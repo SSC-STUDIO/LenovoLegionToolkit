@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
@@ -13,6 +16,8 @@ namespace UniversalDeviceToolkit.WPF.Controls.Custom;
 public class NavigationStore : Control
 {
     private const string TogglePaneButtonPartName = "PART_TogglePaneButton";
+    private readonly Dictionary<string, object> _pageCache = new(StringComparer.OrdinalIgnoreCase);
+    private int _navigateGeneration;
 
     public static readonly DependencyProperty ItemsProperty = DependencyProperty.Register(
         nameof(Items),
@@ -340,20 +345,253 @@ public class NavigationStore : Control
         if (Frame is null)
             return false;
 
-        object? page = null;
+        // Highlight the nav item immediately so the click feels instant.
+        SetCurrent(item);
+        var generation = ++_navigateGeneration;
 
-        if (item.PageType is not null)
-            page = Activator.CreateInstance(item.PageType);
-        else if (item.PageSource is not null)
-            page = item.PageSource;
+        // Explicit page instance (plugin host pages, etc.) — not cached.
+        if (item.PageSource is not null)
+        {
+            PresentPage(item.PageSource, animate: true);
+            return true;
+        }
 
-        if (page is null)
+        if (item.PageType is null)
             return false;
 
-        Frame.Navigate(page);
-        AnimateFrameContent();
-        SetCurrent(item);
+        var cacheKey = GetPageCacheKey(item);
+
+        if (_pageCache.TryGetValue(cacheKey, out var cached) && cached is not null)
+        {
+            if (ReferenceEquals(Frame.Content, cached))
+                return true;
+
+            // Returning to a warm page — soft crossfade, not a hard cut.
+            PresentPage(cached, animate: true);
+            return true;
+        }
+
+        // First visit: show a lightweight skeleton shell NOW, then build the real page.
+        // Skeleton was previously inside the real page — useless while CreateInstance blocks.
+        PresentPage(CreateNavigationSkeletonShell(), animate: false);
+
+        var pageType = item.PageType;
+        // Create page on next Loaded tick so the skeleton can paint once, then hand off.
+        // No artificial multi-hundred-ms hold — that padded every cold navigation for aesthetics.
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            if (generation != _navigateGeneration || !ReferenceEquals(Current, item))
+                return;
+
+            try
+            {
+                var page = Activator.CreateInstance(pageType);
+                if (page is null)
+                    return;
+
+                _pageCache[cacheKey] = page;
+
+                if (generation != _navigateGeneration || !ReferenceEquals(Current, item))
+                    return;
+
+                // Soft handoff shell → real page (real page keeps its own loading chrome).
+                PresentPage(page, animate: true);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to create navigation page {pageType.FullName}", ex);
+            }
+        }), DispatcherPriority.Loaded);
+
         return true;
+    }
+
+    private void PresentPage(object page, bool animate)
+    {
+        if (Frame is null)
+            return;
+
+        if (ReferenceEquals(Frame.Content, page))
+            return;
+
+        // Crossfade: ease current content out, then swap + ease new content in.
+        if (animate && ShouldAnimate() && Frame.Content is FrameworkElement outgoing)
+        {
+            outgoing.BeginAnimation(UIElement.OpacityProperty, null);
+            var duration = ResolveCrossfadeDuration();
+            var target = page;
+            var generation = _navigateGeneration;
+            var fadeOut = new DoubleAnimation
+            {
+                To = 0,
+                Duration = duration,
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+            };
+            fadeOut.Completed += (_, _) =>
+            {
+                if (Frame is null || generation != _navigateGeneration)
+                    return;
+                CommitPage(target);
+                if (Frame.Content is FrameworkElement incoming)
+                    SoftFadeIn(incoming, duration);
+            };
+            outgoing.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+            return;
+        }
+
+        CommitPage(page);
+        if (Frame.Content is FrameworkElement content)
+        {
+            if (animate && ShouldAnimate())
+                SoftFadeIn(content, ResolveCrossfadeDuration());
+            else
+            {
+                content.BeginAnimation(UIElement.OpacityProperty, null);
+                content.Opacity = 1;
+            }
+        }
+    }
+
+    private void CommitPage(object page)
+    {
+        if (Frame is null)
+            return;
+
+        Frame.Navigate(page);
+        TrimFrameJournal();
+    }
+
+    private static Duration ResolveCrossfadeDuration() =>
+        Application.Current?.TryFindResource("AnimationDurationSkeletonCrossfade") as Duration?
+        ?? new Duration(TimeSpan.FromMilliseconds(280));
+
+    private static void SoftFadeIn(FrameworkElement content, Duration duration)
+    {
+        content.BeginAnimation(UIElement.OpacityProperty, null);
+        content.Opacity = 0;
+        var fade = new DoubleAnimation
+        {
+            From = 0,
+            To = 1,
+            Duration = duration,
+            EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+        };
+        content.BeginAnimation(UIElement.OpacityProperty, fade);
+    }
+
+    private void TrimFrameJournal()
+    {
+        if (Frame is null)
+            return;
+
+        try
+        {
+            while (Frame.CanGoBack)
+                Frame.RemoveBackEntry();
+        }
+        catch
+        {
+            // Journal may be unavailable for some content types.
+        }
+    }
+
+    private static string GetPageCacheKey(NavigationItem item)
+    {
+        if (!string.IsNullOrWhiteSpace(item.PageTag))
+            return item.PageTag!;
+        if (item.PageType is not null)
+            return item.PageType.FullName ?? item.PageType.Name;
+        return item.GetHashCode().ToString();
+    }
+
+    /// <summary>
+    /// Instant shell shown while a heavy Page is constructed on the UI thread.
+    /// </summary>
+    private static Page CreateNavigationSkeletonShell()
+    {
+        static Border Block(double width, double height, Thickness margin)
+        {
+            var border = new Border
+            {
+                Width = width,
+                Height = height,
+                Margin = margin,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                CornerRadius = new CornerRadius(6),
+                Background = TryBrush("ControlFillColorTertiaryBrush", new SolidColorBrush(Color.FromRgb(0x4A, 0x4A, 0x4A)))
+            };
+
+            // Prefer shared shimmer style when available.
+            if (Application.Current?.TryFindResource("AppSkeletonShimmerBlockStyle") is Style shimmer)
+                border.Style = shimmer;
+
+            return border;
+        }
+
+        static Border Card()
+        {
+            var card = new Border
+            {
+                Margin = new Thickness(0, 0, 0, 10),
+                Padding = new Thickness(16, 14, 16, 14),
+                MinHeight = 88,
+                CornerRadius = new CornerRadius(10),
+                Background = TryBrush("ControlFillColorDefaultBrush", new SolidColorBrush(Color.FromRgb(0x30, 0x30, 0x30))),
+                BorderBrush = TryBrush("ControlStrokeColorDefaultBrush", new SolidColorBrush(Color.FromRgb(0x50, 0x50, 0x50))),
+                BorderThickness = new Thickness(1)
+            };
+
+            var grid = new Grid();
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+            var icon = Block(42, 42, new Thickness(0, 0, 12, 0));
+            Grid.SetColumn(icon, 0);
+            grid.Children.Add(icon);
+
+            var lines = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+            lines.Children.Add(Block(210, 14, new Thickness(0)));
+            lines.Children.Add(Block(140, 10, new Thickness(0, 10, 0, 0)));
+            var stretch = Block(180, 10, new Thickness(0, 12, 0, 0));
+            stretch.HorizontalAlignment = HorizontalAlignment.Stretch;
+            stretch.Width = double.NaN;
+            lines.Children.Add(stretch);
+            Grid.SetColumn(lines, 1);
+            grid.Children.Add(lines);
+
+            card.Child = grid;
+            return card;
+        }
+
+        var root = new StackPanel { Margin = new Thickness(20, 16, 20, 16) };
+        root.Children.Add(Block(160, 16, new Thickness(0, 0, 0, 16)));
+        root.Children.Add(Card());
+        root.Children.Add(Card());
+        root.Children.Add(Card());
+        root.Children.Add(Card());
+
+        return new Page
+        {
+            Background = Brushes.Transparent,
+            Content = root,
+            Focusable = false
+        };
+    }
+
+    private static Brush TryBrush(string key, Brush fallback)
+    {
+        try
+        {
+            if (Application.Current?.TryFindResource(key) is Brush brush)
+                return brush;
+        }
+        catch
+        {
+            // ignore
+        }
+
+        return fallback;
     }
 
     private void AnimateFrameContent()
@@ -361,16 +599,7 @@ public class NavigationStore : Control
         if (Frame?.Content is not FrameworkElement content || !ShouldAnimate())
             return;
 
-        content.Opacity = 0;
-        var fadeIn = new DoubleAnimation
-        {
-            From = 0,
-            To = 1,
-            Duration = Application.Current.Resources["AnimationDurationMedium"] as Duration? ?? new Duration(TimeSpan.FromMilliseconds(200)),
-            EasingFunction = Application.Current.Resources["AnimationEasingCubicOut"] as IEasingFunction
-        };
-
-        content.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+        SoftFadeIn(content, ResolveCrossfadeDuration());
     }
 
     private void SetCurrent(NavigationItem item)

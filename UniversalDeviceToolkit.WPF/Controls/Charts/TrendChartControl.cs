@@ -96,9 +96,12 @@ public sealed class TrendSeries
         if (_cachedFill is not null)
             return _cachedFill;
 
+        // Reference-style fill: readable solid tint at the top that softens toward the baseline
+        // so the area has a clear silhouette even with few samples at first open.
         var fill = new LinearGradientBrush { StartPoint = new Point(0, 0), EndPoint = new Point(0, 1) };
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(72, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.0));
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(0, _cachedColor.R, _cachedColor.G, _cachedColor.B), 1.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(140, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(72, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.55));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(20, _cachedColor.R, _cachedColor.G, _cachedColor.B), 1.0));
         fill.Freeze();
         _cachedFill = fill;
         return fill;
@@ -109,7 +112,8 @@ public sealed class TrendSeries
         if (_cachedLinePen is not null)
             return _cachedLinePen;
 
-        var pen = new Pen(new SolidColorBrush(_cachedColor), 2.0)
+        // Slightly thicker stroke so the top edge stays crisp against the soft fill.
+        var pen = new Pen(new SolidColorBrush(_cachedColor), 2.25)
         {
             LineJoin = PenLineJoin.Round,
             StartLineCap = PenLineCap.Round,
@@ -200,19 +204,21 @@ public class TrendChartControl : FrameworkElement
         if (width <= 1 || height <= 1)
             return;
 
-        DrawGridlines(dc, width, height, GridlineBrush, BaselineBrush);
+        DrawPlotFrame(dc, width, height, GridlineBrush, BaselineBrush);
 
         foreach (var series in _orderedSeries)
             DrawSeries(dc, series, width, height);
     }
 
     /// <summary>
-    /// Faint horizontal guide lines (25/50/75%) plus a slightly stronger baseline so an empty
-    /// chart still reads as a chart surface and filled series stay easy to gauge by eye.
+    /// Horizontal guides plus a full rectangular frame (left/right/top/baseline) so an empty
+    /// chart at first open still reads as a chart surface with clear edges.
     /// </summary>
-    private static void DrawGridlines(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush)
+    private static void DrawPlotFrame(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush)
     {
-        var grid = new Pen(gridlineBrush, 1);
+        var grid = new Pen(gridlineBrush, 1.0);
+        var baseline = new Pen(baselineBrush, 1.25);
+        var frame = new Pen(baselineBrush, 1.0);
 
         for (var fraction = 0.25; fraction < 1.0; fraction += 0.25)
         {
@@ -220,33 +226,25 @@ public class TrendChartControl : FrameworkElement
             dc.DrawLine(grid, new Point(0, y), new Point(width, y));
         }
 
-        var baseline = new Pen(baselineBrush, 1);
+        // Outer plot edges — always visible even when no series samples exist yet.
+        dc.DrawLine(frame, new Point(0.5, 0), new Point(0.5, height));
+        dc.DrawLine(frame, new Point(width - 0.5, 0), new Point(width - 0.5, height));
+        dc.DrawLine(frame, new Point(0, 0.5), new Point(width, 0.5));
         dc.DrawLine(baseline, new Point(0, height - 0.5), new Point(width, height - 0.5));
     }
 
     private static void DrawSeries(DrawingContext dc, TrendSeries series, double width, double height)
     {
-        if (series.Count < 2)
+        if (series.Count < 1)
             return;
 
         var max = series.Maximum ?? Math.Max(1.0, series.ObservedMaximum() * 1.1);
         if (max <= 0)
             max = 1.0;
 
-        var capacity = Math.Max(2, series.Capacity);
-        var stepX = width / (capacity - 1);
-        var startIndex = capacity - series.Count;
-
-        var points = new List<Point>(series.Count);
-        var i = 0;
-        foreach (var sample in series.EnumerateOrdered())
-        {
-            var x = (startIndex + i) * stepX;
-            var ratio = Math.Clamp(sample / max, 0.0, 1.0);
-            var y = height - ratio * (height - 2) - 1;
-            points.Add(new Point(x, y));
-            i++;
-        }
+        var points = BuildPlotPoints(series, width, height, max);
+        if (points.Count < 2)
+            return;
 
         var lineGeometry = new StreamGeometry();
         var areaGeometry = new StreamGeometry();
@@ -254,6 +252,8 @@ public class TrendChartControl : FrameworkElement
         using (var lineCtx = lineGeometry.Open())
         using (var areaCtx = areaGeometry.Open())
         {
+            // Closed area with vertical left/right drops so the fill has explicit edges
+            // (matches reference area charts: left wall, curve, right wall, baseline).
             lineCtx.BeginFigure(points[0], false, false);
             areaCtx.BeginFigure(new Point(points[0].X, height), true, true);
             areaCtx.LineTo(points[0], true, false);
@@ -280,5 +280,34 @@ public class TrendChartControl : FrameworkElement
 
         dc.DrawGeometry(series.GetOrCreateFill(), null, areaGeometry);
         dc.DrawGeometry(null, series.GetOrCreateLinePen(), lineGeometry);
+    }
+
+    /// <summary>
+    /// Builds screen-space points for a series. Samples are left-aligned (oldest at x=0) so
+    /// the chart grows a clear left edge from the first open instead of a tiny right-side blip.
+    /// A single sample is expanded to a short flat segment so fill/stroke still have width.
+    /// </summary>
+    internal static List<Point> BuildPlotPoints(TrendSeries series, double width, double height, double max)
+    {
+        var capacity = Math.Max(2, series.Capacity);
+        var stepX = width / (capacity - 1);
+        var points = new List<Point>(Math.Max(2, series.Count));
+
+        var i = 0;
+        foreach (var sample in series.EnumerateOrdered())
+        {
+            var x = i * stepX;
+            var ratio = Math.Clamp(sample / max, 0.0, 1.0);
+            // 1px padding top/bottom keeps the stroke fully inside the plot frame.
+            var y = height - ratio * (height - 2) - 1;
+            points.Add(new Point(x, y));
+            i++;
+        }
+
+        // One sample: stretch a flat segment one step wide so the area has a visible edge.
+        if (points.Count == 1)
+            points.Add(new Point(Math.Min(width, points[0].X + stepX), points[0].Y));
+
+        return points;
     }
 }

@@ -392,7 +392,8 @@ public sealed class HardwareStateRecoveryService
                         ProcessorThrottleMinGuid,
                         percent);
 
-                    if (ac != 0 || dc != 0)
+                    // PowerWrite* APIs return WIN32 status as uint (0 = ERROR_SUCCESS).
+                    if ((WIN32_ERROR)ac != WIN32_ERROR.ERROR_SUCCESS || (WIN32_ERROR)dc != WIN32_ERROR.ERROR_SUCCESS)
                     {
                         sb.AppendLine($"failure (PowerWriteAC/DC ValueIndex ac={ac}, dc={dc}).");
                         return false;

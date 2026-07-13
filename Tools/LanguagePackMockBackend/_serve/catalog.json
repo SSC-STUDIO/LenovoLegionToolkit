@@ -4,12 +4,12 @@
                           "culture":  "de",
                           "url":  "http://127.0.0.1:18765/de.zip",
                           "displayName":  "German",
-                          "sha256":  "66f2a76cfebfd6df443128fc2019bc4657e487c355bb219cc8ee7a0e89715a67",
-                          "size":  43021
+                          "sha256":  "33ca1389d3457388fc0a29d275e85743e46b6797a7572f88639777f7bfd11dd4",
+                          "size":  45168
                       }
                   ],
     "productName":  "Universal Device Toolkit",
-    "generatedAt":  "2026-07-12T03:43:37.3261422Z",
+    "generatedAt":  "2026-07-13T02:28:30.9527484Z",
     "appVersion":  "4.2.1",
     "schemaVersion":  1,
     "downloads":  {
@@ -17,8 +17,8 @@
                                      "portable":  {
                                                       "url":  "http://127.0.0.1:18765/de.zip",
                                                       "name":  "UniversalDeviceToolkit_v4.2.1_Online_win-x64.zip",
-                                                      "sha256":  "66f2a76cfebfd6df443128fc2019bc4657e487c355bb219cc8ee7a0e89715a67",
-                                                      "size":  43021
+                                                      "sha256":  "33ca1389d3457388fc0a29d275e85743e46b6797a7572f88639777f7bfd11dd4",
+                                                      "size":  45168
                                                   }
                                  }
                   }

@@ -117,7 +117,9 @@ public partial class DeviceInformationWindow
 
             _warrantyStartLabel.Text = warrantyInfo.Value.Start is not null ? warrantyInfo.Value.Start?.ToString(LocalizationHelper.ShortDateFormat) : "-";
             _warrantyEndLabel.Text = warrantyInfo.Value.End is not null ? warrantyInfo.Value.End?.ToString(LocalizationHelper.ShortDateFormat) : "-";
-            _warrantyLinkCardAction.Tag = warrantyInfo.Value.Link;
+            // Prefer product-specific page; fall back so the action card is always clickable.
+            _warrantyLinkCardAction.Tag = warrantyInfo.Value.Link
+                ?? BuildLenovoSupportUri(mi.SerialNumber, mi.MachineType);
             HasWarrantyInfo = true;
         }
         catch (Exception ex)
@@ -286,10 +288,67 @@ public partial class DeviceInformationWindow
         }
     }
 
-    private void WarrantyLinkCardAction_OnClick(object sender, RoutedEventArgs e)
+    private async void WarrantyLinkCardAction_OnClick(object sender, MouseButtonEventArgs e)
     {
-        var link = _warrantyLinkCardAction.Tag as Uri;
-        link?.Open();
+        e.Handled = true;
+        await OpenWarrantySupportLinkAsync().ConfigureAwait(true);
+    }
+
+    private async Task OpenWarrantySupportLinkAsync()
+    {
+        try
+        {
+            var link = _warrantyLinkCardAction.Tag as Uri
+                ?? BuildLenovoSupportUri(_serialNumberLabel.Text, _mtmLabel.Text);
+
+            if (link is null)
+            {
+                await ShowSnackBarAsync(
+                    Resource.DeviceInformationWindow_Warranty_Title,
+                    Resource.DeviceInformationWindow_WarrantyLinkUnavailable);
+                return;
+            }
+
+            link.Open();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to open Lenovo support link.", ex);
+
+            try
+            {
+                await ShowSnackBarAsync(
+                    Resource.DeviceInformationWindow_Warranty_Title,
+                    Resource.DeviceInformationWindow_WarrantyLinkUnavailable);
+            }
+            catch
+            {
+                // keep window alive
+            }
+        }
+    }
+
+    /// <summary>
+    /// Builds a public Lenovo PC Support URL when the product-id deep link is unavailable.
+    /// </summary>
+    private static Uri? BuildLenovoSupportUri(string? serialNumber, string? machineType)
+    {
+        // Generic warranty lookup is always valid HTTPS; serial/MTM refine the query when present.
+        var serial = string.IsNullOrWhiteSpace(serialNumber) || serialNumber == "-"
+            ? null
+            : serialNumber.Trim();
+        var mtm = string.IsNullOrWhiteSpace(machineType) || machineType == "-"
+            ? null
+            : machineType.Trim();
+
+        if (serial is not null && mtm is not null)
+            return new Uri($"https://pcsupport.lenovo.com/warrantylookup?serialNumber={Uri.EscapeDataString(serial)}&machineType={Uri.EscapeDataString(mtm)}");
+
+        if (serial is not null)
+            return new Uri($"https://pcsupport.lenovo.com/warrantylookup?serialNumber={Uri.EscapeDataString(serial)}");
+
+        return new Uri("https://pcsupport.lenovo.com/");
     }
 
     private async Task ShowSnackBarAsync(string title, string? message)

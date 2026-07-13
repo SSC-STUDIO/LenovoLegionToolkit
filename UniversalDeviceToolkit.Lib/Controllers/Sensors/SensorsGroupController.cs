@@ -710,13 +710,16 @@ public class SensorsGroupController : IDisposable
 
             try
             {
+                // IsControllerEnabled restores EC/SuperIO fan channels that historical
+                // LibreHardwareMonitor configs used for Legion chassis RPM when WMI
+                // Fan_GetCurrentFanSpeed / capability IDs report 0.
                 _computer = new Computer
                 {
                     IsCpuEnabled = true,
                     IsGpuEnabled = true,
                     IsMemoryEnabled = true,
                     IsMotherboardEnabled = true,
-                    IsControllerEnabled = false,
+                    IsControllerEnabled = true,
                     IsNetworkEnabled = false,
                     IsStorageEnabled = true
                 };
@@ -1525,15 +1528,22 @@ public class SensorsGroupController : IDisposable
     private static int ScoreCpuFanName(string name)
     {
         if (name.Contains("CPU", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("Processor", StringComparison.OrdinalIgnoreCase))
+            name.Contains("Processor", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("PCH", StringComparison.OrdinalIgnoreCase))
             return 300;
         if (name.Contains("Fan #1", StringComparison.OrdinalIgnoreCase) ||
             name.Contains("Fan 1", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Fan#1", StringComparison.OrdinalIgnoreCase) ||
             name.Contains("SYS", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("System", StringComparison.OrdinalIgnoreCase))
+            name.Contains("System", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Chassis", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Left", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Right", StringComparison.OrdinalIgnoreCase))
             return 200;
-        if (name.Contains("GPU", StringComparison.OrdinalIgnoreCase))
+        if (name.Contains("GPU", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Graphics", StringComparison.OrdinalIgnoreCase))
             return 0;
+        // Any remaining fan sensor is still a candidate (Legion OEM names vary by generation).
         return 100;
     }
 
@@ -1541,11 +1551,19 @@ public class SensorsGroupController : IDisposable
     {
         if (name.Contains("GPU", StringComparison.OrdinalIgnoreCase) ||
             name.Contains("Graphics", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("Video", StringComparison.OrdinalIgnoreCase))
+            name.Contains("Video", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("dGPU", StringComparison.OrdinalIgnoreCase))
             return 300;
         if (name.Contains("Fan #2", StringComparison.OrdinalIgnoreCase) ||
-            name.Contains("Fan 2", StringComparison.OrdinalIgnoreCase))
+            name.Contains("Fan 2", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Fan#2", StringComparison.OrdinalIgnoreCase) ||
+            name.Contains("Fan2", StringComparison.OrdinalIgnoreCase))
             return 150;
+        // Generic "Fan" / chassis names still usable when no dedicated GPU sensor exists.
+        if (name.Contains("Fan", StringComparison.OrdinalIgnoreCase) &&
+            !name.Contains("CPU", StringComparison.OrdinalIgnoreCase) &&
+            !name.Contains("Processor", StringComparison.OrdinalIgnoreCase))
+            return 50;
         return 0;
     }
 

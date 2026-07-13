@@ -62,16 +62,34 @@ if (-not $SkipPrune) {
     & $pruneScript -PayloadPath $runtimeDir -AllowedCultures "en;$Culture"
 }
 
-$serverJob = Start-Job -ScriptBlock {
-    param($script, $port, $culture)
-    & $script -Port $port -Culture $culture
-} -ArgumentList $serverScript, $Port, $Culture
+# Prefer Start-Process over Start-Job: job runspaces hide HttpListener/startup errors on GHA
+# and Get-RuntimeDirectory historically missed bin\x64\Release paths.
+$serverLog = Join-Path $env:TEMP ("udt-mock-catalog-" + [guid]::NewGuid().ToString("N") + ".log")
+$serverErr = "$serverLog.err"
+$pwshCmd = Get-Command pwsh -ErrorAction SilentlyContinue
+if ($pwshCmd) { $pwshExe = $pwshCmd.Source }
+else { $pwshExe = (Get-Command powershell).Source }
+
+Write-Host "[lang-online-ci] Starting mock catalog server (log: $serverLog)"
+$serverProcess = Start-Process -FilePath $pwshExe -ArgumentList @(
+    "-NoProfile",
+    "-ExecutionPolicy", "Bypass",
+    "-File", $serverScript,
+    "-Port", "$Port",
+    "-Culture", $Culture
+) -PassThru -WindowStyle Hidden `
+    -RedirectStandardOutput $serverLog `
+    -RedirectStandardError $serverErr
 
 try {
     $catalogUrl = "http://127.0.0.1:$Port/catalog.json"
-    $deadline = (Get-Date).AddSeconds(60)
+    $deadline = (Get-Date).AddSeconds(90)
     $ready = $false
     while ((Get-Date) -lt $deadline) {
+        if ($serverProcess.HasExited) {
+            Write-Host "[lang-online-ci] Mock catalog process exited early (code $($serverProcess.ExitCode))"
+            break
+        }
         try {
             Invoke-WebRequest -Uri $catalogUrl -UseBasicParsing -TimeoutSec 2 | Out-Null
             $ready = $true
@@ -83,7 +101,10 @@ try {
         }
     }
     if (-not $ready) {
-        Receive-Job $serverJob -ErrorAction SilentlyContinue | Out-Host
+        Write-Host "[lang-online-ci] --- mock catalog stdout ---"
+        if (Test-Path $serverLog) { Get-Content -LiteralPath $serverLog -ErrorAction SilentlyContinue | Out-Host }
+        Write-Host "[lang-online-ci] --- mock catalog stderr ---"
+        if (Test-Path $serverErr) { Get-Content -LiteralPath $serverErr -ErrorAction SilentlyContinue | Out-Host }
         throw "Mock catalog server did not become ready on port $Port"
     }
 
@@ -98,7 +119,9 @@ try {
     exit 0
 }
 finally {
-    Stop-Job $serverJob -ErrorAction SilentlyContinue
-    Remove-Job $serverJob -Force -ErrorAction SilentlyContinue
+    if ($serverProcess -and -not $serverProcess.HasExited) {
+        Stop-Process -Id $serverProcess.Id -Force -ErrorAction SilentlyContinue
+    }
     try { Remove-Item -LiteralPath $onlineStaging -Recurse -Force -ErrorAction SilentlyContinue } catch { }
+    try { Remove-Item -LiteralPath $serverLog, $serverErr -Force -ErrorAction SilentlyContinue } catch { }
 }

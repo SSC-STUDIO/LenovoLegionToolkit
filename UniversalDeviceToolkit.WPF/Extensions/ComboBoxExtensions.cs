@@ -18,6 +18,10 @@ public static class ComboBoxExtensions
         var boxedItems = items.Select(v => new ComboBoxItem<T>(v, displayValueConverter)).ToArray();
         var selectedBoxedItem = FindSelectedBoxedItem(boxedItems, selectedItem);
 
+        // Never leave the combo with items but no selection — that paints an empty
+        // dropdown (e.g. power mode when WMI returns Extreme / unlisted values).
+        selectedBoxedItem ??= boxedItems.Length > 0 ? boxedItems[0] : null;
+
         comboBox.Items.Clear();
         comboBox.Items.AddRange(boxedItems);
         comboBox.SelectedItem = selectedBoxedItem;

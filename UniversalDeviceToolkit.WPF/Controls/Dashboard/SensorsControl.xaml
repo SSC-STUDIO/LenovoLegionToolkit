@@ -32,12 +32,35 @@
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         </Style>
         <Style x:Key="StatValueStyle" TargetType="Label">
+            <!--
+              Keep room for units (GHz / RPM / °C / W). Too-narrow Auto columns were clipping
+              the unit suffix when the sensors card is dense.
+            -->
             <Setter Property="HorizontalContentAlignment" Value="Right" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="0,2" />
+            <Setter Property="Padding" Value="4,2,0,2" />
             <Setter Property="MinWidth" Value="0" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
+        <!--
+          Detail values (PCIe throughput, CPU power breakdown) can be long. Wrap + trim so they
+          stay inside their column instead of painting over the adjacent temperature field
+          (e.g. "2.71 MB/s" covering "80 °C" → "2.71 ME 80℃").
+        -->
+        <Style x:Key="StatDetailValueStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+        <Style x:Key="SensorDetailColumnStyle" TargetType="StackPanel">
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+        <!--
+          Track must stay readable on light card surfaces. ControlFillColorSecondary is nearly
+          white in light theme and blends into the card; Tertiary + stroke keeps the empty
+          segment visible while remaining subtle in dark theme.
+        -->
         <Style x:Key="MetricProgressBarStyle" TargetType="ProgressBar">
             <Setter Property="Height" Value="6" />
             <Setter Property="MinWidth" Value="24" />
@@ -46,15 +69,19 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Maximum" Value="100" />
             <Setter Property="Foreground" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ProgressBar">
                         <Grid Height="{TemplateBinding Height}" SnapsToDevicePixels="True">
                             <Border
                                 Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="{StaticResource CornerRadiusProgressBar}" />
-                            <Grid x:Name="PART_Track" ClipToBounds="True">
+                            <Grid x:Name="PART_Track" ClipToBounds="True" Margin="1,1,1,1">
                                 <Border
                                     x:Name="PART_Indicator"
                                     HorizontalAlignment="Left"
@@ -66,73 +93,119 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!--
+          Legend item = (dot + label) as one WrapPanel child so narrow cards wrap whole entries
+          instead of splitting Chinese labels mid-string (e.g. "温度" → only "度" visible).
+        -->
+        <Style x:Key="LegendItemStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,14,4" />
+        </Style>
         <Style x:Key="LegendTextStyle" TargetType="TextBlock" BasedOn="{StaticResource AppSmallBodyTextBlockStyle}">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="4,0,14,0" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="MaxWidth" Value="120" />
         </Style>
         <Style x:Key="LegendDotStyle" TargetType="Ellipse">
             <Setter Property="Width" Value="8" />
             <Setter Property="Height" Value="8" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+        <Style x:Key="LegendPanelStyle" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Orientation" Value="Horizontal" />
         </Style>
         <Style x:Key="TrendPanelStyle" TargetType="Border">
+            <!--
+              Visible 1px frame around the plot so empty charts at first open still have
+              clear edges (matches reference area charts with a defined silhouette).
+            -->
             <Setter Property="Margin" Value="0,14,0,0" />
             <Setter Property="Height" Value="76" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
             <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ChartSurfaceBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="2,2,2,2" />
             <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
         </Style>
 
+        <!--
+          Skeleton sizes track the live summary layout (title + model, gauge + 3 metric rows,
+          trend panel, 3-item legend). Fixed shimmer sizes use the same tokens as live gauges
+          (GaugeSizeMD/SM); code-behind still resizes gauges/trends on window width changes.
+        -->
         <Style x:Key="SkeletonTitleBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="20" />
-            <Setter Property="Width" Value="96" />
+            <Setter Property="MinWidth" Value="56" />
+            <Setter Property="Width" Value="72" />
+            <Setter Property="MaxWidth" Value="120" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="Margin" Value="0,4,0,14" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
         </Style>
         <Style x:Key="SkeletonSubtitleBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="Height" Value="12" />
-            <Setter Property="Width" Value="120" />
+            <!-- Matches SensorHeaderModelStyle: caption-height text beside title -->
+            <Setter Property="Height" Value="14" />
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="Width" Value="140" />
+            <Setter Property="MaxWidth" Value="220" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="8,1,0,0" />
         </Style>
         <Style x:Key="SkeletonGaugeStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="Width" Value="80" />
-            <Setter Property="Height" Value="80" />
+            <!-- Default = live RadialGaugeControl (GaugeSizeMD); compact path sets GaugeSizeSM in code. -->
+            <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
+            <Setter Property="Height" Value="{StaticResource GaugeSizeMD}" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
             <Setter Property="Margin" Value="0,0,12,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SkeletonLabelBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="Height" Value="12" />
-            <Setter Property="Width" Value="60" />
+            <!-- Fills the 24px metric row like StatLabelStyle text -->
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="56" />
+            <Setter Property="MinWidth" Value="48" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SkeletonBarBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <!-- Matches MetricProgressBarStyle Height=6, Margin=8,0 -->
             <Setter Property="Height" Value="6" />
-            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MaxWidth" Value="260" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusProgressBar}" />
         </Style>
         <Style x:Key="SkeletonValueBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="Height" Value="12" />
-            <Setter Property="Width" Value="48" />
+            <!-- Tracks live StatValue column MinWidth=72 so skeleton silhouette matches units. -->
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="64" />
+            <Setter Property="MinWidth" Value="56" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SkeletonTrendPanelStyle" TargetType="Border" BasedOn="{StaticResource TrendPanelStyle}">
-            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
         </Style>
         <Style x:Key="SkeletonTrendBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="Height" Value="60" />
-            <Setter Property="Margin" Value="8" />
+            <!-- Fill trend panel (live chart uses Margin=2) -->
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
         </Style>
         <Style x:Key="SkeletonLegendDotStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
@@ -140,14 +213,16 @@
             <Setter Property="Height" Value="8" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
         </Style>
         <Style x:Key="SkeletonLegendTextStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="Height" Value="10" />
-            <Setter Property="Width" Value="56" />
-            <Setter Property="Margin" Value="4,0,14,0" />
+            <Setter Property="Height" Value="12" />
+            <Setter Property="Width" Value="48" />
+            <Setter Property="Margin" Value="6,0,0,0" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style x:Key="SkeletonLegendItemStyle" TargetType="StackPanel" BasedOn="{StaticResource LegendItemStyle}" />
     </UserControl.Resources>
 
     <!-- PLACEHOLDER_BODY -->
@@ -206,7 +281,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -237,67 +312,73 @@
                     <Border x:Name="_cpuTrendPanel" Style="{StaticResource TrendPanelStyle}">
                         <charts:TrendChartControl x:Name="_cpuTrendChart" Margin="2" />
                     </Border>
-                    <WrapPanel x:Name="_cpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartUtilizationBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                    <WrapPanel x:Name="_cpuLegend" Style="{StaticResource LegendPanelStyle}">
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartUtilizationBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                        </StackPanel>
                     </WrapPanel>
 
                     <!-- PLACEHOLDER_CPU_DETAILS -->
                     <StackPanel x:Name="_cpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsCpuDetailsPanel" Visibility="Collapsed" Margin="0,16,0,0">
-                        <Grid>
+                        <Grid ClipToBounds="True">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource SensorDetailColumnStyle}">
                                 <StackPanel x:Name="_cpuWattageDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuWattage" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuWattage" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_cpuVoltageDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuVoltage" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuVoltage" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_cpuPCoreClockDetail">
                                     <TextBlock x:Name="_cpuPCoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuPCoreClock" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuPCoreClock" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_cpuECoreClockDetail">
                                     <TextBlock x:Name="_cpuECoreClockTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuECoreClock" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuECoreClock" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_cpuMemoryUsageDetail">
                                     <TextBlock x:Name="_cpuMemoryUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuMemoryUsage" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuMemoryUsage" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource SensorDetailColumnStyle}">
                                 <StackPanel x:Name="_cpuTempRangeDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuTempRange" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuTempRange" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_cpuVoltageRangeDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuVoltageRange" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuVoltageRange" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_cpuMemoryTemperatureDetail">
                                     <TextBlock x:Name="_cpuMemoryTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuMemoryTemperature" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuMemoryTemperature" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_cpuSsdTemperatureDetail">
                                     <TextBlock x:Name="_cpuSsdTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_cpuSsdTemperature" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_cpuSsdTemperature" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
@@ -332,7 +413,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -363,13 +444,19 @@
                     <Border x:Name="_batteryTrendPanel" Style="{StaticResource TrendPanelStyle}">
                         <charts:TrendChartControl x:Name="_batteryTrendChart" Margin="2" />
                     </Border>
-                    <WrapPanel x:Name="_batteryLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartBatteryBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Charge}" />
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Health}" />
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                    <WrapPanel x:Name="_batteryLegend" Style="{StaticResource LegendPanelStyle}">
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartBatteryBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Charge}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Health}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                        </StackPanel>
                     </WrapPanel>
 
                     <StackPanel Margin="0,12,0,0">
@@ -403,40 +490,42 @@
                                 <TextBlock x:Name="_batteryFullCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
                             </StackPanel>
                             <StackPanel HorizontalAlignment="Center">
+                                <!-- Health ring (was a static "design capacity" track that always looked empty/gray). -->
                                 <charts:RadialGaugeControl
+                                    x:Name="_batteryHealthGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
                                     RingThickness="6"
-                                    Value="100"
-                                    RingBrush="{DynamicResource ChartTrackBrush}"
-                                    ValueText=" "
-                                    Caption="{x:Static resources:Resource.SensorsControl_DesignCapacity}" />
-                                <TextBlock x:Name="_batteryDesignCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
+                                    Maximum="100"
+                                    RingBrush="{DynamicResource StatusCriticalBrush}"
+                                    Caption="{x:Static resources:Resource.SensorsControl_Health}" />
+                                <TextBlock x:Name="_batteryDesignCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}"
+                                           ToolTip="{x:Static resources:Resource.SensorsControl_DesignCapacity}" />
                             </StackPanel>
                         </UniformGrid>
-                        <Grid>
+                        <Grid ClipToBounds="True">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource SensorDetailColumnStyle}">
                                 <StackPanel x:Name="_batteryRateRangeDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_RateRange}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
-                                    <TextBlock x:Name="_batteryRateRange" Text="-" />
+                                    <TextBlock x:Name="_batteryRateRange" Text="-" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                                 <StackPanel x:Name="_batteryCyclesDetail" Margin="0,4,0,0">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Cycles}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
-                                    <TextBlock x:Name="_batteryCycles" Text="-" />
+                                    <TextBlock x:Name="_batteryCycles" Text="-" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource SensorDetailColumnStyle}">
                                 <StackPanel x:Name="_batteryDateDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Date}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
-                                    <TextBlock x:Name="_batteryDate" Text="-" />
+                                    <TextBlock x:Name="_batteryDate" Text="-" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                                 <StackPanel x:Name="_batteryTemperatureDetail" Margin="0,4,0,0">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
-                                    <TextBlock x:Name="_batteryTemperature" Text="-" />
+                                    <TextBlock x:Name="_batteryTemperature" Text="-" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
@@ -471,7 +560,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -502,13 +591,19 @@
                     <Border x:Name="_gpuTrendPanel" Style="{StaticResource TrendPanelStyle}">
                         <charts:TrendChartControl x:Name="_gpuTrendChart" Margin="2" />
                     </Border>
-                    <WrapPanel x:Name="_gpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartUtilizationBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
-                        <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
-                        <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                    <WrapPanel x:Name="_gpuLegend" Style="{StaticResource LegendPanelStyle}">
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartUtilizationBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource LegendItemStyle}">
+                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                        </StackPanel>
                     </WrapPanel>
 
                     <!-- PLACEHOLDER_GPU_DETAILS -->
@@ -517,59 +612,59 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <ProgressBar x:Name="_gpuMemoryClockBar" Grid.Column="0" Margin="0,0,8,0" Maximum="100" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <TextBlock x:Name="_gpuMemoryClockText" Grid.Column="1" Text="-" />
+                            <TextBlock x:Name="_gpuMemoryClockText" Grid.Column="1" Text="-" Style="{StaticResource StatDetailValueStyle}" Margin="0" />
                         </Grid>
 
-                        <Grid Margin="0,8,0,0">
+                        <Grid Margin="0,8,0,0" ClipToBounds="True">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Margin="0,0,4,0">
+                            <StackPanel Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource SensorDetailColumnStyle}">
                                 <StackPanel x:Name="_gpuVramUsageDetail">
                                     <TextBlock x:Name="_gpuVramUsageTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuVramUsage" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuVramUsage" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_gpuWattageDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuWattage" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuWattage" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_gpuVoltageDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuVoltage" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuVoltage" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_gpuPcieThroughputDetail">
                                     <TextBlock x:Name="_gpuPcieThroughputTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuPcieThroughput" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuPcieThroughput" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Margin="4,0,0,0">
+                            <StackPanel Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource SensorDetailColumnStyle}">
                                 <StackPanel x:Name="_gpuVramTemperatureDetail">
                                     <TextBlock x:Name="_gpuVramTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuVramTemperature" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuVramTemperature" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_gpuHotSpotTemperatureDetail">
                                     <TextBlock x:Name="_gpuHotSpotTemperatureTitle" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuHotSpotTemperature" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuHotSpotTemperature" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_gpuTempRangeDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuTempRange" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuTempRange" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
 
                                 <StackPanel x:Name="_gpuVoltageRangeDetail">
                                     <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Style="{StaticResource AppCaptionTextBlockStyle}" />
-                                    <TextBlock x:Name="_gpuVoltageRange" Text="" Margin="0,0,0,8" />
+                                    <TextBlock x:Name="_gpuVoltageRange" Text="" Style="{StaticResource StatDetailValueStyle}" />
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
@@ -579,10 +674,13 @@
         </wpfui:CardControl.Header>
     </wpfui:CardControl>
 
-        <Grid
+        <!-- Overlay sits on top of the live card; corner radius/padding match CardControl.Header. -->
+        <Border
             x:Name="_skeletonOverlay"
             AutomationProperties.AutomationId="DashboardSensorsSkeleton"
             Background="{DynamicResource AppSurfaceCardBrush}"
+            CornerRadius="{StaticResource CornerRadiusCard}"
+            ClipToBounds="True"
             IsHitTestVisible="False">
             <UniformGrid x:Name="_skeletonGrid" Margin="8,10" Columns="3">
                 <StackPanel x:Name="_skeletonCpuSection" Style="{StaticResource SensorSectionStyle}">
@@ -592,7 +690,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" Style="{StaticResource SkeletonTitleBlockStyle}" />
-                        <Border x:Name="_skeletonCpuSubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" Margin="8,7,0,0" />
+                        <Border x:Name="_skeletonCpuSubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" />
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -604,7 +702,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -612,26 +710,32 @@
                                 <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonCpuBar0" Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonCpuBar1" Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                             <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonCpuBar2" Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                         </Grid>
                     </Grid>
                     <Border x:Name="_skeletonCpuTrendPanel" Style="{StaticResource SkeletonTrendPanelStyle}">
                         <Border Style="{StaticResource SkeletonTrendBlockStyle}" />
                     </Border>
-                    <WrapPanel x:Name="_skeletonCpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                    <WrapPanel x:Name="_skeletonCpuLegend" Style="{StaticResource LegendPanelStyle}">
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
                     </WrapPanel>
                 </StackPanel>
                 <StackPanel x:Name="_skeletonBatterySection" Style="{StaticResource SensorSectionStyle}">
@@ -641,7 +745,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" Style="{StaticResource SkeletonTitleBlockStyle}" />
-                        <Border x:Name="_skeletonBatterySubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" Margin="8,7,0,0" />
+                        <Border x:Name="_skeletonBatterySubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" />
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -653,7 +757,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -661,26 +765,32 @@
                                 <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonBatteryBar0" Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonBatteryBar1" Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                             <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonBatteryBar2" Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                         </Grid>
                     </Grid>
                     <Border x:Name="_skeletonBatteryTrendPanel" Style="{StaticResource SkeletonTrendPanelStyle}">
                         <Border Style="{StaticResource SkeletonTrendBlockStyle}" />
                     </Border>
-                    <WrapPanel x:Name="_skeletonBatteryLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                    <WrapPanel x:Name="_skeletonBatteryLegend" Style="{StaticResource LegendPanelStyle}">
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
                     </WrapPanel>
                 </StackPanel>
                 <StackPanel x:Name="_skeletonGpuSection" Style="{StaticResource SensorSectionStyle}">
@@ -690,7 +800,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Border Grid.Column="0" Style="{StaticResource SkeletonTitleBlockStyle}" />
-                        <Border x:Name="_skeletonGpuSubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" Margin="8,7,0,0" />
+                        <Border x:Name="_skeletonGpuSubtitle" Grid.Column="1" Style="{StaticResource SkeletonSubtitleBlockStyle}" />
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -702,7 +812,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="56" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -710,29 +820,35 @@
                                 <RowDefinition Height="24" />
                             </Grid.RowDefinitions>
                             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonGpuBar0" Grid.Row="0" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonGpuBar1" Grid.Row="1" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                             <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource SkeletonLabelBlockStyle}" />
-                            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
+                            <Border x:Name="_skeletonGpuBar2" Grid.Row="2" Grid.Column="1" Style="{StaticResource SkeletonBarBlockStyle}" />
                             <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource SkeletonValueBlockStyle}" />
                         </Grid>
                     </Grid>
                     <Border x:Name="_skeletonGpuTrendPanel" Style="{StaticResource SkeletonTrendPanelStyle}">
                         <Border Style="{StaticResource SkeletonTrendBlockStyle}" />
                     </Border>
-                    <WrapPanel x:Name="_skeletonGpuLegend" Margin="0,8,0,0" HorizontalAlignment="Left">
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendDotStyle}" />
-                        <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                    <WrapPanel x:Name="_skeletonGpuLegend" Style="{StaticResource LegendPanelStyle}">
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
+                        <StackPanel Style="{StaticResource SkeletonLegendItemStyle}">
+                            <Border Style="{StaticResource SkeletonLegendDotStyle}" />
+                            <Border Style="{StaticResource SkeletonLegendTextStyle}" />
+                        </StackPanel>
                     </WrapPanel>
                 </StackPanel>
             </UniformGrid>
-        </Grid>
+        </Border>
     </Grid>
 </UserControl>

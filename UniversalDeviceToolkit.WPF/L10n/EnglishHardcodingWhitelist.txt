@@ -100,6 +100,14 @@
 [PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Pages/PluginExtensionsPage.xaml :: 0
 
 # ---------------------------------------------------------------------------
+# [PLACEHOLDER]  NetworkAccelerationControl metric defaults.  The em-dash
+# glyphs (Text="—") and the numeric zero (Text="0") are overwritten by
+# NetworkAccelerationControl.xaml.cs before the control becomes visible.
+# ---------------------------------------------------------------------------
+[PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: —
+[PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: 0
+
+# ---------------------------------------------------------------------------
 # [PLACEHOLDER]  PluginSettingsWindow.xaml designer-only defaults; the
 # code-behind always sets Text from plugin metadata before the window is
 # visible.  See PluginSettingsWindow.xaml.cs lines 84-95.

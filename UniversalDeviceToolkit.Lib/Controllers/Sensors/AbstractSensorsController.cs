@@ -65,12 +65,13 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private int? _cpuMaxFanSpeedCache;
     private int? _gpuMaxFanSpeedCache;
 
-    // Sensor data cache, cache time is 100ms
+    // Sensor data cache — short TTL collapses concurrent callers (UI + HWiNFO + OSD).
     private readonly object _cacheLock = new();
     private SensorsData? _cachedSensorsData;
+    private bool _cachedSensorsDetailed;
     private bool _sensorReadFailureLogged;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
-    private const int CACHE_EXPIRATION_MS = 100;
+    private const int CACHE_EXPIRATION_MS = 180;
     private const int SENSOR_READ_TIMEOUT_SECONDS = 2;
     protected virtual int SensorReadTimeoutSeconds => SENSOR_READ_TIMEOUT_SECONDS;
 
@@ -140,11 +141,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     public async Task<SensorsData> GetDataAsync(bool detailed = false)
     {
-        // Check if cache is valid, return cached data if it is
+        // Check if cache is valid, return cached data if it is.
+        // Detailed snapshots can satisfy summary callers; summary cannot satisfy detailed.
         var now = DateTime.UtcNow;
         lock (_cacheLock)
         {
-            if (!detailed && _cachedSensorsData.HasValue && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS)
+            if (_cachedSensorsData.HasValue
+                && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS
+                && (!detailed || _cachedSensorsDetailed))
             {
                 return _cachedSensorsData.Value;
             }
@@ -169,14 +173,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             var result = new SensorsData(cpu, gpu);
             _sensorReadFailureLogged = false;
 
-            // Update cache only for the fast summary path.
-            if (!detailed)
+            lock (_cacheLock)
             {
-                lock (_cacheLock)
-                {
-                    _cachedSensorsData = result;
-                    _lastCacheUpdateTime = now;
-                }
+                _cachedSensorsData = result;
+                _cachedSensorsDetailed = detailed;
+                _lastCacheUpdateTime = now;
             }
 
             return result;
@@ -225,18 +226,66 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
         cancellationToken.ThrowIfCancellationRequested();
 
+        // Cheap counters stay sync; independent WMI/NVAPI/fan probes run in parallel.
         var cpuUtilization = SafeRead(() => GetCpuUtilization(GENERIC_MAX_UTILIZATION), -1, "CPU utilization");
-        var cpuMaxCoreClock = await SafeReadAsync(async () => _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false), -1, "CPU max core clock").ConfigureAwait(false);
-        cancellationToken.ThrowIfCancellationRequested();
         var cpuCoreClock = SafeRead(GetCpuCoreClock, -1, "CPU core clock");
-        var cpuCurrentTemperature = NormalizeTemperatureReading(await SafeReadAsync(GetCpuCurrentTemperatureAsync, -1, "CPU temperature").ConfigureAwait(false));
-        var cpuCurrentFanSpeed = await SafeReadAsync(GetCpuCurrentFanSpeedAsync, -1, "CPU fan speed").ConfigureAwait(false);
-        var cpuMaxFanSpeed = await SafeReadAsync(async () => _cpuMaxFanSpeedCache ??= await GetCpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "CPU max fan speed").ConfigureAwait(false);
 
-        double cpuVoltage = 0;
-        int cpuWattage = -1;
+        var cpuMaxCoreClockTask = SafeReadAsync(async () => _cpuMaxCoreClockCache ??= await GetCpuMaxCoreClockAsync().ConfigureAwait(false), -1, "CPU max core clock");
+        var cpuTempTask = SafeReadAsync(GetCpuCurrentTemperatureAsync, -1, "CPU temperature");
+        var cpuFanTask = SafeReadAsync(GetCpuCurrentFanSpeedAsync, -1, "CPU fan speed");
+        var cpuMaxFanTask = SafeReadAsync(async () => _cpuMaxFanSpeedCache ??= await GetCpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "CPU max fan speed");
+        var gpuInfoTask = SafeReadAsync(GetGPUInfoAsync, GPUInfo.Empty, "GPU info");
+        var gpuTempTask = SafeReadAsync(GetGpuCurrentTemperatureAsync, -1, "GPU temperature");
+        var gpuFanTask = SafeReadAsync(GetGpuCurrentFanSpeedAsync, -1, "GPU fan speed");
+        var gpuMaxFanTask = SafeReadAsync(async () => _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "GPU max fan speed");
+        Task<double>? cpuVoltageTask = detailed
+            ? SafeReadAsync(WMI.Win32.Processor.GetVoltageAsync, 0d, "CPU voltage")
+            : null;
+        Task<int>? cpuWattageTask = detailed
+            ? SafeReadAsync(GetCpuWattageAsync, -1, "CPU wattage")
+            : null;
 
-        if (cpuUtilization < 0 || cpuCoreClock < 0 || cpuCurrentTemperature < 0 || cpuCurrentFanSpeed <= 0)
+        await Task.WhenAll(
+            cpuMaxCoreClockTask,
+            cpuTempTask,
+            cpuFanTask,
+            cpuMaxFanTask,
+            gpuInfoTask,
+            gpuTempTask,
+            gpuFanTask,
+            gpuMaxFanTask,
+            cpuVoltageTask ?? Task.CompletedTask,
+            cpuWattageTask ?? Task.CompletedTask).ConfigureAwait(false);
+
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var cpuMaxCoreClock = await cpuMaxCoreClockTask.ConfigureAwait(false);
+        var cpuCurrentTemperature = NormalizeTemperatureReading(await cpuTempTask.ConfigureAwait(false));
+        var cpuCurrentFanSpeed = await cpuFanTask.ConfigureAwait(false);
+        var cpuMaxFanSpeed = await cpuMaxFanTask.ConfigureAwait(false);
+        var cpuVoltage = cpuVoltageTask is null ? 0d : await cpuVoltageTask.ConfigureAwait(false);
+        var cpuWattage = cpuWattageTask is null ? -1 : await cpuWattageTask.ConfigureAwait(false);
+
+        var gpuInfo = await gpuInfoTask.ConfigureAwait(false);
+        var gpuUtilization = gpuInfo.Utilization;
+        var gpuCoreClock = gpuInfo.CoreClock;
+        var gpuMaxCoreClock = gpuInfo.MaxCoreClock;
+        var gpuMemoryClock = gpuInfo.MemoryClock;
+        var gpuMaxMemoryClock = gpuInfo.MaxMemoryClock;
+        var gpuWattage = gpuInfo.Wattage;
+        var gpuVoltage = gpuInfo.Voltage;
+        var gpuCurrentTemperature = gpuInfo.Temperature > 0
+            ? gpuInfo.Temperature
+            : NormalizeTemperatureReading(await gpuTempTask.ConfigureAwait(false));
+        var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : GENERIC_MAX_TEMPERATURE;
+        var gpuCurrentFanSpeed = await gpuFanTask.ConfigureAwait(false);
+        var gpuMaxFanSpeed = await gpuMaxFanTask.ConfigureAwait(false);
+
+        // Single LHM pass fills any missing CPU/GPU fields (fans are the common gap on IRX9+).
+        var needLhm = cpuUtilization < 0 || cpuCoreClock < 0 || cpuCurrentTemperature < 0 || cpuCurrentFanSpeed <= 0
+                      || gpuUtilization < 0 || gpuCoreClock < 0 || gpuCurrentTemperature < 0 || gpuCurrentFanSpeed <= 0
+                      || (detailed && (cpuVoltage <= 0 || cpuWattage < 0 || gpuVoltage <= 0 || gpuWattage < 0));
+        if (needLhm)
         {
             var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
             if (libreHardwareMonitorReadings is { } readings)
@@ -249,57 +298,11 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                     cpuCurrentTemperature = readings.CpuTemperature;
                 if (cpuCurrentFanSpeed <= 0 && readings.CpuFanSpeed > 0)
                     cpuCurrentFanSpeed = readings.CpuFanSpeed;
-            }
-        }
+                if (detailed && cpuVoltage <= 0 && readings.CpuVoltage > 0)
+                    cpuVoltage = readings.CpuVoltage;
+                if (detailed && cpuWattage < 0 && readings.CpuWattage > 0)
+                    cpuWattage = readings.CpuWattage;
 
-        if (cpuCurrentTemperature < 0)
-        {
-            var fallback = await SensorReadingHelper.GetCpuTemperatureFromAcpiAsync().ConfigureAwait(false);
-            cpuCurrentTemperature = fallback > 0 ? fallback : -1;
-        }
-
-        cancellationToken.ThrowIfCancellationRequested();
-
-        if (detailed)
-        {
-            cpuVoltage = await SafeReadAsync(WMI.Win32.Processor.GetVoltageAsync, 0d, "CPU voltage").ConfigureAwait(false);
-            cpuWattage = await SafeReadAsync(GetCpuWattageAsync, -1, "CPU wattage").ConfigureAwait(false);
-
-            if (cpuVoltage <= 0 || cpuWattage < 0)
-            {
-                var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
-                if (libreHardwareMonitorReadings is { } readings)
-                {
-                    if (cpuVoltage <= 0 && readings.CpuVoltage > 0)
-                        cpuVoltage = readings.CpuVoltage;
-                    if (cpuWattage < 0 && readings.CpuWattage > 0)
-                        cpuWattage = readings.CpuWattage;
-                }
-            }
-        }
-
-        var gpuInfo = await SafeReadAsync(GetGPUInfoAsync, GPUInfo.Empty, "GPU info").ConfigureAwait(false);
-        var gpuUtilization = gpuInfo.Utilization;
-        var gpuCoreClock = gpuInfo.CoreClock;
-        var gpuMaxCoreClock = gpuInfo.MaxCoreClock;
-        var gpuMemoryClock = gpuInfo.MemoryClock;
-        var gpuMaxMemoryClock = gpuInfo.MaxMemoryClock;
-        var gpuCurrentTemperature = gpuInfo.Temperature > 0
-            ? gpuInfo.Temperature
-            : NormalizeTemperatureReading(await SafeReadAsync(GetGpuCurrentTemperatureAsync, -1, "GPU temperature").ConfigureAwait(false));
-        var gpuMaxTemperature = gpuInfo.MaxTemperature >= 0 ? gpuInfo.MaxTemperature : GENERIC_MAX_TEMPERATURE;
-        var gpuWattage = gpuInfo.Wattage;
-        var gpuVoltage = gpuInfo.Voltage;
-        var gpuCurrentFanSpeed = await SafeReadAsync(GetGpuCurrentFanSpeedAsync, -1, "GPU fan speed").ConfigureAwait(false);
-        var gpuMaxFanSpeed = await SafeReadAsync(async () => _gpuMaxFanSpeedCache ??= await GetGpuMaxFanSpeedAsync().ConfigureAwait(false), -1, "GPU max fan speed").ConfigureAwait(false);
-
-        cancellationToken.ThrowIfCancellationRequested();
-
-        if (gpuUtilization < 0 || gpuCoreClock < 0 || gpuCurrentTemperature < 0 || gpuCurrentFanSpeed <= 0 || (detailed && (gpuVoltage <= 0 || gpuWattage < 0)))
-        {
-            var libreHardwareMonitorReadings = await GetLibreHardwareMonitorReadingsOnceAsync().ConfigureAwait(false);
-            if (libreHardwareMonitorReadings is { } readings)
-            {
                 if (gpuUtilization < 0 && readings.GpuUtilization >= 0)
                     gpuUtilization = readings.GpuUtilization;
                 if (gpuCoreClock < 0 && readings.GpuCoreClock >= 0)
@@ -316,6 +319,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                     gpuVoltage = readings.GpuVoltage;
             }
         }
+
+        if (cpuCurrentTemperature < 0)
+        {
+            var fallback = await SensorReadingHelper.GetCpuTemperatureFromAcpiAsync().ConfigureAwait(false);
+            cpuCurrentTemperature = fallback > 0 ? fallback : -1;
+        }
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (cpuMaxFanSpeed <= 0 && cpuCurrentFanSpeed > 0)
             cpuMaxFanSpeed = Math.Max(cpuCurrentFanSpeed, 5500);
@@ -338,7 +349,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             if (cpuCurrentTemperature < _cpuMinTemp) _cpuMinTemp = cpuCurrentTemperature;
             if (cpuCurrentTemperature > _cpuMaxTemp) _cpuMaxTemp = cpuCurrentTemperature;
         }
-        
+
         if (gpuVoltage > 0)
         {
             if (gpuVoltage < _gpuMinVoltage) _gpuMinVoltage = gpuVoltage;
@@ -362,7 +373,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             cpuVoltage,
             cpuCurrentFanSpeed,
             cpuMaxFanSpeed).WithMinMax(_cpuMinVoltage, _cpuMaxVoltage, _cpuMinTemp, _cpuMaxTemp);
-            
+
         var gpu = new SensorData(gpuUtilization,
             GENERIC_MAX_UTILIZATION,
             gpuCoreClock,
@@ -455,19 +466,24 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         value > 0 ? (int)Math.Round(value) : -1;
 
     /// <summary>
-    /// Capability fan IDs often report 0 on newer Legion firmware even while fans spin.
-    /// Prefer a positive capability reading, otherwise fall back to Fan_GetCurrentFanSpeed.
+    /// Multi-source fan RPM (restored historical behavior + IRX9 fixes):
+    /// prefer any positive reading from primary (usually Fan_GetCurrentFanSpeed) then fallback
+    /// (capability / alternate). Capability 0 is unreliable — only trust explicit 0 from the
+    /// fan-method path so LibreHardwareMonitor can still fill missing RPM.
     /// </summary>
     protected static async Task<int> ReadFanSpeedWithFallbackAsync(
         Func<Task<int>> primaryAsync,
         Func<Task<int>> fallbackAsync)
     {
         var primary = -1;
+        var primaryWasZero = false;
         try
         {
             primary = await primaryAsync().ConfigureAwait(false);
             if (primary > 0)
                 return primary;
+            if (primary == 0)
+                primaryWasZero = true;
         }
         catch
         {
@@ -479,12 +495,19 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             var fallback = await fallbackAsync().ConfigureAwait(false);
             if (fallback > 0)
                 return fallback;
-            // Keep a successful zero from either source (fans may be parked).
-            return primary >= 0 ? primary : fallback;
+
+            // Prefer real parked-zero from fan method; capability 0 alone is not trusted.
+            if (primaryWasZero)
+                return 0;
+
+            if (fallback == 0)
+                return 0;
+
+            return -1;
         }
         catch
         {
-            return primary;
+            return primaryWasZero ? 0 : -1;
         }
     }
 

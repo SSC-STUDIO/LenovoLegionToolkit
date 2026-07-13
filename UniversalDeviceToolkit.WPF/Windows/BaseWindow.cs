@@ -17,6 +17,7 @@ public class BaseWindow : FluentWindow
     protected BaseWindow()
     {
         SnapsToDevicePixels = true;
+        UseLayoutRounding = true;
         ExtendsContentIntoTitleBar = true;
 
         // Set initial backdrop type based on settings
@@ -64,6 +65,13 @@ public class BaseWindow : FluentWindow
 
         var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
         RenderingCompatibilityHelper.ApplyWindowRenderingCompatibility(this, hwndSource, settings);
+
+        // Maximize to monitor work area (not full screen) so MyDockFinder Dock/Finder
+        // and the taskbar are not covered and we are not treated as exclusive fullscreen.
+        WindowMaximizeWorkAreaHelper.Attach(this);
+
+        // Stabilize live resize (esp. top/left edges where Top+Height change together).
+        WindowResizeStabilityHelper.Attach(this);
     }
 
     private void BaseWindow_Loaded(object sender, RoutedEventArgs e)

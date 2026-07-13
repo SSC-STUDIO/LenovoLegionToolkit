@@ -33,6 +33,23 @@ public sealed class ComboBoxExtensionsTests
         });
     }
 
+    [Fact]
+    public void SetItems_WhenSelectedValueMissingFromItems_ShouldSelectFirstItemInsteadOfBlank()
+    {
+        RunOnStaThread(() =>
+        {
+            var comboBox = new ComboBox();
+            var items = new[] { "Quiet", "Balance", "Performance" };
+
+            // Selected value is not in the list (mirrors Extreme/unlisted power modes).
+            comboBox.SetItems(items, "GodMode", item => item);
+
+            comboBox.SelectedItem.Should().NotBeNull("empty selection paints a blank dropdown");
+            comboBox.TryGetSelectedItem<string>(out var selected).Should().BeTrue();
+            selected.Should().Be("Quiet");
+        });
+    }
+
     private static void RunOnStaThread(Action action)
     {
         Exception? exception = null;

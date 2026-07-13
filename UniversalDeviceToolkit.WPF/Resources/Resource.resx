@@ -370,6 +370,9 @@ WARNING: This action will not run correctly, if internal display is off or Hybri
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
     <value>Lenovo Support</value>
   </data>
+  <data name="DeviceInformationWindow_WarrantyLinkUnavailable" xml:space="preserve">
+    <value>Could not open the Lenovo support page. Check your network or try again later.</value>
+  </data>
   <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
     <value>Machine Type</value>
   </data>
@@ -383,7 +386,7 @@ WARNING: This action will not run correctly, if internal display is off or Hybri
     <value>Serial number</value>
   </data>
   <data name="DeviceInformationWindow_Title" xml:space="preserve">
-    <value>About your device</value>
+    <value>Device information</value>
   </data>
   <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
     <value>End date</value>
@@ -1753,31 +1756,58 @@ Requires restart.</value>
 {0}</value>
   </data>
   <data name="CrashReportNotification_DeleteReport" xml:space="preserve">
-    <value>Delete Report</value>
+    <value>Delete report</value>
   </data>
   <data name="CrashReportNotification_Description" xml:space="preserve">
-    <value>A crash report has been saved to disk. You can review the report details below. Reports are not sent automatically.</value>
+    <value>A crash report was saved locally. Review the details below — nothing is uploaded automatically.</value>
   </data>
   <data name="CrashReportNotification_Message" xml:space="preserve">
-    <value>The application crashed during the previous session</value>
+    <value>The app crashed in the previous session</value>
   </data>
   <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
     <value>Failed to open crash report: {0}</value>
   </data>
   <data name="CrashReportNotification_OpenReport" xml:space="preserve">
-    <value>Open Report</value>
+    <value>Open report</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Close</value>
   </data>
   <data name="CrashReportNotification_ReportPath" xml:space="preserve">
-    <value>Crash report saved to: {0}</value>
+    <value>Saved to: {0}</value>
   </data>
   <data name="CrashReportNotification_Title" xml:space="preserve">
-    <value>Crash Report Detected</value>
+    <value>Crash report detected</value>
   </data>
   <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
     <value>Unable to load crash report details.</value>
+  </data>
+  <data name="CrashReportNotification_DetailsHeading" xml:space="preserve">
+    <value>Report details</value>
+  </data>
+  <data name="CrashReportNotification_Field_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="CrashReportNotification_Field_Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="CrashReportNotification_Field_Uptime" xml:space="preserve">
+    <value>Uptime</value>
+  </data>
+  <data name="CrashReportNotification_Field_Exception" xml:space="preserve">
+    <value>Exception</value>
+  </data>
+  <data name="CrashReportNotification_Field_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="CrashReportNotification_Field_Inner" xml:space="preserve">
+    <value>Inner</value>
+  </data>
+  <data name="CrashReportNotification_Field_InnerMessage" xml:space="preserve">
+    <value>Inner message</value>
+  </data>
+  <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
+    <value>Stack trace</value>
   </data>
   <data name="Unnamed" xml:space="preserve">
     <value>Unnamed</value>
@@ -3639,14 +3669,128 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="NetworkAccelerationPage_ControlHeading" xml:space="preserve">
+    <value>Control</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlSubtitle" xml:space="preserve">
+    <value>Optional local acceleration. Off by default — never auto-starts on launch.</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
+    <value>Unlock mode selection and manual Start. Does not change system proxy until you start.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHint" xml:space="preserve">
+    <value>Quick local checks only when you request them.</value>
+  </data>
   <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
     <value>Off (default)</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Idle" xml:space="preserve">
+    <value>Not started</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Starting" xml:space="preserve">
+    <value>Starting…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Stopping" xml:space="preserve">
+    <value>Stopping…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Restoring" xml:space="preserve">
+    <value>Restoring…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Failed" xml:space="preserve">
+    <value>Start failed</value>
   </data>
   <data name="NetworkAccelerationPage_Start" xml:space="preserve">
     <value>Start</value>
   </data>
   <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
     <value>Stop</value>
+  </data>
+  <data name="NetworkAccelerationPage_Retry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="NetworkAccelerationPage_TargetsHeading" xml:space="preserve">
+    <value>Acceleration targets</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainEnabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainDisabled" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainCountFormat" xml:space="preserve">
+    <value>{0} domains</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Latency" xml:space="preserve">
+    <value>Latency</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Connections" xml:space="preserve">
+    <value>Connections</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Rules" xml:space="preserve">
+    <value>Active rules</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Unavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Ms" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Rate" xml:space="preserve">
+    <value>KB/s</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunningDiagnostics" xml:space="preserve">
+    <value>Running diagnostics…</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsCancelled" xml:space="preserve">
+    <value>Diagnostics cancelled.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DangerZoneHeading" xml:space="preserve">
+    <value>Danger zone</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
+    <value>Restores system proxy and UDT-marked Hosts changes from the last snapshot. Does not re-enable acceleration.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
+    <value>Proxy worker</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
+    <value>Not found</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
+    <value>Acceleration</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
+    <value>Loopback proxy port</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
+    <value>Gateway</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Doh" xml:space="preserve">
+    <value>DoH</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
+    <value>Diagnostics</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
+    <value>Not reachable</value>
   </data>
   <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
     <value>Diagnostics</value>
@@ -3688,7 +3832,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Domain groups</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} enabled, {3} domains (Steam/GitHub built-in, off by default — edit advanced config if needed).</value>
+    <value>{0}/{1} groups enabled · {2} domains (Steam/GitHub built-in, off by default).</value>
   </data>
   <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
     <value>Choose how acceleration is applied. Off is controlled by the master switch above.</value>
@@ -3707,6 +3851,18 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
     <value>Diagnostics only (no system changes)</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
+    <value>System proxy</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
+    <value>Diagnostics only</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricsHeading" xml:space="preserve">
+    <value>Overview</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Running ({0}) loopback:{1}</value>

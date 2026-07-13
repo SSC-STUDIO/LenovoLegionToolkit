@@ -119,14 +119,18 @@ public static class SnackbarHelper
             SnackbarType.Info => new SymbolIcon { Symbol = SymbolRegular.Info24 },
             _ => new SymbolIcon { Symbol = SymbolRegular.Checkmark24 }
         };
+        // All snackbars auto-dismiss. Success is short and has no close button so
+        // download/apply confirmations do not linger; errors stay longer for reading.
         snackBar.Timeout = TimeSpan.FromMilliseconds(type switch
         {
-            SnackbarType.Success => 2000,
+            SnackbarType.Success => 2800,
+            SnackbarType.Info => Math.Clamp(GetTextLengthInMilliseconds(title, message), 3000, 6000),
             _ => Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000)
         });
         snackBar.IsCloseButtonEnabled = type switch
         {
             SnackbarType.Success => false,
+            SnackbarType.Info => false,
             _ => true
         };
         System.Windows.Automation.AutomationProperties.SetName(

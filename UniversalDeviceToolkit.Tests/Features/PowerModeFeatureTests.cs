@@ -327,6 +327,70 @@ public class PowerModeFeatureTests : UnitTestBase
     }
 
     [Fact]
+    public async Task GetStateAsync_WhenRuntimeReturnsExtreme_ShouldMapToPerformanceForUi()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            SetMachineInformation(new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DF",
+                Model = "Legion Y9000P IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.Extreme],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            var feature = new TestPowerModeFeature(() => Task.FromResult(PowerModeState.Extreme));
+
+            var state = await feature.GetStateAsync();
+
+            // Extreme is not listed in GetAllStatesAsync; UI must still get a selectable value.
+            state.Should().Be(PowerModeState.Performance);
+            (await feature.GetAllStatesAsync()).Should().Contain(state);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
+    public async Task GetStateAsync_WhenRuntimeReturnsUndefinedValue_ShouldFallBackToListedMode()
+    {
+        ResetCompatibilityCache();
+
+        try
+        {
+            SetMachineInformation(new MachineInformation
+            {
+                Vendor = "LENOVO",
+                MachineType = "83DF",
+                Model = "Legion Y9000P IRX9",
+                SerialNumber = "TEST",
+                SupportedPowerModes = [],
+                Features = MachineInformation.FeatureData.Unknown,
+                Properties = new MachineInformation.PropertyData()
+            });
+
+            // Cast an undefined enum ordinal (not Quiet/Balance/Performance/Extreme/GodMode).
+            var feature = new TestPowerModeFeature(() => Task.FromResult((PowerModeState)7));
+
+            var state = await feature.GetStateAsync();
+
+            state.Should().Be(PowerModeState.Balance);
+            (await feature.GetAllStatesAsync()).Should().Contain(state);
+        }
+        finally
+        {
+            ResetCompatibilityCache();
+        }
+    }
+
+    [Fact]
     public async Task GetStateAsync_WhenRuntimeReadFails_ShouldFallBackToBalance()
     {
         ResetCompatibilityCache();

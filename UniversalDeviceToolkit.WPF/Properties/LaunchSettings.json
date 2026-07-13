@@ -1,18 +1,18 @@
 {
   "profiles": {
-    "LenovoLegionToolkit.WPF": {
+    "UniversalDeviceToolkit.WPF": {
       "commandName": "Project",
       "commandLineArgs": ""
     },
-    "LenovoLegionToolkit.WPF (Trace)": {
+    "UniversalDeviceToolkit.WPF (Trace)": {
       "commandName": "Project",
       "commandLineArgs": "--trace"
     },
-    "LenovoLegionToolkit.WPF (Minimized)": {
+    "UniversalDeviceToolkit.WPF (Minimized)": {
       "commandName": "Project",
       "commandLineArgs": "--minimized"
     },
-    "LenovoLegionToolkit.WPF (Trace, Minimized)": {
+    "UniversalDeviceToolkit.WPF (Trace, Minimized)": {
       "commandName": "Project",
       "commandLineArgs": "--trace --minimized"
     }

@@ -1,9 +1,7 @@
 using System;
-using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Features;
@@ -43,15 +41,10 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Getting state... [feature={GetType().Name}]");
 
-        int value;
-        try
-        {
-            value = await WMI.LenovoOtherMethod.GetFeatureValueAsync(capabilityID).ConfigureAwait(false);
-        }
-        catch (ManagementException ex)
-        {
-            throw ExceptionHelper.WmiFeatureUnavailable(capabilityID, ex);
-        }
+        // GetFeatureValueAsync never throws (returns -1 when unavailable).
+        var value = await WMI.LenovoOtherMethod.GetFeatureValueAsync(capabilityID).ConfigureAwait(false);
+        if (value < 0)
+            throw ExceptionHelper.WmiFeatureUnavailable(capabilityID, new InvalidOperationException("GetFeatureValue unavailable"));
 
         cancellationToken.ThrowIfCancellationRequested();
 

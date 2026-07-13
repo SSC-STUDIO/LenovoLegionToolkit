@@ -16,7 +16,9 @@ public static class AnimationHelper
         UpdateDuration("AnimationDurationFast", 0.1, animationsEnabled, animationSpeed);
         UpdateDuration("AnimationDurationMedium", 0.2, animationsEnabled, animationSpeed);
         UpdateDuration("AnimationDurationSlow", 0.3, animationsEnabled, animationSpeed);
-        UpdateDuration("AnimationDurationShimmer", 1.4, animationsEnabled, animationSpeed);
+        // Skeleton 流光: long base so default AnimationSpeed (2.0) still feels calm (~3s),
+        // not a rapid flash (was 1.4 → ~0.7s).
+        UpdateDuration("AnimationDurationShimmer", 6.0, animationsEnabled, animationSpeed);
     }
 
     private static void UpdateDuration(string key, double baseSeconds, bool enabled, double speed)

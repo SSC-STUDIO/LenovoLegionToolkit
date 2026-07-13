@@ -1,4 +1,16 @@
 <Project>
+  <!--
+    Re-assert x64 after the project file is evaluated (TargetFramework is available here).
+    Fixes MSB3270 when VS builds with Platform=AnyCPU but references win-x64 (AMD64) assemblies.
+  -->
+  <PropertyGroup Condition="'$(DisableUdtForceX64)' != 'true' and '$(TargetFramework)' != '' and $([System.String]::Copy('$(TargetFramework)').Contains('windows'))">
+    <Platforms>x64</Platforms>
+    <Platform Condition="'$(Platform)' == '' or '$(Platform)' == 'AnyCPU' or '$(Platform)' == 'Any CPU'">x64</Platform>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(IsUdtShippingApp)' == 'true' and '$(Configuration)' == 'Release'">
     <!-- Prefer size over local symbols; CI/Make already pass DebugType=None on publish. -->
     <DebugType>none</DebugType>

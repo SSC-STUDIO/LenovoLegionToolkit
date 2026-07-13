@@ -227,6 +227,73 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void SensorsControlMarkup_DetailValues_ShouldClipAndWrapToProtectUnits()
+    {
+        var xaml = ReadSensorsControlXaml();
+
+        // Detail columns clip overflow so long PCIe/power text cannot paint over temperatures.
+        xaml.Should().Contain("x:Key=\"StatDetailValueStyle\"");
+        xaml.Should().Contain("x:Key=\"SensorDetailColumnStyle\"");
+        xaml.Should().Contain("Property=\"ClipToBounds\" Value=\"True\"");
+        xaml.Should().Contain("Property=\"TextWrapping\" Value=\"Wrap\"");
+        xaml.Should().Contain("Property=\"TextTrimming\" Value=\"CharacterEllipsis\"");
+
+        // Summary value column keeps room for unit suffixes (GHz / RPM / °C).
+        xaml.Should().Contain("MinWidth=\"72\"");
+        xaml.Should().Contain("x:Name=\"_gpuHotSpotTemperature\"");
+        xaml.Should().Contain("Style=\"{StaticResource StatDetailValueStyle}\"");
+    }
+
+    [Fact]
+    public void SensorsControlMarkup_TrendLegend_ShouldWrapDotAndLabelAsAtomicItems()
+    {
+        var xaml = ReadSensorsControlXaml();
+
+        // Each series is one StackPanel (dot + label) so WrapPanel never splits Chinese mid-label.
+        xaml.Should().Contain("x:Key=\"LegendItemStyle\"");
+        xaml.Should().Contain("x:Key=\"LegendPanelStyle\"");
+        xaml.Should().Contain("Property=\"TextWrapping\" Value=\"NoWrap\"");
+
+        var cpuLegend = ExtractXamlRange(xaml, "x:Name=\"_cpuLegend\"", "x:Name=\"_cpuDetailsPanel\"");
+        cpuLegend.Should().Contain("Style=\"{StaticResource LegendItemStyle}\"");
+        cpuLegend.Should().Contain("Resource.SensorsControl_Utilization_Title");
+        cpuLegend.Should().Contain("Resource.SensorsControl_CoreClock_Title");
+        cpuLegend.Should().Contain("Resource.SensorsControl_Temperature_Title");
+        // Dot/text are not loose siblings of WrapPanel (would reintroduce mid-label wrap).
+        System.Text.RegularExpressions.Regex.Matches(cpuLegend, @"<StackPanel Style=""\{StaticResource LegendItemStyle\}"">").Count
+            .Should().Be(3);
+    }
+
+    [Fact]
+    public void SensorsControlMarkup_Skeleton_ShouldMirrorLiveSummaryGeometry()
+    {
+        var xaml = ReadSensorsControlXaml();
+        var code = ReadSensorsControlCode();
+
+        // Overlay is a card-shaped Border so silhouette matches the live sensors card.
+        xaml.Should().Contain("x:Name=\"_skeletonOverlay\"");
+        xaml.Should().Contain("CornerRadius=\"{StaticResource CornerRadiusCard}\"");
+
+        // Gauge default matches live RadialGauge (GaugeSizeMD); code resizes for compact.
+        xaml.Should().Contain("x:Key=\"SkeletonGaugeStyle\"");
+        xaml.Should().Contain("Value=\"{StaticResource GaugeSizeMD}\"");
+
+        // Bars share live MetricProgressBarStyle geometry (height 6, margin 8,0).
+        xaml.Should().Contain("x:Key=\"SkeletonBarBlockStyle\"");
+        xaml.Should().Contain("<Setter Property=\"Height\" Value=\"6\" />");
+        xaml.Should().Contain("<Setter Property=\"Margin\" Value=\"8,0\" />");
+
+        // Named bars so wide-mode MaxWidth can track live progress bars.
+        xaml.Should().Contain("x:Name=\"_skeletonCpuBar0\"");
+        xaml.Should().Contain("x:Name=\"_skeletonBatteryBar0\"");
+        xaml.Should().Contain("x:Name=\"_skeletonGpuBar0\"");
+
+        // Resize path keeps skeleton in sync with live layout modes.
+        code.Should().Contain("ApplyProgressBarMaxWidth(_skeletonCpuBar0, isWide)");
+        code.Should().Contain("ApplySensorSummaryLayout(width, force: true)");
+    }
+
+    [Fact]
     public void SensorsControlMarkup_ShouldKeepSummaryGaugeCaptionsAndAvoidDuplicateProgressRows()
     {
         var xaml = ReadSensorsControlXaml();
@@ -352,7 +419,8 @@ public class SensorsControlTests
     {
         var text = SensorsControl.FormatThroughputPair(1024f * 1024f, 2 * 1024f * 1024f);
 
-        text.Should().Be("Rx 1.00 MB/s / Tx 2.00 MB/s");
+        // Newline keeps long PCIe strings inside their detail column (avoids unit-swallow overlay).
+        text.Should().Be("Rx 1.00 MB/s\nTx 2.00 MB/s");
     }
 
     [Fact]

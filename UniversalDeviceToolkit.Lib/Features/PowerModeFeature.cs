@@ -54,6 +54,10 @@ public class PowerModeFeature(
         try
         {
             var state = await ReadStateCoreAsync(cancellationToken).ConfigureAwait(false);
+            // Map Extreme / undefined / unlisted WMI values onto something the dashboard
+            // combo can actually select — otherwise SelectedItem stays null and the UI
+            // shows an empty power-mode dropdown.
+            state = await NormalizeStateForUiAsync(state, cancellationToken).ConfigureAwait(false);
             _lastKnownState = state;
             return state;
         }
@@ -187,14 +191,50 @@ public class PowerModeFeature(
         return PowerModeState.Performance;
     }
 
+    /// <summary>
+    /// Ensures the value returned to the UI exists in <see cref="GetAllStatesAsync"/>.
+    /// Extreme is treated as Performance (same as write-path migration); unknown or
+    /// machine-unsupported values fall back so the combo never ends up with a blank selection.
+    /// </summary>
+    internal async Task<PowerModeState> NormalizeStateForUiAsync(PowerModeState state, CancellationToken cancellationToken = default)
+    {
+        if (state == PowerModeState.Extreme)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Mapping {PowerModeState.Extreme} → {PowerModeState.Performance} for UI [feature={nameof(PowerModeFeature)}]");
+            state = PowerModeState.Performance;
+        }
+
+        if (!Enum.IsDefined(typeof(PowerModeState), state))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Undefined power mode value {(int)state}; using fallback [feature={nameof(PowerModeFeature)}]");
+            return await PickListedFallbackAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        var allStates = await GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
+        if (allStates.Contains(state))
+            return state;
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Power mode {state} is not in supported list; using fallback [feature={nameof(PowerModeFeature)}]");
+
+        return await PickListedFallbackAsync(cancellationToken, allStates).ConfigureAwait(false);
+    }
+
     private async Task<PowerModeState> GetFallbackStateAsync(CancellationToken cancellationToken)
     {
         if (_lastKnownState.HasValue)
             return _lastKnownState.Value;
 
+        return await PickListedFallbackAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    private async Task<PowerModeState> PickListedFallbackAsync(CancellationToken cancellationToken, PowerModeState[]? allStates = null)
+    {
         try
         {
-            var allStates = await GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
+            allStates ??= await GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
 
             if (allStates.Contains(PowerModeState.Balance))
                 return PowerModeState.Balance;

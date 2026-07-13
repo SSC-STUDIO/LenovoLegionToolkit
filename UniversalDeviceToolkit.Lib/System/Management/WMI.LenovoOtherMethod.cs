@@ -62,11 +62,26 @@ public static partial class WMI
                 return new HardwareId($"{vendorId:X}", $"{deviceId:X}");
             });
 
-        public static Task<int> GetFeatureValueAsync(CapabilityID id) => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_OTHER_METHOD",
-            "GetFeatureValue",
-            new() { { "IDs", (int)id } },
-            pdc => Convert.ToInt32(pdc["Value"].Value));
+        /// <summary>
+        /// Never throws. Returns -1 when unavailable so sensor polling does not spam the debugger.
+        /// </summary>
+        public static Task<int> GetFeatureValueAsync(CapabilityID id) => TryGetFeatureValueAsync(id);
+
+        /// <summary>
+        /// Probe-friendly feature read. Never throws; returns -1 when unavailable.
+        /// Preferred for fan RPM capability IDs that many firmwares leave at 0 / unsupported.
+        /// </summary>
+        public static async Task<int> TryGetFeatureValueAsync(CapabilityID id)
+        {
+            var (ok, value) = await TryCallAsync(
+                "root\\WMI",
+                $"SELECT * FROM LENOVO_OTHER_METHOD",
+                "GetFeatureValue",
+                new() { { "IDs", (int)id } },
+                pdc => Convert.ToInt32(pdc["Value"].Value),
+                fallback: -1).ConfigureAwait(false);
+            return ok ? value : -1;
+        }
 
         public static Task SetFeatureValueAsync(CapabilityID id, int value) => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_OTHER_METHOD",
@@ -77,12 +92,17 @@ public static partial class WMI
                 { "value", value }
             });
 
-        public static Task<int> GetFeatureValueAsync(uint idRaw) => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_OTHER_METHOD",
-            "GetFeatureValue",
-            new() { { "IDs", idRaw } },
-            pdc => Convert.ToInt32(pdc["Value"].Value));
-
+        public static async Task<int> GetFeatureValueAsync(uint idRaw)
+        {
+            var (ok, value) = await TryCallAsync(
+                "root\\WMI",
+                $"SELECT * FROM LENOVO_OTHER_METHOD",
+                "GetFeatureValue",
+                new() { { "IDs", unchecked((int)idRaw) } },
+                pdc => Convert.ToInt32(pdc["Value"].Value),
+                fallback: -1).ConfigureAwait(false);
+            return ok ? value : -1;
+        }
         public static Task SetFeatureValueAsync(uint idRaw, int value) => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_OTHER_METHOD",
             "SetFeatureValue",

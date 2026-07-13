@@ -449,6 +449,10 @@ public partial class MainWindow
                 SetEfficiencyMode(false);
                 BringToForeground();
                 break;
+            case WindowState.Maximized:
+                // Work-area maximize (MyDockFinder / taskbar friendly) — stay interactive.
+                SetEfficiencyMode(false);
+                break;
         }
     }
 

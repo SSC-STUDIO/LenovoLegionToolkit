@@ -89,14 +89,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         {
             if (_currentMode == value) return;
             _currentMode = value;
-            OnPropertyChanged(nameof(CurrentMode));
-            OnPropertyChanged(nameof(VisibleSelectedActions));
-            OnPropertyChanged(nameof(HasSelectedActions));
-            OnPropertyChanged(nameof(SelectedActionsSummary));
-            OnPropertyChanged(nameof(ActiveCategories));
-            OnPropertyChanged(nameof(IsCleanupMode));
-            OnPropertyChanged(nameof(IsDriverDownloadMode));
-            OnPropertyChanged(nameof(IsNetworkAccelerationMode));
+            NotifyModePropertiesChanged();
 
             // Save the last selected mode
             _applicationSettings.Store.LastWindowsOptimizationPageMode = (int)_currentMode;
@@ -107,6 +100,51 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
     public bool IsCleanupMode => CurrentMode == PageMode.Cleanup;
     public bool IsDriverDownloadMode => CurrentMode == PageMode.DriverDownload;
     public bool IsNetworkAccelerationMode => CurrentMode == PageMode.NetworkAcceleration;
+    public bool IsOptimizationMode => CurrentMode == PageMode.Optimization;
+
+    /// <summary>
+    /// Page header title for the active tab (avoids showing system-optimization copy on other tabs).
+    /// </summary>
+    public string PageHeaderTitle => CurrentMode switch
+    {
+        PageMode.NetworkAcceleration => Resource.NetworkAccelerationPage_Title,
+        PageMode.Cleanup => Resource.WindowsOptimizationPage_Tab_Cleanup,
+        PageMode.DriverDownload => Resource.WindowsOptimizationPage_Tab_DriverDownload,
+        _ => Resource.SettingsPage_WindowsOptimization_Title
+    };
+
+    /// <summary>
+    /// Page header subtitle for the active tab.
+    /// </summary>
+    public string PageHeaderDescription => CurrentMode switch
+    {
+        PageMode.NetworkAcceleration => Resource.NetworkAccelerationPage_Subtitle,
+        PageMode.Cleanup => Resource.WindowsOptimizationPage_CleanupInfo,
+        PageMode.DriverDownload => T("WindowsOptimizationPage_DriverEmpty_NotScanned_Message",
+            "Choose a source and scan to list compatible driver downloads."),
+        _ => Resource.WindowsOptimizationPage_Info
+    };
+
+    /// <summary>
+    /// Re-raises mode-related property changes without changing <see cref="CurrentMode"/>.
+    /// Used when the NA tab is re-selected after a silent mode restore.
+    /// </summary>
+    public void RefreshModePresentation() => NotifyModePropertiesChanged();
+
+    private void NotifyModePropertiesChanged()
+    {
+        OnPropertyChanged(nameof(CurrentMode));
+        OnPropertyChanged(nameof(VisibleSelectedActions));
+        OnPropertyChanged(nameof(HasSelectedActions));
+        OnPropertyChanged(nameof(SelectedActionsSummary));
+        OnPropertyChanged(nameof(ActiveCategories));
+        OnPropertyChanged(nameof(IsCleanupMode));
+        OnPropertyChanged(nameof(IsDriverDownloadMode));
+        OnPropertyChanged(nameof(IsNetworkAccelerationMode));
+        OnPropertyChanged(nameof(IsOptimizationMode));
+        OnPropertyChanged(nameof(PageHeaderTitle));
+        OnPropertyChanged(nameof(PageHeaderDescription));
+    }
 
     public string ScanCleanupButtonText => T("WindowsOptimizationPage_Scan_Button", "Scan");
     public string PauseAllButtonText => T("WindowsOptimizationPage_PauseAll_Button", "Pause All");
@@ -391,10 +429,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
                 OptimizationCategories.Add(categoryVm);
         }
 
-        OnPropertyChanged(nameof(CurrentMode));
-        OnPropertyChanged(nameof(IsCleanupMode));
-        OnPropertyChanged(nameof(IsDriverDownloadMode));
-        OnPropertyChanged(nameof(ActiveCategories));
+        // Must include IsNetworkAccelerationMode — otherwise restoring NA tab keeps optimization list visible.
+        NotifyModePropertiesChanged();
         UpdateSelectedActions();
 
         StartOptimizationStateScan();
@@ -787,6 +823,19 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
                         actionVm.Title,
                         T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
                     SnackbarType.Error);
+            }
+            else
+            {
+                // Auto-closing success toast for apply / revert.
+                await ShowOptimizationSnackbarAsync(
+                    desiredApplied
+                        ? string.Format(
+                            T("WindowsOptimizationPage_Optimization_Applied_Format", "{0} applied successfully."),
+                            actionVm.Title)
+                        : string.Format(
+                            T("WindowsOptimizationPage_Optimization_Reverted_Format", "{0} reverted successfully."),
+                            actionVm.Title),
+                    SnackbarType.Success);
             }
 
             await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);

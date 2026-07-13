@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Collections.ObjectModel;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
@@ -52,6 +53,15 @@ private string _currentSearchText = string.Empty;
     private readonly Dictionary<string, string> _recentInstalledVersions = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _pluginIdsReloadedForUi = new(StringComparer.OrdinalIgnoreCase);
     private bool _isPluginInstallCoordinatorSubscribed;
+
+    /// <summary>
+    /// First open used to hide the skeleton as soon as local plugins existed, so the
+    /// shimmer never had time to paint. Hold at least this long so the animation is visible.
+    /// </summary>
+    // Keep short so first paint shows shimmer without padding cold navigation by half a second.
+    private static readonly TimeSpan MinSkeletonVisible = TimeSpan.FromMilliseconds(180);
+    private DateTime _skeletonShownAtUtc = DateTime.MinValue;
+    private int _loadingStateVersion;
     private readonly DebounceDispatcher _searchDebouncer = new();
 
     public PluginExtensionsPage()
@@ -70,6 +80,9 @@ private string _currentSearchText = string.Empty;
         {
             _pluginsListBox.ItemsSource = _pluginViewModels;
         }
+
+        // First paint must show skeleton, not a blank white list region.
+        SetLoadingState(true);
 
         // Set page title and text (using dynamic resources to avoid auto-generated resource issues)
         Title = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Title", "Plugin Extensions", Resource.Culture);
@@ -141,7 +154,8 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            await FetchOnlinePluginsAsync(forceRefresh: true);
+            // Manual refresh: keep current list visible (no full-page skeleton flash).
+            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton: false);
         }
         catch (Exception ex)
         {
@@ -161,20 +175,123 @@ private string _currentSearchText = string.Empty;
 
     private void SetLoadingState(bool isLoading)
     {
-        if (_loadingIndicator != null)
-            _loadingIndicator.Visibility = isLoading ? Visibility.Visible : Visibility.Collapsed;
+        // Crossfade skeleton ↔ list in the same grid cell (overlay), not a hard cut.
+        if (isLoading)
+        {
+            _loadingStateVersion++;
+            if (_skeletonShownAtUtc == DateTime.MinValue
+                || _loadingIndicator?.Visibility != Visibility.Visible
+                || (_loadingIndicator?.Opacity ?? 0) < 0.5)
+            {
+                _skeletonShownAtUtc = DateTime.UtcNow;
+            }
 
-        if (_pluginListPanel != null)
-            _pluginListPanel.Visibility = isLoading ? Visibility.Hidden : Visibility.Visible;
+            if (_noPluginsMessage != null)
+                _noPluginsMessage.Visibility = Visibility.Collapsed;
+            if (_noResultsStackPanel != null)
+                _noResultsStackPanel.Visibility = Visibility.Collapsed;
 
-        if (!isLoading)
+            CrossfadePanels(show: _loadingIndicator, hide: _pluginListPanel);
+        }
+        else
+        {
+            // Honor minimum skeleton visibility so first-open shimmer is actually seen.
+            var version = ++_loadingStateVersion;
+            var elapsed = _skeletonShownAtUtc == DateTime.MinValue
+                ? MinSkeletonVisible
+                : DateTime.UtcNow - _skeletonShownAtUtc;
+            var remaining = MinSkeletonVisible - elapsed;
+            if (remaining > TimeSpan.Zero && IsLoaded)
+            {
+                _ = HideLoadingStateAfterAsync(remaining, version);
+                return;
+            }
+
+            ApplyLoadingStateHidden();
+        }
+    }
+
+    private async Task HideLoadingStateAfterAsync(TimeSpan delay, int version)
+    {
+        try
+        {
+            await Task.Delay(delay).ConfigureAwait(true);
+        }
+        catch
+        {
+            return;
+        }
+
+        if (version != _loadingStateVersion || !IsLoaded)
             return;
 
-        if (_noPluginsMessage != null)
-            _noPluginsMessage.Visibility = Visibility.Collapsed;
+        ApplyLoadingStateHidden();
+    }
 
-        if (_noResultsStackPanel != null)
-            _noResultsStackPanel.Visibility = Visibility.Collapsed;
+    private void ApplyLoadingStateHidden()
+    {
+        _skeletonShownAtUtc = DateTime.MinValue;
+        CrossfadePanels(show: _pluginListPanel, hide: _loadingIndicator);
+    }
+
+    /// <summary>
+    /// Soft handoff between skeleton overlay and real content. Both share Grid.Row so z-order
+    /// stacks; we fade rather than Collapsed-swap to avoid a visual pop.
+    /// </summary>
+    private void CrossfadePanels(UIElement? show, UIElement? hide)
+    {
+        var duration = TryFindResource("AnimationDurationSkeletonCrossfade") as Duration?
+                       ?? new Duration(TimeSpan.FromMilliseconds(280));
+
+        if (hide is FrameworkElement hideFe && hideFe.Visibility == Visibility.Visible)
+        {
+            hideFe.IsHitTestVisible = false;
+            hideFe.BeginAnimation(UIElement.OpacityProperty, null);
+            var fadeOut = new DoubleAnimation
+            {
+                To = 0,
+                Duration = duration,
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+            };
+            fadeOut.Completed += (_, _) =>
+            {
+                // Only collapse if still faded out (another SetLoadingState may have shown it).
+                if (hideFe.Opacity > 0.05)
+                    return;
+                hideFe.Visibility = Visibility.Collapsed;
+                hideFe.BeginAnimation(UIElement.OpacityProperty, null);
+                hideFe.Opacity = 1;
+            };
+            hideFe.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+        }
+        else if (hide is not null)
+        {
+            hide.Visibility = Visibility.Collapsed;
+        }
+
+        if (show is FrameworkElement showFe)
+        {
+            showFe.BeginAnimation(UIElement.OpacityProperty, null);
+            // Already fully visible: do not reset Opacity to 0 (that made skeleton "never show").
+            var alreadyShowing = showFe.Visibility == Visibility.Visible && showFe.Opacity >= 0.95;
+            showFe.Visibility = Visibility.Visible;
+            showFe.IsHitTestVisible = true;
+            if (alreadyShowing)
+            {
+                showFe.Opacity = 1;
+                return;
+            }
+
+            showFe.Opacity = 0;
+            var fadeIn = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                Duration = duration,
+                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+            };
+            showFe.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+        }
     }
 
     private int GetInstallableOnlinePluginCount() =>
@@ -256,7 +373,7 @@ private string _currentSearchText = string.Empty;
         return LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
     }
 
-    private async Task FetchOnlinePluginsAsync(bool forceRefresh = false)
+    private async Task FetchOnlinePluginsAsync(bool forceRefresh = false, bool showFullSkeleton = true)
     {
         if (_isLoadingOnlinePlugins)
             return;
@@ -267,23 +384,19 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            SetLoadingState(true);
+            // Only cover the list with skeleton when there is nothing useful to show yet.
+            // Hiding installed plugins for a multi-second store fetch feels like "navigation lag".
+            if (showFullSkeleton)
+                SetLoadingState(true);
 
-            // Fetch online plugins
             _availableUpdates.Clear();
-            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh);
+            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh).ConfigureAwait(true);
 
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Fetched {_onlinePlugins.Count} online plugins");
-                foreach (var plugin in _onlinePlugins)
-                {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - Online: {plugin.Id} v{plugin.Version} (DownloadUrl: {plugin.DownloadUrl})");
-                }
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                    $"PluginExtensionsPage: Fetched {_onlinePlugins.Count} online plugins");
             }
-
-            // Refresh the marketplace UI even if the optional update check later fails.
-            UpdateAllPluginsUI();
 
             try
             {
@@ -294,23 +407,17 @@ private string _currentSearchText = string.Empty;
 
                 if (updates.Count > 0 && LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Found {updates.Count} plugin updates");
-                    foreach (var update in updates)
-                    {
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - Update available: {update.Id} v{update.Version}");
-                    }
+                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                        $"PluginExtensionsPage: Found {updates.Count} plugin updates");
                 }
             }
             catch (Exception ex)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: update check failed after online plugins were loaded: {ex.Message}", ex);
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                    $"PluginExtensionsPage: update check failed after online plugins were loaded: {ex.Message}",
+                    ex);
                 _availableUpdates.Clear();
             }
-
-            // Refresh once more after update metadata settles so each card gets
-            // the latest update badge, version, and changelog state.
-            UpdateAllPluginsUI();
-            UpdateBulkActionButtonsVisibility();
         }
         catch (Exception ex)
         {
@@ -332,6 +439,7 @@ private string _currentSearchText = string.Empty;
             _isLoadingOnlinePlugins = false;
             SetLoadingState(false);
 
+            // Single UI rebuild after loading ends (avoids triple list rebuild jank).
             UpdateAllPluginsUI();
             UpdateBulkActionButtonsVisibility();
         }
@@ -603,12 +711,34 @@ private string _currentSearchText = string.Empty;
         }
 
         _hasStartedInitialFetch = true;
-        SetLoadingState(true);
 
         try
         {
-            await Task.Delay(100); // Small delay to let UI render first
-            await FetchOnlinePluginsAsync();
+            // Always start (or keep) skeleton so first navigation shows 流光, even when
+            // local plugins exist and would otherwise skip loading chrome entirely.
+            SetLoadingState(true);
+
+            // Let first layout + shimmer start painting before any heavy list work.
+            await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Loaded);
+            await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Render);
+
+            // Prepare local/installed list under the skeleton (no network yet).
+            UpdateAllPluginsUI();
+            SyncPluginInstallUi();
+            var hasLocalContent = _pluginViewModels.Count > 0;
+
+            // Hold skeleton for MinSkeletonVisible, then reveal list. Online fetch can
+            // continue without covering the list again when we already have rows.
+            if (hasLocalContent)
+            {
+                SetLoadingState(false); // respects MinSkeletonVisible
+                await FetchOnlinePluginsAsync(showFullSkeleton: false).ConfigureAwait(true);
+            }
+            else
+            {
+                // No rows yet — keep skeleton for the whole store fetch (also min-hold).
+                await FetchOnlinePluginsAsync(showFullSkeleton: true).ConfigureAwait(true);
+            }
         }
         catch (Exception ex)
         {
@@ -628,13 +758,20 @@ private string _currentSearchText = string.Empty;
             AttachPluginInstallCoordinator();
             EnsurePluginExtensionsNavigationState();
 
-            // Use Dispatcher to ensure UI updates happen after plugin scanning
+            // Skip heavy rebuild while an online fetch is still showing skeleton.
+            if (_isLoadingOnlinePlugins)
+                return;
+
+            // Background priority so navigation animation stays smooth.
             Dispatcher.BeginInvoke(new Action(() =>
             {
+                if (_isLoadingOnlinePlugins || !IsVisible)
+                    return;
+
                 LocalizationHelper.SetPluginResourceCultures();
                 UpdateAllPluginsUI();
                 SyncPluginInstallUi();
-            }), System.Windows.Threading.DispatcherPriority.Loaded);
+            }), System.Windows.Threading.DispatcherPriority.Background);
         }
     }
 

@@ -60,9 +60,13 @@ public partial class SensorsControl : IDisposable
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;
     private bool _sensorsRefreshFailureLogged;
+    // Guards start/stop of sensor refresh so Dispose / IsVisible / Refresh cannot race on _cts.
+    private readonly object _sensorLifecycleLock = new();
 
     private CancellationTokenSource? _batteryCts;
     private Task? _batteryRefreshTask;
+    // Guards start/stop of battery refresh so Dispose / IsVisible / Refresh cannot race on _batteryCts.
+    private readonly object _batteryLifecycleLock = new();
     private readonly object _initialSensorDataLoadLock = new();
     private TaskCompletionSource _firstSensorDataTaskCompletionSource = CreateInitialSensorDataTaskCompletionSource();
     private bool _hasRenderedSensorData;
@@ -161,11 +165,8 @@ public partial class SensorsControl : IDisposable
 
     public void Dispose()
     {
-        _cts?.Dispose();
-        _cts = null;
-
-        _batteryCts?.Dispose();
-        _batteryCts = null;
+        StopSensorRefresh();
+        StopBatteryRefresh();
     }
 
     internal enum SensorSummaryLayoutMode
@@ -299,11 +300,12 @@ public partial class SensorsControl : IDisposable
 
     private void ApplySkeletonSummaryLayout(bool isCompact, bool isWide)
     {
+        // Match live subtitle visibility (hidden only in compact).
         SetVisibility("_skeletonCpuSubtitle", !isCompact);
         SetVisibility("_skeletonBatterySubtitle", !isCompact);
         SetVisibility("_skeletonGpuSubtitle", !isCompact);
 
-        // Keep skeleton trend placeholders visible so first paint matches live layout.
+        // Trends + legends always visible (same as live summary).
         SetVisibility("_skeletonCpuLegend", true);
         SetVisibility("_skeletonBatteryLegend", true);
         SetVisibility("_skeletonGpuLegend", true);
@@ -311,13 +313,26 @@ public partial class SensorsControl : IDisposable
         SetVisibility("_skeletonBatteryTrendPanel", true);
         SetVisibility("_skeletonGpuTrendPanel", true);
 
+        // Gauge sizes: GaugeSizeSM (88) compact / GaugeSizeMD (110) standard+wide.
         ApplySummaryGaugeSize(_skeletonCpuGauge, isCompact);
         ApplySummaryGaugeSize(_skeletonBatteryGauge, isCompact);
         ApplySummaryGaugeSize(_skeletonGpuGauge, isCompact);
 
+        // Trend panel heights: 76 standard / 96 wide.
         ApplyTrendPanelHeight(_skeletonCpuTrendPanel, isWide);
         ApplyTrendPanelHeight(_skeletonBatteryTrendPanel, isWide);
         ApplyTrendPanelHeight(_skeletonGpuTrendPanel, isWide);
+
+        // Metric bars MaxWidth: 260 standard / 320 wide (same as live ProgressBars).
+        ApplyProgressBarMaxWidth(_skeletonCpuBar0, isWide);
+        ApplyProgressBarMaxWidth(_skeletonCpuBar1, isWide);
+        ApplyProgressBarMaxWidth(_skeletonCpuBar2, isWide);
+        ApplyProgressBarMaxWidth(_skeletonBatteryBar0, isWide);
+        ApplyProgressBarMaxWidth(_skeletonBatteryBar1, isWide);
+        ApplyProgressBarMaxWidth(_skeletonBatteryBar2, isWide);
+        ApplyProgressBarMaxWidth(_skeletonGpuBar0, isWide);
+        ApplyProgressBarMaxWidth(_skeletonGpuBar1, isWide);
+        ApplyProgressBarMaxWidth(_skeletonGpuBar2, isWide);
     }
 
     private void SetLiveSensorContentVisible(bool visible)
@@ -331,9 +346,12 @@ public partial class SensorsControl : IDisposable
         if (gauge is null)
             return;
 
+        // Keep in sync with DesignTokens: GaugeSizeSM=88, GaugeSizeMD=110.
         var size = isCompact ? 88 : 110;
         gauge.Width = size;
         gauge.Height = size;
+        gauge.MinWidth = size;
+        gauge.MinHeight = size;
     }
 
     private static void ApplyTrendPanelHeight(FrameworkElement? trendPanel, bool isWide)
@@ -399,9 +417,10 @@ public partial class SensorsControl : IDisposable
         if (_skeletonOverlay is null)
             return;
 
-        ApplySkeletonSummaryLayout(
-            _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Compact,
-            _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Wide);
+        // Prefer real measure so first skeleton frame matches current window width
+        // (compact/standard/wide), not a stale default mode from construction.
+        var width = ActualWidth > 1 ? ActualWidth : (_sensorsCard?.ActualWidth > 1 ? _sensorsCard.ActualWidth : 1200);
+        ApplySensorSummaryLayout(width, force: true);
 
         SetLiveSensorContentVisible(false);
         _skeletonOverlay.Opacity = 1;
@@ -524,27 +543,9 @@ public partial class SensorsControl : IDisposable
                 return;
             }
 
-            if (_cts is not null)
-            {
-                await _cts.CancelAsync();
-                _cts.Dispose();
-            }
-            _cts = null;
-
-            if (_refreshTask is not null)
-                await _refreshTask;
-            _refreshTask = null;
-
-            if (_batteryCts is not null)
-            {
-                await _batteryCts.CancelAsync();
-                _batteryCts.Dispose();
-            }
-            _batteryCts = null;
-
-            if (_batteryRefreshTask is not null)
-                await _batteryRefreshTask;
-            _batteryRefreshTask = null;
+            // Always operate on locals after clearing fields — never touch _cts/_batteryCts after await.
+            await StopSensorRefreshAsync().ConfigureAwait(true);
+            await StopBatteryRefreshAsync().ConfigureAwait(true);
         }
         catch (Exception ex)
         {
@@ -553,38 +554,165 @@ public partial class SensorsControl : IDisposable
         }
     }
 
+    private static void SafeCancelAndDispose(CancellationTokenSource? cts)
+    {
+        if (cts is null)
+            return;
+
+        try
+        {
+            cts.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+
+        try
+        {
+            cts.Dispose();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+    }
+
+    private static async Task SafeCancelAndDisposeAsync(CancellationTokenSource? cts)
+    {
+        if (cts is null)
+            return;
+
+        try
+        {
+            await cts.CancelAsync().ConfigureAwait(false);
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+
+        try
+        {
+            cts.Dispose();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+    }
+
+    private static async Task SafeAwaitRefreshTaskAsync(Task? task)
+    {
+        if (task is null)
+            return;
+
+        try
+        {
+            await task.ConfigureAwait(true);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception)
+        {
+            // Visibility/dispose teardown must not surface refresh loop failures.
+        }
+    }
+
+    private void StopSensorRefresh()
+    {
+        CancellationTokenSource? cts;
+        lock (_sensorLifecycleLock)
+        {
+            cts = _cts;
+            _cts = null;
+            _refreshTask = null;
+        }
+
+        SafeCancelAndDispose(cts);
+    }
+
+    private async Task StopSensorRefreshAsync()
+    {
+        CancellationTokenSource? cts;
+        Task? task;
+        lock (_sensorLifecycleLock)
+        {
+            cts = _cts;
+            _cts = null;
+            task = _refreshTask;
+            _refreshTask = null;
+        }
+
+        await SafeCancelAndDisposeAsync(cts).ConfigureAwait(true);
+        await SafeAwaitRefreshTaskAsync(task).ConfigureAwait(true);
+    }
+
+    private void StopBatteryRefresh()
+    {
+        CancellationTokenSource? cts;
+        lock (_batteryLifecycleLock)
+        {
+            cts = _batteryCts;
+            _batteryCts = null;
+            _batteryRefreshTask = null;
+        }
+
+        SafeCancelAndDispose(cts);
+    }
+
+    private async Task StopBatteryRefreshAsync()
+    {
+        CancellationTokenSource? cts;
+        Task? task;
+        lock (_batteryLifecycleLock)
+        {
+            cts = _batteryCts;
+            _batteryCts = null;
+            task = _batteryRefreshTask;
+            _batteryRefreshTask = null;
+        }
+
+        await SafeCancelAndDisposeAsync(cts).ConfigureAwait(true);
+        await SafeAwaitRefreshTaskAsync(task).ConfigureAwait(true);
+    }
+
     private void RefreshBattery()
     {
-        _batteryCts?.Cancel();
-        _batteryCts?.Dispose();
-        _batteryCts = new CancellationTokenSource();
-
-        var token = _batteryCts.Token;
-
-        _batteryRefreshTask = Task.Run(async () =>
+        // Capture CTS in a local so concurrent Dispose / hide cannot NRE on field access after await.
+        lock (_batteryLifecycleLock)
         {
-            while (!token.IsCancellationRequested)
-            {
-                try
-                {
-                    var batteryInfo = Battery.GetBatteryInformation();
-                    var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync();
-                    var onBatterySince = Battery.GetOnBatterySince();
-                    await Dispatcher.InvokeAsync(() => SetBattery(batteryInfo, powerAdapterStatus, onBatterySince, recordTrendHistory: true));
+            var previous = _batteryCts;
+            _batteryCts = null;
+            SafeCancelAndDispose(previous);
 
-                    await _delayProvider.Delay(TimeSpan.FromSeconds(2), token);
-                }
-                catch (OperationCanceledException)
+            var cts = new CancellationTokenSource();
+            _batteryCts = cts;
+            var token = cts.Token;
+
+            _batteryRefreshTask = Task.Run(async () =>
+            {
+                while (!token.IsCancellationRequested)
                 {
-                    // Expected when battery refresh is cancelled.
+                    try
+                    {
+                        var batteryInfo = Battery.GetBatteryInformation();
+                        var powerAdapterStatus = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
+                        var onBatterySince = Battery.GetOnBatterySince();
+                        await Dispatcher.InvokeAsync(() =>
+                            SetBattery(batteryInfo, powerAdapterStatus, onBatterySince, recordTrendHistory: true));
+
+                        await _delayProvider.Delay(TimeSpan.FromSeconds(2), token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Expected when battery refresh is cancelled.
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Battery information refresh failed.", ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Battery information refresh failed.", ex);
-                }
-            }
-        }, token);
+            }, token);
+        }
     }
 
     private void SetBattery(BatteryInformation batteryInfo, PowerAdapterStatus powerAdapterStatus, DateTime? onBatterySince,
@@ -632,7 +760,10 @@ public partial class SensorsControl : IDisposable
         // This relies on the UI elements being present in the XAML
         // I will implement this assuming the UI structure I will create
         UpdateDetailText("_batteryHealthText", $"{info.BatteryHealth:0.00}%");
-        if (FindNameCached("_batteryHealthBar") is System.Windows.Controls.Primitives.RangeBase healthBar) healthBar.Value = info.BatteryHealth;
+        if (FindNameCached("_batteryHealthBar") is System.Windows.Controls.Primitives.RangeBase healthBar)
+            healthBar.Value = info.BatteryHealth;
+
+        UpdateBatteryHealthGauge(info.BatteryHealth);
 
         if (FindNameCached("_batteryTemperatureBar") is System.Windows.Controls.Primitives.RangeBase tempBar &&
             FindNameCached("_batteryTempText") is ContentControl tempLabel)
@@ -661,18 +792,50 @@ public partial class SensorsControl : IDisposable
         {
              UpdateDetailText("_batteryCap", $"{info.EstimateChargeRemaining / 1000.0:0.00} Wh");
              UpdateDetailText("_batteryFullCap", $"{info.FullChargeCapacity / 1000.0:0.00} Wh");
-             UpdateDetailText("_batteryDesignCap", $"{info.DesignCapacity / 1000.0:0.00} Wh");
+             // Keep design capacity as supporting text under the health ring (tooltip still labels it).
+             UpdateDetailText("_batteryDesignCap",
+                 $"{T("SensorsControl_DesignCapacity", "Design capacity")}: {info.DesignCapacity / 1000.0:0.00} Wh");
 
              if (_batteryCapGauge is not null)
                 _batteryCapGauge.Value = (info.EstimateChargeRemaining / (double)info.DesignCapacity) * 100.0;
              if (_batteryFullCapGauge is not null)
                 _batteryFullCapGauge.Value = (info.FullChargeCapacity / (double)info.DesignCapacity) * 100.0;
         }
+        else
+        {
+            UpdateDetailText("_batteryDesignCap", string.Empty);
+        }
 
         UpdateDetailText("_batteryCycles", $"{info.CycleCount:N0}");
         UpdateDetailText("_batteryDate", info.ManufactureDate?.ToString(LocalizationHelper.ShortDateFormat) ?? string.Empty);
         UpdateDetailText("_batteryTemperature", FormatNullableTemperature(info.BatteryTemperatureC, _applicationSettings.Store.TemperatureUnit));
 
+    }
+
+    /// <summary>
+    /// Third detail ring shows battery health (not a static "design capacity" track).
+    /// Color: green ≥80, caution 60–80, critical/red &lt;60.
+    /// </summary>
+    private void UpdateBatteryHealthGauge(double healthPercent)
+    {
+        if (_batteryHealthGauge is null)
+            return;
+
+        var value = healthPercent < 0 ? 0 : Math.Clamp(healthPercent, 0, 100);
+        _batteryHealthGauge.Maximum = 100;
+        _batteryHealthGauge.Value = value;
+        _batteryHealthGauge.ValueText = healthPercent < 0 ? "—" : $"{value:0}%";
+
+        var brushKey = value >= 80
+            ? "ChartBatteryBrush"
+            : value >= 60
+                ? "ChartCautionBrush"
+                : "StatusCriticalBrush";
+
+        if (TryFindResource(brushKey) is System.Windows.Media.Brush brush)
+            _batteryHealthGauge.RingBrush = brush;
+        else if (TryFindResource("StatusCriticalBrush") is System.Windows.Media.Brush fallback)
+            _batteryHealthGauge.RingBrush = fallback;
     }
 
     private void UpdateDetailText(string name, string text)
@@ -772,64 +935,79 @@ public partial class SensorsControl : IDisposable
 
     private void Refresh()
     {
-        _cts?.Cancel();
-        _cts?.Dispose();
-        _cts = new CancellationTokenSource();
-
-        var token = _cts.Token;
-
-        _refreshTask = Task.Run(async () =>
+        lock (_sensorLifecycleLock)
         {
-            if (!await _controller.IsSupportedAsync())
+            var previous = _cts;
+            _cts = null;
+            SafeCancelAndDispose(previous);
+
+            var cts = new CancellationTokenSource();
+            _cts = cts;
+            var token = cts.Token;
+
+            _refreshTask = Task.Run(async () =>
             {
+                if (!await _controller.IsSupportedAsync().ConfigureAwait(false))
+                {
+                    await Dispatcher.InvokeAsync(() =>
+                    {
+                        _sensorRuntimeAvailable = false;
+                        SetSensorSectionsVisible(true);
+                        ResetSensorValues();
+                        CompleteInitialSensorDataLoad();
+                    });
+                    return;
+                }
+
                 await Dispatcher.InvokeAsync(() =>
                 {
-                    _sensorRuntimeAvailable = false;
+                    _sensorRuntimeAvailable = true;
                     SetSensorSectionsVisible(true);
-                    ResetSensorValues();
-                    CompleteInitialSensorDataLoad();
                 });
-                return;
-            }
 
-            await Dispatcher.InvokeAsync(() =>
-            {
-                _sensorRuntimeAvailable = true;
-                SetSensorSectionsVisible(true);
-            });
+                await _controller.PrepareAsync().ConfigureAwait(false);
 
-            await _controller.PrepareAsync();
-
-            while (!token.IsCancellationRequested)
-            {
-                try
+                while (!token.IsCancellationRequested)
                 {
-                    var detailed = await Dispatcher.InvokeAsync(() => CanShowSensorDetails && _cpuDetailsPanel.Visibility == Visibility.Visible) || (CanShowSensorDetails && _forceDetailedRefresh);
-                    var data = await _controller.GetDataAsync(detailed);
-                    if (detailed)
-                        _forceDetailedRefresh = false;
-                    await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
-                    _sensorsRefreshFailureLogged = false;
-                    await _delayProvider.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token);
-                }
-                catch (OperationCanceledException)
-                {
-                    // Expected when sensors refresh is cancelled, no action needed
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled && !_sensorsRefreshFailureLogged)
+                    try
                     {
-                        Log.Instance.Trace($"Sensors refresh failed.", ex);
-                        _sensorsRefreshFailureLogged = true;
-                    }
+                        // Always request the detailed snapshot while detail panels are open so
+                        // wattage/voltage/memory-clock stay on one source (NvAPI/WMI path) and
+                        // do not alternate with the LibreHardwareMonitor extended overlay.
+                        var detailed = await Dispatcher.InvokeAsync(() =>
+                            CanShowSensorDetails
+                            && (_detailsExpanded
+                                || _forceDetailedRefresh
+                                || IsElementVisible("_cpuDetailsPanel")
+                                || IsElementVisible("_gpuDetailsPanel"))).Task.ConfigureAwait(false);
 
-                    var cached = TryGetSessionSensorDataForDisplay();
-                    if (cached.HasValue)
-                        await Dispatcher.InvokeAsync(() => UpdateValues(cached.Value));
+                        var data = await _controller.GetDataAsync(detailed).ConfigureAwait(false);
+                        if (detailed)
+                            _forceDetailedRefresh = false;
+                        await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
+                        _sensorsRefreshFailureLogged = false;
+                        await _delayProvider.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token)
+                            .ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // Expected when sensors refresh is cancelled, no action needed
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled && !_sensorsRefreshFailureLogged)
+                        {
+                            Log.Instance.Trace($"Sensors refresh failed.", ex);
+                            _sensorsRefreshFailureLogged = true;
+                        }
+
+                        var cached = TryGetSessionSensorDataForDisplay();
+                        if (cached.HasValue)
+                            await Dispatcher.InvokeAsync(() => UpdateValues(cached.Value));
+                    }
                 }
-            }
-        }, token);
+            }, token);
+        }
     }
 
     private void CacheTextBlockReferences()
@@ -865,7 +1043,10 @@ public partial class SensorsControl : IDisposable
         UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
             string.Concat(data.CPU.FanSpeed.ToString("0.0"), " ", RpmUnit), string.Concat(data.CPU.MaxFanSpeed.ToString("0.0"), " ", RpmUnit));
 
-        if (_cpuWattageText is not null)
+        // When detail panels are open, CPU wattage is owned by the LHM extended path
+        // (includes cores/memory/platform breakdown). Writing a plain wattage here first
+        // caused a one-second flicker with that richer string.
+        if (_cpuWattageText is not null && !_detailsExpanded)
         {
             _cpuWattageText.Text = data.CPU.Wattage >= 0 ? $"{data.CPU.Wattage} W" : NotAvailableText();
         }
@@ -1462,6 +1643,9 @@ public partial class SensorsControl : IDisposable
 
             await _sensorsGroupController.UpdateAsync();
 
+            // Only fields that the main GetDataAsync path does NOT already render.
+            // Writing GPU wattage / voltage / memory-clock here as well caused a 1 Hz flicker
+            // (NvAPI snapshot vs LibreHardwareMonitor values alternating each refresh).
             var gpuVramUsedTask = _sensorsGroupController.GetGpuVramUsedAsync();
             var gpuVramTotalTask = _sensorsGroupController.GetGpuVramTotalAsync();
             var gpuVramUtilizationTask = _sensorsGroupController.GetGpuVramUtilizationAsync();
@@ -1470,11 +1654,7 @@ public partial class SensorsControl : IDisposable
             var gpuPcieRxThroughputTask = _sensorsGroupController.GetGpuPcieRxThroughputAsync();
             var gpuPcieTxThroughputTask = _sensorsGroupController.GetGpuPcieTxThroughputAsync();
             var gpuIsIntegratedTask = _sensorsGroupController.IsCurrentGpuIntegratedAsync();
-            var gpuMemoryClockTask = _sensorsGroupController.GetGpuMemoryClockAsync();
-            var gpuPowerTask = _sensorsGroupController.GetGpuPowerAsync();
-            var gpuVoltageTask = _sensorsGroupController.GetGpuVoltageAsync();
             var cpuPowerTask = _sensorsGroupController.GetCpuPowerAsync();
-            var cpuVoltageTask = _sensorsGroupController.GetCpuVoltageAsync();
             var cpuPCoreClockTask = _sensorsGroupController.GetCpuPCoreClockAsync();
             var cpuECoreClockTask = _sensorsGroupController.GetCpuECoreClockAsync();
             var memoryUsageTask = _sensorsGroupController.GetMemoryUsageAsync();
@@ -1493,11 +1673,7 @@ public partial class SensorsControl : IDisposable
                 gpuPcieRxThroughputTask,
                 gpuPcieTxThroughputTask,
                 gpuIsIntegratedTask,
-                gpuMemoryClockTask,
-                gpuPowerTask,
-                gpuVoltageTask,
                 cpuPowerTask,
-                cpuVoltageTask,
                 cpuPCoreClockTask,
                 cpuECoreClockTask,
                 memoryUsageTask,
@@ -1515,10 +1691,7 @@ public partial class SensorsControl : IDisposable
             var gpuHotSpotTemperature = await gpuHotSpotTemperatureTask;
             var gpuPcieRxThroughput = await gpuPcieRxThroughputTask;
             var gpuPcieTxThroughput = await gpuPcieTxThroughputTask;
-            var gpuPower = await gpuPowerTask;
-            var gpuVoltage = await gpuVoltageTask;
             var cpuPower = await cpuPowerTask;
-            var cpuVoltage = await cpuVoltageTask;
             var cpuPCoreClock = await cpuPCoreClockTask;
             var cpuECoreClock = await cpuECoreClockTask;
             var memoryUsage = await memoryUsageTask;
@@ -1527,7 +1700,6 @@ public partial class SensorsControl : IDisposable
             var memoryTemperature = await memoryTemperatureTask;
             var ssdTemperatures = await ssdTemperaturesTask;
             var cpuComponentPowers = await cpuComponentPowersTask;
-            var gpuMemoryClock = await gpuMemoryClockTask;
 
             await Dispatcher.InvokeAsync(() =>
             {
@@ -1539,34 +1711,18 @@ public partial class SensorsControl : IDisposable
                 UpdateDetailText("_gpuVramTemperature", GetTemperatureText(gpuVramTemperature >= 0 ? (double?)gpuVramTemperature : null));
                 UpdateDetailText("_gpuHotSpotTemperature", GetTemperatureText(gpuHotSpotTemperature >= 0 ? (double?)gpuHotSpotTemperature : null));
                 UpdateDetailText("_gpuPcieThroughput", FormatThroughputPair(gpuPcieRxThroughput, gpuPcieTxThroughput));
-                UpdateDetailText("_gpuWattage", FormatPowerKeepingPrevious(gpuPower, _gpuWattage.Text));
+                // Prefer LHM CPU power breakdown (richer than summary wattage).
                 UpdateDetailText("_cpuWattage", FormatCpuPowerBreakdown(cpuPower, cpuComponentPowers));
-                UpdateDetailText("_cpuVoltage", FormatVoltage(cpuVoltage));
                 UpdateDetailText("_cpuPCoreClock", FormatFrequency(cpuPCoreClock));
                 UpdateDetailText("_cpuECoreClock", FormatFrequency(cpuECoreClock));
                 UpdateDetailText("_cpuMemoryUsage", FormatUsageInGigabytes(memoryUsed, memoryTotal, memoryUsage));
                 UpdateDetailText("_cpuMemoryTemperature", GetTemperatureText(memoryTemperature > 0 ? memoryTemperature : null));
                 UpdateDetailText("_cpuSsdTemperature", FormatTemperaturePair(ssdTemperatures, _applicationSettings.Store.TemperatureUnit));
-                UpdateDetailText("_gpuVoltage", FormatVoltage(gpuVoltage));
+                // Ranges: keep min/max from the primary SensorsData path; only seed when empty.
                 UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content as string ?? _cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
                 UpdateDetailText("_cpuVoltageRange", FormatFallbackRangeText(_cpuVoltage.Text, _cpuVoltageRange.Text));
                 UpdateDetailText("_gpuTempRange", FormatTemperatureRangeText(_gpuTemperatureLabel?.Content as string ?? _gpuTemperatureLabel?.Content?.ToString(), _gpuTempRange.Text));
                 UpdateDetailText("_gpuVoltageRange", FormatFallbackRangeText(_gpuVoltage.Text, _gpuVoltageRange.Text));
-
-                if (_gpuMemoryClockBar is not null && _gpuMemoryClockText is not null)
-                {
-                    if (gpuMemoryClock > 0)
-                    {
-                        _gpuMemoryClockBar.Maximum = Math.Max(gpuMemoryClock, _gpuMemoryClockBar.Maximum);
-                        _gpuMemoryClockBar.Value = gpuMemoryClock;
-                        _gpuMemoryClockText.Text = $"{gpuMemoryClock:0} {MegahertzUnit}";
-                    }
-                    else
-                    {
-                        _gpuMemoryClockBar.Value = 0;
-                        _gpuMemoryClockText.Text = NotAvailableText();
-                    }
-                }
             });
         }
         catch (Exception ex)
@@ -1624,9 +1780,11 @@ public partial class SensorsControl : IDisposable
         var rx = FormatThroughput(rxBytesPerSecond);
         var tx = FormatThroughput(txBytesPerSecond);
 
+        // Prefer a line break so long "Rx … / Tx …" strings wrap cleanly inside the
+        // detail column instead of overflowing into the temperature column.
         return (rx, tx) switch
         {
-            ({ } a, { } b) => $"Rx {a} / Tx {b}",
+            ({ } a, { } b) => $"Rx {a}\nTx {b}",
             ({ } a, null) => $"Rx {a}",
             (null, { } b) => $"Tx {b}",
             _ => "-"

@@ -34,15 +34,16 @@ function Get-RepoRoot {
 }
 
 function Get-RuntimeDirectory([string] $repoRoot) {
-    foreach ($cfg in @("Debug", "Release")) {
-        $root = Join-Path $repoRoot "UniversalDeviceToolkit.WPF\bin\$cfg"
-        if (-not (Test-Path $root)) { continue }
-        $exe = Get-ChildItem -Path $root -Filter "Universal Device Toolkit.exe" -Recurse -ErrorAction SilentlyContinue |
+    # CI builds with -p:Platform=x64 land under bin\x64\Release\... (not bin\Release\...).
+    # Prefer recursive search under the whole bin tree so Platform folders are included.
+    $binRoot = Join-Path $repoRoot "UniversalDeviceToolkit.WPF\bin"
+    if (Test-Path $binRoot) {
+        $exe = Get-ChildItem -Path $binRoot -Filter "Universal Device Toolkit.exe" -Recurse -ErrorAction SilentlyContinue |
             Sort-Object LastWriteTimeUtc -Descending |
             Select-Object -First 1
         if ($exe) { return $exe.DirectoryName }
     }
-    throw "Build WPF first: dotnet build UniversalDeviceToolkit.WPF -c Debug"
+    throw "Build WPF first: dotnet build UniversalDeviceToolkit.WPF -c Release -p:Platform=x64"
 }
 
 function Ensure-WpfBuilt([string] $repoRoot, [string] $runtimeDir, [string] $culture) {
@@ -50,8 +51,14 @@ function Ensure-WpfBuilt([string] $repoRoot, [string] $runtimeDir, [string] $cul
     if (Test-Path $satellite) { return $satellite }
     Write-Host "[mock-catalog] Building WPF (satellite missing)..."
     $proj = Join-Path $repoRoot "UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj"
-    dotnet build $proj -c Debug | Out-Host
-    if ($LASTEXITCODE -ne 0) { throw "WPF build failed." }
+    # Prefer Release|x64 so CI-built payloads under bin\x64\Release are found first.
+    $env:MSBUILDDISABLENODEREUSE = "1"
+    dotnet build $proj -c Release -p:Platform=x64 -m:1 --nologo | Out-Host
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[mock-catalog] Release|x64 build failed; retrying Debug..."
+        dotnet build $proj -c Debug -m:1 --nologo | Out-Host
+        if ($LASTEXITCODE -ne 0) { throw "WPF build failed." }
+    }
     $runtimeDir = Get-RuntimeDirectory $repoRoot
     $satellite = Join-Path $runtimeDir "$culture\Universal Device Toolkit.resources.dll"
     if (-not (Test-Path $satellite)) { throw "Satellite not found: $satellite" }

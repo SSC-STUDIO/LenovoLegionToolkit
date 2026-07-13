@@ -195,7 +195,8 @@ public partial class PackageControl : IProgress<float>, IDisposable
         _categoryTextBlock.Text = package.Category;
         _detailTextBlock.Text = $"{Resource.PackageControl_Version} {package.Version}  |  {package.FileSize}  |  {package.FileName}";
 
-        _readmeButton.Visibility = package.Readme is null ? Visibility.Collapsed : Visibility.Visible;
+        // Vantage packages often set Readme to "" when missing — hide unless a real URL exists.
+        _readmeButton.Visibility = HasOpenableReadme(package.Readme) ? Visibility.Visible : Visibility.Collapsed;
         _updateRebootStackPanel.Visibility = _isUpdateStackPanel.Visibility = package.IsUpdate ? Visibility.Visible : Visibility.Collapsed;
 
         _rebootStackPanel.Visibility = package is { IsUpdate: true, Reboot: RebootType.Delayed or RebootType.Requested or RebootType.Forced or RebootType.ForcedPowerOff }
@@ -722,7 +723,20 @@ public partial class PackageControl : IProgress<float>, IDisposable
                 return;
 
             if (failureMessage is not null)
+            {
                 await SnackbarHelper.ShowAsync(Resource.PackageControl_InstallError_Title, failureMessage, SnackbarType.Error);
+            }
+            else if (status == PackageStatus.Completed)
+            {
+                // Auto-closing success toast when installer finishes cleanly.
+                await SnackbarHelper.ShowAsync(
+                    Resource.PackageControl_InstallStarted_Title,
+                    string.Format(
+                        Resource.Culture ?? System.Globalization.CultureInfo.CurrentUICulture,
+                        Resource.PackageControl_DownloadComplete_Message,
+                        _package.FileName),
+                    SnackbarType.Success);
+            }
         }
         catch (Exception ex)
         {
@@ -847,10 +861,37 @@ public partial class PackageControl : IProgress<float>, IDisposable
 
     private void ReadmeButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_package.Readme is null)
+        if (!TryCreateHttpUri(_package.Readme, out var uri) || uri is null)
             return;
 
-        new Uri(_package.Readme).Open();
+        try
+        {
+            uri.Open();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't open package readme. [readme={_package.Readme}]", ex);
+        }
+    }
+
+    private static bool HasOpenableReadme(string? readme) => TryCreateHttpUri(readme, out _);
+
+    private static bool TryCreateHttpUri(string? value, out Uri? uri)
+    {
+        uri = null;
+        if (string.IsNullOrWhiteSpace(value))
+            return false;
+
+        if (!Uri.TryCreate(value.Trim(), UriKind.Absolute, out var created) || created is null)
+            return false;
+
+        if (!string.Equals(created.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase)
+            && !string.Equals(created.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        uri = created;
+        return true;
     }
 
     private async void DownloadButton_Click(object sender, RoutedEventArgs e)

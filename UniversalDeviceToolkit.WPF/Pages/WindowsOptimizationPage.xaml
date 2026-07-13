@@ -176,15 +176,15 @@
                     AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
                     Focusable="True"
                     Style="{StaticResource AppPageTitleTextBlockStyle}"
-                    Text="{x:Static resources:Resource.SettingsPage_WindowsOptimization_Title}" />
+                    Text="{Binding PageHeaderTitle, FallbackValue={x:Static resources:Resource.SettingsPage_WindowsOptimization_Title}}" />
 
                 <TextBlock
                     MaxWidth="540"
                     HorizontalAlignment="Left"
                     Style="{StaticResource AppPageDescriptionTextBlockStyle}"
-                    Text="{x:Static resources:Resource.WindowsOptimizationPage_Info}"
+                    Text="{Binding PageHeaderDescription, FallbackValue={x:Static resources:Resource.WindowsOptimizationPage_Info}}"
                     TextTrimming="CharacterEllipsis"
-                    />
+                    TextWrapping="Wrap" />
             </StackPanel>
         </Grid>
 

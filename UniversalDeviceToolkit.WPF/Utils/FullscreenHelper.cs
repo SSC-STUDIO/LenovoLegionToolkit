@@ -27,8 +27,13 @@ public static class FullscreenHelper
             if (!PInvoke.GetWindowRect(foregroundWindowHandle, out var appBounds))
                 return false;
 
-            var screenBounds = Screen.FromHandle(foregroundWindowHandle).Bounds;
-            var coversFullScreen = appBounds.bottom - appBounds.top == screenBounds.Height && appBounds.right - appBounds.left == screenBounds.Width;
+            // Exclusive fullscreen covers the full monitor Bounds (not just WorkingArea).
+            // Work-area maximize (taskbar / MyDockFinder dock reserved) must NOT count as FS.
+            var screen = Screen.FromHandle(foregroundWindowHandle);
+            var screenBounds = screen.Bounds;
+            var coversFullScreen =
+                appBounds.bottom - appBounds.top == screenBounds.Height
+                && appBounds.right - appBounds.left == screenBounds.Width;
             if (!coversFullScreen)
                 return false;
 

@@ -33,9 +33,37 @@ public static class WindowExtensions
     [DllImport("user32.dll", EntryPoint = "SetWindowLong", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
     private static extern IntPtr SetWindowLong32(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
-    [DllImport("user32.dll", EntryPoint = "GetWindowBand", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    private static extern bool GetWindowBand(IntPtr hWnd, out uint pdwBand);
+    /// <summary>
+    /// Resolved once via GetProcAddress — avoids EntryPointNotFoundException first-chance spam
+    /// on Windows builds that do not export GetWindowBand.
+    /// </summary>
+    private static readonly GetWindowBandDelegate? GetWindowBandFn = ResolveGetWindowBand();
+
+    private delegate bool GetWindowBandDelegate(IntPtr hWnd, out uint pdwBand);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern IntPtr GetModuleHandle(string lpModuleName);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+    private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+    private static GetWindowBandDelegate? ResolveGetWindowBand()
+    {
+        try
+        {
+            var module = GetModuleHandle("user32.dll");
+            if (module == IntPtr.Zero)
+                return null;
+            var proc = GetProcAddress(module, "GetWindowBand");
+            if (proc == IntPtr.Zero)
+                return null;
+            return Marshal.GetDelegateForFunctionPointer<GetWindowBandDelegate>(proc);
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct STYLESTRUCT
@@ -69,8 +97,12 @@ public static class WindowExtensions
                 SET_WINDOW_POS_FLAGS.SWP_NOSIZE |
                 SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE);
 
-            if (GetWindowBand(source.Handle, out uint currentBand))
-                Log.Instance.Trace($"EscalateZBand executed for {window.GetType().Name}. Current Band: {currentBand}");
+            // Optional API — resolved via GetProcAddress so missing export never throws.
+            if (GetWindowBandFn is { } getBand && getBand(source.Handle, out uint currentBand))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"EscalateZBand executed for {window.GetType().Name}. Current Band: {currentBand}");
+            }
         }
         catch (Exception ex)
         {

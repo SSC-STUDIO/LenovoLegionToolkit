@@ -373,6 +373,18 @@ public partial class WindowsOptimizationPage
 
             if (_driverSearchControlsGrid != null)
                 _driverSearchControlsGrid.Visibility = Visibility.Visible;
+
+            // Auto-closing success toast after the package list is fetched.
+            var count = packages?.Count ?? 0;
+            await SnackbarHelper.ShowAsync(
+                Resource.SettingsPage_WindowsOptimization_Title,
+                string.Format(
+                    Resource.Culture ?? System.Globalization.CultureInfo.CurrentUICulture,
+                    count == 1
+                        ? "{0} package found."
+                        : "{0} packages found.",
+                    count),
+                SnackbarType.Success);
         }
         catch (Exception ex)
         {

@@ -84,10 +84,11 @@
     <SolidColorBrush x:Key="ChartCautionBrush" Color="{StaticResource ChartCautionColor}" />
     <SolidColorBrush x:Key="ChartCriticalBrush" Color="{StaticResource ChartCriticalColor}" />
     <SolidColorBrush x:Key="ChartTrackBrush" Color="#33FFFFFF" />
-    <SolidColorBrush x:Key="ChartSurfaceBrush" Color="#0AFFFFFF" />
-    <SolidColorBrush x:Key="ChartSurfaceBorderBrush" Color="#1AFFFFFF" />
-    <SolidColorBrush x:Key="ChartGridlineBrush" Color="#1FFFFFFF" />
-    <SolidColorBrush x:Key="ChartBaselineBrush" Color="#38FFFFFF" />
+    <!-- Slightly stronger chart frame so empty/first-open trends still show clear edges. -->
+    <SolidColorBrush x:Key="ChartSurfaceBrush" Color="#0CFFFFFF" />
+    <SolidColorBrush x:Key="ChartSurfaceBorderBrush" Color="#30FFFFFF" />
+    <SolidColorBrush x:Key="ChartGridlineBrush" Color="#28FFFFFF" />
+    <SolidColorBrush x:Key="ChartBaselineBrush" Color="#4DFFFFFF" />
     <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#A6202020" />
     <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#48FFFFFF" />
 

@@ -97,10 +97,74 @@ public class CatalogDeviceSupportProvider(
         HiddenFeatures = BasicModeHiddenFeatures
     };
 
-    private static bool MatchesMachineType(DevicePack pack, MachineInformation machineInformation) =>
-        VendorMatches(pack, machineInformation) &&
-        !string.IsNullOrWhiteSpace(machineInformation.MachineType) &&
-        GetCollectionOrEmpty(pack.MachineTypes).Any(machineType => machineType.Equals(machineInformation.MachineType, StringComparison.OrdinalIgnoreCase));
+    private static bool MatchesMachineType(DevicePack pack, MachineInformation machineInformation)
+    {
+        if (!VendorMatches(pack, machineInformation))
+            return false;
+
+        var candidates = GetMachineTypeCandidates(machineInformation).ToArray();
+        if (candidates.Length == 0)
+            return false;
+
+        var packTypes = GetCollectionOrEmpty(pack.MachineTypes);
+        return candidates.Any(candidate =>
+            packTypes.Any(machineType => machineType.Equals(candidate, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    /// <summary>
+    /// Collect 4-char Lenovo MTM codes from MachineType, Model, and DMI SKU
+    /// (e.g. LENOVO_MT_83DF_BU_idea_FM_Legion Y9000P IRX9).
+    /// </summary>
+    private static IEnumerable<string> GetMachineTypeCandidates(MachineInformation machineInformation)
+    {
+        if (!string.IsNullOrWhiteSpace(machineInformation.MachineType))
+        {
+            yield return machineInformation.MachineType.Trim();
+            var fromType = ExtractMachineTypeToken(machineInformation.MachineType);
+            if (fromType is not null)
+                yield return fromType;
+        }
+
+        foreach (var signal in GetModelSignals(machineInformation))
+        {
+            var token = ExtractMachineTypeToken(signal);
+            if (token is not null)
+                yield return token;
+        }
+    }
+
+    private static string? ExtractMachineTypeToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        // LENOVO_MT_83DF_BU_...
+        const string mtMarker = "_MT_";
+        var mtIndex = value.IndexOf(mtMarker, StringComparison.OrdinalIgnoreCase);
+        if (mtIndex >= 0 && value.Length >= mtIndex + mtMarker.Length + 4)
+        {
+            var token = value.Substring(mtIndex + mtMarker.Length, 4);
+            if (IsLikelyMachineType(token))
+                return token.ToUpperInvariant();
+        }
+
+        // Bare 4-char MTM (83DF)
+        var trimmed = value.Trim();
+        if (trimmed.Length >= 4)
+        {
+            var head = trimmed[..4];
+            if (IsLikelyMachineType(head) && (trimmed.Length == 4 || !char.IsLetterOrDigit(trimmed[4])))
+                return head.ToUpperInvariant();
+        }
+
+        return null;
+    }
+
+    private static bool IsLikelyMachineType(string token) =>
+        token.Length == 4 &&
+        char.IsDigit(token[0]) &&
+        char.IsDigit(token[1]) &&
+        token.Skip(2).All(c => char.IsLetterOrDigit(c));
 
     private static bool MatchesModel(DevicePack pack, MachineInformation machineInformation)
     {

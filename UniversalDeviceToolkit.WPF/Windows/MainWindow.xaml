@@ -15,7 +15,9 @@
     Height="850"
     MinWidth="1200"
     MinHeight="650"
-    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    UseLayoutRounding="True"
+    SnapsToDevicePixels="True">
 
     <local:BaseWindow.Resources>
         <Style
@@ -59,7 +61,10 @@
         </Style>
     </local:BaseWindow.Resources>
 
-    <Grid Background="{DynamicResource AppNavigationBackgroundBrush}">
+    <Grid
+        Background="{DynamicResource AppNavigationBackgroundBrush}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="38" />
             <RowDefinition Height="*" />
@@ -268,10 +273,14 @@
                 BorderThickness="1,1,0,0"
                 ClipToBounds="True"
                 CornerRadius="{StaticResource CornerRadiusSurfaceTop}"
+                UseLayoutRounding="True"
                 SnapsToDevicePixels="True">
                 <Frame Name="_rootFrame"
                        AutomationProperties.AutomationId="MainRootFrame"
-                       Margin="24,0,0,0" />
+                       Margin="24,0,0,0"
+                       UseLayoutRounding="True"
+                       SnapsToDevicePixels="True"
+                       NavigationUIVisibility="Hidden" />
             </Border>
 
         </Grid>

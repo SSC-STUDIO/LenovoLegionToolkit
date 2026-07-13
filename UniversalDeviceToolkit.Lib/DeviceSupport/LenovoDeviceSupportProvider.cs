@@ -36,65 +36,69 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
     {
         SchemaVersion = 1,
         AppVersion = "built-in",
+        // Order: more specific packs first so MTM FirstOrDefault does not steal into Legion 5.
+        // Each machine type should appear in only one pack.
         DevicePacks =
         [
-            LenovoHardwarePack(
-                "lenovo-legion-5",
-                "Lenovo Legion 5",
-                ["Legion"],
-                ["15ACH", "15AKP", "15AHP", "15APH", "15ARH", "15ARP", "15IAH", "15IAX", "15IHU", "15IMH", "15IRH", "15IRX", "15ITH", "15ARP10", "15IRX10", "15IAX10", "16ACH", "16ADR", "16AFR", "16AHP", "16APH", "16ARH", "16ARP", "16ARX", "16IAH", "16IAX", "16IRH", "16IRX", "16ITH", "16IRX9", "17ACH", "17ARH", "17IRX", "17ITH", "17IMH"],
-                // Machine types cover 2020–2026 Legion 5 / Y7000 / R7000 family refreshes.
-                ["83F0", "83F1", "83M0", "83NX", "83N2", "83LY", "83DG", "83EW", "83EG", "83JJ", "83JG", "83JH", "83JC", "83JD", "83JE", "83JF", "82RC", "82RB", "82TB", "83EF", "82RE", "82RD", "82AX", "82B0", "82GR", "82JU", "82JY", "82K0", "82K1", "82K2", "82N4", "82N5", "83FG", "83FH", "83G1", "83G2", "83LL", "83LM", "83LN"],
-                ["Legion 5", "Legion 5i", "Legion 5 Pro", "Y7000", "Y7000P", "Y7000P 2020H", "Y7000P2020H", "R7000", "R7000P", "R7000P 2021"]),
-            LenovoHardwarePack(
-                "lenovo-legion-slim-5",
-                "Lenovo Legion Slim 5",
-                ["Legion", "Lenovo Slim"],
-                ["14AHP", "14APH", "14AKP", "14IRP", "14IRX", "14IAX", "16AHP", "16APH", "16IRX", "16IAX"],
-                ["83DH", "83EX", "82Y5", "82Y9", "82YA", "83D6", "83D0", "83D1", "83G5", "83G6", "83G7", "83G8"],
-                ["Legion Slim 5", "Legion Slim 5i", "Legion Slim 7"]),
-            LenovoHardwarePack(
-                "lenovo-legion-pro-5",
-                "Lenovo Legion Pro 5",
-                ["Legion"],
-                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "16IRX9", "16IAX9", "16ARP", "16ARH"],
-                ["83LT", "83F3", "83DF", "83F2", "83LU", "82WM", "83NN", "82WK", "82JQ", "82RF", "82RG", "83DG", "83DH", "83LR", "83LS", "83LV"],
-                ["Legion Pro 5", "Legion Pro 5i", "Y9000P", "R9000P"]),
-            LenovoHardwarePack(
-                "lenovo-legion-7",
-                "Lenovo Legion 7",
-                ["Legion"],
-                ["16ACH", "16ARH", "16IAH", "16IAX", "16IRH", "16IRX", "16IRX9", "16IAX9"],
-                ["83KY", "83FD", "82UH", "82TD", "82N6", "82N7", "83FE", "83FF", "83FG", "83K0", "83K1"],
-                ["Legion 7", "Legion 7i"]),
             LenovoHardwarePack(
                 "lenovo-legion-pro-7",
                 "Lenovo Legion Pro 7",
                 ["Legion"],
-                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "IRX10", "IAX10", "16IRX9", "16IAX9"],
-                ["83RU", "83F5", "83DE", "82WR", "82WQ", "82WS", "82WT", "83RS", "83RT", "83RV", "83RW"],
-                ["Legion Pro 7", "Legion Pro 7i", "Y9000P", "R9000P", "Y9000P IRX", "Y9000P IAX"]),
+                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "IRX10", "IAX10", "16IRX9", "16IAX9", "16IRX11", "16IAX11"],
+                ["83RU", "83F5", "83DE", "82WR", "82WQ", "82WS", "82WT", "83RS", "83RT", "83RV", "83RW", "83RX", "83RY"],
+                // Avoid bare Y9000P/IRX keywords here — those belong to Pro 5 (e.g. 83DF IRX9).
+                ["Legion Pro 7", "Legion Pro 7i", "Y9000K", "R9000K", "拯救者 Y9000K", "Y9000P Ultimate"]),
+            LenovoHardwarePack(
+                "lenovo-legion-pro-5",
+                "Lenovo Legion Pro 5",
+                ["Legion"],
+                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "16IRX9", "16IAX9", "16ARP", "16ARH", "16ADR", "16AFR", "16ADR10", "16AFR10", "16IRX11", "16IAX11"],
+                // 83DF = Legion Y9000P IRX9 (CN) — full hardware pack
+                ["83LT", "83F3", "83DF", "83F2", "83LU", "82WM", "83NN", "82WK", "82JQ", "82RF", "82RG", "83DG", "83LR", "83LS", "83LV", "83LW", "83LX", "82SN", "82SM"],
+                ["Legion Pro 5", "Legion Pro 5i", "Y9000P", "R9000P", "Y9000P IRX9", "Y9000P IAX9", "Y9000P IRX10", "Y9000P 2024", "Y9000P 2025", "R9000P 2024", "R9000P 2025", "拯救者 Y9000P", "拯救者 R9000P"]),
             LenovoHardwarePack(
                 "lenovo-legion-9",
                 "Lenovo Legion 9",
                 ["Legion"],
-                ["16IRX", "16IAX", "18IAX", "16IRX9", "16IAX9", "18IRX"],
-                ["83G0", "83EY", "83EZ", "83F0", "83G9", "83GA"],
+                ["16IRX", "16IAX", "18IAX", "16IRX9", "16IAX9", "18IRX", "18IAX10", "16IRX10", "16IAX10"],
+                ["83G0", "83EY", "83EZ", "83G9", "83GA", "83GB"],
                 ["Legion 9", "Legion 9i"]),
+            LenovoHardwarePack(
+                "lenovo-legion-7",
+                "Lenovo Legion 7",
+                ["Legion"],
+                ["16ACH", "16ARH", "16IAH", "16IAX", "16IRH", "16IRX", "16IRX9", "16IAX9", "16IRX10", "16IAX10"],
+                ["83KY", "83FD", "82UH", "82TD", "82N6", "82N7", "83FE", "83FF", "83K0", "83K1", "83AG"],
+                ["Legion 7", "Legion 7i"]),
+            LenovoHardwarePack(
+                "lenovo-legion-slim-5",
+                "Lenovo Legion Slim 5",
+                ["Legion", "Lenovo Slim"],
+                ["14AHP", "14APH", "14AKP", "14IRP", "14IRX", "14IAX", "14AHP10", "14AKP10", "16AHP", "16APH", "16IRX", "16IAX"],
+                ["83DH", "83EX", "82Y5", "82Y9", "82YA", "83D6", "83D0", "83D1", "83G5", "83G6", "83G7", "83G8"],
+                ["Legion Slim 5", "Legion Slim 5i", "Legion Slim 7"]),
             LenovoHardwarePack(
                 "lenovo-legion-go",
                 "Lenovo Legion Go",
                 ["Legion"],
-                ["NX", "8APU1"],
+                ["NX", "8APU1", "NX10"],
                 ["83E1", "83N0", "83N1", "83L3"],
                 ["Legion Go", "Legion Go S", "Legion Go 2"]),
             LenovoHardwarePack(
                 "lenovo-loq",
                 "Lenovo LOQ",
                 ["LOQ"],
-                ["15IAX", "15IRH", "15IRX", "15ARP", "15APH", "15AHP", "15IAX9", "15IRX9", "15ARP9", "16IRH", "16IAX", "16APH", "16IRX", "16ARP", "17IRX", "17IAX", "17IRX9"],
-                ["83GS", "83GT", "83GU", "83GV", "83GW", "83JC", "83JD", "83JE", "83JF", "83JG", "82XV", "82XW", "83DV", "83DW", "83DX", "83DY"],
-                ["LOQ", "LOQ 15", "LOQ 16", "LOQ 17", "G5000", "拯救者 LOQ"]),
+                ["15IAX", "15IRH", "15IRX", "15ARP", "15APH", "15AHP", "15IAX9", "15IRX9", "15ARP9", "15APH11", "15IPH11", "15ARP10", "16IRH", "16IAX", "16APH", "16IRX", "16ARP", "17IRX", "17IAX", "17IRX9", "17IRX10"],
+                ["83GS", "83GT", "83GU", "83GV", "83GW", "83JC", "83JD", "83JE", "83JF", "82XV", "82XW", "83DV", "83DW", "83DX", "83DY", "83AQ", "83AR", "83AS"],
+                ["LOQ", "LOQ 15", "LOQ 16", "LOQ 17", "G5000", "拯救者 LOQ", "拯救者G5000"]),
+            LenovoHardwarePack(
+                "lenovo-legion-5",
+                "Lenovo Legion 5",
+                ["Legion"],
+                ["15ACH", "15AKP", "15AHP", "15APH", "15ARH", "15ARP", "15IAH", "15IAX", "15IHU", "15IMH", "15IRH", "15IRX", "15ITH", "15ARP10", "15IRX10", "15IAX10", "15AKP10", "15AHP10", "15APH11", "16ACH", "16ADR", "16AFR", "16AHP", "16APH", "16ARH", "16ARP", "16ARX", "16IAH", "16IAX", "16IRH", "16IRX", "16ITH", "16IRX9", "16IRX10", "17ACH", "17ARH", "17IRX", "17ITH", "17IMH", "17IRX10"],
+                // Machine types cover 2020–2026 Legion 5 / Y7000 / R7000 family refreshes.
+                ["83F0", "83F1", "83M0", "83NX", "83N2", "83LY", "83EW", "83EG", "83JJ", "83JG", "83JH", "82RC", "82RB", "82TB", "83EF", "82RE", "82RD", "82AX", "82B0", "82GR", "82JU", "82JY", "82K0", "82K1", "82K2", "82N4", "82N5", "82NW", "83FG", "83FH", "83G1", "83G2", "83LL", "83LM", "83LN", "83DT", "83DU", "83C6", "83C7"],
+                ["Legion 5", "Legion 5i", "Legion 5 Pro", "Legion 5a", "Y7000", "Y7000P", "Y7000P 2020H", "Y7000P2020H", "Y7000P IRX9", "Y7000P IRX10", "R7000", "R7000P", "R7000P 2021", "R7000P 2024", "R7000P 2025", "拯救者 Y7000", "拯救者 Y7000P", "拯救者 R7000", "拯救者 R7000P"]),
             LenovoBasicPack(
                 "lenovo-chromebook-basic",
                 "Lenovo Chromebook Basic",

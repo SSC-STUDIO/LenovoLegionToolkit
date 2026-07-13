@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -24,7 +25,7 @@ public partial class FanCurveControl : UserControl
     private readonly DebounceDispatcher _debouncer = new();
     private Path? _cachedLinePath;
     private Polygon? _cachedFillPolygon;
-    private SolidColorBrush? _cachedLineBrush;
+    private Brush? _cachedLineBrush;
 
     private FanTableData[]? _tableData;
     private FanTable? _minimumFanTable;
@@ -198,19 +199,26 @@ public partial class FanCurveControl : UserControl
 
     private void DrawGraph()
     {
-        var color = Application.Current.Resources["ControlFillColorDefaultBrush"] as SolidColorBrush;
+        // ControlFillColorDefault blends into the card surface (especially light theme),
+        // so the polyline between thumbs was effectively invisible. Prefer accent/chart colors.
+        var lineBrush = ResolveLineBrush();
+        var fillBrush = ResolveFillBrush(lineBrush);
 
         var points = _sliders
             .Select(GetThumbLocation)
             .Select(p => new Point(p.X, p.Y))
             .ToArray();
 
-        if (points.IsEmpty())
+        if (points.Length < 2)
             return;
 
-        if (_cachedLineBrush != color)
+        // Skip until layout has real sizes (first arrange can report 0-height thumbs).
+        if (points.All(p => p.X <= 0 && p.Y <= 0))
+            return;
+
+        if (!ReferenceEquals(_cachedLineBrush, lineBrush))
         {
-            _cachedLineBrush = color;
+            _cachedLineBrush = lineBrush;
             _cachedLinePath = null;
             _cachedFillPolygon = null;
         }
@@ -219,42 +227,89 @@ public partial class FanCurveControl : UserControl
         {
             _canvas.Children.Clear();
 
+            // Fill under the curve first so the stroke paints on top.
+            _cachedFillPolygon = new Polygon
+            {
+                IsHitTestVisible = false,
+            };
+            _canvas.Children.Add(_cachedFillPolygon);
+
             _cachedLinePath = new Path
             {
-                StrokeThickness = 2,
+                StrokeThickness = 2.25,
                 StrokeStartLineCap = PenLineCap.Round,
                 StrokeEndLineCap = PenLineCap.Round,
+                StrokeLineJoin = PenLineJoin.Round,
+                IsHitTestVisible = false,
             };
             _canvas.Children.Add(_cachedLinePath);
-
-            _cachedFillPolygon = new Polygon();
-            _canvas.Children.Add(_cachedFillPolygon);
         }
 
-        _cachedLinePath.Stroke = color;
+        _cachedLinePath.Stroke = lineBrush;
 
         var pathSegmentCollection = new PathSegmentCollection();
         foreach (var point in points.Skip(1))
-            pathSegmentCollection.Add(new LineSegment { Point = point });
-        var pathFigure = new PathFigure { StartPoint = points[0], Segments = pathSegmentCollection };
+            pathSegmentCollection.Add(new LineSegment { Point = point, IsStroked = true });
+        var pathFigure = new PathFigure
+        {
+            StartPoint = points[0],
+            Segments = pathSegmentCollection,
+            IsClosed = false,
+            IsFilled = false,
+        };
         _cachedLinePath.Data = new PathGeometry { Figures = [pathFigure] };
 
-        var pointCollection = new PointCollection { new(points[0].X, _canvas.ActualHeight - 1) };
+        var canvasHeight = _canvas.ActualHeight > 1 ? _canvas.ActualHeight : _slidersGrid.ActualHeight;
+        var baselineY = Math.Max(0, canvasHeight - 1);
+        var pointCollection = new PointCollection { new(points[0].X, baselineY) };
         foreach (var point in points)
             pointCollection.Add(point);
-        pointCollection.Add(new(points[^1].X, _canvas.ActualHeight - 1));
+        pointCollection.Add(new(points[^1].X, baselineY));
 
-        _cachedFillPolygon.Fill = color;
+        _cachedFillPolygon.Fill = fillBrush;
         _cachedFillPolygon.Points = pointCollection;
+    }
+
+    private static Brush ResolveLineBrush()
+    {
+        if (Application.Current?.Resources["ChartUtilizationBrush"] is SolidColorBrush chart)
+            return chart;
+        if (Application.Current?.Resources["AccentFillColorDefaultBrush"] is SolidColorBrush accent)
+            return accent;
+        if (Application.Current?.Resources["SystemAccentColorPrimaryBrush"] is SolidColorBrush system)
+            return system;
+        return new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
+    }
+
+    private static Brush ResolveFillBrush(Brush lineBrush)
+    {
+        var color = lineBrush is SolidColorBrush solid
+            ? solid.Color
+            : Color.FromRgb(0x00, 0x78, 0xD4);
+
+        // Soft area under the polyline (same silhouette idea as the sensor trend charts).
+        var fill = new LinearGradientBrush
+        {
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(0, 1),
+        };
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(110, color.R, color.G, color.B), 0.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(24, color.R, color.G, color.B), 1.0));
+        fill.Freeze();
+        return fill;
     }
 
     private Point GetThumbLocation(Slider slider)
     {
-        var ratio = slider.Value / (slider.Maximum - slider.Minimum);
+        var range = slider.Maximum - slider.Minimum;
+        if (range <= 0 || slider.ActualHeight <= 0)
+            return slider.TranslatePoint(new(slider.ActualWidth * 0.5, 0), _canvas);
+
+        var ratio = (slider.Value - slider.Minimum) / range;
+        // Thumb center sits on the track; pad a few px so the stroke clears the thumb edge.
         var y = slider.ActualHeight - (slider.ActualHeight * ratio);
         var x = slider.ActualWidth * 0.5;
-        var point = slider.TranslatePoint(new(x, y), _canvas);
-        return point;
+        return slider.TranslatePoint(new(x, y), _canvas);
     }
 
     private class InfoTooltip : ToolTip

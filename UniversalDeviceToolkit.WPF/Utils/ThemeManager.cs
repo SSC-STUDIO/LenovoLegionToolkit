@@ -208,10 +208,12 @@ public class ThemeManager
         SetBrush("AppSurfaceBackgroundBrush", surfaceBackground);
         SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255));
         SetBrush("AppNavigationBackgroundBrush", surfaceBackground);
-        SetBrush("ChartSurfaceBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(26, 26, 26), isDark ? 0.035 : 0.025);
-        SetBrush("ChartSurfaceBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), 0.08);
-        SetBrush("ChartGridlineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.10 : 0.09);
-        SetBrush("ChartBaselineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.16);
+        // Chart surface: slightly stronger border/frame so the plot has clear edges at first open
+        // (empty trend panels still read as chart boxes, matching filled area-chart silhouettes).
+        SetBrush("ChartSurfaceBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(26, 26, 26), isDark ? 0.045 : 0.035);
+        SetBrush("ChartSurfaceBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.14);
+        SetBrush("ChartGridlineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.14 : 0.12);
+        SetBrush("ChartBaselineBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.30 : 0.26);
         SetBrush("NotificationGlassSurfaceBrush", isDark ? Color.FromRgb(28, 28, 28) : Color.FromRgb(252, 252, 252), isDark ? 0.62 : 0.72);
         SetBrush("NotificationGlassBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.22 : 0.14);
     }

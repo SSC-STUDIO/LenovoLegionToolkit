@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
@@ -12,13 +12,14 @@ public partial class GodModeValueControl
 {
     private int? _defaultValue;
     private string _automationIdPrefix = string.Empty;
+    private string _unit = string.Empty;
 
     public string Title
     {
-        get => _cardControlHeader.Title;
+        get => _titleTextBlock.Text;
         set
         {
-            _cardControlHeader.Title = value;
+            _titleTextBlock.Text = value ?? string.Empty;
             UpdateAutomationMetadata();
         }
     }
@@ -35,11 +36,26 @@ public partial class GodModeValueControl
 
     public string Description
     {
-        get => _cardControlHeader.Subtitle;
-        set => _cardControlHeader.Subtitle = value;
+        get => _descriptionTextBlock.Text;
+        set
+        {
+            var text = value ?? string.Empty;
+            _descriptionTextBlock.Text = text;
+            _descriptionTextBlock.Visibility = string.IsNullOrWhiteSpace(text)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
     }
 
-    public string Unit { get; set; } = string.Empty;
+    public string Unit
+    {
+        get => _unit;
+        set
+        {
+            _unit = value ?? string.Empty;
+            RefreshSliderLabel();
+        }
+    }
 
     public int Value
     {
@@ -64,6 +80,7 @@ public partial class GodModeValueControl
 
                 newValue = Math.Clamp(MathExtensions.RoundNearest((int)newValue, (int)_slider.TickFrequency), _slider.Minimum, _slider.Maximum);
                 _slider.Value = newValue;
+                RefreshSliderLabel();
                 return;
             }
 
@@ -94,6 +111,7 @@ public partial class GodModeValueControl
     public GodModeValueControl()
     {
         InitializeComponent();
+        _slider.ValueChanged += (_, _) => RefreshSliderLabel();
         UpdateAutomationMetadata();
     }
 
@@ -118,9 +136,7 @@ public partial class GodModeValueControl
             _slider.TickFrequency = 0;
             _slider.Value = 0;
 
-            _sliderLabel.ContentStringFormat = null;
-
-            _comboBox.SetItems(value.Steps, value.Value, v => $"{v} {Unit}");
+            _comboBox.SetItems(value.Steps, value.Value, v => string.IsNullOrEmpty(Unit) ? $"{v}" : $"{v} {Unit}");
 
             _defaultValue = value.DefaultValue;
             _resetToDefaultButton.Visibility = _defaultValue.HasValue ? Visibility.Visible : Visibility.Collapsed;
@@ -139,8 +155,7 @@ public partial class GodModeValueControl
             _slider.Maximum = value.Max;
             _slider.TickFrequency = value.Step;
             _slider.Value = value.Value;
-
-            _sliderLabel.ContentStringFormat = $"{0} {Unit}";
+            RefreshSliderLabel();
 
             _comboBox.Items.Clear();
             _comboBox.SelectedItem = null;
@@ -153,6 +168,17 @@ public partial class GodModeValueControl
         }
 
         Visibility = Visibility.Collapsed;
+    }
+
+    private void RefreshSliderLabel()
+    {
+        if (_sliderLabel is null)
+            return;
+
+        var text = string.IsNullOrEmpty(Unit)
+            ? $"{_slider.Value:0}"
+            : $"{_slider.Value:0} {Unit}";
+        _sliderLabel.Text = text;
     }
 
     private void ResetToDefaultButton_OnClick(object sender, RoutedEventArgs e)
@@ -169,16 +195,23 @@ public partial class GodModeValueControl
 
     private void UpdateAutomationMetadata()
     {
-        AutomationProperties.SetName(_slider, _cardControlHeader.Title);
-        AutomationProperties.SetName(_comboBox, _cardControlHeader.Title);
-        AutomationProperties.SetName(_resetToDefaultButton, _cardControlHeader.Title);
+        var name = _titleTextBlock?.Text ?? string.Empty;
+        if (_slider is not null)
+            AutomationProperties.SetName(_slider, name);
+        if (_comboBox is not null)
+            AutomationProperties.SetName(_comboBox, name);
+        if (_resetToDefaultButton is not null)
+            AutomationProperties.SetName(_resetToDefaultButton, name);
 
         if (string.IsNullOrWhiteSpace(_automationIdPrefix))
             return;
 
-        AutomationProperties.SetAutomationId(_slider, $"{_automationIdPrefix}Slider");
-        AutomationProperties.SetAutomationId(_comboBox, $"{_automationIdPrefix}ComboBox");
-        AutomationProperties.SetAutomationId(_resetToDefaultButton, $"{_automationIdPrefix}ResetButton");
+        if (_slider is not null)
+            AutomationProperties.SetAutomationId(_slider, $"{_automationIdPrefix}Slider");
+        if (_comboBox is not null)
+            AutomationProperties.SetAutomationId(_comboBox, $"{_automationIdPrefix}ComboBox");
+        if (_resetToDefaultButton is not null)
+            AutomationProperties.SetAutomationId(_resetToDefaultButton, $"{_automationIdPrefix}ResetButton");
     }
 }
 }

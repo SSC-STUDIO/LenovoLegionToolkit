@@ -3,179 +3,346 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
-    xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
     <!--
-      Compact settings-style layout (matches SettingsAppearanceControl):
-      flat CardControl sections, no nested hero banners / metric grids.
-      Behavior inspired by Watt Toolkit; no GPL code copied.
+      Network control center — high density, narrow-column safe, Fluent surface.
+      AutomationIds preserved for smoke/UI tests.
     -->
+    <UserControl.Resources>
+        <Style x:Key="NaMainSurfaceStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSurface}" />
+            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="UseLayoutRounding" Value="True" />
+        </Style>
+        <Style x:Key="NaSectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="Margin" Value="0,0,0,2" />
+        </Style>
+        <Style x:Key="NaMutedStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="LineHeight" Value="15" />
+        </Style>
+        <Style x:Key="NaStatusPillStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+        <Style x:Key="NaMetricTileStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="Margin" Value="0,0,6,6" />
+            <Setter Property="MinWidth" Value="108" />
+            <Setter Property="MinHeight" Value="56" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+        <Style x:Key="NaMetricValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+        <Style x:Key="NaMetricUnitStyle" TargetType="TextBlock" BasedOn="{StaticResource NaMutedStyle}">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Margin" Value="4,0,0,2" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+        <Style x:Key="NaDividerStyle" TargetType="Border">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Margin" Value="0,10,0,10" />
+            <Setter Property="Background" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+        <Style x:Key="NaPrimaryButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+            <Setter Property="MinWidth" Value="88" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="Padding" Value="12,4" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style x:Key="NaSecondaryButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <!-- Based on app-wide rounded ComboBox so the drop-down popup is not square. -->
+        <Style x:Key="NaModeComboStyle" TargetType="ComboBox" BasedOn="{StaticResource AppComboBoxStyle}">
+            <Setter Property="MinWidth" Value="168" />
+            <Setter Property="MinHeight" Value="32" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
+
     <wpfui:DynamicScrollViewer
         AutomationProperties.AutomationId="NetworkAccelerationPageScrollViewer"
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="0,0,16,24">
-            <TextBlock
-                Margin="0,16,0,4"
-                Focusable="True"
-                Style="{StaticResource AppPageTitleTextBlockStyle}"
-                Text="{x:Static resources:Resource.NetworkAccelerationPage_Title}" />
-            <TextBlock
-                Margin="0,0,0,16"
-                Focusable="True"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                Text="{x:Static resources:Resource.NetworkAccelerationPage_Subtitle}"
-                TextWrapping="Wrap" />
+        <Border
+            MaxWidth="920"
+            Margin="0,0,8,16"
+            HorizontalAlignment="Stretch"
+            Style="{StaticResource NaMainSurfaceStyle}"
+            AutomationProperties.AutomationId="NetworkAccelerationControlCard">
+            <StackPanel>
 
-            <!-- Status + master switch -->
-            <custom:CardControl
-                Margin="0,0,0,8"
-                Icon="Rocket24"
-                AutomationProperties.AutomationId="NetworkAccelerationStatusCard">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl
-                        Title="{x:Static resources:Resource.NetworkAccelerationPage_StatusHeading}"
-                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_EnableLabel}" />
-                </custom:CardControl.Header>
-                <StackPanel>
-                    <TextBlock
-                        x:Name="_statusText"
-                        Margin="0,0,0,10"
-                        AutomationProperties.AutomationId="NetworkAccelerationStatusText"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        Text="{x:Static resources:Resource.NetworkAccelerationPage_StatusOff}"
-                        TextWrapping="Wrap" />
-                    <CheckBox
-                        x:Name="_enableToggle"
-                        Margin="0,0,0,12"
-                        VerticalAlignment="Center"
-                        AutomationProperties.AutomationId="NetworkAccelerationEnableToggle"
-                        Click="EnableToggle_Click"
-                        Content="{x:Static resources:Resource.NetworkAccelerationPage_EnableLabel}" />
-                    <WrapPanel>
-                        <wpfui:Button
-                            x:Name="_startButton"
-                            MinWidth="110"
-                            Margin="0,0,8,8"
-                            Appearance="Primary"
-                            AutomationProperties.AutomationId="NetworkAccelerationStartButton"
-                            Click="StartButton_Click"
-                            Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}"
-                            IsEnabled="False" />
-                        <wpfui:Button
-                            x:Name="_stopButton"
-                            MinWidth="110"
-                            Margin="0,0,8,8"
-                            AutomationProperties.AutomationId="NetworkAccelerationStopButton"
-                            Click="StopButton_Click"
-                            Content="{x:Static resources:Resource.NetworkAccelerationPage_Stop}"
-                            IsEnabled="False" />
-                        <wpfui:Button
-                            x:Name="_restoreButton"
-                            MinWidth="140"
-                            Margin="0,0,8,8"
-                            AutomationProperties.AutomationId="NetworkAccelerationRestoreButton"
-                            Click="RestoreButton_Click"
-                            Content="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}" />
-                    </WrapPanel>
-                </StackPanel>
-            </custom:CardControl>
+                <!-- 1. Status (stacked = no truncation in narrow columns) -->
+                <Border Style="{StaticResource NaStatusPillStyle}" MaxWidth="1000" HorizontalAlignment="Stretch">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Ellipse
+                            x:Name="_statusDot"
+                            Grid.Column="0"
+                            Width="8"
+                            Height="8"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            Fill="{DynamicResource TextFillColorSecondaryBrush}"
+                            AutomationProperties.AutomationId="NetworkAccelerationStatusIndicator" />
+                        <TextBlock
+                            x:Name="_statusText"
+                            Grid.Column="1"
+                            FontSize="13"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Text="{x:Static resources:Resource.NetworkAccelerationPage_State_Idle}"
+                            TextWrapping="Wrap"
+                            TextTrimming="CharacterEllipsis"
+                            VerticalAlignment="Center"
+                            AutomationProperties.AutomationId="NetworkAccelerationStatusText" />
+                    </Grid>
+                </Border>
 
-            <!-- Mode (System proxy / Hosts / Diagnostics) -->
-            <custom:CardControl
-                Margin="0,0,0,8"
-                Icon="Settings24"
-                AutomationProperties.AutomationId="NetworkAccelerationModeCard">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl
-                        Title="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}"
-                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_ModeHint}" />
-                </custom:CardControl.Header>
-                <ComboBox
-                    x:Name="_modeComboBox"
-                    MinWidth="220"
-                    HorizontalAlignment="Left"
-                    AutomationProperties.AutomationId="NetworkAccelerationModeComboBox"
-                    SelectionChanged="ModeComboBox_SelectionChanged" />
-            </custom:CardControl>
+                <TextBlock
+                    x:Name="_modeSummaryText"
+                    Margin="2,6,0,0"
+                    Style="{StaticResource NaMutedStyle}"
+                    Text="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap" />
 
-            <!-- Domain groups (Steam / GitHub / Custom) -->
-            <custom:CardControl
-                Margin="0,0,0,8"
-                Icon="Globe24"
-                AutomationProperties.AutomationId="NetworkAccelerationDomainsCard">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl
-                        Title="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsLabel}"
-                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsHint}" />
-                </custom:CardControl.Header>
-                <StackPanel>
-                    <TextBlock
-                        x:Name="_domainGroupsText"
-                        Margin="0,0,0,10"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap" />
-                    <StackPanel x:Name="_domainGroupsPanel" />
-                    <TextBlock
-                        Margin="0,10,0,0"
-                        FontSize="12"
-                        Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                        Text="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsFootnote}"
-                        TextWrapping="Wrap" />
-                </StackPanel>
-            </custom:CardControl>
+                <WrapPanel Margin="0,8,0,0" Orientation="Horizontal">
+                    <wpfui:Button
+                        x:Name="_primaryActionButton"
+                        Margin="0,0,8,4"
+                        Style="{StaticResource NaPrimaryButtonStyle}"
+                        Appearance="Primary"
+                        AutomationProperties.AutomationId="NetworkAccelerationPrimaryActionButton"
+                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_Start}"
+                        Click="PrimaryActionButton_Click"
+                        Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}" />
+                    <ComboBox
+                        x:Name="_modeComboBox"
+                        Margin="0,0,0,4"
+                        Style="{StaticResource NaModeComboStyle}"
+                        MaxWidth="320"
+                        HorizontalAlignment="Left"
+                        AutomationProperties.AutomationId="NetworkAccelerationModeSelector"
+                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}"
+                        SelectionChanged="ModeComboBox_SelectionChanged" />
+                </WrapPanel>
 
-            <!-- Diagnostics -->
-            <custom:CardControl
-                Margin="0,0,0,8"
-                Icon="Pulse24"
-                AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsCard">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl
-                        Title="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHeading}"
-                        Subtitle="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsPlaceholder}" />
-                </custom:CardControl.Header>
-                <StackPanel>
-                    <TextBlock
-                        x:Name="_diagnosticsText"
-                        Margin="0,0,0,10"
-                        AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsText"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsPlaceholder}"
-                        TextWrapping="Wrap" />
+                <Border Style="{StaticResource NaDividerStyle}" />
+
+                <!-- 2. Metrics — dense wrap tiles -->
+                <TextBlock
+                    x:Name="_metricsHeadingText"
+                    Style="{StaticResource NaSectionLabelStyle}"
+                    Text="Overview" />
+                <WrapPanel Margin="0,4,0,0">
+                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationLatencyMetric">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock x:Name="_metricLatencyValue" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                                <TextBlock
+                                    x:Name="_metricLatencyUnit"
+                                    Style="{StaticResource NaMetricUnitStyle}"
+                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Ms}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationUploadMetric">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Upload}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock x:Name="_metricUploadValue" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                                <TextBlock
+                                    Style="{StaticResource NaMetricUnitStyle}"
+                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Rate}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationDownloadMetric">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Download}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                <TextBlock x:Name="_metricDownloadValue" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                                <TextBlock
+                                    Style="{StaticResource NaMetricUnitStyle}"
+                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Rate}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationConnectionsMetric">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Connections}" />
+                            <TextBlock x:Name="_metricConnectionsValue" Margin="0,4,0,0" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationRulesMetric">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Rules}" />
+                            <TextBlock x:Name="_metricRulesValue" Margin="0,4,0,0" Style="{StaticResource NaMetricValueStyle}" Text="0" MinWidth="22" />
+                        </StackPanel>
+                    </Border>
+                </WrapPanel>
+
+                <Border Style="{StaticResource NaDividerStyle}" />
+
+                <!-- 3. Acceleration targets -->
+                <TextBlock
+                    Style="{StaticResource NaSectionLabelStyle}"
+                    Text="{x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading}" />
+                <TextBlock
+                    Margin="0,0,0,6"
+                    Style="{StaticResource NaMutedStyle}"
+                    Text="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsHint}" />
+                <ItemsControl
+                    x:Name="_domainGroupsPanel"
+                    AutomationProperties.AutomationId="NetworkAccelerationDomainsCard">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <TextBlock
+                    x:Name="_domainGroupsText"
+                    Margin="0,2,0,0"
+                    Style="{StaticResource NaMutedStyle}" />
+
+                <Border Style="{StaticResource NaDividerStyle}" />
+
+                <!-- 4. Diagnostics -->
+                <Grid AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsCard">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" MinWidth="100" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Center">
+                        <TextBlock
+                            Style="{StaticResource NaSectionLabelStyle}"
+                            Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHeading}" />
+                        <TextBlock
+                            Style="{StaticResource NaMutedStyle}"
+                            Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHint}" />
+                    </StackPanel>
                     <wpfui:Button
                         x:Name="_diagnosticsButton"
-                        HorizontalAlignment="Left"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource NaSecondaryButtonStyle}"
+                        Appearance="Secondary"
                         AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsButton"
+                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_RunDiagnostics}"
                         Click="DiagnosticsButton_Click"
                         Content="{x:Static resources:Resource.NetworkAccelerationPage_RunDiagnostics}" />
-                </StackPanel>
-            </custom:CardControl>
+                </Grid>
 
-            <custom:CardExpander
-                Margin="0,0,0,8"
-                AutomationProperties.AutomationId="NetworkAccelerationAdvancedExpander"
-                Header="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedHeading}"
-                IsExpanded="False">
-                <StackPanel Margin="0,12,0,0">
-                    <TextBlock
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedBody}"
-                        TextWrapping="Wrap" />
-                    <TextBlock
-                        x:Name="_modeText"
-                        Margin="0,12,0,0"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                    <TextBlock
-                        x:Name="_portText"
-                        Margin="0,4,0,0"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                </StackPanel>
-            </custom:CardExpander>
-        </StackPanel>
+                <ItemsControl
+                    x:Name="_diagnosticsItemsPanel"
+                    Margin="0,8,0,0" />
+
+                <TextBlock
+                    x:Name="_diagnosticsText"
+                    Margin="0,6,0,0"
+                    FontSize="10"
+                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                    TextWrapping="Wrap"
+                    Visibility="Collapsed"
+                    AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsText" />
+
+                <Border Style="{StaticResource NaDividerStyle}" />
+
+                <!-- 5. Advanced -->
+                <Expander
+                    x:Name="_advancedExpander"
+                    IsExpanded="False"
+                    AutomationProperties.AutomationId="NetworkAccelerationAdvancedExpander">
+                    <Expander.Header>
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedHeading}" />
+                    </Expander.Header>
+                    <StackPanel Margin="0,8,0,0">
+                        <TextBlock
+                            Style="{StaticResource NaMutedStyle}"
+                            Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedBody}" />
+                        <TextBlock
+                            x:Name="_modeText"
+                            Margin="0,8,0,0"
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock
+                            x:Name="_portText"
+                            Margin="0,2,0,8"
+                            FontSize="12"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                        <Border
+                            Margin="0,2,0,0"
+                            Padding="10,8"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CornerRadiusControl}">
+                            <StackPanel>
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="SemiBold"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading}" />
+                                <TextBlock
+                                    Margin="0,4,0,8"
+                                    Style="{StaticResource NaMutedStyle}"
+                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_RestoreHint}" />
+                                <wpfui:Button
+                                    x:Name="_restoreButton"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource NaSecondaryButtonStyle}"
+                                    Appearance="Secondary"
+                                    AutomationProperties.AutomationId="NetworkAccelerationRestoreButton"
+                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}"
+                                    Click="RestoreButton_Click"
+                                    Content="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Expander>
+            </StackPanel>
+        </Border>
     </wpfui:DynamicScrollViewer>
 </UserControl>

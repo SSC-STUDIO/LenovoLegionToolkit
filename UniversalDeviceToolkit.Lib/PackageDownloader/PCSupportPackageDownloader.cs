@@ -78,7 +78,8 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
         var readmeFileNode = filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("txt readme", StringComparison.OrdinalIgnoreCase))
                               ?? filesNode.FirstOrDefault(n => n!["TypeString"]!.ToString().Equals("html", StringComparison.OrdinalIgnoreCase));
 
-        var readme = readmeFileNode?["URL"]?.ToString();
+        var readmeRaw = readmeFileNode?["URL"]?.ToString();
+        var readme = string.IsNullOrWhiteSpace(readmeRaw) ? null : readmeRaw.Trim();
 
         return new()
         {

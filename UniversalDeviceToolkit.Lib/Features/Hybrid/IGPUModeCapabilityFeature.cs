@@ -80,7 +80,7 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
         {
             return await WMI.LenovoOtherMethod.GetFeatureValueAsync(capabilityId).ConfigureAwait(false);
         }
-        catch (ManagementException ex)
+        catch (Exception ex) when (ex is ManagementException or InvalidOperationException)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"GetFeatureValue({capabilityId}) is unavailable.", ex);

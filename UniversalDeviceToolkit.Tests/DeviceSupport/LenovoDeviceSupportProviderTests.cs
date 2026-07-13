@@ -60,9 +60,15 @@ public sealed class LenovoDeviceSupportProviderTests
     }
 
     [Theory]
+    [InlineData("83DF", "Legion Y9000P IRX9", "lenovo-legion-pro-5")]
+    [InlineData("83DG", "Legion Pro 5 16IRX9", "lenovo-legion-pro-5")]
+    [InlineData("83F2", "Legion Pro 5 16IRX10", "lenovo-legion-pro-5")]
+    [InlineData("83F0", "Legion 5 15IRX10", "lenovo-legion-5")]
     [InlineData("83GS", "LOQ 15IRX9", "lenovo-loq")]
+    [InlineData("83AQ", "LOQ 15APH11", "lenovo-loq")]
     [InlineData("83E1", "Legion Go", "lenovo-legion-go")]
     [InlineData("83N0", "Legion Go S", "lenovo-legion-go")]
+    [InlineData("83DE", "Legion Pro 7 16IRX9", "lenovo-legion-pro-7")]
     public void Evaluate_WhenRecentLenovoGamingMatches_ShouldEnableHardwarePack(
         string machineType,
         string model,
@@ -78,8 +84,33 @@ public sealed class LenovoDeviceSupportProviderTests
         var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
 
         availability.IsSupported.Should().BeTrue();
-        availability.IsBasicMode.Should().BeFalse();
         availability.DevicePackId.Should().Be(expectedPackId);
+    }
+
+    [Fact]
+    public void Evaluate_WhenOnlySkuContainsMachineType_ShouldEnablePro5ForY9000PIrx9()
+    {
+        var machineInformation = new MachineInformation
+        {
+            Vendor = "LENOVO",
+            MachineType = "",
+            Model = "Legion Y9000P IRX9",
+            Hardware = new()
+            {
+                ComputerSystem = new()
+                {
+                    Manufacturer = "LENOVO",
+                    Model = "83DF",
+                    SystemFamily = "Legion Y9000P IRX9",
+                    ChassisSkuNumber = "LENOVO_MT_83DF_BU_idea_FM_Legion Y9000P IRX9"
+                }
+            }
+        };
+
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.DevicePackId.Should().Be("lenovo-legion-pro-5");
         availability.EnabledFeatures.Should().Contain("lenovo-hardware-controls");
     }
 

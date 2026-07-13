@@ -7,6 +7,9 @@
 
     <Style BasedOn="{StaticResource DefaultUiCardActionStyle}" TargetType="{x:Type custom:CardAction}">
         <Setter Property="Margin" Value="0,0,0,12" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
     </Style>
 
     <!--  ReSharper restore Xaml.StaticResourceNotResolved  -->

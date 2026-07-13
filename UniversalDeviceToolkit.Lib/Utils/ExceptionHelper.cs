@@ -265,19 +265,23 @@ public static class ExceptionHelper
     public static InvalidOperationException DriverCommandError(uint controlCode, Exception inner) =>
         new(string.Format(Resource.Exception_DriverCommandError, controlCode), inner);
 
-    public static ManagementException WmiClassNotAvailable(string scope, string queryFormatted, ManagementException inner) =>
+    // Use InvalidOperationException (not ManagementException) for wrapped WMI failures so:
+    // 1) We do not re-fire "break when thrown" for ManagementException on every soft probe.
+    // 2) Callers can catch Exception / InvalidOperationException without mistaking firmware probes
+    //    for unhandled COM failures.
+    public static InvalidOperationException WmiClassNotAvailable(string scope, string queryFormatted, Exception inner) =>
         new(string.Format(Resource.Exception_WmiClassNotAvailable, scope, queryFormatted), inner);
 
-    public static ManagementException WmiReadFailed(string message, string scope, FormattableString query, ManagementException inner) =>
+    public static InvalidOperationException WmiReadFailed(string message, string scope, FormattableString query, Exception inner) =>
         new(string.Format(Resource.Exception_WmiReadFailed, message, scope, query), inner);
 
-    public static ManagementException WmiCallFailed(string message, string scope, FormattableString query, string methodName, ManagementException inner) =>
+    public static InvalidOperationException WmiCallFailed(string message, string scope, FormattableString query, string methodName, Exception inner) =>
         new(string.Format(Resource.Exception_WmiCallFailed, message, scope, query, methodName), inner);
 
-    public static ManagementException WmiCallFailedDot(string message, string scope, FormattableString query, string methodName, ManagementException inner) =>
+    public static InvalidOperationException WmiCallFailedDot(string message, string scope, FormattableString query, string methodName, Exception inner) =>
         new(string.Format(Resource.Exception_WmiCallFailedDot, message, scope, query, methodName), inner);
 
-    public static ManagementException WmiCallFailedFormatted(string message, string scope, string queryFormatted, string methodName, ManagementException inner) =>
+    public static InvalidOperationException WmiCallFailedFormatted(string message, string scope, string queryFormatted, string methodName, Exception inner) =>
         new(string.Format(Resource.Exception_WmiCallFailed, message, scope, queryFormatted, methodName), inner);
 
     public static InvalidOperationException WmiNoResults() =>

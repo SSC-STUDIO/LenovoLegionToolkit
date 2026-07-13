@@ -304,6 +304,15 @@ public partial class GodModeSettingsWindow
             await PersistStateAsync();
             await _godModeController.ApplyStateAsync();
 
+            // Auto-closing success toast (not an error-style snackbar).
+            await ShowSuccessSnackBarAsync(
+                Resource.GodModeSettingsWindow_Title,
+                LocalizationHelper.GetStringOrEnglish(
+                    Resource.ResourceManager,
+                    "GodModeSettingsWindow_ApplySuccess_Message",
+                    "Custom mode settings applied successfully.",
+                    Resource.Culture));
+
             return true;
         }
         catch (Exception ex)
@@ -691,6 +700,22 @@ public partial class GodModeSettingsWindow
     {
         _snackBar.Title = title;
         _snackBar.Content = message;
+        _snackBar.IsCloseButtonEnabled = true;
+        _snackBar.Icon = new SymbolIcon { Symbol = SymbolRegular.ErrorCircle24 };
+        _snackBar.Appearance = ControlAppearance.Danger;
+        _snackBar.Timeout = TimeSpan.FromSeconds(5);
+        await _snackBar.ShowAsync();
+    }
+
+    private async Task ShowSuccessSnackBarAsync(string title, string? message)
+    {
+        _snackBar.Title = title;
+        _snackBar.Content = message;
+        // Success toasts auto-dismiss and do not need a close button.
+        _snackBar.IsCloseButtonEnabled = false;
+        _snackBar.Icon = new SymbolIcon { Symbol = SymbolRegular.Checkmark24 };
+        _snackBar.Appearance = ControlAppearance.Success;
+        _snackBar.Timeout = TimeSpan.FromMilliseconds(2800);
         await _snackBar.ShowAsync();
     }
 

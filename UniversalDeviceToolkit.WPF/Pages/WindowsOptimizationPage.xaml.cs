@@ -217,7 +217,15 @@ public partial class WindowsOptimizationPage : Page
         }
         else if (element == _networkAccelerationNavButton)
         {
-            ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.NetworkAcceleration;
+            // Assign even when already NA so visibility bindings refresh after Initialize restore.
+            if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.NetworkAcceleration)
+            {
+                ViewModel.RefreshModePresentation();
+            }
+            else
+            {
+                ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.NetworkAcceleration;
+            }
         }
     }
 

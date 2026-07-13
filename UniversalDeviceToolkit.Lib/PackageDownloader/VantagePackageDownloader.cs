@@ -150,7 +150,8 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
         var fileCrc = document.SelectSingleNode("/Package/Files/Installer/File/CRC")?.InnerText;
         var fileSize = $"{fileSizeBytes / 1024.0 / 1024.0:0.00} MB";
         var readmeName = document.SelectSingleNode("/Package/Files/Readme/File/Name")?.InnerText;
-        var readme = string.IsNullOrWhiteSpace(readmeName) ? string.Empty : $"{baseLocation}/{readmeName}";
+        // null (not "") so UI can hide the Readme button when missing
+        var readme = string.IsNullOrWhiteSpace(readmeName) ? null : $"{baseLocation}/{readmeName}";
         var fileLocation = $"{baseLocation}/{fileName}";
         var rebootString = document.SelectSingleNode("/Package/Reboot/@type")?.InnerText ?? string.Empty;
         var reboot = int.TryParse(rebootString, out var rebootInt) ? (RebootType)rebootInt : RebootType.NotRequired;

@@ -392,6 +392,9 @@ CPU/GPU 性能。
   <data name="DeviceInformationWindow_LenovoSupport" xml:space="preserve">
     <value>点击访问联想服务网站查看详细保修信息</value>
   </data>
+  <data name="DeviceInformationWindow_WarrantyLinkUnavailable" xml:space="preserve">
+    <value>无法打开联想服务页面。请检查网络后重试。</value>
+  </data>
   <data name="DeviceInformationWindow_MachineType_Title" xml:space="preserve">
     <value>设备代号</value>
   </data>
@@ -405,7 +408,7 @@ CPU/GPU 性能。
     <value>序列号</value>
   </data>
   <data name="DeviceInformationWindow_Title" xml:space="preserve">
-    <value>关于设备</value>
+    <value>设备信息</value>
   </data>
   <data name="DeviceInformationWindow_WarrantyEndDate_Title" xml:space="preserve">
     <value>结束时间</value>
@@ -947,11 +950,8 @@ CPU/GPU 性能。
     <value>版本</value>
   </data>
   <data name="PackagesPage_Disclaimer_Message" xml:space="preserve">
-    <value>以下软件列表根据您的
-电脑型号获取。请确保
-安装的版本与型号正确。
-注：来自联想国际站点，
-不一定适用于中国大陆机型。</value>
+    <value>以下软件列表根据您的电脑型号获取。请确保安装的版本与型号正确。
+注：来自联想国际站点，不一定适用于中国大陆机型。</value>
   </data>
   <data name="PackagesPage_DownloadFailed_Message" xml:space="preserve">
     <value>请确保机器类型与系统类型设置正确！</value>
@@ -1949,28 +1949,55 @@ ImController 可能
     <value>删除报告</value>
   </data>
   <data name="CrashReportNotification_Description" xml:space="preserve">
-    <value>崩溃报告已存储至磁盘。您可以在下方查看详细信息。报告不会自动传送。</value>
+    <value>崩溃报告已保存在本机。可在下方查看详情，报告不会自动上传。</value>
   </data>
   <data name="CrashReportNotification_Message" xml:space="preserve">
-    <value>应用程序在上一次会话中崩溃</value>
+    <value>应用在上一次会话中崩溃</value>
   </data>
   <data name="CrashReportNotification_OpenFailed" xml:space="preserve">
     <value>无法打开崩溃报告：{0}</value>
   </data>
   <data name="CrashReportNotification_OpenReport" xml:space="preserve">
-    <value>开启报告</value>
+    <value>打开报告</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>关闭</value>
   </data>
   <data name="CrashReportNotification_ReportPath" xml:space="preserve">
-    <value>崩溃报告已存储至：{0}</value>
+    <value>保存位置：{0}</value>
   </data>
   <data name="CrashReportNotification_Title" xml:space="preserve">
     <value>检测到崩溃报告</value>
   </data>
   <data name="CrashReportNotification_UnableToLoad" xml:space="preserve">
     <value>无法加载崩溃报告详细信息。</value>
+  </data>
+  <data name="CrashReportNotification_DetailsHeading" xml:space="preserve">
+    <value>报告详情</value>
+  </data>
+  <data name="CrashReportNotification_Field_Time" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="CrashReportNotification_Field_Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="CrashReportNotification_Field_Uptime" xml:space="preserve">
+    <value>运行时长</value>
+  </data>
+  <data name="CrashReportNotification_Field_Exception" xml:space="preserve">
+    <value>异常</value>
+  </data>
+  <data name="CrashReportNotification_Field_Message" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="CrashReportNotification_Field_Inner" xml:space="preserve">
+    <value>内部异常</value>
+  </data>
+  <data name="CrashReportNotification_Field_InnerMessage" xml:space="preserve">
+    <value>内部消息</value>
+  </data>
+  <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
+    <value>堆栈跟踪</value>
   </data>
   <data name="Unnamed" xml:space="preserve">
     <value>未命名</value>
@@ -4000,14 +4027,128 @@ Fn 将会暂时解除锁定。</value>
   <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
     <value>状态</value>
   </data>
+  <data name="NetworkAccelerationPage_ControlHeading" xml:space="preserve">
+    <value>控制</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlSubtitle" xml:space="preserve">
+    <value>可选的本机加速。默认关闭 — 启动时不会自动开启。</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
+    <value>解锁模式选择与手动启动。在点击启动前不会修改系统代理。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHint" xml:space="preserve">
+    <value>仅在你主动请求时运行本机快速检查。</value>
+  </data>
   <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
     <value>关闭（默认）</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Idle" xml:space="preserve">
+    <value>未启动</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Starting" xml:space="preserve">
+    <value>正在启动…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
+    <value>已连接</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Stopping" xml:space="preserve">
+    <value>正在停止…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Restoring" xml:space="preserve">
+    <value>恢复中…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Failed" xml:space="preserve">
+    <value>启动失败</value>
   </data>
   <data name="NetworkAccelerationPage_Start" xml:space="preserve">
     <value>启动</value>
   </data>
   <data name="NetworkAccelerationPage_Stop" xml:space="preserve">
     <value>停止</value>
+  </data>
+  <data name="NetworkAccelerationPage_Retry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="NetworkAccelerationPage_TargetsHeading" xml:space="preserve">
+    <value>加速目标</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainEnabled" xml:space="preserve">
+    <value>已启用</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainDisabled" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainCountFormat" xml:space="preserve">
+    <value>{0} 个域名</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Latency" xml:space="preserve">
+    <value>延迟</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Upload" xml:space="preserve">
+    <value>上传</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Download" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Connections" xml:space="preserve">
+    <value>连接数</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Rules" xml:space="preserve">
+    <value>启用规则</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Unavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Ms" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Rate" xml:space="preserve">
+    <value>KB/s</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunningDiagnostics" xml:space="preserve">
+    <value>正在诊断…</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsCancelled" xml:space="preserve">
+    <value>诊断已取消。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DangerZoneHeading" xml:space="preserve">
+    <value>危险操作</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
+    <value>从上次快照恢复系统代理与 UDT 标记的 Hosts 修改。不会重新启用加速。</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
+    <value>代理进程</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
+    <value>未找到</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
+    <value>加速状态</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
+    <value>本机代理端口</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
+    <value>网关</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Doh" xml:space="preserve">
+    <value>DoH</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
+    <value>诊断</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
+    <value>不可达</value>
   </data>
   <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
     <value>诊断</value>
@@ -4049,7 +4190,7 @@ Fn 将会暂时解除锁定。</value>
     <value>域名组</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}：已启用 {1}/{2}，{3} 个域名（内置 Steam/GitHub，默认关闭 — 可在高级配置中编辑）。</value>
+    <value>已启用 {0}/{1} 组 · {2} 个域名（内置 Steam/GitHub，默认关闭）。</value>
   </data>
   <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
     <value>选择加速应用方式。总开关关闭时不会修改系统网络。</value>
@@ -4068,6 +4209,18 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
     <value>仅诊断（不改系统）</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
+    <value>系统代理</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
+    <value>仅诊断</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricsHeading" xml:space="preserve">
+    <value>运行概览</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>运行中（{0}）回环:{1}</value>

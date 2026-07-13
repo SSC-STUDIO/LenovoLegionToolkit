@@ -29,6 +29,25 @@ public class DashboardPageTests
             .And.Contain("IsHitTestVisible=\"False\"");
     }
 
+    [Fact]
+    public void DashboardPageMarkup_LoadingSkeleton_ShouldMirrorSensorsSummaryGeometry()
+    {
+        var xaml = ReadDashboardPageXaml();
+
+        // Page-level loader must show a 3-column sensors silhouette (CPU / Battery / GPU),
+        // not only list-item cards that look nothing like the live dashboard.
+        xaml.Should().Contain("AutomationProperties.AutomationId=\"DashboardSensorsLoadingSkeleton\"");
+        xaml.Should().Contain("x:Name=\"_skeletonSensorsCard\"");
+        xaml.Should().Contain("x:Name=\"_skeletonSensorsGrid\"");
+        xaml.Should().Contain("Columns=\"3\"");
+        xaml.Should().Contain("DashboardSensorsSkeletonGaugeStyle");
+        xaml.Should().Contain("GaugeSizeMD");
+        xaml.Should().Contain("DashboardSensorsSkeletonBarStyle");
+        xaml.Should().Contain("DashboardSensorsSkeletonTrendPanelStyle");
+        // Feature groups remain below sensors.
+        xaml.Should().Contain("x:Name=\"_skeletonGroupsGrid\"");
+    }
+
     [Theory]
     [InlineData(500, 1)]
     [InlineData(1000, 1)]

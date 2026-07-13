@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
 
@@ -54,9 +55,16 @@ public class SensorsControllerV2(GPUController gpuController) : AbstractSensorsC
         return t;
     }
 
-    protected override Task<int> GetCpuCurrentFanSpeedAsync() => WMI.LenovoFanMethod.FanGetCurrentFanSpeedAsync(CPU_FAN_ID);
+    // Historical V2 path: Fan_GetCurrentFanSpeed first (IDs 0/1), then capability.
+    protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
+        ReadFanSpeedWithFallbackAsync(
+            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(CPU_FAN_ID, 1),
+            () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed));
 
-    protected override Task<int> GetGpuCurrentFanSpeedAsync() => WMI.LenovoFanMethod.FanGetCurrentFanSpeedAsync(GPU_FAN_ID);
+    protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
+        ReadFanSpeedWithFallbackAsync(
+            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(GPU_FAN_ID, 2),
+            () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed));
 
     protected override Task<int> GetCpuMaxFanSpeedAsync() => WMI.LenovoFanMethod.GetCurrentFanMaxSpeedAsync(CPU_SENSOR_ID, CPU_FAN_ID);
 

@@ -5,6 +5,10 @@
     <AssemblyName>LenovoLegionToolkit.Lib.Plugins</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!-- Match Lib/WPF win-x64 graph (avoids MSB3270 MSIL vs AMD64). -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" />

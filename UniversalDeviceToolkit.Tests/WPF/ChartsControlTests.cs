@@ -129,6 +129,58 @@ public class ChartsControlTests
             .And.Contain("1 - Math.Pow(1 - t, 3)");
     }
 
+    [Fact]
+    public void TrendChartSource_ShouldDrawPlotFrameAndLeftAlignedEdges()
+    {
+        var source = ReadWpfText("Controls", "Charts", "TrendChartControl.cs");
+
+        // Empty/first-open charts keep a full rectangular frame (left/right/top/baseline).
+        source.Should().Contain("DrawPlotFrame");
+        source.Should().Contain("width - 0.5");
+        source.Should().Contain("height - 0.5");
+
+        // Samples grow from the left so early history has a clear left edge (not a right blip).
+        source.Should().Contain("BuildPlotPoints");
+        source.Should().Contain("var x = i * stepX");
+
+        // Fill is more opaque so the area silhouette stays readable at first open.
+        source.Should().Contain("Color.FromArgb(140");
+    }
+
+    [Fact]
+    public void BuildPlotPoints_WhenSingleSample_ShouldExpandToFlatSegmentFromLeft()
+    {
+        var series = new TrendSeries("util", 10);
+        series.Add(50);
+        series.Maximum = 100;
+
+        var points = TrendChartControl.BuildPlotPoints(series, width: 100, height: 40, max: 100);
+
+        points.Should().HaveCount(2);
+        points[0].X.Should().Be(0);
+        points[1].X.Should().BeApproximately(100.0 / 9.0, 0.01);
+        points[0].Y.Should().BeApproximately(points[1].Y, 0.01);
+    }
+
+    [Fact]
+    public void BuildPlotPoints_WhenMultipleSamples_ShouldLeftAlignOldestAtOrigin()
+    {
+        var series = new TrendSeries("util", 5);
+        series.Add(0);
+        series.Add(100);
+        series.Add(50);
+
+        var points = TrendChartControl.BuildPlotPoints(series, width: 80, height: 40, max: 100);
+
+        points.Should().HaveCount(3);
+        points[0].X.Should().Be(0);
+        points[1].X.Should().BeApproximately(20.0, 0.01);
+        points[2].X.Should().BeApproximately(40.0, 0.01);
+        // Peak sample is highest on the plot (lowest Y).
+        points[1].Y.Should().BeLessThan(points[0].Y);
+        points[1].Y.Should().BeLessThan(points[2].Y);
+    }
+
     private static string ReadWpfText(params string[] relativeSegments)
     {
         var root = FindRepositoryRoot();

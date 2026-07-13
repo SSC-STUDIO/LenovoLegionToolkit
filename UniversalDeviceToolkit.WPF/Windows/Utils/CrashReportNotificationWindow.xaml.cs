@@ -36,43 +36,46 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
 
         private void InitializeCrashDisplay()
         {
-            // Set report path
-            _reportPathTextBlock.Text = string.Format(T("CrashReportNotification_ReportPath", "Crash report saved to: {0}"), _crashReportPath);
+            _reportPathTextBlock.Text = string.Format(
+                T("CrashReportNotification_ReportPath", "Crash report saved to: {0}"),
+                _crashReportPath);
 
-            if (_crashReport == null)
+            if (_crashReport is null)
             {
-                _crashDetailsTextBlock.Text = T("CrashReportNotification_UnableToLoad", "Unable to load crash report details.");
+                _crashDetailsTextBlock.Text = T(
+                    "CrashReportNotification_UnableToLoad",
+                    "Unable to load crash report details.");
                 return;
             }
 
-            // Build crash details
+            // Compact, readable summary first; stack trace last and bounded.
             var details = new StringBuilder();
-            details.AppendLine($"Timestamp: {_crashReport.Timestamp:yyyy-MM-dd HH:mm:ss} UTC");
-            details.AppendLine($"Application Version: {_crashReport.AppVersion}");
-            details.AppendLine($"Uptime: {_crashReport.Uptime:hh\\:mm\\:ss}");
+            details.AppendLine($"{T("CrashReportNotification_Field_Time", "Time")}: {_crashReport.Timestamp:yyyy-MM-dd HH:mm:ss} UTC");
+            details.AppendLine($"{T("CrashReportNotification_Field_Version", "Version")}: {_crashReport.AppVersion}");
+            details.AppendLine($"{T("CrashReportNotification_Field_Uptime", "Uptime")}: {_crashReport.Uptime:hh\\:mm\\:ss}");
             details.AppendLine();
-            details.AppendLine($"Exception: {_crashReport.ExceptionType}");
-            details.AppendLine($"Message: {_crashReport.ExceptionMessage}");
+            details.AppendLine($"{T("CrashReportNotification_Field_Exception", "Exception")}: {_crashReport.ExceptionType}");
+            details.AppendLine($"{T("CrashReportNotification_Field_Message", "Message")}: {_crashReport.ExceptionMessage}");
 
             if (!string.IsNullOrEmpty(_crashReport.InnerExceptionType))
             {
                 details.AppendLine();
-                details.AppendLine($"Inner Exception: {_crashReport.InnerExceptionType}");
-                details.AppendLine($"Inner Message: {_crashReport.InnerExceptionMessage}");
+                details.AppendLine($"{T("CrashReportNotification_Field_Inner", "Inner")}: {_crashReport.InnerExceptionType}");
+                details.AppendLine($"{T("CrashReportNotification_Field_InnerMessage", "Inner message")}: {_crashReport.InnerExceptionMessage}");
             }
 
             if (!string.IsNullOrEmpty(_crashReport.StackTrace))
             {
                 details.AppendLine();
-                details.AppendLine("Stack Trace:");
-                // Limit stack trace length for display
+                details.AppendLine($"{T("CrashReportNotification_Field_Stack", "Stack trace")}:");
                 var stackTrace = _crashReport.StackTrace;
-                if (stackTrace.Length > 500)
-                    stackTrace = stackTrace.Substring(0, 500) + "...";
-                details.AppendLine(stackTrace);
+                const int maxStackChars = 1200;
+                if (stackTrace.Length > maxStackChars)
+                    stackTrace = stackTrace[..maxStackChars] + Environment.NewLine + "…";
+                details.Append(stackTrace);
             }
 
-            _crashDetailsTextBlock.Text = details.ToString();
+            _crashDetailsTextBlock.Text = details.ToString().TrimEnd();
         }
 
         private void ApplyTheme()
