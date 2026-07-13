@@ -380,14 +380,24 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         }
     }
 
+    internal static CursorThemeMode SanitizeCursorThemeMode(int raw)
+    {
+        return Enum.IsDefined(typeof(CursorThemeMode), raw)
+            ? (CursorThemeMode)raw
+            : CursorThemeMode.Auto;
+    }
+
     private MouseSettings LoadSettings()
     {
+        var rawThemeMode = Configuration.GetValue(nameof(MouseSettings.CursorThemeMode), (int)CursorThemeMode.Auto);
+        var cursorThemeMode = SanitizeCursorThemeMode(rawThemeMode);
+
         return new MouseSettings
         {
             WindowsPointerSpeed = Configuration.GetValue(nameof(MouseSettings.WindowsPointerSpeed), 10),
             SwapButtons = Configuration.GetValue(nameof(MouseSettings.SwapButtons), false),
             AutoThemeCursorStyle = Configuration.GetValue(nameof(MouseSettings.AutoThemeCursorStyle), true),
-            CursorThemeMode = (CursorThemeMode)Configuration.GetValue(nameof(MouseSettings.CursorThemeMode), (int)CursorThemeMode.Auto),
+            CursorThemeMode = cursorThemeMode,
             LastAppliedTheme = Configuration.GetValue(nameof(MouseSettings.LastAppliedTheme), string.Empty),
             ButtonMappings = new Dictionary<int, int>()
         };

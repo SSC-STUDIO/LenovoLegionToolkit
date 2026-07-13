@@ -232,4 +232,29 @@ public class CustomMousePluginTests
         var content = File.ReadAllText(settingsFile);
         Assert.NotEmpty(content);
     }
+
+    [Theory]
+    [InlineData(999)]
+    [InlineData(-1)]
+    [InlineData(100)]
+    public void SanitizeCursorThemeMode_WithOutOfRangeInt_FallsBackToAuto(int corruptValue)
+    {
+        // Regression test: an out-of-range integer persisted for CursorThemeMode
+        // (e.g. 999 from a corrupted config, or a removed enum member) must fall
+        // back to Auto instead of producing an invalid enum value that silently
+        // applies the wrong cursor theme.
+        var result = CustomMousePlugin.SanitizeCursorThemeMode(corruptValue);
+        Assert.Equal(CursorThemeMode.Auto, result);
+    }
+
+    [Theory]
+    [InlineData(0, CursorThemeMode.Auto)]
+    [InlineData(1, CursorThemeMode.Light)]
+    [InlineData(2, CursorThemeMode.Dark)]
+    [InlineData(3, CursorThemeMode.WindowsDefault)]
+    public void SanitizeCursorThemeMode_WithValidInt_PreservesValue(int validValue, CursorThemeMode expected)
+    {
+        var result = CustomMousePlugin.SanitizeCursorThemeMode(validValue);
+        Assert.Equal(expected, result);
+    }
 }
