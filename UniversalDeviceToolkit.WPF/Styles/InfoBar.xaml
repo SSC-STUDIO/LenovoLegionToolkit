@@ -122,7 +122,7 @@
                                         PressedBackground="Transparent"
                                         PressedBorderBrush="Transparent"
                                         Command="{Binding Path=TemplateButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                        CornerRadius="0"
+                                        CornerRadius="{StaticResource CornerRadiusNone}"
                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                         PressedForeground="{DynamicResource TextFillColorPrimaryBrush}"
                                         IsEnabled="True"
