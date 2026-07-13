@@ -1,105 +1,77 @@
-﻿# GitHub Release Notes 鈥?v5.0.0-preview.20260706001
+# Universal Device Toolkit v5.0.0
 
-## 馃帀 Universal Device Toolkit v5.0.0 Preview
+**Release date:** 2026-07-14
 
-**Download**: 
-- 馃摝 **Full Installer**: `UniversalDeviceToolkitSetup-Full.exe` (recommended)
-- 馃寪 **Online Installer**: `UniversalDeviceToolkitSetup-Online.exe` (smaller download)
+## Downloads
 
----
+| Asset | Description |
+|-------|-------------|
+| `UniversalDeviceToolkitSetup-Full.exe` | Full installer (recommended) — bundled languages & device support |
+| `UniversalDeviceToolkitSetup-Online.exe` | Online installer — smaller base; extra resources from in-app catalog |
+| Portable ZIPs under `release-assets/` | Full / Online portable win-x64 packages when produced by Make.bat |
+| Cross-platform CLI (5.x) | Built when `Make.bat` enables cross-platform CLI for major ≥ 5 |
 
-## 鉁?What's New
-
-### 馃攲 Plugin Extensions Overhaul
-- Hot-reload support 鈥?modify plugins without restarting UDT
-- Sandbox isolation for plugin safety
-- Dependency resolution and version management
-- Plugin UI capability resolver (plugins can now expose UI)
-
-### 馃И Testing & Quality Assurance
-- **2300+ unit tests** passing (0 failures!)
-- **FlaUI + WinRT OCR automated UI tests** 鈥?base infrastructure ready
-- Fixed 7 pre-existing test failures
-- Global hook leak fixed 鈥?**no more system stutter after app exit** 馃幆
-
-### 馃實 Internationalization
-- 25+ languages supported
-- Simplified Chinese (zh-Hans) translation completed
-- Community-driven translation system
-
-### 馃帹 UI/UX Improvements
-- Dashboard layout customizations now persisted
-- Theme applied immediately on startup (no more dark flash)
-- Larger default typography for high-DPI
-- Smoother page transitions and button feedback
-- Card subtitle text no longer overflows
-
-### 馃悰 Bug Fixes
-- Update flow no longer falls back to GitHub (installer filename pattern fixed)
-- External links now open correctly (Win32Exception fixed)
-- Settings page crash on open (missing ColorPicker.Models.dll) fixed
-- Language selector and main window no longer pop up simultaneously
-- Windows Optimization checkboxes now surface apply failures via snackbar
+Verify SHA256 against the manifest generated next to the release assets.
 
 ---
 
-## 馃挕 Why UDT?
+## Highlights
 
-| | UDT | Lenovo Vantage |
-|---|---|---|
-| Background service | **None** | Required |
-| Telemetry / account | **None** | Required |
-| Open source | **Yes (GPL-3.0)** | No |
-| Plugin support | **Yes** | No |
-| Memory usage | **< 50 MB** | 200+ MB |
+### Loading chrome & skeleton 流光
+- Dashboard owns loading chrome (no multi-stage nav shell flash) with a **detailed sensors skeleton** (title/model, gauge, metrics, trend well, legend).
+- Plugin Extensions skeleton on cold and re-entry visits; stronger shimmer contrast; soft handoff without stuck blank frames.
+- Shared `SkeletonShimmer` / loading infrastructure cleanup.
+
+### Plugin Extensions opt-in
+- **Plugin Extensions nav is off by default** (opt-in under Settings → Navigation items).
+- Persistent status notice when hidden; close is session-only; fixed false “dismissed” on startup.
+
+### Sensors & fan RPM
+- Faster Lenovo fan WMI path with soft handling of `Invalid object` / 无效的对象 (no debugger spam, retry with fresh instance).
+- Multi-source fan speed coordinator (WMI / Gamezone / capability / LHM fallbacks).
+
+### Theme & UI polish
+- **Official Cool** (and other style presets) retint cards, charts, and notification glass — not only control fills.
+- Settings **CardAction** corner radius matches **CardControl** (`CornerRadiusCard`).
+- Network acceleration status chip: short label + soft tint + detail under the chip.
+- Notification toast width/glass language aligned across snackbar, host, and status banners.
+
+### Reliability
+- Navigation soft-fade no longer leaves LoadingChrome pages at Opacity 0.
+- Device setup / startup orchestration and related stability fixes from the 5.0 train.
 
 ---
 
-## 馃啎 For Developers
+## Upgrade notes
 
-### Plugin Development
-See [CONTRIBUTING.md](CONTRIBUTING.md) for plugin development guide.
+1. **Plugin Extensions** may disappear from the sidebar after upgrade if it was only “default on” from older builds. Enable it in **Settings → Navigation items**.
+2. First launch after upgrade runs a one-time settings migration (`PluginExtensionsOptInMigrationDone`) to apply the opt-in default.
+3. Requires **.NET 10 Desktop Runtime (x64)** and Windows 10 1809+ / Windows 11.
 
-### Running Tests
-```bash
-# Unit tests (2357 tests, < 3 min)
-dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj -c Debug
+---
 
-# FlaUI tests (requires admin + desktop session)
-.\run_flaui_tests_admin.ps1
+## Build
+
+```bat
+REM From repo root, with Inno Setup 6 on PATH (or use full path to ISCC.exe)
+Make.bat 5.0.0
 ```
 
-### Building from Source
-```bash
-dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj -c Release
-```
+Outputs:
+- `Build\` / `Build-English\` — published payloads  
+- `BuildInstaller\UniversalDeviceToolkitSetup-Full.exe`  
+- `BuildInstaller\UniversalDeviceToolkitSetup-Online.exe`  
+- `release-assets\` — packaged assets + hashes  
 
 ---
 
-## 馃搳 By the Numbers
-- 猸?**18 stars** 鈫?**Help us reach 100! Star this repo if UDT helps you**
-- 馃嵈 Fork-friendly GPL-3.0 license
-- 馃И **2357 tests** (2327 passing, 30 skipped)
-- 馃實 **25+ languages**
-- 馃摝 Available on **winget** + GitHub Releases
+## Testing (pre-release checklist)
 
----
-
-## 馃敆 Links
-- 馃摜 **Download**: [GitHub Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
-- 馃摎 **Docs**: [Contributing Guide](CONTRIBUTING.md)
-- 馃挰 **Discussions**: [Community Discussions](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/discussions)
-- 馃悰 **Bug Reports**: [Issue Tracker](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues)
-
----
-
-## 馃挕 Want to Contribute?
-- 馃實 **Translators wanted** 鈥?help localize UDT to your language
-- 馃攲 **Plugin developers** 鈥?build extensions for niche hardware
-- 馃И **Testers** 鈥?run FlaUI tests on your hardware
-- 猸?**Star this repo** 鈥?help more people discover UDT!
-
----
-
-**UDT = Your PC, Your Rules.**
-
+- [x] Release publish WPF + CLI + NetworkProxy (4.2.1 train → 5.0.0)
+- [x] Unit tests (dashboard / plugin loading / skeleton / fan coordinator)
+- [ ] Full installer install on clean machine
+- [ ] Cold start → Dashboard sensors skeleton → live gauges
+- [ ] Plugin Extensions hidden by default + status banner
+- [ ] Settings → Navigation items → enable Plugin Extensions
+- [ ] Official Cool theme: sensors card + toast glass tint
+- [ ] Fan RPM non-zero or graceful `-` with LHM fallback

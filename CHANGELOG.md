@@ -9,7 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 骞堕伒寰?[璇箟鍖栫増鏈琞(https://semver.org/spec/v2.0.0.html)�?
 
 ## [Unreleased]
+
+## [5.0.0] - 2026-07-14
+
+### Added
+- Detailed dashboard sensors loading skeleton (title/model, gauge, metrics, trend, legend) with page-owned loading chrome.
+- Plugin Extensions **opt-in** navigation (default off) plus persistent status notice; one-time settings migration from legacy default-on.
+- Fan speed multi-source read coordinator and faster Lenovo fan WMI probe path.
+- Theme style presets retint **AppSurfaceCard**, chart wells, and **notification glass** (Official Cool / Midnight / Forest).
+- Shared loading chrome ownership attribute and skeleton shimmer coordinator/behavior.
+
+### Fixed
+- Plugin Extensions skeleton only on first visit; re-entry now shows 流光 again.
+- Status banner `Closed` no longer fires on initial Collapsed (false “user dismissed”).
+- WMI `Invalid object` / 无效的对象 no longer rethrown through Task.Run for soft probe retries.
+- Navigation SoftFadeIn could leave LoadingChrome pages invisible (Opacity 0).
+- Settings **CardAction** radius mismatched **CardControl** (now `CornerRadiusCard`).
+- Official Cool sensors/toast surfaces stayed neutral grey while chrome was blue-tinted.
+
 ### Changed
+- Version train **5.0.0** (Directory.Build.props). Cross-platform CLI assets enabled for major ≥ 5 in `Make.bat`.
+- Skeleton shimmer contrast and sweep tuned; network acceleration diagnostics status chip compact layout.
+
+### Changed (carried from pre-5.0 unreleased train)
 - **README screenshots refreshed (2026-07-12)**: Updated `Assets/Screenshot_main.png` (1300×850 home, dark) and `Assets/Screenshot_zh-hans.png` (zh-Hans UI). Brand binaries unified under repo-root `Assets/`.
 - **Docs sync (EN / zh-Hans)**: Aligned download notes (winget pending), language-pack privacy, feature glance table, network acceleration legacy note, documentation index, screenshots & troubleshooting sections, and Star History block in `README_zh-hans.md`.
 - **Code comments**: PerformanceTest console/report strings and remaining C# `//` comments are English-only.

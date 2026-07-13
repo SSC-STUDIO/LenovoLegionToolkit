@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Project>
   <PropertyGroup>
-    <MajorVersion>4</MajorVersion>
-    <MinorVersion>2</MinorVersion>
-    <PatchVersion>1</PatchVersion>
+    <MajorVersion>5</MajorVersion>
+    <MinorVersion>0</MinorVersion>
+    <PatchVersion>0</PatchVersion>
     <ReleaseVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</ReleaseVersion>
     <WindowsVersion>$(ReleaseVersion).0</WindowsVersion>
     <GitCommitHash>unknown</GitCommitHash>
