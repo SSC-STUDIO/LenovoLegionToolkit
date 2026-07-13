@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Network;
 using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
@@ -69,6 +70,23 @@ public partial class NetworkAccelerationControl : UserControl
             RefreshUi();
     }
 
+    /// <summary>
+    /// Plain data item for the mode combo. Using ComboBoxItem instances as Items causes the
+    /// closed-field ContentPresenter to re-host the item visual and double-paint / overlap text.
+    /// </summary>
+    private sealed class ModeOption
+    {
+        public ModeOption(string label, NetworkAccelerationMode mode)
+        {
+            Label = label;
+            Mode = mode;
+        }
+
+        public string Label { get; }
+        public NetworkAccelerationMode Mode { get; }
+        public override string ToString() => Label;
+    }
+
     private void BuildModeCombo()
     {
         if (_modeComboBox is null)
@@ -78,21 +96,16 @@ public partial class NetworkAccelerationControl : UserControl
         try
         {
             _modeComboBox.Items.Clear();
-            _modeComboBox.Items.Add(new ComboBoxItem
-            {
-                Content = T("NetworkAccelerationPage_Mode_SystemProxy", "System proxy (PAC / local proxy)"),
-                Tag = NetworkAccelerationMode.SystemProxy
-            });
-            _modeComboBox.Items.Add(new ComboBoxItem
-            {
-                Content = T("NetworkAccelerationPage_Mode_Hosts", "Hosts rewrite (UDT-marked block)"),
-                Tag = NetworkAccelerationMode.Hosts
-            });
-            _modeComboBox.Items.Add(new ComboBoxItem
-            {
-                Content = T("NetworkAccelerationPage_Mode_DiagnosticsOnly", "Diagnostics only (no system changes)"),
-                Tag = NetworkAccelerationMode.DiagnosticsOnly
-            });
+            // Data items (not ComboBoxItem): SelectionBoxItem is a string-like object, single paint.
+            _modeComboBox.Items.Add(new ModeOption(
+                T("NetworkAccelerationPage_Mode_SystemProxy", "System proxy (PAC / local proxy)"),
+                NetworkAccelerationMode.SystemProxy));
+            _modeComboBox.Items.Add(new ModeOption(
+                T("NetworkAccelerationPage_Mode_Hosts", "Hosts rewrite (UDT-marked block)"),
+                NetworkAccelerationMode.Hosts));
+            _modeComboBox.Items.Add(new ModeOption(
+                T("NetworkAccelerationPage_Mode_DiagnosticsOnly", "Diagnostics only (no system changes)"),
+                NetworkAccelerationMode.DiagnosticsOnly));
         }
         finally
         {
@@ -231,9 +244,9 @@ public partial class NetworkAccelerationControl : UserControl
             group.Enabled = !group.Enabled;
             await _acceleration.SaveConfigAsync().ConfigureAwait(true);
         }
-        catch
+        catch (Exception ex)
         {
-            // keep UI alive
+            Log.Instance.Warning("Failed to toggle network acceleration domain tile; UI kept alive.", ex);
         }
 
         RefreshUi();
@@ -383,9 +396,7 @@ public partial class NetworkAccelerationControl : UserControl
                     : config.Mode;
                 for (var i = 0; i < _modeComboBox.Items.Count; i++)
                 {
-                    if (_modeComboBox.Items[i] is ComboBoxItem item &&
-                        item.Tag is NetworkAccelerationMode m &&
-                        m == displayMode)
+                    if (_modeComboBox.Items[i] is ModeOption option && option.Mode == displayMode)
                     {
                         _modeComboBox.SelectedIndex = i;
                         break;
@@ -446,12 +457,25 @@ public partial class NetworkAccelerationControl : UserControl
         var domainCount = groups.Where(g => g.Enabled).SelectMany(g => g.Domains ?? []).Count();
         if (_domainGroupsText is not null)
         {
-            _domainGroupsText.Text = string.Format(
+            _domainGroupsText.Text = FormatDomainGroupsSummary(
                 Resource.NetworkAccelerationPage_DomainGroupsSummary,
+                Resource.NetworkAccelerationPage_DomainGroupsLabel,
                 enabledCount,
                 groups.Count,
                 domainCount);
         }
+    }
+
+    internal static string FormatDomainGroupsSummary(
+        string format,
+        string label,
+        int enabledCount,
+        int totalCount,
+        int domainCount)
+    {
+        return format.Contains("{3", StringComparison.Ordinal)
+            ? string.Format(format, label, enabledCount, totalCount, domainCount)
+            : string.Format(format, enabledCount, totalCount, domainCount);
     }
 
     private void RefreshMetrics()
@@ -579,9 +603,9 @@ public partial class NetworkAccelerationControl : UserControl
             await _acceleration.StopAsync().ConfigureAwait(true);
             _startFailed = false;
         }
-        catch
+        catch (Exception ex)
         {
-            // ignore
+            Log.Instance.Warning("Network acceleration StopAsync failed from UI.", ex);
         }
         finally
         {
@@ -593,9 +617,10 @@ public partial class NetworkAccelerationControl : UserControl
     private async void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_suppressEvents || _isBusy ||
-            _modeComboBox?.SelectedItem is not ComboBoxItem { Tag: NetworkAccelerationMode mode })
+            _modeComboBox?.SelectedItem is not ModeOption option)
             return;
 
+        var mode = option.Mode;
         try
         {
             _acceleration.Config.AccelerationEnabled = true;
@@ -605,9 +630,9 @@ public partial class NetworkAccelerationControl : UserControl
             if (_acceleration.IsRunning)
                 await _acceleration.StopAsync().ConfigureAwait(true);
         }
-        catch
+        catch (Exception ex)
         {
-            // ignore
+            Log.Instance.Warning($"Failed to apply network acceleration mode '{mode}'.", ex);
         }
 
         RefreshUi();

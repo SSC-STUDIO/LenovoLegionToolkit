@@ -149,8 +149,12 @@ public static class Registry
             using var registryKey = baseKey.OpenSubKey(subKey);
             return registryKey is not null;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"registry-key-exists-{hive}-{subKey}",
+                $"Registry KeyExists failed for {hive}\\{subKey}.",
+                ex);
             return false;
         }
     }
@@ -163,8 +167,12 @@ public static class Registry
             var value = Microsoft.Win32.Registry.GetValue(keyName, valueName, null);
             return value is not null;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"registry-value-exists-{hive}-{subKey}-{valueName}",
+                $"Registry ValueExists failed for {hive}\\{subKey}\\{valueName}.",
+                ex);
             return false;
         }
     }

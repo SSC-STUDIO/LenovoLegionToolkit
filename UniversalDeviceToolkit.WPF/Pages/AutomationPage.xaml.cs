@@ -28,17 +28,17 @@ public partial class AutomationPage
 
     private IAutomationStep[] _supportedAutomationSteps = [];
 
-    internal static TimeSpan GetAutomationFallbackLoadingDelay() => TimeSpan.FromMilliseconds(120);
+    internal static TimeSpan GetAutomationFallbackLoadingDelay() => TimeSpan.FromMilliseconds(600);
 
     public AutomationPage()
     {
-        Initialized += AutomationPage_Initialized;
+        Loaded += AutomationPage_Loaded;
         Unloaded += AutomationPage_Unloaded;
 
         InitializeComponent();
     }
 
-    private async void AutomationPage_Initialized(object? sender, EventArgs e)
+    private async void AutomationPage_Loaded(object sender, RoutedEventArgs e)
     {
         try
         {
@@ -439,9 +439,8 @@ public partial class AutomationPage
 
     private void AutomationPage_Unloaded(object? sender, RoutedEventArgs e)
     {
-        Initialized -= AutomationPage_Initialized;
-        Unloaded -= AutomationPage_Unloaded;
+        // The navigation host caches page instances. Keep lifecycle handlers attached so
+        // returning to Automation refreshes its content and restarts the shared skeleton.
     }
 }
 }
-

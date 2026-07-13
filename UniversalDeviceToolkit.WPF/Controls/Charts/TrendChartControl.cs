@@ -49,8 +49,30 @@ public sealed class TrendSeries
     /// </summary>
     public double? Maximum { get; set; }
 
+    /// <summary>Slowly adapts when <see cref="Maximum"/> is null so the plot does not jump each sample.</summary>
+    private double _smoothedAutoMax = 1.0;
+
     public int Capacity => _samples.Length;
     public int Count => _count;
+
+    /// <summary>Resolve Y-axis max with optional slow auto-scale (no zero-spike when empty).</summary>
+    public double ResolvePlotMaximum()
+    {
+        if (Maximum is { } fixedMax && fixedMax > 0)
+            return fixedMax;
+
+        if (_count < 1)
+            return Math.Max(1.0, _smoothedAutoMax);
+
+        var observed = Math.Max(1.0, ObservedMaximum() * 1.08);
+        // Ease toward observed max (slow zoom out/in) — prevents axis thrash.
+        _smoothedAutoMax = _smoothedAutoMax <= 1.0
+            ? observed
+            : (_smoothedAutoMax * 0.85) + (observed * 0.15);
+        if (_smoothedAutoMax < observed * 0.92)
+            _smoothedAutoMax = observed; // snap up when values spike past the smoothed band
+        return Math.Max(1.0, _smoothedAutoMax);
+    }
 
     public void Add(double value)
     {
@@ -96,12 +118,11 @@ public sealed class TrendSeries
         if (_cachedFill is not null)
             return _cachedFill;
 
-        // Reference-style fill: readable solid tint at the top that softens toward the baseline
-        // so the area has a clear silhouette even with few samples at first open.
+        // Keep multi-series fills translucent so later series do not obscure earlier data.
         var fill = new LinearGradientBrush { StartPoint = new Point(0, 0), EndPoint = new Point(0, 1) };
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(140, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.0));
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(72, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.55));
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(20, _cachedColor.R, _cachedColor.G, _cachedColor.B), 1.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(76, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(42, _cachedColor.R, _cachedColor.G, _cachedColor.B), 0.48));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(10, _cachedColor.R, _cachedColor.G, _cachedColor.B), 1.0));
         fill.Freeze();
         _cachedFill = fill;
         return fill;
@@ -112,8 +133,7 @@ public sealed class TrendSeries
         if (_cachedLinePen is not null)
             return _cachedLinePen;
 
-        // Slightly thicker stroke so the top edge stays crisp against the soft fill.
-        var pen = new Pen(new SolidColorBrush(_cachedColor), 2.25)
+        var pen = new Pen(new SolidColorBrush(_cachedColor), 1.9)
         {
             LineJoin = PenLineJoin.Round,
             StartLineCap = PenLineCap.Round,
@@ -204,21 +224,25 @@ public class TrendChartControl : FrameworkElement
         if (width <= 1 || height <= 1)
             return;
 
-        DrawPlotFrame(dc, width, height, GridlineBrush, BaselineBrush);
+        DrawGridlines(dc, width, height, GridlineBrush, BaselineBrush);
 
         foreach (var series in _orderedSeries)
-            DrawSeries(dc, series, width, height);
+            DrawSeries(dc, series, width, height, drawFill: true, drawLine: false);
+
+        // Draw every crest after all fills so no later series can cover an earlier line.
+        foreach (var series in _orderedSeries)
+            DrawSeries(dc, series, width, height, drawFill: false, drawLine: true);
     }
 
     /// <summary>
-    /// Horizontal guides plus a full rectangular frame (left/right/top/baseline) so an empty
-    /// chart at first open still reads as a chart surface with clear edges.
+    /// Soft horizontal guides and a warmer baseline accent (reference band chart).
+    /// No outer rectangular frame.
     /// </summary>
-    private static void DrawPlotFrame(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush)
+    private static void DrawGridlines(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush)
     {
-        var grid = new Pen(gridlineBrush, 1.0);
-        var baseline = new Pen(baselineBrush, 1.25);
-        var frame = new Pen(baselineBrush, 1.0);
+        var grid = new Pen(gridlineBrush, 0.75);
+        // Baseline is the warm accent edge under the filled band (see reference chart).
+        var baseline = new Pen(baselineBrush, 1.75);
 
         for (var fraction = 0.25; fraction < 1.0; fraction += 0.25)
         {
@@ -226,19 +250,22 @@ public class TrendChartControl : FrameworkElement
             dc.DrawLine(grid, new Point(0, y), new Point(width, y));
         }
 
-        // Outer plot edges — always visible even when no series samples exist yet.
-        dc.DrawLine(frame, new Point(0.5, 0), new Point(0.5, height));
-        dc.DrawLine(frame, new Point(width - 0.5, 0), new Point(width - 0.5, height));
-        dc.DrawLine(frame, new Point(0, 0.5), new Point(width, 0.5));
         dc.DrawLine(baseline, new Point(0, height - 0.5), new Point(width, height - 0.5));
     }
 
-    private static void DrawSeries(DrawingContext dc, TrendSeries series, double width, double height)
+    private static void DrawSeries(
+        DrawingContext dc,
+        TrendSeries series,
+        double width,
+        double height,
+        bool drawFill,
+        bool drawLine)
     {
+        // No samples: do not draw a path to zero (that caused vertical spikes on first paint).
         if (series.Count < 1)
             return;
 
-        var max = series.Maximum ?? Math.Max(1.0, series.ObservedMaximum() * 1.1);
+        var max = series.ResolvePlotMaximum();
         if (max <= 0)
             max = 1.0;
 
@@ -252,8 +279,8 @@ public class TrendChartControl : FrameworkElement
         using (var lineCtx = lineGeometry.Open())
         using (var areaCtx = areaGeometry.Open())
         {
-            // Closed area with vertical left/right drops so the fill has explicit edges
-            // (matches reference area charts: left wall, curve, right wall, baseline).
+            // Closed area: baseline → left crest → curve → right crest → baseline.
+            // Right-aligned samples grow the band from the right edge leftward.
             lineCtx.BeginFigure(points[0], false, false);
             areaCtx.BeginFigure(new Point(points[0].X, height), true, true);
             areaCtx.LineTo(points[0], true, false);
@@ -272,41 +299,73 @@ public class TrendChartControl : FrameworkElement
                 areaCtx.BezierTo(c1, c2, p2, true, false);
             }
 
-            areaCtx.LineTo(new Point(points[^1].X, height), true, false);
+            var lastPoint = points[^1];
+            var previousPoint = points[^2];
+            var sampleStep = Math.Max(1.0, lastPoint.X - previousPoint.X);
+            var tailWidth = Math.Clamp(sampleStep * 0.72, 6.0, 20.0);
+            var tailBottom = new Point(Math.Max(points[0].X, lastPoint.X - tailWidth), height);
+            var tailHeight = Math.Max(1.0, height - lastPoint.Y);
+
+            // Curve the filled band back into the baseline instead of closing it with a
+            // hard vertical wall at the newest sample. The crest line still reaches the
+            // right edge, while the translucent area gets a softer, tapered silhouette.
+            areaCtx.BezierTo(
+                new Point(lastPoint.X - tailWidth * 0.18, lastPoint.Y + tailHeight * 0.30),
+                new Point(lastPoint.X - tailWidth * 0.72, height),
+                tailBottom,
+                true,
+                false);
         }
 
         lineGeometry.Freeze();
         areaGeometry.Freeze();
 
-        dc.DrawGeometry(series.GetOrCreateFill(), null, areaGeometry);
-        dc.DrawGeometry(null, series.GetOrCreateLinePen(), lineGeometry);
+        if (drawFill)
+            dc.DrawGeometry(series.GetOrCreateFill(), null, areaGeometry);
+        if (drawLine)
+            dc.DrawGeometry(null, series.GetOrCreateLinePen(), lineGeometry);
     }
 
     /// <summary>
-    /// Builds screen-space points for a series. Samples are left-aligned (oldest at x=0) so
-    /// the chart grows a clear left edge from the first open instead of a tiny right-side blip.
-    /// A single sample is expanded to a short flat segment so fill/stroke still have width.
+    /// Builds screen-space points for a series. Samples are <b>right-aligned</b>: the newest
+    /// sample sits on the right edge and history grows leftward (right → left) as capacity fills.
+    /// A single sample expands one step left so the band still has visible width.
     /// </summary>
     internal static List<Point> BuildPlotPoints(TrendSeries series, double width, double height, double max)
     {
         var capacity = Math.Max(2, series.Capacity);
         var stepX = width / (capacity - 1);
-        var points = new List<Point>(Math.Max(2, series.Count));
+        var count = series.Count;
+        var points = new List<Point>(Math.Max(2, count));
 
+        // Right-align into the capacity grid: first (oldest) sample at slot (capacity - count).
+        var startSlot = capacity - count;
         var i = 0;
         foreach (var sample in series.EnumerateOrdered())
         {
-            var x = i * stepX;
+            var x = (startSlot + i) * stepX;
             var ratio = Math.Clamp(sample / max, 0.0, 1.0);
-            // 1px padding top/bottom keeps the stroke fully inside the plot frame.
+            // 1px padding top/bottom keeps the stroke fully inside the plot area.
             var y = height - ratio * (height - 2) - 1;
             points.Add(new Point(x, y));
             i++;
         }
 
-        // One sample: stretch a flat segment one step wide so the area has a visible edge.
+        // While history is still filling, ease the visible series in from the baseline.
+        // This avoids the first real sample appearing as a vertical wall in the middle of
+        // the chart and matches the natural entry used by Task Manager-style graphs.
+        if (points.Count > 0 && startSlot > 0)
+        {
+            var first = points[0];
+            points.Insert(0, new Point(Math.Max(0, first.X - stepX), height - 1));
+        }
+
+        // One sample: extend a flat segment one step to the left of the right edge.
         if (points.Count == 1)
-            points.Add(new Point(Math.Min(width, points[0].X + stepX), points[0].Y));
+        {
+            var right = points[0];
+            points.Insert(0, new Point(Math.Max(0, right.X - stepX), right.Y));
+        }
 
         return points;
     }

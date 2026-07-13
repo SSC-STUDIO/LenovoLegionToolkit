@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
@@ -45,9 +46,13 @@ internal static class RemoteSessionHelper
                 if (GetCurrentSessionId() != WTSGetActiveConsoleSessionId())
                     return true;
             }
-            catch
+            catch (Exception ex)
             {
                 // Detection failures must never crash startup.
+                Log.Instance.TraceOnce(
+                    "remote-session-detect",
+                    "Remote session detection failed; assuming local session.",
+                    ex);
             }
 
             return false;
@@ -70,8 +75,12 @@ internal static class RemoteSessionHelper
             ProcessIdToSessionId(WTSGetCurrentProcessId(), out var sessionId);
             return sessionId;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "remote-session-id",
+                "ProcessIdToSessionId failed during remote session detection.",
+                ex);
             return 0;
         }
     }

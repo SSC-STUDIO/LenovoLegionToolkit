@@ -1,6 +1,8 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
+using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Controls;
@@ -91,5 +93,12 @@ public class LoadableControl : UserControl
     {
         _contentPresenter.Visibility = IsLoading ? ContentVisibilityWhileLoading : Visibility.Visible;
         _loadingPresenter.Visibility = IsLoading ? Visibility.Visible : Visibility.Hidden;
+
+        if (IsLoading)
+        {
+            Dispatcher.BeginInvoke(
+                () => SkeletonShimmer.RestartSubtree(_loadingPresenter),
+                DispatcherPriority.Render);
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
@@ -54,12 +55,14 @@ internal static class SensorReadingHelper
 
             return temperatures.Where(t => t > 0).DefaultIfEmpty(-1).Max();
         }
-        catch (ManagementException)
+        catch (ManagementException ex)
         {
+            Log.Instance.TraceOnce("sensors-acpi-temp", "MSAcpi_ThermalZoneTemperature WMI probe failed.", ex);
             return -1;
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
+            Log.Instance.TraceOnce("sensors-acpi-temp-invalid", "ACPI thermal zone read invalid operation.", ex);
             return -1;
         }
     }
@@ -90,8 +93,9 @@ internal static class SensorReadingHelper
                 .DefaultIfEmpty(-1)
                 .Max();
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-gpu-util-category", "GPU Engine performance counter category probe failed.", ex);
             _gpuUtilizationCooldownUntil = DateTime.UtcNow.Add(GpuUtilizationCooldown);
             return -1;
         }
@@ -110,12 +114,14 @@ internal static class SensorReadingHelper
 
             return readings.Where(w => w > 0).DefaultIfEmpty(-1).Max();
         }
-        catch (ManagementException)
+        catch (ManagementException ex)
         {
+            Log.Instance.TraceOnce("sensors-power-meter", "Win32_PowerMeter WMI probe failed.", ex);
             return -1;
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
+            Log.Instance.TraceOnce("sensors-power-meter-invalid", "Win32_PowerMeter read invalid operation.", ex);
             return -1;
         }
     }
@@ -134,8 +140,9 @@ internal static class SensorReadingHelper
 
             return Math.Min(100, (int)Math.Round(value, MidpointRounding.AwayFromZero));
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-gpu-util-instance", "GPU Engine utilization counter instance read failed.", ex);
             _gpuUtilizationCooldownUntil = DateTime.UtcNow.Add(GpuUtilizationCooldown);
             return -1;
         }

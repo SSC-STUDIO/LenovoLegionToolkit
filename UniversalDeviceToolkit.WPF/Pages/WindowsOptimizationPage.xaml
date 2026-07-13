@@ -24,7 +24,8 @@
         <!-- Browser-style Tab RadioButton Style -->
         <Style TargetType="RadioButton" x:Key="NavRadioButtonStyle">
             <Setter Property="Margin" Value="0,0,0,0" />
-            <Setter Property="Padding" Value="20,10" />
+            <Setter Property="Padding" Value="20,10,20,12" />
+            <Setter Property="MinHeight" Value="46" />
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -37,30 +38,47 @@
                     <ControlTemplate TargetType="RadioButton">
                         <Border
                             x:Name="RootBorder"
+                            MinHeight="{TemplateBinding MinHeight}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{StaticResource CornerRadiusSurfaceTop}"
-                            Padding="{TemplateBinding Padding}"
                             Margin="{TemplateBinding Margin}">
-                            <ContentPresenter
-                                x:Name="ContentPresenter"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                RecognizesAccessKey="True"
-                                Content="{TemplateBinding Content}"
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                TextElement.FontWeight="{TemplateBinding FontWeight}"
-                                TextElement.FontSize="{TemplateBinding FontSize}"
-                                TextElement.Foreground="{TemplateBinding Foreground}" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="5" />
+                                </Grid.RowDefinitions>
+                                <ContentPresenter
+                                    x:Name="ContentPresenter"
+                                    Grid.Row="0"
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    RecognizesAccessKey="True"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                    TextElement.FontSize="{TemplateBinding FontSize}"
+                                    TextElement.Foreground="{TemplateBinding Foreground}" />
+                                <Border
+                                    x:Name="ActiveIndicator"
+                                    Grid.Row="1"
+                                    Height="3"
+                                    Margin="12,0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"
+                                    CornerRadius="{StaticResource CornerRadiusNone}" />
+                            </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
                                 <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
                                 <Setter TargetName="RootBorder" Property="BorderThickness" Value="1,1,1,0" />
-                                <Setter TargetName="RootBorder" Property="Margin" Value="0,-2,0,0" />
                                 <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <Setter TargetName="ActiveIndicator" Property="Background" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="False">
                                 <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />

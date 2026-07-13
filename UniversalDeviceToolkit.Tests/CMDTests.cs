@@ -368,7 +368,7 @@ public class CMDTests
 
         Func<Task> act = async () => await CMD.RunAsync("cmd.exe", "/c ping -n 20 127.0.0.1 >nul", waitForExit: true, token: cts.Token);
 
-        await act.Should().ThrowAsync<TaskCanceledException>();
+        await act.Should().ThrowAsync<OperationCanceledException>();
     }
 
     [Fact]

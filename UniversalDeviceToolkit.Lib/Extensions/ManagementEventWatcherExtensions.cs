@@ -19,9 +19,12 @@ public static class ManagementEventWatcherExtensions
             {
                 watcher.Dispose();
             }
-            catch (ManagementException)
+            catch (ManagementException ex)
             {
-                // Ignore exceptions during cleanup
+                Log.Instance.TraceOnce(
+                    "wmi-watcher-dispose-timeout",
+                    "WMI event watcher dispose failed after start timeout.",
+                    ex);
             }
 
             if (Log.Instance.IsTraceEnabled)
@@ -40,7 +43,13 @@ public static class ManagementEventWatcherExtensions
         if (!startTask.Wait(timeoutMs))
         {
             try { watcher.Dispose(); }
-            catch (ManagementException) { }
+            catch (ManagementException ex)
+            {
+                Log.Instance.TraceOnce(
+                    "wmi-watcher-dispose-timeout-sync",
+                    "WMI event watcher dispose failed after sync start timeout.",
+                    ex);
+            }
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"WMI event watcher start timed out after {timeoutMs}ms.");
             throw new TimeoutException($"WMI event watcher start timed out after {timeoutMs}ms.");

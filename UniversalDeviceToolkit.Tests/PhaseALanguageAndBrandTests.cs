@@ -62,7 +62,7 @@ public sealed class PhaseALanguageAndBrandTests
         {
             "Assets/Logo.png",
             "Assets/Icon.ico",
-            "Assets/Default_exe.png",
+            "Assets/Logo.png",
             "Assets/og-preview.png",
             "Assets/Brand/udt-symbol.svg",
             "Assets/Brand/udt-symbol-dark.svg",

@@ -583,8 +583,12 @@ public class PluginManager : IPluginManager
                 return DateTime.MinValue;
             return File.GetLastWriteTimeUtc(filePath);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-manager-write-time",
+                $"Failed to read plugin file write time: {filePath}",
+                ex);
             return DateTime.MinValue;
         }
     }
@@ -1584,8 +1588,12 @@ public class PluginManager : IPluginManager
 
             return null;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-manager-assembly-version",
+                "Failed to resolve plugin assembly version from candidate paths.",
+                ex);
             return null;
         }
     }

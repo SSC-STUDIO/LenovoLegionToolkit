@@ -578,8 +578,9 @@ public static partial class Compatibility
         {
             return await WMI.LenovoGameZoneData.IsSupportGSyncAsync().ConfigureAwait(false) > 0;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("compat-gsync", "G-Sync support WMI probe failed.", ex);
             return false;
         }
     }
@@ -590,8 +591,9 @@ public static partial class Compatibility
         {
             return await WMI.LenovoGameZoneData.IsSupportIGPUModeAsync().ConfigureAwait(false) > 0;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("compat-igpu-mode", "iGPU mode support WMI probe failed.", ex);
             return false;
         }
     }
@@ -603,8 +605,9 @@ public static partial class Compatibility
             await WMI.LenovoGameZoneData.GetIntelligentSubModeAsync().ConfigureAwait(false);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("compat-ai-mode", "AI mode support WMI probe failed.", ex);
             return false;
         }
     }

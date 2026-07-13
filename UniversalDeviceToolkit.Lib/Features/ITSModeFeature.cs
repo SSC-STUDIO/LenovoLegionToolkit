@@ -179,8 +179,12 @@ public partial class ITSModeFeature : IFeature<ITSMode>
 
             return HasDispatcherDeviceNode(ref instance) != 0 ? GetDispatcherModeInternal(ref instance, isThinkBook) : GetStandardModeInternal(ref instance);
         }
-        catch (DllNotFoundException)
+        catch (DllNotFoundException ex)
         {
+            Log.Instance.TraceOnce(
+                "feature-its-dll",
+                "ITS mode native library missing; treating as unsupported.",
+                ex);
             return ITSMode.None;
         }
     }

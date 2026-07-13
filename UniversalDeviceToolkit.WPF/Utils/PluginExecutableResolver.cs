@@ -5,18 +5,45 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
 internal static class PluginExecutableResolver
 {
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> AuthenticodeCache =
+        new(StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Fast path for list/UI: existence only. Authenticode is expensive and must not
+    /// run on the UI thread while rebuilding the plugin list.
+    /// </summary>
+    internal static bool TryResolveForUiListing(
+        string pluginId,
+        string? metadataFilePath,
+        string pluginsDirectory,
+        out string? exeFile,
+        out string? workingDirectory) =>
+        TryResolve(
+            pluginId,
+            metadataFilePath,
+            pluginsDirectory,
+            out exeFile,
+            out workingDirectory,
+            allowUnsignedOverride: true,
+            verifyAuthenticode: false);
+
+    /// <summary>
+    /// Launch path: require Authenticode unless <paramref name="allowUnsignedOverride"/> (DEBUG).
+    /// </summary>
     internal static bool TryResolve(
         string pluginId,
         string? metadataFilePath,
         string pluginsDirectory,
         out string? exeFile,
         out string? workingDirectory,
-        bool allowUnsignedOverride = false)
+        bool allowUnsignedOverride = false,
+        bool verifyAuthenticode = true)
     {
         exeFile = null;
         workingDirectory = null;
@@ -50,7 +77,7 @@ internal static class PluginExecutableResolver
                 if (!File.Exists(preferredCandidate))
                     continue;
 
-                if (!allowUnsignedOverride && !IsAuthenticodeSigned(preferredCandidate))
+                if (verifyAuthenticode && !allowUnsignedOverride && !IsAuthenticodeSigned(preferredCandidate))
                 {
                     LogWarning($"[PluginExecutableResolver] Skipping unsigned executable: '{preferredCandidate}'");
                     continue;
@@ -70,19 +97,34 @@ internal static class PluginExecutableResolver
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             return false;
 
+        if (AuthenticodeCache.TryGetValue(filePath, out var cached))
+            return cached;
+
         try
         {
 #pragma warning disable SYSLIB0057 // CreateFromSignedFile is obsolete; no direct replacement for Authenticode check
             using var certificate = X509Certificate.CreateFromSignedFile(filePath);
 #pragma warning restore SYSLIB0057
-            return certificate != null;
+            var signed = certificate != null;
+            AuthenticodeCache[filePath] = signed;
+            return signed;
         }
-        catch (SecurityException)
+        catch (SecurityException ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-exe-cert-security",
+                "Plugin executable Authenticode check denied by security policy.",
+                ex);
+            AuthenticodeCache[filePath] = false;
             return false;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-exe-cert",
+                "Plugin executable Authenticode check failed.",
+                ex);
+            AuthenticodeCache[filePath] = false;
             return false;
         }
     }

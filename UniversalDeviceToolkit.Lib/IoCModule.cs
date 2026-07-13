@@ -17,6 +17,7 @@ using LenovoLegionToolkit.Lib.Integrations;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Overclocking.Amd;
 using LenovoLegionToolkit.Lib.Network;
+using LenovoLegionToolkit.Lib.Notifications;
 using LenovoLegionToolkit.Lib.Optimization;
 using LenovoLegionToolkit.Lib.PackageDownloader;
 using LenovoLegionToolkit.Lib.ResourcesCatalog;
@@ -35,6 +36,7 @@ public class IoCModule : Module
     {
         builder.Register<HttpClientFactory>();
         builder.Register<OnlineResourceCatalogClient>();
+        builder.RegisterType<AppNotificationService>().As<IAppNotificationService>().SingleInstance();
 
         // Register compatibility service
         builder.Register<CompatibilityService>().As<ICompatibilityService>().SingleInstance();

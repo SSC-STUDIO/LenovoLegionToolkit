@@ -108,8 +108,12 @@ public class DriverWrapper : IDriverWrapper
 
             return isAvailable;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "driver-wrapper-available",
+                "Driver availability probe failed.",
+                ex);
             return false;
         }
     }

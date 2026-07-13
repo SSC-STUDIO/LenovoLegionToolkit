@@ -83,9 +83,9 @@ public class WMIWrapper : IWMIWrapper
                 {
                     watcher.Stop();
                 }
-                catch (ManagementException)
+                catch (ManagementException ex)
                 {
-                    // Ignore exceptions during cleanup
+                    Log.Instance.TraceOnce("wmi-wrapper-watcher-stop", "WMIWrapper event watcher Stop failed during dispose.", ex);
                 }
                 finally
                 {

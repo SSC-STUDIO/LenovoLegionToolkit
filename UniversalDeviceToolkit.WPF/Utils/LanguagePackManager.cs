@@ -427,7 +427,13 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         finally
         {
             try { File.Delete(hashTempPath); }
-            catch { /* best-effort cleanup */ }
+            catch (Exception ex)
+            {
+                Log.Instance.TraceOnce(
+                    "langpack-hash-temp-cleanup",
+                    $"Best-effort delete of language pack hash temp failed: {hashTempPath}",
+                    ex);
+            }
         }
     }
 
@@ -578,11 +584,11 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         try
         {
             if (Directory.Exists(destinationDirectory))
-                Directory.Move(destinationDirectory, backupDirectory);
+                TryMoveOrCopyWithRetry(destinationDirectory, backupDirectory);
 
             if (Path.GetPathRoot(sourceDirectory)?.Equals(Path.GetPathRoot(destinationDirectory), StringComparison.OrdinalIgnoreCase) == true)
             {
-                Directory.Move(sourceDirectory, destinationDirectory);
+                TryMoveOrCopyWithRetry(sourceDirectory, destinationDirectory);
             }
             else
             {
@@ -597,7 +603,12 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             if (Directory.Exists(backupDirectory) && !Directory.Exists(destinationDirectory))
             {
                 try { Directory.Move(backupDirectory, destinationDirectory); }
-                catch { /* best-effort restore */ }
+                catch (Exception restoreEx)
+                {
+                    Log.Instance.Warning(
+                        $"Language pack apply failed and backup restore also failed: {destinationDirectory}",
+                        restoreEx);
+                }
             }
 
             throw new LanguagePackException(
@@ -795,6 +806,34 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to delete directory: {directory}", ex);
+        }
+    }
+
+    private static void TryMoveOrCopyWithRetry(string sourceDirectory, string destinationDirectory, int maxAttempts = 3)
+    {
+        for (var attempt = 0; ; attempt++)
+        {
+            try
+            {
+                Directory.Move(sourceDirectory, destinationDirectory);
+                return;
+            }
+            catch (IOException) when (attempt < maxAttempts)
+            {
+                Thread.Sleep(100 * (attempt + 1));
+            }
+            catch (UnauthorizedAccessException) when (attempt < maxAttempts)
+            {
+                Thread.Sleep(100 * (attempt + 1));
+            }
+            catch (IOException) when (attempt >= maxAttempts)
+            {
+                // Directory.Move failed (likely locked satellite assemblies).
+                // Fall back to file-by-file copy + source cleanup.
+                CopyDirectoryRecursive(sourceDirectory, destinationDirectory);
+                TryDeleteDirectory(sourceDirectory);
+                return;
+            }
         }
     }
 

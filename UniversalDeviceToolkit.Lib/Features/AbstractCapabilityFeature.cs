@@ -22,8 +22,12 @@ public abstract class AbstractCapabilityFeature<T>(CapabilityID capabilityID)
 
             return mi.Features.Source == MachineInformation.FeatureData.SourceType.CapabilityData && mi.Features[capabilityID];
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"feature-cap-supported-{GetType().Name}-{capabilityID}",
+                $"Capability feature support probe failed for {GetType().Name} ({capabilityID}).",
+                ex);
             return false;
         }
     }

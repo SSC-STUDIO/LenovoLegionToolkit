@@ -14,11 +14,9 @@
     -->
     <UserControl.Resources>
         <Style x:Key="NaMainSurfaceStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSurface}" />
-            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="UseLayoutRounding" Value="True" />
         </Style>
@@ -96,7 +94,6 @@
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto">
         <Border
-            MaxWidth="920"
             Margin="0,0,8,16"
             HorizontalAlignment="Stretch"
             Style="{StaticResource NaMainSurfaceStyle}"
@@ -141,10 +138,21 @@
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="NoWrap" />
 
-                <WrapPanel Margin="0,8,0,0" Orientation="Horizontal">
+                <!--
+                  Grid (not WrapPanel): button + mode selector share one row without overlapping.
+                  ComboBox uses plain data items (not ComboBoxItem visuals) so SelectionBoxItem
+                  never re-hosts a control template on top of the closed field text.
+                -->
+                <Grid Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" MinWidth="160" />
+                    </Grid.ColumnDefinitions>
                     <wpfui:Button
                         x:Name="_primaryActionButton"
-                        Margin="0,0,8,4"
+                        Grid.Column="0"
+                        Margin="0,0,8,0"
+                        VerticalAlignment="Center"
                         Style="{StaticResource NaPrimaryButtonStyle}"
                         Appearance="Primary"
                         AutomationProperties.AutomationId="NetworkAccelerationPrimaryActionButton"
@@ -153,14 +161,15 @@
                         Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}" />
                     <ComboBox
                         x:Name="_modeComboBox"
-                        Margin="0,0,0,4"
-                        Style="{StaticResource NaModeComboStyle}"
-                        MaxWidth="320"
+                        Grid.Column="1"
+                        MaxWidth="360"
                         HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource NaModeComboStyle}"
                         AutomationProperties.AutomationId="NetworkAccelerationModeSelector"
                         AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}"
                         SelectionChanged="ModeComboBox_SelectionChanged" />
-                </WrapPanel>
+                </Grid>
 
                 <Border Style="{StaticResource NaDividerStyle}" />
 

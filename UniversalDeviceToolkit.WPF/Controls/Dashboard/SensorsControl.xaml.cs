@@ -610,9 +610,13 @@ public partial class SensorsControl : IDisposable
         catch (OperationCanceledException)
         {
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             // Visibility/dispose teardown must not surface refresh loop failures.
+            Log.Instance.TraceOnce(
+                "sensors-safe-await-refresh",
+                "Sensor refresh task faulted during safe await (teardown-safe).",
+                ex);
         }
     }
 

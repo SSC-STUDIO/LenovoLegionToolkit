@@ -75,7 +75,6 @@ namespace UniversalDeviceToolkit.WPF.Pages
 
         private void PackagesPage_Unloaded(object sender, RoutedEventArgs e)
         {
-            Unloaded -= PackagesPage_Unloaded;
             _viewModel.CancelLoadCommand.Execute(null);
         }
 

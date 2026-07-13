@@ -30,7 +30,7 @@ public sealed class UpstreamCapabilityMatrixGuardTests
                      "Assets/Brand/tray-light.png",
                      "Assets/Logo.png",
                      "Assets/Icon.ico",
-                     "Assets/Default_exe.png",
+                     "Assets/Logo.png",
                      "Assets/og-preview.png"
                  })
             File.Exists(Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar))).Should().BeTrue(path);

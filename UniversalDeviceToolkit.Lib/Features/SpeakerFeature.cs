@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
+using LenovoLegionToolkit.Lib.Utils;
 using NAudio.CoreAudioApi;
 
 namespace LenovoLegionToolkit.Lib.Features;
@@ -23,8 +24,9 @@ public class SpeakerFeature : IFeature<SpeakerState>
             var isSupported = AudioEndpointVolumes.Any();
             return Task.FromResult(isSupported);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("feature-speaker-supported", "Speaker support probe failed (audio endpoints).", ex);
             return Task.FromResult(false);
         }
     }

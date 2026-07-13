@@ -517,6 +517,9 @@ WARNING: This action will not run correctly, if internal display is off.</value>
   <data name="FanCurveControl_FanSpeed" xml:space="preserve">
     <value>Fan Speed</value>
   </data>
+  <data name="FanCurveControl_FanSpeedMax" xml:space="preserve">
+    <value>100%</value>
+  </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
     <value>GPU</value>
   </data>
@@ -2919,13 +2922,13 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Select language</value>
   </data>
   <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
-    <value>This device will start in basic mode. Hardware-specific controls are hidden until a compatible device pack is available.</value>
+    <value>This device will start in basic mode. Hardware-specific controls stay hidden until a matching device pack is available. You can still pick a profile below if you know your model family.</value>
   </data>
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>Device pack: Basic mode</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
-    <value>Universal Device Toolkit detected a matching device pack. Confirm it now so hardware-specific features can be prepared by the app.</value>
+    <value>Universal Device Toolkit found a matching device pack for this machine. Confirm to apply it, or choose another profile if the auto-detect is wrong.</value>
   </data>
   <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
     <value>Device pack: {0}</value>
@@ -2946,7 +2949,28 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Confirm saves this choice and continues. Skip for now keeps basic mode and shows this once more next launch.</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
-    <value>Confirm applies this pack profile. Skip for now continues without confirming (you can finish later). This does not restart Windows.</value>
+    <value>Confirm saves this profile and continues. Skip for now keeps the default and may ask again next launch. This does not restart Windows.</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>Device profile (pack)</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>Basic mode (plugins &amp; optimization only)</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0} (recommended)</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — full hardware</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — basic</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>Full hardware: power modes, sensors, fans, and Lenovo controls when the firmware exposes them.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>Basic profile: plugins, system optimization, language, and theme. Hardware controls stay hidden.</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>Not connected</value>
@@ -3926,5 +3950,44 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="SaveButton" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="AppNotificationHost_AccessibleName" xml:space="preserve">
+    <value>Application notifications</value>
+  </data>
+  <data name="AppNotificationHost_Close" xml:space="preserve">
+    <value>Close notification</value>
+  </data>
+  <data name="SensorsControl_Details" xml:space="preserve">
+    <value>Sensor details</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableTitle" xml:space="preserve">
+    <value>Plugin store unavailable</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreTimeoutTitle" xml:space="preserve">
+    <value>Plugin store timed out</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableMessage" xml:space="preserve">
+    <value>Installed plugins remain available. Retry when the network is back.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreRetry" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="PluginExtensionsPage_FetchTimeoutMessage" xml:space="preserve">
+    <value>Store request timed out. Installed plugins are still available.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Title" xml:space="preserve">
+    <value>Success notifications</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Message" xml:space="preserve">
+    <value>Show toasts when plugins install, optimizations apply, or cleanup finishes. Position stays bottom-right.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Title" xml:space="preserve">
+    <value>Notification sound</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Message" xml:space="preserve">
+    <value>Play a short system sound when a toast appears.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
+    <value>Freed {0}. {1} succeeded, {2} failed.</value>
   </data>
 </root>

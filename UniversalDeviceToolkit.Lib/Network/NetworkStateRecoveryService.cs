@@ -266,8 +266,12 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
                 AutoConfigUrl = key.GetValue("AutoConfigURL") as string
             };
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                "system-proxy-read",
+                "Failed to read system proxy settings from registry.",
+                ex);
             return null;
         }
     }

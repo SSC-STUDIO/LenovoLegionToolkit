@@ -31,10 +31,10 @@
         Color="Black" />
     <DropShadowEffect
         x:Key="NotificationGlassShadowEffect"
-        BlurRadius="24"
+        BlurRadius="14"
         Direction="270"
-        Opacity="0.32"
-        ShadowDepth="6"
+        Opacity="0.18"
+        ShadowDepth="3"
         Color="Black" />
     <DropShadowEffect
         x:Key="ContentSurfaceDividerShadowEffect"

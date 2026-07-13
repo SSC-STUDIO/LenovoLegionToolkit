@@ -3059,19 +3059,52 @@
     <value>选择语言</value>
   </data>
   <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
-    <value>此设备将以基础模式启动。兼容的设备包可用之前，硬件专属控制项会被隐藏。</value>
+    <value>此设备将以基础模式启动。在匹配的设备包可用之前，硬件相关控件会保持隐藏。若你了解机型系列，也可在下方手动选择配置文件。</value>
   </data>
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>设备包：基础模式</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
-    <value>Universal Device Toolkit 检测到匹配的设备包。现在确认后，应用即可准备硬件专属功能。</value>
+    <value>通用设备工具包已找到匹配的设备包。请确认应用，或在自动识别有误时选择其他配置文件。</value>
   </data>
   <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
     <value>设备包：{0}</value>
   </data>
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>正在准备设备设置...</value>
+  </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>设备设置</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>暂时跳过</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>点「确认」将保存所选配置并继续。点「暂时跳过」保留默认，下次启动可能再次提示。不会重启 Windows。</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>设备配置文件（设备包）</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>基础模式（仅插件与系统优化）</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0}（推荐）</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — 完整硬件</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — 基础</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>完整硬件：在固件支持时提供电源模式、传感器、风扇与联想硬件控制。</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>基础配置：插件、系统优化、语言与主题。硬件控件保持隐藏。</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>未连接</value>

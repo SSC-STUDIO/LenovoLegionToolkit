@@ -2,12 +2,33 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FluentAssertions;
+using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
 
 public class NetworkAccelerationUiGuardTests
 {
+    [Fact]
+    public void DomainGroupsSummary_ShouldSupportCurrentAndLegacyPlaceholderShapes()
+    {
+        NetworkAccelerationControl.FormatDomainGroupsSummary(
+                "{0}/{1} groups enabled · {2} domains",
+                "Domain groups",
+                1,
+                3,
+                14)
+            .Should().Be("1/3 groups enabled · 14 domains");
+
+        NetworkAccelerationControl.FormatDomainGroupsSummary(
+                "{0}: {1}/{2} enabled, {3} domains",
+                "Domain groups",
+                1,
+                3,
+                14)
+            .Should().Be("Domain groups: 1/3 enabled, 14 domains");
+    }
+
     [Fact]
     public void NetworkAccelerationControl_Xaml_HasCoreAutomationIdsAndPrimaryAction()
     {
@@ -90,6 +111,41 @@ public class NetworkAccelerationUiGuardTests
         // One main surface AutomationId for the control card; no nested peer CardControl stack.
         Regex.Matches(xaml, "NetworkAccelerationControlCard").Count.Should().Be(1);
         xaml.Should().NotContain("custom:CardControl");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Xaml_PrimaryActionAndModeSelectorShareGridNotWrapPanel()
+    {
+        var xaml = File.ReadAllText(FindControlXaml());
+        // Start button + mode combo must not share a WrapPanel (overlap with long mode labels).
+        xaml.Should().Contain("NetworkAccelerationPrimaryActionButton");
+        xaml.Should().Contain("NetworkAccelerationModeSelector");
+        // Mode selector lives in a Grid column next to the primary action.
+        var modeIdx = xaml.IndexOf("NetworkAccelerationModeSelector", StringComparison.Ordinal);
+        modeIdx.Should().BeGreaterThan(0);
+        var slice = xaml.Substring(Math.Max(0, modeIdx - 400), Math.Min(500, xaml.Length - Math.Max(0, modeIdx - 400)));
+        slice.Should().Contain("Grid.Column=\"1\"");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Code_UsesDataModeOptionsNotComboBoxItemItems()
+    {
+        var code = File.ReadAllText(FindControlCode());
+        // Closed ComboBox SelectionBoxItem double-paints when Items are ComboBoxItem controls.
+        code.Should().Contain("sealed class ModeOption");
+        code.Should().Contain("new ModeOption(");
+        code.Should().NotContain("new ComboBoxItem");
+    }
+
+    private static string FindControlCode()
+    {
+        var root = FindRepoRoot();
+        return Path.Combine(
+            root,
+            "UniversalDeviceToolkit.WPF",
+            "Pages",
+            "WindowsOptimization",
+            "NetworkAccelerationControl.xaml.cs");
     }
 
     private static string FindControlXaml()

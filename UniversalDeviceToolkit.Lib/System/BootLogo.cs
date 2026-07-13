@@ -58,8 +58,9 @@ public static class BootLogo
             _ = GetChecksum();
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("bootlogo-supported", "Boot logo support probe failed.", ex);
             return false;
         }
     }

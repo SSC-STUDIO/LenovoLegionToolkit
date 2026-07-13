@@ -183,7 +183,7 @@ public partial class ProcessAutomationPipelineTriggerTabItemControl : IAutomatio
 
         private void InitializeComponent()
         {
-            _icon.Source = ImageSourceExtensions.ApplicationIcon(Process.ExecutablePath) ?? ImageSourceExtensions.FromResource("Assets/Default_exe.png");
+            _icon.Source = ImageSourceExtensions.ApplicationIcon(Process.ExecutablePath) ?? ImageSourceExtensions.FromResource("Assets/Logo.png");
             _nameTextBox.Text = Process.Name;
             _pathTextBox.Text = Process.ExecutablePath;
 

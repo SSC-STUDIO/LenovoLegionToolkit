@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Custom;
 
@@ -275,13 +276,30 @@ public class NavigationStore : Control
         return GetNavigationWidth(IsExpanded);
     }
 
-    private static double GetNavigationWidth(bool isExpanded)
+    private double GetNavigationWidth(bool isExpanded)
     {
-        var key = isExpanded ? "NavigationWidthExpanded" : "NavigationWidthCollapsed";
-        if (Application.Current.TryFindResource(key) is double width)
-            return width;
+        if (!isExpanded)
+            return NavigationPaneMetrics.GetCollapsedWidth();
 
-        return isExpanded ? 220 : 70;
+        // Expand target scales with the host window so large monitors get a wider rail.
+        var host = Window.GetWindow(this);
+        var windowWidth = host?.ActualWidth > 0
+            ? host.ActualWidth
+            : host is { Width: > 0 } w && !double.IsNaN(w.Width)
+                ? w.Width
+                : 1300;
+        return NavigationPaneMetrics.GetExpandedWidth(windowWidth);
+    }
+
+    /// <summary>
+    /// Re-apply the expanded width after the host window size changes (max stretch scales with window).
+    /// </summary>
+    public void RefreshWidthForHostWindow()
+    {
+        if (!IsExpanded)
+            return;
+
+        UpdateNavigationWidth(animate: false);
     }
 
     private static bool ShouldAnimate()
@@ -290,8 +308,12 @@ public class NavigationStore : Control
         {
             return IoCContainer.Resolve<ApplicationSettings>().Store.AnimationsEnabled;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "nav-should-animate",
+                "Failed to read AnimationsEnabled; defaulting to animated navigation.",
+                ex);
             return true;
         }
     }
@@ -369,6 +391,28 @@ public class NavigationStore : Control
             // Returning to a warm page — soft crossfade, not a hard cut.
             PresentPage(cached, animate: true);
             return true;
+        }
+
+        // Plugin Extensions owns a page-specific skeleton that exactly mirrors its cards.
+        // Construct it directly so the generic navigation shell never flashes first.
+        if (string.Equals(item.PageTag, "pluginExtensions", StringComparison.OrdinalIgnoreCase))
+        {
+            try
+            {
+                var pluginPage = Activator.CreateInstance(item.PageType);
+                if (pluginPage is null)
+                    return false;
+
+                _pageCache[cacheKey] = pluginPage;
+                PresentPage(pluginPage, animate: false);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to create navigation page {item.PageType.FullName}", ex);
+                return false;
+            }
         }
 
         // First visit: show a lightweight skeleton shell NOW, then build the real page.
@@ -490,9 +534,13 @@ public class NavigationStore : Control
             while (Frame.CanGoBack)
                 Frame.RemoveBackEntry();
         }
-        catch
+        catch (Exception ex)
         {
             // Journal may be unavailable for some content types.
+            Log.Instance.TraceOnce(
+                "nav-trim-journal",
+                "Failed to trim navigation frame journal (content may not support it).",
+                ex);
         }
     }
 
@@ -586,9 +634,12 @@ public class NavigationStore : Control
             if (Application.Current?.TryFindResource(key) is Brush brush)
                 return brush;
         }
-        catch
+        catch (Exception ex)
         {
-            // ignore
+            Log.Instance.TraceOnce(
+                $"nav-brush-{key}",
+                $"Failed to resolve brush resource '{key}'.",
+                ex);
         }
 
         return fallback;

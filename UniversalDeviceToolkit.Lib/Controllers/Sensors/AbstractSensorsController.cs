@@ -453,8 +453,9 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetGpuVoltageAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetGpuFanSpeedAsync().ConfigureAwait(false)));
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-lhm-snapshot", "LibreHardwareMonitor sensor snapshot failed.", ex);
             return null;
         }
     }
@@ -466,49 +467,92 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         value > 0 ? (int)Math.Round(value) : -1;
 
     /// <summary>
-    /// Multi-source fan RPM (restored historical behavior + IRX9 fixes):
-    /// prefer any positive reading from primary (usually Fan_GetCurrentFanSpeed) then fallback
-    /// (capability / alternate). Capability 0 is unreliable — only trust explicit 0 from the
-    /// fan-method path so LibreHardwareMonitor can still fill missing RPM.
+    /// Multi-source fan RPM (matches historical LLT/UDT behavior that worked on more machines):
+    /// 1) Prefer any positive RPM from primary or fallback.
+    /// 2) Keep explicit parked-zero only when a source succeeded with 0 (not "missing" → -1).
+    /// 3) Capability often returns 0 while fans spin — treat bare capability 0 as unknown (-1)
+    ///    so LibreHardwareMonitor can still fill missing RPM in GetSensorSnapshot.
     /// </summary>
     protected static async Task<int> ReadFanSpeedWithFallbackAsync(
         Func<Task<int>> primaryAsync,
         Func<Task<int>> fallbackAsync)
     {
         var primary = -1;
-        var primaryWasZero = false;
+        var fallback = -1;
+
         try
         {
             primary = await primaryAsync().ConfigureAwait(false);
             if (primary > 0)
                 return primary;
-            if (primary == 0)
-                primaryWasZero = true;
         }
-        catch
+        catch (Exception ex)
         {
-            // try fallback below
+            Log.Instance.TraceOnce("sensors-fan-primary", "Primary fan RPM read failed; trying fallback.", ex);
+            primary = -1;
         }
 
         try
         {
-            var fallback = await fallbackAsync().ConfigureAwait(false);
+            fallback = await fallbackAsync().ConfigureAwait(false);
             if (fallback > 0)
                 return fallback;
-
-            // Prefer real parked-zero from fan method; capability 0 alone is not trusted.
-            if (primaryWasZero)
-                return 0;
-
-            if (fallback == 0)
-                return 0;
-
-            return -1;
         }
-        catch
+        catch (Exception ex)
         {
-            return primaryWasZero ? 0 : -1;
+            Log.Instance.TraceOnce("sensors-fan-fallback", "Fallback fan RPM read failed.", ex);
+            fallback = -1;
         }
+
+        // Old-style keep: any successful non-negative from fan-method primary wins for parked fans.
+        if (primary >= 0)
+            return primary;
+
+        // Capability-only 0 is unreliable on modern Legion firmware — leave -1 for LHM fill.
+        // (Historical code returned capability 0 and blocked LHM; that caused blank/stuck 0 RPM.)
+        return -1;
+    }
+
+    /// <summary>
+    /// Three-source fan RPM used by V3+ and Generic: fan-method IDs, then capability, then
+    /// any remaining non-negative. Positive values always win.
+    /// </summary>
+    protected static async Task<int> ReadFanSpeedMultiSourceAsync(
+        Func<Task<int>> fanMethodAsync,
+        Func<Task<int>> capabilityAsync)
+    {
+        var fanMethod = -1;
+        var capability = -1;
+
+        try
+        {
+            fanMethod = await fanMethodAsync().ConfigureAwait(false);
+            if (fanMethod > 0)
+                return fanMethod;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.TraceOnce("sensors-fan-method", "Fan_GetCurrentFanSpeed path failed.", ex);
+            fanMethod = -1;
+        }
+
+        try
+        {
+            capability = await capabilityAsync().ConfigureAwait(false);
+            if (capability > 0)
+                return capability;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.TraceOnce("sensors-fan-capability", "GetFeatureValue fan path failed.", ex);
+            capability = -1;
+        }
+
+        // Fan method explicit 0 = parked (trusted). Capability 0 alone is not.
+        if (fanMethod == 0)
+            return 0;
+
+        return -1;
     }
 
     private static double NormalizeLibreHardwareMonitorVoltage(float value) =>
@@ -586,9 +630,12 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             // Note: This may not be available on all systems
             return new SafePerformanceCounter("Processor Information", "Power", "_Total");
         }
-        catch
+        catch (Exception ex)
         {
-            // Counter not available, return null
+            Log.Instance.TraceOnce(
+                "sensors-power-counter",
+                "Processor Information/Power performance counter unavailable.",
+                ex);
             return null;
         }
     }
@@ -609,8 +656,9 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             if (wattage > 0)
                 return wattage;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-cpu-watt-wmi", "CPU wattage WMI probe failed.", ex);
         }
 
         // Try method 3: reuse LibreHardwareMonitor package power if that path is already available
@@ -632,8 +680,9 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
             var powerValue = _cpuPowerCounter.NextValue();
             return SensorReadingHelper.NormalizePowerReadingToWatts(powerValue);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-cpu-watt-perfctr", "CPU wattage performance counter read failed.", ex);
             return -1;
         }
     }
@@ -660,8 +709,12 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "sensors-cpu-watt-lhm",
+                "CPU wattage LibreHardwareMonitor path failed.",
+                ex);
         }
 
         return -1;
@@ -750,8 +803,9 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
             return (wattage, voltage);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-nvidia-smi-power", "nvidia-smi power/voltage parse failed.", ex);
             return (-1, 0);
         }
     }
@@ -802,8 +856,12 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                     currentPerformanceState = parsedState;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Instance.TraceOnce(
+                    "sensors-gpu-pstate",
+                    "Failed to parse GPU performance state id; defaulting to P0.",
+                    ex);
             }
 
             var states = GPUApi.GetPerformanceStates20(gpu.Handle);
@@ -816,16 +874,24 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 maxCoreClockOffset = states.Clocks[currentPerformanceState][0].FrequencyDeltaInkHz.DeltaValue / 1000;
                 maxMemoryClockOffset = states.Clocks[currentPerformanceState][1].FrequencyDeltaInkHz.DeltaValue / 1000;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Instance.TraceOnce(
+                    "sensors-gpu-oc-current",
+                    "Failed to read GPU OC offsets for current p-state; trying P0.",
+                    ex);
                 // Fall back to P0_3DPerformance if current state doesn't have offsets
                 try
                 {
                     maxCoreClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][0].FrequencyDeltaInkHz.DeltaValue / 1000;
                     maxMemoryClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][1].FrequencyDeltaInkHz.DeltaValue / 1000;
                 }
-                catch
+                catch (Exception ex2)
                 {
+                    Log.Instance.TraceOnce(
+                        "sensors-gpu-oc-p0",
+                        "No GPU overclock offsets available from NVAPI.",
+                        ex2);
                     // No overclock offsets available
                 }
             }
@@ -865,32 +931,41 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 currentWattage,
                 currentVoltage);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-nvapi-gpuinfo", "NVAPI GPUInfo snapshot failed.", ex);
             return GPUInfo.Empty;
         }
     }
 
-    private static T SafeRead<T>(Func<T> operation, T fallback, string _)
+    private static T SafeRead<T>(Func<T> operation, T fallback, string operationName)
     {
         try
         {
             return operation();
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"sensors-safe-read-{operationName}",
+                $"Safe sensor read failed: {operationName}",
+                ex);
             return fallback;
         }
     }
 
-    private static async Task<T> SafeReadAsync<T>(Func<Task<T>> operation, T fallback, string _)
+    private static async Task<T> SafeReadAsync<T>(Func<Task<T>> operation, T fallback, string operationName)
     {
         try
         {
             return await operation().ConfigureAwait(false);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"sensors-safe-read-async-{operationName}",
+                $"Safe async sensor read failed: {operationName}",
+                ex);
             return fallback;
         }
     }

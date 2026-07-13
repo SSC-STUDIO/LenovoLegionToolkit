@@ -119,8 +119,12 @@ internal static class TrustedPluginPackageStore
         {
             return Path.GetFullPath(path);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "trusted-plugin-path-normalize",
+                $"Failed to normalize trusted plugin path: {path}",
+                ex);
             return path;
         }
     }
@@ -207,8 +211,12 @@ internal static class TrustedPluginPackageStore
             var json = Encoding.UTF8.GetString(Convert.FromBase64String(envelope.Data));
             return NormalizeStore(JsonSerializer.Deserialize<TrustedPluginPackageStoreModel>(json));
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                "trusted-plugin-store-read",
+                "Failed to read trusted plugin package store; using empty store.",
+                ex);
             return new TrustedPluginPackageStoreModel();
         }
     }

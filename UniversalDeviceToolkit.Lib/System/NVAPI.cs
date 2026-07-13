@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using LenovoLegionToolkit.Lib.Utils;
 using NvAPIWrapper;
 using NvAPIWrapper.Display;
 using NvAPIWrapper.GPU;
@@ -27,8 +28,9 @@ internal static class NVAPI
         {
             return PhysicalGPU.GetPhysicalGPUs().FirstOrDefault(gpu => gpu.SystemType == SystemType.Laptop);
         }
-        catch (NVIDIAApiException)
+        catch (NVIDIAApiException ex)
         {
+            Log.Instance.TraceOnce("nvapi-get-gpu", "NVAPI GetPhysicalGPUs failed (driver unloaded or unsupported).", ex);
             return null;
         }
     }
@@ -39,8 +41,9 @@ internal static class NVAPI
         {
             return Display.GetDisplays().Any(d => d.PhysicalGPUs.Contains(gpu, PhysicalGPUEqualityComparer.Instance));
         }
-        catch (NVIDIAApiException)
+        catch (NVIDIAApiException ex)
         {
+            Log.Instance.TraceOnce("nvapi-display-connected", "NVAPI display connection probe failed.", ex);
             return false;
         }
     }
@@ -51,8 +54,9 @@ internal static class NVAPI
         {
             return gpu.BusInformation.PCIIdentifiers.ToString();
         }
-        catch (NVIDIAApiException)
+        catch (NVIDIAApiException ex)
         {
+            Log.Instance.TraceOnce("nvapi-gpu-id", "NVAPI PCIIdentifiers read failed.", ex);
             return null;
         }
     }

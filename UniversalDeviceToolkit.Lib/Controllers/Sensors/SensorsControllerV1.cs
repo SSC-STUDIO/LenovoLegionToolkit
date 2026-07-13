@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
@@ -28,8 +29,9 @@ public class SensorsControllerV1(GPUController gpuController) : AbstractSensorsC
 
             return result;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("sensors-v1-supported", "SensorsControllerV1 support probe failed.", ex);
             return false;
         }
     }
@@ -50,14 +52,15 @@ public class SensorsControllerV1(GPUController gpuController) : AbstractSensorsC
         return t;
     }
 
-    // Historical V1 path: Fan_GetCurrentFanSpeed first (IDs 0/1), then capability.
+    // Old LLT/UDT V1: Fan_GetCurrentFanSpeed(fanId) is the primary path (IDs 0/1).
+    // PreferAsync adds generation-tolerant ID fallback; capability is last resort.
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        ReadFanSpeedWithFallbackAsync(
+        ReadFanSpeedMultiSourceAsync(
             () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(CPU_FAN_ID, 1),
             () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed));
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        ReadFanSpeedWithFallbackAsync(
+        ReadFanSpeedMultiSourceAsync(
             () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(GPU_FAN_ID, 2),
             () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed));
 

@@ -97,6 +97,7 @@ public partial class MainWindow
         Loaded += MainWindow_Loaded;
         SourceInitialized += MainWindow_SourceInitialized;
         StateChanged += MainWindow_StateChanged;
+        SizeChanged += MainWindow_SizeChanged;
         _updateIndicator.MouseLeftButtonDown += UpdateIndicator_Click;
         _updateIndicator.MouseRightButtonDown += UpdateIndicator_Click;
 
@@ -147,10 +148,11 @@ public partial class MainWindow
 
     private void NavigationSplitter_DragDelta(object sender, DragDeltaEventArgs e)
     {
-        var collapsedWidth = GetNavigationWidthResource("NavigationWidthCollapsed", 70);
-        var expandedWidth = GetNavigationWidthResource("NavigationWidthExpanded", 220);
+        var collapsedWidth = NavigationPaneMetrics.GetCollapsedWidth();
+        // Max stretch scales with the window so large screens can pull the rail further.
+        var maxStretchWidth = NavigationPaneMetrics.GetMaxStretchWidth(ActualWidth);
         var currentWidth = _navigationSplitterWidth > 0 ? _navigationSplitterWidth : _navigationStore.ActualWidth;
-        _navigationSplitterWidth = Math.Clamp(currentWidth + e.HorizontalChange, collapsedWidth, expandedWidth);
+        _navigationSplitterWidth = Math.Clamp(currentWidth + e.HorizontalChange, collapsedWidth, maxStretchWidth);
 
         _navigationStore.BeginAnimation(WidthProperty, null);
         _navigationStore.BeginAnimation(MinWidthProperty, null);
@@ -162,8 +164,8 @@ public partial class MainWindow
 
     private void NavigationSplitter_DragCompleted(object sender, DragCompletedEventArgs e)
     {
-        var collapsedWidth = GetNavigationWidthResource("NavigationWidthCollapsed", 70);
-        var expandedWidth = GetNavigationWidthResource("NavigationWidthExpanded", 220);
+        var collapsedWidth = NavigationPaneMetrics.GetCollapsedWidth();
+        var expandedWidth = NavigationPaneMetrics.GetExpandedWidth(ActualWidth);
         var threshold = collapsedWidth + ((expandedWidth - collapsedWidth) / 2);
         var shouldExpand = (_navigationSplitterWidth > 0 ? _navigationSplitterWidth : _navigationStore.ActualWidth) >= threshold;
         _navigationSplitterWidth = 0;
@@ -208,9 +210,13 @@ public partial class MainWindow
         _navigationStore.BeginAnimation(MaxWidthProperty, animation.Clone());
     }
 
-    private static double GetNavigationWidthResource(string key, double fallback)
+    private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        return Application.Current.TryFindResource(key) is double width ? width : fallback;
+        if (!e.WidthChanged || !IsLoaded)
+            return;
+
+        // Keep expanded rail max within the new window budget (scales with size).
+        _navigationStore.RefreshWidthForHostWindow();
     }
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
     {

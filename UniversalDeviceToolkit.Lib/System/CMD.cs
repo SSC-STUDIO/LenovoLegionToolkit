@@ -204,8 +204,12 @@ public static class CMD
             
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "cmd-validate-filename",
+                $"CMD file path validation failed for '{fileName}'.",
+                ex);
             return false;
         }
     }

@@ -503,9 +503,12 @@ public class WindowsOptimizationService
                         if (!process.HasExited)
                             process.Kill(true);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // Ignore process kill failures; process may already have exited or been disposed.
+                        Log.Instance.TraceOnce(
+                            "opt-cmd-kill",
+                            $"Failed to kill optimization command process ({fileName}); process may already have exited.",
+                            ex);
                     }
                     process.Dispose();
                 }
@@ -786,8 +789,12 @@ public class WindowsOptimizationService
                     if (!process.HasExited)
                         process.Kill(true);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Instance.TraceOnce(
+                        "opt-power-scheme-kill",
+                        "Failed to kill power-scheme probe process after timeout/cancel.",
+                        ex);
                 }
             }
 

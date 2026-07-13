@@ -121,8 +121,12 @@ public static class Autorun
 
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                $"autorun-delete-{taskName}",
+                $"Failed to delete autorun scheduled task '{taskName}'.",
+                ex);
             return false;
         }
     }

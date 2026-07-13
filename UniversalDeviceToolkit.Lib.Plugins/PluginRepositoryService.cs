@@ -687,9 +687,12 @@ public class PluginRepositoryService : IDisposable
                 {
                     process.Kill(entireProcessTree: true);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Ignore cleanup failures for the native fallback.
+                    Log.Instance.TraceOnce(
+                        "plugin-repo-curl-kill",
+                        "Failed to kill native curl download process during cleanup.",
+                        ex);
                 }
             }
 
@@ -1021,15 +1024,21 @@ public class PluginRepositoryService : IDisposable
                                 {
                                     File.Delete(file);
                                 }
-                                catch
+                                catch (Exception fileEx)
                                 {
-                                    // Continue with next file
+                                    Log.Instance.TraceOnce(
+                                        "plugin-repo-delete-file",
+                                        $"Could not delete locked plugin file during reinstall: {file}",
+                                        fileEx);
                                 }
                             }
                         }
-                        catch
+                        catch (Exception enumEx)
                         {
-                            // Continue with copy
+                            Log.Instance.TraceOnce(
+                                "plugin-repo-delete-enum",
+                                $"Could not enumerate plugin files for delete before reinstall: {pluginDir}",
+                                enumEx);
                         }
                     }
                 }
@@ -1698,8 +1707,12 @@ public class PluginRepositoryService : IDisposable
 
             return Encoding.UTF8.GetString(Convert.FromBase64String(envelope.Data));
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                "plugin-repo-store-cache-read",
+                "Failed to read plugin store cache envelope; discarding cache.",
+                ex);
             return null;
         }
     }
@@ -1724,9 +1737,12 @@ public class PluginRepositoryService : IDisposable
             if (File.Exists(destinationPath))
                 File.Delete(destinationPath);
         }
-        catch
+        catch (Exception ex)
         {
-            // Ignore partial cleanup failures; a later successful download uses overwrite semantics.
+            Log.Instance.TraceOnce(
+                "plugin-repo-partial-cleanup",
+                $"Failed to delete partial plugin download: {destinationPath}",
+                ex);
         }
     }
 

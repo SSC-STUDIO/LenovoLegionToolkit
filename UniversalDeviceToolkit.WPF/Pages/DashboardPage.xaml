@@ -72,8 +72,7 @@
             <Setter Property="Margin" Value="0,14,0,0" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
             <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ChartSurfaceBorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="2" />
         </Style>
         <Style x:Key="DashboardSensorsSkeletonLegendDotStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">

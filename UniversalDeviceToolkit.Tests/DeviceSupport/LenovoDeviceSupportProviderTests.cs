@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.DeviceSupport;
@@ -11,6 +14,7 @@ public sealed class LenovoDeviceSupportProviderTests
     public LenovoDeviceSupportProviderTests()
     {
         LenovoDeviceSupportProvider.Instance.SetInstalledCatalog(null);
+        LenovoDeviceSupportProvider.Instance.SetPreferredDevicePackId(null);
     }
 
     [Fact]
@@ -66,9 +70,16 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("83F0", "Legion 5 15IRX10", "lenovo-legion-5")]
     [InlineData("83GS", "LOQ 15IRX9", "lenovo-loq")]
     [InlineData("83AQ", "LOQ 15APH11", "lenovo-loq")]
+    [InlineData("83H0", "LOQ 15IRX10", "lenovo-loq")]
     [InlineData("83E1", "Legion Go", "lenovo-legion-go")]
     [InlineData("83N0", "Legion Go S", "lenovo-legion-go")]
     [InlineData("83DE", "Legion Pro 7 16IRX9", "lenovo-legion-pro-7")]
+    [InlineData("83S0", "Legion Pro 7 16IRX11", "lenovo-legion-pro-7")]
+    [InlineData("83J0", "Legion Pro 5 16IRX10", "lenovo-legion-pro-5")]
+    [InlineData("83M6", "Legion 5 15IRX10", "lenovo-legion-5")]
+    [InlineData("83P0", "Y7000P 2025", "lenovo-legion-5")]
+    [InlineData("83G0", "Legion 9i 16IRX9", "lenovo-legion-9")]
+    [InlineData("83H6", "Legion Slim 5 14AHP10", "lenovo-legion-slim-5")]
     public void Evaluate_WhenRecentLenovoGamingMatches_ShouldEnableHardwarePack(
         string machineType,
         string model,
@@ -85,6 +96,48 @@ public sealed class LenovoDeviceSupportProviderTests
 
         availability.IsSupported.Should().BeTrue();
         availability.DevicePackId.Should().Be(expectedPackId);
+    }
+
+    [Fact]
+    public async Task BuiltInCatalog_ShouldExposeManyHardwarePacksForStartupDeviceSetup()
+    {
+        var catalog = await LenovoDeviceSupportProvider.Instance.GetCatalogAsync();
+        var hardwarePacks = catalog.DevicePacks
+            .Where(p => p.EnabledFeatures.Contains("lenovo-hardware-controls", StringComparer.OrdinalIgnoreCase))
+            .ToArray();
+
+        hardwarePacks.Length.Should().BeGreaterThanOrEqualTo(8);
+        hardwarePacks.Select(p => p.Id).Should().Contain([
+            "lenovo-legion-pro-7",
+            "lenovo-legion-pro-5",
+            "lenovo-legion-5",
+            "lenovo-loq",
+            "lenovo-legion-go",
+            "lenovo-ideapad-gaming"
+        ]);
+
+        // Expanded MTM coverage for 2024–2026 refreshes should be present.
+        hardwarePacks.First(p => p.Id == "lenovo-legion-pro-5").MachineTypes.Should().Contain("83J0");
+        hardwarePacks.First(p => p.Id == "lenovo-loq").MachineTypes.Should().Contain("83H0");
+        hardwarePacks.First(p => p.Id == "lenovo-legion-5").MachineTypes.Should().Contain("83M6");
+
+        // Each MTM may appear in only one pack so FirstOrDefault match is deterministic.
+        var mtmOwners = catalog.DevicePacks
+            .SelectMany(p => (p.MachineTypes ?? []).Select(mt => (Mt: mt.ToUpperInvariant(), PackId: p.Id)))
+            .Where(x => !string.IsNullOrWhiteSpace(x.Mt))
+            .GroupBy(x => x.Mt)
+            .Where(g => g.Select(x => x.PackId).Distinct(StringComparer.OrdinalIgnoreCase).Count() > 1)
+            .Select(g => $"{g.Key} -> {string.Join(", ", g.Select(x => x.PackId).Distinct())}")
+            .ToArray();
+        mtmOwners.Should().BeEmpty("machine types must be unique across device packs");
+
+        // Non-gaming consumer Lenovo lines stay basic (no EC hardware pack claims).
+        var ideapad = catalog.DevicePacks.First(p => p.Id == "lenovo-ideapad");
+        ideapad.EnabledFeatures.Should().NotContain("lenovo-hardware-controls");
+        catalog.DevicePacks.First(p => p.Id == "lenovo-yoga").EnabledFeatures
+            .Should().NotContain("lenovo-hardware-controls");
+        catalog.DevicePacks.First(p => p.Id == "lenovo-thinkbook").EnabledFeatures
+            .Should().NotContain("lenovo-hardware-controls");
     }
 
     [Fact]

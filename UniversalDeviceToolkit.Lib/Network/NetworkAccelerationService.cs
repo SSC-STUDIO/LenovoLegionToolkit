@@ -156,9 +156,12 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
                     var client = _launcher.CreateClient();
                     await client.StopAsync(cancellationToken).ConfigureAwait(false);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Fall through to process kill.
+                    Log.Instance.WarningOnce(
+                        "network-accel-stop-ipc",
+                        "Network acceleration IPC stop failed; falling back to process kill.",
+                        ex);
                 }
             }
 

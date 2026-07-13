@@ -8,9 +8,9 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public class AutomationPageTests
 {
     [Fact]
-    public void GetAutomationFallbackLoadingDelay_ShouldRemainShortAndStable()
+    public void GetAutomationFallbackLoadingDelay_ShouldRemainVisibleAndStable()
     {
-        AutomationPage.GetAutomationFallbackLoadingDelay().Should().Be(TimeSpan.FromMilliseconds(120));
+        AutomationPage.GetAutomationFallbackLoadingDelay().Should().Be(TimeSpan.FromMilliseconds(600));
     }
 
     [Fact]

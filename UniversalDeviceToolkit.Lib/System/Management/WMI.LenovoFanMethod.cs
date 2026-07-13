@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
@@ -15,6 +15,17 @@ public static partial class WMI
     {
         private const string FanMethodScope = "root\\WMI";
         private const string FanMethodQuery = "SELECT * FROM LENOVO_FAN_METHOD";
+
+        // Property names seen across Legion firmware generations for Fan_GetCurrentFanSpeed out-params.
+        private static readonly string[] FanSpeedPropertyNames =
+        [
+            "CurrentFanSpeed",
+            "FanSpeed",
+            "CurrentSpeed",
+            "Speed",
+            "Data",
+            "Value"
+        ];
 
         public static Task FanSetTableAsync(byte[] fanTable) => CallAsync(FanMethodScope,
             $"{FanMethodQuery}",
@@ -45,26 +56,26 @@ public static partial class WMI
         }
 
         /// <summary>
-        /// Historical primary fan RPM path (pre-capability). Some Legion firmwares expose
-        /// LENOVO_FAN_METHOD without this method — returns -1 without throwing.
-        /// Soft-fail cache only when the method is truly missing (not per-id invoke fails).
+        /// Historical primary fan RPM path used by LLT V1/V2 (direct FanID call).
+        /// Soft-fails without throwing when the firmware method is missing.
         /// </summary>
         public static Task<int> FanGetCurrentFanSpeedAsync(int fanId) =>
             FanGetCurrentFanSpeedPreferAsync(fanId);
 
         /// <summary>
         /// Try preferred fan IDs in order (restores multi-generation support:
-        /// V1/V2 used 0/1, V3+ used 1/2). First positive RPM wins; explicit 0 means parked.
+        /// V1/V2 used 0/1, V3+ used 1/2). First positive RPM wins; explicit 0 means parked
+        /// only when the WMI call itself succeeded.
         /// </summary>
         public static async Task<int> FanGetCurrentFanSpeedPreferAsync(params int[] fanIds)
         {
             if (fanIds is null || fanIds.Length == 0)
                 return -1;
 
-            if (IsWmiMethodSoftFailed(FanMethodScope, FanMethodQuery, "Fan_GetCurrentFanSpeed"))
-                return -1;
-
-            var sawParkedZero = false;
+            // Do not hard-skip on soft-fail cache alone for a single generation — still
+            // attempt once; permanent soft-fail only applies after InvalidMethod.
+            var sawSuccessfulZero = false;
+            var anyAttemptSucceeded = false;
 
             foreach (var fanId in fanIds.Distinct())
             {
@@ -73,7 +84,7 @@ public static partial class WMI
                     $"{FanMethodQuery}",
                     "Fan_GetCurrentFanSpeed",
                     new() { { "FanID", fanId } },
-                    pdc => Convert.ToInt32(pdc["CurrentFanSpeed"].Value),
+                    ExtractFanSpeedRpm,
                     fallback: -1).ConfigureAwait(false);
 
                 if (!ok)
@@ -83,14 +94,60 @@ public static partial class WMI
                     continue;
                 }
 
+                anyAttemptSucceeded = true;
                 if (rpm > 0)
                     return rpm;
 
-                // Explicit 0 = fan parked at this id (still a valid reading).
-                sawParkedZero = true;
+                // Explicit 0 = fan parked at this id (valid reading only when invoke succeeded).
+                sawSuccessfulZero = true;
             }
 
-            return sawParkedZero ? 0 : -1;
+            if (sawSuccessfulZero)
+                return 0;
+
+            return anyAttemptSucceeded ? 0 : -1;
+        }
+
+        /// <summary>
+        /// Extract RPM from WMI out-params. Older/newer firmware disagree on property names.
+        /// </summary>
+        private static int ExtractFanSpeedRpm(PropertyDataCollection properties)
+        {
+            foreach (var name in FanSpeedPropertyNames)
+            {
+                try
+                {
+                    var raw = properties[name]?.Value;
+                    if (raw is null)
+                        continue;
+                    var value = Convert.ToInt32(raw);
+                    if (value >= 0)
+                        return value;
+                }
+                catch
+                {
+                    // try next property name
+                }
+            }
+
+            // Last resort: first non-negative convertible property.
+            foreach (PropertyData property in properties)
+            {
+                try
+                {
+                    if (property.Value is null)
+                        continue;
+                    var value = Convert.ToInt32(property.Value);
+                    if (value >= 0)
+                        return value;
+                }
+                catch
+                {
+                    // keep scanning
+                }
+            }
+
+            throw new InvalidOperationException("Fan_GetCurrentFanSpeed returned no readable RPM property.");
         }
 
         public static async Task<int> GetCurrentFanMaxSpeedAsync(int sensorId, int fanId)

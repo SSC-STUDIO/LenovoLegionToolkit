@@ -14,8 +14,9 @@ public class DGPUCapabilityNotify(IDelayProvider delayProvider) : AbstractDGPUNo
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             return mi is { Features.Source: MachineInformation.FeatureData.SourceType.CapabilityData, Properties.SupportsIGPUMode: true };
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("dgpu-cap-notify-supported", "DGPUCapabilityNotify support probe failed.", ex);
             return false;
         }
     }
@@ -31,8 +32,9 @@ public class DGPUCapabilityNotify(IDelayProvider delayProvider) : AbstractDGPUNo
             var deviceId = value >> 16;
             return new HardwareId($"{vendorId:X}", $"{deviceId:X}");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("dgpu-cap-hwid", "Failed to read dGPU hardware id via capability GPUDidVid.", ex);
             return HardwareId.Empty;
         }
     }

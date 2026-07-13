@@ -67,16 +67,16 @@ public static partial class WMI
 
     /// <summary>
     /// Only "method does not exist on this class" should be permanently cached.
-    /// Transient / parameter-specific failures must not disable the method forever.
+    /// Do NOT treat generic NotFound / "找不到" as method-missing — those fire for bad
+    /// object state and wrongly disabled Fan_GetCurrentFanSpeed process-wide.
     /// </summary>
     private static bool IsMethodMissing(ManagementException ex) =>
         ex.ErrorCode is ManagementStatus.InvalidMethod
-            or ManagementStatus.NotFound
         || ex.Message.Contains("not implemented", StringComparison.OrdinalIgnoreCase)
         || ex.Message.Contains("未实现", StringComparison.OrdinalIgnoreCase)
         || ex.Message.Contains("未在任何类中实现", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("not found", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("找不到", StringComparison.OrdinalIgnoreCase);
+        || ex.Message.Contains("does not exist", StringComparison.OrdinalIgnoreCase)
+        || ex.Message.Contains("不存在", StringComparison.OrdinalIgnoreCase);
 
     private static string SoftFailKey(string scope, string queryFormatted, string methodName) =>
         string.Concat(scope, "\u001f", queryFormatted, "\u001f", methodName);
@@ -206,9 +206,9 @@ public static partial class WMI
             {
                 watcher.Stop();
             }
-            catch (ManagementException)
+            catch (ManagementException ex)
             {
-                // Ignore exceptions during cleanup
+                Log.Instance.TraceOnce("wmi-watcher-stop", "WMI event watcher Stop failed during dispose.", ex);
             }
             finally
             {
@@ -281,8 +281,12 @@ public static partial class WMI
         {
             return (true, converter(result.Properties));
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"wmi-trycall-convert-{methodName}",
+                $"WMI TryCallAsync converter failed for {methodName}.",
+                ex);
             return (false, fallback);
         }
     }

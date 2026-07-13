@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using LenovoLegionToolkit.Lib.Utils;
 using NvAPIWrapper.GPU;
 using NvAPIWrapper.Native;
 
@@ -27,9 +28,13 @@ public static class NVAPIExtensions
                 var process = Process.GetProcessById(app.ProcessId);
                 processes.Add(process);
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
                 // Process may have exited, skip this process
+                Log.Instance.TraceOnce(
+                    "nvapi-active-process-gone",
+                    "NVAPI active app process already exited while enumerating.",
+                    ex);
             }
         }
 

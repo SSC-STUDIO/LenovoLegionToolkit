@@ -37,6 +37,7 @@ public class CatalogDeviceSupportProvider(
     ];
 
     private DeviceSupportCatalog? _installedCatalog;
+    private string? _preferredDevicePackId;
 
     public string Id { get; } = id;
 
@@ -48,16 +49,39 @@ public class CatalogDeviceSupportProvider(
         _installedCatalog = catalog;
     }
 
+    public void SetPreferredDevicePackId(string? packId)
+    {
+        _preferredDevicePackId = string.IsNullOrWhiteSpace(packId) ? null : packId.Trim();
+    }
+
     public DeviceFeatureAvailability Evaluate(MachineInformation machineInformation, DeviceSupportCatalog? catalog = null)
     {
         catalog ??= MergeCatalogs(_installedCatalog, builtInCatalog);
 
         var devicePacks = catalog.DevicePacks ?? [];
+
+        // User-confirmed pack from device setup wins over auto-detect.
+        if (!string.IsNullOrWhiteSpace(_preferredDevicePackId))
+        {
+            if (_preferredDevicePackId.Equals(GenericBasicPackId, StringComparison.OrdinalIgnoreCase))
+                return BasicMode();
+
+            var preferred = devicePacks.FirstOrDefault(devicePack =>
+                devicePack.Id.Equals(_preferredDevicePackId, StringComparison.OrdinalIgnoreCase));
+            if (preferred is not null)
+                return FromPack(preferred);
+        }
+
         var pack = devicePacks.FirstOrDefault(devicePack => MatchesMachineType(devicePack, machineInformation))
                    ?? devicePacks.FirstOrDefault(devicePack => MatchesModel(devicePack, machineInformation));
         if (pack is null)
             return BasicMode();
 
+        return FromPack(pack);
+    }
+
+    private static DeviceFeatureAvailability FromPack(DevicePack pack)
+    {
         var enabledFeatures = GetCollectionOrEmpty(pack.EnabledFeatures);
         var hiddenFeatures = GetCollectionOrEmpty(pack.HiddenFeatures);
 

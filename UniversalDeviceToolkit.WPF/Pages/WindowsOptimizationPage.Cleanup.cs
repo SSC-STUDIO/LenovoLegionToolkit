@@ -53,6 +53,8 @@ public partial class WindowsOptimizationPage
             ViewModel.IsCleaning = true;
             var swOverall = Stopwatch.StartNew();
             long totalFreedBytes = 0;
+            var successCount = 0;
+            var failCount = 0;
 
             for (int i = 0; i < selectedActions.Count; i++)
             {
@@ -77,7 +79,18 @@ public partial class WindowsOptimizationPage
                         Log.Instance.Trace($"Failed to estimate size before cleanup for {action.Key}", ex);
                 }
 
-                await _windowsOptimizationService.ExecuteActionsAsync([action.Key], CancellationToken.None);
+                try
+                {
+                    await _windowsOptimizationService.ExecuteActionsAsync([action.Key], CancellationToken.None);
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    failCount++;
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Cleanup step failed for {action.Key}", ex);
+                    continue;
+                }
 
                 long sizeAfter = 0;
                 try
@@ -93,11 +106,47 @@ public partial class WindowsOptimizationPage
             }
 
             swOverall.Stop();
-            var summary = string.Format(LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_CleanupSummary", "Freed {0} in {1}s", Resource.Culture), 
-                ViewModel.EstimatedCleanupSizeText, swOverall.Elapsed.TotalSeconds.ToString("0.0"));
-            
-            // Show snackbar on UI thread
-            await Dispatcher.BeginInvoke(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, summary, SnackbarType.Success));
+            var freedText = FormatFreedBytes(totalFreedBytes);
+            string summary;
+            SnackbarType severity;
+            if (failCount == 0)
+            {
+                // Even when every step "succeeded", zero freed bytes is still a valid result.
+                summary = string.Format(
+                    LocalizationHelper.GetStringOrEnglish(
+                        Resource.ResourceManager,
+                        "WindowsOptimizationPage_CleanupSummary",
+                        "Freed {0} in {1}s ({2} items).",
+                        Resource.Culture),
+                    freedText,
+                    swOverall.Elapsed.TotalSeconds.ToString("0.0"),
+                    successCount);
+                severity = SnackbarType.Success;
+            }
+            else if (successCount == 0)
+            {
+                summary = LocalizationHelper.GetStringOrEnglish(
+                    Resource.ResourceManager,
+                    "SettingsPage_WindowsOptimization_Cleanup_Error",
+                    "Cleanup failed.",
+                    Resource.Culture);
+                severity = SnackbarType.Error;
+            }
+            else
+            {
+                summary = string.Format(
+                    LocalizationHelper.GetStringOrEnglish(
+                        Resource.ResourceManager,
+                        "WindowsOptimizationPage_CleanupPartialSummary",
+                        "Freed {0}. {1} succeeded, {2} failed.",
+                        Resource.Culture),
+                    freedText,
+                    successCount,
+                    failCount);
+                severity = SnackbarType.Warning;
+            }
+
+            await Dispatcher.BeginInvoke(() => SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, summary, severity));
         }
         catch (Exception ex)
         {
@@ -173,6 +222,25 @@ public partial class WindowsOptimizationPage
     {
         _applicationSettings.Store.CustomCleanupRules = ViewModel.CustomCleanupRules.Select(r => r.ToModel()).ToList();
         _applicationSettings.SynchronizeStore();
+    }
+
+    private static string FormatFreedBytes(long bytes)
+    {
+        if (bytes <= 0)
+            return "0 B";
+
+        string[] units = ["B", "KB", "MB", "GB", "TB"];
+        double value = bytes;
+        var unit = 0;
+        while (value >= 1024 && unit < units.Length - 1)
+        {
+            value /= 1024;
+            unit++;
+        }
+
+        return unit == 0
+            ? $"{bytes} {units[unit]}"
+            : $"{value:0.##} {units[unit]}";
     }
 }
 

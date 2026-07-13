@@ -95,6 +95,7 @@ internal static class Program
     private static TimeSpan _failureHold = TimeSpan.Zero;
     private static SmokeScenario _activeScenario = SmokeScenario.None;
     private static SmokeTheme _activeTheme = SmokeTheme.System;
+    private static string _activeLanguage = "en";
     private static string? _activeAppRuntimeDirectory;
     private static string? _activeRepositoryRoot;
     private static string? _activeSmokeAppDataDirectory;
@@ -308,11 +309,13 @@ internal static class Program
             ConfigurePowerModeHardwareVerification(args);
             _activeScenario = ResolveScenario(args);
             _activeTheme = ResolveTheme(args);
+            _activeLanguage = ResolveLanguage(args);
             var repositoryRoot = ResolveRepositoryRoot(args);
             _activeRepositoryRoot = repositoryRoot;
             Console.WriteLine($"[main-smoke] Repository root: {repositoryRoot}");
             Console.WriteLine($"[main-smoke] Scenario: {_activeScenario}");
             Console.WriteLine($"[main-smoke] Theme: {_activeTheme}");
+            Console.WriteLine($"[main-smoke] Language: {_activeLanguage}");
 
             var isDriverDownloadScenario = _activeScenario == SmokeScenario.DriverDownload;
             var isSystemOptimizationScenario = _activeScenario == SmokeScenario.SystemOptimization;
@@ -409,7 +412,6 @@ internal static class Program
             }
 
             NavigateToPluginExtensionsPage(mainWindow, refresh: true);
-            TryCapturePluginExtensionsLoadingSkeleton(mainWindow, process.Id);
             WaitForRequestedOnlinePluginEntries(
                 mainWindow,
                 desiredPluginSources
@@ -679,6 +681,23 @@ internal static class Program
         };
     }
 
+    private static string ResolveLanguage(IReadOnlyList<string> args)
+    {
+        var rawValue = TryReadOptionValue(args, "--lang")
+                       ?? GetEnvVar("UDT_SMOKE_LANG");
+        if (string.IsNullOrWhiteSpace(rawValue))
+            return "en";
+
+        var normalized = rawValue.Trim().ToLowerInvariant().Replace('_', '-');
+        return normalized switch
+        {
+            "en" or "en-us" or "english" => "en",
+            "zh" or "zh-cn" or "zh-hans" or "zh-chs" or "chinese" => "zh-hans",
+            "zh-hant" or "zh-tw" or "zh-hk" or "zh-cht" => "zh-hant",
+            _ => normalized
+        };
+    }
+
     private static ScenarioPreset? ResolveScenarioPreset(SmokeScenario scenario)
     {
         return scenario switch
@@ -795,6 +814,7 @@ MainAppPluginUi.Smoke
 Usage:
 MainAppPluginUi.Smoke.dll [--repo-root <path>] [--app-dir <installed-or-published-app-dir>] [--plugin <id[,id]>] [--plugin-source <pluginId=online|local[,pluginId=...]>]
                             [--scenario shell-local|combo-local|driver-download|system-optimization|dashboard|power-mode] [--theme system|light|dark]
+                            [--lang en|zh-hans|zh-hant|<culture>]
                             [--screenshots off|failures|always] [--screenshot-dir <path>] [--keep-artifacts]
                             [--watch] [--step-delay-ms <ms>] [--success-hold-ms <ms>] [--failure-hold-ms <ms>]
                             [--disable-animations] [--animation-speed-ms <ms>]
@@ -808,6 +828,7 @@ Options:
   --plugin-source        Per-plugin install source. Use '*' as wildcard, for example '*=online' or 'shell-integration=online,custom-mouse=local'. Default source is online for every smoke-supported plugin. Local sources require matching plugin build directories or the smoke fails fast.
   --scenario             Predefined smoke preset. 'shell-local' and 'combo-local' keep their historical plugin filters but now default to online install flow; 'driver-download' captures the Driver Download page without plugin install work; 'system-optimization' validates all System Optimization tabs without applying destructive actions; 'dashboard' validates sensor card expand/collapse; 'power-mode' validates the performance-mode entry without changing hardware mode unless --power-mode-hardware-verify is set.
   --theme                Override app theme for the smoke sandbox. One of: system, light, dark.
+  --lang                 UI language written to the smoke sandbox lang file. Default: en. Use zh-hans for Simplified Chinese README captures.
   --screenshots          Screenshot policy: 'off', 'failures', or 'always'. Default: 'failures'.
   --screenshot-dir       Output directory for screenshot artifacts. Defaults to a temp folder per smoke run.
   --keep-artifacts       Keep the smoke sandbox and local package bundle after a successful run.
@@ -1045,7 +1066,7 @@ Environment variables:
 
         Directory.CreateDirectory(appDataDirectory);
         Directory.CreateDirectory(pluginsDirectory);
-        File.WriteAllText(Path.Combine(appDataDirectory, "lang"), "en");
+        File.WriteAllText(Path.Combine(appDataDirectory, "lang"), _activeLanguage);
         File.WriteAllLines(
             Path.Combine(appDataDirectory, "device-setup"),
             ["devicePackId=", "basicMode=false", $"confirmedAtUtc={DateTimeOffset.UtcNow:O}"]);
@@ -1070,6 +1091,15 @@ Environment variables:
             _ => "System"
         };
 
+        // Normalize main-shell size for README / dashboard screenshots (logical DIPs).
+        root["WindowSize"] = new JsonObject
+        {
+            ["Width"] = 1300,
+            ["Height"] = 850
+        };
+        root["MinimizeToTray"] = false;
+        root["MinimizeOnClose"] = false;
+
         // Inject animation settings for faster test execution (single write)
         var animationSettingsMessage = string.Empty;
         if (_animationsDisabled)
@@ -1085,7 +1115,7 @@ Environment variables:
         }
 
         WriteSettingsRoot(settingsPath, root);
-        Console.WriteLine($"[main-smoke] Smoke settings override written: Theme={root["Theme"]}{animationSettingsMessage}");
+        Console.WriteLine($"[main-smoke] Smoke settings override written: Theme={root["Theme"]} WindowSize=1300x850{animationSettingsMessage}");
 
         var integrationsPath = Path.Combine(sandboxState.AppDataDirectory, "integrations.json");
         var integrationsRoot = File.Exists(integrationsPath)
@@ -1925,6 +1955,7 @@ Environment variables:
         DismissAnyBlockingMessageBox(mainWindow, processId);
 
         var arrived = false;
+        var initialSkeletonCaptured = false;
         for (var attempt = 1; attempt <= 6; attempt++)
         {
             mainWindow = ResolveLiveWindowAndDismissPopups(mainWindow, processId);
@@ -1936,14 +1967,24 @@ Environment variables:
                 Console.WriteLine($"[main-smoke] Plugin navigation element ready (attempt {attempt}/6)");
                 if (TryActivateNavigationElement(pluginNav, "PluginExtensionsNavItem"))
                 {
-                    WaitForAnimationsToComplete();
                     Console.WriteLine($"[main-smoke] Invoked plugin navigation element (attempt {attempt}/6)");
+                    if (!initialSkeletonCaptured)
+                    {
+                        TryCapturePluginExtensionsLoadingSkeleton(mainWindow, processId);
+                        initialSkeletonCaptured = true;
+                    }
+                    WaitForAnimationsToComplete();
                 }
                 else
                 {
                     Console.WriteLine($"[main-smoke] Plugin navigation element was not directly activatable; trying keyboard navigation fallback (attempt {attempt}/6)");
                     BringToForeground(mainWindow);
                     PressCtrlTab();
+                    if (!initialSkeletonCaptured)
+                    {
+                        TryCapturePluginExtensionsLoadingSkeleton(mainWindow, processId);
+                        initialSkeletonCaptured = true;
+                    }
                     WaitForAnimationsToComplete();
                 }
             }
@@ -1952,6 +1993,11 @@ Environment variables:
                 Console.WriteLine($"[main-smoke] Plugin navigation element unavailable; trying keyboard navigation fallback (attempt {attempt}/6)");
                 BringToForeground(mainWindow);
                 PressCtrlTab();
+                if (!initialSkeletonCaptured)
+                {
+                    TryCapturePluginExtensionsLoadingSkeleton(mainWindow, processId);
+                    initialSkeletonCaptured = true;
+                }
                 WaitForAnimationsToComplete();
             }
 
@@ -2102,8 +2148,8 @@ Environment variables:
 
             if (!skeletonVisible)
             {
-                Console.WriteLine("[main-smoke] Plugin loading skeleton not observed; skipping loading screenshot");
-                return;
+                DumpAutomationSnapshot(mainWindow, 220);
+                throw new TimeoutException("Plugin loading skeleton was not visible during initial marketplace loading.");
             }
 
             CaptureMainWindow(mainWindow, "plugin-extensions-loading");
@@ -2117,7 +2163,7 @@ Environment variables:
         }
         catch (Exception ex) when (IsRecoverableAutomationException(ex))
         {
-            Console.WriteLine($"[main-smoke] Plugin loading skeleton screenshot skipped: {ex.GetType().Name}");
+            throw new InvalidOperationException("Plugin loading skeleton validation failed.", ex);
         }
     }
 
@@ -2140,6 +2186,19 @@ Environment variables:
         catch
         {
             // Ignore and continue with click-based fallbacks.
+        }
+
+        try
+        {
+            if (element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var selectionItemPattern))
+            {
+                ((SelectionItemPattern)selectionItemPattern).Select();
+                return true;
+            }
+        }
+        catch
+        {
+            // Ignore and continue with invoke / physical click fallbacks.
         }
 
         try
@@ -2304,6 +2363,13 @@ Environment variables:
 
     private static bool IsPluginMarketplaceReady(AutomationElement mainWindow)
     {
+        if (!TryFindPluginNavigationElement(mainWindow, out var pluginNav)
+            || pluginNav is null
+            || !IsNavigationItemSelected(pluginNav))
+        {
+            return false;
+        }
+
         var rootReady = IsVisible(FindByAutomationId(mainWindow, "PluginExtensionsPageRoot"));
         var searchReady = IsVisible(FindByAutomationId(mainWindow, "PluginSearchTextBox"));
         var filterReady = IsVisible(FindByAutomationId(mainWindow, "PluginFilterComboBox"));
@@ -5474,7 +5540,7 @@ Environment variables:
         var initiallyExpanded = AnyDashboardSensorDetailsVisible(mainWindow);
         if (initiallyExpanded)
         {
-            DoubleClick(sensorsCard);
+            MouseDoubleClick(sensorsCard);
             WaitUntil(
                 () => !AnyDashboardSensorDetailsVisible(ResolveLiveWindow(mainWindow)),
                 TimeSpan.FromSeconds(8),
@@ -5483,7 +5549,7 @@ Environment variables:
 
         mainWindow = ResolveLiveWindow(mainWindow);
         sensorsCard = WaitForAutomationId(mainWindow, "DashboardSensorsCard", TimeSpan.FromSeconds(8));
-        DoubleClick(sensorsCard);
+        MouseDoubleClick(sensorsCard);
 
         var expanded = WaitUntil(
             () => AnyDashboardSensorDetailsVisible(ResolveLiveWindow(mainWindow)),
@@ -5492,15 +5558,41 @@ Environment variables:
 
         if (!expanded)
         {
-            DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 220);
-            throw new TimeoutException("Dashboard sensor details did not expand after double-click.");
+            AutomationElement? detailsWindow = null;
+            WaitUntil(
+                () =>
+                {
+                    detailsWindow = AutomationElement.RootElement
+                        .FindAll(TreeScope.Children, Condition.TrueCondition)
+                        .Cast<AutomationElement>()
+                        .FirstOrDefault(window => string.Equals(
+                            window.Current.AutomationId,
+                            "SensorDetailsWindow",
+                            StringComparison.OrdinalIgnoreCase));
+                    return detailsWindow is not null;
+                },
+                TimeSpan.FromSeconds(8),
+                TimeSpan.FromMilliseconds(200));
+
+            if (detailsWindow is null)
+            {
+                DumpAutomationSnapshot(ResolveLiveWindow(mainWindow), 220);
+                throw new TimeoutException("Dashboard sensor details neither expanded inline nor opened the responsive details window.");
+            }
+
+            if (TryGetNativeWindowHandle(detailsWindow, out var detailsHandle))
+                CaptureWindowArtifacts(detailsHandle, "dashboard-sensor-details-window", includeFullScreen: false);
+            CloseWindow(detailsWindow);
+            CaptureMainWindow(ResolveLiveWindow(mainWindow), "dashboard-sensors-recollapsed");
+            Console.WriteLine("[main-smoke] Dashboard responsive sensor details window verified.");
+            return;
         }
 
         CaptureMainWindow(ResolveLiveWindow(mainWindow), "dashboard-sensors-expanded");
 
         mainWindow = ResolveLiveWindow(mainWindow);
         sensorsCard = WaitForAutomationId(mainWindow, "DashboardSensorsCard", TimeSpan.FromSeconds(8));
-        DoubleClick(sensorsCard);
+        MouseDoubleClick(sensorsCard);
 
         var collapsed = WaitUntil(
             () => !AnyDashboardSensorDetailsVisible(ResolveLiveWindow(mainWindow)),
@@ -6887,9 +6979,30 @@ Environment variables:
 
     private static bool IsDashboardPageReady(AutomationElement mainWindow)
     {
+        if (!TryFindDashboardNavigationElement(mainWindow, out var dashboardNav)
+            || dashboardNav is null
+            || !IsNavigationItemSelected(dashboardNav))
+        {
+            return false;
+        }
+
         return IsVisible(FindByAutomationId(mainWindow, "DashboardPageRoot"))
                || IsVisible(FindByAutomationId(mainWindow, "DashboardSensorsCard"))
                || IsVisible(FindPowerModeComboBox(mainWindow));
+    }
+
+    private static bool IsNavigationItemSelected(AutomationElement element)
+    {
+        try
+        {
+            return element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var pattern)
+                   && pattern is SelectionItemPattern selectionItemPattern
+                   && selectionItemPattern.Current.IsSelected;
+        }
+        catch (Exception ex) when (IsRecoverableAutomationException(ex))
+        {
+            return false;
+        }
     }
 
     private static AutomationElement WaitForDashboardNavigationElement(AutomationElement root, TimeSpan timeout)

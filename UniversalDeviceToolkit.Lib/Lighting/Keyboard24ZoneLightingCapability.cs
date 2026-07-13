@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Utils;
@@ -32,8 +33,12 @@ public static class Keyboard24ZoneLightingCapability
             var spectrum = IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
             return await spectrum.IsSupportedAsync().ConfigureAwait(false);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "lighting-spectrum-special-keys",
+                "Spectrum special-keys capability probe failed.",
+                ex);
             return false;
         }
     }

@@ -140,6 +140,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -157,7 +158,60 @@
                 Text="{x:Static resources:Resource.PluginExtensionsPage_Description}" />
         </StackPanel>
 
-        <Border Grid.Row="1"
+        <!-- Offline / store-failure strip: never leave a blank page without recovery. -->
+        <Border
+            x:Name="_storeOfflineBanner"
+            Grid.Row="1"
+            Margin="0,0,0,10"
+            Padding="12,10"
+            Visibility="Collapsed"
+            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource CornerRadiusCard}"
+            AutomationProperties.AutomationId="PluginStoreOfflineBanner">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <wpfui:SymbolIcon
+                    Grid.Column="0"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    FontSize="18"
+                    Symbol="CloudDismiss24"
+                    Foreground="{DynamicResource StatusWarningBrush}" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="_storeOfflineTitleText"
+                        FontSize="13"
+                        FontWeight="SemiBold"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                        Text="Plugin store unavailable" />
+                    <TextBlock
+                        x:Name="_storeOfflineMessageText"
+                        Margin="0,2,0,0"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap"
+                        Text="Installed plugins remain available. Retry when the network is back." />
+                </StackPanel>
+                <wpfui:Button
+                    x:Name="_storeRetryButton"
+                    Grid.Column="2"
+                    Margin="12,0,0,0"
+                    MinWidth="88"
+                    VerticalAlignment="Center"
+                    Appearance="Secondary"
+                    AutomationProperties.AutomationId="PluginStoreRetryButton"
+                    Click="StoreRetryButton_Click"
+                    Content="Retry" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2"
                 Margin="0,0,0,8"
                 Padding="12,6"
                 CornerRadius="{StaticResource CornerRadiusCard}"
@@ -201,7 +255,7 @@
             </DockPanel>
         </Border>
 
-        <Grid Grid.Row="2" Margin="0,0,0,10">
+        <Grid Grid.Row="3" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -293,7 +347,7 @@
                 </wpfui:Button>
             </WrapPanel>
         </Grid>
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <!-- Hidden until load finishes so skeleton is never covered by an empty list panel. -->
             <Grid x:Name="_pluginListPanel" Visibility="Collapsed">
                 <Grid.RowDefinitions>
@@ -630,13 +684,18 @@
                 </ListBox>
             </Grid>
 
-            <!-- Visible by default so first paint shows skeleton (not an empty white region). -->
+            <!--
+              Visible + opaque by default so the first navigation frame is skeleton 流光,
+              never a blank white list cell. Code-behind snaps this in (no fade-from-0).
+            -->
             <Grid
                 x:Name="_loadingIndicator"
                 AutomationProperties.AutomationId="PluginLoadingIndicator"
+                Panel.ZIndex="2"
                 Visibility="Visible"
+                Opacity="1"
                 ClipToBounds="True"
-                Background="Transparent">
+                Background="{DynamicResource ControlFillColorDefaultBrush}">
                 <StackPanel Margin="0,4,0,0">
                     <Border Width="132"
                             Height="14"

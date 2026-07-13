@@ -10,12 +10,33 @@ namespace UniversalDeviceToolkit.WPF.Pages
 public partial class KeyboardBacklightPage
 {
     private readonly KeyboardBacklightViewModel _viewModel = new();
+    private bool _isInitializing;
 
     public KeyboardBacklightPage()
     {
         InitializeComponent();
         _titleTextBlock.Visibility = Visibility.Collapsed;
+        Loaded += KeyboardBacklightPage_Loaded;
         Unloaded += KeyboardBacklightPage_Unloaded;
+    }
+
+    private async void KeyboardBacklightPage_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (_isInitializing || _content.Children.Count > 0)
+            return;
+
+        _isInitializing = true;
+        _loader.IsLoading = true;
+        _content.Visibility = Visibility.Visible;
+
+        try
+        {
+            await InitializeKeyboardBacklightAsync();
+        }
+        finally
+        {
+            _isInitializing = false;
+        }
     }
 
     private void KeyboardBacklightPage_Unloaded(object sender, RoutedEventArgs e)
@@ -23,7 +44,7 @@ public partial class KeyboardBacklightPage
         _content.Children.Clear();
     }
 
-    private async void KeyboardBacklightPage_Initialized(object? sender, EventArgs e)
+    private async Task InitializeKeyboardBacklightAsync()
     {
         try
         {
@@ -55,10 +76,11 @@ public partial class KeyboardBacklightPage
         {
             if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error initializing keyboard backlight page.", ex);
+
+            _loader.IsLoading = false;
         }
     }
 
     public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync();
 }
 }
-

@@ -201,8 +201,12 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
 
             return new(vendor, device);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "dgpu-hwid-from-path",
+                "Failed to parse dGPU hardware id from device path.",
+                ex);
             return default;
         }
     }

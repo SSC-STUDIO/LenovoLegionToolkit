@@ -142,8 +142,12 @@ public class VersionChecker
             var version = assembly.GetName().Version;
             return version?.ToString() ?? "1.0.0";
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-host-version",
+                "Failed to read host assembly version; defaulting to 1.0.0.",
+                ex);
             return "1.0.0";
         }
     }

@@ -44,10 +44,20 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
         Task.FromResult(-1);
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(-1);
+        ReadLenovoCpuFanSpeedAsync();
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(-1);
+        ReadLenovoGpuFanSpeedAsync();
+
+    protected virtual Task<int> ReadLenovoCpuFanSpeedAsync() =>
+        ReadFanSpeedMultiSourceAsync(
+            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(1, 0),
+            () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed));
+
+    protected virtual Task<int> ReadLenovoGpuFanSpeedAsync() =>
+        ReadFanSpeedMultiSourceAsync(
+            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(2, 1),
+            () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed));
 
     protected override Task<int> GetCpuMaxFanSpeedAsync() =>
         Task.FromResult(-1);
@@ -105,8 +115,9 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
                 .DefaultIfEmpty(-1)
                 .Max();
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("generic-sensors-cpu-max-clock", "Failed to read CPU MaxClockSpeed via WMI.", ex);
             return -1;
         }
     }
@@ -160,8 +171,9 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
                 ParseInt(values[6]),
                 ParseVoltage(values[7]));
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("generic-sensors-nvidia-smi", "nvidia-smi GPU info probe failed.", ex);
             return GPUInfo.Empty;
         }
     }

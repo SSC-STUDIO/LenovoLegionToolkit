@@ -13,7 +13,7 @@ public static class ManagementObjectSearcherExtensions
 {
     // Queries that already failed with "not supported" / missing class, etc.
     // Avoids re-hitting WMI and spamming first-chance ManagementException.
-    private static readonly ConcurrentDictionary<string, byte> SoftFailedQueries = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, byte> _softFailedQueries = new(StringComparer.OrdinalIgnoreCase);
 
     public static Task<IEnumerable<ManagementBaseObject>> GetAsyncWithTimeout(this ManagementObjectSearcher searcher, int timeoutMs = 2500) =>
         searcher.GetAsync(timeoutMs);
@@ -24,7 +24,7 @@ public static class ManagementObjectSearcherExtensions
         var queryString = mos.Query?.QueryString ?? throw new ArgumentException("Query is required.", nameof(mos));
         var cacheKey = string.Concat(scopePath, "\u001f", queryString);
 
-        if (SoftFailedQueries.ContainsKey(cacheKey))
+        if (_softFailedQueries.ContainsKey(cacheKey))
             return Array.Empty<ManagementBaseObject>();
 
         var task = Task.Run(() => ExecuteQuery(scopePath, queryString, cacheKey));
@@ -70,7 +70,7 @@ public static class ManagementObjectSearcherExtensions
         }
         catch (ManagementException ex) when (IsSoftQueryFailure(ex))
         {
-            SoftFailedQueries.TryAdd(cacheKey, 0);
+            _softFailedQueries.TryAdd(cacheKey, 0);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace(

@@ -20,8 +20,9 @@ public class WhiteKeyboardDriverBacklightFeature()
             outBuffer >>= 1;
             return outBuffer == 0x2;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("feature-white-kb-driver-supported", "White keyboard driver backlight support probe failed.", ex);
             return false;
         }
     }

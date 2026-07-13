@@ -98,17 +98,39 @@
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="0,0,24,0" />
-            <Setter Property="Padding" Value="0,0,0,10" />
+            <Setter Property="Padding" Value="10,8,10,10" />
+            <Setter Property="MinHeight" Value="46" />
             <Setter Property="Width" Value="Auto" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" HorizontalAlignment="Stretch">
-                            <StackPanel HorizontalAlignment="Stretch">
-                                <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" />
-                                <Rectangle x:Name="ActiveIndicator" Height="3" Fill="Transparent" RadiusX="1.5" RadiusY="1.5" Margin="0" HorizontalAlignment="Stretch" />
-                            </StackPanel>
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            HorizontalAlignment="Stretch"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Padding="{TemplateBinding Padding}">
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="6" />
+                                </Grid.RowDefinitions>
+                                <ContentPresenter
+                                    Grid.Row="0"
+                                    ContentSource="Header"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <Border
+                                    Grid.Row="1"
+                                    x:Name="ActiveIndicator"
+                                    Height="3"
+                                    Margin="0,3,0,0"
+                                    Background="Transparent"
+                                    CornerRadius="2"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Bottom" />
+                            </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
@@ -116,7 +138,7 @@
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <Setter TargetName="ActiveIndicator" Property="Fill">
+                                <Setter TargetName="ActiveIndicator" Property="Background">
                                     <Setter.Value>
                                         <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
                                     </Setter.Value>

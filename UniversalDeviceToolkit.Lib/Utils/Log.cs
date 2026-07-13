@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,6 +27,9 @@ public class Log : IDisposable
 {
     private static readonly Lazy<Log> _instance = new(() => new Log(), LazyThreadSafetyMode.ExecutionAndPublication);
     public static Log Instance => _instance.Value;
+
+    /// <summary>Keys already emitted by WarningOnce/TraceOnce for this process.</summary>
+    private static readonly ConcurrentDictionary<string, byte> _onceKeys = new(StringComparer.Ordinal);
 
     private readonly Logger _logger;
     private readonly LoggingLevelSwitch _levelSwitch;
@@ -199,6 +203,33 @@ public class Log : IDisposable
 
         var sourceContext = FormatSourceContext(file, lineNumber, caller);
         _logger.Write(LogEventLevel.Warning, ex, "{Message} [@{SourceContext}]", message, sourceContext);
+    }
+
+    /// <summary>
+    /// Emit a Warning at most once per process for the given key.
+    /// Prefer for expected soft-failures that still deserve visibility without flooding logs.
+    /// </summary>
+    public void WarningOnce(string key, string message, Exception? ex = null,
+        [CallerFilePath] string? file = null,
+        [CallerLineNumber] int lineNumber = -1,
+        [CallerMemberName] string? caller = null)
+    {
+        if (string.IsNullOrEmpty(key) || !_onceKeys.TryAdd(key, 0))
+            return;
+        Warning(message, ex, file, lineNumber, caller);
+    }
+
+    /// <summary>
+    /// Emit a Trace at most once per process for the given key (hot paths / capability probes).
+    /// </summary>
+    public void TraceOnce(string key, string message, Exception? ex = null,
+        [CallerFilePath] string? file = null,
+        [CallerLineNumber] int lineNumber = -1,
+        [CallerMemberName] string? caller = null)
+    {
+        if (string.IsNullOrEmpty(key) || !_onceKeys.TryAdd(key, 0))
+            return;
+        Trace(message, ex, file, lineNumber, caller);
     }
 
     public void Info(FormattableString message,

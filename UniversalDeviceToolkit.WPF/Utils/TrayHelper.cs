@@ -144,9 +144,12 @@ public class TrayHelper : IDisposable
                 if (supportChecks.All(s => s))
                     supportedPipelines.Add(pipeline);
             }
-            catch
+            catch (Exception ex)
             {
-                // Skip pipelines that fail support checks.
+                Log.Instance.TraceOnce(
+                    "tray-pipeline-support",
+                    "Tray automation pipeline support check failed; skipping pipeline.",
+                    ex);
             }
         }
 

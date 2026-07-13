@@ -134,9 +134,13 @@ public partial class DashboardPage
             {
                 await Task.WhenAll(contentReadyTasks).WaitAsync(GetDashboardGroupContentReadyTimeout());
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
                 // Do not let one regular card block the whole dashboard.
+                Log.Instance.WarningOnce(
+                    "dashboard-group-content-timeout",
+                    "Dashboard group content ready wait timed out; continuing without blocking sensors shell.",
+                    ex);
             }
         }
 

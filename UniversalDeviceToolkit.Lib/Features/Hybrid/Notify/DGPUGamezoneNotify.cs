@@ -14,8 +14,9 @@ public class DGPUGamezoneNotify(IDelayProvider delayProvider) : AbstractDGPUNoti
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             return mi is { Properties.SupportsIGPUMode: true };
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("dgpu-gamezone-notify-supported", "DGPUGamezoneNotify support probe failed.", ex);
             return false;
         }
     }
@@ -28,8 +29,9 @@ public class DGPUGamezoneNotify(IDelayProvider delayProvider) : AbstractDGPUNoti
         {
             return await WMI.LenovoGameZoneData.GetDGPUHWIdAsync().ConfigureAwait(false);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("dgpu-gamezone-hwid", "Failed to read dGPU hardware id via GameZone WMI.", ex);
             return HardwareId.Empty;
         }
     }

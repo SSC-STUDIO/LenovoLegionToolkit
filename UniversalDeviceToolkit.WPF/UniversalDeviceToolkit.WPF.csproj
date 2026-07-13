@@ -97,7 +97,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<!-- Pack URIs stay pack://.../Assets/... via Link; files are not duplicated under WPF/Assets. -->
-		<Resource Include="..\Assets\Default_exe.png" Link="Assets\Default_exe.png" />
 		<Resource Include="..\Assets\Icon.ico" Link="Assets\Icon.ico" />
 		<Resource Include="..\Assets\Logo.png" Link="Assets\Logo.png" />
 	</ItemGroup>

@@ -87,8 +87,9 @@
     <!-- Slightly stronger chart frame so empty/first-open trends still show clear edges. -->
     <SolidColorBrush x:Key="ChartSurfaceBrush" Color="#0CFFFFFF" />
     <SolidColorBrush x:Key="ChartSurfaceBorderBrush" Color="#30FFFFFF" />
-    <SolidColorBrush x:Key="ChartGridlineBrush" Color="#28FFFFFF" />
-    <SolidColorBrush x:Key="ChartBaselineBrush" Color="#4DFFFFFF" />
+    <SolidColorBrush x:Key="ChartGridlineBrush" Color="#1AFFFFFF" />
+    <!-- Warm baseline accent under filled trend bands (reference area chart). -->
+    <SolidColorBrush x:Key="ChartBaselineBrush" Color="#D9A85A" />
     <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#A6202020" />
     <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#48FFFFFF" />
 

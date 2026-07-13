@@ -31,8 +31,12 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
             _ = await GetStateAsync(cancellationToken).ConfigureAwait(false);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"feature-driver-supported-{GetType().Name}",
+                $"Driver feature support probe failed for {GetType().Name}.",
+                ex);
             return false;
         }
     }

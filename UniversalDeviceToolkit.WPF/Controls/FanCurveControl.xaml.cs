@@ -13,12 +13,15 @@ using LenovoLegionToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 
-namespace UniversalDeviceToolkit.WPF.Controls
-{
+namespace UniversalDeviceToolkit.WPF.Controls;
+
 public partial class FanCurveControl : UserControl
 {
     private const string CelsiusUnit = "\u00B0C";
     private const string RpmUnit = "RPM";
+
+    /// <summary>Matches Track Margin="0,10" in FanCurveSliderStyle — usable thumb travel area.</summary>
+    private const double TrackVerticalMargin = 10;
 
     private readonly List<Slider> _sliders = [];
     private readonly InfoTooltip _customToolTip = new();
@@ -35,8 +38,9 @@ public partial class FanCurveControl : UserControl
         InitializeComponent();
 
         MouseLeave += FanCurveControl_MouseLeave;
-
         Unloaded += FanCurveControl_Unloaded;
+        SizeChanged += (_, _) => DrawGraph();
+        _slidersGrid.SizeChanged += (_, _) => DrawGraph();
     }
 
     private void FanCurveControl_MouseLeave(object sender, MouseEventArgs e)
@@ -63,15 +67,25 @@ public partial class FanCurveControl : UserControl
 
     public void SetFanTableInfo(FanTableInfo fanTableInfo, FanTable minimumFanTable)
     {
+        foreach (var slider in _sliders)
+        {
+            slider.MouseMove -= Slider_MouseMove;
+            slider.ValueChanged -= Slider_OnValueChanged;
+        }
+
         _sliders.Clear();
         _slidersGrid.Children.Clear();
+        InvalidateGraphCache();
 
         var tableValues = fanTableInfo.Table.GetTable();
 
         for (var i = 0; i < tableValues.Length; i++)
         {
             var slider = GenerateSlider(i, 0, 10);
+            // Suppress ValueChanged side-effects while seeding firmware table.
+            slider.ValueChanged -= Slider_OnValueChanged;
             slider.Value = tableValues[i];
+            slider.ValueChanged += Slider_OnValueChanged;
             _sliders.Add(slider);
             _slidersGrid.Children.Add(slider);
         }
@@ -79,6 +93,12 @@ public partial class FanCurveControl : UserControl
         _tableData = fanTableInfo.Data;
         _minimumFanTable = minimumFanTable;
 
+        // Layout → render → draw from values (not fragile thumb visuals).
+        Dispatcher.InvokeAsync(() =>
+        {
+            UpdateLayout();
+            DrawGraph();
+        }, DispatcherPriority.Loaded);
         Dispatcher.InvokeAsync(DrawGraph, DispatcherPriority.Render);
     }
 
@@ -95,18 +115,19 @@ public partial class FanCurveControl : UserControl
     {
         var slider = new Slider
         {
-            HorizontalAlignment = HorizontalAlignment.Center,
             Orientation = Orientation.Vertical,
             IsSnapToTickEnabled = true,
             TickFrequency = 1,
             Maximum = maximum,
             Minimum = minimum,
             Tag = index,
+            Style = (Style)FindResource("FanCurveSliderStyle"),
         };
 
         slider.MouseMove += Slider_MouseMove;
         slider.ValueChanged += Slider_OnValueChanged;
 
+        // Align with original LLT: column 0 is left gutter, points use 1..N.
         Grid.SetColumn(slider, index + 1);
 
         return slider;
@@ -126,6 +147,7 @@ public partial class FanCurveControl : UserControl
             return;
         }
 
+        // Slider value is 0..10 step index; FanSpeeds table is 0-based RPM ladder → value-1.
         _customToolTip.Update(_tableData, (int)slider.Tag, (int)slider.Value - 1);
 
         _customToolTip.Placement = PlacementMode.Custom;
@@ -149,14 +171,18 @@ public partial class FanCurveControl : UserControl
                 return;
 
             if (currentSlider is { IsKeyboardFocusWithin: false, IsMouseCaptureWithin: false })
+            {
+                // Still redraw — programmatic/min clamps need the line to follow.
+                DrawGraph();
                 return;
+            }
 
             if (_minimumFanTable.HasValue)
             {
                 var index = (int)currentSlider.Tag;
                 var minimum = _minimumFanTable.Value.GetTable();
 
-                if (currentSlider.Value < minimum[index])
+                if (index >= 0 && index < minimum.Length && currentSlider.Value < minimum[index])
                 {
                     currentSlider.Value = minimum[index];
                     return;
@@ -172,7 +198,7 @@ public partial class FanCurveControl : UserControl
     {
         return
         [
-            new(new((targetSize.Width - size.Width) * 0.5, -targetSize.Height -size.Height + 8), PopupPrimaryAxis.Vertical)
+            new(new((targetSize.Width - size.Width) * 0.5, -targetSize.Height - size.Height + 8), PopupPrimaryAxis.Vertical)
         ];
     }
 
@@ -184,6 +210,7 @@ public partial class FanCurveControl : UserControl
 
         var currentValue = currentSlider.Value;
 
+        // Fan table must be non-decreasing with temperature (left → right).
         for (var i = 0; i < currentIndex; i++)
         {
             if (_sliders[i].Value > currentValue)
@@ -197,41 +224,46 @@ public partial class FanCurveControl : UserControl
         }
     }
 
+    private void InvalidateGraphCache()
+    {
+        _cachedLinePath = null;
+        _cachedFillPolygon = null;
+        _cachedLineBrush = null;
+        _canvas.Children.Clear();
+    }
+
     private void DrawGraph()
     {
-        // ControlFillColorDefault blends into the card surface (especially light theme),
-        // so the polyline between thumbs was effectively invisible. Prefer accent/chart colors.
+        if (_sliders.Count < 2)
+            return;
+
         var lineBrush = ResolveLineBrush();
         var fillBrush = ResolveFillBrush(lineBrush);
 
+        // Compute points from values (old LLT approach) — thumb visuals lag layout and
+        // produced a decorative/wrong curve with orphaned points.
         var points = _sliders
-            .Select(GetThumbLocation)
-            .Select(p => new Point(p.X, p.Y))
+            .Select(GetGraphPointFromValue)
             .ToArray();
 
         if (points.Length < 2)
             return;
 
-        // Skip until layout has real sizes (first arrange can report 0-height thumbs).
-        if (points.All(p => p.X <= 0 && p.Y <= 0))
+        // Need at least some real width after layout.
+        if (points.All(p => p.X <= 0) || _slidersGrid.ActualHeight < 8)
             return;
 
         if (!ReferenceEquals(_cachedLineBrush, lineBrush))
         {
             _cachedLineBrush = lineBrush;
-            _cachedLinePath = null;
-            _cachedFillPolygon = null;
+            InvalidateGraphCache();
         }
 
         if (_cachedLinePath is null || _cachedFillPolygon is null)
         {
             _canvas.Children.Clear();
 
-            // Fill under the curve first so the stroke paints on top.
-            _cachedFillPolygon = new Polygon
-            {
-                IsHitTestVisible = false,
-            };
+            _cachedFillPolygon = new Polygon { IsHitTestVisible = false };
             _canvas.Children.Add(_cachedFillPolygon);
 
             _cachedLinePath = new Path
@@ -250,14 +282,20 @@ public partial class FanCurveControl : UserControl
         var pathSegmentCollection = new PathSegmentCollection();
         foreach (var point in points.Skip(1))
             pathSegmentCollection.Add(new LineSegment { Point = point, IsStroked = true });
-        var pathFigure = new PathFigure
+
+        _cachedLinePath.Data = new PathGeometry
         {
-            StartPoint = points[0],
-            Segments = pathSegmentCollection,
-            IsClosed = false,
-            IsFilled = false,
+            Figures =
+            [
+                new PathFigure
+                {
+                    StartPoint = points[0],
+                    Segments = pathSegmentCollection,
+                    IsClosed = false,
+                    IsFilled = false,
+                }
+            ]
         };
-        _cachedLinePath.Data = new PathGeometry { Figures = [pathFigure] };
 
         var canvasHeight = _canvas.ActualHeight > 1 ? _canvas.ActualHeight : _slidersGrid.ActualHeight;
         var baselineY = Math.Max(0, canvasHeight - 1);
@@ -268,6 +306,26 @@ public partial class FanCurveControl : UserControl
 
         _cachedFillPolygon.Fill = fillBrush;
         _cachedFillPolygon.Points = pointCollection;
+    }
+
+    /// <summary>
+    /// Map slider value → canvas point. High value = top of chart (100% fan), low = bottom.
+    /// Matches original LenovoLegionToolkit FanCurveControl geometry.
+    /// </summary>
+    private Point GetGraphPointFromValue(Slider slider)
+    {
+        var height = slider.ActualHeight > 1 ? slider.ActualHeight : _slidersGrid.ActualHeight;
+        var width = slider.ActualWidth > 1 ? slider.ActualWidth : (_slidersGrid.ActualWidth / Math.Max(1, _sliders.Count));
+
+        var range = Math.Max(1e-6, slider.Maximum - slider.Minimum);
+        var ratio = (slider.Value - slider.Minimum) / range; // 0..1
+
+        // Track has vertical margin; map onto usable band so points sit on the thumb travel path.
+        var usable = Math.Max(1, height - 2 * TrackVerticalMargin);
+        var yInSlider = TrackVerticalMargin + usable * (1.0 - ratio);
+        var xInSlider = width * 0.5;
+
+        return slider.TranslatePoint(new Point(xInSlider, yInSlider), _canvas);
     }
 
     private static Brush ResolveLineBrush()
@@ -287,7 +345,6 @@ public partial class FanCurveControl : UserControl
             ? solid.Color
             : Color.FromRgb(0x00, 0x78, 0xD4);
 
-        // Soft area under the polyline (same silhouette idea as the sensor trend charts).
         var fill = new LinearGradientBrush
         {
             StartPoint = new Point(0, 0),
@@ -299,34 +356,21 @@ public partial class FanCurveControl : UserControl
         return fill;
     }
 
-    private Point GetThumbLocation(Slider slider)
-    {
-        var range = slider.Maximum - slider.Minimum;
-        if (range <= 0 || slider.ActualHeight <= 0)
-            return slider.TranslatePoint(new(slider.ActualWidth * 0.5, 0), _canvas);
-
-        var ratio = (slider.Value - slider.Minimum) / range;
-        // Thumb center sits on the track; pad a few px so the stroke clears the thumb edge.
-        var y = slider.ActualHeight - (slider.ActualHeight * ratio);
-        var x = slider.ActualWidth * 0.5;
-        return slider.TranslatePoint(new(x, y), _canvas);
-    }
-
-    private class InfoTooltip : ToolTip
+    private sealed class InfoTooltip : ToolTip
     {
         private readonly Grid _grid = new()
         {
             ColumnDefinitions =
             {
-                new() { Width = GridLength.Auto},
-                new () { Width = GridLength.Auto}
+                new() { Width = GridLength.Auto },
+                new() { Width = GridLength.Auto }
             },
             RowDefinitions =
             {
-                new() { Height = GridLength.Auto},
-                new() { Height = GridLength.Auto},
-                new() { Height = GridLength.Auto},
-                new() { Height = GridLength.Auto}
+                new() { Height = GridLength.Auto },
+                new() { Height = GridLength.Auto },
+                new() { Height = GridLength.Auto },
+                new() { Height = GridLength.Auto }
             }
         };
 
@@ -419,5 +463,4 @@ public partial class FanCurveControl : UserControl
             }
         }
     }
-}
 }

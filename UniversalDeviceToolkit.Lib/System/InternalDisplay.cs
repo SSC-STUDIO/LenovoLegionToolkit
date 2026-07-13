@@ -134,8 +134,12 @@ public static class InternalDisplay
             var deviceNameResponse = Marshal.PtrToStructure<DISPLAYCONFIG_TARGET_DEVICE_NAME>(intPtr);
             return deviceNameResponse.outputTechnology;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "internal-display-output-tech",
+                "DisplayConfigGetDeviceInfo failed; treating output technology as OTHER.",
+                ex);
             return DISPLAYCONFIG_VIDEO_OUTPUT_TECHNOLOGY.DISPLAYCONFIG_OUTPUT_TECHNOLOGY_OTHER;
         }
         finally

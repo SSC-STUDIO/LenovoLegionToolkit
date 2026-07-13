@@ -40,9 +40,12 @@ internal class MacroPlayer
         {
             _cancellationTokenSource?.Cancel();
         }
-        catch
+        catch (Exception ex)
         {
-            // Ignore errors during cleanup
+            Log.Instance.TraceOnce(
+                "macro-player-stop-cancel",
+                "MacroPlayer.Stop cancel failed during cleanup.",
+                ex);
         }
     }
 

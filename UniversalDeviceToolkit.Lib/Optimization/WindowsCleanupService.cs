@@ -162,13 +162,19 @@ public class WindowsCleanupService
                                     stack.Push(subDir);
                                 }
                             }
-                            catch (UnauthorizedAccessException)
+                            catch (UnauthorizedAccessException ex)
                             {
-                                // Insufficient permissions to access directory, skip
+                                Log.Instance.TraceOnce(
+                                    "cleanup-subdir-access",
+                                    $"Insufficient permissions for cleanup subdirectory: {subDir}",
+                                    ex);
                             }
-                            catch (IOException)
+                            catch (IOException ex)
                             {
-                                // Directory may be inaccessible, skip
+                                Log.Instance.TraceOnce(
+                                    "cleanup-subdir-io",
+                                    $"Cleanup subdirectory inaccessible: {subDir}",
+                                    ex);
                             }
                         }
                     }
@@ -279,8 +285,12 @@ public class WindowsCleanupService
         {
             return Task.FromResult(new FileInfo(filePath).Length);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "cleanup-estimate-file",
+                $"Failed to estimate file size for cleanup: {filePath}",
+                ex);
             return Task.FromResult(0L);
         }
     }
@@ -336,9 +346,12 @@ public class WindowsCleanupService
                             {
                                 File.Delete(file);
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                // File may be locked or already deleted, continue with next file
+                                Log.Instance.TraceOnce(
+                                    "cleanup-custom-delete",
+                                    $"Custom cleanup could not delete file (locked or already gone): {file}",
+                                    ex);
                             }
                         }
 
@@ -350,13 +363,19 @@ public class WindowsCleanupService
                             }
                         }
                     }
-                    catch (UnauthorizedAccessException)
+                    catch (UnauthorizedAccessException ex)
                     {
-                        // Insufficient permissions to access directory, skip
+                        Log.Instance.TraceOnce(
+                            "cleanup-custom-dir-access",
+                            $"Custom cleanup insufficient permissions: {currentPath}",
+                            ex);
                     }
-                    catch (IOException)
+                    catch (IOException ex)
                     {
-                        // Directory may be inaccessible, skip
+                        Log.Instance.TraceOnce(
+                            "cleanup-custom-dir-io",
+                            $"Custom cleanup directory inaccessible: {currentPath}",
+                            ex);
                     }
                 }
             }
@@ -499,9 +518,12 @@ public class WindowsCleanupService
                                 size += new FileInfo(file).Length;
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            // File may be inaccessible, skip it
+                            Log.Instance.TraceOnce(
+                                "cleanup-size-file",
+                                $"Could not read file size during cleanup estimate: {file}",
+                                ex);
                         }
                     }
 
@@ -513,9 +535,12 @@ public class WindowsCleanupService
                         }
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Directory may be inaccessible, continue with other directories
+                    Log.Instance.TraceOnce(
+                        "cleanup-size-dir",
+                        $"Could not enumerate directory during cleanup estimate: {currentPath}",
+                        ex);
                 }
             }
             return size;

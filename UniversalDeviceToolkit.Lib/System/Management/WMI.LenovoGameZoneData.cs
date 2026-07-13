@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Utils;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable StringLiteralTypo
@@ -118,8 +119,12 @@ public static partial class WMI
 
                     return new HardwareId(vendor, device);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Instance.TraceOnce(
+                        "wmi-gamezone-dgpu-hwid-parse",
+                        "Failed to parse dGPU hardware id from GameZone WMI.",
+                        ex);
                     return HardwareId.Empty;
                 }
             });

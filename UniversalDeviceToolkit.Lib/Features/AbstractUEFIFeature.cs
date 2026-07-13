@@ -20,8 +20,12 @@ public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint
             _ = await GetStateAsync(cancellationToken).ConfigureAwait(false);
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"feature-uefi-supported-{GetType().Name}",
+                $"UEFI feature support probe failed for {GetType().Name}.",
+                ex);
             return false;
         }
     }

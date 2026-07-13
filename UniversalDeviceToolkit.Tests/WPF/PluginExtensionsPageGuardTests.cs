@@ -48,6 +48,43 @@ public sealed class PluginExtensionsPageGuardTests
     }
 
     [Fact]
+    public void LoadingChrome_ShouldShowSkeletonImmediateOnFirstStep()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml");
+
+        // First paint path: snap-in skeleton, never fade-from-0 blank.
+        source.Should().Contain("ShowSkeletonImmediate");
+        source.Should().Contain("SkeletonShimmer.RestartSubtree");
+        source.Should().Contain("MinSkeletonVisible");
+        source.Should().Contain("TimeSpan.FromMilliseconds(400)");
+        source.Should().Contain("ShowSkeletonImmediate();");
+        source.Should().Contain("OnlineFetchTimeout");
+        source.Should().Contain("PluginPageUiState");
+        source.Should().Contain("_pageLoadVersion");
+
+        var loadedStart = source.IndexOf("private async void PluginExtensionsPage_Loaded", StringComparison.Ordinal);
+        loadedStart.Should().BeGreaterThanOrEqualTo(0);
+        var loadedEnd = source.IndexOf("private void PluginExtensionsPage_IsVisibleChanged", loadedStart, StringComparison.Ordinal);
+        loadedEnd.Should().BeGreaterThan(loadedStart);
+        var loaded = source[loadedStart..loadedEnd];
+        // Step 1 of Loaded is always skeleton, before local list / network work.
+        loaded.IndexOf("ShowSkeletonImmediate()", StringComparison.Ordinal)
+            .Should().BeLessThan(loaded.IndexOf("RebuildPluginListWithoutBlockingAsync()", StringComparison.Ordinal));
+        // Culture scan must not block the first paint path.
+        loaded.Should().Contain("DispatcherPriority.Background");
+        loaded.Should().Contain("SetPluginResourceCultures");
+
+        xaml.Should().Contain("PluginLoadingIndicator");
+        xaml.Should().Contain("x:Name=\"_loadingIndicator\"");
+        xaml.Should().Contain("Visibility=\"Visible\"");
+        xaml.Should().Contain("PluginStoreOfflineBanner");
+        xaml.Should().Contain("PluginStoreRetryButton");
+        source.Should().Contain("UpdateStoreOfflineBanner");
+        source.Should().Contain("StoreRetryButton_Click");
+    }
+
+    [Fact]
     public void LocalInstall_ShouldRefreshRuntimeUiAndShowCapabilityAwareFeedback()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");

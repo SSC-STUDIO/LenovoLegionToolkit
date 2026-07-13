@@ -463,8 +463,12 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
 
             return new(width, height, keyCodes, additionalKeyCodes);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "spectrum-keymap",
+                "Failed to read Spectrum keyboard key map.",
+                ex);
             return KeyMap.Empty;
         }
     }
@@ -643,8 +647,12 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                 return newDeviceHandle;
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "spectrum-device-handle",
+                "Failed to open/refresh Spectrum keyboard device handle.",
+                ex);
             return null;
         }
     }

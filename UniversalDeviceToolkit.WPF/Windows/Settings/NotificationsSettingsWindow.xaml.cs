@@ -16,6 +16,8 @@ public partial class NotificationsSettingsWindow
 
     private IEnumerable<CardControl> Cards =>
     [
+        _successNotificationsCard,
+        _notificationSoundCard,
         _notificationPositionCard,
         _notificationDurationCard,
         _updateAvailableCard,
@@ -37,10 +39,14 @@ public partial class NotificationsSettingsWindow
         InitializeComponent();
 
         _dontShowNotificationsToggle.IsChecked = _settings.Store.DontShowNotifications;
+        _successNotificationsToggle.IsChecked = _settings.Store.Notifications.SuccessNotifications;
+        _notificationSoundToggle.IsChecked = _settings.Store.Notifications.NotificationSound;
         _notificationAlwaysOnTopToggle.IsChecked = _settings.Store.NotificationAlwaysOnTop;
         _notificationOnAllScreensToggle.IsChecked = _settings.Store.NotificationOnAllScreens;
 
-        _notificationPositionComboBox.SetItems(Enum.GetValues<NotificationPosition>(), _settings.Store.NotificationPosition, v => v.GetDisplayName());
+        // In-app toast host is fixed bottom-right; keep the setting value for legacy OSD only.
+        _settings.Store.NotificationPosition = NotificationPosition.BottomRight;
+        _notificationPositionComboBox.SetItems(Enum.GetValues<NotificationPosition>(), NotificationPosition.BottomRight, v => v.GetDisplayName());
         _notificationDurationComboBox.SetItems(Enum.GetValues<NotificationDuration>(), _settings.Store.NotificationDuration, v => v.GetDisplayName());
 
         _updateAvailableToggle.IsChecked = _settings.Store.Notifications.UpdateAvailable;
@@ -77,6 +83,26 @@ public partial class NotificationsSettingsWindow
         _settings.SynchronizeStore();
 
         RefreshCards();
+    }
+
+    private void SuccessNotificationsToggle_Click(object sender, RoutedEventArgs e)
+    {
+        var state = _successNotificationsToggle.IsChecked;
+        if (state is null)
+            return;
+
+        _settings.Store.Notifications.SuccessNotifications = state.Value;
+        _settings.SynchronizeStore();
+    }
+
+    private void NotificationSoundToggle_Click(object sender, RoutedEventArgs e)
+    {
+        var state = _notificationSoundToggle.IsChecked;
+        if (state is null)
+            return;
+
+        _settings.Store.Notifications.NotificationSound = state.Value;
+        _settings.SynchronizeStore();
     }
 
     private void NotificationAlwaysOnTopToggle_Click(object sender, RoutedEventArgs e)

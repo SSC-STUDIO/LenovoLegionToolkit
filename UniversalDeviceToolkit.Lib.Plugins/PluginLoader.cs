@@ -412,8 +412,12 @@ public class PluginLoader : IPluginLoader
             return candidatePublicKeyToken != null &&
                    candidatePublicKeyToken.SequenceEqual(requestedPublicKeyToken);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-loader-pubkey-token",
+                "Failed to compare assembly public key tokens during plugin load.",
+                ex);
             return false;
         }
     }
@@ -438,8 +442,12 @@ public class PluginLoader : IPluginLoader
             chain.ChainPolicy.VerificationTime = DateTime.UtcNow;
             return chain.Build(certificate);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-loader-cert-chain",
+                "Failed to build certificate chain while validating plugin signing cert.",
+                ex);
             return false;
         }
     }
@@ -558,8 +566,12 @@ public class PluginLoader : IPluginLoader
                 ? null
                 : Path.GetFullPath(assembly.Location);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "plugin-loader-assembly-location",
+                "Failed to resolve assembly location during plugin load.",
+                ex);
             return null;
         }
     }

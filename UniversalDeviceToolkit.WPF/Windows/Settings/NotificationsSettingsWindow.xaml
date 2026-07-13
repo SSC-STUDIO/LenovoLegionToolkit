@@ -61,6 +61,34 @@
                         Click="DontShowNotificationsToggle_Click" />
                 </custom:CardControl>
 
+                <custom:CardControl x:Name="_successNotificationsCard" Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_SuccessNotifications_Title}"
+                            Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_SuccessNotifications_Message}" />
+                    </custom:CardControl.Header>
+                    <wpfui:ToggleSwitch
+                        x:Name="_successNotificationsToggle"
+                        Margin="0,0,0,8"
+                        AutomationProperties.AutomationId="NotificationsSettings_SuccessToggle"
+                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_SuccessNotifications_Title}"
+                        Click="SuccessNotificationsToggle_Click" />
+                </custom:CardControl>
+
+                <custom:CardControl x:Name="_notificationSoundCard" Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationSound_Title}"
+                            Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationSound_Message}" />
+                    </custom:CardControl.Header>
+                    <wpfui:ToggleSwitch
+                        x:Name="_notificationSoundToggle"
+                        Margin="0,0,0,8"
+                        AutomationProperties.AutomationId="NotificationsSettings_SoundToggle"
+                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationSound_Title}"
+                        Click="NotificationSoundToggle_Click" />
+                </custom:CardControl>
+
                 <custom:CardControl Margin="0,0,0,8">
                     <custom:CardControl.Header>
                         <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Title}" Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Message}" />

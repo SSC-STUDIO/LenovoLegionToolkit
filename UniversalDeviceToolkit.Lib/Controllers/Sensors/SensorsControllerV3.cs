@@ -50,15 +50,15 @@ public class SensorsControllerV3(GPUController gpuController) : AbstractSensorsC
         return value < 1 ? -1 : value;
     }
 
-    // Restore historical multi-source RPM: Fan_GetCurrentFanSpeed (V3 IDs 1/2 + legacy 0/1)
-    // first — capability IDs often stick at 0 on IRX9 while fans are spinning.
+    // V3 old LLT used capability only; many IRX9 firmwares leave capability at 0 while fans spin.
+    // Prefer Fan_GetCurrentFanSpeed (IDs 1/2 + legacy 0/1), then capability, then LHM in snapshot.
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        ReadFanSpeedWithFallbackAsync(
+        ReadFanSpeedMultiSourceAsync(
             () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(CPU_FAN_ID, 0),
             () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed));
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        ReadFanSpeedWithFallbackAsync(
+        ReadFanSpeedMultiSourceAsync(
             () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(GPU_FAN_ID, 1),
             () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed));
 

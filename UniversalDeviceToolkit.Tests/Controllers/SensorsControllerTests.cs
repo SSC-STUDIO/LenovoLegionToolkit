@@ -302,10 +302,19 @@ public class GenericSensorsControllerTests : UnitTestBase
     private sealed class TestableGenericSensorsController(
         GPUController gpuController,
         Func<Task<bool>> canReadSnapshot,
-        IDelayProvider? delayProvider = null)
+        IDelayProvider? delayProvider = null,
+        int cpuFanSpeed = -1,
+        int gpuFanSpeed = -1)
         : GenericSensorsController(gpuController, delayProvider)
     {
         protected override Task<bool> CanReadGenericSnapshotAsyncCore() => canReadSnapshot();
+
+        protected override Task<int> ReadLenovoCpuFanSpeedAsync() => Task.FromResult(cpuFanSpeed);
+
+        protected override Task<int> ReadLenovoGpuFanSpeedAsync() => Task.FromResult(gpuFanSpeed);
+
+        internal async Task<(int cpuFanSpeed, int gpuFanSpeed)> ReadLenovoFanSpeedsAsync() =>
+            (await GetCpuCurrentFanSpeedAsync(), await GetGpuCurrentFanSpeedAsync());
     }
 
     [Fact]
@@ -315,6 +324,22 @@ public class GenericSensorsControllerTests : UnitTestBase
         var controller = new GenericSensorsController(gpuController);
 
         controller.Should().BeAssignableTo<ISensorsController>();
+    }
+
+    [Fact]
+    public async Task GenericSensorsController_ShouldPreserveLenovoFanReadingsWhenGenericFallbackIsSelected()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
+        using var controller = new TestableGenericSensorsController(
+            gpuController,
+            () => Task.FromResult(true),
+            cpuFanSpeed: 2380,
+            gpuFanSpeed: 2510);
+
+        var fanSpeeds = await controller.ReadLenovoFanSpeedsAsync();
+
+        fanSpeeds.cpuFanSpeed.Should().Be(2380);
+        fanSpeeds.gpuFanSpeed.Should().Be(2510);
     }
 
     [Fact]

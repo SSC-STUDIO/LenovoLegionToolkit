@@ -7,8 +7,7 @@
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.KeyboardBacklightPage_Title}"
-    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
-    Initialized="KeyboardBacklightPage_Initialized">
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
     <wpfui:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,0,0">
@@ -58,5 +57,4 @@
     </wpfui:DynamicScrollViewer>
 
 </Page>
-
 

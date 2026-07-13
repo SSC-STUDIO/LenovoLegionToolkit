@@ -21,8 +21,9 @@ public class InstantBootFeatureFlagsFeature : IFeature<InstantBootState>
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             return mi.Features.Source == MachineInformation.FeatureData.SourceType.Flags && mi.Features[CapabilityID.InstantBootAc] && mi.Features[CapabilityID.InstantBootUsbPowerDelivery];
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("feature-instantboot-supported", "InstantBoot feature flags support probe failed.", ex);
             return false;
         }
     }

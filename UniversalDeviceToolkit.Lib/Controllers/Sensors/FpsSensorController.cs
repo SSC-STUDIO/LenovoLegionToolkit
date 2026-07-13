@@ -189,9 +189,21 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors
 
                 return process;
             }
-            catch (ArgumentException) { return null; }
-            catch (InvalidOperationException) { return null; }
-            catch (Win32Exception) { return null; }
+            catch (ArgumentException ex)
+            {
+                Log.Instance.TraceOnce("fps-process-arg", "FPS process attach skipped (process gone).", ex);
+                return null;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Log.Instance.TraceOnce("fps-process-invalid", "FPS process attach skipped (invalid process state).", ex);
+                return null;
+            }
+            catch (Win32Exception ex)
+            {
+                Log.Instance.TraceOnce("fps-process-win32", "FPS process attach skipped (Win32 access).", ex);
+                return null;
+            }
         }
 
         private Task StartProcessMonitoringAsync(Process process)

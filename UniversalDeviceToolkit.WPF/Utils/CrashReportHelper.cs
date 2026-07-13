@@ -98,8 +98,12 @@ public static class CrashReportHelper
 
             return Directory.GetFiles(CrashReportFolder, "crash_*.json");
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                "crash-report-list",
+                "Failed to enumerate unsent crash reports.",
+                ex);
             return Array.Empty<string>();
         }
     }
@@ -134,8 +138,12 @@ public static class CrashReportHelper
             var json = File.ReadAllText(path, Encoding.UTF8);
             return JsonSerializer.Deserialize<CrashReport>(json);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                "crash-report-load",
+                $"Failed to load crash report: {path}",
+                ex);
             return null;
         }
     }
@@ -159,9 +167,12 @@ public static class CrashReportHelper
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // Ignore cleanup errors
+            Log.Instance.WarningOnce(
+                "crash-report-cleanup",
+                "Failed during old crash report cleanup.",
+                ex);
         }
     }
 
@@ -173,8 +184,12 @@ public static class CrashReportHelper
             var version = assembly?.GetName().Version;
             return version?.ToString() ?? "Unknown";
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "crash-report-app-version",
+                "Failed to read app version for crash report metadata.",
+                ex);
             return "Unknown";
         }
     }

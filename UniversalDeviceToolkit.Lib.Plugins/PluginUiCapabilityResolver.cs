@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,10 +29,38 @@ public static class PluginUiCapabilityResolver
 {
     private static readonly string[] ManifestFileNames = ["plugin.manifest.json", "plugin.json", "Plugin.json"];
 
+    // Disk/JSON capability resolution is hot on the plugin list path — cache aggressively.
+    private static readonly ConcurrentDictionary<string, PluginUiCapabilities> CapabilityCache =
+        new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, PluginManifest?> ManifestCache =
+        new(StringComparer.OrdinalIgnoreCase);
+    private static readonly object IdIndexGate = new();
+    private static Dictionary<string, string>? _manifestIdToPath;
+
+    public static void InvalidateCache(string? pluginId = null)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+        {
+            CapabilityCache.Clear();
+            ManifestCache.Clear();
+            lock (IdIndexGate)
+                _manifestIdToPath = null;
+            return;
+        }
+
+        CapabilityCache.TryRemove(pluginId, out _);
+        ManifestCache.TryRemove(pluginId, out _);
+        lock (IdIndexGate)
+            _manifestIdToPath = null;
+    }
+
     public static PluginUiCapabilities ResolveFromInstalledManifest(string pluginId)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
             return default;
+
+        if (CapabilityCache.TryGetValue(pluginId, out var cached))
+            return cached;
 
         try
         {
@@ -43,12 +72,18 @@ public static class PluginUiCapabilityResolver
                     if (!File.Exists(manifestPath))
                         continue;
 
-                    return ReadCapabilitiesFromJson(manifestPath);
+                    var caps = ReadCapabilitiesFromJson(manifestPath);
+                    CapabilityCache[pluginId] = caps;
+                    return caps;
                 }
             }
 
             if (FindInstalledManifestPathByManifestId(pluginId) is { } matchingManifestPath)
-                return ReadCapabilitiesFromJson(matchingManifestPath);
+            {
+                var caps = ReadCapabilitiesFromJson(matchingManifestPath);
+                CapabilityCache[pluginId] = caps;
+                return caps;
+            }
         }
         catch (Exception ex)
         {
@@ -56,6 +91,7 @@ public static class PluginUiCapabilityResolver
                 Log.Instance.Trace($"Failed to read UI capabilities for {pluginId}: {ex.Message}", ex);
         }
 
+        CapabilityCache[pluginId] = default;
         return default;
     }
 
@@ -115,6 +151,9 @@ public static class PluginUiCapabilityResolver
         if (string.IsNullOrWhiteSpace(pluginId))
             return null;
 
+        if (ManifestCache.TryGetValue(pluginId, out var cached))
+            return cached;
+
         try
         {
             foreach (var pluginDirectory in GetInstalledPluginDirectories(pluginId))
@@ -125,11 +164,15 @@ public static class PluginUiCapabilityResolver
                     if (!File.Exists(manifestPath))
                         continue;
 
-                    return JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(manifestPath));
+                    var manifest = JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(manifestPath));
+                    ManifestCache[pluginId] = manifest;
+                    return manifest;
                 }
             }
 
-            return FindInstalledManifestByManifestId(pluginId);
+            var byId = FindInstalledManifestByManifestId(pluginId);
+            ManifestCache[pluginId] = byId;
+            return byId;
         }
         catch (Exception ex)
         {
@@ -137,6 +180,7 @@ public static class PluginUiCapabilityResolver
                 Log.Instance.Trace($"Failed to read installed manifest for {pluginId}: {ex.Message}", ex);
         }
 
+        ManifestCache[pluginId] = null;
         return null;
     }
 
@@ -161,22 +205,38 @@ public static class PluginUiCapabilityResolver
 
     private static string? FindInstalledManifestPathByManifestId(string pluginId)
     {
-        foreach (var manifestPath in EnumerateInstalledManifestPaths())
-        {
-            try
-            {
-                var manifestId = ReadManifestIdFromJson(manifestPath);
-                if (string.Equals(manifestId, pluginId, StringComparison.OrdinalIgnoreCase))
-                    return manifestPath;
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to inspect installed plugin manifest {manifestPath}: {ex.Message}", ex);
-            }
-        }
+        // Build the id→path index once per process (or until InvalidateCache). Scanning
+        // every plugin.json on every list row was freezing the plugin page on UI thread.
+        var index = EnsureManifestIdIndex();
+        return index.TryGetValue(pluginId, out var path) ? path : null;
+    }
 
-        return null;
+    private static Dictionary<string, string> EnsureManifestIdIndex()
+    {
+        lock (IdIndexGate)
+        {
+            if (_manifestIdToPath is not null)
+                return _manifestIdToPath;
+
+            var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var manifestPath in EnumerateInstalledManifestPaths())
+            {
+                try
+                {
+                    var manifestId = ReadManifestIdFromJson(manifestPath);
+                    if (!string.IsNullOrWhiteSpace(manifestId) && !map.ContainsKey(manifestId))
+                        map[manifestId] = manifestPath;
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to inspect installed plugin manifest {manifestPath}: {ex.Message}", ex);
+                }
+            }
+
+            _manifestIdToPath = map;
+            return map;
+        }
     }
 
     private static string? ReadManifestIdFromJson(string manifestPath)

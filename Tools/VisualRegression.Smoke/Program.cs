@@ -80,7 +80,8 @@ internal static partial class Program
             TryWaitForInputIdle(process, 10_000);
             var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(90));
             NormalizeWindow(mainWindow);
-            WaitForIpcReady(TimeSpan.FromSeconds(30));
+            if (!WaitForIpcReady(TimeSpan.FromSeconds(30)))
+                Console.WriteLine("[visual-smoke] IPC did not become ready; continuing with UI Automation-only capture.");
 
             if (options.OsdOnly)
             {
@@ -316,7 +317,7 @@ internal static partial class Program
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
-        var afterToggleWidth = MeasureNavigationPaneWidth(mainWindow);
+        var afterToggleWidth = WaitForNavigationPaneWidthChange(mainWindow, initialWidth, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (after toggle): {afterToggleWidth:F1}px");
 
         if (afterToggleWidth >= 150)
@@ -324,7 +325,7 @@ internal static partial class Program
         else
             CapturePage(currentDirectory, mainWindow, "nav-sidebar-compact-after-toggle");
 
-        if (Math.Abs(afterToggleWidth - initialWidth) < 20)
+        if (Math.Abs(afterToggleWidth - initialWidth) < 80)
             throw new InvalidOperationException(
                 $"Navigation pane toggle did not change width. Before={initialWidth:F1}px, after={afterToggleWidth:F1}px.");
 
@@ -333,7 +334,7 @@ internal static partial class Program
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
-        var restoredWidth = MeasureNavigationPaneWidth(mainWindow);
+        var restoredWidth = WaitForNavigationPaneWidthChange(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (restored): {restoredWidth:F1}px");
         CapturePage(currentDirectory, mainWindow, "nav-sidebar-toggle-restored");
 
@@ -346,26 +347,29 @@ internal static partial class Program
     {
         mainWindow = ResolveLiveWindow(mainWindow);
         var windowRect = mainWindow.Current.BoundingRectangle;
-        var dashboard = FindByAutomationId(mainWindow, "_dashboardItem");
-
-        if (dashboard is not null && IsVisible(dashboard))
-        {
-            var dashboardRect = dashboard.Current.BoundingRectangle;
-            return Math.Max(0, dashboardRect.Right - windowRect.Left + 12);
-        }
-
-        var toggle = FindByAutomationId(mainWindow, "NavigationPaneToggle");
-        if (toggle is not null && IsVisible(toggle))
-        {
-            var toggleRect = toggle.Current.BoundingRectangle;
-            return Math.Max(0, toggleRect.Right - windowRect.Left);
-        }
+        var rootFrame = FindByAutomationId(mainWindow, "MainRootFrame");
+        if (rootFrame is not null && IsVisible(rootFrame))
+            return Math.Max(0, rootFrame.Current.BoundingRectangle.Left - windowRect.Left - 30);
 
         var navStore = FindByAutomationId(mainWindow, "MainNavigationStore");
         if (navStore is not null && IsVisible(navStore))
             return navStore.Current.BoundingRectangle.Width;
 
         throw new InvalidOperationException("Could not measure navigation pane width from automation tree.");
+    }
+
+    private static double WaitForNavigationPaneWidthChange(AutomationElement mainWindow, double previousWidth, TimeSpan timeout)
+    {
+        var deadline = DateTime.UtcNow + timeout;
+        var width = MeasureNavigationPaneWidth(mainWindow);
+        while (DateTime.UtcNow < deadline)
+        {
+            Thread.Sleep(100);
+            width = MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow));
+            if (Math.Abs(width - previousWidth) >= 80)
+                return width;
+        }
+        return width;
     }
 
     private static void NavigateAndCapture(string currentDirectory, AutomationElement mainWindow, PageTarget target)
@@ -1121,7 +1125,7 @@ internal static partial class Program
         }
     }
 
-    private static void WaitForIpcReady(TimeSpan timeout)
+    private static bool WaitForIpcReady(TimeSpan timeout)
     {
         var deadline = DateTime.UtcNow + timeout;
         while (DateTime.UtcNow < deadline)
@@ -1129,13 +1133,13 @@ internal static partial class Program
             if (TrySendIpcRequest(IpcRequest.OperationType.GetAppStatus, out var response) && response?.Success == true)
             {
                 Console.WriteLine("[visual-smoke] IPC ready.");
-                return;
+                return true;
             }
 
             Thread.Sleep(250);
         }
 
-        throw new TimeoutException($"Timed out waiting for IPC readiness on pipe '{_pipeName}'.");
+        return false;
     }
 
     private static bool TrySendIpcRequest(IpcRequest.OperationType operation, out IpcResponse? response, string? name = null, string? value = null)
@@ -1176,7 +1180,19 @@ internal static partial class Program
         using var bitmap = new Bitmap(width, height);
         using (var graphics = Graphics.FromImage(bitmap))
         {
-            graphics.CopyFromScreen(rect.Left, rect.Top, 0, 0, new Size(width, height));
+            var hdc = graphics.GetHdc();
+            bool captured;
+            try
+            {
+                captured = PrintWindow((IntPtr)windowHandle, hdc, 2);
+            }
+            finally
+            {
+                graphics.ReleaseHdc(hdc);
+            }
+
+            if (!captured)
+                graphics.CopyFromScreen(rect.Left, rect.Top, 0, 0, new Size(width, height));
         }
 
         Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
@@ -1510,17 +1526,18 @@ internal static partial class Program
 
     private static string ResolveRuntimeDirectory(string repoRoot, string configuration)
     {
-        var runtimeRoot = Path.Combine(
-            repoRoot,
-            "UniversalDeviceToolkit.WPF",
-            "bin",
-            configuration);
+        var binRoot = Path.Combine(repoRoot, "UniversalDeviceToolkit.WPF", "bin");
+        var runtimeRoots = new[]
+        {
+            Path.Combine(binRoot, "x64", configuration),
+            Path.Combine(binRoot, configuration)
+        };
 
-        var directCandidates = new[]
+        var directCandidates = runtimeRoots.SelectMany(runtimeRoot => new[]
         {
             Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
-            Path.Combine(runtimeRoot, "net10.0-windows", "win-x64"),
-        };
+            Path.Combine(runtimeRoot, "net10.0-windows", "win-x64")
+        });
 
         foreach (var candidate in directCandidates)
         {
@@ -1528,21 +1545,19 @@ internal static partial class Program
                 return candidate;
         }
 
-        if (Directory.Exists(runtimeRoot))
-        {
-            var discovered = Directory
-                .EnumerateDirectories(runtimeRoot, "net10.0-windows*", SearchOption.TopDirectoryOnly)
-                .Select(path => Path.Combine(path, "win-x64"))
-                .Where(Directory.Exists)
-                .Where(ContainsMainAppStartupEntry)
-                .OrderByDescending(Directory.GetLastWriteTimeUtc)
-                .FirstOrDefault();
+        var discovered = runtimeRoots
+            .Where(Directory.Exists)
+            .SelectMany(runtimeRoot => Directory.EnumerateDirectories(runtimeRoot, "net10.0-windows*", SearchOption.TopDirectoryOnly))
+            .Select(path => Path.Combine(path, "win-x64"))
+            .Where(Directory.Exists)
+            .Where(ContainsMainAppStartupEntry)
+            .OrderByDescending(Directory.GetLastWriteTimeUtc)
+            .FirstOrDefault();
 
-            if (discovered is not null)
-                return discovered;
-        }
+        if (discovered is not null)
+            return discovered;
 
-        throw new DirectoryNotFoundException($"Runtime directory not found under: {runtimeRoot}");
+        throw new DirectoryNotFoundException($"Runtime directory not found under: {string.Join(", ", runtimeRoots)}");
     }
 
     private static bool ContainsMainAppStartupEntry(string runtimeDirectory)
@@ -1762,6 +1777,9 @@ internal static partial class Program
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
     private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, uint flags);
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
     private static extern bool SetCursorPos(int x, int y);

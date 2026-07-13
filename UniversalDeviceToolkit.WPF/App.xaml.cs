@@ -405,13 +405,24 @@ public partial class App
             {
                 _backgroundInitializationCancellationTokenSource?.Cancel();
                 try { await Task.WhenAny(task, Task.Delay(500)).ConfigureAwait(false); }
-                catch { /* Background task cancellation failed - app startup continues */ }
+                catch (Exception ex)
+                {
+                    Log.Instance.WarningOnce(
+                        "bg-init-cancel-wait",
+                        "Background initialization cancellation wait failed; startup continues.",
+                        ex);
+                }
                 return;
             }
         }
 
         try { await task.ConfigureAwait(false); }
-        catch { /* Background initialization failed - app continues startup */ }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning(
+                "Background initialization failed; app continues startup.",
+                ex);
+        }
     }
 
     /// <summary>
@@ -768,7 +779,12 @@ public partial class App
             var shutdownTasks = registeredPlugins.Select(plugin => Task.Run(() =>
             {
                 try { plugin.OnShutdown(); }
-                catch { /* Plugin shutdown failed - continue with other plugins */ }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning(
+                        $"Plugin OnShutdown failed; continuing with other plugins. [{plugin.GetType().Name}]",
+                        ex);
+                }
             })).ToList();
 
             await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
@@ -778,7 +794,10 @@ public partial class App
             if (pluginManager is PluginManager manager)
                 await manager.PerformPendingDeletionsAsync().ConfigureAwait(false);
         }
-        catch { /* Plugin shutdown process failed - continue with app shutdown */ }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning("Plugin shutdown process failed; continuing app shutdown.", ex);
+        }
     }
 
     /// <summary>
@@ -797,7 +816,12 @@ public partial class App
             // AbstractAutoListener.Dispose() calls StopAsync() which releases WH_KEYBOARD_LL/WH_MOUSE_LL hooks
             await Task.Run(() => ((IDisposable)listener).Dispose()).ConfigureAwait(false);
         }
-        catch { /* Listener stop failed during shutdown - continue cleanup */ }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning(
+                "UserInactivityAutoListener dispose failed during shutdown; hooks may linger until process exit.",
+                ex);
+        }
     }
 
     private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

@@ -19,8 +19,9 @@ public class OneLevelWhiteKeyboardBacklightFeature() : AbstractDriverFeature<One
             var result = ((int)outBuffer & 16) == 16;
             return result;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("feature-onelevel-kb-supported", "One-level white keyboard backlight support probe failed.", ex);
             return false;
         }
     }

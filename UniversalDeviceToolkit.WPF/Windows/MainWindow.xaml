@@ -293,10 +293,16 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Panel.ZIndex="100">
+            <!-- Unified multi-toast host (success 5s, max height + scroll, bottom-right). -->
+            <shell:AppNotificationHost
+                x:Name="_appNotificationHost"
+                Margin="0,0,0,8"
+                HorizontalAlignment="Right" />
             <wpfui:SnackbarPresenter
                 x:Name="_snackbarPresenter"
                 Margin="0,0,0,10"
-                HorizontalAlignment="Right" />
+                HorizontalAlignment="Right"
+                Visibility="Collapsed" />
             <shell:AppStatusBanner
                 x:Name="_vantageIndicator"
                 IsPersistent="True"

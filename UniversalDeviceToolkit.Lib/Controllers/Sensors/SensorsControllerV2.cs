@@ -55,14 +55,14 @@ public class SensorsControllerV2(GPUController gpuController) : AbstractSensorsC
         return t;
     }
 
-    // Historical V2 path: Fan_GetCurrentFanSpeed first (IDs 0/1), then capability.
+    // Old LLT/UDT V2: Fan_GetCurrentFanSpeed(fanId) primary (IDs 0/1), capability secondary.
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        ReadFanSpeedWithFallbackAsync(
+        ReadFanSpeedMultiSourceAsync(
             () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(CPU_FAN_ID, 1),
             () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed));
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        ReadFanSpeedWithFallbackAsync(
+        ReadFanSpeedMultiSourceAsync(
             () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(GPU_FAN_ID, 2),
             () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed));
 

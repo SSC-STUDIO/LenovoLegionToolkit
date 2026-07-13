@@ -42,8 +42,12 @@ public class PluginConfiguration : IPluginConfiguration
                 var convertedValue = Convert.ChangeType(value, typeof(T));
                 return convertedValue is T converted ? converted : defaultValue;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Instance.TraceOnce(
+                    $"plugin-config-convert-{key}",
+                    $"Plugin configuration value conversion failed for key '{key}'.",
+                    ex);
                 return defaultValue;
             }
         }

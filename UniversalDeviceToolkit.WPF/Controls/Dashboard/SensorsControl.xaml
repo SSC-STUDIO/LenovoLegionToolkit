@@ -122,16 +122,11 @@
             <Setter Property="Orientation" Value="Horizontal" />
         </Style>
         <Style x:Key="TrendPanelStyle" TargetType="Border">
-            <!--
-              Visible 1px frame around the plot so empty charts at first open still have
-              clear edges (matches reference area charts with a defined silhouette).
-            -->
             <Setter Property="Margin" Value="0,14,0,0" />
             <Setter Property="Height" Value="76" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
             <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ChartSurfaceBorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="2,2,2,2" />
             <Setter Property="ClipToBounds" Value="True" />
             <Setter Property="SnapsToDevicePixels" Value="True" />

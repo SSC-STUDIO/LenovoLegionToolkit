@@ -27,23 +27,26 @@
         <Setter Property="Height" Value="24" />
     </Style>
 
-    <!-- Solid theme fill — Tertiary stays readable on light cards (Secondary often matches card). -->
+    <!--
+      Bone fill: Secondary is more contrasty than Tertiary on light-theme cards.
+      SkeletonShimmer further lifts contrast at runtime if the theme brush is too pale.
+    -->
     <Style x:Key="AppSkeletonBlockStyle" TargetType="Border">
-        <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
         <Setter Property="Opacity" Value="1" />
         <Setter Property="ClipToBounds" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
     </Style>
 
     <!--
-      Sweeping shimmer (流光) via utils:SkeletonShimmer attached behavior.
-      Border is a Decorator — it has no Template (Control-only). The attached
-      property creates a per-instance LinearGradientBrush + TranslateTransform
-      (shared Style Freezables freeze and cannot animate RelativeTransform).
+      Sweeping shimmer (流光) + soft pulse via utils:SkeletonShimmer.
+      Border is a Decorator — no Control.Template; per-instance Freezables are required.
     -->
     <Style x:Key="AppSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonBlockStyle}">
         <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
     </Style>
 
     <!-- Matches CardControl / CardExpander surface chrome (padding, radius, stroke). -->
@@ -55,6 +58,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
     </Style>
 
     <!-- Collapsed CardExpander / feature list rows (Automation, Dashboard, Macro...). -->

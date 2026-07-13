@@ -89,8 +89,9 @@ public class GPUController : IDisposable
             NVAPI.Initialize();
             return NVAPI.GetGPU() is not null;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("gpu-is-supported", "GPUController.IsSupportedAsync failed (NVAPI/WMI probe).", ex);
             return false;
         }
         finally
@@ -322,8 +323,12 @@ public class GPUController : IDisposable
             var gpuInstanceId = await WMI.Win32.PnpEntity.GetDeviceIDAsync(pnpDeviceIdPart).ConfigureAwait(false);
             return string.IsNullOrWhiteSpace(gpuInstanceId) ? null : gpuInstanceId;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "gpu-instance-id",
+                $"Failed to resolve GPU PnP instance id for '{pnpDeviceIdPart}'.",
+                ex);
             return null;
         }
     }
@@ -357,8 +362,12 @@ public class GPUController : IDisposable
             _performanceState = Resource.GPUController_PoweredOff;
             CheckStateChange(_state);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "gpu-perf-state",
+                "Failed to read NVAPI performance state; reporting Unknown.",
+                ex);
             _performanceState = "Unknown";
         }
     }

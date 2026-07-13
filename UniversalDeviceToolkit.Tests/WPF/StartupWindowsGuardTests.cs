@@ -39,21 +39,27 @@ public sealed class StartupWindowsGuardTests
 
         source.Should().Contain("DeviceSetupWindow_BasicModeSummary");
         source.Should().Contain("DeviceSetupWindow_MatchingPackSummary");
-        source.Should().Contain("DeviceSetupWindow_DevicePackFormat");
+        source.Should().Contain("DeviceSetupWindow_SelectPackLabel");
+        source.Should().Contain("DeviceSetupWindow_RecommendedPackFormat");
         source.Should().Contain("DeviceSetupWindow_Preparing");
         source.Should().Contain("DeviceSetupWindow_SkipButton");
         source.Should().Contain("DeviceSetupWindow_ConfirmButton");
         source.Should().Contain("DeviceSetupWindow_Title");
+        source.Should().Contain("BuildPackOptions");
+        xaml.Should().Contain("DeviceSetupPackComboBox");
         // Must not misuse hybrid-mode restart labels on this window.
         xaml.Should().NotContain("Resource.RestartLater");
         xaml.Should().NotContain("Resource.RestartNow");
 
         zhResources.Should().Contain("<data name=\"DeviceSetupWindow_MatchingPackSummary\"");
         zhResources.Should().Contain("<value>设备包：{0}</value>");
+        zhResources.Should().Contain("DeviceSetupWindow_SelectPackLabel");
         zhHansResources.Should().Contain("<data name=\"DeviceSetupWindow_MatchingPackSummary\"");
         zhHansResources.Should().Contain("<value>设备包：{0}</value>");
         zhHansResources.Should().Contain("DeviceSetupWindow_SkipButton");
         zhHansResources.Should().Contain("暂时跳过");
+        zhHansResources.Should().Contain("DeviceSetupWindow_SelectPackLabel");
+        zhHansResources.Should().Contain("设备配置文件");
         zhHansResources.Should().NotContain("detected a matching device pack");
     }
 
@@ -72,10 +78,17 @@ public sealed class StartupWindowsGuardTests
             "DeviceSetupWindow_DevicePackFormat",
             "fallback",
             culture);
+        var selectLabel = LocalizationHelper.GetStringOrEnglish(
+            Resource.ResourceManager,
+            "DeviceSetupWindow_SelectPackLabel",
+            "fallback",
+            culture);
 
         summary.Should().NotBe("fallback");
         summary.Should().NotContain("detected a matching device pack");
+        summary.Should().NotContain("found a matching device pack");
         packFormat.Should().Be("设备包：{0}");
+        selectLabel.Should().Contain("设备配置文件");
 
         var skip = LocalizationHelper.GetStringOrEnglish(
             Resource.ResourceManager,

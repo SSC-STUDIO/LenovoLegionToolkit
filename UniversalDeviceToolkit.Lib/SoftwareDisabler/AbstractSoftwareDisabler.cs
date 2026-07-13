@@ -131,8 +131,12 @@ public abstract class AbstractSoftwareDisabler
 
             return service.Status is not ServiceControllerStatus.Stopped;
         }
-        catch (InvalidOperationException)
+        catch (InvalidOperationException ex)
         {
+            Log.Instance.TraceOnce(
+                $"software-disabler-service-{serviceName}",
+                $"Service status query failed for '{serviceName}' (may not exist).",
+                ex);
             return false;
         }
     }

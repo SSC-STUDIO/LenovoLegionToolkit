@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
 using Windows.Win32;
@@ -51,8 +52,9 @@ public static class Power
 
             return result == 1;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("power-ac-fit-oc", "IsACFitForOC WMI probe failed.", ex);
             return null;
         }
     }
@@ -68,8 +70,9 @@ public static class Power
 
             return result == 1;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("power-charge-mode", "GetPowerChargeMode WMI probe failed.", ex);
             return null;
         }
     }

@@ -51,29 +51,40 @@ private string _currentSearchText = string.Empty;
     private bool _onlineMetadataLoadCompleted = false;
     private bool _onlineMetadataLoadFailed = false;
     private readonly Dictionary<string, string> _recentInstalledVersions = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, bool> _installedStateSnapshot = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _pluginIdsReloadedForUi = new(StringComparer.OrdinalIgnoreCase);
     private bool _isPluginInstallCoordinatorSubscribed;
 
     /// <summary>
-    /// First open used to hide the skeleton as soon as local plugins existed, so the
-    /// shimmer never had time to paint. Hold at least this long so the animation is visible.
+    /// Brief skeleton hold so the first frame is never a blank list, without blocking
+    /// navigation for a multi-second artificial wait (was 1500ms and felt frozen).
     /// </summary>
-    // Keep short so first paint shows shimmer without padding cold navigation by half a second.
-    private static readonly TimeSpan MinSkeletonVisible = TimeSpan.FromMilliseconds(180);
+    private static readonly TimeSpan MinSkeletonVisible = TimeSpan.FromMilliseconds(400);
+    private static readonly TimeSpan OnlineFetchTimeout = TimeSpan.FromSeconds(15);
+    private CancellationTokenSource? _pageLoadCts;
+    private int _pageLoadVersion;
+    private PluginPageUiState _pageUiState = PluginPageUiState.InitialLoading;
+
+    private enum PluginPageUiState
+    {
+        InitialLoading,
+        Refreshing,
+        Ready,
+        Empty,
+        Offline,
+        Failed
+    }
     private DateTime _skeletonShownAtUtc = DateTime.MinValue;
     private int _loadingStateVersion;
+    private bool _lifecycleSubscriptionsAttached;
     private readonly DebounceDispatcher _searchDebouncer = new();
 
     public PluginExtensionsPage()
     {
         InitializeComponent();
         Loaded += PluginExtensionsPage_Loaded;
-        IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged;
         Unloaded += PluginExtensionsPage_Unloaded;
-        AttachPluginInstallCoordinator();
-
-        // Subscribe to plugin state changes
-        _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
+        AttachPageLifecycleSubscriptions();
 
         // Initialize ListBox data binding
         if (_pluginsListBox != null)
@@ -81,8 +92,8 @@ private string _currentSearchText = string.Empty;
             _pluginsListBox.ItemsSource = _pluginViewModels;
         }
 
-        // First paint must show skeleton, not a blank white list region.
-        SetLoadingState(true);
+        // Instant skeleton (no fade-from-0) so the first frame is never blank/white.
+        ShowSkeletonImmediate();
 
         // Set page title and text (using dynamic resources to avoid auto-generated resource issues)
         Title = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_Title", "Plugin Extensions", Resource.Culture);
@@ -175,40 +186,71 @@ private string _currentSearchText = string.Empty;
 
     private void SetLoadingState(bool isLoading)
     {
-        // Crossfade skeleton ↔ list in the same grid cell (overlay), not a hard cut.
         if (isLoading)
         {
-            _loadingStateVersion++;
-            if (_skeletonShownAtUtc == DateTime.MinValue
-                || _loadingIndicator?.Visibility != Visibility.Visible
-                || (_loadingIndicator?.Opacity ?? 0) < 0.5)
-            {
-                _skeletonShownAtUtc = DateTime.UtcNow;
-            }
-
-            if (_noPluginsMessage != null)
-                _noPluginsMessage.Visibility = Visibility.Collapsed;
-            if (_noResultsStackPanel != null)
-                _noResultsStackPanel.Visibility = Visibility.Collapsed;
-
-            CrossfadePanels(show: _loadingIndicator, hide: _pluginListPanel);
+            ShowSkeletonImmediate();
+            return;
         }
-        else
+
+        // Honor minimum skeleton visibility so first-open 流光 is actually seen.
+        var version = ++_loadingStateVersion;
+        var elapsed = _skeletonShownAtUtc == DateTime.MinValue
+            ? MinSkeletonVisible
+            : DateTime.UtcNow - _skeletonShownAtUtc;
+        var remaining = MinSkeletonVisible - elapsed;
+        if (remaining > TimeSpan.Zero && IsLoaded)
         {
-            // Honor minimum skeleton visibility so first-open shimmer is actually seen.
-            var version = ++_loadingStateVersion;
-            var elapsed = _skeletonShownAtUtc == DateTime.MinValue
-                ? MinSkeletonVisible
-                : DateTime.UtcNow - _skeletonShownAtUtc;
-            var remaining = MinSkeletonVisible - elapsed;
-            if (remaining > TimeSpan.Zero && IsLoaded)
-            {
-                _ = HideLoadingStateAfterAsync(remaining, version);
-                return;
-            }
-
-            ApplyLoadingStateHidden();
+            _ = HideLoadingStateAfterAsync(remaining, version);
+            return;
         }
+
+        ApplyLoadingStateHidden();
+    }
+
+    /// <summary>
+    /// First-step chrome: skeleton fully opaque and list collapsed. Never fade-from-0
+    /// (that left a blank white region until the fade finished, or forever if interrupted).
+    /// </summary>
+    private void ShowSkeletonImmediate()
+    {
+        _loadingStateVersion++;
+        if (_skeletonShownAtUtc == DateTime.MinValue
+            || _loadingIndicator?.Visibility != Visibility.Visible
+            || (_loadingIndicator?.Opacity ?? 0) < 0.95)
+        {
+            _skeletonShownAtUtc = DateTime.UtcNow;
+        }
+
+        if (_noPluginsMessage != null)
+            _noPluginsMessage.Visibility = Visibility.Collapsed;
+        if (_noResultsStackPanel != null)
+            _noResultsStackPanel.Visibility = Visibility.Collapsed;
+
+        // List must not cover skeleton (even empty ListBox can paint a blank surface).
+        if (_pluginListPanel is FrameworkElement listPanel)
+        {
+            listPanel.BeginAnimation(UIElement.OpacityProperty, null);
+            listPanel.Visibility = Visibility.Collapsed;
+            listPanel.Opacity = 1;
+            listPanel.IsHitTestVisible = false;
+        }
+
+        if (_loadingIndicator is FrameworkElement skeleton)
+        {
+            skeleton.BeginAnimation(UIElement.OpacityProperty, null);
+            skeleton.Visibility = Visibility.Visible;
+            skeleton.Opacity = 1;
+            skeleton.IsHitTestVisible = true;
+            Panel.SetZIndex(skeleton, 2);
+        }
+
+        // Re-arm 流光 after Unloaded stopped brushes, or after first layout when IsLoaded flips.
+        if (IsLoaded)
+            SkeletonShimmer.RestartSubtree(_loadingIndicator);
+        else
+            Dispatcher.BeginInvoke(
+                () => SkeletonShimmer.RestartSubtree(_loadingIndicator),
+                System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
     private async Task HideLoadingStateAfterAsync(TimeSpan delay, int version)
@@ -231,22 +273,22 @@ private string _currentSearchText = string.Empty;
     private void ApplyLoadingStateHidden()
     {
         _skeletonShownAtUtc = DateTime.MinValue;
-        CrossfadePanels(show: _pluginListPanel, hide: _loadingIndicator);
+        CrossfadeToContent();
     }
 
     /// <summary>
-    /// Soft handoff between skeleton overlay and real content. Both share Grid.Row so z-order
-    /// stacks; we fade rather than Collapsed-swap to avoid a visual pop.
+    /// Soft handoff skeleton → real list only. Skeleton show path always snaps in
+    /// via <see cref="ShowSkeletonImmediate"/> (never opacity 0).
     /// </summary>
-    private void CrossfadePanels(UIElement? show, UIElement? hide)
+    private void CrossfadeToContent()
     {
         var duration = TryFindResource("AnimationDurationSkeletonCrossfade") as Duration?
-                       ?? new Duration(TimeSpan.FromMilliseconds(280));
+                       ?? new Duration(TimeSpan.FromMilliseconds(220));
 
-        if (hide is FrameworkElement hideFe && hideFe.Visibility == Visibility.Visible)
+        if (_loadingIndicator is FrameworkElement skeleton && skeleton.Visibility == Visibility.Visible)
         {
-            hideFe.IsHitTestVisible = false;
-            hideFe.BeginAnimation(UIElement.OpacityProperty, null);
+            skeleton.IsHitTestVisible = false;
+            skeleton.BeginAnimation(UIElement.OpacityProperty, null);
             var fadeOut = new DoubleAnimation
             {
                 To = 0,
@@ -255,42 +297,43 @@ private string _currentSearchText = string.Empty;
             };
             fadeOut.Completed += (_, _) =>
             {
-                // Only collapse if still faded out (another SetLoadingState may have shown it).
-                if (hideFe.Opacity > 0.05)
+                // Another ShowSkeletonImmediate may have re-shown it mid-fade.
+                if (skeleton.Opacity > 0.05 && skeleton.Visibility == Visibility.Visible)
                     return;
-                hideFe.Visibility = Visibility.Collapsed;
-                hideFe.BeginAnimation(UIElement.OpacityProperty, null);
-                hideFe.Opacity = 1;
+                skeleton.Visibility = Visibility.Collapsed;
+                skeleton.BeginAnimation(UIElement.OpacityProperty, null);
+                skeleton.Opacity = 1;
             };
-            hideFe.BeginAnimation(UIElement.OpacityProperty, fadeOut);
+            skeleton.BeginAnimation(UIElement.OpacityProperty, fadeOut);
         }
-        else if (hide is not null)
+        else if (_loadingIndicator is not null)
         {
-            hide.Visibility = Visibility.Collapsed;
+            _loadingIndicator.Visibility = Visibility.Collapsed;
         }
 
-        if (show is FrameworkElement showFe)
+        if (_pluginListPanel is FrameworkElement listPanel)
         {
-            showFe.BeginAnimation(UIElement.OpacityProperty, null);
-            // Already fully visible: do not reset Opacity to 0 (that made skeleton "never show").
-            var alreadyShowing = showFe.Visibility == Visibility.Visible && showFe.Opacity >= 0.95;
-            showFe.Visibility = Visibility.Visible;
-            showFe.IsHitTestVisible = true;
-            if (alreadyShowing)
+            listPanel.BeginAnimation(UIElement.OpacityProperty, null);
+            listPanel.Visibility = Visibility.Visible;
+            listPanel.IsHitTestVisible = true;
+            Panel.SetZIndex(listPanel, 1);
+            // Content can fade in; skeleton already covered first paint.
+            if (listPanel.Opacity < 0.95)
             {
-                showFe.Opacity = 1;
-                return;
+                listPanel.Opacity = 0;
+                var fadeIn = new DoubleAnimation
+                {
+                    From = 0,
+                    To = 1,
+                    Duration = duration,
+                    EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+                };
+                listPanel.BeginAnimation(UIElement.OpacityProperty, fadeIn);
             }
-
-            showFe.Opacity = 0;
-            var fadeIn = new DoubleAnimation
+            else
             {
-                From = 0,
-                To = 1,
-                Duration = duration,
-                EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
-            };
-            showFe.BeginAnimation(UIElement.OpacityProperty, fadeIn);
+                listPanel.Opacity = 1;
+            }
         }
     }
 
@@ -378,50 +421,90 @@ private string _currentSearchText = string.Empty;
         if (_isLoadingOnlinePlugins)
             return;
 
+        var version = ++_pageLoadVersion;
         _isLoadingOnlinePlugins = true;
         _onlineMetadataLoadCompleted = false;
         _onlineMetadataLoadFailed = false;
+        _pageUiState = showFullSkeleton ? PluginPageUiState.InitialLoading : PluginPageUiState.Refreshing;
+
+        _pageLoadCts?.Cancel();
+        _pageLoadCts?.Dispose();
+        _pageLoadCts = new CancellationTokenSource();
+        var token = _pageLoadCts.Token;
 
         try
         {
             // Only cover the list with skeleton when there is nothing useful to show yet.
-            // Hiding installed plugins for a multi-second store fetch feels like "navigation lag".
             if (showFullSkeleton)
                 SetLoadingState(true);
 
             _availableUpdates.Clear();
-            _onlinePlugins = await _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh).ConfigureAwait(true);
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            // 15s timeout — never leave the page blank waiting on the store forever.
+            var fetchTask = _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh);
+            var completed = await Task.WhenAny(fetchTask, Task.Delay(OnlineFetchTimeout, token)).ConfigureAwait(true);
+            if (version != _pageLoadVersion || token.IsCancellationRequested)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
-                    $"PluginExtensionsPage: Fetched {_onlinePlugins.Count} online plugins");
+                // Observe abandoned fetch so faults are not unobserved.
+                _ = ObserveAbandonedFetchAsync(fetchTask);
+                return;
             }
 
-            try
+            if (completed != fetchTask)
             {
-                // Check for plugin updates against actually installed plugin IDs only.
-                var installedManifests = BuildInstalledPluginManifestsForUpdateCheck();
-                var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
-                _availableUpdates = updates;
+                _ = ObserveAbandonedFetchAsync(fetchTask);
+                _onlineMetadataLoadFailed = true;
+                _pageUiState = PluginPageUiState.Offline;
+                // Keep any previously loaded store list; only clear updates we cannot verify.
+                _availableUpdates.Clear();
+                SnackbarHelper.Show(
+                    T("PluginExtensionsPage_FetchFailed", "Failed to fetch plugins"),
+                    T("PluginExtensionsPage_FetchTimeoutMessage", "Store request timed out. Installed plugins are still available."),
+                    SnackbarType.Warning);
+            }
+            else
+            {
+                _onlinePlugins = await fetchTask.ConfigureAwait(true);
+                if (version != _pageLoadVersion)
+                    return;
 
-                if (updates.Count > 0 && LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                _onlineMetadataLoadFailed = false;
+                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
                     LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
-                        $"PluginExtensionsPage: Found {updates.Count} plugin updates");
+                        $"PluginExtensionsPage: Fetched {_onlinePlugins.Count} online plugins");
+                }
+
+                try
+                {
+                    var installedManifests = BuildInstalledPluginManifestsForUpdateCheck();
+                    var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests).ConfigureAwait(true);
+                    if (version != _pageLoadVersion)
+                        return;
+                    _availableUpdates = updates;
+                }
+                catch (Exception ex)
+                {
+                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                        $"PluginExtensionsPage: update check failed after online plugins were loaded: {ex.Message}",
+                        ex);
+                    _availableUpdates.Clear();
                 }
             }
-            catch (Exception ex)
-            {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
-                    $"PluginExtensionsPage: update check failed after online plugins were loaded: {ex.Message}",
-                    ex);
-                _availableUpdates.Clear();
-            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Page left — ignore stale result.
+            return;
         }
         catch (Exception ex)
         {
+            if (version != _pageLoadVersion)
+                return;
+
             _onlineMetadataLoadFailed = true;
+            _pageUiState = PluginPageUiState.Failed;
+            // Do not wipe _onlinePlugins on hard failure — keep last good store snapshot.
             _availableUpdates.Clear();
             LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error fetching online plugins: {ex.Message}", ex);
 
@@ -435,13 +518,103 @@ private string _currentSearchText = string.Empty;
         }
         finally
         {
-            _onlineMetadataLoadCompleted = true;
-            _isLoadingOnlinePlugins = false;
-            SetLoadingState(false);
+            if (version == _pageLoadVersion)
+            {
+                _onlineMetadataLoadCompleted = true;
+                _isLoadingOnlinePlugins = false;
+                SetLoadingState(false);
+                UpdateAllPluginsUI();
+                UpdateBulkActionButtonsVisibility();
+                // Prefer Offline/Failed flags over "Ready just because local rows exist".
+                if (_onlineMetadataLoadFailed)
+                {
+                    _pageUiState = _pageUiState is PluginPageUiState.Offline
+                        ? PluginPageUiState.Offline
+                        : PluginPageUiState.Failed;
+                }
+                else
+                {
+                    _pageUiState = _pluginViewModels.Count > 0
+                        ? PluginPageUiState.Ready
+                        : PluginPageUiState.Empty;
+                }
 
-            // Single UI rebuild after loading ends (avoids triple list rebuild jank).
-            UpdateAllPluginsUI();
-            UpdateBulkActionButtonsVisibility();
+                UpdateStoreOfflineBanner();
+            }
+            else
+            {
+                _isLoadingOnlinePlugins = false;
+            }
+        }
+    }
+
+    private static async Task ObserveAbandonedFetchAsync(Task fetchTask)
+    {
+        try
+        {
+            await fetchTask.ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace("Abandoned plugin store fetch faulted.", ex);
+        }
+    }
+
+    private void UpdateStoreOfflineBanner()
+    {
+        if (_storeOfflineBanner is null)
+            return;
+
+        var show = _onlineMetadataLoadFailed || _pageUiState is PluginPageUiState.Offline or PluginPageUiState.Failed;
+        _storeOfflineBanner.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+        if (!show)
+            return;
+
+        if (_storeOfflineTitleText is not null)
+        {
+            _storeOfflineTitleText.Text = _pageUiState == PluginPageUiState.Offline
+                ? LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_StoreTimeoutTitle", "Plugin store timed out", Resource.Culture)
+                : LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_StoreUnavailableTitle", "Plugin store unavailable", Resource.Culture);
+        }
+
+        if (_storeOfflineMessageText is not null)
+        {
+            _storeOfflineMessageText.Text = LocalizationHelper.GetStringOrEnglish(
+                Resource.ResourceManager,
+                "PluginExtensionsPage_StoreUnavailableMessage",
+                "Installed plugins remain available. Retry when the network is back.",
+                Resource.Culture);
+        }
+
+        if (_storeRetryButton is not null)
+        {
+            _storeRetryButton.Content = LocalizationHelper.GetStringOrEnglish(
+                Resource.ResourceManager,
+                "PluginExtensionsPage_StoreRetry",
+                "Retry",
+                Resource.Culture);
+            _storeRetryButton.IsEnabled = !_isLoadingOnlinePlugins && !_isRefreshing;
+        }
+    }
+
+    private async void StoreRetryButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isLoadingOnlinePlugins || _isRefreshing)
+            return;
+
+        if (_storeRetryButton is not null)
+            _storeRetryButton.IsEnabled = false;
+
+        try
+        {
+            // Retry keeps installed list visible; skeleton only if nothing to show.
+            var showFullSkeleton = _pluginViewModels.Count == 0;
+            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton).ConfigureAwait(true);
+        }
+        finally
+        {
+            UpdateStoreOfflineBanner();
         }
     }
 
@@ -557,11 +730,14 @@ private string _currentSearchText = string.Empty;
                     isLocal = onlinePlugin == null;
                 }
 
+                // Prefer already-in-memory store/online manifests; disk reads are cached.
                 var installedManifest = isInstalled ? TryReadInstalledPluginManifest(plugin.Id, metadata?.FilePath) : null;
                 var manifestMetadata = installedManifest ?? updatePlugin ?? onlinePlugin;
-                var resolvedPlugin = EnsureRegisteredPluginForUi(plugin.Id, isInstalled) ?? plugin;
+                // List rebuild must NOT force plugin reload (ScanAndLoad) — that freezes the UI.
+                var resolvedPlugin = GetRegisteredPluginForUi(plugin.Id, reloadIfMissing: false) ?? plugin;
                 var capabilities = ResolvePluginCapabilities(resolvedPlugin, isInstalled, plugin.Id, manifestMetadata);
-                var supportsExecutableEntryPoint = isInstalled && TryResolvePluginExecutable(plugin.Id, out _, out _);
+                // Existence-only for list badges; Authenticode runs on launch only.
+                var supportsExecutableEntryPoint = isInstalled && TryResolvePluginExecutableForListing(plugin.Id);
                 var localizedName = GetPluginLocalizedName(plugin, manifestMetadata);
                 var localizedDescription = GetPluginLocalizedDescription(plugin, manifestMetadata);
                 var localizedTags = GetPluginLocalizedTags(plugin, manifestMetadata);
@@ -610,7 +786,7 @@ private string _currentSearchText = string.Empty;
                             $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
-                    existingViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
+                    existingViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && isInstalled;
                     existingViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     existingViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
                     existingViewModel.SupportsExecutableEntryPoint = supportsExecutableEntryPoint;
@@ -637,7 +813,7 @@ private string _currentSearchText = string.Empty;
                             $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
-                    pluginViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(plugin.Id);
+                    pluginViewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && isInstalled;
                     pluginViewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     pluginViewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
                     pluginViewModel.SupportsExecutableEntryPoint = supportsExecutableEntryPoint;
@@ -700,13 +876,26 @@ private string _currentSearchText = string.Empty;
 
     private async void PluginExtensionsPage_Loaded(object sender, RoutedEventArgs e)
     {
-        AttachPluginInstallCoordinator();
-        LocalizationHelper.SetPluginResourceCultures();
+        AttachPageLifecycleSubscriptions();
+
+        // Step 1 always: skeleton + 流光, never a blank white list cell.
+        // Do NOT call SetPluginResourceCultures here — scanning all assemblies freezes UI.
+        ShowSkeletonImmediate();
+        await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Loaded);
+        await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Render);
+        SkeletonShimmer.RestartSubtree(_loadingIndicator);
+
+        // Culture apply after first paint, low priority (fire-and-forget).
+        _ = Dispatcher.BeginInvoke(
+            new Action(() => LocalizationHelper.SetPluginResourceCultures()),
+            System.Windows.Threading.DispatcherPriority.Background);
 
         if (_hasStartedInitialFetch)
         {
-            UpdateAllPluginsUI();
+            // Re-entry: rebuild under skeleton, then reveal (still honors MinSkeletonVisible).
+            await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
             SyncPluginInstallUi();
+            SetLoadingState(false);
             return;
         }
 
@@ -714,16 +903,8 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            // Always start (or keep) skeleton so first navigation shows 流光, even when
-            // local plugins exist and would otherwise skip loading chrome entirely.
-            SetLoadingState(true);
-
-            // Let first layout + shimmer start painting before any heavy list work.
-            await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Loaded);
-            await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Render);
-
             // Prepare local/installed list under the skeleton (no network yet).
-            UpdateAllPluginsUI();
+            await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
             SyncPluginInstallUi();
             var hasLocalContent = _pluginViewModels.Count > 0;
 
@@ -746,9 +927,21 @@ private string _currentSearchText = string.Empty;
             _onlineMetadataLoadFailed = true;
             _onlineMetadataLoadCompleted = true;
             SetLoadingState(false);
-            UpdateAllPluginsUI();
+            await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
             UpdateBulkActionButtonsVisibility();
         }
+    }
+
+    /// <summary>
+    /// Yield to the dispatcher so navigation/skeleton can paint, then rebuild the list.
+    /// Keeps heavy-ish work after first frame instead of freezing the click that opened the page.
+    /// </summary>
+    private async Task RebuildPluginListWithoutBlockingAsync()
+    {
+        await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Background);
+        if (!IsLoaded)
+            return;
+        UpdateAllPluginsUI();
     }
 
     private void PluginExtensionsPage_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -768,7 +961,8 @@ private string _currentSearchText = string.Empty;
                 if (_isLoadingOnlinePlugins || !IsVisible)
                     return;
 
-                LocalizationHelper.SetPluginResourceCultures();
+                // SetPluginResourceCultures is already deferred from Loaded; avoid re-scanning
+                // every assembly on every tab show (was a major freeze).
                 UpdateAllPluginsUI();
                 SyncPluginInstallUi();
             }), System.Windows.Threading.DispatcherPriority.Background);
@@ -777,9 +971,42 @@ private string _currentSearchText = string.Empty;
 
     private void PluginExtensionsPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        // Invalidate in-flight store fetch so it cannot paint over a new navigation.
+        _pageLoadVersion++;
+        try
+        {
+            _pageLoadCts?.Cancel();
+            _pageLoadCts?.Dispose();
+            _pageLoadCts = null;
+        }
+        catch
+        {
+            // ignore dispose races
+        }
+
+        DetachPageLifecycleSubscriptions();
+    }
+
+    private void AttachPageLifecycleSubscriptions()
+    {
+        if (_lifecycleSubscriptionsAttached)
+            return;
+
+        IsVisibleChanged += PluginExtensionsPage_IsVisibleChanged;
+        _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
+        AttachPluginInstallCoordinator();
+        _lifecycleSubscriptionsAttached = true;
+    }
+
+    private void DetachPageLifecycleSubscriptions()
+    {
+        if (!_lifecycleSubscriptionsAttached)
+            return;
+
+        IsVisibleChanged -= PluginExtensionsPage_IsVisibleChanged;
         _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
         DetachPluginInstallCoordinator();
-        IsVisibleChanged -= PluginExtensionsPage_IsVisibleChanged;
+        _lifecycleSubscriptionsAttached = false;
     }
 
     private void AttachPluginInstallCoordinator()
@@ -858,6 +1085,7 @@ private string _currentSearchText = string.Empty;
 
     private void UpdateAllPluginsUI()
     {
+        var startedAt = Stopwatch.GetTimestamp();
         try
         {
             // Merge online plugins and locally registered plugins
@@ -907,6 +1135,8 @@ private string _currentSearchText = string.Empty;
 
             _allPlugins = allPluginsList;
 
+            RebuildInstalledStateSnapshot(_allPlugins.Select(plugin => plugin.Id));
+
             UpdateBulkActionButtonsVisibility();
 
             // Apply current filters and search
@@ -929,6 +1159,15 @@ private string _currentSearchText = string.Empty;
             if (_noPluginsMessage != null)
             {
                 _noPluginsMessage.Visibility = Visibility.Visible;
+            }
+        }
+        finally
+        {
+            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            {
+                var elapsed = Stopwatch.GetElapsedTime(startedAt);
+                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                    $"PluginExtensionsPage UI rebuild completed in {elapsed.TotalMilliseconds:0} ms. [plugins={_allPlugins.Count}, rows={_pluginViewModels.Count}]");
             }
         }
     }
@@ -1130,6 +1369,24 @@ private string _currentSearchText = string.Empty;
     {
         if (string.IsNullOrWhiteSpace(pluginId))
             return false;
+
+        if (_installedStateSnapshot.TryGetValue(pluginId, out var installed))
+            return installed;
+
+        installed = ResolvePluginInstalledForUi(pluginId);
+        _installedStateSnapshot[pluginId] = installed;
+        return installed;
+    }
+
+    private void RebuildInstalledStateSnapshot(IEnumerable<string> pluginIds)
+    {
+        _installedStateSnapshot.Clear();
+        foreach (var pluginId in pluginIds.Where(id => !string.IsNullOrWhiteSpace(id)).Distinct(StringComparer.OrdinalIgnoreCase))
+            _installedStateSnapshot[pluginId] = ResolvePluginInstalledForUi(pluginId);
+    }
+
+    private bool ResolvePluginInstalledForUi(string pluginId)
+    {
 
         if (_pluginManager.IsInstalled(pluginId))
             return true;
@@ -1393,7 +1650,7 @@ private string _currentSearchText = string.Empty;
                     viewModel.SupportsConfiguration = capabilities.SupportsSettingsPage && _pluginManager.IsInstalled(pluginId);
                     viewModel.SupportsFeaturePage = capabilities.SupportsFeaturePage;
                     viewModel.SupportsOptimizationCategory = capabilities.SupportsOptimizationCategory;
-                    viewModel.SupportsExecutableEntryPoint = TryResolvePluginExecutable(pluginId, out _, out _);
+                    viewModel.SupportsExecutableEntryPoint = TryResolvePluginExecutableForListing(pluginId);
                 }
                 else
                 {
@@ -1796,6 +2053,7 @@ private string _currentSearchText = string.Empty;
     private async Task RefreshInstalledPluginUiAfterInstallAsync(string pluginId, bool forceRefreshRuntime)
     {
         _pluginIdsReloadedForUi.Remove(pluginId);
+        PluginUiCapabilityResolver.InvalidateCache(pluginId);
         await _pluginManager.ScanAndLoadPluginsAsync(forceRefreshRuntime);
         LocalizationHelper.SetPluginResourceCultures();
         UpdateAllPluginsUI();
@@ -1840,6 +2098,7 @@ private string _currentSearchText = string.Empty;
 
             // Immediately update specific plugin's UI state
             _pluginIdsReloadedForUi.Remove(pluginId);
+            PluginUiCapabilityResolver.InvalidateCache(pluginId);
             UpdateSpecificPluginUI(pluginId);
 
             SnackbarHelper.Show(Resource.PluginExtensionsPage_UninstallSuccess, Resource.PluginExtensionsPage_UninstallSuccessMessage, SnackbarType.Success);
@@ -2543,13 +2802,40 @@ private string _currentSearchText = string.Empty;
         return manifests;
     }
 
+    /// <summary>List/badge path: no Authenticode (UI-thread safe).</summary>
+    private bool TryResolvePluginExecutableForListing(string pluginId)
+    {
+        var metadata = _pluginManager.GetPluginMetadata(pluginId);
+        return PluginExecutableResolver.TryResolveForUiListing(
+            pluginId,
+            metadata?.FilePath,
+            GetPluginsDirectory(),
+            out _,
+            out _);
+    }
+
+    /// <summary>Launch path: Authenticode required outside DEBUG.</summary>
     private bool TryResolvePluginExecutable(string pluginId, out string? exeFile, out string? workingDirectory)
     {
         var metadata = _pluginManager.GetPluginMetadata(pluginId);
 #if DEBUG
-        return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), out exeFile, out workingDirectory, allowUnsignedOverride: true);
+        return PluginExecutableResolver.TryResolve(
+            pluginId,
+            metadata?.FilePath,
+            GetPluginsDirectory(),
+            out exeFile,
+            out workingDirectory,
+            allowUnsignedOverride: true,
+            verifyAuthenticode: true);
 #else
-        return PluginExecutableResolver.TryResolve(pluginId, metadata?.FilePath, GetPluginsDirectory(), out exeFile, out workingDirectory);
+        return PluginExecutableResolver.TryResolve(
+            pluginId,
+            metadata?.FilePath,
+            GetPluginsDirectory(),
+            out exeFile,
+            out workingDirectory,
+            allowUnsignedOverride: false,
+            verifyAuthenticode: true);
 #endif
     }
 
@@ -3049,4 +3335,3 @@ private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? man
     }
 }
 }
-

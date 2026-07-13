@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using LenovoLegionToolkit.Lib.Utils;
 using NvAPIWrapper.Native.GPU;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
@@ -34,8 +35,9 @@ public static class GPUInfoHelper
 
             return (int)(Convert.ToDouble(powerValue) / 1000.0);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("gpu-info-wattage", "GPUInfoHelper.GetWattage reflection probe failed.", ex);
             return -1;
         }
     }
@@ -71,8 +73,9 @@ public static class GPUInfoHelper
                 _ => Convert.ToDouble(voltageValue)
             };
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("gpu-info-voltage", "GPUInfoHelper.GetVoltage reflection probe failed.", ex);
             return 0;
         }
     }
@@ -117,8 +120,9 @@ public static class GPUInfoHelper
 
             return -1;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("gpu-info-power-topology", "GPUInfoHelper.GetWattageFromPowerTopology failed.", ex);
             return -1;
         }
     }

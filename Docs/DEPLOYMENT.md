@@ -147,24 +147,28 @@ All README screenshots must use the same window size and capture method so aspec
 Brand binaries (icons/logos) live only under repo-root [`Assets/`](../Assets/README.md).
 
 ```powershell
-# Build x64 Release (primary output layout)
-dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj -c Release -p:Platform=x64
+# Build smoke tooling (also builds the app with EnableUdtTestHooks for sandboxed captures)
+dotnet build Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release -p:Platform=x64
 
-# Preferred: MainAppPluginUi smoke (captures main shell)
+$smoke = "Tools/MainAppPluginUi.Smoke/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64/MainAppPluginUi.Smoke.dll"
 $appDir = "UniversalDeviceToolkit.WPF/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64"
-dotnet exec Tools/MainAppPluginUi.Smoke/bin/x64/Release/net10.0-windows10.0.26100.0/MainAppPluginUi.Smoke.dll `
-  --repo-root . --app-dir $appDir --scenario dashboard --theme dark `
-  --screenshots always --screenshot-dir Build/readme-screenshots-en --disable-animations
 
-# Promote the main-shell home capture
+# English main shell
+dotnet exec $smoke --repo-root . --app-dir $appDir --scenario dashboard --theme dark `
+  --lang en --screenshots always --screenshot-dir Build/readme-screenshots-en --disable-animations
 Copy-Item Build/readme-screenshots-en/*main-shell-home*.png Assets/Screenshot_main.png -Force
 
-# Chinese UI: seed AppData lang=zh-hans, launch Release, capture window (or use VisualRegression.Smoke --lang zh-hans)
-# VisualRegression.Smoke expects bin/Release/.../win-x64 (junction from bin/x64/Release if needed).
+# Simplified Chinese main shell (sandbox lang + WindowSize 1300×850)
+dotnet exec $smoke --repo-root . --app-dir $appDir --scenario dashboard --theme dark `
+  --lang zh-hans --screenshots always --screenshot-dir Build/readme-screenshots-zh --disable-animations
+Copy-Item Build/readme-screenshots-zh/*main-shell-home*.png Assets/Screenshot_zh-hans.png -Force
+
+# Alternate: VisualRegression.Smoke --readme-screenshots --lang zh-hans
+# (expects bin/Release/.../win-x64; create a junction from bin/x64/Release if needed).
 ```
 
 Document the refresh in `CHANGELOG.md` when user-visible UI changes ship.
-Last refreshed: 2026-07-12 (`Screenshot_main.png` 1300×850 home; `Screenshot_zh-hans.png` zh-hans UI).
+Last refreshed: 2026-07-13 (`Screenshot_main.png` EN main-shell home; `Screenshot_zh-hans.png` zh-hans main-shell home via MainAppPluginUi.Smoke `--lang`). Target logical window 1300×850 (pixel size scales with display DPI).
 
 ### Manual Testing Checklist
 

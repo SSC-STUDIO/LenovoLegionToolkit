@@ -369,9 +369,13 @@ public static class Battery
 
                 return info;
             }
-            catch
+            catch (Exception ex)
             {
-                // Device not available or IOCTL not supported
+                // Device not available or IOCTL not supported at this index.
+                Log.Instance.TraceOnce(
+                    $"battery-info-index-{index}",
+                    $"Lenovo battery IOCTL failed at index {index}.",
+                    ex);
                 continue;
             }
         }
@@ -406,8 +410,9 @@ public static class Battery
                 return null;
             return date;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("battery-decode-date", $"Failed to decode battery manufacture date from value {s}.", ex);
             return null;
         }
     }

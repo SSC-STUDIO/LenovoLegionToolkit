@@ -82,9 +82,12 @@ public sealed class SettingsBackupService
                 if (Directory.Exists(staging))
                     Directory.Delete(staging, recursive: true);
             }
-            catch
+            catch (Exception ex)
             {
-                // best-effort cleanup
+                Log.Instance.WarningOnce(
+                    "settings-backup-staging-cleanup",
+                    $"Best-effort cleanup of settings backup staging failed: {staging}",
+                    ex);
             }
         }
     }

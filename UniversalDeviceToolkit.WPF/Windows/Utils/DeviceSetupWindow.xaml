@@ -6,10 +6,10 @@
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static utils:AppDisplayName.Value}"
-    MinWidth="560"
-    MinHeight="340"
-    MaxWidth="560"
-    MaxHeight="340"
+    MinWidth="600"
+    MinHeight="420"
+    MaxWidth="620"
+    MaxHeight="480"
     Closed="DeviceSetupWindow_OnClosed"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
@@ -17,7 +17,8 @@
     Topmost="True"
     WindowStartupLocation="CenterScreen"
     Background="{DynamicResource ApplicationBackgroundBrush}"
-    WindowBackdropType="None">
+    WindowBackdropType="None"
+    AutomationProperties.AutomationId="DeviceSetupWindow">
 
     <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions>
@@ -54,7 +55,7 @@
                     x:Name="_titleText"
                     Margin="0,0,0,8"
                     Focusable="True"
-                    FontWeight="SemiBold"
+                    FontWeight="Normal"
                     TextWrapping="Wrap" />
 
                 <TextBlock
@@ -82,11 +83,23 @@
                     <TextBlock x:Name="_machineTypeText" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" />
                 </Grid>
 
+                <!-- Manual pack selection: auto-detect pre-selects; user can override. -->
                 <TextBlock
-                    x:Name="_packText"
-                    Margin="0,0,0,8"
-                    Focusable="True"
+                    x:Name="_packLabelText"
+                    Margin="0,0,0,6"
                     FontWeight="Medium"
+                    TextWrapping="Wrap" />
+                <ComboBox
+                    x:Name="_packComboBox"
+                    MinHeight="36"
+                    Margin="0,0,0,8"
+                    AutomationProperties.AutomationId="DeviceSetupPackComboBox"
+                    SelectionChanged="PackComboBox_SelectionChanged" />
+
+                <TextBlock
+                    x:Name="_packDetailText"
+                    Margin="0,0,0,8"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     TextWrapping="Wrap" />
 
                 <TextBlock
@@ -114,7 +127,6 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <!-- Labels set in code-behind so we never reuse RestartLater (hybrid-mode restart). -->
                 <wpfui:Button
                     x:Name="_skipButton"
                     Grid.Column="0"

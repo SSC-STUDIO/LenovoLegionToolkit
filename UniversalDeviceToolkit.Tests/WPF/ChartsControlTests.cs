@@ -130,25 +130,31 @@ public class ChartsControlTests
     }
 
     [Fact]
-    public void TrendChartSource_ShouldDrawPlotFrameAndLeftAlignedEdges()
+    public void TrendChartSource_ShouldDrawDenseBandAndRightAlignedGrowth()
     {
         var source = ReadWpfText("Controls", "Charts", "TrendChartControl.cs");
 
-        // Empty/first-open charts keep a full rectangular frame (left/right/top/baseline).
-        source.Should().Contain("DrawPlotFrame");
-        source.Should().Contain("width - 0.5");
+        // Horizontal guides + baseline only — no outer rectangular plot frame.
+        source.Should().Contain("DrawGridlines");
+        source.Should().NotContain("DrawPlotFrame");
         source.Should().Contain("height - 0.5");
 
-        // Samples grow from the left so early history has a clear left edge (not a right blip).
+        // Right-aligned growth: newest on the right, history expands leftward.
         source.Should().Contain("BuildPlotPoints");
-        source.Should().Contain("var x = i * stepX");
+        source.Should().Contain("startSlot");
+        source.Should().Contain("capacity - count");
 
-        // Fill is more opaque so the area silhouette stays readable at first open.
-        source.Should().Contain("Color.FromArgb(140");
+        // Multi-series fills stay translucent and all crest lines render after fills.
+        source.Should().Contain("Color.FromArgb(76");
+        source.Should().Contain("drawFill: true, drawLine: false");
+        source.Should().Contain("drawFill: false, drawLine: true");
+        source.Should().Contain("tailWidth");
+        source.Should().Contain("areaCtx.BezierTo");
+        source.Should().NotContain("areaCtx.LineTo(new Point(points[^1].X, height)");
     }
 
     [Fact]
-    public void BuildPlotPoints_WhenSingleSample_ShouldExpandToFlatSegmentFromLeft()
+    public void BuildPlotPoints_WhenSingleSample_ShouldEaseInFromBaseline()
     {
         var series = new TrendSeries("util", 10);
         series.Add(50);
@@ -156,14 +162,17 @@ public class ChartsControlTests
 
         var points = TrendChartControl.BuildPlotPoints(series, width: 100, height: 40, max: 100);
 
+        // Capacity 10 → step = 100/9; single sample at right edge, flat segment one step left.
+        var step = 100.0 / 9.0;
         points.Should().HaveCount(2);
-        points[0].X.Should().Be(0);
-        points[1].X.Should().BeApproximately(100.0 / 9.0, 0.01);
-        points[0].Y.Should().BeApproximately(points[1].Y, 0.01);
+        points[0].X.Should().BeApproximately(100.0 - step, 0.01);
+        points[1].X.Should().BeApproximately(100.0, 0.01);
+        points[0].Y.Should().BeApproximately(39.0, 0.01);
+        points[1].Y.Should().BeLessThan(points[0].Y);
     }
 
     [Fact]
-    public void BuildPlotPoints_WhenMultipleSamples_ShouldLeftAlignOldestAtOrigin()
+    public void BuildPlotPoints_WhenMultipleSamples_ShouldRightAlignNewestAtRightEdge()
     {
         var series = new TrendSeries("util", 5);
         series.Add(0);
@@ -172,13 +181,16 @@ public class ChartsControlTests
 
         var points = TrendChartControl.BuildPlotPoints(series, width: 80, height: 40, max: 100);
 
-        points.Should().HaveCount(3);
-        points[0].X.Should().Be(0);
-        points[1].X.Should().BeApproximately(20.0, 0.01);
-        points[2].X.Should().BeApproximately(40.0, 0.01);
+        // Capacity 5 → step = 20; 3 samples occupy slots 2,3,4 → x = 40, 60, 80.
+        points.Should().HaveCount(4);
+        points[0].X.Should().BeApproximately(20.0, 0.01);
+        points[0].Y.Should().BeApproximately(39.0, 0.01);
+        points[1].X.Should().BeApproximately(40.0, 0.01);
+        points[2].X.Should().BeApproximately(60.0, 0.01);
+        points[3].X.Should().BeApproximately(80.0, 0.01);
         // Peak sample is highest on the plot (lowest Y).
-        points[1].Y.Should().BeLessThan(points[0].Y);
-        points[1].Y.Should().BeLessThan(points[2].Y);
+        points[2].Y.Should().BeLessThan(points[1].Y);
+        points[2].Y.Should().BeLessThan(points[3].Y);
     }
 
     private static string ReadWpfText(params string[] relativeSegments)

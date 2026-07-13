@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -48,8 +49,12 @@ public class PluginConfiguration : IPluginConfiguration
                     var convertedValue = Convert.ChangeType(value, typeof(T));
                     return convertedValue != null ? (T)convertedValue : defaultValue;
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Instance.TraceOnce(
+                        $"plugin-config-convert-{key}",
+                        $"Plugin configuration value conversion failed for key '{key}'.",
+                        ex);
                     return defaultValue;
                 }
             }

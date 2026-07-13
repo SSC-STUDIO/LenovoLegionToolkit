@@ -91,6 +91,7 @@
 [PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Windows/Osd/OsdBarWindow.xaml     :: -
 [PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Windows/Osd/OsdPanelWindow.xaml   :: -
 [PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Controls/Dashboard/SensorsControl.xaml :: -
+[PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Controls/Dashboard/DiscreteGPUControl.xaml :: -
 [PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Windows/Utils/DeviceInformationWindow.xaml :: -
 
 # ---------------------------------------------------------------------------

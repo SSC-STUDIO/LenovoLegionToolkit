@@ -635,10 +635,12 @@ screenshot.png
 .tools-wpfui-inspect/
 all_strings.txt
 
-# Local temporary translation scripts, logs, and reports
-*.py
-*.ps1
+# Local temporary translation / QA scratch (do NOT blanket-ignore *.json/*.ps1/*.py —
+# those hide intentional Scripts/, Tools/, packages.lock.json, Packaging manifests).
 *.bak
+*.cs.bak
+*~
+*.orig
 *_report.json
 *_report.txt
 *keys*.txt
@@ -646,16 +648,18 @@ all_strings.txt
 *_verify_report.txt
 *_qa_*.py
 *analyze*.txt
-*.json
-!*.json.json
-!xunit.runner.json
-!coverlet.runsettings
-!*.csproj
-!*.sln
-!*.config
-!*.resx
+coverage*.json
+sensor-inventory.latest.json
 _work/
 output/
+
+# Accidental MSBuild dumps at project roots (legacy Build*.deps.json)
+**/Build*.deps.json
+**/*LenovoLegionToolkit*.deps.json
+
+# Scratch / verify screenshots (never product Assets/Screenshot_*)
+Docs/_verify_*.png
+**/_verify_*.png
 
 # Local backups / IDE agent session junk (do not publish)
 .backup_async_fix/
@@ -667,5 +671,7 @@ agent-transcripts/
 _size_bench_publish/
 
 *.tmp
+# Local zip dumps only — force-track intentional fixtures (e.g. LanguagePackMockBackend/_serve/*.zip)
 *.zip
+!Tools/LanguagePackMockBackend/**/*.zip
 build_debug_log.txt

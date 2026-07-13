@@ -23,8 +23,12 @@ internal static class WindowsOptimizationHelper
                 if (!RegistryValueEquals(currentValue, tweak.Value, tweak.Kind))
                     return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Instance.TraceOnce(
+                    "opt-registry-tweak-read",
+                    $"Failed to read optimization registry tweak {tweak.Hive}\\{tweak.SubKey}\\{tweak.ValueName}.",
+                    ex);
                 return false;
             }
         }
@@ -43,8 +47,12 @@ internal static class WindowsOptimizationHelper
                 _ => Equals(currentValue, expectedValue)
             };
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                "opt-registry-value-compare",
+                "Failed to compare optimization registry values.",
+                ex);
             return false;
         }
     }
@@ -65,8 +73,12 @@ internal static class WindowsOptimizationHelper
                 if (startValue != 4)
                     return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Instance.TraceOnce(
+                    $"opt-service-start-{serviceName}",
+                    $"Failed to read service Start value for optimization check: {serviceName}",
+                    ex);
                 return false;
             }
 
@@ -80,8 +92,12 @@ internal static class WindowsOptimizationHelper
             {
                 // Service not found – treat as already disabled.
             }
-            catch
+            catch (Exception ex)
             {
+                Log.Instance.WarningOnce(
+                    $"opt-service-status-{serviceName}",
+                    $"Failed to query service status for optimization check: {serviceName}",
+                    ex);
                 return false;
             }
         }
@@ -106,6 +122,13 @@ internal static class WindowsOptimizationHelper
         catch (InvalidOperationException)
         {
             // Service not found, ignore.
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.WarningOnce(
+                $"opt-service-stop-{serviceName}",
+                $"Failed to stop service during optimization: {serviceName}",
+                ex);
         }
     }
 }

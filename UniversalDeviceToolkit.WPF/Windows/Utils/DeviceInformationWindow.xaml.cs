@@ -322,9 +322,12 @@ public partial class DeviceInformationWindow
                     Resource.DeviceInformationWindow_Warranty_Title,
                     Resource.DeviceInformationWindow_WarrantyLinkUnavailable);
             }
-            catch
+            catch (Exception snackEx)
             {
-                // keep window alive
+                Log.Instance.TraceOnce(
+                    "device-info-snackbar",
+                    "Failed to show warranty snackbar; keeping device information window alive.",
+                    snackEx);
             }
         }
     }

@@ -18,8 +18,9 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             return mi is { Features.Source: MachineInformation.FeatureData.SourceType.CapabilityData, Properties.SupportsIGPUMode: true };
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce("feature-igpu-cap-supported", "IGPUModeCapabilityFeature support probe failed.", ex);
             return false;
         }
     }

@@ -16,8 +16,7 @@
         </custom:CardControl.Header>
         <StackPanel
             x:Name="_content"
-            Orientation="Vertical"
-            Visibility="{Binding IsGpuContentReady, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}">
+            Orientation="Vertical">
             <Grid HorizontalAlignment="Right">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -54,7 +53,8 @@
                     AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
                     AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
                     Focusable="True"
-                    FontWeight="Medium" />
+                    FontWeight="Medium"
+                    Text="-" />
                 <wpfui:Button
                     x:Name="_gpuInfoButton"
                     Grid.Column="2"

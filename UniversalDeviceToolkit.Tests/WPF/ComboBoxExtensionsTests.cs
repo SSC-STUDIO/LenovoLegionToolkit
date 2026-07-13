@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Windows.Controls;
 using FluentAssertions;
@@ -11,6 +12,19 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 [Trait("Category", TestCategories.Unit)]
 public sealed class ComboBoxExtensionsTests
 {
+    [Fact]
+    public void AppComboBoxStyle_ShouldUseOldNativeWpfUiTemplate()
+    {
+        var root = FindRepoRoot();
+        var xaml = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Styles", "ControlStyles.xaml"));
+
+        xaml.Should().Contain("x:Key=\"AppComboBoxStyle\"");
+        xaml.Should().Contain("BasedOn=\"{StaticResource {x:Type ComboBox}}\"");
+        xaml.Should().Contain("ButtonHeightStandard");
+        xaml.Should().NotContain("AppComboBoxToggleButtonTemplate");
+        xaml.Should().NotContain("SelectionBoxItemToStringConverter");
+    }
+
     [Fact]
     public void SetItems_WhenKeyValuePairValueChanges_ShouldSelectItemByKeyAndDisplayLatestValue()
     {
@@ -71,6 +85,20 @@ public sealed class ComboBoxExtensionsTests
 
         if (exception is not null)
             throw exception;
+    }
+
+    private static string FindRepoRoot()
+    {
+        var dir = new DirectoryInfo(AppContext.BaseDirectory);
+        while (dir is not null)
+        {
+            if (File.Exists(Path.Combine(dir.FullName, "UniversalDeviceToolkit.sln")) ||
+                File.Exists(Path.Combine(dir.FullName, "UniversalDeviceToolkit.WPF", "UniversalDeviceToolkit.WPF.csproj")))
+                return dir.FullName;
+            dir = dir.Parent;
+        }
+
+        throw new DirectoryNotFoundException("Could not locate UniversalDeviceToolkit repo root.");
     }
 
     private sealed record PresetListItem(string Name);

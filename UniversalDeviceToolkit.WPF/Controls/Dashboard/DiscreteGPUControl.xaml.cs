@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -122,8 +123,6 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
             if (IsVisible)
                 return;
 
-            IsGpuContentReady = false;
-
             await _gpuController.StopAsync();
         }
         catch (Exception ex)
@@ -160,15 +159,14 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
             if (e.ProcessCount > 0)
             {
                 processesStringBuilder.Append(Resource.DiscreteGPUControl_Processes);
-                foreach (var p in e.Processes.OrderBy(p => p.ProcessName))
-                {
-                    try { processesStringBuilder.AppendLine().Append("  \u2022 ").Append(p.ProcessName); }
-                    catch
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace("Failed to append GPU process name");
-                    }
-                }
+                var processNames = e.Processes
+                    .Select(TryGetProcessName)
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase)
+                    .ToArray();
+
+                foreach (var processName in processNames)
+                    processesStringBuilder.AppendLine().Append("  \u2022 ").Append(processName);
             }
             else
             {
@@ -218,6 +216,22 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
         IsGpuContentReady = true;
     });
+
+    internal static string? TryGetProcessName(Process process)
+    {
+        try
+        {
+            return process.HasExited ? null : process.ProcessName;
+        }
+        catch (InvalidOperationException)
+        {
+            return null;
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            return null;
+        }
+    }
 
     private void DeactivateGPUButton_Click(object sender, RoutedEventArgs e)
     {

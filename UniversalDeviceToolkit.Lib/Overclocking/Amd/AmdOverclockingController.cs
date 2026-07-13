@@ -96,8 +96,12 @@ public sealed class AmdOverclockingController : IDisposable
             using var stream = File.OpenRead(_statusFilePath);
             return JsonSerializer.Deserialize<ShutdownInfo>(stream);
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                "amd-oc-shutdown-info",
+                "Failed to load AMD overclocking shutdown info; using defaults.",
+                ex);
             return new ShutdownInfo { Status = "Normal", AbnormalCount = 0 };
         }
     }

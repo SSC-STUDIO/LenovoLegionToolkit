@@ -541,6 +541,9 @@ CPU/GPU 性能。
   <data name="FanCurveControl_FanSpeed" xml:space="preserve">
     <value>风扇转速</value>
   </data>
+  <data name="FanCurveControl_FanSpeedMax" xml:space="preserve">
+    <value>100%</value>
+  </data>
   <data name="FanCurveControl_GPU" xml:space="preserve">
     <value>显卡</value>
   </data>
@@ -3155,13 +3158,13 @@ Fn 将会暂时解除锁定。</value>
     <value>选择语言</value>
   </data>
   <data name="DeviceSetupWindow_BasicModeSummary" xml:space="preserve">
-    <value>此设备将以基础模式启动。在兼容的设备包可用之前，与硬件相关的控件将被隐藏。</value>
+    <value>此设备将以基础模式启动。在匹配的设备包可用之前，硬件相关控件会保持隐藏。若你了解机型系列，也可在下方手动选择配置文件。</value>
   </data>
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>设备包：基础模式</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
-    <value>通用设备工具包检测到匹配的设备包。请立即确认，以便应用准备硬件相关功能。</value>
+    <value>通用设备工具包已找到匹配的设备包。请确认应用，或在自动识别有误时选择其他配置文件。</value>
   </data>
   <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
     <value>设备包：{0}</value>
@@ -3182,7 +3185,28 @@ Fn 将会暂时解除锁定。</value>
     <value>点「确认」会保存当前选择并继续。点「暂时跳过」会以基础模式进入，下次启动可能再次提示。不会重启 Windows。</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
-    <value>点「确认」将使用匹配的设备包配置硬件功能。点「暂时跳过」可先进入应用（可稍后完成）。不会重启 Windows。</value>
+    <value>点「确认」将保存所选配置并继续。点「暂时跳过」保留默认，下次启动可能再次提示。不会重启 Windows。</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>设备配置文件（设备包）</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>基础模式（仅插件与系统优化）</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0}（推荐）</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — 完整硬件</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — 基础</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>完整硬件：在固件支持时提供电源模式、传感器、风扇与联想硬件控制。</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>基础配置：插件、系统优化、语言与主题。硬件控件保持隐藏。</value>
   </data>
   <data name="DeviceAutomationPipelineTriggerTabItemContent_NotConnected" xml:space="preserve">
     <value>未连接</value>
@@ -4341,5 +4365,44 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="SaveButton" xml:space="preserve">
     <value>保存</value>
+  </data>
+  <data name="AppNotificationHost_AccessibleName" xml:space="preserve">
+    <value>应用通知</value>
+  </data>
+  <data name="AppNotificationHost_Close" xml:space="preserve">
+    <value>关闭通知</value>
+  </data>
+  <data name="SensorsControl_Details" xml:space="preserve">
+    <value>传感器详细信息</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableTitle" xml:space="preserve">
+    <value>插件商店不可用</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreTimeoutTitle" xml:space="preserve">
+    <value>插件商店请求超时</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableMessage" xml:space="preserve">
+    <value>已安装的插件仍可使用。网络恢复后可重试。</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreRetry" xml:space="preserve">
+    <value>重试</value>
+  </data>
+  <data name="PluginExtensionsPage_FetchTimeoutMessage" xml:space="preserve">
+    <value>商店请求超时。已安装的插件仍可使用。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Title" xml:space="preserve">
+    <value>成功通知</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Message" xml:space="preserve">
+    <value>在插件安装、优化应用或清理完成时显示提示。位置固定为右下角。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Title" xml:space="preserve">
+    <value>通知声音</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Message" xml:space="preserve">
+    <value>出现通知时播放短促系统提示音。</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
+    <value>已释放 {0}。成功 {1} 项，失败 {2} 项。</value>
   </data>
 </root>

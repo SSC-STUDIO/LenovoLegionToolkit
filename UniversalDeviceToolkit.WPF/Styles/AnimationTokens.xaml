@@ -7,9 +7,9 @@
     <Duration x:Key="AnimationDurationFast">0:0:0.1</Duration>
     <Duration x:Key="AnimationDurationMedium">0:0:0.2</Duration>
     <Duration x:Key="AnimationDurationSlow">0:0:0.3</Duration>
-    <!-- Soft matte skeleton 流光 — slow wash (overwritten at runtime by AnimationHelper). -->
-    <Duration x:Key="AnimationDurationShimmer">0:0:3.5</Duration>
-    <Duration x:Key="AnimationDurationSkeletonCrossfade">0:0:0.28</Duration>
+    <!-- Skeleton 流光 one-way duration (SineEase InOut; cascade via SkeletonShimmer delay). -->
+    <Duration x:Key="AnimationDurationShimmer">0:0:1.55</Duration>
+    <Duration x:Key="AnimationDurationSkeletonCrossfade">0:0:0.20</Duration>
 
     <!-- Animation Easing Functions -->
     <CubicEase x:Key="AnimationEasingCubicOut" EasingMode="EaseOut" />

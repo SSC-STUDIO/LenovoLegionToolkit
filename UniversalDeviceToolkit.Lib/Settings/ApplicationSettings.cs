@@ -25,6 +25,12 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool SmartKey { get; set; }
         public bool AutomationNotification { get; set; } = true;
 
+        /// <summary>In-app success toasts (plugin install, optimization, cleanup). Default on.</summary>
+        public bool SuccessNotifications { get; set; } = true;
+
+        /// <summary>Optional short beep when a toast is published. Default off.</summary>
+        public bool NotificationSound { get; set; }
+
         /// <summary>
         /// Optional per-category policies (enable / persist / severity).
         /// When absent for a key, legacy bool toggles above remain authoritative for enable.

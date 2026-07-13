@@ -1,4 +1,6 @@
 using FluentAssertions;
+using System.Diagnostics;
+using UniversalDeviceToolkit.WPF.Controls.Dashboard;
 using UniversalDeviceToolkit.WPF.Pages;
 using Xunit;
 
@@ -7,6 +9,26 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 [Trait("Category", TestCategories.Unit)]
 public class DashboardPageTests
 {
+    [Fact]
+    public void TryGetProcessName_ExitedProcess_ShouldReturnNullWithoutThrowing()
+    {
+        using var process = Process.Start(new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = "/c exit 0",
+            CreateNoWindow = true,
+            UseShellExecute = false,
+        });
+
+        process.Should().NotBeNull();
+        process!.WaitForExit();
+
+        var action = () => DiscreteGPUControl.TryGetProcessName(process);
+
+        action.Should().NotThrow();
+        action().Should().BeNull();
+    }
+
     [Fact]
     public void GetDashboardFallbackLoadingDelay_ShouldRemainShortAndStable()
     {

@@ -150,8 +150,12 @@ public class WindowsPowerPlanController(ApplicationSettings settings, VantageDis
 
             return global::System.Text.Encoding.Unicode.GetString(buffer, 0, (int)nameSize).TrimEnd('\0');
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.TraceOnce(
+                $"power-plan-name-{powerPlanGuid}",
+                $"PowerReadFriendlyName failed for {powerPlanGuid}; using GUID string.",
+                ex);
             return powerPlanGuid.ToString();
         }
     }

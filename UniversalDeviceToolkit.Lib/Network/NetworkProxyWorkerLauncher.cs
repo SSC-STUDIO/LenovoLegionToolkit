@@ -89,9 +89,12 @@ public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
                     if (!process.HasExited)
                         process.Kill(entireProcessTree: true);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // ignore per-process failures
+                    Log.Instance.TraceOnce(
+                        "network-proxy-kill-orphan",
+                        $"Failed to kill orphaned NetworkProxy process (pid={process.Id}).",
+                        ex);
                 }
                 finally
                 {
@@ -99,9 +102,12 @@ public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
                 }
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // ignore enumeration failures
+            Log.Instance.WarningOnce(
+                "network-proxy-enum-orphans",
+                "Failed to enumerate orphaned NetworkProxy workers.",
+                ex);
         }
     }
 
@@ -175,7 +181,11 @@ public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
             if (_sessionToken is not null && _pipeName is not null)
             {
                 try { client = new NetworkProxyIpcClient(_pipeName, _sessionToken); }
-                catch { client = null; }
+                catch (Exception ex)
+                {
+                    Log.Instance.TraceOnce("network-proxy-ipc-client", "Failed to create NetworkProxy IPC client during stop.", ex);
+                    client = null;
+                }
             }
         }
 
@@ -186,9 +196,12 @@ public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
                 await client.StopAsync(cancellationToken).ConfigureAwait(false);
                 await client.ShutdownAsync(cancellationToken).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex)
             {
-                // Fall through to Kill.
+                Log.Instance.WarningOnce(
+                    "network-proxy-graceful-stop",
+                    "NetworkProxy graceful stop failed; falling back to process kill.",
+                    ex);
             }
         }
 
@@ -202,9 +215,12 @@ public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
                     await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Best-effort shutdown.
+                Log.Instance.WarningOnce(
+                    "network-proxy-force-kill",
+                    "Best-effort NetworkProxy process kill failed during stop.",
+                    ex);
             }
             finally
             {

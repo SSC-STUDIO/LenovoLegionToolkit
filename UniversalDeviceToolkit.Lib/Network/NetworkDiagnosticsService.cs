@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Network;
 
@@ -81,8 +82,16 @@ public sealed class NetworkDiagnosticsService : INetworkDiagnosticsService
             await client.ConnectAsync(global::System.Net.IPAddress.Loopback, port, cts.Token).ConfigureAwait(false);
             return client.Connected;
         }
-        catch
+        catch (OperationCanceledException)
         {
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.TraceOnce(
+                $"net-diag-loopback-{port}",
+                $"Loopback probe failed for port {port} (proxy may not be listening).",
+                ex);
             return false;
         }
     }

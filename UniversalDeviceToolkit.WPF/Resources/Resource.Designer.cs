@@ -2316,6 +2316,15 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to 100%.
+        /// </summary>
+        public static string FanCurveControl_FanSpeedMax {
+            get {
+                return ResourceManager.GetString("FanCurveControl_FanSpeedMax", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to GPU.
         /// </summary>
         public static string FanCurveControl_GPU {
@@ -10131,6 +10140,13 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string DeviceSetupWindow_MatchingPackSummary { get { return ResourceManager.GetString("DeviceSetupWindow_MatchingPackSummary", resourceCulture); } }
         public static string DeviceSetupWindow_DevicePackFormat { get { return ResourceManager.GetString("DeviceSetupWindow_DevicePackFormat", resourceCulture); } }
         public static string DeviceSetupWindow_Preparing { get { return ResourceManager.GetString("DeviceSetupWindow_Preparing", resourceCulture); } }
+        public static string DeviceSetupWindow_SelectPackLabel { get { return ResourceManager.GetString("DeviceSetupWindow_SelectPackLabel", resourceCulture); } }
+        public static string DeviceSetupWindow_BasicModePackName { get { return ResourceManager.GetString("DeviceSetupWindow_BasicModePackName", resourceCulture); } }
+        public static string DeviceSetupWindow_RecommendedPackFormat { get { return ResourceManager.GetString("DeviceSetupWindow_RecommendedPackFormat", resourceCulture); } }
+        public static string DeviceSetupWindow_HardwarePackFormat { get { return ResourceManager.GetString("DeviceSetupWindow_HardwarePackFormat", resourceCulture); } }
+        public static string DeviceSetupWindow_BasicPackFormat { get { return ResourceManager.GetString("DeviceSetupWindow_BasicPackFormat", resourceCulture); } }
+        public static string DeviceSetupWindow_HardwarePackDetail { get { return ResourceManager.GetString("DeviceSetupWindow_HardwarePackDetail", resourceCulture); } }
+        public static string DeviceSetupWindow_BasicPackDetail { get { return ResourceManager.GetString("DeviceSetupWindow_BasicPackDetail", resourceCulture); } }
         public static string SensorsControl_NotAvailable { get { return ResourceManager.GetString("SensorsControl_NotAvailable", resourceCulture); } }
         public static string SensorsControl_UnknownBattery { get { return ResourceManager.GetString("SensorsControl_UnknownBattery", resourceCulture); } }
         public static string SensorsControl_UnknownCpu { get { return ResourceManager.GetString("SensorsControl_UnknownCpu", resourceCulture); } }
@@ -10157,5 +10173,57 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string LanguageSelector_RetryButton { get { return ResourceManager.GetString("LanguageSelector_RetryButton", resourceCulture); } }
         public static string LanguageSelector_ContinueInEnglishButton { get { return ResourceManager.GetString("LanguageSelector_ContinueInEnglishButton", resourceCulture); } }
         public static string SaveButton { get { return ResourceManager.GetString("SaveButton", resourceCulture); } }
+        public static string AppNotificationHost_AccessibleName {
+            get { return ResourceManager.GetString("AppNotificationHost_AccessibleName", resourceCulture); }
+        }
+
+        public static string AppNotificationHost_Close {
+            get { return ResourceManager.GetString("AppNotificationHost_Close", resourceCulture); }
+        }
+
+        public static string SensorsControl_Details {
+            get { return ResourceManager.GetString("SensorsControl_Details", resourceCulture); }
+        }
+
+        public static string PluginExtensionsPage_StoreUnavailableTitle {
+            get { return ResourceManager.GetString("PluginExtensionsPage_StoreUnavailableTitle", resourceCulture); }
+        }
+
+        public static string PluginExtensionsPage_StoreTimeoutTitle {
+            get { return ResourceManager.GetString("PluginExtensionsPage_StoreTimeoutTitle", resourceCulture); }
+        }
+
+        public static string PluginExtensionsPage_StoreUnavailableMessage {
+            get { return ResourceManager.GetString("PluginExtensionsPage_StoreUnavailableMessage", resourceCulture); }
+        }
+
+        public static string PluginExtensionsPage_StoreRetry {
+            get { return ResourceManager.GetString("PluginExtensionsPage_StoreRetry", resourceCulture); }
+        }
+
+        public static string PluginExtensionsPage_FetchTimeoutMessage {
+            get { return ResourceManager.GetString("PluginExtensionsPage_FetchTimeoutMessage", resourceCulture); }
+        }
+
+        public static string NotificationsSettingsWindow_SuccessNotifications_Title {
+            get { return ResourceManager.GetString("NotificationsSettingsWindow_SuccessNotifications_Title", resourceCulture); }
+        }
+
+        public static string NotificationsSettingsWindow_SuccessNotifications_Message {
+            get { return ResourceManager.GetString("NotificationsSettingsWindow_SuccessNotifications_Message", resourceCulture); }
+        }
+
+        public static string NotificationsSettingsWindow_NotificationSound_Title {
+            get { return ResourceManager.GetString("NotificationsSettingsWindow_NotificationSound_Title", resourceCulture); }
+        }
+
+        public static string NotificationsSettingsWindow_NotificationSound_Message {
+            get { return ResourceManager.GetString("NotificationsSettingsWindow_NotificationSound_Message", resourceCulture); }
+        }
+
+        public static string WindowsOptimizationPage_CleanupPartialSummary {
+            get { return ResourceManager.GetString("WindowsOptimizationPage_CleanupPartialSummary", resourceCulture); }
+        }
+
     }
 }

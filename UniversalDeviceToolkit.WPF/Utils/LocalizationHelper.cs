@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Humanizer;
 using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
@@ -175,9 +176,12 @@ public static class LocalizationHelper
             if (ReferenceEquals(Application.Current?.MainWindow, languageWindow))
                 Application.Current.MainWindow = null;
         }
-        catch
+        catch (Exception ex)
         {
-            // best-effort
+            Log.Instance.TraceOnce(
+                "loc-clear-temp-mainwindow",
+                "Best-effort clear of temporary MainWindow after language selector failed.",
+                ex);
         }
     }
 
@@ -187,8 +191,12 @@ public static class LocalizationHelper
         {
             return File.Exists(Path.Combine(Folders.AppData, "device-setup"));
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Instance.WarningOnce(
+                "device-setup-exists-check",
+                "Failed to check device-setup completion marker; treating as incomplete.",
+                ex);
             return false;
         }
     }
@@ -404,8 +412,13 @@ public static class LocalizationHelper
         {
             defaultCultureInfo ??= Resource.Culture ?? CultureInfo.CurrentUICulture;
 
+            // Only touch plugin assemblies. Scanning every loaded assembly with GetTypes()
+            // freezes the UI when opening the plugin page (large AppDomain after store load).
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
+                if (!IsLikelyPluginAssembly(assembly))
+                    continue;
+
                 foreach (var resourceType in GetPluginResourceTypes(assembly))
                 {
                     try
@@ -462,6 +475,34 @@ public static class LocalizationHelper
     private static Type[] FilterPluginResourceTypes(IEnumerable<Type> types) =>
         types.Where(IsPluginResourceType)
             .ToArray();
+
+    private static bool IsLikelyPluginAssembly(System.Reflection.Assembly assembly)
+    {
+        try
+        {
+            if (assembly.IsDynamic)
+                return false;
+
+            var name = assembly.GetName().Name ?? string.Empty;
+            if (name.Contains("Plugin", StringComparison.OrdinalIgnoreCase) ||
+                name.Contains("LenovoLegionToolkit.Plugins", StringComparison.OrdinalIgnoreCase) ||
+                name.Contains("UniversalDeviceToolkit.Plugins", StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            // Loaded from the plugins folder (file-based load contexts).
+            var location = assembly.Location;
+            if (string.IsNullOrWhiteSpace(location))
+                return false;
+
+            var pluginsDir = LenovoLegionToolkit.Lib.Plugins.PluginPaths.GetPluginsDirectory();
+            return !string.IsNullOrWhiteSpace(pluginsDir) &&
+                   location.StartsWith(pluginsDir, StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     /// <summary>
     /// Recognizes generated satellite resource types in plugin assemblies.
