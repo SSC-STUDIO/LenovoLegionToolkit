@@ -36,11 +36,29 @@
   </PropertyGroup>
 
   <!--
-    Align processor architecture for the Windows app graph in Directory.Build.targets
-    (after each .csproj is evaluated). Do NOT stamp RuntimeIdentifier/Platform here:
-    props run before project-level DisableUdtForceX64=true on portable CrossPlatform
-    projects, and an early win-x64 RID breaks Linux/macOS CI (exec format / missing x64 host).
+    Portable CrossPlatform projects must opt out before the Windows x64/win-x64 stamp.
+    Project-level DisableUdtForceX64=true is too late (props evaluate first), so detect by name.
   -->
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('CrossPlatform'))">
+    <DisableUdtForceX64>true</DisableUdtForceX64>
+  </PropertyGroup>
+
+  <!--
+    Align processor architecture across the Windows app graph.
+    Shipping projects are win-x64 (AMD64). MSIL/AnyCPU consumers referencing them trigger MSB3270.
+
+    IMPORTANT: TargetFramework is often still empty when Directory.Build.props is evaluated
+    (set later in the .csproj). Gate on UDTTargetFramework so this applies early for Windows
+    projects. Portable CrossPlatform projects set DisableUdtForceX64 above and skip this.
+    Directory.Build.targets re-asserts after the project file when TargetFramework is known.
+  -->
+  <PropertyGroup Condition="'$(DisableUdtForceX64)' != 'true' and $(UDTTargetFramework.Contains('windows'))">
+    <Platforms>x64</Platforms>
+    <Platform Condition="'$(Platform)' == '' or '$(Platform)' == 'AnyCPU' or '$(Platform)' == 'Any CPU'">x64</Platform>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
+  </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(EnableUdtTestHooks)' == 'true'">
     <ProjectReference>
