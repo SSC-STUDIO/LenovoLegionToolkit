@@ -172,19 +172,20 @@ public class ViveToolFeatureService : IDisposable
                 return null;
             }
 
-            // Parse output to determine status
+            // Parse output to determine status — use word-boundary regex to avoid
+            // false-positives on substrings like "not enabled" matching "enabled".
             var output = result.Output?.ToLowerInvariant() ?? string.Empty;
-            if (output.Contains("enabled") || output.Contains("state: 1"))
+            if (Regex.IsMatch(output, @"(?<!not\s)\benabled\b") || output.Contains("state: 1"))
             {
                 return FeatureFlagStatus.Enabled;
             }
 
-            if (output.Contains("disabled") || output.Contains("state: 0"))
+            if (Regex.IsMatch(output, @"(?<!not\s)\bdisabled\b") || output.Contains("state: 0"))
             {
                 return FeatureFlagStatus.Disabled;
             }
 
-            if (output.Contains("default") || output.Contains("state: 2"))
+            if (Regex.IsMatch(output, @"(?<!not\s)\bdefault\b") || output.Contains("state: 2"))
             {
                 return FeatureFlagStatus.Default;
             }
@@ -627,17 +628,17 @@ public class ViveToolFeatureService : IDisposable
 
     private FeatureFlagStatus ParseStatusFromLine(string line)
     {
-        if (line.Contains("Enabled", StringComparison.OrdinalIgnoreCase))
+        if (Regex.IsMatch(line, @"(?<!\bnot\s)\benabled\b", RegexOptions.IgnoreCase))
         {
             return FeatureFlagStatus.Enabled;
         }
 
-        if (line.Contains("Disabled", StringComparison.OrdinalIgnoreCase))
+        if (Regex.IsMatch(line, @"(?<!\bnot\s)\bdisabled\b", RegexOptions.IgnoreCase))
         {
             return FeatureFlagStatus.Disabled;
         }
 
-        if (line.Contains("Default", StringComparison.OrdinalIgnoreCase))
+        if (Regex.IsMatch(line, @"(?<!\bnot\s)\bdefault\b", RegexOptions.IgnoreCase))
         {
             return FeatureFlagStatus.Default;
         }

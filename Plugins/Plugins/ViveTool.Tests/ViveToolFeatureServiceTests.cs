@@ -306,6 +306,10 @@ public class ViveToolFeatureServiceTests
     [InlineData("Feature state is Disabled", FeatureFlagStatus.Disabled)]
     [InlineData("Feature state is Default", FeatureFlagStatus.Default)]
     [InlineData("Feature state is Unknown", FeatureFlagStatus.Unknown)]
+    // Regression: "not enabled" must NOT match as Enabled (word-boundary regex)
+    [InlineData("Feature state is not Enabled", FeatureFlagStatus.Unknown)]
+    [InlineData("Feature state is not Disabled", FeatureFlagStatus.Unknown)]
+    [InlineData("Feature state is not Default", FeatureFlagStatus.Unknown)]
     public void ParseStatusFromLine_RecognizesSupportedStates(string line, FeatureFlagStatus expectedStatus)
     {
         Assert.Equal(expectedStatus, InvokeParseStatusFromLine(line));
