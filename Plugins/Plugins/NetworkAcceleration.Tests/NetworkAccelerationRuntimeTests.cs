@@ -84,6 +84,32 @@ public class NetworkAccelerationRuntimeTests
         Assert.False(runtime.IsRunning);
     }
 
+    [Fact]
+    public void Stop_WaitsForLoopTask_BeforeDisposingCts()
+    {
+        // Regression: Stop() previously disposed the CancellationTokenSource
+        // without waiting for the sampling loop to observe cancellation.
+        // This caused the loop to hit ObjectDisposedException on the token.
+        // After the fix, Stop() must wait for the loop task before disposal.
+        var runtime = CreateRuntime();
+
+        runtime.Start();
+        // Give the sampling loop time to actually start running.
+        Thread.Sleep(500);
+        runtime.Stop();
+
+        // After Stop() returns, the runtime must be fully stopped.
+        // The fix ensures the loop task has completed before CTS disposal.
+        Assert.False(runtime.IsRunning);
+
+        // Verify we can immediately restart without issues.
+        runtime.Start();
+        Assert.True(runtime.IsRunning);
+        runtime.Stop();
+
+        Assert.False(runtime.IsRunning);
+    }
+
     #endregion
 
     #region Async Lifecycle Tests

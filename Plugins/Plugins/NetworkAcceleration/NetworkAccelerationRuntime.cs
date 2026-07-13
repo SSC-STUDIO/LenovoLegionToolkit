@@ -37,7 +37,9 @@ public sealed class NetworkAccelerationRuntime
     private static readonly TimeSpan SampleInterval = TimeSpan.FromSeconds(1);
 
     private readonly object _gate = new();
-    private readonly List<NetworkAccelerationSample> _samples = new(DefaultHistorySize);
+    private readonly NetworkAccelerationSample?[] _samples = new NetworkAccelerationSample?[DefaultHistorySize];
+    private int _sampleStart;
+    private int _sampleCount;
     private CancellationTokenSource? _cts;
     private Task? _loopTask;
 
@@ -52,7 +54,18 @@ public sealed class NetworkAccelerationRuntime
     {
         lock (_gate)
         {
-            return _samples.ToList();
+            if (_sampleCount == 0)
+            {
+                return Array.Empty<NetworkAccelerationSample>();
+            }
+
+            var result = new NetworkAccelerationSample[_sampleCount];
+            for (var i = 0; i < _sampleCount; i++)
+            {
+                result[i] = _samples[(_sampleStart + i) % _samples.Length]!;
+            }
+
+            return result;
         }
     }
 
@@ -70,15 +83,17 @@ public sealed class NetworkAccelerationRuntime
         }
     }
 
+    /// <summary>
+    /// Stops the runtime. Cancels the loop synchronously and cleans up resources.
+    /// Does not block on the loop task to avoid deadlock (use <see cref="StopAsync"/> for graceful await).
+    /// </summary>
     public void Stop()
     {
         CancellationTokenSource? capturedCts;
-        Task? capturedTask;
 
         lock (_gate)
         {
             capturedCts = _cts;
-            capturedTask = _loopTask;
             _cts = null;
             _loopTask = null;
         }
@@ -91,22 +106,6 @@ public sealed class NetworkAccelerationRuntime
         try
         {
             capturedCts.Cancel();
-
-            if (capturedTask != null)
-            {
-                try
-                {
-                    capturedTask.Wait(TimeSpan.FromSeconds(2));
-                }
-                catch (TimeoutException)
-                {
-                    PluginLog.Trace("NetworkAcceleration: Sampling loop did not complete within 2 seconds during shutdown.");
-                }
-                catch (AggregateException)
-                {
-                    // Expected when the task is cancelled.
-                }
-            }
         }
         catch (OperationCanceledException)
         {
@@ -229,12 +228,19 @@ public sealed class NetworkAccelerationRuntime
 
             lock (_gate)
             {
-                if (_samples.Count >= DefaultHistorySize)
-                {
-                    _samples.RemoveAt(0);
-                }
+                // O(1) ring buffer write: overwrite the oldest sample when full
+                // instead of List<T>.RemoveAt(0) which shifts the entire array (O(n)).
+                _samples[(_sampleStart + _sampleCount) % _samples.Length] = sample;
 
-                _samples.Add(sample);
+                if (_sampleCount < _samples.Length)
+                {
+                    _sampleCount++;
+                }
+                else
+                {
+                    // Buffer is full — advance the start index to overwrite the oldest entry.
+                    _sampleStart = (_sampleStart + 1) % _samples.Length;
+                }
             }
 
             RaiseSampled(sample);
