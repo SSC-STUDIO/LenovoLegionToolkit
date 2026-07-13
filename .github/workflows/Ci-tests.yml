@@ -166,11 +166,16 @@ jobs:
             $expectedVersion = "$majorVersion.$minorVersion.$patchVersion"
           }
 
-          $cliExePath = Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.exe'
-          $cliDllPath = Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.dll'
-          if (-not (Test-Path $cliExePath)) {
-            throw "CLI executable not found at $cliExePath"
+          # Solution builds map Release|Any CPU -> Release|x64, so outputs live under bin\x64\...
+          $cliCandidates = @(
+            (Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\x64\Release\net10.0-windows10.0.26100.0\win-x64\llt.exe'),
+            (Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\llt.exe')
+          )
+          $cliExePath = $cliCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $cliExePath) {
+            throw "CLI executable not found. Tried:`n$($cliCandidates -join "`n")"
           }
+          $cliDllPath = [System.IO.Path]::ChangeExtension($cliExePath, '.dll')
           if (-not (Test-Path $cliDllPath)) {
             throw "CLI assembly not found at $cliDllPath"
           }
