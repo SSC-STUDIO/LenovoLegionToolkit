@@ -111,9 +111,14 @@ public class CompatibilityTests
     {
         var machineInformation = CreateMachineInformation("IdeaPad Pro 5 16AKP10");
 
+        // IdeaPad consumer lines match a basic pack (plugins/optimization only).
+        // IsSupportedLegionMachine tracks full Lenovo hardware control support, so basic packs return false.
         var result = Compatibility.IsSupportedLegionMachine(machineInformation);
+        var availability = Compatibility.GetDeviceFeatureAvailability(machineInformation);
 
-        result.Should().BeTrue();
+        result.Should().BeFalse();
+        availability.IsBasicMode.Should().BeTrue();
+        availability.DevicePackId.Should().Be("lenovo-ideapad");
     }
 
     [Theory]
@@ -244,7 +249,6 @@ public class CompatibilityTests
 
     [Theory]
     [InlineData("Legion Pro 7 NX10")]
-    [InlineData("ThinkBook 16P G7 IRX")]
     [InlineData("Legion 5 14AKP10")]
     [InlineData("Legion Slim 5 14AHP10")]
     public void IsSupportedLegionMachine_WithAdditionalUpstreamModelPrefixes_ShouldReturnTrue(string model)
@@ -254,6 +258,20 @@ public class CompatibilityTests
         var result = Compatibility.IsSupportedLegionMachine(machineInformation);
 
         result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void GetDeviceFeatureAvailability_WithThinkBook_ShouldUseBasicPack()
+    {
+        var machineInformation = CreateMachineInformation("ThinkBook 16P G7 IRX");
+
+        // ThinkBook is catalogued as basic (no Legion hardware controls).
+        var result = Compatibility.IsSupportedLegionMachine(machineInformation);
+        var availability = Compatibility.GetDeviceFeatureAvailability(machineInformation);
+
+        result.Should().BeFalse();
+        availability.IsBasicMode.Should().BeTrue();
+        availability.DevicePackId.Should().Be("lenovo-thinkbook");
     }
 
     [Fact]

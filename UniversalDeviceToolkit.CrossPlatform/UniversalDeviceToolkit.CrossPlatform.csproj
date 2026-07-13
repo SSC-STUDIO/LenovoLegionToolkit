@@ -8,11 +8,13 @@
     <Copyright>$(ProjectCopyright)</Copyright>
     <AssemblyName>udt</AssemblyName>
     <!--
-      Align solution configs (Debug|x64 / Release|x64) without forcing win-x64 RID.
-      DisableUdtForceX64 keeps this portable net10.0 (macOS/Linux-capable).
+      Portable net10.0 CLI: do not force win-x64 RID or PlatformTarget=x64.
+      DisableUdtForceX64 clears the early win-x64 stamp from Directory.Build.props so
+      Linux/macOS (including Apple Silicon arm64) can build and run on the host.
     -->
     <DisableUdtForceX64>true</DisableUdtForceX64>
-    <Platforms>x64</Platforms>
-    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 </Project>

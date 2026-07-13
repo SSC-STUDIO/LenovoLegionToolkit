@@ -1,7 +1,8 @@
 <Project>
   <!--
-    Re-assert x64 after the project file is evaluated (TargetFramework is available here).
-    Fixes MSB3270 when VS builds with Platform=AnyCPU but references win-x64 (AMD64) assemblies.
+    Windows shipping graph: force x64 + win-x64 after the .csproj is evaluated
+    (TargetFramework and DisableUdtForceX64 are known here).
+    Fixes MSB3270 when VS builds with Platform=AnyCPU but references win-x64 assemblies.
   -->
   <PropertyGroup Condition="'$(DisableUdtForceX64)' != 'true' and '$(TargetFramework)' != '' and $([System.String]::Copy('$(TargetFramework)').Contains('windows'))">
     <Platforms>x64</Platforms>
@@ -9,6 +10,21 @@
     <PlatformTarget>x64</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <!--
+    Portable CrossPlatform CLI/tests: keep host-native output (no win-x64 RID folder).
+    Critical for ubuntu/macOS CI smoke (`dotnet run`) and Apple Silicon test hosts.
+  -->
+  <PropertyGroup Condition="'$(DisableUdtForceX64)' == 'true'">
+    <RuntimeIdentifier></RuntimeIdentifier>
+    <RuntimeIdentifiers></RuntimeIdentifiers>
+    <SelfContained>false</SelfContained>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <Platforms Condition="'$(Platforms)' == '' or '$(Platforms)' == 'x64'">AnyCPU;x64</Platforms>
+    <Platform Condition="'$(Platform)' == '' or '$(Platform)' == 'x64'">AnyCPU</Platform>
+    <PlatformTarget Condition="'$(PlatformTarget)' == '' or '$(PlatformTarget)' == 'x64'">AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsUdtShippingApp)' == 'true' and '$(Configuration)' == 'Release'">
