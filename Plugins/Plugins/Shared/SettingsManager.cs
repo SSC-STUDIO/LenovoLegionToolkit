@@ -481,11 +481,18 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         {
             _saveDebounceTimer.Change(Timeout.Infinite, Timeout.Infinite);
             _saveDebounceTimer.Dispose();
-            // Flush pending save
-            if (_pendingSettings != null)
+
+            T? pending;
+            lock (_lock)
             {
-                Save(_pendingSettings);
+                pending = _pendingSettings;
                 _pendingSettings = null;
+            }
+
+            // Flush pending save (outside _lock to avoid lock-order inversion with Save)
+            if (pending != null)
+            {
+                Save(pending);
             }
         }
 
@@ -501,7 +508,7 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         T? settingsToSave;
         lock (_lock)
         {
-            if (_pendingSettings == null)
+            if (_disposed || _pendingSettings == null)
             {
                 return;
             }

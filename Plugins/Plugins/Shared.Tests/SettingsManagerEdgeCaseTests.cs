@@ -517,4 +517,34 @@ public class SettingsManagerEdgeCaseTests : IDisposable
         // Both saves must succeed.
         Assert.True(await saveAsyncTask, "SaveAsync should have succeeded.");
     }
+
+    [Fact]
+    public void Dispose_ConcurrentWithDebounceTimer_DoesNotThrowObjectDisposed()
+    {
+        // Regression test: Dispose() disposes _semaphore while the debounce timer
+        // callback may be executing Save() which calls _semaphore.Wait().
+        // Before the fix, the timer callback did not check _disposed, causing
+        // ObjectDisposedException from _semaphore.Wait() inside Save().
+        var manager = new SettingsManager<TestSettings>(
+            "dispose-race", null, _testDir,
+            enableDebounce: true, debounceDelayMs: 1);
+
+        var settings = new TestSettings { Name = "race", Value = 1, Enabled = true };
+
+        // Queue many debounced saves so the timer keeps firing.
+        for (int i = 0; i < 50; i++)
+        {
+            manager.SaveWithDebounce(new TestSettings { Name = "race", Value = i, Enabled = true });
+        }
+
+        // Dispose while timer callbacks may be in flight.
+        // If _disposed is not checked in the timer callback, _semaphore.Wait()
+        // inside Save() throws ObjectDisposedException.
+        var ex = Record.Exception(() => manager.Dispose());
+        Assert.Null(ex);
+
+        // Dispose again to verify idempotency.
+        ex = Record.Exception(() => manager.Dispose());
+        Assert.Null(ex);
+    }
 }
