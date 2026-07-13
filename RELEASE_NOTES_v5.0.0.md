@@ -6,12 +6,15 @@
 
 | Asset | Description |
 |-------|-------------|
-| `UniversalDeviceToolkitSetup-Full.exe` | Full installer (recommended) — bundled languages & device support |
-| `UniversalDeviceToolkitSetup-Online.exe` | Online installer — smaller base; extra resources from in-app catalog |
-| Portable ZIPs under `release-assets/` | Full / Online portable win-x64 packages when produced by Make.bat |
-| Cross-platform CLI (5.x) | Built when `Make.bat` enables cross-platform CLI for major ≥ 5 |
+| `UniversalDeviceToolkit_v5.0.0_Full_Setup.exe` | Full installer (recommended) — bundled languages & device support |
+| `LenovoLegionToolkit_v5.0.0_Setup.exe` | Legacy installer filename alias for existing updaters |
+| `UniversalDeviceToolkit_v5.0.0_Full_win-x64.zip` | Full portable win-x64 package |
+| `UniversalDeviceToolkit_v5.0.0_CLI_cross-platform.zip` | Cross-platform diagnostics CLI (5.x) |
+| `UniversalDeviceToolkit_v5.0.0_SHA256.txt` | SHA256 checksums |
 
-Verify SHA256 against the manifest generated next to the release assets.
+This stable release ships **Full packages only** (no Online installer or Online zip).
+
+Verify SHA256 against the manifest attached to the release.
 
 ---
 
@@ -57,17 +60,14 @@ REM From repo root, with Inno Setup 6 on PATH (or use full path to ISCC.exe)
 Make.bat 5.0.0
 ```
 
-Outputs:
-- `Build\` / `Build-English\` — published payloads  
-- `BuildInstaller\UniversalDeviceToolkitSetup-Full.exe`  
-- `BuildInstaller\UniversalDeviceToolkitSetup-Online.exe`  
-- `release-assets\` — packaged assets + hashes  
+Ship **Full** installer/portable assets for this release (Online optional for internal builds only).
 
 ---
 
 ## Testing (pre-release checklist)
 
-- [x] Release publish WPF + CLI + NetworkProxy (4.2.1 train → 5.0.0)
+- [x] Release publish WPF + CLI + NetworkProxy at 5.0.0
+- [x] Full installer + Full portable zip + SHA256
 - [x] Unit tests (dashboard / plugin loading / skeleton / fan coordinator)
 - [ ] Full installer install on clean machine
 - [ ] Cold start → Dashboard sensors skeleton → live gauges
