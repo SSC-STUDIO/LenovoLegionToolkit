@@ -702,7 +702,7 @@ WARNING: This action will not run correctly if the internal display is off.</val
     <value>Show or hide the System Optimization navigation item</value>
   </data>
 <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
-    <value>Show or hide the Plugin Extensions navigation item</value>
+    <value>Show or hide the Plugin Extensions navigation item (off by default)</value>
   </data>
 
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
@@ -2791,6 +2791,9 @@ Supported formats are: {1}.</value>
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
     <value>Lenovo Vantage and/or ImController is running in the background.</value>
+  </data>
+  <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
+    <value>Plugin Extensions is off by default. Enable it under Settings → Navigation items.</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
     <value>Show notification on all screens connected to your device.</value>

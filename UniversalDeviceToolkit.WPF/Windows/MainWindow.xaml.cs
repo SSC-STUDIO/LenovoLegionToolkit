@@ -47,9 +47,7 @@ namespace UniversalDeviceToolkit.WPF.Windows
 public partial class MainWindow
 {
     private const int WmNchittest = 0x0084;
-    private const int WmNclbuttonUp = 0x00A2;
     private const int HtClient = 1;
-    private const int HtMaxButton = 9;
     private const int MaxVisibleStatusNotifications = 4;
 
     private readonly ApplicationSettings _applicationSettings;
@@ -64,6 +62,8 @@ public partial class MainWindow
     private readonly Dictionary<string, NavigationItem> _pluginNavigationItems = new();
     private readonly Snackbar _snackbar;
     private double _navigationSplitterWidth;
+    private bool _pluginExtensionsNoticeDismissed;
+    private bool _pluginExtensionsSettingsPersisted;
 
     public bool TrayTooltipEnabled { get; set; } = true;
     public bool SuppressClosingEventHandler { get; set; }
@@ -215,7 +215,11 @@ public partial class MainWindow
         if (!e.WidthChanged || !IsLoaded)
             return;
 
-        // Keep expanded rail max within the new window budget (scales with size).
+        // Skip per-pixel rail updates during live drag (feels stiff / thrashy vs Explorer).
+        // Apply once the user releases the edge, or on maximize/restore via StateChanged.
+        if (WindowResizeStabilityHelper.IsLiveResizing(this))
+            return;
+
         _navigationStore.RefreshWidthForHostWindow();
     }
     private void RootFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
@@ -454,10 +458,15 @@ public partial class MainWindow
             case WindowState.Normal:
                 SetEfficiencyMode(false);
                 BringToForeground();
+                // Settle rail width after restore (skipped during live resize).
+                if (IsLoaded)
+                    _navigationStore.RefreshWidthForHostWindow();
                 break;
             case WindowState.Maximized:
                 // Work-area maximize (MyDockFinder / taskbar friendly) — stay interactive.
                 SetEfficiencyMode(false);
+                if (IsLoaded)
+                    _navigationStore.RefreshWidthForHostWindow();
                 break;
         }
     }
@@ -468,24 +477,6 @@ public partial class MainWindow
             return;
 
         _ = CheckForUpdates();
-    }
-
-    private void MainTitleBar_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-        if (sender is not TitleBar titleBar || e.ChangedButton != MouseButton.Left)
-            return;
-
-        var point = e.GetPosition(titleBar);
-        var maximizeButtonLeft = titleBar.ActualWidth - 96;
-        var maximizeButtonRight = titleBar.ActualWidth - 48;
-
-        if (point.X < maximizeButtonLeft || point.X >= maximizeButtonRight)
-            return;
-
-        WindowState = WindowState == WindowState.Maximized
-            ? WindowState.Normal
-            : WindowState.Maximized;
-        e.Handled = true;
     }
 
     private void OpenLogIndicator_Click(object sender, RoutedEventArgs e)
@@ -614,6 +605,12 @@ public partial class MainWindow
     {
         foreach (var banner in _statusNotificationStack.Children.OfType<AppStatusBanner>())
             banner.IsVisibleChanged += (_, _) => EnforceStatusNotificationLimit();
+
+        if (_pluginExtensionsIndicator is not null)
+        {
+            // Closed only fires from the close button (AppStatusBanner.Hide), not from initial Collapsed.
+            _pluginExtensionsIndicator.Closed += (_, _) => _pluginExtensionsNoticeDismissed = true;
+        }
     }
 
     private void EnforceStatusNotificationLimit()
@@ -759,14 +756,9 @@ public partial class MainWindow
 
     private IntPtr MainWindowHwndSourceHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
-        if (msg == WmNclbuttonUp && wParam.ToInt32() == HtMaxButton)
-        {
-            WindowState = WindowState == WindowState.Maximized
-                ? WindowState.Normal
-                : WindowState.Maximized;
-            handled = true;
-            return IntPtr.Zero;
-        }
+        // Do not intercept HTMAXBUTTON / force WindowState here.
+        // Manually setting WindowState on NCLBUTTONUP skips DWM maximize/restore animation
+        // and feels abrupt compared with Explorer. Let FluentWindow / DWM own maximize.
 
         if (msg != WmNchittest)
             return IntPtr.Zero;
@@ -826,6 +818,21 @@ public partial class MainWindow
         // UpdatePluginExtensionsNavigationVisibility must be called AFTER UpdateNavigationItemsVisibilityFromSettings
         // to ensure it has the latest visibility settings
         UpdatePluginExtensionsNavigationVisibility();
+
+        // Persist one-time pluginExtensions opt-in migration (default off + notice).
+        if (!_pluginExtensionsSettingsPersisted)
+        {
+            _pluginExtensionsSettingsPersisted = true;
+            try
+            {
+                _applicationSettings.SynchronizeStore();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to persist plugin-extensions navigation default.", ex);
+            }
+        }
     }
 
     private void UpdateNavigationItemsVisibilityFromSettings()
@@ -862,15 +869,13 @@ public partial class MainWindow
         if (visibilitySettings.TryGetValue(pageTag, out var visibility))
             return visibility;
 
-        // Visible by default
-        return true;
+        // Plugin Extensions is opt-in (default off); everything else defaults on.
+        return pageTag != "pluginExtensions";
     }
 
     private void UpdatePluginExtensionsNavigationVisibility()
     {
-        // Control plugin extensions navigation item visibility based on navigation items visibility settings
-        // Plugin extensions should be visible by default, just like other navigation items
-        // Only controlled by navigation items visibility settings, not by ExtensionsEnabled
+        // Controlled by navigation items visibility settings; default is hidden (opt-in).
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
         var shouldShow = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
         
@@ -879,6 +884,27 @@ public partial class MainWindow
             _pluginExtensionsItem.Visibility = shouldShow 
                 ? Visibility.Visible 
                 : Visibility.Collapsed;
+        }
+
+        // Persistent notice while the nav entry is off. Dismissible for the session; shown again next launch if still off.
+        if (_pluginExtensionsIndicator != null)
+        {
+            if (shouldShow)
+            {
+                // Enabling the nav entry clears any session dismiss so the notice can return if turned off again.
+                _pluginExtensionsNoticeDismissed = false;
+                _pluginExtensionsIndicator.Visibility = Visibility.Collapsed;
+            }
+            else if (_pluginExtensionsNoticeDismissed)
+            {
+                _pluginExtensionsIndicator.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                _pluginExtensionsIndicator.Visibility = Visibility.Visible;
+            }
+
+            EnforceStatusNotificationLimit();
         }
     }
 

@@ -14,7 +14,7 @@
     Width="1300"
     Height="850"
     MinWidth="1200"
-    MinHeight="650"
+    MinHeight="720"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     UseLayoutRounding="True"
     SnapsToDevicePixels="True">
@@ -221,6 +221,7 @@
                         Icon="Apps24"
                         PageTag="pluginExtensions"
                         PageType="{x:Type pages:PluginExtensionsPage}"
+                        Visibility="Collapsed"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}" />
 
                     <custom:NavigationItem
@@ -320,6 +321,13 @@
                 IsPersistent="True"
                 Message="{x:Static resources:Resource.MainWindows_FnKeysRunning}"
                 Severity="Warning" />
+
+            <shell:AppStatusBanner
+                x:Name="_pluginExtensionsIndicator"
+                IsPersistent="True"
+                Message="{x:Static resources:Resource.MainWindow_PluginExtensionsDisabledNotice}"
+                Severity="Warning"
+                ToolTip="{x:Static resources:Resource.MainWindow_PluginExtensionsDisabledNotice}" />
 
             <shell:AppStatusBanner
                 x:Name="_updateIndicator"

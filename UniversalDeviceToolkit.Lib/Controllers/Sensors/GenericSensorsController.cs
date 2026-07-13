@@ -50,15 +50,10 @@ public class GenericSensorsController(GPUController gpuController, IDelayProvide
         ReadLenovoGpuFanSpeedAsync();
 
     protected virtual Task<int> ReadLenovoCpuFanSpeedAsync() =>
-        ReadFanSpeedMultiSourceAsync(
-            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(1, 0),
-            () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed));
+        ReadFanSpeedAsync("CPU", CapabilityFanSource(CapabilityID.CpuCurrentFanSpeed), GamezoneCpuFanSource());
 
     protected virtual Task<int> ReadLenovoGpuFanSpeedAsync() =>
-        ReadFanSpeedMultiSourceAsync(
-            () => WMI.LenovoFanMethod.FanGetCurrentFanSpeedPreferAsync(2, 1),
-            () => WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed));
-
+        ReadFanSpeedAsync("GPU", CapabilityFanSource(CapabilityID.GpuCurrentFanSpeed), GamezoneGpuFanSource());
     protected override Task<int> GetCpuMaxFanSpeedAsync() =>
         Task.FromResult(-1);
 

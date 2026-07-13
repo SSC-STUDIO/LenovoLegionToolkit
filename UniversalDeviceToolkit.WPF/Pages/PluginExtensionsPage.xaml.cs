@@ -20,6 +20,7 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Controls.Loading;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Windows;
@@ -31,7 +32,8 @@ using PluginManifest = LenovoLegionToolkit.Lib.Plugins.PluginManifest;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
-public partial class PluginExtensionsPage
+[LoadingChromeOwner(LoadingChromeOwnership.Page, delayMilliseconds: 0, minimumVisibleMilliseconds: 520)]
+public partial class PluginExtensionsPage : ILoadingChromeOwner
 {
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
@@ -56,10 +58,10 @@ private string _currentSearchText = string.Empty;
     private bool _isPluginInstallCoordinatorSubscribed;
 
     /// <summary>
-    /// Brief skeleton hold so the first frame is never a blank list, without blocking
-    /// navigation for a multi-second artificial wait (was 1500ms and felt frozen).
+    /// Minimum skeleton hold so 流光 is actually perceived (including re-entry), without
+    /// a multi-second artificial freeze (was 1500ms). Long enough to outlast nav handoff.
     /// </summary>
-    private static readonly TimeSpan MinSkeletonVisible = TimeSpan.FromMilliseconds(400);
+    private static readonly TimeSpan MinSkeletonVisible = TimeSpan.FromMilliseconds(520);
     private static readonly TimeSpan OnlineFetchTimeout = TimeSpan.FromSeconds(15);
     private CancellationTokenSource? _pageLoadCts;
     private int _pageLoadVersion;
@@ -78,6 +80,8 @@ private string _currentSearchText = string.Empty;
     private int _loadingStateVersion;
     private bool _lifecycleSubscriptionsAttached;
     private readonly DebounceDispatcher _searchDebouncer = new();
+
+    public LoadingChromeOwnership LoadingChromeOwnership => LoadingChromeOwnership.Page;
 
     public PluginExtensionsPage()
     {
@@ -166,7 +170,8 @@ private string _currentSearchText = string.Empty;
         try
         {
             // Manual refresh: keep current list visible (no full-page skeleton flash).
-            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton: false);
+            // Full skeleton on manual refresh so 流光 is not first-open-only.
+            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton: true);
         }
         catch (Exception ex)
         {
@@ -210,16 +215,17 @@ private string _currentSearchText = string.Empty;
     /// <summary>
     /// First-step chrome: skeleton fully opaque and list collapsed. Never fade-from-0
     /// (that left a blank white region until the fade finished, or forever if interrupted).
+    /// Always restarts the hold clock so re-entry cannot skip 流光 because of a stale timestamp.
     /// </summary>
     private void ShowSkeletonImmediate()
     {
         _loadingStateVersion++;
-        if (_skeletonShownAtUtc == DateTime.MinValue
-            || _loadingIndicator?.Visibility != Visibility.Visible
-            || (_loadingIndicator?.Opacity ?? 0) < 0.95)
-        {
-            _skeletonShownAtUtc = DateTime.UtcNow;
-        }
+        // Always restart the min-hold clock on every show (including hot re-entry).
+        _skeletonShownAtUtc = DateTime.UtcNow;
+
+        // Nav crossfade may have left this Page at Opacity 0 after a prior leave — force visible.
+        BeginAnimation(UIElement.OpacityProperty, null);
+        Opacity = 1;
 
         if (_noPluginsMessage != null)
             _noPluginsMessage.Visibility = Visibility.Collapsed;
@@ -242,15 +248,12 @@ private string _currentSearchText = string.Empty;
             skeleton.Opacity = 1;
             skeleton.IsHitTestVisible = true;
             Panel.SetZIndex(skeleton, 2);
+            // Ensure IsVisible/layout are ready before RestartSubtree walks shimmer borders.
+            skeleton.UpdateLayout();
         }
 
-        // Re-arm 流光 after Unloaded stopped brushes, or after first layout when IsLoaded flips.
-        if (IsLoaded)
-            SkeletonShimmer.RestartSubtree(_loadingIndicator);
-        else
-            Dispatcher.BeginInvoke(
-                () => SkeletonShimmer.RestartSubtree(_loadingIndicator),
-                System.Windows.Threading.DispatcherPriority.Loaded);
+        // Coalesced restart — avoids repeated Stop/Start that freezes the sweep mid-cycle.
+        SkeletonShimmer.RestartSubtree(_loadingIndicator);
     }
 
     private async Task HideLoadingStateAfterAsync(TimeSpan delay, int version)
@@ -276,6 +279,30 @@ private string _currentSearchText = string.Empty;
         CrossfadeToContent();
     }
 
+    private void ShowCachedContentImmediate()
+    {
+        _loadingStateVersion++;
+        _skeletonShownAtUtc = DateTime.MinValue;
+
+        if (_loadingIndicator is FrameworkElement skeleton)
+        {
+            SkeletonShimmer.StopSubtree(skeleton);
+            skeleton.BeginAnimation(UIElement.OpacityProperty, null);
+            skeleton.Visibility = Visibility.Collapsed;
+            skeleton.Opacity = 1;
+            skeleton.IsHitTestVisible = false;
+        }
+
+        if (_pluginListPanel is FrameworkElement listPanel)
+        {
+            listPanel.BeginAnimation(UIElement.OpacityProperty, null);
+            listPanel.Visibility = Visibility.Visible;
+            listPanel.Opacity = 1;
+            listPanel.IsHitTestVisible = true;
+            Panel.SetZIndex(listPanel, 1);
+        }
+    }
+
     /// <summary>
     /// Soft handoff skeleton → real list only. Skeleton show path always snaps in
     /// via <see cref="ShowSkeletonImmediate"/> (never opacity 0).
@@ -287,6 +314,7 @@ private string _currentSearchText = string.Empty;
 
         if (_loadingIndicator is FrameworkElement skeleton && skeleton.Visibility == Visibility.Visible)
         {
+            SkeletonShimmer.StopSubtree(_loadingIndicator);
             skeleton.IsHitTestVisible = false;
             skeleton.BeginAnimation(UIElement.OpacityProperty, null);
             var fadeOut = new DoubleAnimation
@@ -878,31 +906,35 @@ private string _currentSearchText = string.Empty;
     {
         AttachPageLifecycleSubscriptions();
 
-        // Step 1 always: skeleton + 流光, never a blank white list cell.
+        // Always paint skeleton + 流光 first — including hot re-entry / page cache hits.
+        // Skipping to ShowCachedContentImmediate made skeleton feel first-open-only.
         // Do NOT call SetPluginResourceCultures here — scanning all assemblies freezes UI.
         ShowSkeletonImmediate();
         await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Loaded);
         await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.Render);
-        SkeletonShimmer.RestartSubtree(_loadingIndicator);
 
         // Culture apply after first paint, low priority (fire-and-forget).
         _ = Dispatcher.BeginInvoke(
             new Action(() => LocalizationHelper.SetPluginResourceCultures()),
             System.Windows.Threading.DispatcherPriority.Background);
 
-        if (_hasStartedInitialFetch)
-        {
-            // Re-entry: rebuild under skeleton, then reveal (still honors MinSkeletonVisible).
-            await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
-            SyncPluginInstallUi();
-            SetLoadingState(false);
-            return;
-        }
-
-        _hasStartedInitialFetch = true;
-
         try
         {
+            if (_hasStartedInitialFetch)
+            {
+                // Re-entry: rebuild under skeleton, honor MinSkeletonVisible, then soft reveal.
+                await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
+                SyncPluginInstallUi();
+                SetLoadingState(false);
+
+                // Quiet background store refresh (no second skeleton cycle).
+                if (!_isLoadingOnlinePlugins)
+                    _ = FetchOnlinePluginsAsync(forceRefresh: false, showFullSkeleton: false);
+                return;
+            }
+
+            _hasStartedInitialFetch = true;
+
             // Prepare local/installed list under the skeleton (no network yet).
             await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
             SyncPluginInstallUi();
@@ -984,6 +1016,7 @@ private string _currentSearchText = string.Empty;
             // ignore dispose races
         }
 
+        SkeletonShimmer.StopSubtree(_loadingIndicator);
         DetachPageLifecycleSubscriptions();
     }
 

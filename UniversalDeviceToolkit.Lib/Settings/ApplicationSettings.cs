@@ -90,10 +90,17 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
             { "automation", true },
             { "macro", true },
             { "windowsOptimization", true },
-            { "pluginExtensions", true },
+            // Off by default — enable under Settings → Navigation items.
+            { "pluginExtensions", false },
 
             { "about", true }
         };
+
+        /// <summary>
+        /// One-time migration: older builds defaulted pluginExtensions to true and persisted it.
+        /// When false, Normalize forces the opt-in default (hidden) once.
+        /// </summary>
+        public bool PluginExtensionsOptInMigrationDone { get; set; }
     }
 
     public ApplicationSettings() : base("settings.json") { }
@@ -137,6 +144,23 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         store.InstalledExtensions ??= [];
         store.PendingDeletionExtensions ??= [];
         store.NavigationItemsVisibility ??= new ApplicationSettingsStore().NavigationItemsVisibility;
+        // Fill any missing nav keys with defaults (pluginExtensions is false) without
+        // overwriting values the user already persisted (except one-time opt-in migration below).
+        var defaults = new ApplicationSettingsStore().NavigationItemsVisibility;
+        foreach (var pair in defaults)
+        {
+            if (!store.NavigationItemsVisibility.ContainsKey(pair.Key))
+                store.NavigationItemsVisibility[pair.Key] = pair.Value;
+        }
+
+        // Older builds defaulted pluginExtensions=true and wrote it to settings.json, so the
+        // "default off + permanent notice" policy never appeared. Force once to hidden.
+        if (!store.PluginExtensionsOptInMigrationDone)
+        {
+            store.NavigationItemsVisibility["pluginExtensions"] = false;
+            store.PluginExtensionsOptInMigrationDone = true;
+        }
+
         return store;
     }
 

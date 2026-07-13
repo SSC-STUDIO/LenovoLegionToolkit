@@ -30,9 +30,22 @@ public class DashboardPageTests
     }
 
     [Fact]
-    public void GetDashboardFallbackLoadingDelay_ShouldRemainShortAndStable()
+    public void DashboardPage_ShouldUseCancelableLatestWinsLoading()
     {
-        DashboardPage.GetDashboardFallbackLoadingDelay().Should().Be(TimeSpan.FromMilliseconds(120));
+        ReadDashboardPageSource()
+            .Should()
+            .Contain("CancellationTokenSource")
+            .And.Contain("refreshVersion")
+            .And.Contain("_hasLoadedContent");
+    }
+
+    [Fact]
+    public void DashboardPage_ShouldNotUseFixedLoadingDelays()
+    {
+        ReadDashboardPageSource()
+            .Should()
+            .NotContain("GetDashboardFallbackLoadingDelay")
+            .And.NotContain("Task.Delay(");
     }
 
     [Fact]
@@ -52,22 +65,25 @@ public class DashboardPageTests
     }
 
     [Fact]
-    public void DashboardPageMarkup_LoadingSkeleton_ShouldMirrorSensorsSummaryGeometry()
+    public void DashboardPageMarkup_LoadingSkeleton_ShouldIncludeSensorsCardSilhouette()
     {
         var xaml = ReadDashboardPageXaml();
+        var source = ReadDashboardPageSource();
 
-        // Page-level loader must show a 3-column sensors silhouette (CPU / Battery / GPU),
-        // not only list-item cards that look nothing like the live dashboard.
-        xaml.Should().Contain("AutomationProperties.AutomationId=\"DashboardSensorsLoadingSkeleton\"");
+        // Content is Opacity 0 while loading, so SensorsControl overlay cannot paint.
+        // Page skeleton owns a detailed sensor-card silhouette (matches SensorsControl overlay).
         xaml.Should().Contain("x:Name=\"_skeletonSensorsCard\"");
-        xaml.Should().Contain("x:Name=\"_skeletonSensorsGrid\"");
-        xaml.Should().Contain("Columns=\"3\"");
-        xaml.Should().Contain("DashboardSensorsSkeletonGaugeStyle");
-        xaml.Should().Contain("GaugeSizeMD");
-        xaml.Should().Contain("DashboardSensorsSkeletonBarStyle");
-        xaml.Should().Contain("DashboardSensorsSkeletonTrendPanelStyle");
-        // Feature groups remain below sensors.
+        xaml.Should().Contain("AutomationProperties.AutomationId=\"DashboardSensorsLoadingSkeleton\"");
         xaml.Should().Contain("x:Name=\"_skeletonGroupsGrid\"");
+        xaml.Should().Contain("DashboardPage owns loading chrome");
+        // Detail parity with SensorsControl: title+subtitle, GaugeSizeMD, trend well, legend.
+        xaml.Should().Contain("DashboardSensorsSkeletonSubtitleStyle");
+        xaml.Should().Contain("GaugeSizeMD");
+        xaml.Should().Contain("DashboardSensorsSkeletonTrendPanelStyle");
+        xaml.Should().Contain("DashboardSensorsSkeletonLegendPanelStyle");
+        source.Should().Contain("LoadingChromeOwnership.Page");
+        source.Should().Contain("ILoadingChromeOwner");
+        source.Should().Contain("_skeletonSensorsCard.Visibility");
     }
 
     [Theory]
@@ -103,15 +119,15 @@ public class DashboardPageTests
     {
         var source = ReadDashboardPageSource();
 
-        source.Should().Contain("await WaitForDashboardShellAsync(sensorsReadyTask);");
-        source.Should().Contain("await WaitForDashboardSensorDataAsync(sensorsReadyTask);");
-        var shellMethod = ExtractMethod(source, "private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask)");
+        source.Should().Contain("await WaitForDashboardShellAsync(sensorsReadyTask, cancellationToken);");
+        source.Should().Contain("await WaitForDashboardSensorDataAsync(sensorsReadyTask, cancellationToken);");
+        var shellMethod = ExtractMethod(source, "private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask, CancellationToken cancellationToken)");
         shellMethod
             .Should()
-            .Contain("await WaitForDashboardSensorDataAsync(sensorsReadyTask);");
-        ExtractMethod(source, "private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask)")
+            .Contain("await WaitForDashboardSensorDataAsync(sensorsReadyTask, cancellationToken);");
+        ExtractMethod(source, "private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask, CancellationToken cancellationToken)")
             .Should()
-            .Contain("WaitAsync(GetDashboardSensorDataReadyTimeout())")
+            .Contain("WaitAsync(GetDashboardSensorDataReadyTimeout(), cancellationToken)")
             .And.Contain("catch (TimeoutException)");
     }
 

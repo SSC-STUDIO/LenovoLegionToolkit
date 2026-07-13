@@ -20,76 +20,129 @@
         <Style x:Key="DashboardSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}" />
 
         <Style x:Key="DashboardListSkeletonCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonListItemCardStyle}">
-            <Setter Property="Margin" Value="0,0,16,8" />
+            <Setter Property="Margin" Value="0,0,0,8" />
             <Setter Property="MinHeight" Value="72" />
         </Style>
 
-        <!-- Mirror SensorsControl summary geometry (title, round gauge, 3 metric rows, trend, legend). -->
+        <!--
+          Sensors skeleton mirrors SensorsControl overlay layout:
+          title + model subtitle, GaugeSizeMD + 3 metric rows, trend well, 3-item legend.
+        -->
+        <Style x:Key="DashboardSensorsSkeletonCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonCardStyle}">
+            <Setter Property="Margin" Value="0,0,16,16" />
+            <Setter Property="Padding" Value="8,10" />
+            <Setter Property="MinHeight" Value="280" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style x:Key="DashboardSensorsSkeletonSectionStyle" TargetType="StackPanel">
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="MinWidth" Value="0" />
+        </Style>
+
         <Style x:Key="DashboardSensorsSkeletonTitleStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="20" />
+            <Setter Property="MinWidth" Value="56" />
             <Setter Property="Width" Value="72" />
+            <Setter Property="MaxWidth" Value="120" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="Margin" Value="0" />
         </Style>
+
         <Style x:Key="DashboardSensorsSkeletonSubtitleStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="14" />
+            <Setter Property="MinWidth" Value="80" />
             <Setter Property="Width" Value="140" />
-            <Setter Property="Margin" Value="8,1,0,0" />
+            <Setter Property="MaxWidth" Value="220" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="Margin" Value="8,1,0,0" />
         </Style>
+
         <Style x:Key="DashboardSensorsSkeletonGaugeStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
             <Setter Property="Height" Value="{StaticResource GaugeSizeMD}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
             <Setter Property="Margin" Value="0,0,12,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
         </Style>
+
         <Style x:Key="DashboardSensorsSkeletonLabelStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="14" />
             <Setter Property="Width" Value="56" />
+            <Setter Property="MinWidth" Value="48" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
         </Style>
+
         <Style x:Key="DashboardSensorsSkeletonBarStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="6" />
             <Setter Property="Margin" Value="8,0" />
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MaxWidth" Value="260" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusProgressBar}" />
         </Style>
+
         <Style x:Key="DashboardSensorsSkeletonValueStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="14" />
-            <Setter Property="Width" Value="52" />
+            <Setter Property="Width" Value="64" />
+            <Setter Property="MinWidth" Value="56" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="DashboardSensorsSkeletonTrendPanelStyle" TargetType="Border">
+            <Setter Property="Margin" Value="0,14,0,0" />
+            <Setter Property="Height" Value="76" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+            <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="DashboardSensorsSkeletonTrendFillStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
         </Style>
-        <Style x:Key="DashboardSensorsSkeletonTrendPanelStyle" TargetType="Border">
-            <Setter Property="Height" Value="72" />
-            <Setter Property="Margin" Value="0,14,0,0" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
-            <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Padding" Value="2" />
+
+        <Style x:Key="DashboardSensorsSkeletonLegendPanelStyle" TargetType="WrapPanel">
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Orientation" Value="Horizontal" />
         </Style>
+
+        <Style x:Key="DashboardSensorsSkeletonLegendItemStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,14,4" />
+        </Style>
+
         <Style x:Key="DashboardSensorsSkeletonLegendDotStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Width" Value="8" />
             <Setter Property="Height" Value="8" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
         </Style>
+
         <Style x:Key="DashboardSensorsSkeletonLegendTextStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <Setter Property="Height" Value="12" />
             <Setter Property="Width" Value="48" />
-            <Setter Property="Margin" Value="4,0,14,0" />
-            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6,0,0,0" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
-        </Style>
-        <Style x:Key="DashboardSensorsSkeletonSectionStyle" TargetType="StackPanel">
-            <Setter Property="Margin" Value="8,4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
     </Page.Resources>
 
@@ -103,72 +156,75 @@
             ContentVisibilityWhileLoading="Visible">
             <controls:LoadableControl.LoadingContent>
                 <StackPanel
-                    Margin="0,16,16,0"
+                    Margin="0,16,0,0"
                     AutomationProperties.AutomationId="DashboardLoadingSkeleton"
                     AutomationProperties.Name="{x:Static resources:Resource.DashboardPage_Title}">
 
-                    <!-- Sensors summary skeleton: same 3-column silhouette as live SensorsControl. -->
+                    <!--
+                      Single page-owned skeleton: sensors card + feature groups.
+                      NavigationStore skips its generic shell because DashboardPage owns loading chrome.
+                      Content stays Opacity 0 while loading, so SensorsControl overlay cannot paint —
+                      the page skeleton must include the sensor-card silhouette.
+                    -->
                     <Border
                         x:Name="_skeletonSensorsCard"
-                        Margin="0,0,0,16"
-                        Padding="8,10"
-                        Background="{DynamicResource AppSurfaceCardBrush}"
-                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        SnapsToDevicePixels="True">
-                        <UniformGrid
-                            x:Name="_skeletonSensorsGrid"
-                            AutomationProperties.AutomationId="DashboardSensorsLoadingSkeleton"
-                            Columns="3">
-                            <!-- CPU -->
+                        AutomationProperties.AutomationId="DashboardSensorsLoadingSkeleton"
+                        Style="{StaticResource DashboardSensorsSkeletonCardStyle}">
+                        <UniformGrid Columns="3">
+                            <!-- CPU: title+model, gauge+3 metrics, trend, legend -->
                             <StackPanel Style="{StaticResource DashboardSensorsSkeletonSectionStyle}">
                                 <Grid Margin="0,0,0,14">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonTitleStyle}" />
-                                    <Border Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonSubtitleStyle}" />
+                                    <Border Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonTitleStyle}" Width="72" />
+                                    <Border Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonSubtitleStyle}" Width="168" />
                                 </Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonGaugeStyle}" />
+                                    <Border Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonGaugeStyle}" />
                                     <Grid Grid.Column="1" VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" MinWidth="56" />
+                                            <ColumnDefinition Width="Auto" MinWidth="72" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="24" />
                                             <RowDefinition Height="24" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
-                                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="52" />
                                         <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
-                                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="58" />
+                                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="44" />
                                         <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
-                                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="48" />
+                                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="40" />
                                         <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
+                                        <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="36" />
                                     </Grid>
                                 </Grid>
                                 <Border Style="{StaticResource DashboardSensorsSkeletonTrendPanelStyle}">
-                                    <Border Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                    <Border Style="{StaticResource DashboardSensorsSkeletonTrendFillStyle}" />
                                 </Border>
-                                <WrapPanel Margin="0,8,0,0" HorizontalAlignment="Left">
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
+                                <WrapPanel Style="{StaticResource DashboardSensorsSkeletonLegendPanelStyle}">
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="42" />
+                                    </StackPanel>
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="52" />
+                                    </StackPanel>
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="36" />
+                                    </StackPanel>
                                 </WrapPanel>
                             </StackPanel>
 
@@ -179,47 +235,53 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonTitleStyle}" Width="48" />
-                                    <Border Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonSubtitleStyle}" Width="100" />
+                                    <Border Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonTitleStyle}" Width="56" />
+                                    <Border Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonSubtitleStyle}" Width="120" />
                                 </Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonGaugeStyle}" />
+                                    <Border Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonGaugeStyle}" />
                                     <Grid Grid.Column="1" VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" MinWidth="56" />
+                                            <ColumnDefinition Width="Auto" MinWidth="72" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="24" />
                                             <RowDefinition Height="24" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
-                                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="40" />
                                         <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
-                                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="52" />
+                                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="48" />
                                         <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
-                                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="56" />
+                                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="36" />
                                         <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
+                                        <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="60" />
                                     </Grid>
                                 </Grid>
                                 <Border Style="{StaticResource DashboardSensorsSkeletonTrendPanelStyle}">
-                                    <Border Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                    <Border Style="{StaticResource DashboardSensorsSkeletonTrendFillStyle}" />
                                 </Border>
-                                <WrapPanel Margin="0,8,0,0" HorizontalAlignment="Left">
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
+                                <WrapPanel Style="{StaticResource DashboardSensorsSkeletonLegendPanelStyle}">
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="36" />
+                                    </StackPanel>
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="44" />
+                                    </StackPanel>
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="36" />
+                                    </StackPanel>
                                 </WrapPanel>
                             </StackPanel>
 
@@ -230,65 +292,72 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonTitleStyle}" Width="40" />
-                                    <Border Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonSubtitleStyle}" Width="160" />
+                                    <Border Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonTitleStyle}" Width="48" />
+                                    <Border Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonSubtitleStyle}" Width="152" />
                                 </Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonGaugeStyle}" />
+                                    <Border Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonGaugeStyle}" />
                                     <Grid Grid.Column="1" VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" MinWidth="56" />
+                                            <ColumnDefinition Width="Auto" MinWidth="72" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="24" />
                                             <RowDefinition Height="24" />
                                             <RowDefinition Height="24" />
                                         </Grid.RowDefinitions>
-                                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="52" />
                                         <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
-                                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="0" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="58" />
+                                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="44" />
                                         <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
-                                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" />
+                                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="48" />
+                                        <Border Grid.Row="2" Grid.Column="0" Style="{StaticResource DashboardSensorsSkeletonLabelStyle}" Width="40" />
                                         <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource DashboardSensorsSkeletonBarStyle}" />
-                                        <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" />
+                                        <Border Grid.Row="2" Grid.Column="2" Style="{StaticResource DashboardSensorsSkeletonValueStyle}" Width="36" />
                                     </Grid>
                                 </Grid>
                                 <Border Style="{StaticResource DashboardSensorsSkeletonTrendPanelStyle}">
-                                    <Border Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                                    <Border Style="{StaticResource DashboardSensorsSkeletonTrendFillStyle}" />
                                 </Border>
-                                <WrapPanel Margin="0,8,0,0" HorizontalAlignment="Left">
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
-                                    <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" />
+                                <WrapPanel Style="{StaticResource DashboardSensorsSkeletonLegendPanelStyle}">
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="42" />
+                                    </StackPanel>
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="52" />
+                                    </StackPanel>
+                                    <StackPanel Style="{StaticResource DashboardSensorsSkeletonLegendItemStyle}">
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendDotStyle}" />
+                                        <Border Style="{StaticResource DashboardSensorsSkeletonLegendTextStyle}" Width="36" />
+                                    </StackPanel>
                                 </WrapPanel>
                             </StackPanel>
                         </UniformGrid>
                     </Border>
 
-                    <!-- Feature groups under sensors (power mode, etc.) — list silhouette. -->
                     <Grid x:Name="_skeletonGroupsGrid">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
                         <StackPanel x:Name="_skeletonGroup0" Grid.Row="0" Grid.Column="0" Margin="0,0,16,0">
-                            <Border Width="96" Height="20" Margin="0,0,0,12" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
+                            <Border Width="132" Height="29" Margin="0,0,0,24" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
                             <Border Style="{StaticResource DashboardListSkeletonCardStyle}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -350,7 +419,7 @@
                         </StackPanel>
 
                         <StackPanel x:Name="_skeletonGroup1" Grid.Row="0" Grid.Column="1" Margin="0,0,16,0">
-                            <Border Width="80" Height="20" Margin="0,0,0,12" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
+                            <Border Width="112" Height="29" Margin="0,0,0,24" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
                             <Border Style="{StaticResource DashboardListSkeletonCardStyle}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -369,6 +438,35 @@
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Margin="0,1,12,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
                                     <Border Grid.Column="1" Width="172" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel x:Name="_skeletonGroup2" Grid.Row="0" Grid.Column="2" Margin="0,0,16,0">
+                            <Border Width="144" Height="29" Margin="0,0,0,24" HorizontalAlignment="Left" Style="{StaticResource DashboardSkeletonShimmerBlockStyle}" />
+                            <Border Style="{StaticResource DashboardListSkeletonCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="0,0,12,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                    <Border Grid.Row="0" Grid.Column="1" Width="176" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                    <Border Grid.Row="1" Grid.Column="1" Width="216" Margin="0,8,0,0" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource DashboardListSkeletonCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="0,1,12,0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                    <Border Grid.Column="1" Width="188" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
                                 </Grid>
                             </Border>
                         </StackPanel>

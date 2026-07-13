@@ -275,21 +275,70 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void ApplyStatusVisual(StatusVisual visual)
     {
-        var (bgKey, dotKey) = visual switch
+        // Soft-tint chip: low-alpha fill + mid-alpha border + solid accent dot/label.
+        // Always content-hugging (HorizontalAlignment=Left) — never Stretch.
+        var accentKey = visual switch
         {
-            StatusVisual.Running => ("PaletteGreenBrush", "PaletteGreenBrush"),
-            StatusVisual.Caution => ("PaletteOrangeBrush", "PaletteOrangeBrush"),
-            StatusVisual.Danger => ("PaletteRedBrush", "PaletteRedBrush"),
-            StatusVisual.Info => ("PaletteLightBlueBrush", "PaletteLightBlueBrush"),
-            _ => ("ControlFillColorSecondaryBrush", "TextFillColorSecondaryBrush")
+            StatusVisual.Running => "PaletteGreenBrush",
+            StatusVisual.Caution => "PaletteOrangeBrush",
+            StatusVisual.Danger => "PaletteRedBrush",
+            StatusVisual.Info => "PaletteLightBlueBrush",
+            _ => null
         };
 
-        TrySetResourceBrush(_statusDot, Shape.FillProperty, dotKey, "TextFillColorSecondaryBrush");
-        // Soft tint on status text only — keep hero clean.
+        if (accentKey is null || ResolveSolidColor(accentKey) is not { } accent)
+        {
+            ApplyNeutralStatusChrome();
+            return;
+        }
+
+        if (_statusPill is not null)
+        {
+            _statusPill.Background = SoftBrush(accent, alpha: 0x22);
+            _statusPill.BorderBrush = SoftBrush(accent, alpha: 0x55);
+        }
+
+        if (_statusDot is not null)
+            _statusDot.Fill = new SolidColorBrush(accent);
+
+        if (_statusText is not null)
+            _statusText.Foreground = SoftBrush(accent, alpha: 0xEE);
+    }
+
+    private void ApplyNeutralStatusChrome()
+    {
+        if (_statusPill is not null)
+        {
+            _statusPill.SetResourceReference(Border.BackgroundProperty, "ControlFillColorSecondaryBrush");
+            _statusPill.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
+        }
+
+        if (_statusDot is not null)
+            _statusDot.SetResourceReference(Shape.FillProperty, "TextFillColorSecondaryBrush");
+
         if (_statusText is not null)
             _statusText.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
-        _ = bgKey;
     }
+
+    private Color? ResolveSolidColor(string brushKey)
+    {
+        try
+        {
+            if (TryFindResource(brushKey) is SolidColorBrush solid)
+                return solid.Color;
+            if (TryFindResource(brushKey) is Color color)
+                return color;
+        }
+        catch
+        {
+            // Resource missing in design-time / tests — fall back to neutral chrome.
+        }
+
+        return null;
+    }
+
+    private static SolidColorBrush SoftBrush(Color baseColor, byte alpha) =>
+        new(Color.FromArgb(alpha, baseColor.R, baseColor.G, baseColor.B));
 
     private static void TrySetResourceBrush(FrameworkElement? element, DependencyProperty property, string key, string fallbackKey)
     {
@@ -331,9 +380,23 @@ public partial class NetworkAccelerationControl : UserControl
         ConnectionUiState.Stopping => T("NetworkAccelerationPage_State_Stopping", "Stopping…"),
         ConnectionUiState.Restoring => T("NetworkAccelerationPage_State_Restoring", "Restoring…"),
         ConnectionUiState.Failed => T("NetworkAccelerationPage_State_Failed", "Start failed"),
-        ConnectionUiState.DiagnosticsOnly => T("NetworkAccelerationPage_StatusDiagnosticsOnly", "Diagnostics only (no system network changes)"),
+        // Short chip label; full safety copy is tooltip + mode summary line.
+        ConnectionUiState.DiagnosticsOnly => T("NetworkAccelerationPage_ModeShort_DiagnosticsOnly", "Diagnostics only"),
         ConnectionUiState.WorkerMissing => T("NetworkAccelerationPage_StatusWorkerMissing", "Worker binary not found — build/install UniversalDeviceToolkit.NetworkProxy.exe"),
         _ => T("NetworkAccelerationPage_State_Idle", "Not started")
+    };
+
+    private string StatusDetailFor(ConnectionUiState state) => state switch
+    {
+        ConnectionUiState.DiagnosticsOnly => T(
+            "NetworkAccelerationPage_StatusDiagnosticsOnly",
+            "Diagnostics only (no system network changes)"),
+        ConnectionUiState.WorkerMissing => T(
+            "NetworkAccelerationPage_StatusWorkerMissing",
+            "Worker binary not found — build/install UniversalDeviceToolkit.NetworkProxy.exe"),
+        ConnectionUiState.Connected => ModeFullLabel(_acceleration.Config.Mode),
+        ConnectionUiState.Failed => T("NetworkAccelerationPage_State_Failed", "Start failed"),
+        _ => StatusLabelFor(state)
     };
 
     private string ModeFullLabel(NetworkAccelerationMode mode) => mode switch
@@ -370,19 +433,36 @@ public partial class NetworkAccelerationControl : UserControl
             var config = _acceleration.Config;
             _uiState = ResolveUiState();
 
+            var statusLabel = StatusLabelFor(_uiState);
+            var statusDetail = StatusDetailFor(_uiState);
             if (_statusText is not null)
-                _statusText.Text = StatusLabelFor(_uiState);
+            {
+                _statusText.Text = statusLabel;
+                // Long states (worker missing) may need wrap; short chips stay single-line.
+                _statusText.TextWrapping = _uiState is ConnectionUiState.WorkerMissing
+                    ? TextWrapping.Wrap
+                    : TextWrapping.NoWrap;
+            }
+
             ApplyStatusVisual(VisualFor(_uiState));
 
             var modeFull = ModeFullLabel(config.Mode);
             var modeShort = ModeShortLabel(config.Mode);
             if (_modeSummaryText is not null)
             {
-                _modeSummaryText.Text = $"{T("NetworkAccelerationPage_ModeLabel", "Mode")} · {modeShort}";
-                _modeSummaryText.ToolTip = modeFull;
+                // Diagnostics: put the safety note under the short chip (chip stays "仅诊断").
+                _modeSummaryText.Text = _uiState is ConnectionUiState.DiagnosticsOnly
+                    ? statusDetail
+                    : $"{T("NetworkAccelerationPage_ModeLabel", "Mode")} · {modeShort}";
+                _modeSummaryText.ToolTip = _uiState is ConnectionUiState.DiagnosticsOnly
+                    ? statusDetail
+                    : modeFull;
             }
+
+            if (_statusPill is not null)
+                _statusPill.ToolTip = statusDetail;
             if (_statusText is not null)
-                _statusText.ToolTip = _statusText.Text;
+                _statusText.ToolTip = statusDetail;
 
             if (_modeText is not null)
                 _modeText.Text = $"{T("NetworkAccelerationPage_ModeLabel", "Mode")}: {config.Mode}";

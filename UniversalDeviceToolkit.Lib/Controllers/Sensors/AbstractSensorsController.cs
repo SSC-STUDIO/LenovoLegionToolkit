@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using NvAPIWrapper.Native;
 using NvAPIWrapper.Native.GPU;
@@ -15,7 +16,7 @@ using Windows.Win32.System.Power;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
-public abstract class AbstractSensorsController(GPUController gpuController) : ISensorsController
+public abstract partial class AbstractSensorsController(GPUController gpuController) : ISensorsController
 {
     protected readonly record struct LibreHardwareMonitorReadings(
         int CpuUtilization,
@@ -65,14 +66,15 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
     private int? _cpuMaxFanSpeedCache;
     private int? _gpuMaxFanSpeedCache;
 
-    // Sensor data cache — short TTL collapses concurrent callers (UI + HWiNFO + OSD).
+    // Sensor data cache 鈥?short TTL collapses concurrent callers (UI + HWiNFO + OSD).
     private readonly object _cacheLock = new();
     private SensorsData? _cachedSensorsData;
     private bool _cachedSensorsDetailed;
     private bool _sensorReadFailureLogged;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
     private const int CACHE_EXPIRATION_MS = 180;
-    private const int SENSOR_READ_TIMEOUT_SECONDS = 2;
+    // Fan WMI + LHM must finish inside this window; overruns return stale cache and freeze gauges/charts.
+    private const int SENSOR_READ_TIMEOUT_SECONDS = 3;
     protected virtual int SensorReadTimeoutSeconds => SENSOR_READ_TIMEOUT_SECONDS;
 
     private bool _disposed;
@@ -282,6 +284,7 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
         var gpuMaxFanSpeed = await gpuMaxFanTask.ConfigureAwait(false);
 
         // Single LHM pass fills any missing CPU/GPU fields (fans are the common gap on IRX9+).
+        // Fan uses <= 0 so a false WMI "0 RPM" can still be replaced by a positive LHM reading.
         var needLhm = cpuUtilization < 0 || cpuCoreClock < 0 || cpuCurrentTemperature < 0 || cpuCurrentFanSpeed <= 0
                       || gpuUtilization < 0 || gpuCoreClock < 0 || gpuCurrentTemperature < 0 || gpuCurrentFanSpeed <= 0
                       || (detailed && (cpuVoltage <= 0 || cpuWattage < 0 || gpuVoltage <= 0 || gpuWattage < 0));
@@ -431,7 +434,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 return null;
 
             if (!sensorsGroupController.IsLibreHardwareMonitorInitialized())
-                _ = await sensorsGroupController.IsSupportedAsync().ConfigureAwait(false);
+            {
+                var fullSensorsEnabled = IoCContainer.TryResolve<ApplicationSettings>()?.Store.EnableHardwareSensors == true;
+                _ = fullSensorsEnabled
+                    ? await sensorsGroupController.IsSupportedAsync().ConfigureAwait(false)
+                    : await sensorsGroupController.EnsureFanSensorsAvailableAsync().ConfigureAwait(false)
+                        ? LibreHardwareMonitorInitialState.Success
+                        : LibreHardwareMonitorInitialState.Fail;
+            }
 
             if (!sensorsGroupController.IsLibreHardwareMonitorInitialized())
                 return null;
@@ -444,14 +454,14 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetCpuCoreClockAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetCpuPowerAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetCpuVoltageAsync().ConfigureAwait(false)),
-                NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetCpuFanSpeedAsync().ConfigureAwait(false)),
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetCpuFanSpeedAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuUsageAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuTemperatureAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuCoreClockAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuMemoryClockAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetGpuPowerAsync().ConfigureAwait(false)),
                 NormalizeLibreHardwareMonitorVoltage(await sensorsGroupController.GetGpuVoltageAsync().ConfigureAwait(false)),
-                NormalizeLibreHardwareMonitorPositiveMetric(await sensorsGroupController.GetGpuFanSpeedAsync().ConfigureAwait(false)));
+                NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetGpuFanSpeedAsync().ConfigureAwait(false)));
         }
         catch (Exception ex)
         {
@@ -465,95 +475,6 @@ public abstract class AbstractSensorsController(GPUController gpuController) : I
 
     private static int NormalizeLibreHardwareMonitorPositiveMetric(float value) =>
         value > 0 ? (int)Math.Round(value) : -1;
-
-    /// <summary>
-    /// Multi-source fan RPM (matches historical LLT/UDT behavior that worked on more machines):
-    /// 1) Prefer any positive RPM from primary or fallback.
-    /// 2) Keep explicit parked-zero only when a source succeeded with 0 (not "missing" → -1).
-    /// 3) Capability often returns 0 while fans spin — treat bare capability 0 as unknown (-1)
-    ///    so LibreHardwareMonitor can still fill missing RPM in GetSensorSnapshot.
-    /// </summary>
-    protected static async Task<int> ReadFanSpeedWithFallbackAsync(
-        Func<Task<int>> primaryAsync,
-        Func<Task<int>> fallbackAsync)
-    {
-        var primary = -1;
-        var fallback = -1;
-
-        try
-        {
-            primary = await primaryAsync().ConfigureAwait(false);
-            if (primary > 0)
-                return primary;
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.TraceOnce("sensors-fan-primary", "Primary fan RPM read failed; trying fallback.", ex);
-            primary = -1;
-        }
-
-        try
-        {
-            fallback = await fallbackAsync().ConfigureAwait(false);
-            if (fallback > 0)
-                return fallback;
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.TraceOnce("sensors-fan-fallback", "Fallback fan RPM read failed.", ex);
-            fallback = -1;
-        }
-
-        // Old-style keep: any successful non-negative from fan-method primary wins for parked fans.
-        if (primary >= 0)
-            return primary;
-
-        // Capability-only 0 is unreliable on modern Legion firmware — leave -1 for LHM fill.
-        // (Historical code returned capability 0 and blocked LHM; that caused blank/stuck 0 RPM.)
-        return -1;
-    }
-
-    /// <summary>
-    /// Three-source fan RPM used by V3+ and Generic: fan-method IDs, then capability, then
-    /// any remaining non-negative. Positive values always win.
-    /// </summary>
-    protected static async Task<int> ReadFanSpeedMultiSourceAsync(
-        Func<Task<int>> fanMethodAsync,
-        Func<Task<int>> capabilityAsync)
-    {
-        var fanMethod = -1;
-        var capability = -1;
-
-        try
-        {
-            fanMethod = await fanMethodAsync().ConfigureAwait(false);
-            if (fanMethod > 0)
-                return fanMethod;
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.TraceOnce("sensors-fan-method", "Fan_GetCurrentFanSpeed path failed.", ex);
-            fanMethod = -1;
-        }
-
-        try
-        {
-            capability = await capabilityAsync().ConfigureAwait(false);
-            if (capability > 0)
-                return capability;
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.TraceOnce("sensors-fan-capability", "GetFeatureValue fan path failed.", ex);
-            capability = -1;
-        }
-
-        // Fan method explicit 0 = parked (trusted). Capability 0 alone is not.
-        if (fanMethod == 0)
-            return 0;
-
-        return -1;
-    }
 
     private static double NormalizeLibreHardwareMonitorVoltage(float value) =>
         value > 0 ? Math.Round(value, 3) : 0;

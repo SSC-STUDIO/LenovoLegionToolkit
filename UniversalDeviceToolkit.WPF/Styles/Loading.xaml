@@ -1,9 +1,16 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+
+    <!-- Classic skeleton 流光: cool slate accent with enough alpha to read on dark/light bones. -->
+    <Color x:Key="SkeletonShimmerStartColor">#2A8E99AA</Color>
+    <Color x:Key="SkeletonShimmerPeakColor">#52A8B2C0</Color>
+    <!-- Light theme: stronger wash so the band is visible on pale card surfaces. -->
+    <Color x:Key="SkeletonShimmerStartColorLight">#1E707888</Color>
+    <Color x:Key="SkeletonShimmerPeakColorLight">#3A707888</Color>
 
     <Style x:Key="AppLoadingRingStyle" TargetType="wpfui:ProgressRing">
         <Setter Property="Width" Value="48" />
@@ -41,8 +48,8 @@
     </Style>
 
     <!--
-      Sweeping shimmer (流光) + soft pulse via utils:SkeletonShimmer.
-      Border is a Decorator — no Control.Template; per-instance Freezables are required.
+      Classic cool-slate shimmer (娴佸厜) via utils:SkeletonShimmer.
+      Border is a Decorator 鈥?no Control.Template; per-instance Freezables are required.
     -->
     <Style x:Key="AppSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonBlockStyle}">
         <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />

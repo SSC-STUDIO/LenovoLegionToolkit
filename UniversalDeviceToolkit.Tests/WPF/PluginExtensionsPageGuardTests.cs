@@ -56,8 +56,9 @@ public sealed class PluginExtensionsPageGuardTests
         // First paint path: snap-in skeleton, never fade-from-0 blank.
         source.Should().Contain("ShowSkeletonImmediate");
         source.Should().Contain("SkeletonShimmer.RestartSubtree");
+        source.Should().Contain("SkeletonShimmer.StopSubtree");
         source.Should().Contain("MinSkeletonVisible");
-        source.Should().Contain("TimeSpan.FromMilliseconds(400)");
+        source.Should().Contain("TimeSpan.FromMilliseconds(520)");
         source.Should().Contain("ShowSkeletonImmediate();");
         source.Should().Contain("OnlineFetchTimeout");
         source.Should().Contain("PluginPageUiState");
@@ -68,9 +69,11 @@ public sealed class PluginExtensionsPageGuardTests
         var loadedEnd = source.IndexOf("private void PluginExtensionsPage_IsVisibleChanged", loadedStart, StringComparison.Ordinal);
         loadedEnd.Should().BeGreaterThan(loadedStart);
         var loaded = source[loadedStart..loadedEnd];
-        // Step 1 of Loaded is always skeleton, before local list / network work.
+        // Every load (cold + hot re-entry) shows skeleton before rebuild — not first-open-only.
         loaded.IndexOf("ShowSkeletonImmediate()", StringComparison.Ordinal)
             .Should().BeLessThan(loaded.IndexOf("RebuildPluginListWithoutBlockingAsync()", StringComparison.Ordinal));
+        loaded.Should().Contain("_hasStartedInitialFetch");
+        loaded.Should().NotContain("ShowCachedContentImmediate();");
         // Culture scan must not block the first paint path.
         loaded.Should().Contain("DispatcherPriority.Background");
         loaded.Should().Contain("SetPluginResourceCultures");
@@ -82,6 +85,16 @@ public sealed class PluginExtensionsPageGuardTests
         xaml.Should().Contain("PluginStoreRetryButton");
         source.Should().Contain("UpdateStoreOfflineBanner");
         source.Should().Contain("StoreRetryButton_Click");
+    }
+
+    [Fact]
+    public void LoadingChrome_ShouldUseSingleSkeletonHost()
+    {
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml");
+        xaml.Split("PluginLoadingIndicator").Length.Should().Be(2);
+        xaml.Split("x:Name=\"_loadingIndicator\"").Length.Should().Be(2);
+        xaml.Should().Contain("x:Name=\"_pluginListPanel\" Visibility=\"Collapsed\"");
+        xaml.Should().Contain("Panel.ZIndex=\"2\"");
     }
 
     [Fact]

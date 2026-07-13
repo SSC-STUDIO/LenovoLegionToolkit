@@ -187,23 +187,22 @@ public class ThemeManager
     {
         var isDark = IsDarkMode();
         var defaultSurface = isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246);
+        var palette = GetPresetPalette(_settings.Store.ThemeStylePreset, isDark);
+
+        // Style presets (Official Cool / Midnight / Forest) must also retint cards, charts,
+        // and notification glass — otherwise sensors + Hotkeys toast stay neutral grey on a
+        // colored shell (user report: 官方炫酷模式适配).
+        if (palette is not null)
+        {
+            ApplyPresetSurfaceResources(palette, isDark);
+            return;
+        }
 
         // Navigation and content surface must share one background or the shell seam shows in light mode
         // (WPF-UI ApplicationBackgroundBrush is pure white while the content surface uses #F6F6F6).
-        Color surfaceBackground;
-        if (isDark)
-        {
-            surfaceBackground = TryGetBrushColor("ApplicationBackgroundBrush") ?? defaultSurface;
-        }
-        else if (_settings.Store.ThemeStylePreset != ThemeStylePreset.Default
-                 && TryGetBrushColor("ApplicationBackgroundBrush") is { } presetBackground)
-        {
-            surfaceBackground = presetBackground;
-        }
-        else
-        {
-            surfaceBackground = defaultSurface;
-        }
+        var surfaceBackground = isDark
+            ? (TryGetBrushColor("ApplicationBackgroundBrush") ?? defaultSurface)
+            : defaultSurface;
 
         SetBrush("AppSurfaceBackgroundBrush", surfaceBackground);
         SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255));
@@ -216,6 +215,39 @@ public class ThemeManager
         SetBrush("ChartBaselineBrush", Color.FromRgb(210, 160, 90), isDark ? 0.75 : 0.85);
         SetBrush("NotificationGlassSurfaceBrush", isDark ? Color.FromRgb(28, 28, 28) : Color.FromRgb(252, 252, 252), isDark ? 0.62 : 0.72);
         SetBrush("NotificationGlassBorderBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.22 : 0.14);
+    }
+
+    /// <summary>
+    /// Surface tokens for Official Cool / Midnight Neon / Forest Tech so dashboard sensors
+    /// cards and in-app toasts match the tinted shell (not neutral Fluent grey).
+    /// </summary>
+    private static void ApplyPresetSurfaceResources(ThemeStylePalette palette, bool isDark)
+    {
+        SetBrush("AppSurfaceBackgroundBrush", palette.ApplicationBackground);
+        // Card one step above page bg (ControlFillDefault) — matches sensors / list surfaces.
+        SetBrush("AppSurfaceCardBrush", palette.ControlFillDefault);
+        SetBrush("AppNavigationBackgroundBrush", palette.ApplicationBackground);
+
+        // Soft chart wells: light wash over the tinted card, not pure white-on-grey.
+        var chartWash = isDark ? Color.FromRgb(255, 255, 255) : BlendToward(palette.ApplicationBackground, Colors.Black, 0.55);
+        SetBrush("ChartSurfaceBrush", chartWash, isDark ? 0.06 : 0.045);
+        SetBrush("ChartSurfaceBorderBrush", palette.ControlStrokeDefault, isDark ? 0.35 : 0.28);
+        SetBrush("ChartGridlineBrush", palette.ControlStrokeSecondary, isDark ? 0.28 : 0.22);
+        // Baseline keeps a warm copper note so series remain readable on blue/purple/green shells.
+        SetBrush("ChartBaselineBrush", Color.FromRgb(210, 160, 90), isDark ? 0.72 : 0.82);
+
+        // Toast / status banner glass: elevated fill from the same family + stroke tint.
+        SetBrush("NotificationGlassSurfaceBrush", palette.ControlFillSecondary, isDark ? 0.82 : 0.88);
+        SetBrush("NotificationGlassBorderBrush", palette.ControlStrokeDefault, isDark ? 0.55 : 0.42);
+    }
+
+    private static Color BlendToward(Color from, Color to, double amount)
+    {
+        amount = Math.Clamp(amount, 0, 1);
+        return Color.FromRgb(
+            (byte)Math.Clamp((int)Math.Round(from.R + (to.R - from.R) * amount), 0, 255),
+            (byte)Math.Clamp((int)Math.Round(from.G + (to.G - from.G) * amount), 0, 255),
+            (byte)Math.Clamp((int)Math.Round(from.B + (to.B - from.B) * amount), 0, 255));
     }
 
     private static void SetBrush(string key, Color color, double opacity = 1.0)

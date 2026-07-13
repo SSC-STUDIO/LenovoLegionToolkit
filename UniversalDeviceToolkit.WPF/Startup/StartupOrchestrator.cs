@@ -203,10 +203,13 @@ namespace UniversalDeviceToolkit.WPF.Startup
                 // Safe-start also runs this (diagnostics + restore only).
                 await RunNetworkStartupRecoveryAsync().ConfigureAwait(false);
 
+                // Create MainWindow first (needed for IoC/host context) but do NOT show it
+                // until device-setup / compatibility gates finish — otherwise the dashboard
+                // paints under a non-modal DeviceSetupWindow ("two UIs at once").
                 await CreateMainWindowAsync();
+                await CheckCompatibilityAsync();
                 await ShowMainWindowAsync();
 
-                await CheckCompatibilityAsync();
                 await LoadPluginsAsync();
                 await StartBackgroundInitAsync();
                 await InitializeOsdAsync();

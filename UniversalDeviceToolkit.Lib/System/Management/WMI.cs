@@ -17,11 +17,12 @@ public static partial class WMI
     // WMI method invocations (ManagementObject.InvokeMethod) must honor the 2,500ms ceiling
     // enforced by KNOWNLEDGE_BASE.md "WMI Timeout Protection" rule (#2). Never raise this
     // above 3,000ms or the caller may stall well past the async contract.
-    private const int WmiInvokeTimeoutMs = 2500;
+    // Keep well under AbstractSensorsController's 2s snapshot budget (CPU+GPU fan in parallel).
+    private const int _wmiInvokeTimeoutMs = 800;
 
     // Soft-failed method signatures for this process — avoids re-invoking known-missing firmware methods
     // (which would otherwise spam first-chance ManagementException during capability probes).
-    private static readonly ConcurrentDictionary<string, byte> SoftFailedMethodKeys = new(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<string, byte> _softFailedMethodKeys = new(StringComparer.Ordinal);
 
     private static bool IsAccessDenied(ManagementException ex) =>
         ex.ErrorCode == ManagementStatus.AccessDenied
@@ -70,22 +71,25 @@ public static partial class WMI
     /// Do NOT treat generic NotFound / "找不到" as method-missing — those fire for bad
     /// object state and wrongly disabled Fan_GetCurrentFanSpeed process-wide.
     /// </summary>
+    /// <summary>
+    /// Only permanent method-missing cases. Do NOT match generic "does not exist" / NotFound —
+    /// those fire for bad object state / access and wrongly disabled Fan_GetCurrentFanSpeed
+    /// process-wide (sticky 0 RPM with no LHM recovery).
+    /// </summary>
     private static bool IsMethodMissing(ManagementException ex) =>
         ex.ErrorCode is ManagementStatus.InvalidMethod
         || ex.Message.Contains("not implemented", StringComparison.OrdinalIgnoreCase)
         || ex.Message.Contains("未实现", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("未在任何类中实现", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("does not exist", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("不存在", StringComparison.OrdinalIgnoreCase);
+        || ex.Message.Contains("未在任何类中实现", StringComparison.OrdinalIgnoreCase);
 
     private static string SoftFailKey(string scope, string queryFormatted, string methodName) =>
         string.Concat(scope, "\u001f", queryFormatted, "\u001f", methodName);
 
     internal static bool IsWmiMethodSoftFailed(string scope, string queryFormatted, string methodName) =>
-        SoftFailedMethodKeys.ContainsKey(SoftFailKey(scope, queryFormatted, methodName));
+        _softFailedMethodKeys.ContainsKey(SoftFailKey(scope, queryFormatted, methodName));
 
     private static void MarkWmiMethodSoftFailed(string scope, string queryFormatted, string methodName) =>
-        SoftFailedMethodKeys.TryAdd(SoftFailKey(scope, queryFormatted, methodName), 0);
+        _softFailedMethodKeys.TryAdd(SoftFailKey(scope, queryFormatted, methodName), 0);
 
     /// <summary>
     /// Try GetMethodParameters without rethrowing soft failures (no InvalidOperationException).
@@ -132,13 +136,19 @@ public static partial class WMI
         }
         catch (ManagementException ex) when (IsSoftWmiFailure(ex))
         {
+            // Soft-fail including Invalid object / 无效的对象 — never rethrow.
+            // Lenovo providers often invalidate the MO between Get() and InvokeMethod();
+            // TryCallInternalAsync re-queries a fresh instance on the next attempt.
+            // Rethrowing here only spammed first-chance exceptions in the debugger while
+            // fan/sensor probes ran every second.
+            //
             // Do NOT permanently soft-fail on Invoke failures.
             // GetFeatureValue / similar methods accept many IDs: one unsupported fan ID must
             // not poison temperature / other capabilities for the rest of the process.
             // Method-missing is still cached in TryGetWmiMethodParameters.
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace(
-                    $"WMI invoke soft-failed (not cached). [method={methodName}, query={queryFormatted}]",
+                    $"WMI invoke soft-failed (not cached). [method={methodName}, query={queryFormatted}, code={ex.ErrorCode}]",
                     ex);
             result = null;
             return false;
@@ -330,7 +340,7 @@ public static partial class WMI
     {
         var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
         var softKey = SoftFailKey(scope, queryFormatted, methodName);
-        if (SoftFailedMethodKeys.ContainsKey(softKey))
+        if (_softFailedMethodKeys.ContainsKey(softKey))
             return null;
 
         for (var attempt = 1; attempt <= 2; attempt++)
@@ -344,7 +354,7 @@ public static partial class WMI
                     return null;
                 });
 
-                var completed = await Task.WhenAny(callTask, Task.Delay(WmiInvokeTimeoutMs)).ConfigureAwait(false);
+                var completed = await Task.WhenAny(callTask, Task.Delay(_wmiInvokeTimeoutMs)).ConfigureAwait(false);
                 if (completed != callTask)
                 {
                     _ = callTask.ContinueWith(
@@ -357,7 +367,7 @@ public static partial class WMI
 
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace(
-                            $"WMI method {methodName} timed out after {WmiInvokeTimeoutMs}ms. [query={queryFormatted}]");
+                            $"WMI method {methodName} timed out after {_wmiInvokeTimeoutMs}ms. [query={queryFormatted}]");
                     return null;
                 }
 
@@ -365,10 +375,20 @@ public static partial class WMI
                 if (result is not null)
                     return result;
 
-                // Soft fail already cached by TryGet/TryInvoke; one retry for flaky providers.
-                if (attempt < 2 && SoftFailedMethodKeys.ContainsKey(softKey))
+                // True method-missing was cached during this attempt — do not retry.
+                if (_softFailedMethodKeys.ContainsKey(softKey))
+                    return null;
+
+                // Null = transient soft invoke fail (Invalid object / 无效的对象, bad fan ID…).
+                // Re-query once: each TryExecuteWmiMethodCall does a fresh Get(), matching the
+                // historical contract when Lenovo invalidates the MO between Get and Invoke.
+                // Previously Invalid object was rethrown only to hit catch-retry — that worked
+                // but broke into the debugger on every sensor/fan poll.
+                if (attempt < 2)
                 {
-                    SoftFailedMethodKeys.TryRemove(softKey, out _);
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace(
+                            $"WMI call soft-failed, retrying with fresh instance. [scope={scope}, query={queryFormatted}, methodName={methodName}, attempt={attempt}]");
                     continue;
                 }
 

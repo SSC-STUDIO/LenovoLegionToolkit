@@ -55,7 +55,9 @@ public partial class AppStatusBanner : UserControl
     {
         InitializeComponent();
         ApplySeverity();
-        IsVisibleChanged += (_, _) => RaiseClosedIfHidden();
+        // Do NOT raise Closed on IsVisibleChanged→Collapsed: initial load is Collapsed and
+        // that would fire Closed before the host ever shows the banner (false "user dismissed").
+        // Closed is only raised from Hide() (close button).
     }
 
     private static void OnSeverityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -98,11 +100,5 @@ public partial class AppStatusBanner : UserControl
 
         Visibility = Visibility.Collapsed;
         Closed?.Invoke(this, new RoutedEventArgs());
-    }
-
-    private void RaiseClosedIfHidden()
-    {
-        if (Visibility == Visibility.Collapsed)
-            Closed?.Invoke(this, new RoutedEventArgs());
     }
 }

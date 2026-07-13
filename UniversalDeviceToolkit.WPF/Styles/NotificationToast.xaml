@@ -9,9 +9,49 @@
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+    <!--
+      Single width token for every in-app notification card:
+      Snackbar, AppNotificationHost stack, AppStatusBanner.
+    -->
     <sys:Double x:Key="NotificationToastWidth">360</sys:Double>
-    <Thickness x:Key="NotificationToastPadding">10</Thickness>
+    <Thickness x:Key="NotificationToastPadding">12,10</Thickness>
     <Thickness x:Key="NotificationToastMargin">0,0,0,0</Thickness>
+
+    <!--
+      Icon-only dismiss control: no rounded “tile” behind the X.
+      Hover/press only tint the glyph, never draw a filled box.
+    -->
+    <Style x:Key="NotificationCloseButtonStyle" TargetType="{x:Type controls:Button}" BasedOn="{StaticResource {x:Type controls:Button}}">
+        <Setter Property="Appearance" Value="Transparent" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="MinWidth" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="MouseOverBackground" Value="Transparent" />
+        <Setter Property="MouseOverBorderBrush" Value="Transparent" />
+        <Setter Property="PressedBackground" Value="Transparent" />
+        <Setter Property="PressedBorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 
     <Style TargetType="{x:Type controls:Snackbar}">
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -20,6 +60,7 @@
         <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
         <Setter Property="Margin" Value="{StaticResource NotificationToastMargin}" />
         <Setter Property="Width" Value="{StaticResource NotificationToastWidth}" />
+        <Setter Property="MinWidth" Value="{StaticResource NotificationToastWidth}" />
         <Setter Property="MaxWidth" Value="{StaticResource NotificationToastWidth}" />
         <Setter Property="MinHeight" Value="56" />
         <Setter Property="Focusable" Value="False" />
@@ -107,20 +148,13 @@
                                 <controls:Button
                                     x:Name="CloseButton"
                                     Grid.Column="2"
-                                    Width="28"
-                                    Height="28"
                                     Margin="8,0,0,0"
-                                    Padding="0"
                                     VerticalAlignment="Center"
-                                    Appearance="Transparent"
+                                    Style="{StaticResource NotificationCloseButtonStyle}"
                                     AutomationProperties.Name="{x:Static resources:Resource.CloseNotification_AutomationName}"
                                     Command="{Binding Path=TemplateButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                    CornerRadius="{StaticResource CornerRadiusCompact}"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     ToolTip="{x:Static resources:Resource.Close_Tooltip}">
-                                    <controls:Button.Icon>
-                                        <controls:SymbolIcon FontSize="14" Symbol="Dismiss20" />
-                                    </controls:Button.Icon>
+                                    <controls:SymbolIcon FontSize="14" Symbol="Dismiss20" />
                                 </controls:Button>
                             </Grid>
                         </Border>

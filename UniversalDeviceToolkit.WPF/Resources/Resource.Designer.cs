@@ -3522,6 +3522,15 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Plugin Extensions is off by default. Enable it under Settings → Navigation items..
+        /// </summary>
+        public static string MainWindow_PluginExtensionsDisabledNotice {
+            get {
+                return ResourceManager.GetString("MainWindow_PluginExtensionsDisabledNotice", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Lenovo Vantage and/or ImController is running in the background..
         /// </summary>
         public static string MainWindows_VantageRunning {

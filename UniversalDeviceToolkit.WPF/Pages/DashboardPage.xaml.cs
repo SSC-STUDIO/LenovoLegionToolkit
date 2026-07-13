@@ -11,6 +11,7 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard;
+using UniversalDeviceToolkit.WPF.Controls.Loading;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -19,7 +20,12 @@ using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
-public partial class DashboardPage
+/// <summary>
+/// Owns loading chrome so NavigationStore skips the generic shell skeleton.
+/// A single page-level skeleton covers sensors + feature groups (no multi-stage flash).
+/// </summary>
+[LoadingChromeOwner(LoadingChromeOwnership.Page, delayMilliseconds: 0, minimumVisibleMilliseconds: 180)]
+public partial class DashboardPage : ILoadingChromeOwner
 {
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
@@ -27,6 +33,11 @@ public partial class DashboardPage
     private readonly List<DashboardGroupControl> _dashboardGroupControls = [];
     private HyperlinkButton? _editDashboardHyperlink;
     private int _currentColumnCount = 1;
+    private CancellationTokenSource? _refreshCancellationTokenSource;
+    private int _refreshVersion;
+    private bool _hasLoadedContent;
+
+    public LoadingChromeOwnership LoadingChromeOwnership => LoadingChromeOwnership.Page;
 
     public DashboardPage()
     {
@@ -50,13 +61,29 @@ public partial class DashboardPage
 
     private async Task RefreshAsync()
     {
-        _loader.IsLoading = true;
-        SetDashboardContentReady(false);
+        var refreshVersion = Interlocked.Increment(ref _refreshVersion);
+        var cancellationTokenSource = new CancellationTokenSource();
+        var previousCancellationTokenSource = Interlocked.Exchange(ref _refreshCancellationTokenSource, cancellationTokenSource);
+        previousCancellationTokenSource?.Cancel();
+        previousCancellationTokenSource?.Dispose();
+        var cancellationToken = cancellationTokenSource.Token;
+
+        var initialLoad = !_hasLoadedContent;
+        if (initialLoad)
+        {
+            _loader.IsLoading = true;
+            SetDashboardContentReady(false);
+        }
 
         _scrollViewer.ScrollToTop();
 
         Task? sensorsReadyTask = null;
-        if (_dashboardSettings.Store.ShowSensors)
+        var showSensors = _dashboardSettings.Store.ShowSensors;
+        // Page skeleton owns the sensor-card silhouette during initial load (content is Opacity 0).
+        if (_skeletonSensorsCard is not null)
+            _skeletonSensorsCard.Visibility = showSensors ? Visibility.Visible : Visibility.Collapsed;
+
+        if (showSensors)
         {
             _sensors.RestartTrendCharts();
             sensorsReadyTask = _sensors.RestartInitialSensorDataLoad();
@@ -107,10 +134,21 @@ public partial class DashboardPage
 
         LayoutGroups(ActualWidth);
 
-        await WaitForDashboardShellAsync(sensorsReadyTask);
+        try
+        {
+            await WaitForDashboardShellAsync(sensorsReadyTask, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (cancellationToken.IsCancellationRequested || refreshVersion != Volatile.Read(ref _refreshVersion))
+            return;
+
         SetDashboardContentReady(true);
+        _hasLoadedContent = true;
         _loader.IsLoading = false;
-        await Task.Delay(TimeSpan.FromMilliseconds(250));
     }
 
     private void SetDashboardContentReady(bool ready)
@@ -120,11 +158,11 @@ public partial class DashboardPage
         _dashboardContentRoot.IsHitTestVisible = ready;
     }
 
-    private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask)
+    private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask, CancellationToken cancellationToken)
     {
         var groupInitializationTasks = _dashboardGroupControls.Select(control => control.InitializedTask).ToArray();
         if (groupInitializationTasks.Length > 0)
-            await Task.WhenAll(groupInitializationTasks);
+            await Task.WhenAll(groupInitializationTasks).WaitAsync(cancellationToken);
 
         var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToArray();
 
@@ -132,7 +170,7 @@ public partial class DashboardPage
         {
             try
             {
-                await Task.WhenAll(contentReadyTasks).WaitAsync(GetDashboardGroupContentReadyTimeout());
+                await Task.WhenAll(contentReadyTasks).WaitAsync(GetDashboardGroupContentReadyTimeout(), cancellationToken);
             }
             catch (TimeoutException ex)
             {
@@ -145,16 +183,14 @@ public partial class DashboardPage
         }
 
         if (sensorsReadyTask is not null)
-            await WaitForDashboardSensorDataAsync(sensorsReadyTask);
-
-        await Task.Delay(GetDashboardFallbackLoadingDelay());
+            await WaitForDashboardSensorDataAsync(sensorsReadyTask, cancellationToken);
     }
 
-    private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask)
+    private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask, CancellationToken cancellationToken)
     {
         try
         {
-            await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout());
+            await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout(), cancellationToken);
         }
         catch (TimeoutException)
         {
@@ -171,8 +207,6 @@ public partial class DashboardPage
     internal static TimeSpan GetDashboardGroupContentReadyTimeout() => TimeSpan.FromSeconds(3);
 
     internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(12);
-
-    internal static TimeSpan GetDashboardFallbackLoadingDelay() => TimeSpan.FromMilliseconds(120);
 
     private void DashboardPage_SizeChanged(object sender, SizeChangedEventArgs e)
     {
@@ -207,25 +241,23 @@ public partial class DashboardPage
 
     private void LayoutSkeletonGroups(int columns)
     {
-        if (_skeletonGroupsGrid is null || _skeletonGroup0 is null || _skeletonGroup1 is null)
+        if (_skeletonGroupsGrid is null || _skeletonGroup0 is null || _skeletonGroup1 is null || _skeletonGroup2 is null)
             return;
 
-        // The skeleton placeholder only models two columns; collapse to one when narrow.
-        if (columns >= 2)
+        columns = Math.Clamp(columns, 1, 3);
+        for (var index = 0; index < _skeletonGroupsGrid.ColumnDefinitions.Count; index++)
         {
-            _skeletonGroupsGrid.ColumnDefinitions[1].Width = new(1, GridUnitType.Star);
-            Grid.SetRow(_skeletonGroup0, 0);
-            Grid.SetColumn(_skeletonGroup0, 0);
-            Grid.SetRow(_skeletonGroup1, 0);
-            Grid.SetColumn(_skeletonGroup1, 1);
-            return;
+            _skeletonGroupsGrid.ColumnDefinitions[index].Width = index < columns
+                ? new GridLength(1, GridUnitType.Star)
+                : new GridLength(0, GridUnitType.Pixel);
         }
 
-        _skeletonGroupsGrid.ColumnDefinitions[1].Width = new(0, GridUnitType.Pixel);
-        Grid.SetRow(_skeletonGroup0, 0);
-        Grid.SetColumn(_skeletonGroup0, 0);
-        Grid.SetRow(_skeletonGroup1, 1);
-        Grid.SetColumn(_skeletonGroup1, 0);
+        var groups = new[] { _skeletonGroup0, _skeletonGroup1, _skeletonGroup2 };
+        for (var index = 0; index < groups.Length; index++)
+        {
+            Grid.SetRow(groups[index], index / columns);
+            Grid.SetColumn(groups[index], index % columns);
+        }
     }
 
     private void LayoutColumns(int columns)

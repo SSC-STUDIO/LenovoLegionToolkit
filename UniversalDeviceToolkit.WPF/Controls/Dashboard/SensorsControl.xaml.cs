@@ -125,9 +125,18 @@ public partial class SensorsControl : IDisposable
             ["Battery"] = _batterySectionColumn,
             ["GPU"] = _gpuSection
         };
+        var skeletonSectionMap = new Dictionary<string, FrameworkElement>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["CPU"] = _skeletonCpuSection,
+            ["Battery"] = _skeletonBatterySection,
+            ["GPU"] = _skeletonGpuSection
+        };
 
         foreach (var (name, element) in sectionMap)
+        {
             element.Visibility = visible.Contains(name) ? Visibility.Visible : Visibility.Collapsed;
+            skeletonSectionMap[name].Visibility = element.Visibility;
+        }
 
         var order = (store.SectionOrder is { Length: > 0 } ? store.SectionOrder : ["CPU", "Battery", "GPU"])
             .Where(name => sectionMap.ContainsKey(name))
@@ -151,7 +160,21 @@ public partial class SensorsControl : IDisposable
         foreach (var child in orderedVisible)
             _sensorsGrid.Children.Add(child);
 
-        _sensorsGrid.Columns = Math.Max(1, orderedVisible.Count);
+        _skeletonGrid.Children.Clear();
+        foreach (var name in order)
+        {
+            if (skeletonSectionMap.TryGetValue(name, out var element) && element.Visibility == Visibility.Visible)
+                _skeletonGrid.Children.Add(element);
+        }
+        foreach (var (name, element) in skeletonSectionMap)
+        {
+            if (element.Visibility == Visibility.Visible && !_skeletonGrid.Children.Contains(element))
+                _skeletonGrid.Children.Add(element);
+        }
+
+        var columnCount = Math.Max(1, orderedVisible.Count);
+        _sensorsGrid.Columns = columnCount;
+        _skeletonGrid.Columns = columnCount;
     }
 
     private void SensorsControl_Unloaded(object sender, RoutedEventArgs e)
@@ -244,12 +267,6 @@ public partial class SensorsControl : IDisposable
 
     private void ApplySensorSummaryLayout(double width, bool force = false)
     {
-        if (_sensorsGrid is not null && _sensorsGrid.Columns != 3)
-            _sensorsGrid.Columns = 3;
-
-        if (_skeletonGrid is not null && _skeletonGrid.Columns != 3)
-            _skeletonGrid.Columns = 3;
-
         var mode = GetSensorSummaryLayoutMode(width);
         var isCompact = mode == SensorSummaryLayoutMode.Compact;
         var isWide = mode == SensorSummaryLayoutMode.Wide;
@@ -990,12 +1007,15 @@ public partial class SensorsControl : IDisposable
                             _forceDetailedRefresh = false;
                         await Dispatcher.InvokeAsync(() => UpdateValues(data, completesInitialLoad: true, recordTrendHistory: true));
                         _sensorsRefreshFailureLogged = false;
-                        await _delayProvider.Delay(TimeSpan.FromSeconds(_dashboardSettings.Store.SensorsRefreshIntervalSeconds), token)
-                            .ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (token.IsCancellationRequested)
+                    {
+                        // Refresh stopped (navigate away / dispose).
+                        break;
                     }
                     catch (OperationCanceledException)
                     {
-                        // Expected when sensors refresh is cancelled, no action needed
+                        // Transient cancel from a nested CTS — keep polling.
                     }
                     catch (Exception ex)
                     {
@@ -1007,7 +1027,20 @@ public partial class SensorsControl : IDisposable
 
                         var cached = TryGetSessionSensorDataForDisplay();
                         if (cached.HasValue)
-                            await Dispatcher.InvokeAsync(() => UpdateValues(cached.Value));
+                            await Dispatcher.InvokeAsync(() => UpdateValues(cached.Value, recordTrendHistory: false));
+                    }
+
+                    // Always pace the loop (including after errors) so we never hot-spin
+                    // and so one timed-out snapshot cannot stall chart updates forever.
+                    try
+                    {
+                        var intervalSeconds = Math.Max(1, _dashboardSettings.Store.SensorsRefreshIntervalSeconds);
+                        await _delayProvider.Delay(TimeSpan.FromSeconds(intervalSeconds), token)
+                            .ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException) when (token.IsCancellationRequested)
+                    {
+                        break;
                     }
                 }
             }, token);
@@ -1310,7 +1343,9 @@ public partial class SensorsControl : IDisposable
         var temperature = KeepCurrentOrPrevious(current.Temperature, previous.Temperature, IsNonNegative);
         var wattage = KeepCurrentOrPrevious(current.Wattage, previous.Wattage, IsNonNegative);
         var voltage = KeepCurrentOrPrevious(current.Voltage, previous.Voltage, value => value > 0);
-        var fanSpeed = KeepCurrentOrPrevious(current.FanSpeed, previous.FanSpeed, IsNonNegative);
+        // Fan RPM: keep last positive reading when the new sample is unknown (-1).
+        // Do not sticky-lock a false 0 forever when a later sample is -1 then positive via LHM.
+        var fanSpeed = MergeFanSpeed(current.FanSpeed, previous.FanSpeed);
 
         var merged = new SensorData(
             utilization,
@@ -1357,6 +1392,18 @@ public partial class SensorsControl : IDisposable
 
     private static double KeepCurrentOrPrevious(double current, double previous, Func<double, bool> isValid) =>
         isValid(current) ? current : previous;
+
+    /// <summary>
+    /// Positive RPM always wins. Fresh 0 (parked) is shown. Unknown (-1) keeps last positive.
+    /// </summary>
+    private static int MergeFanSpeed(int current, int previous)
+    {
+        if (current > 0)
+            return current;
+        if (current == 0)
+            return 0;
+        return previous > 0 ? previous : current;
+    }
 
     internal static void CacheSessionSensorDataForDisplay(SensorsData data)
     {
@@ -1507,7 +1554,7 @@ public partial class SensorsControl : IDisposable
 
     private static void UpdateValue(RangeBase bar, ContentControl label, double max, double value, string text, string? toolTipText = null)
     {
-        if (max < 0 || value < 0)
+        if (value < 0)
         {
             bar.Minimum = 0;
             bar.Maximum = 1;
@@ -1515,16 +1562,18 @@ public partial class SensorsControl : IDisposable
             label.Content = "-";
             label.ToolTip = null;
             label.Tag = 0;
+            return;
         }
-        else
-        {
-            bar.Minimum = 0;
-            bar.Maximum = max;
-            bar.Value = value;
-            label.Content = text;
-            label.ToolTip = toolTipText is null ? null : string.Format(Resource.SensorsControl_Maximum, toolTipText);
-            label.Tag = value;
-        }
+
+        if (max < 0)
+            max = Math.Max(value, 1);
+
+        bar.Minimum = 0;
+        bar.Maximum = max;
+        bar.Value = value;
+        label.Content = text;
+        label.ToolTip = toolTipText is null ? null : string.Format(Resource.SensorsControl_Maximum, toolTipText);
+        label.Tag = value;
     }
 
     private void SetSensorSectionsVisible(bool visible)

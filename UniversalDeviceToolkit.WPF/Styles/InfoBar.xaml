@@ -37,7 +37,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:InfoBar}">
+                <ControlTemplate TargetType="{x:Type custom:InfoBar}">
                     <Grid x:Name="InfoBarRoot">
                         <!--
                           Stretch the surface to the control width. Title/Message must live in a
@@ -116,11 +116,19 @@
                                         AutomationProperties.Name="{x:Static resources:Resource.Close_Tooltip}"
                                         Background="Transparent"
                                         BorderThickness="0"
-                                        Command="{Binding Path=CloseButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                        CornerRadius="{StaticResource CornerRadiusCompact}"
-                                        Icon="Dismiss20"
+                                        BorderBrush="Transparent"
+                                        MouseOverBackground="Transparent"
+                                        MouseOverBorderBrush="Transparent"
+                                        PressedBackground="Transparent"
+                                        PressedBorderBrush="Transparent"
+                                        Command="{Binding Path=TemplateButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        CornerRadius="0"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        PressedForeground="{DynamicResource TextFillColorPrimaryBrush}"
                                         IsEnabled="True"
-                                        ToolTip="{x:Static resources:Resource.Close_Tooltip}" />
+                                        ToolTip="{x:Static resources:Resource.Close_Tooltip}">
+                                        <controls:SymbolIcon FontSize="14" Symbol="Dismiss20" />
+                                    </controls:Button>
                                 </Border>
                             </Grid>
                         </Border>

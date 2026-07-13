@@ -9,13 +9,12 @@ using Wpf.Ui.Controls;
 namespace UniversalDeviceToolkit.WPF.Utils;
 
 /// <summary>
-/// Reduces UI jitter when the user resizes a Fluent/Mica window — especially from the
-/// top or left edge where both position and size change every mouse move.
+/// Reduces flicker when the user live-resizes a Fluent/Mica window (top/left edge drag).
 ///
-/// Strategy while the live resize loop is active (WM_ENTERSIZEMOVE … WM_EXITSIZEMOVE):
-/// 1. Temporarily disable Mica/Acrylic (DWM backdrop recomposition is the main flicker source).
-/// 2. Snapshot the visual tree with BitmapCache so layout thrash does not repaint every control.
-/// 3. Disable DWM transitions and request no-copy-bits during WINDOWPOSCHANGING.
+/// Intentionally softer than a full freeze:
+/// - Keep DWM maximize/snap/resize transitions enabled (Explorer-like motion).
+/// - Do NOT snapshot the UI with BitmapCache (that freezes content and feels stiff).
+/// - Only pause Mica/Acrylic during the drag and set SWP_NOCOPYBITS to avoid bit-blit tearing.
 /// </summary>
 internal static class WindowResizeStabilityHelper
 {
@@ -24,10 +23,14 @@ internal static class WindowResizeStabilityHelper
     private const int WmWindowPosChanging = 0x0046;
     private const int SwpNoCopyBits = 0x0100;
 
-    private const int DwmwaTransitionsForcedisabled = 3;
-
     // Per-window state (weak-ish: cleaned on closed).
     private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Window, ResizeSession> Sessions = new();
+
+    /// <summary>True while the user is in a live move/size loop for this window.</summary>
+    public static bool IsLiveResizing(Window window) =>
+        window is not null
+        && Sessions.TryGetValue(window, out var session)
+        && session.IsResizing;
 
     public static void Attach(Window window)
     {
@@ -121,7 +124,6 @@ internal static class WindowResizeStabilityHelper
 
         private WindowBackdropType? _savedBackdrop;
         private object? _savedBackground;
-        private CacheMode? _savedCacheMode;
         private bool _hadSolidBackground;
 
         public void Begin(Window window, IntPtr hwnd)
@@ -132,8 +134,7 @@ internal static class WindowResizeStabilityHelper
 
             try
             {
-                SetDwmTransitionsDisabled(hwnd, disabled: true);
-
+                // Pause only expensive backdrop recomposition — keep DWM window transitions on.
                 if (window is FluentWindow fluent)
                 {
                     _savedBackdrop = fluent.WindowBackdropType;
@@ -151,18 +152,6 @@ internal static class WindowResizeStabilityHelper
                 else
                 {
                     _savedBackground = window.Background;
-                }
-
-                if (window.Content is UIElement content)
-                {
-                    _savedCacheMode = content.CacheMode;
-                    // Cache the visual tree for the duration of the drag so each mouse move
-                    // does not re-layout/re-render every sensor/list control (top-edge jitter).
-                    content.CacheMode = new BitmapCache
-                    {
-                        EnableClearType = true,
-                        RenderAtScale = 1.0
-                    };
                 }
 
                 window.UseLayoutRounding = true;
@@ -184,13 +173,6 @@ internal static class WindowResizeStabilityHelper
 
             try
             {
-                var handle = hwnd ?? new WindowInteropHelper(window).Handle;
-                if (handle != IntPtr.Zero)
-                    SetDwmTransitionsDisabled(handle, disabled: false);
-
-                if (window.Content is UIElement content)
-                    content.CacheMode = _savedCacheMode;
-
                 if (window is FluentWindow fluent && _savedBackdrop is { } backdrop)
                     fluent.WindowBackdropType = backdrop;
 
@@ -199,7 +181,7 @@ internal static class WindowResizeStabilityHelper
                 else if (_savedBackground is Brush brush)
                     window.Background = brush;
 
-                // Force one clean layout pass after live resize ends.
+                // One clean pass after live resize (navigation rail, metrics, etc.).
                 window.InvalidateVisual();
                 if (window.Content is UIElement root)
                     root.InvalidateVisual();
@@ -213,19 +195,9 @@ internal static class WindowResizeStabilityHelper
             {
                 _savedBackdrop = null;
                 _savedBackground = null;
-                _savedCacheMode = null;
                 _hadSolidBackground = false;
             }
         }
-    }
-
-    private static void SetDwmTransitionsDisabled(IntPtr hwnd, bool disabled)
-    {
-        if (hwnd == IntPtr.Zero)
-            return;
-
-        var value = disabled ? 1 : 0;
-        _ = DwmSetWindowAttribute(hwnd, DwmwaTransitionsForcedisabled, ref value, sizeof(int));
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -239,7 +211,4 @@ internal static class WindowResizeStabilityHelper
         public int cy;
         public int flags;
     }
-
-    [DllImport("dwmapi.dll", PreserveSig = true)]
-    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
 }

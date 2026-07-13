@@ -3,12 +3,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
-    <!-- Apply the canonical keyboard focus ring to all WPF-UI buttons. -->
+    <!--
+      Apply the canonical keyboard focus ring to all WPF-UI buttons.
+      PressedForeground MUST be set on the Button (not left unset): inside DataTemplates the
+      default WPF-UI pressed trigger can resolve against ContentPresenter and error with
+      "PressedForeground not found on ContentPresenter" (PluginExtensionsPage icon buttons).
+    -->
     <Style BasedOn="{StaticResource {x:Type wpfui:Button}}" TargetType="wpfui:Button">
         <Setter Property="MinHeight" Value="{StaticResource ButtonHeightCompact}" />
         <Setter Property="Padding" Value="14,6" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         <Style.Triggers>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Opacity" Value="0.85" />
@@ -22,6 +28,7 @@
         <Setter Property="Height" Value="{StaticResource ButtonHeightCompact}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
 
     <!-- Standard Button Style -->
@@ -42,6 +49,7 @@
         <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
         <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
     </Style>
 

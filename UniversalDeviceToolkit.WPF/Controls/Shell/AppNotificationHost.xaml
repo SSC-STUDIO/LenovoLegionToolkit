@@ -4,8 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
-    Width="360"
-    MaxWidth="380"
+    Width="{StaticResource NotificationToastWidth}"
+    MinWidth="{StaticResource NotificationToastWidth}"
+    MaxWidth="{StaticResource NotificationToastWidth}"
     HorizontalAlignment="Right"
     VerticalAlignment="Bottom"
     Focusable="False"
@@ -14,12 +15,14 @@
     AutomationProperties.Name="{x:Static resources:Resource.AppNotificationHost_AccessibleName}">
     <!--
       Bottom-right toast stack: up to 3 rows fully visible; overflow scrolls inside a fixed max height.
+      Card width matches Snackbar / AppStatusBanner via NotificationToastWidth.
       New items append at the bottom. Close buttons never invoke notification primary actions.
     -->
     <!-- ~3 toast rows (~100px each + margins) stay fully visible; overflow scrolls. -->
     <ScrollViewer
         x:Name="_scrollViewer"
         MaxHeight="320"
+        HorizontalAlignment="Stretch"
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto"
         CanContentScroll="False"
@@ -27,18 +30,28 @@
         Padding="0">
         <ItemsControl
             x:Name="_items"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
             AutomationProperties.AutomationId="AppNotificationList">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" />
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid Margin="8,5,8,11" Background="Transparent">
-                        <Border
+                    <!-- Vertical spacing only — full NotificationToastWidth for every card. -->
+                    <Border
                             x:Name="ToastBorder"
+                            Margin="0,5,0,11"
                             Padding="12,10"
+                            HorizontalAlignment="Stretch"
+                            MinWidth="{StaticResource NotificationToastWidth}"
                             Background="{DynamicResource NotificationGlassSurfaceBrush}"
                             BorderBrush="{DynamicResource NotificationGlassBorderBrush}"
                             BorderThickness="1"
@@ -81,12 +94,8 @@
                             </StackPanel>
                             <wpfui:Button
                                 Grid.Column="2"
-                                Width="28"
-                                Height="28"
-                                MinWidth="28"
-                                Padding="0"
-                                Appearance="Transparent"
                                 VerticalAlignment="Top"
+                                Style="{StaticResource NotificationCloseButtonStyle}"
                                 ToolTip="{x:Static resources:Resource.AppNotificationHost_Close}"
                                 AutomationProperties.AutomationId="{Binding CloseAutomationId}"
                                 AutomationProperties.Name="{x:Static resources:Resource.AppNotificationHost_Close}"
@@ -95,8 +104,7 @@
                                 <wpfui:SymbolIcon Symbol="Dismiss24" FontSize="14" />
                             </wpfui:Button>
                             </Grid>
-                        </Border>
-                    </Grid>
+                    </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

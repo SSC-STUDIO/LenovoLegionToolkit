@@ -38,6 +38,8 @@ public partial class WindowsOptimizationPage : Page
     private readonly PackageDownloaderSettings _packageDownloaderSettings = IoCContainer.Resolve<PackageDownloaderSettings>();
     private readonly PackageDownloaderFactory _packageDownloaderFactory = IoCContainer.Resolve<PackageDownloaderFactory>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+    private CancellationTokenSource? _pluginRefreshCancellationTokenSource;
+    private int _pluginRefreshVersion;
     
     private SelectedActionsWindow? _selectedActionsWindow;
     private ActionDetailsWindow? _actionDetailsWindow;
@@ -101,6 +103,10 @@ public partial class WindowsOptimizationPage : Page
     {
         _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
 
+        var cancellationTokenSource = Interlocked.Exchange(ref _pluginRefreshCancellationTokenSource, null);
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource?.Dispose();
+
         // Close windows
         _actionDetailsWindow?.Close();
         _selectedActionsWindow?.Close();
@@ -157,17 +163,34 @@ public partial class WindowsOptimizationPage : Page
 
     private void PluginManager_PluginStateChanged(object? sender, PluginEventArgs e)
     {
+        var refreshVersion = Interlocked.Increment(ref _pluginRefreshVersion);
+        var cancellationTokenSource = new CancellationTokenSource();
+        var previousCancellationTokenSource = Interlocked.Exchange(ref _pluginRefreshCancellationTokenSource, cancellationTokenSource);
+        previousCancellationTokenSource?.Cancel();
+        previousCancellationTokenSource?.Dispose();
+        var cancellationToken = cancellationTokenSource.Token;
+
         Dispatcher.InvokeAsync(async () =>
         {
-            if (e.IsInstalled)
-                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true);
+            try
+            {
+                if (e.IsInstalled)
+                    await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true);
 
-            ViewModel.Initialize();
+                cancellationToken.ThrowIfCancellationRequested();
+                if (refreshVersion != Volatile.Read(ref _pluginRefreshVersion))
+                    return;
 
-            if (e.IsInstalled)
-                RequestPluginCategoryFocus(e.PluginId);
+                ViewModel.Initialize();
 
-            TryApplyPendingPluginFocusRequest();
+                if (e.IsInstalled)
+                    RequestPluginCategoryFocus(e.PluginId);
+
+                TryApplyPendingPluginFocusRequest();
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }, DispatcherPriority.Background);
     }
 
@@ -343,4 +366,3 @@ public partial class WindowsOptimizationPage : Page
     }
 }
 }
-

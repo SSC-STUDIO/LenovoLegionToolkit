@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.RGB;
@@ -11,6 +12,8 @@ public partial class KeyboardBacklightPage
 {
     private readonly KeyboardBacklightViewModel _viewModel = new();
     private bool _isInitializing;
+    private CancellationTokenSource? _initializationCancellationTokenSource;
+    private int _initializationVersion;
 
     public KeyboardBacklightPage()
     {
@@ -29,28 +32,46 @@ public partial class KeyboardBacklightPage
         _loader.IsLoading = true;
         _content.Visibility = Visibility.Visible;
 
+        var initializationVersion = Interlocked.Increment(ref _initializationVersion);
+        var cancellationTokenSource = new CancellationTokenSource();
+        var previousCancellationTokenSource = Interlocked.Exchange(ref _initializationCancellationTokenSource, cancellationTokenSource);
+        previousCancellationTokenSource?.Cancel();
+        previousCancellationTokenSource?.Dispose();
+
         try
         {
-            await InitializeKeyboardBacklightAsync();
+            await InitializeKeyboardBacklightAsync(initializationVersion, cancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException)
+        {
         }
         finally
         {
-            _isInitializing = false;
+            if (initializationVersion == Volatile.Read(ref _initializationVersion))
+                _isInitializing = false;
         }
     }
 
     private void KeyboardBacklightPage_Unloaded(object sender, RoutedEventArgs e)
     {
+        Interlocked.Increment(ref _initializationVersion);
+        var cancellationTokenSource = Interlocked.Exchange(ref _initializationCancellationTokenSource, null);
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource?.Dispose();
+        _isInitializing = false;
         _content.Children.Clear();
     }
 
-    private async Task InitializeKeyboardBacklightAsync()
+    private async Task InitializeKeyboardBacklightAsync(int initializationVersion, CancellationToken cancellationToken)
     {
         try
         {
             _titleTextBlock.Visibility = Visibility.Collapsed;
 
             await _viewModel.DetectKeyboardTypeCommand.ExecuteAsync(null);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (initializationVersion != Volatile.Read(ref _initializationVersion))
+                return;
 
             if (_viewModel.IsSpectrumSupported)
             {
@@ -71,6 +92,10 @@ public partial class KeyboardBacklightPage
             }
 
             _loader.IsLoading = false;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {

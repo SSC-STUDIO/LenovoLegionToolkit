@@ -1,7 +1,7 @@
 // This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
 // If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 // Copyright (C) RAMSPDToolkit and Contributors.
-// Partial Copyright (C) Michael Möller <mmoeller@openhardwaremonitor.org> and Contributors.
+// Partial Copyright (C) Michael M枚ller <mmoeller@openhardwaremonitor.org> and Contributors.
 // All Rights Reserved.
 // Derived from Lenovo Legion Toolkit.
 // Original project copyright: Copyright (C) Bartosz Cichecki and contributors.
@@ -23,6 +23,12 @@ namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 
 public class SensorsGroupController : IDisposable
 {
+    private enum HardwareInitializationMode
+    {
+        None,
+        FanOnly,
+        Full
+    }
     #region Constants (Magic Words & Numbers)
 
     private const float INVALID_VALUE_FLOAT = -1f;
@@ -511,6 +517,7 @@ public class SensorsGroupController : IDisposable
     private readonly List<IHardware> _hardware = [];
 
     private Computer? _computer;
+    private HardwareInitializationMode _initializationMode;
     private IHardware? _cpuHardware;
     private IHardware? _amdGpuHardware;
     private IHardware? _gpuHardware;
@@ -683,7 +690,7 @@ public class SensorsGroupController : IDisposable
 
     public async Task<LibreHardwareMonitorInitialState> IsSupportedAsync()
     {
-        LibreHardwareMonitorInitialState result = await InitializeAsync().ConfigureAwait(false);
+        LibreHardwareMonitorInitialState result = await InitializeAsync(HardwareInitializationMode.Full).ConfigureAwait(false);
         try
         {
             bool haveHardware;
@@ -698,7 +705,7 @@ public class SensorsGroupController : IDisposable
         return LibreHardwareMonitorInitialState.Fail;
     }
 
-    private void GetHardware()
+    private void GetHardware(HardwareInitializationMode mode)
     {
         lock (_hardwareLock)
         {
@@ -713,21 +720,23 @@ public class SensorsGroupController : IDisposable
                 // IsControllerEnabled restores EC/SuperIO fan channels that historical
                 // LibreHardwareMonitor configs used for Legion chassis RPM when WMI
                 // Fan_GetCurrentFanSpeed / capability IDs report 0.
+                var fanOnly = mode == HardwareInitializationMode.FanOnly;
                 _computer = new Computer
                 {
-                    IsCpuEnabled = true,
-                    IsGpuEnabled = true,
-                    IsMemoryEnabled = true,
+                    IsCpuEnabled = !fanOnly,
+                    IsGpuEnabled = !fanOnly,
+                    IsMemoryEnabled = !fanOnly,
                     IsMotherboardEnabled = true,
                     IsControllerEnabled = true,
                     IsNetworkEnabled = false,
-                    IsStorageEnabled = true
+                    IsStorageEnabled = !fanOnly
                 };
 
                 _computer.Open();
                 _computer.Accept(new UpdateVisitor());
                 _hardware.AddRange(EnumerateHardwareTree(_computer.Hardware));
                 RefreshSensorCache();
+                _initializationMode = mode;
             }
             catch (Exception ex)
             {
@@ -737,7 +746,7 @@ public class SensorsGroupController : IDisposable
                 _hardware.Clear();
                 throw;
             }
-            finally { _hardwareInitialized = true; }
+            finally { _hardwareInitialized = _computer is not null && _hardware.Count > 0; }
         }
     }
 
@@ -2186,40 +2195,89 @@ public class SensorsGroupController : IDisposable
         lock (_dataLock) return Task.FromResult(_snapshotMotherboardMaxTemp);
     }
 
-    private async Task<LibreHardwareMonitorInitialState> InitializeAsync(CancellationToken cancellationToken = default)
+    internal async Task<bool> EnsureFanSensorsAvailableAsync(CancellationToken cancellationToken = default)
     {
-        if (_initialized)
+        var state = await InitializeAsync(HardwareInitializationMode.FanOnly, cancellationToken).ConfigureAwait(false);
+        return state is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success;
+    }
+
+    private async Task<LibreHardwareMonitorInitialState> InitializeAsync(
+        HardwareInitializationMode requestedMode,
+        CancellationToken cancellationToken = default)
+    {
+        if (_initialized && _initializationMode >= requestedMode)
         {
-            InitialState = _hardware.Count == 0 ? LibreHardwareMonitorInitialState.Fail : LibreHardwareMonitorInitialState.Initialized;
+            InitialState = _hardware.Count == 0
+                ? LibreHardwareMonitorInitialState.Fail
+                : LibreHardwareMonitorInitialState.Initialized;
             return InitialState;
         }
+
         await _initSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
-            if (_initialized)
+            if (_initialized && _initializationMode >= requestedMode)
             {
-                InitialState = _hardware.Count == 0 ? LibreHardwareMonitorInitialState.Fail : LibreHardwareMonitorInitialState.Initialized;
+                InitialState = _hardware.Count == 0
+                    ? LibreHardwareMonitorInitialState.Fail
+                    : LibreHardwareMonitorInitialState.Initialized;
                 return InitialState;
             }
-            await Task.Run(GetHardware).ConfigureAwait(false);
+
+            if (_initialized && requestedMode == HardwareInitializationMode.Full)
+                CloseHardwareForUpgrade();
+
+            await Task.Run(() => GetHardware(requestedMode), cancellationToken).ConfigureAwait(false);
             _initialized = true;
-            InitialState = _hardware.Count == 0 ? LibreHardwareMonitorInitialState.Fail : LibreHardwareMonitorInitialState.Success;
+            InitialState = _hardware.Count == 0
+                ? LibreHardwareMonitorInitialState.Fail
+                : LibreHardwareMonitorInitialState.Success;
             return InitialState;
         }
-        catch (DllNotFoundException) { HandleInitException("DLL Not Found"); InitialState = LibreHardwareMonitorInitialState.PawnIONotInstalled; return InitialState; }
-        catch (Exception ex) { HandleInitException(ex.Message); throw; }
-        finally { _initSemaphore.Release(); }
+        catch (DllNotFoundException)
+        {
+            HandleInitException("DLL Not Found", mutateSettings: requestedMode == HardwareInitializationMode.Full);
+            InitialState = LibreHardwareMonitorInitialState.PawnIONotInstalled;
+            return InitialState;
+        }
+        catch (Exception ex)
+        {
+            HandleInitException(ex.Message, mutateSettings: requestedMode == HardwareInitializationMode.Full);
+            if (requestedMode == HardwareInitializationMode.FanOnly)
+                return LibreHardwareMonitorInitialState.Fail;
+            throw;
+        }
+        finally
+        {
+            _initSemaphore.Release();
+        }
     }
 
-    private void HandleInitException(string reason)
+    private void CloseHardwareForUpgrade()
+    {
+        lock (_hardwareLock)
+        {
+            _computer?.Close();
+            _computer = null;
+            _hardware.Clear();
+            _hardwareInitialized = false;
+            _initialized = false;
+            _initializationMode = HardwareInitializationMode.None;
+            RefreshSensorCache();
+        }
+    }
+
+    private void HandleInitException(string reason, bool mutateSettings)
     {
         Log.Instance.Trace($"LibreHardwareMonitor initialization failed: {reason}");
-        var settings = IoCContainer.Resolve<ApplicationSettings>();
-        settings.Store.EnableHardwareSensors = false;
-        settings.SynchronizeStore();
+        if (mutateSettings)
+        {
+            var settings = IoCContainer.Resolve<ApplicationSettings>();
+            settings.Store.EnableHardwareSensors = false;
+            settings.SynchronizeStore();
+        }
         InitialState = LibreHardwareMonitorInitialState.Fail;
     }
-
     public void NeedRefreshHardware(string hardwareId)
     {
         if (!IsLibreHardwareMonitorInitialized() || _computer == null || hardwareId != HARDWARE_ID_NVIDIA_GPU) return;
@@ -2561,7 +2619,7 @@ public class SensorsGroupController : IDisposable
     public void Dispose()
     {
         StopProducerLoop();
-        lock (_hardwareLock) { _computer?.Close(); _computer = null; _hardwareInitialized = false; }
+        lock (_hardwareLock) { _computer?.Close(); _computer = null; _hardwareInitialized = false; _initialized = false; _initializationMode = HardwareInitializationMode.None; }
         _initSemaphore.Dispose();
         GC.SuppressFinalize(this);
     }

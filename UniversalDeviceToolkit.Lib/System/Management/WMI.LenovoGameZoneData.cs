@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Utils;
@@ -19,6 +19,46 @@ public static partial class WMI
         private static partial Regex DGPUHWIdRegexV2();
 
         public static Task<bool> ExistsAsync() => WMI.ExistsAsync("root\\WMI", $"SELECT * FROM LENOVO_GAMEZONE_DATA");
+
+        public static Task<(bool Success, int Value)> TryGetFanCountAsync() =>
+            TryCallAsync(
+                "root\\WMI",
+                $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+                "GetFanCount",
+                [],
+                pdc => Convert.ToInt32(pdc["Data"].Value),
+                fallback: -1);
+
+        public static Task<(bool Success, int Value)> TryGetFan1SpeedAsync() =>
+            TryGetFanSpeedAsync("GetFan1Speed");
+
+        public static Task<(bool Success, int Value)> TryGetFan2SpeedAsync() =>
+            TryGetFanSpeedAsync("GetFan2Speed");
+
+        private static Task<(bool Success, int Value)> TryGetFanSpeedAsync(string methodName) =>
+            TryCallAsync(
+                "root\\WMI",
+                $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+                methodName,
+                [],
+                pdc => Convert.ToInt32(pdc["Data"].Value),
+                fallback: -1);
+
+        internal static async Task<(bool Success, int Rpm)> TryGetCpuFanSpeedAsync()
+        {
+            var (countSuccess, count) = await TryGetFanCountAsync().ConfigureAwait(false);
+            return countSuccess && count >= 1
+                ? await TryGetFan1SpeedAsync().ConfigureAwait(false)
+                : (false, -1);
+        }
+
+        internal static async Task<(bool Success, int Rpm)> TryGetGpuFanSpeedAsync()
+        {
+            var (countSuccess, count) = await TryGetFanCountAsync().ConfigureAwait(false);
+            return countSuccess && count >= 2
+                ? await TryGetFan2SpeedAsync().ConfigureAwait(false)
+                : (false, -1);
+        }
 
         public static Task<int> GetBIOSOCMode() => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_GAMEZONE_DATA",

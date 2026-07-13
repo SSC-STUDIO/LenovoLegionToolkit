@@ -1,7 +1,9 @@
 using System.Globalization;
+using HardwareValidation;
 using System.Management;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
+using LenovoLegionToolkit.Lib.Controllers.Sensors;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Settings;
@@ -45,6 +47,7 @@ static class ProgramEntry
             return args[0].ToLowerInvariant() switch
             {
                 "capabilities" => await PrintCapabilitiesAsync().ConfigureAwait(false),
+                "fans" => await RunFansAsync(args.Skip(1).ToArray()).ConfigureAwait(false),
                 "power-mode" => await RunPowerModeAsync(args.Skip(1).ToArray()).ConfigureAwait(false),
                 "feature" => await RunFeatureAsync(args.Skip(1).ToArray()).ConfigureAwait(false),
                 "godmode" => await RunGodModeAsync(args.Skip(1).ToArray()).ConfigureAwait(false),
@@ -53,9 +56,76 @@ static class ProgramEntry
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine(ex.Message);
+            Console.Error.WriteLine(ex);
             return 1;
         }
+    }
+
+
+    private static async Task<int> RunFansAsync(string[] args)
+    {
+        var samples = ParsePositiveIntArg(args, 0, 8, "samples");
+        var delayMs = ParsePositiveIntArg(args, 1, 750, "delay-ms");
+
+        Console.WriteLine($"FanSamples: {samples}");
+        Console.WriteLine($"FanDelayMs: {delayMs}");
+        NativeFanProbe.Dump();
+
+        for (var fanId = 0; fanId <= 2; fanId++)
+        {
+            var rpm = await WMI.LenovoFanMethod.FanGetCurrentFanSpeedAsync(fanId).ConfigureAwait(false);
+            Console.WriteLine($"RawFanMethod[{fanId}]: {rpm}");
+        }
+
+        var fanCount = await WMI.LenovoGameZoneData.TryGetFanCountAsync().ConfigureAwait(false);
+        var gameZoneFan1 = await WMI.LenovoGameZoneData.TryGetFan1SpeedAsync().ConfigureAwait(false);
+        var gameZoneFan2 = await WMI.LenovoGameZoneData.TryGetFan2SpeedAsync().ConfigureAwait(false);
+        var capabilityCpu = await WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.CpuCurrentFanSpeed).ConfigureAwait(false);
+        var capabilityGpu = await WMI.LenovoOtherMethod.TryGetFeatureValueAsync(CapabilityID.GpuCurrentFanSpeed).ConfigureAwait(false);
+        Console.WriteLine($"RawGameZoneFanCount: Success={fanCount.Success} Value={fanCount.Value}");
+        Console.WriteLine($"RawGameZoneFan1: Success={gameZoneFan1.Success} Value={gameZoneFan1.Value}");
+        Console.WriteLine($"RawGameZoneFan2: Success={gameZoneFan2.Success} Value={gameZoneFan2.Value}");
+        Console.WriteLine($"RawCapabilityCPU: {capabilityCpu}");
+        Console.WriteLine($"RawCapabilityGPU: {capabilityGpu}");
+
+        IoCContainer.Initialize(new LenovoLegionToolkit.Lib.IoCModule());
+        var sensorsController = IoCContainer.Resolve<SensorsController>();
+        Console.WriteLine($"SensorsSupported: {await sensorsController.IsSupportedAsync().ConfigureAwait(false)}");
+        await sensorsController.PrepareAsync().ConfigureAwait(false);
+
+        var validCpuSamples = 0;
+        var validGpuSamples = 0;
+        for (var sample = 1; sample <= samples; sample++)
+        {
+            var (cpuFanSpeed, gpuFanSpeed) = await sensorsController.GetFanSpeedsAsync().ConfigureAwait(false);
+            var data = await sensorsController.GetDataAsync().ConfigureAwait(false);
+            if (cpuFanSpeed >= 0)
+                validCpuSamples++;
+            if (gpuFanSpeed >= 0)
+                validGpuSamples++;
+
+            Console.WriteLine(
+                $"Sample[{sample}]: CPU={cpuFanSpeed} GPU={gpuFanSpeed} " +
+                $"SnapshotCPU={data.CPU.FanSpeed} SnapshotGPU={data.GPU.FanSpeed}");
+
+            if (sample < samples)
+                await Task.Delay(delayMs).ConfigureAwait(false);
+        }
+
+        Console.WriteLine($"ValidCpuSamples: {validCpuSamples}/{samples}");
+        Console.WriteLine($"ValidGpuSamples: {validGpuSamples}/{samples}");
+        return validCpuSamples > 0 ? 0 : 2;
+    }
+
+    private static int ParsePositiveIntArg(string[] args, int index, int fallback, string name)
+    {
+        if (index >= args.Length)
+            return fallback;
+
+        if (!int.TryParse(args[index], NumberStyles.Integer, CultureInfo.InvariantCulture, out var value) || value <= 0)
+            throw new InvalidOperationException($"{name} must be a positive integer.");
+
+        return value;
     }
 
     private static async Task<int> PrintCapabilitiesAsync()
@@ -695,6 +765,7 @@ static class ProgramEntry
     {
         Console.WriteLine("HardwareValidation");
         Console.WriteLine("  capabilities");
+        Console.WriteLine("  fans [samples] [delay-ms]");
         Console.WriteLine("  power-mode get");
         Console.WriteLine("  power-mode set <int>");
         Console.WriteLine("  power-mode set-verify <int> [--no-restore]");

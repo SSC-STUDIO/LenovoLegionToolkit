@@ -461,6 +461,12 @@
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
 
+                            <!--
+                              Isolate DataContext to the Button itself. Nested inside NavigationStore's
+                              ControlTemplate, inherited DataContext is NavigationStore; WPF-UI's default
+                              pressed trigger binds Foreground -> PressedForeground without RelativeSource
+                              Self, which then errors: PressedForeground not found on NavigationStore.
+                            -->
                             <wpfui:Button
                                 x:Name="PART_TogglePaneButton"
                                 Grid.Row="2"
@@ -472,15 +478,24 @@
                                 Background="Transparent"
                                 BorderThickness="0"
                                 Cursor="Hand"
-                                Focusable="True">
+                                Focusable="True"
+                                DataContext="{Binding RelativeSource={RelativeSource Self}}"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                MouseOverBackground="{DynamicResource ControlFillColorSecondaryBrush}"
+                                MouseOverBorderBrush="Transparent"
+                                PressedBackground="{DynamicResource ControlFillColorTertiaryBrush}"
+                                PressedBorderBrush="Transparent"
+                                PressedForeground="{DynamicResource TextFillColorPrimaryBrush}">
                                 <Grid>
                                     <controls:SymbolIcon
                                         x:Name="PART_CollapseIcon"
                                         FontSize="16"
+                                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=wpfui:Button}}"
                                         Symbol="ChevronLeft24" />
                                     <controls:SymbolIcon
                                         x:Name="PART_ExpandIcon"
                                         FontSize="16"
+                                        Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=wpfui:Button}}"
                                         Symbol="ChevronRight24"
                                         Visibility="Collapsed" />
                                 </Grid>

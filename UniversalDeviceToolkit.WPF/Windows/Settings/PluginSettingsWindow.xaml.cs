@@ -68,8 +68,11 @@ public partial class PluginSettingsWindow : BaseWindow
                 ? Resource.PluginSettingsWindow_NoConfigMessage
                 : pluginDescription;
 
-            _titleTextBlock.Text = $"{pluginName} {Resource.PluginSettingsWindow_Settings}";
-            Title = _titleTextBlock.Text;
+            var windowTitle = $"{pluginName} — {Resource.PluginSettingsWindow_Settings}";
+            Title = windowTitle;
+            _titleTextBlock.Text = windowTitle;
+            if (_titleBar != null)
+                _titleBar.Title = windowTitle;
             _pluginNameTextBlock.Text = pluginName;
             _pluginDescriptionTextBlock.Text = pluginDescription;
             var pluginsDirectory = PluginIconResolver.ResolvePluginsDirectory();

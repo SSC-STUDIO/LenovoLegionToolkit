@@ -21,17 +21,17 @@
 
     <Page.Resources>
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <!-- Browser-style Tab RadioButton Style -->
+        <!-- Unified segmented navigation: one surface, lightweight selected state. -->
         <Style TargetType="RadioButton" x:Key="NavRadioButtonStyle">
-            <Setter Property="Margin" Value="0,0,0,0" />
-            <Setter Property="Padding" Value="20,10,20,12" />
-            <Setter Property="MinHeight" Value="46" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Padding" Value="18,8,18,9" />
+            <Setter Property="MinHeight" Value="42" />
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontSize" Value="13" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1,1,1,0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -42,12 +42,12 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{StaticResource CornerRadiusSurfaceTop}"
+                            CornerRadius="{StaticResource CornerRadiusControl}"
                             Margin="{TemplateBinding Margin}">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
-                                    <RowDefinition Height="5" />
+                                    <RowDefinition Height="3" />
                                 </Grid.RowDefinitions>
                                 <ContentPresenter
                                     x:Name="ContentPresenter"
@@ -64,29 +64,29 @@
                                 <Border
                                     x:Name="ActiveIndicator"
                                     Grid.Row="1"
+                                    Width="22"
                                     Height="3"
-                                    Margin="12,0"
-                                    HorizontalAlignment="Stretch"
+                                    HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     Background="Transparent"
-                                    CornerRadius="{StaticResource CornerRadiusNone}" />
+                                    CornerRadius="{StaticResource CornerRadiusCompact}" />
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
-                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-                                <Setter TargetName="RootBorder" Property="BorderThickness" Value="1,1,1,0" />
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="Transparent" />
                                 <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <Setter TargetName="ContentPresenter" Property="TextElement.FontWeight" Value="SemiBold" />
                                 <Setter TargetName="ActiveIndicator" Property="Background" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="False">
-                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
-                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="RootBorder" Property="Background" Value="Transparent" />
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="Transparent" />
                                 <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
                                 <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                             </Trigger>
                             <MultiTrigger>
@@ -97,8 +97,8 @@
                                 <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
                             </MultiTrigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="RootBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
-                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="RootBorder" Property="Background" Value="Transparent" />
+                                <Setter TargetName="RootBorder" Property="BorderBrush" Value="Transparent" />
                                 <Setter TargetName="ContentPresenter" Property="TextElement.Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -225,8 +225,12 @@
                 <Border
                     Grid.Row="0"
                     Grid.Column="0"
-                    Background="Transparent"
-                    Margin="0,0,24,0">
+                    Padding="3"
+                    Background="{DynamicResource ControlFillColorTertiaryBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Margin="0,0,20,0">
                     <StackPanel
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
@@ -263,15 +267,6 @@
                     </StackPanel>
                 </Border>
                 
-                <Border 
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Height="1"
-                    Background="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    HorizontalAlignment="Stretch"
-                    SnapsToDevicePixels="True" />
-
                 <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -286,11 +281,16 @@
                             FontSize="14"
                             Visibility="Collapsed" />
 
-                        <StackPanel
+                        <Border
                             Grid.Column="1"
-                            HorizontalAlignment="Right">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
+                            Padding="3"
+                            HorizontalAlignment="Right"
+                            Background="{DynamicResource ControlFillColorTertiaryBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CornerRadiusCard}">
+                            <Border.Style>
+                                <Style TargetType="Border">
                                     <Setter Property="Visibility" Value="Visible" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
@@ -298,17 +298,18 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </StackPanel.Style>
-                            <StackPanel.Resources>
+                            </Border.Style>
+                            <Border.Resources>
                                 <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-                                    <Setter Property="MinHeight" Value="36" />
+                                    <Setter Property="MinHeight" Value="40" />
+                                    <Setter Property="Padding" Value="12,7" />
                                 </Style>
-                            </StackPanel.Resources>
-                            <WrapPanel ItemHeight="36" ItemWidth="Auto" Orientation="Horizontal">
+                            </Border.Resources>
+                            <StackPanel Orientation="Horizontal">
                             <wpfui:Button
                                 AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsButton"
                                 MinWidth="148"
-                                Margin="0,0,12,0"
+                                Margin="0,0,4,0"
                                 Appearance="Secondary"
                                 ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
                                 AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
@@ -325,8 +326,8 @@
                             <wpfui:Button
                                 x:Name="_selectRecommendedButton"
                                 AutomationProperties.AutomationId="WindowsOptimizationSelectRecommendedButton"
-                                MinWidth="36"
-                                Margin="0,0,12,0"
+                                MinWidth="40"
+                                Margin="0,0,4,0"
                                 Appearance="Secondary"
                                 ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
                                 AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
@@ -336,12 +337,14 @@
                             <wpfui:Button
                                 x:Name="_clearButton"
                                 AutomationProperties.AutomationId="WindowsOptimizationBulkActionButton"
-                                MinWidth="36"
-                                Margin="0,0,12,0"
+                                MinWidth="40"
+                                Margin="0"
                                 Appearance="Secondary"
                                 Click="ClearSelectionButton_Click">
                                 <wpfui:Button.Style>
                                     <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                                        <Setter Property="MinHeight" Value="40" />
+                                        <Setter Property="Padding" Value="12,7" />
                                         <Setter Property="ToolTip" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                         <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
                                         <Style.Triggers>
@@ -380,8 +383,8 @@
                                     </wpfui:SymbolIcon.Style>
                                 </wpfui:SymbolIcon>
                             </wpfui:Button>
-                            </WrapPanel>
-                        </StackPanel>
+                            </StackPanel>
+                        </Border>
                     </Grid>
             </Grid>
 

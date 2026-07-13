@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,8 +28,9 @@ public partial class AutomationPage
     private readonly AutomationProcessor _automationProcessor = IoCContainer.Resolve<AutomationProcessor>();
 
     private IAutomationStep[] _supportedAutomationSteps = [];
-
-    internal static TimeSpan GetAutomationFallbackLoadingDelay() => TimeSpan.FromMilliseconds(600);
+    private CancellationTokenSource? _refreshCancellationTokenSource;
+    private int _refreshVersion;
+    private bool _hasLoadedContent;
 
     public AutomationPage()
     {
@@ -159,22 +161,38 @@ public partial class AutomationPage
 
     private async Task RefreshAsync()
     {
+        var refreshVersion = Interlocked.Increment(ref _refreshVersion);
+        var cancellationTokenSource = new CancellationTokenSource();
+        var previousCancellationTokenSource = Interlocked.Exchange(ref _refreshCancellationTokenSource, cancellationTokenSource);
+        previousCancellationTokenSource?.Cancel();
+        previousCancellationTokenSource?.Dispose();
+        var cancellationToken = cancellationTokenSource.Token;
+
         _scrollViewer.ScrollToTop();
 
-        _loaderAutomatic.IsLoading = true;
-        _loaderManual.IsLoading = true;
-
-        var initializedTasks = new List<Task> { Task.Delay(GetAutomationFallbackLoadingDelay()) };
-
-        _enableAutomaticPipelinesToggle.IsChecked = _automationProcessor.IsEnabled;
-
-        _automaticPipelinesStackPanel.Children.Clear();
-        _manualPipelinesStackPanel.Children.Clear();
+        if (!_hasLoadedContent)
+        {
+            _loaderAutomatic.IsLoading = true;
+            _loaderManual.IsLoading = true;
+        }
 
         var pipelines = await _automationProcessor.GetPipelinesAsync();
+        if (cancellationToken.IsCancellationRequested)
+            return;
 
         if (_supportedAutomationSteps.IsEmpty())
             _supportedAutomationSteps = await GetSupportedAutomationStepsAsync();
+        if (cancellationToken.IsCancellationRequested)
+            return;
+
+        if (refreshVersion != Volatile.Read(ref _refreshVersion))
+            return;
+
+        _enableAutomaticPipelinesToggle.IsChecked = _automationProcessor.IsEnabled;
+        _automaticPipelinesStackPanel.Children.Clear();
+        _manualPipelinesStackPanel.Children.Clear();
+
+        var initializedTasks = new List<Task>();
 
         foreach (var pipeline in pipelines.Where(p => p.Trigger is not null))
         {
@@ -200,7 +218,12 @@ public partial class AutomationPage
             : Visibility.Collapsed;
 
         await Task.WhenAll(initializedTasks);
+        if (cancellationToken.IsCancellationRequested)
+            return;
+        if (refreshVersion != Volatile.Read(ref _refreshVersion))
+            return;
 
+        _hasLoadedContent = true;
         _loaderAutomatic.IsLoading = false;
         _loaderManual.IsLoading = false;
     }
@@ -439,8 +462,9 @@ public partial class AutomationPage
 
     private void AutomationPage_Unloaded(object? sender, RoutedEventArgs e)
     {
-        // The navigation host caches page instances. Keep lifecycle handlers attached so
-        // returning to Automation refreshes its content and restarts the shared skeleton.
+        var cancellationTokenSource = Interlocked.Exchange(ref _refreshCancellationTokenSource, null);
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource?.Dispose();
     }
 }
 }

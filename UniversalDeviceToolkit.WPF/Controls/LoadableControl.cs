@@ -1,104 +1,81 @@
-using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using UniversalDeviceToolkit.WPF.Utils;
-using Wpf.Ui.Controls;
+using UniversalDeviceToolkit.WPF.Controls.Loading;
 
 namespace UniversalDeviceToolkit.WPF.Controls;
 
-public class LoadableControl : UserControl
+public class LoadableControl : LoadStatePresenter
 {
-    private readonly ContentPresenter _contentPresenter = new();
-    private readonly ContentPresenter _loadingPresenter = new();
-    private readonly ProgressRing _progressRing = new();
-
-    private bool _isLoading = true;
+    public static readonly DependencyProperty IsLoadingProperty = DependencyProperty.Register(
+        nameof(IsLoading), typeof(bool), typeof(LoadableControl),
+        new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsLoadingChanged));
 
     public bool IsLoading
     {
-        get => _isLoading;
-        set
-        {
-            _isLoading = value;
-            UpdateLoadingState();
-        }
+        get => (bool)GetValue(IsLoadingProperty);
+        set => SetValue(IsLoadingProperty, value);
     }
 
     public bool IsIndeterminate
     {
-        get => _progressRing.IsIndeterminate;
-        set => _progressRing.IsIndeterminate = value;
+        get => LoadingProgressRing.IsIndeterminate;
+        set => LoadingProgressRing.IsIndeterminate = value;
     }
 
     public double Progress
     {
-        get => _progressRing.Progress;
-        set => _progressRing.Progress = value;
+        get => LoadingProgressRing.Progress;
+        set => LoadingProgressRing.Progress = value;
     }
 
     public double IndicatorWidth
     {
-        get => _progressRing.Width;
-        set => _progressRing.Width = value;
+        get => LoadingProgressRing.Width;
+        set => LoadingProgressRing.Width = value;
     }
 
     public double IndicatorHeight
     {
-        get => _progressRing.Height;
-        set => _progressRing.Height = value;
+        get => LoadingProgressRing.Height;
+        set => LoadingProgressRing.Height = value;
     }
 
     public HorizontalAlignment IndicatorHorizontalAlignment
     {
-        get => _progressRing.HorizontalAlignment;
-        set => _progressRing.HorizontalAlignment = value;
+        get => LoadingProgressRing.HorizontalAlignment;
+        set => LoadingProgressRing.HorizontalAlignment = value;
     }
 
     public VerticalAlignment IndicatorVerticalAlignment
     {
-        get => _progressRing.VerticalAlignment;
-        set => _progressRing.VerticalAlignment = value;
+        get => LoadingProgressRing.VerticalAlignment;
+        set => LoadingProgressRing.VerticalAlignment = value;
     }
 
     public Thickness IndicatorMargin
     {
-        get => _progressRing.Margin;
-        set => _progressRing.Margin = value;
+        get => LoadingProgressRing.Margin;
+        set => LoadingProgressRing.Margin = value;
     }
 
-    public Visibility ContentVisibilityWhileLoading { get; set; } = Visibility.Hidden;
-
-    public object? LoadingContent { get; set; }
-
-    protected override void OnInitialized(EventArgs e)
+    protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
-        base.OnInitialized(e);
+        base.OnPropertyChanged(e);
 
-        _contentPresenter.Content = Content;
-        _progressRing.SetResourceReference(StyleProperty, "AppLoadingRingStyle");
+        if (e.Property != LoadStateProperty)
+            return;
 
-        _loadingPresenter.Content = LoadingContent ?? _progressRing;
-
-        var grid = new Grid();
-        grid.Children.Add(_contentPresenter);
-        grid.Children.Add(_loadingPresenter);
-
-        UpdateLoadingState();
-
-        Content = grid;
+        var isLoading = LoadState is LoadState.Loading or LoadState.Refreshing;
+        if (IsLoading != isLoading)
+            SetCurrentValue(IsLoadingProperty, isLoading);
     }
 
-    private void UpdateLoadingState()
+    private static void OnIsLoadingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        _contentPresenter.Visibility = IsLoading ? ContentVisibilityWhileLoading : Visibility.Visible;
-        _loadingPresenter.Visibility = IsLoading ? Visibility.Visible : Visibility.Hidden;
+        if (d is not LoadableControl control)
+            return;
 
-        if (IsLoading)
-        {
-            Dispatcher.BeginInvoke(
-                () => SkeletonShimmer.RestartSubtree(_loadingPresenter),
-                DispatcherPriority.Render);
-        }
+        var targetState = e.NewValue is true ? LoadState.Loading : LoadState.Ready;
+        if (control.LoadState != targetState)
+            control.SetCurrentValue(LoadStateProperty, targetState);
     }
 }

@@ -127,7 +127,7 @@
                                     Height="3"
                                     Margin="0,3,0,0"
                                     Background="Transparent"
-                                    CornerRadius="2"
+                                    CornerRadius="{StaticResource CornerRadiusNone}"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Bottom" />
                             </Grid>

@@ -757,7 +757,7 @@
     <value>显示或隐藏系统优化导航项</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
-    <value>显示或隐藏插件扩展导航项</value>
+    <value>显示或隐藏插件扩展导航项（默认关闭）</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
     <value>显示或隐藏关于导航项</value>
@@ -2418,6 +2418,9 @@
   </data>
   <data name="MainWindows_VantageRunning" xml:space="preserve">
     <value>Lenovo Vantage 和 / 或 ImController 正在后台运行。</value>
+  </data>
+  <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
+    <value>插件扩展默认关闭。可在「设置 → 导航项」中开启。</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
     <value>在所有连接到设备的显示器上显示提示弹窗。</value>

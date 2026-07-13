@@ -71,16 +71,47 @@ public sealed class StartupDeviceSetupCoordinator
 
         var window = _createWindow(machineInformation, recommendedPack, availability.IsBasicMode, selectablePacks);
         LocalizationHelper.ApplyStartupTheme(window);
-        window.Show();
-        var result = await window.ShouldContinue;
 
-        if (!result.Confirmed)
-            return;
+        // Never leave MainWindow interactive under the setup dialog.
+        // Prefer showing setup while MainWindow is still hidden (startup order).
+        var mainWindow = System.Windows.Application.Current?.MainWindow;
+        var restoredMainEnabled = true;
+        var disabledMain = false;
+        if (mainWindow is not null
+            && !ReferenceEquals(mainWindow, window)
+            && mainWindow.IsVisible)
+        {
+            window.Owner = mainWindow;
+            window.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            restoredMainEnabled = mainWindow.IsEnabled;
+            mainWindow.IsEnabled = false;
+            disabledMain = true;
+        }
+        else
+        {
+            window.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+        }
 
-        // Prefer the user's pick for basic vs hardware over auto-detect alone.
-        _saveSetupState(result.DevicePackId, result.IsBasicMode);
-        ApplyPreferredPack(result.DevicePackId);
-        result.Window?.CompleteAndClose();
+        try
+        {
+            window.Show();
+            window.Activate();
+            _ = window.Focus();
+            var result = await window.ShouldContinue.ConfigureAwait(true);
+
+            if (!result.Confirmed)
+                return;
+
+            // Prefer the user's pick for basic vs hardware over auto-detect alone.
+            _saveSetupState(result.DevicePackId, result.IsBasicMode);
+            ApplyPreferredPack(result.DevicePackId);
+            result.Window?.CompleteAndClose();
+        }
+        finally
+        {
+            if (disabledMain && mainWindow is not null)
+                mainWindow.IsEnabled = restoredMainEnabled;
+        }
     }
 
     /// <summary>Apply saved device-setup pack so feature gates honor user confirmation every launch.</summary>

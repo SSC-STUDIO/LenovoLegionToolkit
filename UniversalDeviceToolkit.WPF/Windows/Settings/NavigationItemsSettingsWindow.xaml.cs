@@ -57,9 +57,9 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
             
         if (visibilitySettings.TryGetValue(pageTag, out var visibility))
             return visibility;
-            
-        // Visible by default
-        return true;
+
+        // Plugin Extensions is opt-in; other items default on.
+        return pageTag != "pluginExtensions";
     }
 
     private void NavigationItemToggle_Click(object sender, RoutedEventArgs e)

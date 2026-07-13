@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
@@ -15,16 +16,15 @@ public static partial class WMI
     {
         private const string FanMethodScope = "root\\WMI";
         private const string FanMethodQuery = "SELECT * FROM LENOVO_FAN_METHOD";
+        private const string FanGetCurrentFanSpeedMethod = "Fan_GetCurrentFanSpeed";
 
-        // Property names seen across Legion firmware generations for Fan_GetCurrentFanSpeed out-params.
+        // Out-param names used by Legion firmware (old LLT used CurrentFanSpeed only).
         private static readonly string[] FanSpeedPropertyNames =
         [
             "CurrentFanSpeed",
             "FanSpeed",
             "CurrentSpeed",
-            "Speed",
-            "Data",
-            "Value"
+            "Speed"
         ];
 
         public static Task FanSetTableAsync(byte[] fanTable) => CallAsync(FanMethodScope,
@@ -63,27 +63,38 @@ public static partial class WMI
             FanGetCurrentFanSpeedPreferAsync(fanId);
 
         /// <summary>
-        /// Try preferred fan IDs in order (restores multi-generation support:
-        /// V1/V2 used 0/1, V3+ used 1/2). First positive RPM wins; explicit 0 means parked
-        /// only when the WMI call itself succeeded.
+        /// Coordinator-friendly API: Success=false when unavailable (-1), Success=true for parked 0 or spinning RPM.
+        /// </summary>
+        public static async Task<(bool Success, int Rpm)> TryFanGetCurrentFanSpeedAsync(params int[] fanIds)
+        {
+            var rpm = await FanGetCurrentFanSpeedPreferAsync(fanIds).ConfigureAwait(false);
+            return rpm < 0 ? (false, -1) : (true, rpm);
+        }
+
+        /// <summary>
+        /// Try preferred fan IDs in order (V1/V2: 0/1, V3+: 1/2). First positive RPM wins.
+        /// Kept deliberately small: each WMI invoke may take hundreds of ms; over-probing
+        /// blew the sensor snapshot budget and froze the dashboard on cached data.
         /// </summary>
         public static async Task<int> FanGetCurrentFanSpeedPreferAsync(params int[] fanIds)
         {
             if (fanIds is null || fanIds.Length == 0)
                 return -1;
 
-            // Do not hard-skip on soft-fail cache alone for a single generation — still
-            // attempt once; permanent soft-fail only applies after InvalidMethod.
-            var sawSuccessfulZero = false;
-            var anyAttemptSucceeded = false;
+            var orderedIds = fanIds.Where(id => id >= 0).Distinct().ToArray();
+            if (orderedIds.Length == 0)
+                return -1;
 
-            foreach (var fanId in fanIds.Distinct())
+            var sawSuccessfulZero = false;
+
+            foreach (var fanId in orderedIds)
             {
+                // Old LLT signature only: FanID (int) → CurrentFanSpeed.
                 var (ok, rpm) = await TryCallAsync(
                     FanMethodScope,
                     $"{FanMethodQuery}",
-                    "Fan_GetCurrentFanSpeed",
-                    new() { { "FanID", fanId } },
+                    FanGetCurrentFanSpeedMethod,
+                    new Dictionary<string, object> { { "FanID", fanId } },
                     ExtractFanSpeedRpm,
                     fallback: -1).ConfigureAwait(false);
 
@@ -94,22 +105,20 @@ public static partial class WMI
                     continue;
                 }
 
-                anyAttemptSucceeded = true;
                 if (rpm > 0)
                     return rpm;
 
-                // Explicit 0 = fan parked at this id (valid reading only when invoke succeeded).
+                // Explicit named-property 0 = parked at this id.
                 sawSuccessfulZero = true;
             }
 
-            if (sawSuccessfulZero)
-                return 0;
-
-            return anyAttemptSucceeded ? 0 : -1;
+            return sawSuccessfulZero ? 0 : -1;
         }
 
         /// <summary>
-        /// Extract RPM from WMI out-params. Older/newer firmware disagree on property names.
+        /// Extract RPM only from known out-params (old LLT: CurrentFanSpeed).
+        /// Never scan all properties — FanID / Status flags are often 0 and were misread
+        /// as parked RPM, freezing the UI on a sticky 0 and blocking LHM fill.
         /// </summary>
         private static int ExtractFanSpeedRpm(PropertyDataCollection properties)
         {
@@ -121,33 +130,26 @@ public static partial class WMI
                     if (raw is null)
                         continue;
                     var value = Convert.ToInt32(raw);
-                    if (value >= 0)
+                    if (value >= 0 && value <= 100_000)
                         return value;
                 }
-                catch
+                catch (ManagementException)
                 {
-                    // try next property name
+                    // property not present
+                }
+                catch (InvalidCastException)
+                {
+                }
+                catch (FormatException)
+                {
+                }
+                catch (OverflowException)
+                {
                 }
             }
 
-            // Last resort: first non-negative convertible property.
-            foreach (PropertyData property in properties)
-            {
-                try
-                {
-                    if (property.Value is null)
-                        continue;
-                    var value = Convert.ToInt32(property.Value);
-                    if (value >= 0)
-                        return value;
-                }
-                catch
-                {
-                    // keep scanning
-                }
-            }
-
-            throw new InvalidOperationException("Fan_GetCurrentFanSpeed returned no readable RPM property.");
+            throw new InvalidOperationException(
+                "Fan_GetCurrentFanSpeed returned no named RPM property (CurrentFanSpeed/FanSpeed/...).");
         }
 
         public static async Task<int> GetCurrentFanMaxSpeedAsync(int sensorId, int fanId)

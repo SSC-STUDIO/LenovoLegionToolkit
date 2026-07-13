@@ -8,18 +8,22 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public class AutomationPageTests
 {
     [Fact]
-    public void GetAutomationFallbackLoadingDelay_ShouldRemainVisibleAndStable()
-    {
-        AutomationPage.GetAutomationFallbackLoadingDelay().Should().Be(TimeSpan.FromMilliseconds(600));
-    }
-
-    [Fact]
-    public void AutomationPage_ShouldNotForceOneSecondLoadingOnRefresh()
+    public void AutomationPage_ShouldUseCancelableLatestWinsLoading()
     {
         ReadAutomationPageSource()
             .Should()
-            .Contain("Task.Delay(GetAutomationFallbackLoadingDelay())")
-            .And.NotContain("TimeSpan.FromSeconds(1)");
+            .Contain("CancellationTokenSource")
+            .And.Contain("refreshVersion")
+            .And.Contain("_hasLoadedContent");
+    }
+
+    [Fact]
+    public void AutomationPage_ShouldNotUseFixedLoadingDelays()
+    {
+        ReadAutomationPageSource()
+            .Should()
+            .NotContain("GetAutomationFallbackLoadingDelay")
+            .And.NotContain("Task.Delay(");
     }
 
     private static string ReadAutomationPageSource()

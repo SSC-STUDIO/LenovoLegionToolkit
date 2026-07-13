@@ -5,8 +5,9 @@
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:shell="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Shell"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    Width="360"
-    MaxWidth="360"
+    Width="{StaticResource NotificationToastWidth}"
+    MinWidth="{StaticResource NotificationToastWidth}"
+    MaxWidth="{StaticResource NotificationToastWidth}"
     HorizontalAlignment="Right"
     Focusable="False"
     Background="Transparent"
@@ -74,15 +75,11 @@
             <wpfui:Button
                 x:Name="CloseButton"
                 Grid.Column="3"
-                Width="28"
-                Height="28"
-                Padding="0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Appearance="Transparent"
+                Style="{StaticResource NotificationCloseButtonStyle}"
                 AutomationProperties.Name="{x:Static resources:Resource.CloseNotification_AutomationName}"
                 Click="CloseButton_Click"
-                CornerRadius="{StaticResource CornerRadiusCompact}"
                 PreviewMouseLeftButtonDown="CloseButton_PreviewMouseLeftButtonDown"
                 ToolTip="{x:Static resources:Resource.Close_Tooltip}">
                 <wpfui:SymbolIcon FontSize="14" Symbol="Dismiss20" />

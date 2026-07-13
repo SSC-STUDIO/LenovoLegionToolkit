@@ -5,11 +5,16 @@
 
     <!--  ReSharper disable Xaml.StaticResourceNotResolved  -->
 
+    <!--
+      WPF-UI CardAction has no CornerRadius DP — it binds template Border to Border.CornerRadius
+      (defaults to ControlCornerRadius ≈ 4–8). Match CardControl / CardExpander (CornerRadiusCard = 18).
+    -->
     <Style BasedOn="{StaticResource DefaultUiCardActionStyle}" TargetType="{x:Type custom:CardAction}">
         <Setter Property="Margin" Value="0,0,0,12" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Border.CornerRadius" Value="{StaticResource CornerRadiusCard}" />
     </Style>
 
     <!--  ReSharper restore Xaml.StaticResourceNotResolved  -->

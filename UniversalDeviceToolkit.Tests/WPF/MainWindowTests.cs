@@ -20,9 +20,11 @@ public class MainWindowTests
     public void MainWindowMinimumWidth_ShouldStayAbovePreviousCrampedMinimum()
     {
         var minWidth = ExtractDoubleAttribute(ReadMainWindowXaml(), "MinWidth");
+        var minHeight = ExtractDoubleAttribute(ReadMainWindowXaml(), "MinHeight");
 
         minWidth.Should().BeGreaterThanOrEqualTo(1200);
-        minWidth.Should().BeGreaterThan(1000);
+        minWidth.Should().BeLessThanOrEqualTo(1300);
+        minHeight.Should().BeGreaterThanOrEqualTo(720);
     }
 
     [Fact]

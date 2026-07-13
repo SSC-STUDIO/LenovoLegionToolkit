@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Controls.Loading;
 using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Custom;
@@ -386,16 +387,25 @@ public class NavigationStore : Control
         if (_pageCache.TryGetValue(cacheKey, out var cached) && cached is not null)
         {
             if (ReferenceEquals(Frame.Content, cached))
+            {
+                // Re-selecting the same page must not leave a stuck Opacity=0 from a prior fade-out.
+                EnsurePageOpaque(cached);
                 return true;
+            }
 
-            // Returning to a warm page — soft crossfade, not a hard cut.
-            PresentPage(cached, animate: true);
+            // Pages that own loading chrome (plugin store, etc.) must not SoftFadeIn from 0 —
+            // that hides their skeleton 流光 for the whole crossfade and feels like "no second animation".
+            var animateReturn = !OwnsLoadingChrome(item.PageType);
+            PresentPage(cached, animate: animateReturn);
+            // Immediate commit path only — do not cancel SoftFadeIn for normal pages.
+            if (!animateReturn)
+                EnsurePageOpaque(cached);
             return true;
         }
 
-        // Plugin Extensions owns a page-specific skeleton that exactly mirrors its cards.
-        // Construct it directly so the generic navigation shell never flashes first.
-        if (string.Equals(item.PageTag, "pluginExtensions", StringComparison.OrdinalIgnoreCase))
+        // Pages that own their loading chrome are constructed directly so the
+        // generic navigation skeleton never flashes before dedicated loading UI.
+        if (OwnsLoadingChrome(item.PageType))
         {
             try
             {
@@ -405,6 +415,7 @@ public class NavigationStore : Control
 
                 _pageCache[cacheKey] = pluginPage;
                 PresentPage(pluginPage, animate: false);
+                EnsurePageOpaque(pluginPage);
                 return true;
             }
             catch (Exception ex)
@@ -449,6 +460,16 @@ public class NavigationStore : Control
         }), DispatcherPriority.Loaded);
 
         return true;
+    }
+
+    private static bool OwnsLoadingChrome(Type pageType)
+    {
+        var metadata = pageType
+            .GetCustomAttributes(typeof(LoadingChromeOwnerAttribute), inherit: true)
+            .OfType<LoadingChromeOwnerAttribute>()
+            .FirstOrDefault();
+
+        return metadata?.Ownership == LoadingChromeOwnership.Page;
     }
 
     private void PresentPage(object page, bool animate)
@@ -519,9 +540,27 @@ public class NavigationStore : Control
             From = 0,
             To = 1,
             Duration = duration,
+            FillBehavior = FillBehavior.Stop,
             EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
         };
+        fade.Completed += (_, _) =>
+        {
+            content.BeginAnimation(UIElement.OpacityProperty, null);
+            content.Opacity = 1;
+        };
         content.BeginAnimation(UIElement.OpacityProperty, fade);
+    }
+
+    /// <summary>
+    /// Clears any leftover Opacity animation (e.g. navigate-away fade-out left the page at 0).
+    /// </summary>
+    private static void EnsurePageOpaque(object page)
+    {
+        if (page is not FrameworkElement element)
+            return;
+
+        element.BeginAnimation(UIElement.OpacityProperty, null);
+        element.Opacity = 1;
     }
 
     private void TrimFrameJournal()

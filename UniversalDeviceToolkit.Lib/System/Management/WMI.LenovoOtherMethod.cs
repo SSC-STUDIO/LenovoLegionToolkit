@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 
 // ReSharper disable IdentifierTypo
@@ -73,15 +73,18 @@ public static partial class WMI
         /// </summary>
         public static async Task<int> TryGetFeatureValueAsync(CapabilityID id)
         {
-            var (ok, value) = await TryCallAsync(
+            var (ok, value) = await TryReadFeatureValueAsync(id).ConfigureAwait(false);
+            return ok ? value : -1;
+        }
+
+        internal static Task<(bool Success, int Value)> TryReadFeatureValueAsync(CapabilityID id) =>
+            TryCallAsync(
                 "root\\WMI",
                 $"SELECT * FROM LENOVO_OTHER_METHOD",
                 "GetFeatureValue",
                 new() { { "IDs", (int)id } },
                 pdc => Convert.ToInt32(pdc["Value"].Value),
-                fallback: -1).ConfigureAwait(false);
-            return ok ? value : -1;
-        }
+                fallback: -1);
 
         public static Task SetFeatureValueAsync(CapabilityID id, int value) => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_OTHER_METHOD",
