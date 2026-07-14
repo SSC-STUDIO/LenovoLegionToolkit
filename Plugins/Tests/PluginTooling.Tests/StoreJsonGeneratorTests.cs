@@ -171,6 +171,36 @@ public class StoreJsonGeneratorTests : IDisposable
         Assert.Equal("SSC-STUDIO", store.Plugins.Single().Author);
     }
 
+    [Fact]
+    public void Generate_ComputesZipAndMainDllHashes_WhenReleaseAssetExists()
+    {
+        CreatePluginFolder("hash-plugin", manifestLifecycle: "Active", manifestName: "Hash Plugin",
+            description: "Integrity hashes from release ZIP.");
+
+        var assetDir = Path.Combine(_tempRoot, "Build", "release-assets");
+        Directory.CreateDirectory(assetDir);
+        var zipPath = Path.Combine(assetDir, "hash-plugin-v1.0.0.zip");
+        var dllBytes = new byte[] { 0x4D, 0x5A, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00 }; // tiny PE-like payload
+        using (var archive = System.IO.Compression.ZipFile.Open(zipPath, System.IO.Compression.ZipArchiveMode.Create))
+        {
+            var entry = archive.CreateEntry("UniversalDeviceToolkit.Plugins.hash-plugin.dll");
+            using var stream = entry.Open();
+            stream.Write(dllBytes);
+        }
+
+        string expectedZipHash;
+        using (var zipStream = File.OpenRead(zipPath))
+            expectedZipHash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(zipStream)).ToLowerInvariant();
+        var expectedDllHash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(dllBytes)).ToLowerInvariant();
+
+        var store = InvokeGenerate(pluginIds: ["hash-plugin"]);
+        var entryResult = Assert.Single(store.Plugins);
+        Assert.False(string.IsNullOrWhiteSpace(entryResult.ZipHash));
+        Assert.False(string.IsNullOrWhiteSpace(entryResult.FileHash));
+        Assert.Equal(expectedZipHash, entryResult.ZipHash);
+        Assert.Equal(expectedDllHash, entryResult.FileHash);
+    }
+
     private void CreatePluginFolder(
         string folderName,
         string? manifestLifecycle,
@@ -335,6 +365,14 @@ public class StoreJsonGeneratorTests : IDisposable
             Assert.NotEmpty(entry.LocalizedNames);
             Assert.NotEmpty(entry.LocalizedDescriptions);
             Assert.NotEmpty(entry.LocalizedTags);
+            // Official Active packages must ship ZIP + main-DLL integrity digests.
+            if (string.Equals(entry.Status, "Active", StringComparison.OrdinalIgnoreCase))
+            {
+                Assert.False(string.IsNullOrWhiteSpace(entry.ZipHash), $"{entry.Id} missing zipHash");
+                Assert.False(string.IsNullOrWhiteSpace(entry.FileHash), $"{entry.Id} missing fileHash");
+                Assert.Equal(64, entry.ZipHash.Length);
+                Assert.Equal(64, entry.FileHash.Length);
+            }
         });
 
         var roundTripPath = Path.Combine(_tempRoot, "store-roundtrip.json");

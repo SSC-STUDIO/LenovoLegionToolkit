@@ -1,3 +1,6 @@
+using System.IO.Compression;
+using System.Security.Cryptography;
+
 namespace PluginTooling.Core;
 
 public sealed class StoreJsonGenerator
@@ -95,9 +98,24 @@ public sealed class StoreJsonGenerator
                 generatedEntry.Changelog = existingEntry.Changelog;
             }
 
-            if (request.MergeExisting && existingEntry is not null)
+            // Prefer hashes computed from the release ZIP; fall back to existing store values
+            // only when the asset is absent (e.g. regenerate metadata without re-download).
+            if (assetExists)
+            {
+                ApplyIntegrityHashesFromAsset(generatedEntry, assetPath, plugin);
+            }
+            else if (request.MergeExisting && existingEntry is not null)
             {
                 PreserveIntegrityFields(generatedEntry, existingEntry);
+            }
+
+            if (request.RequireAssets &&
+                (string.IsNullOrWhiteSpace(generatedEntry.ZipHash) || string.IsNullOrWhiteSpace(generatedEntry.FileHash)))
+            {
+                throw new InvalidOperationException(
+                    $"Release asset for '{plugin.Manifest.Id}' is present but integrity hashes could not be computed " +
+                    $"(zipHash='{generatedEntry.ZipHash}', fileHash='{generatedEntry.FileHash}'). " +
+                    "Ensure the package ZIP contains the main plugin DLL.");
             }
 
             var priorEntry = store.Plugins.FirstOrDefault(entry =>
@@ -283,6 +301,72 @@ public sealed class StoreJsonGenerator
 
         if (string.IsNullOrWhiteSpace(generated.ZipHash) && !string.IsNullOrWhiteSpace(existing.ZipHash))
             generated.ZipHash = existing.ZipHash;
+    }
+
+    /// <summary>
+    /// Fills <see cref="StorePluginEntry.ZipHash"/> (ZIP SHA-256) and
+    /// <see cref="StorePluginEntry.FileHash"/> (main plugin DLL SHA-256 inside the ZIP).
+    /// Host verifies ZIP before extract and DLL before load.
+    /// </summary>
+    internal static void ApplyIntegrityHashesFromAsset(
+        StorePluginEntry entry,
+        string assetPath,
+        PluginContext plugin)
+    {
+        entry.ZipHash = ComputeSha256Hex(assetPath);
+        entry.FileHash = TryComputeMainDllHashFromZip(assetPath, plugin) ?? string.Empty;
+    }
+
+    internal static string ComputeSha256Hex(string path)
+    {
+        using var stream = File.OpenRead(path);
+        var hash = SHA256.HashData(stream);
+        return Convert.ToHexString(hash).ToLowerInvariant();
+    }
+
+    internal static string? TryComputeMainDllHashFromZip(string zipPath, PluginContext plugin)
+    {
+        var candidates = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            $"{plugin.ExpectedAssemblyName}.dll",
+            $"UniversalDeviceToolkit.Plugins.{plugin.FolderName}.dll",
+            $"LenovoLegionToolkit.Plugins.{plugin.FolderName}.dll",
+        };
+
+        // Hyphenated id → Pascal folder variants sometimes differ; also try plugin id forms.
+        var noHyphen = plugin.Manifest.Id.Replace("-", "", StringComparison.Ordinal);
+        candidates.Add($"UniversalDeviceToolkit.Plugins.{noHyphen}.dll");
+        candidates.Add($"LenovoLegionToolkit.Plugins.{noHyphen}.dll");
+
+        try
+        {
+            using var archive = ZipFile.OpenRead(zipPath);
+            foreach (var entry in archive.Entries)
+            {
+                if (string.IsNullOrEmpty(entry.Name))
+                    continue;
+
+                var fileName = Path.GetFileName(entry.FullName);
+                if (!candidates.Contains(fileName))
+                    continue;
+
+                using var entryStream = entry.Open();
+                using var memory = new MemoryStream();
+                entryStream.CopyTo(memory);
+                var hash = SHA256.HashData(memory.ToArray());
+                return Convert.ToHexString(hash).ToLowerInvariant();
+            }
+        }
+        catch (InvalidDataException)
+        {
+            return null;
+        }
+        catch (IOException)
+        {
+            return null;
+        }
+
+        return null;
     }
 
     private static Dictionary<string, string> ResolveLocalizedStrings(
