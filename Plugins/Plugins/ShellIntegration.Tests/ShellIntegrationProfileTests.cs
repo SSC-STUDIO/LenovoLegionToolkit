@@ -215,4 +215,47 @@ public class ShellIntegrationProfileTests
         Assert.True(p.EnableShellIntegration);
         Assert.False(string.IsNullOrEmpty(p.ThemeName));
     }
+
+    // ── SanitizeBackgroundEffect ─────────────────────────────────
+
+    [Theory]
+    [InlineData(999)]
+    [InlineData(-1)]
+    public void SanitizeBackgroundEffect_OutOfRangeValue_ReturnsAcrylic(int raw)
+    {
+        var result = ShellIntegrationProfile.SanitizeBackgroundEffect((ShellVisualEffect)raw);
+        Assert.Equal(ShellVisualEffect.Acrylic, result);
+    }
+
+    [Theory]
+    [InlineData(ShellVisualEffect.None)]
+    [InlineData(ShellVisualEffect.Transparent)]
+    [InlineData(ShellVisualEffect.Blur)]
+    [InlineData(ShellVisualEffect.Acrylic)]
+    public void SanitizeBackgroundEffect_ValidValue_PreservesValue(ShellVisualEffect raw)
+    {
+        var result = ShellIntegrationProfile.SanitizeBackgroundEffect(raw);
+        Assert.Equal(raw, result);
+    }
+
+    // ── SanitizeColorScheme ──────────────────────────────────────
+
+    [Theory]
+    [InlineData(999)]
+    [InlineData(-1)]
+    public void SanitizeColorScheme_OutOfRangeValue_ReturnsAuto(int raw)
+    {
+        var result = ShellIntegrationProfile.SanitizeColorScheme((ShellColorScheme)raw);
+        Assert.Equal(ShellColorScheme.Auto, result);
+    }
+
+    [Theory]
+    [InlineData(ShellColorScheme.Auto)]
+    [InlineData(ShellColorScheme.Light)]
+    [InlineData(ShellColorScheme.Dark)]
+    public void SanitizeColorScheme_ValidValue_PreservesValue(ShellColorScheme raw)
+    {
+        var result = ShellIntegrationProfile.SanitizeColorScheme(raw);
+        Assert.Equal(raw, result);
+    }
 }
