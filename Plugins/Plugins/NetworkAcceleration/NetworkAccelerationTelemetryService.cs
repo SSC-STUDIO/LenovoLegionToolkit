@@ -91,11 +91,7 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
             }
         }
 
-        _lastCounters.Clear();
-        foreach (var entry in currentCounters)
-        {
-            _lastCounters[entry.Key] = entry.Value;
-        }
+        UpdateLastCounters(_lastCounters, interfaces.Select(i => i.Id).ToArray(), currentCounters);
 
         _lastTimestamp = now;
         if (bestSnapshot is null)
@@ -117,6 +113,34 @@ internal sealed class NetworkAccelerationTelemetryService : IDisposable
         {
             _lastCounters.Clear();
             _lastTimestamp = null;
+        }
+    }
+
+    /// <summary>
+    /// Incrementally updates the last-counters dictionary: updates entries for
+    /// interfaces that were successfully read this cycle, removes entries for
+    /// interfaces that are no longer Up/eligible (preventing unbounded growth),
+    /// and preserves entries for interfaces that failed to read stats this
+    /// cycle so their baseline survives for the next successful read.
+    /// </summary>
+    internal static void UpdateLastCounters(
+        Dictionary<string, (long ReceivedBytes, long SentBytes)> lastCounters,
+        string[] activeInterfaceIds,
+        Dictionary<string, (long ReceivedBytes, long SentBytes)> currentCounters)
+    {
+        var activeIds = new HashSet<string>(activeInterfaceIds, StringComparer.OrdinalIgnoreCase);
+
+        var staleIds = lastCounters.Keys
+            .Where(id => !activeIds.Contains(id))
+            .ToList();
+        foreach (var staleId in staleIds)
+        {
+            lastCounters.Remove(staleId);
+        }
+
+        foreach (var entry in currentCounters)
+        {
+            lastCounters[entry.Key] = entry.Value;
         }
     }
 }
