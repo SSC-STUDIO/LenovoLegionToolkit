@@ -2,11 +2,12 @@ using System;
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Listeners;
 
-public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Action<TRawValue>, IDisposable> listen)
+public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Action<TRawValue>, Task<IDisposable>> listen)
     : IListener<TEventArgs>, IDisposable
     where TEventArgs : EventArgs
 {
@@ -18,13 +19,13 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
     public event EventHandler<TEventArgs>? Changed;
 
 
-    public Task StartAsync()
+    public async Task StartAsync()
     {
         if (_isUnsupported)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Listener marked unsupported. Skipping start. [listener={GetType().Name}]");
-            return Task.CompletedTask;
+            return;
         }
 
         try
@@ -33,14 +34,15 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Already started. [listener={GetType().Name}]");
-                return Task.CompletedTask;
+                return;
             }
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Starting... [listener={GetType().Name}]");
 
-            _disposable = listen(Handler);
-            
+            // Await async WMI watcher start (StartAsyncWithTimeout) — does not block UI/sync context.
+            _disposable = await listen(Handler).ConfigureAwait(false);
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Started successfully. [listener={GetType().Name}]");
         }
@@ -54,8 +56,6 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
         {
             Log.Instance.Error($"Couldn't start listener. [listener={GetType().Name}]", ex);
         }
-
-        return Task.CompletedTask;
     }
 
     public Task StopAsync()
@@ -114,7 +114,7 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
     // Event handler wrapper that properly handles async task
     private void Handler(TRawValue properties)
     {
-        _ = HandlerAsync(properties);
+        HandlerAsync(properties).Forget($"{GetType().Name}.HandlerAsync");
     }
 
     public void Dispose()
@@ -130,7 +130,7 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
         if (disposing)
         {
-            _ = StopAsync();
+            StopAsync().Forget($"{GetType().Name}.StopAsync");
             Changed = null;
         }
 

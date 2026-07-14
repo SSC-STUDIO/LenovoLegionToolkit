@@ -157,14 +157,20 @@ public static partial class WMI
         }
     }
 
+    /// <summary>
+    /// Sync WMI event subscription. Blocks the caller while starting the watcher
+    /// (see <see cref="ManagementEventWatcherExtensions.StartWithTimeout"/>). Prefer
+    /// <see cref="ListenAsync"/> from async / UI code paths.
+    /// </summary>
     private static LambdaDisposable Listen(string scope, FormattableString query, Action<PropertyDataCollection> handler)
     {
         var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
         var watcher = new ManagementEventWatcher(scope, queryFormatted);
         watcher.EventArrived += (_, e) => handler(e.NewEvent.Properties);
-        
+
         try
         {
+            // Blocks calling thread; Start itself runs on the thread pool. Prefer ListenAsync.
             watcher.StartWithTimeout();
         }
         catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
@@ -173,7 +179,34 @@ public static partial class WMI
             throw ExceptionHelper.WmiClassNotAvailable(scope, queryFormatted, ex);
         }
 
-        return new LambdaDisposable(() =>
+        return CreateWatcherDisposable(watcher);
+    }
+
+    /// <summary>
+    /// Async WMI event subscription. Does not block the calling thread while starting.
+    /// Preferred for <see cref="Listeners.AbstractWMIListener{TEventArgs,TValue,TRawValue}"/> and other async hosts.
+    /// </summary>
+    private static async Task<IDisposable> ListenAsync(string scope, FormattableString query, Action<PropertyDataCollection> handler)
+    {
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
+        var watcher = new ManagementEventWatcher(scope, queryFormatted);
+        watcher.EventArrived += (_, e) => handler(e.NewEvent.Properties);
+
+        try
+        {
+            await watcher.StartAsyncWithTimeout().ConfigureAwait(false);
+        }
+        catch (ManagementException ex) when (ex.ErrorCode == ManagementStatus.InvalidClass || ex.ErrorCode == ManagementStatus.InvalidNamespace)
+        {
+            watcher.Dispose();
+            throw ExceptionHelper.WmiClassNotAvailable(scope, queryFormatted, ex);
+        }
+
+        return CreateWatcherDisposable(watcher);
+    }
+
+    private static LambdaDisposable CreateWatcherDisposable(ManagementEventWatcher watcher) =>
+        new(() =>
         {
             try
             {
@@ -188,7 +221,6 @@ public static partial class WMI
                 watcher.Dispose();
             }
         });
-    }
 
     internal static async Task<IEnumerable<T>> ReadAsync<T>(string scope, FormattableString query, Func<PropertyDataCollection, T> converter)
     {

@@ -166,15 +166,6 @@ public class PluginManager : IPluginManager
         }
     }
 
-    /// <summary>
-    /// Scan and load plugins from the plugins directory (fire-and-forget for backward compatibility)
-    /// </summary>
-    [Obsolete("Use ScanAndLoadPluginsAsync() instead. This method is fire-and-forget and cannot be awaited.")]
-    public void ScanAndLoadPlugins()
-    {
-        _ = ScanAndLoadPluginsAsync();
-    }
-
     private void RegisterAssemblyResolver(string pluginsDirectory)
     {
         if (_assemblyResolveHandler != null)
@@ -937,35 +928,6 @@ public class PluginManager : IPluginManager
         return _applicationSettings.Store.InstalledExtensions;
     }
 
-    /// <inheritdoc/>
-    public void RegisterPlugin(IPlugin plugin)
-    {
-        if (plugin == null)
-            return;
-
-        var metadata = new PluginMetadata
-        {
-            Id = plugin.Id,
-            Name = plugin.Name,
-            Description = plugin.Description,
-            Icon = plugin.Icon,
-            IsSystemPlugin = plugin.IsSystemPlugin,
-            Dependencies = plugin.Dependencies
-        };
-
-        _registry.Register(plugin, metadata);
-    }
-
-    public async Task InstallPluginAsync(string pluginId)
-    {
-        await Task.Run(() => InstallPlugin(pluginId)).ConfigureAwait(false);
-    }
-
-    public async Task<bool> UninstallPluginAsync(string pluginId)
-    {
-        return await Task.Run(() => UninstallPlugin(pluginId)).ConfigureAwait(false);
-    }
-
     public async Task<bool> PermanentlyDeletePluginAsync(string pluginId)
     {
         // SECURITY: Validate plugin ID format
@@ -1222,43 +1184,6 @@ public class PluginManager : IPluginManager
         return missingDependencies.Count == 0;
     }
 
-    public IEnumerable<string> GetDependentPlugins(string pluginId)
-    {
-        var dependents = new List<string>();
-        
-        foreach (var plugin in _registry.GetAll())
-        {
-            if (plugin.Dependencies != null && plugin.Dependencies.Contains(pluginId, StringComparer.OrdinalIgnoreCase))
-            {
-                dependents.Add(plugin.Id);
-            }
-        }
-        
-        return dependents;
-    }
-
-    public PluginHealthStatus CheckPluginHealth(string pluginId)
-    {
-        if (!_registry.IsRegistered(pluginId))
-            return PluginHealthStatus.NotFound;
-
-        // Check dependencies
-        if (!CheckDependencies(pluginId, out _))
-            return PluginHealthStatus.MissingDependencies;
-
-        // Check version compatibility
-        var metadata = _registry.GetMetadata(pluginId);
-        if (metadata != null && !IsVersionCompatible(metadata.MinimumHostVersion))
-            return PluginHealthStatus.VersionIncompatible;
-
-        // Check if plugin files exist
-        if (metadata?.FilePath != null && !File.Exists(metadata.FilePath))
-            return PluginHealthStatus.Error;
-
-        // Plugin is healthy
-        return PluginHealthStatus.Healthy;
-    }
-    
     private PluginRepositoryService? _pluginRepositoryService;
 
     /// <summary>
@@ -1314,46 +1239,6 @@ public class PluginManager : IPluginManager
         
         return updates;
     }
-    
-    /// <summary>
-    /// Check if a specific plugin has an update available
-    /// </summary>
-    public async Task<bool> HasUpdateAsync(string pluginId)
-    {
-        if (string.IsNullOrWhiteSpace(pluginId))
-            return false;
-            
-        try
-        {
-            var updates = await CheckForUpdatesAsync().ConfigureAwait(false);
-            return updates.ContainsKey(pluginId);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Error($"Error checking update for plugin {pluginId}", ex);
-            return false;
-        }
-    }
-
-    /// <inheritdoc/>
-    public bool PermanentlyDeletePlugin(string pluginId)
-    {
-        // Sync-over-async boundary kept for interface compatibility. Prefer
-        // calling PermanentlyDeletePluginAsync directly from async code paths.
-        // We block here only because the consumer cannot be made async; we
-        // catch and log so that a transient I/O failure surfaces as `false`
-        // to the caller rather than tearing down the caller's stack.
-        try
-        {
-            return PermanentlyDeletePluginAsync(pluginId).GetAwaiter().GetResult();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Synchronous PermanentlyDeletePlugin failed for {pluginId}: {ex.Message}", ex);
-            return false;
-        }
-    }
 
     /// <summary>
     /// Perform actual deletion of plugins marked for deletion (call on app exit)
@@ -1396,27 +1281,6 @@ public class PluginManager : IPluginManager
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Pending plugin deletions completed.");
-    }
-
-    /// <summary>
-    /// Perform actual deletion of plugins marked for deletion (sync wrapper)
-    /// </summary>
-    public void PerformPendingDeletions()
-    {
-        // Sync-over-async boundary kept for callers that cannot be made
-        // async (for example, a final shutdown hook from a non-async
-        // context). Prefer PerformPendingDeletionsAsync from any async
-        // call site. We trap and log here so a single failing plugin does
-        // not abort the rest of the pending-deletion sweep.
-        try
-        {
-            PerformPendingDeletionsAsync().GetAwaiter().GetResult();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Synchronous PerformPendingDeletions failed: {ex.Message}", ex);
-        }
     }
 
     public void UnloadAllPlugins()

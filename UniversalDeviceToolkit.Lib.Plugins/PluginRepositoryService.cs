@@ -2046,26 +2046,6 @@ public class PluginRepositoryService : IDisposable
         return string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
-    /// <summary>
-    /// Cleanup temporary download directory
-    /// </summary>
-    public void CleanupTempFiles()
-    {
-        try
-        {
-            if (Directory.Exists(_tempDownloadDirectory))
-            {
-                Directory.Delete(_tempDownloadDirectory, true);
-                Directory.CreateDirectory(_tempDownloadDirectory);
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error cleaning up temp files: {ex.Message}", ex);
-        }
-    }
-
     private bool _disposed = false;
 
     public void Dispose()

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.Eventing.Reader;
 using System.Threading.Tasks;
+using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Listeners;
@@ -50,6 +51,6 @@ private async Task Watcher_EventRecordWrittenAsync(object? sender, EventRecordWr
     // Event handler wrapper that properly handles async task
     private void Watcher_EventRecordWritten(object? sender, EventRecordWrittenEventArgs e)
     {
-        _ = Watcher_EventRecordWrittenAsync(sender, e);
+        Watcher_EventRecordWrittenAsync(sender, e).Forget($"{GetType().Name}.Watcher_EventRecordWrittenAsync");
     }
 }

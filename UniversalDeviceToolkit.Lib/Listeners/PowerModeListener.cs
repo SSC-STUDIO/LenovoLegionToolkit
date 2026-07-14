@@ -13,7 +13,7 @@ public class PowerModeListener(
     GodModeController godModeController,
     WindowsPowerModeController windowsPowerModeController,
     WindowsPowerPlanController windowsPowerPlanController)
-    : AbstractWMIListener<PowerModeListener.ChangedEventArgs, PowerModeState, int>(WMI.LenovoGameZoneSmartFanModeEvent.Listen), INotifyingListener<PowerModeListener.ChangedEventArgs, PowerModeState>
+    : AbstractWMIListener<PowerModeListener.ChangedEventArgs, PowerModeState, int>(WMI.LenovoGameZoneSmartFanModeEvent.ListenAsync), INotifyingListener<PowerModeListener.ChangedEventArgs, PowerModeState>
 {
     public class ChangedEventArgs(PowerModeState state) : EventArgs
     {

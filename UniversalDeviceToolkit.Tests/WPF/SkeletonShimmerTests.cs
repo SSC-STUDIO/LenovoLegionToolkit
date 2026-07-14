@@ -17,8 +17,8 @@ public sealed class SkeletonShimmerTests
 {
     private static readonly Color ShimmerStart = Color.FromArgb(0x26, 0x88, 0x91, 0xA0);
     private static readonly Color ShimmerPeak = Color.FromArgb(0x4A, 0x88, 0x91, 0xA0);
-    private static readonly Color ShimmerStartLight = Color.FromArgb(0x4A, 0x88, 0xA8, 0xC0);
-    private static readonly Color ShimmerPeakLight = Color.FromArgb(0x8A, 0x98, 0xB8, 0xD0);
+    private static readonly Color ShimmerStartLight = Color.FromArgb(0x38, 0x88, 0xA8, 0xC0);
+    private static readonly Color ShimmerPeakLight = Color.FromArgb(0x90, 0xF0, 0xF6, 0xFC);
 
     [Fact]
     public void CreateShimmerBrush_ShouldHaveOrderedStopsAndVisiblePeak()

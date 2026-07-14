@@ -18,24 +18,38 @@ public static partial class WMI
         {
             public static IDisposable Listen(Action<int, string> handler) => WMI.Listen("root\\CIMV2",
                 $"SELECT * FROM Win32_ProcessStartTrace",
+                ConvertAndHandle(handler));
+
+            public static Task<IDisposable> ListenAsync(Action<int, string> handler) => WMI.ListenAsync("root\\CIMV2",
+                $"SELECT * FROM Win32_ProcessStartTrace",
+                ConvertAndHandle(handler));
+
+            private static Action<PropertyDataCollection> ConvertAndHandle(Action<int, string> handler) =>
                 pdc =>
                 {
                     var processId = Convert.ToInt32(pdc["ProcessID"].Value);
                     var processName = (string)pdc["ProcessName"].Value;
                     handler(processId, Path.GetFileNameWithoutExtension(processName));
-                });
+                };
         }
 
         public static class ProcessStopTrace
         {
             public static IDisposable Listen(Action<int, string> handler) => WMI.Listen("root\\CIMV2",
                 $"SELECT * FROM Win32_ProcessStopTrace",
+                ConvertAndHandle(handler));
+
+            public static Task<IDisposable> ListenAsync(Action<int, string> handler) => WMI.ListenAsync("root\\CIMV2",
+                $"SELECT * FROM Win32_ProcessStopTrace",
+                ConvertAndHandle(handler));
+
+            private static Action<PropertyDataCollection> ConvertAndHandle(Action<int, string> handler) =>
                 pdc =>
                 {
                     var processId = Convert.ToInt32(pdc["ProcessID"].Value);
                     var processName = (string)pdc["ProcessName"].Value;
                     handler(processId, Path.GetFileNameWithoutExtension(processName));
-                });
+                };
         }
 
         public static class ComputerSystemProduct

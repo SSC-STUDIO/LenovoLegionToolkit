@@ -15,8 +15,9 @@ public static class SkeletonShimmer
     // Classic 4.x teal-slate overlay; composited over the resolved theme bone fill at runtime.
     private static readonly Color DefaultShimmerStart = Color.FromArgb(0x26, 0x88, 0x91, 0xA0);
     private static readonly Color DefaultShimmerPeak = Color.FromArgb(0x4A, 0x88, 0x91, 0xA0);
-    private static readonly Color DefaultShimmerStartLight = Color.FromArgb(0x4A, 0x88, 0xA8, 0xC0);
-    private static readonly Color DefaultShimmerPeakLight = Color.FromArgb(0x8A, 0x98, 0xB8, 0xD0);
+    // Light cards need a brighter peak than the bone fill; cool-white keeps the 4.x teal-slate sweep readable.
+    private static readonly Color DefaultShimmerStartLight = Color.FromArgb(0x38, 0x88, 0xA8, 0xC0);
+    private static readonly Color DefaultShimmerPeakLight = Color.FromArgb(0x90, 0xF0, 0xF6, 0xFC);
 
     public static readonly DependencyProperty IsEnabledProperty =
         DependencyProperty.RegisterAttached(

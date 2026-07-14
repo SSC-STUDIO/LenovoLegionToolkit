@@ -28,9 +28,52 @@ public sealed class ManagementEventWatcherExtensionsSourceTests
         source.Should().NotContain("GetAwaiter().GetResult()");
     }
 
-    private static string ReadSourceFile()
+    [Fact]
+    public void StartWithTimeout_ShouldDocumentWaitIsForNonUiThreads()
     {
-        var relativePath = Path.Combine("UniversalDeviceToolkit.Lib", "Extensions", "ManagementEventWatcherExtensions.cs");
+        var source = ReadSourceFile();
+        source.Should().Contain("Do not call from the UI thread");
+        source.Should().Contain("startTask.Wait(timeoutMs)");
+        source.Should().Contain("intentional for sync callers");
+    }
+
+    [Fact]
+    public void StartAsyncWithTimeout_ShouldUseConfigureAwaitFalse()
+    {
+        var source = ReadSourceFile();
+        source.Should().Contain("ConfigureAwait(false)");
+        source.Should().Contain("Task.WhenAny(startTask, Task.Delay(timeoutMs, cts.Token))");
+    }
+
+    [Fact]
+    public void WmiListenAsync_ShouldUseStartAsyncWithTimeout()
+    {
+        var source = ReadWmiSourceFile();
+        source.Should().Contain("private static async Task<IDisposable> ListenAsync(");
+        source.Should().Contain("await watcher.StartAsyncWithTimeout().ConfigureAwait(false)");
+    }
+
+    [Fact]
+    public void WmiWrapper_ShouldExposeSubscribeAsyncUsingStartAsyncWithTimeout()
+    {
+        var source = ReadWmiWrapperSourceFile();
+        source.Should().Contain("public async Task<IDisposable> SubscribeAsync(");
+        source.Should().Contain("await watcher.StartAsyncWithTimeout().ConfigureAwait(false)");
+        source.Should().Contain("Prefer");
+        source.Should().Contain("SubscribeAsync");
+    }
+
+    private static string ReadSourceFile() =>
+        ReadRepositoryFile(Path.Combine("UniversalDeviceToolkit.Lib", "Extensions", "ManagementEventWatcherExtensions.cs"));
+
+    private static string ReadWmiSourceFile() =>
+        ReadRepositoryFile(Path.Combine("UniversalDeviceToolkit.Lib", "System", "Management", "WMI.cs"));
+
+    private static string ReadWmiWrapperSourceFile() =>
+        ReadRepositoryFile(Path.Combine("UniversalDeviceToolkit.Lib", "System", "Management", "WMIWrapper.cs"));
+
+    private static string ReadRepositoryFile(string relativePath)
+    {
         foreach (var candidateRoot in GetRepositoryRootCandidates())
         {
             var path = Path.Combine(candidateRoot, relativePath);

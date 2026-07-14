@@ -393,33 +393,6 @@ public class PluginSandbox : IPluginSandbox, IDisposable
     }
 
     /// <inheritdoc />
-    public SandboxResourceUsage GetResourceUsage(string pluginId)
-    {
-        SandboxContext? context;
-        lock (_lock)
-        {
-            if (!_sandboxes.TryGetValue(pluginId, out context))
-                return new SandboxResourceUsage();
-        }
-
-        lock (context)
-        {
-            return new SandboxResourceUsage
-            {
-                MemoryUsageBytes = context.ResourceStats.MemoryUsageBytes,
-                PeakMemoryUsageBytes = context.ResourceStats.PeakMemoryUsageBytes,
-                CpuUsagePercentage = context.ResourceStats.CpuUsagePercentage,
-                FileSystemOperationCount = context.ResourceStats.FileSystemOperationCount,
-                NetworkOperationCount = context.ResourceStats.NetworkOperationCount,
-                AverageOperationTimeMs = context.ResourceStats.AverageOperationTimeMs,
-                ViolationCount = context.ResourceStats.ViolationCount,
-                SandboxCreatedAt = context.Info.LoadedAt,
-                TotalRunningTime = DateTime.UtcNow - context.Info.LoadedAt
-            };
-        }
-    }
-
-    /// <inheritdoc />
     public bool DestroySandbox(string pluginId)
     {
         lock (_lock)

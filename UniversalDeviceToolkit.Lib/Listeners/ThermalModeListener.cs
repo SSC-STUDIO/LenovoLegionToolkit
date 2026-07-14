@@ -9,7 +9,7 @@ namespace LenovoLegionToolkit.Lib.Listeners;
 public class ThermalModeListener(
     WindowsPowerModeController windowsPowerModeController,
     WindowsPowerPlanController windowsPowerPlanController)
-    : AbstractWMIListener<ThermalModeListener.ChangedEventArgs, ThermalModeState, int>(WMI.LenovoGameZoneThermalModeEvent.Listen)
+    : AbstractWMIListener<ThermalModeListener.ChangedEventArgs, ThermalModeState, int>(WMI.LenovoGameZoneThermalModeEvent.ListenAsync)
 {
     public class ChangedEventArgs(ThermalModeState state) : EventArgs
     {

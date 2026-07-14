@@ -10,7 +10,7 @@ using LenovoLegionToolkit.Lib.Utils;
 namespace LenovoLegionToolkit.Lib.Listeners;
 
 public class RGBKeyboardBacklightListener(RGBKeyboardBacklightController controller)
-    : AbstractWMIListener<EventArgs, RGBKeyboardBacklightChanged, int>(WMI.LenovoGameZoneLightProfileChangeEvent.Listen)
+    : AbstractWMIListener<EventArgs, RGBKeyboardBacklightChanged, int>(WMI.LenovoGameZoneLightProfileChangeEvent.ListenAsync)
 {
     protected override RGBKeyboardBacklightChanged GetValue(int value) => default;
 

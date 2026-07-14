@@ -258,13 +258,6 @@ public interface IPluginSandbox
     bool UpdateConfiguration(string pluginId, SandboxConfiguration configuration);
 
     /// <summary>
-    /// Gets the current resource usage for a plugin
-    /// </summary>
-    /// <param name="pluginId">Plugin identifier</param>
-    /// <returns>Resource usage statistics</returns>
-    SandboxResourceUsage GetResourceUsage(string pluginId);
-
-    /// <summary>
     /// Destroys a sandbox and releases all resources
     /// </summary>
     /// <param name="pluginId">Plugin identifier</param>

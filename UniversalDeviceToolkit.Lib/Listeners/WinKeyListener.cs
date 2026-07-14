@@ -5,7 +5,7 @@ using LenovoLegionToolkit.Lib.System.Management;
 namespace LenovoLegionToolkit.Lib.Listeners;
 
 public class WinKeyListener()
-    : AbstractWMIListener<EventArgs, WinKeyChanged, int>(WMI.LenovoGameZoneKeyLockStatusEvent.Listen)
+    : AbstractWMIListener<EventArgs, WinKeyChanged, int>(WMI.LenovoGameZoneKeyLockStatusEvent.ListenAsync)
 {
     protected override WinKeyChanged GetValue(int value) => default;
 

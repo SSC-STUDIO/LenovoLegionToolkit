@@ -15,7 +15,7 @@ public class LightingChangeListener(
     PortsBacklightFeature portsBacklightFeature,
     FnKeysDisabler fnKeysDisabler)
     : AbstractWMIListener<LightingChangeListener.ChangedEventArgs, LightingChangeState, int>(WMI.LenovoLightingEvent
-        .Listen)
+        .ListenAsync)
 {
     public class ChangedEventArgs(LightingChangeState state) : EventArgs
     {

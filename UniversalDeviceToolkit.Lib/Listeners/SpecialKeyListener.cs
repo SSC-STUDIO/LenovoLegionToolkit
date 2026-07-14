@@ -20,7 +20,7 @@ public class SpecialKeyListener(
     RefreshRateFeature feature,
     MicrophoneFeature microphoneFeature,
     IDelayProvider? delayProvider = null)
-    : AbstractWMIListener<SpecialKeyListener.ChangedEventArgs, SpecialKey, int>(WMI.LenovoUtilityEvent.Listen)
+    : AbstractWMIListener<SpecialKeyListener.ChangedEventArgs, SpecialKey, int>(WMI.LenovoUtilityEvent.ListenAsync)
 {
     private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     public class ChangedEventArgs(SpecialKey specialKey) : EventArgs

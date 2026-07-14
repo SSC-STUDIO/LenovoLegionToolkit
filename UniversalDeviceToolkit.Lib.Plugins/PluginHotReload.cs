@@ -399,96 +399,31 @@ public class PluginHotReload : IPluginHotReload, IDisposable
     }
 
     /// <inheritdoc />
-    public bool StartWatching(string pluginId, string assemblyPath)
+    public bool StopWatching(string pluginId)
     {
-        if (!Configuration.AutoReloadOnChange)
+        if (string.IsNullOrWhiteSpace(pluginId))
             return false;
 
         lock (_lock)
         {
-            if (_watchers.ContainsKey(pluginId))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Already watching plugin: {pluginId}");
+            if (!_watchers.Remove(pluginId, out var watcher))
                 return false;
-            }
 
             try
             {
-                var directory = Path.GetDirectoryName(assemblyPath);
-                var fileName = Path.GetFileName(assemblyPath);
-
-                if (string.IsNullOrEmpty(directory) || string.IsNullOrEmpty(fileName))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Invalid assembly path for watching: {assemblyPath}");
-                    return false;
-                }
-
-                var watcher = new FileSystemWatcher(directory, fileName)
-                {
-                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.FileName,
-                    EnableRaisingEvents = true
-                };
-
-                watcher.Changed += async (sender, e) =>
-                {
-                    try
-                    {
-                        if (e.ChangeType == WatcherChangeTypes.Changed)
-                        {
-                            await OnPluginFileChanged(pluginId, e.FullPath);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Error during plugin file change for {pluginId}: {ex.Message}");
-                    }
-                };
-
-                _watchers[pluginId] = watcher;
-
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Started watching plugin {pluginId} at {assemblyPath}");
-
-                return true;
+                watcher.EnableRaisingEvents = false;
+                watcher.Dispose();
             }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to start watching plugin {pluginId}: {ex.Message}");
-                return false;
+                    Log.Instance.Trace($"Failed to dispose file watcher for plugin {pluginId}: {ex.Message}", ex);
             }
-        }
-    }
 
-    /// <inheritdoc />
-    public bool StopWatching(string pluginId)
-    {
-        lock (_lock)
-        {
-            if (_watchers.TryGetValue(pluginId, out var watcher))
-            {
-                watcher.EnableRaisingEvents = false;
-                watcher.Dispose();
-                _watchers.Remove(pluginId);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Stopped watching plugin assembly: {pluginId}");
 
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Stopped watching plugin: {pluginId}");
-
-                return true;
-            }
-            return false;
-        }
-    }
-
-    /// <inheritdoc />
-    public IEnumerable<string> GetWatchedPlugins()
-    {
-        lock (_lock)
-        {
-            return _watchers.Keys.ToList();
+            return true;
         }
     }
 
@@ -542,47 +477,6 @@ public class PluginHotReload : IPluginHotReload, IDisposable
                 Log.Instance.Trace($"Failed to create backup for plugin {pluginId}: {ex.Message}");
             return null;
         }
-    }
-
-    /// <inheritdoc />
-    public async Task<bool> RestoreFromBackupAsync(string pluginId, string backupPath)
-    {
-        try
-        {
-            if (!File.Exists(backupPath))
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Backup not found: {backupPath}");
-                return false;
-            }
-
-            // Reload from backup
-            var result = await ReloadPluginAsync(pluginId, backupPath);
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Restore from backup for plugin {pluginId}: {result}");
-
-            return result;
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to restore from backup for plugin {pluginId}: {ex.Message}");
-            return false;
-        }
-    }
-
-    /// <inheritdoc />
-    public IEnumerable<string> GetBackups(string pluginId)
-    {
-        var backupDir = Path.Combine(_backupPath, pluginId);
-        if (!Directory.Exists(backupDir))
-        {
-            return Enumerable.Empty<string>();
-        }
-
-        return Directory.GetFiles(backupDir, "*.dll")
-            .OrderByDescending(f => File.GetCreationTime(f));
     }
 
     /// <inheritdoc />

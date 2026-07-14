@@ -72,10 +72,10 @@ public class AbstractWMIListenerTests
     {
         private Action<int>? _handler;
 
-        public IDisposable Register(Action<int> handler)
+        public Task<IDisposable> Register(Action<int> handler)
         {
             _handler = handler;
-            return new Registration(() => _handler = null);
+            return Task.FromResult<IDisposable>(new Registration(() => _handler = null));
         }
 
         public void Emit(int value)

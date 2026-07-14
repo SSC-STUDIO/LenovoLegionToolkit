@@ -9,8 +9,8 @@
     <Color x:Key="SkeletonShimmerStartColor">#268891A0</Color>
     <Color x:Key="SkeletonShimmerPeakColor">#4A8891A0</Color>
     <!-- Light theme needs higher alpha so the sweep reads on pale ControlFill surfaces. -->
-    <Color x:Key="SkeletonShimmerStartColorLight">#4A88A8C0</Color>
-    <Color x:Key="SkeletonShimmerPeakColorLight">#8A98B8D0</Color>
+    <Color x:Key="SkeletonShimmerStartColorLight">#3888A8C0</Color>
+    <Color x:Key="SkeletonShimmerPeakColorLight">#90F0F6FC</Color>
 
     <Style x:Key="AppLoadingRingStyle" TargetType="wpfui:ProgressRing">
         <Setter Property="Width" Value="48" />

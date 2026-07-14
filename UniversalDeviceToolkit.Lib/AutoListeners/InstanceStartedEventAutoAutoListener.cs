@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.System.Management;
 
@@ -14,10 +14,9 @@ public class InstanceStartedEventAutoAutoListener : AbstractAutoListener<Instanc
 
     private IDisposable? _disposable;
 
-    protected override Task StartAsync()
+    protected override async Task StartAsync()
     {
-        _disposable = WMI.Win32.ProcessStartTrace.Listen(Handle);
-        return Task.CompletedTask;
+        _disposable = await WMI.Win32.ProcessStartTrace.ListenAsync(Handle).ConfigureAwait(false);
     }
 
 

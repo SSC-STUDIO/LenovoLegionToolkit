@@ -20,11 +20,6 @@ public class PluginStateData
     public byte[]? StateBytes { get; set; }
 
     /// <summary>
-    /// State format version
-    /// </summary>
-    public int StateVersion { get; set; } = 1;
-
-    /// <summary>
     /// When the state was saved
     /// </summary>
     public DateTime SavedAt { get; set; } = DateTime.UtcNow;
@@ -107,16 +102,6 @@ public class HotReloadConfiguration
     public bool RestoreState { get; set; } = true;
 
     /// <summary>
-    /// Maximum time to wait for state serialization (in seconds)
-    /// </summary>
-    public int StateSerializationTimeoutSeconds { get; set; } = 5;
-
-    /// <summary>
-    /// Maximum time to wait for plugin shutdown (in seconds)
-    /// </summary>
-    public int ShutdownTimeoutSeconds { get; set; } = 10;
-
-    /// <summary>
     /// Whether to keep old plugin version as backup
     /// </summary>
     public bool KeepBackup { get; set; } = true;
@@ -133,23 +118,12 @@ public class HotReloadConfiguration
 public interface IStatefulPlugin : IPlugin
 {
     /// <summary>
-    /// Serializes the plugin's current state
-    /// </summary>
-    /// <returns>Serialized state data</returns>
-    byte[] SerializeState();
-
-    /// <summary>
     /// Deserializes and restores the plugin's state
     /// </summary>
     /// <param name="stateData">Serialized state data</param>
     /// <param name="previousVersion">Version of the plugin that saved the state</param>
     /// <returns>True if state was successfully restored</returns>
     bool DeserializeState(byte[] stateData, string previousVersion);
-
-    /// <summary>
-    /// Gets the current state version for compatibility checking
-    /// </summary>
-    int StateVersion { get; }
 }
 
 /// <summary>
@@ -221,25 +195,11 @@ public interface IPluginHotReload
     bool ClearSavedState(string pluginId);
 
     /// <summary>
-    /// Starts watching a plugin's assembly file for changes
-    /// </summary>
-    /// <param name="pluginId">Plugin identifier</param>
-    /// <param name="assemblyPath">Path to the plugin assembly</param>
-    /// <returns>True if watching was started</returns>
-    bool StartWatching(string pluginId, string assemblyPath);
-
-    /// <summary>
     /// Stops watching a plugin's assembly file
     /// </summary>
     /// <param name="pluginId">Plugin identifier</param>
     /// <returns>True if watching was stopped</returns>
     bool StopWatching(string pluginId);
-
-    /// <summary>
-    /// Gets all plugins currently being watched
-    /// </summary>
-    /// <returns>List of watched plugin IDs</returns>
-    IEnumerable<string> GetWatchedPlugins();
 
     /// <summary>
     /// Creates a backup of the current plugin assembly
@@ -248,21 +208,6 @@ public interface IPluginHotReload
     /// <param name="assemblyPath">Path to the plugin assembly</param>
     /// <returns>Path to the backup file or null if failed</returns>
     string? CreateBackup(string pluginId, string assemblyPath);
-
-    /// <summary>
-    /// Restores a plugin from backup
-    /// </summary>
-    /// <param name="pluginId">Plugin identifier</param>
-    /// <param name="backupPath">Path to the backup file</param>
-    /// <returns>True if restore was successful</returns>
-    Task<bool> RestoreFromBackupAsync(string pluginId, string backupPath);
-
-    /// <summary>
-    /// Gets a list of available backups for a plugin
-    /// </summary>
-    /// <param name="pluginId">Plugin identifier</param>
-    /// <returns>List of backup file paths</returns>
-    IEnumerable<string> GetBackups(string pluginId);
 
     /// <summary>
     /// Event raised when a plugin is about to be reloaded
@@ -285,53 +230,3 @@ public interface IPluginHotReload
     event EventHandler<HotReloadEventArgs>? ReloadFailed;
 }
 
-/// <summary>
-/// Result of a hot reload operation
-/// </summary>
-public class HotReloadResult
-{
-    /// <summary>
-    /// Whether the reload was successful
-    /// </summary>
-    public bool Success { get; set; }
-
-    /// <summary>
-    /// The old plugin instance (if available)
-    /// </summary>
-    public IPlugin? OldPlugin { get; set; }
-
-    /// <summary>
-    /// The new plugin instance
-    /// </summary>
-    public IPlugin? NewPlugin { get; set; }
-
-    /// <summary>
-    /// Old plugin version
-    /// </summary>
-    public string OldVersion { get; set; } = string.Empty;
-
-    /// <summary>
-    /// New plugin version
-    /// </summary>
-    public string NewVersion { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Whether state was saved
-    /// </summary>
-    public bool StateSaved { get; set; }
-
-    /// <summary>
-    /// Whether state was restored
-    /// </summary>
-    public bool StateRestored { get; set; }
-
-    /// <summary>
-    /// Error message if reload failed
-    /// </summary>
-    public string? ErrorMessage { get; set; }
-
-    /// <summary>
-    /// Duration of the reload operation
-    /// </summary>
-    public TimeSpan Duration { get; set; }
-}

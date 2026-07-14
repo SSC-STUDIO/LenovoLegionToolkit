@@ -1,4 +1,6 @@
-﻿using System;
+using System;
+using System.Management;
+using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable StringLiteralTypo
@@ -11,10 +13,17 @@ public static partial class WMI
     {
         public static IDisposable Listen(Action<int> handler) => WMI.Listen("root\\WMI",
             $"SELECT * FROM LENOVO_GAMEZONE_KEYLOCK_STATUS_EVENT",
+            ConvertAndHandle(handler));
+
+        public static Task<IDisposable> ListenAsync(Action<int> handler) => WMI.ListenAsync("root\\WMI",
+            $"SELECT * FROM LENOVO_GAMEZONE_KEYLOCK_STATUS_EVENT",
+            ConvertAndHandle(handler));
+
+        private static Action<PropertyDataCollection> ConvertAndHandle(Action<int> handler) =>
             pdc =>
             {
                 var value = Convert.ToInt32(pdc["KeyLockState"].Value);
                 handler(value);
-            });
+            };
     }
 }

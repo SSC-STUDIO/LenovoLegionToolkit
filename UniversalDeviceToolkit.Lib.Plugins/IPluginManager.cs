@@ -15,11 +15,6 @@ public interface IPluginManager : IDisposable
     event EventHandler<PluginEventArgs>? PluginStateChanged;
 
     /// <summary>
-    /// Register plugin
-    /// </summary>
-    void RegisterPlugin(IPlugin plugin);
-
-    /// <summary>
     /// Get all registered plugins
     /// </summary>
     IEnumerable<IPlugin> GetRegisteredPlugins();
@@ -40,19 +35,9 @@ public interface IPluginManager : IDisposable
     void InstallPlugin(string pluginId);
 
     /// <summary>
-    /// Install plugin asynchronously
-    /// </summary>
-    Task InstallPluginAsync(string pluginId);
-
-    /// <summary>
     /// Uninstall plugin
     /// </summary>
     bool UninstallPlugin(string pluginId);
-
-    /// <summary>
-    /// Uninstall plugin asynchronously
-    /// </summary>
-    Task<bool> UninstallPluginAsync(string pluginId);
 
     /// <summary>
     /// Get all installed plugin IDs
@@ -64,17 +49,6 @@ public interface IPluginManager : IDisposable
     /// </summary>
     /// <returns>A task that completes when the scan is finished</returns>
     Task ScanAndLoadPluginsAsync(bool forceRefresh = false);
-
-    /// <summary>
-    /// Scan and load plugins from the plugins directory (fire-and-forget for backward compatibility)
-    /// </summary>
-    [Obsolete("Use ScanAndLoadPluginsAsync() instead. This method is fire-and-forget and cannot be awaited.")]
-    void ScanAndLoadPlugins();
-
-    /// <summary>
-    /// Permanently delete plugin files from disk (cannot be recovered)
-    /// </summary>
-    bool PermanentlyDeletePlugin(string pluginId);
 
     /// <summary>
     /// Permanently delete plugin files from disk asynchronously
@@ -113,26 +87,11 @@ public interface IPluginManager : IDisposable
     /// Check if all plugin dependencies are satisfied
     /// </summary>
     bool CheckDependencies(string pluginId, out List<string> missingDependencies);
-    
-    /// <summary>
-    /// Get plugins that depend on the given plugin
-    /// </summary>
-    IEnumerable<string> GetDependentPlugins(string pluginId);
-    
-    /// <summary>
-    /// Validate plugin health
-    /// </summary>
-    PluginHealthStatus CheckPluginHealth(string pluginId);
-    
+
     /// <summary>
     /// Check for plugin updates (returns a dictionary of pluginId -> availableVersion)
     /// </summary>
     Task<Dictionary<string, string>> CheckForUpdatesAsync();
-    
-    /// <summary>
-    /// Check if a specific plugin has an update available
-    /// </summary>
-    Task<bool> HasUpdateAsync(string pluginId);
 }
 
 /// <summary>

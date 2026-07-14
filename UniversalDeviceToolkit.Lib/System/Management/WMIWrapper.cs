@@ -52,6 +52,11 @@ public class WMIWrapper : IWMIWrapper
         }
     }
 
+    /// <summary>
+    /// Sync subscribe. Blocks the calling thread while the watcher starts
+    /// (<see cref="ManagementEventWatcherExtensions.StartWithTimeout"/>). Prefer
+    /// <see cref="SubscribeAsync"/> from UI / async code.
+    /// </summary>
     public IDisposable Subscribe(string query, Action<object> callback)
     {
         if (_disposed)
@@ -59,44 +64,44 @@ public class WMIWrapper : IWMIWrapper
 
         try
         {
-            var scope = "root\\cimv2";
-            var watcher = new ManagementEventWatcher(scope, query);
+            var (watcher, disposable) = CreateSubscription(query, callback);
 
-            watcher.EventArrived += (_, e) =>
-            {
-                try
-                {
-                    callback(e.NewEvent);
-                }
-                catch (Exception ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"WMI event callback failed", ex);
-                }
-            };
-
+            // Blocks caller intentionally for the sync API. Start runs on the thread pool
+            // via Task.Run inside StartWithTimeout — still do not call from the UI thread.
             watcher.StartWithTimeout();
 
-            return new LambdaDisposable(() =>
-            {
-                try
-                {
-                    watcher.Stop();
-                }
-                catch (ManagementException ex)
-                {
-                    Log.Instance.TraceOnce("wmi-wrapper-watcher-stop", "WMIWrapper event watcher Stop failed during dispose.", ex);
-                }
-                finally
-                {
-                    watcher.Dispose();
-                }
-            });
+            return disposable;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"WMI subscribe failed: {query}", ex);
+
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Async subscribe. Starts the watcher with <see cref="ManagementEventWatcherExtensions.StartAsyncWithTimeout"/>
+    /// and does not block the calling thread.
+    /// </summary>
+    public async Task<IDisposable> SubscribeAsync(string query, Action<object> callback)
+    {
+        if (_disposed)
+            throw new ObjectDisposedException(nameof(WMIWrapper));
+
+        try
+        {
+            var (watcher, disposable) = CreateSubscription(query, callback);
+
+            await watcher.StartAsyncWithTimeout().ConfigureAwait(false);
+
+            return disposable;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"WMI subscribe async failed: {query}", ex);
 
             throw;
         }
@@ -121,6 +126,43 @@ public class WMIWrapper : IWMIWrapper
                 Log.Instance.Trace("WMI availability check failed", ex);
             return false;
         }
+    }
+
+    private (ManagementEventWatcher Watcher, IDisposable Disposable) CreateSubscription(string query, Action<object> callback)
+    {
+        var scope = "root\\cimv2";
+        var watcher = new ManagementEventWatcher(scope, query);
+
+        watcher.EventArrived += (_, e) =>
+        {
+            try
+            {
+                callback(e.NewEvent);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"WMI event callback failed", ex);
+            }
+        };
+
+        IDisposable disposable = new LambdaDisposable(() =>
+        {
+            try
+            {
+                watcher.Stop();
+            }
+            catch (ManagementException ex)
+            {
+                Log.Instance.TraceOnce("wmi-wrapper-watcher-stop", "WMIWrapper event watcher Stop failed during dispose.", ex);
+            }
+            finally
+            {
+                watcher.Dispose();
+            }
+        });
+
+        return (watcher, disposable);
     }
 
     private static T ConvertManagementObject<T>(ManagementObject mo) where T : new()
