@@ -32,6 +32,52 @@
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="LineHeight" Value="15" />
         </Style>
+        <!-- Segmented selection-bar action cell: tag/chip look (Watt Toolkit reference). -->
+        <Style x:Key="NaSelectionActionButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="36" />
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Margin" Value="2,0,0,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Focusable" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="Chrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource CornerRadiusCompact}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="NaSelectionGlyphStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
         <!--
           Content-hugging status chip. Keep HorizontalAlignment=Left — Stretch + CornerRadius=999
           paints a full-width capsule streak across the page.
@@ -378,14 +424,14 @@
     </wpfui:DynamicScrollViewer>
 
         <!--
-          Watt Toolkit-style selection bar: count + favorite (star) + start selected (play).
-          Always visible; actions enable when selection count &gt; 0.
-          Use text glyphs (not WPF-UI symbol icons) — UiGuard forbids icon controls here.
+          Watt Toolkit-style selection bar as segmented tags (not checkbox chrome):
+          [document + count] [☆] [▶] — pill shell with discrete rounded action cells.
+          Text glyphs only (UiGuard forbids icon controls on this page).
         -->
         <Border
             x:Name="_selectionBar"
             Margin="0,0,0,10"
-            Padding="14,8,10,8"
+            Padding="4"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
             Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -396,65 +442,56 @@
             UseLayoutRounding="True"
             AutomationProperties.AutomationId="NetworkAccelerationSelectionBar"
             AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
-            <Border.Effect>
-                <DropShadowEffect
-                    BlurRadius="18"
-                    Direction="270"
-                    Opacity="0.18"
-                    ShadowDepth="2"
-                    Color="#000000" />
-            </Border.Effect>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock
-                    Margin="0,0,8,0"
+                <!-- Label segment: document glyph + count (matches reference tag, not checkbox). -->
+                <Border
+                    MinHeight="36"
+                    Padding="12,6,14,6"
                     VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    Text="☑" />
-                <TextBlock
-                    x:Name="_selectionCountText"
-                    Margin="0,0,12,0"
-                    VerticalAlignment="Center"
-                    FontSize="13"
-                    FontWeight="SemiBold"
-                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                    Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
-                    AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
-                <wpfui:Button
+                    Background="Transparent"
+                    CornerRadius="{StaticResource CornerRadiusRound}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
+                            FontSize="15"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="&#xE8A5;"
+                            AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}" />
+                        <TextBlock
+                            x:Name="_selectionCountText"
+                            VerticalAlignment="Center"
+                            FontSize="13"
+                            FontWeight="Normal"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
+                            AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Action cells: same visual language as other compact tags / chips. -->
+                <Button
                     x:Name="_selectionFavoriteButton"
-                    Width="36"
-                    Height="36"
-                    Margin="0,0,6,0"
-                    Padding="0"
-                    Appearance="Secondary"
+                    Style="{StaticResource NaSelectionActionButtonStyle}"
                     AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
                     Click="SelectionFavoriteButton_Click"
                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}"
                     IsEnabled="False">
-                    <TextBlock
-                        FontSize="16"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="★" />
-                </wpfui:Button>
-                <wpfui:Button
+                    <TextBlock Style="{StaticResource NaSelectionGlyphStyle}" Text="&#xE734;" />
+                </Button>
+
+                <Button
                     x:Name="_selectionStartButton"
-                    Width="36"
-                    Height="36"
-                    Padding="0"
-                    Appearance="Primary"
+                    Style="{StaticResource NaSelectionActionButtonStyle}"
                     AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
                     Click="SelectionStartButton_Click"
                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}"
                     IsEnabled="False">
-                    <TextBlock
-                        FontSize="14"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="▶" />
-                </wpfui:Button>
+                    <TextBlock Style="{StaticResource NaSelectionGlyphStyle}" Text="&#xE768;" />
+                </Button>
             </StackPanel>
         </Border>
     </Grid>
