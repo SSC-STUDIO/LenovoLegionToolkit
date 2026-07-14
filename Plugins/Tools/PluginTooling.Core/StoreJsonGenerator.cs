@@ -21,10 +21,14 @@ public sealed class StoreJsonGenerator
             : Path.GetFullPath(request.AssetRoot);
 
         var releaseDate = request.ReleaseDate ?? DateTimeOffset.UtcNow;
-        var existingEntries = repository.StoreDocument?.Plugins.ToDictionary(
-            entry => entry.Id,
-            entry => entry,
-            StringComparer.OrdinalIgnoreCase) ?? new Dictionary<string, StorePluginEntry>(StringComparer.OrdinalIgnoreCase);
+        // Tolerate duplicate entry IDs in store.json (manual edit, merge artifact).
+        // Last-wins semantics match ReplaceOrAdd below.
+        var existingEntries = (repository.StoreDocument?.Plugins ?? [])
+            .GroupBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Last(),
+                StringComparer.OrdinalIgnoreCase);
 
         var store = new StoreDocument
         {
@@ -39,7 +43,13 @@ public sealed class StoreJsonGenerator
             store.StoreVersion = string.IsNullOrWhiteSpace(repository.StoreDocument.StoreVersion)
                 ? store.StoreVersion
                 : repository.StoreDocument.StoreVersion;
-            store.Plugins.AddRange(repository.StoreDocument.Plugins.Select(Clone));
+            // Deduplicate by entry ID before merge — last-wins, matching ReplaceOrAdd semantics.
+            foreach (var cloned in repository.StoreDocument.Plugins
+                         .GroupBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
+                         .Select(group => Clone(group.Last())))
+            {
+                ReplaceOrAdd(store.Plugins, cloned);
+            }
         }
 
         var storeContentChanged = false;

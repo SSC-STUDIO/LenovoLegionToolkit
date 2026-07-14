@@ -477,6 +477,147 @@ public class StoreJsonGeneratorTests : IDisposable
         Assert.NotNull(entry.Tags);
     }
 
+    [Fact]
+    public void Generate_MergeExisting_DuplicateStoreEntryIds_DeduplicatesLastWins()
+    {
+        // Regression: store.json with two entries sharing the same Id used to crash
+        // StoreJsonGenerator.Generate via ToDictionary ArgumentException. After the
+        // GroupBy.Last() fix, Generate must tolerate duplicates and keep only the
+        // last entry for each Id (last-wins semantics matching ReplaceOrAdd).
+        CreatePluginFolder("dup-plugin", manifestLifecycle: "Active", manifestName: "Dup Plugin",
+            description: "Plugin with duplicate store entries.");
+
+        var storePath = Path.Combine(_tempRoot, "store.json");
+        File.WriteAllText(storePath,
+            """
+            {
+              "lastUpdated": "2026-07-14T00:00:00.0000000+00:00",
+              "storeVersion": "1.0.0",
+              "plugins": [
+                {
+                  "id": "dup-plugin",
+                  "name": "First Entry",
+                  "description": "First entry for duplicate plugin.",
+                  "author": "SSC-STUDIO",
+                  "version": "1.0.0",
+                  "minLLTVersion": "4.2.1",
+                  "isSystemPlugin": false,
+                  "downloadUrl": "https://example.com/releases/download/dup-plugin-v1.0.0/dup-plugin-v1.0.0.zip",
+                  "changelog": "https://example.com/releases/tag/dup-plugin-v1.0.0",
+                  "fileSize": 100,
+                  "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
+                  "repositoryUrl": "https://example.com/repo",
+                  "supportedLanguages": [ "en" ],
+                  "icon": "Icon24",
+                  "iconBackground": "#FFFFFF",
+                  "dependencies": [],
+                  "tags": [ "sample" ],
+                  "status": "Active"
+                },
+                {
+                  "id": "dup-plugin",
+                  "name": "Second Entry",
+                  "description": "Second entry for duplicate plugin.",
+                  "author": "SSC-STUDIO",
+                  "version": "1.0.0",
+                  "minLLTVersion": "4.2.1",
+                  "isSystemPlugin": false,
+                  "downloadUrl": "https://example.com/releases/download/dup-plugin-v1.0.0/dup-plugin-v1.0.0.zip",
+                  "changelog": "https://example.com/releases/tag/dup-plugin-v1.0.0",
+                  "fileSize": 200,
+                  "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
+                  "repositoryUrl": "https://example.com/repo",
+                  "supportedLanguages": [ "en" ],
+                  "icon": "Icon24",
+                  "iconBackground": "#FFFFFF",
+                  "dependencies": [],
+                  "tags": [ "sample" ],
+                  "status": "Active"
+                }
+              ]
+            }
+            """);
+
+        // Must not throw ArgumentException from ToDictionary.
+        var store = InvokeGenerate(mergeExisting: true, pluginIds: ["dup-plugin"]);
+
+        // Only one entry for dup-plugin in the output — the merge path
+        // deduplicates existing entries, then ReplaceOrAdd overwrites with
+        // the freshly generated entry from the manifest.
+        var entries = store.Plugins.Where(e => e.Id == "dup-plugin").ToList();
+        Assert.Single(entries);
+        // Generated entry reflects the manifest, not the store.json duplicates.
+        Assert.Equal("Dup Plugin", entries[0].Name);
+    }
+
+    [Fact]
+    public void Generate_NoMergeExisting_DuplicateStoreEntryIds_DoesNotThrow()
+    {
+        // Even without MergeExisting, the ToDictionary call on existing entries
+        // must not crash when store.json contains duplicate IDs.
+        CreatePluginFolder("dup-nomerge", manifestLifecycle: "Active", manifestName: "Dup NoMerge",
+            description: "Plugin with duplicate store entries, no merge.");
+
+        var storePath = Path.Combine(_tempRoot, "store.json");
+        File.WriteAllText(storePath,
+            """
+            {
+              "lastUpdated": "2026-07-14T00:00:00.0000000+00:00",
+              "storeVersion": "1.0.0",
+              "plugins": [
+                {
+                  "id": "dup-nomerge",
+                  "name": "First",
+                  "description": "First.",
+                  "author": "SSC-STUDIO",
+                  "version": "1.0.0",
+                  "minLLTVersion": "4.2.1",
+                  "isSystemPlugin": false,
+                  "downloadUrl": "",
+                  "changelog": "",
+                  "fileSize": 10,
+                  "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
+                  "repositoryUrl": "",
+                  "supportedLanguages": [ "en" ],
+                  "icon": "Icon24",
+                  "iconBackground": "#FFFFFF",
+                  "dependencies": [],
+                  "tags": [ "sample" ],
+                  "status": "Active"
+                },
+                {
+                  "id": "dup-nomerge",
+                  "name": "Second",
+                  "description": "Second.",
+                  "author": "SSC-STUDIO",
+                  "version": "1.0.0",
+                  "minLLTVersion": "4.2.1",
+                  "isSystemPlugin": false,
+                  "downloadUrl": "",
+                  "changelog": "",
+                  "fileSize": 20,
+                  "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
+                  "repositoryUrl": "",
+                  "supportedLanguages": [ "en" ],
+                  "icon": "Icon24",
+                  "iconBackground": "#FFFFFF",
+                  "dependencies": [],
+                  "tags": [ "sample" ],
+                  "status": "Active"
+                }
+              ]
+            }
+            """);
+
+        // Must not throw ArgumentException from ToDictionary.
+        var store = InvokeGenerate(mergeExisting: false, pluginIds: ["dup-nomerge"]);
+
+        // Generate produces a fresh entry from the plugin manifest, so the output
+        // entry reflects the manifest, not the store.json duplicates.
+        var entry = Assert.Single(store.Plugins);
+        Assert.Equal("dup-nomerge", entry.Id);
+    }
+
     private StoreDocument InvokeGenerate(bool mergeExisting = false, IReadOnlyList<string>? pluginIds = null)
     {
         var request = new StoreGenerationRequest
