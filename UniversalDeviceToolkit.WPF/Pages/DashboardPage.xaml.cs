@@ -209,6 +209,10 @@ public partial class DashboardPage : ILoadingChromeOwner
         if (!e.WidthChanged)
             return;
 
+        // Live resize uses a content snapshot; defer full group reflow until mouse-up.
+        if (Window.GetWindow(this) is { } host && WindowResizeStabilityHelper.IsLiveResizing(host))
+            return;
+
         // Only relayout when the responsive column count actually changes.
         if (GetColumnCountForWidth(e.NewSize.Width) == _currentColumnCount && _content.ColumnDefinitions.Count > 0)
         {

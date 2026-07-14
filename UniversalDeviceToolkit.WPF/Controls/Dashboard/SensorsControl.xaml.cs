@@ -233,6 +233,10 @@ public partial class SensorsControl : IDisposable
         if (!e.WidthChanged)
             return;
 
+        // During live edge-resize content is BitmapCached — skip thrashy gauge reflow.
+        if (Window.GetWindow(this) is { } host && WindowResizeStabilityHelper.IsLiveResizing(host))
+            return;
+
         // Ignore transient zero/near-zero measures that would falsely enter Compact.
         if (e.NewSize.Width <= 1)
             return;

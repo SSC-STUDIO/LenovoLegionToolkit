@@ -211,9 +211,18 @@ public partial class MainWindow
         if (!e.WidthChanged || !IsLoaded)
             return;
 
-        // Skip per-pixel rail updates during live drag (feels stiff / thrashy vs Explorer).
-        // Apply once the user releases the edge, or on maximize/restore via StateChanged.
+        // Skip per-pixel rail updates during live drag (Explorer does not reflow chrome each move).
+        // Applied once on mouse-up via RefreshChromeAfterLiveResize.
         if (WindowResizeStabilityHelper.IsLiveResizing(this))
+            return;
+
+        _navigationStore.RefreshWidthForHostWindow();
+    }
+
+    /// <summary>Called after live edge-resize ends so deferred layout matches the final size.</summary>
+    internal void RefreshChromeAfterLiveResize()
+    {
+        if (!IsLoaded)
             return;
 
         _navigationStore.RefreshWidthForHostWindow();

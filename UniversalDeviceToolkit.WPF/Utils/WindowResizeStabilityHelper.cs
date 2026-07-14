@@ -9,21 +9,30 @@ using Wpf.Ui.Controls;
 namespace UniversalDeviceToolkit.WPF.Utils;
 
 /// <summary>
-/// Reduces flicker when the user live-resizes a Fluent/Mica window (top/left edge drag).
+/// Explorer-like live resize stability for Fluent/Mica windows.
 ///
-/// Intentionally softer than a full freeze:
-/// - Keep DWM maximize/snap/resize transitions enabled (Explorer-like motion).
-/// - Do NOT snapshot the UI with BitmapCache (that freezes content and feels stiff).
-/// - Only pause Mica/Acrylic during the drag and set SWP_NOCOPYBITS to avoid bit-blit tearing.
+/// Why Explorer does not jitter:
+/// - Native shell content is composed by DWM; client content is not a full WPF layout tree
+///   re-measuring every mouse move.
+///
+/// What we do during edge drag (WM_ENTERSIZEMOVE … WM_EXITSIZEMOVE):
+/// 1. <see cref="BitmapCache"/> the window content so WPF does not re-layout the whole tree
+///    every pixel (content scales as a snapshot, like a frozen layer).
+/// 2. Pause Mica/Acrylic (expensive to recompute each frame).
+/// 3. Force <c>SWP_NOCOPYBITS</c> so Win32 does not bit-blit stale client pixels when
+///    Top/Left change together (top/left edge resize).
+/// 4. Expose <see cref="IsLiveResizing"/> so pages can skip thrashy SizeChanged work.
+///
+/// On mouse-up we drop the cache, restore backdrop, and invalidate once for a sharp frame.
 /// </summary>
 internal static class WindowResizeStabilityHelper
 {
     private const int WmEnterSizeMove = 0x0231;
     private const int WmExitSizeMove = 0x0232;
     private const int WmWindowPosChanging = 0x0046;
+    private const int WmSizing = 0x0214;
     private const int SwpNoCopyBits = 0x0100;
 
-    // Per-window state (weak-ish: cleaned on closed).
     private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Window, ResizeSession> Sessions = new();
 
     /// <summary>True while the user is in a live move/size loop for this window.</summary>
@@ -90,15 +99,22 @@ internal static class WindowResizeStabilityHelper
             switch (msg)
             {
                 case WmEnterSizeMove:
-                    session.Begin(window, hwnd);
+                    session.Begin(window);
                     break;
 
                 case WmExitSizeMove:
-                    session.End(window, hwnd);
+                    session.End(window);
+                    break;
+
+                // Also mark live-resize on first WM_SIZING in case ENTERSIZEMOVE was missed
+                // (some shell hooks / multi-monitor edge cases).
+                case WmSizing:
+                    if (!session.IsResizing)
+                        session.Begin(window);
                     break;
 
                 case WmWindowPosChanging when session.IsResizing && lParam != IntPtr.Zero:
-                    // Skip reusing previous client bits when Top/Left move (top/left edge drag).
+                    // Skip reusing previous client bits when Top/Left move (any edge drag).
                     // Prevents tearing/jitter from partial bit-blits during simultaneous move+size.
                     var pos = Marshal.PtrToStructure<WindowPos>(lParam);
                     if ((pos.flags & SwpNoCopyBits) == 0)
@@ -125,8 +141,11 @@ internal static class WindowResizeStabilityHelper
         private WindowBackdropType? _savedBackdrop;
         private object? _savedBackground;
         private bool _hadSolidBackground;
+        private CacheMode? _savedContentCacheMode;
+        private bool _contentCacheApplied;
+        private UIElement? _cachedContent;
 
-        public void Begin(Window window, IntPtr hwnd)
+        public void Begin(Window window)
         {
             if (IsResizing)
                 return;
@@ -134,7 +153,27 @@ internal static class WindowResizeStabilityHelper
 
             try
             {
-                // Pause only expensive backdrop recomposition — keep DWM window transitions on.
+                window.UseLayoutRounding = true;
+                window.SnapsToDevicePixels = true;
+
+                // 1) Snapshot content so the layout tree is not re-measured every mouse move.
+                //    Explorer does not reflow a WPF tree; this is the closest client-side equivalent.
+                if (window.Content is UIElement content)
+                {
+                    _cachedContent = content;
+                    _savedContentCacheMode = content.CacheMode;
+                    content.CacheMode = new BitmapCache
+                    {
+                        // ClearType over a scaling bitmap looks muddy during drag; restore after.
+                        EnableClearType = false,
+                        RenderAtScale = 1.0,
+                        SnapsToDevicePixels = true,
+                    };
+                    _contentCacheApplied = true;
+                    RenderOptions.SetBitmapScalingMode(content, BitmapScalingMode.LowQuality);
+                }
+
+                // 2) Pause expensive backdrop recomposition (Mica/Acrylic).
                 if (window is FluentWindow fluent)
                 {
                     _savedBackdrop = fluent.WindowBackdropType;
@@ -142,7 +181,7 @@ internal static class WindowResizeStabilityHelper
                         fluent.WindowBackdropType = WindowBackdropType.None;
                 }
 
-                // Solid fill while backdrop is off — avoids transparent flash mid-drag.
+                // 3) Solid fill while backdrop is off — avoids transparent flash mid-drag.
                 _hadSolidBackground = window.ReadLocalValue(Window.BackgroundProperty) != DependencyProperty.UnsetValue;
                 if (!_hadSolidBackground)
                 {
@@ -153,8 +192,6 @@ internal static class WindowResizeStabilityHelper
                 {
                     _savedBackground = window.Background;
                 }
-
-                window.UseLayoutRounding = true;
             }
             catch (Exception ex)
             {
@@ -163,9 +200,9 @@ internal static class WindowResizeStabilityHelper
             }
         }
 
-        public void End(Window window, IntPtr hwnd) => RestoreIfNeeded(window, hwnd);
+        public void End(Window window) => RestoreIfNeeded(window);
 
-        public void RestoreIfNeeded(Window window, IntPtr? hwnd = null)
+        public void RestoreIfNeeded(Window window)
         {
             if (!IsResizing)
                 return;
@@ -173,6 +210,16 @@ internal static class WindowResizeStabilityHelper
 
             try
             {
+                if (_contentCacheApplied && _cachedContent is not null)
+                {
+                    if (_savedContentCacheMode is null)
+                        _cachedContent.ClearValue(UIElement.CacheModeProperty);
+                    else
+                        _cachedContent.CacheMode = _savedContentCacheMode;
+
+                    RenderOptions.SetBitmapScalingMode(_cachedContent, BitmapScalingMode.Unspecified);
+                }
+
                 if (window is FluentWindow fluent && _savedBackdrop is { } backdrop)
                     fluent.WindowBackdropType = backdrop;
 
@@ -181,10 +228,24 @@ internal static class WindowResizeStabilityHelper
                 else if (_savedBackground is Brush brush)
                     window.Background = brush;
 
-                // One clean pass after live resize (navigation rail, metrics, etc.).
+                // One clean, sharp layout pass after the drag ends (nav rail, sensors, etc.).
                 window.InvalidateVisual();
                 if (window.Content is UIElement root)
+                {
                     root.InvalidateVisual();
+                    root.InvalidateMeasure();
+                    root.InvalidateArrange();
+                    root.UpdateLayout();
+                }
+
+                // Apply deferred chrome layout (nav rail width, etc.) once, at final size.
+                window.Dispatcher.BeginInvoke(
+                    () =>
+                    {
+                        if (window is Windows.MainWindow main)
+                            main.RefreshChromeAfterLiveResize();
+                    },
+                    System.Windows.Threading.DispatcherPriority.Loaded);
             }
             catch (Exception ex)
             {
@@ -196,6 +257,9 @@ internal static class WindowResizeStabilityHelper
                 _savedBackdrop = null;
                 _savedBackground = null;
                 _hadSolidBackground = false;
+                _savedContentCacheMode = null;
+                _contentCacheApplied = false;
+                _cachedContent = null;
             }
         }
     }
