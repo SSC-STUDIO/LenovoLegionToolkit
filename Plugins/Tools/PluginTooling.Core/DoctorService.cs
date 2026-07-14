@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace PluginTooling.Core;
 
 public sealed class DoctorService
@@ -18,15 +20,36 @@ public sealed class DoctorService
         var hostReleasePath = Path.Combine(repository.HostDependenciesRoot, "host-release.json");
         Add(result, File.Exists(hostReleasePath), $"Host release manifest found: {hostReleasePath}");
 
-        var libPath = Path.Combine(repository.HostDependenciesRoot, "UniversalDeviceToolkit.Lib.dll");
+        var hostRelease = TryReadHostRelease(hostReleasePath);
+
+        var libName = hostRelease?.Artifacts.Lib ?? "UniversalDeviceToolkit.Lib.dll";
+        var libPath = Path.Combine(repository.HostDependenciesRoot, libName);
         Add(result, File.Exists(libPath), $"Host library found: {libPath}");
 
-        var wpfPath = Path.Combine(repository.HostDependenciesRoot, "Lenovo Legion Toolkit.dll");
+        var wpfName = hostRelease?.Artifacts.Wpf ?? "Universal Device Toolkit.dll";
+        var wpfPath = Path.Combine(repository.HostDependenciesRoot, wpfName);
         Add(result, File.Exists(wpfPath), $"Host WPF assembly found: {wpfPath}");
 
         Add(result, repository.Plugins.Count > 0, $"Discovered {repository.Plugins.Count} plugin project(s).");
 
         return result;
+    }
+
+    private static HostReleaseManifest? TryReadHostRelease(string path)
+    {
+        if (!File.Exists(path))
+        {
+            return null;
+        }
+
+        try
+        {
+            return PluginRepository.ReadJsonFile<HostReleaseManifest>(path);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 
     private static void Add(DoctorResult result, bool condition, string message)

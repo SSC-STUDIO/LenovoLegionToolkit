@@ -380,6 +380,36 @@ public sealed class DoctorResult
     public int FailureCount => Checks.Count(check => string.Equals(check.Status, "FAIL", StringComparison.OrdinalIgnoreCase));
 }
 
+public sealed class HostReleaseManifest
+{
+    [JsonPropertyName("hostVersion")]
+    public string HostVersion { get; set; } = string.Empty;
+
+    [JsonPropertyName("hostTag")]
+    public string HostTag { get; set; } = string.Empty;
+
+    [JsonPropertyName("artifacts")]
+    public HostReleaseArtifacts Artifacts { get; set; } = new();
+}
+
+public sealed class HostReleaseArtifacts
+{
+    [JsonPropertyName("lib")]
+    public string Lib { get; set; } = "UniversalDeviceToolkit.Lib.dll";
+
+    [JsonPropertyName("libPlugins")]
+    public string LibPlugins { get; set; } = string.Empty;
+
+    [JsonPropertyName("wpf")]
+    public string Wpf { get; set; } = "Universal Device Toolkit.dll";
+
+    [JsonPropertyName("package")]
+    public string Package { get; set; } = string.Empty;
+
+    [JsonPropertyName("transitiveDependencies")]
+    public List<string> TransitiveDependencies { get; set; } = [];
+}
+
 public sealed class PluginInspectionReport
 {
     [JsonPropertyName("repositoryRoot")]
