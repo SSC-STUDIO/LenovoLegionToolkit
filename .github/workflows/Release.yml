@@ -81,7 +81,7 @@ jobs:
         "LEGACY_SETUP_ASSET=LenovoLegionToolkit_v$versionLabel" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Restore solution
-      run: dotnet restore UniversalDeviceToolkit.sln
+      run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
 
     - name: Build release test project
       run: dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore

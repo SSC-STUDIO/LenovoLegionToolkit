@@ -30,7 +30,7 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
 
       - name: Restore solution
-        run: dotnet restore UniversalDeviceToolkit.sln
+        run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
 
       - name: Build solution
         env:
@@ -221,7 +221,7 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
 
       - name: Restore cross-platform tests
-        run: dotnet restore UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj
+        run: dotnet restore UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --locked-mode
 
       - name: Build cross-platform tests
         run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-restore

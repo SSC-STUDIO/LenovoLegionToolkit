@@ -96,7 +96,7 @@ jobs:
 
       - name: Restore solution
         shell: pwsh
-        run: dotnet restore UniversalDeviceToolkit.sln
+        run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
 
       - name: Build main app
         shell: pwsh

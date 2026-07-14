@@ -1,7 +1,7 @@
 ## Welcome to Universal Device Toolkit contributing guide!
 
 ### Other language versions of this contributing guide:
-* [[ÖÐÎÄ°æ](CONTRIBUTING_zh-hans.md)(CONTRIBUTING_zh-hans.md)
+* [ç®€ä½“ä¸­æ–‡ç‰ˆ](CONTRIBUTING_zh-hans.md)
 
 Thanks for investing your time in contributing to this project! Given the growing popularity of UDT, here are a few rules to follow to ensure that your contribution goes smoothly.
 

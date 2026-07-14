@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added / 新增
+- Multi-agent network acceleration diagnostics and compact status-chip layout work on the network/UI surface / 多代理协作完善网络加速诊断与状态芯片紧凑布局
+- Dashboard sensors loading skeleton ownership (page-owned chrome, shared shimmer coordinator) and theme retints for notification glass / 仪表盘传感器骨架屏归属与共享 shimmer 协调，以及通知玻璃主题重着色
+
+### Fixed / 修复
+- Plugin Extensions skeleton re-entry, SoftFadeIn opacity, and CardAction radius consistency / 插件扩展骨架屏重入、SoftFadeIn 透明度与 CardAction 圆角一致性
+
 ## [5.0.0] - 2026-07-14
 
 ### Added
@@ -40,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Log.Shutdown/Dispose SemaphoreSlim handle leak (BUG-2026-07-09-004)**: Centralized all teardown into a single DisposeCoreAsync() to guarantee _logger and _emergencyLock are disposed exactly once regardless of whether Shutdown, ShutdownAsync, or Dispose fires first. Added regression tests verifying Shutdown-then-Dispose and concurrent ShutdownAsync/Dispose races do not throw double-dispose exceptions.
 
 ### Added / 新增
-- FlaUI + WinRT OCR automated UI verification pipeline (Pillar C) base class `FlaUiTestBase`, collection definition, setup tests, and main window tests for automated UI validation / FlaUI + WinRT OCR 自动鍖?UI 验证管道（Pillar C锛夆€斺鍩虹`FlaUiTestBase`、集合定涔夈€佸畨装测璇曘€佷富窗口测试，用于自鍔ㄥUI 楠岃
+- FlaUI + WinRT OCR automated UI verification pipeline (Pillar C) base class `FlaUiTestBase`, collection definition, setup tests, and main window tests for automated UI validation / FlaUI + WinRT OCR 自动化 UI 验证管道（Pillar C）——基类 `FlaUiTestBase`、集合定义、安装测试、主窗口测试，用于自动化 UI 验证
 - Admin test runner script (`run_flaui_tests_admin.ps1`) for easy FlaUI test execution with auto-elevation / 管理员测试运行脚本（`run_flaui_tests_admin.ps1`），支持自动提权，简化 FlaUI 测试执行
 - FlaUI testing guide (`Docs/FlaUI_Testing.md`) with prerequisites, quick start, troubleshooting, and writing new tests / FlaUI 测试指南（`Docs/FlaUI_Testing.md`），包含先决条件、快速开始、故障排除和编写新测试
 
@@ -48,27 +55,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [Build][Pillar 0] BUG-2026-07-09-001: UniversalDeviceToolkit.sln normalized for the 7 x64-only project GUIDs (DC01FDB3,4B902DDC,CB52B339,AC885CE1,656AC74B,2C7AB13C,BB54FD85); Debug|Any CPU = Debug|x64 / Release|Any CPU = Release|x64 mappings present, duplicate Debug|x64/Release|x64 pairs removed. Eliminates 7x MSB4121 warnings and duplicate MSBuild task lines. Verified: dotnet build -c Debug -m:1 --no-incremental -> 0 warnings, 0 errors, no MSB4121.
 
-- [Localization][Pillar B] ColorPickerControl Hex label now binds `{x:Static resources:Resource.Color_Hex}` instead of a hardcoded `"Hex"` string (`ColorPickerControl.xaml` L60), so the label is localized across all 78+ locales / [本地化][支柱 B] ColorPickerControl 十六进制标签现绑`{x:Static resources:Resource.Color_Hex}`，替代硬编码 `"Hex"`（`ColorPickerControl.xaml` 0行），使该标签在 78+ 语言下本鍦板
-- [Localization][Pillar B] ColorPickerControl OK button now binds `{x:Static resources:Resource.OK}` instead of a hardcoded `"OK"` string (`ColorPickerControl.xaml` L131), so the button is localized across all 78+ locales / [本地化][支柱 B] ColorPickerControl 确定按钮现绑`{x:Static resources:Resource.OK}`，替代硬编码 `"OK"`（`ColorPickerControl.xaml` 31行），使该按钮在 78+ 语言下本鍦板
-- [UDT-007][Threading & WMI] WMI extension default timeouts were actually lowered `5000ms` to `2500ms` in both `ManagementObjectSearcherExtensions` and `ManagementEventWatcherExtensions` (the phantom UDT-001 archive `**Fixed**` claim had never landed in code, verified via `git show HEAD`) and a 3-space to 4-space indentation regression on the four declaration lines was corrected / [UDT-007][线程涓?WMI] 涓やWMI 扩展的默认超时真姝ｇ`5000ms` 下调鑷?`2500ms`（此前的 UDT-001 褰掓`**Fixed**` 澹扮О从未真正落地于代码，`git show HEAD` 核实），并修正了四处方法声明琛?3 空格鍒?4 空格的缩进回褰?
-- [UDT-008][UI & Localization] 3 GPU status-dot `Ellipse.Fill` literals in `StatusWindow.xaml` were hardcoded raw hex (`#FF8BC34A` / `#F2A541` / `#BF360C`); now bound to `{DynamicResource StatusSuccessBrush}` / `{DynamicResource StatusWarningBrush}` / `{DynamicResource StatusCriticalBrush}` so they follow light/dark theme swaps and align with the shared chart-keyed status-color vocabulary used across all dashboard indicators / [UDT-008][UI 与本地化] `StatusWindow.xaml` 3 GPU 鐘舵€佸渾鐐?`Ellipse.Fill` 原为硬编码十六进制颜色（`#FF8BC34A` / `#F2A541` / `#BF360C`）；现绑`{DynamicResource StatusSuccessBrush}` / `{DynamicResource StatusWarningBrush}`
-- [Test Reliability] `SensorReadTimeoutSeconds` virtual seam added to `AbstractSensorsController` so the flaky detailed-sensor-read test can override the 2s production cap to 60s via a mock (`SensorReadTimeoutSeconds => 60`), restoring deterministic test timing without weakening the production timeout
-- [Brand Migration] Uzbek (`uz`) resource file user-facing brand string in `ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message` (`Resource.uz.resx` L476) now reads `Universal Device Toolkit` instead of the legacy `Lenovo Legion Toolkit`, so the no-refresh-rate-found message uses the current product name in Uzbek
-- [Brand Migration] PerformanceTest console boot banner and report title now display `Universal Device Toolkit` instead of the legacy `Lenovo Legion Toolkit` (`Program.cs` L21 boot banner, L339 report title)
-- [Pre-existing Fix] `UniversalDeviceToolkit.PerformanceTest.csproj` XML declaration had a stray `"` between `?` and `>` (`<?xml ... ?>"?>`), making MSBuild unable to parse the project; byte-level corrected to `<?xml version="1.0" encoding="utf-8"?>` (this project was never in the main solution `UniversalDeviceToolkit.sln` and had never compiled before) / [预存修复] `UniversalDeviceToolkit.PerformanceTest.csproj` XML 声明涓?`?` `>` 之间多了涓€`"`（`<?xml ... ?>"?>`），瀵艰MSBuild 无法解析项目；已字节绾т慨正为 `<?xml version="1.0" encoding="utf-8"?>`（该项目从未包含在主解决鏂规`UniversalDeviceToolkit.sln` 中，此前从未编译
-- [Pre-existing Fix] 9 corrupted Chinese string literals in `UniversalDeviceToolkit.PerformanceTest/Program.cs` whose last Chinese glyph + closing `"` had been replaced by `U+FFFD` + `?` (causing CS1010 newline-in-constant errors when the project was first compiled) reconstructed from context and restored: `L33 "`, `L35 "`, `L38 "`, `L45 "`, `L145 ""`, `L227 "`, `L240 "`, `L314 "`, `L357 "` / [预存修复] `UniversalDeviceToolkit.PerformanceTest/Program.cs` 9 处中文字绗︿覆字面量最后一个中文字与闭合引鍙?`"` 被替换为 `U+FFFD` + `?`（导致项目首次编译时鎶?CS1010 常量中有换行绗︼級，已根据上下文重建恢复：`L33 "`、`L35 "`、`L38 "`、`L45 "`、`L145 ""`、`L227 "`、`L240 "`、`L314 "`、`L357 "`
-- [UDT-006][Runtime Stability] `MacroController.Stop()` no longer orphans the global `WH_KEYBOARD_LL` macro hook or fires macros twice: the hook handle is now cleared first and `UnhookWindowsHookEx` runs FIRST, with recorder/player teardown isolated in separate traced `try/catch` blocks (was a silent comment-only `catch { }` whose `finally` still zeroed the field, so a teardown throw skipped the unhook and the next `Start()` re-installed a second hook)
-- [UDT-005][Test Reliability] FlaUI main-window UI tests no longer hard-fail when the runner lacks an admin/desktop session: `FlaUIMainWindowTests` methods switched from `[Fact]` to `[SkippableFact]` (with `MainWindow!` null-forgiving on the two deref sites), so an unavailable elevation now yields a clean skip instead of a `SkipException` failure (previously 3 failures) / [UDT-005][测试可靠性] 受管理员鏉冮桌面会话限制鏃?FlaUI 主窗口测试不再硬鎬ф姤错：`FlaUIMainWindowTests` 方法鐢?`[Fact]` 改为 `[SkippableFact]`（两澶勮В引用`MainWindow!` 空抑制），缺少提权时现在为干鍑€跳过鑰岄`SkipException` 失败（此鍓嶄3 个失败）
-- [Brand Migration] FPS self-monitoring blacklist (`FpsSensorController`) now also excludes the renamed `Universal Device Toolkit` process alongside the legacy `Lenovo Legion Toolkit`, so the app own window is no longer counted as a monitored foreground app
-- [Brand Migration] HWiNFO custom sensor group now registers under `Universal Device Toolkit`; on stop the legacy `Lenovo Legion Toolkit` registry group is cleaned too, so pre-rename sensors do not linger in HWiNFO
-- [Brand Migration] Plugin Workbench host resource resolver now matches both `Universal Device Toolkit` and `Lenovo Legion Toolkit` host assemblies (was legacy-only), restoring resource lookup under the renamed host
-- [Brand Migration] Audit confirms the user-facing brand is fully migrated to `Universal Device Toolkit`; `LenovoLegionToolkit.*` assembly/namespace identifiers are intentionally retained as cross-repository ABI contracts on which plugin loading depends
-- [UDT-001][Threading & WMI] WMI helper extension default timeouts in `ManagementObjectSearcherExtensions` and `ManagementEventWatcherExtensions` lowered from `5000ms` to `2500ms` to respect the WMI timeout ceiling; default callers rely on a linked `CancellationToken` / [UDT-001][线程涓?WMI] `ManagementObjectSearcherExtensions` `ManagementEventWatcherExtensions` WMI 助手默认超时鐢?`5000ms` 下调鑷?`2500ms`，遵WMI 超时上限；默认调用方使用联动鐨?`CancellationToken`
-- [UDT-002][Threading & WMI] WMI method-invoke bound in `WMI.CallInternalAsync` lowered from a hardcoded `10000ms` to a `2500ms` constant (`WmiInvokeTimeoutMs`); a hung WMI method now fails fast instead of stalling the caller 10s
-- [UDT-003][Threading & WMI] `AmdOverclockingController.FetchCommands` no longer runs synchronous `ManagementObject` construction and `WMI.InvokeMethodAndGetValue` on the calling thread; converted to `FetchCommandsAsync` wrapped in `Task.Run(...).WaitAsync(2500ms)` with `.ConfigureAwait(false)` so AMD overclocking no longer stalls the UI 5-10s / [UDT-003][线程涓?WMI] `AmdOverclockingController.FetchCommands` 不再在调用线程同步执`ManagementObject` 鏋勯€犱`WMI.InvokeMethodAndGetValue`；已改为 `FetchCommandsAsync`锛岄€氳`Task.Run(...).WaitAsync(2500ms)` `.ConfigureAwait(false)` 包装，避AMD 超频功能闃诲UI 5-10 
-- [UDT-004][Runtime Stability & Telemetry] Empty `catch { }` in the `Registry` listener teardown at `Registry.cs` no longer silently swallows exceptions; it now traces via `Log.Instance.Trace(...)` matching the surrounding listener loop so cancelled/stuck listener tasks stay observable / [UDT-004][运行鏃剁ǔ瀹氭€т笌可观娴嬫€`Registry.cs` 注册表监听器清理·径中的`catch { }` 不再静默吞掉异常；现已改涓洪€氳繃 `Log.Instance.Trace(...)` 打点（与周围监听循环涓€致），使被取卡住的监听任务可被观娴?
+- [Localization][Pillar B] ColorPickerControl Hex label now binds `{x:Static resources:Resource.Color_Hex}` instead of a hardcoded `"Hex"` string (`ColorPickerControl.xaml` L60), so the label is localized across all 78+ locales / [本地化][支柱 B] ColorPickerControl 十六进制标签现绑定 `{x:Static resources:Resource.Color_Hex}`，替代硬编码 `"Hex"`（`ColorPickerControl.xaml` 第 60 行），使该标签在 78+ 语言下本地化
+- [Localization][Pillar B] ColorPickerControl OK button now binds `{x:Static resources:Resource.OK}` instead of a hardcoded `"OK"` string (`ColorPickerControl.xaml` L131), so the button is localized across all 78+ locales / [本地化][支柱 B] ColorPickerControl 确定按钮现绑定 `{x:Static resources:Resource.OK}`，替代硬编码 `"OK"`（`ColorPickerControl.xaml` 第 131 行），使该按钮在 78+ 语言下本地化
+- [UDT-007][Threading & WMI] WMI extension default timeouts were actually lowered `5000ms` to `2500ms` in both `ManagementObjectSearcherExtensions` and `ManagementEventWatcherExtensions` (the phantom UDT-001 archive `**Fixed**` claim had never landed in code, verified via `git show HEAD`) and a 3-space to 4-space indentation regression on the four declaration lines was corrected / [UDT-007][线程与 WMI] 两处 WMI 扩展的默认超时真正从 `5000ms` 下调至 `2500ms`（此前的 UDT-001 归档 `**Fixed**` 声明从未真正落地于代码，`git show HEAD` 核实），并修正了四处方法声明从 3 空格到 4 空格的缩进回退
+- [UDT-008][UI & Localization] 3 GPU status-dot `Ellipse.Fill` literals in `StatusWindow.xaml` were hardcoded raw hex (`#FF8BC34A` / `#F2A541` / `#BF360C`); now bound to `{DynamicResource StatusSuccessBrush}` / `{DynamicResource StatusWarningBrush}` / `{DynamicResource StatusCriticalBrush}` so they follow light/dark theme swaps and align with the shared chart-keyed status-color vocabulary used across all dashboard indicators / [UDT-008][UI 与本地化] `StatusWindow.xaml` 中 3 个 GPU 状态圆点 `Ellipse.Fill` 原为硬编码十六进制颜色（`#FF8BC34A` / `#F2A541` / `#BF360C`）；现绑定 `{DynamicResource StatusSuccessBrush}` / `{DynamicResource StatusWarningBrush}` / `{DynamicResource StatusCriticalBrush}`，随浅/深色主题切换并与仪表盘共享状态色词汇对齐
+- [Test Reliability] `SensorReadTimeoutSeconds` virtual seam added to `AbstractSensorsController` so the flaky detailed-sensor-read test can override the 2s production cap to 60s via a mock (`SensorReadTimeoutSeconds => 60`), restoring deterministic test timing without weakening the production timeout / [测试可靠性] 在 `AbstractSensorsController` 增加 `SensorReadTimeoutSeconds` 虚拟接缝，使易抖动的详细传感器读取测试可通过 mock 将生产 2s 上限覆盖为 60s，恢复确定性时序且不削弱生产超时
+- [Brand Migration] Uzbek (`uz`) resource file user-facing brand string in `ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message` (`Resource.uz.resx` L476) now reads `Universal Device Toolkit` instead of the legacy `Lenovo Legion Toolkit`, so the no-refresh-rate-found message uses the current product name in Uzbek / [品牌迁移] 乌兹别克语（`uz`）资源中 `ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message` 的用户可见品牌字符串现为 `Universal Device Toolkit`，不再使用旧称 `Lenovo Legion Toolkit`
+- [Brand Migration] PerformanceTest console boot banner and report title now display `Universal Device Toolkit` instead of the legacy `Lenovo Legion Toolkit` (`Program.cs` L21 boot banner, L339 report title) / [品牌迁移] PerformanceTest 控制台启动横幅与报告标题现显示 `Universal Device Toolkit`，不再使用旧称
+- [Pre-existing Fix] `UniversalDeviceToolkit.PerformanceTest.csproj` XML declaration had a stray `"` between `?` and `>` (`<?xml ... ?>"?>`), making MSBuild unable to parse the project; byte-level corrected to `<?xml version="1.0" encoding="utf-8"?>` (this project was never in the main solution `UniversalDeviceToolkit.sln` and had never compiled before) / [预存修复] `UniversalDeviceToolkit.PerformanceTest.csproj` XML 声明在 `?` 与 `>` 之间多了一个 `"`（`<?xml ... ?>"?>`），导致 MSBuild 无法解析项目；已按字节级修正为 `<?xml version="1.0" encoding="utf-8"?>`（该项目从未包含在主解决方案 `UniversalDeviceToolkit.sln` 中，此前从未编译）
+- [Pre-existing Fix] 9 corrupted Chinese string literals in `UniversalDeviceToolkit.PerformanceTest/Program.cs` whose last Chinese glyph + closing `"` had been replaced by `U+FFFD` + `?` (causing CS1010 newline-in-constant errors when the project was first compiled) reconstructed from context and restored: `L33 "`, `L35 "`, `L38 "`, `L45 "`, `L145 ""`, `L227 "`, `L240 "`, `L314 "`, `L357 "` / [预存修复] `UniversalDeviceToolkit.PerformanceTest/Program.cs` 中 9 处中文字符串字面量最后一个中文字与闭合引号 `"` 被替换为 `U+FFFD` + `?`（导致项目首次编译时抛出 CS1010 常量中有换行符），已根据上下文重建恢复
+- [UDT-006][Runtime Stability] `MacroController.Stop()` no longer orphans the global `WH_KEYBOARD_LL` macro hook or fires macros twice: the hook handle is now cleared first and `UnhookWindowsHookEx` runs FIRST, with recorder/player teardown isolated in separate traced `try/catch` blocks (was a silent comment-only `catch { }` whose `finally` still zeroed the field, so a teardown throw skipped the unhook and the next `Start()` re-installed a second hook) / [UDT-006][运行时稳定性] `MacroController.Stop()` 不再遗弃全局 `WH_KEYBOARD_LL` 宏钩子或导致宏触发两次：钩子句柄先清空且 `UnhookWindowsHookEx` 优先执行，录制/播放清理分在可追踪的 `try/catch` 中隔离
+- [UDT-005][Test Reliability] FlaUI main-window UI tests no longer hard-fail when the runner lacks an admin/desktop session: `FlaUIMainWindowTests` methods switched from `[Fact]` to `[SkippableFact]` (with `MainWindow!` null-forgiving on the two deref sites), so an unavailable elevation now yields a clean skip instead of a `SkipException` failure (previously 3 failures) / [UDT-005][测试可靠性] 受管理员权限/桌面会话限制时，FlaUI 主窗口测试不再硬失败：`FlaUIMainWindowTests` 方法由 `[Fact]` 改为 `[SkippableFact]`（两处解引用使用 `MainWindow!` 空抑制），缺少提权时现在为干净跳过而非 `SkipException` 失败（此前 3 个失败）
+- [Brand Migration] FPS self-monitoring blacklist (`FpsSensorController`) now also excludes the renamed `Universal Device Toolkit` process alongside the legacy `Lenovo Legion Toolkit`, so the app own window is no longer counted as a monitored foreground app / [品牌迁移] FPS 自监控黑名单现同时排除更名后的 `Universal Device Toolkit` 与旧称进程，应用自身窗口不再被计入前台监控
+- [Brand Migration] HWiNFO custom sensor group now registers under `Universal Device Toolkit`; on stop the legacy `Lenovo Legion Toolkit` registry group is cleaned too, so pre-rename sensors do not linger in HWiNFO / [品牌迁移] HWiNFO 自定义传感器组现以 `Universal Device Toolkit` 注册；停止时亦清理旧称注册表组，避免更名前传感器残留
+- [Brand Migration] Plugin Workbench host resource resolver now matches both `Universal Device Toolkit` and `Lenovo Legion Toolkit` host assemblies (was legacy-only), restoring resource lookup under the renamed host / [品牌迁移] 插件工作台宿主资源解析器现同时匹配新旧宿主程序集名称，恢复更名后的资源查找
+- [Brand Migration] Audit confirms the user-facing brand is fully migrated to `Universal Device Toolkit`; `LenovoLegionToolkit.*` assembly/namespace identifiers are intentionally retained as cross-repository ABI contracts on which plugin loading depends / [品牌迁移] 审计确认用户可见品牌已全面迁移至 `Universal Device Toolkit`；`LenovoLegionToolkit.*` 程序集/命名空间标识刻意保留为跨仓库 ABI 契约（插件加载依赖）
+- [UDT-001][Threading & WMI] WMI helper extension default timeouts in `ManagementObjectSearcherExtensions` and `ManagementEventWatcherExtensions` lowered from `5000ms` to `2500ms` to respect the WMI timeout ceiling; default callers rely on a linked `CancellationToken` / [UDT-001][线程与 WMI] `ManagementObjectSearcherExtensions` 与 `ManagementEventWatcherExtensions` 的 WMI 助手默认超时由 `5000ms` 下调至 `2500ms`，遵守 WMI 超时上限；默认调用方使用联动的 `CancellationToken`
+- [UDT-002][Threading & WMI] WMI method-invoke bound in `WMI.CallInternalAsync` lowered from a hardcoded `10000ms` to a `2500ms` constant (`WmiInvokeTimeoutMs`); a hung WMI method now fails fast instead of stalling the caller 10s / [UDT-002][线程与 WMI] `WMI.CallInternalAsync` 中的方法调用超时由硬编码 `10000ms` 降为 `2500ms` 常量（`WmiInvokeTimeoutMs`）；挂起的 WMI 方法会快速失败而不再阻塞调用方 10 秒
+- [UDT-003][Threading & WMI] `AmdOverclockingController.FetchCommands` no longer runs synchronous `ManagementObject` construction and `WMI.InvokeMethodAndGetValue` on the calling thread; converted to `FetchCommandsAsync` wrapped in `Task.Run(...).WaitAsync(2500ms)` with `.ConfigureAwait(false)` so AMD overclocking no longer stalls the UI 5-10s / [UDT-003][线程与 WMI] `AmdOverclockingController.FetchCommands` 不再在调用线程同步执行 `ManagementObject` 构造与 `WMI.InvokeMethodAndGetValue`；已改为 `FetchCommandsAsync`，通过 `Task.Run(...).WaitAsync(2500ms)` 与 `.ConfigureAwait(false)` 包装，避免 AMD 超频功能阻塞 UI 5–10 秒
+- [UDT-004][Runtime Stability & Telemetry] Empty `catch { }` in the `Registry` listener teardown at `Registry.cs` no longer silently swallows exceptions; it now traces via `Log.Instance.Trace(...)` matching the surrounding listener loop so cancelled/stuck listener tasks stay observable / [UDT-004][运行时稳定性与可观测性] `Registry.cs` 注册表监听器清理路径中的空 `catch { }` 不再静默吞掉异常；现已改为通过 `Log.Instance.Trace(...)` 打点（与周围监听循环一致），使被取消/卡住的监听任务可被观测
 - [Threading] `SmartFnLockController` no longer floods the thread pool with a new fire-and-forget polling task on every enable cycle; polling is coalesced onto a single guarded long-running task / [线程] `SmartFnLockController` 不再每次启用都新建无等待轮询任务导致线程池洪水；轮询已合并到单个受保护的长周期任务上
-- [Threading] `MacroController` global `WH_KEYBOARD_LL` macro-recording hook no longer drops keystrokes or leaks the hook; the hook thread now runs a Windows message pump so events keep being delivered and the hook is reliably unhooked on stop / [线程] `MacroController` 鍏ㄥ`WH_KEYBOARD_LL` 宏录制钩子不再丢键或泄漏钩子；钩子线程现在运琛?Windows 消息泵，确保事件持续派发，并在停止时可靠卸载钩子
+- [Threading] `MacroController` global `WH_KEYBOARD_LL` macro-recording hook no longer drops keystrokes or leaks the hook; the hook thread now runs a Windows message pump so events keep being delivered and the hook is reliably unhooked on stop / [线程] `MacroController` 全局 `WH_KEYBOARD_LL` 宏录制钩子不再丢键或泄漏钩子；钩子线程现在运行 Windows 消息泵，确保事件持续派发，并在停止时可靠卸载钩子
 - Dashboard layout customizations (groups, items order, sensors toggle) are now persisted across app restarts; `DashboardSettings` IoC registration changed from transient to `SingleInstance()` so EditDashboardWindow and DashboardPage share the same in-memory cache and `SynchronizeStore()` writes are immediately visible to all consumers / 控制台自定义布局（分组、项目顺序、传感器开关）现在可在应用重启后持久化保留；`DashboardSettings` 的 IoC 注册从瞬时改为 `SingleInstance()`，确保 EditDashboardWindow 与 DashboardPage 共享同一内存缓存，`SynchronizeStore()` 写入对所有消费者立即可见
 - Update flow no longer falls back to GitHub because the installer file-name pattern required a hyphen that the actual installer never has; relaxed pattern matches `UniversalDeviceToolkitSetup*.exe` so in-app updates run again / 更新流程不再因安装包文件名匹配规则错误（要求连字符）而回退到 GitHub；现已改为匹配实际的 `UniversalDeviceToolkitSetup*.exe` 命名，恢复应用内自动更新
 - Clicking external links (release page, device info link, etc.) no longer fails with `Win32Exception`; URL opening keeps `UseShellExecute=true` (required for protocol handlers) behind a strict HTTP/HTTPS scheme allow-list / 打开外部链接（发行页、设备信息链接等）不再因 `Win32Exception` 失败；URL 开启保留 `UseShellExecute=true`（协议处理器需要），并由严格的 HTTP/HTTPS 协议白名单保护
@@ -76,15 +83,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - About Device window cards no longer show empty white blocks on the left; row content is placed in `CardControl.Header` per WPF-UI template / 关于设备窗口卡片左侧不再出现空白色块；行内容已按 WPF-UI 模板放入 `CardControl.Header`
 - Windows Optimization checkboxes now surface apply failures (registry access denied, command exit codes, verification mismatch) via snackbar instead of silently reverting; unchecking uses rollback where available / Windows 优化勾选项在应用失败（注册表拒绝访问、命令非零退出、验证不匹配）时会通过 Snackbar 提示，不再静默回退；取消勾选时在支持的情况下执行回滚
 - Windows Optimization Shell Integration category no longer shows raw resource keys (`WindowsOptimization_Category_NilesoftShell_*`); host resources now supply localized titles/descriptions and plugin lookups fall back to them / Windows 优化页 Shell Integration 分类不再显示未翻译的资源键（`WindowsOptimization_Category_NilesoftShell_*`），宿主资源已补全中英文文案并在插件资源缺失时回退读取
-- Settings page no longer crashes on open when `ColorPicker.Models.dll` was missing from Release output; the dependency is now referenced explicitly / 修复设置椤靛Release 输出缺少 `ColorPicker.Models.dll` 而无法打寮€的问题，现已显式引用该依in `UniversalDeviceToolkit.WPF/Resources/Resource.sq.resx` now uses the same `at {0} ({1})` placeholder shape for `AutomationPipelineControl_SubtitlePart_AtTime` as the English resource (`n{0} ({1})`), so the automation-pipeline subtitle renders the time and timezone correctly instead of an arbitrary `HH:mm` colon-joined string / `UniversalDeviceToolkit.WPF/Resources/Resource.sq.resx` 中 `AutomationPipelineControl_SubtitlePart_AtTime` 的占位符格式已与英文资源 `at {0} ({1})` 对齐为 `në {0} ({1})`，自动化流水线副标题现在可正确显示时间与时区，而不是错误的 `HH:mm` 冒号拼接
+- Settings page no longer crashes on open when `ColorPicker.Models.dll` was missing from Release output; the dependency is now referenced explicitly / 修复设置页因 Release 输出缺少 `ColorPicker.Models.dll` 而无法打开的问题，现已显式引用该依赖
+- `UniversalDeviceToolkit.WPF/Resources/Resource.sq.resx` now uses the same `at {0} ({1})` placeholder shape for `AutomationPipelineControl_SubtitlePart_AtTime` as the English resource (`në {0} ({1})`), so the automation-pipeline subtitle renders the time and timezone correctly instead of an arbitrary `HH:mm` colon-joined string / `UniversalDeviceToolkit.WPF/Resources/Resource.sq.resx` 中 `AutomationPipelineControl_SubtitlePart_AtTime` 的占位符格式已与英文资源 `at {0} ({1})` 对齐为 `në {0} ({1})`，自动化流水线副标题现在可正确显示时间与时区，而不是错误的 `HH:mm` 冒号拼接
 - Backfilled simplified Chinese (`zh-Hans`) UI strings for Plugin Extensions, Windows Optimization, sensors, and large-file cleanup by syncing from `zh-Hant` and manually translating newly added keys, so Chinese UI no longer mixes English labels like `Available`, `Configure`, or `Preparing download...` / 从 `zh-Hant` 同步并补全新增键的简体中文翻译，修复插件扩展、Windows 优化、传感器与大文件清理等界面中英混排（如 `Available`、`Configure`、`Preparing download...`）
 - Plugin Extensions install/configure/open/uninstall icon buttons now render explicit symbols and stay vertically centered in each card in Dark/Light themes / 插件扩展页安装/配置/打开/卸载图标按钮在深浅色主题下正确显示符号并在卡片内垂直居中
 - Packages page readme/download/cancel action buttons no longer render as empty boxes in light mode; icons use explicit `SymbolIcon` foreground like Plugin Extensions / 驱动包列表页 readme/下载/取消操作按钮在浅色模式下不再显示为空白方框，图标改用与插件扩展页一致的显式 `SymbolIcon` 前景色
 - Macro event card titles for mouse actions (MOVE, WHEEL DOWN/UP/LEFT/RIGHT, XBUTTON, LBUTTON, RBUTTON, MBUTTON) are now localized via `Lib.Macro.Resources.Resource` instead of hardcoded English strings / 宏事件卡片中鼠标操作的标题（MOVE、WHEEL DOWN/UP/LEFT/RIGHT、XBUTTON、LBUTTON、RBUTTON、MBUTTON）现通过 `Lib.Macro.Resources.Resource` 本地化，不再硬编码英文
 - Fixed 7 pre-existing test failures (source-code structure tests outdated after refactors, WMI timeout in VantagePackageDownloaderTests); all 2343 tests now pass / 修复 7 个预存的测试失败（源代码结构测试在重构后未同步更新、VantagePackageDownloaderTests 中 WMI 超时），现在 2343 个测试全部通过
 - Language selector and main window no longer pop up simultaneously on first launch; `LocalizationHelper.cs` changed `window.Show()` to `window.ShowDialog()` so language selection blocks until complete / 首次启动时语言选择窗口与主窗口不再同时弹出；`LocalizationHelper.cs` 将 `window.Show()` 改为 `window.ShowDialog()`，语言选择完成前阻塞后续流程
-- Card subtitle text (Chinese localization) no longer overflows and bloats card height; `CardHeaderControl` now enforces `MaxHeight=60` ( lines) on subtitle `TextBlock`, and 25+ overly long Chinese `Message`-suffixed resource strings in `Resource.zh-hans.resx` were shortened to 5 chars per line with intentional `\n` breaks / 卡片副标题文本（中文本地化）不再溢出并撑高卡片；`CardHeaderControl` 现在对副标题 `TextBlock` 强制 `MaxHeight=60`（约 3 行），`Resource.zh-hans.resx` 中 25+ 条过长的 `Message` 后缀中文资源字符串已缩短至每行 ≤45 字符并添加必要的 `\n` 换行
-- System-wide stutter after closing the app is fixed; `NativeWindowsMessageListener` (global `WH_KEYBOARD_LL` hook) and `UserInactivityAutoListener` (global `WH_KEYBOARD_LL` + `WH_MOUSE_LL` hooks) were not stopped on app exit, causing Windows to keep calling into the dead process `App.xaml.cs` `PerformShutdownAsync()` now properly stops both listeners, and `AppDomain.ProcessExit` handler added as defense-in-depth / 修复关闭应用后系统全局卡顿的问题；`NativeWindowsMessageListener`（全局 `WH_KEYBOARD_LL` 钩子）和 `UserInactivityAutoListener`（全局 `WH_KEYBOARD_LL` + `WH_MOUSE_LL` 钩子）在应用退出时未被停止，导致 Windows 持续向已死进程发起钩子回调——`App.xaml.cs` 的 `PerformShutdownAsync()` 现已正确停止这两个监听器，并新增 `AppDomain.ProcessExit` 处理程序作为深度防御
+- Card subtitle text (Chinese localization) no longer overflows and bloats card height; `CardHeaderControl` now enforces `MaxHeight=60` (≈3 lines) on subtitle `TextBlock`, and 25+ overly long Chinese `Message`-suffixed resource strings in `Resource.zh-hans.resx` were shortened to ≤45 chars per line with intentional `\n` breaks / 卡片副标题文本（中文本地化）不再溢出并撑高卡片；`CardHeaderControl` 现在对副标题 `TextBlock` 强制 `MaxHeight=60`（约 3 行），`Resource.zh-hans.resx` 中 25+ 条过长的 `Message` 后缀中文资源字符串已缩短至每行 ≤45 字符并添加必要的 `\n` 换行
+- System-wide stutter after closing the app is fixed; `NativeWindowsMessageListener` (global `WH_KEYBOARD_LL` hook) and `UserInactivityAutoListener` (global `WH_KEYBOARD_LL` + `WH_MOUSE_LL` hooks) were not stopped on app exit, causing Windows to keep calling into the dead process — `App.xaml.cs` `PerformShutdownAsync()` now properly stops both listeners, and `AppDomain.ProcessExit` handler added as defense-in-depth / 修复关闭应用后系统全局卡顿的问题；`NativeWindowsMessageListener`（全局 `WH_KEYBOARD_LL` 钩子）和 `UserInactivityAutoListener`（全局 `WH_KEYBOARD_LL` + `WH_MOUSE_LL` 钩子）在应用退出时未被停止，导致 Windows 持续向已死进程发起钩子回调——`App.xaml.cs` 的 `PerformShutdownAsync()` 现已正确停止这两个监听器，并新增 `AppDomain.ProcessExit` 处理程序作为深度防御
 
 ### Improved / 改进
 
@@ -92,14 +100,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Larger default body/caption typography with gentler high-DPI compensation; title-bar device model text is easier to read / 提升默认正文字号并减轻高 DPI 缩小，标题栏机型文字更易读
 - About Device window uses compact grouped rows (label + value per line) instead of one card per field / 关于设备窗口改为分组紧凑行布局，不再为每个字段单独占一张卡片
 - About Device window is wider with reduced side margins so long hardware values (e.g. GPU names) have more room / 关于设备窗口加宽并减小左右边距，长硬件信息（如 GPU 名称）有更多显示空间
-- Theme is applied as soon as settings load so light/dark mode no longer flashes the App.xaml dark defaults on startup / 设置加载后立即应用主题，避免启动时先闪深色默认样larger card/button corner radii, seamless light-mode navigation/content surfaces, skeleton loading on Packages and Keyboard Backlight pages, smoother page transitions and button press feedback / 统一 Fluent 主壳高级感：加大卡片与按钮圆角、修复浅色模式导航与内容区色差、为驱动包与键盘背光页增加骨架屏加载，并改进页面切换与按钮按压反馈
+- Theme is applied as soon as settings load so light/dark mode no longer flashes the App.xaml dark defaults on startup / 设置加载后立即应用主题，避免启动时先闪深色默认样式
+- Unified Fluent shell polish: larger card/button corner radii, seamless light-mode navigation/content surfaces, skeleton loading on Packages and Keyboard Backlight pages, smoother page transitions and button press feedback / 统一 Fluent 主壳高级感：加大卡片与按钮圆角、修复浅色模式导航与内容区色差、为驱动包与键盘背光页增加骨架屏加载，并改进页面切换与按钮按压反馈
 - README and promotion docs now lead with taglines, UDT-vs-Vantage comparison, audience positioning, and expanded EN/ZH social/release copy templates / README 与宣发文档新增标语、UDT 对比 Vantage 表格、受众定位，并扩充中英文发布与社交文案模板
 - Promotion copy rewritten in conversational tone for forums and social posts (PROMOTION_*, COMMUNITY_OUTREACH) / 宣发文案改为口语化写法，适合论坛与社区真人发帖
 - Simplified Plugin Extensions card visuals: removed heavy selection/install chrome, toolbar boxes, and left accent bar; install progress is a bottom accent line plus spinner / 简化插件扩展卡片视觉：移除选中/安装粗边框、工具条空框与左侧色条，安装进度改为底部细线加旋转指示
 - Dashboard `SensorsControl` now shows a content-shaped skeleton overlay with shimmer animation while waiting for the first sensor reading; each of the CPU/Battery/GPU sections renders a 3-row gauge+bar+chart+legend placeholder that matches the real layout, then fades out via a 0.45s `EasingCubicOut` storyboard when data is ready (or whenever initial load is restarted) / 控制台 `SensorsControl` 现在在等待首次传感器数据时显示与内容形状一致的骨架屏覆盖层（带 shimmer 动画）；CPU/Battery/GPU 三段各自渲染与实际布局一致的 3 行（仪表+进度条+图表+图例）占位符，当数据就绪（或重新触发首次加载）时通过 0.45s `EasingCubicOut` Storyboard 淡出
 - Replaced `CompositionTarget.Rendering` in `RadialGaugeControl` with a `DispatcherTimer` at ~60fps to reduce global render-event pressure when multiple gauges animate simultaneously; timer is cleaned up on `Unloaded` / 将 `RadialGaugeControl` 中的 `CompositionTarget.Rendering` 替换为 `DispatcherTimer`（~60fps），降低多仪表同时动画时的全局渲染事件压力；`Unloaded` 时清理定时器
 - `TrendChartControl` and `TrendSeries` now cache `LinearGradientBrush` and `Pen` objects per series color instead of recreating them on every render pass / `TrendChartControl` 和 `TrendSeries` 现在按系列颜色缓存 `LinearGradientBrush` 和 `Pen` 对象，不再每次渲染都重新创建
-- `SensorsControl` now caches `FindName()` results in a `Dictionary<string, FrameworkElement?>` to avoid repeated XAML name-scope tree walks in hot update paths / `SensorsControl` 现在将 `FindName()` 结果缓存到 `Dictionary<string, FrameworkElement?>` 中，避免在热更新·径中反复遍历 XAML 名称作用域树
+- `SensorsControl` now caches `FindName()` results in a `Dictionary<string, FrameworkElement?>` to avoid repeated XAML name-scope tree walks in hot update paths / `SensorsControl` 现在将 `FindName()` 结果缓存到 `Dictionary<string, FrameworkElement?>` 中，避免在热更新路径中反复遍历 XAML 名称作用域树
 - `DiscreteGPUControl` and `AbstractRefreshingControl` now unsubscribe from singleton events in `Unloaded` handlers to prevent memory leaks when controls are created and destroyed by page navigation / `DiscreteGPUControl` 和 `AbstractRefreshingControl` 现在在 `Unloaded` 处理程序中取消对单例事件的订阅，防止页面导航创建/销毁控件时的内存泄漏
 - `FanCurveControl.DrawGraph` now caches the `Path` and `Polygon` canvas children and updates their `Data`/`Points` in-place instead of clearing and rebuilding on every slider change; `VerifyValues` uses direct `for` loops instead of LINQ `Take`/`Skip` to avoid enumerator allocation / `FanCurveControl.DrawGraph` 现在缓存画布子元素 `Path` 和 `Polygon`，每次滑块变化时就地更新 `Data`/`Points` 而非清空重建；`VerifyValues` 使用直接 `for` 循环替代 LINQ `Take`/`Skip`，避免枚举器分配
 - `AutomationPage.GetSupportedAutomationStepsAsync` now runs all 30+ `IsSupportedAsync` calls in parallel via `Task.WhenAll` instead of sequentially, reducing page initialization time / `AutomationPage.GetSupportedAutomationStepsAsync` 现在通过 `Task.WhenAll` 并行运行 30+ 个 `IsSupportedAsync` 调用，替代原来的串行执行，减少页面初始化时间
@@ -115,7 +124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 35 empty `catch` blocks across the codebase now log exceptions at appropriate levels instead of silently swallowing them / 代码库中 35 个空 `catch` 块现在以适当级别记录异常，不再静默吞掉
 - `GodModeSettingsWindow.SetDefaults` converted from `async void` to `async Task` with proper try/catch to prevent unobserved exceptions / `GodModeSettingsWindow.SetDefaults` 从 `async void` 转换为 `async Task` 并添加适当的 try/catch，防止未观察异常
 - 8 singleton event subscriptions in controls/pages now unsubscribe in `Unloaded` handlers to prevent memory leaks when controls are navigated away: `PluginExtensionsPage`, `SettingsAppearanceControl`, `ResolutionAutomationStepControl`, `RefreshRateAutomationStepControl`, `HDRAutomationStepControl`, `DpiScaleAutomationStepControl`, `DeviceAutomationPipelineTriggerTabItemContent`, `MacroSequenceControl` / 8 个控件/页面中的单例事件订阅现在在 `Unloaded` 处理程序中取消订阅，防止导航离开时内存泄漏：`PluginExtensionsPage`、`SettingsAppearanceControl`、`ResolutionAutomationStepControl`、`RefreshRateAutomationStepControl`、`HDRAutomationStepControl`、`DpiScaleAutomationStepControl`、`DeviceAutomationPipelineTriggerTabItemContent`、`MacroSequenceControl`
-- Hot-path string allocations reduced in `OsdWindowBase` (sensor tick loop, FPS callback) and `SensorsControl` (gauge updates, trend samples) by caching resource suffixes in static readonly fields and replacing interpolated strings with `string.Concat` / 减少 `OsdWindowBase`（传感器刷新循环、FPS 回调）和 `SensorsControl`（仪表更新、趋势采样）中的热·径字符串分配，将资源后缀缓存到静态只读字段并用 `string.Concat` 替代内插字符串
+- Hot-path string allocations reduced in `OsdWindowBase` (sensor tick loop, FPS callback) and `SensorsControl` (gauge updates, trend samples) by caching resource suffixes in static readonly fields and replacing interpolated strings with `string.Concat` / 减少 `OsdWindowBase`（传感器刷新循环、FPS 回调）和 `SensorsControl`（仪表更新、趋势采样）中的热路径字符串分配，将资源后缀缓存到静态只读字段并用 `string.Concat` 替代内插字符串
 - `EnumToBoolConverter` now caches `Enum.Parse` results in a `ConcurrentDictionary` to avoid per-call allocations; `CollectionSplitConverters` replaced LINQ `Cast().ToList()` with manual enumeration and `Array.Empty<object>()` / `EnumToBoolConverter` 现在将 `Enum.Parse` 结果缓存到 `ConcurrentDictionary` 中，避免每次调用分配；`CollectionSplitConverters` 用手动枚举和 `Array.Empty<object>()` 替代 LINQ `Cast().ToList()`
 - `SpectrumKeyboardBacklightControl`, `PowerModeControl`, `SensorsControl`, `PackageControl` now implement `IDisposable` and dispose their `CancellationTokenSource`, `ThrottleLastDispatcher`, and `Process` fields / `SpectrumKeyboardBacklightControl`、`PowerModeControl`、`SensorsControl`、`PackageControl` 现在实现 `IDisposable` 并释放其 `CancellationTokenSource`、`ThrottleLastDispatcher` 和 `Process` 字段
 - Dynamic Panel children in `KeyboardBacklightPage`, `OsdSettingsWindow`, `SensorsControl`, `AutomationPipelineControl` now properly cleaned up in `Unloaded` handlers / `KeyboardBacklightPage`、`OsdSettingsWindow`、`SensorsControl`、`AutomationPipelineControl` 中的动态 Panel 子元素现在在 `Unloaded` 处理程序中正确清理
@@ -210,7 +219,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.2.0] - 2026-06-04
 
-### Highlights / 閲嶇
+### Highlights / 重点
 
 - Stable release for in-app updates from v4.1.0. Existing installs can check for updates normally and install the Full or Online setup package from GitHub Releases.
 - Added a real-time on-screen display (OSD) overlay for hardware metrics, ported from upstream Lenovo Legion Toolkit behavior.
@@ -234,7 +243,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.1.0] - 2026-05-31
 
-### Highlights / 閲嶇
+### Highlights / 重点
 
 - Fixed God Mode preset management so create, rename, delete, and preset switching refresh both the visible picker and the stored state correctly.
 - Fixed optimization-only plugins so installed local plugins can contribute System Optimization child actions even when they do not expose a standalone page.
@@ -253,7 +262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.0.0] - 2026-05-29
 
-### Highlights / 閲嶇
+### Highlights / 重点
 
 - Universal Device Toolkit is now the stable public name. Existing Lenovo Legion Toolkit installations can upgrade in place while settings, plugins, updater paths, winget, and Scoop compatibility are preserved.
 - Added Full and Online release packages. Full includes bundled languages and device support data; Online starts smaller and installs language/device resources from the GitHub Pages catalog through the app flow.
@@ -343,7 +352,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed / 修复
 
 - Fixed sensor data handling by correcting CPU wattage queries and unit normalization and adding ACPI thermal-zone fallback when Lenovo temperature sensors are unavailable.
-- 修复插件 ZIP 安装中的 Zip Slip ·径遍历风险，阻止恶意插件包写入目标目录涔嬪/ Fixed a Zip Slip path traversal vulnerability during plugin ZIP extraction.
+- 修复插件 ZIP 安装中的 Zip Slip 路径遍历风险，阻止恶意插件包写入目标目录之外 / Fixed a Zip Slip path traversal vulnerability during plugin ZIP extraction.
 - Fixed multiple WPF-UI 4 migration regressions across title-bar buttons, the startup language selector, About scrolling, Plugin Extensions summary cards, and dark-theme text contrast.
 Fixed localization issues including the Norwegian clipboard placeholder and the Chinese `GHz` unit label. / - 修正若干本地化细节，包括挪威语剪贴板占位符和中文传感器频率单位 `GHz`
 
@@ -361,132 +370,132 @@ Expanded 2025 Lenovo Legion and LOQ Gen 10 model detection. / - 扩展 2025 年 
 
 ### Fixed / 修复
 
-- 鎭㈠CPU / Battery / GPU 单卡片仪表板布局，默认折叠详细传感器行，骞惰ˉ上双击展寮€鎻愮/ Restored the single-card CPU / Battery / GPU dashboard layout with detailed rows collapsed by default and a double-click expansion hint.
-- Hardened sensor refresh and fallback behavior so transient Lenovo WMI failures are less likely to hide the whole dashboard card.
-- Kept the power mode selector visible by falling back to the last known or balanced mode when runtime reads fail.
-- 修复启动阶段未观察任务异常和插件瀹夎加载兼容鎬ч棶题，减少在线烟测时的崩溃与误鎶?/ Fixed startup-time unobserved task failures and tightened plugin install/load compatibility for online smoke coverage.
+- 恢复 CPU / Battery / GPU 单卡片仪表板布局，默认折叠详细传感器行，并补上双击展开提示 / Restored the single-card CPU / Battery / GPU dashboard layout with detailed rows collapsed by default and a double-click expansion hint.
+- 强化传感器刷新与回退逻辑，减少 Lenovo WMI 瞬时失败导致整张卡片消失的问题 / Hardened sensor refresh and fallback behavior so transient Lenovo WMI failures are less likely to hide the whole dashboard card.
+- 在运行时读取失败时保留功耗模式控件可见，回退到最近一次已知状态或均衡模式，而不是直接塌掉 / Kept the power mode selector visible by falling back to the last known or balanced mode when runtime reads fail.
+- 修复启动阶段未观察任务异常和插件安装/加载兼容性问题，减少在线烟测时的崩溃与误报 / Fixed startup-time unobserved task failures and tightened plugin install/load compatibility for online smoke coverage.
 
 ### Improved / 改进
 
-- 收紧 Plugin Extensions 页面布局锛岀Щ除多余空鐧介€夋嫨态，默认选中首个插件，并补充更清晰的说明和使用引/ Tightened the Plugin Extensions page layout, removed the redundant empty state, auto-selected the first plugin, and added clearer descriptions and usage guidance.
-- Expanded online plugin smoke coverage across install, configure/open, and uninstall flows.
-- 鏇存3.6.16 发布与分发文档，补齐中文宣发文案浠ュwinget / Scoop 维护流程璇存/ Updated 3.6.16 release and distribution docs, including Chinese promotion copy and winget/Scoop maintainer workflows.
+- 收紧 Plugin Extensions 页面布局，移除多余空白选择态，默认选中首个插件，并补充更清晰的说明和使用引导 / Tightened the Plugin Extensions page layout, removed the redundant empty state, auto-selected the first plugin, and added clearer descriptions and usage guidance.
+- 扩展在线插件烟测覆盖，补齐安装、配置/打开与卸载链路，提高默认插件集的验证可靠性 / Expanded online plugin smoke coverage across install, configure/open, and uninstall flows.
+- 更新 3.6.16 发布与分发文档，补齐中文宣发文案以及 winget / Scoop 维护流程说明 / Updated 3.6.16 release and distribution docs, including Chinese promotion copy and winget/Scoop maintainer workflows.
 
 ## [3.6.15] - 2026-04-29
 
 ### Fixed / 修复
 
-- Fixed stability issues across settings, shutdown, Driver Download, and System Optimization, including noisy missing-config logs, the blank `--disable-update-checker` page, RGB ownership false alarms, cross-thread snackbar errors, and failing `del` / `rd` cleanup actions.
-Fixed plugin-loading and isolated-smoke issues including sidecar DLL resolution, expired Microsoft signature handling, page rebuild loops, single-instance conflicts, `ReleaseMutex` errors, marketplace card refresh, and `Open` entry-point misclassification. / - 修复插件加载与隔离烟测链·中的一组问题，包括 sidecar DLL 解析、过期微软签名兼容、页面重建循环、单实例锁冲突、`ReleaseMutex` 异常，以及插件市场卡片刷新与 `Open` 入口误判
-Fixed the in-app IPC screenshot path resetting the WPF render mode and reintroducing blank-window issues in compatibility or software-rendering sessions. / - 修复应用内 IPC 截图·径重置 WPF 渲染模式的问题，降低兼容模式和软件渲染场景再次出现空白窗口的概率
-- 放宽系统优化命令校验规则，允许受鎺хstdout / stderr 重定向，閬垮`2>&1` 等合法片段被误判为注入风/ Relaxed System Optimization command validation so controlled stdout/stderr redirection such as `2>&1` is no longer misclassified as an injection risk.
+- 修复设置页、退出流程、驱动下载与系统优化中的多处稳定性问题，包括缺失配置文件日志噪音、`--disable-update-checker` 空白页、RGB 所有权跳过误报、跨线程提示异常，以及 `del` / `rd` 清理命令执行失败 / Fixed stability issues across settings, shutdown, Driver Download, and System Optimization, including noisy missing-config logs, the blank `--disable-update-checker` page, RGB ownership false alarms, cross-thread snackbar errors, and failing `del` / `rd` cleanup actions.
+- 修复插件加载与隔离烟测链路中的一组问题，包括 sidecar DLL 解析、过期微软签名兼容、页面重建循环、单实例锁冲突、`ReleaseMutex` 异常，以及插件市场卡片刷新与 `Open` 入口误判 / Fixed plugin-loading and isolated-smoke issues including sidecar DLL resolution, expired Microsoft signature handling, page rebuild loops, single-instance conflicts, `ReleaseMutex` errors, marketplace card refresh, and `Open` entry-point misclassification.
+- 修复应用内 IPC 截图路径重置 WPF 渲染模式的问题，降低兼容模式和软件渲染场景再次出现空白窗口的概率 / Fixed the in-app IPC screenshot path resetting the WPF render mode and reintroducing blank-window issues in compatibility or software-rendering sessions.
+- 放宽系统优化命令校验规则，允许受控的 stdout / stderr 重定向，避免 `2>&1` 等合法片段被误判为注入风险 / Relaxed System Optimization command validation so controlled stdout/stderr redirection such as `2>&1` is no longer misclassified as an injection risk.
 
 ### Improved / 改进
 
-- Added a `status` CLI command for checking host connectivity, update-check disablement, and the active update repository.
-- Reworked Driver Download into a more complete and compact queue-based workflow with improved empty, no-result, restore, and completed states.
-- Reworked Plugin Extensions into a manager-style list/detail layout with aligned skeleton states, clearer actions, icons, and descriptions.
-- `custom-mouse` `shell-integration` 统一收敛到配置窗口和系统优化分类入口，降低侧栏分鏁ｅ/ Consolidated `custom-mouse` and `shell-integration` into the settings-window plus System Optimization entry model.
-- Moved System Optimization top-right and bulk actions into the toolbar and added stable AutomationIds for UI smoke and accessibility.
-Expanded `MainAppPluginUi.Smoke` with animation-aware waits, popup handling, screenshot indexing, watch/theme/screenshot options, and IPC-based window exports. / - `MainAppPluginUi.Smoke` 做了一轮系统性增强，包括动画等待、弹窗识别与消除、页面截图索引、`--watch` / `--theme` / `--screenshots` 等参数，以及主窗口/设置窗口 IPC 导出能力
-Hardened real plugin-install and marketplace validation with better refresh handling, install-success detection, download retries, serial installs, readiness checks, and a `curl.exe` fallback. / - 强化真实插件安装与在线市场验证链·，改进市场刷新、安装成功判定、下载重试、串行安装、页面就绪判断和 `curl.exe` 下载兜底
-Polished the plugin settings host shell and style settings pages with larger windows, less nested scrolling, and host-aligned presentation. / - 插件设置宿主壳和样式设置页做了纯 UI 打磨，放大窗口、减少双层滚动，并让 `shell-integration` / `custom-mouse` 的设置体验更接近宿主应用
-- 鏂板`Main App UI Smoke` workflow PowerShell runner 包装脚本，可在独立交互式 Windows runner 上执行真UI smoke 并自动回传截图与鏃ュ/ Added a dedicated `Main App UI Smoke` workflow and PowerShell runner wrapper for real UI smoke on an interactive Windows runner.
+- CLI 新增 `status` 命令，可快速查看主程序连接状态、更新检查禁用状态和当前更新仓库，便于诊断设置页问题 / Added a `status` CLI command for checking host connectivity, update-check disablement, and the active update repository.
+- 驱动下载页重做为更完整、更紧凑的队列式体验，补齐队列管理、空状态、无结果、隐藏项恢复和完成状态展示 / Reworked Driver Download into a more complete and compact queue-based workflow with improved empty, no-result, restore, and completed states.
+- 插件扩展页改为左侧列表加右侧详情的管理器式布局，骨架屏与最终布局对齐，卡片操作、图标与说明更清晰 / Reworked Plugin Extensions into a manager-style list/detail layout with aligned skeleton states, clearer actions, icons, and descriptions.
+- `custom-mouse` 与 `shell-integration` 统一收敛到配置窗口和系统优化分类入口，降低侧栏分散度 / Consolidated `custom-mouse` and `shell-integration` into the settings-window plus System Optimization entry model.
+- 系统优化页将右上角与批量操作迁入工具栏，并补充稳定 AutomationId，提升 UI 冒烟和辅助功能定位 / Moved System Optimization top-right and bulk actions into the toolbar and added stable AutomationIds for UI smoke and accessibility.
+- `MainAppPluginUi.Smoke` 做了一轮系统性增强，包括动画等待、弹窗识别与消除、页面截图索引、`--watch` / `--theme` / `--screenshots` 等参数，以及主窗口/设置窗口 IPC 导出能力 / Expanded `MainAppPluginUi.Smoke` with animation-aware waits, popup handling, screenshot indexing, watch/theme/screenshot options, and IPC-based window exports.
+- 强化真实插件安装与在线市场验证链路，改进市场刷新、安装成功判定、下载重试、串行安装、页面就绪判断和 `curl.exe` 下载兜底 / Hardened real plugin-install and marketplace validation with better refresh handling, install-success detection, download retries, serial installs, readiness checks, and a `curl.exe` fallback.
+- 插件设置宿主壳和样式设置页做了纯 UI 打磨，放大窗口、减少双层滚动，并让 `shell-integration` / `custom-mouse` 的设置体验更接近宿主应用 / Polished the plugin settings host shell and style settings pages with larger windows, less nested scrolling, and host-aligned presentation.
+- 新增 `Main App UI Smoke` workflow 与 PowerShell runner 包装脚本，可在独立交互式 Windows runner 上执行真实 UI smoke 并自动回传截图与日志 / Added a dedicated `Main App UI Smoke` workflow and PowerShell runner wrapper for real UI smoke on an interactive Windows runner.
 
 ## [3.6.14] - 2026-04-19
 
 ### Added / 新增
 
-Added design tokens plus standard button and typography styles to unify spacing, corners, icon sizes, button sizes, and text scales. / - 新增设计令牌体系和标准按钮/字体样式，统一间距、圆角、图标、按钮尺寸和字号，为后续 UI 收敛打基础
+- 新增设计令牌体系和标准按钮/字体样式，统一间距、圆角、图标、按钮尺寸和字号，为后续 UI 收敛打基础 / Added design tokens plus standard button and typography styles to unify spacing, corners, icon sizes, button sizes, and text scales.
 
 ### Improved / 改进
 
-- Plugin Extensions、Windows Optimization、CardHeader、About、Macro、Sensors 等页面的灞€部样式收敛到全局设计令牌Typography，提升界面一鑷存€?/ Consolidated local page styles onto shared design tokens and typography across Plugin Extensions, Windows Optimization, CardHeader, About, Macro, Sensors, and related surfaces.
-Moved plugin UI smoke to a more realistic isolated-sandbox flow with real online installs, local ZIP imports, and an explicit `LLT_PLUGIN_SIGNATURE_MODE` override. / - 插件 UI 烟测切换到更真实的隔离沙箱流程，同时支持真实在线安装和本地 ZIP 导入，并允许通过 `LLT_PLUGIN_SIGNATURE_MODE` 切换签名校验策略
-Improved plugin marketplace resilience with mirrored sources, retries, and cached fallback for metadata and package downloads. / - 改进插件市场的在线元数据与安装包下载抗抖动能力，加入多源镜像、重试和缓存回退，减少 GitHub 连接重置带来的空市场页和安装失败
-Upgraded GitHub Actions dependencies and cleaned nullable/xUnit analyzer warnings to reduce CI noise and future runner-upgrade risk. / - 升级 GitHub Actions 依赖并清理测试项目中的 nullable / xUnit analyzer 告警，降低 CI 噪声和后续 runner 升级风险
+- 将 Plugin Extensions、Windows Optimization、CardHeader、About、Macro、Sensors 等页面的局部样式收敛到全局设计令牌和 Typography，提升界面一致性 / Consolidated local page styles onto shared design tokens and typography across Plugin Extensions, Windows Optimization, CardHeader, About, Macro, Sensors, and related surfaces.
+- 插件 UI 烟测切换到更真实的隔离沙箱流程，同时支持真实在线安装和本地 ZIP 导入，并允许通过 `LLT_PLUGIN_SIGNATURE_MODE` 切换签名校验策略 / Moved plugin UI smoke to a more realistic isolated-sandbox flow with real online installs, local ZIP imports, and an explicit `LLT_PLUGIN_SIGNATURE_MODE` override.
+- 改进插件市场的在线元数据与安装包下载抗抖动能力，加入多源镜像、重试和缓存回退，减少 GitHub 连接重置带来的空市场页和安装失败 / Improved plugin marketplace resilience with mirrored sources, retries, and cached fallback for metadata and package downloads.
+- 升级 GitHub Actions 依赖并清理测试项目中的 nullable / xUnit analyzer 告警，降低 CI 噪声和后续 runner 升级风险 / Upgraded GitHub Actions dependencies and cleaned nullable/xUnit analyzer warnings to reduce CI noise and future runner-upgrade risk.
 
 ### Fixed / 修复
 
-- 修复驱动鐗规€у啓入校楠屻€丵uick Action 循环引用、进程监听器缓存清理等核蹇冪ǔ瀹氭€ч棶题，减少误报成功、卡死和高事件压力下的异/ Fixed core stability issues around driver-feature verification, cyclic Quick Actions, and process-listener cache cleanup.
-- Fixed IPC ACL issues, permanently disabled toggles after errors, close-to-tray save races, and installers falsely reporting success on non-zero exit codes.
-- 修复插件加载器缺sidecar 依赖解析、插件市场失败更新残留半复制目录、以及重扫竞态导致的鐘舵€侀敊涔?/ Fixed plugin-loader sidecar dependency resolution plus marketplace update/install races that could leave half-copied directories or stale UI state.
-- Fixed overlapping WMI listener execution, stuck quick-action buttons, and plugin-store failures being silently treated as an empty list.
+- 修复驱动特性写入校验、Quick Action 循环引用、进程监听器缓存清理等核心稳定性问题，减少误报成功、卡死和高事件压力下的异常 / Fixed core stability issues around driver-feature verification, cyclic Quick Actions, and process-listener cache cleanup.
+- 修复 IPC 命名管道 ACL、设置页 toggle 永久禁用、关闭时最小化异步保存竞争，以及安装器忽略非零退出码等问题 / Fixed IPC ACL issues, permanently disabled toggles after errors, close-to-tray save races, and installers falsely reporting success on non-zero exit codes.
+- 修复插件加载器缺少 sidecar 依赖解析、插件市场失败更新残留半复制目录、以及重扫竞态导致的状态错乱 / Fixed plugin-loader sidecar dependency resolution plus marketplace update/install races that could leave half-copied directories or stale UI state.
+- 修复 WMI listener 并发重叠、自动化“立即运行”/独显停用/关闭显示器按钮卡死，以及插件商店请求失败被静默视为空列表等问题 / Fixed overlapping WMI listener execution, stuck quick-action buttons, and plugin-store failures being silently treated as an empty list.
 
 ## [3.6.13] - 2026-04-18
 
 ### Added / 新增
 
-- 为插件加载新增可配置的签名校楠屾ā式，在开发与生产场景下都能更明确地拦截未签名鎻掍/ Added configurable signature validation modes for plugin loading so unsigned plugins are blocked more explicitly in both development and production scenarios
+- 为插件加载新增可配置的签名校验模式，在开发与生产场景下都能更明确地拦截未签名插件 / Added configurable signature validation modes for plugin loading so unsigned plugins are blocked more explicitly in both development and production scenarios
 
 ### Fixed / 修复
 
-Restored Panel Logo lighting features and their host/CLI registrations so supported devices no longer lose the controls or hit the related build regression / - 恢复 Panel Logo 灯效功能及其宿主/CLI 注册链·，避免受支持设备上的相关控制项缺失或引入构建回归
-- 为下载的更新包增SHA256 完整鎬ф牎验，避免绡℃敼包在安装鍓嶉€氳繃鏍￠/ Added SHA256 integrity verification for downloaded update packages so tampered payloads are rejected before installation
+- 恢复 Panel Logo 灯效功能及其宿主/CLI 注册链路，避免受支持设备上的相关控制项缺失或引入构建回归 / Restored Panel Logo lighting features and their host/CLI registrations so supported devices no longer lose the controls or hit the related build regression
+- 为下载的更新包增加 SHA256 完整性校验，避免篡改包在安装前通过校验 / Added SHA256 integrity verification for downloaded update packages so tampered payloads are rejected before installation
 
 ### Improved / 改进
 
-Release downloads now ship with versioned setup, portable ZIP, and SHA256 manifest assets for easier verification, archiving, and support / - 发布下载现在提供带版本号的安装包、便携 ZIP 和 SHA256 清单，便于校验、归档与问题排查
+- 发布下载现在提供带版本号的安装包、便携 ZIP 和 SHA256 清单，便于校验、归档与问题排查 / Release downloads now ship with versioned setup, portable ZIP, and SHA256 manifest assets for easier verification, archiving, and support
 
 ## [3.6.12] - 2026-03-28
 
 ### Fixed / 修复
 
-- **Plugin Install State Recovery / 插件安装鐘舵€佹仮*: Cleared pending-deletion markers during reinstall/update, rejected plugin packages whose normalized `plugin.json` ID does not match the requested store manifest, and blocked incompatible host-version installs before download state is persisted so plugin updates no longer disappear after app exit or land in a false-installed state / 在重装与更新时清理待删除标记，拒绝规范化`plugin.json` ID 与商店清单不涓€致的插件包，并在下载前拦截宿主版本不兼容的安装，避免插件更新后在閫€出时被删掉，或进鍏モ€滄樉示已安装但实际不可用”的错误鐘舵
-- **Plugin Update Accuracy / 插件更新准确鎬?*: Limited marketplace update checks to truly installed plugin IDs and aligned quick-open executable discovery with real plugin directories and metadata-backed locations so update badges and `Open` actions no longer drift when only discoverable/local plugins are present
+- **Plugin Install State Recovery / 插件安装状态恢复**: Cleared pending-deletion markers during reinstall/update, rejected plugin packages whose normalized `plugin.json` ID does not match the requested store manifest, and blocked incompatible host-version installs before download state is persisted so plugin updates no longer disappear after app exit or land in a false-installed state / 在重装与更新时清理待删除标记，拒绝规范化后 `plugin.json` ID 与商店清单不一致的插件包，并在下载前拦截宿主版本不兼容的安装，避免插件更新后在退出时被删掉，或进入“显示已安装但实际不可用”的错误状态
+- **Plugin Update Accuracy / 插件更新准确性**: Limited marketplace update checks to truly installed plugin IDs and aligned quick-open executable discovery with real plugin directories and metadata-backed locations so update badges and `Open` actions no longer drift when only discoverable/local plugins are present / 将插件市场更新检查收敛到真正已安装的插件 ID，并让快速打开动作按真实插件目录与元数据定位可执行文件，避免仅存在可发现/本地插件时更新提示和 `Open` 行为误报
 
 ## [3.6.11] - 2026-03-27
 
 ### Fixed / 修复
 
-- **WPF Rendering Compatibility / WPF 渲染兼容*: Centralized the software-rendering fallback in `RenderingCompatibilityHelper`, applied an opaque window background fallback in `BaseWindow`, and routed app startup render-mode selection through the helper so Remote Desktop / forced-software-rendering sessions no longer show blank Mica/Acrylic windows. Evidence: `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\build-rendering-compat.log`, `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\rendering-compat.diff`
-- **Plugin UI Localization / 插件界面本地鍖?*: Replaced plugin marketplace summary/capability/author strings with localized resources and added a localized optimization failure format so simplified Chinese UI no longer shows English labels such as `Total Plugins`, `Quick Open`, or `Failed to apply ...` in the plugin workflow
-- **Menu Style Editor Localization / 菜单样式编辑器本鍦板*: Replaced hard-coded Chinese strings in `MenuStyleSettingsWindow` with resource lookups, localized apply/open error prompts, and aligned the editor with the actual Shell config availability so Chinese and cold-locale runs no longer mix in untranslated text or expose missing-file actions / `MenuStyleSettingsWindow` 中的硬编码中文替换为资源查找锛岃ˉ齐应用与打开失败提示的本地化，并按实Shell 配置文件可用鎬ф帶制编辑器鐘舵€侊紝避免中文和冷门语瑷€运行时混入未翻译文本或暴露无效文件操浣?
-- **Plugin Host Localization Refresh / 插件宿主本地化刷*: Added a shared plugin-resource culture change event, taught `PluginPageWrapper` and `PluginSettingsWindow` to rebuild plugin UI after culture changes, and localized previously hard-coded plugin host empty states, delete confirmations, snackbars, and ZIP dialog filters so plugin pages/settings inherit language changes more reliably instead of keeping stale text or popping untranslated helper UI / 新增共享的插件资源文化变更事件，`PluginPageWrapper` `PluginSettingsWindow` 在语瑷€变化后重建插件界面，并把原本硬编码的插件宿主空状鎬併€佸垹除确璁ゃ€佹彁示条ZIP 文件对话框过滤文本资源化，减少插浠堕设置页保留旧语言或弹出未翻译的辅助界闈?
+- **WPF Rendering Compatibility / WPF 渲染兼容性**: Centralized the software-rendering fallback in `RenderingCompatibilityHelper`, applied an opaque window background fallback in `BaseWindow`, and routed app startup render-mode selection through the helper so Remote Desktop / forced-software-rendering sessions no longer show blank Mica/Acrylic windows. Evidence: `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\build-rendering-compat.log`, `C:\Users\96152\.openclaw\workspace\opencode_automation\report\LenovoLegionToolkit\rendering-compat.diff` / 将软件渲染兜底逻辑集中到 `RenderingCompatibilityHelper`，在 `BaseWindow` 中补充不透明背景兜底，并让启动阶段的渲染模式统一走 helper，避免远程桌面或强制软件渲染场景下 Mica/Acrylic 窗口空白
+- **Plugin UI Localization / 插件界面本地化**: Replaced plugin marketplace summary/capability/author strings with localized resources and added a localized optimization failure format so simplified Chinese UI no longer shows English labels such as `Total Plugins`, `Quick Open`, or `Failed to apply ...` in the plugin workflow / 将插件市场的摘要、能力标签、作者前缀改为资源化本地化文本，并补充系统优化失败消息模板，使简体中文插件流程中不再显示 `Total Plugins`、`Quick Open`、`Failed to apply ...` 等英文标签
+- **Menu Style Editor Localization / 菜单样式编辑器本地化**: Replaced hard-coded Chinese strings in `MenuStyleSettingsWindow` with resource lookups, localized apply/open error prompts, and aligned the editor with the actual Shell config availability so Chinese and cold-locale runs no longer mix in untranslated text or expose missing-file actions / 将 `MenuStyleSettingsWindow` 中的硬编码中文替换为资源查找，补齐应用与打开失败提示的本地化，并按实际 Shell 配置文件可用性控制编辑器状态，避免中文和冷门语言运行时混入未翻译文本或暴露无效文件操作
+- **Plugin Host Localization Refresh / 插件宿主本地化刷新**: Added a shared plugin-resource culture change event, taught `PluginPageWrapper` and `PluginSettingsWindow` to rebuild plugin UI after culture changes, and localized previously hard-coded plugin host empty states, delete confirmations, snackbars, and ZIP dialog filters so plugin pages/settings inherit language changes more reliably instead of keeping stale text or popping untranslated helper UI / 新增共享的插件资源文化变更事件，让 `PluginPageWrapper` 与 `PluginSettingsWindow` 在语言变化后重建插件界面，并把原本硬编码的插件宿主空状态、删除确认、提示条与 ZIP 文件对话框过滤文本资源化，减少插件页/设置页保留旧语言或弹出未翻译的辅助界面
 - **Plugin Marketplace Hidden Copy / 插件市场隐藏文案**: Routed the remaining install/uninstall/bulk-import fallback snackbars in `PluginExtensionsPage` through resource keys so the plugin marketplace no longer mixes English helper text like install-failed details, dependency uninstall warnings, or `Unknown` import-source placeholders into Chinese mode / 将 `PluginExtensionsPage` 中残留的安装、卸载、批量导入兜底提示统一改走资源键，避免插件市场在中文模式下继续混入安装失败详情、依赖卸载警告或 `Unknown` 这类英文占位提示
-- **Hidden Settings Dialog Copy / 隐藏设置弹框文案**: Routed package-download example placeholders in `PackagesPage` and the mirrored `WindowsOptimizationPage` surface through shared resource keys, and localized the Compatibility Check window's manual 鈥淥pen Logfailure message so hidden host dialogs no longer mix hard-coded English/Chinese helper text / 将 `PackagesPage` 及镜像到 `WindowsOptimizationPage` 的包下载示例占位文案改走共享资源键，并把兼容性检查窗口里手动“打开日志”失败提示资源化，避免宿主隐藏弹框继续混入硬编码中英文辅助文本
-- **Explorer Restart Reliability / Explorer 重启可靠*: Replaced duplicated Explorer restart snippets with a shared helper that waits for Explorer to fully exit, relaunches it via the shell with a `cmd /c start` fallback, uses the Windows `explorer.exe` full path, and verifies the process actually returns so optimization and menu-style apply flows no longer leave the desktop shell closed / 用共浜?helper 替换重复Explorer 重启片段：等寰?Explorer 完全閫€鍑恒€侀€氳shell 方式拉起并提渚?`cmd /c start` 兜底、使Windows `explorer.exe` 的全·径、并校验进程确实恢复，避免系统优化和菜单样式应用流程把桌面壳鏉€掉后不自动回
-- **Windows Optimization Locale Drift / 系统优化语言婕傜*: Forced `WindowsOptimizationViewModel` category/action resource lookups to use the app's active `Resource.Culture` explicitly, fixing the case where cold locales like `uz-latn-uz` still rendered Shell Integration and optimization-category cards in Chinese because those strings were resolved against the wrong culture during initialization
-- **Plugin Smoke Cold-Locale Coverage / 插件冒烟冷门语言瑕嗙*: Taught `MainAppPluginUi.Smoke` to temporarily pre-seed requested plugins into `InstalledExtensions`, restore settings afterward, and fall back to optimization/sidebar verification when marketplace-only settings windows are unavailable, which unblocked `uz-latn-uz` screenshot validation for `custom-mouse` and `network-acceleration` / `MainAppPluginUi.Smoke` 在运行前临时把目标插件写`InstalledExtensions` 并在结束后恢复设置，同时在市场页设置窗口不可用时鍥為€€到系统优化页或侧边栏验证，从而打`custom-mouse` `network-acceleration` `uz-latn-uz` 下的截图楠岃
-- **English Fallback Chain / 英文兜底*: Added a shared `LocalizationHelper.GetStringOrEnglish(...)` path for runtime resource lookups, forcing dynamic UI text to resolve through current language -> parent culture -> English instead of drifting into unrelated cultures such as Chinese; wired it into Windows Optimization, Plugin Extensions, MainWindow, cleanup helpers, and other runtime-only windows so missing keys now fall back to English consistently / 新增共享`LocalizationHelper.GetStringOrEnglish(...)` 运行时资源查找链，让鍔ㄦUI 文案统一鎸夆€滃綋前语瑷€ -> 父文鍖?-> 英文鈥濊В析，不再漂到中文等无关文化；并已接入系统优化、插件市鍦恒€丮ainWindow、清理提示和其他运行时窗口，使缺键时统一鍥為€€英文
-- **Unsupported Window Hyperlink Crash / 不受支持硬件窗口超链接崩婧?*: Split GitHub link constants into XAML-safe string URLs and kept Uri variants for code paths, then switched `UnsupportedWindow` and `AboutPage` hyperlink bindings to the string values so WPF-UI no longer throws `NavigateUri` parse exceptions during compatibility-check startup
+- **Hidden Settings Dialog Copy / 隐藏设置弹框文案**: Routed package-download example placeholders in `PackagesPage` and the mirrored `WindowsOptimizationPage` surface through shared resource keys, and localized the Compatibility Check window's manual “Open Log” failure message so hidden host dialogs no longer mix hard-coded English/Chinese helper text / 将 `PackagesPage` 及镜像到 `WindowsOptimizationPage` 的包下载示例占位文案改走共享资源键，并把兼容性检查窗口里手动“打开日志”失败提示资源化，避免宿主隐藏弹框继续混入硬编码中英文辅助文本
+- **Explorer Restart Reliability / Explorer 重启可靠性**: Replaced duplicated Explorer restart snippets with a shared helper that waits for Explorer to fully exit, relaunches it via the shell with a `cmd /c start` fallback, uses the Windows `explorer.exe` full path, and verifies the process actually returns so optimization and menu-style apply flows no longer leave the desktop shell closed / 用共享 helper 替换重复的 Explorer 重启片段：等待 Explorer 完全退出、通过 shell 方式拉起并提供 `cmd /c start` 兜底、使用 Windows 下 `explorer.exe` 的全路径、并校验进程确实恢复，避免系统优化和菜单样式应用流程把桌面壳杀掉后不自动回来
+- **Windows Optimization Locale Drift / 系统优化语言漂移**: Forced `WindowsOptimizationViewModel` category/action resource lookups to use the app's active `Resource.Culture` explicitly, fixing the case where cold locales like `uz-latn-uz` still rendered Shell Integration and optimization-category cards in Chinese because those strings were resolved against the wrong culture during initialization / 让 `WindowsOptimizationViewModel` 中分类与动作文案的资源读取显式使用当前应用的 `Resource.Culture`，修复 `uz-latn-uz` 这类冷门语言下 Shell Integration 与系统优化分类卡片仍回落成中文的问题
+- **Plugin Smoke Cold-Locale Coverage / 插件冒烟冷门语言覆盖**: Taught `MainAppPluginUi.Smoke` to temporarily pre-seed requested plugins into `InstalledExtensions`, restore settings afterward, and fall back to optimization/sidebar verification when marketplace-only settings windows are unavailable, which unblocked `uz-latn-uz` screenshot validation for `custom-mouse` and `network-acceleration` / 让 `MainAppPluginUi.Smoke` 在运行前临时把目标插件写入 `InstalledExtensions` 并在结束后恢复设置，同时在市场页设置窗口不可用时回退到系统优化页或侧边栏验证，从而打通 `custom-mouse` 与 `network-acceleration` 在 `uz-latn-uz` 下的截图验证
+- **English Fallback Chain / 英文兜底链**: Added a shared `LocalizationHelper.GetStringOrEnglish(...)` path for runtime resource lookups, forcing dynamic UI text to resolve through current language -> parent culture -> English instead of drifting into unrelated cultures such as Chinese; wired it into Windows Optimization, Plugin Extensions, MainWindow, cleanup helpers, and other runtime-only windows so missing keys now fall back to English consistently / 新增共享的 `LocalizationHelper.GetStringOrEnglish(...)` 运行时资源查找链，让动态 UI 文案统一按“当前语言 -> 父文化 -> 英文”解析，不再漂到中文等无关文化；并已接入系统优化、插件市场、MainWindow、清理提示和其他运行时窗口，使缺键时统一回退英文
+- **Unsupported Window Hyperlink Crash / 不受支持硬件窗口超链接崩溃**: Split GitHub link constants into XAML-safe string URLs and kept Uri variants for code paths, then switched `UnsupportedWindow` and `AboutPage` hyperlink bindings to the string values so WPF-UI no longer throws `NavigateUri` parse exceptions during compatibility-check startup / 将 GitHub 链接常量拆为 XAML 安全的字符串 URL，并在代码路径保留 Uri 变体；`UnsupportedWindow` 与 `AboutPage` 超链接绑定改用字符串值，避免兼容性检查启动时 WPF-UI 抛出 `NavigateUri` 解析异常
 
 ### Improved / 改进
 
-- **ViVeTool Plugin Smoke / ViVeTool 插件冒烟**: Normalized runtime fixture IDs for `vive-tool`, switched settings-window discovery to descendant modal scanning, used the Configure-button route when marketplace double-click is not applicable, and added in-process screenshot capture fallback so the host smoke run now reaches the `ViVeTool 设置` window reliably / 规范 `vive-tool` 的 runtime fixture ID 映射，将设置窗探测改为 descendant 模态窗口扫描，在市场双击不适用时回退到 Configure 按钮·径，并补充进程内截图兜底，使宿主冒烟现在可以稳定进入 `ViVeTool 设置` 窗口
-- **Plugin UI Smoke / 插件界面鍐掔*: Updated `MainAppPluginUi.Smoke` to launch the app with `--skip-compat-check`, tolerate missing refresh buttons, and capture optimization-route settings windows so Shell Integration localization and availability fixes can be verified on unsupported hardware / 鏇存`MainAppPluginUi.Smoke`：启动主程序时自动附鍔?`--skip-compat-check`、兼容缺失的刷新按钮，并支持截取优化·由下的设置窗口，便于在不受支持硬件上验Shell Integration 的本地化与可鐢ㄦ€т慨澶?
-- **Plugin UI Smoke Evidence / 插件界面冒烟证据**: Completed a real end-to-end smoke pass for `shell-integration` through the optimization route, including action toggles and screenshot capture, while recording reproducible failure evidence for `custom-mouse` category discovery and runtime fixture file-lock cleanup during broader plugin-set runs / 已基于真实运行完成 `shell-integration` 的系统优化·由端到端冒烟验证，包含动作切换与截图留证，同时记录了 `custom-mouse` 分类定位失败以及更大插件集合运行时 fixture 清理文件锁定的可复现失败证据
-- **Plugin UI Smoke Stability / 插件界面冒烟稳定*: Hardened `MainAppPluginUi.Smoke` against stale UI Automation window handles during plugin settings validation so Shell and Network Acceleration screenshot runs no longer fail on transient `ElementNotAvailableException` cleanup/rebind paths
+- **ViVeTool Plugin Smoke / ViVeTool 插件冒烟**: Normalized runtime fixture IDs for `vive-tool`, switched settings-window discovery to descendant modal scanning, used the Configure-button route when marketplace double-click is not applicable, and added in-process screenshot capture fallback so the host smoke run now reaches the `ViVeTool 设置` window reliably / 规范 `vive-tool` 的 runtime fixture ID 映射，将设置窗探测改为 descendant 模态窗口扫描，在市场双击不适用时回退到 Configure 按钮路径，并补充进程内截图兜底，使宿主冒烟现在可以稳定进入 `ViVeTool 设置` 窗口
+- **Plugin UI Smoke / 插件界面冒烟**: Updated `MainAppPluginUi.Smoke` to launch the app with `--skip-compat-check`, tolerate missing refresh buttons, and capture optimization-route settings windows so Shell Integration localization and availability fixes can be verified on unsupported hardware / 更新 `MainAppPluginUi.Smoke`：启动主程序时自动附加 `--skip-compat-check`、兼容缺失的刷新按钮，并支持截取优化路由下的设置窗口，便于在不受支持硬件上验证 Shell Integration 的本地化与可用性修复
+- **Plugin UI Smoke Evidence / 插件界面冒烟证据**: Completed a real end-to-end smoke pass for `shell-integration` through the optimization route, including action toggles and screenshot capture, while recording reproducible failure evidence for `custom-mouse` category discovery and runtime fixture file-lock cleanup during broader plugin-set runs / 已基于真实运行完成 `shell-integration` 的系统优化路由端到端冒烟验证，包含动作切换与截图留证，同时记录了 `custom-mouse` 分类定位失败以及更大插件集合运行时 fixture 清理文件锁定的可复现失败证据
+- **Plugin UI Smoke Stability / 插件界面冒烟稳定性**: Hardened `MainAppPluginUi.Smoke` against stale UI Automation window handles during plugin settings validation so Shell and Network Acceleration screenshot runs no longer fail on transient `ElementNotAvailableException` cleanup/rebind paths / 加固 `MainAppPluginUi.Smoke` 对插件设置验证期间陈旧 UI Automation 窗口句柄的处理，避免 Shell 与网络加速截图因瞬时 `ElementNotAvailableException` 清理/重绑失败
 - **Shell Integration Smoke Coverage / Shell Integration 冒烟覆盖**: Adjusted `MainAppPluginUi.Smoke` to validate the real optimization-route entry for `shell-integration`, capture the main-window optimization screenshot, and avoid redundant return-to-market cleanup when the plugin was already installed / 调整 `MainAppPluginUi.Smoke`，改为验证 `shell-integration` 实际走到的系统优化入口、截取主窗口优化页截图，并在插件本来就已安装时跳过多余的回插件市场清理流程
 
 ## [3.6.6] - 2026-03-15
 
 ### Fixed / 修复
 
-- **Plugin Store Source / 插件商店*: Removed the failing `main/store.json` probe from the plugin store fetch path and now fetch the published `master/store.json` directly, avoiding the initial 404/timeout hop before plugin downloads / 从插件商店拉取·径中移除失效鐨?`main/store.json` 探测，改为直接获取已发布`master/store.json`，避免插件下载前先经历一404/超时跳转
+- **Plugin Store Source / 插件商店源**: Removed the failing `main/store.json` probe from the plugin store fetch path and now fetch the published `master/store.json` directly, avoiding the initial 404/timeout hop before plugin downloads / 从插件商店拉取路径中移除失效的 `main/store.json` 探测，改为直接获取已发布的 `master/store.json`，避免插件下载前先经历一次 404/超时跳转
 - **Plugin Marketplace / 插件市场**: Verified end-to-end download, install, and load of `shell-integration v1.0.4` through the main app plugin system after the store-source correction / 在修正商店源之后，已通过主程序插件系统端到端验证 `shell-integration v1.0.4` 的下载、安装与加载流程
 
 ### Improved / 改进
 
-- **Plugin Documentation / 插件鏂囨*: Added README links to the official `UniversalDeviceToolkit-Plugins` repository so plugin source, manifests, and release metadata are discoverable from the main project
+- **Plugin Documentation / 插件文档**: Added README links to the official `UniversalDeviceToolkit-Plugins` repository so plugin source, manifests, and release metadata are discoverable from the main project
 
 ### Fixed / 修复
 
-- **Remote Desktop Rendering / 远程桌面娓叉*: Added a software-rendering fallback toggle for RDP/headless sessions to avoid blank UI when no physical display is active / 为远程桌面或无显示器场景新增“软件渲鏌撯€濆紑关与兜底策略，避免界面空鐧?
+- **Remote Desktop Rendering / 远程桌面渲染**: Added a software-rendering fallback toggle for RDP/headless sessions to avoid blank UI when no physical display is active / 为远程桌面或无显示器场景新增“软件渲染”开关与兜底策略，避免界面空白
 - **Background Command Execution / 后台命令执行**: Fixed `CMD.RunAsync` fire-and-forget mode to stop redirecting stdout/stderr when `waitForExit` is `false`, preventing background processes with large output from hanging before completion
 - **Command Injection Guard / 命令注入闃叉*: Fixed `CMD.ContainsDangerousInput` to scan all `&` occurrences so mixed input like safe redirection followed by command chaining can no longer bypass validation
 - **CMD Argument Validation / CMD 参数校验**: Fixed `CMD.ContainsDangerousInput` false positives by allowing escaped ampersands (`^&`) and valid implicit redirection (`>&1`, `>&2`) while still blocking no-space command chaining (e.g. `echo a&whoami`) / 修复 `CMD.ContainsDangerousInput` 误判：在保持拦截无空格命令拼接（如 `echo a&whoami`）的同时，允许合法的转义与重定向写法（`^&`、`>&1`、`>&2`）
 - **Command Execution / 命令执行**: Fixed `CMD.RunAsync` output-buffer deadlock by draining standard output/error streams while waiting for process exit (prevents hangs on large output commands such as directory listing)
 - **Retry Logic / 重试逻辑**: Fixed `RetryHelper` to correctly stop and throw `MaximumRetriesReachedException` after reaching retry limit instead of looping indefinitely / 修复 `RetryHelper` 在达到重试上限后的行为：现在会正确停止并抛出 `MaximumRetriesReachedException`，不再无限循环
 - **Power Mode Error Message / 电源模式错误消息**: Fixed `PowerModeUnavailableWithoutACException` message to include the blocked power mode for clearer diagnostics / 修复 `PowerModeUnavailableWithoutACException` 的消息内容，包含被阻止的电源模式，便于问题诊断
-- **Status Tray Popup / 托盘鐘舵€佸脊*: Hide battery discharge/min/max rate rows when running in compatibility mode to avoid showing meaningless `0.00 W` values on unsupported machines
-- **Localization / 本地鍖?*: Fixed plugin-open error localization by removing an invalid `{0}` placeholder from the title resource and unifying plugin open failure message formatting to `PluginExtensionsPage_OpenFailedMessage`
-- **Localization / 本地鍖?*: Fixed missing `SettingsPage_Autorun_Message` in base and zh-Hans resources to ensure settings subtitle renders correctly in default and simplified Chinese UI / 修复基准与简体中文资源中缺失鐨?`SettingsPage_Autorun_Message`，确保设置页副标题在默认语言与简体中文界面下正确显示
-- **Localization / 本地鍖?*: Added missing base resource entries for network optimization action keys used by `WindowsOptimizationCategoryProvider` to ensure fallback localization works outside zh-Hans
-- **Localization / 本地鍖?*: Removed stale locale-only resource keys in zh-Hans/zh-Hant/ar that had no code references, and aligned locale files with base keys to reduce translation drift / 娓呯zh-Hans/zh-Hant/ar 中无代码引用的陈鏃ф湰地化键，并将多语瑷€资源与基准键对齐，降低翻译漂
-- **Localization / 本地鍖?*: Restored base fallback entries for `WindowsOptimizationPage_Extensions_ComingSoon_`* and `PluginExtensionsPage_OpenPluginFailed` to keep `Resource.resx` aligned with generated designer metadata and avoid null fallback strings if reintroduced
-- **Localization / 本地鍖?*: Improved Chinese translation quality by synchronizing untranslated `zh-Hant` entries from `zh-Hans` with Simplified-to-Traditional conversion and manually localizing high-visibility plugin/menu-style UI strings in both `zh-Hans` and `zh-Hant` / 提升中文翻译质量锛氬`zh-Hant` 中未翻译条目基于 `zh-Hans` 同步并执行简转繁，同时对 `zh-Hans` `zh-Hant` 的高可见鎻掍菜单样式界面文案进行人工本地化修
-- **Localization / 本地鍖?*: Performed a full 20+ locale semantic translation pass for newly added English UI strings across WPF/Lib/Automation/Macro resources (Bing-backed batching + placeholder-safe restoration), updating 16k+ entries and preserving resource structure integrity (`missing=0`, `extra=0`, `placeholder_mismatch=0`)
+- **Status Tray Popup / 托盘状态弹窗**: Hide battery discharge/min/max rate rows when running in compatibility mode to avoid showing meaningless `0.00 W` values on unsupported machines
+- **Localization / 本地化**: Fixed plugin-open error localization by removing an invalid `{0}` placeholder from the title resource and unifying plugin open failure message formatting to `PluginExtensionsPage_OpenFailedMessage`
+- **Localization / 本地化**: Fixed missing `SettingsPage_Autorun_Message` in base and zh-Hans resources to ensure settings subtitle renders correctly in default and simplified Chinese UI / 修复基准与简体中文资源中缺失的 `SettingsPage_Autorun_Message`，确保设置页副标题在默认语言与简体中文界面下正确显示
+- **Localization / 本地化**: Added missing base resource entries for network optimization action keys used by `WindowsOptimizationCategoryProvider` to ensure fallback localization works outside zh-Hans
+- **Localization / 本地化**: Removed stale locale-only resource keys in zh-Hans/zh-Hant/ar that had no code references, and aligned locale files with base keys to reduce translation drift / 清理 zh-Hans/zh-Hant/ar 中无代码引用的陈旧本地化键，并将多语言资源与基准键对齐，降低翻译漂移
+- **Localization / 本地化**: Restored base fallback entries for `WindowsOptimizationPage_Extensions_ComingSoon_`* and `PluginExtensionsPage_OpenPluginFailed` to keep `Resource.resx` aligned with generated designer metadata and avoid null fallback strings if reintroduced
+- **Localization / 本地化**: Improved Chinese translation quality by synchronizing untranslated `zh-Hant` entries from `zh-Hans` with Simplified-to-Traditional conversion and manually localizing high-visibility plugin/menu-style UI strings in both `zh-Hans` and `zh-Hant` / 提升中文翻译质量：将 `zh-Hant` 中未翻译条目基于 `zh-Hans` 同步并执行简转繁，同时对 `zh-Hans`/`zh-Hant` 的高可见插件/菜单样式界面文案进行人工本地化修订
+- **Localization / 本地化**: Performed a full 20+ locale semantic translation pass for newly added English UI strings across WPF/Lib/Automation/Macro resources (Bing-backed batching + placeholder-safe restoration), updating 16k+ entries and preserving resource structure integrity (`missing=0`, `extra=0`, `placeholder_mismatch=0`)
 - **Localization**: Added a follow-up 20+ locale semantic completion pass to translate additional English-identical leftovers (`+63` entries across `25` locale files) while keeping structural audit clean (`missing=0`, `extra=0`, `placeholder_mismatch=0`).
 - **Localization**: Continued multi-round semantic localization refinement across 20+ locales with interruption-safe per-locale runs, reducing English-identical residual entries from `1047` to `486` while preserving structural consistency (`missing=0`, `extra=0`, `placeholder_mismatch=0`).
 - **Localization**: Performed a second continuation wave with locale-specific provider routing and Portuguese mapping compatibility (`pt`), reducing residual English-identical entries from `486` to `291` while keeping structural audits fully clean (`missing=0`, `extra=0`, `placeholder_mismatch=0`).
@@ -495,33 +504,33 @@ Release downloads now ship with versioned setup, portable ZIP, and SHA256 manife
 
 - **Test Stability / 测试稳定*: Replaced the `CMD.RunAsync` cancellation test command from `timeout` to a deterministic `ping`-based long-running command to avoid environment-dependent false negatives in headless runs
 - **Smoke Evidence / 冒烟证据**: Captured latest WPF smoke log at `attachments/lenovo-legion-toolkit/wpf-smoke-latest.log` for verification traceability / 记录最新 WPF 冒烟日志（`attachments/lenovo-legion-toolkit/wpf-smoke-latest.log`）用于验证留痕
-- **Localization Workflow / 本地化流*: Replaced legacy single-file Crowdin mapping with a repository-wide `crowdin.yml` that covers WPF/Lib/Automation/Macro resource modules and locale naming mappings (`zh-hans`, `zh-hant`, `pt-br`, `nl-nl`, `uz-latn-uz`) / 将旧的单鏂囦Crowdin 映射升级为仓库级 `crowdin.yml`，覆鐩?WPF/Lib/Automation/Macro 四个资源模块，并补齐 `zh-hans`、`zh-hant`、`pt-br`、`nl-nl`、`uz-latn-uz` 等语瑷€命名鏄犲
-- **Documentation / 鏂囨*: Updated README and Docs set to align with current repository links, workflow files, release examples, and translation synchronization commands / 鏇存README Docs 文档集，使其与当前仓库链鎺ャ€佸伐作流文件、发布示例及翻译同步命令保持涓€
-- **Documentation / 鏂囨*: Added a WPF smoke build shortcut to deployment docs to highlight `scripts/smoke-build.ps1` / 在部署文档中补充 WPF 冒烟构建快捷命令，说鏄?`scripts/smoke-build.ps1` 的使用方
-- **Documentation / 鏂囨*: Documented how to capture smoke build output logs with `Tee-Object` for sharing / 说明如何浣跨`Tee-Object` 鎹曡WPF 冒烟构建输出日志，便于分
-- **Plugin UI Smoke / 插件界面鍐掔*: Stabilized `MainAppPluginUi.Smoke` settings-window automation by switching to descendant modal-window discovery, filtering stale window handles, adding deterministic close-wait logic, and using a configure-button fallback when double-click is flaky; verified end-to-end network plugin settings + feature interactions
+- **Localization Workflow / 本地化流程**: Replaced legacy single-file Crowdin mapping with a repository-wide `crowdin.yml` that covers WPF/Lib/Automation/Macro resource modules and locale naming mappings (`zh-hans`, `zh-hant`, `pt-br`, `nl-nl`, `uz-latn-uz`) / 将旧的单文件 Crowdin 映射升级为仓库级 `crowdin.yml`，覆盖 WPF/Lib/Automation/Macro 四个资源模块，并补齐 `zh-hans`、`zh-hant`、`pt-br`、`nl-nl`、`uz-latn-uz` 等语言命名映射
+- **Documentation / 文档**: Updated README and Docs set to align with current repository links, workflow files, release examples, and translation synchronization commands / 更新 README 与 Docs 文档集，使其与当前仓库链接、工作流文件、发布示例及翻译同步命令保持一致
+- **Documentation / 文档**: Added a WPF smoke build shortcut to deployment docs to highlight `scripts/smoke-build.ps1` / 在部署文档中补充 WPF 冒烟构建快捷命令，说明 `scripts/smoke-build.ps1` 的使用方式
+- **Documentation / 文档**: Documented how to capture smoke build output logs with `Tee-Object` for sharing / 说明如何使用 `Tee-Object` 捕获 WPF 冒烟构建输出日志，便于分享
+- **Plugin UI Smoke / 插件界面冒烟**: Stabilized `MainAppPluginUi.Smoke` settings-window automation by switching to descendant modal-window discovery, filtering stale window handles, adding deterministic close-wait logic, and using a configure-button fallback when double-click is flaky; verified end-to-end network plugin settings + feature interactions
 - **Plugin Open Routing / 插件打开路由**: Extended plugin marketplace `Open` behavior to include optimization-category plugins, and added category-focused navigation into Windows Optimization for `shell-integration` and `custom-mouse` / 扩展插件市场 `Open` 行为以支持系统优化分类插件，并为 `shell-integration` `custom-mouse` 增加跳转系统优化并定位分类的能力
 
 ## [3.6.4] - 2026-02-26
 
 ### Improved / 改进
 
-- **Plugin Marketplace Validation / 插件市场楠岃*: Extended desktop smoke validation for plugin marketplace interactions (open plugin page, install/uninstall, double-click configuration window) and verified the end-to-end flow against latest plugin runtime fixes
+- **Plugin Marketplace Validation / 插件市场验证**: Extended desktop smoke validation for plugin marketplace interactions (open plugin page, install/uninstall, double-click configuration window) and verified the end-to-end flow against latest plugin runtime fixes
 
 ## [3.6.3] - 2026-02-26
 
 ### Improved / 改进
 
-- **Plugin Tooling / 插件工具*: Added a standalone plugin completion UI tool in the sibling `UniversalDeviceToolkit-Plugins` repository (`Tools/PluginCompletionUiTool`) for independent visual validation without launching the main app / 在兄弟仓`UniversalDeviceToolkit-Plugins` 中新增独立的插件完成搴﹀彲视化校验工具（`Tools/PluginCompletionUiTool`），无需启动主程序即可进行可视化楠岃
+- **Plugin Tooling / 插件工具**: Added a standalone plugin completion UI tool in the sibling `UniversalDeviceToolkit-Plugins` repository (`Tools/PluginCompletionUiTool`) for independent visual validation without launching the main app / 在兄弟仓库 `UniversalDeviceToolkit-Plugins` 中新增独立的插件完成可视化校验工具（`Tools/PluginCompletionUiTool`），无需启动主程序即可进行可视化验证
 
 ## [3.6.2] - 2026-02-26
 
 ### Fixed / 修复
 
-- **Plugin Navigation / 插件瀵艰*: Fixed sidebar plugin navigation to include only installed plugins that provide `IPluginPage`, preventing empty plugin pages
+- **Plugin Navigation / 插件导航**: Fixed sidebar plugin navigation to include only installed plugins that provide `IPluginPage`, preventing empty plugin pages
 - **Plugin Actions / 插件操作**: Fixed plugin card action visibility and capability probing by separating feature-page and settings-page detection / 修复插件卡片操作可见性与能力探测逻辑，拆分“功能页”和“设置页”判定
-- **Plugin Settings Host / 插件设置瀹夸*: Fixed `PluginSettingsWindow` to support `IPluginPage` settings providers in addition to raw `Page` objects
-- **Plugin Implementations / 插件瀹炵*: Fixed official plugin runtime behavior by adding missing UI/settings/optimization capabilities for `custom-mouse`, `network-acceleration`, and `shell-integration` / 修复官方插件运行时行为：涓?`custom-mouse`、`network-acceleration`、`shell-integration` 补齐缺失UI/璁剧系统优化扩展能力
+- **Plugin Settings Host / 插件设置宿主**: Fixed `PluginSettingsWindow` to support `IPluginPage` settings providers in addition to raw `Page` objects
+- **Plugin Implementations / 插件实现**: Fixed official plugin runtime behavior by adding missing UI/settings/optimization capabilities for `custom-mouse`, `network-acceleration`, and `shell-integration` / 修复官方插件运行时行为：为 `custom-mouse`、`network-acceleration`、`shell-integration` 补齐缺失的 UI/设置/系统优化扩展能力
 
 ### Improved / 改进
 
@@ -536,22 +545,22 @@ Release downloads now ship with versioned setup, portable ZIP, and SHA256 manife
 
 ### Fixed / 修复
 
-- **Plugin Store / 插件商店**: Fixed plugin store URLs and file sizes (Crs10259 SSC-STUDIO, correct file sizes) / 修复插件鍟嗗URL 和文件大小（Crs10259 SSC-STUDIO，正确的文件澶у皬锛?
-- **Localization / 本地鍖?*: Fixed hardcoded "Recommended" text in Windows Optimization view to use localized resource
+- **Plugin Store / 插件商店**: Fixed plugin store URLs and file sizes (Crs10259 SSC-STUDIO, correct file sizes) / 修复插件商店 URL 和文件大小（Crs10259 SSC-STUDIO，正确的文件大小）
+- **Localization / 本地化**: Fixed hardcoded "Recommended" text in Windows Optimization view to use localized resource
 - **Plugin Configuration / 插件配置**: Fixed plugin configuration button visibility for plugins exposing `GetSettingsPage` / 修复插件配置按钮可见性，支持实现 `GetSettingsPage` 的插件
 - **Plugin Configuration / 插件配置**: Added double-click behavior on plugin list items to open plugin settings for installed plugins / 为已安装插件新增列表项双击打开配置页面行为
 - **Settings UI / 设置界面**: Fixed inconsistent sidebar shadow rendering across different PCs by replacing the settings navigation selection shadow with a stable highlight-only style / 修复设置页侧边栏阴影在不同电脑上的渲染不一致问题，改为更稳定的高亮样式
 - **Settings UI / 设置界面**: Updated the default update repository owner shown in Settings to `SSC-STUDIO` and aligned owner placeholders across languages / 将设置页中更新仓库拥有者默认显示更新为 `SSC-STUDIO`，并同步多语言占位符
-- **Plugin Navigation / 插件瀵艰*: Fixed installed plugin sidebar visibility by including installed system plugins in navigation refresh / 修复已安装插件侧边栏可见鎬э紝在导航刷新中包含已安装系统插浠?
+- **Plugin Navigation / 插件导航**: Fixed installed plugin sidebar visibility by including installed system plugins in navigation refresh / 修复已安装插件侧边栏可见性，在导航刷新中包含已安装系统插件
 - **Plugin Loading / 插件加载**: Fixed plugin discovery and ZIP installation to support both `LenovoLegionToolkit.Plugins.*.dll` and ID-based DLL names (for example `custom-mouse.dll`) / 修复插件发现与 ZIP 安装逻辑，兼容 `LenovoLegionToolkit.Plugins.*.dll` 与按插件 ID 命名的 DLL（如 `custom-mouse.dll`）
-- **Plugin Manifest Compatibility / 插件清单兼容鎬?*: Fixed legacy `minLLTVersion` compatibility in host manifest parsing and ecosystem metadata alignment / 修复主程序清鍗曡В析对鏃у瓧`minLLTVersion` 的兼容，并对齐插件生态元数据
+- **Plugin Manifest Compatibility / 插件清单兼容性**: Fixed legacy `minLLTVersion` compatibility in host manifest parsing and ecosystem metadata alignment / 修复主程序清单解析对旧字段 `minLLTVersion` 的兼容，并对齐插件生态元数据
 - **Plugin Download / 插件下载**: Fixed online install failures on GitHub 404 assets by adding multi-URL retry and local package fallback from existing compiled plugin directories / 修复 GitHub 资源 404 导致的在线安装失败，新增多 URL 重试与本地已编译插件目录打包回退机制
-- **Plugin Update UX / 插件更新浣撻*: Fixed update hint visibility and metadata rendering by showing update info only for installed plugins with real updates, hiding empty release/changelog fields, formatting release date, and enabling changelog URL click-through from the update icon
-- **Plugin Icon Color / 插件图标棰滆*: Fixed plugin icon background color instability across app restarts by replacing non-deterministic hash usage and wiring `store.json` `iconBackground` into plugin cards / 修复插件图标背景色重启后变化不一致的问题：替换非确定鎬у搱希方案，骞跺`store.json` `iconBackground` 正式接入插件卡片鏄剧
+- **Plugin Update UX / 插件更新体验**: Fixed update hint visibility and metadata rendering by showing update info only for installed plugins with real updates, hiding empty release/changelog fields, formatting release date, and enabling changelog URL click-through from the update icon
+- **Plugin Icon Color / 插件图标颜色**: Fixed plugin icon background color instability across app restarts by replacing non-deterministic hash usage and wiring `store.json` `iconBackground` into plugin cards / 修复插件图标背景色重启后变化不一致的问题：替换非确定性哈希方案，并将 `store.json` 的 `iconBackground` 正式接入插件卡片显示
 
 ### Improved / 改进
 
-- **Plugin Store Reliability / 插件商店可靠鎬?*: Added store metadata fallback fetch order (`main` `master`) to reduce branch mismatch failures
+- **Plugin Store Reliability / 插件商店可靠性**: Added store metadata fallback fetch order (`main` `master`) to reduce branch mismatch failures
 
 ## [3.6.0] - 2026-02-25
 
@@ -563,10 +572,10 @@ Release downloads now ship with versioned setup, portable ZIP, and SHA256 manife
 - **Plugin System / 插件系统**: Added plugin configuration management with user preferences / 添加插件配置管理，支持用户偏好设置
 - **Plugin System / 插件系统**: Added plugin update settings (check on startup, auto-download, notification, frequency) / 添加插件更新设置（启动检查、自动下载、通知、频率）
 - **Plugin System / 插件系统**: Integrated plugins repository and migrated downloads to releases / 集成插件仓库并将下载迁移到 releases
-- **Internationalization / 国际鍖?*: Added multilingual support for CustomMouse and ShellIntegration plugins (13 languages) / CustomMouse ShellIntegration 插件添加多语瑷€支持3种语瑷€锛?
-- **Internationalization / 国际鍖?*: Migrated hardcoded Chinese text in XAML files to resource files / XAML 文件中硬编码的中文文本迁移到资源文件
-- **Documentation / 鏂囨*: Created comprehensive documentation (ARCHITECTURE.md, DEPLOYMENT.md, SECURITY.md, CODE_OF_CONDUCT.md) / 创建完整文档（ARCHITECTURE.md、DEPLOYMENT.md、SECURITY.md、CODE_OF_CONDUCT.md
-- **Documentation / 鏂囨*: Added quick start guide, troubleshooting section to README / README 中添加快速入门指鍗椼€佹晠障排查部鍒?
+- **Internationalization / 国际化**: Added multilingual support for CustomMouse and ShellIntegration plugins (13 languages) / CustomMouse 与 ShellIntegration 插件添加多语言支持（13 种语言）
+- **Internationalization / 国际化**: Migrated hardcoded Chinese text in XAML files to resource files / XAML 文件中硬编码的中文文本迁移到资源文件
+- **Documentation / 文档**: Created comprehensive documentation (ARCHITECTURE.md, DEPLOYMENT.md, SECURITY.md, CODE_OF_CONDUCT.md) / 创建完整文档（ARCHITECTURE.md、DEPLOYMENT.md、SECURITY.md、CODE_OF_CONDUCT.md
+- **Documentation / 文档**: Added quick start guide, troubleshooting section to README / README 中添加快速入门指南、故障排查部分
 - **Testing Infrastructure / 测试基础璁炬*: Added comprehensive test coverage for PowerModeFeature, BatteryFeature, and plugin features / PowerModeFeature、BatteryFeature 和插件功能添加全面测试覆
 
 ### Improved / 改进
@@ -920,7 +929,7 @@ Added persistence for selection state and page mode in Windows Optimization / - 
 
 ### Fixed / 修复
 
-- ShellIntegration submodule paths and build artifacts / ShellIntegration 子模块·径和构建产物
+- ShellIntegration submodule paths and build artifacts / ShellIntegration 子模块路径和构建产物
 - Installation and distribution issues / 安装和分发问题
 
 ### Improved / 改进
@@ -1964,7 +1973,7 @@ Added persistence for selection state and page mode in Windows Optimization / - 
 ## Contributors / 贡献者
 
 Thanks to everyone who has contributed to this project!
-感谢鎵€有为这个项目做出贡献的人锛?
+感谢所有为这个项目做出贡献的人！
 
 - Main developer: BartoszCichecki / 主要开发者：BartoszCichecki
 - Community contributors and translators / 社区贡献者和翻译者
@@ -1973,4 +1982,4 @@ Thanks to everyone who has contributed to this project!
 ---
 
 *This changelog follows the format established by [Keep a Changelog](https://keepachangelog.com/).*
-*此更新日志遵寰?[Keep a Changelog](https://keepachangelog.com/) 建立的格寮忋
+*此更新日志遵循 [Keep a Changelog](https://keepachangelog.com/) 建立的格式。

@@ -43,7 +43,7 @@ jobs:
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Restore solution
-        run: dotnet restore UniversalDeviceToolkit.sln
+        run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
 
       - name: Build solution
         env:

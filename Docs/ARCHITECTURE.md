@@ -199,6 +199,12 @@ GameDetectionService (Background Monitor)
 | Updates | GitHub Releases API |
 | Localization | Crowdin + `crowdin.yml` mapping for multi-module `.resx` files |
 
+## Namespace and assembly naming
+
+User-facing product names are **Universal Device Toolkit**, but core library assemblies intentionally retain `LenovoLegionToolkit.Lib` / `LenovoLegionToolkit.Lib.Plugins` as plugin ABI contracts. Do not mass-rename those assemblies or namespaces without a migration plan.
+
+See **[NamespaceMigration.md](./NamespaceMigration.md)** for the current RootNamespace/AssemblyName inventory, why Lib/Lib.Plugins keep the LLT ABI, phased rename plan (Phases 0–3), and CLI/`llt`/IPC pipe compatibility notes.
+
 ## Key Design Decisions
 
 1. **No Background Service**: Application runs only when user is logged in
@@ -206,6 +212,7 @@ GameDetectionService (Background Monitor)
 3. **Lightweight**: Minimal resource footprint
 4. **Plugin Extensibility**: Dynamic module loading for device-specific workflows
 5. **Catalog-backed Device Support**: Data-driven hardware/basic-mode profiles across Lenovo families and common PC vendors
+6. **Stable plugin ABI names**: Core Lib assemblies remain `LenovoLegionToolkit.Lib*` until TypeForwardedTo / dual-package migration (see [NamespaceMigration.md](./NamespaceMigration.md))
 
 ## Platform Compatibility
 

@@ -42,13 +42,13 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
 
       - name: Restore solution
-        run: dotnet restore UniversalDeviceToolkit.sln
+        run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
 
       - name: Build main app
         run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
 
       - name: Restore visual regression smoke tool
-        run: dotnet restore Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj
+        run: dotnet restore Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --locked-mode
 
       - name: Build visual regression smoke tool
         run: dotnet build Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --configuration Release --no-restore

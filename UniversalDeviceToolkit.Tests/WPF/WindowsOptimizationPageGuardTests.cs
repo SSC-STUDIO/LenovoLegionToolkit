@@ -48,6 +48,44 @@ public sealed class WindowsOptimizationPageGuardTests
         xaml.Should().Contain("WindowsOptimizationDriverOpenFolderButton");
         xaml.Should().Contain("WindowsOptimizationDriverOsComboBox");
         xaml.Should().Contain("WindowsOptimizationDriverDownloadToTextBox");
+        xaml.Should().Contain("WindowsOptimizationDriverMachineTypeTextBox");
+        xaml.Should().Contain("WindowsOptimizationDriverSearchButton");
+    }
+
+    [Fact]
+    public void DriverFilterForm_ShouldNotBeStuffedIntoCardControlHeader()
+    {
+        // Multi-field filter forms belong in card body/surface chrome, not CardControl.Header
+        // (Header is for title/subtitle rows; stuffing forms there leaves empty body/icon chrome).
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
+        AssertAutomationIdNotInsideCardControlHeader(xaml, "WindowsOptimizationDriverMachineTypeTextBox");
+        AssertAutomationIdNotInsideCardControlHeader(xaml, "WindowsOptimizationDriverSearchButton");
+    }
+
+    private static void AssertAutomationIdNotInsideCardControlHeader(string xaml, string automationId)
+    {
+        var idIndex = xaml.IndexOf(automationId, System.StringComparison.Ordinal);
+        idIndex.Should().BeGreaterThanOrEqualTo(0, $"expected AutomationId {automationId}");
+
+        var searchFrom = 0;
+        while (true)
+        {
+            var headerOpen = xaml.IndexOf("CardControl.Header", searchFrom, System.StringComparison.Ordinal);
+            if (headerOpen < 0 || headerOpen > idIndex)
+                break;
+
+            var headerClose = xaml.IndexOf("/custom:CardControl.Header", headerOpen, System.StringComparison.Ordinal);
+            if (headerClose < 0)
+                headerClose = xaml.IndexOf("/wpfui:CardControl.Header", headerOpen, System.StringComparison.Ordinal);
+            if (headerClose < 0)
+                break;
+
+            (idIndex > headerOpen && idIndex < headerClose)
+                .Should()
+                .BeFalse($"{automationId} must not live inside CardControl.Header");
+
+            searchFrom = headerClose + 1;
+        }
     }
 
     private static string ReadRepositoryFile(params string[] pathParts)
