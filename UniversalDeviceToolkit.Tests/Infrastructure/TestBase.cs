@@ -13,10 +13,7 @@ namespace UniversalDeviceToolkit.Tests;
 public static class TestCategories
 {
     public const string Unit = "Unit";
-    public const string Integration = "Integration";
-    public const string Performance = "Performance";
     public const string Plugin = "Plugin";
-    public const string Settings = "Settings";
     public const string Utils = "Utils";
     public const string Controller = "Controller";
 }
@@ -26,8 +23,6 @@ public static class TestCategories
 /// </summary>
 public abstract class UnitTestBase : IDisposable
 {
-    protected static readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(30);
-
     protected UnitTestBase()
     {
         var culture = System.Globalization.CultureInfo.GetCultureInfo("en-US");

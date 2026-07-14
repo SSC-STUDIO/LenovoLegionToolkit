@@ -639,7 +639,6 @@
                                                     x:Name="_driverSourcePrimaryRadio"
                                                     AutomationProperties.HelpText="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}"
                                                     AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_PrimarySource}"
-                                                    Checked="DriverSourceRadio_Checked"
                                                     Focusable="True"
                                                     GroupName="driverSource"
                                                     IsChecked="True"
@@ -660,7 +659,6 @@
                                                     x:Name="_driverSourceSecondaryRadio"
                                                     AutomationProperties.HelpText="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}"
                                                     AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_SecondarySource}"
-                                                    Checked="DriverSourceRadio_Checked"
                                                     GroupName="driverSource"
                                                     Style="{StaticResource DriverSourceRadioStyle}">
                                                     <StackPanel>

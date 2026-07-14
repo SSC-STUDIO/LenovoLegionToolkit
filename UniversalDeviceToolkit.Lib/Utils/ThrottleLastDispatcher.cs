@@ -11,7 +11,6 @@ namespace LenovoLegionToolkit.Lib.Utils;
 public class ThrottleLastDispatcher : IDisposable
 {
     private readonly TimeSpan _interval;
-    private readonly string? _tag;
     private readonly object _lock = new();
     private long _currentVersion;
     private CancellationTokenSource? _cancellationTokenSource;
@@ -22,7 +21,7 @@ public class ThrottleLastDispatcher : IDisposable
     /// Initializes a new ThrottleLastDispatcher instance.
     /// </summary>
     /// <param name="interval">The throttle interval.</param>
-    /// <param name="tag">Optional tag for logging.</param>
+    /// <param name="tag">Optional tag for logging (reserved for API compatibility).</param>
     /// <param name="delayProvider">Optional delay provider for testing.</param>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when interval is negative.</exception>
     public ThrottleLastDispatcher(TimeSpan interval, string? tag = null, IDelayProvider? delayProvider = null)
@@ -31,7 +30,7 @@ public class ThrottleLastDispatcher : IDisposable
             throw new ArgumentOutOfRangeException(nameof(interval));
 
         _interval = interval;
-        _tag = tag;
+        _ = tag;
         _delayProvider = delayProvider;
     }
 

@@ -16,7 +16,6 @@ namespace UniversalDeviceToolkit.WPF.ViewModels;
 
 public partial class SettingsViewModel : ObservableObject
 {
-    private readonly ApplicationSettings _settings;
     private readonly FnKeysDisabler _fnKeysDisabler;
     private static CultureInfo ActiveCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveCulture);
@@ -35,7 +34,8 @@ public partial class SettingsViewModel : ObservableObject
 
     public SettingsViewModel(ApplicationSettings settings, FnKeysDisabler fnKeysDisabler)
     {
-        _settings = settings;
+        // ApplicationSettings retained for Autofac resolution shape; not stored until bindings need it.
+        _ = settings;
         _fnKeysDisabler = fnKeysDisabler;
     }
 

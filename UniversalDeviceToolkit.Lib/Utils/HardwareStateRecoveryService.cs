@@ -13,7 +13,6 @@ using LenovoLegionToolkit.Lib.Network;
 using LenovoLegionToolkit.Lib.Settings;
 using Windows.Win32;
 using Windows.Win32.Foundation;
-using Windows.Win32.System.Power;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 

@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.ServiceProcess;
+﻿using System.ServiceProcess;
 using LenovoLegionToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.System.Services;

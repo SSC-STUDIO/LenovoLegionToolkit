@@ -110,11 +110,6 @@ public partial class WindowsOptimizationPage
         }
     }
 
-    private void DriverSourceRadio_Checked(object sender, RoutedEventArgs e)
-    {
-        // Source selection is handled when clicking Search
-    }
-
     private async void DriverSearchButton_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -225,24 +220,12 @@ public partial class WindowsOptimizationPage
         }
     }
 
-    private class DriverDownloadProgressReporter : IProgress<float>
+    private sealed class DriverDownloadProgressReporter : IProgress<float>
     {
-        private readonly WindowsOptimizationPage _page;
-
-        public DriverDownloadProgressReporter(WindowsOptimizationPage page)
-        {
-            _page = page;
-        }
-
         public void Report(float value)
         {
             // Optional: update UI progress
         }
-    }
-
-    private void StopDriverRetryTimer()
-    {
-        // No-op or implementation if timer exists
     }
 
     private void ShowDriverEmptyState(string title, string message)
@@ -358,14 +341,12 @@ public partial class WindowsOptimizationPage
             }
 
             _driverPackageDownloader = _packageDownloaderFactory.GetInstance(packageDownloaderType);
-            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(this), token);
+            var packages = await _driverPackageDownloader.GetPackagesAsync(machineType, os, new DriverDownloadProgressReporter(), token);
 
             _driverPackages = packages;
 
             // Ensure UI update happens on UI thread
             _ = Dispatcher.BeginInvoke(() => DriverReload());
-
-            StopDriverRetryTimer();
 
             if (_driverLoadingIndicator != null)
                 _driverLoadingIndicator.Visibility = Visibility.Collapsed;

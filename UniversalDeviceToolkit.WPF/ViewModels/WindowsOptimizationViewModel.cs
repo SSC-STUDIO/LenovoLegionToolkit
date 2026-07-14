@@ -26,8 +26,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
     private readonly WindowsOptimizationService _windowsOptimizationService;
     private readonly WindowsCleanupService _cleanupService;
     private readonly ApplicationSettings _applicationSettings;
-    private readonly PackageDownloaderSettings _packageDownloaderSettings;
-    private readonly PackageDownloaderFactory _packageDownloaderFactory;
     private static CultureInfo ActiveCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveCulture);
 
@@ -59,8 +57,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         _windowsOptimizationService = windowsOptimizationService;
         _cleanupService = cleanupService;
         _applicationSettings = applicationSettings;
-        _packageDownloaderSettings = packageDownloaderSettings;
-        _packageDownloaderFactory = packageDownloaderFactory;
+        // Package downloader deps are owned by WindowsOptimizationPage; keep params for Autofac shape.
+        _ = packageDownloaderSettings;
+        _ = packageDownloaderFactory;
 
         Categories = new ObservableCollection<OptimizationCategoryViewModel>();
         OptimizationCategories = new ObservableCollection<OptimizationCategoryViewModel>();

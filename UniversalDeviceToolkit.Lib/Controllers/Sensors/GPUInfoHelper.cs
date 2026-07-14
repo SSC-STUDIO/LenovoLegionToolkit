@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using LenovoLegionToolkit.Lib.Utils;
-using NvAPIWrapper.Native.GPU;
 
 namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
 

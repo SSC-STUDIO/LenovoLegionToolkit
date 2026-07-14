@@ -65,7 +65,6 @@ namespace UniversalDeviceToolkit.WPF.Startup
             "Last startup encountered repeated failures — switched to safe-start this run.";
 
         private readonly App _app;
-        private readonly StartupEventArgs _startupEventArgs;
         private readonly Flags _flags;
         private ApplicationSettings? _settings;
         private SafeStartupHealthGuard? _startupHealthGuard;
@@ -76,7 +75,7 @@ namespace UniversalDeviceToolkit.WPF.Startup
         public StartupOrchestrator(App app, StartupEventArgs startupEventArgs)
         {
             _app = app ?? throw new ArgumentNullException(nameof(app));
-            _startupEventArgs = startupEventArgs ?? throw new ArgumentNullException(nameof(startupEventArgs));
+            ArgumentNullException.ThrowIfNull(startupEventArgs);
             _flags = new Flags(startupEventArgs.Args);
         }
 

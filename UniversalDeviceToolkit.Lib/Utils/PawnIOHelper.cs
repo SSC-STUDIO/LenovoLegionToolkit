@@ -8,8 +8,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Settings;
 using Microsoft.Win32;
 

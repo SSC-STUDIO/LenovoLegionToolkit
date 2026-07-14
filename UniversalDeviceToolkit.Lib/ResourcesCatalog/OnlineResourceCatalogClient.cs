@@ -5,7 +5,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Serialization;
 using LenovoLegionToolkit.Lib.Utils;
 

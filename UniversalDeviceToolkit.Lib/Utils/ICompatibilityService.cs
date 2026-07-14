@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 

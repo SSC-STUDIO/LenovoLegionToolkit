@@ -275,30 +275,6 @@ private string _currentSearchText = string.Empty;
         CrossfadeToContent();
     }
 
-    private void ShowCachedContentImmediate()
-    {
-        _loadingStateVersion++;
-        _skeletonShownAtUtc = DateTime.MinValue;
-
-        if (_loadingIndicator is FrameworkElement skeleton)
-        {
-            SkeletonShimmer.StopSubtree(skeleton);
-            skeleton.BeginAnimation(UIElement.OpacityProperty, null);
-            skeleton.Visibility = Visibility.Collapsed;
-            skeleton.Opacity = 1;
-            skeleton.IsHitTestVisible = false;
-        }
-
-        if (_pluginListPanel is FrameworkElement listPanel)
-        {
-            listPanel.BeginAnimation(UIElement.OpacityProperty, null);
-            listPanel.Visibility = Visibility.Visible;
-            listPanel.Opacity = 1;
-            listPanel.IsHitTestVisible = true;
-            Panel.SetZIndex(listPanel, 1);
-        }
-    }
-
     /// <summary>
     /// Soft handoff skeleton → real list only. Skeleton show path always snaps in
     /// via <see cref="ShowSkeletonImmediate"/> (never opacity 0).

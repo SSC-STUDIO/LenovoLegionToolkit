@@ -688,14 +688,6 @@ public partial class MainWindow
         Top = (desktopWorkingArea.Height - Height) / 2 + desktopWorkingArea.Top;
     }
 
-    private void SaveSize()
-    {
-        _applicationSettings.Store.WindowSize = WindowState != WindowState.Normal
-            ? new(RestoreBounds.Width, RestoreBounds.Height)
-            : new(Width, Height);
-        _applicationSettings.SynchronizeStore();
-    }
-
     private async Task SaveSizeAsync()
     {
         _applicationSettings.Store.WindowSize = WindowState != WindowState.Normal
@@ -710,21 +702,6 @@ public partial class MainWindow
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Window size saved asynchronously.");
     }
-
-#if DEBUG
-    [Conditional("DEBUG")]
-    private void DebugBreakpoint(string location)
-    {
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"DEBUG BREAKPOINT: {location}");
-
-        if (Debugger.IsAttached)
-            Debugger.Break();
-    }
-#else
-    [Conditional("DEBUG")]
-    private void DebugBreakpoint(string location) { }
-#endif
 
     private void BringToForeground() => WindowExtensions.BringToForeground(this);
 

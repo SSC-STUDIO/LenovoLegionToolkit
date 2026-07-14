@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Management;
 using System.Runtime.InteropServices;
 using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;

@@ -31,7 +31,6 @@ public partial class PluginPageWrapper : Page
     {
         InitializeComponent();
         Loaded += PluginPageWrapper_Loaded;
-        Unloaded += PluginPageWrapper_Unloaded;
     }
 
     public PluginPageWrapper(string pluginId) : this()
@@ -83,10 +82,6 @@ public partial class PluginPageWrapper : Page
         }
 
         LoadPluginPage();
-    }
-
-    private void PluginPageWrapper_Unloaded(object sender, RoutedEventArgs e)
-    {
     }
 
     private void LoadPluginPage()

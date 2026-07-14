@@ -1,6 +1,4 @@
-using System;
 using Autofac;
-using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib;

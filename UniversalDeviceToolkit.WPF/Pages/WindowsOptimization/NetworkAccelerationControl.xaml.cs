@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Network;
-using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -24,7 +23,6 @@ public partial class NetworkAccelerationControl : UserControl
     private readonly INetworkAccelerationService _acceleration;
     private readonly INetworkDiagnosticsService _diagnostics;
     private readonly INetworkStateRecoveryService _recovery;
-    private readonly ApplicationSettings _settings;
     private bool _suppressEvents;
     private bool _isBusy;
     private bool _startFailed;
@@ -39,7 +37,6 @@ public partial class NetworkAccelerationControl : UserControl
         _acceleration = IoCContainer.Resolve<INetworkAccelerationService>();
         _diagnostics = IoCContainer.Resolve<INetworkDiagnosticsService>();
         _recovery = IoCContainer.Resolve<INetworkStateRecoveryService>();
-        _settings = IoCContainer.Resolve<ApplicationSettings>();
         InitializeComponent();
         Loaded += NetworkAccelerationControl_Loaded;
         Unloaded += NetworkAccelerationControl_Unloaded;

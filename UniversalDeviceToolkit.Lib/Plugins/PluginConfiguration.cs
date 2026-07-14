@@ -9,7 +9,6 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 
 public class PluginConfiguration : IPluginConfiguration
 {
-    private readonly string _pluginId;
     private readonly string _configFilePath;
     private Dictionary<string, object?> _configuration = [];
     private readonly object _lock = new();
@@ -17,7 +16,6 @@ public class PluginConfiguration : IPluginConfiguration
 
     public PluginConfiguration(string pluginId)
     {
-        _pluginId = pluginId;
         var configDir = GetConfigDirectory();
         Directory.CreateDirectory(configDir);
         _configFilePath = Path.Combine(configDir, $"{pluginId}.json");
