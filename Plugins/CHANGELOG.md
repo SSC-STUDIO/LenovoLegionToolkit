@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / 变更
 
+- **Version tooling / 版本工具链**: Added `sync-version` and `bump-version` CLI commands; `migrate` now propagates `plugin.manifest.json` version to csproj, `[Plugin]` attribute, `plugin.json`, and `store-entry.json`. Removed misleading repo-wide version from `Directory.Build.props`.
 - **Store release / 商店上架**: Bumped active plugin versions for plugin-center testing — custom-mouse 1.0.17, shell-integration 1.0.13, vive-tool 1.2.3; regenerated `store.json` with release asset sizes.
 
 ### Fixed

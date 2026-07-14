@@ -30,6 +30,8 @@ static async Task<int> ProgramMainAsync(string[] args)
             "package" => await RunPackAsync(root, args),
             "pack" => await RunPackAsync(root, args),
             "migrate" => RunMigrate(root, args),
+            "sync-version" => RunSyncVersion(root, args),
+            "bump-version" => RunBumpVersion(root, args),
             "promote" => RunPromote(root, args),
             "generate-store" => RunGenerateStore(root, args),
             _ => Fail($"Unknown command '{args[0]}'."),
@@ -267,16 +269,93 @@ static async Task<int> ProgramMainAsync(string[] args)
 
     int RunMigrate(string repositoryRoot, string[] argv)
     {
+        return RunSyncVersion(repositoryRoot, argv);
+    }
+
+    int RunSyncVersion(string repositoryRoot, string[] argv)
+    {
+        var selection = ResolvePluginSelection(argv);
+        var checkOnly = HasFlag(argv, "--check");
+        var synchronizer = new PluginVersionSynchronizer();
+        var reports = synchronizer.SyncRepository(repositoryRoot, selection, checkOnly, Console.WriteLine);
+
+        foreach (var report in reports)
+        {
+            if (report.DriftMessages.Count == 0)
+            {
+                Console.WriteLine($"[{report.PluginId}] aligned at {report.ManifestVersion}");
+                continue;
+            }
+
+            Console.WriteLine($"[{report.PluginId}] manifest {report.ManifestVersion}");
+            foreach (var drift in report.DriftMessages)
+            {
+                Console.WriteLine($"  - {drift}");
+            }
+
+            if (report.Changed)
+            {
+                Console.WriteLine($"  synced: {string.Join(", ", report.Actions)}");
+            }
+        }
+
+        if (checkOnly && reports.Any(report => !report.IsAligned))
+        {
+            return 1;
+        }
+
+        Console.WriteLine(checkOnly
+            ? $"Checked {reports.Count} plugin version graph(s)."
+            : $"Synced {reports.Count} plugin version graph(s).");
+        return 0;
+    }
+
+    int RunBumpVersion(string repositoryRoot, string[] argv)
+    {
+        var pluginId = RequireValue(argv, "--plugin");
+        var explicitVersion = OptionalValue(argv, "--version");
+        var partRaw = OptionalValue(argv, "--part");
+        VersionBumpPart? part = partRaw is null
+            ? null
+            : partRaw.ToLowerInvariant() switch
+            {
+                "patch" => VersionBumpPart.Patch,
+                "minor" => VersionBumpPart.Minor,
+                "major" => VersionBumpPart.Major,
+                _ => throw new InvalidOperationException($"Unknown --part value '{partRaw}'. Use patch, minor, or major."),
+            };
+
+        if (explicitVersion is null && part is null)
+        {
+            part = VersionBumpPart.Patch;
+        }
+
+        var repository = new PluginRepository();
+        var plugin = repository.Load(repositoryRoot).Plugins[pluginId];
+        var synchronizer = new PluginVersionSynchronizer();
+        var report = synchronizer.Bump(plugin, part, explicitVersion, writeChanges: !HasFlag(argv, "--check"), Console.WriteLine);
+
+        if (HasFlag(argv, "--check"))
+        {
+            foreach (var drift in report.DriftMessages)
+            {
+                Console.WriteLine($"  - {drift}");
+            }
+
+            return 0;
+        }
+
+        Console.WriteLine($"[{report.PluginId}] bumped to {report.ManifestVersion}");
+        return 0;
+    }
+
+    static string[] ResolvePluginSelection(string[] argv)
+    {
         var rawPluginIds = OptionalValue(argv, "--plugin-ids");
         var pluginId = OptionalValue(argv, "--plugin");
-        var selection = rawPluginIds is not null
+        return rawPluginIds is not null
             ? rawPluginIds.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             : pluginId is not null ? [pluginId] : Array.Empty<string>();
-
-        var migrator = new PluginManifestMigrator();
-        var written = migrator.Migrate(repositoryRoot, selection, Console.WriteLine);
-        Console.WriteLine($"Migrated {written.Count} plugin manifest(s).");
-        return 0;
     }
 
     int RunGenerateStore(string repositoryRoot, string[] argv)
@@ -412,7 +491,9 @@ plugin-tooling test --plugin <plugin-id> [--configuration Release]
 plugin-tooling preview --plugin <plugin-id> [--theme system|light|dark] [--view feature|settings|optimization]
 plugin-tooling validate [--plugin <plugin-id>|--plugin-ids <id,id>] [--profile contributor|official-candidate|official-release] [--skip-build] [--skip-tests] [--json-report-path <path>]
 plugin-tooling package --plugin <plugin-id> [--configuration Release] [--output-dir <path>] [--build-first]
-plugin-tooling migrate [--plugin <plugin-id>|--plugin-ids <id,id>]
+plugin-tooling migrate [--plugin <plugin-id>|--plugin-ids <id,id>] [--check]
+plugin-tooling sync-version [--plugin <plugin-id>|--plugin-ids <id,id>] [--check]
+plugin-tooling bump-version --plugin <plugin-id> [--part patch|minor|major] [--version <x.y.z>] [--check]
 plugin-tooling promote --plugin <plugin-id> [--overwrite]
 plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>] [--release-date <iso-8601>] [--plugin <plugin-id>|--plugin-ids <id,id>] [--merge-existing] [--require-assets] [--check]
 """);

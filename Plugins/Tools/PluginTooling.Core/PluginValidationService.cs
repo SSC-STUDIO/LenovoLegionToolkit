@@ -321,7 +321,12 @@ public sealed class PluginValidationService
 
         var document = XDocument.Load(plugin.ProjectPath, LoadOptions.None);
         ValidateEqual(ReadProperty(document, "Version"), plugin.Manifest.Version, "Project Version does not match plugin.manifest.json version.", state);
+        ValidateEqual(ReadProperty(document, "FileVersion"), plugin.Manifest.Version, "Project FileVersion does not match plugin.manifest.json version.", state);
+        ValidateEqual(ReadProperty(document, "AssemblyVersion"), plugin.Manifest.Version, "Project AssemblyVersion does not match plugin.manifest.json version.", state);
         ValidateEqual(ReadProperty(document, "AssemblyName"), plugin.ExpectedAssemblyName, $"AssemblyName must be '{plugin.ExpectedAssemblyName}'.", state);
+
+        var attributeVersion = PluginVersionSynchronizer.ReadPluginAttributeVersion(plugin.DirectoryPath);
+        ValidateEqual(attributeVersion ?? string.Empty, plugin.Manifest.Version, "[Plugin] attribute version does not match plugin.manifest.json version. Run sync-version.", state);
 
         var outputPath = ReadProperty(document, "OutputPath");
         var expectedOutputPath = $@"..\..\Build\plugins\{plugin.ExpectedAssemblyName}\";

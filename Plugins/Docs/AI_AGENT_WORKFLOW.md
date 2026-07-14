@@ -43,6 +43,14 @@ Run full candidate validation when the repository is ready for a slower check:
   --json-report-path artifacts/agent/validate-official.json
 ```
 
+## Version Management
+
+- Plugin SemVer source of truth: `Plugins/<Name>/plugin.manifest.json` → `version`
+- Bump: `./llt-plugin.cmd bump-version --plugin <id> --part patch`
+- Propagate without bumping: `./llt-plugin.cmd sync-version --plugin <id>`
+- Drift check: `./llt-plugin.cmd sync-version --plugin-ids <ids> --check`
+- Do not hand-edit `.csproj`, `plugin.json`, `[Plugin]` attribute, or `store.json` version fields for routine releases
+
 ## Store Generation
 
 Root `store.json` should be reproducible from `plugin.manifest.json` store metadata, release assets, and a fixed release date. `store-entry.json` is compatibility output only.

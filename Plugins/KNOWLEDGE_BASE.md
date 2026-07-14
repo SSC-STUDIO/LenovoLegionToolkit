@@ -38,8 +38,10 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 - **Enforced Rule**: 
   - `plugin.manifest.json` is the SINGLE SOURCE OF TRUTH for version
   - `plugin.json` MUST be auto-generated from `plugin.manifest.json` (or strictly synced)
-  - `.csproj` `<Version>` MUST match `plugin.manifest.json` version
-  - Use `.\llt-plugin.cmd promote` to auto-sync versions
+  - `.csproj` `<Version>` / `<FileVersion>` / `<AssemblyVersion>` MUST match `plugin.manifest.json` version
+  - `[Plugin(... version: "...")]` in `*Plugin.cs` MUST match `plugin.manifest.json` version
+  - Use `.\llt-plugin.cmd bump-version --plugin <id> --part patch|minor|major` to bump, or `sync-version` to propagate without bumping
+  - `promote` only prepares store metadata (`store-entry.json`); it does **not** bump versions
 - **.NET/OS Version**: .NET 10, Windows 11 24H2
 
 ---

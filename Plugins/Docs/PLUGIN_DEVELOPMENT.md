@@ -138,6 +138,43 @@ The CLI emits:
 - resource files
 - previewable pages/controls
 
+## Version Management
+
+Version numbers are easy to drift because they appear in several files. Use one rule:
+
+| Layer | Source of truth | Example |
+|---|---|---|
+| Host app (UDT) | `UniversalDeviceToolkit/Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `5.0.0` |
+| Each plugin | `Plugins/<Name>/plugin.manifest.json` → `version` | `custom-mouse` → `1.0.17` |
+| Plugin store catalog | Generated `store.json` (release output, not hand-edited) | per-plugin `version` + `fileSize` |
+
+Do **not** treat `UniversalDeviceToolkit-Plugins/Directory.Build.props` as a plugin version. Each plugin keeps its own SemVer.
+
+### Bump a plugin (recommended)
+
+```powershell
+.\llt-plugin.cmd bump-version --plugin custom-mouse --part patch
+.\llt-plugin.cmd validate --plugin custom-mouse --profile official-candidate
+.\llt-plugin.cmd package --plugin custom-mouse --build-first --output-dir Build\release-assets
+.\llt-plugin.cmd generate-store --plugin-ids custom-mouse --asset-root Build\release-assets --merge-existing --require-assets
+```
+
+`bump-version` updates `plugin.manifest.json`, then `sync-version` propagates to:
+
+- `plugin.json`
+- `store-entry.json`
+- `.csproj` `Version` / `FileVersion` / `AssemblyVersion`
+- `[Plugin(... version: "...")]` in `*Plugin.cs`
+- `package.assetName`
+
+### Check drift without writing
+
+```powershell
+.\llt-plugin.cmd sync-version --plugin-ids custom-mouse,shell-integration,vive-tool --check
+```
+
+`migrate` is an alias for `sync-version` (same behavior).
+
 ## Release Metadata Model
 
 Authoring metadata split:
