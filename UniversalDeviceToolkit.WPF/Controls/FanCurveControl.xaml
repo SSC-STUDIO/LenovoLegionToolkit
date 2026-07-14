@@ -39,13 +39,13 @@
                                                     x:Name="ThumbSurface"
                                                     Fill="{DynamicResource ChartUtilizationBrush}"
                                                     Stroke="{DynamicResource SolidBackgroundFillColorBaseBrush}"
-                                                    StrokeThickness="3" />
+                                                    StrokeThickness="2" />
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
                                                         <Setter TargetName="ThumbSurface" Property="Stroke" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
                                                     </Trigger>
                                                     <Trigger Property="IsDragging" Value="True">
-                                                        <Setter TargetName="ThumbSurface" Property="StrokeThickness" Value="4" />
+                                                        <Setter TargetName="ThumbSurface" Property="StrokeThickness" Value="2.5" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>

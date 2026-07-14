@@ -162,7 +162,7 @@
         AutomationProperties.AutomationId="NetworkAccelerationPageScrollViewer"
         HorizontalScrollBarVisibility="Disabled"
         VerticalScrollBarVisibility="Auto"
-        Margin="0,0,0,56">
+        Margin="0">
         <Border
             Margin="0,0,8,16"
             HorizontalAlignment="Stretch"
@@ -422,77 +422,5 @@
             </StackPanel>
         </Border>
     </wpfui:DynamicScrollViewer>
-
-        <!--
-          Watt Toolkit-style selection bar as segmented tags (not checkbox chrome):
-          [document + count] [☆] [▶] — pill shell with discrete rounded action cells.
-          Text glyphs only (UiGuard forbids icon controls on this page).
-        -->
-        <Border
-            x:Name="_selectionBar"
-            Margin="0,0,0,10"
-            Padding="4"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Background="{DynamicResource ControlFillColorDefaultBrush}"
-            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="1"
-            CornerRadius="{StaticResource CornerRadiusRound}"
-            SnapsToDevicePixels="True"
-            UseLayoutRounding="True"
-            AutomationProperties.AutomationId="NetworkAccelerationSelectionBar"
-            AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <!-- Label segment: document glyph + count (matches reference tag, not checkbox). -->
-                <Border
-                    MinHeight="36"
-                    Padding="12,6,14,6"
-                    VerticalAlignment="Center"
-                    Background="Transparent"
-                    CornerRadius="{StaticResource CornerRadiusRound}">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock
-                            Margin="0,0,8,0"
-                            VerticalAlignment="Center"
-                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
-                            FontSize="15"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="&#xE8A5;"
-                            AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}" />
-                        <TextBlock
-                            x:Name="_selectionCountText"
-                            VerticalAlignment="Center"
-                            FontSize="13"
-                            FontWeight="Normal"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
-                            AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
-                    </StackPanel>
-                </Border>
-
-                <!-- Action cells: same visual language as other compact tags / chips. -->
-                <Button
-                    x:Name="_selectionFavoriteButton"
-                    Style="{StaticResource NaSelectionActionButtonStyle}"
-                    AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
-                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
-                    Click="SelectionFavoriteButton_Click"
-                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}"
-                    IsEnabled="False">
-                    <TextBlock Style="{StaticResource NaSelectionGlyphStyle}" Text="&#xE734;" />
-                </Button>
-
-                <Button
-                    x:Name="_selectionStartButton"
-                    Style="{StaticResource NaSelectionActionButtonStyle}"
-                    AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
-                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
-                    Click="SelectionStartButton_Click"
-                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}"
-                    IsEnabled="False">
-                    <TextBlock Style="{StaticResource NaSelectionGlyphStyle}" Text="&#xE768;" />
-                </Button>
-            </StackPanel>
-        </Border>
     </Grid>
 </UserControl>

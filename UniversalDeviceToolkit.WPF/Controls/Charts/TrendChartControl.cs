@@ -133,7 +133,8 @@ public sealed class TrendSeries
         if (_cachedLinePen is not null)
             return _cachedLinePen;
 
-        var pen = new Pen(new SolidColorBrush(_cachedColor), 1.9)
+        // Keep crest stroke slim so multi-series charts stay readable (was 1.9).
+        var pen = new Pen(new SolidColorBrush(_cachedColor), 1.15)
         {
             LineJoin = PenLineJoin.Round,
             StartLineCap = PenLineCap.Round,
@@ -240,9 +241,9 @@ public class TrendChartControl : FrameworkElement
     /// </summary>
     private static void DrawGridlines(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush)
     {
-        var grid = new Pen(gridlineBrush, 0.75);
+        var grid = new Pen(gridlineBrush, 0.5);
         // Baseline is the warm accent edge under the filled band (see reference chart).
-        var baseline = new Pen(baselineBrush, 1.75);
+        var baseline = new Pen(baselineBrush, 1.0);
 
         for (var fraction = 0.25; fraction < 1.0; fraction += 0.25)
         {

@@ -76,7 +76,23 @@ public partial class WindowsOptimizationPage : Page
         _pluginManager.PluginStateChanged += PluginManager_PluginStateChanged;
         ViewModel.Initialize();
         SyncNavButtonToCurrentMode();
+        AttachNetworkAccelerationSelectionChrome();
         TryApplyPendingPluginFocusRequest();
+    }
+
+    /// <summary>
+    /// Network acceleration multi-select chrome shares the tab-row toolbar slot
+    /// used by bulk actions on other optimization modes (not floating over content).
+    /// </summary>
+    private void AttachNetworkAccelerationSelectionChrome()
+    {
+        if (_networkAccelerationControl is null)
+            return;
+
+        _networkAccelerationControl.AttachSelectionChrome(
+            _networkAccelerationSelectionCount,
+            _networkAccelerationSelectionFavoriteButton,
+            _networkAccelerationSelectionStartButton);
     }
 
     private void SyncNavButtonToCurrentMode()

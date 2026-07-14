@@ -281,6 +281,138 @@
                             FontSize="14"
                             Visibility="Collapsed" />
 
+                        <!-- Same tab-row chrome slot for bulk actions (opt/cleanup/drivers) and NA selection. -->
+                        <Border
+                            x:Name="_networkAccelerationSelectionBar"
+                            Grid.Column="1"
+                            Padding="4"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CornerRadiusRound}"
+                            SnapsToDevicePixels="True"
+                            AutomationProperties.AutomationId="NetworkAccelerationSelectionBar"
+                            AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border
+                                    MinHeight="36"
+                                    Padding="12,6,14,6"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
+                                            FontSize="15"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Text="&#xE8A5;" />
+                                        <TextBlock
+                                            x:Name="_networkAccelerationSelectionCount"
+                                            VerticalAlignment="Center"
+                                            FontSize="13"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
+                                            AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
+                                    </StackPanel>
+                                </Border>
+                                <Button
+                                    x:Name="_networkAccelerationSelectionFavoriteButton"
+                                    Width="36"
+                                    Height="36"
+                                    Margin="2,0,0,0"
+                                    Padding="0"
+                                    VerticalAlignment="Center"
+                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    Cursor="Hand"
+                                    IsEnabled="False"
+                                    AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
+                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
+                                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                x:Name="Chrome"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="{StaticResource CornerRadiusCompact}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Opacity" Value="0.45" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <TextBlock
+                                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="&#xE734;" />
+                                </Button>
+                                <Button
+                                    x:Name="_networkAccelerationSelectionStartButton"
+                                    Width="36"
+                                    Height="36"
+                                    Margin="2,0,0,0"
+                                    Padding="0"
+                                    VerticalAlignment="Center"
+                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    Cursor="Hand"
+                                    IsEnabled="False"
+                                    AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
+                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
+                                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border
+                                                x:Name="Chrome"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="{StaticResource CornerRadiusCompact}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Opacity" Value="0.45" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <TextBlock
+                                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="&#xE768;" />
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
                         <Border
                             Grid.Column="1"
                             Padding="3"
@@ -1021,7 +1153,7 @@
                             </Style.Triggers>
                         </Style>
                     </Grid.Style>
-                    <opt:NetworkAccelerationControl />
+                    <opt:NetworkAccelerationControl x:Name="_networkAccelerationControl" />
                 </Grid>
 
                 <ScrollViewer

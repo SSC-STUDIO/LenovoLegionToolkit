@@ -21,7 +21,7 @@
       Micro chart tracks may use ProgressBar (3). Avoid literal radii in views.
     -->
     <CornerRadius x:Key="CornerRadiusNone">0</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusProgressBar">3</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusProgressBar">2</CornerRadius>
     <!-- Compact-scale micro chrome (badges, chips). Prefer Compact over Small in new XAML. -->
     <CornerRadius x:Key="CornerRadiusSmall">8</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCompact">8</CornerRadius>

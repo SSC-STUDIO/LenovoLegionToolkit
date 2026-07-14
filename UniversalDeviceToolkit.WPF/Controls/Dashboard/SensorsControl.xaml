@@ -62,7 +62,7 @@
           segment visible while remaining subtle in dark theme.
         -->
         <Style x:Key="MetricProgressBarStyle" TargetType="ProgressBar">
-            <Setter Property="Height" Value="6" />
+            <Setter Property="Height" Value="3.5" />
             <Setter Property="MinWidth" Value="24" />
             <Setter Property="MaxWidth" Value="260" />
             <Setter Property="Margin" Value="8,0" />
@@ -176,8 +176,8 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SkeletonBarBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <!-- Matches MetricProgressBarStyle Height=6, Margin=8,0 -->
-            <Setter Property="Height" Value="6" />
+            <!-- Matches MetricProgressBarStyle Height, Margin=8,0 -->
+            <Setter Property="Height" Value="3.5" />
             <Setter Property="Margin" Value="8,0" />
             <Setter Property="MinWidth" Value="24" />
             <Setter Property="MaxWidth" Value="260" />
@@ -469,7 +469,7 @@
                                     x:Name="_batteryCapGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="6"
+                                    RingThickness="4"
                                     RingBrush="{DynamicResource ChartBatteryBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_Capacity}" />
                                 <TextBlock x:Name="_batteryCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
@@ -479,7 +479,7 @@
                                     x:Name="_batteryFullCapGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="6"
+                                    RingThickness="4"
                                     RingBrush="{DynamicResource ChartUtilizationBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_FullCapacity}" />
                                 <TextBlock x:Name="_batteryFullCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
@@ -490,7 +490,7 @@
                                     x:Name="_batteryHealthGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="6"
+                                    RingThickness="4"
                                     Maximum="100"
                                     RingBrush="{DynamicResource StatusCriticalBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_Health}" />

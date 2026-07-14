@@ -132,7 +132,7 @@ public class RadialGaugeControl : Control
 
     public static readonly DependencyProperty RingThicknessProperty = DependencyProperty.Register(
         nameof(RingThickness), typeof(double), typeof(RadialGaugeControl),
-        new FrameworkPropertyMetadata(8.0, OnVisualChanged));
+        new FrameworkPropertyMetadata(5.0, OnVisualChanged));
 
     public double RingThickness
     {
@@ -316,7 +316,7 @@ public class RadialGaugeControl : Control
         if (_glowPath is not null)
         {
             _glowPath.Data = arc;
-            _glowPath.StrokeThickness = RingThickness + 6;
+            _glowPath.StrokeThickness = RingThickness + 3.5;
             _glowPath.Stroke = ExtractRingColorBrush(96);
             _glowPath.StrokeStartLineCap = PenLineCap.Round;
             _glowPath.StrokeEndLineCap = PenLineCap.Round;
@@ -332,7 +332,7 @@ public class RadialGaugeControl : Control
             else
             {
                 var tipCenter = PointOnCircle(center, radius, StartAngle + sweep);
-                var tipDiameter = Math.Max(4.0, RingThickness + 2.0);
+                var tipDiameter = Math.Max(3.0, RingThickness + 1.0);
 
                 _tip.Width = tipDiameter;
                 _tip.Height = tipDiameter;

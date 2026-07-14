@@ -12,7 +12,7 @@
     <!-- Default template for the self-drawn radial gauge. -->
     <Style TargetType="{x:Type charts:RadialGaugeControl}">
         <Setter Property="RingBrush" Value="{DynamicResource ChartUtilizationBrush}" />
-        <Setter Property="RingThickness" Value="8" />
+        <Setter Property="RingThickness" Value="5" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
@@ -25,7 +25,7 @@
                         <!-- Blurred underlay that gives the value arc a soft glow. -->
                         <Path x:Name="PART_Glow" Opacity="0.55">
                             <Path.Effect>
-                                <BlurEffect Radius="7" KernelType="Gaussian" />
+                                <BlurEffect Radius="5" KernelType="Gaussian" />
                             </Path.Effect>
                         </Path>
                         <Path x:Name="PART_Value" />

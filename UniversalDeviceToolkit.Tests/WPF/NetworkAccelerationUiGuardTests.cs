@@ -50,10 +50,20 @@ public class NetworkAccelerationUiGuardTests
         xaml.Should().Contain("NetworkAccelerationConnectionsMetric");
         xaml.Should().Contain("NetworkAccelerationRulesMetric");
         xaml.Should().Contain("NetworkAccelerationRestoreButton");
-        xaml.Should().Contain("NetworkAccelerationSelectionBar");
-        xaml.Should().Contain("NetworkAccelerationSelectionCount");
-        xaml.Should().Contain("NetworkAccelerationSelectionFavoriteButton");
-        xaml.Should().Contain("NetworkAccelerationSelectionStartButton");
+        // Selection chrome lives on WindowsOptimizationPage tab toolbar (not floating in the control).
+        xaml.Should().NotContain("NetworkAccelerationSelectionBar");
+    }
+
+    [Fact]
+    public void WindowsOptimizationPage_Xaml_HostsNetworkAccelerationSelectionBarInTabToolbar()
+    {
+        var pageXaml = File.ReadAllText(FindPageXaml());
+        pageXaml.Should().Contain("NetworkAccelerationSelectionBar");
+        pageXaml.Should().Contain("NetworkAccelerationSelectionCount");
+        pageXaml.Should().Contain("NetworkAccelerationSelectionFavoriteButton");
+        pageXaml.Should().Contain("NetworkAccelerationSelectionStartButton");
+        pageXaml.Should().Contain("_networkAccelerationControl");
+        pageXaml.Should().Contain("IsNetworkAccelerationMode");
     }
 
     [Fact]
@@ -68,15 +78,18 @@ public class NetworkAccelerationUiGuardTests
     [Fact]
     public void NetworkAccelerationControl_Xaml_SelectionBarUsesResourceStrings()
     {
-        var xaml = File.ReadAllText(FindControlXaml());
-        xaml.Should().Contain("NetworkAccelerationPage_SelectionHint");
-        xaml.Should().Contain("NetworkAccelerationPage_SelectionBar");
-        xaml.Should().Contain("NetworkAccelerationPage_SelectionCountZero");
-        xaml.Should().Contain("NetworkAccelerationPage_SelectionFavorite");
-        xaml.Should().Contain("NetworkAccelerationPage_SelectionStart");
-        // Concrete actions: favorite + start selected (Watt Toolkit-style).
-        xaml.Should().Contain("SelectionFavoriteButton_Click");
-        xaml.Should().Contain("SelectionStartButton_Click");
+        var controlXaml = File.ReadAllText(FindControlXaml());
+        var pageXaml = File.ReadAllText(FindPageXaml());
+        var code = File.ReadAllText(FindControlCode());
+        controlXaml.Should().Contain("NetworkAccelerationPage_SelectionHint");
+        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionBar");
+        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionCountZero");
+        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionFavorite");
+        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionStart");
+        // Handlers stay on the control; chrome is hosted by the page tab toolbar.
+        code.Should().Contain("SelectionFavoriteButton_Click");
+        code.Should().Contain("SelectionStartButton_Click");
+        code.Should().Contain("AttachSelectionChrome");
     }
 
     [Fact]
@@ -226,6 +239,12 @@ public class NetworkAccelerationUiGuardTests
             "Pages",
             "WindowsOptimization",
             "NetworkAccelerationControl.xaml");
+    }
+
+    private static string FindPageXaml()
+    {
+        var root = FindRepoRoot();
+        return Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
     }
 
     private static string FindRepoRoot()

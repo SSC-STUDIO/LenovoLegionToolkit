@@ -83,7 +83,7 @@
         </Style>
 
         <Style x:Key="DashboardSensorsSkeletonBarStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="Height" Value="6" />
+            <Setter Property="Height" Value="3.5" />
             <Setter Property="Margin" Value="8,0" />
             <Setter Property="MinWidth" Value="24" />
             <Setter Property="MaxWidth" Value="260" />

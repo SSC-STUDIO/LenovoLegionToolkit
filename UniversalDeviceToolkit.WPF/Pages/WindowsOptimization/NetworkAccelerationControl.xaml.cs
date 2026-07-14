@@ -32,6 +32,11 @@ public partial class NetworkAccelerationControl : UserControl
     /// <summary>Multi-select set for domain tiles (Watt Toolkit-style selection bar).</summary>
     private readonly HashSet<string> _selectedGroupIds = new(StringComparer.OrdinalIgnoreCase);
 
+    // Hosted by WindowsOptimizationPage tab toolbar (not floating over content).
+    private TextBlock? _selectionCountText;
+    private System.Windows.Controls.Button? _selectionFavoriteButton;
+    private System.Windows.Controls.Button? _selectionStartButton;
+
     private static string T(string key, string fallback) =>
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
@@ -333,6 +338,28 @@ public partial class NetworkAccelerationControl : UserControl
         }
 
         RefreshUi();
+    }
+
+    /// <summary>
+    /// Host page wires the tab-row selection chrome (same slot as Driver/Optimization bulk actions).
+    /// </summary>
+    public void AttachSelectionChrome(TextBlock countText, System.Windows.Controls.Button favoriteButton, System.Windows.Controls.Button startButton)
+    {
+        if (_selectionFavoriteButton is not null)
+            _selectionFavoriteButton.Click -= SelectionFavoriteButton_Click;
+        if (_selectionStartButton is not null)
+            _selectionStartButton.Click -= SelectionStartButton_Click;
+
+        _selectionCountText = countText;
+        _selectionFavoriteButton = favoriteButton;
+        _selectionStartButton = startButton;
+
+        if (_selectionFavoriteButton is not null)
+            _selectionFavoriteButton.Click += SelectionFavoriteButton_Click;
+        if (_selectionStartButton is not null)
+            _selectionStartButton.Click += SelectionStartButton_Click;
+
+        RefreshSelectionBar();
     }
 
     private void RefreshSelectionBar()

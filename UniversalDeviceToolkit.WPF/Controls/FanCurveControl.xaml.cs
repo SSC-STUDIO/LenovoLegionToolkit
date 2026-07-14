@@ -267,7 +267,7 @@ public partial class FanCurveControl : UserControl
 
             _cachedLinePath = new Path
             {
-                StrokeThickness = 2.25,
+                StrokeThickness = 1.4,
                 StrokeStartLineCap = PenLineCap.Round,
                 StrokeEndLineCap = PenLineCap.Round,
                 StrokeLineJoin = PenLineJoin.Round,
