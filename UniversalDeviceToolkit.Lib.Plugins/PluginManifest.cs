@@ -71,6 +71,9 @@ public class PluginManifest
     [JsonPropertyName("fileHash")]
     public string FileHash { get; set; } = string.Empty;
 
+    [JsonPropertyName("zipHash")]
+    public string ZipHash { get; set; } = string.Empty;
+
     [JsonPropertyName("fileSize")]
     public long FileSize { get; set; }
 

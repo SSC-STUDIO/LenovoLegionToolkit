@@ -68,11 +68,13 @@ IPC defaults (e.g. pipe base name `udt-network-proxy`) are UDT-oriented. No rena
 | Lib `RootNamespace` / `AssemblyName` | `LenovoLegionToolkit.Lib` | `UniversalDeviceToolkit.Lib` |
 | Lib.Plugins `RootNamespace` / `AssemblyName` | `LenovoLegionToolkit.Lib.Plugins` | `UniversalDeviceToolkit.Lib.Plugins` |
 | C# namespaces in Lib* | `LenovoLegionToolkit.Lib*` | `UniversalDeviceToolkit.Lib*` |
-| Windows CLI `AssemblyName` | `llt` → `llt.exe` | `udt-cli` → `udt-cli.exe` |
+| Windows CLI `AssemblyName` | `llt` → `llt.exe` | `udt-cli` → `udt-cli.exe` (+ release ships `llt.exe` copy as one-train shim) |
 | Preferred CLI IPC pipe | (introduced in Phase 2) | `UniversalDeviceToolkit-IPC-0` |
 | Legacy CLI IPC pipe | `LenovoLegionToolkit-IPC-0` | **Still accepted** (compat) |
+| winget `PackageIdentifier` | `SSC-STUDIO.LenovoLegionToolkit` | **Unchanged** (in-place upgrades; do not rewrite historical manifests) |
+| Compatibility installer alias | `LenovoLegionToolkit_v*_Setup.exe` | **Still published** (copy of Full setup) |
 
-**Impact:** Plugins and tools compiled only against pre-cutover `LenovoLegionToolkit.Lib*` assembly/type identities will not bind to the new primary DLL simple names without rebuild or explicit compatibility handling. Host plugin load paths still accept **legacy plugin assembly prefixes** during transition (see below).
+**Impact:** Plugins and tools compiled only against pre-cutover `LenovoLegionToolkit.Lib*` assembly/type identities **will not bind** to `UniversalDeviceToolkit.Lib.dll` without rebuild. There is **no TypeForwardedTo shim** in this train. Host dual-load covers **filename prefixes** and dual-staged SDK/Shared DLL names only — not old Lib type identities.
 
 ---
 
@@ -100,7 +102,7 @@ Phase 3 did **not** erase every Lenovo / LLT token. The following remain on purp
 | `ProductDisplayName` / `ProductCompactName` | Universal Device Toolkit / UniversalDeviceToolkit | Current brand |
 | `LegacyProductDisplayName` / `LegacyProductCompactName` | Lenovo Legion Toolkit / LenovoLegionToolkit | Migration messaging, AppData migration, docs |
 | `PreferredAssemblyLib` / `PreferredAssemblyLibPlugins` | `UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins` | **Current** primary assembly simple names |
-| `LegacyAssemblyLib` / `LegacyAssemblyLibPlugins` | `LenovoLegionToolkit.Lib` / `LenovoLegionToolkit.Lib.Plugins` | Pre-cutover names for reflection / migration checks |
+| `LegacyAssemblyLib` / `LegacyAssemblyLibPlugins` | `LenovoLegionToolkit.Lib` / `LenovoLegionToolkit.Lib.Plugins` | Messaging / detection only — **not** a runtime bind target |
 
 Also see `AppIdentity` legacy display/compact/repository tokens used for AppData migration and historical links.
 
@@ -109,13 +111,15 @@ Also see `AppIdentity` legacy display/compact/repository tokens used for AppData
 Host plugin discovery/install/load should accept:
 
 - **Preferred:** `UniversalDeviceToolkit.Plugins.*`
-- **Legacy:** `LenovoLegionToolkit.Plugins.*` (and historical SDK/Shared DLL simple names where still referenced)
+- **Legacy:** `LenovoLegionToolkit.Plugins.*`
 
-New plugins and packaging should ship under `UniversalDeviceToolkit.Plugins.*`. Legacy prefixes remain so existing plugin folders/ZIPs keep loading during transition.
+SDK/Shared dual-stage (`PluginAssemblyNaming.StageDualNamed*`) copies the same bytes under **both** UDT and LLT filenames so either simple name can resolve from the plugin folder. Official plugins must still **recompile** against `UniversalDeviceToolkit.Lib*` / `UniversalDeviceToolkit.Plugins.SDK`.
+
+New plugins and packaging should ship under `UniversalDeviceToolkit.Plugins.*`.
 
 ### 4. Automation environment variables (dual-write)
 
-`AutomationEnvironment` continues to write each automation value under the historical `LLT_*` key **and** a `UDT_*` alias (`ToUdtAlias`). Scripts may read either prefix.
+`AutomationEnvironment` dual-writes each automation value under **primary `UDT_*`** and **alias `LLT_*`** (`ToLltAlias`). Scripts may read either prefix.
 
 | Legacy (`LLT_*`) | UDT alias | Context |
 | --- | --- | --- |

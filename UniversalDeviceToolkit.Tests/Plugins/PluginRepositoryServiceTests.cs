@@ -263,6 +263,86 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task VerifyDownloadedPackageIntegrityAsync_WithMatchingZipHash_ShouldSucceed()
+    {
+        const string pluginId = "zip-integrity";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "VerifyDownloadedPackageIntegrityAsync",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        var result = await (Task<bool>)method!.Invoke(null, [packagePath, manifest])!;
+
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task VerifyDownloadedPackageIntegrityAsync_WithMismatchedZipHash_ShouldFail()
+    {
+        const string pluginId = "zip-integrity-fail";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = new string('a', 64);
+
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "VerifyDownloadedPackageIntegrityAsync",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        var result = await (Task<bool>)method!.Invoke(null, [packagePath, manifest])!;
+
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithMismatchedFileHash_ShouldFail()
+    {
+        const string pluginId = "dll-integrity-fail";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = new string('b', 64);
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeFalse();
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Never);
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithMatchingIntegrityHashes_ShouldKeepPluginInstalled()
+    {
+        const string pluginId = "integrity-pass";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
+        var plugin = MockFactory.CreateMockPlugin(id: pluginId);
+
+        _pluginManager
+            .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out plugin))
+            .Returns(true);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeTrue();
+        _pluginManager.Verify(manager => manager.InstallPlugin(pluginId), Times.Once);
+    }
+
+    [Fact]
     public async Task DownloadAndInstallPluginAsync_WhenRuntimeDoesNotLoad_ShouldRollbackInstalledState()
     {
         // Arrange
@@ -475,6 +555,24 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         // blocks file:// downloads in Release builds (CI runs --configuration Release).
         return new PluginRepositoryService(_pluginManager.Object, httpClientFactory, forceAllowFileUrls: true);
    }
+
+    private static async Task<string> ComputePackageDllHashAsync(string packagePath, string pluginId)
+    {
+        var tempDirectory = Path.Combine(Path.GetTempPath(), $"udt-plugin-hash-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(tempDirectory);
+
+        try
+        {
+            ZipFile.ExtractToDirectory(packagePath, tempDirectory);
+            var dllPath = Path.Combine(tempDirectory, pluginId, $"{pluginId}.dll");
+            return await PluginPackageIntegrity.ComputeSha256HexAsync(dllPath);
+        }
+        finally
+        {
+            if (Directory.Exists(tempDirectory))
+                Directory.Delete(tempDirectory, recursive: true);
+        }
+    }
 
     private string CreatePluginPackage(string pluginId, bool includeOptimizationAction)
     {

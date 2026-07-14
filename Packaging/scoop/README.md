@@ -11,7 +11,7 @@ This repo may also contain a versioned draft manifest such as `lenovolegiontoolk
 1. Publish a stable GitHub release with:
    - `UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`
    - `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`
-   - `UniversalDeviceToolkit_vX.Y.Z_Setup.exe`
+   - `LenovoLegionToolkit_vX.Y.Z_Setup.exe`
    - `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`
 2. Confirm the installer URL is the final GitHub Release asset URL.
 3. Update the `lenovolegiontoolkit.json` manifest in `SSC-STUDIO/scoop-bucket`:

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
         <TargetFramework>$(UDTTargetFramework)</TargetFramework>
-		<!-- ABI retention: RootNamespace/AssemblyName stay UniversalDeviceToolkit.Lib (plugin + cross-repo contract).
-		     Do NOT rename to UniversalDeviceToolkit.Lib without Docs/NamespaceMigration.md Phase 2–3 (TypeForwardedTo / dual-package + plugin recompile). -->
+		<!-- Phase 3 complete: primary ABI is UniversalDeviceToolkit.Lib (see Docs/NamespaceMigration.md).
+		     Legacy LenovoLegionToolkit.* names remain only as BrandCompatibility / dual-load string surfaces. -->
 		<RootNamespace>UniversalDeviceToolkit.Lib</RootNamespace>
 		<AssemblyName>UniversalDeviceToolkit.Lib</AssemblyName>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>

@@ -393,14 +393,8 @@ public class PluginInstallationService
 
         try
         {
-            // Prefer staging under primary UDT name; also stage legacy name when source is legacy-only.
-            var preferredDest = Path.Combine(pluginDirectory, PluginAssemblyNaming.PreferredSharedDllFileName);
-            File.Copy(sourcePath, preferredDest, overwrite: true);
-
-            if (Path.GetFileName(sourcePath).Equals(PluginAssemblyNaming.LegacySharedDllFileName, StringComparison.OrdinalIgnoreCase))
-            {
-                File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.LegacySharedDllFileName), overwrite: true);
-            }
+            // Always stage both UDT and legacy filenames so dual-load plugins resolve either simple name.
+            PluginAssemblyNaming.StageDualNamedSharedDll(sourcePath, pluginDirectory);
         }
         catch (Exception ex)
         {

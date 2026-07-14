@@ -22,7 +22,7 @@ param(
 
     [string]$PublicAssetPrefix = 'UniversalDeviceToolkit',
 
-    [string]$LegacyAssetPrefix = 'UniversalDeviceToolkit',
+    [string]$LegacyAssetPrefix = 'LenovoLegionToolkit',
 
     [string]$ProductName = 'Universal Device Toolkit',
 

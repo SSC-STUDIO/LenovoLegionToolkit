@@ -84,7 +84,7 @@ function Get-HashFromManifest
     throw "SHA256 manifest '$ManifestPath' does not contain '$AssetName'."
 }
 
-$legacyAssetName = "UniversalDeviceToolkit_v${Version}_Setup.exe"
+$legacyAssetName = "LenovoLegionToolkit_v${Version}_Setup.exe"
 
 if (-not [string]::IsNullOrWhiteSpace($HashManifestPath))
 {
@@ -184,7 +184,7 @@ function Get-ScoopManifestContent
   "autoupdate": {
     "architecture": {
       "64bit": {
-        "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v`$version/UniversalDeviceToolkit_v`$version_Setup.exe"
+        "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v`$version/LenovoLegionToolkit_v`$version_Setup.exe"
       }
     }
   }
@@ -192,17 +192,17 @@ function Get-ScoopManifestContent
 "@
 }
 
-$wingetVersionDirectory = Join-Path $repoRoot "Packaging\winget\manifests\s\SSC-STUDIO\UniversalDeviceToolkit\$Version"
+$wingetVersionDirectory = Join-Path $repoRoot "Packaging\winget\manifests\s\SSC-STUDIO\LenovoLegionToolkit\$Version"
 Ensure-Directory -Path $wingetVersionDirectory
 
-$wingetVersionManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.UniversalDeviceToolkit.yaml'
-$wingetLocaleManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.UniversalDeviceToolkit.locale.en-US.yaml'
-$wingetInstallerManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.UniversalDeviceToolkit.installer.yaml'
+$wingetVersionManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.yaml'
+$wingetLocaleManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.locale.en-US.yaml'
+$wingetInstallerManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.installer.yaml'
 
 $wingetVersionManifest = @"
 # yaml-language-server: `$schema=https://aka.ms/winget-manifest.version.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
+PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
 PackageVersion: $Version
 DefaultLocale: en-US
 ManifestType: version
@@ -212,7 +212,7 @@ ManifestVersion: 1.10.0
 $wingetLocaleManifest = @"
 # yaml-language-server: `$schema=https://aka.ms/winget-manifest.defaultLocale.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
+PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
 PackageVersion: $Version
 PackageLocale: en-US
 Publisher: SSC-STUDIO
@@ -224,7 +224,7 @@ License: GPL-3.0
 LicenseUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/LICENSE
 Copyright: Copyright (C) Universal Device Toolkit contributors
 ShortDescription: Lightweight open-source Windows device toolkit — Legion hardware control, plugins, no telemetry.
-Description: Universal Device Toolkit (UDT) is a lightweight, open-source Windows utility. Supported Lenovo Legion, LOQ, and IdeaPad Gaming laptops get direct hardware controls (power modes, RGB, dGPU, battery, Custom Mode, and more). Other Lenovo models and non-Lenovo PCs run in basic mode with plugins, system optimization, themes, and updates. No background service, no telemetry, no account. CLI automation via udt-cli.exe. Legacy package ID SSC-STUDIO.UniversalDeviceToolkit is retained for in-place upgrades from Lenovo Legion Toolkit.
+Description: Universal Device Toolkit (UDT) is a lightweight, open-source Windows utility. Supported Lenovo Legion, LOQ, and IdeaPad Gaming laptops get direct hardware controls (power modes, RGB, dGPU, battery, Custom Mode, and more). Other Lenovo models and non-Lenovo PCs run in basic mode with plugins, system optimization, themes, and updates. No background service, no telemetry, no account. CLI automation via udt-cli.exe (llt.exe shipped as a one-release compatibility shim). Package identity remains SSC-STUDIO.LenovoLegionToolkit so existing winget installs upgrade in place.
 Moniker: universaldevicetoolkit
 Tags:
 - lenovo
@@ -243,7 +243,7 @@ ManifestVersion: 1.10.0
 $wingetInstallerManifest = @"
 # yaml-language-server: `$schema=https://aka.ms/winget-manifest.installer.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
+PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
 PackageVersion: $Version
 InstallerType: inno
 Scope: machine

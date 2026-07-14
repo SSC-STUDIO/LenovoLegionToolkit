@@ -202,6 +202,30 @@ public static class PluginAssemblyNaming
         }
     }
 
+    /// <summary>
+    /// Copy <paramref name="sourcePath"/> into <paramref name="destinationDirectory"/> under
+    /// both preferred and legacy file names so dual-load plugins resolve either simple name.
+    /// </summary>
+    public static void StageDualNamedDll(string sourcePath, string destinationDirectory, string preferredFileName, string legacyFileName)
+    {
+        if (string.IsNullOrWhiteSpace(sourcePath) ||
+            string.IsNullOrWhiteSpace(destinationDirectory) ||
+            !File.Exists(sourcePath))
+        {
+            return;
+        }
+
+        Directory.CreateDirectory(destinationDirectory);
+        File.Copy(sourcePath, Path.Combine(destinationDirectory, preferredFileName), overwrite: true);
+        File.Copy(sourcePath, Path.Combine(destinationDirectory, legacyFileName), overwrite: true);
+    }
+
+    public static void StageDualNamedSharedDll(string sourcePath, string destinationDirectory) =>
+        StageDualNamedDll(sourcePath, destinationDirectory, PreferredSharedDllFileName, LegacySharedDllFileName);
+
+    public static void StageDualNamedSdkDll(string sourcePath, string destinationDirectory) =>
+        StageDualNamedDll(sourcePath, destinationDirectory, PreferredSdkDllFileName, LegacySdkDllFileName);
+
     public static bool HasPluginAssemblyPrefix(string fileName) =>
         IsPluginPrefixedFileName(fileName) && !IsSdkOrSharedDllFileName(fileName);
 }

@@ -4,19 +4,24 @@
 namespace UniversalDeviceToolkit.Lib.Branding;
 
 /// <summary>
-/// Dual-surface brand and ABI constants after the UniversalDeviceToolkit assembly cutover.
+/// Brand and assembly-name constants after the UniversalDeviceToolkit hard cutover.
 /// </summary>
 /// <remarks>
 /// <para>
 /// User-facing product names use Universal Device Toolkit (UDT) branding.
 /// Primary assembly simple names match project <c>AssemblyName</c> values
 /// (<c>UniversalDeviceToolkit.Lib</c> / <c>UniversalDeviceToolkit.Lib.Plugins</c>).
-/// Legacy <c>LenovoLegionToolkit.Lib*</c> strings remain for loading older plugins
-/// and AppData migration messaging.
+/// </para>
+/// <para>
+/// <b>Legacy assembly names are not a load-time bridge.</b> Plugins compiled against
+/// <c>LenovoLegionToolkit.Lib*</c> must be rebuilt against <c>UniversalDeviceToolkit.Lib*</c>
+/// (no TypeForwardedTo shim ships in this train). Legacy constants remain for:
+/// migration messaging, AppData folder detection, reflection/diagnostics, and dual-load
+/// of plugin <em>filename prefixes</em> / SDK-Shared dual-file staging only.
 /// </para>
 /// <para>
 /// See <c>Docs/NamespaceMigration.md</c> for dual IPC pipe names and automation
-/// env-var <c>UDT_*</c> / <c>LLT_*</c> aliases.
+/// env-var <c>UDT_*</c> (primary) / <c>LLT_*</c> (alias) dual-write.
 /// </para>
 /// <para>
 /// Display-name values align with <see cref="UniversalDeviceToolkit.Lib.Utils.AppIdentity"/>.
@@ -52,12 +57,12 @@ public static class BrandCompatibility
     public const string PreferredAssemblyLibPlugins = "UniversalDeviceToolkit.Lib.Plugins";
 
     /// <summary>
-    /// Legacy core library assembly simple name retained for old plugins / migration messaging.
+    /// Legacy core library assembly simple name — messaging / detection only (not a runtime bind target).
     /// </summary>
     public const string LegacyAssemblyLib = "LenovoLegionToolkit.Lib";
 
     /// <summary>
-    /// Legacy plugins host assembly simple name retained for old plugins / migration messaging.
+    /// Legacy plugins host assembly simple name — messaging / detection only (not a runtime bind target).
     /// </summary>
     public const string LegacyAssemblyLibPlugins = "LenovoLegionToolkit.Lib.Plugins";
 }

@@ -249,6 +249,12 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
 
+            if (!await VerifyDownloadedPackageIntegrityAsync(tempFilePath, manifest).ConfigureAwait(false))
+            {
+                DownloadFailed?.Invoke(this, string.Format(Resource.Plugin_Error_Repository_DownloadFailed, manifest.Id));
+                return false;
+            }
+
             // Extract and install
             var extractPath = Path.Combine(_tempDownloadDirectory, manifest.Id);
             var installed = await ExtractAndInstallPluginAsync(
@@ -886,6 +892,39 @@ public class PluginRepositoryService : IDisposable
         }
     }
 
+    private static bool IsIntegrityVerificationRequired =>
+        IsProductionMode && !PluginPackageIntegrity.IsVerificationWaived();
+
+    private static async Task<bool> VerifyDownloadedPackageIntegrityAsync(string zipPath, PluginManifest manifest)
+    {
+        try
+        {
+            var zipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(zipPath).ConfigureAwait(false);
+            if (!PluginPackageIntegrity.TryVerifyExpectedHash(
+                    manifest.ZipHash,
+                    zipHash,
+                    IsIntegrityVerificationRequired,
+                    out var zipIntegrityFailure))
+            {
+                Log.Instance.Warning($"Plugin ZIP integrity check failed for {manifest.Id}: {zipIntegrityFailure}");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(manifest.ZipHash) && !IsIntegrityVerificationRequired)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Plugin {manifest.Id} has no zipHash in store manifest; skipping ZIP integrity verification.");
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning($"Plugin ZIP integrity check failed for {manifest.Id}: {ex.Message}", ex);
+            return false;
+        }
+    }
+
     /// <summary>
     /// Extract plugin zip and install to plugins directory
     /// </summary>
@@ -963,21 +1002,21 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
             
-            // Calculate hash
-            using var sha256 = SHA256.Create();
-            using var stream = File.OpenRead(dllPath);
-            var hash = await sha256.ComputeHashAsync(stream).ConfigureAwait(false);
-            var hashString = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-
-            if (string.IsNullOrEmpty(manifest.FileHash))
+            var hashString = await PluginPackageIntegrity.ComputeSha256HexAsync(dllPath).ConfigureAwait(false);
+            if (!PluginPackageIntegrity.TryVerifyExpectedHash(
+                    manifest.FileHash,
+                    hashString,
+                    IsIntegrityVerificationRequired,
+                    out var dllIntegrityFailure))
             {
-                if (IsProductionMode)
-                    Log.Instance.Warning($"Plugin {manifest.Id} has no fileHash in store manifest; skipping integrity verification.");
-            }
-            else if (!hashString.Equals(manifest.FileHash, StringComparison.OrdinalIgnoreCase))
-            {
-                Log.Instance.Warning($"Hash mismatch for {manifest.Id}. Expected: {manifest.FileHash}, Got: {hashString}");
+                Log.Instance.Warning($"Plugin DLL integrity check failed for {manifest.Id}: {dllIntegrityFailure}");
                 return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(manifest.FileHash) && !IsIntegrityVerificationRequired)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Plugin {manifest.Id} has no fileHash in store manifest; skipping DLL integrity verification.");
             }
 
             // SECURITY: Validate plugin ID before using in path construction
@@ -1212,6 +1251,7 @@ public class PluginRepositoryService : IDisposable
         merged.MinimumHostVersion = FirstNonEmpty(merged.MinimumHostVersion, storeManifest.MinimumHostVersion);
         merged.DownloadUrl = FirstNonEmpty(merged.DownloadUrl, storeManifest.DownloadUrl);
         merged.FileHash = FirstNonEmpty(merged.FileHash, storeManifest.FileHash);
+        merged.ZipHash = FirstNonEmpty(merged.ZipHash, storeManifest.ZipHash);
         merged.FileSize = merged.FileSize > 0 ? merged.FileSize : storeManifest.FileSize;
         merged.ReleaseDate = FirstNonEmpty(merged.ReleaseDate, storeManifest.ReleaseDate);
         merged.Changelog = FirstNonEmpty(merged.Changelog, storeManifest.Changelog);
@@ -1817,12 +1857,7 @@ public class PluginRepositoryService : IDisposable
 
         try
         {
-            File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.PreferredSharedDllFileName), overwrite: true);
-
-            if (Path.GetFileName(sourcePath).Equals(PluginAssemblyNaming.LegacySharedDllFileName, StringComparison.OrdinalIgnoreCase))
-            {
-                File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.LegacySharedDllFileName), overwrite: true);
-            }
+            PluginAssemblyNaming.StageDualNamedSharedDll(sourcePath, pluginDirectory);
         }
         catch (Exception ex)
         {
@@ -1839,12 +1874,7 @@ public class PluginRepositoryService : IDisposable
 
         try
         {
-            File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.PreferredSdkDllFileName), overwrite: true);
-
-            if (Path.GetFileName(sourcePath).Equals(PluginAssemblyNaming.LegacySdkDllFileName, StringComparison.OrdinalIgnoreCase))
-            {
-                File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.LegacySdkDllFileName), overwrite: true);
-            }
+            PluginAssemblyNaming.StageDualNamedSdkDll(sourcePath, pluginDirectory);
         }
         catch (Exception ex)
         {
@@ -1917,6 +1947,7 @@ public class PluginRepositoryService : IDisposable
             Dependencies = manifest.Dependencies?.ToArray(),
             DownloadUrl = manifest.DownloadUrl,
             FileHash = manifest.FileHash,
+            ZipHash = manifest.ZipHash,
             FileSize = manifest.FileSize,
             ReleaseDate = manifest.ReleaseDate,
             Changelog = manifest.Changelog,

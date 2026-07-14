@@ -191,7 +191,7 @@ function Get-DownloadLines {
   $crossPlatformCliZip = $sorted | Where-Object { $_ -match '_CLI_cross-platform\.zip$' } | Select-Object -First 1
   $englishSetup = $sorted | Where-Object { $_ -match '_English_Setup\.exe$' } | Select-Object -First 1
   $englishZip = $sorted | Where-Object { $_ -match '_English_win-x64\.zip$' } | Select-Object -First 1
-  $legacyAlias = $sorted | Where-Object { $_ -match '^UniversalDeviceToolkit_v\d+\.\d+\.\d+_Setup\.exe$' } | Select-Object -First 1
+  $legacyAlias = $sorted | Where-Object { $_ -match '^LenovoLegionToolkit_v\d+\.\d+\.\d+_Setup\.exe$' } | Select-Object -First 1
   $setup = $sorted | Where-Object { $_ -match 'Setup\.exe$' -and $_ -ne $fullSetup -and $_ -ne $onlineSetup -and $_ -ne $englishSetup -and $_ -ne $legacyAlias } | Select-Object -First 1
   $zip = $sorted | Where-Object { $_ -match '_win-x64\.zip$' -and $_ -ne $fullZip -and $_ -ne $onlineZip -and $_ -ne $englishZip } | Select-Object -First 1
   $sha = $sorted | Where-Object { $_ -match '_SHA256\.txt$' } | Select-Object -First 1
