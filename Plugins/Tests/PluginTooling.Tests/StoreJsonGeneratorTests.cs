@@ -358,6 +358,44 @@ public class StoreJsonGeneratorTests : IDisposable
         }
     }
 
+    [Fact]
+    public void Generate_MergeExisting_BumpsTwoPartStoreVersion()
+    {
+        CreatePluginFolder("sample", manifestLifecycle: "Active", manifestName: "Sample",
+            description: "Sample plugin.");
+
+        // Write a store.json with a 2-part SemVer version string ("1.0" not "1.0.0").
+        // BumpStoreVersion must handle Version.Build == -1 from 2-part parsing.
+        var storePath = Path.Combine(_tempRoot, "store.json");
+        File.WriteAllText(storePath,
+            """
+            {
+              "lastUpdated": "2026-07-14T00:00:00.0000000+00:00",
+              "storeVersion": "1.0",
+              "plugins": []
+            }
+            """);
+
+        // Modify the manifest so content differs from the existing (empty) plugin list.
+        // This triggers storeContentChanged = true, invoking BumpStoreVersion.
+        CreatePluginFolder("sample", manifestLifecycle: "Active", manifestName: "Sample",
+            description: "Sample plugin.");
+
+        var request = new StoreGenerationRequest
+        {
+            RepositoryRoot = _tempRoot,
+            AssetRoot = Path.Combine(_tempRoot, "Build", "release-assets"),
+            ReleaseRepositoryUrl = "https://example.com/releases",
+            MergeExisting = true,
+            RequireAssets = false,
+            PluginIds = Array.Empty<string>(),
+        };
+        var store = new StoreJsonGenerator().Generate(request);
+
+        // 2-part "1.0" → Math.Max(-1, 0) + 1 = 1 → "1.0.1", NOT "1.0.0"
+        Assert.Equal("1.0.1", store.StoreVersion);
+    }
+
     private StoreDocument InvokeGenerate(bool mergeExisting = false, IReadOnlyList<string>? pluginIds = null)
     {
         var request = new StoreGenerationRequest

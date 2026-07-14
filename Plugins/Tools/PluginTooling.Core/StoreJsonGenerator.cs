@@ -370,7 +370,8 @@ public sealed class StoreJsonGenerator
     {
         if (Version.TryParse(NormalizeStoreVersion(current), out var version))
         {
-            var bumped = new Version(version.Major, version.Minor, version.Build + 1);
+            var build = Math.Max(version.Build, 0);
+            var bumped = new Version(version.Major, version.Minor, build + 1);
             return bumped.ToString(3);
         }
 
