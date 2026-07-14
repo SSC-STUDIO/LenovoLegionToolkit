@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Listeners;
@@ -16,12 +17,19 @@ using NvAPIWrapper.Native.GPU.Structures;
 
 namespace LenovoLegionToolkit.Lib.Controllers;
 
-public class GPUOverclockController
+public class GPUOverclockController : IDisposable
 {
+    /// <summary>
+    /// Serializes all NVAPI.Initialize/Unload pairs. NVAPI is not thread-safe;
+    /// concurrent Initialize/Unload (e.g. UI reading max memory delta while ApplyStateAsync runs) is unsafe (H-015).
+    /// </summary>
+    private static readonly SemaphoreSlim NvApiLock = new(1, 1);
+
     private readonly GPUOverclockSettings _settings;
     private readonly VantageDisabler _vantageDisabler;
     private readonly LegionZoneDisabler _legionZoneDisabler;
     private readonly NativeWindowsMessageListener _nativeWindowsMessageListener;
+    private int _disposed;
 
     public event EventHandler? Changed;
 
@@ -41,18 +49,26 @@ public class GPUOverclockController
 
     public static int GetMaxMemoryDeltaMhz()
     {
+        NvApiLock.Wait();
         try
         {
-            NVAPI.Initialize();
-            return GetMaxMemoryDeltaMhz(NVAPI.GetGPU());
+            try
+            {
+                NVAPI.Initialize();
+                return GetMaxMemoryDeltaMhz(NVAPI.GetGPU());
+            }
+            finally
+            {
+                try { NVAPI.Unload(); } catch
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to unload NVAPI in GetMaxMemoryDeltaMhz");
+                }
+            }
         }
         finally
         {
-            try { NVAPI.Unload(); } catch
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Failed to unload NVAPI in GetMaxMemoryDeltaMhz");
-            }
+            NvApiLock.Release();
         }
     }
 
@@ -67,20 +83,35 @@ public class GPUOverclockController
             if (!Compatibility.IsSupportedLegionMachine(mi))
                 return false;
 
-            NVAPI.Initialize();
-            isSupported = NVAPI.GetGPU() is not null;
+            await NvApiLock.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                try
+                {
+                    NVAPI.Initialize();
+                    isSupported = NVAPI.GetGPU() is not null;
+                }
+                catch
+                {
+                    isSupported = false;
+                }
+                finally
+                {
+                    try { NVAPI.Unload(); } catch
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("Failed to unload NVAPI in IsSupportedAsync");
+                    }
+                }
+            }
+            finally
+            {
+                NvApiLock.Release();
+            }
         }
         catch
         {
             isSupported = false;
-        }
-        finally
-        {
-            try { NVAPI.Unload(); } catch
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Failed to unload NVAPI in IsSupportedAsync");
-            }
         }
 
         Log.Instance.Info($"NVAPI status: {isSupported}.");
@@ -259,23 +290,37 @@ public class GPUOverclockController
 
         try
         {
-            NVAPI.Initialize();
-
-            var gpu = NVAPI.GetGPU();
-            if (gpu is null)
+            await NvApiLock.WaitAsync().ConfigureAwait(false);
+            try
             {
+                NVAPI.Initialize();
+
+                var gpu = NVAPI.GetGPU();
+                if (gpu is null)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"dGPU not found.");
+
+                    Changed?.Invoke(this, EventArgs.Empty);
+
+                    return;
+                }
+
+                SetOverclockInfo(gpu, info);
+
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"dGPU not found.");
-
-                Changed?.Invoke(this, EventArgs.Empty);
-
-                return;
+                    Log.Instance.Trace($"Applied overclock: {info}, current: {GetOverclockInfo(gpu)}.");
             }
+            finally
+            {
+                try { NVAPI.Unload(); } catch
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Failed to unload NVAPI in ApplyStateAsync");
+                }
 
-            SetOverclockInfo(gpu, info);
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Applied overclock: {info}, current: {GetOverclockInfo(gpu)}.");
+                NvApiLock.Release();
+            }
         }
         catch (Exception ex)
         {
@@ -286,12 +331,6 @@ public class GPUOverclockController
         finally
         {
             Changed?.Invoke(this, EventArgs.Empty);
-
-            try { NVAPI.Unload(); } catch
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace("Failed to unload NVAPI in ApplyStateAsync");
-            }
         }
     }
 
@@ -429,5 +468,14 @@ private async Task NativeWindowsMessageListenerOnChangedAsync(object? sender, Na
 
             suffix++;
         }
+    }
+
+    public void Dispose()
+    {
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            return;
+
+        _nativeWindowsMessageListener.Changed -= NativeWindowsMessageListenerOnChanged;
+        GC.SuppressFinalize(this);
     }
 }

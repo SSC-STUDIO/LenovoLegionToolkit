@@ -24,9 +24,35 @@ public static class MessagingCenter
         }
     }
 
-    public static void Subscribe<T>(object subscriber, Action<T> handler) where T : IMessage => Hub.Default.Subscribe(subscriber, handler);
+    public static void Subscribe<T>(object subscriber, Action<T> handler) where T : IMessage
+    {
+        Hub.Default.Subscribe(subscriber, (T msg) =>
+        {
+            try
+            {
+                handler(msg);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Warning($"MessagingCenter handler for {typeof(T).Name} failed: {ex.Message}", ex);
+            }
+        });
+    }
 
-    public static void Subscribe<T>(object subscriber, Action handler) where T : IMessage => Hub.Default.Subscribe<T>(subscriber, _ => handler());
+    public static void Subscribe<T>(object subscriber, Action handler) where T : IMessage
+    {
+        Hub.Default.Subscribe<T>(subscriber, _ =>
+        {
+            try
+            {
+                handler();
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Warning($"MessagingCenter handler for {typeof(T).Name} failed: {ex.Message}", ex);
+            }
+        });
+    }
 
     public static void Unsubscribe<T>(object subscriber) where T : IMessage => Hub.Default.Unsubscribe<T>(subscriber);
 

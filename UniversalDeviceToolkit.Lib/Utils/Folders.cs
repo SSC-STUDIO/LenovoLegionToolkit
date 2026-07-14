@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security;
 
 namespace LenovoLegionToolkit.Lib.Utils;
 
@@ -97,9 +98,22 @@ public static class Folders
                 File.Copy(file, destinationPath, false);
             }
         }
-        catch
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException or DirectoryNotFoundException)
         {
-            Directory.CreateDirectory(destinationDirectory);
+            Log.Instance.Warning(
+                $"Failed to copy missing directory entries from \"{sourceDirectory}\" to \"{destinationDirectory}\": {ex.Message}",
+                ex);
+
+            try
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+            catch (Exception createEx) when (createEx is IOException or UnauthorizedAccessException or SecurityException or DirectoryNotFoundException)
+            {
+                Log.Instance.Warning(
+                    $"Failed to ensure destination directory \"{destinationDirectory}\": {createEx.Message}",
+                    createEx);
+            }
         }
     }
 }

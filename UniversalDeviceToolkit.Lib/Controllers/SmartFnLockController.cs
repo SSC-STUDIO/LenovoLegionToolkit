@@ -14,9 +14,6 @@ public class SmartFnLockController(FnLockFeature feature, ApplicationSettings se
 {
     private readonly AsyncLock _lock = new();
 
-    private bool _ctrlDepressed;
-    private bool _shiftDepressed;
-    private bool _altDepressed;
     private bool _restoreFnLock;
 
     public void OnKeyboardEvent(nuint wParam, KBDLLHOOKSTRUCT kbStruct)
@@ -42,7 +39,7 @@ public class SmartFnLockController(FnLockFeature feature, ApplicationSettings se
             try
             {
                 using (await _lock.LockAsync().ConfigureAwait(false))
-                    await OnKeyboardEventAsync(wParam, kbStruct).ConfigureAwait(false);
+                    await OnKeyboardEventAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -52,9 +49,9 @@ public class SmartFnLockController(FnLockFeature feature, ApplicationSettings se
         });
     }
 
-    private async Task OnKeyboardEventAsync(nuint wParam, KBDLLHOOKSTRUCT kbStruct)
+    private async Task OnKeyboardEventAsync()
     {
-        if (IsModifierKeyPressed(wParam, kbStruct))
+        if (IsModifierKeyPressed())
         {
             if (_restoreFnLock)
                 return;
@@ -79,37 +76,39 @@ public class SmartFnLockController(FnLockFeature feature, ApplicationSettings se
         }
     }
 
-    private bool IsModifierKeyPressed(nuint wParam, KBDLLHOOKSTRUCT kbStruct)
+    /// <summary>
+    /// Query live modifier state via GetKeyState rather than tracking
+    /// hook-event order, which can desync on KEYUP/SYSKEY transitions.
+    /// (CsWin32 surface exposes GetKeyState; high bit = currently down.)
+    /// </summary>
+    private bool IsModifierKeyPressed()
     {
-        var isKeyDown = wParam is PInvoke.WM_KEYDOWN or PInvoke.WM_SYSKEYDOWN;
-        var vkKeyCode = (VIRTUAL_KEY)kbStruct.vkCode;
+        static bool IsDown(VIRTUAL_KEY key) => (PInvoke.GetKeyState((int)key) & 0x8000) != 0;
 
-        if (vkKeyCode is VIRTUAL_KEY.VK_LCONTROL or VIRTUAL_KEY.VK_RCONTROL)
-            _ctrlDepressed = isKeyDown;
+        var ctrlDown = IsDown(VIRTUAL_KEY.VK_LCONTROL)
+            || IsDown(VIRTUAL_KEY.VK_RCONTROL)
+            || IsDown(VIRTUAL_KEY.VK_CONTROL);
+        var shiftDown = IsDown(VIRTUAL_KEY.VK_LSHIFT)
+            || IsDown(VIRTUAL_KEY.VK_RSHIFT)
+            || IsDown(VIRTUAL_KEY.VK_SHIFT);
+        var altDown = IsDown(VIRTUAL_KEY.VK_LMENU)
+            || IsDown(VIRTUAL_KEY.VK_RMENU)
+            || IsDown(VIRTUAL_KEY.VK_MENU);
 
-        if (vkKeyCode is VIRTUAL_KEY.VK_LSHIFT or VIRTUAL_KEY.VK_RSHIFT)
-            _shiftDepressed = isKeyDown;
-
-        if (vkKeyCode is VIRTUAL_KEY.VK_LMENU or VIRTUAL_KEY.VK_RMENU)
-            _altDepressed = isKeyDown;
-
-        if (!_ctrlDepressed && !_shiftDepressed && !_altDepressed)
-            return false;
-
-        var result = false;
         var flags = settings.Store.SmartFnLockFlags;
+        var result = false;
 
         if (flags.HasFlag(ModifierKey.Ctrl))
-            result |= _ctrlDepressed;
+            result |= ctrlDown;
 
         if (flags.HasFlag(ModifierKey.Shift))
-            result |= _shiftDepressed;
+            result |= shiftDown;
 
         if (flags.HasFlag(ModifierKey.Alt))
-            result |= _altDepressed;
+            result |= altDown;
 
-if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Modifier key is depressed: {result} [ctrl={_ctrlDepressed}, shift={_shiftDepressed}, alt={_altDepressed}, flags={flags}]");
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Modifier key is depressed: {result} [ctrl={ctrlDown}, shift={shiftDown}, alt={altDown}, flags={flags}]");
 
         return result;
     }
