@@ -620,6 +620,9 @@ _build_*/
 _test_*/
 _verify_out/
 _build-verify-*/
+
+# Local l10n cleanup archive (orphans / unsupported cultures extracted for review)
+_obsolete_translations/
 *.result.txt
 *.smoke.txt
 *.stdout
