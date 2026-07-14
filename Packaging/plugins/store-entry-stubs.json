@@ -1,5 +1,5 @@
 {
-  "note": "Local planning stubs only. Published store.json lives in UniversalDeviceToolkit-Plugins.",
+  "note": "Local planning stubs only. Published store.json lives in UniversalDeviceToolkit-Plugins. Host app version: UniversalDeviceToolkit/Directory.Build.props (Major/Minor/Patch). Plugin versions: each plugin's plugin.manifest.json; bump via llt-plugin.cmd bump-version.",
   "lastUpdated": "2026-07-14",
   "plugins": [
     {
