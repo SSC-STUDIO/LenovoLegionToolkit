@@ -1,11 +1,11 @@
 using System.Text.Json;
 using System;
 using System.IO;
-using LenovoLegionToolkit.Plugins.Shared;
-using LenovoLegionToolkit.Plugins.BatteryHealth;
+using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.BatteryHealth;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth.Tests;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth.Tests;
 
 public class BatteryHealthSettingsTests
 {

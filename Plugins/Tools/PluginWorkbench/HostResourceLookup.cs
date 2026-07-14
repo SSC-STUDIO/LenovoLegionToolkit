@@ -60,6 +60,6 @@ internal static class HostResourceLookup
                 return null;
         }
 
-        return assembly.GetType("LenovoLegionToolkit.WPF.Resources.Resource", throwOnError: false, ignoreCase: false);
+        return assembly.GetType("UniversalDeviceToolkit.WPF.Resources.Resource", throwOnError: false, ignoreCase: false);
     }
 }

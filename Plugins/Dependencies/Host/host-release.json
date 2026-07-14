@@ -1,11 +1,11 @@
 {
-  "hostVersion": "4.2.1",
-  "hostTag": "v4.2.1",
-  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v4.2.1/UniversalDeviceToolkit_v4.2.1_win-x64.zip",
+  "hostVersion": "5.0.0",
+  "hostTag": "v5.0.0",
+  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v5.0.0/UniversalDeviceToolkit_v5.0.0_win-x64.zip",
   "artifacts": {
-    "package": "UniversalDeviceToolkit_v4.2.1_win-x64.zip",
-    "lib": "LenovoLegionToolkit.Lib.dll",
-    "libPlugins": "LenovoLegionToolkit.Lib.Plugins.dll",
+    "package": "UniversalDeviceToolkit_v5.0.0_win-x64.zip",
+    "lib": "UniversalDeviceToolkit.Lib.dll",
+    "libPlugins": "UniversalDeviceToolkit.Lib.Plugins.dll",
     "wpf": "Universal Device Toolkit.dll",
     "transitiveDependencies": [
       "Serilog.dll",
@@ -14,5 +14,5 @@
     ]
   },
   "source": "vendored-host-build",
-  "notes": "Refresh these host references from a matching UniversalDeviceToolkit build before shipping plugin changes that depend on new host APIs. Serilog 4.3.0 is a transitive dependency of LenovoLegionToolkit.Lib v4.2.1 and must be vendored alongside the host binaries."
+  "notes": "Phase 3 ABI hard cutover: host Lib/Lib.Plugins assembly identities are UniversalDeviceToolkit.Lib / UniversalDeviceToolkit.Lib.Plugins. Refresh these host references from a matching UniversalDeviceToolkit build before shipping plugin changes that depend on new host APIs. Serilog is a transitive dependency of UniversalDeviceToolkit.Lib and must be vendored alongside the host binaries."
 }

@@ -6,14 +6,14 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Plugins.Shared;
-using LenovoLegionToolkit.Plugins.ViveTool.Resources;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
-using LenovoLegionToolkit.Plugins.ViveTool.Services.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
 using Microsoft.Win32;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool;
+namespace UniversalDeviceToolkit.Plugins.ViveTool;
 
 public partial class ViveToolSettingsPage
 {
@@ -318,7 +318,7 @@ public partial class ViveToolSettingsPage
             // Start download
             var progress = new Progress<long>(bytesDownloaded =>
             {
-                const long estimatedTotalBytes = LenovoLegionToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
+                const long estimatedTotalBytes = UniversalDeviceToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
                 _downloadProgress = (int)Math.Min(100, bytesDownloaded * 100 / estimatedTotalBytes);
                 _downloadProgressBar?.Value = _downloadProgress;
             });

@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 public class ViveToolServicePathTests
 {

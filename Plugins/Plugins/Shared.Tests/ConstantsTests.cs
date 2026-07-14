@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 public class ConstantsTests
 {

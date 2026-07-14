@@ -7,7 +7,7 @@ using Xunit;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 public class ProcessRunnerTests
 {

@@ -1,7 +1,7 @@
-﻿using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.Plugins.Shared;
+﻿using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth;
 
 [Plugin(
     id: "battery-health",

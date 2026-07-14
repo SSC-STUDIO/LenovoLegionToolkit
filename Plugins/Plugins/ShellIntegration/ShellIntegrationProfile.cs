@@ -3,7 +3,7 @@ using System.Globalization;
 #nullable enable
 
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
 public enum ShellVisualEffect
 {

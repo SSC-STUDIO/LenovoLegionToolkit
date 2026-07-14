@@ -1,9 +1,9 @@
 using System;
-using LenovoLegionToolkit.Plugins.BatteryHealth.Resources;
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.BatteryHealth.Resources;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth.Tests;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth.Tests;
 
 [Collection("BatteryHealthResourceCulture")]
 public sealed class BatteryHealthTextTests : LocalizedTextTestsBase

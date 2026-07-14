@@ -9,23 +9,23 @@
     <Version>1.0.13</Version>
     <FileVersion>1.0.13</FileVersion>
     <AssemblyVersion>1.0.13</AssemblyVersion>
-    <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration</AssemblyName>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ShellIntegration\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -35,11 +35,11 @@
   "lifecycle": "Migrated",
   "contributes": {
     "featurePage": {
-      "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthFeaturePage",
+      "class": "UniversalDeviceToolkit.Plugins.BatteryHealth.BatteryHealthFeaturePage",
       "title": "Battery Health (Legacy)"
     },
     "settingsPage": {
-      "class": "LenovoLegionToolkit.Plugins.BatteryHealth.BatteryHealthSettingsPage",
+      "class": "UniversalDeviceToolkit.Plugins.BatteryHealth.BatteryHealthSettingsPage",
       "title": "Battery Health (Legacy) Settings"
     },
     "runtime": null,
@@ -48,8 +48,8 @@
   "package": {
     "assetName": "battery-health-v1.0.0.zip",
     "requiredFiles": [
-      "LenovoLegionToolkit.Plugins.BatteryHealth.dll",
-      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "UniversalDeviceToolkit.Plugins.BatteryHealth.dll",
+      "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
       "plugin.manifest.json"
     ]

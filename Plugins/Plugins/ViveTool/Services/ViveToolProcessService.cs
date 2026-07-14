@@ -2,10 +2,10 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
 /// <summary>
 /// Handles process execution for ViVeTool commands.

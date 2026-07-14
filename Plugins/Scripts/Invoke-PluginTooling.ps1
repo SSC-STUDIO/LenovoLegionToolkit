@@ -23,7 +23,7 @@ function Get-InputLastWriteUtc {
         (Join-Path $repoRoot "Directory.Build.targets"),
         (Join-Path $repoRoot "Tools\PluginTooling.Cli\PluginTooling.Cli.csproj"),
         (Join-Path $repoRoot "Tools\PluginTooling.Core\PluginTooling.Core.csproj"),
-        (Join-Path $repoRoot "SDK\LenovoLegionToolkit.Plugins.SDK.csproj")
+        (Join-Path $repoRoot "SDK\UniversalDeviceToolkit.Plugins.SDK.csproj")
     )
 
     $inputs += Get-ChildItem -Path (Join-Path $repoRoot "Tools\PluginTooling.Cli") -Filter "*.cs" -File -Recurse | ForEach-Object { $_.FullName }

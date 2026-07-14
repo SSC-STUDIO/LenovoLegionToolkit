@@ -2,15 +2,15 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.Shared;
+namespace UniversalDeviceToolkit.Plugins.Shared;
 
 /// <summary>
 /// Provides host-agnostic access to WPF notification helpers (Snackbar, MessageBox, Localization)
 /// by resolving the corresponding types from the host application at runtime via reflection.
 /// Falls back to basic <see cref="System.Windows.MessageBox"/> when the host helpers are unavailable.
-/// This eliminates the hard compile-time dependency on LenovoLegionToolkit.WPF assembly.
+/// This eliminates the hard compile-time dependency on UniversalDeviceToolkit.WPF assembly.
 /// </summary>
 public static class WpfHostNotifications
 {
@@ -30,10 +30,10 @@ public static class WpfHostNotifications
                 return;
             }
 
-            SnackbarHelperType = hostAssembly.GetType("LenovoLegionToolkit.WPF.Utils.SnackbarHelper", throwOnError: false, ignoreCase: false);
-            MessageBoxHelperType = hostAssembly.GetType("LenovoLegionToolkit.WPF.Utils.MessageBoxHelper", throwOnError: false, ignoreCase: false);
-            LocalizationHelperType = hostAssembly.GetType("LenovoLegionToolkit.WPF.Utils.LocalizationHelper", throwOnError: false, ignoreCase: false);
-            SnackbarTypeType = hostAssembly.GetType("LenovoLegionToolkit.WPF.Utils.SnackbarType", throwOnError: false, ignoreCase: false);
+            SnackbarHelperType = hostAssembly.GetType("UniversalDeviceToolkit.WPF.Utils.SnackbarHelper", throwOnError: false, ignoreCase: false);
+            MessageBoxHelperType = hostAssembly.GetType("UniversalDeviceToolkit.WPF.Utils.MessageBoxHelper", throwOnError: false, ignoreCase: false);
+            LocalizationHelperType = hostAssembly.GetType("UniversalDeviceToolkit.WPF.Utils.LocalizationHelper", throwOnError: false, ignoreCase: false);
+            SnackbarTypeType = hostAssembly.GetType("UniversalDeviceToolkit.WPF.Utils.SnackbarType", throwOnError: false, ignoreCase: false);
 
             if (SnackbarTypeType is not null)
             {

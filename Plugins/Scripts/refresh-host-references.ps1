@@ -9,8 +9,8 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $targetDir = Join-Path $repoRoot "Dependencies\\Host"
 
 $requiredFiles = @(
-    "LenovoLegionToolkit.Lib.dll",
-    "LenovoLegionToolkit.Lib.Plugins.dll",
+    "UniversalDeviceToolkit.Lib.dll",
+    "UniversalDeviceToolkit.Lib.Plugins.dll",
     "Universal Device Toolkit.dll",
     "Serilog.dll",
     "Serilog.Sinks.Async.dll",

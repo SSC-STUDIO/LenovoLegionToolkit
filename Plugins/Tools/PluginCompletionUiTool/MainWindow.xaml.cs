@@ -108,7 +108,7 @@ public partial class MainWindow : Window
     {
         using var dialog = new FolderBrowserDialog
         {
-            Description = "Select LenovoLegionToolkit-Plugins repository root"
+            Description = "Select UniversalDeviceToolkit-Plugins repository root"
         };
 
         var currentPath = RepositoryPathTextBox.Text.Trim();
@@ -262,7 +262,7 @@ public partial class MainWindow : Window
         for (var depth = 0; depth < 10 && directory is not null; depth++)
         {
             var storePath = Path.Combine(directory.FullName, "store.json");
-            var solutionPath = Path.Combine(directory.FullName, "LenovoLegionToolkit-Plugins.sln");
+            var solutionPath = Path.Combine(directory.FullName, "UniversalDeviceToolkit-Plugins.sln");
             var pluginsDirectory = Path.Combine(directory.FullName, "Plugins");
             var toolDirectory = Path.Combine(directory.FullName, @"Tools\PluginCompletionUiTool");
             if (File.Exists(storePath) &&

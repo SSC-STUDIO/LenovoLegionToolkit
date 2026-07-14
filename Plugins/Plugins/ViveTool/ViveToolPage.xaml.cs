@@ -13,15 +13,15 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Plugins.Shared;
-using LenovoLegionToolkit.Plugins.ViveTool.Resources;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
-using LenovoLegionToolkit.Plugins.ViveTool.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool;
+namespace UniversalDeviceToolkit.Plugins.ViveTool;
 
 /// <summary>
 /// ViVeTool Page - Windows Feature Flags Management
@@ -186,7 +186,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         var availabilityVisibilityConverter = new BooleanToVisibilityConverter();
         var inverseAvailabilityVisibilityConverter =
-            new LenovoLegionToolkit.Plugins.ViveTool.Utils.InverseBooleanToVisibilityConverter();
+            new UniversalDeviceToolkit.Plugins.ViveTool.Utils.InverseBooleanToVisibilityConverter();
 
         _searchTextBox = new Wpf.Ui.Controls.TextBox
         {
@@ -750,7 +750,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             {
                 // Calculate progress percentage (we don't have total size, so we'll use a heuristic)
                 // ViVeTool is around 2-3 MB, so we'll assume 3 MB for estimation
-                const long estimatedTotalBytes = LenovoLegionToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
+                const long estimatedTotalBytes = UniversalDeviceToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
                 double percent = Math.Min(100, (bytesDownloaded * 100.0) / estimatedTotalBytes);
 
                 DownloadProgress = percent;

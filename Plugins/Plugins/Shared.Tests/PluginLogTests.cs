@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 [Collection("PluginLogSerial")]
 public class PluginLogTests : IDisposable

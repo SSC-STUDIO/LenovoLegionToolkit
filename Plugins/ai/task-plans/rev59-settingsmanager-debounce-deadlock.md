@@ -20,7 +20,7 @@ HEAD aa79184 on origin/master. 4 prior commits: ViveTool fix (e1478b6), Update d
 
 ## Verification
 - Focused: `dotnet test Plugins/Shared.Tests/Shared.Tests.csproj -c Release --filter "SaveWithDebounce_ConcurrentWithSaveAsync_DoesNotDeadlock"`
-- Full gate: `dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo`
+- Full gate: `dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo`
 - Canonical: `powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1`
 
 ## Risks
@@ -41,7 +41,7 @@ Files changed:
 
 Verification:
 - Focused: dotnet test Plugins/Shared.Tests/Shared.Tests.csproj -c Release --filter "SaveWithDebounce_ConcurrentWithSaveAsync_DoesNotDeadlock" — 1/1 passed, 27ms, exit 0
-- Full gate: dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo — 548 pass, 2 skip, 0 fail, exit 0
+- Full gate: dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo — 548 pass, 2 skip, 0 fail, exit 0
 - Canonical: powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1 — EXIT_CODE=0, build 0 errors 0 warnings
 - Ad-hoc script: hermes-verify-rev56-debounce-deadlock.sh — FOCUSED_EXIT=0, GATE_EXIT=0, BUILD_EXIT=0, ALL PASS
 

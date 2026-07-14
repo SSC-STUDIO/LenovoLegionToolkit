@@ -26,7 +26,7 @@ public sealed class PluginManifestMigrator
             }
 
             EnsureRequiredFile(unifiedManifest, $"{plugin.ExpectedAssemblyName}.dll");
-            EnsureRequiredFile(unifiedManifest, "LenovoLegionToolkit.Plugins.SDK.dll");
+            EnsureRequiredFile(unifiedManifest, "UniversalDeviceToolkit.Plugins.SDK.dll");
             EnsureRequiredFile(unifiedManifest, "plugin.json");
             EnsureRequiredFile(unifiedManifest, "plugin.manifest.json");
 

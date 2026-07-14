@@ -31,7 +31,7 @@
 - 方法名：`public void StartRuntime()`
 - 属性名：`public string PluginName`
 - 公共字段：`public const int DefaultTimeout`
-- 命名空间：`namespace LenovoLegionToolkit.Plugins.ViveTool`
+- 命名空间：`namespace UniversalDeviceToolkit.Plugins.ViveTool`
 
 ### camelCase（驼峰命名）
 
@@ -53,9 +53,9 @@
 ```csharp
 using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
 public class ViveToolFeatureService : IViveToolFeatureService
 {
@@ -82,7 +82,7 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using Wpf.Ui;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 ```
 
 ## 异步编程
@@ -516,7 +516,7 @@ public class BadExample
 ### 编译检查
 
 ```bash
-dotnet build LenovoLegionToolkit-Plugins.sln
+dotnet build UniversalDeviceToolkit-Plugins.sln
 ```
 
 ### 测试验证
@@ -528,8 +528,8 @@ dotnet test --collect:"XPlat Code Coverage"
 ### 完成检查
 
 ```bash
-dotnet build .\LenovoLegionToolkit-Plugins.sln -c Release
-dotnet test .\LenovoLegionToolkit-Plugins.sln -c Release
+dotnet build .\UniversalDeviceToolkit-Plugins.sln -c Release
+dotnet test .\UniversalDeviceToolkit-Plugins.sln -c Release
 ```
 
 ### 代码分析

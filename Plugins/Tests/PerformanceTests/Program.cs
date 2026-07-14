@@ -6,9 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.Tests.PerformanceTests;
+namespace UniversalDeviceToolkit.Plugins.Tests.PerformanceTests;
 
 /// <summary>
 /// Performance benchmarks for plugin loading and settings management.
@@ -27,7 +27,7 @@ public class PluginLoadBenchmarks
     {
         var testDirectory = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "LenovoLegionToolkit",
+            "UniversalDeviceToolkit",
             "plugins",
             _testPluginName);
 
@@ -47,7 +47,7 @@ public class PluginLoadBenchmarks
     {
         var testDirectory = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "LenovoLegionToolkit",
+            "UniversalDeviceToolkit",
             "plugins",
             _testPluginName);
 

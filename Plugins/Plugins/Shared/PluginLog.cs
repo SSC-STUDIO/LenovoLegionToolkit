@@ -1,12 +1,12 @@
 using System;
 
-namespace LenovoLegionToolkit.Plugins.Shared;
+namespace UniversalDeviceToolkit.Plugins.Shared;
 
 /// <summary>
 /// Plugin-side logging façade. Plugins call <see cref="Trace"/> and <see cref="Error"/>
 /// without depending on any concrete host logger. The hosting plugin must call
 /// <see cref="Configure"/> once at startup to bridge to the real logger
-/// (e.g. LenovoLegionToolkit.Lib.Utils.Log.Instance).
+/// (e.g. UniversalDeviceToolkit.Lib.Utils.Log.Instance).
 /// </summary>
 public static class PluginLog
 {

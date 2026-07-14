@@ -1,8 +1,8 @@
 using System;
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration.Tests;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration.Tests;
 
 [Collection("ShellIntegrationResourceCulture")]
 public class ShellIntegrationTextTests : LocalizedTextTestsBase

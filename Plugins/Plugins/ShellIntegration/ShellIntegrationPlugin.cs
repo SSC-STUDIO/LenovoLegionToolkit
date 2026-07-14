@@ -7,13 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Plugins.Shared;
-using LenovoLegionToolkit.Plugins.ShellIntegration.Resources;
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.ShellIntegration.Resources;
+using UniversalDeviceToolkit.Plugins.SDK;
 using Microsoft.Win32;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
 [Plugin(
     id: "shell-integration",
@@ -24,7 +24,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration;
     MinimumHostVersion = "3.6.1",
     Icon = "Folder24"
 )]
-public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
+public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
 {
     private const string PluginId = "shell-integration";
     private const string ShellClsid = "{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}";
@@ -62,8 +62,8 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     static ShellIntegrationPlugin()
     {
         PluginLog.Configure(
-            isTraceEnabled: () => LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
-            trace: (message, exception) => LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
+            isTraceEnabled: () => UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
+            trace: (message, exception) => UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
     }
 
     public override string Id => PluginId;
@@ -723,7 +723,7 @@ public class ShellIntegrationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     }
 }
 
-public class ShellIntegrationSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
+public class ShellIntegrationSettingsPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
 {
     private readonly ShellIntegrationPlugin _plugin;
 

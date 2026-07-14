@@ -19,7 +19,7 @@ public sealed class PluginRepository
         var rootPath = Path.GetFullPath(repositoryRoot);
         EnsureRepositoryRoot(rootPath);
 
-        var solutionPath = Path.Combine(rootPath, "LenovoLegionToolkit-Plugins.sln");
+        var solutionPath = Path.Combine(rootPath, "UniversalDeviceToolkit-Plugins.sln");
         var pluginsRoot = Path.Combine(rootPath, "Plugins");
         var hostDependenciesRoot = Path.Combine(rootPath, "Dependencies", "Host");
         var storePath = Path.Combine(rootPath, "store.json");
@@ -40,7 +40,7 @@ public sealed class PluginRepository
         var current = new DirectoryInfo(Path.GetFullPath(startPath));
         for (var i = 0; i < 10 && current is not null; i++)
         {
-            if (File.Exists(Path.Combine(current.FullName, "LenovoLegionToolkit-Plugins.sln")) &&
+            if (File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit-Plugins.sln")) &&
                 Directory.Exists(Path.Combine(current.FullName, "Plugins")))
             {
                 return current.FullName;
@@ -49,7 +49,7 @@ public sealed class PluginRepository
             current = current.Parent;
         }
 
-        throw new DirectoryNotFoundException($"Could not locate LenovoLegionToolkit-Plugins repository root from '{startPath}'.");
+        throw new DirectoryNotFoundException($"Could not locate UniversalDeviceToolkit-Plugins repository root from '{startPath}'.");
     }
 
     public IReadOnlyList<string> ResolveTargetPluginIds(RepositoryContext repository, IReadOnlyList<string> pluginIds)
@@ -135,10 +135,10 @@ public sealed class PluginRepository
 
     public void EnsureRepositoryRoot(string rootPath)
     {
-        if (!File.Exists(Path.Combine(rootPath, "LenovoLegionToolkit-Plugins.sln")) ||
+        if (!File.Exists(Path.Combine(rootPath, "UniversalDeviceToolkit-Plugins.sln")) ||
             !Directory.Exists(Path.Combine(rootPath, "Plugins")))
         {
-            throw new DirectoryNotFoundException($"Path is not LenovoLegionToolkit-Plugins repository root: {rootPath}");
+            throw new DirectoryNotFoundException($"Path is not UniversalDeviceToolkit-Plugins repository root: {rootPath}");
         }
     }
 
@@ -260,8 +260,8 @@ public sealed class PluginRepository
                 AssetName = packageAssetName,
                 RequiredFiles =
                 [
-                    $"LenovoLegionToolkit.Plugins.{folderName}.dll",
-                    "LenovoLegionToolkit.Plugins.SDK.dll",
+                    $"UniversalDeviceToolkit.Plugins.{folderName}.dll",
+                    "UniversalDeviceToolkit.Plugins.SDK.dll",
                     "plugin.json",
                     "plugin.manifest.json",
                 ],
@@ -282,7 +282,7 @@ public sealed class PluginRepository
         {
             unified.Contributes.FeaturePage = new PluginPageContribution
             {
-                Class = $"LenovoLegionToolkit.Plugins.{namespaceSegment}.{namespaceSegment}FeaturePage",
+                Class = $"UniversalDeviceToolkit.Plugins.{namespaceSegment}.{namespaceSegment}FeaturePage",
                 Title = manifest.Name,
             };
         }
@@ -291,7 +291,7 @@ public sealed class PluginRepository
         {
             unified.Contributes.SettingsPage = new PluginPageContribution
             {
-                Class = $"LenovoLegionToolkit.Plugins.{namespaceSegment}.{namespaceSegment}SettingsPage",
+                Class = $"UniversalDeviceToolkit.Plugins.{namespaceSegment}.{namespaceSegment}SettingsPage",
                 Title = $"{manifest.Name} Settings",
             };
         }
@@ -300,7 +300,7 @@ public sealed class PluginRepository
         {
             unified.Contributes.Runtime = new PluginRuntimeContribution
             {
-                Class = $"LenovoLegionToolkit.Plugins.{namespaceSegment}.{namespaceSegment}Runtime",
+                Class = $"UniversalDeviceToolkit.Plugins.{namespaceSegment}.{namespaceSegment}Runtime",
             };
         }
 

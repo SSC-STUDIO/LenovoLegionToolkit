@@ -1,8 +1,8 @@
 using System;
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse.Tests;
 
 [Collection("CustomMouseResourceCulture")]
 public class CustomMouseTextTests : LocalizedTextTestsBase

@@ -10,23 +10,23 @@
     <Version>1.2.3</Version>
     <FileVersion>1.2.3</FileVersion>
     <AssemblyVersion>1.2.3</AssemblyVersion>
-    <AssemblyName>LenovoLegionToolkit.Plugins.ViveTool</AssemblyName>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

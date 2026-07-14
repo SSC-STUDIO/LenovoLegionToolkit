@@ -7,9 +7,9 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
 public partial class ShellIntegrationSettingsControl : UserControl
 {
@@ -118,7 +118,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
             return;
         }
 
-        var allowSystemActions = LenovoLegionToolkit.Plugins.SDK.PluginHostContext.Current.AllowSystemActions;
+        var allowSystemActions = UniversalDeviceToolkit.Plugins.SDK.PluginHostContext.Current.AllowSystemActions;
         var installed = _plugin.IsShellInstalled();
         var shellFolder = _plugin.GetShellFolderPath();
         var shellConfigPath = _plugin.GetShellConfigPath();
@@ -136,7 +136,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
         var canOpenShellFolder = !string.IsNullOrWhiteSpace(shellFolder);
         var canOpenConfig = configExists;
         var canManageConfig = installed;
-        var canOpenStyleSettings = canManageShell || LenovoLegionToolkit.Plugins.SDK.PluginHostContext.Current.Mode == LenovoLegionToolkit.Plugins.SDK.PluginHostMode.Preview;
+        var canOpenStyleSettings = canManageShell || UniversalDeviceToolkit.Plugins.SDK.PluginHostContext.Current.Mode == UniversalDeviceToolkit.Plugins.SDK.PluginHostMode.Preview;
 
         _registrationValueTextBlock?.Text = installed
                 ? (isRegistered ? ShellIntegrationText.RegisteredState : ShellIntegrationText.MissingState)

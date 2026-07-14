@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Threading;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 /// <summary>
 /// Tests for WpfFallbackHelper that don't require WPF UI instantiation.

@@ -1,11 +1,11 @@
-﻿using LenovoLegionToolkit.Plugins.NetworkAcceleration;
-using LenovoLegionToolkit.Plugins.TestCommon;
+﻿using UniversalDeviceToolkit.Plugins.NetworkAcceleration;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration.Tests;
 
 [Collection("NetworkAccelerationResourceCulture")]
 public class NetworkAccelerationThreadSafetyTests

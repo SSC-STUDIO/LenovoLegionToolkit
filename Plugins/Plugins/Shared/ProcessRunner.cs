@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace LenovoLegionToolkit.Plugins.Shared;
+namespace UniversalDeviceToolkit.Plugins.Shared;
 
 /// <summary>
 /// Safe process execution wrapper with input validation and security checks.

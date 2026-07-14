@@ -1,8 +1,8 @@
 ﻿using System;
-using LenovoLegionToolkit.Plugins.ShellIntegration;
+using UniversalDeviceToolkit.Plugins.ShellIntegration;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration.Tests;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration.Tests;
 
 public class ShellIntegrationProfileTests
 {

@@ -9,7 +9,7 @@ using Xunit;
 using Moq;
 using Microsoft.Extensions.Logging;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 /// <summary>
 /// Additional edge-case tests for SettingsManager targeting corrupted file recovery,

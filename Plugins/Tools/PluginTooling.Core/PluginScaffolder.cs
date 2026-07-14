@@ -42,7 +42,7 @@ public sealed class PluginScaffolder
             ? $"{request.DisplayName} plugin for Lenovo Legion Toolkit"
             : request.Description.Trim();
 
-        var pluginProjectPath = Path.Combine(pluginDirectory, $"LenovoLegionToolkit.Plugins.{request.FolderName}.csproj");
+        var pluginProjectPath = Path.Combine(pluginDirectory, $"UniversalDeviceToolkit.Plugins.{request.FolderName}.csproj");
         var testProjectPath = Path.Combine(testsDirectory, $"{request.FolderName}.Tests.csproj");
         var legacyManifest = BuildPluginManifest(request);
         var unifiedManifest = PluginRepository.CreateUnifiedManifest(legacyManifest, null, request.FolderName, archetype);
@@ -159,19 +159,19 @@ public sealed class PluginScaffolder
     <Version>1.0.0</Version>
     <FileVersion>1.0.0</FileVersion>
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <AssemblyName>LenovoLegionToolkit.Plugins.{{request.FolderName}}</AssemblyName>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.{{request.FolderName}}</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.{{request.FolderName}}\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.{{request.FolderName}}\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -209,8 +209,8 @@ public sealed class PluginScaffolder
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <RootNamespace>LenovoLegionToolkit.Plugins.{{namespaceSegment}}.Tests</RootNamespace>
-    <AssemblyName>LenovoLegionToolkit.Plugins.{{namespaceSegment}}.Tests</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.Tests</RootNamespace>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.Tests</AssemblyName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -237,12 +237,12 @@ public sealed class PluginScaffolder
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\{{request.FolderName}}\LenovoLegionToolkit.Plugins.{{request.FolderName}}.csproj" />
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\{{request.FolderName}}\UniversalDeviceToolkit.Plugins.{{request.FolderName}}.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
-    <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+    <Reference Include="UniversalDeviceToolkit.Lib">
+      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>
@@ -281,9 +281,9 @@ public sealed class PluginScaffolder
     private static string BuildTextClass(string namespaceSegment, string classPrefix, ScaffoldRequest request)
     {
         return $$"""
-using LenovoLegionToolkit.Plugins.{{namespaceSegment}}.Resources;
+using UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.Resources;
 
-namespace LenovoLegionToolkit.Plugins.{{namespaceSegment}};
+namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}};
 
 public static class {{classPrefix}}Text
 {
@@ -310,15 +310,15 @@ public static class {{classPrefix}}Text
         var optimization = archetype.HasOptimizationCategory
             ? $$"""
 
-    public override LenovoLegionToolkit.Lib.Optimization.WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
+    public override UniversalDeviceToolkit.Lib.Optimization.WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {
-        return new LenovoLegionToolkit.Lib.Optimization.WindowsOptimizationCategoryDefinition(
+        return new UniversalDeviceToolkit.Lib.Optimization.WindowsOptimizationCategoryDefinition(
             "{{request.PluginId}}.optimization",
             "{{classPrefix}}_Optimization_Title",
             "{{classPrefix}}_Optimization_Description",
             new[]
             {
-                new LenovoLegionToolkit.Lib.Optimization.WindowsOptimizationActionDefinition(
+                new UniversalDeviceToolkit.Lib.Optimization.WindowsOptimizationActionDefinition(
                     "{{request.PluginId}}.optimization.enable",
                     "{{classPrefix}}_Optimization_Enable_Title",
                     "{{classPrefix}}_Optimization_Enable_Description",
@@ -331,9 +331,9 @@ public static class {{classPrefix}}Text
             : string.Empty;
 
         return $$"""
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.SDK;
 
-namespace LenovoLegionToolkit.Plugins.{{namespaceSegment}};
+namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}};
 
 [Plugin(
     id: "{{request.PluginId}}",
@@ -376,7 +376,7 @@ public sealed class {{classPrefix}}SettingsPage : IPluginPage
     private static string BuildContentControlXaml(string namespaceSegment, string className, string title, string description)
     {
         return $$"""
-<UserControl x:Class="LenovoLegionToolkit.Plugins.{{namespaceSegment}}.{{className}}"
+<UserControl x:Class="UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.{{className}}"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Border Padding="24"
@@ -403,7 +403,7 @@ public sealed class {{classPrefix}}SettingsPage : IPluginPage
         return $$"""
 using System.Windows.Controls;
 
-namespace LenovoLegionToolkit.Plugins.{{namespaceSegment}};
+namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}};
 
 public partial class {{classPrefix}}{{suffix}} : UserControl
 {
@@ -418,7 +418,7 @@ public partial class {{classPrefix}}{{suffix}} : UserControl
     private static string BuildRuntimeClass(string namespaceSegment, string classPrefix)
     {
         return $$"""
-namespace LenovoLegionToolkit.Plugins.{{namespaceSegment}};
+namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}};
 
 public sealed class {{classPrefix}}Runtime
 {
@@ -433,11 +433,11 @@ public sealed class {{classPrefix}}Runtime
     private static string BuildPluginTests(string namespaceSegment, string classPrefix, ScaffoldRequest request, ArchetypeDefinition archetype)
     {
         return $$"""
-using LenovoLegionToolkit.Plugins.{{namespaceSegment}};
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.{{namespaceSegment}};
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.{{namespaceSegment}}.Tests;
+namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.Tests;
 
 public class {{classPrefix}}PluginTests
 {
@@ -466,10 +466,10 @@ public class {{classPrefix}}PluginTests
     private static string BuildTextTests(string namespaceSegment, string classPrefix)
     {
         return $$"""
-using LenovoLegionToolkit.Plugins.{{namespaceSegment}}.Resources;
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.Resources;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 
-namespace LenovoLegionToolkit.Plugins.{{namespaceSegment}}.Tests;
+namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.Tests;
 
 public sealed class {{classPrefix}}TextTests : LocalizedTextTestsBase
 {

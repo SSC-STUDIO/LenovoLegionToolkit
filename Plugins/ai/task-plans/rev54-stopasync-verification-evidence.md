@@ -14,8 +14,8 @@ source fixes are verified correct and no new source edits are needed.
   1. `Plugins/NetworkAcceleration/NetworkAccelerationRuntime.cs` — async-over-sync fix
   2. `Plugins/NetworkAcceleration/NetworkAccelerationTelemetryService.cs` — semaphore thread safety fix
 - All other changes are ai/ documentation and test infrastructure.
-- Build baseline: `dotnet build LenovoLegionToolkit-Plugins.sln -c Release --nologo` exits 0 with 0 errors.
-- Test baseline: `dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo` exits 0 with 544 passed, 2 skipped, 0 failed.
+- Build baseline: `dotnet build UniversalDeviceToolkit-Plugins.sln -c Release --nologo` exits 0 with 0 errors.
+- Test baseline: `dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo` exits 0 with 544 passed, 2 skipped, 0 failed.
 
 ## Scope
 - Verify that both source fixes remain correct and no regressions have been introduced.
@@ -26,9 +26,9 @@ source fixes are verified correct and no new source edits are needed.
 
 ## Steps
 1. Create this plan file at `ai/task-plans/rev54-stopasync-verification-evidence.md`.
-2. Run `dotnet build LenovoLegionToolkit-Plugins.sln -c Release --nologo` and record exit code.
+2. Run `dotnet build UniversalDeviceToolkit-Plugins.sln -c Release --nologo` and record exit code.
 3. Run focused tests: `dotnet test "Plugins/NetworkAcceleration.Tests/NetworkAcceleration.Tests.csproj" -c Release --nologo --filter "Sampled_Event"`.
-4. Run full solution gate: `dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo`.
+4. Run full solution gate: `dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo`.
 5. Update this plan with the exact outputs from steps 2-4.
 6. State NO_NEW_EDIT_NEEDED with justification.
 
@@ -37,7 +37,7 @@ Commands executed and results (collected in this turn, revision 54):
 
 ### Build
 ```
-dotnet build LenovoLegionToolkit-Plugins.sln -c Release --nologo
+dotnet build UniversalDeviceToolkit-Plugins.sln -c Release --nologo
 ```
 Exit code: 0 | Error count: 0 | Duration: 3.35s
 Output: 已成功生成. 0 个警告, 0 个错误.
@@ -53,7 +53,7 @@ Exit code: 0 | 3 passed, 0 failed, 0 skipped | Duration: 4s
 
 ### Full solution gate
 ```
-dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo
+dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo
 ```
 Exit code: 0
 Results by project:

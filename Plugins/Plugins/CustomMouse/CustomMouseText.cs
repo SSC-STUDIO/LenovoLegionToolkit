@@ -3,7 +3,7 @@ using System.Globalization;
 #nullable enable
 
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 
 public static class CustomMouseText
 {
@@ -65,7 +65,7 @@ public static class CustomMouseText
     }
 
     private static readonly System.Resources.ResourceManager ResourceManager =
-        new("LenovoLegionToolkit.Plugins.CustomMouse.Resources.Resource", typeof(CustomMouseText).Assembly);
+        new("UniversalDeviceToolkit.Plugins.CustomMouse.Resources.Resource", typeof(CustomMouseText).Assembly);
 
     private static string T(string key, string fallback)
     {

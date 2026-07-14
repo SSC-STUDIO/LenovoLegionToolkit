@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <RootNamespace>LenovoLegionToolkit.Plugins.BatteryHealth.Tests</RootNamespace>
-    <AssemblyName>LenovoLegionToolkit.Plugins.BatteryHealth.Tests</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Plugins.BatteryHealth.Tests</RootNamespace>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.BatteryHealth.Tests</AssemblyName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -30,13 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BatteryHealth\LenovoLegionToolkit.Plugins.BatteryHealth.csproj" />
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\BatteryHealth\UniversalDeviceToolkit.Plugins.BatteryHealth.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
     <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
-    <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+    <Reference Include="UniversalDeviceToolkit.Lib">
+      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

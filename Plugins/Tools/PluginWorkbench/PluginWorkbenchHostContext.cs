@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.SDK;
 
 namespace PluginWorkbench;
 

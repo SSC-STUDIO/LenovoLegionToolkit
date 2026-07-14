@@ -22,7 +22,7 @@ Fix a lock-order inversion deadlock in `SettingsManager<T>.Update()` that could 
 
 ## Verification
 - Focused: `dotnet test Plugins/Shared.Tests/Shared.Tests.csproj -c Release --nologo --filter "Update_ConcurrentWithSaveAsync"` → exit 0, 1/1 passed
-- Full gate: `dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo` → exit 0, 0 failures
+- Full gate: `dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo` → exit 0, 0 failures
 - Canonical: `powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1` → exit 0
 
 ## Risks
@@ -46,7 +46,7 @@ Stop after the deadlock fix is verified and published.
 - `Plugins/Shared.Tests/SettingsManagerEdgeCaseTests.cs` — added `Update_ConcurrentWithSaveAsync_DoesNotDeadlock` regression test
 
 **Verification results:**
-- `dotnet build LenovoLegionToolkit-Plugins.sln -c Release --nologo` → exit 0, 0 errors, 0 warnings
+- `dotnet build UniversalDeviceToolkit-Plugins.sln -c Release --nologo` → exit 0, 0 errors, 0 warnings
 - `dotnet test Plugins/Shared.Tests/Shared.Tests.csproj -c Release --nologo --filter "Update_ConcurrentWithSaveAsync"` → exit 0, 1/1 passed (879 ms)
-- `dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo` → exit 0, 0 failures (all projects passed)
+- `dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo` → exit 0, 0 failures (all projects passed)
 - `powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1` → exit 0

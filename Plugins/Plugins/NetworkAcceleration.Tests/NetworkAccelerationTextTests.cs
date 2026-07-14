@@ -1,8 +1,8 @@
 using System;
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration.Tests;
 
 [Collection("NetworkAccelerationResourceCulture")]
 public class NetworkAccelerationTextTests : LocalizedTextTestsBase

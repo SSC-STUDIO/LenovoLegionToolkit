@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Plugins.SDK;
+namespace UniversalDeviceToolkit.Plugins.SDK;
 
 /// <summary>
 /// Host-level services that plugins can use without hard-coding the main application UI.

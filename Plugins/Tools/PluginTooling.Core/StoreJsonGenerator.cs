@@ -26,14 +26,20 @@ public sealed class StoreJsonGenerator
         var store = new StoreDocument
         {
             LastUpdated = releaseDate.ToString("O"),
+            StoreVersion = repository.StoreDocument?.StoreVersion ?? "1.0.0",
             Plugins = [],
         };
 
         if (request.MergeExisting && repository.StoreDocument is not null)
         {
             store.LastUpdated = repository.StoreDocument.LastUpdated;
+            store.StoreVersion = string.IsNullOrWhiteSpace(repository.StoreDocument.StoreVersion)
+                ? store.StoreVersion
+                : repository.StoreDocument.StoreVersion;
             store.Plugins.AddRange(repository.StoreDocument.Plugins.Select(Clone));
         }
+
+        var storeContentChanged = false;
 
         foreach (var pluginId in selectedPluginIds.OrderBy(id => id, StringComparer.OrdinalIgnoreCase))
         {
@@ -76,6 +82,7 @@ public sealed class StoreJsonGenerator
             };
 
             var hasExistingEntry = existingEntries.TryGetValue(plugin.Manifest.Id, out var existingEntry);
+            ApplyLocalizationFields(generatedEntry, plugin.UnifiedManifest, existingEntry);
             if (request.MergeExisting &&
                 hasExistingEntry &&
                 existingEntry is not null &&
@@ -84,19 +91,38 @@ public sealed class StoreJsonGenerator
                 existingEntry.FileSize == generatedEntry.FileSize)
             {
                 generatedEntry.ReleaseDate = existingEntry.ReleaseDate;
+                generatedEntry.DownloadUrl = existingEntry.DownloadUrl;
+                generatedEntry.Changelog = existingEntry.Changelog;
             }
 
+            if (request.MergeExisting && existingEntry is not null)
+            {
+                PreserveIntegrityFields(generatedEntry, existingEntry);
+            }
+
+            var priorEntry = store.Plugins.FirstOrDefault(entry =>
+                string.Equals(entry.Id, generatedEntry.Id, StringComparison.OrdinalIgnoreCase));
             ReplaceOrAdd(store.Plugins, generatedEntry);
 
             if (!request.MergeExisting || !hasExistingEntry || existingEntry is null || !EntriesEqual(existingEntry, generatedEntry))
             {
                 store.LastUpdated = releaseDate.ToString("O");
+                storeContentChanged = true;
+            }
+            else if (priorEntry is not null && !EntriesEqual(priorEntry, generatedEntry))
+            {
+                storeContentChanged = true;
             }
         }
 
         store.Plugins = store.Plugins
             .OrderBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
             .ToList();
+
+        if (storeContentChanged)
+        {
+            store.StoreVersion = BumpStoreVersion(store.StoreVersion);
+        }
 
         return store;
     }
@@ -179,6 +205,9 @@ public sealed class StoreJsonGenerator
             Id = entry.Id,
             Name = entry.Name,
             Description = entry.Description,
+            LocalizedNames = CloneStringDictionary(entry.LocalizedNames),
+            LocalizedDescriptions = CloneStringDictionary(entry.LocalizedDescriptions),
+            LocalizedTags = CloneTagDictionary(entry.LocalizedTags),
             Author = entry.Author,
             Version = entry.Version,
             MinLltVersion = entry.MinLltVersion,
@@ -186,6 +215,8 @@ public sealed class StoreJsonGenerator
             DownloadUrl = entry.DownloadUrl,
             Changelog = entry.Changelog,
             FileSize = entry.FileSize,
+            FileHash = entry.FileHash,
+            ZipHash = entry.ZipHash,
             ReleaseDate = entry.ReleaseDate,
             RepositoryUrl = entry.RepositoryUrl,
             SupportedLanguages = entry.SupportedLanguages.ToList(),
@@ -202,6 +233,9 @@ public sealed class StoreJsonGenerator
         return string.Equals(left.Id, right.Id, StringComparison.Ordinal) &&
                string.Equals(left.Name, right.Name, StringComparison.Ordinal) &&
                string.Equals(left.Description, right.Description, StringComparison.Ordinal) &&
+               StringDictionariesEqual(left.LocalizedNames, right.LocalizedNames) &&
+               StringDictionariesEqual(left.LocalizedDescriptions, right.LocalizedDescriptions) &&
+               TagDictionariesEqual(left.LocalizedTags, right.LocalizedTags) &&
                string.Equals(left.Author, right.Author, StringComparison.Ordinal) &&
                string.Equals(left.Version, right.Version, StringComparison.Ordinal) &&
                string.Equals(left.MinLltVersion, right.MinLltVersion, StringComparison.Ordinal) &&
@@ -209,6 +243,8 @@ public sealed class StoreJsonGenerator
                string.Equals(left.DownloadUrl, right.DownloadUrl, StringComparison.Ordinal) &&
                string.Equals(left.Changelog, right.Changelog, StringComparison.Ordinal) &&
                left.FileSize == right.FileSize &&
+               string.Equals(left.FileHash, right.FileHash, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(left.ZipHash, right.ZipHash, StringComparison.OrdinalIgnoreCase) &&
                string.Equals(left.ReleaseDate, right.ReleaseDate, StringComparison.Ordinal) &&
                string.Equals(left.RepositoryUrl, right.RepositoryUrl, StringComparison.Ordinal) &&
                left.SupportedLanguages.SequenceEqual(right.SupportedLanguages, StringComparer.Ordinal) &&
@@ -217,6 +253,137 @@ public sealed class StoreJsonGenerator
                left.Dependencies.SequenceEqual(right.Dependencies, StringComparer.Ordinal) &&
                left.Tags.SequenceEqual(right.Tags, StringComparer.Ordinal) &&
                string.Equals(left.Status, right.Status, StringComparison.Ordinal);
+    }
+
+    private static void ApplyLocalizationFields(
+        StorePluginEntry entry,
+        UnifiedPluginManifest manifest,
+        StorePluginEntry? existingEntry)
+    {
+        entry.LocalizedNames = ResolveLocalizedStrings(
+            manifest.LocalizedNames ?? [],
+            existingEntry?.LocalizedNames,
+            entry.Name);
+
+        entry.LocalizedDescriptions = ResolveLocalizedStrings(
+            manifest.LocalizedDescriptions ?? [],
+            existingEntry?.LocalizedDescriptions,
+            entry.Description);
+
+        entry.LocalizedTags = ResolveLocalizedTags(
+            manifest.LocalizedTags ?? [],
+            existingEntry?.LocalizedTags,
+            entry.Tags);
+    }
+
+    private static void PreserveIntegrityFields(StorePluginEntry generated, StorePluginEntry existing)
+    {
+        if (string.IsNullOrWhiteSpace(generated.FileHash) && !string.IsNullOrWhiteSpace(existing.FileHash))
+            generated.FileHash = existing.FileHash;
+
+        if (string.IsNullOrWhiteSpace(generated.ZipHash) && !string.IsNullOrWhiteSpace(existing.ZipHash))
+            generated.ZipHash = existing.ZipHash;
+    }
+
+    private static Dictionary<string, string> ResolveLocalizedStrings(
+        Dictionary<string, string> manifestValues,
+        Dictionary<string, string>? existingValues,
+        string fallback)
+    {
+        if (manifestValues.Count > 0)
+            return CloneStringDictionary(manifestValues);
+
+        if (existingValues is { Count: > 0 })
+            return CloneStringDictionary(existingValues);
+
+        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["default"] = fallback,
+        };
+    }
+
+    private static Dictionary<string, List<string>> ResolveLocalizedTags(
+        Dictionary<string, List<string>> manifestValues,
+        Dictionary<string, List<string>>? existingValues,
+        IReadOnlyList<string> fallback)
+    {
+        if (manifestValues.Count > 0)
+            return CloneTagDictionary(manifestValues);
+
+        if (existingValues is { Count: > 0 })
+            return CloneTagDictionary(existingValues);
+
+        return new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["default"] = fallback.ToList(),
+        };
+    }
+
+    private static Dictionary<string, string> CloneStringDictionary(Dictionary<string, string> source) =>
+        source.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
+
+    private static Dictionary<string, List<string>> CloneTagDictionary(Dictionary<string, List<string>> source) =>
+        source.ToDictionary(
+            pair => pair.Key,
+            pair => pair.Value.ToList(),
+            StringComparer.OrdinalIgnoreCase);
+
+    private static bool StringDictionariesEqual(
+        Dictionary<string, string> left,
+        Dictionary<string, string> right)
+    {
+        if (left.Count != right.Count)
+            return false;
+
+        foreach (var pair in left)
+        {
+            if (!right.TryGetValue(pair.Key, out var rightValue) ||
+                !string.Equals(pair.Value, rightValue, StringComparison.Ordinal))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static bool TagDictionariesEqual(
+        Dictionary<string, List<string>> left,
+        Dictionary<string, List<string>> right)
+    {
+        if (left.Count != right.Count)
+            return false;
+
+        foreach (var pair in left)
+        {
+            if (!right.TryGetValue(pair.Key, out var rightValue) ||
+                !pair.Value.SequenceEqual(rightValue, StringComparer.Ordinal))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static string BumpStoreVersion(string current)
+    {
+        if (Version.TryParse(NormalizeStoreVersion(current), out var version))
+        {
+            var bumped = new Version(version.Major, version.Minor, version.Build + 1);
+            return bumped.ToString(3);
+        }
+
+        return "1.0.0";
+    }
+
+    private static string NormalizeStoreVersion(string value)
+    {
+        var normalized = value.Trim();
+        if (normalized.StartsWith('v') || normalized.StartsWith('V'))
+            normalized = normalized[1..];
+
+        return normalized;
     }
 
     private static string ResolveLifecycleStatus(PluginContext plugin)

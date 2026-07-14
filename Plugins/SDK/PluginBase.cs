@@ -1,16 +1,16 @@
 using System;
 using System.Net.Http;
 using System.Threading;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.SDK;
+namespace UniversalDeviceToolkit.Plugins.SDK;
 
 /// <summary>
 /// Base class for plugins that provides default implementation
 /// This is a forwarder class that inherits from the main PluginBase in Lib
 /// </summary>
-public abstract class PluginBase : LenovoLegionToolkit.Lib.Plugins.PluginBase
+public abstract class PluginBase : UniversalDeviceToolkit.Lib.Plugins.PluginBase
 {
     /// <summary>
     /// Gets a shared HttpClient instance for making HTTP requests.

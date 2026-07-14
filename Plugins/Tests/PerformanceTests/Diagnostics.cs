@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.Tests.PerformanceTests;
+namespace UniversalDeviceToolkit.Plugins.Tests.PerformanceTests;
 
 /// <summary>
 /// Diagnose SettingsManager.Save() performance bottleneck.
@@ -23,7 +23,7 @@ public class SavePerformanceDiagnostics
         // Setup
         var testDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "LenovoLegionToolkit", "plugins", _testPluginName);
+            "UniversalDeviceToolkit", "plugins", _testPluginName);
         if (Directory.Exists(testDir)) Directory.Delete(testDir, recursive: true);
         _settingsManager = new SettingsManager<TestSettings>(_testPluginName);
 

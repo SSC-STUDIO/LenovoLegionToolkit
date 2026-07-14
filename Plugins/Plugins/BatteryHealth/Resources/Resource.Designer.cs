@@ -4,7 +4,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth.Resources
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth.Resources
 {
     using System.CodeDom.Compiler;
     using System.ComponentModel;
@@ -33,7 +33,7 @@ namespace LenovoLegionToolkit.Plugins.BatteryHealth.Resources
             {
                 if (ReferenceEquals(resourceMan, null))
                 {
-                    resourceMan = new ResourceManager("LenovoLegionToolkit.Plugins.BatteryHealth.Resources.Resource", typeof(Resource).Assembly);
+                    resourceMan = new ResourceManager("UniversalDeviceToolkit.Plugins.BatteryHealth.Resources.Resource", typeof(Resource).Assembly);
                 }
 
                 return resourceMan;

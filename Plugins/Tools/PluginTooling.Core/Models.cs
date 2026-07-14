@@ -80,6 +80,15 @@ public sealed class UnifiedPluginManifest
 
     [JsonPropertyName("lifecycle")]
     public string Lifecycle { get; set; } = PluginLifecycleStatus.Active;
+
+    [JsonPropertyName("localizedNames")]
+    public Dictionary<string, string> LocalizedNames { get; set; } = [];
+
+    [JsonPropertyName("localizedDescriptions")]
+    public Dictionary<string, string> LocalizedDescriptions { get; set; } = [];
+
+    [JsonPropertyName("localizedTags")]
+    public Dictionary<string, List<string>> LocalizedTags { get; set; } = [];
 }
 
 public sealed class PluginContributions
@@ -177,8 +186,8 @@ public sealed record PluginContext(
     string? StoreEntryPath,
     OfficialStoreEntry? StoreEntry)
 {
-    public string OutputDirectory => Path.Combine(RepositoryRoot, "Build", "plugins", $"LenovoLegionToolkit.Plugins.{FolderName}");
-    public string ExpectedAssemblyName => $"LenovoLegionToolkit.Plugins.{FolderName}";
+    public string OutputDirectory => Path.Combine(RepositoryRoot, "Build", "plugins", $"UniversalDeviceToolkit.Plugins.{FolderName}");
+    public string ExpectedAssemblyName => $"UniversalDeviceToolkit.Plugins.{FolderName}";
     public string ExpectedAssemblyPath => Path.Combine(OutputDirectory, $"{ExpectedAssemblyName}.dll");
 }
 
@@ -195,6 +204,9 @@ public sealed class StoreDocument
     [JsonPropertyName("lastUpdated")]
     public string LastUpdated { get; set; } = string.Empty;
 
+    [JsonPropertyName("storeVersion")]
+    public string StoreVersion { get; set; } = string.Empty;
+
     [JsonPropertyName("plugins")]
     public List<StorePluginEntry> Plugins { get; set; } = [];
 }
@@ -209,6 +221,15 @@ public sealed class StorePluginEntry
 
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;
+
+    [JsonPropertyName("localizedNames")]
+    public Dictionary<string, string> LocalizedNames { get; set; } = [];
+
+    [JsonPropertyName("localizedDescriptions")]
+    public Dictionary<string, string> LocalizedDescriptions { get; set; } = [];
+
+    [JsonPropertyName("localizedTags")]
+    public Dictionary<string, List<string>> LocalizedTags { get; set; } = [];
 
     [JsonPropertyName("author")]
     public string Author { get; set; } = string.Empty;
@@ -230,6 +251,14 @@ public sealed class StorePluginEntry
 
     [JsonPropertyName("fileSize")]
     public long FileSize { get; set; }
+
+    [JsonPropertyName("fileHash")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public string FileHash { get; set; } = string.Empty;
+
+    [JsonPropertyName("zipHash")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public string ZipHash { get; set; } = string.Empty;
 
     [JsonPropertyName("releaseDate")]
     public string ReleaseDate { get; set; } = string.Empty;

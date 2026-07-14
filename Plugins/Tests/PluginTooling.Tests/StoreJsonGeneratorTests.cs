@@ -51,8 +51,8 @@ public class StoreJsonGeneratorTests : IDisposable
         Directory.CreateDirectory(_tempRoot);
 
         // The PluginRepository.EnsureRepositoryRoot guard requires both
-        // LenovoLegionToolkit-Plugins.sln and a Plugins/ directory at the root.
-        File.WriteAllText(Path.Combine(_tempRoot, "LenovoLegionToolkit-Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
+        // UniversalDeviceToolkit-Plugins.sln and a Plugins/ directory at the root.
+        File.WriteAllText(Path.Combine(_tempRoot, "UniversalDeviceToolkit-Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
     }
 
     public void Dispose()
@@ -177,6 +177,7 @@ public class StoreJsonGeneratorTests : IDisposable
         string manifestName,
         string description,
         bool includeStoreBlock = true,
+        bool includeLocalization = false,
         string author = "SSC-STUDIO")
     {
         var pluginDir = Path.Combine(_tempRoot, "Plugins", folderName);
@@ -200,6 +201,22 @@ public class StoreJsonGeneratorTests : IDisposable
             ? string.Empty
             : $",\n    \"lifecycle\": \"{manifestLifecycle}\"";
 
+        var localizationFragment = includeLocalization
+            ? @",
+    ""localizedNames"": {
+        ""default"": """ + manifestName + @""",
+        ""zh-Hans"": ""电池健康（旧版）""
+    },
+    ""localizedDescriptions"": {
+        ""default"": """ + description + @""",
+        ""zh-Hans"": ""已弃用：电池健康插件。""
+    },
+    ""localizedTags"": {
+        ""default"": [ ""battery"", ""health"" ],
+        ""zh-Hans"": [ ""电池"", ""健康"" ]
+    }"
+            : string.Empty;
+
         var storeBlock = includeStoreBlock
             ? $@",
     ""store"": {{
@@ -222,21 +239,135 @@ public class StoreJsonGeneratorTests : IDisposable
     ""author"": ""{author}"",
     ""isSystemPlugin"": false,
     ""repository"": ""https://example.com/repo"",
-    ""issues"": ""https://example.com/issues""{lifecycleFragment}{storeBlock}
+    ""issues"": ""https://example.com/issues""{localizationFragment}{lifecycleFragment}{storeBlock}
 }}";
 
         File.WriteAllText(Path.Combine(pluginDir, "plugin.manifest.json"), unifiedManifest);
     }
 
-    private StoreDocument InvokeGenerate()
+    [Fact]
+    public void Generate_MergeExisting_PreservesLocalizedFields_WhenManifestLacksThem()
+    {
+        CreatePluginFolder("custom-mouse", manifestLifecycle: "Active", manifestName: "Cursor & Pointer",
+            description: "Mouse customization plugin.");
+
+        var assetDir = Path.Combine(_tempRoot, "Build", "release-assets");
+        Directory.CreateDirectory(assetDir);
+        File.WriteAllBytes(Path.Combine(assetDir, "custom-mouse-v1.0.0.zip"), new byte[1234]);
+
+        var storePath = Path.Combine(_tempRoot, "store.json");
+        File.WriteAllText(storePath,
+            """
+            {
+              "lastUpdated": "2026-07-14T00:00:00.0000000+00:00",
+              "storeVersion": "1.1.1",
+              "plugins": [
+                {
+                  "id": "custom-mouse",
+                  "name": "Cursor & Pointer",
+                  "description": "Mouse customization plugin.",
+                  "localizedNames": {
+                    "default": "Cursor & Pointer",
+                    "zh-Hans": "光标与指针"
+                  },
+                  "localizedDescriptions": {
+                    "default": "Mouse customization plugin.",
+                    "zh-Hans": "鼠标自定义插件。"
+                  },
+                  "localizedTags": {
+                    "default": [ "mouse", "customization" ],
+                    "zh-Hans": [ "鼠标", "自定义" ]
+                  },
+                  "author": "SSC-STUDIO",
+                  "version": "1.0.0",
+                  "minLLTVersion": "4.2.1",
+                  "isSystemPlugin": false,
+                  "downloadUrl": "https://example.com/releases/download/custom-mouse-v1.0.0/custom-mouse-v1.0.0.zip",
+                  "changelog": "https://example.com/releases/tag/custom-mouse-v1.0.0",
+                  "fileSize": 1234,
+                  "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
+                  "repositoryUrl": "https://example.com/repo",
+                  "supportedLanguages": [ "en" ],
+                  "icon": "Icon24",
+                  "iconBackground": "#FFFFFF",
+                  "dependencies": [],
+                  "tags": [ "mouse", "customization" ],
+                  "status": "Active"
+                }
+              ]
+            }
+            """);
+
+        var store = InvokeGenerate(mergeExisting: true, pluginIds: ["custom-mouse"]);
+
+        var entry = Assert.Single(store.Plugins);
+        Assert.Equal("光标与指针", entry.LocalizedNames["zh-Hans"]);
+        Assert.Equal("鼠标自定义插件。", entry.LocalizedDescriptions["zh-Hans"]);
+        Assert.Equal(new[] { "鼠标", "自定义" }, entry.LocalizedTags["zh-Hans"]);
+    }
+
+    [Fact]
+    public void Generate_PopulatesLocalizedFields_FromUnifiedManifest()
+    {
+        CreatePluginFolder("battery-health", manifestLifecycle: "Migrated", manifestName: "Battery Health (Legacy)",
+            description: "Deprecated battery plugin.", includeLocalization: true);
+
+        var store = InvokeGenerate();
+
+        var entry = Assert.Single(store.Plugins);
+        Assert.Equal("电池健康（旧版）", entry.LocalizedNames["zh-Hans"]);
+        Assert.Contains("已弃用", entry.LocalizedDescriptions["zh-Hans"]);
+        Assert.Equal(new[] { "电池", "健康" }, entry.LocalizedTags["zh-Hans"]);
+    }
+
+    [Fact]
+    public void ProductionStoreJson_RoundTripsWithoutLosingModeledFields()
+    {
+        var repositoryRoot = PluginRepository.FindRepositoryRoot(AppContext.BaseDirectory);
+        var storePath = Path.Combine(repositoryRoot, "store.json");
+        Assert.True(File.Exists(storePath), $"Expected production store at {storePath}");
+
+        var original = PluginRepository.ReadJsonFile<StoreDocument>(storePath);
+        Assert.False(string.IsNullOrWhiteSpace(original.StoreVersion));
+        Assert.Equal(3, original.Plugins.Count);
+        Assert.All(original.Plugins, entry =>
+        {
+            Assert.NotEmpty(entry.LocalizedNames);
+            Assert.NotEmpty(entry.LocalizedDescriptions);
+            Assert.NotEmpty(entry.LocalizedTags);
+        });
+
+        var roundTripPath = Path.Combine(_tempRoot, "store-roundtrip.json");
+        PluginRepository.WriteJsonFile(roundTripPath, original);
+        var roundTrip = PluginRepository.ReadJsonFile<StoreDocument>(roundTripPath);
+
+        Assert.Equal(original.StoreVersion, roundTrip.StoreVersion);
+        Assert.Equal(original.Plugins.Count, roundTrip.Plugins.Count);
+        foreach (var expected in original.Plugins)
+        {
+            var actual = roundTrip.Plugins.Single(plugin => plugin.Id == expected.Id);
+            Assert.Equal(expected.LocalizedNames.Count, actual.LocalizedNames.Count);
+            foreach (var pair in expected.LocalizedNames)
+                Assert.Equal(pair.Value, actual.LocalizedNames[pair.Key]);
+
+            Assert.Equal(expected.LocalizedDescriptions.Count, actual.LocalizedDescriptions.Count);
+            foreach (var pair in expected.LocalizedDescriptions)
+                Assert.Equal(pair.Value, actual.LocalizedDescriptions[pair.Key]);
+
+            Assert.Equal(expected.LocalizedTags["zh-Hans"], actual.LocalizedTags["zh-Hans"]);
+        }
+    }
+
+    private StoreDocument InvokeGenerate(bool mergeExisting = false, IReadOnlyList<string>? pluginIds = null)
     {
         var request = new StoreGenerationRequest
         {
             RepositoryRoot = _tempRoot,
             AssetRoot = Path.Combine(_tempRoot, "Build", "release-assets"),
             ReleaseRepositoryUrl = "https://example.com/releases",
-            MergeExisting = false,
+            MergeExisting = mergeExisting,
             RequireAssets = false,
+            PluginIds = pluginIds ?? Array.Empty<string>(),
         };
 
         return new StoreJsonGenerator().Generate(request);

@@ -3,21 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.SDK", "SDK\LenovoLegionToolkit.Plugins.SDK.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.SDK", "SDK\UniversalDeviceToolkit.Plugins.SDK.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.CustomMouse", "Plugins\CustomMouse\LenovoLegionToolkit.Plugins.CustomMouse.csproj", "{B2C3D4E5-F6A7-8901-BCDE-F23456789012}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.CustomMouse", "Plugins\CustomMouse\UniversalDeviceToolkit.Plugins.CustomMouse.csproj", "{B2C3D4E5-F6A7-8901-BCDE-F23456789012}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.ShellIntegration", "Plugins\ShellIntegration\LenovoLegionToolkit.Plugins.ShellIntegration.csproj", "{C3D4E5F6-A7B8-9012-CDEF-345678901234}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.ShellIntegration", "Plugins\ShellIntegration\UniversalDeviceToolkit.Plugins.ShellIntegration.csproj", "{C3D4E5F6-A7B8-9012-CDEF-345678901234}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{07D57EEB-2F50-60C4-C011-FE4FA775C9A8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetworkAcceleration", "NetworkAcceleration", "{AE4E52FF-46B2-4D50-A640-058C1EF037CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.NetworkAcceleration", "Plugins\NetworkAcceleration\LenovoLegionToolkit.Plugins.NetworkAcceleration.csproj", "{8C292F6F-6A80-419A-9F4A-FA49AA3D27E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.NetworkAcceleration", "Plugins\NetworkAcceleration\UniversalDeviceToolkit.Plugins.NetworkAcceleration.csproj", "{8C292F6F-6A80-419A-9F4A-FA49AA3D27E6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ViveTool", "ViveTool", "{8CB383A2-3AB2-833C-903D-022C462A3C73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.ViveTool", "Plugins\ViveTool\LenovoLegionToolkit.Plugins.ViveTool.csproj", "{E8633D5D-D85B-4067-A663-8184037E2F56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.ViveTool", "Plugins\ViveTool\UniversalDeviceToolkit.Plugins.ViveTool.csproj", "{E8633D5D-D85B-4067-A663-8184037E2F56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomMouse.Tests", "Plugins\CustomMouse.Tests\CustomMouse.Tests.csproj", "{5AAF241C-969D-4B7F-AF10-0300E480F51C}"
 EndProject
@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViveTool.Tests", "Plugins\V
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginWorkbench", "Tools\PluginWorkbench\PluginWorkbench.csproj", "{3276CC40-2880-4C6D-8545-E786067EE6AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.Shared", "Plugins\Shared\LenovoLegionToolkit.Plugins.Shared.csproj", "{CBA3407B-0BAB-4CA8-A6DB-D43F7C5AD766}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.Shared", "Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj", "{CBA3407B-0BAB-4CA8-A6DB-D43F7C5AD766}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginWorkbench.Smoke", "Tools\PluginWorkbench.Smoke\PluginWorkbench.Smoke.csproj", "{293E5C61-5BB9-49D1-A0D7-EE8A2F4E2287}"
 EndProject
@@ -49,7 +49,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginTooling.Cli", "Tools\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BatteryHealth", "BatteryHealth", "{0BB4196F-CB09-441E-4648-A83AB862966A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LenovoLegionToolkit.Plugins.BatteryHealth", "Plugins\BatteryHealth\LenovoLegionToolkit.Plugins.BatteryHealth.csproj", "{120BE431-F4F6-46CF-978A-DDD2B61072B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.BatteryHealth", "Plugins\BatteryHealth\UniversalDeviceToolkit.Plugins.BatteryHealth.csproj", "{120BE431-F4F6-46CF-978A-DDD2B61072B7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{703EA724-6488-59CA-432C-F94A561E4087}"
 EndProject

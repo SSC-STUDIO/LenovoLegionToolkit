@@ -3,12 +3,12 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Services.Settings;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
 
 /// <summary>
 /// ViVeTool plugin settings manager

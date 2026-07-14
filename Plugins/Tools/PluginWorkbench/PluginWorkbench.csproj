@@ -15,13 +15,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PluginTooling.Core\PluginTooling.Core.csproj" />
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\..\Plugins\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
-   <Reference Include="LenovoLegionToolkit.Lib">
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+   <Reference Include="UniversalDeviceToolkit.Lib">
      <HintPath>$(HostLibPath)</HintPath>
      <Private>true</Private>
    </Reference>
-    <Reference Include="LenovoLegionToolkit.Lib.Plugins">
+    <Reference Include="UniversalDeviceToolkit.Lib.Plugins">
       <HintPath>$(HostLibPluginsPath)</HintPath>
       <Private>true</Private>
     </Reference>

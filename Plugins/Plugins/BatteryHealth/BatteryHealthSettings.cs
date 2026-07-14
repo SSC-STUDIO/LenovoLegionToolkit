@@ -1,10 +1,10 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Management;
-using LenovoLegionToolkit.Plugins.Shared;
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.SDK;
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth;
 
 /// <summary>
 /// Settings for Battery Health plugin.

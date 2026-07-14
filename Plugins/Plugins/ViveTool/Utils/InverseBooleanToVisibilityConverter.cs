@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Utils;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 
 public class InverseBooleanToVisibilityConverter : IValueConverter
 {

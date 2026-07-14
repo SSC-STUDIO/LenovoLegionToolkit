@@ -4,7 +4,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration.Resources
 {
     using System;
     using System.CodeDom.Compiler;
@@ -34,7 +34,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
             {
                 if (ReferenceEquals(resourceMan, null))
                 {
-                    resourceMan = new ResourceManager("LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource", typeof(Resource).Assembly);
+                    resourceMan = new ResourceManager("UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource", typeof(Resource).Assembly);
                 }
 
                 return resourceMan;
@@ -49,7 +49,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
         }
 
         /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PluginName.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PluginName.
     /// </summary>
     public static string PluginName {
         get {
@@ -58,7 +58,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PluginDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PluginDescription.
     /// </summary>
     public static string PluginDescription {
         get {
@@ -67,7 +67,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.SettingsPageTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.SettingsPageTitle.
     /// </summary>
     public static string SettingsPageTitle {
         get {
@@ -76,7 +76,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.Subtitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.Subtitle.
     /// </summary>
     public static string Subtitle {
         get {
@@ -85,7 +85,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.EnableButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.EnableButton.
     /// </summary>
     public static string EnableButton {
         get {
@@ -94,7 +94,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.DisableButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.DisableButton.
     /// </summary>
     public static string DisableButton {
         get {
@@ -103,7 +103,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.OpenStyleSettingsButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.OpenStyleSettingsButton.
     /// </summary>
     public static string OpenStyleSettingsButton {
         get {
@@ -112,7 +112,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.OpenStyleShortButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.OpenStyleShortButton.
     /// </summary>
     public static string OpenStyleShortButton {
         get {
@@ -121,7 +121,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.RefreshButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.RefreshButton.
     /// </summary>
     public static string RefreshButton {
         get {
@@ -130,7 +130,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ResetButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ResetButton.
     /// </summary>
     public static string ResetButton {
         get {
@@ -139,7 +139,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ApplyButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ApplyButton.
     /// </summary>
     public static string ApplyButton {
         get {
@@ -148,7 +148,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.OptimizationHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.OptimizationHint.
     /// </summary>
     public static string OptimizationHint {
         get {
@@ -157,7 +157,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDetected.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDetected.
     /// </summary>
     public static string StatusDetected {
         get {
@@ -166,7 +166,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusNotDetected.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusNotDetected.
     /// </summary>
     public static string StatusNotDetected {
         get {
@@ -175,7 +175,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusRegistered.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusRegistered.
     /// </summary>
     public static string StatusRegistered {
         get {
@@ -184,7 +184,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusUnregistered.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusUnregistered.
     /// </summary>
     public static string StatusUnregistered {
         get {
@@ -193,7 +193,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDetailDefault.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDetailDefault.
     /// </summary>
     public static string StatusDetailDefault {
         get {
@@ -202,7 +202,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusEnabledBadge.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusEnabledBadge.
     /// </summary>
     public static string StatusEnabledBadge {
         get {
@@ -211,7 +211,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDisabledBadge.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDisabledBadge.
     /// </summary>
     public static string StatusDisabledBadge {
         get {
@@ -220,7 +220,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusMissingBadge.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusMissingBadge.
     /// </summary>
     public static string StatusMissingBadge {
         get {
@@ -229,7 +229,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusUnknownBadge.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusUnknownBadge.
     /// </summary>
     public static string StatusUnknownBadge {
         get {
@@ -238,7 +238,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PathLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PathLabel.
     /// </summary>
     public static string PathLabel {
         get {
@@ -247,7 +247,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.NotFound.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.NotFound.
     /// </summary>
     public static string NotFound {
         get {
@@ -256,7 +256,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ManagedConfigLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ManagedConfigLabel.
     /// </summary>
     public static string ManagedConfigLabel {
         get {
@@ -265,7 +265,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ManagedConfigNotReady.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ManagedConfigNotReady.
     /// </summary>
     public static string ManagedConfigNotReady {
         get {
@@ -274,7 +274,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusEnableCompleted.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusEnableCompleted.
     /// </summary>
     public static string StatusEnableCompleted {
         get {
@@ -283,7 +283,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusEnableFailed.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusEnableFailed.
     /// </summary>
     public static string StatusEnableFailed {
         get {
@@ -292,7 +292,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDisableCompleted.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDisableCompleted.
     /// </summary>
     public static string StatusDisableCompleted {
         get {
@@ -301,7 +301,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDisableFailed.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusDisableFailed.
     /// </summary>
     public static string StatusDisableFailed {
         get {
@@ -310,7 +310,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.StatusOpenedStyleSettings.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.StatusOpenedStyleSettings.
     /// </summary>
     public static string StatusOpenedStyleSettings {
         get {
@@ -319,7 +319,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ProfileSavedShellMissing.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ProfileSavedShellMissing.
     /// </summary>
     public static string ProfileSavedShellMissing {
         get {
@@ -328,7 +328,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ApplyCompletedEnabled.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ApplyCompletedEnabled.
     /// </summary>
     public static string ApplyCompletedEnabled {
         get {
@@ -337,7 +337,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ApplyCompletedDisabled.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ApplyCompletedDisabled.
     /// </summary>
     public static string ApplyCompletedDisabled {
         get {
@@ -346,7 +346,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.FallbackLoadError.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.FallbackLoadError.
     /// </summary>
     public static string FallbackLoadError {
         get {
@@ -355,7 +355,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.AppearanceSection.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.AppearanceSection.
     /// </summary>
     public static string AppearanceSection {
         get {
@@ -364,7 +364,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.AppearanceSectionHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.AppearanceSectionHint.
     /// </summary>
     public static string AppearanceSectionHint {
         get {
@@ -373,7 +373,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PaletteSection.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PaletteSection.
     /// </summary>
     public static string PaletteSection {
         get {
@@ -382,7 +382,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PaletteSectionHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PaletteSectionHint.
     /// </summary>
     public static string PaletteSectionHint {
         get {
@@ -391,7 +391,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewSection.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewSection.
     /// </summary>
     public static string PreviewSection {
         get {
@@ -400,7 +400,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewHint.
     /// </summary>
     public static string PreviewHint {
         get {
@@ -409,7 +409,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PathsSection.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PathsSection.
     /// </summary>
     public static string PathsSection {
         get {
@@ -418,7 +418,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.MotionToggleLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.MotionToggleLabel.
     /// </summary>
     public static string MotionToggleLabel {
         get {
@@ -427,7 +427,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ShadowToggleLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ShadowToggleLabel.
     /// </summary>
     public static string ShadowToggleLabel {
         get {
@@ -436,7 +436,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeLabel.
     /// </summary>
     public static string ColorSchemeLabel {
         get {
@@ -445,7 +445,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeAuto.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeAuto.
     /// </summary>
     public static string ColorSchemeAuto {
         get {
@@ -454,7 +454,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeLight.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeLight.
     /// </summary>
     public static string ColorSchemeLight {
         get {
@@ -463,7 +463,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeDark.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ColorSchemeDark.
     /// </summary>
     public static string ColorSchemeDark {
         get {
@@ -472,7 +472,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.VisualEffectLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.VisualEffectLabel.
     /// </summary>
     public static string VisualEffectLabel {
         get {
@@ -481,7 +481,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.EffectNone.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.EffectNone.
     /// </summary>
     public static string EffectNone {
         get {
@@ -490,7 +490,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.EffectTransparent.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.EffectTransparent.
     /// </summary>
     public static string EffectTransparent {
         get {
@@ -499,7 +499,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.EffectBlur.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.EffectBlur.
     /// </summary>
     public static string EffectBlur {
         get {
@@ -508,7 +508,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.EffectAcrylic.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.EffectAcrylic.
     /// </summary>
     public static string EffectAcrylic {
         get {
@@ -517,7 +517,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ShowDelayLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ShowDelayLabel.
     /// </summary>
     public static string ShowDelayLabel {
         get {
@@ -526,7 +526,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ShowDelayValueFormat.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ShowDelayValueFormat.
     /// </summary>
     public static string ShowDelayValueFormat {
         get {
@@ -535,7 +535,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ShadowStrengthLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ShadowStrengthLabel.
     /// </summary>
     public static string ShadowStrengthLabel {
         get {
@@ -544,7 +544,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.ShadowStrengthValueFormat.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.ShadowStrengthValueFormat.
     /// </summary>
     public static string ShadowStrengthValueFormat {
         get {
@@ -553,7 +553,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.AccentColorLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.AccentColorLabel.
     /// </summary>
     public static string AccentColorLabel {
         get {
@@ -562,7 +562,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.BackgroundColorLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.BackgroundColorLabel.
     /// </summary>
     public static string BackgroundColorLabel {
         get {
@@ -571,7 +571,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.HoverColorLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.HoverColorLabel.
     /// </summary>
     public static string HoverColorLabel {
         get {
@@ -580,7 +580,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.TextColorLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.TextColorLabel.
     /// </summary>
     public static string TextColorLabel {
         get {
@@ -589,7 +589,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.MutedColorLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.MutedColorLabel.
     /// </summary>
     public static string MutedColorLabel {
         get {
@@ -598,7 +598,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.TintColorLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.TintColorLabel.
     /// </summary>
     public static string TintColorLabel {
         get {
@@ -607,7 +607,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewPrimary.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewPrimary.
     /// </summary>
     public static string PreviewPrimary {
         get {
@@ -616,7 +616,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewPrimaryHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewPrimaryHint.
     /// </summary>
     public static string PreviewPrimaryHint {
         get {
@@ -625,7 +625,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewSecondary.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewSecondary.
     /// </summary>
     public static string PreviewSecondary {
         get {
@@ -634,7 +634,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewSecondaryHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewSecondaryHint.
     /// </summary>
     public static string PreviewSecondaryHint {
         get {
@@ -643,7 +643,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewTertiary.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewTertiary.
     /// </summary>
     public static string PreviewTertiary {
         get {
@@ -652,7 +652,7 @@ namespace LenovoLegionToolkit.Plugins.ShellIntegration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewTertiaryHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.PreviewTertiaryHint.
     /// </summary>
     public static string PreviewTertiaryHint {
         get {

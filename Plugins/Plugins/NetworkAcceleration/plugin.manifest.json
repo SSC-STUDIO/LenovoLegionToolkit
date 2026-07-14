@@ -37,23 +37,23 @@
   "lifecycle": "Migrated",
   "contributes": {
     "featurePage": {
-      "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationControl",
+      "class": "UniversalDeviceToolkit.Plugins.NetworkAcceleration.NetworkAccelerationControl",
       "title": "Network Acceleration (Legacy)"
     },
     "settingsPage": {
-      "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationSettingsControl",
+      "class": "UniversalDeviceToolkit.Plugins.NetworkAcceleration.NetworkAccelerationSettingsControl",
       "title": "Network Acceleration (Legacy) Settings"
     },
     "runtime": {
-      "class": "LenovoLegionToolkit.Plugins.NetworkAcceleration.NetworkAccelerationRuntime"
+      "class": "UniversalDeviceToolkit.Plugins.NetworkAcceleration.NetworkAccelerationRuntime"
     },
     "optimizationActions": []
   },
   "package": {
     "assetName": "network-acceleration-v1.2.0.zip",
     "requiredFiles": [
-      "LenovoLegionToolkit.Plugins.NetworkAcceleration.dll",
-      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "UniversalDeviceToolkit.Plugins.NetworkAcceleration.dll",
+      "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
       "plugin.manifest.json"
     ]

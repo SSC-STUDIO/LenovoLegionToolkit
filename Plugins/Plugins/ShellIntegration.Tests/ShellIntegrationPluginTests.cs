@@ -3,12 +3,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading;
-using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.Plugins.ShellIntegration;
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.ShellIntegration;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration.Tests;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration.Tests;
 
 [Collection("ShellIntegrationResourceCulture")]
 public class ShellIntegrationPluginTests

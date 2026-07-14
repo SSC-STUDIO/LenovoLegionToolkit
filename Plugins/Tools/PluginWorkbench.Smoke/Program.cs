@@ -304,7 +304,7 @@ internal static class Program
 
     private static bool IsRepositoryRoot(string repositoryRoot)
     {
-        return File.Exists(Path.Combine(repositoryRoot, "LenovoLegionToolkit-Plugins.sln")) &&
+        return File.Exists(Path.Combine(repositoryRoot, "UniversalDeviceToolkit-Plugins.sln")) &&
                File.Exists(Path.Combine(repositoryRoot, "store.json")) &&
                Directory.Exists(Path.Combine(repositoryRoot, "Plugins")) &&
                Directory.Exists(Path.Combine(repositoryRoot, @"Tools\PluginWorkbench"));
@@ -348,7 +348,7 @@ internal static class Program
 
     private static string ResolvePluginBuildDirectory(string repositoryRoot, string folderName, string pluginId)
     {
-        var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"LenovoLegionToolkit.Plugins.{folderName}");
+        var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"UniversalDeviceToolkit.Plugins.{folderName}");
         if (Directory.Exists(canonical))
         {
             return canonical;

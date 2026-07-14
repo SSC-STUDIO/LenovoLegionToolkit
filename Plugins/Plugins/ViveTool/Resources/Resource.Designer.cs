@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Resources
 {
     using System;
     using System.CodeDom.Compiler;
@@ -46,7 +46,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool.Resources
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LenovoLegionToolkit.Plugins.ViveTool.Resources.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UniversalDeviceToolkit.Plugins.ViveTool.Resources.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

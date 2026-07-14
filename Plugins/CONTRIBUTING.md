@@ -138,13 +138,13 @@ Plugins/MyPlugin/
 �?  ������� Resource.resx                    # Localized strings
 ������� plugin.manifest.json                 # Plugin manifest (authoring)
 ������� store-entry.json                     # Store metadata (official only)
-������� LenovoLegionToolkit.Plugins.MyPlugin.csproj
+������� UniversalDeviceToolkit.Plugins.MyPlugin.csproj
 ```
 
 ### Implementing IPlugin
 
 ```csharp
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.SDK;
 
 [Plugin(
     Id = "my-plugin",

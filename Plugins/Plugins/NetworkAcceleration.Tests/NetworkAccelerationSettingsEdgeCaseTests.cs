@@ -1,8 +1,8 @@
-﻿using LenovoLegionToolkit.Plugins.NetworkAcceleration;
-using LenovoLegionToolkit.Plugins.TestCommon;
+﻿using UniversalDeviceToolkit.Plugins.NetworkAcceleration;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration.Tests;
 
 [Collection("NetworkAccelerationResourceCulture")]
 public class NetworkAccelerationSettingsEdgeCaseTests

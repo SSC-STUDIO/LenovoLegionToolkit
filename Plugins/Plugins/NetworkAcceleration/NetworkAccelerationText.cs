@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration;
 
 public static class NetworkAccelerationText
 {
@@ -103,7 +103,7 @@ public static class NetworkAccelerationText
     public static string ErrorPrefix => T(nameof(ErrorPrefix), "Error");
 
     private static readonly System.Resources.ResourceManager ResourceManager =
-        new("LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource", typeof(NetworkAccelerationText).Assembly);
+        new("UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource", typeof(NetworkAccelerationText).Assembly);
 
     private static string T(string key, string fallback)
     {

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 /// <summary>
 /// Collection definition for STA-thread tests required by WPF.

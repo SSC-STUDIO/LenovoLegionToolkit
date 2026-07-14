@@ -16,12 +16,12 @@ Plugins/Shared/SettingsManager.cs — add CleanupTempFile helper + try/catch in 
 8. Add Save_MessagePack_WhenFileMoveFails_CleansUpTempFile test — same pattern for MessagePack path.
 9. Build Shared.Tests project — confirm 0 errors 0 warnings.
 10. Run focused tests — confirm 2/2 pass.
-11. Run full gate: dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo.
+11. Run full gate: dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo.
 12. Run verify-hermes.ps1 — confirm exit 0.
 13. Stage, commit, push as rev58.
 ## Verification
 - Focused: dotnet test Plugins/Shared.Tests/Shared.Tests.csproj -c Release --filter "Save_WhenFileMoveFails|Save_MessagePack_WhenFileMoveFails" — 2/2 passed, exit 0.
-- Full gate: dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo — 547 pass, 2 skip, 0 fail, exit 0.
+- Full gate: dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo — 547 pass, 2 skip, 0 fail, exit 0.
 - Canonical: powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1 — EXIT_CODE=0.
 ## Risks
 - CleanupTempFile is best-effort: if temp file is locked by another process, it logs a warning but does not throw. This is acceptable — the orphaned temp file will be cleaned up on next successful save or manual deletion.

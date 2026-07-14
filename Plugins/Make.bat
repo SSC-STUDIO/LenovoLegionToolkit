@@ -10,7 +10,7 @@ REM ============================================================
 
 SET SCRIPT_DIR=%~dp0
 SET REPO_ROOT=%SCRIPT_DIR:~0,-1%
-SET SOLUTION=%REPO_ROOT%\LenovoLegionToolkit-Plugins.sln
+SET SOLUTION=%REPO_ROOT%\UniversalDeviceToolkit-Plugins.sln
 SET TOOLING_SCRIPT=%REPO_ROOT%\Scripts\Invoke-PluginTooling.ps1
 
 IF "%1"=="-h" GOTO HELP
@@ -42,7 +42,7 @@ IF /I "%1"=="debug" GOTO BUILD_DEBUG
 
 ECHO Error: Legacy per-plugin build entry points have been removed.
 ECHO Use dotnet build on the specific project directly, e.g.
-ECHO   dotnet build Plugins\CustomMouse\LenovoLegionToolkit.Plugins.CustomMouse.csproj -c Release
+ECHO   dotnet build Plugins\CustomMouse\UniversalDeviceToolkit.Plugins.CustomMouse.csproj -c Release
 EXIT /B 1
 
 :BUILD
@@ -172,7 +172,7 @@ ECHO   llt-plugin.cmd dev --plugin my-plugin --theme system
 ECHO   llt-plugin.cmd validate --profile contributor --plugin my-plugin
 ECHO   llt-plugin.cmd preview --plugin my-plugin --theme system
 ECHO   llt-plugin.cmd package --plugin my-plugin --build-first
-ECHO   dotnet build LenovoLegionToolkit-Plugins.sln -c Release
+ECHO   dotnet build UniversalDeviceToolkit-Plugins.sln -c Release
 ECHO   dotnet build Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release
 ECHO   dotnet run --project Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
 ECHO   powershell -NoProfile -ExecutionPolicy Bypass -File Scripts\ensure-host-dependencies.ps1

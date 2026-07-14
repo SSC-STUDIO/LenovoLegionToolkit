@@ -1,6 +1,6 @@
 using System;
 
-namespace LenovoLegionToolkit.Plugins.SDK;
+namespace UniversalDeviceToolkit.Plugins.SDK;
 
 /// <summary>
 /// Plugin attribute used to mark a class as a plugin

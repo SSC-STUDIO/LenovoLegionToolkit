@@ -18,13 +18,13 @@ ViveToolSettings.SaveAsync (line 176-183) has the same atomic-write pattern with
 2. Add regression test that locks target file with FileStream(FileShare.None), calls SaveAsync, asserts no .tmp remains
 3. Build ViveTool.Tests.csproj -c Release
 4. Run focused test: dotnet test --filter "SaveAsync_WhenFileMoveFails_CleansUpTempFile"
-5. Run full gate: dotnet test LenovoLegionToolkit-Plugins.sln -c Release
+5. Run full gate: dotnet test UniversalDeviceToolkit-Plugins.sln -c Release
 6. Run canonical: powershell -File scripts/verify-hermes.ps1
 7. Update Evidence with exact commands and exit codes
 
 ## Verification
 - Focused: dotnet test Plugins/ViveTool.Tests/ViveTool.Tests.csproj -c Release --filter "SaveAsync_WhenFileMoveFails_CleansUpTempFile"
-- Full gate: dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo
+- Full gate: dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo
 - Canonical: powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1
 
 ## Risks

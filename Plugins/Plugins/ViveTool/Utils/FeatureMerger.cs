@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Utils;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 
 public static class FeatureMerger
 {

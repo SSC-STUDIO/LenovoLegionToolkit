@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration;
 
 internal static class NetworkAccelerationSettingsBinding
 {

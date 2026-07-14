@@ -3,10 +3,10 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 #nullable enable
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth;
 
 /// <summary>
 /// Battery health classification driven by user-configured thresholds.

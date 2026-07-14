@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
 /// <summary>
 /// ViVeTool service implementation that aggregates specialized services.

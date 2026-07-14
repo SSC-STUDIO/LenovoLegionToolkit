@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth.Tests;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth.Tests;
 
 /// <summary>
 /// LocalizedTextTestsBase swings Resources.Resource.Culture through a static; the sibling

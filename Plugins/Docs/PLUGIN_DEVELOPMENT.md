@@ -204,5 +204,5 @@ Manual official publishing should:
 ## Notes
 
 - Do not add source `ProjectReference` links back to the sibling main repository.
-- Keep plugin outputs under `Build/plugins/LenovoLegionToolkit.Plugins.<FolderName>/`.
+- Keep plugin outputs under `Build/plugins/UniversalDeviceToolkit.Plugins.<FolderName>/`.
 - Keep release ZIP naming stable: `<plugin-id>-v<version>.zip`.

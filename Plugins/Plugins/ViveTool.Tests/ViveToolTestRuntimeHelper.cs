@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 internal static class ViveToolTestRuntimeHelper
 {

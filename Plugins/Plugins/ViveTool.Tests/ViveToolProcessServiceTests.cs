@@ -2,10 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 /// <summary>
 /// Tests for ViveToolProcessService - process execution wrapper.

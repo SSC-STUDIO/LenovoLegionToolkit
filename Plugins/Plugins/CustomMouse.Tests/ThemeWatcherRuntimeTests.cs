@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse.Tests;
 
 public class ThemeWatcherRuntimeTests
 {

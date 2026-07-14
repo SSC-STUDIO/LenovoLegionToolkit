@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace LenovoLegionToolkit.Plugins.SDK;
+namespace UniversalDeviceToolkit.Plugins.SDK;
 
 /// <summary>
 /// Provides access to the current plugin host and preserves compatibility with both
@@ -11,12 +11,12 @@ namespace LenovoLegionToolkit.Plugins.SDK;
 /// </summary>
 public static class PluginHostContext
 {
-    private const string HostLibAssemblyName = "LenovoLegionToolkit.Lib";
+    private const string HostLibAssemblyName = "UniversalDeviceToolkit.Lib";
     private const string HostUdtLibAssemblyName = "UniversalDeviceToolkit.Lib";
     private const string HostWpfAssemblyName = "Lenovo Legion Toolkit";
     private const string HostUdtWpfAssemblyName = "Universal Device Toolkit";
-    private const string HostPluginHostContextTypeName = "LenovoLegionToolkit.Lib.Plugins.PluginHostContext";
-    private const string HostPluginSettingsWindowTypeName = "LenovoLegionToolkit.WPF.Windows.Settings.PluginSettingsWindow";
+    private const string HostPluginHostContextTypeName = "UniversalDeviceToolkit.Lib.Plugins.PluginHostContext";
+    private const string HostPluginSettingsWindowTypeName = "UniversalDeviceToolkit.WPF.Windows.Settings.PluginSettingsWindow";
     private const string HostUdtPluginSettingsWindowTypeName = "UniversalDeviceToolkit.WPF.Windows.Settings.PluginSettingsWindow";
     private const string WpfApplicationTypeName = "System.Windows.Application";
     private const string WpfWindowTypeName = "System.Windows.Window";

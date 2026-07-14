@@ -5,9 +5,9 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 
 public partial class CustomMouseSettingsControl : UserControl
 {

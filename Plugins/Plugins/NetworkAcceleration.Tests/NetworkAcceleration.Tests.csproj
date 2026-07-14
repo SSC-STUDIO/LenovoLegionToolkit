@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <RootNamespace>LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests</RootNamespace>
-    <AssemblyName>LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Plugins.NetworkAcceleration.Tests</RootNamespace>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.NetworkAcceleration.Tests</AssemblyName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -30,12 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetworkAcceleration\LenovoLegionToolkit.Plugins.NetworkAcceleration.csproj" />
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\NetworkAcceleration\UniversalDeviceToolkit.Plugins.NetworkAcceleration.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
-    <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+    <Reference Include="UniversalDeviceToolkit.Lib">
+      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

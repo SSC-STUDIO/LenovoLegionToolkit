@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Resources;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.TestCommon;
+namespace UniversalDeviceToolkit.Plugins.TestCommon;
 
 public abstract class LocalizedTextTestsBase
 {

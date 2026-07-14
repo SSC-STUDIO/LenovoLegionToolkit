@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration;
 
 [Plugin(
     id: "network-acceleration",
@@ -17,7 +17,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
     MinimumHostVersion = "3.6.1",
     Icon = "Rocket24"
 )]
-public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
+public class NetworkAccelerationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
 {
     private static readonly ProcessRunner SharedProcessRunner = new();
 
@@ -46,8 +46,8 @@ public class NetworkAccelerationPlugin : LenovoLegionToolkit.Plugins.SDK.PluginB
     public NetworkAccelerationPlugin()
     {
         PluginLog.Configure(
-            isTraceEnabled: () => LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
-            trace: (message, exception) => LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
+            isTraceEnabled: () => UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
+            trace: (message, exception) => UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
 
         lock (_settingsLock)
         {
@@ -328,7 +328,7 @@ public sealed record NetworkOptimizationPlan(
     NetworkAccelerationMode Mode,
     IReadOnlyList<NetworkOptimizationStep> Steps);
 
-public class NetworkAccelerationPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
+public class NetworkAccelerationPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
 {
     private readonly NetworkAccelerationPlugin _plugin;
 
@@ -346,7 +346,7 @@ public class NetworkAccelerationPluginPage : LenovoLegionToolkit.Plugins.SDK.IPl
     }
 }
 
-public class NetworkAccelerationSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
+public class NetworkAccelerationSettingsPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
 {
     private readonly NetworkAccelerationPlugin _plugin;
 

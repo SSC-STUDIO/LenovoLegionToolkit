@@ -6,9 +6,9 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
 public sealed record ShellManagedConfigPaths(
     string InstallDirectory,
@@ -22,8 +22,8 @@ public sealed class ShellIntegrationConfigService
 {
     private const string ManagedDirectoryName = "lenovo-legion-toolkit";
     private const string ManagedOutputDirectoryName = "managed";
-    private const string ManagedBlockStart = "# region LenovoLegionToolkit.Managed";
-    private const string ManagedBlockEnd = "# endregion LenovoLegionToolkit.Managed";
+    private const string ManagedBlockStart = "# region UniversalDeviceToolkit.Managed";
+    private const string ManagedBlockEnd = "# endregion UniversalDeviceToolkit.Managed";
     private const string ManagedLanguageFileName = "language.nss";
 
     private readonly object _fileLock = new();

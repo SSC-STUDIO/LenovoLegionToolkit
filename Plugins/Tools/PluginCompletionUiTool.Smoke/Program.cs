@@ -149,7 +149,7 @@ internal static class Program
             return false;
         }
 
-        return File.Exists(Path.Combine(repositoryRoot, "LenovoLegionToolkit-Plugins.sln")) &&
+        return File.Exists(Path.Combine(repositoryRoot, "UniversalDeviceToolkit-Plugins.sln")) &&
                Directory.Exists(Path.Combine(repositoryRoot, "Plugins")) &&
                Directory.Exists(Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool"));
     }

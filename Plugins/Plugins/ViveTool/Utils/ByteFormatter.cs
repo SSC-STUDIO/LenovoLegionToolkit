@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Utils;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 
 public static class ByteFormatter
 {

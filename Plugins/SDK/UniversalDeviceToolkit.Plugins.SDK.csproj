@@ -5,6 +5,8 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.SDK</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Plugins.SDK</RootNamespace>
     <Copyright>© 2025-2026 SSC-STUDIO</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
@@ -19,8 +21,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plugins\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
-    <Reference Include="LenovoLegionToolkit.Lib">
+    <ProjectReference Include="..\Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
       <Private>false</Private>
     </Reference>
@@ -29,12 +31,12 @@
   <!-- Exclude all unwanted files from output -->
   <ItemGroup>
     <None Remove="**\*.resources.dll" />
-    <None Remove="LenovoLegionToolkit.Lib.dll" />
+    <None Remove="UniversalDeviceToolkit.Lib.dll" />
   </ItemGroup>
 
   <Target Name="CleanUnwantedFiles" AfterTargets="Build">
     <RemoveDir Directories="$(OutputPath)\ar;$(OutputPath)\bg;$(OutputPath)\bs;$(OutputPath)\ca;$(OutputPath)\cs;$(OutputPath)\de;$(OutputPath)\el;$(OutputPath)\es;$(OutputPath)\fr;$(OutputPath)\hu;$(OutputPath)\it;$(OutputPath)\ja;$(OutputPath)\ko;$(OutputPath)\lv;$(OutputPath)\nl-nl;$(OutputPath)\pl;$(OutputPath)\pt;$(OutputPath)\pt-br;$(OutputPath)\ro;$(OutputPath)\ru;$(OutputPath)\sk;$(OutputPath)\tr;$(OutputPath)\uk;$(OutputPath)\uz-latn-uz;$(OutputPath)\vi;$(OutputPath)\zh-hans;$(OutputPath)\zh-hant" />
-    <Delete Files="$(OutputPath)\LenovoLegionToolkit.Lib.dll" />
+    <Delete Files="$(OutputPath)\UniversalDeviceToolkit.Lib.dll" />
   </Target>
 
 </Project>

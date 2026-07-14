@@ -4,9 +4,9 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth;
 
 /// <summary>
 /// Settings page UI for the Battery Health plugin.

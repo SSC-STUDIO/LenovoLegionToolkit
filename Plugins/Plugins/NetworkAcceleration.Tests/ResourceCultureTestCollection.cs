@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration.Tests;
 
 /// <summary>
 /// LocalizedTextTestsBase swings Resources.Resource.Culture through a static; the sibling

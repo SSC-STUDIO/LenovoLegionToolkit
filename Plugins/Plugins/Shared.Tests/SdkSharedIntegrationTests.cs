@@ -1,9 +1,9 @@
 using System;
 using System.Net.Http;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 /// <summary>
 /// Integration tests for SDK-Shared HttpClient singleton chain.

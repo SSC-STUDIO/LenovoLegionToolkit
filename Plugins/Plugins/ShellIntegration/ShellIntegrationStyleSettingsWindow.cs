@@ -7,7 +7,7 @@ using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
 internal sealed class ShellIntegrationStyleSettingsWindow : Window
 {

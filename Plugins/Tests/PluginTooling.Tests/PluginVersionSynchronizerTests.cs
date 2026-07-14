@@ -13,7 +13,7 @@ public class PluginVersionSynchronizerTests : IDisposable
         _tempRoot = Path.Combine(Path.GetTempPath(), "udt-version-sync-tests", Guid.NewGuid().ToString("N"));
         _pluginDirectory = Path.Combine(_tempRoot, "Plugins", "Sample");
         Directory.CreateDirectory(_pluginDirectory);
-        File.WriteAllText(Path.Combine(_tempRoot, "LenovoLegionToolkit-Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
+        File.WriteAllText(Path.Combine(_tempRoot, "UniversalDeviceToolkit-Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
     }
 
     public void Dispose()
@@ -89,7 +89,7 @@ public class PluginVersionSynchronizerTests : IDisposable
           "contributes": {
             "featurePage": null,
             "settingsPage": {
-              "class": "LenovoLegionToolkit.Plugins.Sample.SampleSettingsPage",
+              "class": "UniversalDeviceToolkit.Plugins.Sample.SampleSettingsPage",
               "title": "Sample"
             },
             "runtime": null,
@@ -98,8 +98,8 @@ public class PluginVersionSynchronizerTests : IDisposable
           "package": {
             "assetName": "sample-plugin-v{{manifestVersion}}.zip",
             "requiredFiles": [
-              "LenovoLegionToolkit.Plugins.Sample.dll",
-              "LenovoLegionToolkit.Plugins.SDK.dll",
+              "UniversalDeviceToolkit.Plugins.Sample.dll",
+              "UniversalDeviceToolkit.Plugins.SDK.dll",
               "plugin.json",
               "plugin.manifest.json"
             ]
@@ -128,21 +128,21 @@ public class PluginVersionSynchronizerTests : IDisposable
         }
         """);
 
-        File.WriteAllText(Path.Combine(_pluginDirectory, "LenovoLegionToolkit.Plugins.Sample.csproj"), $$"""
+        File.WriteAllText(Path.Combine(_pluginDirectory, "UniversalDeviceToolkit.Plugins.Sample.csproj"), $$"""
         <Project Sdk="Microsoft.NET.Sdk">
           <PropertyGroup>
             <Version>{{csprojVersion}}</Version>
             <FileVersion>{{csprojVersion}}</FileVersion>
             <AssemblyVersion>{{csprojVersion}}</AssemblyVersion>
-            <AssemblyName>LenovoLegionToolkit.Plugins.Sample</AssemblyName>
+            <AssemblyName>UniversalDeviceToolkit.Plugins.Sample</AssemblyName>
           </PropertyGroup>
         </Project>
         """);
 
         File.WriteAllText(Path.Combine(_pluginDirectory, "SamplePlugin.cs"), $$"""
-        using LenovoLegionToolkit.Plugins.SDK;
+        using UniversalDeviceToolkit.Plugins.SDK;
 
-        namespace LenovoLegionToolkit.Plugins.Sample;
+        namespace UniversalDeviceToolkit.Plugins.Sample;
 
         [Plugin(
             id: "sample-plugin",

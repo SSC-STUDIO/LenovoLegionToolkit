@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using MessagePack;
 using Microsoft.Extensions.Logging;
 
-namespace LenovoLegionToolkit.Plugins.Shared;
+namespace UniversalDeviceToolkit.Plugins.Shared;
 
 /// <summary>
 /// Unified settings persistence manager for all plugins.

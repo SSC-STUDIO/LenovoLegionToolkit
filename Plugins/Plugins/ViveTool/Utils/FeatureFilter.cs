@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Utils;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 
 public readonly record struct FeatureStatusSummary(
     int Total,

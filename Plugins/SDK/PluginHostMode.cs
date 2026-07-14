@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Plugins.SDK;
+namespace UniversalDeviceToolkit.Plugins.SDK;
 
 /// <summary>
 /// Describes how the current host intends plugins to behave.

@@ -1,10 +1,10 @@
-﻿using LenovoLegionToolkit.Plugins.BatteryHealth;
-using LenovoLegionToolkit.Plugins.Shared;
-using LenovoLegionToolkit.Plugins.TestCommon;
+﻿using UniversalDeviceToolkit.Plugins.BatteryHealth;
+using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using System.Text.Json;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth.Tests;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth.Tests;
 
 [Collection("BatteryHealthResourceCulture")]
 public class BatteryHealthSettingsEdgeCaseTests

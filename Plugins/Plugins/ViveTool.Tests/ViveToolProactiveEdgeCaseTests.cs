@@ -5,13 +5,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
-using LenovoLegionToolkit.Plugins.ViveTool.Services.Settings;
-using LenovoLegionToolkit.Plugins.ViveTool.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
+using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 /// <summary>
 /// Proactive edge-case coverage for ViveTool util/service surfaces that were

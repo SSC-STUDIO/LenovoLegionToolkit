@@ -12,8 +12,8 @@ $manifestPath = Join-Path $targetDir "host-release.json"
 $refreshScript = Join-Path $PSScriptRoot "refresh-host-references.ps1"
 
 $requiredFiles = @(
-    "LenovoLegionToolkit.Lib.dll",
-    "LenovoLegionToolkit.Lib.Plugins.dll",
+    "UniversalDeviceToolkit.Lib.dll",
+    "UniversalDeviceToolkit.Lib.Plugins.dll",
     "Universal Device Toolkit.dll",
     "Serilog.dll",
     "Serilog.Sinks.Async.dll",
@@ -36,8 +36,8 @@ function Resolve-SiblingSourceDir {
     )
 
     foreach ($candidate in $candidates) {
-        $libCandidate = Join-Path $candidate "LenovoLegionToolkit.Lib.dll"
-        $libPluginsCandidate = Join-Path $candidate "LenovoLegionToolkit.Lib.Plugins.dll"
+        $libCandidate = Join-Path $candidate "UniversalDeviceToolkit.Lib.dll"
+        $libPluginsCandidate = Join-Path $candidate "UniversalDeviceToolkit.Lib.Plugins.dll"
         $wpfCandidate = Join-Path $candidate "Universal Device Toolkit.dll"
         $serilogCandidate = Join-Path $candidate "Serilog.dll"
         $serilogAsyncCandidate = Join-Path $candidate "Serilog.Sinks.Async.dll"
@@ -76,7 +76,7 @@ function Copy-FromReleaseZip {
         }
 
         if (-not [string]::IsNullOrWhiteSpace($hostTag) -and -not [string]::IsNullOrWhiteSpace($packageName)) {
-            $downloadUrl = "https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/download/$hostTag/$packageName"
+            $downloadUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/$hostTag/$packageName"
         }
     }
 

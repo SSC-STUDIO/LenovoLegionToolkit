@@ -9,13 +9,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.Shared;
 using Microsoft.Win32;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 
 [Plugin(
     id: "custom-mouse",
@@ -26,7 +26,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
     MinimumHostVersion = "3.6.1",
     Icon = "Pen24"
 )]
-public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
+public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
 {
     internal const string WindowsDefaultCursorSchemeName = "Windows Aero";
 
@@ -884,7 +884,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
         {
             directories.Add(Path.Combine(overridePluginsDirectory, "local", "custom-mouse"));
             directories.Add(Path.Combine(overridePluginsDirectory, "custom-mouse"));
-            directories.Add(Path.Combine(overridePluginsDirectory, "LenovoLegionToolkit.Plugins.CustomMouse"));
+            directories.Add(Path.Combine(overridePluginsDirectory, "UniversalDeviceToolkit.Plugins.CustomMouse"));
         }
 
         directories.Add(Path.GetDirectoryName(typeof(CustomMousePlugin).Assembly.Location));
@@ -895,7 +895,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             var pluginsDirectory = GetDefaultPluginsDirectory();
             directories.Add(Path.Combine(pluginsDirectory, "local", "custom-mouse"));
             directories.Add(Path.Combine(pluginsDirectory, "custom-mouse"));
-            directories.Add(Path.Combine(pluginsDirectory, "LenovoLegionToolkit.Plugins.CustomMouse"));
+            directories.Add(Path.Combine(pluginsDirectory, "UniversalDeviceToolkit.Plugins.CustomMouse"));
         }
 
         directories.Add(AppContext.BaseDirectory);
@@ -972,7 +972,7 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
     private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 }
 
-public class CustomMouseSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
+public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
 {
     private readonly CustomMousePlugin _plugin;
 

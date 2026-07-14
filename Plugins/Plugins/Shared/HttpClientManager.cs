@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 
-namespace LenovoLegionToolkit.Plugins.Shared;
+namespace UniversalDeviceToolkit.Plugins.Shared;
 
 /// <summary>
 /// Manages shared HttpClient instances to prevent socket exhaustion.

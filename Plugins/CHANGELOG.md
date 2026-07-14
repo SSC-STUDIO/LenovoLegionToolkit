@@ -13,11 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] — v1.3.0-quality (Day 1-5 sprint)
 
-### Changed / 变更
-
-- **Version tooling / 版本工具链**: Added `sync-version` and `bump-version` CLI commands; `migrate` now propagates `plugin.manifest.json` version to csproj, `[Plugin]` attribute, `plugin.json`, and `store-entry.json`. Removed misleading repo-wide version from `Directory.Build.props`.
-- **Store release / 商店上架**: Bumped active plugin versions for plugin-center testing — custom-mouse 1.0.17, shell-integration 1.0.13, vive-tool 1.2.3; regenerated `store.json` with release asset sizes.
-
 ### Fixed
 
 - Harmonized BatteryHealth plugin author to SSC-STUDIO across plugin.json, plugin.manifest.json, and Plugin attribute (was EliuaK_Csy)
@@ -48,7 +43,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Memory transaction: skip save if settings unchanged
 - **SDK version / SDK 版本**: Updated to match host app v4.2.1
 - **Battery Health settings UI**: Fixed CS0104 type ambiguity between Wpf.Ui.Controls and System.Windows.Controls
-- **Brand generalization rewrite / 品牌通用化重写**: Generalized all user-visible Lenovo-specific framing to universal Windows/OEM scope across 15 docs — /LenovoLegion→/pcmasterrace, "Lenovo Legion laptops"→"your Windows setup", 插件数 4→5, 项目数 6→7. M-010 ABI gate preserved (LenovoLegionToolkit.* namespaces, solution name, x:Class, manifest class, DLL names, host-release.json intentionally retained). Intentionally kept: /Lenovo community, Lenovo Vantage competitor comparison, lenovo-legion GitHub topic. Verification: 0 residual branding issues, build 0 warnings/0 errors, tests 409/409.
+- **Brand generalization rewrite / 品牌通用化重写**: Generalized all user-visible Lenovo-specific framing to universal Windows/OEM scope across 15 docs — 
+/LenovoLegion→
+/pcmasterrace, "Lenovo Legion laptops"→"your Windows setup", 插件数 4→5, 项目数 6→7. M-010 ABI gate preserved (LenovoLegionToolkit.* namespaces, solution name, x:Class, manifest class, DLL names, host-release.json intentionally retained). Intentionally kept: 
+/Lenovo community, Lenovo Vantage competitor comparison, lenovo-legion GitHub topic. Verification: 0 residual branding issues, build 0 warnings/0 errors, tests 409/409.
 - **Cross-repo data-root alignment verification / 跨仓库数据根对齐验证**: Confirmed plugin SettingsManager<T> writes to root %LocalAppData%\UniversalDeviceToolkit\plugins\ (L21-24) aligned with host Folders.AppData (%LocalAppData%\UniversalDeviceToolkit, Main Folders.cs L29-30). LenovoLegionToolkit path segments retained as read-only migration source (unchanged).
 - **Brand residual final-audit cleanup / 品牌残留终审清理**: Docs/ARCHITECTURE.md L5 project name migrated to Universal Device Toolkit Plugins, Docs/CODING_STANDARDS.md L5 project name synced. M-010 ABI markers preserved in namespace declarations and output path patterns.
 - **Session backup file cleanup / 会话备份文件清理**: Removed 6 accumulated session backup files — workspace remains clean.

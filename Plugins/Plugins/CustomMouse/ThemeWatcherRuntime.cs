@@ -3,10 +3,10 @@ using System.Threading;
 #nullable enable
 
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 using Microsoft.Win32;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 
 public sealed class ThemeWatcherRuntime
 {

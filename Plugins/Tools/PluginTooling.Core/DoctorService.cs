@@ -18,7 +18,7 @@ public sealed class DoctorService
         var hostReleasePath = Path.Combine(repository.HostDependenciesRoot, "host-release.json");
         Add(result, File.Exists(hostReleasePath), $"Host release manifest found: {hostReleasePath}");
 
-        var libPath = Path.Combine(repository.HostDependenciesRoot, "LenovoLegionToolkit.Lib.dll");
+        var libPath = Path.Combine(repository.HostDependenciesRoot, "UniversalDeviceToolkit.Lib.dll");
         Add(result, File.Exists(libPath), $"Host library found: {libPath}");
 
         var wpfPath = Path.Combine(repository.HostDependenciesRoot, "Lenovo Legion Toolkit.dll");

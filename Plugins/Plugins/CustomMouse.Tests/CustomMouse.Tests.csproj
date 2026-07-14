@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <RootNamespace>LenovoLegionToolkit.Plugins.CustomMouse.Tests</RootNamespace>
-    <AssemblyName>LenovoLegionToolkit.Plugins.CustomMouse.Tests</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Plugins.CustomMouse.Tests</RootNamespace>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.CustomMouse.Tests</AssemblyName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -31,12 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CustomMouse\LenovoLegionToolkit.Plugins.CustomMouse.csproj" />
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\CustomMouse\UniversalDeviceToolkit.Plugins.CustomMouse.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
-    <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+    <Reference Include="UniversalDeviceToolkit.Lib">
+      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

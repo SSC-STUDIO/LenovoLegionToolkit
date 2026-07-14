@@ -10,11 +10,11 @@
   "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
   "contributes": {
     "featurePage": {
-      "class": "LenovoLegionToolkit.Plugins.ViveTool.ViveToolPage",
+      "class": "UniversalDeviceToolkit.Plugins.ViveTool.ViveToolPage",
       "title": "ViVeTool"
     },
     "settingsPage": {
-      "class": "LenovoLegionToolkit.Plugins.ViveTool.ViveToolSettingsPage",
+      "class": "UniversalDeviceToolkit.Plugins.ViveTool.ViveToolSettingsPage",
       "title": "ViVeTool Settings"
     },
     "runtime": null,
@@ -23,8 +23,8 @@
   "package": {
     "assetName": "vive-tool-v1.2.3.zip",
     "requiredFiles": [
-      "LenovoLegionToolkit.Plugins.ViveTool.dll",
-      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "UniversalDeviceToolkit.Plugins.ViveTool.dll",
+      "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
       "plugin.manifest.json"
     ]

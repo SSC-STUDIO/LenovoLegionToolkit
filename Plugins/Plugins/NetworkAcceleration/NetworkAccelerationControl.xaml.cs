@@ -9,9 +9,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration;
 
 public partial class NetworkAccelerationControl : UserControl
 {

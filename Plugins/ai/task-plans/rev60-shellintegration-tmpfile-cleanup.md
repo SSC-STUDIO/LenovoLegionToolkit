@@ -19,7 +19,7 @@ HEAD b1de808 on origin/master. 4 commits already pushed this revision cycle (e14
 
 ## Verification
 - Focused: `dotnet test Plugins/ShellIntegration.Tests/ShellIntegration.Tests.csproj -c Release --filter "SaveProfile_WhenFileMoveFails_CleansUpTempFile"` — 1/1 passed, 42ms, exit 0
-- Full gate: `dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo` — 549 pass (71+37+146+62+230+3), 2 skip, 0 fail, exit 0
+- Full gate: `dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo` — 549 pass (71+37+146+62+230+3), 2 skip, 0 fail, exit 0
 - Canonical: `powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1` — EXIT_CODE=0, 0 errors, 0 warnings
 - Ad-hoc: hermes-verify-rev56-shellintegration-templeak.sh — FOCUSED_EXIT=0, GATE_EXIT=0
 
@@ -40,7 +40,7 @@ Test: SaveProfile_WhenFileMoveFails_CleansUpTempFile — saves profile successfu
 Verification results:
 - Build: dotnet build Plugins/ShellIntegration.Tests/ShellIntegration.Tests.csproj -c Release — 0 errors, 0 warnings, exit 0
 - Focused: dotnet test Plugins/ShellIntegration.Tests/ShellIntegration.Tests.csproj -c Release --filter "SaveProfile_WhenFileMoveFails_CleansUpTempFile" — 1/1 passed, 42ms, exit 0
-- Full gate: dotnet test LenovoLegionToolkit-Plugins.sln -c Release — 549 pass (71+37+146+62+230+3), 2 skip, 0 fail, exit 0
+- Full gate: dotnet test UniversalDeviceToolkit-Plugins.sln -c Release — 549 pass (71+37+146+62+230+3), 2 skip, 0 fail, exit 0
 - Canonical: powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1 — EXIT_CODE=0, build 0 errors 0 warnings
 - Ad-hoc: hermes-verify-rev56-shellintegration-templeak.sh — FOCUSED_EXIT=0, GATE_EXIT=0
 

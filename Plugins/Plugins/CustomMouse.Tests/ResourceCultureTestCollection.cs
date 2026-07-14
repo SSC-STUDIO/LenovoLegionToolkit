@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse.Tests;
 
 /// <summary>
 /// LocalizedTextTestsBase swings Resources.Resource.Culture through a static; the sibling

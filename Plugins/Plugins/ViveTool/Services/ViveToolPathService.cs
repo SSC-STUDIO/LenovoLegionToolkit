@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Plugins.Shared;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Services;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
 /// <summary>
 /// Manages ViVeTool path resolution and caching.
@@ -104,7 +104,7 @@ public class ViveToolPathService
         {
             directories.Add(Path.Combine(overridePluginsDirectory, "local", "vive-tool"));
             directories.Add(Path.Combine(overridePluginsDirectory, "vive-tool"));
-            directories.Add(Path.Combine(overridePluginsDirectory, "LenovoLegionToolkit.Plugins.ViveTool"));
+            directories.Add(Path.Combine(overridePluginsDirectory, "UniversalDeviceToolkit.Plugins.ViveTool"));
         }
 
         directories.Add(Path.GetDirectoryName(typeof(ViveToolService).Assembly.Location));
@@ -115,7 +115,7 @@ public class ViveToolPathService
             var pluginsDirectory = GetDefaultPluginsDirectory();
             directories.Add(Path.Combine(pluginsDirectory, "local", "vive-tool"));
             directories.Add(Path.Combine(pluginsDirectory, "vive-tool"));
-            directories.Add(Path.Combine(pluginsDirectory, "LenovoLegionToolkit.Plugins.ViveTool"));
+            directories.Add(Path.Combine(pluginsDirectory, "UniversalDeviceToolkit.Plugins.ViveTool"));
         }
 
         directories.Add(AppContext.BaseDirectory);

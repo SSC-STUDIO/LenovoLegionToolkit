@@ -1,9 +1,9 @@
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.Plugins.Shared;
-using LenovoLegionToolkit.Plugins.ViveTool.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool;
+namespace UniversalDeviceToolkit.Plugins.ViveTool;
 
 [Plugin(
     id: "vive-tool",
@@ -14,7 +14,7 @@ namespace LenovoLegionToolkit.Plugins.ViveTool;
     MinimumHostVersion = "3.6.1",
     Icon = "Code24"
 )]
-public class ViveToolPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
+public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
 {
     static ViveToolPlugin()
     {
@@ -40,7 +40,7 @@ public class ViveToolPlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase
     }
 }
 
-public class ViveToolPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
+public class ViveToolPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
 {
     public string PageTitle => Resource.ViveTool_PageTitle;
     public string? PageIcon => "Code24";
@@ -51,7 +51,7 @@ public class ViveToolPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
     }
 }
 
-public class ViveToolSettingsPluginPage : LenovoLegionToolkit.Plugins.SDK.IPluginPage
+public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
 {
     public string PageTitle => Resource.ViveTool_BinaryPathTitle;
     public string? PageIcon => "Settings24";

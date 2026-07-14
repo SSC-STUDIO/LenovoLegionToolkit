@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
-using LenovoLegionToolkit.Plugins.ViveTool.Utils;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 public class ViveToolPageRegressionTests
 {

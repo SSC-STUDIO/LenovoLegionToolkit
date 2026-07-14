@@ -11,11 +11,11 @@
   "contributes": {
     "featurePage": null,
     "settingsPage": {
-      "class": "LenovoLegionToolkit.Plugins.CustomMouse.CustomMouseSettingsControl",
+      "class": "UniversalDeviceToolkit.Plugins.CustomMouse.CustomMouseSettingsControl",
       "title": "Cursor \u0026 Pointer"
     },
     "runtime": {
-      "class": "LenovoLegionToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
+      "class": "UniversalDeviceToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
     },
     "optimizationActions": [
       {
@@ -27,8 +27,8 @@
   "package": {
     "assetName": "custom-mouse-v1.0.17.zip",
     "requiredFiles": [
-      "LenovoLegionToolkit.Plugins.CustomMouse.dll",
-      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "UniversalDeviceToolkit.Plugins.CustomMouse.dll",
+      "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
       "plugin.manifest.json"
     ]

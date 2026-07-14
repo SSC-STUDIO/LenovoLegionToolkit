@@ -1,11 +1,11 @@
 using System.Globalization;
 using System.Windows.Data;
-using LenovoLegionToolkit.Plugins.ViveTool;
-using LenovoLegionToolkit.Plugins.ViveTool.Resources;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool;
+using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 public class FeatureStatusConverterTests
 {

@@ -1,11 +1,11 @@
 using System.Reflection;
-using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.Plugins.TestCommon;
-using LenovoLegionToolkit.Plugins.ViveTool;
-using LenovoLegionToolkit.Plugins.ViveTool.Resources;
+using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.ViveTool;
+using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 public class ViveToolPluginTests
 {

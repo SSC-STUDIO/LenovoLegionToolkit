@@ -4,7 +4,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources
 {
     using System;
     using System.CodeDom.Compiler;
@@ -34,7 +34,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
             {
                 if (ReferenceEquals(resourceMan, null))
                 {
-                    resourceMan = new ResourceManager("LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource", typeof(Resource).Assembly);
+                    resourceMan = new ResourceManager("UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource", typeof(Resource).Assembly);
                 }
 
                 return resourceMan;
@@ -49,7 +49,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
         }
 
         /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.PluginName.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.PluginName.
     /// </summary>
     public static string PluginName {
         get {
@@ -58,7 +58,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.PluginDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.PluginDescription.
     /// </summary>
     public static string PluginDescription {
         get {
@@ -67,7 +67,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.PageTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.PageTitle.
     /// </summary>
     public static string PageTitle {
         get {
@@ -76,7 +76,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsPageTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsPageTitle.
     /// </summary>
     public static string SettingsPageTitle {
         get {
@@ -85,7 +85,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.QuickActionsTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.QuickActionsTitle.
     /// </summary>
     public static string QuickActionsTitle {
         get {
@@ -94,7 +94,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.QuickActionsDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.QuickActionsDescription.
     /// </summary>
     public static string QuickActionsDescription {
         get {
@@ -103,7 +103,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.RunQuickOptimizationButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.RunQuickOptimizationButton.
     /// </summary>
     public static string RunQuickOptimizationButton {
         get {
@@ -112,7 +112,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ResetNetworkStackButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ResetNetworkStackButton.
     /// </summary>
     public static string ResetNetworkStackButton {
         get {
@@ -121,7 +121,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.AdminHint.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.AdminHint.
     /// </summary>
     public static string AdminHint {
         get {
@@ -130,7 +130,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.PreferredModeTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.PreferredModeTitle.
     /// </summary>
     public static string PreferredModeTitle {
         get {
@@ -139,7 +139,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SaveModeButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SaveModeButton.
     /// </summary>
     public static string SaveModeButton {
         get {
@@ -148,7 +148,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeBalanced.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeBalanced.
     /// </summary>
     public static string ModeBalanced {
         get {
@@ -157,7 +157,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeGaming.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeGaming.
     /// </summary>
     public static string ModeGaming {
         get {
@@ -166,7 +166,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeStreaming.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeStreaming.
     /// </summary>
     public static string ModeStreaming {
         get {
@@ -175,7 +175,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusQuickOptimizationCompleted.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusQuickOptimizationCompleted.
     /// </summary>
     public static string StatusQuickOptimizationCompleted {
         get {
@@ -184,7 +184,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusQuickOptimizationFailed.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusQuickOptimizationFailed.
     /// </summary>
     public static string StatusQuickOptimizationFailed {
         get {
@@ -193,7 +193,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusResetCompleted.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusResetCompleted.
     /// </summary>
     public static string StatusResetCompleted {
         get {
@@ -202,7 +202,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusResetFailed.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusResetFailed.
     /// </summary>
     public static string StatusResetFailed {
         get {
@@ -211,7 +211,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusSelectValidMode.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusSelectValidMode.
     /// </summary>
     public static string StatusSelectValidMode {
         get {
@@ -220,7 +220,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusModeSaved.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusModeSaved.
     /// </summary>
     public static string StatusModeSaved {
         get {
@@ -229,7 +229,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsTitle.
     /// </summary>
     public static string SettingsTitle {
         get {
@@ -238,7 +238,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsDescription.
     /// </summary>
     public static string SettingsDescription {
         get {
@@ -247,7 +247,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.AutoOptimizeOnStartup.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.AutoOptimizeOnStartup.
     /// </summary>
     public static string AutoOptimizeOnStartup {
         get {
@@ -256,7 +256,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ResetWinsockOnOptimize.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ResetWinsockOnOptimize.
     /// </summary>
     public static string ResetWinsockOnOptimize {
         get {
@@ -265,7 +265,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ResetTcpIpOnOptimize.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ResetTcpIpOnOptimize.
     /// </summary>
     public static string ResetTcpIpOnOptimize {
         get {
@@ -274,7 +274,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SaveSettingsButton.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SaveSettingsButton.
     /// </summary>
     public static string SaveSettingsButton {
         get {
@@ -283,7 +283,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsSaved.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsSaved.
     /// </summary>
     public static string SettingsSaved {
         get {
@@ -292,7 +292,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.LiveTelemetryTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.LiveTelemetryTitle.
     /// </summary>
     public static string LiveTelemetryTitle {
         get {
@@ -301,7 +301,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.LiveTelemetryDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.LiveTelemetryDescription.
     /// </summary>
     public static string LiveTelemetryDescription {
         get {
@@ -310,7 +310,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.CurrentDownloadLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.CurrentDownloadLabel.
     /// </summary>
     public static string CurrentDownloadLabel {
         get {
@@ -319,7 +319,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.CurrentUploadLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.CurrentUploadLabel.
     /// </summary>
     public static string CurrentUploadLabel {
         get {
@@ -328,7 +328,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.PeakTrafficLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.PeakTrafficLabel.
     /// </summary>
     public static string PeakTrafficLabel {
         get {
@@ -337,7 +337,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ActiveAdapterLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ActiveAdapterLabel.
     /// </summary>
     public static string ActiveAdapterLabel {
         get {
@@ -346,7 +346,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.DownloadLegend.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.DownloadLegend.
     /// </summary>
     public static string DownloadLegend {
         get {
@@ -355,7 +355,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.UploadLegend.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.UploadLegend.
     /// </summary>
     public static string UploadLegend {
         get {
@@ -364,7 +364,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ChartEmptyState.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ChartEmptyState.
     /// </summary>
     public static string ChartEmptyState {
         get {
@@ -373,7 +373,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.DownloadTotalLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.DownloadTotalLabel.
     /// </summary>
     public static string DownloadTotalLabel {
         get {
@@ -382,7 +382,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.UploadTotalLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.UploadTotalLabel.
     /// </summary>
     public static string UploadTotalLabel {
         get {
@@ -391,7 +391,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.UpdatedLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.UpdatedLabel.
     /// </summary>
     public static string UpdatedLabel {
         get {
@@ -400,7 +400,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.PreferredModeDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.PreferredModeDescription.
     /// </summary>
     public static string PreferredModeDescription {
         get {
@@ -409,7 +409,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.CurrentModeLabel.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.CurrentModeLabel.
     /// </summary>
     public static string CurrentModeLabel {
         get {
@@ -418,7 +418,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeBalancedDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeBalancedDescription.
     /// </summary>
     public static string ModeBalancedDescription {
         get {
@@ -427,7 +427,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeGamingDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeGamingDescription.
     /// </summary>
     public static string ModeGamingDescription {
         get {
@@ -436,7 +436,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeStreamingDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.ModeStreamingDescription.
     /// </summary>
     public static string ModeStreamingDescription {
         get {
@@ -445,7 +445,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusCardTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StatusCardTitle.
     /// </summary>
     public static string StatusCardTitle {
         get {
@@ -454,7 +454,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.MonitoringStatus.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.MonitoringStatus.
     /// </summary>
     public static string MonitoringStatus {
         get {
@@ -463,7 +463,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.NoActiveAdapter.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.NoActiveAdapter.
     /// </summary>
     public static string NoActiveAdapter {
         get {
@@ -472,7 +472,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.MbpsValueFormat.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.MbpsValueFormat.
     /// </summary>
     public static string MbpsValueFormat {
         get {
@@ -481,7 +481,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsSummaryTitle.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsSummaryTitle.
     /// </summary>
     public static string SettingsSummaryTitle {
         get {
@@ -490,7 +490,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsSummaryDescription.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.SettingsSummaryDescription.
     /// </summary>
     public static string SettingsSummaryDescription {
         get {
@@ -499,7 +499,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StateEnabled.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StateEnabled.
     /// </summary>
     public static string StateEnabled {
         get {
@@ -508,7 +508,7 @@ namespace LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources
     }
 
     /// <summary>
-    ///   Looks up a localized string similar to LenovoLegionToolkit.Plugins.NetworkAcceleration.Resources.Resource.StateDisabled.
+    ///   Looks up a localized string similar to UniversalDeviceToolkit.Plugins.NetworkAcceleration.Resources.Resource.StateDisabled.
     /// </summary>
     public static string StateDisabled {
         get {

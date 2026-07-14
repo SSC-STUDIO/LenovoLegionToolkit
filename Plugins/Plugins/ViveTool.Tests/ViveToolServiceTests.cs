@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 public class ViveToolServiceTests
 {
@@ -397,9 +397,9 @@ public class ViveToolServiceTests
         return (ViveToolFeatureService)FeatureServiceField.GetValue(service)!;
     }
 
-    private static LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings GetSettings(ViveToolPathService pathService)
+    private static UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings GetSettings(ViveToolPathService pathService)
     {
-        return (LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)SettingsField.GetValue(pathService)!;
+        return (UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)SettingsField.GetValue(pathService)!;
     }
 
     private static void SeedFeatureCache(ViveToolService service, params FeatureFlagInfo[] features)
@@ -454,7 +454,7 @@ public class ViveToolServiceTests
     private sealed class ViveToolServiceHarness(
         ViveToolService service,
         ViveToolPathService pathService,
-        LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings settings,
+        UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings settings,
         string? originalStoredPath,
         ViveToolTestRuntimeScope? runtimeScope) : IDisposable, IAsyncDisposable
     {

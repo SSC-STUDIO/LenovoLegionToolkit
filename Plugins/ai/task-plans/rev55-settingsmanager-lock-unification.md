@@ -53,7 +53,7 @@ writes and `File.Move` calls, corrupting the settings file.
    (half Save, half SaveAsync) on the same SettingsManager instance and
    verifies the file is valid JSON/MessagePack with no exceptions.
 6. Run focused tests: `dotnet test Plugins/Shared.Tests/ --filter SettingsManager`.
-7. Run full solution gate: `dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo`.
+7. Run full solution gate: `dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo`.
 8. Update this plan with actual verification results.
 
 ## Verification
@@ -61,7 +61,7 @@ Commands executed and results (collected in this turn, revision 55):
 
 ### Build
 ```
-dotnet build LenovoLegionToolkit-Plugins.sln -c Release --nologo
+dotnet build UniversalDeviceToolkit-Plugins.sln -c Release --nologo
 ```
 Exit code: 0 | 0 warnings, 0 errors | Duration: 13.21s
 
@@ -74,7 +74,7 @@ Exit code: 0 | 52 passed, 0 failed, 0 skipped | Duration: 561ms
 
 ### Full solution gate
 ```
-dotnet test LenovoLegionToolkit-Plugins.sln -c Release --nologo
+dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --nologo
 ```
 Exit code: 0
 Results by project:

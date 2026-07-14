@@ -3,7 +3,7 @@ using System.Globalization;
 #nullable enable
 
 
-namespace LenovoLegionToolkit.Plugins.BatteryHealth;
+namespace UniversalDeviceToolkit.Plugins.BatteryHealth;
 
 public static class BatteryHealthText
 {
@@ -95,7 +95,7 @@ public static class BatteryHealthText
     };
 
     private static readonly System.Resources.ResourceManager ResourceManager =
-        new("LenovoLegionToolkit.Plugins.BatteryHealth.Resources.Resource", typeof(BatteryHealthText).Assembly);
+        new("UniversalDeviceToolkit.Plugins.BatteryHealth.Resources.Resource", typeof(BatteryHealthText).Assembly);
 
     private static string T(string key, string fallback)
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace LenovoLegionToolkit.Plugins.NetworkAcceleration;
+namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration;
 
 internal static class NetworkAccelerationPresentation
 {

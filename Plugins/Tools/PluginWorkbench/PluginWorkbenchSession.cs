@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Plugins.SDK;
 
 namespace PluginWorkbench;
 
@@ -59,11 +59,11 @@ internal sealed class PluginWorkbenchSession : IDisposable
     public bool IsArchiveSource { get; }
     public string PluginVersion { get; }
     public string MinimumHostVersion { get; }
-    public LenovoLegionToolkit.Lib.Plugins.IPluginPage? FeaturePage { get; }
-    public LenovoLegionToolkit.Lib.Plugins.IPluginPage? SettingsPage { get; }
+    public UniversalDeviceToolkit.Lib.Plugins.IPluginPage? FeaturePage { get; }
+    public UniversalDeviceToolkit.Lib.Plugins.IPluginPage? SettingsPage { get; }
     public WindowsOptimizationCategoryDefinition? OptimizationCategory { get; }
 
-    public static async Task<PluginWorkbenchSession> LoadFromBuildOutputAsync(string buildDirectory, LenovoLegionToolkit.Plugins.SDK.PluginHostMode mode)
+    public static async Task<PluginWorkbenchSession> LoadFromBuildOutputAsync(string buildDirectory, UniversalDeviceToolkit.Plugins.SDK.PluginHostMode mode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(buildDirectory);
 
@@ -73,7 +73,7 @@ internal sealed class PluginWorkbenchSession : IDisposable
         return session;
     }
 
-    public static async Task<PluginWorkbenchSession> LoadFromArchiveAsync(string archivePath, LenovoLegionToolkit.Plugins.SDK.PluginHostMode mode)
+    public static async Task<PluginWorkbenchSession> LoadFromArchiveAsync(string archivePath, UniversalDeviceToolkit.Plugins.SDK.PluginHostMode mode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(archivePath);
 
@@ -179,8 +179,8 @@ internal sealed class PluginWorkbenchSession : IDisposable
             .Where(path =>
             {
                 var fileName = Path.GetFileNameWithoutExtension(path);
-                return !string.Equals(fileName, "LenovoLegionToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase)
-                       && !string.Equals(fileName, "LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase);
+                return !string.Equals(fileName, "UniversalDeviceToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase)
+                       && !string.Equals(fileName, "UniversalDeviceToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase);
             })
             .ToList();
 
@@ -199,16 +199,16 @@ internal sealed class PluginWorkbenchSession : IDisposable
         return File.Exists(assemblyPath) ? Assembly.LoadFrom(assemblyPath) : null;
     }
 
-    private void Start(LenovoLegionToolkit.Plugins.SDK.PluginHostMode mode)
+    private void Start(UniversalDeviceToolkit.Plugins.SDK.PluginHostMode mode)
     {
         EnsureInstalledState();
 
-        if (mode != LenovoLegionToolkit.Plugins.SDK.PluginHostMode.RealRuntime)
+        if (mode != UniversalDeviceToolkit.Plugins.SDK.PluginHostMode.RealRuntime)
         {
             return;
         }
 
-        if (Plugin is LenovoLegionToolkit.Lib.Plugins.IAppStartupPlugin startupPlugin)
+        if (Plugin is UniversalDeviceToolkit.Lib.Plugins.IAppStartupPlugin startupPlugin)
         {
             startupPlugin.OnAppStarted();
             return;
@@ -251,7 +251,7 @@ internal sealed class PluginWorkbenchSession : IDisposable
 
     private static object? GetPluginExtension(IPlugin plugin, string methodName)
     {
-        if (plugin is LenovoLegionToolkit.Lib.Plugins.PluginBase pluginBase)
+        if (plugin is UniversalDeviceToolkit.Lib.Plugins.PluginBase pluginBase)
         {
             return methodName switch
             {
@@ -266,7 +266,7 @@ internal sealed class PluginWorkbenchSession : IDisposable
 
     private static WindowsOptimizationCategoryDefinition? GetOptimizationCategory(IPlugin plugin)
     {
-        if (plugin is LenovoLegionToolkit.Lib.Plugins.PluginBase pluginBase)
+        if (plugin is UniversalDeviceToolkit.Lib.Plugins.PluginBase pluginBase)
         {
             return pluginBase.GetOptimizationCategory();
         }
@@ -276,12 +276,12 @@ internal sealed class PluginWorkbenchSession : IDisposable
             .Invoke(plugin, null) as WindowsOptimizationCategoryDefinition;
     }
 
-    private static LenovoLegionToolkit.Lib.Plugins.IPluginPage? CreatePluginPage(object? extension)
+    private static UniversalDeviceToolkit.Lib.Plugins.IPluginPage? CreatePluginPage(object? extension)
     {
-        return extension as LenovoLegionToolkit.Lib.Plugins.IPluginPage;
+        return extension as UniversalDeviceToolkit.Lib.Plugins.IPluginPage;
     }
 
-    private static UIElement? CreateContent(LenovoLegionToolkit.Lib.Plugins.IPluginPage? pluginPage)
+    private static UIElement? CreateContent(UniversalDeviceToolkit.Lib.Plugins.IPluginPage? pluginPage)
     {
         if (pluginPage is null)
         {

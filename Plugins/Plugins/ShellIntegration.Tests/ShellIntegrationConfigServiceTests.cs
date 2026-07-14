@@ -5,7 +5,7 @@ using System.IO;
 using System.Text;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration.Tests;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration.Tests;
 
 public class ShellIntegrationConfigServiceTests : IDisposable
 {
@@ -808,8 +808,8 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     {
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock("");
 
-        Assert.Contains("# region LenovoLegionToolkit.Managed", result);
-        Assert.Contains("# endregion LenovoLegionToolkit.Managed", result);
+        Assert.Contains("# region UniversalDeviceToolkit.Managed", result);
+        Assert.Contains("# endregion UniversalDeviceToolkit.Managed", result);
     }
 
     [Fact]
@@ -817,7 +817,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     {
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock(null!);
 
-        Assert.Contains("# region LenovoLegionToolkit.Managed", result);
+        Assert.Contains("# region UniversalDeviceToolkit.Managed", result);
     }
 
     [Fact]
@@ -825,7 +825,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     {
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock("   ");
 
-        Assert.Contains("# region LenovoLegionToolkit.Managed", result);
+        Assert.Contains("# region UniversalDeviceToolkit.Managed", result);
     }
 
     [Fact]
@@ -856,7 +856,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     [Fact]
     public void UpsertManagedImportBlock_WithExistingBlock_ReplacesBlock()
     {
-        var existing = "# region LenovoLegionToolkit.Managed\nold content\n# endregion LenovoLegionToolkit.Managed";
+        var existing = "# region UniversalDeviceToolkit.Managed\nold content\n# endregion UniversalDeviceToolkit.Managed";
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock(existing);
 
         Assert.DoesNotContain("old content", result);
@@ -879,7 +879,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var content = "theme { }\n\nmenu(\n{\n})";
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock(content);
 
-        var blockIndex = result.IndexOf("# region LenovoLegionToolkit.Managed");
+        var blockIndex = result.IndexOf("# region UniversalDeviceToolkit.Managed");
         var menuIndex = result.IndexOf("menu(");
 
         Assert.True(blockIndex < menuIndex);
@@ -892,7 +892,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock(content);
 
         Assert.Contains("theme { }", result);
-        Assert.Contains("# region LenovoLegionToolkit.Managed", result);
+        Assert.Contains("# region UniversalDeviceToolkit.Managed", result);
     }
 
     [Fact]
@@ -907,7 +907,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     [Fact]
     public void UpsertManagedImportBlock_RemovesOldManagedBlock()
     {
-        var oldBlock = "# region LenovoLegionToolkit.Managed\nold imports\n# endregion LenovoLegionToolkit.Managed";
+        var oldBlock = "# region UniversalDeviceToolkit.Managed\nold imports\n# endregion UniversalDeviceToolkit.Managed";
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock(oldBlock);
 
         Assert.DoesNotContain("old imports", result);
@@ -1114,15 +1114,15 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     public void UpsertManagedImportBlock_WithMultipleExistingBlocks_RemovesAll()
     {
         var content = @"
-# region LenovoLegionToolkit.Managed
+# region UniversalDeviceToolkit.Managed
 old1
-# endregion LenovoLegionToolkit.Managed
+# endregion UniversalDeviceToolkit.Managed
 
 some content
 
-# region LenovoLegionToolkit.Managed
+# region UniversalDeviceToolkit.Managed
 old2
-# endregion LenovoLegionToolkit.Managed
+# endregion UniversalDeviceToolkit.Managed
 ";
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock(content);
 

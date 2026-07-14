@@ -245,7 +245,7 @@ I've been building a **plugin ecosystem** for Windows device management on **.NE
 
 **Host app**: Universal Device Toolkit (WPF, .NET 10)  
 **Plugins**: 5 plugins (Network Acceleration, Custom Mouse, ViVeTool, Shell Integration, Battery Health)  
-**SDK**: `LenovoLegionToolkit.Plugins.SDK.dll` (interfaces + contracts)  
+**SDK**: `UniversalDeviceToolkit.Plugins.SDK.dll` (interfaces + contracts)  
 **Tooling**: CLI scaffold (`llt-plugin.cmd`), PluginWorkbench (standalone previewer)
 
 ---

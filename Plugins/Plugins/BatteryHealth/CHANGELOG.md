@@ -15,4 +15,4 @@
 - Threshold theory inline-data bug; 16/16 unit tests green (0 warnings, 0 errors)
 
 ### Notes
-- Internal LenovoLegionToolkit.Plugins.BatteryHealth namespaces retained for host ABI compatibility (host vendored as LenovoLegionToolkit.Lib); user-visible/store text branded as Universal Device Toolkit (cross-repo rename TODO, see BUGS.md M-010)
+- Internal UniversalDeviceToolkit.Plugins.BatteryHealth namespaces retained for host ABI compatibility (host vendored as UniversalDeviceToolkit.Lib); user-visible/store text branded as Universal Device Toolkit (cross-repo rename TODO, see BUGS.md M-010)

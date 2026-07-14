@@ -4,7 +4,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse.Resources
+namespace UniversalDeviceToolkit.Plugins.CustomMouse.Resources
 {
     using System.CodeDom.Compiler;
     using System.ComponentModel;
@@ -33,7 +33,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse.Resources
             {
                 if (ReferenceEquals(resourceMan, null))
                 {
-                    resourceMan = new ResourceManager("LenovoLegionToolkit.Plugins.CustomMouse.Resources.Resource", typeof(Resource).Assembly);
+                    resourceMan = new ResourceManager("UniversalDeviceToolkit.Plugins.CustomMouse.Resources.Resource", typeof(Resource).Assembly);
                 }
 
                 return resourceMan;

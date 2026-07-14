@@ -2,10 +2,10 @@
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Plugins.ViveTool.Services;
+using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.ViveTool.Tests;
+namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 /// <summary>
 /// Tests for ViveToolPathService - path resolution and caching.
@@ -308,7 +308,7 @@ public class ViveToolPathServiceTests
         await settings.SaveAsync();
 
         // Get the settings file path via reflection (static readonly)
-        var settingsFilePath = (string)typeof(LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)
+        var settingsFilePath = (string)typeof(UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)
             .GetField("SettingsFilePath", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!
             .GetValue(null)!;
 
@@ -338,7 +338,7 @@ public class ViveToolPathServiceTests
         settings.ViveToolPath = "C:\\test\\ViVeTool.exe";
         await settings.SaveAsync();
 
-        var settingsFilePath = (string)typeof(LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)
+        var settingsFilePath = (string)typeof(UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)
             .GetField("SettingsFilePath", BindingFlags.NonPublic | BindingFlags.Static)!
             .GetValue(null)!;
 
@@ -366,9 +366,9 @@ public class ViveToolPathServiceTests
         await settings.SaveAsync();
     }
 
-    private static LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings GetSettings(ViveToolPathService service)
+    private static UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings GetSettings(ViveToolPathService service)
     {
-        return (LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)SettingsField.GetValue(service)!;
+        return (UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings)SettingsField.GetValue(service)!;
     }
 
     private static async Task<ViveToolPathServiceHarness> CreateHarnessAsync()
@@ -400,7 +400,7 @@ public class ViveToolPathServiceTests
 
     private sealed class ViveToolPathServiceHarness(
         ViveToolPathService service,
-        LenovoLegionToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings settings,
+        UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings.ViveToolSettings settings,
         string? originalStoredPath) : IDisposable, IAsyncDisposable
     {
         public ViveToolPathService Service { get; } = service;

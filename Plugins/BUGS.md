@@ -270,15 +270,17 @@
 - **状态**: 🟢 Fixed（Hermes — `ResolveType` 现在区分预期异常 (`FileNotFoundException` / `BadImageFormatException`，静默返回 null) 与意外异常 (`FileLoadException` / `SecurityException` / `ArgumentException` 等，Debug.WriteLine 输出后返回 null)。`CreateHostWindow` 的 catch-all 同样改造。Debug 构建可在 Visual Studio Output 窗口 / dotnet 调试输出中观察到失败原因。构建 0W/0E，539/539 测试通过。）
 - **发现日期**: 2026-07-06
 
-### 🟡 M-010: SDK `PluginBase` 硬依赖 `LenovoLegionToolkit.Lib` 程序集名称 — ABI 兼容性风险（Day 11 确认）
+### 🟢 M-010: SDK `PluginBase` 硬依赖 host `Lib` 程序集名称 — Phase 3 硬切换完成（原 Day 11）
 
-- **文件**: `SDK/PluginBase.cs:13`, `SDK/LenovoLegionToolkit.Plugins.SDK.csproj:23-26`
-- **严重程度**: Medium
-- **类别**: 正确性
-- **描述**: SDK 的 `PluginBase` 继承自 `LenovoLegionToolkit.Lib.Plugins.PluginBase`，且 .csproj 中引用了 `LenovoLegionToolkit.Lib` 程序集（`<Private>false</Private>`）。虽然 UDT 主程序在 `LegacyPluginContracts.cs` 中以相同命名空间 `LenovoLegionToolkit.Lib.Plugins` 提供了兼容的基类，但这依赖 UDT 永久维护这个 shim。如果未来 UDT 移除 `LegacyPluginContracts.cs`，所有基于该 SDK 编译的插件将全部无法加载。
-- **建议修复**: 在 SDK 和主机之间定义独立的 ABI 接口（不依赖具体程序集），使用 `System.Runtime.Loader` 做插件隔离加载；或在文档中明确 ABI 兼容性策略。
-- **状态**: 🟡 Confirmed（Day 11 验证为真实问题）
+- **文件**: `SDK/PluginBase.cs`, `SDK/UniversalDeviceToolkit.Plugins.SDK.csproj`
+- **严重程度**: Medium（历史）
+- **类别**: 正确性 / ABI
+- **描述（历史）**: SDK 的 `PluginBase` 继承 host `*.Lib.Plugins.PluginBase` 并引用 host `*.Lib` 程序集。早期依赖 `LenovoLegionToolkit.*` 命名与 Legacy shim。
+- **Phase 3 修复（2026-07-14）**: 宿主与插件仓库硬切换到 `UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins` / `UniversalDeviceToolkit.Plugins.*`。新编译插件加载名与 host AssemblyName 对齐。预存在的 `LenovoLegionToolkit.Plugins.*` 插件包需主机双载或重新打包。
+- **仍保留**: `%LocalAppData%\LenovoLegionToolkit\` 设置/配置迁移只读路径（SettingsManager / ShellIntegration）。
+- **状态**: 🟢 Fixed / Phase 3 hard cutover
 - **发现日期**: 2026-07-06
+- **关闭日期**: 2026-07-14
 
 ### 🟡 M-011: `BridgedHostContext` 使用反射访问主机属性 — API 变更无编译时检查（Day 11 确认）
 
@@ -338,12 +340,12 @@
 
 ## 2026-07-06 — Day 7 审查
 
-### 🟡 M-013: `SettingsManager<T>` 默认设置路径硬编码 `LenovoLegionToolkit`
+### 🟡 M-013: `SettingsManager<T>` 默认设置路径硬编码 `UniversalDeviceToolkit`
 
 - **文件**: `Plugins/Shared/SettingsManager.cs:17-20`
 - **严重程度**: Medium
 - **类别**: 正确性
-- **描述**: `DefaultSettingsRoot` 硬编码为 `LenovoLegionToolkit\plugins`。当插件在 UDT（Universal Device Toolkit）下运行时，设置应保存到 `UniversalDeviceToolkit\plugins`。这导致插件设置在 LLT 和 UDT 之间不共享（可能是预期行为），但如果 UDT 期望从 `UniversalDeviceToolkit` 路径读取设置，会读不到。
+- **描述**: `DefaultSettingsRoot` 硬编码为 `UniversalDeviceToolkit\plugins`。当插件在 UDT（Universal Device Toolkit）下运行时，设置应保存到 `UniversalDeviceToolkit\plugins`。这导致插件设置在 LLT 和 UDT 之间不共享（可能是预期行为），但如果 UDT 期望从 `UniversalDeviceToolkit` 路径读取设置，会读不到。
 - **建议修复**: 使 `DefaultSettingsRoot` 动态检测主机应用身份（`AppIdentity.CompactName`）；或通过 `settingsRoot` 参数由主机注入。
 - **状态**: 🟡 Confirmed（Day 11 验证）
 - **发现日期**: 2026-07-06
@@ -397,7 +399,7 @@
 - **文件**: `Plugins/Shared/SettingsManager.cs:17-20`
 - **严重程度**: Low
 - **类别**: 正确性
-- **描述**: `DefaultSettingsRoot` 是 `LenovoLegionToolkit\plugins`（第 19 行）。如果同一台机器上同时安装了 LLT 和 UDT，它们会共享同一个 `plugins` 目录，导致插件设置互相覆盖。虽然可能是预期行为（共享插件配置），但也可能导致版本冲突。
+- **描述**: `DefaultSettingsRoot` 是 `UniversalDeviceToolkit\plugins`（第 19 行）。如果同一台机器上同时安装了 LLT 和 UDT，它们会共享同一个 `plugins` 目录，导致插件设置互相覆盖。虽然可能是预期行为（共享插件配置），但也可能导致版本冲突。
 - **建议修复**: UDT 使用独立的设置路径（如 `UniversalDeviceToolkit\plugins`）；或在 `SettingsManager` 构造函数中自动检测主机身份。
 - **状态**: 🟢 Confirmed（Day 11 验证）（低风险）
 - **发现日期**: 2026-07-06

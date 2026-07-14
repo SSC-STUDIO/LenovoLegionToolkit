@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <RootNamespace>LenovoLegionToolkit.Plugins.ViveTool.Tests</RootNamespace>
-    <AssemblyName>LenovoLegionToolkit.Plugins.ViveTool.Tests</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Plugins.ViveTool.Tests</RootNamespace>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.ViveTool.Tests</AssemblyName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -30,15 +30,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ViveTool\LenovoLegionToolkit.Plugins.ViveTool.csproj" />
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\ViveTool\UniversalDeviceToolkit.Plugins.ViveTool.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="Universal Device Toolkit">
       <HintPath>..\..\Dependencies\Host\Universal Device Toolkit.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+    <Reference Include="UniversalDeviceToolkit.Lib">
+      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

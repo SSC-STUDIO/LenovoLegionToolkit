@@ -1,8 +1,8 @@
 using System;
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.SDK;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 public sealed class PluginHostContextTests : IDisposable
 {
@@ -45,7 +45,7 @@ public sealed class PluginHostContextTests : IDisposable
     [Fact]
     public void CreateHostWindow_WithMissingType_ReturnsNull()
     {
-        var window = PluginHostContext.CreateHostWindow("LenovoLegionToolkit.WPF.Windows.Settings.DoesNotExistWindow");
+        var window = PluginHostContext.CreateHostWindow("UniversalDeviceToolkit.WPF.Windows.Settings.DoesNotExistWindow");
 
         Assert.Null(window);
     }

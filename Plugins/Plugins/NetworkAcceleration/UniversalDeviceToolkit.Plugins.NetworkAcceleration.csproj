@@ -9,28 +9,28 @@
     <Version>1.2.0</Version>
     <FileVersion>1.2.0</FileVersion>
     <AssemblyVersion>1.2.0</AssemblyVersion>
-    <AssemblyName>LenovoLegionToolkit.Plugins.NetworkAcceleration</AssemblyName>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.NetworkAcceleration</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.NetworkAcceleration\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.NetworkAcceleration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.NetworkAcceleration\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.NetworkAcceleration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>LenovoLegionToolkit.Plugins.NetworkAcceleration.Tests</_Parameter1>
+      <_Parameter1>UniversalDeviceToolkit.Plugins.NetworkAcceleration.Tests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 

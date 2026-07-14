@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <RootNamespace>LenovoLegionToolkit.Plugins.ShellIntegration.Tests</RootNamespace>
-    <AssemblyName>LenovoLegionToolkit.Plugins.ShellIntegration.Tests</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Plugins.ShellIntegration.Tests</RootNamespace>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.ShellIntegration.Tests</AssemblyName>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
@@ -30,16 +30,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShellIntegration\LenovoLegionToolkit.Plugins.ShellIntegration.csproj" />
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\ShellIntegration\UniversalDeviceToolkit.Plugins.ShellIntegration.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
     <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="Universal Device Toolkit">
       <HintPath>..\..\Dependencies\Host\Universal Device Toolkit.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="LenovoLegionToolkit.Lib">
-      <HintPath>..\..\Dependencies\Host\LenovoLegionToolkit.Lib.dll</HintPath>
+    <Reference Include="UniversalDeviceToolkit.Lib">
+      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

@@ -5,11 +5,11 @@ using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Plugins.SDK;
-using PluginHostMode = LenovoLegionToolkit.Plugins.SDK.PluginHostMode;
-using PluginHostContext = LenovoLegionToolkit.Plugins.SDK.PluginHostContext;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Plugins.SDK;
+using PluginHostMode = UniversalDeviceToolkit.Plugins.SDK.PluginHostMode;
+using PluginHostContext = UniversalDeviceToolkit.Plugins.SDK.PluginHostContext;
 using Microsoft.Win32;
 using PluginTooling.Core;
 
@@ -732,7 +732,7 @@ public partial class MainWindow : Window
 
     private static string? ResolveBuildDirectory(string repositoryRoot, string folderName, string pluginId)
     {
-        var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"LenovoLegionToolkit.Plugins.{folderName}");
+        var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"UniversalDeviceToolkit.Plugins.{folderName}");
         if (Directory.Exists(canonical))
         {
             return canonical;
@@ -785,7 +785,7 @@ public partial class MainWindow : Window
             var current = new DirectoryInfo(candidate);
             for (var i = 0; i < 8 && current is not null; i++)
             {
-                if (File.Exists(Path.Combine(current.FullName, "LenovoLegionToolkit-Plugins.sln")) &&
+                if (File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit-Plugins.sln")) &&
                     Directory.Exists(Path.Combine(current.FullName, "Plugins")))
                 {
                     return current.FullName;

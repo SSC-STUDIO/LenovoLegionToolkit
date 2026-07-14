@@ -1,13 +1,13 @@
-using LenovoLegionToolkit.Plugins.CustomMouse;
-using LenovoLegionToolkit.Plugins.SDK;
-using LenovoLegionToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Plugins.CustomMouse;
+using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.TestCommon;
 using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.CustomMouse.Tests;
+namespace UniversalDeviceToolkit.Plugins.CustomMouse.Tests;
 
 [Collection("CustomMouseResourceCulture")]
 public class CustomMousePluginTests

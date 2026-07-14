@@ -5,7 +5,7 @@ using Xunit;
 using Moq;
 using Microsoft.Extensions.Logging;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 // Test settings class for use in tests
 public class TestSettings

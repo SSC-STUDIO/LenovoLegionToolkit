@@ -2,7 +2,7 @@
 
 ## Session Scope
 
-Autonomous plugin UI redesign audit, cross-repository synchronization, quality verification, and store promotion for **UniversalDeviceToolkit-Plugins**. User constraint: `LenovoLegionToolkit`-named code/identifiers need attention because the product scope widened to `UniversalDeviceToolkit`. Anti-termination clause: never stop after one ticket; chain to the next.
+Autonomous plugin UI redesign audit, cross-repository synchronization, quality verification, and store promotion for **UniversalDeviceToolkit-Plugins**. User constraint: `UniversalDeviceToolkit`-named code/identifiers need attention because the product scope widened to `UniversalDeviceToolkit`. Anti-termination clause: never stop after one ticket; chain to the next.
 
 ## Completed This Session
 
@@ -19,17 +19,17 @@ Deleted 6 accumulated session backup files to restore a clean worktree:
 Full `rg -i -n 'LenovoLegion|Lenovo Legion|Lianxiang zhengjiuzhe'` scan of `Docs/` and `README*` found user-visible project-name references still using the legacy name:
 
 **Fixed (user-visible positioning):**
-- `Docs/ARCHITECTURE.md` L5 prose: `LenovoLegionToolkit-Plugins` -> `Universal Device Toolkit Plugins`
-- `Docs/ARCHITECTURE.md` L15 directory root label: `LenovoLegionToolkit-Plugins/` -> `UniversalDeviceToolkit-Plugins/`
-- `Docs/ARCHITECTURE.md` L61 sibling reference: `` `LenovoLegionToolkit` `` -> `` `UniversalDeviceToolkit` ``
-- `Docs/ARCHITECTURE.md` L218 dependency diagram ASCII box label: `LenovoLegionToolkit` -> `Universal Device Toolkit` (64-char outer box alignment preserved)
-- `Docs/CODING_STANDARDS.md` L5 project name: `LenovoLegionToolkit-Plugins` -> `Universal Device Toolkit Plugins`
+- `Docs/ARCHITECTURE.md` L5 prose: `UniversalDeviceToolkit-Plugins` -> `Universal Device Toolkit Plugins`
+- `Docs/ARCHITECTURE.md` L15 directory root label: `UniversalDeviceToolkit-Plugins/` -> `UniversalDeviceToolkit-Plugins/`
+- `Docs/ARCHITECTURE.md` L61 sibling reference: `` `UniversalDeviceToolkit` `` -> `` `UniversalDeviceToolkit` ``
+- `Docs/ARCHITECTURE.md` L218 dependency diagram ASCII box label: `UniversalDeviceToolkit` -> `Universal Device Toolkit` (64-char outer box alignment preserved)
+- `Docs/CODING_STANDARDS.md` L5 project name: `UniversalDeviceToolkit-Plugins` -> `Universal Device Toolkit Plugins`
 
 **Preserved (M-010 ABI gate):**
-- `Docs/CODING_STANDARDS.md` L34/L56/L58/L85 namespace declarations (`LenovoLegionToolkit.Plugins.*`)
-- `Docs/CODING_STANDARDS.md` L519/L531/L532 solution file name references (`LenovoLegionToolkit-Plugins.sln`)
+- `Docs/CODING_STANDARDS.md` L34/L56/L58/L85 namespace declarations (`UniversalDeviceToolkit.Plugins.*`)
+- `Docs/CODING_STANDARDS.md` L519/L531/L532 solution file name references (`UniversalDeviceToolkit-Plugins.sln`)
 - `Docs/PLUGIN_DEVELOPMENT.md` L172 output directory pattern
-- `Docs/REDDIT_POSTS.md` L248 `LenovoLegionToolkit.Plugins.SDK.dll` (SDK DLL real name)
+- `Docs/REDDIT_POSTS.md` L248 `UniversalDeviceToolkit.Plugins.SDK.dll` (SDK DLL real name)
 - `store.json` `minLLTVersion` field name (ABI JSON property, consumed by host `PluginManifest.cs:52` `[JsonPropertyName]`)
 
 Post-audit residual scan: zero Chinese brand, zero spaced brand, zero unspaced brand outside M-010 gated references.
@@ -41,7 +41,7 @@ Added 3 new bullets to `[Unreleased] -> Changed` section:
 - Cross-repo UDT-008 linkage (StatusWindow.xaml theme-brush binding, no plugin code change)
 
 ### 4. Dual-Track Verification
-- Plugin `dotnet build LenovoLegionToolkit-Plugins.sln -c Release` => 0 warnings / 0 errors (4.74s)
+- Plugin `dotnet build UniversalDeviceToolkit-Plugins.sln -c Release` => 0 warnings / 0 errors (4.74s)
 - Plugin `dotnet test --no-build` => **409 passed / 0 failed / 0 skipped** (BatteryHealth 16, CustomMouse 54, ShellIntegration 114, NetworkAcceleration 39, ViveTool 186)
 
 ### 5. Pillar A (UI/UX Redesign) Audit
@@ -70,21 +70,21 @@ Added 3 new bullets to `[Unreleased] -> Changed` section:
 ## Key Technical Details
 
 ### M-010 ABI Gate (must NOT rename)
-- `LenovoLegionToolkit.Plugins.*` namespaces (clr-namespace, `x:Class`, `using`)
-- Solution file name `LenovoLegionToolkit-Plugins.sln`
+- `UniversalDeviceToolkit.Plugins.*` namespaces (clr-namespace, `x:Class`, `using`)
+- Solution file name `UniversalDeviceToolkit-Plugins.sln`
 - `*.csproj` file names and assembly names
 - `plugin.manifest.json` `class` field
-- DLL names (`LenovoLegionToolkit.Plugins.SDK.dll`)
+- DLL names (`UniversalDeviceToolkit.Plugins.SDK.dll`)
 - `host-release.json`
 - `store.json` `minLLTVersion` JSON property name (consumed by host `PluginManifest.cs:52`)
-- `SettingsManager<T>` legacy read paths (`%LocalAppData%\LenovoLegionToolkit\`) for pre-rebrand migration
+- `SettingsManager<T>` legacy read paths (`%LocalAppData%\UniversalDeviceToolkit\`) for pre-rebrand migration
 
 ### Repairs (build/test commands)
 ```powershell
 # Plugin build
-dotnet build LenovoLegionToolkit-Plugins.sln -c Release -v q --nologo
+dotnet build UniversalDeviceToolkit-Plugins.sln -c Release -v q --nologo
 # Plugin test
-dotnet test LenovoLegionToolkit-Plugins.sln -c Release --no-build --nologo -v q
+dotnet test UniversalDeviceToolkit-Plugins.sln -c Release --no-build --nologo -v q
 # Main build
 dotnet build UniversalDeviceToolkit.sln -c Release -m:1 -p:UseSharedCompilation=false -v q --nologo
 # Main test
@@ -101,8 +101,8 @@ PowerShell 5.1 console code page is GBK 936 (CJK renders as mojibake in terminal
 2. **Commit pending work**: Both repos have uncommitted work (plugin: brand rewrite + PLG-001..004 + this session's doc fixes; main: UDT-007/008 fixes). User should review and commit.
 
 ### Mid-term (M-010 gate release)
-3. **M-010 DLL rename**: After the host repo renames the host DLL, batch-rename plugin compilation identifiers (assembly names, namespaces, `x:Class`, `class` field, solution file). Until then, all `LenovoLegionToolkit.*` ABI identifiers stay.
-4. **`PackageManifestScriptTests.cs:L43`**: winget manifest directory still contains `LenovoLegionToolkit` — evaluate after M-010 gate release.
+3. **M-010 DLL rename**: After the host repo renames the host DLL, batch-rename plugin compilation identifiers (assembly names, namespaces, `x:Class`, `class` field, solution file). Until then, all `UniversalDeviceToolkit.*` ABI identifiers stay.
+4. **`PackageManifestScriptTests.cs:L43`**: winget manifest directory still contains `UniversalDeviceToolkit` — evaluate after M-010 gate release.
 
 ### Long-term (100+ Stars goal)
 5. **Promotion publishing** (human action): `REDDIT_POSTS.md` and `PROMOTION_COPIES.md` copy is ready. Publish to Reddit, V2EX, 52Poje, Chiphell, Bilibili, Zhihu. See `Docs/DAY6_REDDIT_PUBLISHING_GUIDE.md` for the publishing workflow.
@@ -134,8 +134,8 @@ _Generated by Codex Session 23, 2026-07-07. Anti-termination clause honored: cha
 - **Smoke tests**: 10/10 PASS (5 plugins × {Dark, Light} themes, visual captures saved)
 
 ### Files Changed / 修改的文件
-- `Dependencies\Host\LenovoLegionToolkit.Lib.dll` (v3.6.14 → v4.2.1.0)
-- `Dependencies\Host\LenovoLegionToolkit.Lib.Plugins.dll` (NEW, v4.2.1.0)
+- `Dependencies\Host\UniversalDeviceToolkit.Lib.dll` (v3.6.14 → v4.2.1.0)
+- `Dependencies\Host\UniversalDeviceToolkit.Lib.Plugins.dll` (NEW, v4.2.1.0)
 - `Dependencies\Host\Universal Device Toolkit.dll` (renamed from `Lenovo Legion Toolkit.dll`, v4.2.1.0)
 - `Dependencies\Host\Serilog.dll` (NEW, v4.3.0.0)
 - `Dependencies\Host\Serilog.Sinks.Async.dll` (NEW, v2.1.0.0)

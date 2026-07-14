@@ -11,7 +11,7 @@
   "contributes": {
     "featurePage": null,
     "settingsPage": {
-      "class": "LenovoLegionToolkit.Plugins.ShellIntegration.ShellIntegrationSettingsControl",
+      "class": "UniversalDeviceToolkit.Plugins.ShellIntegration.ShellIntegrationSettingsControl",
       "title": "Nilesoft Shell Manager"
     },
     "runtime": null,
@@ -25,8 +25,8 @@
   "package": {
     "assetName": "shell-integration-v1.0.13.zip",
     "requiredFiles": [
-      "LenovoLegionToolkit.Plugins.ShellIntegration.dll",
-      "LenovoLegionToolkit.Plugins.SDK.dll",
+      "UniversalDeviceToolkit.Plugins.ShellIntegration.dll",
+      "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
       "plugin.manifest.json"
     ]

@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace LenovoLegionToolkit.Plugins.ShellIntegration;
+namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
 public static class ShellIntegrationText
 {
@@ -67,7 +67,7 @@ public static string PluginName => T(nameof(PluginName), "Nilesoft Shell Manager
     public static string ErrorPrefix => T(nameof(ErrorPrefix), "Error");
 
     private static readonly System.Resources.ResourceManager ResourceManager =
-        new("LenovoLegionToolkit.Plugins.ShellIntegration.Resources.Resource", typeof(ShellIntegrationText).Assembly);
+        new("UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource", typeof(ShellIntegrationText).Assembly);
 
     private static string T(string key, string fallback)
     {

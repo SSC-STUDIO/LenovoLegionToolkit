@@ -1,7 +1,7 @@
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.SDK;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.TestCommon;
+namespace UniversalDeviceToolkit.Plugins.TestCommon;
 
 internal static class PluginPageAssertions
 {

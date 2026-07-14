@@ -9,19 +9,19 @@
     <Version>1.0.0</Version>
     <FileVersion>1.0.0</FileVersion>
     <AssemblyVersion>1.0.0</AssemblyVersion>
-    <AssemblyName>LenovoLegionToolkit.Plugins.BatteryHealth</AssemblyName>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.BatteryHealth</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.BatteryHealth\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.BatteryHealth\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\LenovoLegionToolkit.Plugins.BatteryHealth\</OutputPath>
+    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.BatteryHealth\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\LenovoLegionToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\LenovoLegionToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

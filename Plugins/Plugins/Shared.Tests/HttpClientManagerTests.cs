@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Xunit;
 
-namespace LenovoLegionToolkit.Plugins.Shared.Tests;
+namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
 public class HttpClientManagerTests
 {
