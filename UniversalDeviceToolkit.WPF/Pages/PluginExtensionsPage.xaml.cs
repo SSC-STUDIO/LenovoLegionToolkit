@@ -479,6 +479,7 @@ private string _currentSearchText = string.Empty;
                     if (version != _pageLoadVersion)
                         return;
                     _availableUpdates = updates;
+                    ReconcileAvailableUpdatesWithInstalledVersions();
                 }
                 catch (Exception ex)
                 {
@@ -701,7 +702,13 @@ private string _currentSearchText = string.Empty;
                 var iconBackground = updatePlugin?.IconBackground ?? onlinePlugin?.IconBackground ?? string.Empty;
 
                 string version = "1.0.0";
-                if (isInstalled && metadata != null && !string.IsNullOrWhiteSpace(metadata.Version))
+                if (isInstalled)
+                {
+                    var installedVersion = ResolveInstalledPluginVersion(plugin.Id);
+                    if (!string.IsNullOrWhiteSpace(installedVersion))
+                        version = installedVersion;
+                }
+                else if (metadata != null && !string.IsNullOrWhiteSpace(metadata.Version))
                     version = metadata.Version;
                 else if (!string.IsNullOrWhiteSpace(newVersion))
                     version = newVersion;
@@ -1090,6 +1097,8 @@ private string _currentSearchText = string.Empty;
         var startedAt = Stopwatch.GetTimestamp();
         try
         {
+            ReconcileAvailableUpdatesWithInstalledVersions();
+
             // Merge online plugins and locally registered plugins
             var allPluginsList = new List<IPlugin>();
             var pluginIds = new HashSet<string>();
@@ -1211,17 +1220,6 @@ private string _currentSearchText = string.Empty;
         if (string.IsNullOrWhiteSpace(pluginId) || !IsPluginInstalledForUi(pluginId))
             return false;
 
-        var metadata = _pluginManager.GetPluginMetadata(pluginId);
-        if (metadata == null || string.IsNullOrWhiteSpace(metadata.Version))
-        {
-            if (_recentInstalledVersions.TryGetValue(pluginId, out var recentVersion))
-                return TryParsePluginVersion(availableVersion, out var recentOnlineVersion) &&
-                       TryParsePluginVersion(recentVersion, out var installedFromRecentInstall) &&
-                       recentOnlineVersion > installedFromRecentInstall;
-
-            return false;
-        }
-
         if (string.IsNullOrWhiteSpace(availableVersion))
         {
             availableVersion = _onlinePlugins
@@ -1229,32 +1227,25 @@ private string _currentSearchText = string.Empty;
                 ?.Version;
         }
 
-        if (!TryParsePluginVersion(availableVersion, out var onlineVersion))
-            return false;
-
-        if (!TryParsePluginVersion(metadata.Version, out var installedVersion))
-            return true;
-
-        return onlineVersion > installedVersion;
+        return PluginVersionParser.IsNewerThan(availableVersion, ResolveInstalledPluginVersion(pluginId));
     }
 
-    private static bool TryParsePluginVersion(string? rawVersion, out Version version)
+    private string? ResolveInstalledPluginVersion(string pluginId)
     {
-        version = new Version(0, 0, 0, 0);
-        if (string.IsNullOrWhiteSpace(rawVersion))
-            return false;
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return null;
 
-        var normalized = rawVersion.Trim();
-        if (normalized.StartsWith("v", StringComparison.OrdinalIgnoreCase))
-            normalized = normalized[1..];
+        var metadata = _pluginManager.GetPluginMetadata(pluginId);
+        var manifest = TryReadInstalledPluginManifest(pluginId, metadata?.FilePath);
+        if (!string.IsNullOrWhiteSpace(manifest?.Version))
+            return manifest.Version;
 
-        if (Version.TryParse(normalized, out var parsedVersion))
-        {
-            version = parsedVersion;
-            return true;
-        }
+        if (!string.IsNullOrWhiteSpace(metadata?.Version))
+            return metadata.Version;
 
-        return false;
+        return _recentInstalledVersions.TryGetValue(pluginId, out var recentVersion)
+            ? recentVersion
+            : null;
     }
 
     private bool IsPluginInstalledForUi(string pluginId)
@@ -2412,7 +2403,7 @@ private string _currentSearchText = string.Empty;
                 Id = pluginId,
                 Name = plugin?.Name ?? metadata?.Name ?? pluginId,
                 Description = plugin?.Description ?? metadata?.Description ?? string.Empty,
-                Version = metadata?.Version ?? "0.0.0",
+                Version = ResolveInstalledPluginVersion(pluginId) ?? metadata?.Version ?? "0.0.0",
                 Icon = plugin?.Icon ?? metadata?.Icon ?? string.Empty,
                 IsSystemPlugin = plugin?.IsSystemPlugin ?? metadata?.IsSystemPlugin ?? false
             });

@@ -74,7 +74,10 @@ public class IpcServer(
         }
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Started");
+        {
+            var pipeNames = GetPipeNames();
+            Log.Instance.Trace($"Started (listening on: {string.Join(", ", pipeNames)})");
+        }
     }
 
     public async Task StopAsync()
@@ -127,16 +130,26 @@ public class IpcServer(
 
     private async Task Handler(CancellationToken token)
     {
+        var pipeNames = GetPipeNames();
+        var acceptLoops = pipeNames
+            .Select(pipeName => HandlerForPipe(pipeName, token))
+            .ToArray();
+
+        await Task.WhenAll(acceptLoops).ConfigureAwait(false);
+    }
+
+    private async Task HandlerForPipe(string pipeName, CancellationToken token)
+    {
         try
         {
-            await using var pipe = CreatePipeServerStream();
+            await using var pipe = CreatePipeServerStream(pipeName);
 
             while (!token.IsCancellationRequested)
             {
                 await pipe.WaitForConnectionAsync(token).ConfigureAwait(false);
 
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Connection received.");
+                    Log.Instance.Trace($"Connection received. [pipe={pipeName}]");
 
                 try
                 {
@@ -182,7 +195,7 @@ public class IpcServer(
                 finally
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Disconnecting...");
+                        Log.Instance.Trace($"Disconnecting... [pipe={pipeName}]");
 
                     pipe.Disconnect();
                 }
@@ -195,14 +208,14 @@ public class IpcServer(
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unknown failure.", ex);
+                Log.Instance.Trace($"Unknown failure. [pipe={pipeName}]", ex);
         }
     }
 
-    private static NamedPipeServerStream CreatePipeServerStream()
+    private static NamedPipeServerStream CreatePipeServerStream(string pipeName)
     {
         var security = CreatePipeSecurity();
-        return NamedPipeServerStreamAcl.Create(GetPipeName(),
+        return NamedPipeServerStreamAcl.Create(pipeName,
             PipeDirection.InOut,
             1,
             PipeTransmissionMode.Message,
@@ -226,13 +239,16 @@ public class IpcServer(
         return security;
     }
 
-    private static string GetPipeName()
+    /// <summary>
+    /// Dual listen names: legacy DEFAULT (primary) + preferred UDT, both isolation-suffixed the same way.
+    /// </summary>
+    private static string[] GetPipeNames()
     {
 #if UDT_TEST_HOOKS
         var isolationPath = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
-        return UniversalDeviceToolkit.CLI.Lib.Constants.GetPipeName(isolationPath);
+        return UniversalDeviceToolkit.CLI.Lib.Constants.GetServerPipeNames(isolationPath);
 #else
-        return UniversalDeviceToolkit.CLI.Lib.Constants.DEFAULT_PIPE_NAME;
+        return UniversalDeviceToolkit.CLI.Lib.Constants.GetServerPipeNames();
 #endif
     }
 

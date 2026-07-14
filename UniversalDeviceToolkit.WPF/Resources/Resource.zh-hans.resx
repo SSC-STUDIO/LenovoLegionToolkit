@@ -4193,7 +4193,7 @@ Fn 将会暂时解除锁定。</value>
     <value>高级</value>
   </data>
   <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
-    <value>模式：系统代理、Hosts（UDT 标记块）或仅诊断。工作进程仅监听 127.0.0.1 / ::1，并通过命名管道 IPC 通信。</value>
+    <value>模式：系统代理（PAC）或仅诊断。Hosts 改写已预留/停用，待本地 TLS 源就绪后再开放（标记块辅助仍保留）。工作进程仅监听 127.0.0.1 / ::1，并通过命名管道 IPC 通信。</value>
   </data>
   <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
     <value>模式</value>
@@ -4220,10 +4220,10 @@ Fn 将会暂时解除锁定。</value>
     <value>已启用 {0}/{1} 组 · {2} 个域名（内置 Steam/GitHub，默认关闭）。</value>
   </data>
   <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
-    <value>选择加速应用方式。总开关关闭时不会修改系统网络。</value>
+    <value>请选择系统代理（PAC）或仅诊断。Hosts 改写已预留，待本地 TLS 源就绪后再开放。</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
-    <value>仅启用的域名组会进入 PAC / Hosts。默认全部关闭。</value>
+    <value>仅启用的域名组会进入 PAC（系统代理）。默认全部关闭。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>单击选择域名组 · 双击启用/关闭 · 底部栏可收藏或启动所选组。</value>
@@ -4256,7 +4256,7 @@ Fn 将会暂时解除锁定。</value>
     <value>系统代理（PAC / 本地代理）</value>
   </data>
   <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
-    <value>Hosts 改写（UDT 标记块）</value>
+    <value>Hosts 改写（预留 / 已停用）</value>
   </data>
   <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
     <value>仅诊断（不改系统）</value>
@@ -4266,6 +4266,15 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
     <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_HostsDisabled" xml:space="preserve">
+    <value>Hosts 已停用</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledNote" xml:space="preserve">
+    <value>Hosts 模式已停用 — 请使用系统代理</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledDetail" xml:space="preserve">
+    <value>在提供本地 TLS 源之前，Hosts→127.0.0.1 不可用。请选择系统代理或仅诊断。</value>
   </data>
   <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
     <value>仅诊断</value>

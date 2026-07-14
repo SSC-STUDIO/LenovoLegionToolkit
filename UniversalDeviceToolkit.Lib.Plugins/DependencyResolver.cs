@@ -376,14 +376,14 @@ public class DependencyResolver : IDependencyResolver
 
     private bool IsVersionCompatible(string actualVersion, string? minVersion, string? maxVersion)
     {
-        if (!Version.TryParse(actualVersion, out var actual))
+        if (!PluginVersionParser.TryParse(actualVersion, out var actual))
         {
             return true; // If we can't parse, assume compatible
         }
 
         if (!string.IsNullOrEmpty(minVersion))
         {
-            if (Version.TryParse(minVersion, out var min) && actual < min)
+            if (PluginVersionParser.TryParse(minVersion, out var min) && actual < min)
             {
                 return false;
             }
@@ -391,7 +391,7 @@ public class DependencyResolver : IDependencyResolver
 
         if (!string.IsNullOrEmpty(maxVersion))
         {
-            if (Version.TryParse(maxVersion, out var max) && actual > max)
+            if (PluginVersionParser.TryParse(maxVersion, out var max) && actual > max)
             {
                 return false;
             }

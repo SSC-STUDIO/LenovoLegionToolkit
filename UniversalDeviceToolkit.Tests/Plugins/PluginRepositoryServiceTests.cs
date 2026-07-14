@@ -184,6 +184,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     [Theory]
     [InlineData("1.0.16", "1.0.16")]
     [InlineData("1.0.16", "1.0.17")]
+    [InlineData("v1.0.16", "1.0.16")]
+    [InlineData("1.0.16", "v1.0.17")]
     public void LocalPackageFallbackVersionGate_ShouldAcceptSameOrNewerLocalPackage(string requestedVersion, string localVersion)
     {
         // Arrange
@@ -196,6 +198,20 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         result.Should().Be(true);
+    }
+
+    [Theory]
+    [InlineData("v1.0.16", "1.0.15")]
+    [InlineData("1.0.16", "v1.0.15")]
+    public void LocalPackageFallbackVersionGate_ShouldRejectOlderLocalPackage_WithVPrefix(string requestedVersion, string localVersion)
+    {
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "IsLocalPackageVersionUsableForFallback",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        var result = method!.Invoke(null, [requestedVersion, localVersion]);
+
+        result.Should().Be(false);
     }
 
     [Fact]

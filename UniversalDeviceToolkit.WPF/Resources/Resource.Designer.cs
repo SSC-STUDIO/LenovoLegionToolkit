@@ -10131,6 +10131,9 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string NetworkAccelerationPage_Mode_DiagnosticsOnly { get { return ResourceManager.GetString("NetworkAccelerationPage_Mode_DiagnosticsOnly", resourceCulture); } }
         public static string NetworkAccelerationPage_ModeShort_SystemProxy { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeShort_SystemProxy", resourceCulture); } }
         public static string NetworkAccelerationPage_ModeShort_Hosts { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeShort_Hosts", resourceCulture); } }
+        public static string NetworkAccelerationPage_ModeShort_HostsDisabled { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeShort_HostsDisabled", resourceCulture); } }
+        public static string NetworkAccelerationPage_HostsDisabledNote { get { return ResourceManager.GetString("NetworkAccelerationPage_HostsDisabledNote", resourceCulture); } }
+        public static string NetworkAccelerationPage_HostsDisabledDetail { get { return ResourceManager.GetString("NetworkAccelerationPage_HostsDisabledDetail", resourceCulture); } }
         public static string NetworkAccelerationPage_ModeShort_DiagnosticsOnly { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeShort_DiagnosticsOnly", resourceCulture); } }
         public static string NetworkAccelerationPage_MetricsHeading { get { return ResourceManager.GetString("NetworkAccelerationPage_MetricsHeading", resourceCulture); } }
         public static string NetworkAccelerationPage_StatusRunning { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusRunning", resourceCulture); } }

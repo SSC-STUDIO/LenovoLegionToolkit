@@ -102,11 +102,16 @@ When the ecosystem is ready to introduce `UniversalDeviceToolkit.Lib*` type name
 | Concern | Current value | Guidance |
 | --- | --- | --- |
 | CLI `AssemblyName` | `llt` (`UniversalDeviceToolkit.CLI`) | Keep `llt.exe` for scripts and docs that invoke the short name; CrossPlatform shipping uses `udt` where appropriate. |
-| Named pipe (host ↔ CLI IPC) | `LenovoLegionToolkit-IPC-0` (`UniversalDeviceToolkit.CLI.Lib.Constants.DEFAULT_PIPE_NAME`) | **LLT-compatible** by design. Renaming the pipe without dual-listen or a versioned discovery story breaks existing CLI ↔ running app pairs. |
+| Named pipe (host ↔ CLI IPC) — **legacy primary** | `LenovoLegionToolkit-IPC-0` (`Constants.DEFAULT_PIPE_NAME`) | **Server primary** listen name for full backward compatibility with older CLI / tooling that only knows the LLT pipe. |
+| Named pipe (host ↔ CLI IPC) — **preferred UDT** | `UniversalDeviceToolkit-IPC-0` (`Constants.PREFERRED_PIPE_NAME`) | **Client-preferred** name. Host dual-listens on both; clients try UDT first, then fall back to legacy DEFAULT within a short timeout. Isolation-path hashing suffixes **both** names the same way. |
 | Automation env vars | `LLT_*` (documented in README) | User scripts depend on these names; treat as compatibility surface, not dead branding. |
 | Network proxy pipe | `udt-network-proxy` (and session-suffixed variants) | UDT-native; separate from CLI IPC. |
 
-Do not rename CLI pipe constants or `llt` assembly name in drive-by cleanups.
+Phase 2 dual-pipe behavior (non-breaking):
+
+- **Server (`IpcServer`)**: accept loops on both `DEFAULT_PIPE_NAME` and `PREFERRED_PIPE_NAME` (see `Constants.GetServerPipeNames`).
+- **Client (`IpcClient`)**: `GetClientPipeNames` order — preferred UDT, then legacy LLT.
+- Do not remove the legacy pipe constant or `llt` assembly name in drive-by cleanups until a hard cutover is deliberately planned.
 
 ---
 
@@ -129,6 +134,6 @@ Core Lib DLL:        LenovoLegionToolkit.Lib.dll
 Plugins host DLL:    LenovoLegionToolkit.Lib.Plugins.dll
 Plugin SDK (other):  LenovoLegionToolkit.Plugins.SDK / Shared
 CLI exe (Windows):  llt.exe
-CLI IPC pipe:        LenovoLegionToolkit-IPC-0
+CLI IPC pipes:       UniversalDeviceToolkit-IPC-0 (preferred) + LenovoLegionToolkit-IPC-0 (legacy primary)
 NetworkProxy:        UniversalDeviceToolkit.NetworkProxy (fully UDT)
 ```

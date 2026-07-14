@@ -16,8 +16,11 @@ _Due to large number of issues created, those that do not meet the criteria will
 
 1. Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (Windows)
 2. Clone the repo: git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git
-3. Build: dotnet build -c Release -m:1
-4. Run tests: dotnet test -c Release
+3. Restore (CI-aligned): `dotnet restore UniversalDeviceToolkit.sln --locked-mode`
+4. Build: `dotnet build -c Release -m:1 --no-restore`
+5. Run tests: `dotnet test -c Release`
+
+NuGet restores are reproducible via committed per-project `packages.lock.json` files (`RestorePackagesWithLockFile` in `Directory.Build.props`). CI always uses `dotnet restore … --locked-mode`. Use that flag locally when validating against CI; omit it only when you intentionally refresh lock files after package version changes, then commit the updated `packages.lock.json` files. `Make.bat` and most local scripts rely on implicit restore during build/publish and do not force `--locked-mode`, so casual offline builds are not blocked by a strict lock mismatch.
 
 The solution has 16 projects. Build sequentially (-m:1) to avoid VBCSCompiler lock conflicts. See Docs/ARCHITECTURE.md for the full project map.
 

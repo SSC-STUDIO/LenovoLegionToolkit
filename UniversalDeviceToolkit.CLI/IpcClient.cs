@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Tasks;
@@ -244,9 +246,7 @@ public static class IpcClient
     private static async Task<string?> SendRequestAsync(IpcRequest req)
     {
         using var loading = ConsoleLoadingAnimation.Start(GetLoadingMessage(req));
-        using var pipe = new NamedPipeClientStream(GetPipeName());
-
-        await ConnectAsync(pipe).ConfigureAwait(false);
+        using var pipe = await ConnectToAvailablePipeAsync().ConfigureAwait(false);
 
         var challengeResponse = await pipe.ReadObjectAsync<IpcResponse>().ConfigureAwait(false);
         if (challengeResponse is null || !challengeResponse.Success || challengeResponse.Message is null)
@@ -262,6 +262,41 @@ public static class IpcClient
             throw new IpcException(res?.Message ?? Strings.Get("CLI_IpcError_UnknownFailure", "Unknown failure"));
 
         return res.Message;
+    }
+
+    /// <summary>
+    /// Try preferred UDT pipe first (short timeout), then fall back to legacy DEFAULT.
+    /// </summary>
+    private static async Task<NamedPipeClientStream> ConnectToAvailablePipeAsync()
+    {
+        var pipeNames = GetClientPipeNames();
+        Exception? lastError = null;
+
+        for (var i = 0; i < pipeNames.Length; i++)
+        {
+            var pipeName = pipeNames[i];
+            var isFallback = i > 0;
+            var attempts = isFallback ? ConnectMaxAttempts : PreferredConnectAttempts;
+            var pipe = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut);
+
+            try
+            {
+                await ConnectAsync(pipe, attempts).ConfigureAwait(false);
+                if (isFallback)
+                    Trace.WriteLine($"CLI IPC: preferred pipe unavailable; fell back to '{pipeName}'.");
+                return pipe;
+            }
+            catch (Exception ex) when (ex is TimeoutException or IpcConnectException or IOException)
+            {
+                lastError = ex;
+                await pipe.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        if (lastError is IpcConnectException ipc)
+            throw ipc;
+
+        throw new IpcConnectException();
     }
 
     private static string ComputeAuthToken(byte[] challenge) => Convert.ToHexString(challenge);
@@ -324,9 +359,14 @@ public static class IpcClient
 
     private const int ConnectMaxAttempts = 40;
 
-    private static async Task ConnectAsync(NamedPipeClientStream pipe)
+    /// <summary>
+    /// Short probe budget for the preferred UDT pipe before falling back to legacy.
+    /// </summary>
+    private const int PreferredConnectAttempts = 2;
+
+    private static async Task ConnectAsync(NamedPipeClientStream pipe, int maxAttempts = ConnectMaxAttempts)
     {
-        for (var attempt = 0; attempt < ConnectMaxAttempts; attempt++)
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
         {
             try
             {
@@ -336,7 +376,7 @@ public static class IpcClient
             }
             catch (TimeoutException)
             {
-                if (attempt < ConnectMaxAttempts - 1)
+                if (attempt < maxAttempts - 1)
                 {
                     var baseDelay = (int)Math.Min(200 * Math.Pow(2, attempt), 3000);
                     var jitter = Random.Shared.Next(-50, 51);
@@ -349,6 +389,6 @@ public static class IpcClient
         throw new IpcConnectException();
     }
 
-    private static string GetPipeName()
-        => Constants.GetPipeNameFromEnvironment();
+    private static string[] GetClientPipeNames()
+        => Constants.GetClientPipeNamesFromEnvironment();
 }

@@ -55,6 +55,43 @@ public class PipeNameAndAdditionalEdgeCaseTests
         a.Should().NotBe(b);
     }
 
+    [Fact]
+    public void GetPipeName_WithBaseName_ShouldApplySameIsolationSuffixToBothBases()
+    {
+        var path = @"C:\Users\Test\AppData\Local\UDT";
+        var legacy = Constants.GetPipeName(path, Constants.DEFAULT_PIPE_NAME);
+        var preferred = Constants.GetPipeName(path, Constants.PREFERRED_PIPE_NAME);
+
+        legacy.Should().StartWith(Constants.DEFAULT_PIPE_NAME + "-");
+        preferred.Should().StartWith(Constants.PREFERRED_PIPE_NAME + "-");
+
+        var legacySuffix = legacy[Constants.DEFAULT_PIPE_NAME.Length..];
+        var preferredSuffix = preferred[Constants.PREFERRED_PIPE_NAME.Length..];
+        preferredSuffix.Should().Be(legacySuffix);
+    }
+
+    [Fact]
+    public void GetServerPipeNames_WithIsolation_ShouldSuffixBothNames()
+    {
+        var path = @"C:\Users\Test\AppData\Local\UDT";
+        var names = Constants.GetServerPipeNames(path);
+
+        names.Should().HaveCount(2);
+        names[0].Should().StartWith(Constants.DEFAULT_PIPE_NAME + "-");
+        names[1].Should().StartWith(Constants.PREFERRED_PIPE_NAME + "-");
+    }
+
+    [Fact]
+    public void GetClientPipeNames_WithIsolation_ShouldPreferUdtThenLegacy()
+    {
+        var path = @"C:\Users\Test\AppData\Local\UDT";
+        var names = Constants.GetClientPipeNames(path);
+
+        names.Should().HaveCount(2);
+        names[0].Should().StartWith(Constants.PREFERRED_PIPE_NAME + "-");
+        names[1].Should().StartWith(Constants.DEFAULT_PIPE_NAME + "-");
+    }
+
     #endregion
 
     #region Additional NotificationType Coverage

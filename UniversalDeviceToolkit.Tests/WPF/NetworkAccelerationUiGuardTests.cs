@@ -167,6 +167,33 @@ public class NetworkAccelerationUiGuardTests
     }
 
     [Fact]
+    public void NetworkAccelerationControl_Code_OmitsHostsFromSelectableModes()
+    {
+        var code = File.ReadAllText(FindControlCode());
+        // Hosts is refused at the service layer; do not offer it in the mode combo.
+        code.Should().Contain("ToSelectableMode");
+        code.Should().Contain("HostsDisabledNote");
+        // Only the BuildModeCombo method body — not ToSelectableMode / Start coerce helpers / their docs.
+        var buildStart = code.IndexOf("private void BuildModeCombo()", StringComparison.Ordinal);
+        buildStart.Should().BeGreaterThan(0);
+        // End at the closing brace of BuildModeCombo (before ToSelectableMode docs or next method).
+        var afterBuild = code.IndexOf("private static NetworkAccelerationMode ToSelectableMode", StringComparison.Ordinal);
+        if (afterBuild < 0)
+            afterBuild = code.IndexOf("private void BuildDomainGroupTiles()", StringComparison.Ordinal);
+        afterBuild.Should().BeGreaterThan(buildStart);
+        // Slice only the method: stop at the last '}' before ToSelectableMode so XML docs are excluded.
+        var slice = code.Substring(buildStart, afterBuild - buildStart);
+        var lastBrace = slice.LastIndexOf('}');
+        lastBrace.Should().BeGreaterThan(0);
+        var buildBody = slice.Substring(0, lastBrace + 1);
+        buildBody.Should().NotContain("NetworkAccelerationMode.Hosts");
+        buildBody.Should().Contain("NetworkAccelerationMode.SystemProxy");
+        buildBody.Should().Contain("NetworkAccelerationMode.DiagnosticsOnly");
+        // Items.Add calls for modes: SystemProxy + DiagnosticsOnly only (no Hosts ModeOption).
+        Regex.Matches(buildBody, @"new ModeOption\(").Count.Should().Be(2);
+    }
+
+    [Fact]
     public void NetworkAccelerationControl_Code_SelectionBarHasFavoriteAndStartHandlers()
     {
         var code = File.ReadAllText(FindControlCode());

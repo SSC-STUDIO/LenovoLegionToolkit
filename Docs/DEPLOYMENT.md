@@ -245,9 +245,11 @@ jobs:
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
-      - run: dotnet restore
+      - run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
       - run: dotnet build --configuration Release --no-restore
 ```
+
+CI restores with `--locked-mode` so the committed per-project `packages.lock.json` files (enabled by `RestorePackagesWithLockFile` in `Directory.Build.props`) must match `Directory.Packages.props` / project graphs. Local scripts and `Make.bat` do not pass `--locked-mode` on implicit restore during `dotnet publish`/`dotnet build`, so offline or lock-refresh workflows stay flexible; prefer the locked form when matching CI.
 
 #### Release Pipeline (`Release.yml`)
 
@@ -534,8 +536,13 @@ On Windows builds from a WSL UNC path, prefer `--no-restore` after a successful 
 # Clear NuGet cache
 dotnet nuget locals all --clear
 
-# Restore packages
-dotnet restore UniversalDeviceToolkit.sln
+# Restore packages (same flags as CI; fails if lock files are out of date)
+dotnet restore UniversalDeviceToolkit.sln --locked-mode
+
+# After intentionally updating Directory.Packages.props / PackageReferences,
+# regenerate locks without --locked-mode, then commit the updated packages.lock.json files:
+#   dotnet restore UniversalDeviceToolkit.sln
+#   git add '**/packages.lock.json'
 
 # Clear obj/bin folders
 dotnet clean

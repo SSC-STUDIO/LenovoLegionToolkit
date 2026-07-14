@@ -1286,7 +1286,7 @@ public class PluginManager : IPluginManager
                     Id = plugin.Id,
                     Name = plugin.Name,
                     Description = plugin.Description,
-                    Version = metadata?.Version ?? "0.0.0",
+                    Version = PluginVersionParser.ResolveInstalledVersion(plugin.Id, metadata?.Version) ?? "0.0.0",
                     Icon = plugin.Icon,
                     IsSystemPlugin = plugin.IsSystemPlugin
                 });
@@ -1556,7 +1556,8 @@ public class PluginManager : IPluginManager
 
     private static int ComparePluginVersions(string? left, string? right)
     {
-        if (Version.TryParse(left, out var leftVersion) && Version.TryParse(right, out var rightVersion))
+        if (PluginVersionParser.TryParse(left, out var leftVersion) &&
+            PluginVersionParser.TryParse(right, out var rightVersion))
             return leftVersion.CompareTo(rightVersion);
 
         return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);

@@ -3835,7 +3835,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Advanced</value>
   </data>
   <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
-    <value>Modes: System proxy, Hosts (UDT-marked block), or Diagnostics only. Worker listens on 127.0.0.1 / ::1 with named-pipe IPC.</value>
+    <value>Modes: System proxy (PAC) or Diagnostics only. Hosts rewrite is reserved/disabled until a local TLS origin exists (marked-block helpers kept). Worker listens on 127.0.0.1 / ::1 with named-pipe IPC.</value>
   </data>
   <data name="NetworkAccelerationPage_ModeLabel" xml:space="preserve">
     <value>Mode</value>
@@ -3862,10 +3862,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>{0}/{1} groups enabled · {2} domains (Steam/GitHub built-in, off by default).</value>
   </data>
   <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
-    <value>Choose how acceleration is applied. Off is controlled by the master switch above.</value>
+    <value>Choose System proxy (PAC) or Diagnostics only. Hosts rewrite is reserved until a local TLS origin exists.</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
-    <value>Only enabled groups are rewritten by PAC / Hosts. All groups stay off by default.</value>
+    <value>Only enabled groups are applied by PAC (system proxy). All groups stay off by default.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Click to select groups · double-click to enable/disable · use the bar to favorite or start selected.</value>
@@ -3898,7 +3898,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>System proxy (PAC / local proxy)</value>
   </data>
   <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
-    <value>Hosts rewrite (UDT-marked block)</value>
+    <value>Hosts rewrite (reserved / disabled)</value>
   </data>
   <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
     <value>Diagnostics only (no system changes)</value>
@@ -3908,6 +3908,15 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
     <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_HostsDisabled" xml:space="preserve">
+    <value>Hosts disabled</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledNote" xml:space="preserve">
+    <value>Hosts mode disabled — use System proxy</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledDetail" xml:space="preserve">
+    <value>Hosts→127.0.0.1 is unavailable until a local TLS origin exists. Choose System proxy or Diagnostics only.</value>
   </data>
   <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
     <value>Diagnostics only</value>

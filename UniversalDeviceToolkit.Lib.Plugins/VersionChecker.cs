@@ -95,19 +95,9 @@ public class VersionChecker
         if (string.IsNullOrWhiteSpace(newVersion))
             return false;
 
-        try
-        {
-            var current = string.IsNullOrWhiteSpace(currentVersion) 
-                ? new Version("0.0.0.0") 
-                : new Version(currentVersion);
-            var latest = new Version(newVersion);
-            return latest > current;
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Error checking update availability: {ex.Message}");
-            return false;
-        }
+        // Empty/missing current version is treated as 0.0.0 so first installs can surface as upgrades.
+        var baseline = string.IsNullOrWhiteSpace(currentVersion) ? "0.0.0.0" : currentVersion;
+        return PluginVersionParser.IsNewerThan(newVersion, baseline);
     }
 
     /// <summary>
@@ -118,17 +108,15 @@ public class VersionChecker
     /// <returns>Negative if version1 < version2, zero if equal, positive if version1 > version2</returns>
     public int CompareVersions(string version1, string version2)
     {
-        try
-        {
-            var v1 = string.IsNullOrWhiteSpace(version1) ? new Version("0.0.0.0") : new Version(version1);
-            var v2 = string.IsNullOrWhiteSpace(version2) ? new Version("0.0.0.0") : new Version(version2);
-            return v1.CompareTo(v2);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Error comparing versions: {ex.Message}");
-            return 0;
-        }
+        var leftRaw = string.IsNullOrWhiteSpace(version1) ? "0.0.0.0" : version1;
+        var rightRaw = string.IsNullOrWhiteSpace(version2) ? "0.0.0.0" : version2;
+
+        if (PluginVersionParser.TryParse(leftRaw, out var left) &&
+            PluginVersionParser.TryParse(rightRaw, out var right))
+            return left.CompareTo(right);
+
+        Log.Instance.Warning($"Error comparing versions: unable to parse '{version1}' and/or '{version2}'");
+        return 0;
     }
 
     /// <summary>

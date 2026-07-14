@@ -780,8 +780,8 @@ public class PluginRepositoryService : IDisposable
         if (string.IsNullOrWhiteSpace(localVersion))
             return false;
 
-        if (Version.TryParse(localVersion, out var parsedLocalVersion) &&
-            Version.TryParse(requestedVersion, out var parsedRequestedVersion))
+        if (PluginVersionParser.TryParse(localVersion, out var parsedLocalVersion) &&
+            PluginVersionParser.TryParse(requestedVersion, out var parsedRequestedVersion))
         {
             return parsedLocalVersion >= parsedRequestedVersion;
         }
@@ -1874,18 +1874,13 @@ public class PluginRepositoryService : IDisposable
 
         foreach (var installed in installedPlugins)
         {
-            var available = availablePlugins.FirstOrDefault(p => p.Id == installed.Id);
-            if (available != null)
-            {
-                if (Version.TryParse(available.Version, out var availableVersion) &&
-                    Version.TryParse(installed.Version, out var installedVersion))
-                {
-                    if (availableVersion > installedVersion)
-                    {
-                        updates.Add(available);
-                    }
-                }
-            }
+            var available = availablePlugins.FirstOrDefault(p =>
+                string.Equals(p.Id, installed.Id, StringComparison.OrdinalIgnoreCase));
+            if (available == null)
+                continue;
+
+            if (PluginVersionParser.IsNewerThan(available.Version, installed.Version))
+                updates.Add(available);
         }
 
         return updates;

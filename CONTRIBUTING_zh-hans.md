@@ -1,60 +1,76 @@
-﻿## 娆㈣繋鏉ュ埌 UDT 寮€鍙戣€呮寚鍗?
+## 欢迎来到 UDT 开发者指南！
 
-棣栧厛鎰熻阿浣犺姳鏃堕棿涓烘椤圭洰鍋氬嚭璐＄尞锛侀殢鐫€ UDT 鐨勭儹搴﹁秺鏉ヨ秺楂橈紝涓轰簡纭繚浣犵殑璐＄尞鑳藉琚繀閫熼噰绾筹紝浣犲簲璇ラ伒瀹堜竴瀹氱殑鏍煎紡鍜岃鍒欍€?
+### 其他语言版本：
+* [English](CONTRIBUTING.md)
+
+首先感谢你花时间为本项目做出贡献！随着 UDT 的热度越来越高，为了确保你的贡献能够被顺利采纳，你应该遵守一定的格式和规则。
 
 <br/>
 
-_鐢变簬 Issues 鎬婚噺鐨勫鍔狅紝涓嶇鍚堟爣鍑嗙殑 Issue 浼氬湪鏃犻鍏堣鍛婄殑鎯呭喌涓嬭鍏抽棴鎴栧垹闄ゃ€傚薄娆¤繚鍙嶈€呭皢琚湰椤圭洰灏佺銆俖
+_由于 Issues 总量的增加，不符合标准的 Issue 会在无预先警告的情况下被关闭或删除。屡次违反者将被本项目封禁。_
 
 <br/>
 
-**1. 鍦ㄦ姤鍛?Issue 鍓嶈浠旂粏闃呰 README**
+**开发环境准备**
 
-缁濆ぇ澶氭暟甯歌闂鐨勮В鍐虫柟娉曞拰閲嶈淇℃伅閮藉凡鍦?[README](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/README_zh-hans.md) 鍐呴槓鏄庛€傝鍔″繀鍦ㄦ姤鍛?Issue 鎴栧彂璧疯璁哄墠閫氳鍏朵腑鐨勫唴瀹广€?
+1. 安装 [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)（Windows）
+2. 克隆仓库：`git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git`
+3. 还原（与 CI 一致）：`dotnet restore UniversalDeviceToolkit.sln --locked-mode`
+4. 构建：`dotnet build -c Release -m:1 --no-restore`
+5. 运行测试：`dotnet test -c Release`
 
-**2. 妫€鏌ュ凡琚姤鍛婄殑 Issues**
+NuGet 还原通过各项目已提交的 `packages.lock.json` 保证可复现（`Directory.Build.props` 中启用了 `RestorePackagesWithLockFile`）。CI 始终使用 `dotnet restore … --locked-mode`。本地对齐 CI 时请带上该参数；仅在有意更新包版本后刷新锁文件时省略，并将更新后的 `packages.lock.json` 一并提交。`Make.bat` 与多数本地脚本依赖构建/发布时的隐式还原，不会强制 `--locked-mode`，因此一般离线构建不会因锁文件严格校验而中断。
 
-璇锋鏌ラ」鐩粨搴撲笅鐨?[Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues?q=is%3Aissue) 鍜?[Discussions](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/discussions?discussions_q=) 鏍忕洰銆傝涓嶈鎶ュ憡閲嶅鐨?Issue 鎴栧彂璧烽噸澶嶇殑璁ㄨ銆傚嵆浣夸綘鎵惧埌鐨?Issue 宸茬粡琚叧闂紝浣犱竴鏍峰彲浠ュ湪閭ｉ噷鐣欒█銆?
+解决方案共有 16 个项目。请顺序构建（`-m:1`），以避免 VBCSCompiler 锁冲突。完整项目结构见 [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)。
 
-**3. 浣跨敤鑻辫**
+<br/>
 
-杩欎細璁╂墍鏈変汉涔嬮棿鐨勪氦娴侀兘鏇村姞渚垮埄銆?
+**1. 在报告 Issue 前请仔细阅读 README**
 
-璇戣€呮彁绀猴細鑻ヤ綘鏃犳硶娴佺晠鍦颁娇鐢ㄨ嫳璇〃杈撅紝浣犲彲浠ュ湪浣跨敤涓枃瀹屾垚鑽夌鍚庝娇鐢ㄧ櫨搴︾炕璇戞垨 [DeepL](https://www.deepl.com/zh/translator) 绛夌炕璇戠綉绔欐垨杞欢灏嗚崏绋跨炕璇戜负鑻辫鍚庢彁浜ゃ€?
+绝大多数常见问题的解决方法和重要信息都已在 [README](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/README_zh-hans.md) 内阐明。请务必在报告 Issue 或发起讨论前通读其中的内容。
 
-**4. 灏婇噸椤圭洰鐩爣**
+**2. 检查已被报告的 Issues**
 
-杩欎笉鏄竴涓竾鑳界殑搴旂敤銆傞」鐩殑鎰挎櫙寰堟槑纭細涓烘嫰鏁戣€呯瑪璁版湰鎻愪緵涓€涓?Legion Zone锛堟捣澶栫増鍒欎负 Vantage锛夌殑鏇夸唬鍝併€傝鍕胯姹傛敮鎸佸叾瀹冪被鍨嬫垨鍨嬪彿鐨勮澶囥€?
+请检查项目仓库下的 [Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues?q=is%3Aissue) 和 [Discussions](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/discussions?discussions_q=) 栏目。请不要报告重复的 Issue 或发起重复的讨论。即使你找到的 Issue 已经被关闭，你一样可以在那里留言。
 
-**5. 鍦ㄦ柊寤?Issue 鍓嶅鏌ヤ綘鐨勯棶棰?*
+**3. 使用英语**
 
-璇风‘淇?Bug 纭疄鏄?UDT 鐨?Bug銆傝繖涓嶆槸涓€涓厤璐圭殑绯荤粺鏁呴殰鎺掗櫎璁哄潧锛屽鏋滀綘鍦ㄤ娇鐢ㄨ淇敼杩囩殑 Windows 鐗堟湰鎴栦綘鐨勭郴缁熸湰韬凡缁忓嚭鐜伴棶棰橈紝璇疯嚜琛岃В鍐炽€?
+这会让所有人之间的交流都更加便利。
 
-**6. 灏芥墍鑳借缁嗘弿杩颁綘鐨勯棶棰?*
+译者提示：若你无法流利地使用英语表达，你可以在使用中文完成草稿后使用百度翻译或 [DeepL](https://www.deepl.com/zh/translator) 等翻译网站或软件将草稿翻译为英语后提交。
 
-璇︾粏鐨勬弿杩版槸瑙ｅ喅闂鐨勫叧閿墍鍦ㄣ€傝鍦ㄦ柊寤?Issue 鏃跺～鍐欒〃鍗曞唴鐨勬墍鏈夐」鐩苟鎻愪緵鏃ュ織鏂囦欢銆傚彧鏈夋彁渚涜壇濂界殑鎻忚堪鎴戜滑鎵嶈兘鏇村揩鍦拌В鍐抽棶棰樸€?
+**4. 尊重项目目标**
 
-**7. 涓轰綘鐨?Issue 鎴栨潯璁鸿捣涓€涓ソ鐨勬爣棰?*
+这不是一个万能的应用。项目的愿景很明确：为拯救者笔记本提供一个 Legion Zone（海外版则为 Vantage）的替代品。请勿要求支持其他类型或型号的设备。
 
-杩欐牱鍙互鏋佸ぇ鏂逛究娴忚 Issue 鍜岃璁哄垪琛ㄣ€傗€滀娇鐢?UDT 鏃跺嚭鐜伴棶棰樷€濆苟涓嶆槸涓€涓ソ鐨勬爣棰樸€?
+**5. 在新建 Issue 前审查你的问题**
 
-**8. 鍥寸粫涓婚**
+请确保 Bug 确实是 UDT 的 Bug。这不是一个免费的系统故障排除论坛，如果你在使用被修改过的 Windows 版本或你的系统本身已经出现问题，请自行解决。
 
-涓嶈鍙戣〃涓庝富棰樻棤鍏虫垨鏃犳剰涔夌殑鐣欒█銆?
+**6. 尽所能详细描述你的问题**
 
-**9. 涓€涓?Issue 涓€涓棶棰?*
+详细的描述是解决问题的关键所在。请在新建 Issue 时填写表单内的所有项目并提供日志文件。只有提供良好的描述我们才能更快地解决问题。
 
-璇蜂笉瑕佸湪涓€涓?Issue 鍐呭悓鏃舵姤鍛婂涓棶棰樻垨璇锋眰娣诲姞澶氫釜鍔熻兘銆傝涓烘瘡涓€涓棶棰樸€佷富棰樻垨鎯虫硶鏂板缓涓€涓崟鐙殑 Issue 鎴栬璁猴紝杩欎細璁╁悗鏈熻窡杩涙洿鍔犲鏄撱€?
+**7. 为你的 Issue 或讨论起一个好的标题**
 
-**10. 缈昏瘧**
+这样可以极大方便浏览 Issue 和讨论列表。“使用 UDT 时出现问题”并不是一个好的标题。
 
-鎴戜滑浣跨敤 [Crowdin](https://crowdin.com/project/llt) 浣滀负杞欢缈昏瘧骞冲彴銆傚鏋滀綘鎯充负缈昏瘧鍋氬嚭璐＄尞锛岃鍦ㄩ偅閲岀敵璇疯闂」鐩殑鏉冮檺銆?
+**8. 围绕主题**
+
+不要发表与主题无关或无意义的留言。
+
+**9. 一个 Issue 一个问题**
+
+请不要在一个 Issue 内同时报告多个问题或请求添加多个功能。请为每一个问题、主题或想法新建一个单独的 Issue 或讨论，这会让后期跟进更加容易。
+
+**10. 翻译**
+
+我们使用 [Crowdin](https://crowdin.com/project/llt) 作为软件翻译平台。如果你想为翻译做出贡献，请在那里申请访问项目的权限。
 
 **11. Pull requests**
 
-鎴戜滑娆㈣繋浣犳彁浜?PR锛堝綋鐒朵簡锛夈€傞櫎闈炰綘鎻愪氦浜嗕竴涓潪甯哥畝鍗曟槗鎳傜殑 PR锛岃鍏堝垱寤轰竴涓?Issue 骞舵弿杩颁綘姝ｅ湪瑙ｅ喅鐨勯棶棰樸€備负涓€涓細琚嫆缁濈殑鐐瑰瓙鑺辨椂闂村苟娌℃湁浠€涔堟剰涔夛紝鍥犱负杩欎笉绗﹀悎鏈」鐩殑鎰挎櫙銆傚悓鏃惰閬靛惊鐜版湁鐨勪唬鐮侀鏍煎拰椤圭洰缁勭粐銆?
+我们欢迎你提交 PR（当然了）。除非你提交了一个非常简单易懂的 PR，请先创建一个 Issue 并描述你正在解决的问题。为一个会被拒绝的点子花时间并没有什么意义，因为这不符合本项目的愿景。同时请遵循现有的代码风格和项目组织。
 
 <br/>
 
-鍐嶆鎰熻阿浣犺姳鏃堕棿甯姪椤圭洰鍙樺緱鏇村ソ锛?
-
+再次感谢你花时间帮助项目变得更好！

@@ -95,13 +95,12 @@ public partial class NetworkAccelerationControl : UserControl
         try
         {
             _modeComboBox.Items.Clear();
+            // Selectable modes only. Hosts is reserved: service refuses Hosts→127.0.0.1 until a
+            // local TLS origin exists (helpers kept for a future redesign). Do not list Hosts.
             // Data items (not ComboBoxItem): SelectionBoxItem is a string-like object, single paint.
             _modeComboBox.Items.Add(new ModeOption(
                 T("NetworkAccelerationPage_Mode_SystemProxy", "System proxy (PAC / local proxy)"),
                 NetworkAccelerationMode.SystemProxy));
-            _modeComboBox.Items.Add(new ModeOption(
-                T("NetworkAccelerationPage_Mode_Hosts", "Hosts rewrite (UDT-marked block)"),
-                NetworkAccelerationMode.Hosts));
             _modeComboBox.Items.Add(new ModeOption(
                 T("NetworkAccelerationPage_Mode_DiagnosticsOnly", "Diagnostics only (no system changes)"),
                 NetworkAccelerationMode.DiagnosticsOnly));
@@ -111,6 +110,15 @@ public partial class NetworkAccelerationControl : UserControl
             _suppressEvents = false;
         }
     }
+
+    /// <summary>
+    /// Maps saved/config modes onto the selectable combo values.
+    /// Hosts is not selectable in the combo; treat like SystemProxy for the selector.
+    /// </summary>
+    private static NetworkAccelerationMode ToSelectableMode(NetworkAccelerationMode mode) =>
+        mode is NetworkAccelerationMode.Off or NetworkAccelerationMode.Hosts
+            ? NetworkAccelerationMode.SystemProxy
+            : mode;
 
     private void BuildDomainGroupTiles()
     {
@@ -406,9 +414,12 @@ public partial class NetworkAccelerationControl : UserControl
             if (!any)
                 return;
 
-            // Enable master switch + a real mode so Start applies PAC/Hosts for selected groups.
+            // Enable master switch + a real mode so Start applies PAC for selected groups.
+            // Hosts is refused at the service layer — coerce to SystemProxy on start path.
             _acceleration.Config.AccelerationEnabled = true;
-            if (_acceleration.Config.Mode is NetworkAccelerationMode.Off or NetworkAccelerationMode.DiagnosticsOnly)
+            if (_acceleration.Config.Mode is NetworkAccelerationMode.Off
+                or NetworkAccelerationMode.DiagnosticsOnly
+                or NetworkAccelerationMode.Hosts)
                 _acceleration.Config.Mode = NetworkAccelerationMode.SystemProxy;
 
             await _acceleration.SaveConfigAsync().ConfigureAwait(true);
@@ -578,7 +589,9 @@ public partial class NetworkAccelerationControl : UserControl
 
     private string ModeFullLabel(NetworkAccelerationMode mode) => mode switch
     {
-        NetworkAccelerationMode.Hosts => T("NetworkAccelerationPage_Mode_Hosts", "Hosts rewrite (UDT-marked block)"),
+        NetworkAccelerationMode.Hosts => T(
+            "NetworkAccelerationPage_HostsDisabledDetail",
+            "Hosts→127.0.0.1 is unavailable until a local TLS origin exists. Choose System proxy or Diagnostics only."),
         NetworkAccelerationMode.DiagnosticsOnly => T("NetworkAccelerationPage_Mode_DiagnosticsOnly", "Diagnostics only (no system changes)"),
         NetworkAccelerationMode.SystemProxy => T("NetworkAccelerationPage_Mode_SystemProxy", "System proxy (PAC / local proxy)"),
         _ => T("NetworkAccelerationPage_Mode_SystemProxy", "System proxy (PAC / local proxy)")
@@ -586,7 +599,7 @@ public partial class NetworkAccelerationControl : UserControl
 
     private string ModeShortLabel(NetworkAccelerationMode mode) => mode switch
     {
-        NetworkAccelerationMode.Hosts => T("NetworkAccelerationPage_ModeShort_Hosts", "Hosts"),
+        NetworkAccelerationMode.Hosts => T("NetworkAccelerationPage_ModeShort_HostsDisabled", "Hosts disabled"),
         NetworkAccelerationMode.DiagnosticsOnly => T("NetworkAccelerationPage_ModeShort_DiagnosticsOnly", "Diagnostics only"),
         NetworkAccelerationMode.SystemProxy => T("NetworkAccelerationPage_ModeShort_SystemProxy", "System proxy"),
         NetworkAccelerationMode.Off => T("NetworkAccelerationPage_State_Idle", "Not started"),
@@ -625,15 +638,28 @@ public partial class NetworkAccelerationControl : UserControl
 
             var modeFull = ModeFullLabel(config.Mode);
             var modeShort = ModeShortLabel(config.Mode);
+            var hostsDisabled = config.Mode is NetworkAccelerationMode.Hosts;
             if (_modeSummaryText is not null)
             {
+                // Hosts: saved config may still say Hosts — surface that it is disabled (combo shows SystemProxy).
                 // Diagnostics: put the safety note under the short chip (chip stays "仅诊断").
-                _modeSummaryText.Text = _uiState is ConnectionUiState.DiagnosticsOnly
-                    ? statusDetail
-                    : $"{T("NetworkAccelerationPage_ModeLabel", "Mode")} · {modeShort}";
-                _modeSummaryText.ToolTip = _uiState is ConnectionUiState.DiagnosticsOnly
-                    ? statusDetail
-                    : modeFull;
+                if (hostsDisabled)
+                {
+                    _modeSummaryText.Text = T(
+                        "NetworkAccelerationPage_HostsDisabledNote",
+                        "Hosts mode disabled — use System proxy");
+                    _modeSummaryText.ToolTip = modeFull;
+                }
+                else if (_uiState is ConnectionUiState.DiagnosticsOnly)
+                {
+                    _modeSummaryText.Text = statusDetail;
+                    _modeSummaryText.ToolTip = statusDetail;
+                }
+                else
+                {
+                    _modeSummaryText.Text = $"{T("NetworkAccelerationPage_ModeLabel", "Mode")} · {modeShort}";
+                    _modeSummaryText.ToolTip = modeFull;
+                }
             }
 
             if (_statusPill is not null)
@@ -642,15 +668,18 @@ public partial class NetworkAccelerationControl : UserControl
                 _statusText.ToolTip = statusDetail;
 
             if (_modeText is not null)
-                _modeText.Text = $"{T("NetworkAccelerationPage_ModeLabel", "Mode")}: {config.Mode}";
+            {
+                _modeText.Text = hostsDisabled
+                    ? $"{T("NetworkAccelerationPage_ModeLabel", "Mode")}: {T("NetworkAccelerationPage_ModeShort_HostsDisabled", "Hosts disabled")}"
+                    : $"{T("NetworkAccelerationPage_ModeLabel", "Mode")}: {config.Mode}";
+            }
             if (_portText is not null)
                 _portText.Text = $"{T("NetworkAccelerationPage_PortLabel", "Listen port")}: {config.ListenPort}";
 
             if (_modeComboBox is not null)
             {
-                var displayMode = config.Mode is NetworkAccelerationMode.Off
-                    ? NetworkAccelerationMode.SystemProxy
-                    : config.Mode;
+                // Off / Hosts are not selectable — show SystemProxy without mutating config until Save/Start.
+                var displayMode = ToSelectableMode(config.Mode);
                 for (var i = 0; i < _modeComboBox.Items.Count; i++)
                 {
                     if (_modeComboBox.Items[i] is ModeOption option && option.Mode == displayMode)
@@ -844,13 +873,22 @@ public partial class NetworkAccelerationControl : UserControl
 
         try
         {
+            // Coerce Off/Hosts before Start: Hosts is refused by the service until a local TLS origin exists.
+            var needsSave = false;
             if (!_acceleration.Config.AccelerationEnabled)
             {
                 _acceleration.Config.AccelerationEnabled = true;
-                if (_acceleration.Config.Mode is NetworkAccelerationMode.Off)
-                    _acceleration.Config.Mode = NetworkAccelerationMode.SystemProxy;
-                await _acceleration.SaveConfigAsync().ConfigureAwait(true);
+                needsSave = true;
             }
+
+            if (_acceleration.Config.Mode is NetworkAccelerationMode.Off or NetworkAccelerationMode.Hosts)
+            {
+                _acceleration.Config.Mode = NetworkAccelerationMode.SystemProxy;
+                needsSave = true;
+            }
+
+            if (needsSave)
+                await _acceleration.SaveConfigAsync().ConfigureAwait(true);
 
             var ok = await _acceleration.StartAsync().ConfigureAwait(true);
             _startFailed = !ok;

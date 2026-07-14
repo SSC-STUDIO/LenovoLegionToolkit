@@ -133,11 +133,11 @@ UDT supports dynamic plugin loading through a structured API:
 
 ```
 Plugin Structure (runtime, in host plugins directory):
-??? plugin.manifest.json    # Authoring manifest (also packaged for compatibility)
-??? plugin.json             # Generated runtime manifest output (legacy-compatible)
-??? plugin.dll              # Main plugin assembly
-??? [dependencies]          # Additional assemblies (e.g. LenovoLegionToolkit.Plugins.SDK.dll)
-??? [resources]             # Plugin resources
++-- plugin.manifest.json    # Authoring manifest (also packaged for compatibility)
++-- plugin.json             # Generated runtime manifest output (legacy-compatible)
++-- plugin.dll              # Main plugin assembly
++-- [dependencies]          # Additional assemblies (e.g. LenovoLegionToolkit.Plugins.SDK.dll)
++-- [resources]             # Plugin resources
 ```
 
 Official plugins are built and published from the separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repository; the host loads their packaged output.
@@ -155,9 +155,11 @@ Author scaffolding in [UniversalDeviceToolkit-Plugins](https://github.com/SSC-ST
 ### Plugin Lifecycle
 
 ```
-Loading �?Initialization �?Registration �?Activation �?Shutdown
-  �?           �?             �?             �?          �?  �?           ??????????????????????????????????????????�?  �?                        Active State
-  �?  ??�?Disabled/Failed �?Unloaded
+Loading -> Initialization -> Registration -> Activation -> Shutdown
+  |              |                |              |           |
+  |              +----------------+--------------+-----------+
+  |                              Active State
+  +-> Disabled/Failed -> Unloaded
 ```
 
 ## Data Flow
@@ -166,24 +168,24 @@ Loading �?Initialization �?Registration �?Activation �?Shutdown
 
 ```
 User Action (UI)
-      �?PowerModeSelectorViewModel
-      �?PowerModeController.SetModeAsync()
-      �?WMI Call (\\ROOT\WMI\Lenovo_Path)
-      �?ACPI Communication
-      �?Hardware Response
-      �?Windows Power Plan Sync
-      �?State Update Broadcast
-      �?UI Refresh
+      -> PowerModeSelectorViewModel
+      -> PowerModeController.SetModeAsync()
+      -> WMI Call (\\ROOT\WMI\Lenovo_Path)
+      -> ACPI Communication
+      -> Hardware Response
+      -> Windows Power Plan Sync
+      -> State Update Broadcast
+      -> UI Refresh
 ```
 
 ### Game Detection Flow
 
 ```
 GameDetectionService (Background Monitor)
-      �?Window Title / Process Matching
-      �?Plugin Notifications
-      �?Automation Rules Evaluation
-      �?Automatic Actions Execution
+      -> Window Title / Process Matching
+      -> Plugin Notifications
+      -> Automation Rules Evaluation
+      -> Automatic Actions Execution
 ```
 
 ## Technology Stack
