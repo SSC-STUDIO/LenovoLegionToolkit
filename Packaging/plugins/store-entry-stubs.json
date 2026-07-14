@@ -1,6 +1,6 @@
 {
   "note": "Local planning stubs only. Published store.json lives in UniversalDeviceToolkit-Plugins.",
-  "lastUpdated": "2026-07-11",
+  "lastUpdated": "2026-07-14",
   "plugins": [
     {
       "id": "network-acceleration",
