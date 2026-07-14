@@ -6,6 +6,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
 
+[Trait("Category", TestCategories.Smoke)]
 public class MainAppPluginUiSmokeArgumentParsingTests
 {
     [Fact]

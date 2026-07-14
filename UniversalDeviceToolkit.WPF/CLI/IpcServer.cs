@@ -16,6 +16,7 @@ using UniversalDeviceToolkit.CLI.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Messaging;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
@@ -431,7 +432,7 @@ public class IpcServer(
         var pipelines = await automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
         var quickActions = pipelines
             .Where(p => p.Trigger is null)
-            .Select(p => p.Name);
+            .Select(p => PipelineNameLocalizer.LocalizeStoredName(p.Name) ?? p.Name);
 
         return string.Join('\n', quickActions);
     }
@@ -439,9 +440,15 @@ public class IpcServer(
     private async Task RunQuickActionAsync(string name)
     {
         var pipelines = await automationProcessor.GetPipelinesAsync().ConfigureAwait(false);
-        var quickAction = pipelines
-                              .Where(p => p.Trigger is null)
-                              .FirstOrDefault(p => p.Name == name)
+        var quickActions = pipelines.Where(p => p.Trigger is null).ToArray();
+        var quickAction = quickActions.FirstOrDefault(p =>
+                              string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase) ||
+                              string.Equals(
+                                  PipelineNameLocalizer.LocalizeStoredName(p.Name),
+                                  name,
+                                  StringComparison.OrdinalIgnoreCase) ||
+                              (PipelineNameLocalizer.IsKnownDeactivateGpuTitle(name) &&
+                               PipelineNameLocalizer.IsKnownDeactivateGpuTitle(p.Name)))
                           ?? throw new InvalidOperationException($"Quick Action \"{name}\" not found");
 
         await automationProcessor.RunNowAsync(quickAction.Id).ConfigureAwait(false);

@@ -14,6 +14,11 @@ if (-not $resolvedPath) {
 $pathTrimChars = [char[]]@([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
 $payloadRoot = $resolvedPath.Path.TrimEnd($pathTrimChars)
 
+$requiredExactNames = @(
+    'UniversalDeviceToolkit.Plugins.SDK.dll',
+    'UniversalDeviceToolkit.Plugins.Shared.dll'
+)
+
 $forbiddenExactNames = @(
     'SpectrumTester.exe',
     'SpectrumTester.dll',
@@ -102,6 +107,23 @@ function Test-ContainsBinaryMarker {
     }
 
     return $false
+}
+
+$missingRequired = @()
+foreach ($requiredName in $requiredExactNames) {
+    $requiredPath = Join-Path $payloadRoot $requiredName
+    if (-not (Test-Path -LiteralPath $requiredPath)) {
+        $missingRequired += $requiredName
+    }
+}
+
+if ($missingRequired.Count -gt 0) {
+    [Console]::Error.WriteLine('Shipping payload is missing required plugin runtime files:')
+    foreach ($missingName in $missingRequired) {
+        [Console]::Error.WriteLine(" - $missingName")
+    }
+
+    exit 1
 }
 
 $violations = @()

@@ -11,6 +11,9 @@ public sealed class ShippingPayloadGuardTests
     {
         var script = ReadRepositoryFile("Scripts", "Assert-ShippingPayload.ps1");
 
+        script.Should().Contain("'UniversalDeviceToolkit.Plugins.SDK.dll'");
+        script.Should().Contain("'UniversalDeviceToolkit.Plugins.Shared.dll'");
+        script.Should().Contain("Shipping payload is missing required plugin runtime files");
         script.Should().Contain("'UniversalDeviceToolkit.Tests'");
         script.Should().Contain("'UniversalDeviceToolkit.CrossPlatform.Tests'");
         script.Should().Contain("'MainAppPluginUi.Smoke'");
@@ -34,6 +37,31 @@ public sealed class ShippingPayloadGuardTests
     }
 
     [Fact]
+    public void ShippingPayloadGuard_ShouldRejectPayloadMissingPluginRuntime()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var payloadRoot = NewTempDirectory("UDT-shipping-missing-runtime");
+        File.WriteAllBytes(Path.Combine(payloadRoot, "Universal Device Toolkit.dll"), [0x01]);
+
+        try
+        {
+            var output = RunPowerShellScript(
+                Path.Combine(repositoryRoot, "Scripts", "Assert-ShippingPayload.ps1"),
+                ["-PayloadPath", payloadRoot],
+                repositoryRoot,
+                expectSuccess: false);
+
+            output.Should().Contain("Shipping payload is missing required plugin runtime files:");
+            output.Should().Contain("UniversalDeviceToolkit.Plugins.SDK.dll");
+            output.Should().Contain("UniversalDeviceToolkit.Plugins.Shared.dll");
+        }
+        finally
+        {
+            Directory.Delete(payloadRoot, recursive: true);
+        }
+    }
+
+    [Fact]
     public void ShippingPayloadGuard_ShouldRejectUtf16BinaryTestHookMarkers()
     {
         var repositoryRoot = FindRepositoryRoot();
@@ -41,6 +69,7 @@ public sealed class ShippingPayloadGuardTests
 
         try
         {
+            SeedRequiredPluginRuntimeFiles(payloadRoot);
             var markerPath = Path.Combine(payloadRoot, "Universal Device Toolkit.dll");
             File.WriteAllBytes(markerPath, System.Text.Encoding.Unicode.GetBytes("prefix UDT_APPDATA_OVERRIDE suffix"));
 
@@ -72,6 +101,7 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel");
         workflow.Should().Contain("$includeCrossPlatformCli = $majorVersionNumber -ge 5");
         workflow.Should().Contain("ENABLE_CROSS_PLATFORM_CLI=$($includeCrossPlatformCli.ToString().ToLowerInvariant())");
+        workflow.Should().Contain("./Scripts/Build-PluginRuntimeAssets.ps1");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT");
         workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
@@ -374,6 +404,12 @@ public sealed class ShippingPayloadGuardTests
         }
 
         return output + error;
+    }
+
+    private static void SeedRequiredPluginRuntimeFiles(string payloadRoot)
+    {
+        File.WriteAllBytes(Path.Combine(payloadRoot, "UniversalDeviceToolkit.Plugins.SDK.dll"), [0x01]);
+        File.WriteAllBytes(Path.Combine(payloadRoot, "UniversalDeviceToolkit.Plugins.Shared.dll"), [0x02]);
     }
 
     private static string NewTempDirectory(string prefix)

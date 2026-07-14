@@ -13,7 +13,10 @@ using UniversalDeviceToolkit.Lib.Plugins.Resources;
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
-/// Implementation of plugin sandbox using AssemblyLoadContext for isolation
+/// In-process load isolation for plugins via <see cref="AssemblyLoadContext"/>.
+/// This is <b>not</b> a security sandbox: plugin code runs with host privileges
+/// inside the same process. Untrusted third-party plugins require an out-of-process
+/// host and IPC permission model — do not treat this type as a trust boundary.
 /// </summary>
 public class PluginSandbox : IPluginSandbox, IDisposable
 {
@@ -209,7 +212,7 @@ public class PluginSandbox : IPluginSandbox, IDisposable
                 };
             }
 
-            // Execute the operation
+            // Load isolation only: invoke on the calling thread in-process (not a security sandbox).
             var result = operation();
 
             stopwatch.Stop();

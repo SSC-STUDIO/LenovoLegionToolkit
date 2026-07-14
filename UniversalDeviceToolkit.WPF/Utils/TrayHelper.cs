@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Assets;
 using UniversalDeviceToolkit.WPF.Controls.Custom;
@@ -178,7 +179,8 @@ public class TrayHelper : IDisposable
             var item = new MenuItem
             {
                 Icon = new SymbolIcon { Symbol = icon },
-                Header = pipeline.Name ?? Resource.Unnamed,
+                // Stable keys (e.g. __udt.quickAction.deactivateGpu) must not surface in the tray.
+                Header = PipelineNameLocalizer.LocalizeStoredName(pipeline.Name) ?? pipeline.Name ?? Resource.Unnamed,
                 Tag = AUTOMATION_TAG
             };
             item.Click += async (_, _) =>

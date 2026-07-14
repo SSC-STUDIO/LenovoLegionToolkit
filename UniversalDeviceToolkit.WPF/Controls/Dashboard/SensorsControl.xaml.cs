@@ -112,6 +112,14 @@ public partial class SensorsControl : IDisposable
         // control is in the visual tree so trend charts are not stuck in Compact hide.
         var width = ActualWidth > 1 ? ActualWidth : 1200;
         ApplySensorSummaryLayout(width, force: true);
+
+        // NavigationStore caches DashboardPage — Unloaded stops polling but the control
+        // is reused. Restart refresh when the cached page is presented again.
+        if (IsVisible)
+        {
+            Refresh();
+            RefreshBattery();
+        }
     }
 
     private void ApplySensorSectionConfiguration()
@@ -178,17 +186,21 @@ public partial class SensorsControl : IDisposable
 
     private void SensorsControl_Unloaded(object sender, RoutedEventArgs e)
     {
-        IsVisibleChanged -= SensorsControl_IsVisibleChanged;
-        SizeChanged -= SensorsControl_SizeChanged;
-        Loaded -= SensorsControl_Loaded;
-        Unloaded -= SensorsControl_Unloaded;
-        Dispose();
+        // Cached navigation unloads without destroying the control — pause polling only.
+        // Keep event handlers attached so Loaded / IsVisibleChanged can resume on return.
+        StopSensorRefresh();
+        StopBatteryRefresh();
     }
 
     public void Dispose()
     {
         StopSensorRefresh();
         StopBatteryRefresh();
+
+        IsVisibleChanged -= SensorsControl_IsVisibleChanged;
+        SizeChanged -= SensorsControl_SizeChanged;
+        Loaded -= SensorsControl_Loaded;
+        Unloaded -= SensorsControl_Unloaded;
     }
 
     internal enum SensorSummaryLayoutMode

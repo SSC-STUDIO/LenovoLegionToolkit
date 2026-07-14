@@ -9,12 +9,12 @@ internal static class SkeletonShimmerCoordinator
 {
     private static readonly Dictionary<DependencyObject, DispatcherOperation> PendingRestarts = new();
 
-    internal static void Restart(DependencyObject root)
+    internal static void Restart(DependencyObject root, bool force = false)
     {
         var dispatcher = GetDispatcher(root);
         if (!dispatcher.CheckAccess())
         {
-            _ = dispatcher.BeginInvoke(() => Restart(root), DispatcherPriority.Render);
+            _ = dispatcher.BeginInvoke(() => Restart(root, force), DispatcherPriority.Render);
             return;
         }
 
@@ -22,6 +22,7 @@ internal static class SkeletonShimmerCoordinator
         if (dispatcher.HasShutdownStarted || dispatcher.HasShutdownFinished)
             return;
 
+        // Coalesce: later Restart(force:true) must not be starved by an earlier soft restart.
         DispatcherOperation? operation = null;
         operation = dispatcher.BeginInvoke(() =>
         {
@@ -36,7 +37,7 @@ internal static class SkeletonShimmerCoordinator
                 return;
 
             var index = 0;
-            SkeletonShimmer.RestartSubtreeCore(root, ref index);
+            SkeletonShimmer.RestartSubtreeCore(root, ref index, force);
         }, DispatcherPriority.Render);
 
         PendingRestarts[root] = operation;

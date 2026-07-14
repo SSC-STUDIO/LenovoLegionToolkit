@@ -64,6 +64,12 @@ public class NetworkAccelerationUiGuardTests
         pageXaml.Should().Contain("NetworkAccelerationSelectionStartButton");
         pageXaml.Should().Contain("_networkAccelerationControl");
         pageXaml.Should().Contain("IsNetworkAccelerationMode");
+        // Visual parity with bulk SelectedActions chrome (Tertiary + Card + wpfui Secondary).
+        pageXaml.Should().Contain("ControlFillColorTertiaryBrush");
+        pageXaml.Should().Contain("CornerRadiusCard");
+        pageXaml.Should().Contain("DocumentBulletList24");
+        pageXaml.Should().Contain("Star24");
+        pageXaml.Should().Contain("Play24");
     }
 
     [Fact]

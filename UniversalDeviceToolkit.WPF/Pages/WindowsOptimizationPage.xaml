@@ -281,17 +281,18 @@
                             FontSize="14"
                             Visibility="Collapsed" />
 
-                        <!-- Same tab-row chrome slot for bulk actions (opt/cleanup/drivers) and NA selection. -->
+                        <!-- Same tab-row chrome slot for bulk actions (opt/cleanup/drivers) and NA selection.
+                             Visual parity with bulk SelectedActions bar: Tertiary fill, Card radius, wpfui Secondary buttons. -->
                         <Border
                             x:Name="_networkAccelerationSelectionBar"
                             Grid.Column="1"
-                            Padding="4"
+                            Padding="3"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            Background="{DynamicResource ControlFillColorTertiaryBrush}"
                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                             BorderThickness="1"
-                            CornerRadius="{StaticResource CornerRadiusRound}"
+                            CornerRadius="{StaticResource CornerRadiusCard}"
                             SnapsToDevicePixels="True"
                             AutomationProperties.AutomationId="NetworkAccelerationSelectionBar"
                             AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
@@ -305,111 +306,56 @@
                                     </Style.Triggers>
                                 </Style>
                             </Border.Style>
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Border
-                                    MinHeight="36"
-                                    Padding="12,6,14,6"
-                                    VerticalAlignment="Center"
-                                    Background="Transparent">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock
+                            <Border.Resources>
+                                <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                                    <Setter Property="MinHeight" Value="40" />
+                                    <Setter Property="Padding" Value="12,7" />
+                                </Style>
+                            </Border.Resources>
+                            <StackPanel Orientation="Horizontal">
+                                <!-- Count summary (display-only; bulk mode opens a list window on click) -->
+                                <wpfui:Button
+                                    MinWidth="148"
+                                    Margin="0,0,4,0"
+                                    Appearance="Secondary"
+                                    Focusable="False"
+                                    IsHitTestVisible="False"
+                                    IsTabStop="False"
+                                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}"
+                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <wpfui:SymbolIcon
                                             Margin="0,0,8,0"
-                                            VerticalAlignment="Center"
-                                            FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
-                                            FontSize="15"
-                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                            Text="&#xE8A5;" />
+                                            Symbol="DocumentBulletList24" />
                                         <TextBlock
                                             x:Name="_networkAccelerationSelectionCount"
                                             VerticalAlignment="Center"
-                                            FontSize="13"
-                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                             Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
                                             AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
                                     </StackPanel>
-                                </Border>
-                                <Button
+                                </wpfui:Button>
+                                <wpfui:Button
                                     x:Name="_networkAccelerationSelectionFavoriteButton"
-                                    Width="36"
-                                    Height="36"
-                                    Margin="2,0,0,0"
-                                    Padding="0"
-                                    VerticalAlignment="Center"
-                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                    BorderThickness="1"
-                                    Cursor="Hand"
+                                    MinWidth="40"
+                                    Margin="0,0,4,0"
+                                    Appearance="Secondary"
                                     IsEnabled="False"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border
-                                                x:Name="Chrome"
-                                                Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="{StaticResource CornerRadiusCompact}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                                                </Trigger>
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="Opacity" Value="0.45" />
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                    <TextBlock
-                                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
-                                        FontSize="14"
-                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Text="&#xE734;" />
-                                </Button>
-                                <Button
+                                    <wpfui:SymbolIcon Symbol="Star24" />
+                                </wpfui:Button>
+                                <wpfui:Button
                                     x:Name="_networkAccelerationSelectionStartButton"
-                                    Width="36"
-                                    Height="36"
-                                    Margin="2,0,0,0"
-                                    Padding="0"
-                                    VerticalAlignment="Center"
-                                    Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                    BorderThickness="1"
-                                    Cursor="Hand"
+                                    MinWidth="40"
+                                    Margin="0"
+                                    Appearance="Secondary"
                                     IsEnabled="False"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border
-                                                x:Name="Chrome"
-                                                Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="{StaticResource CornerRadiusCompact}">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="Chrome" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                                                </Trigger>
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="Opacity" Value="0.45" />
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                    <TextBlock
-                                        FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol"
-                                        FontSize="14"
-                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                        Text="&#xE768;" />
-                                </Button>
+                                    <wpfui:SymbolIcon Symbol="Play24" />
+                                </wpfui:Button>
                             </StackPanel>
                         </Border>
 

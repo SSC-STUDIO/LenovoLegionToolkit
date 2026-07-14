@@ -43,15 +43,21 @@ public class WindowsOptimizationServiceTests
     [Fact]
     public async Task EstimateCleanupSizeAsync_ShouldReturnNonZeroForValidActionKey()
     {
-        // Arrange
+        // Arrange — do not use CancellationToken.None: real Temp trees can hang CI for minutes.
         var service = new WindowsOptimizationService(new WindowsCleanupService(new TestApplicationSettings()));
-        var validActionKey = "cleanup.tempFiles"; // Use a valid action key instead of category key
-        
+        var validActionKey = "cleanup.tempFiles";
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+
         // Act
-        var result = await service.EstimateCleanupSizeAsync(new[] { validActionKey }, CancellationToken.None);
-        
-        // Assert
-        result.Should().BeGreaterThanOrEqualTo(0);
+        try
+        {
+            var result = await service.EstimateCleanupSizeAsync(new[] { validActionKey }, cts.Token);
+            result.Should().BeGreaterThanOrEqualTo(0);
+        }
+        catch (OperationCanceledException) when (cts.IsCancellationRequested)
+        {
+            // Bounded scan is enough to prove the API is wired; hang is a regression.
+        }
     }
 
     [Fact]

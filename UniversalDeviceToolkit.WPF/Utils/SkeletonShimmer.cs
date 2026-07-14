@@ -41,10 +41,17 @@ public static class SkeletonShimmer
 
     public static void SetDelaySeconds(DependencyObject obj, double value) => obj.SetValue(DelaySecondsProperty, value);
 
-    public static void RestartSubtree(DependencyObject? root)
+    public static void RestartSubtree(DependencyObject? root) =>
+        RestartSubtree(root, force: false);
+
+    /// <summary>
+    /// Restarts shimmer under <paramref name="root"/>. Prefer non-force for hot re-entry
+    /// so already-running sweeps keep phase (classic 4.x felt smooth because it did not thrash).
+    /// </summary>
+    public static void RestartSubtree(DependencyObject? root, bool force)
     {
         if (root is not null)
-            SkeletonShimmerCoordinator.Restart(root);
+            SkeletonShimmerCoordinator.Restart(root, force);
     }
 
     public static void StopSubtree(DependencyObject? root)
@@ -53,7 +60,11 @@ public static class SkeletonShimmer
             SkeletonShimmerCoordinator.Stop(root);
     }
 
-    internal static void RestartSubtreeCore(DependencyObject root, ref int index)
+    /// <param name="force">
+    /// When false, borders that already have a running sweep are left alone (avoids Stop/Start jank
+    /// on plugin-page re-entry). Theme refresh passes true.
+    /// </param>
+    internal static void RestartSubtreeCore(DependencyObject root, ref int index, bool force = false)
     {
         if (root is Border border && GetIsEnabled(border) && border.IsLoaded && border.IsVisible)
         {
@@ -61,12 +72,12 @@ public static class SkeletonShimmer
                 index * SkeletonAnimationTokens.StaggerStepSeconds,
                 SkeletonAnimationTokens.StaggerMaxSeconds));
             index++;
-            SkeletonShimmerBehavior.Start(border, automaticDelay);
+            SkeletonShimmerBehavior.Start(border, automaticDelay, forceRestart: force);
         }
 
         var count = VisualTreeHelper.GetChildrenCount(root);
         for (var childIndex = 0; childIndex < count; childIndex++)
-            RestartSubtreeCore(VisualTreeHelper.GetChild(root, childIndex), ref index);
+            RestartSubtreeCore(VisualTreeHelper.GetChild(root, childIndex), ref index, force);
     }
 
     internal static void StopSubtreeCore(DependencyObject root)

@@ -1,64 +1,83 @@
-# FlaUI Tests Workflow
-# NOTE: FlaUI tests require a Windows desktop session and cannot run on GitHub-hosted runners.
-# This workflow is for reference and local self-hosted runners with desktop access.
+# FlaUI UI automation — requires a Windows desktop session.
+# Runs on the self-hosted LLT-UI-SMOKE runner nightly and on demand.
 
-name: FlaUI Tests
+name: FlaUI Tests Nightly
 
 on:
-  workflow_dispatch:  # Manual trigger only
-  push:
-    branches: [ master ]
-    paths:
-      - 'UniversalDeviceToolkit.WPF/**'
-      - 'UniversalDeviceToolkit.Tests/FlaUI/**'
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: flaui-tests-nightly
+  cancel-in-progress: false
 
 jobs:
   flaui-tests:
     name: FlaUI UI Automation Tests
-    runs-on: windows-latest  # Requires self-hosted runner with desktop session
-    if: false  # Disabled - requires desktop session (https://github.com/actions/runner/issues/1510)
+    runs-on: [self-hosted, Windows, LLT-UI-SMOKE]
+    timeout-minutes: 120
+    env:
+      UDT_ALLOW_FLAUI_TESTS: true
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup .NET 10
-      uses: actions/setup-dotnet@v5
-      with:
-        dotnet-version: '10.0.x'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
 
-    - name: Kill existing UDT processes
-      run: |
-        Get-Process -Name "Universal Device Toolkit" -ErrorAction SilentlyContinue | Stop-Process -Force
-        Start-Sleep -Seconds 2
-      shell: powershell
+      - name: Cache NuGet packages
+        uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
 
-    - name: Build solution
-      run: dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj -c Debug
-      shell: powershell
+      - name: Restore solution
+        shell: pwsh
+        run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
 
-    - name: Run FlaUI tests
-      run: |
-        dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj `
-          --filter "FullyQualifiedName~FlaUI" `
-          -c Debug `
-          --no-build `
-          -v n `
-          -- NUnit.DisplayName=Full
-      shell: powershell
+      - name: Build main app and tests
+        shell: pwsh
+        env:
+          MSBUILDDISABLENODEREUSE: 1
+        run: |
+          dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore
+          if ($LASTEXITCODE -ne 0) { throw "WPF build failed." }
 
-    - name: Upload test results
-      if: always()
-      uses: actions/upload-artifact@v7
-      with:
-        name: flaui-test-results
-        path: FlaUI_test_results.txt
-        if-no-files-found: ignore
+          dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
+          if ($LASTEXITCODE -ne 0) { throw "Test project build failed." }
 
-    - name: Upload screenshots on failure
-      if: failure()
-      uses: actions/upload-artifact@v7
-      with:
-        name: flaui-screenshots
-        path: "**/FlaUI_*.png"
-        if-no-files-found: ignore
+      - name: Stop existing app instances
+        shell: pwsh
+        run: |
+          Get-Process -Name 'Universal Device Toolkit' -ErrorAction SilentlyContinue | Stop-Process -Force
+          Start-Sleep -Seconds 2
+
+      - name: Run FlaUI tests
+        shell: pwsh
+        run: |
+          dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj `
+            --framework net10.0-windows10.0.26100.0 `
+            --configuration Release `
+            --no-build `
+            --filter "FullyQualifiedName~FlaUI" `
+            --logger "trx;LogFileName=UniversalDeviceToolkit.FlaUI.Tests.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: flaui-test-results-${{ github.run_id }}
+          path: '**/UniversalDeviceToolkit.FlaUI.Tests.trx'
+          if-no-files-found: warn
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: flaui-screenshots-${{ github.run_id }}
+          path: '**/FlaUI_*.png'
+          if-no-files-found: ignore

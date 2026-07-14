@@ -165,9 +165,10 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            // Manual refresh: keep current list visible (no full-page skeleton flash).
-            // Full skeleton on manual refresh so 流光 is not first-open-only.
-            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton: true);
+            // Manual refresh: keep list when we already have cards (classic smooth path).
+            // Full skeleton only when the page is empty so first-load 流光 still appears.
+            var showFullSkeleton = _pluginViewModels.Count == 0;
+            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton: showFullSkeleton);
         }
         catch (Exception ex)
         {
@@ -216,8 +217,6 @@ private string _currentSearchText = string.Empty;
     private void ShowSkeletonImmediate()
     {
         _loadingStateVersion++;
-        // Always restart the min-hold clock on every show (including hot re-entry).
-        _skeletonShownAtUtc = DateTime.UtcNow;
 
         // Nav crossfade may have left this Page at Opacity 0 after a prior leave — force visible.
         BeginAnimation(UIElement.OpacityProperty, null);
@@ -237,6 +236,14 @@ private string _currentSearchText = string.Empty;
             listPanel.IsHitTestVisible = false;
         }
 
+        var skeletonAlreadyLive = _loadingIndicator is FrameworkElement existing
+            && existing.Visibility == Visibility.Visible
+            && existing.Opacity >= 0.95;
+
+        // Only reset min-hold clock when skeleton is newly shown (classic soft re-entry).
+        if (!skeletonAlreadyLive || _skeletonShownAtUtc == DateTime.MinValue)
+            _skeletonShownAtUtc = DateTime.UtcNow;
+
         if (_loadingIndicator is FrameworkElement skeleton)
         {
             skeleton.BeginAnimation(UIElement.OpacityProperty, null);
@@ -244,12 +251,14 @@ private string _currentSearchText = string.Empty;
             skeleton.Opacity = 1;
             skeleton.IsHitTestVisible = true;
             Panel.SetZIndex(skeleton, 2);
-            // Ensure IsVisible/layout are ready before RestartSubtree walks shimmer borders.
-            skeleton.UpdateLayout();
+            // First show only: force layout so IsVisible is true before walking borders.
+            // Hot re-entry skips UpdateLayout — it was a major hitch on this page.
+            if (!skeletonAlreadyLive)
+                skeleton.UpdateLayout();
         }
 
-        // Coalesced restart — avoids repeated Stop/Start that freezes the sweep mid-cycle.
-        SkeletonShimmer.RestartSubtree(_loadingIndicator);
+        // Soft restart: keep phase of already-running sweeps (4.x-style smoothness).
+        SkeletonShimmer.RestartSubtree(_loadingIndicator, force: !skeletonAlreadyLive);
     }
 
     private async Task HideLoadingStateAfterAsync(TimeSpan delay, int version)

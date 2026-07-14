@@ -363,6 +363,25 @@ public class SensorsControlTests
     }
 
     [Fact]
+    public void SensorsControlCode_UnloadedShouldPauseRefreshWithoutTearingDownLifecycleHandlers()
+    {
+        var source = ReadSensorsControlCode();
+        var unloadedMethod = ExtractMethod(source, "private void SensorsControl_Unloaded(object sender, RoutedEventArgs e)");
+        var loadedMethod = ExtractMethod(source, "private void SensorsControl_Loaded(object sender, RoutedEventArgs e)");
+        var disposeMethod = ExtractMethod(source, "public void Dispose()");
+
+        unloadedMethod.Should().Contain("StopSensorRefresh();");
+        unloadedMethod.Should().Contain("StopBatteryRefresh();");
+        unloadedMethod.Should().NotContain("Dispose();");
+        unloadedMethod.Should().NotContain("IsVisibleChanged -=");
+
+        loadedMethod.Should().Contain("Refresh();");
+        loadedMethod.Should().Contain("RefreshBattery();");
+
+        disposeMethod.Should().Contain("IsVisibleChanged -=");
+    }
+
+    [Fact]
     public void SensorsControlCode_ShouldOpenDetailsWindowWhenInlineDetailsAreUnavailable()
     {
         var source = ReadSensorsControlCode();

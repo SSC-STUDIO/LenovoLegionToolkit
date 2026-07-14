@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -52,6 +53,22 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
         /// </summary>
         public static bool IsCiEnvironment()
         {
+            if (string.Equals(
+                    Environment.GetEnvironmentVariable("UDT_ALLOW_FLAUI_TESTS"),
+                    "true",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (string.Equals(
+                    Environment.GetEnvironmentVariable("RUNNER_ENVIRONMENT"),
+                    "self-hosted",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
             var ciVars = new[]
             {
                 "CI", "GITHUB_ACTIONS", "TF_BUILD", "JENKINS_URL",
@@ -227,24 +244,50 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
             }
 
             var solutionDir = FindSolutionDirectory();
-            var candidates = new[]
+            var candidates = new List<string>
             {
-                // Build output (from Make.bat)
+                // Make.bat / packaging layouts
                 Path.Combine(solutionDir, "Build", "Universal Device Toolkit", "Universal Device Toolkit.exe"),
-                // Debug build — any RID
+                Path.Combine(solutionDir, "Build", "Universal Device Toolkit.exe"),
+                Path.Combine(solutionDir, "Build", "UniversalDeviceToolkit", "Universal Device Toolkit.exe"),
+                // x64 platform builds (solution default)
+                Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "x64", "Debug", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
+                Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "x64", "Release", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
+                // Legacy/non-x64 output layouts
                 Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "Debug", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
                 Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "Debug", "net10.0-windows10.0.26100.0", "win-x86", "Universal Device Toolkit.exe"),
-                // Release build — any RID
                 Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "Release", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
                 Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "Release", "net10.0-windows10.0.26100.0", "win-x86", "Universal Device Toolkit.exe"),
             };
 
+            // Shallow scan under Build/ for renamed folder layouts used by CI artifacts.
+            var buildRoot = Path.Combine(solutionDir, "Build");
+            if (Directory.Exists(buildRoot))
+            {
+                try
+                {
+                    foreach (var hit in Directory.EnumerateFiles(
+                                 buildRoot,
+                                 "Universal Device Toolkit.exe",
+                                 SearchOption.AllDirectories)
+                                 .Take(8))
+                    {
+                        candidates.Add(hit);
+                    }
+                }
+                catch (IOException)
+                {
+                    // Ignore scan failures; fall through to known paths.
+                }
+                catch (UnauthorizedAccessException)
+                {
+                }
+            }
+
             foreach (var candidate in candidates)
             {
                 if (File.Exists(candidate))
-                {
                     return candidate;
-                }
             }
 
             return currentPath;

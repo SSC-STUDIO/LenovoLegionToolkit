@@ -274,7 +274,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             "VerifyDownloadedPackageIntegrityAsync",
             BindingFlags.NonPublic | BindingFlags.Static);
 
-        var result = await (Task<bool>)method!.Invoke(null, [packagePath, manifest])!;
+        // trustAsOfficialOnlinePackage: false — DEBUG may skip missing hashes; matching hash still passes.
+        var result = await (Task<bool>)method!.Invoke(null, [packagePath, manifest, false])!;
 
         result.Should().BeTrue();
     }
@@ -291,7 +292,25 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             "VerifyDownloadedPackageIntegrityAsync",
             BindingFlags.NonPublic | BindingFlags.Static);
 
-        var result = await (Task<bool>)method!.Invoke(null, [packagePath, manifest])!;
+        var result = await (Task<bool>)method!.Invoke(null, [packagePath, manifest, false])!;
+
+        result.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task VerifyDownloadedPackageIntegrityAsync_OfficialPackageMissingZipHash_ShouldFail()
+    {
+        const string pluginId = "zip-integrity-official-missing";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = string.Empty;
+
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "VerifyDownloadedPackageIntegrityAsync",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        // Official online packages must fail closed without zipHash even in DEBUG.
+        var result = await (Task<bool>)method!.Invoke(null, [packagePath, manifest, true])!;
 
         result.Should().BeFalse();
     }
@@ -349,6 +368,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         const string pluginId = "broken-runtime";
         var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
         var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
         var scanCalls = new List<bool>();
 
         _pluginManager
@@ -378,6 +399,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         const string pluginId = "working-runtime";
         var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
         var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
         var plugin = MockFactory.CreateMockPlugin(id: pluginId);
 
         _pluginManager
@@ -405,6 +428,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         const string pluginId = "ordered-runtime";
         var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
         var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
         var plugin = MockFactory.CreateMockPlugin(id: pluginId);
         var sequence = new MockSequence();
 
@@ -436,6 +461,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         const string pluginId = "manifest-optimization";
         var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: true);
         var manifest = CreateInstallManifest(pluginId, packagePath, includeOptimizationAction: true);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
 
         _pluginManager
             .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
@@ -463,6 +490,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         const string pluginId = "user-feedback";
         var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
         var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
         manifest.Contributes = new PluginManifestContributions
         {
             SettingsPage = new PluginManifestPageContribution
@@ -498,6 +527,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         const string pluginId = "store-optimization-key";
         var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
         var manifest = CreateInstallManifest(pluginId, packagePath, includeOptimizationAction: true, useOptimizationActionKey: true);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
 
         _pluginManager
             .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
@@ -525,6 +556,8 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         const string pluginId = "store-optimization";
         var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
         var manifest = CreateInstallManifest(pluginId, packagePath, includeOptimizationAction: true);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
 
         _pluginManager
             .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
@@ -564,7 +597,9 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         try
         {
             ZipFile.ExtractToDirectory(packagePath, tempDirectory);
-            var dllPath = Path.Combine(tempDirectory, pluginId, $"{pluginId}.dll");
+            var dllPath = Directory
+                .EnumerateFiles(tempDirectory, $"{pluginId}.dll", SearchOption.AllDirectories)
+                .Single();
             return await PluginPackageIntegrity.ComputeSha256HexAsync(dllPath);
         }
         finally

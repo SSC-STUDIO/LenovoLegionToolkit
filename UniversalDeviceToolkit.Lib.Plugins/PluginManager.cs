@@ -771,25 +771,26 @@ public class PluginManager : IPluginManager
                 return false;
             }
 
-            // Check for the main plugin DLL
+            // Main plugin DLL is required — presence of other DLLs alone is not "installed".
             var hasMainDll = dllFiles.Any(f => mainDllNameCandidates.Contains(Path.GetFileName(f), StringComparer.OrdinalIgnoreCase));
-
             if (!hasMainDll)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"IsInstalled({pluginId}): Main plugin DLL not found. Available DLLs: [{string.Join(", ", dllFiles.Select(Path.GetFileName))}]");
+                return false;
             }
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"IsInstalled({pluginId}): Plugin files exist, returning true");
+                Log.Instance.Trace($"IsInstalled({pluginId}): Main plugin DLL present, returning true");
 
             return true;
         }
         catch (Exception ex)
         {
+            // Fail closed: settings can lag behind a broken on-disk layout.
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"IsInstalled({pluginId}): Error checking plugin files: {ex.Message}");
-            return isInstalled;
+            return false;
         }
     }
 

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.Lib.Messaging;
@@ -129,7 +130,8 @@ internal class SmartKeyHelper
 
                 await _automationProcessor.RunNowAsync(pipeline.Id);
 
-                MessagingCenter.Publish(new NotificationMessage(isDoublePress ? NotificationType.SmartKeyDoublePress : NotificationType.SmartKeySinglePress, pipeline.Name ?? string.Empty));
+                var displayName = PipelineNameLocalizer.LocalizeStoredName(pipeline.Name) ?? pipeline.Name ?? string.Empty;
+                MessagingCenter.Publish(new NotificationMessage(isDoublePress ? NotificationType.SmartKeyDoublePress : NotificationType.SmartKeySinglePress, displayName));
             }
         }
         catch (Exception ex)

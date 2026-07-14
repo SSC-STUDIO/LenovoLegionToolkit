@@ -67,10 +67,35 @@ public static class PipelineNameLocalizer
         if (string.Equals(storedName, DeactivateGpuQuickActionStableName, StringComparison.Ordinal) ||
             IsKnownDeactivateGpuTitle(storedName))
         {
-            return Resource.DeactivateGpuQuickAction_Title;
+            // Never leak the stable storage key into UI even if the satellite is missing.
+            return ResolveDeactivateGpuTitle();
         }
 
         return storedName;
+    }
+
+    /// <summary>
+    /// Current-culture title for the built-in Deactivate GPU quick action, with English fallback.
+    /// </summary>
+    public static string ResolveDeactivateGpuTitle()
+    {
+        var title = Resource.DeactivateGpuQuickAction_Title;
+        if (!string.IsNullOrWhiteSpace(title) &&
+            !string.Equals(title, DeactivateGpuQuickActionStableName, StringComparison.Ordinal))
+            return title;
+
+        try
+        {
+            title = Resource.ResourceManager.GetString(ResourceKey, CultureInfo.InvariantCulture);
+            if (!string.IsNullOrWhiteSpace(title))
+                return title;
+        }
+        catch
+        {
+            // ignore and use hard-coded English
+        }
+
+        return "Deactivate GPU";
     }
 
     /// <summary>

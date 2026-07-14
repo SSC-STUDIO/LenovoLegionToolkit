@@ -25,6 +25,12 @@ jobs:
       uses: actions/checkout@v7
       with:
         fetch-depth: 0
+    - name: Checkout plugin repository
+      uses: actions/checkout@v7
+      with:
+        repository: SSC-STUDIO/UniversalDeviceToolkit-Plugins
+        path: UniversalDeviceToolkit-Plugins
+        ref: master
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
@@ -115,6 +121,12 @@ jobs:
         }
 
         ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT -AllowedCultures 'ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant'
+        ./Scripts/Build-PluginRuntimeAssets.ps1 `
+          -PluginsRepositoryRoot "$env:GITHUB_WORKSPACE/UniversalDeviceToolkit-Plugins" `
+          -HostSourceDir $env:BUILD_OUTPUT `
+          -DestinationPath $env:BUILD_OUTPUT `
+          -Configuration Release
+        if ($LASTEXITCODE -ne 0) { throw "Plugin runtime staging failed." }
         ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
 
     - name: Smoke CLI help and version

@@ -45,6 +45,9 @@ jobs:
       - name: Test (Unit category — fail fast)
         run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Unit" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Unit.trx"
 
+      - name: Test (Main app plugin UI smoke contract — fail fast)
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Smoke" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Smoke.trx"
+
       - name: Test stable paths (full suite + coverage)
         run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 

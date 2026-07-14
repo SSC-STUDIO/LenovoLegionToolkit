@@ -28,6 +28,23 @@ public class PipelineNameLocalizerTests
     }
 
     [Fact]
+    public void LocalizeStoredName_StableKey_NeverReturnsStorageKey()
+    {
+        var display = PipelineNameLocalizer.LocalizeStoredName(PipelineNameLocalizer.DeactivateGpuQuickActionStableName);
+        display.Should().NotBeNullOrWhiteSpace();
+        display.Should().NotBe(PipelineNameLocalizer.DeactivateGpuQuickActionStableName);
+        display.Should().NotContain("quickAction.deactivateGpu");
+    }
+
+    [Fact]
+    public void ResolveDeactivateGpuTitle_IsNonEmptyHumanReadable()
+    {
+        var title = PipelineNameLocalizer.ResolveDeactivateGpuTitle();
+        title.Should().NotBeNullOrWhiteSpace();
+        title.Should().NotBe(PipelineNameLocalizer.DeactivateGpuQuickActionStableName);
+    }
+
+    [Fact]
     public void LocalizeStoredName_UserCustomName_Unchanged()
     {
         PipelineNameLocalizer.LocalizeStoredName("My custom QA")

@@ -249,7 +249,10 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
 
-            if (!await VerifyDownloadedPackageIntegrityAsync(tempFilePath, manifest).ConfigureAwait(false))
+            if (!await VerifyDownloadedPackageIntegrityAsync(
+                    tempFilePath,
+                    manifest,
+                    downloadResult.TrustAsOfficialOnlinePackage).ConfigureAwait(false))
             {
                 DownloadFailed?.Invoke(this, string.Format(Resource.Plugin_Error_Repository_DownloadFailed, manifest.Id));
                 return false;
@@ -892,25 +895,34 @@ public class PluginRepositoryService : IDisposable
         }
     }
 
-    private static bool IsIntegrityVerificationRequired =>
-        IsProductionMode && !PluginPackageIntegrity.IsVerificationWaived();
+    /// <summary>
+    /// Production builds always require store ZIP/DLL hashes unless explicitly waived.
+    /// Official online packages require hashes even in DEBUG (local/dev fallback may omit them).
+    /// </summary>
+    private static bool RequirePackageIntegrity(bool trustAsOfficialOnlinePackage) =>
+        !PluginPackageIntegrity.IsVerificationWaived()
+        && (IsProductionMode || trustAsOfficialOnlinePackage);
 
-    private static async Task<bool> VerifyDownloadedPackageIntegrityAsync(string zipPath, PluginManifest manifest)
+    private static async Task<bool> VerifyDownloadedPackageIntegrityAsync(
+        string zipPath,
+        PluginManifest manifest,
+        bool trustAsOfficialOnlinePackage)
     {
+        var require = RequirePackageIntegrity(trustAsOfficialOnlinePackage);
         try
         {
             var zipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(zipPath).ConfigureAwait(false);
             if (!PluginPackageIntegrity.TryVerifyExpectedHash(
                     manifest.ZipHash,
                     zipHash,
-                    IsIntegrityVerificationRequired,
+                    require,
                     out var zipIntegrityFailure))
             {
                 Log.Instance.Warning($"Plugin ZIP integrity check failed for {manifest.Id}: {zipIntegrityFailure}");
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(manifest.ZipHash) && !IsIntegrityVerificationRequired)
+            if (string.IsNullOrWhiteSpace(manifest.ZipHash) && !require)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {manifest.Id} has no zipHash in store manifest; skipping ZIP integrity verification.");
@@ -1002,18 +1014,19 @@ public class PluginRepositoryService : IDisposable
                 return false;
             }
             
+            var requireDllIntegrity = RequirePackageIntegrity(trustAsOfficialOnlinePackage);
             var hashString = await PluginPackageIntegrity.ComputeSha256HexAsync(dllPath).ConfigureAwait(false);
             if (!PluginPackageIntegrity.TryVerifyExpectedHash(
                     manifest.FileHash,
                     hashString,
-                    IsIntegrityVerificationRequired,
+                    requireDllIntegrity,
                     out var dllIntegrityFailure))
             {
                 Log.Instance.Warning($"Plugin DLL integrity check failed for {manifest.Id}: {dllIntegrityFailure}");
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(manifest.FileHash) && !IsIntegrityVerificationRequired)
+            if (string.IsNullOrWhiteSpace(manifest.FileHash) && !requireDllIntegrity)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin {manifest.Id} has no fileHash in store manifest; skipping DLL integrity verification.");

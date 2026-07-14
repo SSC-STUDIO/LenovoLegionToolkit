@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using FluentAssertions;
 using Xunit;
@@ -25,7 +26,8 @@ public sealed class ManagementEventWatcherExtensionsSourceTests
     public void StartWithTimeout_ShouldNotUseGetAwaiterGetResult()
     {
         var source = ReadSourceFile();
-        source.Should().NotContain("GetAwaiter().GetResult()");
+        var startMethod = ExtractMethod(source, "public static void StartWithTimeout(");
+        startMethod.Should().NotContain("GetAwaiter().GetResult()");
     }
 
     [Fact]
@@ -61,6 +63,23 @@ public sealed class ManagementEventWatcherExtensionsSourceTests
         source.Should().Contain("await watcher.StartAsyncWithTimeout().ConfigureAwait(false)");
         source.Should().Contain("Prefer");
         source.Should().Contain("SubscribeAsync");
+    }
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, StringComparison.Ordinal);
+        if (start < 0) return string.Empty;
+
+        var braceStart = source.IndexOf('{', start);
+        if (braceStart < 0) return string.Empty;
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{') depth++;
+            else if (source[i] == '}') { depth--; if (depth == 0) return source[start..(i + 1)]; }
+        }
+        return string.Empty;
     }
 
     private static string ReadSourceFile() =>

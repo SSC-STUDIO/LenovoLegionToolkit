@@ -16,6 +16,7 @@ public static class TestCategories
     public const string Plugin = "Plugin";
     public const string Utils = "Utils";
     public const string Controller = "Controller";
+    public const string Smoke = "Smoke";
 }
 
 /// <summary>

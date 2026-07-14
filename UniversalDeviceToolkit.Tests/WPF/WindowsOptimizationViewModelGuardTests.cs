@@ -36,7 +36,7 @@ public sealed class WindowsOptimizationViewModelGuardTests
         source.Should().Contain("private readonly SemaphoreSlim _optimizationStateScanLock = new(1, 1);");
         scanMethod.Should().Contain("await _optimizationStateScanLock.WaitAsync(cancellationToken);");
         scanMethod.Should().Contain("var actions = await GetOptimizationActionSnapshotAsync();");
-        scanMethod.Should().Contain("foreach (var action in actions)");
+        scanMethod.Should().Contain("foreach (var action in actions.Where");
         scanMethod.Should().NotContain("foreach (var category in OptimizationCategories)");
         scanMethod.Should().Contain("_optimizationStateScanLock.Release();");
 

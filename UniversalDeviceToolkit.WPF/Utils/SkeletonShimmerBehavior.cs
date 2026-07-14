@@ -73,16 +73,27 @@ internal static class SkeletonShimmerBehavior
         state.PendingStart = operation;
     }
 
-    internal static void Start(Border border, TimeSpan? automaticDelay)
+    internal static void Start(Border border, TimeSpan? automaticDelay, bool forceRestart = false)
     {
         if (!border.Dispatcher.CheckAccess())
         {
-            _ = border.Dispatcher.BeginInvoke(() => Start(border, automaticDelay), DispatcherPriority.Render);
+            _ = border.Dispatcher.BeginInvoke(() => Start(border, automaticDelay, forceRestart), DispatcherPriority.Render);
             return;
         }
 
         var state = States.GetOrCreateValue(border);
         CancelPendingStart(state);
+
+        // Soft path: keep the existing forever-sweep. Tear-down/rebuild is what made plugin
+        // skeleton feel heavy when ShowSkeletonImmediate re-entered every navigation tick.
+        if (state.IsRunning
+            && !forceRestart
+            && border.Background is LinearGradientBrush { RelativeTransform: TranslateTransform })
+        {
+            TrackActive(border);
+            return;
+        }
+
         StopAnimation(border, state, restoreBackground: true);
 
         var duration = SkeletonShimmer.ResolveDuration(border);
@@ -103,6 +114,7 @@ internal static class SkeletonShimmerBehavior
         var beginTime = configuredDelay >= 0
             ? TimeSpan.FromSeconds(Math.Min(configuredDelay, SkeletonAnimationTokens.StaggerMaxSeconds))
             : automaticDelay ?? TimeSpan.Zero;
+        // Sine ease (classic 4.x feel) — cheaper/smoother than cubic for endless loops.
         var animation = new DoubleAnimation
         {
             From = SkeletonAnimationTokens.SweepFrom,
@@ -110,7 +122,7 @@ internal static class SkeletonShimmerBehavior
             Duration = duration,
             BeginTime = beginTime,
             RepeatBehavior = RepeatBehavior.Forever,
-            EasingFunction = ResolveEasingFunction(border)
+            EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
         };
 
         transform.BeginAnimation(TranslateTransform.XProperty, animation, HandoffBehavior.SnapshotAndReplace);
@@ -154,20 +166,6 @@ internal static class SkeletonShimmerBehavior
             QueueStart(border, null);
         else
             Stop(border);
-    }
-
-    private static IEasingFunction ResolveEasingFunction(FrameworkElement element)
-    {
-        try
-        {
-            if (element.TryFindResource("AnimationEasingCubicOut") is IEasingFunction easing)
-                return easing;
-        }
-        catch (InvalidOperationException)
-        {
-        }
-
-        return new CubicEase { EasingMode = EasingMode.EaseOut };
     }
 
     private static bool IsMotionDisabled(Duration duration) =>
@@ -264,7 +262,8 @@ internal static class SkeletonShimmerBehavior
                 continue;
             }
 
-            QueueStart(border, null);
+            // Theme/contrast change must rebuild brushes — force restart.
+            Start(border, automaticDelay: null, forceRestart: true);
         }
     }
 

@@ -62,7 +62,7 @@
           segment visible while remaining subtle in dark theme.
         -->
         <Style x:Key="MetricProgressBarStyle" TargetType="ProgressBar">
-            <Setter Property="Height" Value="3.5" />
+            <Setter Property="Height" Value="6" />
             <Setter Property="MinWidth" Value="24" />
             <Setter Property="MaxWidth" Value="260" />
             <Setter Property="Margin" Value="8,0" />
@@ -176,8 +176,8 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style x:Key="SkeletonBarBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <!-- Matches MetricProgressBarStyle Height, Margin=8,0 -->
-            <Setter Property="Height" Value="3.5" />
+            <!-- Matches MetricProgressBarStyle Height=6, Margin=8,0 -->
+            <Setter Property="Height" Value="6" />
             <Setter Property="Margin" Value="8,0" />
             <Setter Property="MinWidth" Value="24" />
             <Setter Property="MaxWidth" Value="260" />
