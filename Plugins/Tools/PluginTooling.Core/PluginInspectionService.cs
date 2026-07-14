@@ -74,8 +74,8 @@ public sealed class PluginInspectionService
         return !string.IsNullOrWhiteSpace(store.Description) &&
                !string.IsNullOrWhiteSpace(store.Icon) &&
                !string.IsNullOrWhiteSpace(store.IconBackground) &&
-               store.Tags.Count > 0 &&
-               store.SupportedLanguages.Count > 0;
+               (store.Tags ?? []).Count > 0 &&
+               (store.SupportedLanguages ?? []).Count > 0;
     }
 
     private static bool HasUnreleasedChangelog(string? changelogPath)

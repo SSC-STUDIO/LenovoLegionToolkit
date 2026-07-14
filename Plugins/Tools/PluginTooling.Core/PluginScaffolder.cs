@@ -118,11 +118,13 @@ public sealed class PluginScaffolder
         plugin.UnifiedManifest.Store.IconBackground = string.IsNullOrWhiteSpace(plugin.UnifiedManifest.Store.IconBackground)
             ? "#FFF1E2"
             : plugin.UnifiedManifest.Store.IconBackground;
+        plugin.UnifiedManifest.Store.Tags ??= [];
         if (plugin.UnifiedManifest.Store.Tags.Count == 0)
         {
             plugin.UnifiedManifest.Store.Tags.Add("official-candidate");
         }
 
+        plugin.UnifiedManifest.Store.SupportedLanguages ??= [];
         if (plugin.UnifiedManifest.Store.SupportedLanguages.Count == 0)
         {
             plugin.UnifiedManifest.Store.SupportedLanguages.AddRange(_repository.InferSupportedLanguages(plugin));

@@ -381,7 +381,7 @@ public sealed class PluginValidationService
             state.Pass("plugin.manifest.json store iconBackground found.");
         }
 
-        if (store.Tags.Count == 0)
+        if ((store.Tags ?? []).Count == 0)
         {
             state.Fail("plugin.manifest.json store.tags is missing.");
         }
@@ -390,7 +390,7 @@ public sealed class PluginValidationService
             state.Pass("plugin.manifest.json store tags found.");
         }
 
-        if (store.SupportedLanguages.Count == 0)
+        if ((store.SupportedLanguages ?? []).Count == 0)
         {
             state.Fail("plugin.manifest.json store.supportedLanguages is missing.");
         }

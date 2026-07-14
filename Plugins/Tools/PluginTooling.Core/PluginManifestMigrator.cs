@@ -15,8 +15,9 @@ public sealed class PluginManifestMigrator
             var unifiedPath = Path.Combine(plugin.DirectoryPath, "plugin.manifest.json");
             var unifiedManifest = plugin.UnifiedManifest;
 
-            if (unifiedManifest.Store.SupportedLanguages.Count == 0)
+            if ((unifiedManifest.Store.SupportedLanguages ?? []).Count == 0)
             {
+                unifiedManifest.Store.SupportedLanguages ??= [];
                 unifiedManifest.Store.SupportedLanguages.AddRange(_repository.InferSupportedLanguages(plugin));
             }
 
@@ -46,8 +47,9 @@ public sealed class PluginManifestMigrator
 
     private static void EnsureRequiredFile(UnifiedPluginManifest manifest, string fileName)
     {
-        if (!manifest.Package.RequiredFiles.Contains(fileName, StringComparer.OrdinalIgnoreCase))
+        if (!(manifest.Package.RequiredFiles ?? []).Contains(fileName, StringComparer.OrdinalIgnoreCase))
         {
+            manifest.Package.RequiredFiles ??= [];
             manifest.Package.RequiredFiles.Add(fileName);
         }
     }
@@ -57,7 +59,7 @@ public sealed class PluginManifestMigrator
         return !string.IsNullOrWhiteSpace(manifest.Store.Description) &&
                !string.IsNullOrWhiteSpace(manifest.Store.Icon) &&
                !string.IsNullOrWhiteSpace(manifest.Store.IconBackground) &&
-               manifest.Store.Tags.Count > 0 &&
-               manifest.Store.SupportedLanguages.Count > 0;
+               (manifest.Store.Tags ?? []).Count > 0 &&
+               (manifest.Store.SupportedLanguages ?? []).Count > 0;
     }
 }

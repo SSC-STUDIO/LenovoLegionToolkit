@@ -76,11 +76,11 @@ public sealed class StoreJsonGenerator
                 FileSize = assetExists ? new FileInfo(assetPath).Length : 0,
                 ReleaseDate = releaseDate.ToString("O"),
                 RepositoryUrl = storeMetadata.RepositoryUrl ?? plugin.Manifest.Repository,
-                SupportedLanguages = storeMetadata.SupportedLanguages.ToList(),
+                SupportedLanguages = (storeMetadata.SupportedLanguages ?? []).ToList(),
                 Icon = storeMetadata.Icon,
                 IconBackground = storeMetadata.IconBackground,
-                Dependencies = storeMetadata.Dependencies.ToList(),
-                Tags = storeMetadata.Tags.ToList(),
+                Dependencies = (storeMetadata.Dependencies ?? []).ToList(),
+                Tags = (storeMetadata.Tags ?? []).ToList(),
                 Status = ResolveLifecycleStatus(plugin),
             };
 
@@ -199,8 +199,8 @@ public sealed class StoreJsonGenerator
         return !string.IsNullOrWhiteSpace(store.Description) &&
                !string.IsNullOrWhiteSpace(store.Icon) &&
                !string.IsNullOrWhiteSpace(store.IconBackground) &&
-               store.Tags.Count > 0 &&
-               store.SupportedLanguages.Count > 0;
+               (store.Tags ?? []).Count > 0 &&
+               (store.SupportedLanguages ?? []).Count > 0;
     }
 
     private static void ReplaceOrAdd(List<StorePluginEntry> entries, StorePluginEntry entry)

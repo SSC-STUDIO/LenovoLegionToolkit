@@ -491,6 +491,154 @@ public class StoreJsonGeneratorTests : IDisposable
 
         return new StoreJsonGenerator().Generate(request);
     }
+
+    [Fact]
+    public void Generate_NullCollectionFieldsInManifestJson_DoesNotThrow()
+    {
+        // When plugin.manifest.json has "tags": null, "dependencies": null, etc.,
+        // StoreJsonGenerator.Generate must null-coalesce before .ToList().
+        // This exercises the initial entry creation path (lines 79/82/83).
+        var pluginDir = Path.Combine(_tempRoot, "Plugins", "null-collections");
+        Directory.CreateDirectory(pluginDir);
+
+        var legacyManifest = JsonSerializer.Serialize(new
+        {
+            Id = "null-collections",
+            Name = "Null Collections Test",
+            Version = "1.0.0",
+            MinLltVersion = "4.2.1",
+            Author = "SSC-STUDIO",
+            IsSystemPlugin = false,
+            Repository = "https://example.com/repo",
+            Issues = "https://example.com/issues",
+        });
+        File.WriteAllText(Path.Combine(pluginDir, "plugin.json"), legacyManifest);
+
+        // Manifest with explicit null for tags, dependencies, supportedLanguages
+        var unifiedManifest = """
+            {
+              "schemaVersion": 1,
+              "id": "null-collections",
+              "name": "Null Collections Test",
+              "version": "1.0.0",
+              "minHostVersion": "4.2.1",
+              "author": "SSC-STUDIO",
+              "isSystemPlugin": false,
+              "repository": "https://example.com/repo",
+              "issues": "https://example.com/issues",
+              "store": {
+                "description": "Test plugin with null collections.",
+                "icon": "PuzzlePiece24",
+                "iconBackground": "#FFF1E2",
+                "tags": null,
+                "dependencies": null,
+                "supportedLanguages": null,
+                "repositoryUrl": "https://example.com/repo"
+              }
+            }
+            """;
+        File.WriteAllText(Path.Combine(pluginDir, "plugin.manifest.json"), unifiedManifest);
+
+        var store = InvokeGenerate();
+
+        // HasStoreMetadata returns false when Tags is null/empty, so the plugin
+        // is correctly skipped — no entry in store.Plugins. The test verifies
+        // that Generate does not throw NRE when collections are null.
+        Assert.Empty(store.Plugins);
+    }
+
+    [Fact]
+    public void Generate_NullRequiredFilesInManifestJson_HasStoreMetadataDoesNotThrow()
+    {
+        // HasStoreMetadata in StoreJsonGenerator accesses store.Tags.Count and
+        // store.SupportedLanguages.Count. With null collections, this must not throw.
+        var pluginDir = Path.Combine(_tempRoot, "Plugins", "null-required-files");
+        Directory.CreateDirectory(pluginDir);
+
+        File.WriteAllText(Path.Combine(pluginDir, "plugin.json"),
+            JsonSerializer.Serialize(new { Id = "null-required-files", Name = "Null Required Files", Version = "1.0.0", MinLltVersion = "4.2.1", Author = "SSC-STUDIO", IsSystemPlugin = false, Repository = "https://example.com/repo", Issues = "https://example.com/issues" }));
+
+        // Manifest with null for requiredFiles AND null store collections
+        var unifiedManifest = """
+            {
+              "schemaVersion": 1,
+              "id": "null-required-files",
+              "name": "Null Required Files",
+              "version": "1.0.0",
+              "minHostVersion": "4.2.1",
+              "author": "SSC-STUDIO",
+              "isSystemPlugin": false,
+              "repository": "https://example.com/repo",
+              "issues": "https://example.com/issues",
+              "package": {
+                "assetName": "",
+                "requiredFiles": null
+              },
+              "store": {
+                "description": "Test plugin with null requiredFiles.",
+                "icon": "PuzzlePiece24",
+                "iconBackground": "#FFF1E2",
+                "tags": null,
+                "dependencies": null,
+                "supportedLanguages": null
+              }
+            }
+            """;
+        File.WriteAllText(Path.Combine(pluginDir, "plugin.manifest.json"), unifiedManifest);
+
+        var store = InvokeGenerate();
+        // Does not throw NRE — plugin is skipped because HasStoreMetadata is false.
+        Assert.Empty(store.Plugins);
+    }
+
+    [Fact]
+    public void Migrate_NullCollectionFields_DoesNotThrow()
+    {
+        // PluginManifestMigrator.Migrate accesses SupportedLanguages.Count, Tags.Count,
+        // RequiredFiles.Contains/Add, and SupportedLanguages.AddRange — all NRE-prone
+        // when JSON has explicit null for these collections.
+        var pluginDir = Path.Combine(_tempRoot, "Plugins", "migrate-null-test");
+        Directory.CreateDirectory(pluginDir);
+
+        File.WriteAllText(Path.Combine(pluginDir, "plugin.json"),
+            JsonSerializer.Serialize(new { Id = "migrate-null-test", Name = "Migrate Null Test", Version = "1.0.0", MinLltVersion = "4.2.1", Author = "SSC-STUDIO", IsSystemPlugin = false, Repository = "https://example.com/repo", Issues = "https://example.com/issues" }));
+
+        var unifiedManifest = """
+            {
+              "schemaVersion": 1,
+              "id": "migrate-null-test",
+              "name": "Migrate Null Test",
+              "version": "1.0.0",
+              "minHostVersion": "4.2.1",
+              "author": "SSC-STUDIO",
+              "isSystemPlugin": false,
+              "repository": "https://example.com/repo",
+              "issues": "https://example.com/issues",
+              "package": {
+                "assetName": "",
+                "requiredFiles": null
+              },
+              "store": {
+                "description": "Test plugin for Migrate null-collection regression.",
+                "icon": "PuzzlePiece24",
+                "iconBackground": "#FFF1E2",
+                "tags": null,
+                "dependencies": null,
+                "supportedLanguages": null
+              }
+            }
+            """;
+        File.WriteAllText(Path.Combine(pluginDir, "plugin.manifest.json"), unifiedManifest);
+
+        var migrator = new PluginManifestMigrator();
+        var written = migrator.Migrate(_tempRoot, ["migrate-null-test"]);
+
+        Assert.Single(written);
+        // After migration, the manifest should have been written back with
+        // non-null collections (EnsureRequiredFile adds required files, etc.)
+        var rewrittenJson = File.ReadAllText(Path.Combine(pluginDir, "plugin.manifest.json"));
+        Assert.DoesNotContain("\"requiredFiles\": null", rewrittenJson);
+    }
 }
 
 public class CreateUnifiedManifestNullGuardTests

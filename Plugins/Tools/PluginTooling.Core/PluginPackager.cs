@@ -60,7 +60,7 @@ public sealed class PluginPackager
 
     private static void EnsurePackageRequiredFiles(PluginContext plugin)
     {
-        foreach (var requiredFile in plugin.UnifiedManifest.Package.RequiredFiles)
+        foreach (var requiredFile in plugin.UnifiedManifest.Package.RequiredFiles ?? [])
         {
             var path = Path.Combine(plugin.OutputDirectory, requiredFile);
             if (!File.Exists(path))
