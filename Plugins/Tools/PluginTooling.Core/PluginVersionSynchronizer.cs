@@ -32,7 +32,7 @@ public sealed class VersionSyncReport
     public IReadOnlyList<string> Actions { get; init; } = [];
 }
 
-public sealed class PluginVersionSynchronizer
+public sealed partial class PluginVersionSynchronizer
 {
     private static readonly Regex PluginAttributeVersionRegex = new(
         @"version:\s*""[^""]*""",
@@ -43,14 +43,21 @@ public sealed class PluginVersionSynchronizer
 
     public static string BumpSemVer(string version, VersionBumpPart part)
     {
-        if (!Version.TryParse(version, out var parsed))
+        if (string.IsNullOrWhiteSpace(version))
         {
-            throw new FormatException($"Version '{version}' is not a valid SemVer string.");
+            throw new FormatException("Version string is null or empty.");
         }
 
-        var major = parsed.Major;
-        var minor = parsed.Minor;
-        var patch = parsed.Build >= 0 ? parsed.Build : 0;
+        var match = SemVerRegex().Match(version);
+        if (!match.Success)
+        {
+            throw new FormatException(
+                $"Version '{version}' is not a valid 3-part SemVer string (expected: major.minor.patch).");
+        }
+
+        var major = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
+        var minor = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+        var patch = int.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
 
         return part switch
         {
@@ -60,6 +67,9 @@ public sealed class PluginVersionSynchronizer
             _ => throw new ArgumentOutOfRangeException(nameof(part), part, null),
         };
     }
+
+    [GeneratedRegex(@"^(\d+)\.(\d+)\.(\d+)$", RegexOptions.CultureInvariant)]
+    private static partial Regex SemVerRegex();
 
     public IReadOnlyList<VersionSyncReport> SyncRepository(
         string repositoryRoot,

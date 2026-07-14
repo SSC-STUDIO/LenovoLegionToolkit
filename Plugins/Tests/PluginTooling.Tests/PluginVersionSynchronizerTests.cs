@@ -36,6 +36,17 @@ public class PluginVersionSynchronizerTests : IDisposable
         Assert.Equal(expected, PluginVersionSynchronizer.BumpSemVer(current, part));
     }
 
+    [Theory]
+    [InlineData("1.2", VersionBumpPart.Patch)]      // 2-part: not valid SemVer
+    [InlineData("1.2.3.4", VersionBumpPart.Patch)]   // 4-part: silently drops Revision (data loss)
+    [InlineData("1.2.3-alpha", VersionBumpPart.Patch)] // pre-release suffix: not numeric-only
+    [InlineData("", VersionBumpPart.Patch)]           // empty
+    [InlineData("   ", VersionBumpPart.Patch)]        // whitespace-only
+    public void BumpSemVer_RejectsNonThreePartSemVer(string current, VersionBumpPart part)
+    {
+        Assert.Throws<FormatException>(() => PluginVersionSynchronizer.BumpSemVer(current, part));
+    }
+
     [Fact]
     public void Sync_WritesCsprojAndPluginAttribute_FromManifest()
     {
