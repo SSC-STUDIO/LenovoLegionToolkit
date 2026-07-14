@@ -3,13 +3,11 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Utils;
-using UniversalDeviceToolkit.WPF.Controls.Custom;
 using UniversalDeviceToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
 

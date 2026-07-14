@@ -1,10 +1,8 @@
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
-using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows;

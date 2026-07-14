@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Resources;
 using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.System.Management;
@@ -30,47 +28,12 @@ public static partial class WMI
         || ex.Message.Contains("拒绝访问", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
-    /// Expected probe failures when a Legion WMI method/class/object is not available on this machine
-    /// (or was disposed while a timed-out invoke was still running).
-    /// </summary>
-    private static bool IsInvalidObject(ManagementException ex) =>
-        ex.ErrorCode is ManagementStatus.InvalidObject
-            or ManagementStatus.InvalidMethod
-            or ManagementStatus.NotFound
-            or ManagementStatus.NotSupported
-            or ManagementStatus.InvalidClass
-            or ManagementStatus.InvalidNamespace
-            or ManagementStatus.InvalidMethodParameters
-            or ManagementStatus.InvalidParameter
-            or ManagementStatus.InvalidOperation
-            or ManagementStatus.InvalidQuery
-            or ManagementStatus.ProviderNotFound
-            or ManagementStatus.ProviderFailure
-            or ManagementStatus.ProviderLoadFailure
-            or ManagementStatus.Failed
-        || ex.Message.Contains("Invalid object", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("无效的对象", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("not found", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("找不到", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("not supported", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("不支持", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("not implemented", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("未在任何类中实现", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("未实现", StringComparison.OrdinalIgnoreCase)
-        || ex.Message.Contains("无效", StringComparison.OrdinalIgnoreCase);
-
-    /// <summary>
     /// True for WMI failures that capability probing should treat as "feature unavailable"
     /// rather than a hard crash. Access denied is excluded so elevation issues still surface.
     /// </summary>
     private static bool IsSoftWmiFailure(ManagementException ex) =>
         !IsAccessDenied(ex);
 
-    /// <summary>
-    /// Only "method does not exist on this class" should be permanently cached.
-    /// Do NOT treat generic NotFound / "找不到" as method-missing — those fire for bad
-    /// object state and wrongly disabled Fan_GetCurrentFanSpeed process-wide.
-    /// </summary>
     /// <summary>
     /// Only permanent method-missing cases. Do NOT match generic "does not exist" / NotFound —
     /// those fire for bad object state / access and wrongly disabled Fan_GetCurrentFanSpeed

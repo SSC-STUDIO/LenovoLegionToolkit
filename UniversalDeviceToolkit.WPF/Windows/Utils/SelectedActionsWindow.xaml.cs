@@ -3,9 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
-using UniversalDeviceToolkit.WPF.Windows;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
-using static UniversalDeviceToolkit.WPF.Pages.WindowsOptimizationPage;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {

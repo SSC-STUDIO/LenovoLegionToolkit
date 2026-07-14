@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Settings;
 using Moq;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -12,16 +10,6 @@ namespace UniversalDeviceToolkit.Tests;
 /// </summary>
 public static class MockFactory
 {
-    /// <summary>
-    /// Creates a mock file system watcher
-    /// </summary>
-    public static Mock<FileSystemWatcher> CreateFileSystemWatcher(string path = "C:\\Test")
-    {
-        var mock = new Mock<FileSystemWatcher>(path);
-        mock.SetupAllProperties();
-        return mock;
-    }
-
     /// <summary>
     /// Creates a mock plugin
     /// </summary>
@@ -41,24 +29,6 @@ public static class MockFactory
         mock.Setup(p => p.IsSystemPlugin).Returns(isSystemPlugin);
         mock.Setup(p => p.Dependencies).Returns(dependencies ?? Array.Empty<string>());
         return mock.Object;
-    }
-
-    /// <summary>
-    /// Creates a mock plugin manager
-    /// </summary>
-    public static Mock<IPluginManager> CreatePluginManager(
-        IEnumerable<IPlugin>? plugins = null,
-        bool isInstalled = true)
-    {
-        var mock = new Mock<IPluginManager>();
-        var pluginList = plugins ?? new List<IPlugin>();
-
-        mock.Setup(m => m.GetRegisteredPlugins()).Returns(pluginList);
-        mock.Setup(m => m.IsInstalled(It.IsAny<string>())).Returns(isInstalled);
-        mock.Setup(m => m.GetInstalledPluginIds()).Returns(
-            pluginList.Select(p => p.Id));
-
-        return mock;
     }
 
     /// <summary>
@@ -105,24 +75,6 @@ public static class MockFactory
             ReleaseDate = DateTime.UtcNow.ToString("o")
         };
     }
-
-    /// <summary>
-    /// Creates mock application settings
-    /// </summary>
-    public static ApplicationSettings CreateMockApplicationSettings(
-        bool extensionsEnabled = false)
-    {
-        var store = new ApplicationSettings.ApplicationSettingsStore
-        {
-            ExtensionsEnabled = extensionsEnabled,
-            InstalledExtensions = new List<string>()
-        };
-
-        var mock = new Mock<ApplicationSettings>();
-        mock.Setup(s => s.Store).Returns(store);
-
-        return mock.Object;
-    }
 }
 
 /// <summary>
@@ -144,14 +96,6 @@ public static class Builder
     public static PluginMetadataBuilder PluginMetadata()
     {
         return new PluginMetadataBuilder();
-    }
-
-    /// <summary>
-    /// Builds an ApplicationSettingsStore with customizable properties
-    /// </summary>
-    public static SettingsStoreBuilder SettingsStore()
-    {
-        return new SettingsStoreBuilder();
     }
 }
 
@@ -342,33 +286,6 @@ public class PluginMetadataBuilder
             Author = _author,
             Dependencies = _dependencies,
             FilePath = _filePath
-        };
-    }
-}
-
-public class SettingsStoreBuilder
-{
-    private bool _extensionsEnabled = false;
-    private List<string> _installedExtensions = new();
-
-    public SettingsStoreBuilder WithExtensionsEnabled(bool enabled)
-    {
-        _extensionsEnabled = enabled;
-        return this;
-    }
-
-    public SettingsStoreBuilder WithInstalledExtensions(params string[] extensions)
-    {
-        _installedExtensions = new List<string>(extensions);
-        return this;
-    }
-
-    public ApplicationSettings.ApplicationSettingsStore Build()
-    {
-        return new ApplicationSettings.ApplicationSettingsStore
-        {
-            ExtensionsEnabled = _extensionsEnabled,
-            InstalledExtensions = _installedExtensions
         };
     }
 }

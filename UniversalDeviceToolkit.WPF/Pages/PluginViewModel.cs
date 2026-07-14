@@ -1,10 +1,8 @@
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Media;
 using System.Linq;
 using System.Collections.Generic;
-using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;

@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Loading;
@@ -682,14 +681,6 @@ public class NavigationStore : Control
         }
 
         return fallback;
-    }
-
-    private void AnimateFrameContent()
-    {
-        if (Frame?.Content is not FrameworkElement content || !ShouldAnimate())
-            return;
-
-        SoftFadeIn(content, ResolveCrossfadeDuration());
     }
 
     private void SetCurrent(NavigationItem item)

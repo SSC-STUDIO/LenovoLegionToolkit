@@ -642,7 +642,6 @@ public class SensorsGroupController : IDisposable
 
     private readonly Dictionary<object, TimeSpan> _subscribers = [];
     private CancellationTokenSource? _producerCts;
-    private Task? _producerTask;
     private bool _producerLoopErrorLogged;
     public event EventHandler? SensorsUpdated;
 
@@ -2556,7 +2555,7 @@ public class SensorsGroupController : IDisposable
 
         _producerCts = new CancellationTokenSource();
         var token = _producerCts.Token;
-        _producerTask = Task.Run(() => ProducerLoop(token), token);
+        _ = Task.Run(() => ProducerLoop(token), token);
     }
 
     private void StopProducerLoop()
@@ -2564,7 +2563,6 @@ public class SensorsGroupController : IDisposable
         _producerCts?.Cancel();
         _producerCts?.Dispose();
         _producerCts = null;
-        _producerTask = null;
     }
 
     private async Task ProducerLoop(CancellationToken token)

@@ -5,10 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Humanizer;
 using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard;
 using UniversalDeviceToolkit.WPF.Controls.Loading;
@@ -28,7 +25,6 @@ namespace UniversalDeviceToolkit.WPF.Pages
 public partial class DashboardPage : ILoadingChromeOwner
 {
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
-    private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
 
     private readonly List<DashboardGroupControl> _dashboardGroupControls = [];
     private HyperlinkButton? _editDashboardHyperlink;

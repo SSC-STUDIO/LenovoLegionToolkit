@@ -1,7 +1,5 @@
 using System;
-using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;

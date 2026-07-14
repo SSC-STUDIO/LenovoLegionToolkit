@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using LenovoLegionToolkit.Lib;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils;
 

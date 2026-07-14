@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Resources;
 using System.Windows.Media;
 

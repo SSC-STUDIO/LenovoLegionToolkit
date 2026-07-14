@@ -1,6 +1,5 @@
 using System;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 

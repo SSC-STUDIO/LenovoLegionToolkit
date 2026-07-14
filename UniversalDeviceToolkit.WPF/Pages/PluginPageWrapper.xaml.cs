@@ -12,7 +12,6 @@ using UniversalDeviceToolkit.WPF.Controls.Custom;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Windows;
-using UniversalDeviceToolkit.WPF.Windows.Settings;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Pages

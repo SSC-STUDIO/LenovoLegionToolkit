@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -19,7 +18,6 @@ using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 using Color = System.Windows.Media.Color;
 using Colors = System.Windows.Media.Colors;
-using Point = System.Drawing.Point;
 using Rectangle = System.Drawing.Rectangle;
 using Size = System.Windows.Size;
 

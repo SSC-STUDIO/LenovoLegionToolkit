@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.ViewModels;
-using UniversalDeviceToolkit.WPF.Windows;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Settings
 {

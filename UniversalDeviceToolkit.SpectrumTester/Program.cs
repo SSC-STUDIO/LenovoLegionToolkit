@@ -252,14 +252,7 @@ internal struct LENOVO_SPECTRUM_GENERIC_RESPONSE
 
 internal enum LENOVO_SPECTRUM_OPERATION_TYPE : byte
 {
-    ProfileSet1 = 0xC8,
-    GetProfile = 0xCA,
-    EffectChange = 0xCB,
-    ProfileSet2 = 0xCC,
-    GetBrightness = 0xCD,
     Brightness = 0xCE,
-    AuroraSendBitmap = 0xA1,
-    State = 0x03,
     Unknown04 = 0x04,
     UnknownC4 = 0xC4,
     UnknownC5 = 0xC5,

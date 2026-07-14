@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
 using LenovoLegionToolkit.Lib.Controllers.Sensors;
@@ -17,7 +16,6 @@ using UniversalDeviceToolkit.WPF.Controls.Dashboard;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
-using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils

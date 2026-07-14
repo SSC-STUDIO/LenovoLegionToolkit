@@ -15,7 +15,6 @@ using UniversalDeviceToolkit.WPF.Extensions;
 using LenovoLegionToolkit.Lib.System;
 using UniversalDeviceToolkit.WPF.Utils;
 using System.IO;
-using System.Net.Http;
 using Wpf.Ui.Controls;
 using System.Windows.Forms;
 using Process = System.Diagnostics.Process;

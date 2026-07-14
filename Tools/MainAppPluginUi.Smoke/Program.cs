@@ -58,7 +58,6 @@ internal static class Program
     private const byte VkTab = 0x09;
     private const byte VkShift = 0x10;
     private const byte VkA = 0x41;
-    private const byte VkV = 0x56;
     private const byte VkBack = 0x08;
     private const uint KeyEventExtendedKey = 0x0001;
     private const uint KeyEventKeyUp = 0x0002;
@@ -75,7 +74,6 @@ internal static class Program
     private static readonly TimeSpan OnlinePluginInstallTimeout = TimeSpan.FromMinutes(12);
     private static readonly TimeSpan WindowAnimationDuration = TimeSpan.FromMilliseconds(BaseAnimationDurationMs);
     private static readonly TimeSpan WindowAnimationGracePeriod = TimeSpan.FromMilliseconds(150);
-    private static readonly TimeSpan MessageBoxDetectionTimeout = TimeSpan.FromSeconds(5);
     private static readonly TimeSpan PowerModeHardwareReadbackTimeout = TimeSpan.FromSeconds(15);
     private static readonly TimeSpan PowerModeHardwareReadbackPollDelay = TimeSpan.FromMilliseconds(300);
     private static readonly string[] DefaultPluginIds = { "custom-mouse", "shell-integration", "vive-tool", "network-acceleration" };
@@ -2355,12 +2353,6 @@ Environment variables:
         return liveWindow;
     }
 
-    private static AutomationElement WaitForAnimationsAndResolveWindow(AutomationElement window, int processId, TimeSpan? additionalDelay = null)
-    {
-        WaitForAnimationsToComplete(additionalDelay);
-        return ResolveLiveWindowAndDismissPopups(window, processId);
-    }
-
     private static bool IsPluginMarketplaceReady(AutomationElement mainWindow)
     {
         if (!TryFindPluginNavigationElement(mainWindow, out var pluginNav)
@@ -2907,39 +2899,6 @@ Environment variables:
         return false;
     }
 
-    private static void TestOpenOptimizationExtension(AutomationElement mainWindow, string pluginId, bool returnToMarketplace)
-    {
-        EnsurePluginMarketplaceEntrySelected(mainWindow, pluginId);
-        var openButton = FindOptimizationOpenEntryButton(mainWindow, pluginId, TimeSpan.FromSeconds(20));
-        Click(openButton);
-
-        EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: false);
-        CaptureMainWindow(mainWindow, pluginId, "optimization-page");
-        Console.WriteLine($"[main-smoke] Open button routed to optimization extension without applying actions: {pluginId}");
-        ObserveStep($"Optimization route opened: {pluginId}", mainWindow);
-
-        if (returnToMarketplace)
-            NavigateToPluginExtensionsPage(mainWindow, refresh: false);
-    }
-
-    private static AutomationElement FindOptimizationOpenEntryButton(AutomationElement mainWindow, string pluginId, TimeSpan timeout)
-    {
-        var directAutomationId = $"PluginOpenButton_{pluginId}";
-        var openButton = TryWaitForAutomationId(mainWindow, directAutomationId, timeout);
-        if (openButton is not null)
-            return openButton;
-
-        throw new TimeoutException($"Timed out waiting for optimization entry button for '{pluginId}'. Tried '{directAutomationId}'.");
-    }
-
-    private static void AssertNoStandaloneFeatureEntry(AutomationElement mainWindow, string pluginId)
-    {
-        mainWindow = ResolveLiveWindow(mainWindow);
-        var navItem = TryWaitForAutomationId(mainWindow, $"PluginNavItem_{pluginId}", TimeSpan.FromSeconds(2));
-        if (navItem is not null)
-            throw new InvalidOperationException($"Plugin '{pluginId}' unexpectedly exposed a sidebar feature-page entry.");
-    }
-
     private static void EnsurePluginFeaturePageRendered(AutomationElement mainWindow, string pluginId, string entrySource)
     {
         var wrapperReady = WaitUntil(
@@ -3002,7 +2961,6 @@ Environment variables:
             }
         }
     }
-
 
     private static bool IsPluginSpecificFeatureMarkerVisible(AutomationElement mainWindow, string pluginId)
     {
@@ -3189,7 +3147,6 @@ Environment variables:
         CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
     }
 
-
     private static void TestConfigureOpensSettings(AutomationElement mainWindow, int processId, string pluginId, bool settingsRouteAlreadyValidated = false)
     {
         mainWindow = ResolveLiveWindowAndDismissPopups(mainWindow, processId);
@@ -3358,111 +3315,6 @@ Environment variables:
         {
             Console.WriteLine($"[main-smoke] Marketplace selection refresh for '{pluginId}' skipped: {ex.Message}");
         }
-    }
-
-    private static void TestOptimizationSettingsWindow(AutomationElement mainWindow, int processId, string pluginId, bool returnToMarketplace)
-    {
-        NavigateToWindowsOptimizationPage(mainWindow);
-
-        var definition = GetOptimizationRouteDefinition(pluginId)
-                         ?? throw new InvalidOperationException($"No optimization route definition found for plugin '{pluginId}'.");
-
-        var category = WaitForOptimizationCategory(mainWindow, pluginId, definition, TimeSpan.FromSeconds(30));
-        if (category is not null)
-            ExpandIfNeeded(category);
-
-        var settingsButton = WaitForOptimizationSettingsButton(mainWindow, pluginId, definition, TimeSpan.FromSeconds(20));
-        var existingSettingsWindows = GetSettingsWindowHandles(processId, mainWindow.Current.NativeWindowHandle);
-        var expectedWindowNames = GetPluginSettingsWindowExpectedNames(pluginId);
-        Click(settingsButton);
-
-        if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
-        {
-            Console.WriteLine($"[main-smoke] custom-mouse optimization settings button clicked: id='{settingsButton.Current.AutomationId}' name='{settingsButton.Current.Name}'");
-        }
-
-        AutomationElement? settingsWindow = TryWaitForOptimizationSettingsWindow(mainWindow, processId, pluginId, existingSettingsWindows, expectedWindowNames);
-        if (settingsWindow is null && pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
-        {
-            BringToForeground(mainWindow);
-            MouseClick(settingsButton);
-            Console.WriteLine("[main-smoke] custom-mouse optimization settings button received mouse-click fallback.");
-            settingsWindow = TryWaitForOptimizationSettingsWindow(mainWindow, processId, pluginId, existingSettingsWindows, expectedWindowNames);
-        }
-
-        if (settingsWindow is null && pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
-        {
-            BringToForeground(mainWindow);
-            MouseClick(settingsButton);
-            Console.WriteLine("[main-smoke] shell-integration optimization settings button received mouse-click fallback.");
-            settingsWindow = TryWaitForOptimizationSettingsWindow(mainWindow, processId, pluginId, existingSettingsWindows, expectedWindowNames);
-        }
-
-        if (settingsWindow is null && pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
-        {
-            Console.WriteLine("[main-smoke] custom-mouse optimization settings window not detected; continuing after explicit trigger trace.");
-            return;
-        }
-
-        if (settingsWindow is null)
-            throw new TimeoutException($"{pluginId} optimization settings window did not appear.");
-
-        Console.WriteLine($"[main-smoke] Opened optimization settings window for: {pluginId}");
-        CapturePluginSettingsWindow(settingsWindow, pluginId, "settings-optimization");
-        ObserveStep($"Optimization settings window opened: {pluginId}", settingsWindow);
-
-        var settingsWindowHandle = settingsWindow.Current.NativeWindowHandle;
-        Console.WriteLine($"[main-smoke] Optimization settings window handle for '{pluginId}': {settingsWindowHandle}");
-
-        if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
-        {
-            WaitForCustomMouseTopLevelWindowToClose(settingsWindow, processId, TimeSpan.FromSeconds(8), "optimization");
-        }
-        else
-        {
-            CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
-        }
-
-        if (returnToMarketplace)
-        {
-            if (pluginId.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
-            {
-                TryHandleCustomMouseReentryCheckpoint(mainWindow, processId, TimeSpan.FromSeconds(8));
-                NavigateToPluginExtensionsPage(mainWindow, refresh: false);
-                TryHandleCustomMouseMarketplaceReentryReady(mainWindow, processId, TimeSpan.FromSeconds(12));
-                return;
-            }
-
-            NavigateToPluginExtensionsPage(mainWindow, refresh: false);
-        }
-    }
-
-    private static AutomationElement? TryWaitForOptimizationSettingsWindow(
-        AutomationElement mainWindow,
-        int processId,
-        string pluginId,
-        ISet<int> existingSettingsWindows,
-        string[] expectedWindowNames)
-    {
-        var timeout = TimeSpan.FromSeconds(15);
-
-        if (expectedWindowNames.Length > 0)
-        {
-            return TryWaitForPluginSettingsWindowByHandleOrName(
-                processId,
-                mainWindow.Current.NativeWindowHandle,
-                existingSettingsWindows,
-                timeout,
-                $"{pluginId} optimization",
-                expectedWindowNames);
-        }
-
-        return TryWaitForPluginSettingsWindow(
-            processId,
-            mainWindow.Current.NativeWindowHandle,
-            existingSettingsWindows,
-            timeout,
-            Array.Empty<string>());
     }
 
     private static string[] GetPluginSettingsWindowExpectedNames(string pluginId)
@@ -4396,77 +4248,6 @@ Environment variables:
         }
     }
 
-    private static AutomationElement? DetectNotificationWindow(int processId, int mainWindowHandle, TimeSpan timeout)
-    {
-        var deadline = DateTime.UtcNow + timeout;
-        while (DateTime.UtcNow < deadline)
-        {
-            try
-            {
-                var windows = AutomationElement.RootElement.FindAll(TreeScope.Children, Condition.TrueCondition)
-                    .Cast<AutomationElement>()
-                    .Where(window => window.Current.ProcessId == processId)
-                    .ToArray();
-
-                foreach (var window in windows)
-                {
-                    if (window.Current.ControlType != ControlType.Window)
-                        continue;
-
-                    var handle = window.Current.NativeWindowHandle;
-                    if (handle == mainWindowHandle || handle == 0)
-                        continue;
-
-                    if (IsNotificationWindow(window))
-                    {
-                        Console.WriteLine($"[main-smoke] Detected NotificationWindow: handle={handle}");
-                        return window;
-                    }
-                }
-            }
-            catch (Exception ex) when (IsRecoverableAutomationException(ex))
-            {
-                Console.WriteLine($"[main-smoke] Retrying NotificationWindow detection after {ex.GetType().Name}");
-            }
-
-            Thread.Sleep(100);
-        }
-
-        return null;
-    }
-
-    private static bool IsNotificationWindow(AutomationElement window)
-    {
-        var name = window.Current.Name ?? string.Empty;
-
-        if (name.Contains("Notification", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (window.TryGetCurrentPattern(WindowPattern.Pattern, out var pattern))
-        {
-            try
-            {
-                var windowPattern = (WindowPattern)pattern;
-                if (windowPattern.Current.IsTopmost)
-                {
-                    var children = window.FindAll(TreeScope.Descendants, Condition.TrueCondition)
-                        .Cast<AutomationElement>()
-                        .Take(10)
-                        .ToArray();
-
-                    if (children.Length <= 5)
-                        return true;
-                }
-            }
-            catch
-            {
-                // Ignore pattern access errors
-            }
-        }
-
-        return false;
-    }
-
     private static void WaitForAnimationsToComplete(TimeSpan? additionalDelay = null)
     {
         // Non-observation mode: skip animation waits for faster execution
@@ -5059,14 +4840,6 @@ Environment variables:
             yield return basePrefix + "ShellIntegration";
     }
 
-    private static void TestOptimizationExtensionCategory(AutomationElement mainWindow, string pluginId)
-    {
-        EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: false);
-        CaptureMainWindow(mainWindow, pluginId, "optimization-category");
-        Console.WriteLine($"[main-smoke] Optimization category actions verified without applying changes: {pluginId}");
-        ObserveStep($"Optimization category visible: {pluginId}", mainWindow);
-    }
-
     private static void EnsureOptimizationCategoryVisible(AutomationElement mainWindow, string pluginId, bool toggleActions)
     {
         NavigateToWindowsOptimizationPage(mainWindow);
@@ -5099,11 +4872,6 @@ Environment variables:
             var actionKey = actionAutomationId.Replace("WindowsOptimizationAction_", string.Empty, StringComparison.Ordinal);
             ClickActionCheckbox(actions[index], actionKey);
         }
-    }
-
-    private static void ToggleOptimizationActions(AutomationElement mainWindow, string pluginId)
-    {
-        EnsureOptimizationCategoryVisible(mainWindow, pluginId, toggleActions: true);
     }
 
     private static AutomationElement[] WaitForOptimizationActionButtons(
@@ -5919,82 +5687,6 @@ Environment variables:
         return builder.ToString().Normalize(NormalizationForm.FormC);
     }
 
-    private static void SelectPowerModeForGodModeSettings(AutomationElement mainWindow, AutomationElement comboBox)
-    {
-        var optionsBeforeSelection = GetComboBoxOptionNames(comboBox);
-        Console.WriteLine($"[main-smoke] Power-mode combo options before selection: [{string.Join(", ", optionsBeforeSelection)}]");
-        var currentSelection = TryGetComboBoxSelectedItemText(comboBox) ?? ReadElementText(comboBox);
-        if (IsGodModeSettingsSelection(currentSelection))
-        {
-            Console.WriteLine($"[main-smoke] Power-mode combo box is already on '{currentSelection}'; skipping reselection.");
-            return;
-        }
-
-        var currentSettingsButton = FindByAutomationId(ResolveLiveWindow(mainWindow), "PowerModeSettingsButton");
-        if (IsInteractable(currentSettingsButton))
-        {
-            Console.WriteLine($"[main-smoke] Power-mode settings button is already interactable while selection reads '{currentSelection}'; skipping reselection.");
-            return;
-        }
-
-        if (optionsBeforeSelection.Length == 0)
-        {
-            Console.WriteLine($"[main-smoke] Power-mode combo options were unavailable while selection reads '{currentSelection}'.");
-            if (!string.IsNullOrWhiteSpace(currentSelection))
-                return;
-        }
-
-        var selected = SelectComboBoxItemByNamesOrContains(comboBox, "God Mode", "GodMode", "Custom", "自定义", "Performance", "性能");
-        Console.WriteLine($"[main-smoke] Requested power-mode selection item: '{selected}'.");
-
-        var settingsButton = WaitForPowerModeSettingsButton(mainWindow, "power mode settings button after selecting performance/godmode");
-        var selectionUpdated = WaitUntil(
-            () =>
-            {
-                var liveMainWindow = ResolveLiveWindow(mainWindow);
-                var liveCombo = FindPowerModeComboBox(liveMainWindow) ?? comboBox;
-                var selection = TryGetComboBoxSelectedItemText(liveCombo) ?? ReadElementText(liveCombo);
-                if (IsGodModeSettingsSelection(selection))
-                    return true;
-
-                var liveSettingsButton = FindByAutomationId(liveMainWindow, "PowerModeSettingsButton");
-                return IsInteractable(liveSettingsButton);
-            },
-            TimeSpan.FromSeconds(20),
-            TimeSpan.FromMilliseconds(250));
-
-        if (!selectionUpdated)
-            throw new TimeoutException("Timed out waiting for power mode combo box selection to update.");
-
-        var optionsAfterSelection = GetComboBoxOptionNames(FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) ?? comboBox);
-        Console.WriteLine($"[main-smoke] Power-mode combo options after selection: [{string.Join(", ", optionsAfterSelection)}]");
-        var finalCombo = FindPowerModeComboBox(ResolveLiveWindow(mainWindow)) ?? comboBox;
-        var finalSelection = TryGetComboBoxSelectedItemText(finalCombo) ?? ReadElementText(finalCombo);
-        Console.WriteLine($"[main-smoke] UI-selected power mode for settings: '{finalSelection}' (requested '{selected}').");
-    }
-
-    private static AutomationElement WaitForPowerModeSettingsButton(AutomationElement mainWindow, string description)
-    {
-        return WaitUntilValue(
-            () =>
-            {
-                var candidate = FindByAutomationId(ResolveLiveWindow(mainWindow), "PowerModeSettingsButton");
-                return IsInteractable(candidate) ? candidate : null;
-            },
-            TimeSpan.FromSeconds(30),
-            TimeSpan.FromMilliseconds(300),
-            description);
-    }
-
-    private static AutomationElement WaitForPowerModeComboBox(AutomationElement mainWindow, TimeSpan timeout)
-    {
-        return WaitUntilValue(
-            () => TryFindPowerModeComboBox(mainWindow, timeout),
-            timeout,
-            TimeSpan.FromMilliseconds(250),
-            "power mode combo box");
-    }
-
     private static AutomationElement? TryFindPowerModeComboBox(AutomationElement mainWindow, TimeSpan timeout)
     {
         var found = WaitUntil(
@@ -6057,12 +5749,6 @@ Environment variables:
             .OrderByDescending(combo => combo.Current.BoundingRectangle.Width)
             .FirstOrDefault()
             ?? comboBoxes.OrderByDescending(combo => combo.Current.BoundingRectangle.Width).FirstOrDefault();
-    }
-
-    private static bool IsGodModeSettingsSelection(string? value)
-    {
-        var normalized = NormalizePowerModeValue(value ?? string.Empty);
-        return normalized is "performance" or "godmode";
     }
 
     private static void VerifyPowerModeComboBox(AutomationElement comboBox)
@@ -6156,19 +5842,6 @@ Environment variables:
                 $"God Mode base preset(s) missing from combo box: [{string.Join(", ", missing)}]. Options: [{string.Join(", ", options)}]");
 
         Console.WriteLine($"[main-smoke] God Mode base presets verified: [{string.Join(", ", options)}]");
-    }
-
-    private static (string SelectedText, string[] Options) ReadComboBoxState(AutomationElement comboBox)
-    {
-        var selectedText = TryGetComboBoxSelectedItemText(comboBox) ?? ReadElementText(comboBox);
-        var options = GetComboBoxOptionNames(comboBox);
-        return (selectedText, options);
-    }
-
-    private static bool ComboBoxContainsOption(AutomationElement comboBox, string expectedText)
-    {
-        return GetComboBoxOptionNames(comboBox)
-            .Any(option => option.Contains(expectedText, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string NormalizePowerModeValue(string value)
@@ -6495,30 +6168,6 @@ Environment variables:
         mainWindow = ResolveLiveWindow(mainWindow);
         var category = WaitForAutomationIdPresent(mainWindow, $"WindowsOptimizationCategory_{categoryKey}", TimeSpan.FromSeconds(12));
         ExpandIfNeeded(category);
-    }
-
-    private static void VerifyActionDetailsWindow(AutomationElement mainWindow, string actionKey)
-    {
-        var action = WaitForAutomationId(mainWindow, $"WindowsOptimizationAction_{actionKey}", TimeSpan.FromSeconds(8));
-        DoubleClick(action);
-
-        var processId = mainWindow.Current.ProcessId;
-        var detailsWindow = WaitForOwnedWindow(
-            processId,
-            mainWindow.Current.NativeWindowHandle,
-            window => IsVisible(FindByAutomationId(window, "ActionDetailsWindowTitleBar")),
-            TimeSpan.FromSeconds(10),
-            "action details window");
-
-        CapturePluginSettingsWindow(detailsWindow, "system-optimization", "action-details");
-        var closeButton = FindByAutomationId(detailsWindow, "ActionDetailsWindowCloseButton");
-        if (closeButton is not null)
-            Click(closeButton);
-        else
-            CloseWindow(detailsWindow);
-
-        Thread.Sleep((int)WindowAnimationDuration.TotalMilliseconds);
-        Console.WriteLine($"[main-smoke] Action details window verified for {actionKey}");
     }
 
     private static void VerifySelectedActionsWindow(AutomationElement mainWindow)
@@ -7398,18 +7047,6 @@ Environment variables:
         throw new InvalidOperationException($"Automation element set was not interactable after wait: '{string.Join("', '", candidates)}'.");
     }
 
-    private static AutomationElement? TryWaitForAnyAutomationId(AutomationElement root, IReadOnlyList<string> automationIds, TimeSpan timeout)
-    {
-        try
-        {
-            return WaitForAnyAutomationId(root, automationIds, timeout);
-        }
-        catch (TimeoutException)
-        {
-            return null;
-        }
-    }
-
     private static AutomationElement WaitForAutomationIdOrNames(AutomationElement root, string automationId, string[] names, TimeSpan timeout)
     {
         var found = WaitUntil(
@@ -7577,7 +7214,6 @@ Environment variables:
                ?? matches[0];
     }
 
-
     private static void Click(AutomationElement element)
     {
         EnsureElementInteractable(element, "click target");
@@ -7596,7 +7232,6 @@ Environment variables:
 
         MouseClick(element);
     }
-
 
     private static void SelectComboBoxItemByNames(AutomationElement comboBox, params string[] itemNames)
     {
@@ -8453,114 +8088,12 @@ Environment variables:
         Thread.Sleep(80);
     }
 
-    private static void PressCtrlV()
-    {
-        keybd_event(VkControl, 0, KeyEventExtendedKey, UIntPtr.Zero);
-        Thread.Sleep(40);
-        keybd_event(VkV, 0, KeyEventExtendedKey, UIntPtr.Zero);
-        Thread.Sleep(40);
-        keybd_event(VkV, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
-        Thread.Sleep(40);
-        keybd_event(VkControl, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
-        Thread.Sleep(120);
-    }
-
-    private static void TypeText(string text)
-    {
-        if (string.IsNullOrEmpty(text))
-            return;
-
-        foreach (var character in text)
-            TypeAsciiCharacter(character);
-    }
-
-    private static void TypeAsciiCharacter(char character)
-    {
-        if (!TryMapAsciiKey(character, out var virtualKey, out var shift))
-            throw new ArgumentException($"Unsupported character for smoke keyboard input: '{character}'");
-
-        if (shift)
-        {
-            keybd_event(VkShift, 0, KeyEventExtendedKey, UIntPtr.Zero);
-            Thread.Sleep(20);
-        }
-
-        keybd_event(virtualKey, 0, KeyEventExtendedKey, UIntPtr.Zero);
-        Thread.Sleep(20);
-        keybd_event(virtualKey, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
-        Thread.Sleep(20);
-
-        if (shift)
-        {
-            keybd_event(VkShift, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
-            Thread.Sleep(20);
-        }
-    }
-
-    private static bool TryMapAsciiKey(char character, out byte virtualKey, out bool shift)
-    {
-        shift = false;
-        if (character is >= 'a' and <= 'z')
-        {
-            virtualKey = (byte)char.ToUpperInvariant(character);
-            return true;
-        }
-
-        if (character is >= 'A' and <= 'Z')
-        {
-            virtualKey = (byte)character;
-            shift = true;
-            return true;
-        }
-
-        if (character is >= '0' and <= '9')
-        {
-            virtualKey = (byte)character;
-            return true;
-        }
-
-        switch (character)
-        {
-            case ' ':
-                virtualKey = VkSpace;
-                return true;
-            case '-':
-                virtualKey = 0xBD;
-                return true;
-            case '_':
-                virtualKey = 0xBD;
-                shift = true;
-                return true;
-            case ':':
-                virtualKey = 0xBA;
-                shift = true;
-                return true;
-            case '.':
-                virtualKey = 0xBE;
-                return true;
-            default:
-                virtualKey = 0;
-                return false;
-        }
-    }
-
     private static void PressVirtualKey(byte virtualKey)
     {
         keybd_event(virtualKey, 0, KeyEventExtendedKey, UIntPtr.Zero);
         Thread.Sleep(40);
         keybd_event(virtualKey, 0, KeyEventExtendedKey | KeyEventKeyUp, UIntPtr.Zero);
         Thread.Sleep(60);
-    }
-
-    private static void SetClipboardText(string value)
-    {
-        var thread = new Thread(() => System.Windows.Clipboard.SetText(value))
-        {
-            IsBackground = true
-        };
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        thread.Join();
     }
 
     private static void SendUnicodeCharacter(char character)

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 internal sealed record HardwareIdentity(
@@ -10,11 +9,6 @@ internal sealed record HardwareIdentity(
     string Source)
 {
     public static HardwareIdentity Unknown(string source) => new("", "", "", "", source);
-}
-
-internal interface IHardwareIdentityProvider
-{
-    HardwareIdentity Read();
 }
 
 internal sealed class HardwareIdentityReader(
@@ -33,7 +27,7 @@ internal sealed class HardwareIdentityReader(
     }
 }
 
-internal sealed class LinuxHardwareIdentityProvider(IFileSystem fileSystem) : IHardwareIdentityProvider
+internal sealed class LinuxHardwareIdentityProvider(IFileSystem fileSystem)
 {
     private const string DmiRoot = "/sys/class/dmi/id";
 
@@ -82,7 +76,7 @@ internal sealed class LinuxHardwareIdentityProvider(IFileSystem fileSystem) : IH
         string.Join(separator, values.Where(value => !string.IsNullOrWhiteSpace(value))).Trim();
 }
 
-internal sealed class MacHardwareIdentityProvider(ICommandRunner commandRunner) : IHardwareIdentityProvider
+internal sealed class MacHardwareIdentityProvider(ICommandRunner commandRunner)
 {
     public HardwareIdentity Read()
     {

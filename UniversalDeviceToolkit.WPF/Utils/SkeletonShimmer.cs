@@ -201,9 +201,6 @@ public static class SkeletonShimmer
             SkeletonShimmerBehavior.Detach(border);
     }
 
-    private static Color WithAlpha(Color color, double scale) =>
-        Color.FromArgb((byte)Math.Clamp((int)Math.Round(color.A * Math.Clamp(scale, 0, 1)), 0, 255), color.R, color.G, color.B);
-
     private static byte Lerp(byte from, byte to, double amount) =>
         (byte)Math.Clamp((int)Math.Round(from + ((to - from) * amount)), 0, 255);
 }

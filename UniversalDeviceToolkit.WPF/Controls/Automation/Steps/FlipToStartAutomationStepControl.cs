@@ -1,4 +1,3 @@
-using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;

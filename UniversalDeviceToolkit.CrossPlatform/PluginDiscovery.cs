@@ -238,8 +238,7 @@ internal sealed class CrossPlatformPluginRuntimeContribution
     public string Class { get; set; } = string.Empty;
 }
 
+// Deserialization target for contributes.optimizationActions; only list length is used.
 internal sealed class CrossPlatformPluginOptimizationContribution
 {
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = string.Empty;
 }

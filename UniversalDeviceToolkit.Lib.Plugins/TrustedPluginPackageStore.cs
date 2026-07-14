@@ -12,8 +12,6 @@ namespace LenovoLegionToolkit.Lib.Plugins;
 
 internal static class TrustedPluginPackageStore
 {
-    private const string HmacFieldName = "_hmac";
-
     private static readonly object Lock = new();
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 

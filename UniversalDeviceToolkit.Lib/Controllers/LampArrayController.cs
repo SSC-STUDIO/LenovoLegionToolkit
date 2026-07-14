@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Lights;
 using Windows.Foundation.Metadata;
-using Windows.System;
 using Windows.UI;
 using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
@@ -63,7 +62,6 @@ public class LampArrayController : IDisposable
     private class LampArrayDevice
     {
         public LampArray Device { get; }
-        private Dictionary<VirtualKey, List<int>> VirtualKeyToIndex { get; } = new();
 
         public LampArrayDevice(LampArray device)
         {

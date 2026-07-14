@@ -1,8 +1,6 @@
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
-using UniversalDeviceToolkit.WPF.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
 {

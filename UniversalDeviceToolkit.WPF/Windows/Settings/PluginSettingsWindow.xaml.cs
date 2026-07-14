@@ -2,13 +2,10 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
-using System.Windows.Controls;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Pages;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
-using UniversalDeviceToolkit.WPF.Windows;
 using Wpf.Ui.Controls;
 using MessageBox = System.Windows.MessageBox;
 

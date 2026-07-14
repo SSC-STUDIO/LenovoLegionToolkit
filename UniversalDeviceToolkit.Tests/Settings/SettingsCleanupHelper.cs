@@ -27,36 +27,6 @@ namespace UniversalDeviceToolkit.Tests.Settings
         }
 
         /// <summary>
-        /// Deletes all settings files from the AppData folder
-        /// </summary>
-        public static void CleanupAllSettingsFiles()
-        {
-            try
-            {
-                UseIsolatedAppData();
-                var appData = Folders.AppData;
-                if (Directory.Exists(appData))
-                {
-                    foreach (var file in Directory.GetFiles(appData, "*.json"))
-                    {
-                        try
-                        {
-                            File.Delete(file);
-                        }
-                        catch
-                        {
-                            // Ignore deletion errors
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // Ignore cleanup errors
-            }
-        }
-
-        /// <summary>
         /// Deletes a specific settings file
         /// </summary>
         public static void CleanupSettingsFile(string fileName)
@@ -88,7 +58,6 @@ namespace UniversalDeviceToolkit.Tests.Settings
             public const string Application = "settings.json";
             public const string Integrations = "integrations.json";
             public const string BalanceMode = "balancemode.json";
-            public const string SpectrumKeyboard = "spectrum_keyboard.json";
             public const string SunriseSunset = "sunrise_sunset.json";
         }
 

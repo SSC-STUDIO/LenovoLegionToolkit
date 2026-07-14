@@ -1,4 +1,3 @@
-using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 

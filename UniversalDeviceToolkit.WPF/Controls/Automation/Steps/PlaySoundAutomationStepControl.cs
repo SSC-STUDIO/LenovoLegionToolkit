@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.WPF.Resources;
-using UniversalDeviceToolkit.WPF.Utils;
 using Microsoft.Win32;
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;

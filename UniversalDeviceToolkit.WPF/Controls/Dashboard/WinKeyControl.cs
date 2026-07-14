@@ -1,5 +1,4 @@
 using System;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;

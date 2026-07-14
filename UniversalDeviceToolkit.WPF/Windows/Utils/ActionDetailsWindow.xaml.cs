@@ -1,17 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Resources;
-using System.Text;
 using System.Windows;
 using UniversalDeviceToolkit.WPF.Resources;
-using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
-using UniversalDeviceToolkit.WPF.Windows;
 using UniversalDeviceToolkit.WPF.Utils;
-using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {

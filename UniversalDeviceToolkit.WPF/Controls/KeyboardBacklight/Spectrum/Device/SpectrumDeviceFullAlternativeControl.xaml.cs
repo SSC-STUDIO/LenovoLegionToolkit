@@ -1,5 +1,3 @@
-using LenovoLegionToolkit.Lib;
-
 namespace UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device
 {
 public partial class SpectrumDeviceFullAlternativeControl

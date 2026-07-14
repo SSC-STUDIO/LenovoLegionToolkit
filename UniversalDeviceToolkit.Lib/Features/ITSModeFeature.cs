@@ -19,12 +19,7 @@ namespace LenovoLegionToolkit.Lib.Features;
 public partial class ITSModeFeature : IFeature<ITSMode>
 {
     #region Constants and Imports
-    private const uint ITS_VERSION_3 = 16384U;
-    private const uint ITS_VERSION_4 = 20480U;
-    private const uint ITS_VERSION_5 = 24576U;
-    private const uint DISPATCHER_VERSION_2 = 4096U;
     private const uint DISPATCHER_VERSION_3 = 8192U;
-    private const uint DISPATCHER_VERSION_4 = 12288U;
 
     [LibraryImport("PowerBattery.dll", EntryPoint = "?SetITSMode@CIntelligentCooling@PowerBattery@@QEAAHAEAW4ITSMode@12@@Z", SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]

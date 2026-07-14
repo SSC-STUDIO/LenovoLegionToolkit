@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Resources;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +16,6 @@ using System.Windows.Media.Animation;
 using System.Collections.ObjectModel;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Loading;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -35,7 +32,6 @@ namespace UniversalDeviceToolkit.WPF.Pages
 [LoadingChromeOwner(LoadingChromeOwnership.Page, delayMilliseconds: 0, minimumVisibleMilliseconds: 520)]
 public partial class PluginExtensionsPage : ILoadingChromeOwner
 {
-    private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private readonly PluginRepositoryService _pluginRepositoryService = IoCContainer.Resolve<PluginRepositoryService>();
     private readonly PluginInstallCoordinator _pluginInstallCoordinator = IoCContainer.Resolve<PluginInstallCoordinator>();
@@ -364,9 +360,6 @@ private string _currentSearchText = string.Empty;
             }
         }
     }
-
-    private int GetInstallableOnlinePluginCount() =>
-        _onlinePlugins.Count(plugin => !IsPluginInstalledForUi(plugin.Id));
 
     private void UpdateBulkActionButtonsVisibility()
     {
@@ -1208,107 +1201,6 @@ private string _currentSearchText = string.Empty;
 
 
     /// <summary>
-    /// Create plugin icon (colored letters)
-    /// </summary>
-    private UIElement CreatePluginIconOrLetter(IPlugin plugin)
-    {
-        var name = plugin.Name;
-        if (string.IsNullOrWhiteSpace(name))
-            name = plugin.Id;
-
-        var letters = new List<char>();
-        foreach (var c in name)
-        {
-            if (char.IsLetter(c))
-            {
-                letters.Add(c);
-                if (letters.Count >= 2)
-                    break;
-            }
-        }
-
-        var darkColors = new List<SolidColorBrush>
-        {
-            new SolidColorBrush(Color.FromRgb(30, 41, 59)),
-            new SolidColorBrush(Color.FromRgb(51, 65, 85)),
-            new SolidColorBrush(Color.FromRgb(71, 85, 105)),
-            new SolidColorBrush(Color.FromRgb(30, 58, 138)),
-            new SolidColorBrush(Color.FromRgb(44, 62, 80)),
-            new SolidColorBrush(Color.FromRgb(52, 73, 94)),
-            new SolidColorBrush(Color.FromRgb(47, 79, 79)),
-            new SolidColorBrush(Color.FromRgb(39, 60, 117))
-        };
-        var random = new Random(name.GetHashCode());
-        var backgroundColor = darkColors[Math.Abs(random.Next()) % darkColors.Count];
-        var cornerRadius = Application.Current?.TryFindResource("CornerRadiusControl") is CornerRadius cr
-            ? cr
-            : new CornerRadius(12);
-        var border = new Border
-        {
-            Background = backgroundColor,
-            CornerRadius = cornerRadius,
-            HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch
-        };
-
-        if (letters.Count >= 2)
-        {
-            var stackPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-
-            var firstLetter = new TextBlock
-            {
-                Text = letters[0].ToString().ToUpperInvariant(),
-                FontSize = 48,
-                FontWeight = FontWeights.Bold,
-                Foreground = Brushes.White
-            };
-
-            var secondLetter = new TextBlock
-            {
-                Text = letters[1].ToString().ToLowerInvariant(),
-                FontSize = 48,
-                FontWeight = FontWeights.Bold,
-                Foreground = Brushes.White
-            };
-
-            stackPanel.Children.Add(firstLetter);
-            stackPanel.Children.Add(secondLetter);
-            border.Child = stackPanel;
-        }
-        else if (letters.Count == 1)
-        {
-            var letter = new TextBlock
-            {
-                Text = letters[0].ToString().ToUpperInvariant(),
-                FontSize = 64,
-                FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Foreground = Brushes.White
-            };
-            border.Child = letter;
-        }
-        else
-        {
-            var icon = new Wpf.Ui.Controls.SymbolIcon
-            {
-                Symbol = SymbolRegular.Apps24,
-                FontSize = 64,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
-            border.Child = icon;
-        }
-        return border;
-    }
-
-    /// <summary>
     /// Remove "Plugin" suffix from plugin name
     /// </summary>
     private string RemovePluginSuffix(string name)
@@ -1325,15 +1217,6 @@ private string _currentSearchText = string.Empty;
             }
         }
         return name;
-    }
-
-    private bool CheckPluginHasUpdate(string pluginId)
-    {
-        var plugin = _allPlugins.FirstOrDefault(p => p.Id == pluginId);
-        if (plugin == null)
-            return false;
-
-        return TryGetAvailableUpdate(pluginId, out _);
     }
 
     private bool TryGetAvailableUpdate(string pluginId, out PluginManifest? updatePlugin)
@@ -1466,75 +1349,6 @@ private string _currentSearchText = string.Empty;
             LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: cleared update marker for {pluginId}");
     }
 
-    private async void PluginUpdateButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
-            return;
-
-        try
-        {
-            var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
-            if (onlinePlugin == null)
-            {
-                SnackbarHelper.Show(
-                    Resource.PluginExtensionsPage_UpdateFailed,
-                    T("PluginExtensionsPage_OnlineVersionMissing", "Unable to find online version of plugin"),
-                    SnackbarType.Error);
-                return;
-            }
-
-            var updateButton = this.FindName("PluginUpdateButton") as Wpf.Ui.Controls.Button;
-            if (updateButton != null)
-            {
-                updateButton.IsEnabled = false;
-                updateButton.Content = T("PluginExtensionsPage_Updating", "Updating...");
-            }
-
-            SnackbarHelper.Show(
-                Resource.PluginExtensionsPage_UpdatingPlugin,
-                string.Format(
-                    Resource.Culture ?? CultureInfo.CurrentUICulture,
-                    T("PluginExtensionsPage_UpdatingPluginMessageWithName", "Downloading and updating {0}..."),
-                    onlinePlugin.Name),
-                SnackbarType.Info);
-
-            await InstallOnlinePluginAsync(onlinePlugin);
-        }
-        catch (Exception ex)
-        {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error updating plugin: {ex.Message}", ex);
-
-            SnackbarHelper.Show(
-                Resource.PluginExtensionsPage_UpdateFailed,
-                string.Format(
-                    Resource.Culture ?? CultureInfo.CurrentUICulture,
-                    T("PluginExtensionsPage_UpdateExceptionMessage", "Error updating plugin: {0}"),
-                    ex.Message),
-                SnackbarType.Error);
-        }
-        finally
-        {
-            var updateButton = this.FindName("PluginUpdateButton") as Wpf.Ui.Controls.Button;
-            if (updateButton != null)
-            {
-                updateButton.IsEnabled = true;
-                updateButton.Content = Resource.Update;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Convert string to SymbolRegular enum value
-    /// </summary>
-    private Wpf.Ui.Controls.SymbolRegular GetSymbolFromString(string symbolString)
-    {
-        if (Enum.TryParse<Wpf.Ui.Controls.SymbolRegular>(symbolString, out var symbol))
-        {
-            return symbol;
-        }
-        return Wpf.Ui.Controls.SymbolRegular.Apps24;
-    }
-
     private PluginUiCapabilities ResolvePluginCapabilities(
         IPlugin? plugin,
         bool isInstalled,
@@ -1634,12 +1448,6 @@ private string _currentSearchText = string.Empty;
             SupportsFeaturePage = supportsFeaturePage,
             SupportsOptimizationCategory = supportsOptimizationCategory,
         };
-    }
-
-    private void UpdatePluginUI(string pluginId)
-    {
-        // Toolbox and system optimization are now default apps, no longer need updates here
-        // Future real plugin system will handle third-party plugins here
     }
 
     private void UpdateSpecificPluginUI(string pluginId)
@@ -2163,37 +1971,6 @@ private string _currentSearchText = string.Empty;
         }
     }
 
-    private void PluginUpdateInfoButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is not System.Windows.Controls.Button button || button.DataContext is not PluginViewModel viewModel)
-            return;
-
-        if (!viewModel.HasChangelogUrl || string.IsNullOrWhiteSpace(viewModel.Changelog))
-            return;
-
-        if (!Uri.TryCreate(viewModel.Changelog, UriKind.Absolute, out var uri) ||
-            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-        {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Rejected changelog URL for plugin {viewModel.PluginId}: invalid or unsupported scheme.");
-            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, Resource.PluginExtensionsPage_OpenFailedMessage, SnackbarType.Error);
-            return;
-        }
-
-        try
-        {
-            using var process = Process.Start(new ProcessStartInfo
-            {
-                FileName = uri.AbsoluteUri,
-                UseShellExecute = true
-            });
-        }
-        catch (Exception ex)
-        {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error opening changelog link for plugin {viewModel.PluginId}: {ex.Message}", ex);
-            SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message), SnackbarType.Error);
-        }
-    }
-
     private async Task OpenPluginConfigurationAsync(string pluginId)
     {
         try
@@ -2543,66 +2320,6 @@ private string _currentSearchText = string.Empty;
         navigationStore?.Navigate("pluginExtensions");
     }
 
-    private async void PluginPermanentlyDeleteButton_Click(object sender, RoutedEventArgs e)
-    {
-        if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
-            return;
-
-        try
-        {
-            var plugin = _pluginManager.GetRegisteredPlugins().FirstOrDefault(p => p.Id == pluginId);
-            if (plugin == null)
-                return;
-
-            var result = await MessageBoxHelper.ShowAsync(this,
-                T("PluginExtensionsPage_PermanentlyDeleteTitle", "Permanently Delete Plugin"),
-                string.Format(
-                    Resource.Culture ?? CultureInfo.CurrentUICulture,
-                    T("PluginExtensionsPage_PermanentlyDeleteConfirmationMessage", "Are you sure you want to permanently delete plugin \"{0}\"?\n\nThis action cannot be undone, plugin files will be permanently deleted."),
-                    plugin.Name),
-                Resource.Delete,
-                Resource.Cancel);
-
-            if (!result)
-                return;
-
-            _pluginManager.StopPlugin(pluginId);
-            _pluginManager.UninstallPlugin(pluginId);
-
-            var deleted = await _pluginManager.PermanentlyDeletePluginAsync(pluginId);
-
-            UpdateAllPluginsUI();
-
-            if (deleted)
-            {
-                SnackbarHelper.Show(
-                    T("PluginExtensionsPage_PluginDeleted", "Plugin Deleted"),
-                    T("PluginExtensionsPage_PluginDeletedMessage", "Plugin has been permanently deleted from your computer."),
-                    SnackbarType.Success);
-            }
-            else
-            {
-                SnackbarHelper.Show(
-                    Resource.PluginExtensionsPage_PluginUninstalled,
-                    T("PluginExtensionsPage_PluginUninstalledLockedMessage", "Plugin will be deleted when the program closes (some files were locked)."),
-                    SnackbarType.Info);
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Error permanently deleting plugin: {ex.Message}", ex);
-
-            SnackbarHelper.Show(
-                Resource.PluginExtensionsPage_DeletionFailed,
-                string.Format(
-                    Resource.Culture ?? CultureInfo.CurrentUICulture,
-                    T("PluginExtensionsPage_DeletionExceptionMessage", "Error occurred while deleting plugin: {0}"),
-                    ex.Message),
-                SnackbarType.Error);
-        }
-    }
-
     private async void BulkImportButton_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -2695,113 +2412,6 @@ private string _currentSearchText = string.Empty;
         return dialogResult == true
             ? openFileDialog.FileNames
             : Array.Empty<string>();
-    }
-
-    private UIElement LoadPluginIcon(IPlugin plugin)
-    {
-        try
-        {
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            var pluginsRootDir = GetPluginsDirectory();
-            var iconExtensions = new[] { ".png", ".jpg", ".jpeg", ".ico", ".svg" };
-            string? iconPath = null;
-
-            // Try multiple possible plugin directory names
-            var possibleDirNames = new[]
-            {
-                $"LenovoLegionToolkit.Plugins.{plugin.Id}",
-                plugin.Id
-            };
-
-            // Try multiple possible file icon names
-            var possibleIconNames = new[]
-            {
-                "icon",
-                plugin.Id,
-                "plugin",
-                "logo"
-            };
-
-            foreach (var dirName in possibleDirNames)
-            {
-                var pluginDir = Path.Combine(pluginsRootDir, dirName);
-                if (Directory.Exists(pluginDir))
-                {
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Checking plugin directory for icons: {pluginDir}");
-
-                    foreach (var iconName in possibleIconNames)
-                    {
-                        foreach (var ext in iconExtensions)
-                        {
-                            var testPath = Path.Combine(pluginDir, $"{iconName}{ext}");
-                            if (File.Exists(testPath))
-                            {
-                                iconPath = testPath;
-                                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Found icon for plugin {plugin.Id}: {iconPath}");
-                                break;
-                            }
-                        }
-                        if (iconPath != null)
-                            break;
-                    }
-                    if (iconPath != null)
-                        break;
-                }
-            }
-
-            if (string.IsNullOrEmpty(iconPath))
-            {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"No icon file found for plugin {plugin.Id}, using SymbolIcon with icon string: {plugin.Icon}");
-
-                var symbol = GetSymbolFromString(plugin.Icon);
-                var icon = new Wpf.Ui.Controls.SymbolIcon
-                {
-                    Symbol = symbol,
-                    FontSize = 24,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
-                return icon;
-            }
-            else
-            {
-                var bitmapImage = new System.Windows.Media.Imaging.BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.UriSource = new Uri(iconPath, UriKind.Absolute);
-                bitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-
-                var image = new System.Windows.Controls.Image
-                {
-                    Source = bitmapImage,
-                    Width = 32,
-                    Height = 32,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Stretch = System.Windows.Media.Stretch.Uniform
-                };
-                return image;
-            }
-        }
-        catch (Exception ex)
-        {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error loading plugin icon for {plugin.Id}: {ex.Message}", ex);
-
-            var icon = new Wpf.Ui.Controls.SymbolIcon
-            {
-                Symbol = SymbolRegular.Apps24,
-                FontSize = 24,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
-            icon.SetResourceReference(Control.ForegroundProperty, "SystemAccentColorBrush");
-            return icon;
-        }
     }
 
     private string GetPluginsDirectory()
@@ -2946,141 +2556,7 @@ private string _currentSearchText = string.Empty;
         return RemovePluginSuffix(metadata.GetDisplayName(Resource.Culture ?? CultureInfo.CurrentUICulture));
     }
 
-    private async Task<string?> AnalyzeAndFixPluginStructureAsync(string extractDir)
-    {
-        await Task.Yield();
-
-        try
-        {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Analyzing plugin structure in {extractDir}");
-
-            var subDirectories = Directory.GetDirectories(extractDir);
-            if (subDirectories.Length == 0)
-            {
-                // No subdirectories, check if this is already a plugin directory
-                var dllFiles = Directory.GetFiles(extractDir, "*.dll", SearchOption.TopDirectoryOnly);
-                var pluginDll = dllFiles.FirstOrDefault(f => Path.GetFileName(f).StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase));
-
-                if (pluginDll != null)
-                {
-                    // Extract plugin ID from DLL name
-                    var dllName = Path.GetFileNameWithoutExtension(pluginDll);
-                    var pluginId = dllName.Replace("LenovoLegionToolkit.Plugins.", "");
-
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Found plugin directory with DLL: {pluginId}");
-
-                    // Rename extractDir to pluginId
-                    var parentDir = Path.GetDirectoryName(extractDir);
-                    if (parentDir != null)
-                    {
-                        var targetDir = Path.Combine(parentDir, pluginId);
-                        if (Directory.Exists(targetDir))
-                            Directory.Delete(targetDir, true);
-                        Directory.Move(extractDir, targetDir);
-                        return pluginId;
-                    }
-                }
-
-                return null;
-            }
-
-            // Check for nested structure
-            var firstSubDir = subDirectories[0];
-            var firstSubDirName = Path.GetFileName(firstSubDir);
-
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Found subdirectory: {firstSubDirName}");
-
-            // Case 1: Single level nesting (e.g., NetworkAcceleration/LenovoLegionToolkit.Plugins.NetworkAcceleration/)
-            if (firstSubDirName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.Ordinal))
-            {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Detected single-level nesting, flattening...");
-
-                var pluginId = firstSubDirName.Replace("LenovoLegionToolkit.Plugins.", "");
-
-                // Move all contents from nested directory to extractDir
-                await MoveDirectoryContentsAsync(firstSubDir, extractDir);
-
-                // Delete the now-empty nested directory
-                Directory.Delete(firstSubDir, true);
-
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Successfully flattened to plugin: {pluginId}");
-
-                return pluginId;
-            }
-
-            // Case 2: Double level nesting (e.g., NetworkAcceleration/NetworkAcceleration/LenovoLegionToolkit.Plugins.NetworkAcceleration/)
-            var nestedSubDirs = Directory.GetDirectories(firstSubDir);
-            if (nestedSubDirs.Length == 1)
-            {
-                var nestedSubDir = nestedSubDirs[0];
-                var nestedSubDirName = Path.GetFileName(nestedSubDir);
-
-                if (nestedSubDirName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.Ordinal))
-                {
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Detected double-level nesting, flattening...");
-
-                    var pluginId = nestedSubDirName.Replace("LenovoLegionToolkit.Plugins.", "");
-
-                    // Move all contents from deeply nested directory to extractDir
-                    await MoveDirectoryContentsAsync(nestedSubDir, extractDir);
-
-                    // Delete the now-empty nested directories
-                    Directory.Delete(nestedSubDir, true);
-                    Directory.Delete(firstSubDir, true);
-
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Successfully flattened to plugin: {pluginId}");
-
-                    return pluginId;
-                }
-            }
-
-            // Case 3: Use the subdirectory name as plugin ID
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  Using subdirectory as plugin ID: {firstSubDirName}");
-
-            return firstSubDirName;
-        }
-        catch (Exception ex)
-        {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error analyzing plugin structure: {ex.Message}", ex);
-            return null;
-        }
-    }
-
-    private async Task MoveDirectoryContentsAsync(string sourceDir, string targetDir)
-    {
-        await Task.Run(() =>
-        {
-            var files = Directory.GetFiles(sourceDir);
-            var dirs = Directory.GetDirectories(sourceDir);
-
-            foreach (var file in files)
-            {
-                var destFile = Path.Combine(targetDir, Path.GetFileName(file));
-                if (File.Exists(destFile))
-                    File.Delete(destFile);
-                File.Move(file, destFile);
-            }
-
-            foreach (var dir in dirs)
-            {
-                var destDir = Path.Combine(targetDir, Path.GetFileName(dir));
-                if (Directory.Exists(destDir))
-                    Directory.Delete(destDir, true);
-                Directory.Move(dir, destDir);
-            }
-        });
-    }
-
-private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? manifest)
+    private string GetPluginLocalizedDescription(IPlugin plugin, PluginManifest? manifest)
     {
         var metadata = CreatePluginDisplayMetadata(plugin, manifest);
         return metadata.GetDisplayDescription(Resource.Culture ?? CultureInfo.CurrentUICulture);

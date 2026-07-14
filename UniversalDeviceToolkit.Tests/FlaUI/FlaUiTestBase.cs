@@ -211,58 +211,12 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
         }
 
         /// <summary>
-        /// Finds a UI element by automation ID, waiting until it appears.
-        /// </summary>
-        protected virtual AutomationElement WaitForElement(string automationId, int timeoutMs = DefaultTimeoutMs)
-        {
-            var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
-            while (DateTime.UtcNow < deadline)
-            {
-                var element = MainWindow!.FindFirstDescendant(c => c.ByAutomationId(automationId));
-                if (element != null)
-                {
-                    return element;
-                }
-                Thread.Sleep(PollIntervalMs);
-            }
-            throw new TimeoutException($"Element with AutomationId '{automationId}' not found after {timeoutMs}ms.");
-        }
-
-        /// <summary>
-        /// Finds a UI element by name, waiting until it appears.
-        /// </summary>
-        protected virtual AutomationElement WaitForElementByName(string name, int timeoutMs = DefaultTimeoutMs)
-        {
-            var deadline = DateTime.UtcNow.AddMilliseconds(timeoutMs);
-            while (DateTime.UtcNow < deadline)
-            {
-                var element = MainWindow!.FindFirstDescendant(c => c.ByName(name));
-                if (element != null)
-                {
-                    return element;
-                }
-                Thread.Sleep(PollIntervalMs);
-            }
-            throw new TimeoutException($"Element with Name '{name}' not found after {timeoutMs}ms.");
-        }
-
-        /// <summary>
         /// Captures a screenshot of the main window and extracts visible text using
         /// both FlaUI element tree inspection and WinRT OCR (when available).
         /// </summary>
         protected virtual async Task<string[]> ExtractTextFromWindowAsync()
         {
             return await WinRTOcrHelper.ExtractVisibleTextAsync(MainWindow!);
-        }
-
-        /// <summary>
-        /// Verifies that the main window contains the expected text using WinRT OCR.
-        /// </summary>
-        protected virtual async Task AssertWindowContainsTextAsync(string expectedText)
-        {
-            var extractedText = await ExtractTextFromWindowAsync();
-            var allText = string.Join(" ", extractedText);
-            Assert.Contains(expectedText, allText, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string LocateAppExecutable(string currentPath)

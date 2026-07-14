@@ -11,7 +11,6 @@ using UniversalDeviceToolkit.WPF.ViewModels;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 using UniversalDeviceToolkit.WPF.Resources;
-using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Pages;
 

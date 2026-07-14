@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Settings;
 using Wpf.Ui.Controls;
 

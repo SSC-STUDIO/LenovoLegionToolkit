@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;

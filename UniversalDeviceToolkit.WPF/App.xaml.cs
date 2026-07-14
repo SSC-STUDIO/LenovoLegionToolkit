@@ -1068,11 +1068,6 @@ public partial class App
         }
     }
 
-    private static void ApplyStartupOverrides(Flags flags)
-    {
-        _ = flags;
-    }
-
     private static async Task FinalizeRuntimeProfilesAsync()
     {
         try

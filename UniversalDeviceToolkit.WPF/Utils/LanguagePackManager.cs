@@ -628,40 +628,6 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             CopyDirectoryRecursive(nested, Path.Combine(destinationDirectory, Path.GetFileName(nested)));
     }
 
-    private static void CopyLanguageDirectories(string extractPath, CultureInfo cultureInfo)
-    {
-        var staging = Path.Combine(Path.GetTempPath(), $"{AssetPrefix}-stage-{Guid.NewGuid():N}");
-        try
-        {
-            Directory.CreateDirectory(staging);
-            StageLanguageDirectories(extractPath, staging, cultureInfo);
-            ValidateStagedAssemblies(staging, cultureInfo);
-            AtomicApplyStagedDirectories(staging, cultureInfo);
-        }
-        finally
-        {
-            TryDeleteDirectory(staging);
-        }
-    }
-
-    private static bool TryCopyNestedCultureDirectories(string sourceDirectory, System.Collections.Generic.HashSet<string> expectedDirectoryNames)
-    {
-        var copied = false;
-
-        foreach (var nestedDirectory in Directory.EnumerateDirectories(sourceDirectory, "*", SearchOption.TopDirectoryOnly))
-        {
-            var directoryName = Path.GetFileName(nestedDirectory);
-            if (!expectedDirectoryNames.Contains(directoryName))
-                continue;
-
-            var destinationDirectory = Path.Combine(ApplicationDirectory, directoryName);
-            CopySatelliteAssemblies(nestedDirectory, destinationDirectory);
-            copied = true;
-        }
-
-        return copied;
-    }
-
     private static void ExtractZipSafely(string zipPath, string destinationDirectory)
     {
         var destinationRoot = EnsureTrailingDirectorySeparator(Path.GetFullPath(destinationDirectory));

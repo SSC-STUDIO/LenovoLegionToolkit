@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Settings;
-using Moq;
 
 namespace UniversalDeviceToolkit.Tests;
 
@@ -119,22 +117,6 @@ public abstract class TemporaryFileTestBase : UnitTestBase
 }
 
 /// <summary>
-/// Base class for tests that need to mock application settings
-/// </summary>
-public abstract class SettingsTestBase : UnitTestBase
-{
-    protected ApplicationSettings CreateMockSettings()
-    {
-        return new ApplicationSettings();
-    }
-
-    protected ApplicationSettings.ApplicationSettingsStore CreateMockSettingsStore()
-    {
-        return new ApplicationSettings.ApplicationSettingsStore();
-    }
-}
-
-/// <summary>
 /// Assertion helpers for common test scenarios
 /// </summary>
 public static class TestAssertions
@@ -144,39 +126,9 @@ public static class TestAssertions
         action.Should().NotThrow();
     }
 
-    public static async Task ShouldBeSuccessfulAsync(this Func<Task> action)
-    {
-        await action.Should().NotThrowAsync();
-    }
-
     public static void ShouldFailWith<TException>(this Action action) where TException : Exception
     {
         action.Should().Throw<TException>();
-    }
-
-    public static async Task ShouldFailWithAsync<TException>(this Func<Task> action) where TException : Exception
-    {
-        await action.Should().ThrowAsync<TException>();
-    }
-
-    public static void ShouldBeEquivalentTo<T>(this T actual, T expected)
-    {
-        actual.Should().BeEquivalentTo(expected);
-    }
-
-    public static void ShouldHaveCount<T>(this IEnumerable<T> collection, int expectedCount)
-    {
-        collection.Should().HaveCount(expectedCount);
-    }
-
-    public static void ShouldBeEmpty<T>(this IEnumerable<T> collection)
-    {
-        collection.Should().BeEmpty();
-    }
-
-    public static void ShouldNotBeEmpty<T>(this IEnumerable<T> collection)
-    {
-        collection.Should().NotBeEmpty();
     }
 
     public static void ShouldContain<T>(this IEnumerable<T> collection, T expected)
@@ -214,11 +166,6 @@ public static class TestDataGenerator
         return $"{prefix}_{Guid.NewGuid():N}_{++_counter}";
     }
 
-    public static int GenerateUniqueNumber()
-    {
-        return ++_counter;
-    }
-
     public static Version GenerateVersion(int major = 1, int minor = 0, int build = 0, int revision = 0)
     {
         return new Version(major, minor, build, revision);
@@ -243,14 +190,6 @@ public static class TestDataGenerator
             .Select(_ => chars[new Random(42).Next(chars.Length)])
             .ToArray());
     }
-
-    public static DateTime GenerateRandomDate(DateTime? start = null, DateTime? end = null)
-    {
-        var startDate = start ?? DateTime.Now.AddYears(-1);
-        var endDate = end ?? DateTime.Now;
-        var range = (endDate - startDate).Days;
-        return startDate.AddDays(new Random(42).Next(range));
-    }
 }
 
 /// <summary>
@@ -258,18 +197,6 @@ public static class TestDataGenerator
 /// </summary>
 public static class AsyncTestHelpers
 {
-    public static async Task<T> WithTimeout<T>(this Task<T> task, TimeSpan? timeout = null)
-    {
-        using var cts = new CancellationTokenSource(timeout ?? TimeSpan.FromSeconds(30));
-        return await task.WaitAsync(cts.Token);
-    }
-
-    public static async Task WithTimeout(this Task task, TimeSpan? timeout = null)
-    {
-        using var cts = new CancellationTokenSource(timeout ?? TimeSpan.FromSeconds(30));
-        await task.WaitAsync(cts.Token);
-    }
-
     public static async Task RetryAsync(Func<Task> action, int maxRetries = 3, int delayMs = 100)
     {
         for (int i = 0; i < maxRetries; i++)

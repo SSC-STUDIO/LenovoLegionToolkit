@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Dashboard
 {

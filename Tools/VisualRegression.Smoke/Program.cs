@@ -16,9 +16,6 @@ internal static partial class Program
 {
     private const string AppDataOverrideEnvironmentVariable = "UDT_APPDATA_OVERRIDE";
 
-    private static string? GetEnvVar(string environmentVariableName) =>
-        Environment.GetEnvironmentVariable(environmentVariableName);
-
     private static void SetEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string environmentVariableName, string value) =>
         environmentVariables[environmentVariableName] = value;
 
@@ -1023,11 +1020,6 @@ internal static partial class Program
         {
             return false;
         }
-    }
-
-    private static bool FindVisibleTextContainsAny(AutomationElement root, params string[] keywords)
-    {
-        return keywords.Any(keyword => FindVisibleTextContains(root, keyword));
     }
 
     private static bool FindVisibleTextContains(AutomationElement root, string keyword)

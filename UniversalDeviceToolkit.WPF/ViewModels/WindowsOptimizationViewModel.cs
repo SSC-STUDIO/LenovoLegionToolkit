@@ -31,7 +31,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
     private static CultureInfo ActiveCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, ActiveCulture);
 
-    private readonly HashSet<string> _userUncheckedActions = new(StringComparer.OrdinalIgnoreCase);
     private readonly SemaphoreSlim _optimizationStateScanLock = new(1, 1);
     private CancellationTokenSource? _driverGetPackagesTokenSource;
     private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;

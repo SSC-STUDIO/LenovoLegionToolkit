@@ -385,7 +385,6 @@ private static void UpdateAvailableAction()
     }
 
     private bool _disposed = false;
-    private readonly object _subscription = new();
 
     public void Dispose()
     {

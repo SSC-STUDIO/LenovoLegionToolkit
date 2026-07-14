@@ -1,7 +1,5 @@
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
-using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 

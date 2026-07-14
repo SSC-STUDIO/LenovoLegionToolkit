@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Settings;
@@ -20,7 +19,6 @@ public partial class SettingsPage
 {
     private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
-    private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
 
     private SettingsAppearanceControl? _appearanceControl;
