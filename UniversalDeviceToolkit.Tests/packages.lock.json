@@ -793,6 +793,13 @@
           "UniversalDeviceToolkit.Lib": "[5.0.0, )"
         }
       },
+      "SpectrumTester": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "[10.0.8, )",
+          "UniversalDeviceToolkit.Lib": "[5.0.0, )"
+        }
+      },
       "udt-cli": {
         "type": "Project",
         "dependencies": {

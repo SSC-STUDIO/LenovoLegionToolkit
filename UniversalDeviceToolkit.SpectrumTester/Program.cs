@@ -240,6 +240,7 @@ internal struct LENOVO_SPECTRUM_GENERIC_REQUEST(LENOVO_SPECTRUM_OPERATION_TYPE o
 {
     public LENOVO_SPECTRUM_HEADER Header = new(operation, 0xC0);
     public byte Value = value;
+    public byte Value2 = value2;
 }
 
 [StructLayout(LayoutKind.Sequential, Size = 960)]
