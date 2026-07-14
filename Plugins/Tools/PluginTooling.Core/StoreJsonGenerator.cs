@@ -340,13 +340,11 @@ public sealed class StoreJsonGenerator
         {
             $"{plugin.ExpectedAssemblyName}.dll",
             $"UniversalDeviceToolkit.Plugins.{plugin.FolderName}.dll",
-            $"LenovoLegionToolkit.Plugins.{plugin.FolderName}.dll",
         };
 
         // Hyphenated id → Pascal folder variants sometimes differ; also try plugin id forms.
         var noHyphen = plugin.Manifest.Id.Replace("-", "", StringComparison.Ordinal);
         candidates.Add($"UniversalDeviceToolkit.Plugins.{noHyphen}.dll");
-        candidates.Add($"LenovoLegionToolkit.Plugins.{noHyphen}.dll");
 
         try
         {

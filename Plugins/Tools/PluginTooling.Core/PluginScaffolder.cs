@@ -39,7 +39,7 @@ public sealed class PluginScaffolder
             : PluginRepository.NormalizeIdentifier(request.ClassPrefix);
 
         var description = string.IsNullOrWhiteSpace(request.Description)
-            ? $"{request.DisplayName} plugin for Lenovo Legion Toolkit"
+            ? BuildDefaultDescription(request.DisplayName)
             : request.Description.Trim();
 
         var pluginProjectPath = Path.Combine(pluginDirectory, $"UniversalDeviceToolkit.Plugins.{request.FolderName}.csproj");
@@ -266,6 +266,11 @@ public sealed class PluginScaffolder
             false,
             string.Empty,
             string.Empty);
+    }
+
+    private static string BuildDefaultDescription(string displayName)
+    {
+        return $"{displayName} plugin for Universal Device Toolkit";
     }
 
     private static string BuildPluginChangelog(string displayName)
