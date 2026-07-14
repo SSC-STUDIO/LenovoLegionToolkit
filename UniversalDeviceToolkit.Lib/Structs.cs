@@ -1000,7 +1000,6 @@ public readonly struct Update(Release release)
 
     private static bool IsSetupAsset(ReleaseAsset releaseAsset) =>
         releaseAsset.Name.EndsWith("UniversalDeviceToolkitSetup.exe", StringComparison.OrdinalIgnoreCase) ||
-        releaseAsset.Name.EndsWith("UniversalDeviceToolkitSetup.exe", StringComparison.OrdinalIgnoreCase) ||
         (releaseAsset.Name.EndsWith("setup.exe", StringComparison.OrdinalIgnoreCase) &&
          !releaseAsset.Name.Contains("_lang_", StringComparison.OrdinalIgnoreCase));
 
