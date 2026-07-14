@@ -271,9 +271,9 @@ public sealed class PluginRepository
                 Description = storeEntry?.Description ?? manifest.Name,
                 Icon = storeEntry?.Icon ?? "PuzzlePiece24",
                 IconBackground = storeEntry?.IconBackground ?? "#FFF1E2",
-                Tags = storeEntry?.Tags.ToList() ?? [],
-                Dependencies = storeEntry?.Dependencies.ToList() ?? [],
-                SupportedLanguages = storeEntry?.SupportedLanguages.ToList() ?? ["en"],
+                Tags = (storeEntry?.Tags ?? []).ToList(),
+                Dependencies = (storeEntry?.Dependencies ?? []).ToList(),
+                SupportedLanguages = (storeEntry?.SupportedLanguages ?? ["en"]).ToList(),
                 RepositoryUrl = storeEntry?.RepositoryUrl ?? (string.IsNullOrWhiteSpace(manifest.Repository) ? null : manifest.Repository),
             },
         };

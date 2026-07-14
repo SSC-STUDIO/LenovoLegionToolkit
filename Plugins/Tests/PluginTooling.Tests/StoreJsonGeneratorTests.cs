@@ -492,3 +492,52 @@ public class StoreJsonGeneratorTests : IDisposable
         return new StoreJsonGenerator().Generate(request);
     }
 }
+
+public class CreateUnifiedManifestNullGuardTests
+{
+    private static PluginManifest NewManifest() => new(
+        Id: "test-plugin",
+        Name: "Test Plugin",
+        Version: "1.0.0",
+        MinLltVersion: "1.0.0",
+        Author: "TestAuthor",
+        IsSystemPlugin: false,
+        Repository: "https://example.com/repo",
+        Issues: "https://example.com/issues");
+
+    [Fact]
+    public void CreateUnifiedManifest_NullCollectionPropertiesInStoreEntry_DoesNotThrow()
+    {
+        // OfficialStoreEntry with null Tags/Dependencies/SupportedLanguages.
+        // This simulates store-entry.json containing "tags": null, etc.
+        var storeEntry = new OfficialStoreEntry(
+            Description: "Test",
+            Icon: "PuzzlePiece24",
+            IconBackground: "#FFF1E2",
+            Tags: null!,
+            Dependencies: null!,
+            SupportedLanguages: null!,
+            RepositoryUrl: null);
+
+        var manifest = NewManifest();
+        var unified = PluginRepository.CreateUnifiedManifest(manifest, storeEntry, folderName: "TestPlugin");
+
+        Assert.NotNull(unified.Store.Tags);
+        Assert.Empty(unified.Store.Tags);
+        Assert.NotNull(unified.Store.Dependencies);
+        Assert.Empty(unified.Store.Dependencies);
+        Assert.NotNull(unified.Store.SupportedLanguages);
+        Assert.Equal(["en"], unified.Store.SupportedLanguages);
+    }
+
+    [Fact]
+    public void CreateUnifiedManifest_NullStoreEntry_UsesDefaults()
+    {
+        var manifest = NewManifest();
+        var unified = PluginRepository.CreateUnifiedManifest(manifest, storeEntry: null, folderName: "TestPlugin");
+
+        Assert.Empty(unified.Store.Tags);
+        Assert.Empty(unified.Store.Dependencies);
+        Assert.Equal(["en"], unified.Store.SupportedLanguages);
+    }
+}
