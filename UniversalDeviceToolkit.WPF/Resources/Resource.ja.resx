@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,9 +58,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutPage_AppName" xml:space="preserve">
-    <value>レノボ レギオン ツールキット</value>
-  </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>ビルド</value>
   </data>
@@ -103,9 +100,6 @@
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
     <value>USBの常時給電</value>
-  </data>
-  <data name="AppName" xml:space="preserve">
-    <value>レノボ レギオン ツールキット</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>適用</value>
@@ -243,69 +237,14 @@
   <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
     <value>電源に接続済み。充電していません。</value>
   </data>
-  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>バッテリーの現在の温度</value>
-  </data>
-  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
-    <value>バッテリーの温度</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
-    <value>現在のバッテリーの容量</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>現在の容量</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
-    <value>充電/放電サイクルの数</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
-    <value>充電回数</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
-    <value>設計時のバッテリーの最大容量</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
-    <value>設計時の最大容量</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
-    <value>バッテリーの充電 (+) または放電 (-) の速度</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>出力量</value>
-  </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>推定残り時間: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
     <value>残り時間を計算中...</value>
   </data>
-  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>初回使用日</value>
-  </data>
-  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>バッテリーを初めて使用した年月日</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>フル充電時のバッテリーの容量</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
-    <value>バッテリーの最大容量</value>
-  </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
     <value>低出力な電源が接続されています。</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>バッテリーが製造された年月日</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
-    <value>製造日</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>デバイスが最後に電源に接続されてからの時間
-デバイスがスリープ、電源オフのときに充電されていた場合、この時間は正確ではない可能性があります。</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>バッテリー駆動時間</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
     <value>バッテリー</value>
@@ -343,9 +282,6 @@
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
     <value>GPU動作モード</value>
-  </data>
-  <data name="ContextMenu_QuickActions" xml:space="preserve">
-    <value>クイックアクション</value>
   </data>
   <data name="Continue" xml:space="preserve">
     <value>続行</value>
@@ -660,39 +596,6 @@
   <data name="Import" xml:space="preserve">
     <value>インポート</value>
   </data>
-  <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>このデバイスは Universal Device Toolkit と互換性がありません。</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>お使いのデバイスに必要なシステムコンポーネント（LenovoGameZoneData）が不足している可能性があります。</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>"OK"をクリックして続行する場合：</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- ソフトウェアは制限モードで実行されます</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- 一部の機能が無効になります（ダッシュボード、自動化、マクロ）</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- その他の基本機能は引き続き利用可能です</value>
-  </data>
-  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
-    <value>デバイス情報：</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>製造元:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>モデル:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
-    <value>マシンタイプ:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>"OK"をクリックして続行するか、"キャンセル"をクリックして終了します。</value>
-  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>互換性のあるキーボードが見つかりません</value>
   </data>
@@ -711,17 +614,11 @@
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
     <value>アクション</value>
   </data>
-  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
-    <value>バッテリー</value>
-  </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>ダッシュボード</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>キーボード</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>ダウンロード</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>設定</value>
@@ -1004,9 +901,6 @@
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
     <value>速度</value>
-  </data>
-  <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>お読み下さい</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>更新</value>
@@ -1295,9 +1189,6 @@
     <value>ご自身の責任で続行することもできますが、一部の機能が利用できなくなったり、正しく動作しない可能性があることに注意してください。
 
 続行することを選択すると、ログは自動的に有効になります。</value>
-  </data>
-  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>ログフォルダ</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
     <value>デバイスの種類</value>
@@ -1753,9 +1644,6 @@
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
     <value>カスタムブートロゴが設定されました。</value>
   </data>
-  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>ネットワーク名 (SSID)</value>
-  </data>
   <data name="SettingsPage_HWiNFO_Title" xml:space="preserve">
     <value>HWiNFO64</value>
   </data>
@@ -1862,9 +1750,6 @@
   <data name="MacroSequenceControl_Record" xml:space="preserve">
     <value>記録</value>
   </data>
-  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>記録を停止</value>
-  </data>
   <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
     <value>繰り返さない</value>
   </data>
@@ -1952,12 +1837,6 @@
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
     <value>更新を自動的に確認</value>
   </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>アップデートカタログが見つかりません</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>他のソースから更新を取得してください。</value>
-  </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>推奨</value>
   </data>
@@ -2006,9 +1885,6 @@
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>システム最適化</value>
   </data>
-  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>操作一覧</value>
-  </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>推定クリーンアップサイズ: {0}</value>
   </data>
@@ -2017,9 +1893,6 @@
   </data>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>実行中: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>選択したアプリをアンインストールしています…</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>{0} を削除しました（{1} 秒）</value>
@@ -2038,27 +1911,6 @@
   </data>
   <data name="BatteryNightChargeAutomationStepControl_Title" xml:space="preserve">
     <value>夜間のバッテリー充電</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>バッテリーの最大充電容量。</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>バッテリーの健康状態</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>バッテリーが充電（+）または放電（-）される最大レート。</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>最大放電レート</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>バッテリーが充電（+）または放電（-）される最小レート。</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>最小放電レート</value>
-  </data>
-  <data name="CollapseAll" xml:space="preserve">
-    <value>すべて折りたたむ</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
     <value>コンピューターの使用状況と電源状態に基づいて GPU 動作モードを選択します。
@@ -2111,9 +1963,6 @@
   </data>
   <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
     <value>デバイス</value>
-  </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>すべて展開</value>
   </data>
   <data name="GodModeSettingsWindow_CPU_APUsPPT_PL_Description" xml:space="preserve">
     <value>わずかな遅延で CPU が到達可能なピーク消費電力。</value>
@@ -2191,9 +2040,6 @@
   <data name="MainWindow_LegionZoneRunning" xml:space="preserve">
     <value>Legion Zone がバックグラウンドで実行されています。</value>
   </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>システム美化</value>
-  </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>システム最適化</value>
   </data>
@@ -2230,9 +2076,6 @@
   </data>
   <data name="PackagesPage_DownloadInProgress_Message" xml:space="preserve">
     <value>並べ替えやフィルター結果の変更、パッケージの非表示、リストの更新を行うとダウンロードが停止します。続行しますか？</value>
-  </data>
-  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>インターネット接続が機能していることを確認してください。</value>
   </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>エラーが発生しました</value>
@@ -2288,26 +2131,8 @@
   <data name="SettingsPage_HWiNFO_Message" xml:space="preserve">
     <value>HWiNFO64とファン速度、バッテリー温度などを共有します。このオプションを変更した後、HWiNFO64を再起動する必要があるかもしれません。</value>
   </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>クリーンアップを実行</value>
-  </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>クリーンアップに失敗しました。</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>クリーンアップが完了しました。</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>推奨されるパフォーマンス調整を適用し、一時ファイルを削除します。</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>パフォーマンスとサービスの調整を適用</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>パフォーマンス最適化を適用できませんでした。</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>パフォーマンス最適化が適用されました。</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>システム最適化</value>
@@ -2338,23 +2163,6 @@
   </data>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
     <value>最小放電レート</value>
-  </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Windowsの透明度効果を調整します。</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>視覚効果</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>透明度効果を有効にする</value>
-  </data>
-
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>右クリックメニュースタイルを含むWindowsの外観をカスタマイズします。</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Windows美化</value>
   </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
     <value>統合GPUと専用GPUの間で切り替えを許可します。
@@ -2389,44 +2197,6 @@
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
     <value>任意のWi-Fiネットワークの場合は空欄のままにしてください。</value>
   </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>選択した操作を適用</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>選択した操作の完了に失敗しました。</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>選択した操作が正常に完了しました。</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>すべてのユーザーに対して削除する事前インストール済みのMicrosoft Storeアプリを選択します。</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>削除するアプリが選択されていません。</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>AppX管理</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>読み込みに失敗しました: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>アプリを読み込んでいます。お待ちください...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>発行者: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>選択したアプリをアンインストール</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>選択したアプリの削除に失敗しました。</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>選択したアプリが削除予定に追加されました。</value>
-  </data>
-
-
   <data name="WindowsOptimizationPage_ClearSelection_Button" xml:space="preserve">
     <value>選択をクリア</value>
   </data>
@@ -2454,29 +2224,14 @@
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
     <value>削除</value>
   </data>
-  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>少なくとも1つの操作を選択してください。</value>
-  </data>
   <data name="WindowsOptimizationPage_Info" xml:space="preserve">
     <value>これらの操作はシステムサービスとファイルを変更します。管理者権限が必要な場合があります。</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanup_Button" xml:space="preserve">
     <value>クリーンアップ操作を実行</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>すべて選択</value>
-  </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
     <value>推奨を選択</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>美化</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>すべてのユーザーに対して選択した事前インストール済みUWPアプリケーションをアンインストールします。</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>バンドルされたWindowsアプリを削除</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
     <value>Internet ExplorerとEdgeのキャッシュとCookieファイルを削除します。</value>
@@ -2652,18 +2407,6 @@
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
     <value>SysMainを無効にする</value>
   </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Windowsキーの動作を変更して、スタートメニューの代わりに検索を開きます。</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Windowsキーを検索を開くように変更</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>キャッシュ、一時ファイル、その他の残り物を削除します。</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>クリーンアップ</value>
-  </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
     <value>タスクバー、ファイルエクスプローラー、ユーザーインターフェースの動作を調整します。</value>
   </data>
@@ -2682,9 +2425,6 @@
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
     <value>サービス</value>
   </data>
-  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>システム美化</value>
-  </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
     <value>実装タイプ:</value>
   </data>
@@ -2693,12 +2433,6 @@
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>{0}%を実行中</value>
-  </data>
-  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>作戦中止</value>
-  </data>
-  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>エラー詳細:{0}</value>
   </data>
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>隠しダウンロードを表示する</value>
@@ -2714,9 +2448,6 @@
   </data>
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>ゾーンの同期</value>
-  </data>
-  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>プラグインが完全に削除されます。この操作は元に戻せません。</value>
   </data>
   <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
     <value>一括インポート</value>
@@ -2745,12 +2476,6 @@
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
     <value>プラグインをインポートしています...</value>
   </data>
-  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>{0} をインポートしています...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>{0} を処理しています...</value>
-  </data>
   <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
     <value>プラグイン拡張</value>
   </data>
@@ -2762,9 +2487,6 @@
   </data>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>キーボードのナビゲーション項目を表示または非表示にする</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>バッテリーのナビゲーション項目を表示または非表示にする</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
     <value>オートメーションのナビゲーション項目を表示または非表示にする</value>
@@ -2790,20 +2512,11 @@
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>利用可能なドライバーパッケージをスキャン中です。しばらくお待ちください...</value>
   </data>
-  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>ネットワークエラーが発生しました。自動的に再試行しています...</value>
-  </data>
-  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>ドライバーパッケージの取得を再試行中...</value>
-  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>クリーンアップ情報</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
     <value>クリーンアップ操作の進行状況と推定サイズを表示します。</value>
-  </data>
-  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>外観</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>スキャン</value>
@@ -2811,32 +2524,11 @@
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>ドライバーのダウンロード</value>
   </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>安全性の確認</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>システムのクリーンアップにより、一時ファイルとキャッシュが永久に削除されます。通常は安全ですが、重要なデータのバックアップを確保することをお勧めします。続行しますか？</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
-    <value>拡張子</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>システム最適化の拡張機能とツールを管理</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
-    <value>利用可能な拡張機能はありません</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>プラグイン拡張ページから拡張機能をインストールして、システム最適化機能を強化してください。</value>
-  </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>近日公開</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
     <value>拡張機能マーケットプレイスは将来のアップデートで利用可能になります。</value>
-  </data>
-  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>プラグインを読み込み中...</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>さまざまなアプリケーションによって残された一時ファイルとログをクリーンアップします。</value>
@@ -2906,9 +2598,6 @@
   </data>
   <data name="PackageControl_Install" xml:space="preserve">
     <value>インストール</value>
-  </data>
-  <data name="PackageControl_Uninstall" xml:space="preserve">
-    <value>アンインストール</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>インストールに失敗しました</value>
@@ -2997,9 +2686,6 @@
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>ステータス: クラシックメニューがインストールされ、有効になっています</value>
   </data>
-  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
-    <value>アンインストールできません</value>
-  </data>
   <data name="PluginSettingsWindow_Title" xml:space="preserve">
     <value>プラグイン設定</value>
   </data>
@@ -3026,9 +2712,6 @@
   </data>
   <data name="PluginSettingsWindow_Author" xml:space="preserve">
     <value>著者:{0}</value>
-  </data>
-  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>プラグインの設定インターフェース形式が正しくありません。</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
     <value>プラグイン設定の読み込みエラー:{0}</value>
@@ -3059,12 +2742,6 @@
   </data>
   <data name="PluginExtensionsPage_Open" xml:space="preserve">
     <value>開ける</value>
-  </data>
-  <data name="PluginExtensionsPage_Language" xml:space="preserve">
-    <value>言語:</value>
-  </data>
-  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
-    <value>Application Defaultを使用</value>
   </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>{0} プラグインを発見しました</value>
@@ -3120,12 +2797,6 @@
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
     <value>プラグインの更新に失敗しました。ネットワーク接続を確認して、後でもう一度お試しください。</value>
   </data>
-  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
-    <value>更新に成功しました</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
-    <value>プラグインは正常に更新されました</value>
-  </data>
   <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
     <value>プラグインを更新中</value>
   </data>
@@ -3138,44 +2809,14 @@
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>プラグインを実行</value>
   </data>
-  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
-    <value>プラグインが開始されました</value>
-  </data>
   <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
     <value>プラグインがアンインストールされました</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>プラグインはプログラム終了時に削除されます。</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>削除に失敗しました</value>
   </data>
-  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
-    <value>プラグインの削除中にエラーが発生しました</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
-    <value>設定に失敗しました</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>プラグインはインストールされていますが、ロードされていません。アプリケーションを再起動してみてください。</value>
-  </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>設定なし</value>
-  </data>
-  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
-    <value>プラグインには設定オプションがありません。</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>設定非対応</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>プラグインは設定をサポートしていません。</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
-    <value>プラグイン状態リセット</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
-    <value>すべてのプラグインのインストール状態がクリアされました</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
     <value>一括更新完了</value>
@@ -3189,17 +2830,8 @@
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
     <value>ローカル</value>
   </data>
-  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
-    <value>新しいバージョンがあります</value>
-  </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
     <value>バージョン:</value>
-  </data>
-  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>リリース日:</value>
-  </data>
-  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
-    <value>新機能:</value>
   </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
     <value>プラグインリストを更新</value>
@@ -3267,15 +2899,6 @@
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>ダウンロード中... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>使用可能なツールがありません。アプリケーションディレクトリ内の tools フォルダーにツールを追加してください。</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>ツールディレクトリにツールが追加されると、ここに表示されます。</value>
-  </data>
-  <data name="SensorsControl_Model" xml:space="preserve">
-    <value>モデル</value>
-  </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
     <value>電力使用量</value>
   </data>
@@ -3287,12 +2910,6 @@
   </data>
   <data name="SensorsControl_Rate" xml:space="preserve">
     <value>レート</value>
-  </data>
-  <data name="SensorsControl_MinRate" xml:space="preserve">
-    <value>最小レート</value>
-  </data>
-  <data name="SensorsControl_MaxRate" xml:space="preserve">
-    <value>最大レート</value>
   </data>
   <data name="SensorsControl_Cycles" xml:space="preserve">
     <value>サイクル</value>
@@ -3308,9 +2925,6 @@
   </data>
   <data name="SensorsControl_Date" xml:space="preserve">
     <value>日付</value>
-  </data>
-  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
-    <value>コア/メモリクロック</value>
   </data>
   <data name="SensorsControl_Voltage" xml:space="preserve">
     <value>コア電圧</value>
@@ -3354,9 +2968,6 @@
   <data name="PackageControl_Queued" xml:space="preserve">
     <value>キューに追加済み</value>
   </data>
-  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>{0} 作</value>
-  </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
     <value>最適化</value>
   </data>
@@ -3374,9 +2985,6 @@
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
     <value>インストール可能</value>
-  </data>
-  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>現在のフィードに {0} 件の追加プラグインがあります。</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
     <value>インストール済み</value>
@@ -3399,17 +3007,11 @@
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
     <value>更新準備完了</value>
   </data>
-  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} 件のプラグイン更新をインストールする準備が完了しています。</value>
-  </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
     <value>プラグインメタデータの読み込みを待機しています。</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
     <value>メタデータを読み込み中</value>
-  </data>
-  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>言語、温度単位、テーマ、アクセントカラーをカスタマイズします。</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>外観</value>
@@ -3819,9 +3421,6 @@
   <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
     <value>VRAM 使用率</value>
   </data>
-  <data name="SensorsControl_Loading" xml:space="preserve">
-    <value>読み込み中…</value>
-  </data>
   <data name="SensorsControl_Memory_Title" xml:space="preserve">
     <value>RAM</value>
   </data>
@@ -3830,9 +3429,6 @@
   </data>
   <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
     <value>メモリ使用量</value>
-  </data>
-  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
-    <value>ボード温度</value>
   </data>
   <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
     <value>マザーボード</value>
@@ -3891,7 +3487,31 @@
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Disable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>The change could not be verified. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>Please wait for the current optimization to finish.</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>保存できませんでした</value>
   </data>
   <data name="AutomationPage_Save_Error_Message" xml:space="preserve">

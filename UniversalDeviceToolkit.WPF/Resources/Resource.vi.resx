@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,9 +58,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Bộ công cụ Lenovo Legion</value>
-  </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Bản dựng</value>
   </data>
@@ -103,9 +100,6 @@
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
     <value>Luôn bật cổng USB</value>
-  </data>
-  <data name="AppName" xml:space="preserve">
-    <value>Bộ công cụ Lenovo Legion</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Áp dụng</value>
@@ -246,87 +240,14 @@ Chỉ có các Hành động thỏa điều kiện hiện tại sẽ được ch
   <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
     <value>Đã nối với nguồn điện, đang không sạc</value>
   </data>
-  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>Nhiệt độ pin hiện tại.</value>
-  </data>
-  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
-    <value>Nhiệt độ pin</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
-    <value>Dung lượng pin hiện tại.</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>Dung lượng hiện tại</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
-    <value>Số lần sạc xả.</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
-    <value>Số lượng chu kỳ sạc</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
-    <value>Dung lượng theo thiết kế.</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
-    <value>Dung lượng gốc</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
-    <value>Tốc độ pin sạc (+), hoặc xả (-).</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>Tốc độ sạc/xả</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Tốc độ pin sạc (+), hoặc xả (-) thấp nhất.</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Tốc độ sạc/xả thấp nhất</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Tốc độ pin sạc (+), hoặc xả (-) cao nhất.</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Tốc độ sạc/xả cao nhất</value>
-  </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>Ước tính thời gian dùng còn lại: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
     <value>Đang ước tính thời gian...</value>
   </data>
-  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>Ngày đầu tiên sử dụng</value>
-  </data>
-  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>Thời điểm pin được dùng lần đầu tiên.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>Dung lượng pin khi sạc đầy.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
-    <value>Dung lượng tối đa</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Dung lượng sạc tối đa của pin.</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Tình trạng pin</value>
-  </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
     <value>Sạc công suất thấp được kết nối</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>Thời điểm pin được sản xuất.</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
-    <value>Ngày sản xuất</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Thời gian kể từ khi laptop được ngắt khỏi nguồn điện.
-Thời gian có thể không chính xác nếu laptop được sạc khi Ngủ hoặc Tắt.</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>Thời gian chạy trên pin</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
     <value>Pin</value>
@@ -361,9 +282,6 @@ Chuyển đổi giữa các chế độ có thể cần phải khởi động l�
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
     <value>Chế độ hoạt động của GPU</value>
-  </data>
-  <data name="ContextMenu_QuickActions" xml:space="preserve">
-    <value>Phím tắt Hành động</value>
   </data>
   <data name="Continue" xml:space="preserve">
     <value>Tiếp tục</value>
@@ -679,39 +597,6 @@ CẢNH BÁO: Hành động này sẽ không chạy nếu màn hình laptop tắt
   <data name="Import" xml:space="preserve">
     <value>Nhập vào</value>
   </data>
-  <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>Thiết bị này không tương thích với Universal Device Toolkit.</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Thiết bị của bạn có thể thiếu các thành phần hệ thống cần thiết (LenovoGameZoneData).</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>Nếu bạn nhấp "OK" để tiếp tục:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- Phần mềm sẽ chạy ở chế độ hạn chế</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- Một số tính năng sẽ bị vô hiệu hóa (Bảng điều khiển, Tự động hóa, Macro)</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Các tính năng cơ bản khác vẫn sẽ khả dụng</value>
-  </data>
-  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
-    <value>Thông tin thiết bị:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>Nhà sản xuất:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Mẫu:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
-    <value>Loại máy:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Nhấp "OK" để tiếp tục hoặc "Hủy" để thoát.</value>
-  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Không tìm thấy bàn phím tương thích</value>
   </data>
@@ -730,17 +615,11 @@ CẢNH BÁO: Hành động này sẽ không chạy nếu màn hình laptop tắt
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
     <value>Hành động</value>
   </data>
-  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
-    <value>Pin</value>
-  </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Trang chủ</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Bàn phím</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>Tải về</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Cài đặt</value>
@@ -1029,9 +908,6 @@ Bạn có thể chuyển đổi giữa các Chế độ với Fn+Q.</value>
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
     <value>Tốc độ</value>
-  </data>
-  <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Đọc tôi</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Làm mới</value>
@@ -1348,9 +1224,6 @@ Logging sẽ được tự động bật, nếu bạn chọn tiếp tục.</valu
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
     <value>Hãy truy cập trang của dự án trên GitHub để biết thêm thông tin.</value>
-  </data>
-  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Thư mục log</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
     <value>Mã máy</value>
@@ -1942,9 +1815,6 @@ Các định dạng hỗ trợ: {1}.</value>
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
     <value>Logo khởi động tùy chỉnh được đặt.</value>
   </data>
-  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Tên mạng (SSID)</value>
-  </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
     <value>Sao chép tên mạng hiện tại</value>
   </data>
@@ -2068,9 +1938,6 @@ Các định dạng hỗ trợ: {1}.</value>
   </data>
   <data name="MacroSequenceControl_Record" xml:space="preserve">
     <value>Bắt đầu ghi</value>
-  </data>
-  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Dừng Ghi</value>
   </data>
   <data name="MacroSequenceControl_DontRepeat" xml:space="preserve">
     <value>Không lặp lại</value>
@@ -2198,17 +2065,8 @@ Các định dạng hỗ trợ: {1}.</value>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
     <value>Tự động kiểm tra cập nhật</value>
   </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Không tìm thấy danh mục cập nhật</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Thử kiểm tra cập nhật từ nguồn khác.</value>
-  </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>Đã có lỗi xảy ra</value>
-  </data>
-  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Kiểm tra kết nối internet của bạn.</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Title" xml:space="preserve">
     <value>Phát âm thanh</value>
@@ -2280,9 +2138,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimizationPage_Tab_Optimization" xml:space="preserve">
     <value>Tối ưu hóa hệ thống</value>
   </data>
-  <data name="CollapseAll" xml:space="preserve">
-    <value>Thu gọn tất cả</value>
-  </data>
   <data name="Compact" xml:space="preserve">
     <value>Chế độ xem gọn</value>
   </data>
@@ -2310,12 +2165,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="CustomCleanupRuleWindow_Title" xml:space="preserve">
     <value>Quy tắc dọn dẹp tùy chỉnh</value>
   </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Mở rộng tất cả</value>
-  </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>System beautification</value>
-  </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>Tối ưu hóa hệ thống</value>
   </data>
@@ -2325,94 +2174,15 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="SettingsPage_DisableCompatibilityWarning_Title" xml:space="preserve">
     <value>Vô hiệu hóa cảnh báo thiết bị không tương thích</value>
   </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Chạy dọn dẹp</value>
-  </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>Dọn dẹp thất bại.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Dọn dẹp hoàn tất.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Áp dụng các tinh chỉnh hiệu suất được đề xuất và dọn các tệp tạm thời.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Áp dụng các tinh chỉnh hiệu suất &amp; dịch vụ</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Không thể áp dụng các tối ưu hóa hiệu suất.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Các tối ưu hóa hiệu suất đã được áp dụng.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>Tối ưu hóa hệ thống</value>
   </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Adjust Windows transparency effects.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Visual effects</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Enable transparency effects</value>
-  </data>
-
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Customize Windows appearance including right-click menu style.</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Trang trí Windows</value>
-  </data>
   <data name="UnsupportedWindow_DisableHint" xml:space="preserve">
     <value>Bạn có thể tắt cảnh báo này bất cứ lúc nào trong Cài đặt.</value>
   </data>
-  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Hành động</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Áp dụng các hành động đã chọn</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Không thể hoàn thành các hành động đã chọn.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Các hành động đã chọn thực hiện thành công.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Chọn các ứng dụng Microsoft Store được cài đặt sẵn để xóa cho tất cả người dùng.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>Không có ứng dụng nào được chọn để xóa.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>Quản lý AppX</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Không tải được: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Đang tải ứng dụng, vui lòng đợi...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Nhà xuất bản: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Đang gỡ cài đặt các ứng dụng đã chọn...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Gỡ cài đặt các ứng dụng đã chọn</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Không thể xóa các ứng dụng đã chọn.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Các ứng dụng đã chọn đã lên lịch xóa.</value>
-  </data>
-
-
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Giải phóng {0} trong {1}</value>
   </data>
@@ -2443,9 +2213,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
     <value>Loại bỏ</value>
   </data>
-  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Vui lòng chọn ít nhất một hành động.</value>
-  </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>Kích thước dự kiến để dọn dẹp: {0}</value>
   </data>
@@ -2461,20 +2228,8 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>Đang chạy: {0}</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Chọn tất cả</value>
-  </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
     <value>Chọn đề xuất</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Tô điểm</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Gỡ cài đặt các ứng dụng UWP được cài sẵn cho tất cả người dùng.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Gỡ các ứng dụng Windows đi kèm</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
     <value>Xóa bộ nhớ đệm và tệp cookie của Internet Explorer và Edge.</value>
@@ -2650,18 +2405,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
     <value>Vô hiệu hóa SysMain</value>
   </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Chỉnh hành vi của phím Windows để mở tìm kiếm thay vì menu Start.</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Thay đổi phím Windows để mở tìm kiếm</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Xóa bộ nhớ đệm, tập tin tạm thời và các dữ liệu dư thừa khác.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Dọn dẹp</value>
-  </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
     <value>Tối ưu thanh tác vụ, File Explorer và hành vi giao diện người dùng.</value>
   </data>
@@ -2680,9 +2423,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
     <value>Dịch vụ</value>
   </data>
-  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>Làm đẹp hệ thống</value>
-  </data>
   <data name="ActionDetailsWindow_ImplementationType" xml:space="preserve">
     <value>Loại Triển khai:</value>
   </data>
@@ -2691,12 +2431,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Đang thực thi {0}%</value>
-  </data>
-  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Thao tác đã bị hủy</value>
-  </data>
-  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Chi tiết lỗi: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>Hiển thị các tải xuống ẩn</value>
@@ -2712,9 +2446,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="RGBKeyboardBacklightControl_SynchroniseZones" xml:space="preserve">
     <value>Đồng bộ các vùng</value>
-  </data>
-  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>Plugin sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.</value>
   </data>
   <data name="PluginExtensionsPage_BulkImport" xml:space="preserve">
     <value>Nhập hàng loạt</value>
@@ -2743,12 +2474,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
     <value>Đang nhập plugin...</value>
   </data>
-  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>Đang nhập {0}...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>Đang xử lý {0}...</value>
-  </data>
   <data name="MainWindow_NavigationItem_PluginExtensions" xml:space="preserve">
     <value>Tiện ích mở rộng Plugin</value>
   </data>
@@ -2760,9 +2485,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>Hiển thị hoặc ẩn mục điều hướng Bàn phím</value>
-  </data>
-  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>Hiển thị hoặc ẩn mục điều hướng Pin</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
     <value>Hiển thị hoặc ẩn mục điều hướng Tự động hóa</value>
@@ -2788,20 +2510,11 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>Đang quét các gói driver có sẵn, vui lòng chờ...</value>
   </data>
-  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Đã xảy ra lỗi mạng. Tự động thử lại...</value>
-  </data>
-  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Đang thử tải lại các gói driver...</value>
-  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>Thông tin dọn dẹp</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
     <value>Xem tiến trình hoạt động dọn dẹp và dung lượng ước tính.</value>
-  </data>
-  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Diện mạo</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Quét</value>
@@ -2809,32 +2522,11 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>Tải trình điều khiển</value>
   </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>Xác nhận an toàn</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>Việc dọn dẹp hệ thống sẽ xóa vĩnh viễn các tập tin tạm thời và bộ nhớ đệm. Mặc dù thường an toàn, nhưng nên chắc chắn rằng bạn đã sao lưu các dữ liệu quan trọng. Bạn có muốn tiếp tục không?</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
-    <value>Tiện ích mở rộng</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Quản lý các tiện ích mở rộng và công cụ tối ưu hóa hệ thống</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
-    <value>Không có tiện ích mở rộng nào</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Cài đặt tiện ích mở rộng từ trang Tiện ích Plugin để nâng cao chức năng tối ưu hóa hệ thống.</value>
-  </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>Sắp ra mắt</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
     <value>Chợ tiện ích mở rộng sẽ có trong bản cập nhật tương lai.</value>
-  </data>
-  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>Đang tải plugin...</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Dọn dẹp các tệp tạm thời và nhật ký do các ứng dụng khác nhau để lại.</value>
@@ -2904,9 +2596,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="PackageControl_Install" xml:space="preserve">
     <value>Cài đặt</value>
-  </data>
-  <data name="PackageControl_Uninstall" xml:space="preserve">
-    <value>Gỡ cài đặt</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>Cài đặt thất bại</value>
@@ -2995,9 +2684,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>Đã cài đặt</value>
   </data>
-  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
-    <value>Không thể gỡ cài đặt</value>
-  </data>
   <data name="PluginSettingsWindow_Title" xml:space="preserve">
     <value>Cài đặt Plugin</value>
   </data>
@@ -3024,9 +2710,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="PluginSettingsWindow_Author" xml:space="preserve">
     <value>Tác giả: {0}</value>
-  </data>
-  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>Định dạng giao diện cấu hình plugin không đúng.</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
     <value>Lỗi khi tải cài đặt plugin: {0}</value>
@@ -3057,12 +2740,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="PluginExtensionsPage_Open" xml:space="preserve">
     <value>Mở</value>
-  </data>
-  <data name="PluginExtensionsPage_Language" xml:space="preserve">
-    <value>Ngôn ngữ:</value>
-  </data>
-  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
-    <value>Sử dụng mặc định của ứng dụng</value>
   </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>Đã tìm thấy plugin {0}</value>
@@ -3118,12 +2795,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
     <value>Cập nhật plugin thất bại, vui lòng kiểm tra kết nối mạng và thử lại sau.</value>
   </data>
-  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
-    <value>Cập nhật thành công</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
-    <value>Plugin đã được cập nhật thành công</value>
-  </data>
   <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
     <value>Đang cập nhật plugin</value>
   </data>
@@ -3136,44 +2807,14 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>Chạy Plugin</value>
   </data>
-  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
-    <value>Plugin đã bắt đầu</value>
-  </data>
   <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
     <value>Plugin đã gỡ cài đặt</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>Plugin sẽ bị xóa khi chương trình đóng.</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>Xóa thất bại</value>
   </data>
-  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
-    <value>Đã xảy ra lỗi khi xóa plugin</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
-    <value>Cấu hình thất bại</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>Plugin đã được cài đặt nhưng chưa được tải. Vui lòng thử khởi động lại ứng dụng.</value>
-  </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>Không có Cấu hình</value>
-  </data>
-  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
-    <value>Plugin không có tuỳ chọn cấu hình nào.</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>Cấu hình không được hỗ trợ</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>Plugin không hỗ trợ cấu hình.</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
-    <value>Trạng thái Plugin đã được Đặt Lại</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
-    <value>Tất cả trạng thái cài đặt plugin đã được xóa</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
     <value>Cập nhật số lượng lớn hoàn tất</value>
@@ -3187,17 +2828,8 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
     <value>Cục bộ</value>
   </data>
-  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
-    <value>Phiên bản mới có sẵn</value>
-  </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
     <value>Phiên bản:</value>
-  </data>
-  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Ngày phát hành:</value>
-  </data>
-  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
-    <value>Có gì mới:</value>
   </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
     <value>Làm mới danh sách plugin</value>
@@ -3265,15 +2897,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Đang tải xuống... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>Không có công cụ nào có sẵn. Vui lòng thêm công cụ vào thư mục tools trong thư mục ứng dụng.</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>Các công cụ sẽ xuất hiện ở đây khi chúng có sẵn trong thư mục tools.</value>
-  </data>
-  <data name="SensorsControl_Model" xml:space="preserve">
-    <value>Mẫu máy</value>
-  </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
     <value>Mức tiêu thụ điện</value>
   </data>
@@ -3285,12 +2908,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="SensorsControl_Rate" xml:space="preserve">
     <value>Tỉ lệ</value>
-  </data>
-  <data name="SensorsControl_MinRate" xml:space="preserve">
-    <value>Tỷ lệ tối thiểu</value>
-  </data>
-  <data name="SensorsControl_MaxRate" xml:space="preserve">
-    <value>Tỷ lệ tối đa</value>
   </data>
   <data name="SensorsControl_Cycles" xml:space="preserve">
     <value>Chu kỳ</value>
@@ -3306,9 +2923,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="SensorsControl_Date" xml:space="preserve">
     <value>Ngày</value>
-  </data>
-  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
-    <value>Tốc độ lõi / bộ nhớ</value>
   </data>
   <data name="SensorsControl_Voltage" xml:space="preserve">
     <value>Điện áp lõi</value>
@@ -3352,9 +2966,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PackageControl_Queued" xml:space="preserve">
     <value>Đang chờ</value>
   </data>
-  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
-  </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
     <value>Optimize</value>
   </data>
@@ -3372,9 +2983,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
     <value>Có thể cài đặt</value>
-  </data>
-  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>{0} plugin bổ sung có sẵn trong nguồn cấp hiện tại.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
     <value>Đã cài đặt</value>
@@ -3397,17 +3005,11 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
     <value>Sẵn sàng cập nhật</value>
   </data>
-  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} bản cập nhật plugin đã sẵn sàng để cài đặt.</value>
-  </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
     <value>Đang chờ tải thông tin plugin...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
     <value>Đang tải thông tin</value>
-  </data>
-  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Tùy chỉnh ngôn ngữ, đơn vị nhiệt độ, chủ đề và màu nhấn.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Giao diện</value>
@@ -3544,7 +3146,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
   </data>
-
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>Gói thiết bị: Chế độ cơ bản</value>
   </data>
@@ -3818,9 +3419,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
     <value>Sử dụng VRAM</value>
   </data>
-  <data name="SensorsControl_Loading" xml:space="preserve">
-    <value>Đang tải...</value>
-  </data>
   <data name="SensorsControl_Memory_Title" xml:space="preserve">
     <value>RAM</value>
   </data>
@@ -3829,9 +3427,6 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
     <value>Sử dụng bộ nhớ</value>
-  </data>
-  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
-    <value>Nhiệt độ bo mạch chủ</value>
   </data>
   <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
     <value>Bo mạch chủ</value>
@@ -3890,7 +3485,31 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Disable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>The change could not be verified. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>Please wait for the current optimization to finish.</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Không thể lưu</value>
   </data>
   <data name="AutomationPage_Save_Error_Message" xml:space="preserve">

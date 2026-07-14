@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,9 +58,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Lenovo Legion Инструменти</value>
-  </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Издание</value>
   </data>
@@ -100,9 +97,6 @@
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
     <value>Винаги включен USB</value>
-  </data>
-  <data name="AppName" xml:space="preserve">
-    <value>Lenovo Legion Инструменти</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Приложи</value>
@@ -242,69 +236,14 @@
   <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
     <value>Свързано, не зарежда батерията</value>
   </data>
-  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>Текуща температура на батерията.</value>
-  </data>
-  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
-    <value>Температура на батерията</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
-    <value>Текущ капацитет на батерията.</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>Текущ капацитет</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
-    <value>Колко пъти батерията е преминала през цикъл на разреждане и зареждане.</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
-    <value>Брой на циклите</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
-    <value>Капацитет на батерията по спецификация.</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
-    <value>Фабричен капацитет</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
-    <value>Скорост на зареждане (+) или разреждане (-) на батерията.</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>Скорост на разреждане</value>
-  </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>Оставащо време: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
     <value>Пресмятане на времето...</value>
   </data>
-  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>Дата на първо използване</value>
-  </data>
-  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>Кога батерията е била използвана за първи път.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>Капацитет на батерията, когато е напълно заредена.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
-    <value>Пълен капацитет</value>
-  </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
     <value>Беше свързано зарядно с ниска мощност</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>Кога е била произведена батерията.</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
-    <value>Дата на производство</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Изминалото време от последното свързване на зарядното.
-Възможни са неточности, ако лаптопът е бил зареждан по време на спящ режим или докато е бил изключен.</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>На батерия от</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
     <value>Батерия</value>
@@ -339,9 +278,6 @@
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
     <value>Режим на работа на видео картата.</value>
-  </data>
-  <data name="ContextMenu_QuickActions" xml:space="preserve">
-    <value>Бързи действия</value>
   </data>
   <data name="Continue" xml:space="preserve">
     <value>Продължи</value>
@@ -654,39 +590,6 @@
   <data name="Import" xml:space="preserve">
     <value>Импортиране</value>
   </data>
-  <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>Това устройство не е съвместимо с Universal Device Toolkit.</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Вашето устройство може да няма необходимите системни компоненти (LenovoGameZoneData).</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>Ако щракнете "OK" за продължение:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- Софтуерът ще работи в ограничен режим</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- Някои функции ще бъдат деактивирани (Табло, Автоматизация, Макроси)</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Други основни функции ще останат достъпни</value>
-  </data>
-  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
-    <value>Информация за устройството:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>Производител:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Модел:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
-    <value>Тип машина:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Щракнете "OK" за продължение или "Отказ" за изход.</value>
-  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Не са намерени съвместими клавиатури</value>
   </data>
@@ -705,17 +608,11 @@
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
     <value>Действия</value>
   </data>
-  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
-    <value>Батерия</value>
-  </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Информационно табло</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Клавиатура</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>Изтегляния</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Настройки</value>
@@ -994,9 +891,6 @@
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
     <value>Скорост</value>
-  </data>
-  <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Прочети ме</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Опресни</value>
@@ -1310,9 +1204,6 @@
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
     <value>Вижте страницата на проекта в GitHub за повече информация.</value>
-  </data>
-  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Изберете Лог папка</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
     <value>Вид на машината</value>
@@ -1887,9 +1778,6 @@
   <data name="BootLogoWindow_SetCustomSuccess" xml:space="preserve">
     <value>Зададено е потребителско лого.</value>
   </data>
-  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Име на мрежата (SSID)</value>
-  </data>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_CopyCurrentNetworkName" xml:space="preserve">
     <value>Копиране на текущото име на мрежата</value>
   </data>
@@ -2011,29 +1899,8 @@
   <data name="AboutPage_ThirdPartyLibraries" xml:space="preserve">
     <value>Библиотеки на трети страни</value>
   </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Максимален капацитет за зареждане на батерията.</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Състояние на батерията</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Максимална скорост, с която батерията се зарежда (+), или се разрежда (-).</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Максимална скорост на разреждане</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Минимална скорост, с която батерията се зарежда (+), или се разрежда (-).</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Минимална скорост на разреждане</value>
-  </data>
   <data name="Clear" xml:space="preserve">
     <value>Изчисти</value>
-  </data>
-  <data name="CollapseAll" xml:space="preserve">
-    <value>Свие всички</value>
   </data>
   <data name="Compact" xml:space="preserve">
     <value>Компактен изглед</value>
@@ -2079,9 +1946,6 @@
   </data>
   <data name="DevicePipelineTriggerTabItemContent_Devices" xml:space="preserve">
     <value>Устройства</value>
-  </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Разгърни всички</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>GPU №2</value>
@@ -2149,9 +2013,6 @@
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
     <value>Повтори</value>
   </data>
-  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Спрете записването</value>
-  </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>Достигнат е лимит на API заявките, моля опитайте отново по-късно.</value>
   </data>
@@ -2169,9 +2030,6 @@
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>Макро</value>
-  </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>Оформление на системата</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>Оптимизация на системата</value>
@@ -2199,17 +2057,8 @@
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Title" xml:space="preserve">
     <value>Известие на всички екрани</value>
   </data>
-  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Проверете дали връзката Ви с Интернет е наред.</value>
-  </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>Нещо се обърка</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Опитайте да получите актуализации от друг източник.</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Каталогът за актуализации не е намерен</value>
   </data>
   <data name="PlaySoundAutomationStepControl_Message" xml:space="preserve">
     <value>Поддържат се често срещани музикални формати като wav или mp3.</value>
@@ -2280,26 +2129,8 @@
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Актуализация</value>
   </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Стартирай почистване</value>
-  </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>Почистването не бе успешно.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Почистването е завършено.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Приложи препоръчителни настройки за производителност и изтрий временните файлове.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Приложи настройки за производителност и услуги</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Не успяхме да приложим оптимизациите за производителност.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Оптимизациите за производителност бяха приложени.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>Оптимизация на системата</value>
@@ -2328,23 +2159,6 @@
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
     <value>Минимална скорост на разреждане</value>
   </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Настройка на визуалните ефекти на Windows.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Визуални ефекти</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Прозрачност</value>
-  </data>
-
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Персонализирайте външния вид на Windows, включително стила на контекстното меню.</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Украса на Windows</value>
-  </data>
   <data name="UnexpectedException" xml:space="preserve">
     <value>Възникна неочаквано изключение:
   {0}</value>
@@ -2358,50 +2172,6 @@
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
     <value>Заключен клавиш Windows</value>
   </data>
-  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Действия</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Приложи избраните действия</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Неуспешно приключване на избраните действия.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Избраните действия бяха изпълнени успешно.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Изберете предварително инсталирани приложения от Microsoft Store за премахване за всички потребители.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>Не са избрани приложения за премахване.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>Управление на AppX</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Неуспешно зареждане: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Зареждане на приложения, моля изчакайте...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Издател: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Деинсталиране на избрани приложения...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Деинсталирай избраните приложения</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Неуспешно премахване на избраните приложения.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Избраните приложения са планирани за премахване.</value>
-  </data>
-
-
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Освободени {0} в {1}</value>
   </data>
@@ -2432,9 +2202,6 @@
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
     <value>Премахни</value>
   </data>
-  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Моля, изберете поне едно действие.</value>
-  </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>Очакван размер на почистването: {0}</value>
   </data>
@@ -2450,20 +2217,8 @@
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>Стартиране: {0}</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Избери всичко</value>
-  </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
     <value>Избери препоръчителното</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Оформление</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Деинсталирай избрани предварително инсталирани UWP приложения за всички потребители.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Премахни предварително инсталираните приложения на Windows</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
     <value>Премахва кеш и бисквитки на Internet Explorer и Edge.</value>
@@ -2639,18 +2394,6 @@
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
     <value>Деактивирайте SysMain</value>
   </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Променете поведението на клавиша Windows, за да отваря търсене вместо старт менюто.</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Променете клавиша Windows за отваряне на търсене</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Премахнете кешове, временни файлове и други остатъци.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Почистване</value>
-  </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
     <value>Настройте лентата на задачите, File Explorer и поведението на потребителския интерфейс.</value>
   </data>
@@ -2669,9 +2412,6 @@
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
     <value>Услуги</value>
   </data>
-  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>Украсa на системата</value>
-  </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
     <value>Режими на захранване на Windows</value>
   </data>
@@ -2689,12 +2429,6 @@
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Изпълнение {0}%</value>
-  </data>
-  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Операцията е отменена</value>
-  </data>
-  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Детайли за грешката: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>Показване на скрити изтегляния</value>
@@ -2723,9 +2457,6 @@
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>Показване или скриване на елемента за навигация на клавиатурата</value>
   </data>
-  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>Покажете или скрийте навигационния елемент Батерия</value>
-  </data>
   <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
     <value>Покажи или скрий навигационния елемент Автоматизация</value>
   </data>
@@ -2750,20 +2481,11 @@
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>Сканирам за налични пакети за шофьори, моля, изчакайте...</value>
   </data>
-  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Възникна мрежова грешка. Опитвайки автоматично отново...</value>
-  </data>
-  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Опитвам се да взема пакети за шофьори...</value>
-  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>Информация за почистване</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
     <value>Вижте напредъка по почистването и приблизителния размер.</value>
-  </data>
-  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Външен вид</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Сканирай</value>
@@ -2771,32 +2493,11 @@
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>Изтегляне на драйвер</value>
   </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>Потвърждение на безопасността</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>Почистването на системата ще изтрие временно съхраняваните файлове и кеша постоянно. Въпреки че обикновено е безопасно, се препоръчва да се уверите, че имате резервни копия на важните данни. Искате ли да продължите?</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
-    <value>Разширения</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Управлявайте разширенията и инструментите за оптимизация на системата</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
-    <value>Няма налични разширения</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Инсталирайте разширения от страницата с разширения на плъгини, за да подобрите функционалността на оптимизацията на системата.</value>
-  </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>Очаквайте скоро</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
     <value>Пазарът за разширения ще бъде наличен в бъдеща актуализация.</value>
-  </data>
-  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>Зареждане на приставки...</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Почиства временни файлове и логове, оставени от различни приложения.</value>
@@ -2866,9 +2567,6 @@
   </data>
   <data name="PackageControl_Install" xml:space="preserve">
     <value>Инсталиране</value>
-  </data>
-  <data name="PackageControl_Uninstall" xml:space="preserve">
-    <value>Деинсталиране</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>Инсталацията не бе успешна</value>
@@ -2957,9 +2655,6 @@
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>Инсталирано</value>
   </data>
-  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
-    <value>Не може да се деинсталира</value>
-  </data>
   <data name="PluginSettingsWindow_Title" xml:space="preserve">
     <value>Настройки на плъгина</value>
   </data>
@@ -2986,9 +2681,6 @@
   </data>
   <data name="PluginSettingsWindow_Author" xml:space="preserve">
     <value>Автор: {0}</value>
-  </data>
-  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>Форматът на интерфейса за конфигуриране на плъгина е неправилен.</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
     <value>Грешка при зареждане на настройките на плъгина: {0}</value>
@@ -3020,12 +2712,6 @@
   <data name="PluginExtensionsPage_Open" xml:space="preserve">
     <value>Отвори</value>
   </data>
-  <data name="PluginExtensionsPage_Language" xml:space="preserve">
-    <value>Език:</value>
-  </data>
-  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
-    <value>Използване по подразбиране на приложението</value>
-  </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>Намерени плъгини {0}</value>
   </data>
@@ -3055,12 +2741,6 @@
   </data>
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
     <value>Импортиране на плъгини...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>Импортиране на {0}...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>Обработка на {0}...</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
     <value>Плъгинът е инсталиран успешно</value>
@@ -3107,20 +2787,11 @@
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>Плъгинът ще бъде завинаги изтрит</value>
   </data>
-  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>Плъгинът ще бъде изтрит завинаги. Това действие не може да бъде отменено.</value>
-  </data>
   <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
     <value>Актуализацията не успя</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
     <value>Актуализацията на плъгина не успя, моля, проверете мрежовата връзка и опитайте пак по-късно.</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
-    <value>Актуализацията е успешна</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
-    <value>Плъгинът беше успешно обновен</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
     <value>Актуализиране на плъгина</value>
@@ -3134,44 +2805,14 @@
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>Стартирай плъгин</value>
   </data>
-  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
-    <value>Плъгинът стартира</value>
-  </data>
   <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
     <value>Плъгинът е деинсталиран</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>Плъгинът ще бъде изтрит, когато програмата затвори.</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>Изтриването не успя</value>
   </data>
-  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
-    <value>Възникна грешка при изтриване на плъгин</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
-    <value>Конфигурацията не успя</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>Плъгинът е инсталиран, но не е зареден. Моля, опитайте да рестартирате кандидатурата.</value>
-  </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>Няма конфигурация</value>
-  </data>
-  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
-    <value>Плъгинът няма конфигурационни опции.</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>Конфигурацията не се поддържа</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>Плъгинът не поддържа конфигурация.</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
-    <value>Състоянията на плъгина са нулирани</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
-    <value>Всички състояния на инсталираните плъгини са изчистени</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
     <value>Груповата актуализация е завършена</value>
@@ -3185,17 +2826,8 @@
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
     <value>Локално</value>
   </data>
-  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
-    <value>Налична е нова версия</value>
-  </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
     <value>Версия:</value>
-  </data>
-  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Дата на пускане:</value>
-  </data>
-  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
-    <value>Какво е новото:</value>
   </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
     <value>Обнови списъка с плъгини</value>
@@ -3263,15 +2895,6 @@
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Изтегляне... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>Няма налични инструменти. Моля, добавете инструменти в папката tools в директорията на приложението.</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>Инструментите ще се появят тук, щом станат налични в директорията tools.</value>
-  </data>
-  <data name="SensorsControl_Model" xml:space="preserve">
-    <value>Модел</value>
-  </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
     <value>Използване на енергия</value>
   </data>
@@ -3283,12 +2906,6 @@
   </data>
   <data name="SensorsControl_Rate" xml:space="preserve">
     <value>Скорост</value>
-  </data>
-  <data name="SensorsControl_MinRate" xml:space="preserve">
-    <value>Минимална скорост</value>
-  </data>
-  <data name="SensorsControl_MaxRate" xml:space="preserve">
-    <value>Максимална скорост</value>
   </data>
   <data name="SensorsControl_Cycles" xml:space="preserve">
     <value>Цикли</value>
@@ -3304,9 +2921,6 @@
   </data>
   <data name="SensorsControl_Date" xml:space="preserve">
     <value>Дата</value>
-  </data>
-  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
-    <value>Честота на ядро / памет</value>
   </data>
   <data name="SensorsControl_Voltage" xml:space="preserve">
     <value>Напрежение на ядро</value>
@@ -3354,9 +2968,6 @@
     <value>
     На опашка</value>
   </data>
-  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>от {0}</value>
-  </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
     <value>Оптимизиране</value>
   </data>
@@ -3376,10 +2987,6 @@
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
     <value>
     Налични за инсталиране</value>
-  </data>
-  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>
-    В текущия канал са налични {0} допълнителни плъгина.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
     <value>
@@ -3409,10 +3016,6 @@
     <value>
     Готови актуализации</value>
   </data>
-  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>
-    {0} актуализации на плъгини са готови за инсталиране.</value>
-  </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
     <value>
     Изчакване на зареждане на метаданните на плъгините.</value>
@@ -3420,9 +3023,6 @@
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
     <value>
     Зареждане на метаданни</value>
-  </data>
-  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Персонализирайте език, единица за температура, тема и акцентен цвят.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Външен вид</value>
@@ -3570,7 +3170,6 @@
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
   </data>
-
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>Пакет за устройство: Основен режим</value>
   </data>
@@ -3844,9 +3443,6 @@
   <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
     <value>Използване на VRAM</value>
   </data>
-  <data name="SensorsControl_Loading" xml:space="preserve">
-    <value>Зареждане...</value>
-  </data>
   <data name="SensorsControl_Memory_Title" xml:space="preserve">
     <value>RAM</value>
   </data>
@@ -3855,9 +3451,6 @@
   </data>
   <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
     <value>Използване на паметта</value>
-  </data>
-  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
-    <value>Температура на дънната платка</value>
   </data>
   <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
     <value>Дънна платка</value>
@@ -3916,7 +3509,31 @@
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Disable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>The change could not be verified. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>Please wait for the current optimization to finish.</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Не може да се запази</value>
   </data>
   <data name="AutomationPage_Save_Error_Message" xml:space="preserve">

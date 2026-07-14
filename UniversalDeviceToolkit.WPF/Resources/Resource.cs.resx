@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,9 +58,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Nástroj Lenovo Legion</value>
-  </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Sestavení</value>
   </data>
@@ -100,9 +97,6 @@
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
     <value>Vždy napájené USB</value>
-  </data>
-  <data name="AppName" xml:space="preserve">
-    <value>Nástroj Lenovo Legion</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Použít</value>
@@ -243,69 +237,14 @@ Spustí se pouze akce, které odpovídají aktuálnímu stavu.</value>
   <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
     <value>Připojen, nenabíjí</value>
   </data>
-  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>Aktualní teplota baterie.</value>
-  </data>
-  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
-    <value>Teplota baterie</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
-    <value>Aktuální kapacita baterie.</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>Aktuální kapacita</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
-    <value>Počet cyklů nabití/vybití.</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
-    <value>Počet cyklů</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
-    <value>Konstrukční kapacita baterie.</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
-    <value>Konstrukční kapacita</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
-    <value>Rychlost nabíjení (+), nebo vybíjení (-) baterie.</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>Rychlost vybíjení</value>
-  </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>Odhadovaný zbývající čas: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
     <value>Odhaduji čas...</value>
   </data>
-  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>Datum prvního použití</value>
-  </data>
-  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>Kdy byla baterie použita poprvé.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>Kapacita baterie, když je plně nabitá.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
-    <value>Plně nabitá kapacita</value>
-  </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
     <value>Připojena nabíječka s nízkým výkonem</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>Kdy byla baterie vyrobena.</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
-    <value>Datum výroby</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Čas od posledního připojení notebooku k nabíječce.
-Tento čas nemusí být přesný, pokud byl notebook nabíjen ve spánku nebo ve vypnutém stavu.</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>Na baterii od</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
     <value>Baterie</value>
@@ -340,9 +279,6 @@ Přepínání režimů může vyžadovat restart.</value>
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
     <value>Pracovní režim GPU</value>
-  </data>
-  <data name="ContextMenu_QuickActions" xml:space="preserve">
-    <value>Rychlé akce</value>
   </data>
   <data name="Continue" xml:space="preserve">
     <value>Pokračovat</value>
@@ -638,41 +574,6 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je interní displej vypnutý.
   <data name="Import" xml:space="preserve">
     <value>Importovat</value>
   </data>
-  <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>Toto zařízení není kompatibilní s Universal Device Toolkit.</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Vaše zařízení může postrádat požadované systémové komponenty (LenovoGameZoneData).</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>Pokud kliknete na "OK" pro pokračování:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- Software bude spuštěn v omezeném režimu</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- Některé funkce budou zakázány (Nástěnka, Automatizace, Makra)</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Ostatní základní funkce zůstanou dostupné</value>
-  </data>
-  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
-    <value>Informace o zařízení:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>Výrobce:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>
-    Model zařízení:
-</value>
-  </data>
-  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
-    <value>Typ stroje:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Klikněte na "OK" pro pokračování nebo na "Zrušit" pro ukončení.</value>
-  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Nebyly nalezeny žádné kompatibilní klávesnice</value>
   </data>
@@ -685,17 +586,11 @@ VAROVÁNÍ: Tato akce neproběhne správně, pokud je interní displej vypnutý.
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
     <value>Akce</value>
   </data>
-  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
-    <value>Baterie</value>
-  </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Přehled</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Klávesnice</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>Balíčky</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Nastavení</value>
@@ -971,9 +866,6 @@ Režim můžeš přepínat pomocí Fn+Q.</value>
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
     <value>Rychlost</value>
-  </data>
-  <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Přečti mě</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Obnovit</value>
@@ -1268,9 +1160,6 @@ Pokud se rozhodneš pokračovat, protokolování bude automaticky povoleno.</val
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
     <value>Další informace najdeš na stránce projektu na GitHubu.</value>
-  </data>
-  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Složka s logy</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
     <value>Typ zařízení</value>
@@ -1662,24 +1551,6 @@ Toto nastavení se aplikuje jen když je zapnutý vlastní režim.</value>
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
     <value>Noční nabíjení baterie</value>
   </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Maximální kapacita nabití baterie.</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Stav baterie</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximální rychlost, při které se baterie nabíjí (+), nebo vybíjí (-).</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximální rychlost vybíjení</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimální rychlost, při které se baterie nabíjí (+), nebo vybíjí (-).</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimální rychlost vybíjení</value>
-  </data>
   <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
     <value>Vlastní logo při spouštění je nastaveno</value>
   </data>
@@ -1728,9 +1599,6 @@ Toto nastavení se aplikuje jen když je zapnutý vlastní režim.</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Vymazat</value>
-  </data>
-  <data name="CollapseAll" xml:space="preserve">
-    <value>Sbalit vše</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
     <value>Vyber provozní režim GPU na základě využití počítače a podmínek napájení.
@@ -1795,9 +1663,6 @@ Přepínání režimů může vyžadovat restart.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Senzory</value>
-  </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Rozbalit vše</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>GPU # 2</value>
@@ -1934,9 +1799,6 @@ Přepínání režimů může vyžadovat restart.</value>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
     <value>Opakovat</value>
   </data>
-  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Zastavit nahrávání</value>
-  </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>Dosaženo limitu API, zkuste to prosím později.</value>
   </data>
@@ -1954,9 +1816,6 @@ Přepínání režimů může vyžadovat restart.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>Makro</value>
-  </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>Zkrášlování systému</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>Optimalizace systému</value>
@@ -2037,20 +1896,11 @@ Přepínání režimů může vyžadovat restart.</value>
   <data name="PackagesPage_DownloadTo" xml:space="preserve">
     <value>Složka pro stažení</value>
   </data>
-  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Zkontroluj, zda je tvoje připojení k internetu v provozu.</value>
-  </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>Něco se pokazilo</value>
   </data>
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
     <value>Otevřít složku pro stažení</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Zkuste získat aktualizace z jiného zdroje.</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Katalog aktualizací nenalezen</value>
   </data>
   <data name="PanelLogoBacklightAutomationStepControl_Message" xml:space="preserve">
     <value>Zapnout nebo vypnout podsvícení na víku notebooku.</value>
@@ -2248,26 +2098,8 @@ Přepínání režimů může vyžadovat restart.</value>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Aktualizovat</value>
   </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Spustit úklid</value>
-  </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>Úklid selhal.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Úklid dokončen.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Použít doporučené optimalizace výkonu a vyčistit dočasné soubory.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Použít optimalizace výkonu a služeb</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Nepodařilo se aplikovat optimalizace výkonu.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Optimalizace výkonu byly aplikovány.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>Optimalizace systému</value>
@@ -2308,23 +2140,6 @@ Přepínání režimů může vyžadovat restart.</value>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
     <value>Minimální vybíjecí proud</value>
   </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Upravte efekty průhlednosti Windows.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Vizuální efekty</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Povolit efekty průhlednosti</value>
-  </data>
-
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Přizpůsobte vzhled Windows včetně stylu místní nabídky.</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Zkrášlování Windows</value>
-  </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
     <value>Umožnit přepínání mezi integrovaným a dedikovaným GPU.
 Vyžaduje restart.</value>
@@ -2351,59 +2166,12 @@ Vyžaduje restart.</value>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
     <value>Nechte prázdné pro jakoukoli Wi-Fi síť.</value>
   </data>
-  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Název sítě (SSID)</value>
-  </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
     <value>Zakázat klávesu Windows na vestavěné klávesnici.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
     <value>Zámek tlačítka Windows</value>
   </data>
-  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Akce</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Použít vybrané akce</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Nepodařilo se dokončit vybrané akce.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Vybrané akce byly úspěšně dokončeny.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Vyberte předinstalované aplikace z Microsoft Store, které chcete odstranit pro všechny uživatele.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>Žádné aplikace nebyly vybrány k odstranění.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>Správa AppX</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Nepodařilo se načíst: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Načítání aplikací, prosím čekejte...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Vydavatel: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Odinstalování vybraných aplikací...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Odinstalovat vybrané aplikace</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Nepodařilo se odstranit vybrané aplikace.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Vybrané aplikace jsou naplánovány k odstranění.</value>
-  </data>
-
-
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Uvolněno {0} v {1}</value>
   </data>
@@ -2434,9 +2202,6 @@ Vyžaduje restart.</value>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
     <value>Odstranit</value>
   </data>
-  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Vyberte prosím alespoň jednu akci.</value>
-  </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>Odhadovaná velikost úklidu: {0}</value>
   </data>
@@ -2452,20 +2217,8 @@ Vyžaduje restart.</value>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>Spouštění: {0}</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Vybrat vše</value>
-  </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
     <value>Vybrat doporučené</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Zkrášlení</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Odinstalovat vybrané předinstalované UWP aplikace pro všechny uživatele.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Odstranit předinstalované aplikace Windows</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
     <value>Odstranit mezipaměť a soubory cookie z Internet Exploreru a Edge.</value>
@@ -2641,18 +2394,6 @@ Vyžaduje restart.</value>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
     <value>Deaktivujte SysMain</value>
   </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Upravit chování klávesy Windows tak, aby otevírala hledání místo nabídky Start.</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Změnit klávesu Windows na otevření hledání</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Odstranit cache, dočasné soubory a další zbytky.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Vyčištění</value>
-  </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
     <value>Ladit hlavní panel, Průzkumník a chování uživatelského rozhraní.</value>
   </data>
@@ -2671,9 +2412,6 @@ Vyžaduje restart.</value>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
     <value>Služby</value>
   </data>
-  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>Zkrášlení systému</value>
-  </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
     <value>Režimy napájení Windows</value>
   </data>
@@ -2691,12 +2429,6 @@ Vyžaduje restart.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Provádí se {0}%</value>
-  </data>
-  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operace zrušena</value>
-  </data>
-  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Detaily chyby: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>Zobrazit skryté stahování</value>
@@ -2725,9 +2457,6 @@ Vyžaduje restart.</value>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>Zobrazit nebo skrýt položku Navigace klávesnicí</value>
   </data>
-  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>Zobrazit nebo skrýt položku Navigace baterií</value>
-  </data>
   <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
     <value>Zobrazit nebo skrýt položku Navigace automatizace</value>
   </data>
@@ -2752,20 +2481,11 @@ Vyžaduje restart.</value>
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>Prohledávání dostupných balíčků ovladačů, prosím čekejte...</value>
   </data>
-  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Došlo k chybě sítě. Opakování automaticky...</value>
-  </data>
-  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Opakování stahování balíčků ovladačů...</value>
-  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>Informace o úklidu</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
     <value>Zobrazit průběh operace úklidu a odhadovanou velikost.</value>
-  </data>
-  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Vzhled</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Skenovat</value>
@@ -2773,32 +2493,11 @@ Vyžaduje restart.</value>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>Stažení ovladače</value>
   </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>Potvrzení bezpečnosti</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>Vyčištění systému trvale odstraní dočasné soubory a cache. Obvykle je to bezpečné, ale doporučuje se zálohovat důležitá data. Chcete pokračovat?</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
-    <value>Rozšíření</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Spravujte rozšíření a nástroje pro optimalizaci systému</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
-    <value>Žádná rozšíření nejsou k dispozici</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Nainstalujte rozšíření z stránky Pluginů pro zvýšení funkčnosti optimalizace systému.</value>
-  </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>Brzy bude k dispozici</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
     <value>Marketplace rozšíření bude dostupný v budoucí aktualizaci.</value>
-  </data>
-  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>Načítání pluginů...</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Vyčistit dočasné soubory a logy zanechané různými aplikacemi.</value>
@@ -2870,9 +2569,6 @@ Vyžaduje restart.</value>
   </data>
   <data name="PackageControl_Install" xml:space="preserve">
     <value>Nainstalovat</value>
-  </data>
-  <data name="PackageControl_Uninstall" xml:space="preserve">
-    <value>Odinstalovat</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>Instalace selhala</value>
@@ -2961,9 +2657,6 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>Nainstalováno</value>
   </data>
-  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
-    <value>Nelze odinstalovat</value>
-  </data>
   <data name="PluginSettingsWindow_Title" xml:space="preserve">
     <value>Nastavení pluginu</value>
   </data>
@@ -2990,9 +2683,6 @@ Vyžaduje restart.</value>
   </data>
   <data name="PluginSettingsWindow_Author" xml:space="preserve">
     <value>Autor: {0}</value>
-  </data>
-  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>Formát rozhraní konfigurace pluginu je nesprávný.</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
     <value>Chyba při načítání nastavení pluginu: {0}</value>
@@ -3024,12 +2714,6 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_Open" xml:space="preserve">
     <value>Otevřít</value>
   </data>
-  <data name="PluginExtensionsPage_Language" xml:space="preserve">
-    <value>Jazyk:</value>
-  </data>
-  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
-    <value>Použít výchozí nastavení aplikace</value>
-  </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>Nalezené pluginy {0}</value>
   </data>
@@ -3059,12 +2743,6 @@ Vyžaduje restart.</value>
   </data>
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
     <value>Importuji pluginy...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>Importuji {0}...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>Zpracovávám {0}...</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
     <value>Plugin byl úspěšně nainstalován</value>
@@ -3111,20 +2789,11 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>Plugin bude trvale smazán</value>
   </data>
-  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>Plugin bude trvale smazán. Tuto akci nelze vrátit zpět.</value>
-  </data>
   <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
     <value>Aktualizace selhala</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
     <value>Aktualizace pluginu selhala, zkontrolujte prosím připojení k síti a zkuste to později znovu.</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
-    <value>Aktualizace byla úspěšná</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
-    <value>Plugin byl úspěšně aktualizován</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
     <value>Aktualizace pluginu</value>
@@ -3138,44 +2807,14 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>Spustit plugin</value>
   </data>
-  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
-    <value>Plugin spuštěn</value>
-  </data>
   <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
     <value>Plugin odinstalován</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>Plugin bude smazán po zavření programu.</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>Smazání selhalo</value>
   </data>
-  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
-    <value>Při mazání pluginu došlo k chybě</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
-    <value>Konfigurace selhala</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>Plugin je nainstalován, ale nenačten. Zkuste prosím restartovat aplikaci.</value>
-  </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>Žádná konfigurace</value>
-  </data>
-  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
-    <value>Plugin nemá žádné možnosti konfigurace.</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>Konfigurace není podporována</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>Plugin nepodporuje konfiguraci.</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
-    <value>Stavy pluginu resetovány</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
-    <value>Všechny stavy instalace pluginů byly vymazány</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
     <value>Hromadná aktualizace dokončena</value>
@@ -3189,17 +2828,8 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
     <value>Místní</value>
   </data>
-  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
-    <value>Nová verze k dispozici</value>
-  </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
     <value>Verze:</value>
-  </data>
-  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Datum vydání:</value>
-  </data>
-  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
-    <value>Co je nového:</value>
   </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
     <value>Seznam pluginů pro obnovu</value>
@@ -3267,15 +2897,6 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Stahuji... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>Žádné nástroje nejsou k dispozici. Přidejte prosím nástroje do složky tools v adresáři aplikace.</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>Nástroje se zde objeví, jakmile budou k dispozici ve složce tools.</value>
-  </data>
-  <data name="SensorsControl_Model" xml:space="preserve">
-    <value>Vzor</value>
-  </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
     <value>Spotřeba energie</value>
   </data>
@@ -3287,12 +2908,6 @@ Vyžaduje restart.</value>
   </data>
   <data name="SensorsControl_Rate" xml:space="preserve">
     <value>Míra</value>
-  </data>
-  <data name="SensorsControl_MinRate" xml:space="preserve">
-    <value>Minimální sazba</value>
-  </data>
-  <data name="SensorsControl_MaxRate" xml:space="preserve">
-    <value>Maximální sazba</value>
   </data>
   <data name="SensorsControl_Cycles" xml:space="preserve">
     <value>Cyklus</value>
@@ -3308,9 +2923,6 @@ Vyžaduje restart.</value>
   </data>
   <data name="SensorsControl_Date" xml:space="preserve">
     <value>Datum</value>
-  </data>
-  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
-    <value>Jádro / frekvence paměti</value>
   </data>
   <data name="SensorsControl_Voltage" xml:space="preserve">
     <value>Napětí jádra</value>
@@ -3362,9 +2974,6 @@ Vyžaduje restart.</value>
     Ve frontě
 </value>
   </data>
-  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
-  </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
     <value>Optimize</value>
   </data>
@@ -3385,11 +2994,6 @@ Vyžaduje restart.</value>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
     <value>
     K dispozici k instalaci
-</value>
-  </data>
-  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>
-    V aktuálním kanálu je k dispozici {0} dalších zásuvných modulů.
 </value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
@@ -3427,11 +3031,6 @@ Vyžaduje restart.</value>
     Aktualizace připraveny
 </value>
   </data>
-  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>
-    {0} aktualizací zásuvných modulů je připraveno k instalaci.
-</value>
-  </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
     <value>
     Čekání na načtení metadat zásuvných modulů.
@@ -3441,9 +3040,6 @@ Vyžaduje restart.</value>
     <value>
     Načítání metadat
 </value>
-  </data>
-  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Přizpůsobte jazyk, jednotku teploty, motiv a barvu zvýraznění.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Appearance</value>
@@ -3602,7 +3198,6 @@ Vyžaduje restart.</value>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0}%</value>
   </data>
-
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>Sada zařízení: Základní režim</value>
   </data>
@@ -3876,9 +3471,6 @@ Vyžaduje restart.</value>
   <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
     <value>Využití VRAM</value>
   </data>
-  <data name="SensorsControl_Loading" xml:space="preserve">
-    <value>Načítání...</value>
-  </data>
   <data name="SensorsControl_Memory_Title" xml:space="preserve">
     <value>RAM</value>
   </data>
@@ -3887,9 +3479,6 @@ Vyžaduje restart.</value>
   </data>
   <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
     <value>Využití paměti</value>
-  </data>
-  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
-    <value>Teplota základní desky</value>
   </data>
   <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
     <value>Základní deska</value>
@@ -3948,7 +3537,31 @@ Vyžaduje restart.</value>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Disable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>The change could not be verified. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>Please wait for the current optimization to finish.</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Nelze uložit</value>
   </data>
   <data name="AutomationPage_Save_Error_Message" xml:space="preserve">

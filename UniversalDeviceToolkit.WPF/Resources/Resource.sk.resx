@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -58,9 +58,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutPage_AppName" xml:space="preserve">
-    <value>Universal Device Toolkit</value>
-  </data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Zostava</value>
   </data>
@@ -100,9 +97,6 @@
   </data>
   <data name="AlwaysOnUsbAutomationStepControl_Title" xml:space="preserve">
     <value>Vždy napájané USB</value>
-  </data>
-  <data name="AppName" xml:space="preserve">
-    <value>Universal Device Toolkit</value>
   </data>
   <data name="Apply" xml:space="preserve">
     <value>Použiť</value>
@@ -242,69 +236,14 @@
   <data name="BatteryPage_ACAdapterConnectedNotCharging" xml:space="preserve">
     <value>Pripojené, nenabíja</value>
   </data>
-  <data name="BatteryPage_BatteryTemperature_Message" xml:space="preserve">
-    <value>Aktuálna teplota batérie.</value>
-  </data>
-  <data name="BatteryPage_BatteryTemperature_Title" xml:space="preserve">
-    <value>Teplota batérie</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Message" xml:space="preserve">
-    <value>Aktuálna kapacita batérie.</value>
-  </data>
-  <data name="BatteryPage_CurrentCapacity_Title" xml:space="preserve">
-    <value>Aktuálna kapacita</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Message" xml:space="preserve">
-    <value>Počet nabíjacích/vybíjacích cyklov.</value>
-  </data>
-  <data name="BatteryPage_CycleCount_Title" xml:space="preserve">
-    <value>Počet cyklov</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Message" xml:space="preserve">
-    <value>Konštrukčná kapacita batérie.</value>
-  </data>
-  <data name="BatteryPage_DesignCapacity_Title" xml:space="preserve">
-    <value>Konštrukčná kapacita</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Message" xml:space="preserve">
-    <value>Rýchlosť akou sa batéria nabíja (+) alebo vybíja (-).</value>
-  </data>
-  <data name="BatteryPage_DischargeRate_Title" xml:space="preserve">
-    <value>Rýchlosť vybíjania</value>
-  </data>
   <data name="BatteryPage_EstimatedBatteryLifeRemaining" xml:space="preserve">
     <value>Odhadovaný zostávajúci čas: {0}</value>
   </data>
   <data name="BatteryPage_EstimatingBatteryLife" xml:space="preserve">
     <value>Odhaduje sa čas...</value>
   </data>
-  <data name="BatteryPage_FirstUseDate_Title" xml:space="preserve">
-    <value>Dátum prvého použitia</value>
-  </data>
-  <data name="BatteryPage_FirstUse_Message" xml:space="preserve">
-    <value>Kedy bola batéria prvýkrát použitá.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Message" xml:space="preserve">
-    <value>Kapacita batéria, keď je plne nabitá.</value>
-  </data>
-  <data name="BatteryPage_FullChargeCapacity_Title" xml:space="preserve">
-    <value>Kapacita pri plnom nabití</value>
-  </data>
   <data name="BatteryPage_LowWattageChargerConnected" xml:space="preserve">
     <value>Pripojená nízkovýkonová nabíjačka</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Message" xml:space="preserve">
-    <value>Kedy bola batéria vyrobená.</value>
-  </data>
-  <data name="BatteryPage_ManufactureDate_Title" xml:space="preserve">
-    <value>Dátum výroby</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Message" xml:space="preserve">
-    <value>Čas od posledného pripojenia notebooku k sieťovému napájaniu.
-Tento čas nemusí byť presný, ak bol notebooku nabíjaný vypnutý alebo v spánku.</value>
-  </data>
-  <data name="BatteryPage_OnBatterySince_Title" xml:space="preserve">
-    <value>Na batérii od</value>
   </data>
   <data name="BatteryPage_Title" xml:space="preserve">
     <value>Batéria</value>
@@ -339,9 +278,6 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   </data>
   <data name="ComboBoxHybridModeControl_Title" xml:space="preserve">
     <value>Prevádzkový režim GPU</value>
-  </data>
-  <data name="ContextMenu_QuickActions" xml:space="preserve">
-    <value>Rýchle akcie</value>
   </data>
   <data name="Continue" xml:space="preserve">
     <value>Pokračovať</value>
@@ -654,39 +590,6 @@ VAROVANIE: Táto akcia neprebehne správne, ak je zabudovaný displej vypnutý.<
   <data name="Import" xml:space="preserve">
     <value>Importovať</value>
   </data>
-  <data name="IncompatibleDevice_Message" xml:space="preserve">
-    <value>Toto zariadenie nie je kompatibilné s Universal Device Toolkit.</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_MissingComponent" xml:space="preserve">
-    <value>Vaše zariadenie nemusí mať požadované systémové komponenty (LenovoGameZoneData).</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_IfContinue" xml:space="preserve">
-    <value>Ak kliknete na "OK" pre pokračovanie:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_RestrictedMode" xml:space="preserve">
-    <value>- Softvér sa spustí v obmedzenom režime</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_DisabledFeatures" xml:space="preserve">
-    <value>- Niektoré funkcie budú zakázané (Panel, Automatizácia, Makrá)</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Warning_OtherFeatures" xml:space="preserve">
-    <value>- Ostatné základné funkcie zostanú dostupné</value>
-  </data>
-  <data name="BasicCompatibilityCheck_DeviceInfo" xml:space="preserve">
-    <value>Informácie o zariadení:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Vendor" xml:space="preserve">
-    <value>Výrobca:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Model" xml:space="preserve">
-    <value>Model zariadenia:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_MachineType" xml:space="preserve">
-    <value>Typ stroja:</value>
-  </data>
-  <data name="BasicCompatibilityCheck_Prompt" xml:space="preserve">
-    <value>Kliknite na "OK" pre pokračovanie alebo na "Zrušiť" pre ukončenie.</value>
-  </data>
   <data name="KeyboardBacklightPage_NoCompatibleKeyboardsFound" xml:space="preserve">
     <value>Nenašli sa kompatibilné klávesnice</value>
   </data>
@@ -699,17 +602,11 @@ VAROVANIE: Táto akcia neprebehne správne, ak je zabudovaný displej vypnutý.<
   <data name="MainWindow_NavigationItem_Actions" xml:space="preserve">
     <value>Akcie</value>
   </data>
-  <data name="MainWindow_NavigationItem_Battery" xml:space="preserve">
-    <value>Batéria</value>
-  </data>
   <data name="MainWindow_NavigationItem_Dashboard" xml:space="preserve">
     <value>Prehľad</value>
   </data>
   <data name="MainWindow_NavigationItem_Keyboard" xml:space="preserve">
     <value>Klávesnica</value>
-  </data>
-  <data name="MainWindow_NavigationItem_Packages" xml:space="preserve">
-    <value>Balíčky</value>
   </data>
   <data name="MainWindow_NavigationItem_Settings" xml:space="preserve">
     <value>Nastavenia</value>
@@ -985,9 +882,6 @@ Môžete prepnúť pomocou Fn+Q.</value>
   </data>
   <data name="RGBKeyboardBacklightSpeedCardControl_Title" xml:space="preserve">
     <value>Rýchlosť</value>
-  </data>
-  <data name="ReadmeWindow_Title" xml:space="preserve">
-    <value>Informácie</value>
   </data>
   <data name="Refresh" xml:space="preserve">
     <value>Obnoviť</value>
@@ -1289,9 +1183,6 @@ Ak sa rozhodnete pokračovať záznam chýb bude automaticky zapnutý.</value>
   </data>
   <data name="UnsupportedWindow_Disclaimer_GitHub" xml:space="preserve">
     <value>Pre viac informácií pozrite stránku projektu na GitHube.</value>
-  </data>
-  <data name="UnsupportedWindow_Disclaimer_Logs" xml:space="preserve">
-    <value>Priečinok so záznamami</value>
   </data>
   <data name="UnsupportedWindow_MachineType" xml:space="preserve">
     <value>Typ zariadenia</value>
@@ -1746,24 +1637,6 @@ VAROVANIE: Táto akcia neprebehne správne, ak je dedikovaná GPU nedostupná.</
   <data name="BatteryNightChargeModeControl_Title" xml:space="preserve">
     <value>Nočné nabíjanie batérie</value>
   </data>
-  <data name="BatteryPage_BatteryHealth_Message" xml:space="preserve">
-    <value>Maximálna kapacita nabitia batérie.</value>
-  </data>
-  <data name="BatteryPage_BatteryHealth_Title" xml:space="preserve">
-    <value>Stav batérie</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Message" xml:space="preserve">
-    <value>Maximálna rýchlosť nabíjania batérie (+), alebo vybíjania (-).</value>
-  </data>
-  <data name="BatteryPage_MaxDischargeRate_Title" xml:space="preserve">
-    <value>Maximálna rýchlosť vybíjania</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Message" xml:space="preserve">
-    <value>Minimálna rýchlosť nabíjania batérie (+), alebo vybíjania (-).</value>
-  </data>
-  <data name="BatteryPage_MinDischargeRate_Title" xml:space="preserve">
-    <value>Minimálna rýchlosť vybíjania</value>
-  </data>
   <data name="BootLogoWindow_CustomLogoSet" xml:space="preserve">
     <value>Vlastné Boot logo je nastavené</value>
   </data>
@@ -1812,9 +1685,6 @@ VAROVANIE: Táto akcia neprebehne správne, ak je dedikovaná GPU nedostupná.</
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Vymazať</value>
-  </data>
-  <data name="CollapseAll" xml:space="preserve">
-    <value>Zbaliť všetko</value>
   </data>
   <data name="ComboBoxHybridModeAutomationStepControl_Message" xml:space="preserve">
     <value>Výber prevádzkového režimu GPU na základe použitia počítača a podmienok napájania.
@@ -1879,9 +1749,6 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Senzory</value>
-  </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Rozbaliť všetko</value>
   </data>
   <data name="FanCurveControl_GPU2" xml:space="preserve">
     <value>GPU č. 2</value>
@@ -2004,9 +1871,6 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   <data name="MacroSequenceControl_Repeat_Title" xml:space="preserve">
     <value>Opakovať</value>
   </data>
-  <data name="MacroSequenceControl_StopRecording" xml:space="preserve">
-    <value>Zastaviť nahrávanie</value>
-  </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>Dosiahnutý limit API, skúste to prosím neskôr.</value>
   </data>
@@ -2024,9 +1888,6 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   </data>
   <data name="MainWindow_NavigationItem_Macro" xml:space="preserve">
     <value>Makro</value>
-  </data>
-  <data name="MainWindow_NavigationItem_SystemBeautification" xml:space="preserve">
-    <value>Skrášľovanie systému</value>
   </data>
   <data name="MainWindow_NavigationItem_WindowsOptimization" xml:space="preserve">
     <value>Optimalizácia systému</value>
@@ -2078,20 +1939,11 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   <data name="PackagesPage_DownloadTo" xml:space="preserve">
     <value>Zložka na stiahnutie</value>
   </data>
-  <data name="PackagesPage_Error_CheckInternet_Message" xml:space="preserve">
-    <value>Skontrolujte vaše internetové pripojenie.</value>
-  </data>
   <data name="PackagesPage_Error_Title" xml:space="preserve">
     <value>Niečo sa pokazilo</value>
   </data>
   <data name="PackagesPage_OpenDownloadTo" xml:space="preserve">
     <value>Otvoriť priečinok na stiahnutie</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Message" xml:space="preserve">
-    <value>Skúste získať aktualizácie z iného zdroja.</value>
-  </data>
-  <data name="PackagesPage_UpdateCatalogNotFound_Title" xml:space="preserve">
-    <value>Katalóg aktualizácií nenájdený</value>
   </data>
   <data name="PeriodicActionPipelineTriggerTabItemContent_PeriodMinutes" xml:space="preserve">
     <value>Perióda (minúty)</value>
@@ -2255,26 +2107,8 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Aktualizovať</value>
   </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Button" xml:space="preserve">
-    <value>Spustiť čistenie</value>
-  </data>
   <data name="SettingsPage_WindowsOptimization_Cleanup_Error" xml:space="preserve">
     <value>Čistenie zlyhalo.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Cleanup_Success" xml:space="preserve">
-    <value>Čistenie dokončené.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Message" xml:space="preserve">
-    <value>Použiť odporúčané vylepšenia výkonu a vyčistiť dočasné súbory.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Button" xml:space="preserve">
-    <value>Použiť vylepšenia výkonu a služby</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Error" xml:space="preserve">
-    <value>Nepodarilo sa použiť optimalizácie výkonu.</value>
-  </data>
-  <data name="SettingsPage_WindowsOptimization_Performance_Success" xml:space="preserve">
-    <value>Optimalizácie výkonu boli použité.</value>
   </data>
   <data name="SettingsPage_WindowsOptimization_Title" xml:space="preserve">
     <value>Optimalizácia systému</value>
@@ -2306,23 +2140,6 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   <data name="StatusTrayPopup_MinDischargeRate" xml:space="preserve">
     <value>Minimálna miera vybíjania</value>
   </data>
-  <data name="SystemBeautification_Effects_Subtitle" xml:space="preserve">
-    <value>Upravte efekty priehľadnosti Windows.</value>
-  </data>
-  <data name="SystemBeautification_Effects_Title" xml:space="preserve">
-    <value>Vizuálne efekty</value>
-  </data>
-  <data name="SystemBeautification_Effects_Transparency" xml:space="preserve">
-    <value>Povoliť efekty priehľadnosti</value>
-  </data>
-
-
-<data name="SystemBeautification_WindowsBeautification_Subtitle" xml:space="preserve">
-    <value>Prispôsobte vzhľad systému Windows vrátane štýlu kontextovej ponuky.</value>
-  </data>
-  <data name="SystemBeautification_WindowsBeautification_Title" xml:space="preserve">
-    <value>Skrášľovanie Windows</value>
-  </data>
   <data name="ToggleHybridModeAutomationStepControl_Message" xml:space="preserve">
     <value>Umožniť prepínanie medzi integrovanou a dedikovanou GPU.
 Vyžaduje reštart.</value>
@@ -2349,59 +2166,12 @@ Vyžaduje reštart.</value>
   <data name="WiFiConnectedPipelineTriggerTabItemContent_LeaveEmptyForAnyNetwork" xml:space="preserve">
     <value>Nechajte prázdne pre akúkoľvek Wi-Fi sieť.</value>
   </data>
-  <data name="WiFiConnectedPipelineTriggerTabItemContent_NetworkName" xml:space="preserve">
-    <value>Názov siete (SSID)</value>
-  </data>
   <data name="WinKeyAutomationStepControl_Message" xml:space="preserve">
     <value>Zakázať kláves Windows na zabudovanej klávesnici.</value>
   </data>
   <data name="WinKeyAutomationStepControl_Title" xml:space="preserve">
     <value>Zámok Windows klávesy</value>
   </data>
-  <data name="WindowsOptimizationPage_Actions_Header" xml:space="preserve">
-    <value>Akcie</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Button" xml:space="preserve">
-    <value>Použiť vybrané akcie</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Error" xml:space="preserve">
-    <value>Nepodarilo sa dokončiť vybrané akcie.</value>
-  </data>
-  <data name="WindowsOptimizationPage_ApplySelected_Success" xml:space="preserve">
-    <value>Vybrané akcie boli úspešne dokončené.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Description" xml:space="preserve">
-    <value>Vyberte predinštalované aplikácie Microsoft Store, ktoré chcete odstrániť pre všetkých používateľov.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Empty" xml:space="preserve">
-    <value>Žiadne aplikácie neboli vybrané na odstránenie.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Header" xml:space="preserve">
-    <value>Správa AppX</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_LoadError" xml:space="preserve">
-    <value>Nepodarilo sa načítať: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Loading" xml:space="preserve">
-    <value>Načítavajú sa aplikácie, prosím čakajte...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Publisher" xml:space="preserve">
-    <value>Vydavateľ: {0}</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Running" xml:space="preserve">
-    <value>Odinštalovanie vybraných aplikácií...</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Button" xml:space="preserve">
-    <value>Odinštalovať vybrané aplikácie</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Error" xml:space="preserve">
-    <value>Nepodarilo sa odstrániť vybrané aplikácie.</value>
-  </data>
-  <data name="WindowsOptimizationPage_AppxManagement_Uninstall_Success" xml:space="preserve">
-    <value>Vybrané aplikácie naplánované na odstránenie.</value>
-  </data>
-
-
   <data name="WindowsOptimizationPage_CleanupSummary" xml:space="preserve">
     <value>Uvoľnených {0} v {1}</value>
   </data>
@@ -2432,9 +2202,6 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimizationPage_CustomCleanup_Remove" xml:space="preserve">
     <value>Odstrániť</value>
   </data>
-  <data name="WindowsOptimizationPage_EmptySelection_Message" xml:space="preserve">
-    <value>Prosím, vyberte aspoň jednu akciu.</value>
-  </data>
   <data name="WindowsOptimizationPage_EstimatedCleanupSize" xml:space="preserve">
     <value>Odhadovaná veľkosť vyčistenia: {0}</value>
   </data>
@@ -2450,20 +2217,8 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimizationPage_RunningStep" xml:space="preserve">
     <value>Prebieha: {0}</value>
   </data>
-  <data name="WindowsOptimizationPage_SelectAll" xml:space="preserve">
-    <value>Vyberte všetko</value>
-  </data>
   <data name="WindowsOptimizationPage_SelectRecommended_Button" xml:space="preserve">
     <value>Vybrať odporúčané</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Beautification" xml:space="preserve">
-    <value>Skrášlenie</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Description" xml:space="preserve">
-    <value>Odinštalujte vybrané predinštalované aplikácie UWP pre všetkých používateľov.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CleanupAppx_Title" xml:space="preserve">
-    <value>Odstrániť predinštalované aplikácie Windows</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupBrowserCache_Description" xml:space="preserve">
     <value>Odstráňte vyrovnávaciu pamäť a súbory cookie pre Internet Explorer a Edge.</value>
@@ -2639,18 +2394,6 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimization_Action_ServicesSysMain_Title" xml:space="preserve">
     <value>Vypnúť SysMain</value>
   </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Description" xml:space="preserve">
-    <value>Upraviť správanie klávesu Windows tak, aby otvoril vyhľadávanie namiesto ponuky Štart.</value>
-  </data>
-  <data name="WindowsOptimization_Action_WinKeySearch_Title" xml:space="preserve">
-    <value>Zmeniť kláves Windows na otvorenie vyhľadávania</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Description" xml:space="preserve">
-    <value>Odstráňte cache, dočasné súbory a ďalšie zvyšky.</value>
-  </data>
-  <data name="WindowsOptimization_Category_Cleanup_Title" xml:space="preserve">
-    <value>Čistenie</value>
-  </data>
   <data name="WindowsOptimization_Category_Explorer_Description" xml:space="preserve">
     <value>Ladte panel úloh, Správcu súborov a správanie používateľského rozhrania.</value>
   </data>
@@ -2669,9 +2412,6 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimization_Category_Services_Title" xml:space="preserve">
     <value>Služby</value>
   </data>
-  <data name="WindowsOptimization_OpenBeautification_Button" xml:space="preserve">
-    <value>Skrášlenie systému</value>
-  </data>
   <data name="WindowsPowerModesWindow_Title" xml:space="preserve">
     <value>Režimy napájania Windows</value>
   </data>
@@ -2689,12 +2429,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="WindowsOptimizationPage_RunCleanupButtonText_Format" xml:space="preserve">
     <value>Vykonáva sa {0}%</value>
-  </data>
-  <data name="WindowsOptimizationPage_OperationCancelled" xml:space="preserve">
-    <value>Operácia zrušená</value>
-  </data>
-  <data name="WindowsOptimizationPage_ErrorDetails" xml:space="preserve">
-    <value>Podrobnosti chyby: {0}</value>
   </data>
   <data name="WindowsOptimizationPage_ShowHiddenDownloads" xml:space="preserve">
     <value>Zobraziť skryté stiahnuté súbory</value>
@@ -2723,9 +2457,6 @@ Vyžaduje reštart.</value>
   <data name="NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description" xml:space="preserve">
     <value>Zobraziť alebo skryť navigačnú položku Klávesnica</value>
   </data>
-  <data name="NavigationItemsSettingsWindow_ShowBatteryNavigationItem_Description" xml:space="preserve">
-    <value>Zobraziť alebo skryť navigačnú položku Batéria</value>
-  </data>
   <data name="NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description" xml:space="preserve">
     <value>Zobraziť alebo skryť navigačnú položku Automatizácia</value>
   </data>
@@ -2750,20 +2481,11 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimizationPage_ScanningDrivers" xml:space="preserve">
     <value>Skenovanie dostupných balíkov ovládačov, prosím počkajte...</value>
   </data>
-  <data name="WindowsOptimizationPage_NetworkError" xml:space="preserve">
-    <value>Vyskytla sa sieťová chyba. Automatické opakovanie pokusu...</value>
-  </data>
-  <data name="WindowsOptimizationPage_RetryingDrivers" xml:space="preserve">
-    <value>Opakovaný pokus o načítanie balíkov ovládačov...</value>
-  </data>
   <data name="WindowsOptimizationPage_CleanupInfo" xml:space="preserve">
     <value>Informácie o čistení</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupDescription" xml:space="preserve">
     <value>Zobraziť priebeh čistiacej operácie a odhadovanú veľkosť.</value>
-  </data>
-  <data name="SettingsPage_Appearance_Title" xml:space="preserve">
-    <value>Vzhľad</value>
   </data>
   <data name="WindowsOptimizationPage_Scan_Button" xml:space="preserve">
     <value>Skenovať</value>
@@ -2771,32 +2493,11 @@ Vyžaduje reštart.</value>
   <data name="WindowsOptimizationPage_Tab_DriverDownload" xml:space="preserve">
     <value>Stiahnuť ovládač</value>
   </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Title" xml:space="preserve">
-    <value>Potvrdenie bezpečnosti</value>
-  </data>
-  <data name="WindowsOptimizationPage_Cleanup_Safety_Message" xml:space="preserve">
-    <value>Čistenie systému trvalo vymaže dočasné súbory a cache. Aj keď je to zvyčajne bezpečné, odporúča sa mať zálohy dôležitých dát. Chceš pokračovať?</value>
-  </data>
-  <data name="WindowsOptimizationPage_Tab_Extensions" xml:space="preserve">
-    <value>Rozšírenia</value>
-  </data>
-  <data name="WindowsOptimizationPage_Extensions_Description" xml:space="preserve">
-    <value>Spravovať rozšírenia a nástroje na optimalizáciu systému</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions" xml:space="preserve">
-    <value>Nie sú k dispozícii žiadne rozšírenia</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoExtensions_Subtitle" xml:space="preserve">
-    <value>Nainštalujte rozšírenia zo stránky Rozšírenia pluginov na zlepšenie funkčnosti optimalizácie systému.</value>
-  </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Title" xml:space="preserve">
     <value>Čoskoro</value>
   </data>
   <data name="WindowsOptimizationPage_Extensions_ComingSoon_Message" xml:space="preserve">
     <value>Marketplace rozšírení bude dostupný v budúcej aktualizácii.</value>
-  </data>
-  <data name="PluginExtensionsPage_Loading" xml:space="preserve">
-    <value>Načítavajú sa pluginy...</value>
   </data>
   <data name="WindowsOptimization_Action_CleanupAppLeftovers_Description" xml:space="preserve">
     <value>Odstráni dočasné súbory a záznamy zanechané rôznymi aplikáciami.</value>
@@ -2866,9 +2567,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="PackageControl_Install" xml:space="preserve">
     <value>Inštalovať</value>
-  </data>
-  <data name="PackageControl_Uninstall" xml:space="preserve">
-    <value>Odinštalovať</value>
   </data>
   <data name="PackageControl_InstallError_Title" xml:space="preserve">
     <value>Inštalácia zlyhala</value>
@@ -2957,9 +2655,6 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_PluginInstalled" xml:space="preserve">
     <value>Nainštalované</value>
   </data>
-  <data name="PluginExtensionsPage_CannotUninstallTitle" xml:space="preserve">
-    <value>Nie je možné odinštalovať</value>
-  </data>
   <data name="PluginSettingsWindow_Title" xml:space="preserve">
     <value>Nastavenia pluginu</value>
   </data>
@@ -2986,9 +2681,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="PluginSettingsWindow_Author" xml:space="preserve">
     <value>Autor: {0}</value>
-  </data>
-  <data name="PluginSettingsWindow_ConfigFormatError" xml:space="preserve">
-    <value>Formát konfiguračného rozhrania pluginu je nesprávny.</value>
   </data>
   <data name="PluginSettingsWindow_LoadError" xml:space="preserve">
     <value>Chyba pri načítavaní nastavení pluginu: {0}</value>
@@ -3020,12 +2712,6 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_Open" xml:space="preserve">
     <value>Otvor</value>
   </data>
-  <data name="PluginExtensionsPage_Language" xml:space="preserve">
-    <value>Jazyk:</value>
-  </data>
-  <data name="PluginExtensionsPage_LanguageDefault" xml:space="preserve">
-    <value>Použiť predvolený jazyk aplikácie</value>
-  </data>
   <data name="PluginExtensionsPage_FoundPluginsCount" xml:space="preserve">
     <value>Nájdené pluginy {0}</value>
   </data>
@@ -3055,12 +2741,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
     <value>Importovanie zásuvných modulov...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportingPlugin" xml:space="preserve">
-    <value>Importovanie {0}...</value>
-  </data>
-  <data name="PluginExtensionsPage_ImportProgressMessage" xml:space="preserve">
-    <value>Spracovávanie {0}...</value>
   </data>
   <data name="PluginExtensionsPage_InstallSuccess" xml:space="preserve">
     <value>Plugin bol úspešne nainštalovaný</value>
@@ -3107,20 +2787,11 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_PermanentlyDelete" xml:space="preserve">
     <value>Plugin bude trvalo odstránený</value>
   </data>
-  <data name="PluginExtensionsPage_PermanentlyDeleteMessage" xml:space="preserve">
-    <value>Plugin bude trvalo odstránený. Táto akcia sa nedá vrátiť späť.</value>
-  </data>
   <data name="PluginExtensionsPage_UpdateFailed" xml:space="preserve">
     <value>Aktualizácia zlyhala</value>
   </data>
   <data name="PluginExtensionsPage_UpdateFailedMessage" xml:space="preserve">
     <value>Aktualizácia pluginu zlyhala, skontrolujte sieťové pripojenie a skúste to neskôr.</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessful" xml:space="preserve">
-    <value>Aktualizácia úspešná</value>
-  </data>
-  <data name="PluginExtensionsPage_UpdateSuccessfulMessage" xml:space="preserve">
-    <value>Plugin bol úspešne aktualizovaný</value>
   </data>
   <data name="PluginExtensionsPage_UpdatingPlugin" xml:space="preserve">
     <value>Aktualizácia pluginu</value>
@@ -3134,44 +2805,14 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_RunPlugin" xml:space="preserve">
     <value>Spustiť plugin</value>
   </data>
-  <data name="PluginExtensionsPage_RunPluginMessage" xml:space="preserve">
-    <value>Plugin spustený</value>
-  </data>
   <data name="PluginExtensionsPage_PluginUninstalled" xml:space="preserve">
     <value>Plugin odinštalovaný</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginUninstalledMessage" xml:space="preserve">
-    <value>Plugin bude odstránený po zatvorení programu.</value>
   </data>
   <data name="PluginExtensionsPage_DeletionFailed" xml:space="preserve">
     <value>Odstránenie zlyhalo</value>
   </data>
-  <data name="PluginExtensionsPage_DeletionFailedMessage" xml:space="preserve">
-    <value>Pri odstraňovaní pluginu došlo k chybe</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailed" xml:space="preserve">
-    <value>Konfigurácia zlyhala</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationFailedMessage" xml:space="preserve">
-    <value>Plugin je nainštalovaný, ale nie je načítaný. Skúste reštartovať aplikáciu.</value>
-  </data>
   <data name="PluginExtensionsPage_NoConfiguration" xml:space="preserve">
     <value>Žiadna konfigurácia</value>
-  </data>
-  <data name="PluginExtensionsPage_NoConfigurationMessage" xml:space="preserve">
-    <value>Plugin nemá žiadne možnosti konfigurácie.</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupported" xml:space="preserve">
-    <value>Konfigurácia nie je podporovaná</value>
-  </data>
-  <data name="PluginExtensionsPage_ConfigurationNotSupportedMessage" xml:space="preserve">
-    <value>Plugin nepodporuje konfiguráciu.</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesReset" xml:space="preserve">
-    <value>Stavy pluginov obnovené</value>
-  </data>
-  <data name="PluginExtensionsPage_PluginStatesResetMessage" xml:space="preserve">
-    <value>Všetky stavy inštalácie pluginov boli vymazané</value>
   </data>
   <data name="PluginExtensionsPage_BulkUpdateComplete" xml:space="preserve">
     <value>Hromadná aktualizácia dokončená</value>
@@ -3185,17 +2826,8 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_LocalBadge" xml:space="preserve">
     <value>Lokálne</value>
   </data>
-  <data name="PluginExtensionsPage_NewVersionAvailable" xml:space="preserve">
-    <value>Nová verzia dostupná</value>
-  </data>
   <data name="PluginExtensionsPage_VersionLabel" xml:space="preserve">
     <value>Verzia:</value>
-  </data>
-  <data name="PluginExtensionsPage_ReleaseDateLabel" xml:space="preserve">
-    <value>Dátum vydania:</value>
-  </data>
-  <data name="PluginExtensionsPage_ChangelogLabel" xml:space="preserve">
-    <value>Novinky:</value>
   </data>
   <data name="PluginExtensionsPage_RefreshTooltip" xml:space="preserve">
     <value>Obnoviť zoznam pluginov</value>
@@ -3263,15 +2895,6 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_DownloadingWithProgress" xml:space="preserve">
     <value>Sťahuje sa... {0:F1} / {1:F1} MB ({2:F0}%)</value>
   </data>
-  <data name="WindowsOptimizationPage_NoTools" xml:space="preserve">
-    <value>Nástroje nie sú k dispozícii. Prosím pridajte nástroje do priečinka tools v adresári aplikácie.</value>
-  </data>
-  <data name="WindowsOptimizationPage_NoTools_Subtitle" xml:space="preserve">
-    <value>Nástroje sa tu zobrazia, keď budú k dispozícii v adresári tools.</value>
-  </data>
-  <data name="SensorsControl_Model" xml:space="preserve">
-    <value>Vzor</value>
-  </data>
   <data name="SensorsControl_PowerUsage" xml:space="preserve">
     <value>Spotreba energie</value>
   </data>
@@ -3283,12 +2906,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="SensorsControl_Rate" xml:space="preserve">
     <value>Rýchlosť</value>
-  </data>
-  <data name="SensorsControl_MinRate" xml:space="preserve">
-    <value>Minimálna rýchlosť</value>
-  </data>
-  <data name="SensorsControl_MaxRate" xml:space="preserve">
-    <value>Maximálna rýchlosť</value>
   </data>
   <data name="SensorsControl_Cycles" xml:space="preserve">
     <value>Počet cyklov</value>
@@ -3304,9 +2921,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="SensorsControl_Date" xml:space="preserve">
     <value>Dátum</value>
-  </data>
-  <data name="SensorsControl_GpuClocks_Title" xml:space="preserve">
-    <value>Frekvencia jadra / pamäte</value>
   </data>
   <data name="SensorsControl_Voltage" xml:space="preserve">
     <value>Napätie jadra</value>
@@ -3350,9 +2964,6 @@ Vyžaduje reštart.</value>
   <data name="PackageControl_Queued" xml:space="preserve">
     <value>V poradí</value>
   </data>
-  <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
-    <value>by {0}</value>
-  </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
     <value>Optimize</value>
   </data>
@@ -3370,9 +2981,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
     <value>Dostupné na inštaláciu</value>
-  </data>
-  <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
-    <value>V aktuálnom kanáli je dostupných ďalších {0} pluginov.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
     <value>Nainštalované</value>
@@ -3395,17 +3003,11 @@ Vyžaduje reštart.</value>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
     <value>Pripravené aktualizácie</value>
   </data>
-  <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
-    <value>{0} aktualizácií pluginov je pripravených na inštaláciu.</value>
-  </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
     <value>Čaká sa na načítanie metadát pluginov.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
     <value>Načítavajú sa metadáta</value>
-  </data>
-  <data name="SettingsPage_Appearance_Description" xml:space="preserve">
-    <value>Prispôsobte jazyk, jednotku teploty, motív a akcentovú farbu.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Vzhľad</value>
@@ -3542,7 +3144,6 @@ Vyžaduje reštart.</value>
   <data name="SettingsPage_Language_Installing_Percent" xml:space="preserve">
     <value>{0} %</value>
   </data>
-
   <data name="DeviceSetupWindow_BasicModePack" xml:space="preserve">
     <value>Balík zariadenia: Základný režim</value>
   </data>
@@ -3816,9 +3417,6 @@ Vyžaduje reštart.</value>
   <data name="SensorsControl_GpuVramUtilization_Title" xml:space="preserve">
     <value>Využitie VRAM</value>
   </data>
-  <data name="SensorsControl_Loading" xml:space="preserve">
-    <value>Načítava sa...</value>
-  </data>
   <data name="SensorsControl_Memory_Title" xml:space="preserve">
     <value>RAM</value>
   </data>
@@ -3827,9 +3425,6 @@ Vyžaduje reštart.</value>
   </data>
   <data name="SensorsControl_MemoryUsage_Title" xml:space="preserve">
     <value>Využitie pamäte</value>
-  </data>
-  <data name="SensorsControl_Motherboard_Temperature" xml:space="preserve">
-    <value>Teplota základnej dosky</value>
   </data>
   <data name="SensorsControl_Motherboard_Title" xml:space="preserve">
     <value>Základná doska</value>
@@ -3888,7 +3483,31 @@ Vyžaduje reštart.</value>
   <data name="Watt" xml:space="preserve">
     <value>W</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Disable Nilesoft Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>The change could not be verified. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>Please wait for the current optimization to finish.</value>
+  </data>
+  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Nepodarilo sa uložiť</value>
   </data>
   <data name="AutomationPage_Save_Error_Message" xml:space="preserve">

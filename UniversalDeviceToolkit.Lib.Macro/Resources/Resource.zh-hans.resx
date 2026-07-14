@@ -1,67 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-	<xs:schema id="root">
-		<xs:element name="root" ns1:IsDataSet="true">
-			<xs:complexType>
-				<xs:choice maxOccurs="unbounded">
-					<xs:element name="data">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-								<xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-							</xs:sequence>
-							<xs:attribute name="name" type="xsd:string" ns1:Ordinal="1" />
-							<xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
-							<xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="resheader">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-							</xs:sequence>
-							<xs:attribute name="name" type="xsd:string" use="required" />
-						</xs:complexType>
-					</xs:element>
-				</xs:choice>
-			</xs:complexType>
-		</xs:element>
-	</xs:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="MacroSource_Keyboard" xml:space="preserve">
+  <xs:schema id="root">
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="MacroSource_Keyboard" xml:space="preserve">
 		<value>键盘</value>
 	</data>
-	<data name="MacroSource_Mouse" xml:space="preserve">
+  <data name="MacroSource_Mouse" xml:space="preserve">
 		<value>鼠标</value>
 	</data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>管理 Nilesoft Shell 右键菜单的注册和集成。</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>启用 Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>将 Nilesoft Shell 注册为 Windows 右键菜单处理器。</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>禁用 Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>取消注册 Nilesoft Shell 并恢复默认右键菜单。</value></data>
-<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>无法验证更改。可能需要管理员权限。</value></data>
-<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>请等待当前优化完成。</value></data>
-  <data name="Exception_CommandExitedNonZero" xml:space="preserve">
-    <value>命令以非零代码 {0} 退出。输出：{1}</value>
-  </data>
-  <data name="Exception_OptimizationActionNotFound" xml:space="preserve">
-    <value>未找到标识符为 {0} 的优化操作。</value>
-  </data>
-  <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
-    <value>此优化操作无法回滚。</value>
-  </data>
   <data name="MacroEventControl_MouseMove_Title" xml:space="preserve">
     <value>移动</value>
   </data>
@@ -92,6 +75,4 @@
   <data name="MacroEventControl_MouseButton_Title" xml:space="preserve">
     <value>按键 {0}</value>
   </data>
-
-
 </root>

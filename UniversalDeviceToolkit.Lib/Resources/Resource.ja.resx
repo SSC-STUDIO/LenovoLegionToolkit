@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:element name="root" ns1:IsDataSet="true">
@@ -414,16 +413,36 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>毎週</value>
   </data>
-<data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve"><value>オーディオバウンス</value></data>
-<data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve"><value>オーディオリップル</value></data>
-<data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve"><value>オーロラ同期</value></data>
-<data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve"><value>カラーパルス</value></data>
-<data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve"><value>カラウェーブ</value></data>
-<data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve"><value>レインボースクリュー</value></data>
-<data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve"><value>レインボーウェーブ</value></data>
-<data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve"><value>リップル</value></data>
-<data name="WindowBackdropStyle_Windows" xml:space="preserve"><value>ウィンドウズ</value></data>
-<data name="WindowBackdropStyle_macOS" xml:space="preserve"><value>macOS</value></data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioBounce" xml:space="preserve">
+    <value>オーディオバウンス</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AudioRipple" xml:space="preserve">
+    <value>オーディオリップル</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_AuroraSync" xml:space="preserve">
+    <value>オーロラ同期</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorPulse" xml:space="preserve">
+    <value>カラーパルス</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_ColorWave" xml:space="preserve">
+    <value>カラウェーブ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowScrew" xml:space="preserve">
+    <value>レインボースクリュー</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_RainbowWave" xml:space="preserve">
+    <value>レインボーウェーブ</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Ripple" xml:space="preserve">
+    <value>リップル</value>
+  </data>
+  <data name="WindowBackdropStyle_Windows" xml:space="preserve">
+    <value>ウィンドウズ</value>
+  </data>
+  <data name="WindowBackdropStyle_macOS" xml:space="preserve">
+    <value>macOS</value>
+  </data>
   <data name="ThemeStylePreset_Default" xml:space="preserve">
     <value>現在のスタイル</value>
   </data>
@@ -847,15 +866,11 @@
     <value>Command '{0}' failed with exit code {1}. {2}</value>
     <comment>Exception message when a shell command returns non-zero exit code</comment>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Manage Nilesoft Shell context menu registration and integration.</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Enable Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Register Nilesoft Shell as the Windows context menu handler.</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Disable Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Unregister Nilesoft Shell and restore the default context menu.</value></data>
-<data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>The change could not be verified. Administrator privileges may be required.</value></data>
-<data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Please wait for the current optimization to finish.</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>Separator Color</value>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>The change could not be verified. Administrator privileges may be required.</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>Please wait for the current optimization to finish.</value>
   </data>
   <data name="LampEffect_CustomPattern" xml:space="preserve">
     <value>カスタム パターン</value>

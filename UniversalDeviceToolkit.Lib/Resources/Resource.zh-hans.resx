@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:element name="root" ns1:IsDataSet="true">
@@ -59,7 +58,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-
   <data name="AccentColorSource_Custom" xml:space="preserve">
     <value>自定义</value>
   </data>
@@ -946,7 +944,6 @@
   <data name="Exception_CommandExitedNonZero" xml:space="preserve">
     <value>命令“{0}”失败，退出代码为 {1}。{2}</value>
   </data>
-
   <data name="OsdItem_Fps" xml:space="preserve">
     <value>FPS</value>
   </data>
@@ -964,17 +961,11 @@
   <data name="Exception_OptimizationActionRollbackUnavailable" xml:space="preserve">
     <value>此优化操作无法回滚：{0}</value>
   </data>
-
-
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>管理 Nilesoft Shell 右键菜单的注册和集成。</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>启用 Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>将 Nilesoft Shell 注册为 Windows 右键菜单处理器。</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>禁用 Nilesoft Shell</value></data>
-<data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>取消注册 Nilesoft Shell 并恢复默认右键菜单。</value></data>
-  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>无法验证更改。可能需要管理员权限。</value></data>
-  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>请等待当前优化完成。</value></data>  <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>分隔线颜色</value>
+  <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
+    <value>无法验证更改。可能需要管理员权限。</value>
+  </data>
+  <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
+    <value>请等待当前优化完成。</value>
   </data>
   <data name="LampEffect_CustomPattern" xml:space="preserve">
     <value>自定义模式</value>
