@@ -7,7 +7,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Settings;
 using Microsoft.Win32;
 

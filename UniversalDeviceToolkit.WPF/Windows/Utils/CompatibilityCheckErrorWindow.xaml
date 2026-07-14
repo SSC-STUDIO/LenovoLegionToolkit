@@ -10,7 +10,6 @@
     MinHeight="500"
     MaxWidth="900"
     MaxHeight="650"
-    Closed="Window_Closed"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     Loaded="Window_Loaded"

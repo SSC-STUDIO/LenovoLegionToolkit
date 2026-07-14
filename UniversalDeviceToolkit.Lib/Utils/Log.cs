@@ -58,7 +58,6 @@ public class Log : IDisposable
 
     public string LogPath => _folderPath;
 
-#if UDT_TEST_HOOKS
     internal Log(bool _forTesting)
     {
         _folderPath = Path.Combine(Folders.AppData, "logs");
@@ -78,7 +77,6 @@ public class Log : IDisposable
             ))
             .CreateLogger();
     }
-#endif
 
     private Log()
     {

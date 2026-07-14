@@ -368,6 +368,30 @@ public class LogTests
                 try { Directory.Delete(tempDir, true); } catch { /* best-effort cleanup */ }
         }
     }
+
+    [Fact]
+    public void InternalConstructor_IsAccessible_ViaInternalsVisibleTo()
+    {
+        // Regression: internal Log(bool) was guarded by #if UDT_TEST_HOOKS which
+        // was not defined during solution-level builds, causing CS1729 in tests
+        // that call new Log(true). The guard has been removed; the internal access
+        // modifier + InternalsVisibleTo is sufficient to restrict visibility.
+
+        var originalOverride = Environment.GetEnvironmentVariable("UDT_APPDATA_OVERRIDE");
+        var tempDir = Path.Combine(Path.GetTempPath(), "UDT_LogTest_" + Guid.NewGuid().ToString("N").Substring(0, 8));
+        Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", tempDir, EnvironmentVariableTarget.Process);
+        try
+        {
+            // This must compile without UDT_TEST_HOOKS defined
+            Log log = new Log(true);
+            log.Should().NotBeNull();
+            log.Dispose();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", originalOverride, EnvironmentVariableTarget.Process);
+            if (Directory.Exists(tempDir))
+                try { Directory.Delete(tempDir, true); } catch { /* best-effort cleanup */ }
+        }
+    }
 }
-
-

@@ -154,9 +154,6 @@ public class ThemeManager
             primaryAccent: accentColor,
             secondaryAccent: accentColor,
             tertiaryAccent: accentColor);
-        
-        // Ensure proper color contrast for accessibility
-        EnsureColorContrast();
     }
 
     private void ClearStylePresetBrushes()
@@ -345,13 +342,6 @@ public class ThemeManager
                     Color.FromArgb(72, 20, 50, 31)),
             _ => null
         };
-    }
-
-    private void EnsureColorContrast()
-    {
-        // This method can be extended to check and adjust color contrast
-        // for better accessibility compliance
-        // Currently, WPF UI library handles most contrast automatically
     }
 
     private void ApplyStatusTextBrushes()

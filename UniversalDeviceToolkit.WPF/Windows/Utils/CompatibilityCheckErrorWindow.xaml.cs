@@ -143,11 +143,6 @@ public partial class CompatibilityCheckErrorWindow : FluentWindow
         }
     }
 
-    private void Window_Closed(object sender, EventArgs e)
-    {
-        // Window closed by user
-    }
-
     private void OpenLogButton_Click(object sender, RoutedEventArgs e)
     {
         OpenLogFile(showErrors: true);

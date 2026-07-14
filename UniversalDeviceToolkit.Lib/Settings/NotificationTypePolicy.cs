@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using LenovoLegionToolkit.Lib;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 

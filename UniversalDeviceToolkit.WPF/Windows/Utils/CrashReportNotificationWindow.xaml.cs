@@ -107,11 +107,6 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
             ApplyTheme();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            // Window closed
-        }
-
         private void OpenReportButton_Click(object sender, RoutedEventArgs e)
         {
             try

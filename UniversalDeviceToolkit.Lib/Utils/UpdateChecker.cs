@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 using Octokit;
 using Octokit.Internal;

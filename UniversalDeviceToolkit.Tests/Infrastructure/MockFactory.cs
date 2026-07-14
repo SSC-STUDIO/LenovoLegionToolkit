@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using LenovoLegionToolkit.Lib.Plugins;
 using Moq;
 

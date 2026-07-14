@@ -56,7 +56,6 @@ internal static class Program
     private const byte VkEnter = 0x0D;
     private const byte VkSpace = 0x20;
     private const byte VkTab = 0x09;
-    private const byte VkShift = 0x10;
     private const byte VkA = 0x41;
     private const byte VkBack = 0x08;
     private const uint KeyEventExtendedKey = 0x0001;
@@ -3844,22 +3843,6 @@ Environment variables:
         var targetHandle = liveHandle != 0 ? liveHandle : handle;
         Console.WriteLine($"[main-smoke] custom-mouse {stage} closing explicit top-level handle {targetHandle}.");
         ClickCustomMouseExplicitCloseButtonAndWait(liveWindow, processId, targetHandle, timeout, stage);
-    }
-
-    private static void WaitForCustomMouseTopLevelWindowToClose(AutomationElement window, int processId, TimeSpan timeout, string stage)
-    {
-        var handle = window.Current.NativeWindowHandle;
-        Console.WriteLine($"[main-smoke] custom-mouse {stage}: detected top-level settings window handle={handle} name='{window.Current.Name}'");
-        Console.WriteLine($"[main-smoke] custom-mouse {stage}: explicitly closing handle {handle} via PART_CloseButton/_closeButton when available.");
-        CloseCustomMouseSettingsWindowHandleAndWait(window, processId, timeout, stage);
-
-        var closed = WaitUntil(
-            () => !IsTopLevelWindowOpen(processId, handle),
-            timeout,
-            TimeSpan.FromMilliseconds(150));
-        Console.WriteLine($"[main-smoke] custom-mouse {stage}: top-level handle gone verification for {handle}: {closed}");
-        if (!closed)
-            throw new TimeoutException($"custom-mouse {stage} window handle {handle} remained open after explicit close.");
     }
 
     private static void ClickCustomMouseExplicitCloseButtonAndWait(AutomationElement window, int processId, int handle, TimeSpan timeout, string stage)

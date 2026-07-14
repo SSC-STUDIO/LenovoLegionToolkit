@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable StringLiteralTypo
