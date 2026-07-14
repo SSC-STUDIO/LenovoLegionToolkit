@@ -1,41 +1,18 @@
 {
   "schemaVersion": 1,
   "id": "custom-mouse",
-  "name": "Cursor & Pointer",
-  "localizedNames": {
-    "default": "Cursor & Pointer",
-    "zh-Hans": "光标与指针"
-  },
-  "localizedDescriptions": {
-    "default": "Customize mouse cursor style behavior and mouse settings.",
-    "zh-Hans": "自定义鼠标光标样式行为与鼠标设置。"
-  },
-  "localizedTags": {
-    "default": [
-      "mouse",
-      "customization",
-      "cursor",
-      "productivity"
-    ],
-    "zh-Hans": [
-      "鼠标",
-      "自定义",
-      "光标",
-      "生产力"
-    ]
-  },
-  "version": "1.0.16",
+  "name": "Cursor \u0026 Pointer",
+  "version": "1.0.17",
   "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
   "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
-  "lifecycle": "Active",
   "contributes": {
     "featurePage": null,
     "settingsPage": {
       "class": "LenovoLegionToolkit.Plugins.CustomMouse.CustomMouseSettingsControl",
-      "title": "Cursor & Pointer"
+      "title": "Cursor \u0026 Pointer"
     },
     "runtime": {
       "class": "LenovoLegionToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
@@ -43,12 +20,12 @@
     "optimizationActions": [
       {
         "id": "custom.mouse",
-        "title": "Cursor & Pointer"
+        "title": "Cursor \u0026 Pointer"
       }
     ]
   },
   "package": {
-    "assetName": "custom-mouse-v1.0.16.zip",
+    "assetName": "custom-mouse-v1.0.17.zip",
     "requiredFiles": [
       "LenovoLegionToolkit.Plugins.CustomMouse.dll",
       "LenovoLegionToolkit.Plugins.SDK.dll",
@@ -102,5 +79,6 @@
       "zh-Hant"
     ],
     "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
-  }
+  },
+  "lifecycle": "Active"
 }

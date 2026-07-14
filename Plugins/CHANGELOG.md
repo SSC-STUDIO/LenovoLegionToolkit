@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] — v1.3.0-quality (Day 1-5 sprint)
 
+### Changed / 变更
+
+- **Store release / 商店上架**: Bumped active plugin versions for plugin-center testing — custom-mouse 1.0.17, shell-integration 1.0.13, vive-tool 1.2.3; regenerated `store.json` with release asset sizes.
+
 ### Fixed
 
 - Harmonized BatteryHealth plugin author to SSC-STUDIO across plugin.json, plugin.manifest.json, and Plugin attribute (was EliuaK_Csy)

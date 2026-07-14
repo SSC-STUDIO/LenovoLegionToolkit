@@ -2,39 +2,12 @@
   "schemaVersion": 1,
   "id": "shell-integration",
   "name": "Nilesoft Shell Manager",
-  "localizedNames": {
-    "default": "Nilesoft Shell Manager",
-    "zh-Hans": "Nilesoft Shell 管理器"
-  },
-  "localizedDescriptions": {
-    "default": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
-    "zh-Hans": "管理 Nilesoft Shell 注册及其由 UDT 管理的配置。需要已安装 Nilesoft Shell。"
-  },
-  "localizedTags": {
-    "default": [
-      "system",
-      "shell",
-      "integration",
-      "context-menu",
-      "productivity",
-      "windows"
-    ],
-    "zh-Hans": [
-      "系统",
-      "Shell",
-      "集成",
-      "右键菜单",
-      "生产力",
-      "Windows"
-    ]
-  },
-  "version": "1.0.12",
+  "version": "1.0.13",
   "minHostVersion": "4.2.1",
   "author": "SSC-STUDIO",
   "isSystemPlugin": true,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
   "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
-  "lifecycle": "Active",
   "contributes": {
     "featurePage": null,
     "settingsPage": {
@@ -50,7 +23,7 @@
     ]
   },
   "package": {
-    "assetName": "shell-integration-v1.0.12.zip",
+    "assetName": "shell-integration-v1.0.13.zip",
     "requiredFiles": [
       "LenovoLegionToolkit.Plugins.ShellIntegration.dll",
       "LenovoLegionToolkit.Plugins.SDK.dll",
@@ -106,5 +79,6 @@
       "zh-Hant"
     ],
     "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
-  }
+  },
+  "lifecycle": "Active"
 }

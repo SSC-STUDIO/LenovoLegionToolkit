@@ -37,24 +37,39 @@ Stop after successful commit and push of the 3-file diff. All verification gates
 
 ## Evidence
 
+### Commit
+`5c4cea8` — `fix(custommouse): sanitize corrupt CursorThemeMode enum with IsDefined fallback`
+Committed and pushed to origin/master. 3 files changed, 105 insertions, 1 deletion.
+
+### Diff (3 files)
+1. `Plugins/CustomMouse/CustomMousePlugin.cs` — +12/-1
+   - Added `internal static CursorThemeMode SanitizeCursorThemeMode(int raw)` (line 383-388)
+   - `LoadSettings()` now calls `SanitizeCursorThemeMode(rawThemeMode)` instead of inline `(CursorThemeMode)` cast
+2. `Plugins/CustomMouse.Tests/CustomMousePluginTests.cs` — +25/-0
+   - Removed 3 unused `using` statements (Lib.Utils, Lib.Optimization, Lib.Plugins)
+   - Added `[Theory] SanitizeCursorThemeMode_WithOutOfRangeInt_FallsBackToAuto` — 3 cases: 999, -1, 100
+   - Added `[Theory] SanitizeCursorThemeMode_WithValidInt_PreservesValue` — 4 cases: 0→Auto, 1→Light, 2→Dark, 3→WindowsDefault
+3. `ai/task-plans/rev66-custommouse-corrupt-enum-fallback.md` — this plan file
+
 ### Defect
-`CustomMousePlugin.LoadSettings()` line 390: `(CursorThemeMode)Configuration.GetValue(...)` performs unchecked int→enum cast. Corrupted config values (e.g. 999, -1) produce undefined `CursorThemeMode` members that silently apply wrong cursor theme via switch fallthrough.
+`CustomMousePlugin.LoadSettings()` line 390: `(CursorThemeMode)Configuration.GetValue(...)` performs unchecked int→enum cast. Corrupted config values (e.g. 999, -1) produce undefined `CursorThemeMode` members that silently apply wrong cursor theme via switch fallthrough to default.
 
 ### Fix
-- `internal static CursorThemeMode SanitizeCursorThemeMode(int raw)` — validates via `Enum.IsDefined`, falls back to `Auto`
+- `internal static CursorThemeMode SanitizeCursorThemeMode(int raw)` — validates via `Enum.IsDefined`, falls back to `CursorThemeMode.Auto`
 - `LoadSettings()` delegates to helper instead of inline cast
+- Tests call helper directly (no `Configuration` dependency required)
 
-### Regression Tests (7 test cases)
+### Regression Tests (7 test cases via 2 Theory methods)
 - 3 out-of-range values (999, -1, 100) → `Auto`
 - 4 valid values (0→Auto, 1→Light, 2→Dark, 3→WindowsDefault) → preserved
 
-### Focused Verification
+### Focused Verification (post-commit)
 ```
 dotnet test Plugins/CustomMouse.Tests/CustomMouse.Tests.csproj -c Release --nologo
 ```
 Result: 45 passed, 0 failed, 0 skipped. Exit code: 0.
 
-### Canonical Verification
+### Canonical Verification (post-commit)
 ```
 powershell -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File scripts/verify-hermes.ps1
 ```

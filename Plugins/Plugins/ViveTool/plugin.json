@@ -1,7 +1,7 @@
 {
   "Id": "vive-tool",
   "Name": "ViVeTool",
-  "Version": "1.2.2",
+  "Version": "1.2.3",
   "MinLltVersion": "4.2.1",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": false,

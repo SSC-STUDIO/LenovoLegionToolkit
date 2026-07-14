@@ -20,7 +20,7 @@ namespace LenovoLegionToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Cursor & Pointer",
-    version: "1.0.16",
+    version: "1.0.17",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
     MinimumHostVersion = "3.6.1",
@@ -387,14 +387,28 @@ public class CustomMousePlugin : LenovoLegionToolkit.Plugins.SDK.PluginBase, IAp
             : CursorThemeMode.Auto;
     }
 
+    /// <summary>
+    /// Clamps the raw pointer speed value to the valid Windows range [1, 20].
+    /// The Win32 SPI_SETMOUSESPEED API accepts values 1–20; values outside
+    /// this range are silently rejected by SetWindowsPointerSpeed, leaving
+    /// the UI slider displaying a stale/corrupt value. Clamping at load
+    /// time ensures the settings object always holds a safe value.
+    /// </summary>
+    internal static int SanitizeWindowsPointerSpeed(int raw)
+    {
+        return Math.Clamp(raw, 1, 20);
+    }
+
     private MouseSettings LoadSettings()
     {
         var rawThemeMode = Configuration.GetValue(nameof(MouseSettings.CursorThemeMode), (int)CursorThemeMode.Auto);
         var cursorThemeMode = SanitizeCursorThemeMode(rawThemeMode);
+        var rawPointerSpeed = Configuration.GetValue(nameof(MouseSettings.WindowsPointerSpeed), 10);
+        var pointerSpeed = SanitizeWindowsPointerSpeed(rawPointerSpeed);
 
         return new MouseSettings
         {
-            WindowsPointerSpeed = Configuration.GetValue(nameof(MouseSettings.WindowsPointerSpeed), 10),
+            WindowsPointerSpeed = pointerSpeed,
             SwapButtons = Configuration.GetValue(nameof(MouseSettings.SwapButtons), false),
             AutoThemeCursorStyle = Configuration.GetValue(nameof(MouseSettings.AutoThemeCursorStyle), true),
             CursorThemeMode = cursorThemeMode,

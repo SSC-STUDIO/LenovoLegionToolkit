@@ -257,4 +257,25 @@ public class CustomMousePluginTests
         var result = CustomMousePlugin.SanitizeCursorThemeMode(validValue);
         Assert.Equal(expected, result);
     }
+
+    [Theory]
+    [InlineData(-5, 1)]
+    [InlineData(0, 1)]
+    [InlineData(21, 20)]
+    [InlineData(999, 20)]
+    public void SanitizeWindowsPointerSpeed_WithOutOfRangeInt_ClampsToValidRange(int corruptValue, int expected)
+    {
+        var result = CustomMousePlugin.SanitizeWindowsPointerSpeed(corruptValue);
+        Assert.Equal(expected, result);
+    }
+
+    [Theory]
+    [InlineData(1, 1)]
+    [InlineData(10, 10)]
+    [InlineData(20, 20)]
+    public void SanitizeWindowsPointerSpeed_WithValidInt_PreservesValue(int validValue, int expected)
+    {
+        var result = CustomMousePlugin.SanitizeWindowsPointerSpeed(validValue);
+        Assert.Equal(expected, result);
+    }
 }

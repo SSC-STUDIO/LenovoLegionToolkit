@@ -3,9 +3,9 @@
 
 
   <PropertyGroup>
-    <Version>1.0.36</Version>
-    <FileVersion>1.0.36</FileVersion>
-    <AssemblyVersion>1.0.36</AssemblyVersion>
+    <Version>1.0.37</Version>
+    <FileVersion>1.0.37</FileVersion>
+    <AssemblyVersion>1.0.37</AssemblyVersion>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
