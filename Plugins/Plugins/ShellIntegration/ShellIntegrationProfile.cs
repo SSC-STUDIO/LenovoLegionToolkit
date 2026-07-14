@@ -109,6 +109,18 @@ public sealed class ShellIntegrationProfile
         _ => CreateDefault()
     };
 
+    public static ShellVisualEffect SanitizeBackgroundEffect(ShellVisualEffect raw) =>
+        Enum.IsDefined(raw) ? raw : ShellVisualEffect.Acrylic;
+
+    public static ShellColorScheme SanitizeColorScheme(ShellColorScheme raw) =>
+        Enum.IsDefined(raw) ? raw : ShellColorScheme.Auto;
+
+    /// <summary>
+    /// Returns a safe copy with all numeric and enum fields clamped to valid
+    /// ranges. If the persisted JSON holds corrupt values (e.g. an undefined
+    /// enum integer), the unsafe fields are silently reset to their defaults
+    /// instead of propagating garbage into the rendered .nss config.
+    /// </summary>
     public ShellIntegrationProfile Normalize()
     {
         return new ShellIntegrationProfile
@@ -117,8 +129,8 @@ public sealed class ShellIntegrationProfile
             EnableMotionEffects = EnableMotionEffects,
             EnableShadow = EnableShadow,
             UseCompactView = UseCompactView,
-            BackgroundEffect = BackgroundEffect,
-            ColorScheme = ColorScheme,
+            BackgroundEffect = SanitizeBackgroundEffect(BackgroundEffect),
+            ColorScheme = SanitizeColorScheme(ColorScheme),
             BackgroundOpacity = Clamp(BackgroundOpacity, 0, 100),
             ShowDelay = Clamp(ShowDelay, 0, 4000),
             ShadowSize = Clamp(ShadowSize, 0, 30),
