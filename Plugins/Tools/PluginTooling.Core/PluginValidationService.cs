@@ -202,7 +202,7 @@ public sealed class PluginValidationService
         ValidateContributionType(plugin, manifest.Contributes.SettingsPage, "settingsPage", state);
         ValidateContributionType(plugin, manifest.Contributes.Runtime, "runtime", state);
 
-        foreach (var action in manifest.Contributes.OptimizationActions)
+        foreach (var action in manifest.Contributes.OptimizationActions ?? [])
         {
             if (string.IsNullOrWhiteSpace(action.Id) || string.IsNullOrWhiteSpace(action.Title))
             {
@@ -465,7 +465,7 @@ public sealed class PluginValidationService
             return;
         }
 
-        foreach (var requiredFile in plugin.UnifiedManifest.Package.RequiredFiles)
+        foreach (var requiredFile in plugin.UnifiedManifest.Package.RequiredFiles ?? [])
         {
             var requiredPath = Path.Combine(plugin.OutputDirectory, requiredFile);
             if (!File.Exists(requiredPath))
