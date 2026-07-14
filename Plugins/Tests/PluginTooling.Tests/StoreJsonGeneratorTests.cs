@@ -396,6 +396,49 @@ public class StoreJsonGeneratorTests : IDisposable
         Assert.Equal("1.0.1", store.StoreVersion);
     }
 
+    [Fact]
+    public void Generate_MergeExisting_HandlesNullCollectionFieldsInExistingStore()
+    {
+        CreatePluginFolder("sample", manifestLifecycle: "Active", manifestName: "Sample",
+            description: "Sample plugin.");
+
+        // Write a store.json where collection fields are explicitly null.
+        // System.Text.Json deserializes "field": null to null even when the
+        // C# property has a non-null default, causing NullReferenceException
+        // in EntriesEqual → StringDictionariesEqual/TagDictionariesEqual/SequenceEqual.
+        var storePath = Path.Combine(_tempRoot, "store.json");
+        File.WriteAllText(storePath,
+            """
+            {
+              "lastUpdated": "2026-07-14T00:00:00.0000000+00:00",
+              "storeVersion": "1.0.0",
+              "plugins": [
+                {
+                  "id": "sample",
+                  "name": "Sample",
+                  "description": "Sample plugin.",
+                  "localizedNames": null,
+                  "localizedDescriptions": null,
+                  "localizedTags": null,
+                  "supportedLanguages": null,
+                  "dependencies": null,
+                  "tags": null
+                }
+              ]
+            }
+            """);
+
+        var store = InvokeGenerate(mergeExisting: true);
+
+        // Should not throw NRE; should produce valid output with defaults.
+        Assert.Equal("1.0.1", store.StoreVersion);
+        var entry = Assert.Single(store.Plugins);
+        Assert.Equal("sample", entry.Id);
+        Assert.NotNull(entry.SupportedLanguages);
+        Assert.NotNull(entry.Dependencies);
+        Assert.NotNull(entry.Tags);
+    }
+
     private StoreDocument InvokeGenerate(bool mergeExisting = false, IReadOnlyList<string>? pluginIds = null)
     {
         var request = new StoreGenerationRequest

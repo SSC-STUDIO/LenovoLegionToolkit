@@ -219,11 +219,11 @@ public sealed class StoreJsonGenerator
             ZipHash = entry.ZipHash,
             ReleaseDate = entry.ReleaseDate,
             RepositoryUrl = entry.RepositoryUrl,
-            SupportedLanguages = entry.SupportedLanguages.ToList(),
+            SupportedLanguages = (entry.SupportedLanguages ?? []).ToList(),
             Icon = entry.Icon,
             IconBackground = entry.IconBackground,
-            Dependencies = entry.Dependencies.ToList(),
-            Tags = entry.Tags.ToList(),
+            Dependencies = (entry.Dependencies ?? []).ToList(),
+            Tags = (entry.Tags ?? []).ToList(),
             Status = entry.Status,
         };
     }
@@ -247,11 +247,11 @@ public sealed class StoreJsonGenerator
                string.Equals(left.ZipHash, right.ZipHash, StringComparison.OrdinalIgnoreCase) &&
                string.Equals(left.ReleaseDate, right.ReleaseDate, StringComparison.Ordinal) &&
                string.Equals(left.RepositoryUrl, right.RepositoryUrl, StringComparison.Ordinal) &&
-               left.SupportedLanguages.SequenceEqual(right.SupportedLanguages, StringComparer.Ordinal) &&
+               (left.SupportedLanguages ?? []).SequenceEqual(right.SupportedLanguages ?? [], StringComparer.Ordinal) &&
                string.Equals(left.Icon, right.Icon, StringComparison.Ordinal) &&
                string.Equals(left.IconBackground, right.IconBackground, StringComparison.Ordinal) &&
-               left.Dependencies.SequenceEqual(right.Dependencies, StringComparer.Ordinal) &&
-               left.Tags.SequenceEqual(right.Tags, StringComparer.Ordinal) &&
+               (left.Dependencies ?? []).SequenceEqual(right.Dependencies ?? [], StringComparer.Ordinal) &&
+               (left.Tags ?? []).SequenceEqual(right.Tags ?? [], StringComparer.Ordinal) &&
                string.Equals(left.Status, right.Status, StringComparison.Ordinal);
     }
 
@@ -319,19 +319,21 @@ public sealed class StoreJsonGenerator
         };
     }
 
-    private static Dictionary<string, string> CloneStringDictionary(Dictionary<string, string> source) =>
-        source.ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
+    private static Dictionary<string, string> CloneStringDictionary(Dictionary<string, string>? source) =>
+        (source ?? []).ToDictionary(pair => pair.Key, pair => pair.Value, StringComparer.OrdinalIgnoreCase);
 
-    private static Dictionary<string, List<string>> CloneTagDictionary(Dictionary<string, List<string>> source) =>
-        source.ToDictionary(
+    private static Dictionary<string, List<string>> CloneTagDictionary(Dictionary<string, List<string>>? source) =>
+        (source ?? []).ToDictionary(
             pair => pair.Key,
             pair => pair.Value.ToList(),
             StringComparer.OrdinalIgnoreCase);
 
     private static bool StringDictionariesEqual(
-        Dictionary<string, string> left,
-        Dictionary<string, string> right)
+        Dictionary<string, string>? left,
+        Dictionary<string, string>? right)
     {
+        left ??= [];
+        right ??= [];
         if (left.Count != right.Count)
             return false;
 
@@ -348,16 +350,18 @@ public sealed class StoreJsonGenerator
     }
 
     private static bool TagDictionariesEqual(
-        Dictionary<string, List<string>> left,
-        Dictionary<string, List<string>> right)
+        Dictionary<string, List<string>>? left,
+        Dictionary<string, List<string>>? right)
     {
+        left ??= [];
+        right ??= [];
         if (left.Count != right.Count)
             return false;
 
         foreach (var pair in left)
         {
             if (!right.TryGetValue(pair.Key, out var rightValue) ||
-                !pair.Value.SequenceEqual(rightValue, StringComparer.Ordinal))
+                !(pair.Value ?? []).SequenceEqual(rightValue ?? [], StringComparer.Ordinal))
             {
                 return false;
             }
