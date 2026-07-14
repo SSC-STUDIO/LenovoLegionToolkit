@@ -14,21 +14,21 @@ namespace VisualRegression.Smoke;
 
 internal static partial class Program
 {
-    private const string AppDataOverrideEnvironmentVariable = "UDT_APPDATA_OVERRIDE";
+    private const string _appDataOverrideEnvironmentVariable = "UDT_APPDATA_OVERRIDE";
 
     private static void SetEnvVar(System.Collections.Specialized.StringDictionary environmentVariables, string environmentVariableName, string value) =>
         environmentVariables[environmentVariableName] = value;
 
-    private const int WindowX = 80;
-    private const int WindowY = 80;
-    private const int WindowWidth = 1300;
-    private const int WindowHeight = 850;
-    private const int MinWindowWidth = 1000;
-    private const int MinWindowHeight = 650;
-    private static readonly string[] MainAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
+    private const int _windowX = 80;
+    private const int _windowY = 80;
+    private const int _windowWidth = 1300;
+    private const int _windowHeight = 850;
+    private const int _minWindowWidth = 1000;
+    private const int _minWindowHeight = 650;
+    private static readonly string[] _mainAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
 
-    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
-    private static readonly List<CaptureRecord> Captures = new();
+    private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
+    private static readonly List<CaptureRecord> _captures = new();
     private static int _captureSequence;
     private static string _pipeName = string.Empty;
     private static int _processId;
@@ -254,7 +254,7 @@ internal static partial class Program
                 ["About"],
                 root => FindVisibleTextContains(root, "Third-party libraries")
                         || FindVisibleTextContains(root, "Application Folders")));
-            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "about-min-window", MinWindowWidth, MinWindowHeight);
+            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "about-min-window", _minWindowWidth, _minWindowHeight);
 
             NavigateAndWait(mainWindow, new PageTarget(
                 "windowsOptimization",
@@ -450,7 +450,7 @@ internal static partial class Program
 
         var osdWindow = WaitForOsdWindow(_processId, "OsdPanelWindow", TimeSpan.FromSeconds(45));
         CaptureOverlayWindow(currentDirectory, osdWindow, "osd-panel-overlay");
-        AssertOsdOverlayCapture(Path.Combine(currentDirectory, Captures[^1].FileName));
+        AssertOsdOverlayCapture(Path.Combine(currentDirectory, _captures[^1].FileName));
 
         CapturePage(currentDirectory, mainWindow, "dashboard-with-osd");
 
@@ -538,9 +538,9 @@ internal static partial class Program
 
         var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
         var snapshot = BuildSnapshot(label, window);
-        File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, JsonOptions));
+        File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, _jsonOptions));
 
-        Captures.Add(new CaptureRecord(Captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
+        _captures.Add(new CaptureRecord(_captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
     }
 
@@ -558,7 +558,7 @@ internal static partial class Program
     }
 
     private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label)
-        => CapturePage(currentDirectory, mainWindow, label, WindowWidth, WindowHeight);
+        => CapturePage(currentDirectory, mainWindow, label, _windowWidth, _windowHeight);
 
     private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label, int width, int height)
     {
@@ -579,23 +579,23 @@ internal static partial class Program
 
         var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
         var snapshot = BuildSnapshot(label, mainWindow);
-        File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, JsonOptions));
+        File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, _jsonOptions));
 
-        Captures.Add(new CaptureRecord(Captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
+        _captures.Add(new CaptureRecord(_captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
     }
 
     private static void AssertCaptureDimensions(string outputPath, string label)
     {
         using var bitmap = new Bitmap(outputPath);
-        if (bitmap.Width < MinWindowWidth || bitmap.Height < MinWindowHeight)
+        if (bitmap.Width < _minWindowWidth || bitmap.Height < _minWindowHeight)
         {
             throw new InvalidOperationException(
-                $"Screenshot '{label}' is too small ({bitmap.Width}x{bitmap.Height}). Expected at least {MinWindowWidth}x{MinWindowHeight}. " +
-                $"Ensure IPC capture succeeded and the main window was normalized to {WindowWidth}x{WindowHeight}.");
+                $"Screenshot '{label}' is too small ({bitmap.Width}x{bitmap.Height}). Expected at least {_minWindowWidth}x{_minWindowHeight}. " +
+                $"Ensure IPC capture succeeded and the main window was normalized to {_windowWidth}x{_windowHeight}.");
         }
 
-        Console.WriteLine($"[visual-smoke] Capture size for {label}: {bitmap.Width}x{bitmap.Height} (window target {WindowWidth}x{WindowHeight})");
+        Console.WriteLine($"[visual-smoke] Capture size for {label}: {bitmap.Width}x{bitmap.Height} (window target {_windowWidth}x{_windowHeight})");
     }
 
     private static void AssertThemeSurface(string outputPath, string label)
@@ -1078,7 +1078,7 @@ internal static partial class Program
     }
 
     private static void NormalizeWindow(AutomationElement window)
-        => NormalizeWindow(window, WindowWidth, WindowHeight);
+        => NormalizeWindow(window, _windowWidth, _windowHeight);
 
     private static void NormalizeWindow(AutomationElement window, int width, int height)
     {
@@ -1087,7 +1087,7 @@ internal static partial class Program
 
         var hwnd = (IntPtr)handle;
         ShowWindow(hwnd, 9);
-        SetWindowPos(hwnd, IntPtr.Zero, WindowX, WindowY, width, height, 0x0040);
+        SetWindowPos(hwnd, IntPtr.Zero, _windowX, _windowY, width, height, 0x0040);
         SetForegroundWindow(hwnd);
         Thread.Sleep(250);
     }
@@ -1287,10 +1287,10 @@ internal static partial class Program
 
     private static Process StartApp(string runtimeDirectory, string appDataDirectory)
     {
-        var appBaseName = MainAppBaseNames.FirstOrDefault(name =>
+        var appBaseName = _mainAppBaseNames.FirstOrDefault(name =>
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json")))
-            ?? MainAppBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
+            ?? _mainAppBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
 
         if (string.IsNullOrWhiteSpace(appBaseName))
             throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
@@ -1323,7 +1323,7 @@ internal static partial class Program
         else
             throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
 
-        SetEnvVar(startInfo.EnvironmentVariables, AppDataOverrideEnvironmentVariable, appDataDirectory);
+        SetEnvVar(startInfo.EnvironmentVariables, _appDataOverrideEnvironmentVariable, appDataDirectory);
 
         SetEnvVar(startInfo.EnvironmentVariables, "UDT_SMOKE_AUTOMATION", "1");
 
@@ -1345,8 +1345,8 @@ internal static partial class Program
         root["ThemeStylePreset"] = themeStyle;
         root["WindowSize"] = new JsonObject
         {
-            ["Width"] = WindowWidth,
-            ["Height"] = WindowHeight
+            ["Width"] = _windowWidth,
+            ["Height"] = _windowHeight
         };
         root["MinimizeToTray"] = false;
         root["MinimizeOnClose"] = false;
@@ -1357,10 +1357,10 @@ internal static partial class Program
         root["NavigationPaneExpanded"] = true;
 
         Directory.CreateDirectory(appDataDirectory);
-        File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
+        File.WriteAllText(settingsPath, root.ToJsonString(_jsonOptions));
 
         var integrationsPath = Path.Combine(appDataDirectory, "integrations.json");
-        File.WriteAllText(integrationsPath, new JsonObject { ["CLI"] = true }.ToJsonString(JsonOptions));
+        File.WriteAllText(integrationsPath, new JsonObject { ["CLI"] = true }.ToJsonString(_jsonOptions));
 
         var langPath = Path.Combine(appDataDirectory, "lang");
         File.WriteAllText(langPath, string.IsNullOrWhiteSpace(language) ? "en" : language);
@@ -1385,7 +1385,7 @@ internal static partial class Program
             : new JsonObject();
 
         root["EnableHardwareSensors"] = true;
-        File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
+        File.WriteAllText(settingsPath, root.ToJsonString(_jsonOptions));
 
         var osdPath = Path.Combine(appDataDirectory, "osd.json");
         File.WriteAllText(osdPath, new JsonObject
@@ -1398,7 +1398,7 @@ internal static partial class Program
             ["PanelPositionX"] = 60,
             ["PanelPositionY"] = 60,
             ["IsLocked"] = true
-        }.ToJsonString(JsonOptions));
+        }.ToJsonString(_jsonOptions));
 
         Console.WriteLine("[visual-smoke] Prepared sandbox OSD settings (panel style, hardware sensors enabled).");
     }
@@ -1414,7 +1414,7 @@ internal static partial class Program
             : new JsonObject();
 
         root["Theme"] = theme;
-        File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
+        File.WriteAllText(settingsPath, root.ToJsonString(_jsonOptions));
         Console.WriteLine($"[visual-smoke] Updated sandbox theme to {theme}");
     }
 
@@ -1554,7 +1554,7 @@ internal static partial class Program
 
     private static bool ContainsMainAppStartupEntry(string runtimeDirectory)
     {
-        return MainAppBaseNames.Any(name =>
+        return _mainAppBaseNames.Any(name =>
             (File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
              File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json"))) ||
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
@@ -1611,7 +1611,7 @@ internal static partial class Program
             "## Captures",
         };
 
-        lines.AddRange(Captures.Select(capture => $"- `{capture.FileName}`: {capture.Label} ({capture.CapturedAt:HH:mm:ss})"));
+        lines.AddRange(_captures.Select(capture => $"- `{capture.FileName}`: {capture.Label} ({capture.CapturedAt:HH:mm:ss})"));
         File.WriteAllLines(indexPath, lines);
 
         var htmlPath = Path.Combine(currentDirectory, "storyboard.html");
@@ -1622,7 +1622,7 @@ internal static partial class Program
 
     private static string BuildStoryboardHtml()
     {
-        var json = JsonSerializer.Serialize(Captures.Select(capture => new
+        var json = JsonSerializer.Serialize(_captures.Select(capture => new
         {
             capture.Sequence,
             capture.Label,
@@ -1697,7 +1697,7 @@ internal static partial class Program
             processId = process?.Id,
             exitCode,
             error,
-            captures = Captures,
+            captures = _captures,
             appLog = Directory.Exists(Path.Combine(appDataDirectory, "logs"))
                 ? Directory.GetFiles(Path.Combine(appDataDirectory, "logs"), "*.json").OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault()
                 : null,
@@ -1706,7 +1706,7 @@ internal static partial class Program
                 : []
         };
 
-        File.WriteAllText(resultPath, JsonSerializer.Serialize(result, JsonOptions));
+        File.WriteAllText(resultPath, JsonSerializer.Serialize(result, _jsonOptions));
     }
 
     private static void TryWriteFailureResult(string[] args, Process? process, Exception ex)
