@@ -22,11 +22,17 @@ public static class WMICache
         _cache.Clear();
     }
 
+    /// <summary>
+    /// Removes cache entries whose keys start with <paramref name="prefix"/>.
+    /// Enumerates the ConcurrentDictionary directly (race-safer than Keys.Where snapshot);
+    /// concurrent adds of new matching keys after this call are acceptable.
+    /// </summary>
     public static void ClearByPrefix(string prefix)
     {
-        foreach (var key in _cache.Keys.Where(k => k.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+        foreach (var kvp in _cache)
         {
-            _cache.TryRemove(key, out _);
+            if (kvp.Key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                _cache.TryRemove(kvp.Key, out _);
         }
     }
 

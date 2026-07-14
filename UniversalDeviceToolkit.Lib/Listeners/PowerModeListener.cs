@@ -6,6 +6,7 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.Utils;
 
 namespace LenovoLegionToolkit.Lib.Listeners;
 
@@ -42,11 +43,36 @@ public class PowerModeListener(
 
     private async Task ChangeDependenciesAsync(PowerModeState value)
     {
+        // Isolate each dependency so one failure does not skip Windows power mode/plan updates.
         if (value is PowerModeState.GodMode)
-            await godModeController.ApplyStateAsync().ConfigureAwait(false);
+        {
+            try
+            {
+                await godModeController.ApplyStateAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"PowerModeListener GodMode apply failed [powerMode={value}].", ex);
+            }
+        }
 
-        await windowsPowerModeController.SetPowerModeAsync(value).ConfigureAwait(false);
-        await windowsPowerPlanController.SetPowerPlanAsync(value).ConfigureAwait(false);
+        try
+        {
+            await windowsPowerModeController.SetPowerModeAsync(value).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"PowerModeListener Windows power mode apply failed [powerMode={value}].", ex);
+        }
+
+        try
+        {
+            await windowsPowerPlanController.SetPowerPlanAsync(value).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"PowerModeListener Windows power plan apply failed [powerMode={value}].", ex);
+        }
     }
 
     private static void PublishNotification(PowerModeState value)

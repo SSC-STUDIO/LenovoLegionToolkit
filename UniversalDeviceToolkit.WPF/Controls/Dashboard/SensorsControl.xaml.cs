@@ -834,7 +834,7 @@ public partial class SensorsControl : IDisposable
 
     /// <summary>
     /// Third detail ring shows battery health (not a static "design capacity" track).
-    /// Color: green ≥80, caution 60–80, critical/red &lt;60.
+    /// Color: green >= 80, caution 60-80, critical/red < 60.
     /// </summary>
     private void UpdateBatteryHealthGauge(double healthPercent)
     {
@@ -844,7 +844,7 @@ public partial class SensorsControl : IDisposable
         var value = healthPercent < 0 ? 0 : Math.Clamp(healthPercent, 0, 100);
         _batteryHealthGauge.Maximum = 100;
         _batteryHealthGauge.Value = value;
-        _batteryHealthGauge.ValueText = healthPercent < 0 ? "—" : $"{value:0}%";
+        _batteryHealthGauge.ValueText = healthPercent < 0 ? "-" : string.Format("{0:0}%", value);
 
         var brushKey = value >= 80
             ? "ChartBatteryBrush"

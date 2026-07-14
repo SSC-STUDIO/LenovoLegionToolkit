@@ -100,8 +100,12 @@ public class HybridModeFeature(
             {
                 await igpuModeFeature.SetStateAsync(igpuMode, cancellationToken).ConfigureAwait(false);
             }
-            catch (IGPUModeChangeException)
+            catch (IGPUModeChangeException ex)
             {
+                // GSync may already have been applied; do not silently swallow partial hybrid state.
+                Log.Instance.Warning(
+                    $"iGPU mode change failed during hybrid set (gSyncChanged={gSyncChanged}). Hybrid mode may be partial.",
+                    ex);
                 if (!gSyncChanged)
                     throw;
             }

@@ -302,16 +302,31 @@ public class NotificationsManager : IDisposable
             var nwaot = new NotificationAoTWindow(bitmap, screen, _settings.Store.NotificationPosition);
             nwaot.Closed += (_, _) => tcs.TrySetResult(true);
             nwaot.Show(duration);
-            _windows.Add(nwaot);
+            Track(nwaot);
         }
         else
         {
             nw.Closed += (_, _) => tcs.TrySetResult(true);
             nw.Show(duration);
-            _windows.Add(nw);
+            Track(nw);
         }
 
         await tcs.Task;
+    }
+
+    private void Track(INotificationWindow window)
+    {
+        _windows.Add(window);
+        window.Closed += OnNotificationWindowClosed;
+    }
+
+    private void OnNotificationWindowClosed(object? sender, EventArgs e)
+    {
+        if (sender is not INotificationWindow window)
+            return;
+
+        window.Closed -= OnNotificationWindowClosed;
+        _windows.Remove(window);
     }
 
     private bool IsNotificationTypeEnabled(NotificationType type)
@@ -403,9 +418,12 @@ private static void UpdateAvailableAction()
                     // Unsubscribe from MessagingCenter to prevent memory leak
                     MessagingCenter.Unsubscribe<NotificationMessage>(this);
 
-                    foreach (var window in _windows)
+                    foreach (var window in _windows.ToArray())
                     {
-                        window?.Close(true);
+                        if (window is null)
+                            continue;
+                        window.Closed -= OnNotificationWindowClosed;
+                        window.Close(true);
                     }
                     _windows.Clear();
                 }
