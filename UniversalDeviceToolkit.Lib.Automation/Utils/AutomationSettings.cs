@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Text.Json;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
-using UniversalDeviceToolkit.Lib.Automation.Resources;
 using UniversalDeviceToolkit.Lib.Automation.Serialization;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.Lib.Settings;
@@ -34,7 +33,8 @@ public class AutomationSettings() : AbstractSettings<AutomationSettings.Automati
             },
             new AutomationPipeline
             {
-                Name = Resource.DeactivateGpuQuickAction_Title,
+                // Stable key — display name is resolved via PipelineNameLocalizer at UI time.
+                Name = PipelineNameLocalizer.DeactivateGpuQuickActionStableName,
                 Steps = { new DeactivateGPUAutomationStep(DeactivateGPUAutomationStepState.KillApps) },
             },
         },
@@ -44,5 +44,27 @@ public class AutomationSettings() : AbstractSettings<AutomationSettings.Automati
     {
         options.Converters.Add(new AutomationPipelineTriggerJsonConverter());
         options.Converters.Add(new AutomationStepJsonConverter());
+    }
+
+    public override AutomationSettingsStore? LoadStore()
+    {
+        var store = base.LoadStore();
+        if (store?.Pipelines is null)
+            return store;
+
+        if (PipelineNameLocalizer.MigrateBakedDefaultNames(store.Pipelines))
+        {
+            // Persist stable keys so language switches stop re-showing old baked titles.
+            try
+            {
+                SynchronizeStore();
+            }
+            catch
+            {
+                // Display still works via LocalizeStoredName even if write fails.
+            }
+        }
+
+        return store;
     }
 }

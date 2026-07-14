@@ -7,6 +7,7 @@ using System.Windows.Automation;
 using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -158,7 +159,7 @@ public partial class SelectSmartKeyPipelinesWindow
 
         private void InitializeComponent()
         {
-            _nameTextBox.Text = Pipeline.Name;
+            _nameTextBox.Text = PipelineNameLocalizer.LocalizeStoredName(Pipeline.Name) ?? Pipeline.Name;
 
             Grid.SetColumn(_checkBox, 0);
             Grid.SetColumn(_nameTextBox, 1);

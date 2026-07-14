@@ -10,6 +10,7 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Automation.Steps;
@@ -127,11 +128,14 @@ public class AutomationPipelineControl : UserControl
         IsExclusive = _isExclusiveCheckBox.IsChecked ?? false,
     };
 
-    public string? GetName() => AutomationPipeline.Name;
+    public string? GetName() => PipelineNameLocalizer.LocalizeStoredName(AutomationPipeline.Name);
 
     public void SetName(string? name)
     {
-        AutomationPipeline.Name = name;
+        // User renames are stored literally; known default titles map to the stable key.
+        AutomationPipeline.Name = PipelineNameLocalizer.IsKnownDeactivateGpuTitle(name)
+            ? PipelineNameLocalizer.DeactivateGpuQuickActionStableName
+            : name;
         _cardHeaderControl.Title = GenerateHeader();
         _cardHeaderControl.Subtitle = GenerateSubtitle();
         _cardHeaderControl.SubtitleToolTip = _cardHeaderControl.Subtitle;
@@ -261,7 +265,7 @@ public class AutomationPipelineControl : UserControl
     private string GenerateHeader()
     {
         if (!string.IsNullOrWhiteSpace(AutomationPipeline.Name))
-            return AutomationPipeline.Name;
+            return PipelineNameLocalizer.LocalizeStoredName(AutomationPipeline.Name) ?? AutomationPipeline.Name;
 
         if (AutomationPipeline.Trigger is not null)
             return AutomationPipeline.Trigger.DisplayName;

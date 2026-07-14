@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
@@ -51,7 +52,10 @@ public class QuickActionAutomationStepControl : AbstractAutomationStepControl<Qu
         var filteredPipelines = pipelines.Where(p => p.Trigger is null).ToArray();
         var selectedPipeline = filteredPipelines.FirstOrDefault(p => p.Id == AutomationStep.PipelineId);
 
-        _comboBox.SetItems(filteredPipelines, selectedPipeline, p => p?.Name ?? "");
+        _comboBox.SetItems(
+            filteredPipelines,
+            selectedPipeline,
+            p => PipelineNameLocalizer.LocalizeStoredName(p?.Name) ?? p?.Name ?? "");
     }
 }
 
