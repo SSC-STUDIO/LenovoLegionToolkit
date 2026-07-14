@@ -24,7 +24,7 @@ Japanese may contain kanji/Japanese punctuation; auditor allows `ja*`.
 
 ### Resource quality auditor
 
-`LenovoLegionToolkit.Lib.Utils.ResourceQualityAuditor` scans `.resx` trees for:
+`UniversalDeviceToolkit.Lib.Utils.ResourceQualityAuditor` scans `.resx` trees for:
 
 - XML parse errors / duplicate keys  
 - Format placeholder mismatch vs English  

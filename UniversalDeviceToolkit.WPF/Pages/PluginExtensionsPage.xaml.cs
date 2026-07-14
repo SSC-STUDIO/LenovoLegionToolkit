@@ -14,18 +14,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Collections.ObjectModel;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Loading;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Windows;
-using PluginConstants = LenovoLegionToolkit.Lib.Plugins.PluginConstants;
+using PluginConstants = UniversalDeviceToolkit.Lib.Plugins.PluginConstants;
 using Wpf.Ui.Controls;
 using NavigationItem = UniversalDeviceToolkit.WPF.Controls.Custom.NavigationItem;
 using NavigationStore = UniversalDeviceToolkit.WPF.Controls.Custom.NavigationStore;
-using PluginManifest = LenovoLegionToolkit.Lib.Plugins.PluginManifest;
+using PluginManifest = UniversalDeviceToolkit.Lib.Plugins.PluginManifest;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
@@ -466,9 +466,9 @@ private string _currentSearchText = string.Empty;
                     return;
 
                 _onlineMetadataLoadFailed = false;
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(
                         $"PluginExtensionsPage: Fetched {_onlinePlugins.Count} online plugins");
                 }
 
@@ -483,7 +483,7 @@ private string _currentSearchText = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(
                         $"PluginExtensionsPage: update check failed after online plugins were loaded: {ex.Message}",
                         ex);
                     _availableUpdates.Clear();
@@ -504,7 +504,7 @@ private string _currentSearchText = string.Empty;
             _pageUiState = PluginPageUiState.Failed;
             // Do not wipe _onlinePlugins on hard failure — keep last good store snapshot.
             _availableUpdates.Clear();
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error fetching online plugins: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error fetching online plugins: {ex.Message}", ex);
 
             SnackbarHelper.Show(
                 T("PluginExtensionsPage_FetchFailed", "Failed to fetch plugins"),
@@ -554,8 +554,8 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace("Abandoned plugin store fetch faulted.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace("Abandoned plugin store fetch faulted.", ex);
         }
     }
 
@@ -683,9 +683,9 @@ private string _currentSearchText = string.Empty;
             {
                 var isInstalled = IsPluginInstalledForUi(plugin.Id);
 
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - UI installed check returned {isInstalled}");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"UpdatePluginsList: Plugin {plugin.Id} - UI installed check returned {isInstalled}");
                 }
 
                 PluginManifest? updatePlugin = null;
@@ -784,9 +784,9 @@ private string _currentSearchText = string.Empty;
                     existingViewModel.UsageGuide = usageGuide;
                     existingViewModel.SetIconBackgroundFromStore(iconBackground);
 
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                        UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(
                             $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
@@ -811,9 +811,9 @@ private string _currentSearchText = string.Empty;
                     pluginViewModel.UsageGuide = usageGuide;
                     pluginViewModel.SetIconBackgroundFromStore(iconBackground);
 
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                     {
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                        UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(
                             $"UpdatePluginsList: Plugin {plugin.Id} - isInstalled={isInstalled}, pluginType={plugin.GetType().Name}, supportsSettings={capabilities.SupportsSettingsPage}, supportsFeaturePage={capabilities.SupportsFeaturePage}, supportsOptimizationCategory={capabilities.SupportsOptimizationCategory}, supportsExecutableEntryPoint={supportsExecutableEntryPoint}");
                     }
 
@@ -827,7 +827,7 @@ private string _currentSearchText = string.Empty;
             }
             catch (Exception ex)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to update ViewModel for plugin {plugin.Id}: {ex.Message}", ex);
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to update ViewModel for plugin {plugin.Id}: {ex.Message}", ex);
             }
         }
 
@@ -931,7 +931,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: initial online plugin fetch failed: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: initial online plugin fetch failed: {ex.Message}", ex);
             _onlineMetadataLoadFailed = true;
             _onlineMetadataLoadCompleted = true;
             SetLoadingState(false);
@@ -1153,18 +1153,18 @@ private string _currentSearchText = string.Empty;
             // Apply current filters and search
             ApplyFilters();
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Found {_allPlugins.Count} total plugins");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: Found {_allPlugins.Count} total plugins");
                 foreach (var plugin in _allPlugins)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - {plugin.Id}: {plugin.Name} (System: {plugin.IsSystemPlugin}, Installed: {IsPluginInstalledForUi(plugin.Id)})");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - {plugin.Id}: {plugin.Name} (System: {plugin.IsSystemPlugin}, Installed: {IsPluginInstalledForUi(plugin.Id)})");
                 }
             }
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error updating plugins UI: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error updating plugins UI: {ex.Message}", ex);
 
             // Ensure "no plugins" message is shown even on error
             if (_noPluginsMessage != null)
@@ -1174,10 +1174,10 @@ private string _currentSearchText = string.Empty;
         }
         finally
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
                 var elapsed = Stopwatch.GetElapsedTime(startedAt);
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(
                     $"PluginExtensionsPage UI rebuild completed in {elapsed.TotalMilliseconds:0} ms. [plugins={_allPlugins.Count}, rows={_pluginViewModels.Count}]");
             }
         }
@@ -1288,8 +1288,8 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to resolve UI installed state for {pluginId}: {ex.Message}", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to resolve UI installed state for {pluginId}: {ex.Message}", ex);
 
             return false;
         }
@@ -1303,8 +1303,8 @@ private string _currentSearchText = string.Empty;
         var removedCount = _availableUpdates.RemoveAll(update =>
             !IsAvailableUpdateNewerThanInstalled(update.Id, update.Version));
 
-        if (removedCount > 0 && LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: removed {removedCount} stale plugin update marker(s)");
+        if (removedCount > 0 && UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: removed {removedCount} stale plugin update marker(s)");
     }
 
     private void RemoveAvailableUpdate(string pluginId)
@@ -1312,8 +1312,8 @@ private string _currentSearchText = string.Empty;
         var removedCount = _availableUpdates.RemoveAll(update =>
             string.Equals(update.Id, pluginId, StringComparison.OrdinalIgnoreCase));
 
-        if (removedCount > 0 && LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: cleared update marker for {pluginId}");
+        if (removedCount > 0 && UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage: cleared update marker for {pluginId}");
     }
 
     private PluginUiCapabilities ResolvePluginCapabilities(
@@ -1360,7 +1360,7 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            if (plugin is LenovoLegionToolkit.Lib.Plugins.PluginBase pluginBase)
+            if (plugin is UniversalDeviceToolkit.Lib.Plugins.PluginBase pluginBase)
             {
                 var settingsPage = pluginBase.GetSettingsPage();
                 supportsSettingsPage = settingsPage != null;
@@ -1405,8 +1405,8 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to resolve plugin capability for {plugin.Id}", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to resolve plugin capability for {plugin.Id}", ex);
         }
 
         return new PluginUiCapabilities
@@ -1421,12 +1421,12 @@ private string _currentSearchText = string.Empty;
     {
         try
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"UpdateSpecificPluginUI called for {pluginId}");
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled for UI: {IsPluginInstalledForUi(pluginId)}");
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - Available updates: {_availableUpdates.Count}");
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - ViewModel count: {_pluginViewModels.Count}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"UpdateSpecificPluginUI called for {pluginId}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled for UI: {IsPluginInstalledForUi(pluginId)}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - Available updates: {_availableUpdates.Count}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - ViewModel count: {_pluginViewModels.Count}");
             }
 
             // Find corresponding ViewModel and update its status
@@ -1436,12 +1436,12 @@ private string _currentSearchText = string.Empty;
                 var isInstalled = IsPluginInstalledForUi(pluginId);
                 var updateAvailable = isInstalled && TryGetAvailableUpdate(pluginId, out _);
 
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Found ViewModel for {pluginId}:");
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - Current IsInstalled: {viewModel.IsInstalled}");
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - New IsInstalled: {isInstalled}");
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - UpdateAvailable: {updateAvailable}");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Found ViewModel for {pluginId}:");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - Current IsInstalled: {viewModel.IsInstalled}");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - New IsInstalled: {isInstalled}");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - UpdateAvailable: {updateAvailable}");
                 }
 
                 // Update ViewModel's installation status and available update status
@@ -1468,19 +1468,19 @@ private string _currentSearchText = string.Empty;
                     viewModel.SupportsExecutableEntryPoint = false;
                 }
 
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Updated plugin UI for {pluginId}: Installed={isInstalled}, UpdateAvailable={updateAvailable}");
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - ViewModel InstallButtonText after update: {viewModel.InstallButtonText}");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Updated plugin UI for {pluginId}: Installed={isInstalled}, UpdateAvailable={updateAvailable}");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - ViewModel InstallButtonText after update: {viewModel.InstallButtonText}");
                 }
 
                 UpdateBulkActionButtonsVisibility();
             }
             else
             {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"ViewModel not found for {pluginId}, falling back to full UI update");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"ViewModel not found for {pluginId}, falling back to full UI update");
                 }
                     // If existing ViewModel is not found, perform full UI update
                 UpdateAllPluginsUI();
@@ -1488,7 +1488,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error updating specific plugin UI for {pluginId}: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error updating specific plugin UI for {pluginId}: {ex.Message}", ex);
             // Fallback: perform full UI update
             UpdateAllPluginsUI();
         }
@@ -1517,7 +1517,7 @@ private string _currentSearchText = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error during bulk update for {update.Id}: {ex.Message}", ex);
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error during bulk update for {update.Id}: {ex.Message}", ex);
                 }
             }
 
@@ -1525,7 +1525,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error in bulk update: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error in bulk update: {ex.Message}", ex);
             SnackbarHelper.Show(Resource.PluginExtensionsPage_UpdateFailed, string.Format(Resource.PluginExtensionsPage_UpdateFailedMessage, ex.Message), SnackbarType.Error);
         }
         finally
@@ -1587,7 +1587,7 @@ private string _currentSearchText = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error during bulk install for {candidate.Id}: {ex.Message}", ex);
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error during bulk install for {candidate.Id}: {ex.Message}", ex);
                 }
             }
 
@@ -1595,7 +1595,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error in bulk install: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error in bulk install: {ex.Message}", ex);
             SnackbarHelper.Show(bulkInstallFailed, string.Format(bulkInstallFailedMessage, ex.Message), SnackbarType.Error);
         }
         finally
@@ -1627,36 +1627,36 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginInstallButton_Click called for {pluginId}");
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled before install: {_pluginManager.IsInstalled(pluginId)}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginInstallButton_Click called for {pluginId}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled before install: {_pluginManager.IsInstalled(pluginId)}");
             }
 
             // Check if this is an online plugin installation
             var onlinePlugin = _onlinePlugins.FirstOrDefault(p => p.Id == pluginId);
             if (onlinePlugin != null)
             {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Installing online plugin: {pluginId}");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Installing online plugin: {pluginId}");
                 }
                 await InstallOnlinePluginAsync(onlinePlugin);
                 return;
             }
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Installing local plugin: {pluginId}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Installing local plugin: {pluginId}");
             }
 
             // If plugin is already installed, uninstall it first to release file locks
             if (_pluginManager.IsInstalled(pluginId))
             {
 
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} is already installed, uninstalling first to release file locks");
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} is already installed, uninstalling first to release file locks");
                 }
                 // Stop plugin before uninstallation to release resources
                 _pluginManager.StopPlugin(pluginId);
@@ -1668,9 +1668,9 @@ private string _currentSearchText = string.Empty;
 
             _pluginManager.InstallPlugin(pluginId);
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled after install: {_pluginManager.IsInstalled(pluginId)}");
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"  - IsInstalled after install: {_pluginManager.IsInstalled(pluginId)}");
             }
 
             await RefreshInstalledPluginUiAfterInstallAsync(pluginId, forceRefreshRuntime: true);
@@ -1678,7 +1678,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error installing plugin: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error installing plugin: {ex.Message}", ex);
 
             if (Application.Current.MainWindow is MainWindow mainWindow)
             {
@@ -1689,9 +1689,9 @@ private string _currentSearchText = string.Empty;
 
     private async Task InstallOnlinePluginAsync(PluginManifest manifest, bool navigateToOptimizationCategoryOnSuccess = true)
     {
-        if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+        if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"InstallOnlinePluginAsync started for {manifest.Id}");
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"InstallOnlinePluginAsync started for {manifest.Id}");
         }
 
         try
@@ -1738,7 +1738,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error installing online plugin {manifest.Id}: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error installing online plugin {manifest.Id}: {ex.Message}", ex);
 
             SnackbarHelper.Show(
                 Resource.PluginExtensionsPage_InstallFailed,
@@ -1875,16 +1875,16 @@ private string _currentSearchText = string.Empty;
         if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
             return;
 
-        if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginUninstallButton_Click called for {pluginId}");
+        if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginUninstallButton_Click called for {pluginId}");
 
         try
         {
             // For local plugins, we should ensure any running processes are stopped
             if (_pluginManager.IsInstalled(pluginId))
             {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Stopping plugin {pluginId} before uninstall");
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Stopping plugin {pluginId} before uninstall");
 
                 // Stop the plugin first
                 _pluginManager.StopPlugin(pluginId);
@@ -1892,8 +1892,8 @@ private string _currentSearchText = string.Empty;
 
             var result = await Task.Run(() => _pluginManager.UninstallPlugin(pluginId));
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"UninstallPlugin returned: {result}");
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"UninstallPlugin returned: {result}");
 
             if (!result)
             {
@@ -1913,7 +1913,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error uninstalling plugin: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error uninstalling plugin: {ex.Message}", ex);
 
             SnackbarHelper.Show(Resource.PluginExtensionsPage_UninstallFailed, string.Format(Resource.PluginExtensionsPage_UninstallFailedMessage, ex.Message), SnackbarType.Error);
         }
@@ -1926,8 +1926,8 @@ private string _currentSearchText = string.Empty;
             if (sender is not System.Windows.Controls.Button button || button.Tag is not string pluginId)
                 return;
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginConfigureButton_Click called for {pluginId}");
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginConfigureButton_Click called for {pluginId}");
 
             await OpenPluginConfigurationAsync(pluginId);
         }
@@ -1945,8 +1945,8 @@ private string _currentSearchText = string.Empty;
             // Check if plugin is installed
             if (!_pluginManager.IsInstalled(pluginId))
             {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} is not installed, configuration not available");
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} is not installed, configuration not available");
 
                 SnackbarHelper.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage, SnackbarType.Warning);
                 return;
@@ -1958,8 +1958,8 @@ private string _currentSearchText = string.Empty;
 
             if (!capabilities.SupportsSettingsPage)
             {
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} does not provide a settings page");
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Plugin {pluginId} does not provide a settings page");
 
                 SnackbarHelper.Show(
                     Resource.PluginExtensionsPage_NoConfiguration,
@@ -1971,8 +1971,8 @@ private string _currentSearchText = string.Empty;
                 return;
             }
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Opening configuration window for plugin {pluginId}");
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Opening configuration window for plugin {pluginId}");
 
             var window = new Windows.Settings.PluginSettingsWindow(pluginId)
             {
@@ -1982,7 +1982,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error opening plugin settings: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error opening plugin settings: {ex.Message}", ex);
 
             SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message), SnackbarType.Error);
         }
@@ -2097,7 +2097,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error opening plugin: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error opening plugin: {ex.Message}", ex);
 
             SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message), SnackbarType.Error);
         }
@@ -2117,7 +2117,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error opening default plugin action: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error opening default plugin action: {ex.Message}", ex);
             SnackbarHelper.Show(Resource.PluginExtensionsPage_OpenFailed, string.Format(Resource.PluginExtensionsPage_OpenFailedMessage, ex.Message), SnackbarType.Error);
         }
     }
@@ -2131,8 +2131,8 @@ private string _currentSearchText = string.Empty;
 
         try
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Repairing installed online plugin runtime before opening UI: {pluginId}");
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Repairing installed online plugin runtime before opening UI: {pluginId}");
 
             var success = await _pluginInstallCoordinator.InstallAsync(manifest);
             if (!success)
@@ -2148,7 +2148,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to repair installed online plugin runtime: {pluginId}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to repair installed online plugin runtime: {pluginId}", ex);
             return false;
         }
     }
@@ -2238,7 +2238,7 @@ private string _currentSearchText = string.Empty;
         catch (Exception ex)
         {
             _pluginIdsReloadedForUi.Remove(pluginId);
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage failed to load plugin runtime for UI: {pluginId}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage failed to load plugin runtime for UI: {pluginId}", ex);
             return null;
         }
     }
@@ -2261,14 +2261,14 @@ private string _currentSearchText = string.Empty;
                 LocalizationHelper.SetPluginResourceCultures();
                 UpdateSpecificPluginUI(pluginId);
 
-                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage reloaded plugin runtime for UI: {pluginId}");
+                if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage reloaded plugin runtime for UI: {pluginId}");
             });
         }
         catch (Exception ex)
         {
             _pluginIdsReloadedForUi.Remove(pluginId);
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage failed to reload plugin runtime for UI: {pluginId}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginExtensionsPage failed to reload plugin runtime for UI: {pluginId}", ex);
         }
     }
 
@@ -2310,7 +2310,7 @@ private string _currentSearchText = string.Empty;
                     }
                     catch (Exception ex)
                     {
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error importing plugin from {zipFilePath}: {ex.Message}", ex);
+                        UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error importing plugin from {zipFilePath}: {ex.Message}", ex);
 
                         SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportFailed,
                             string.Format(Resource.PluginExtensionsPage_BulkImportFailedMessage, Path.GetFileName(zipFilePath), ex.Message), SnackbarType.Error);
@@ -2334,7 +2334,7 @@ private string _currentSearchText = string.Empty;
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error in bulk import: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error in bulk import: {ex.Message}", ex);
 
             SnackbarHelper.Show(Resource.PluginExtensionsPage_BulkImportFailed,
                 string.Format(
@@ -2350,12 +2350,12 @@ private string _currentSearchText = string.Empty;
         var pluginsDir = GetPluginsDirectory();
         try
         {
-            var installationService = new LenovoLegionToolkit.Lib.Plugins.PluginInstallationService(_pluginManager);
+            var installationService = new UniversalDeviceToolkit.Lib.Plugins.PluginInstallationService(_pluginManager);
             return await installationService.ExtractAndInstallPluginAsync(zipFilePath, pluginsDir);
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error installing plugin from {zipFilePath}: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error installing plugin from {zipFilePath}: {ex.Message}", ex);
             return false;
         }
     }
@@ -2384,8 +2384,8 @@ private string _currentSearchText = string.Empty;
     private string GetPluginsDirectory()
     {
         var pluginsDirectory = PluginPaths.GetPluginsDirectory();
-        if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Using plugins directory: {pluginsDirectory}");
+        if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Using plugins directory: {pluginsDirectory}");
         return pluginsDirectory;
     }
 
@@ -2644,15 +2644,15 @@ private string _currentSearchText = string.Empty;
                 }
                 catch (Exception ex)
                 {
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to read plugin manifest '{manifestPath}': {ex.Message}", ex);
+                    if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                        UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to read plugin manifest '{manifestPath}': {ex.Message}", ex);
                 }
             }
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to locate installed plugin manifest for {pluginId}: {ex.Message}", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to locate installed plugin manifest for {pluginId}: {ex.Message}", ex);
         }
 
         return null;
@@ -2677,8 +2677,8 @@ private string _currentSearchText = string.Empty;
         {
             PluginViewModel? clickedViewModel = null;
 
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick triggered");
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick triggered");
 
         // Ignore double-clicks that originate from action buttons inside the item template.
         if (e.OriginalSource is DependencyObject source)
@@ -2688,16 +2688,16 @@ private string _currentSearchText = string.Empty;
             {
                 if (current is System.Windows.Controls.Button)
                 {
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick ignored because original source is a button");
+                    if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                        UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick ignored because original source is a button");
                     return;
                 }
 
                 if (current is FrameworkElement element && element.DataContext is PluginViewModel viewModel)
                 {
                     clickedViewModel = viewModel;
-                    if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                        LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick data context resolved: {viewModel.PluginId}");
+                    if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                        UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick data context resolved: {viewModel.PluginId}");
                     break;
                 }
 
@@ -2712,8 +2712,8 @@ private string _currentSearchText = string.Empty;
                 _pluginsListBox.SelectedItem = selectedViewModel;
 
             var isInstalled = IsPluginInstalledForUi(selectedViewModel.PluginId);
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick target={selectedViewModel.PluginId}, isInstalled={isInstalled}");
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"PluginListBox_MouseDoubleClick target={selectedViewModel.PluginId}, isInstalled={isInstalled}");
 
             if (isInstalled)
             {
@@ -2724,9 +2724,9 @@ private string _currentSearchText = string.Empty;
                 SnackbarHelper.Show(Resource.PluginExtensionsPage_PluginNotInstalled, Resource.PluginExtensionsPage_PluginNotInstalledMessage, SnackbarType.Warning);
             }
         }
-        else if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+        else if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick no target plugin view model resolved");
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace("PluginListBox_MouseDoubleClick no target plugin view model resolved");
         }
         }
         catch (Exception ex)
@@ -2789,7 +2789,7 @@ private string _currentSearchText = string.Empty;
             }
             catch (Exception ex)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error opening plugin folder: {ex.Message}", ex);
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error opening plugin folder: {ex.Message}", ex);
             }
         }
     }
@@ -2805,7 +2805,7 @@ private string _currentSearchText = string.Empty;
             }
             catch (Exception ex)
             {
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error copying plugin ID: {ex.Message}", ex);
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error copying plugin ID: {ex.Message}", ex);
             }
         }
     }

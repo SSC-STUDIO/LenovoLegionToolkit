@@ -1,6 +1,6 @@
 ﻿using System;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using Xunit;
 

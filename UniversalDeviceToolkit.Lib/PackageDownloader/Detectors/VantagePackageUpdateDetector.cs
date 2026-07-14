@@ -3,11 +3,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using LenovoLegionToolkit.Lib.PackageDownloader.Detectors.Rules;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.PackageDownloader.Detectors.Rules;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader.Detectors;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader.Detectors;
 
 internal class VantagePackageUpdateDetector
 {

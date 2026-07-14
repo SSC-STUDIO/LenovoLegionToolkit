@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Integrations;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Integrations;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.CLI;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin manager interface

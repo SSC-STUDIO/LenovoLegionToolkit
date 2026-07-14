@@ -7,10 +7,10 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Plugins.Resources;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Implementation of plugin sandbox using AssemblyLoadContext for isolation
@@ -640,14 +640,13 @@ public class PluginSandbox : IPluginSandbox, IDisposable
 
         protected override Assembly? Load(AssemblyName assemblyName)
         {
-            // Don't load host assemblies into plugin context
-            if (assemblyName.Name?.StartsWith("LenovoLegionToolkit", StringComparison.Ordinal) == true &&
-                !assemblyName.Name.Contains("Plugins", StringComparison.Ordinal))
+            // Don't load host assemblies into plugin context (UDT primary + LLT legacy dual-load).
+            if (PluginAssemblyNaming.IsNonPluginHostAssembly(assemblyName.Name))
             {
                 return null;
             }
 
-            if (assemblyName.Name?.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) == true)
+            if (PluginAssemblyNaming.IsPluginPrefixedAssemblySimpleName(assemblyName.Name))
             {
                 var sharedAssembly = AppDomain.CurrentDomain.GetAssemblies()
                     .FirstOrDefault(assembly =>

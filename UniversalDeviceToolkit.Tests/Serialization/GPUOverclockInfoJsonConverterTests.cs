@@ -1,7 +1,7 @@
 using System.Text.Json;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Serialization;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Serialization;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Serialization;

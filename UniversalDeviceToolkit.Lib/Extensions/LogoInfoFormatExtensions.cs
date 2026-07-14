@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing.Imaging;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class LogoInfoFormatExtensions
 {

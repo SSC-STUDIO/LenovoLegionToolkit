@@ -4,9 +4,9 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shell;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
 

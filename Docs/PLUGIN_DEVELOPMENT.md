@@ -44,7 +44,9 @@ Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
 
 ## 快速开始
 
-以下步骤在 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 仓库中执行。不要在本主仓库添加 `ProjectReference` 到 `UniversalDeviceToolkit.Lib`；插件通过 `LenovoLegionToolkit.Plugins.SDK.dll` 引用宿主契约。
+以下步骤在 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 仓库中执行。不要在本主仓库添加 `ProjectReference` 到 `UniversalDeviceToolkit.Lib`；插件通过 `UniversalDeviceToolkit.Plugins.SDK.dll` 引用宿主契约。
+
+> **宿主 ABI（Phase 3 硬切换后）**：核心程序集与命名空间为 `UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins`。新插件程序集应使用 `UniversalDeviceToolkit.Plugins.*`；宿主过渡期仍接受旧前缀 `LenovoLegionToolkit.Plugins.*`。完整清单与遗留兼容面见 [NamespaceMigration.md](./NamespaceMigration.md)。
 
 ### 1. 初始化插件
 
@@ -62,12 +64,12 @@ Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
 
 ### 2. 创建插件类
 
-插件类继承 `LenovoLegionToolkit.Plugins.SDK.PluginBase`，并使用 `using LenovoLegionToolkit.Plugins.SDK;`。与官方插件一致的最小示例：
+插件类继承 `UniversalDeviceToolkit.Plugins.SDK.PluginBase`，并使用 `using UniversalDeviceToolkit.Plugins.SDK;`。与官方插件一致的最小示例：
 
 ```csharp
-using LenovoLegionToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Plugins.SDK;
 
-namespace LenovoLegionToolkit.Plugins.MyPlugin;
+namespace UniversalDeviceToolkit.Plugins.MyPlugin;
 
 [Plugin(
     id: "my-plugin",
@@ -130,11 +132,11 @@ public sealed class MyPluginSettingsPage : IPluginPage
   "issues": "https://github.com/yourname/my-plugin/issues",
   "contributes": {
     "featurePage": {
-      "class": "LenovoLegionToolkit.Plugins.MyPlugin.MyPluginFeaturePage",
+      "class": "UniversalDeviceToolkit.Plugins.MyPlugin.MyPluginFeaturePage",
       "title": "My Plugin"
     },
     "settingsPage": {
-      "class": "LenovoLegionToolkit.Plugins.MyPlugin.MyPluginSettingsPage",
+      "class": "UniversalDeviceToolkit.Plugins.MyPlugin.MyPluginSettingsPage",
       "title": "My Plugin Settings"
     },
     "runtime": null,
@@ -172,7 +174,7 @@ public interface IPlugin
 
 ### PluginBase 基类
 
-插件作者应继承 `LenovoLegionToolkit.Plugins.SDK.PluginBase`（下文为宿主侧等价的抽象基类定义；类型由 `LenovoLegionToolkit.Plugins.SDK.dll` 提供）：
+插件作者应继承 `UniversalDeviceToolkit.Plugins.SDK.PluginBase`（下文为宿主侧等价的抽象基类定义；类型由 `UniversalDeviceToolkit.Plugins.SDK.dll` 提供）：
 
 ```csharp
 public abstract class PluginBase : IPlugin
@@ -302,13 +304,13 @@ public class MyPluginSettingsPage : IPluginPage
 
 ### 插件 UI 视觉规范
 
-官方插件应合并 `[Plugins/Shared/PluginUiResources.xaml](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Plugins/Shared/PluginUiResources.xaml)`（由 `LenovoLegionToolkit.Plugins.Shared` 提供），以保持与 Universal Device Toolkit 主程序一致的卡片布局、间距与 WPF-UI 按钮外观：
+官方插件应合并 `[Plugins/Shared/PluginUiResources.xaml](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Plugins/Shared/PluginUiResources.xaml)`（由 `UniversalDeviceToolkit.Plugins.Shared` 提供），以保持与 Universal Device Toolkit 主程序一致的卡片布局、间距与 WPF-UI 按钮外观：
 
 ```xml
 <UserControl.Resources>
   <ResourceDictionary>
     <ResourceDictionary.MergedDictionaries>
-      <ResourceDictionary Source="pack://application:,,,/LenovoLegionToolkit.Plugins.Shared;component/PluginUiResources.xaml" />
+      <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/PluginUiResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
   </ResourceDictionary>
 </UserControl.Resources>
@@ -593,7 +595,7 @@ make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 .\llt-plugin.cmd validate --plugin my-plugin --profile contributor
 ```
 
-输出 ZIP 包含插件程序集、`LenovoLegionToolkit.Plugins.SDK.dll`、生成的 `plugin.json`、`plugin.manifest.json` 与资源文件。
+输出 ZIP 包含插件程序集、`UniversalDeviceToolkit.Plugins.SDK.dll`、生成的 `plugin.json`、`plugin.manifest.json` 与资源文件。
 
 ### 提交到插件仓库
 

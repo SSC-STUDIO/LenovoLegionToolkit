@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Windows;
 using Wpf.Ui.Appearance;

@@ -6,9 +6,9 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 internal static class TrustedPluginPackageStore
 {

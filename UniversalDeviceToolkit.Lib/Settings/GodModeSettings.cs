@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 
 public class GodModeSettings() : AbstractSettings<GodModeSettings.GodModeSettingsStore>("godmode.json")

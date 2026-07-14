@@ -5,7 +5,7 @@ using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
 using UniversalDeviceToolkit.Lib.Automation.Serialization;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Utils;
 

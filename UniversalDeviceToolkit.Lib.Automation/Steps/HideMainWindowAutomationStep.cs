@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Steps;
 

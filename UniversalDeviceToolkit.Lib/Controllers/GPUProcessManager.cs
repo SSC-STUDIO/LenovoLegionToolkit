@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Controllers;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 public interface IGPUProcessManager
 {

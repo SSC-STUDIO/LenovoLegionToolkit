@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

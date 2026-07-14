@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;

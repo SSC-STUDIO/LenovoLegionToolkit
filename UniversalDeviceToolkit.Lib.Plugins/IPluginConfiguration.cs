@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin configuration interface for plugin persistent configuration

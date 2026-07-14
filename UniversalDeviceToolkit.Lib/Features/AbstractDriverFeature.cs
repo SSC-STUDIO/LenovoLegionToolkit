@@ -2,12 +2,12 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandleHandle, uint controlCode, IDelayProvider? delayProvider = null) : IFeature<T> where T : struct, Enum, IComparable
 {

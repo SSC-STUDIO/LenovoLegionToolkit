@@ -8,8 +8,8 @@ host versions without notice.
 The split mirrors the assembly configuration in
 `UniversalDeviceToolkit.Lib.Plugins.csproj`: the SDK files are intentionally
 removed from the host build (`<Compile Remove="..." />`) and shipped
-separately as `LenovoLegionToolkit.Plugins.SDK.dll` /
-`LenovoLegionToolkit.Plugins.Shared.dll`. Plugins only see the SDK surface.
+separately as `UniversalDeviceToolkit.Plugins.SDK.dll` /
+`UniversalDeviceToolkit.Plugins.Shared.dll`. Plugins only see the SDK surface.
 
 ## Public SDK (safe for plugins to reference)
 
@@ -130,9 +130,9 @@ plugin-author channels.
 4. The SDK is shipped in two assemblies that the host's
    `PluginAssemblyLoadContext` treats as shared:
 
-   - `LenovoLegionToolkit.Plugins.SDK.dll` — interfaces, base classes, and
+   - `UniversalDeviceToolkit.Plugins.SDK.dll` — interfaces, base classes, and
      stable enums.
-   - `LenovoLegionToolkit.Plugins.Shared.dll` — default implementations
+   - `UniversalDeviceToolkit.Plugins.Shared.dll` — default implementations
      plugins can choose to consume (e.g. `PluginConfiguration`).
 
    Plugins that need to extend a host-internal type must propose a new SDK

@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public sealed class StructSafeHandle<T> : SafeHandle where T : struct
 {

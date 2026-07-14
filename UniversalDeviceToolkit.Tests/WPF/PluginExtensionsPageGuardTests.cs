@@ -158,7 +158,7 @@ public sealed class PluginExtensionsPageGuardTests
         var feedbackMethod = ExtractMethod(source, "private async Task ShowInstalledPluginFeedbackAsync");
         var resolveMethod = ExtractMethod(source, "internal static InstalledPluginFeedback ResolveInstalledPluginFeedback");
         var resources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.resx");
-        var zhResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh.resx");
+        var zhResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh-hans.resx");
 
         feedbackMethod.Should().Contain("ResolveInstalledPluginFeedback(runtimeCapabilities, manifestCapabilities, hasExecutable, plugin is null)");
         feedbackMethod.Should().Contain("PluginExtensionsPage_InstalledButRuntimeUnavailableMessage");

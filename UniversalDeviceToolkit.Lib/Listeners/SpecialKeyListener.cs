@@ -3,16 +3,16 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Listeners;
+namespace UniversalDeviceToolkit.Lib.Listeners;
 
 public class SpecialKeyListener(
     ApplicationSettings settings,

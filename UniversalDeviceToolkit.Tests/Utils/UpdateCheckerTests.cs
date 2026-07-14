@@ -8,8 +8,8 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Utils;
 using Octokit;
 using Xunit;
 
@@ -25,12 +25,12 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public void Update_ShouldRecognizeCurrentSha256TextAsset()
     {
         // Arrange
-        const string packageUrl = "https://example.com/LenovoLegionToolkit_v2.14.0_Setup.exe";
-        const string sha256Url = "https://example.com/LenovoLegionToolkit_v2.14.0_SHA256.txt";
+        const string packageUrl = "https://example.com/UniversalDeviceToolkit_v2.14.0_Setup.exe";
+        const string sha256Url = "https://example.com/UniversalDeviceToolkit_v2.14.0_SHA256.txt";
         var release = CreateRelease(
             body: string.Empty,
-            ("LenovoLegionToolkit_v2.14.0_Setup.exe", packageUrl),
-            ("LenovoLegionToolkit_v2.14.0_SHA256.txt", sha256Url));
+            ("UniversalDeviceToolkit_v2.14.0_Setup.exe", packageUrl),
+            ("UniversalDeviceToolkit_v2.14.0_SHA256.txt", sha256Url));
 
         // Act
         var update = new Update(release);
@@ -45,12 +45,12 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public void Update_ShouldPreferFullInstallerWhenEnglishOnlyInstallerIsPresent()
     {
         // Arrange
-        const string englishPackageUrl = "https://example.com/LenovoLegionToolkit_v3.7.0_English_Setup.exe";
-        const string fullPackageUrl = "https://example.com/LenovoLegionToolkit_v3.7.0_Setup.exe";
+        const string englishPackageUrl = "https://example.com/UniversalDeviceToolkit_v3.7.0_English_Setup.exe";
+        const string fullPackageUrl = "https://example.com/UniversalDeviceToolkit_v3.7.0_Setup.exe";
         var release = CreateRelease(
             body: string.Empty,
-            ("LenovoLegionToolkit_v3.7.0_English_Setup.exe", englishPackageUrl),
-            ("LenovoLegionToolkit_v3.7.0_Setup.exe", fullPackageUrl));
+            ("UniversalDeviceToolkit_v3.7.0_English_Setup.exe", englishPackageUrl),
+            ("UniversalDeviceToolkit_v3.7.0_Setup.exe", fullPackageUrl));
 
         // Act
         var update = new Update(release);
@@ -64,12 +64,12 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     {
         // Arrange
         const string onlinePackageUrl = "https://example.com/UniversalDeviceToolkit_v3.8.0_Online_Setup.exe";
-        const string legacyPackageUrl = "https://example.com/LenovoLegionToolkit_v3.8.0_Setup.exe";
+        const string legacyPackageUrl = "https://example.com/UniversalDeviceToolkit_v3.8.0_Setup.exe";
         const string fullPackageUrl = "https://example.com/UniversalDeviceToolkit_v3.8.0_Full_Setup.exe";
         var release = CreateRelease(
             body: string.Empty,
             ("UniversalDeviceToolkit_v3.8.0_Online_Setup.exe", onlinePackageUrl),
-            ("LenovoLegionToolkit_v3.8.0_Setup.exe", legacyPackageUrl),
+            ("UniversalDeviceToolkit_v3.8.0_Setup.exe", legacyPackageUrl),
             ("UniversalDeviceToolkit_v3.8.0_Full_Setup.exe", fullPackageUrl));
 
         // Act
@@ -83,16 +83,16 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public void Update_ShouldParsePackageSpecificHashFromReleaseBody()
     {
         // Arrange
-        const string packageUrl = "https://example.com/LenovoLegionToolkit_v2.14.0_Setup.exe";
+        const string packageUrl = "https://example.com/UniversalDeviceToolkit_v2.14.0_Setup.exe";
         var zipHash = new string('1', 64);
         var setupHash = new string('a', 64);
         var release = CreateRelease(
             body: $"""
                    ## Verification
-                   LenovoLegionToolkit_v2.14.0_win-x64.zip: {zipHash}
-                   LenovoLegionToolkit_v2.14.0_Setup.exe: {setupHash}
+                   UniversalDeviceToolkit_v2.14.0_win-x64.zip: {zipHash}
+                   UniversalDeviceToolkit_v2.14.0_Setup.exe: {setupHash}
                    """,
-            ("LenovoLegionToolkit_v2.14.0_Setup.exe", packageUrl));
+            ("UniversalDeviceToolkit_v2.14.0_Setup.exe", packageUrl));
 
         // Act
         var update = new Update(release);
@@ -105,8 +105,8 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public async Task ValidateUpdatePackageAsync_WhenSha256TxtContainsMultipleEntries_ShouldUsePackageSpecificHash()
     {
         // Arrange
-        const string packageUrl = "https://example.com/LenovoLegionToolkit_v2.14.0_Setup.exe";
-        const string sha256Url = "https://example.com/LenovoLegionToolkit_v2.14.0_SHA256.txt";
+        const string packageUrl = "https://example.com/UniversalDeviceToolkit_v2.14.0_Setup.exe";
+        const string sha256Url = "https://example.com/UniversalDeviceToolkit_v2.14.0_SHA256.txt";
         var packageBytes = "signed update payload"u8.ToArray();
         var expectedHash = ComputeSha256(packageBytes);
         var tempFile = CreateTempFile();
@@ -114,8 +114,8 @@ public class UpdateCheckerTests : TemporaryFileTestBase
 
         var update = new Update(CreateRelease(
             body: string.Empty,
-            ("LenovoLegionToolkit_v2.14.0_Setup.exe", packageUrl),
-            ("LenovoLegionToolkit_v2.14.0_SHA256.txt", sha256Url)));
+            ("UniversalDeviceToolkit_v2.14.0_Setup.exe", packageUrl),
+            ("UniversalDeviceToolkit_v2.14.0_SHA256.txt", sha256Url)));
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(request =>
         {
@@ -123,8 +123,8 @@ public class UpdateCheckerTests : TemporaryFileTestBase
             request.RequestUri!.ToString().Should().Be(sha256Url);
 
             var sha256List = $"""
-                              {new string('b', 64)} LenovoLegionToolkit_v2.14.0_win-x64.zip
-                              SHA256 (LenovoLegionToolkit_v2.14.0_Setup.exe) = {expectedHash}
+                              {new string('b', 64)} UniversalDeviceToolkit_v2.14.0_win-x64.zip
+                              SHA256 (UniversalDeviceToolkit_v2.14.0_Setup.exe) = {expectedHash}
                               """;
 
             return new HttpResponseMessage(HttpStatusCode.OK)
@@ -144,8 +144,8 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public async Task ValidateUpdatePackageAsync_WhenLegacySha256AssetContainsRawHash_ShouldAcceptPackage()
     {
         // Arrange
-        const string packageUrl = "https://example.com/LenovoLegionToolkitSetup.exe";
-        const string sha256Url = "https://example.com/LenovoLegionToolkitSetup.exe.sha256";
+        const string packageUrl = "https://example.com/UniversalDeviceToolkitSetup.exe";
+        const string sha256Url = "https://example.com/UniversalDeviceToolkitSetup.exe.sha256";
         var packageBytes = "legacy update payload"u8.ToArray();
         var expectedHash = ComputeSha256(packageBytes);
         var tempFile = CreateTempFile();
@@ -153,8 +153,8 @@ public class UpdateCheckerTests : TemporaryFileTestBase
 
         var update = new Update(CreateRelease(
             body: string.Empty,
-            ("LenovoLegionToolkitSetup.exe", packageUrl),
-            ("LenovoLegionToolkitSetup.exe.sha256", sha256Url)));
+            ("UniversalDeviceToolkitSetup.exe", packageUrl),
+            ("UniversalDeviceToolkitSetup.exe.sha256", sha256Url)));
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)
         {
@@ -172,13 +172,13 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public async Task ValidateUpdatePackageAsync_WhenBodyHashDoesNotMatch_ShouldDeleteFileAndThrow()
     {
         // Arrange
-        const string packageUrl = "https://example.com/LenovoLegionToolkitSetup.exe";
+        const string packageUrl = "https://example.com/UniversalDeviceToolkitSetup.exe";
         var tempFile = CreateTempFile();
         await File.WriteAllBytesAsync(tempFile, "tampered payload"u8.ToArray());
 
         var update = new Update(CreateRelease(
             body: $"SHA256: {new string('c', 64)}",
-            ("LenovoLegionToolkitSetup.exe", packageUrl)));
+            ("UniversalDeviceToolkitSetup.exe", packageUrl)));
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(_ => throw new InvalidOperationException("unexpected request")));
 
@@ -194,13 +194,13 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public async Task ValidateUpdatePackageAsync_WhenNoHashIsAvailable_ShouldSkipValidation()
     {
         // Arrange
-        const string packageUrl = "https://example.com/LenovoLegionToolkitSetup.exe";
+        const string packageUrl = "https://example.com/UniversalDeviceToolkitSetup.exe";
         var tempFile = CreateTempFile();
        await File.WriteAllBytesAsync(tempFile, "unsigned payload"u8.ToArray());
 
        var update = new Update(CreateRelease(
            body: string.Empty,
-           ("LenovoLegionToolkitSetup.exe", packageUrl)));
+           ("UniversalDeviceToolkitSetup.exe", packageUrl)));
 
        using var httpClient = new HttpClient(new StubHttpMessageHandler(_ => throw new InvalidOperationException("unexpected request")));
 
@@ -218,13 +218,13 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     public async Task ValidateUpdatePackageAsync_WhenNoHashIsAvailableAndIntegrityRequired_EnforcesReleaseSecurityGate()
     {
         // Arrange
-        const string packageUrl = "https://example.com/LenovoLegionToolkitSetup.exe";
+        const string packageUrl = "https://example.com/UniversalDeviceToolkitSetup.exe";
         var tempFile = CreateTempFile();
         await File.WriteAllBytesAsync(tempFile, "unverified payload"u8.ToArray());
 
         var update = new Update(CreateRelease(
             body: string.Empty,
-            ("LenovoLegionToolkitSetup.exe", packageUrl)));
+            ("UniversalDeviceToolkitSetup.exe", packageUrl)));
 
         using var httpClient = new HttpClient(new StubHttpMessageHandler(_ => throw new InvalidOperationException("unexpected request")));
 

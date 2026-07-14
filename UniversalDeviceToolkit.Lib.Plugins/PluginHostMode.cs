@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Describes the current plugin host execution mode.

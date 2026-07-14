@@ -1,5 +1,5 @@
 using Autofac;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.CLI;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Utils;

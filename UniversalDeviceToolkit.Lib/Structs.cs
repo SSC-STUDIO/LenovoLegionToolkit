@@ -7,13 +7,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
 using System.Text.Json.Serialization;
 using Octokit;
 
-namespace LenovoLegionToolkit.Lib;
+namespace UniversalDeviceToolkit.Lib;
 
 public readonly struct BatteryInformation(
     bool isCharging,
@@ -999,7 +999,7 @@ public readonly struct Update(Release release)
         .FirstOrDefault();
 
     private static bool IsSetupAsset(ReleaseAsset releaseAsset) =>
-        releaseAsset.Name.EndsWith("LenovoLegionToolkitSetup.exe", StringComparison.OrdinalIgnoreCase) ||
+        releaseAsset.Name.EndsWith("UniversalDeviceToolkitSetup.exe", StringComparison.OrdinalIgnoreCase) ||
         releaseAsset.Name.EndsWith("UniversalDeviceToolkitSetup.exe", StringComparison.OrdinalIgnoreCase) ||
         (releaseAsset.Name.EndsWith("setup.exe", StringComparison.OrdinalIgnoreCase) &&
          !releaseAsset.Name.Contains("_lang_", StringComparison.OrdinalIgnoreCase));

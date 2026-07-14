@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;

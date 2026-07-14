@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.SoftwareDisabler;
+namespace UniversalDeviceToolkit.Lib.SoftwareDisabler;
 
 public class LegionZoneDisabler : AbstractSoftwareDisabler
 {

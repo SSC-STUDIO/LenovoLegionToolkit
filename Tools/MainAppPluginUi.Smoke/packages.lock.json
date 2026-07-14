@@ -206,7 +206,10 @@
         "resolved": "4.7.0",
         "contentHash": "VybpaOQQhqE6siHppMktjfGBw1GCwvCqiufqmP8F1nj7fTUNtW35LOEt3UZTEsECfo+ELAl/9o9nJx3U91i7vA=="
       },
-      "LenovoLegionToolkit.Lib": {
+      "universaldevicetoolkit.cli.lib": {
+        "type": "Project"
+      },
+      "universaldevicetoolkit.lib": {
         "type": "Project",
         "dependencies": {
           "Autofac": "[9.3.0, )",
@@ -229,9 +232,6 @@
           "WindowsDisplayAPI": "[1.3.0.13, )",
           "ZenStates-Core": "[1.0.1, )"
         }
-      },
-      "universaldevicetoolkit.cli.lib": {
-        "type": "Project"
       },
       "Autofac": {
         "type": "CentralTransitive",

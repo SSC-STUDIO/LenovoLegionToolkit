@@ -45,7 +45,7 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
 +-----------------------------------------------------------------------+
 | Core Library Layer                                                      |
 | +--------------------------------------------------------------------+ |
-| | UniversalDeviceToolkit.Lib (assembly: LenovoLegionToolkit.Lib)  |  |
+| | UniversalDeviceToolkit.Lib (assembly: UniversalDeviceToolkit.Lib)  |  |
 | | +- Hardware Controllers (34 modules)                          |  |  |
 | | +- Services (Settings, Messaging, IoC)                        |  |  |
 | | +- Game Detection System                                      |  |  |
@@ -74,7 +74,7 @@ The main WPF application implementing MVVM architecture:
 - **Behaviors/**: Attached behaviors for XAML
 - **Utils/**: UI-related utilities
 
-### 2. UniversalDeviceToolkit.Lib (Core Library; assembly `LenovoLegionToolkit.Lib`)
+### 2. UniversalDeviceToolkit.Lib (Core Library; assembly `UniversalDeviceToolkit.Lib`)
 
 The heart of the application containing:
 
@@ -136,7 +136,7 @@ Plugin Structure (runtime, in host plugins directory):
 +-- plugin.manifest.json    # Authoring manifest (also packaged for compatibility)
 +-- plugin.json             # Generated runtime manifest output (legacy-compatible)
 +-- plugin.dll              # Main plugin assembly
-+-- [dependencies]          # Additional assemblies (e.g. LenovoLegionToolkit.Plugins.SDK.dll)
++-- [dependencies]          # Additional assemblies (e.g. UniversalDeviceToolkit.Plugins.SDK.dll)
 +-- [resources]             # Plugin resources
 ```
 
@@ -203,9 +203,18 @@ GameDetectionService (Background Monitor)
 
 ## Namespace and assembly naming
 
-User-facing product names are **Universal Device Toolkit**, but core library assemblies intentionally retain `LenovoLegionToolkit.Lib` / `LenovoLegionToolkit.Lib.Plugins` as plugin ABI contracts. Do not mass-rename those assemblies or namespaces without a migration plan.
+User-facing product names and **primary plugin/host ABI** are both **Universal Device Toolkit**:
 
-See **[NamespaceMigration.md](./NamespaceMigration.md)** for the current RootNamespace/AssemblyName inventory, why Lib/Lib.Plugins keep the LLT ABI, phased rename plan (Phases 0–3), and CLI/`llt`/IPC pipe compatibility notes.
+| Surface | Primary identity |
+| --- | --- |
+| Product / WPF process | Universal Device Toolkit |
+| Core Lib assembly / namespaces | `UniversalDeviceToolkit.Lib` |
+| Plugins host assembly / namespaces | `UniversalDeviceToolkit.Lib.Plugins` |
+| Windows CLI executable | `udt-cli.exe` (`AssemblyName` = `udt-cli`) |
+
+Phase 3 hard cutover from `LenovoLegionToolkit.Lib*` is **complete**. Remaining LLT tokens (legacy IPC pipe `LenovoLegionToolkit-IPC-0`, `BrandCompatibility.Legacy*`, dual-written `LLT_*` env keys, legacy `LenovoLegionToolkit.Plugins.*` load prefixes, packaging IDs) are deliberate compatibility surfaces — not the primary ABI.
+
+See **[NamespaceMigration.md](./NamespaceMigration.md)** for the RootNamespace/AssemblyName inventory, completed Phases 0–3, and remaining legacy compat notes.
 
 ## Key Design Decisions
 
@@ -214,7 +223,7 @@ See **[NamespaceMigration.md](./NamespaceMigration.md)** for the current RootNam
 3. **Lightweight**: Minimal resource footprint
 4. **Plugin Extensibility**: Dynamic module loading for device-specific workflows
 5. **Catalog-backed Device Support**: Data-driven hardware/basic-mode profiles across Lenovo families and common PC vendors
-6. **Stable plugin ABI names**: Core Lib assemblies remain `LenovoLegionToolkit.Lib*` until TypeForwardedTo / dual-package migration (see [NamespaceMigration.md](./NamespaceMigration.md))
+6. **Primary plugin ABI is UDT-named**: Core Lib assemblies are `UniversalDeviceToolkit.Lib*`; host still accepts selected legacy plugin prefixes and dual pipes during transition (see [NamespaceMigration.md](./NamespaceMigration.md))
 
 ## Platform Compatibility
 

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -67,7 +67,7 @@ public class PluginFileSystemManagerTests
         var manager = new PluginFileSystemManager();
         var candidates = manager.GetMainPluginDllNameCandidates("test");
         candidates.Should().Contain(c => c == "test.dll");
-        candidates.Should().Contain(c => c == "LenovoLegionToolkit.Plugins.test.dll");
+        candidates.Should().Contain(c => c == "UniversalDeviceToolkit.Plugins.test.dll");
     }
 
     #endregion

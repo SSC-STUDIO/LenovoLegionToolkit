@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Optimization;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -205,20 +205,5 @@ public class WindowsOptimizationActionDefinitionSnapshotTests
 
         var action = category!.Actions.First(a => a.Key == "performance.powerPlan");
         action.RollbackAsync.Should().NotBeNull("powercfg has a no-op rollback delegate, not null");
-    }
-}
-
-internal static class WindowsOptimizationTestExtensions
-{
-    public static WindowsOptimizationCategoryDefinition? FirstOrDefault(
-        this System.Collections.Generic.IEnumerable<WindowsOptimizationCategoryDefinition> source,
-        Func<WindowsOptimizationCategoryDefinition, bool> predicate)
-    {
-        foreach (var item in source)
-        {
-            if (predicate(item))
-                return item;
-        }
-        return null;
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.AutoListeners;
+using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Utils;
-using LenovoLegionToolkit.Lib.Controllers.GodMode;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Controllers.GodMode;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 
 namespace UniversalDeviceToolkit.Lib.Automation;

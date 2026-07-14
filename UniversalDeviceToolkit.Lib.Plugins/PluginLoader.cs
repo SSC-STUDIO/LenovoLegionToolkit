@@ -7,9 +7,9 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin loader interface
@@ -708,9 +708,7 @@ public class PluginLoader : IPluginLoader
             if (assemblySimpleName.StartsWith("Wpf.Ui", StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            return assemblySimpleName.StartsWith("LenovoLegionToolkit", StringComparison.OrdinalIgnoreCase) &&
-                   !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase) &&
-                   !assemblySimpleName.Equals("LenovoLegionToolkit.Plugins.Shared", StringComparison.OrdinalIgnoreCase);
+            return PluginAssemblyNaming.ShouldShareHostContractAssembly(assemblySimpleName);
         }
 
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
@@ -847,14 +845,13 @@ public class PluginLoader : IPluginLoader
         var fileName = Path.GetFileName(filePath);
         var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
 
-        if (fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
-            fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) ||
+        if (PluginAssemblyNaming.IsSdkOrSharedDllFileName(fileName) ||
             fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        if (fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+        if (PluginAssemblyNaming.IsPluginPrefixedFileName(fileName))
             return true;
 
         if (string.IsNullOrWhiteSpace(parentDirectoryName))
@@ -862,7 +859,8 @@ public class PluginLoader : IPluginLoader
 
         var normalizedDllName = NormalizePluginToken(fileNameWithoutExtension);
         var normalizedParentName = NormalizePluginToken(parentDirectoryName);
-        var normalizedParentShortName = NormalizePluginToken(parentDirectoryName.Replace("LenovoLegionToolkit.Plugins.", string.Empty, StringComparison.OrdinalIgnoreCase));
+        var normalizedParentShortName = NormalizePluginToken(
+            PluginAssemblyNaming.StripPluginPrefixForNormalization(parentDirectoryName));
 
         if (string.IsNullOrWhiteSpace(normalizedDllName))
             return false;

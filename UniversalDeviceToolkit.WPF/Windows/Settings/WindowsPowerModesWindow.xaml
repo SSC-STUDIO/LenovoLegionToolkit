@@ -6,7 +6,7 @@
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
     xmlns:local="clr-namespace:UniversalDeviceToolkit.WPF.Windows"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
-    xmlns:resourcesLib="clr-namespace:LenovoLegionToolkit.Lib.Resources;assembly=LenovoLegionToolkit.Lib"
+    xmlns:resourcesLib="clr-namespace:UniversalDeviceToolkit.Lib.Resources;assembly=UniversalDeviceToolkit.Lib"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.WindowsPowerModesWindow_Title}"

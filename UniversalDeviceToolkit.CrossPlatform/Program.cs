@@ -541,7 +541,7 @@ internal sealed record CrossPlatformStatus(
         new("Cross-platform control surface", true, "Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface."),
         new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         new("Windows hardware controls", isWindows, isWindows
-            ? "Use the Windows desktop app or existing llt.exe CLI for Lenovo hardware controls."
+            ? "Use the Windows desktop app or existing udt-cli.exe CLI for Lenovo hardware controls."
             : "Windows-only controls are intentionally hidden on macOS/Linux."),
         new("Plugin runtime", isWindows, isWindows
             ? "Windows plugin workflows remain available in the desktop app."

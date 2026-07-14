@@ -4,9 +4,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Tests.Settings;
 using Xunit;
 

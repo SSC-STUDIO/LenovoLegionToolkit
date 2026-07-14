@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -181,7 +181,7 @@ public class ThrottleLastDispatcherTests
         var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(100));
         var executionCount = 0;
 
-        // Act â€?sequential triggers spaced apart; await the last dispatch so completion does not race wall-clock sleeps (flaky on some runners).
+        // Act ï¿½?sequential triggers spaced apart; await the last dispatch so completion does not race wall-clock sleeps (flaky on some runners).
         Task? last = null;
         for (var i = 0; i < 3; i++)
         {
@@ -196,7 +196,7 @@ public class ThrottleLastDispatcherTests
 
         await last!;
 
-        // Assert â€?only the winning dispatch runs the callback
+        // Assert ï¿½?only the winning dispatch runs the callback
         executionCount.Should().Be(1);
     }
 

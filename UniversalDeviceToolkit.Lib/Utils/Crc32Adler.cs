@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public static class Crc32Adler
 {

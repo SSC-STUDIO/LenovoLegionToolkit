@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Abstract interface for compatibility checking operations

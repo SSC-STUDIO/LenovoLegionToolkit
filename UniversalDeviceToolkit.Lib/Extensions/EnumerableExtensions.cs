@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class EnumerableExtensions
 {

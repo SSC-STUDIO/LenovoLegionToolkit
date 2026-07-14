@@ -50,7 +50,7 @@ internal sealed class HardwareControlSurfaceReader(
         };
 
         string[] notes = isWindows
-            ? ["Windows vendor controls remain available through the desktop app and llt.exe; this CLI exposes cross-platform control metadata."]
+            ? ["Windows vendor controls remain available through the desktop app and udt-cli.exe; this CLI exposes cross-platform control metadata."]
             : ["Only standardized OS controls are writable on macOS/Linux. Vendor-specific hardware writes remain hidden unless a platform backend is added."];
 
         return new HardwareControlSurface(
@@ -147,7 +147,7 @@ internal sealed class HardwareControlSurfaceReader(
             deviceSupport.IsHardwareControlAvailable ? "available in desktop app" : "hidden",
             [],
             isWindows
-                ? "Use the Windows desktop app or llt.exe for vendor-specific controls."
+                ? "Use the Windows desktop app or udt-cli.exe for vendor-specific controls."
                 : "Hidden on macOS/Linux until a vendor-specific backend is implemented.");
 
     private static string FirstPresent(params string[] values) =>

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

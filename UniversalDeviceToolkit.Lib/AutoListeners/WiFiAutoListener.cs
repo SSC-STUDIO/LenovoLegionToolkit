@@ -2,13 +2,13 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.NetworkManagement.WiFi;
 
-namespace LenovoLegionToolkit.Lib.AutoListeners;
+namespace UniversalDeviceToolkit.Lib.AutoListeners;
 
 public class WiFiAutoListener : AbstractAutoListener<WiFiAutoListener.ChangedEventArgs>
 {

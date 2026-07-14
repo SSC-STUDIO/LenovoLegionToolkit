@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>
 /// Host / domain matching for PAC rules and selective proxy decisions.

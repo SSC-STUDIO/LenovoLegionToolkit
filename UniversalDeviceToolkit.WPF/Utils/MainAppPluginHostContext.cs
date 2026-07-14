@@ -1,7 +1,7 @@
 using System;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Windows.Settings;
 
 namespace UniversalDeviceToolkit.WPF.Utils;

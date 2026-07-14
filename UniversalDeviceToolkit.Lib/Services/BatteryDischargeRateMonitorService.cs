@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Services;
+namespace UniversalDeviceToolkit.Lib.Services;
 
 public class BatteryDischargeRateMonitorService : IDisposable
 {

@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin manager implementation - coordinates plugin lifecycle operations
@@ -282,7 +282,7 @@ public class PluginManager : IPluginManager
             return TryLoadTrustedPluginAssembly(sdkPath, sdkDirectory, $"SDK assembly {assemblyName}");
 
         // For SDK assembly, try to resolve from already loaded assemblies
-        // The SDK types forward to LenovoLegionToolkit.Lib which is already loaded
+        // The SDK types forward to UniversalDeviceToolkit.Lib which is already loaded
         var loadedAssembly = AppDomain.CurrentDomain.GetAssemblies()
             .FirstOrDefault(a => a.GetName().Name == assemblyName);
         if (loadedAssembly != null)
@@ -700,27 +700,32 @@ public class PluginManager : IPluginManager
                 return false;
             }
 
-            // Check for alternative directory naming (LenovoLegionToolkit.Plugins.{Id})
+            // Check for alternative directory naming (UDT + legacy LLT Plugins.{Id})
             if (!Directory.Exists(pluginDirectory) && !Directory.Exists(localPluginDirectory))
             {
-                var altPluginDirectory = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}");
-                var altPluginDirectoryNoHyphen = Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", "")}");
-
-                if (!PathSecurity.IsPathWithinAllowedDirectory(altPluginDirectory, pluginsDirectory) ||
-                    !PathSecurity.IsPathWithinAllowedDirectory(altPluginDirectoryNoHyphen, pluginsDirectory))
+                var noHyphenId = pluginId.Replace("-", "");
+                string? resolvedAltDirectory = null;
+                foreach (var altName in PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
+                             .Concat(PluginAssemblyNaming.EnumeratePrefixedPluginNames(noHyphenId)))
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"IsInstalled({pluginId}): Path traversal detected in alternative paths");
-                    return false;
+                    var altPluginDirectory = Path.Combine(pluginsDirectory, altName);
+                    if (!PathSecurity.IsPathWithinAllowedDirectory(altPluginDirectory, pluginsDirectory))
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"IsInstalled({pluginId}): Path traversal detected in alternative paths");
+                        return false;
+                    }
+
+                    if (Directory.Exists(altPluginDirectory))
+                    {
+                        resolvedAltDirectory = altPluginDirectory;
+                        break;
+                    }
                 }
 
-                if (Directory.Exists(altPluginDirectory))
+                if (resolvedAltDirectory is not null)
                 {
-                    pluginDirectory = altPluginDirectory;
-                }
-                else if (Directory.Exists(altPluginDirectoryNoHyphen))
-                {
-                    pluginDirectory = altPluginDirectoryNoHyphen;
+                    pluginDirectory = resolvedAltDirectory;
                 }
                 else
                 {
@@ -985,9 +990,7 @@ public class PluginManager : IPluginManager
                         .Where(f =>
                         {
                             var fileName = Path.GetFileName(f);
-                            return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
-                                   !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
-                                   !fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) &&
+                            return PluginAssemblyNaming.HasPluginAssemblyPrefix(fileName) &&
                                    !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
                         });
 
@@ -1016,7 +1019,8 @@ public class PluginManager : IPluginManager
                             // If we can't load it, try matching by filename pattern
                             var fileName = Path.GetFileNameWithoutExtension(dllFile);
                             if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
-                                fileName.Equals($"LenovoLegionToolkit.Plugins.{pluginId}", StringComparison.OrdinalIgnoreCase))
+                                PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
+                                    .Any(name => fileName.Equals(name, StringComparison.OrdinalIgnoreCase)))
                             {
                                 foundFiles.Add(dllFile);
                                 pluginDirectoryToDelete.Add(scanDir);
@@ -1031,9 +1035,7 @@ public class PluginManager : IPluginManager
                 .Where(f =>
                 {
                     var fileName = Path.GetFileName(f);
-                    return fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase) &&
-                           !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
-                           !fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) &&
+                    return PluginAssemblyNaming.HasPluginAssemblyPrefix(fileName) &&
                            !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase);
                 });
 
@@ -1059,7 +1061,8 @@ public class PluginManager : IPluginManager
                 {
                     var fileName = Path.GetFileNameWithoutExtension(dllFile);
                     if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
-                        fileName.Equals($"LenovoLegionToolkit.Plugins.{pluginId}", StringComparison.OrdinalIgnoreCase))
+                        PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
+                            .Any(name => fileName.Equals(name, StringComparison.OrdinalIgnoreCase)))
                     {
                         foundFiles.Add(dllFile);
                     }

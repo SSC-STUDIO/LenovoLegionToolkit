@@ -1,5 +1,5 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Branding;
+using UniversalDeviceToolkit.Lib.Branding;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -11,18 +11,21 @@ public class BrandCompatibilityTests
     public void ProductDisplayName_IsNonEmpty()
     {
         BrandCompatibility.ProductDisplayName.Should().NotBeNullOrWhiteSpace();
+        BrandCompatibility.ProductDisplayName.Should().Be("Universal Device Toolkit");
     }
 
     [Fact]
     public void ProductCompactName_IsNonEmpty()
     {
         BrandCompatibility.ProductCompactName.Should().NotBeNullOrWhiteSpace();
+        BrandCompatibility.ProductCompactName.Should().Be("UniversalDeviceToolkit");
     }
 
     [Fact]
     public void LegacyProductDisplayName_IsNonEmpty()
     {
         BrandCompatibility.LegacyProductDisplayName.Should().NotBeNullOrWhiteSpace();
+        BrandCompatibility.LegacyProductDisplayName.Should().Be("Lenovo Legion Toolkit");
     }
 
     [Fact]
@@ -33,16 +36,16 @@ public class BrandCompatibilityTests
     }
 
     [Fact]
-    public void LegacyAssemblyLibPlugins_IsNonEmpty()
+    public void LegacyAssemblyLibPlugins_IsLenovoLegionToolkitLibPlugins()
     {
         BrandCompatibility.LegacyAssemblyLibPlugins.Should().Be("LenovoLegionToolkit.Lib.Plugins");
         BrandCompatibility.LegacyAssemblyLibPlugins.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
-    public void PreferredAssemblyNames_AreNonEmptyPlanningTokens()
+    public void PreferredAssemblyNames_ArePrimaryUdtAssemblyNames()
     {
-        BrandCompatibility.PreferredAssemblyLib.Should().NotBeNullOrWhiteSpace();
-        BrandCompatibility.PreferredAssemblyLibPlugins.Should().NotBeNullOrWhiteSpace();
+        BrandCompatibility.PreferredAssemblyLib.Should().Be("UniversalDeviceToolkit.Lib");
+        BrandCompatibility.PreferredAssemblyLibPlugins.Should().Be("UniversalDeviceToolkit.Lib.Plugins");
     }
 }

@@ -3,13 +3,13 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Devices.DeviceAndDriverInstallation;
 using Windows.Win32.Foundation;
 
-namespace LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 
 public abstract partial class AbstractDGPUNotify : IDGPUNotify
 {

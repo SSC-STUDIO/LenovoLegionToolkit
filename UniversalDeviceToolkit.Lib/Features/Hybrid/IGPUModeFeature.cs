@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Features.Hybrid;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid;
 
 public class IGPUModeFeature(IGPUModeGamezoneFeature feature1, IGPUModeCapabilityFeature feature2, IGPUModeFeatureFlagsFeature feature3)
     : AbstractCompositeFeature<IGPUModeState>(feature1, feature2, feature3), IIGPUModeFeature

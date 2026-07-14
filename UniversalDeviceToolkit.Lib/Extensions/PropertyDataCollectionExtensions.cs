@@ -1,6 +1,6 @@
 ﻿using System.Management;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class PropertyDataCollectionExtensions
 {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable StringLiteralTypo
 
-namespace LenovoLegionToolkit.Lib.System.Management;
+namespace UniversalDeviceToolkit.Lib.System.Management;
 
 public static partial class WMI
 {

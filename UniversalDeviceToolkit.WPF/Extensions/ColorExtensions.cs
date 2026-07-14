@@ -1,5 +1,5 @@
 using System.Windows.Media;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 
 namespace UniversalDeviceToolkit.WPF.Extensions;
 

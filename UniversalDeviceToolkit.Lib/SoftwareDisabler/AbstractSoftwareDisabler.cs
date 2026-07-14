@@ -5,11 +5,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using TaskService = Microsoft.Win32.TaskScheduler.TaskService;
 
-namespace LenovoLegionToolkit.Lib.SoftwareDisabler;
+namespace UniversalDeviceToolkit.Lib.SoftwareDisabler;
 
 public class SoftwareDisablerException(string message, Exception innerException) : Exception(message, innerException);
 

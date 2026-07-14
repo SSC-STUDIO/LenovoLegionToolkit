@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Controllers.GodMode;
+namespace UniversalDeviceToolkit.Lib.Controllers.GodMode;
 
 /// <summary>
 /// God Mode controller interface for managing custom performance modes and fan curves.

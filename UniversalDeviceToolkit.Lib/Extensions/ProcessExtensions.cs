@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class ProcessExtensions
 {

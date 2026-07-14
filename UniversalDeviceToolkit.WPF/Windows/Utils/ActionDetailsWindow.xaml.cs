@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Resources;
 using System.Windows;
 using UniversalDeviceToolkit.WPF.Resources;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils

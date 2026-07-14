@@ -10,10 +10,10 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.DeviceSupport;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.DeviceSupport;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.DeviceSupport;

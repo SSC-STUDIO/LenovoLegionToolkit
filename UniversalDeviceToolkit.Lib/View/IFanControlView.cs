@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.View
+namespace UniversalDeviceToolkit.Lib.View
 {
     public interface IFanControlView
     {

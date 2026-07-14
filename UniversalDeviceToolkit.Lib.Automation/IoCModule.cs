@@ -1,6 +1,6 @@
 using Autofac;
 using UniversalDeviceToolkit.Lib.Automation.Utils;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
 namespace UniversalDeviceToolkit.Lib.Automation;
 

@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
 PackageVersion: X.Y.Z
 InstallerType: inno
 Scope: machine
@@ -8,7 +8,7 @@ UpgradeBehavior: install
 ReleaseDate: YYYY-MM-DD
 Installers:
 - Architecture: x64
-  InstallerUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/vX.Y.Z/LenovoLegionToolkit_vX.Y.Z_Setup.exe
-  InstallerSha256: <SHA256 for LenovoLegionToolkit_vX.Y.Z_Setup.exe from UniversalDeviceToolkit_vX.Y.Z_SHA256.txt>
+  InstallerUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/vX.Y.Z/UniversalDeviceToolkit_vX.Y.Z_Setup.exe
+  InstallerSha256: <SHA256 for UniversalDeviceToolkit_vX.Y.Z_Setup.exe from UniversalDeviceToolkit_vX.Y.Z_SHA256.txt>
 ManifestType: installer
 ManifestVersion: 1.10.0

@@ -1,6 +1,6 @@
 using System;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Shared parsing and comparison helpers for plugin package/manifest versions.

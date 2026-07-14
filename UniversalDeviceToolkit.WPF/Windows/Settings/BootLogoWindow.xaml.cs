@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Microsoft.Win32;

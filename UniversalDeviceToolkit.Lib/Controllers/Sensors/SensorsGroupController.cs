@@ -5,7 +5,7 @@
 // All Rights Reserved.
 // Derived from Lenovo Legion Toolkit.
 // Original project copyright: Copyright (C) Bartosz Cichecki and contributors.
-// Upstream sync copyright: Copyright (C) 2026 LenovoLegionToolkit-Team.
+// Upstream sync copyright: Copyright (C) 2026 UniversalDeviceToolkit-Team.
 // Modifications copyright: Copyright (C) 2026 Universal Device Toolkit Contributors.
 
 using System;
@@ -14,12 +14,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using LibreHardwareMonitor.Hardware;
 
-namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
 
 public class SensorsGroupController : IDisposable
 {

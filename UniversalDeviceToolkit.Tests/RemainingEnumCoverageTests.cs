@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

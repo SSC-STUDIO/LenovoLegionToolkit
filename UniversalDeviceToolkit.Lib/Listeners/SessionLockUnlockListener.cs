@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.RemoteDesktop;
 
-namespace LenovoLegionToolkit.Lib.Listeners;
+namespace UniversalDeviceToolkit.Lib.Listeners;
 
 public class SessionLockUnlockListener : IListener<SessionLockUnlockListener.ChangedEventArgs>, IDisposable
 {

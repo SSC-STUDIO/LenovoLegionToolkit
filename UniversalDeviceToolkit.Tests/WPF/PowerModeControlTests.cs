@@ -1,5 +1,5 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard;
 using Xunit;
 

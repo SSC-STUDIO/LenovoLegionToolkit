@@ -13,9 +13,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
 
@@ -80,7 +80,7 @@ public sealed class LanguagePackManagerTests : IDisposable
 
     [Theory]
     [InlineData("ff-Latn-SN", "Universal Device Toolkit.resources.dll")]
-    [InlineData("ff-Latn-SN", "LenovoLegionToolkit.WPF.resources.dll")]
+    [InlineData("ff-Latn-SN", "UniversalDeviceToolkit.WPF.resources.dll")]
     public void IsInstalled_WhenAppSatelliteExists_ReturnsTrue(string cultureName, string satelliteFileName)
     {
         var culture = new CultureInfo(cultureName);

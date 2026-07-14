@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Serialization;
-using static LenovoLegionToolkit.Lib.Settings.GPUOverclockSettings;
+using UniversalDeviceToolkit.Lib.Serialization;
+using static UniversalDeviceToolkit.Lib.Settings.GPUOverclockSettings;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public class GPUOverclockSettings() : AbstractSettings<GPUOverclockSettingsStore>("gpu_oc.json")
 {

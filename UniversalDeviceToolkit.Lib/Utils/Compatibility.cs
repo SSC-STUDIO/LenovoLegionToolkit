@@ -5,17 +5,17 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.DeviceSupport;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.DeviceSupport;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.Management;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.Power;
 
 // ReSharper disable StringLiteralTypo
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public static partial class Compatibility
 {

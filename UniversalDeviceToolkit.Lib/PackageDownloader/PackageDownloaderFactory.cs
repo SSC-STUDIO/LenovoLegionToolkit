@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader;
 
 public class PackageDownloaderFactory(
     PCSupportPackageDownloader pcSupportPackageDownloader,

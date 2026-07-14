@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using NvAPIWrapper;
 using NvAPIWrapper.Display;
 using NvAPIWrapper.GPU;
 using NvAPIWrapper.Native.Exceptions;
 using NvAPIWrapper.Native.GPU;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 // TODO(#142): NvAPIWrapper.Net 0.8.1.101 is no longer actively maintained and
 // surfaces as a Dependabot/Renovate warning. Plan a replacement with P/Invoke

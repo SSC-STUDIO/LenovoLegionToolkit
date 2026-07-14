@@ -5,10 +5,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader.Detectors.Rules;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader.Detectors.Rules;
 
 internal readonly partial struct BiosPackageRule : IPackageRule
 {

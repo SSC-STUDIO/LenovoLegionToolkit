@@ -4,9 +4,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using LenovoLegionToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader.Detectors.Rules;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader.Detectors.Rules;
 
 internal readonly struct RegistryKeyPackageRule : IPackageRule
 {

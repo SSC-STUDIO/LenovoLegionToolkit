@@ -1,10 +1,10 @@
 using System;
 using System.Management;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.System.Management;
+namespace UniversalDeviceToolkit.Lib.System.Management;
 
 /// <summary>
 /// Concrete implementation of IWMIWrapper that delegates to the static WMI class.

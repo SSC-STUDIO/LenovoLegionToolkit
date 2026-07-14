@@ -1,6 +1,6 @@
 # Upstream Capability Matrix
 
-Source reviewed: `LenovoLegionToolkit-Team/LenovoLegionToolkit` (including releases through ~v2.34.x) on 2026-07-12.
+Source reviewed: `UniversalDeviceToolkit-Team/UniversalDeviceToolkit` (including releases through ~v2.34.x) on 2026-07-12.
 
 **Master plan:** `Docs/OnlineLanguageAndUpstreamAbsorptionPlan.md`  
 **Language protocol:** `Docs/LanguagePacks.md`

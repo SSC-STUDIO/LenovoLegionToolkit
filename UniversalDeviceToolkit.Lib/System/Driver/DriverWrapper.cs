@@ -1,13 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Storage.FileSystem;
 
-namespace LenovoLegionToolkit.Lib.System.Driver;
+namespace UniversalDeviceToolkit.Lib.System.Driver;
 
 /// <summary>
 /// Concrete implementation of IDriverWrapper that uses Windows DeviceIoControl.

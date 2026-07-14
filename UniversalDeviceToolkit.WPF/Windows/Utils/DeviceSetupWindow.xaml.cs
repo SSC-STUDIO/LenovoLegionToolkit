@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib.DeviceSupport;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.DeviceSupport;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 

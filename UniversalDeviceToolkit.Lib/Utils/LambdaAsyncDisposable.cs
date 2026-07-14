@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public class LambdaAsyncDisposable(Func<Task> action) : IAsyncDisposable
 {

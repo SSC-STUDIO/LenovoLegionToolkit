@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Automation.TabItemContent
 {

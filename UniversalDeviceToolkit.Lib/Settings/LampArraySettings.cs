@@ -1,6 +1,6 @@
 // Derived from Lenovo Legion Toolkit.
 // Original project copyright: Copyright (C) Bartosz Cichecki and contributors.
-// Upstream sync copyright: Copyright (C) 2026 LenovoLegionToolkit-Team.
+// Upstream sync copyright: Copyright (C) 2026 UniversalDeviceToolkit-Team.
 // Modifications copyright: Copyright (C) 2026 Universal Device Toolkit Contributors.
 
 using System;
@@ -8,9 +8,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public class LampArraySettings : AbstractSettings<LampArraySettings.LampArraySettingsStore>
 {

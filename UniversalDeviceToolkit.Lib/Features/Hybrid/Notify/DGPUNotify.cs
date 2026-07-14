@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 
-namespace LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 
 public class DGPUNotify(DGPUGamezoneNotify gamezoneNotify, DGPUCapabilityNotify capabilityNotify, DGPUFeatureFlagsNotify featureFlagsNotify) : IDGPUNotify
 {

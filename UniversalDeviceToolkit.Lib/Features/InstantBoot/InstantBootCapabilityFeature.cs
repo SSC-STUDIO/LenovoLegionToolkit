@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Features.InstantBoot;
+namespace UniversalDeviceToolkit.Lib.Features.InstantBoot;
 
 public class InstantBootCapabilityFeature : IFeature<InstantBootState>
 {

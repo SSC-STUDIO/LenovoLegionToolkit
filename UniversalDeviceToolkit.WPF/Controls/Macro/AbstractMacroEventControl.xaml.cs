@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 using Humanizer;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Macro.Resources;
 using Wpf.Ui.Controls;

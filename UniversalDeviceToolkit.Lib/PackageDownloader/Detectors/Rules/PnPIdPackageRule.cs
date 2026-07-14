@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader.Detectors.Rules;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader.Detectors.Rules;
 
 internal readonly struct PnPIdPackageRule : IPackageRule
 {

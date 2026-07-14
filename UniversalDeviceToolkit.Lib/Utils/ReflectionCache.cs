@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Reflection cache helper to reduce reflection overhead.

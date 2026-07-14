@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using LenovoLegionToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Optimization;
 using Microsoft.Win32;
 using Xunit;
 

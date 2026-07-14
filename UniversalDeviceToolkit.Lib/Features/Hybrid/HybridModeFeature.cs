@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Features.Hybrid;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid;
 
 public class HybridModeFeature(
     IGSyncFeature gSyncFeature,

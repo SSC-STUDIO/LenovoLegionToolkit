@@ -1,6 +1,6 @@
 using Autofac;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Utils;
 using System.Threading;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -18,7 +18,7 @@ public class TestIoCModule : Module
 
 internal class TestSpectrumScreenCapture : SpectrumKeyboardBacklightController.ISpectrumScreenCapture
 {
-    public void CaptureScreen(ref LenovoLegionToolkit.Lib.RGBColor[,] buffer, int width, int height, CancellationToken token)
+    public void CaptureScreen(ref UniversalDeviceToolkit.Lib.RGBColor[,] buffer, int width, int height, CancellationToken token)
     {
         // Mock implementation - do nothing for testing
     }

@@ -8,7 +8,7 @@ param(
 
     [string]$ExpectedInstallerSha256,
 
-    [string]$ExpectedPackageIdentifier = 'SSC-STUDIO.LenovoLegionToolkit',
+    [string]$ExpectedPackageIdentifier = 'SSC-STUDIO.UniversalDeviceToolkit',
 
     [string]$ExpectedPackageName = 'Universal Device Toolkit',
 
@@ -103,7 +103,7 @@ function Get-InnoDefine {
     throw "Could not find Inno Setup define '$Name'."
 }
 
-$legacyAssetName = "LenovoLegionToolkit_v${Version}_Setup.exe"
+$legacyAssetName = "UniversalDeviceToolkit_v${Version}_Setup.exe"
 $expectedInstallerUrl = "https://github.com/$Repository/releases/download/v$Version/$legacyAssetName"
 
 if (-not [string]::IsNullOrWhiteSpace($HashManifestPath)) {
@@ -125,13 +125,13 @@ $expectedInstallerSha256Upper = $ExpectedInstallerSha256.ToUpperInvariant()
 $expectedInstallerSha256Lower = $ExpectedInstallerSha256.ToLowerInvariant()
 
 if ([string]::IsNullOrWhiteSpace($WingetManifestDirectory)) {
-    $WingetManifestDirectory = "Packaging\winget\manifests\s\SSC-STUDIO\LenovoLegionToolkit\$Version"
+    $WingetManifestDirectory = "Packaging\winget\manifests\s\SSC-STUDIO\UniversalDeviceToolkit\$Version"
 }
 
 $resolvedWingetDirectory = Resolve-RepositoryPath $WingetManifestDirectory
-$wingetVersionManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.yaml'
-$wingetLocaleManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.locale.en-US.yaml'
-$wingetInstallerManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.installer.yaml'
+$wingetVersionManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.UniversalDeviceToolkit.yaml'
+$wingetLocaleManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.UniversalDeviceToolkit.locale.en-US.yaml'
+$wingetInstallerManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.UniversalDeviceToolkit.installer.yaml'
 if (-not (Test-Path -LiteralPath $wingetVersionManifestPath)) {
     throw "winget version manifest not found at '$wingetVersionManifestPath'."
 }

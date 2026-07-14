@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>
 /// Orchestrates the NetworkProxy worker, system proxy / PAC / Hosts apply, and stop/restore.

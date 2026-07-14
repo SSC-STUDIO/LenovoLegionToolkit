@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 
 namespace UniversalDeviceToolkit.WPF.Settings;
 

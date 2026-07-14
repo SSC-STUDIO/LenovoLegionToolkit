@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
-    <!-- ABI retention: RootNamespace/AssemblyName stay LenovoLegionToolkit.Lib.Plugins (plugin host surface).
+    <!-- ABI retention: RootNamespace/AssemblyName stay UniversalDeviceToolkit.Lib.Plugins (plugin host surface).
          Do NOT rename to UniversalDeviceToolkit.Lib.Plugins without Docs/NamespaceMigration.md Phase 2–3. -->
-    <RootNamespace>LenovoLegionToolkit.Lib.Plugins</RootNamespace>
-    <AssemblyName>LenovoLegionToolkit.Lib.Plugins</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Lib.Plugins</RootNamespace>
+    <AssemblyName>UniversalDeviceToolkit.Lib.Plugins</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <!-- Match Lib/WPF win-x64 graph (avoids MSB3270 MSIL vs AMD64). -->

@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public class IntegrationsSettings()
     : AbstractSettings<IntegrationsSettings.IntegrationsSettingsStore>("integrations.json")

@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using Moq;
 using Xunit;
 
@@ -193,7 +193,7 @@ public class PluginLoaderTests : IDisposable
     public void CanLoad_WithPluginPrefix_ShouldReturnTrue()
     {
         // Arrange
-        var filePath = "LenovoLegionToolkit.Plugins.TestPlugin.dll";
+        var filePath = "UniversalDeviceToolkit.Plugins.TestPlugin.dll";
 
         // Act
         var result = _loader.CanLoad(filePath);
@@ -234,7 +234,7 @@ public class PluginLoaderTests : IDisposable
     {
         // Arrange
         var filePath = "TestPlugin.dll";
-        var parentDir = "LenovoLegionToolkit.Plugins.TestPlugin";
+        var parentDir = "UniversalDeviceToolkit.Plugins.TestPlugin";
 
         // Act
         var result = _loader.CanLoad(filePath, parentDir);
@@ -441,7 +441,7 @@ public class PluginLoaderTests : IDisposable
         // Arrange
         var method = GetPrivateStaticMethod("GetPluginAssemblyCandidatePath");
         var pluginDirectory = CreateTempDirectory();
-        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.TestPlugin.dll");
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "UniversalDeviceToolkit.Plugins.TestPlugin.dll");
         var requestedAssemblyName = new AssemblyName("Helper.Library, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
 
         // Act
@@ -457,7 +457,7 @@ public class PluginLoaderTests : IDisposable
         // Arrange
         var method = GetPrivateStaticMethod("GetPluginAssemblyCandidatePath");
         var pluginDirectory = CreateTempDirectory();
-        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.TestPlugin.dll");
+        var pluginMainAssemblyPath = Path.Combine(pluginDirectory, "UniversalDeviceToolkit.Plugins.TestPlugin.dll");
         var requestedAssemblyName = new AssemblyName("Helper.Library.resources, Version=1.0.0.0, Culture=fr, PublicKeyToken=null");
 
         // Act

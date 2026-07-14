@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Security;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public static class TokenManipulator
 {

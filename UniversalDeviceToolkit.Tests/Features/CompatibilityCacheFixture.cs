@@ -1,7 +1,7 @@
 using System.Reflection;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.DeviceSupport;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.DeviceSupport;
+using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Features;

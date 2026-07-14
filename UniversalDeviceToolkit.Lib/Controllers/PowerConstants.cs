@@ -1,6 +1,6 @@
 using System;
 
-namespace LenovoLegionToolkit.Lib.Controllers;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 internal static class PowerConstants
 {

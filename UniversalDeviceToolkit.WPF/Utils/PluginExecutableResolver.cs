@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
@@ -62,8 +62,16 @@ internal static class PluginExecutableResolver
 
         candidateDirectories.Add(Path.Combine(pluginsDirectory, pluginId));
         candidateDirectories.Add(Path.Combine(pluginsDirectory, "local", pluginId));
-        candidateDirectories.Add(Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}"));
-        candidateDirectories.Add(Path.Combine(pluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}"));
+        foreach (var prefixed in new[]
+                 {
+                     $"UniversalDeviceToolkit.Plugins.{pluginId}",
+                     $"LenovoLegionToolkit.Plugins.{pluginId}",
+                     $"UniversalDeviceToolkit.Plugins.{pluginId.Replace("-", string.Empty)}",
+                     $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}"
+                 })
+        {
+            candidateDirectories.Add(Path.Combine(pluginsDirectory, prefixed));
+        }
 
         foreach (var candidateDirectory in candidateDirectories
                      .Where(path => !string.IsNullOrWhiteSpace(path))
@@ -132,13 +140,15 @@ internal static class PluginExecutableResolver
     private static IEnumerable<string> GetPreferredExecutableCandidates(string candidateDirectory, string pluginId)
     {
         yield return Path.Combine(candidateDirectory, $"{pluginId}.exe");
+        yield return Path.Combine(candidateDirectory, $"UniversalDeviceToolkit.Plugins.{pluginId}.exe");
         yield return Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.exe");
+        yield return Path.Combine(candidateDirectory, $"UniversalDeviceToolkit.Plugins.{pluginId.Replace("-", string.Empty)}.exe");
         yield return Path.Combine(candidateDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}.exe");
     }
 
     private static void LogWarning(string message)
     {
-        if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace(message);
+        if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(message);
     }
 }

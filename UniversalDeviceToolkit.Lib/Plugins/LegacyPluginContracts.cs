@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Optimization;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
-// Plugin contracts live in LenovoLegionToolkit.Lib so older plugins that still
+// Plugin contracts live in UniversalDeviceToolkit.Lib so older plugins that still
 // reference this assembly remain ABI-compatible with the current host.
 public interface IPlugin
 {

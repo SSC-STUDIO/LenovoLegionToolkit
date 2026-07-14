@@ -4,18 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using NeoSmart.AsyncLock;
 using Windows.Win32;
 
-namespace LenovoLegionToolkit.Lib.Controllers
+namespace UniversalDeviceToolkit.Lib.Controllers
 {
     public class RGBKeyboardBacklightController(RGBKeyboardSettings settings, VantageDisabler vantageDisabler)
     {

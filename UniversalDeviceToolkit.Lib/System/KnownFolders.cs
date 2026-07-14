@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using Windows.Win32;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class KnownFolders
 {

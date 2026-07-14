@@ -2,9 +2,9 @@ using System;
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class ManagementEventWatcherExtensions
 {

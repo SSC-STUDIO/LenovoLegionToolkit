@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class SystemPath
 {

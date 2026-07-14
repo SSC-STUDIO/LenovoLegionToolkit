@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.ResourcesCatalog;

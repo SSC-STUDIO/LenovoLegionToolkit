@@ -78,7 +78,7 @@ public class PluginExecutableResolverTests : IDisposable
         var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
         Directory.CreateDirectory(pluginDirectory);
 
-        var expectedExe = Path.Combine(pluginDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.exe");
+        var expectedExe = Path.Combine(pluginDirectory, $"UniversalDeviceToolkit.Plugins.{pluginId}.exe");
         File.WriteAllText(expectedExe, string.Empty);
 
         var (resolved, exeFile, workingDirectory) = InvokeTryResolve(pluginId, null, pluginsDirectory);
@@ -96,7 +96,7 @@ public class PluginExecutableResolverTests : IDisposable
         var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
         Directory.CreateDirectory(pluginDirectory);
 
-        var expectedExe = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.testplugin.exe");
+        var expectedExe = Path.Combine(pluginDirectory, "UniversalDeviceToolkit.Plugins.testplugin.exe");
         File.WriteAllText(expectedExe, string.Empty);
 
         var (resolved, exeFile, workingDirectory) = InvokeTryResolve(pluginId, null, pluginsDirectory);

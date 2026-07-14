@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 using Timer = System.Threading.Timer;
 
-namespace LenovoLegionToolkit.Lib.AutoListeners;
+namespace UniversalDeviceToolkit.Lib.AutoListeners;
 
 public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatcher)
     : AbstractAutoListener<UserInactivityAutoListener.ChangedEventArgs>
@@ -38,7 +38,7 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
         {
             CreateHandle(new CreateParams
             {
-                Caption = "LenovoLegionToolkit_UserInactivityListenerWindow",
+                Caption = "UniversalDeviceToolkit_UserInactivityListenerWindow",
                 Parent = new IntPtr(-3)
             });
 

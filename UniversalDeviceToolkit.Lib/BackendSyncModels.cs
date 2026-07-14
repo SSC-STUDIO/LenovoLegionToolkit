@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Windows.Devices.Lights;
 
-namespace LenovoLegionToolkit.Lib;
+namespace UniversalDeviceToolkit.Lib;
 
 public readonly struct AmdWmiCommand
 {

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
-using static LenovoLegionToolkit.Lib.Settings.FanCurveSettings;
+using UniversalDeviceToolkit.Lib.Utils;
+using static UniversalDeviceToolkit.Lib.Settings.FanCurveSettings;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 
 public class FanCurveSettings() : AbstractSettings<FanCurveSettingsStore>("fan_curves.json")

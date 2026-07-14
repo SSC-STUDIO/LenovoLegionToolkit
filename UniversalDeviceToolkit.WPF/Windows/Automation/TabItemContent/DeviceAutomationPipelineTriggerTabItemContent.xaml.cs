@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 

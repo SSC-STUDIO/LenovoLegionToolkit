@@ -1,6 +1,6 @@
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 public sealed class NetworkAccelerationSettings()
     : AbstractSettings<NetworkAccelerationConfig>(NetworkAccelerationDefaults.SettingsFileName)

@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
-namespace LenovoLegionToolkit.Lib;
+namespace UniversalDeviceToolkit.Lib;
 
 public class HttpClientFactory
 {

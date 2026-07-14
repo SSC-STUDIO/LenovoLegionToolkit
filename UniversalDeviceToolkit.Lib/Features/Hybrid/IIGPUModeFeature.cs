@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Features.Hybrid;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid;
 
 /// <summary>
 /// Interface for IGPU Mode feature operations.

@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 using NvAPIWrapper.GPU;
 using NvAPIWrapper.Native;
 using NvAPIWrapper.Native.GPU;
 using NvAPIWrapper.Native.GPU.Structures;
 
-namespace LenovoLegionToolkit.Lib.Controllers;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 public class GPUOverclockController : IDisposable
 {

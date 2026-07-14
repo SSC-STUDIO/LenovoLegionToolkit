@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Global plugin host context entry point.

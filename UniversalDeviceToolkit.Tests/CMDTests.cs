@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

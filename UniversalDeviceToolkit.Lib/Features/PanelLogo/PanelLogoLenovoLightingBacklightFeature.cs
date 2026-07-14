@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Features.PanelLogo;
+namespace UniversalDeviceToolkit.Lib.Features.PanelLogo;
 
 public class PanelLogoLenovoLightingBacklightFeature() : AbstractLenovoLightingFeature<PanelLogoBacklightState>(3, 1, 0)
 {

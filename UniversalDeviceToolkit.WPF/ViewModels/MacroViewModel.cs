@@ -1,5 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Macro;
 
 namespace UniversalDeviceToolkit.WPF.ViewModels;

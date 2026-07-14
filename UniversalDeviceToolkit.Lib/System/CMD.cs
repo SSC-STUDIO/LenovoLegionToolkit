@@ -5,10 +5,10 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 /// <summary>
 /// Provides secure command execution with comprehensive injection prevention.

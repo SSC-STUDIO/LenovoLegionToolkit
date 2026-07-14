@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace LenovoLegionToolkit.Lib;
+namespace UniversalDeviceToolkit.Lib;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable

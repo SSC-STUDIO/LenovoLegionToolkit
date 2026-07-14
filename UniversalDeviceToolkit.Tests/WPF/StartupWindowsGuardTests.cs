@@ -34,7 +34,7 @@ public sealed class StartupWindowsGuardTests
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "DeviceSetupWindow.xaml.cs");
         var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "DeviceSetupWindow.xaml");
-        var zhResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh.resx");
+        var zhResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh-hans.resx");
         var zhHansResources = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh-hans.resx");
 
         source.Should().Contain("DeviceSetupWindow_BasicModeSummary");

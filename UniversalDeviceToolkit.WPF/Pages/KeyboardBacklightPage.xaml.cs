@@ -99,8 +99,8 @@ public partial class KeyboardBacklightPage
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error initializing keyboard backlight page.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error initializing keyboard backlight page.", ex);
 
             _loader.IsLoading = false;
         }

@@ -6,7 +6,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.System.Management;
+namespace UniversalDeviceToolkit.Lib.System.Management;
 
 public static partial class WMI
 {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Listeners;
+namespace UniversalDeviceToolkit.Lib.Listeners;
 
 public class ThermalModeListener(
     WindowsPowerModeController windowsPowerModeController,

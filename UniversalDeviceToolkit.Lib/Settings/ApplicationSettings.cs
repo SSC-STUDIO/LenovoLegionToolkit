@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Serialization;
+using UniversalDeviceToolkit.Lib.Serialization;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public class ApplicationSettings : AbstractSettings<ApplicationSettings.ApplicationSettingsStore>
 {

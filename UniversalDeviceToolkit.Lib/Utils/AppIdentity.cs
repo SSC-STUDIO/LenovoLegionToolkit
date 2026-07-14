@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public static class AppIdentity
 {

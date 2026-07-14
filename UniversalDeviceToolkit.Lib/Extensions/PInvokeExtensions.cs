@@ -5,7 +5,7 @@ using Windows.Win32;
 using Windows.Win32.Devices.DeviceAndDriverInstallation;
 using Windows.Win32.Foundation;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo

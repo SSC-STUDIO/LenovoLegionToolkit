@@ -6,9 +6,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
 
 const string pass = "PASS";

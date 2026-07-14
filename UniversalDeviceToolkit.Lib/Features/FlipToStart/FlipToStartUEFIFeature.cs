@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
-namespace LenovoLegionToolkit.Lib.Features.FlipToStart;
+namespace UniversalDeviceToolkit.Lib.Features.FlipToStart;
 
 public class FlipToStartUEFIFeature() : AbstractUEFIFeature<FlipToStartState>(
     "{D743491E-F484-4952-A87D-8D5DD189B70C}",

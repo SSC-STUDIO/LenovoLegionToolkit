@@ -1,16 +1,16 @@
 # Created with komac v2.12.1
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
 PackageVersion: 3.7.0
 PackageLocale: en-US
 Publisher: SSC-STUDIO
 PublisherUrl: https://github.com/SSC-STUDIO
-PublisherSupportUrl: https://github.com/SSC-STUDIO/LenovoLegionToolkit/issues
+PublisherSupportUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues
 PackageName: Lenovo Legion Toolkit
-PackageUrl: https://github.com/SSC-STUDIO/LenovoLegionToolkit
+PackageUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 License: GPL-3.0
-LicenseUrl: https://github.com/SSC-STUDIO/LenovoLegionToolkit/blob/master/LICENSE
+LicenseUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/LICENSE
 Copyright: Copyright (C) Lenovo Legion Toolkit contributors
 ShortDescription: Lightweight Lenovo Vantage and Hotkeys replacement for Lenovo Legion laptops.
 Description: Lenovo Legion Toolkit is a lightweight, open-source utility for Lenovo Legion, LOQ, Ideapad Gaming, and related laptops. It provides access to power modes, battery settings, RGB controls, dGPU state, driver updates, CLI control, and plugin extensions without running a background service or collecting telemetry.
@@ -23,6 +23,6 @@ Tags:
 - rgb
 - laptop
 - hardware-control
-ReleaseNotesUrl: https://github.com/SSC-STUDIO/LenovoLegionToolkit/releases/tag/v3.7.0
+ReleaseNotesUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/v3.7.0
 ManifestType: defaultLocale
 ManifestVersion: 1.10.0

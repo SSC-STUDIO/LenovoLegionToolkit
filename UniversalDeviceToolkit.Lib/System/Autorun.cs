@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.TaskScheduler;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class Autorun
 {

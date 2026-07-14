@@ -1,4 +1,4 @@
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;

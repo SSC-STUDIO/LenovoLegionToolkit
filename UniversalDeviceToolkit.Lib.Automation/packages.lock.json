@@ -228,7 +228,7 @@
         "resolved": "4.7.0",
         "contentHash": "VybpaOQQhqE6siHppMktjfGBw1GCwvCqiufqmP8F1nj7fTUNtW35LOEt3UZTEsECfo+ELAl/9o9nJx3U91i7vA=="
       },
-      "LenovoLegionToolkit.Lib": {
+      "universaldevicetoolkit.lib": {
         "type": "Project",
         "dependencies": {
           "Autofac": "[9.3.0, )",
@@ -255,7 +255,7 @@
       "universaldevicetoolkit.lib.macro": {
         "type": "Project",
         "dependencies": {
-          "LenovoLegionToolkit.Lib": "[4.2.1, )"
+          "UniversalDeviceToolkit.Lib": "[5.0.0, )"
         }
       },
       "LibreHardwareMonitorLib": {

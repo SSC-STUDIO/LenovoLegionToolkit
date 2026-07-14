@@ -1,6 +1,6 @@
-﻿using LenovoLegionToolkit.Lib.Optimization;
+﻿using UniversalDeviceToolkit.Lib.Optimization;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin base class providing default implementation and configuration support

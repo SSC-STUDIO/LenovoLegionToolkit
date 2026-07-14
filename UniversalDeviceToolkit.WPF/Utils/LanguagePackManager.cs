@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
@@ -701,7 +701,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         var names = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             $"{AppIdentity.DisplayName}.resources.dll",
-            "LenovoLegionToolkit.WPF.resources.dll",
+            "UniversalDeviceToolkit.WPF.resources.dll",
         };
 
         var entryAssemblyName = Assembly.GetEntryAssembly()?.GetName().Name;

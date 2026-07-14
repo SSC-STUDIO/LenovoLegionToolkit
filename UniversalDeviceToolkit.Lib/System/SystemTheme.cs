@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static partial class SystemTheme
 {

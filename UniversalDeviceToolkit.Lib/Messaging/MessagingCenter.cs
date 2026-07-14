@@ -1,9 +1,9 @@
 ﻿using System;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Utils;
 using PubSub;
 
-namespace LenovoLegionToolkit.Lib.Messaging;
+namespace UniversalDeviceToolkit.Lib.Messaging;
 
 // TODO(#143): Replace PubSub with a maintained in-process messaging solution
 // (e.g. CommunityToolkit.Mvvm.Messaging or a hand-rolled dispatcher). The current

@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace LenovoLegionToolkit.Lib.Serialization;
+namespace UniversalDeviceToolkit.Lib.Serialization;
 
 /// <summary>
 /// Ensures <see cref="GPUOverclockInfo"/> round-trips for settings JSON; readonly positional structs can deserialize incorrectly with default STJ options.

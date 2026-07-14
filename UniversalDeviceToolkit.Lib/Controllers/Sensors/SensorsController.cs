@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
 
 public class SensorsController(
     SensorsControllerV1 controllerV1,

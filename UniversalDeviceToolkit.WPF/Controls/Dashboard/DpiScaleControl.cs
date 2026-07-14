@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
-using DpiScale = LenovoLegionToolkit.Lib.DpiScale;
+using DpiScale = UniversalDeviceToolkit.Lib.DpiScale;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard;
 

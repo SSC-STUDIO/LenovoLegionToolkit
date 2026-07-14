@@ -2,10 +2,10 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Serialization;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Serialization;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public abstract class AbstractSettings<T> where T : class, new()
 {

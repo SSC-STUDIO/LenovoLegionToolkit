@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Listeners;
+namespace UniversalDeviceToolkit.Lib.Listeners;
 
 public interface IListener<TEventArgs> where TEventArgs : EventArgs
 {

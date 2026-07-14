@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 
-namespace LenovoLegionToolkit.Lib.System.Driver;
+namespace UniversalDeviceToolkit.Lib.System.Driver;
 
 /// <summary>
 /// Abstraction interface for driver-level operations using DeviceIoControl.

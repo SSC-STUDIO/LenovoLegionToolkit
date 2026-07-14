@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public class PackageDownloaderSettings()
     : AbstractSettings<PackageDownloaderSettings.PackageDownloaderSettingsStore>("package_downloader.json")

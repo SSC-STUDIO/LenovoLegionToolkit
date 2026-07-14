@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>Acceleration operating mode. Default for new installs is <see cref="Off"/>.</summary>
 public enum NetworkAccelerationMode

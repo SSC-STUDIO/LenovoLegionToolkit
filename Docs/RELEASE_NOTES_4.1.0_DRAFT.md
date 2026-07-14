@@ -36,7 +36,7 @@ This file kept pre-release verification notes for the `4.1.0` release. The GitHu
 
 - Repository version is set to `4.1.0`.
 - Package manifests should be finalized after the `v4.1.0` tag workflow publishes the final GitHub Release assets:
-  - `Packaging/winget/manifests/s/SSC-STUDIO/LenovoLegionToolkit/4.1.0`
+  - `Packaging/winget/manifests/s/SSC-STUDIO/UniversalDeviceToolkit/4.1.0`
   - `Packaging/scoop/lenovolegiontoolkit.4.1.0.draft.json`
 - Local release assets were generated on 2026-05-31 and local hashes were verified against `release-assets\UniversalDeviceToolkit_v4.1.0_SHA256.txt`.
 - The release workflow will rebuild assets from the tagged commit and publish the final GitHub Release plus GitHub Pages resources. Use the workflow-generated compatibility installer SHA256 when finalizing winget/Scoop submissions.
@@ -44,6 +44,6 @@ This file kept pre-release verification notes for the `4.1.0` release. The GitHu
 ## Validation Status
 
 - `Make.bat 4.1.0` completed successfully in the current worktree.
-- `winget validate Packaging\winget\manifests\s\SSC-STUDIO\LenovoLegionToolkit\4.1.0` passed.
+- `winget validate Packaging\winget\manifests\s\SSC-STUDIO\UniversalDeviceToolkit\4.1.0` passed.
 - Local release asset hashes match `release-assets\UniversalDeviceToolkit_v4.1.0_SHA256.txt`.
 - Standalone hardware validation and preset UI CRUD validation passed through the elevated wrapper path in the current desktop session.

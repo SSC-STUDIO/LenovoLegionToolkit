@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32;
-using ToolkitRegistry = LenovoLegionToolkit.Lib.System.Registry;
+using ToolkitRegistry = UniversalDeviceToolkit.Lib.System.Registry;
 
-namespace LenovoLegionToolkit.Lib.Optimization;
+namespace UniversalDeviceToolkit.Lib.Optimization;
 
 internal static class WindowsOptimizationHelper
 {

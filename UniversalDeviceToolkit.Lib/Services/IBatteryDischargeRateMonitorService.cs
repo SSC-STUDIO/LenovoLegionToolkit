@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Services;
+namespace UniversalDeviceToolkit.Lib.Services;
 
 /// <summary>
 /// Represents a service that monitors and controls the battery discharge rate.

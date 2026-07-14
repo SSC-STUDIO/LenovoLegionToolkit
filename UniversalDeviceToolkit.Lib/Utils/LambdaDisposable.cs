@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public class LambdaDisposable(Action action) : IDisposable
 {

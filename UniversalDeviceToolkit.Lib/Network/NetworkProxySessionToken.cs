@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>Random session token helpers for NetworkProxy named-pipe IPC.</summary>
 public static class NetworkProxySessionToken

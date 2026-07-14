@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Settings;

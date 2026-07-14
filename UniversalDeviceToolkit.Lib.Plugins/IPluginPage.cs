@@ -1,6 +1,6 @@
-using LenovoLegionToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Optimization;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin page interface, used for plugins to provide UI pages

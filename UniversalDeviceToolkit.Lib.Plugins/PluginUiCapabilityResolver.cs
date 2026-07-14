@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 public readonly struct PluginUiCapabilities
 {
@@ -349,20 +349,24 @@ public static class PluginUiCapabilityResolver
     private static string[] GetInstalledPluginDirectories(string pluginId)
     {
         var pluginsDirectory = PluginPaths.GetPluginsDirectory();
-        var assemblyDirectoryName = $"LenovoLegionToolkit.Plugins.{pluginId}";
-        var compactAssemblyDirectoryName = $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}";
-        var pascalAssemblyDirectoryName = $"LenovoLegionToolkit.Plugins.{ToPascalCasePluginId(pluginId)}";
-        var directories = new[]
+        var compactId = pluginId.Replace("-", string.Empty);
+        var pascalId = ToPascalCasePluginId(pluginId);
+
+        // Prefer assembly-style / prefixed folder names (local first) before bare plugin-id
+        // directories. Bare id paths are often created by AppData migration of older installs
+        // and can shadow a dual-load prefixed package that actually has the manifest.
+        var directories = new List<string>();
+
+        foreach (var prefixed in PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
+                     .Concat(PluginAssemblyNaming.EnumeratePrefixedPluginNames(compactId))
+                     .Concat(PluginAssemblyNaming.EnumeratePrefixedPluginNames(pascalId)))
         {
-            Path.Combine(pluginsDirectory, "local", pluginId),
-            Path.Combine(pluginsDirectory, "local", assemblyDirectoryName),
-            Path.Combine(pluginsDirectory, "local", compactAssemblyDirectoryName),
-            Path.Combine(pluginsDirectory, "local", pascalAssemblyDirectoryName),
-            PluginPaths.GetPluginDirectory(pluginId),
-            Path.Combine(pluginsDirectory, assemblyDirectoryName),
-            Path.Combine(pluginsDirectory, compactAssemblyDirectoryName),
-            Path.Combine(pluginsDirectory, pascalAssemblyDirectoryName)
-        };
+            directories.Add(Path.Combine(pluginsDirectory, "local", prefixed));
+            directories.Add(Path.Combine(pluginsDirectory, prefixed));
+        }
+
+        directories.Add(Path.Combine(pluginsDirectory, "local", pluginId));
+        directories.Add(PluginPaths.GetPluginDirectory(pluginId));
 
         return directories
             .Where(Directory.Exists)

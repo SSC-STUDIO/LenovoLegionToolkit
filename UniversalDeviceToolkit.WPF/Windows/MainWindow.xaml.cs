@@ -13,13 +13,13 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Controls.Shell;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Pages;
@@ -33,7 +33,7 @@ using Windows.Win32.System.Threading;
 using Wpf.Ui.Controls;
 #if !DEBUG
 using System.Reflection;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 #endif
 
 #pragma warning disable CA1416

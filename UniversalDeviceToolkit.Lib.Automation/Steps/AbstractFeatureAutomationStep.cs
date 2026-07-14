@@ -1,10 +1,10 @@
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Steps;
 

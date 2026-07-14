@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>Shared defaults for the network-acceleration feature and worker process.</summary>
 public static class NetworkAccelerationDefaults

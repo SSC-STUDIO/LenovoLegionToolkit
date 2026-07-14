@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public abstract class AbstractWmiFeature<T>(Func<Task<int>> getValue, Func<int, Task> setValue, Func<Task<int>>? isSupported = null, int offset = 0)
     : IFeature<T> where T : struct, Enum, IComparable

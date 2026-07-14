@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
 
 public class SensorsControllerV2(GPUController gpuController) : AbstractSensorsController(gpuController)
 {

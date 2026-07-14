@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Features;
 using Xunit;
 using Moq;
 

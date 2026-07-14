@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>Spawns / stops the isolated NetworkProxy worker process.</summary>
 public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable

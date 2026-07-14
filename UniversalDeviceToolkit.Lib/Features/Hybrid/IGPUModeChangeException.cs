@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LenovoLegionToolkit.Lib.Features.Hybrid;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid;
 
 public class IGPUModeChangeException(IGPUModeState igpuMode) : Exception
 {

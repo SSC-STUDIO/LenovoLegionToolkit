@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Builder;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class ContainerBuilderExtensions
 {

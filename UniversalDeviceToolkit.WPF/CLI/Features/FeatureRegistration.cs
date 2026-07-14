@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Features;
 
 namespace UniversalDeviceToolkit.WPF.CLI.Features;
 

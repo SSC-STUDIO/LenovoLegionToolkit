@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using Moq;
 using Xunit;
 

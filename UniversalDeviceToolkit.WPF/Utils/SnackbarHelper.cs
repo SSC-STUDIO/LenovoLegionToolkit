@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Notifications;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Notifications;
 using UniversalDeviceToolkit.WPF.Windows;
 using Wpf.Ui.Controls;
 

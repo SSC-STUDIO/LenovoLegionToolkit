@@ -2,10 +2,10 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public static class ExceptionHelper
 {

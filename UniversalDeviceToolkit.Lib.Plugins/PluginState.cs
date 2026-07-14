@@ -4,7 +4,7 @@
 // by PluginLifecycleStateMachine (host-internal) rather than by
 // plugins themselves.
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin state enumeration

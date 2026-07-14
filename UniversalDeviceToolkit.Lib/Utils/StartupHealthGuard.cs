@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Minimal logging abstraction consumed by <see cref="StartupHealthGuard"/>. When

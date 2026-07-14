@@ -1,6 +1,6 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Pages;
 using Xunit;
 

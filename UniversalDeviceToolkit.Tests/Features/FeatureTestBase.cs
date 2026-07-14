@@ -1,5 +1,5 @@
 using Moq;
-using LenovoLegionToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features;
 
 namespace UniversalDeviceToolkit.Tests.Features;
 

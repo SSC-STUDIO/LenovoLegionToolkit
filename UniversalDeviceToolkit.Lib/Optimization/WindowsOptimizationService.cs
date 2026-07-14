@@ -6,15 +6,15 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
-using ToolkitRegistry = LenovoLegionToolkit.Lib.System.Registry;
+using ToolkitRegistry = UniversalDeviceToolkit.Lib.System.Registry;
 
-namespace LenovoLegionToolkit.Lib.Optimization;
+namespace UniversalDeviceToolkit.Lib.Optimization;
 
 public record WindowsOptimizationActionDefinition(
     string Key,

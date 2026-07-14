@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Provides host-specific services that plugins can optionally use without

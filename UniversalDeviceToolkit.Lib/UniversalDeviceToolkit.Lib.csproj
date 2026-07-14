@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
         <TargetFramework>$(UDTTargetFramework)</TargetFramework>
-		<!-- ABI retention: RootNamespace/AssemblyName stay LenovoLegionToolkit.Lib (plugin + cross-repo contract).
+		<!-- ABI retention: RootNamespace/AssemblyName stay UniversalDeviceToolkit.Lib (plugin + cross-repo contract).
 		     Do NOT rename to UniversalDeviceToolkit.Lib without Docs/NamespaceMigration.md Phase 2–3 (TypeForwardedTo / dual-package + plugin recompile). -->
-		<RootNamespace>LenovoLegionToolkit.Lib</RootNamespace>
-		<AssemblyName>LenovoLegionToolkit.Lib</AssemblyName>
+		<RootNamespace>UniversalDeviceToolkit.Lib</RootNamespace>
+		<AssemblyName>UniversalDeviceToolkit.Lib</AssemblyName>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<Platforms>x64</Platforms>
 		<Nullable>enable</Nullable>

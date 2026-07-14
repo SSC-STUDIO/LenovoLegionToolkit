@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Concrete implementation of compatibility service that delegates to static Compatibility class

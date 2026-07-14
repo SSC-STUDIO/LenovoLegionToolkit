@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using LenovoLegionToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.Network;
 
 namespace UniversalDeviceToolkit.NetworkProxy.Host;
 

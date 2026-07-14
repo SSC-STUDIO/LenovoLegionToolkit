@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Listeners;

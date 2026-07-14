@@ -1,4 +1,4 @@
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;

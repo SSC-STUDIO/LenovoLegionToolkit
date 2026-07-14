@@ -1,11 +1,11 @@
 using System;
 using System.Runtime.CompilerServices;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.AutoListeners;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.AutoListeners;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Settings;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;

@@ -1,6 +1,6 @@
 using System.ComponentModel;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Extensions;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Settings

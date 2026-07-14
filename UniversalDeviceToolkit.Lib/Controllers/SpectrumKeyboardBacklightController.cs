@@ -7,17 +7,17 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Serialization;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Serialization;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using NeoSmart.AsyncLock;
 using Windows.Win32;
 
-namespace LenovoLegionToolkit.Lib.Controllers;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 public class SpectrumKeyboardBacklightController : IDisposable
 {

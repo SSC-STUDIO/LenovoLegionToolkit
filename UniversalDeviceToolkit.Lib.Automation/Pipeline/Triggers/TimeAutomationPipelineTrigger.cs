@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using System.Text.Json.Serialization;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;

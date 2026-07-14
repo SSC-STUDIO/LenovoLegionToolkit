@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;

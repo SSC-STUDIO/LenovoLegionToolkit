@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader;
 
 public interface IPackageDownloader
 {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Linq;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
 
 public static class GPUInfoHelper
 {

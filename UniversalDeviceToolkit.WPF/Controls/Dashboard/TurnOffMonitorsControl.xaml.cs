@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
 {
@@ -20,8 +20,8 @@ public partial class TurnOffMonitorsControl : AbstractRefreshingControl
         }
         catch (System.Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to turn off monitors.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to turn off monitors.", ex);
         }
         finally
         {

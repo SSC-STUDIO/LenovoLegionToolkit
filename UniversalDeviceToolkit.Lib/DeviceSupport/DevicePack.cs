@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.DeviceSupport;
+namespace UniversalDeviceToolkit.Lib.DeviceSupport;
 
 public sealed record DevicePack
 {

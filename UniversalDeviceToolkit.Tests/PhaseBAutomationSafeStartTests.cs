@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Steps;

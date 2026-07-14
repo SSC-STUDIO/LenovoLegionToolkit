@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Provides plugin-based optimization categories by querying installed plugins.
@@ -195,7 +195,7 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
                 : Path.GetFileName(pluginDirectory);
 
             candidates.Add(directoryName);
-            candidates.Add(TrimLegacyAssemblyPrefix(directoryName));
+            candidates.Add(PluginAssemblyNaming.TrimPluginPrefix(directoryName));
 
             var parentDirectoryName = string.IsNullOrWhiteSpace(pluginDirectory)
                 ? null
@@ -211,14 +211,6 @@ public class OptimizationCategoryExtender : IOptimizationCategoryExtender
             if (!string.IsNullOrEmpty(value) && seen.Add(value))
                 yield return value;
         }
-    }
-
-    private static string? TrimLegacyAssemblyPrefix(string? value)
-    {
-        const string prefix = "LenovoLegionToolkit.Plugins.";
-        return !string.IsNullOrWhiteSpace(value) && value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-            ? value[prefix.Length..]
-            : null;
     }
 
     private static PluginManifest? TryReadManifestNearPlugin(PluginMetadata? metadata)

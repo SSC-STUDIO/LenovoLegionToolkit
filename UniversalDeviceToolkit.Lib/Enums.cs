@@ -1,8 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using LenovoLegionToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Resources;
 
-namespace LenovoLegionToolkit.Lib;
+namespace UniversalDeviceToolkit.Lib;
 
 public enum AlwaysOnUSBState
 {

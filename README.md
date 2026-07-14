@@ -61,7 +61,7 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 
 - Legion / LOQ owners who want to drop Vantage but keep Fn+Q, RGB, and dGPU controls
 - Anyone on Windows who just wants plugins and general tools (basic mode)
-- Tinkerers: `llt.exe` CLI, macros, GPL source you can actually read
+- Tinkerers: `udt-cli.exe` CLI, macros, GPL source you can actually read
 
 Promotion copy (conversational): [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
@@ -120,11 +120,11 @@ Please be patient and read through this readme carefully - it contains important
 
 ## Download
 
-Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the LenovoLegionToolkit name for upgrade continuity.
+Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the UniversalDeviceToolkit name for upgrade continuity.
 
 > [!NOTE]
 > **Two release tracks.** Stable: v4.2.1 (default on winget/Releases). Pre-release: v5.0.0-preview (rebuilt plugin system -- hot-reload, sandbox, dependency resolution; 2,343 tests green; global hook-leak fix). Grab the preview zip from [v5.0.0-preview](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/v5.0.0-preview.20260706001) to try plugins early; stable users stay on v4.2.1 until 5.x final.
-> **Note on winget:** the package id `SSC-STUDIO.LenovoLegionToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships. Use Releases or Scoop in the meantime.
+> **Note on winget:** the package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships. Use Releases or Scoop in the meantime.
 
 - **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. **Current stable: v4.2.1** (4.1.0 was the first stable release after the rename). Always install the newest version from the latest release page; 4.x keeps legacy Lenovo Legion Toolkit upgrade compatibility.
 
@@ -134,7 +134,7 @@ Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained buil
 - Offline / `--safe-start` / no network: the app continues in English — it does **not** phone home for language packs unless you start an install.
 - Catalog downloads use HTTPS (or your configured catalog URL). Packages are verified with **SHA-256** before install. No account, no telemetry.
 - Corporate proxy: set system proxy as usual, or point `UDT_RESOURCE_CATALOG_URL` at an internal catalog mirror for air-gapped installs. See `Docs/LanguagePacks.md`.
- - ~~**winget** (pending)~~: the `PackageIdentifier` `SSC-STUDIO.LenovoLegionToolkit` is reserved for in-place upgrade from the legacy Lenovo Legion Toolkit, but the manifest has not been submitted to microsoft/winget-pkgs yet -- `winget install` will fail until it ships. Use Releases or Scoop today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
+ - ~~**winget** (pending)~~: the `PackageIdentifier` `SSC-STUDIO.UniversalDeviceToolkit` is reserved for in-place upgrade from the legacy Lenovo Legion Toolkit, but the manifest has not been submitted to microsoft/winget-pkgs yet -- `winget install` will fail until it ships. Use Releases or Scoop today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
 - **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
@@ -145,11 +145,11 @@ During the rename from Lenovo Legion Toolkit, several identifiers intentionally 
 | What you see | Legacy identifier | Why it remains |
 |---|---|---|
 | Product name in UI / Releases | Universal Device Toolkit (UDT) | Current public branding |
-| winget ID (pending) / Scoop ID | `SSC-STUDIO.LenovoLegionToolkit` (not yet in winget-pkgs) / `lenovolegiontoolkit` | Upgrade continuity once winget publishes; Scoop works now |
-| CLI executable | `llt.exe` | Scripts and automation compatibility |
-| Data directory | `%LOCALAPPDATA%\LenovoLegionToolkit` | Settings/plugins migrate automatically |
-| Action env vars | `LLT_*` | Existing user scripts |
-| Plugin/core assemblies | `LenovoLegionToolkit.*` | Plugin ABI stability |
+| winget ID (pending) / Scoop ID | `SSC-STUDIO.UniversalDeviceToolkit` (not yet in winget-pkgs) / `lenovolegiontoolkit` | Upgrade continuity once winget publishes; Scoop works now |
+| CLI executable | `udt-cli.exe` | Scripts and automation compatibility |
+| Data directory | `%LOCALAPPDATA%\UniversalDeviceToolkit` | Settings/plugins migrate automatically |
+| Action env vars | `LLT_*` + `UDT_*` (dual-write) | Existing user scripts; UDT aliases available |
+| Plugin/core assemblies | `UniversalDeviceToolkit.Lib*` (primary) | Phase 3 ABI; legacy plugin prefixes still load |
 
 Repository folders use `UniversalDeviceToolkit.*`. New users install UDT from Releases; legacy names above are compatibility aliases, not a separate product.
 
@@ -464,27 +464,27 @@ If "Wait for exit" is checked, UDT will capture the output from standard output 
 
 ### CLI
 
-It is possible to control some features of UDT directly from the command line. The CLI executable is still called `llt.exe` for compatibility and can be found in the install directory.
+It is possible to control some features of UDT directly from the command line. The Windows CLI executable is `udt-cli.exe` and can be found in the install directory.
 
-For CLI to work properly, UDT needs to run in the background and CLI option needs to be enabled in UDT settings. You can also chose to add `llt.exe` to your PATH variable for easier access.
+For CLI to work properly, UDT needs to run in the background and CLI option needs to be enabled in UDT settings. You can also chose to add `udt-cli.exe` to your PATH variable for easier access.
 
 CLI does not need to be ran as Administrator.
 
 <details>
 <summary>Features</summary>
 
-* `llt quickAction --list` - list all Quick Actions
-* `llt quickAction <name>` - run Quick Action with given `<name>`
-* `llt feature --list` - list all supported features
-* `llt feature get <name>` - get value of a feature with given `<name>`
-* `llt feature set <name> --list` - list all values for a feature with given `<name>`
-* `llt feature set <name> <value>` - set feature with given `<name>` to a specified `<value>`
-* `llt spectrum profile get` - get current profile Spectrum RGB is set to
-* `llt spectrum profile set <profile>` - set Spectrum RGB profile to `<profile>`
-* `llt spectrum brightness get` - get current brightness Spectrum RGB is set to
-* `llt spectrum brightness set <brightness>` - set Spectrum RGB brightness to `<brightness>`
-* `llt rgb get` - get current 4-zone RGB preset
-* `llt rgb set <profile>` - set 4-zone RGB to `<preset>`
+* `udt-cli quickAction --list` - list all Quick Actions
+* `udt-cli quickAction <name>` - run Quick Action with given `<name>`
+* `udt-cli feature --list` - list all supported features
+* `udt-cli feature get <name>` - get value of a feature with given `<name>`
+* `udt-cli feature set <name> --list` - list all values for a feature with given `<name>`
+* `udt-cli feature set <name> <value>` - set feature with given `<name>` to a specified `<value>`
+* `udt-cli spectrum profile get` - get current profile Spectrum RGB is set to
+* `udt-cli spectrum profile set <profile>` - set Spectrum RGB profile to `<profile>`
+* `udt-cli spectrum brightness get` - get current brightness Spectrum RGB is set to
+* `udt-cli spectrum brightness set <brightness>` - set Spectrum RGB brightness to `<brightness>`
+* `udt-cli rgb get` - get current 4-zone RGB preset
+* `udt-cli rgb set <profile>` - set 4-zone RGB to `<preset>`
 
 </details>
 
@@ -696,7 +696,7 @@ There are very good tools like [Intel XTU](https://www.intel.com/content/www/us/
 If you end up in a situation where your GPU is not stable and you can't boot into Windows, there are two things you can do:
 
 1. Go into BIOS and try to find and option similar to "Enabled GPU Overclocking" and disable it, start Windows, and toggle the BIOS option again to Enabled.
-2. Start Windows in Safe Mode, and delete `gpu_oc.json` file under the compatibility settings directory, which is located in `"%LOCALAPPDATA%\LenovoLegionToolkit`.
+2. Start Windows in Safe Mode, and delete `gpu_oc.json` file under the compatibility settings directory, which is located in `"%LOCALAPPDATA%\UniversalDeviceToolkit`.
 
 #### Why is my Boot Logo not applied?
 
@@ -718,7 +718,7 @@ Check the model number. Example model numbers are `16ACH6H` or `16IAX7`. The las
 
 Some, less frequently needed, features or options can be enabled by using additional arguments. These arguments can either be passed as parameters or added to `args.txt` file.
 
-* `--trace` - enables logging to `%LOCALAPPDATA%\LenovoLegionToolkit\log`
+* `--trace` - enables logging to `%LOCALAPPDATA%\UniversalDeviceToolkit\log`
 * `--minimized` - starts UDT minimized to tray
 * `--disable-tray-tooltip` - disables tray tooltip that is shown when you hover the cursors over tray icon
 * `--allow-all-power-modes-on-battery` - allows using all Power Modes without AC adapter _(No support is provided when this argument is used)_
@@ -733,7 +733,7 @@ Some, less frequently needed, features or options can be enabled by using additi
 * `--disable-update-checker` - disable update checks in UDT, in case you want to rely on winget, scoop etc.
 
 If you decide to use the arguments with `args.txt` file:
-1. Go to `%LOCALAPPDATA%\LenovoLegionToolkit`
+1. Go to `%LOCALAPPDATA%\UniversalDeviceToolkit`
 2. Create or edit `args.txt` file in there
 3. Paste **one** argument per line
 4. Start UDT
@@ -742,16 +742,16 @@ Arguments not listed above are no longer needed or available.
 
 ## How to collect logs?
 
-In all troubleshooting situations, logs provide important information. **Always** attach logs to your issues. Critical error logs are saved automatically and saved under `"%LOCALAPPDATA%\LenovoLegionToolkit\log"`.
+In all troubleshooting situations, logs provide important information. **Always** attach logs to your issues. Critical error logs are saved automatically and saved under `"%LOCALAPPDATA%\UniversalDeviceToolkit\log"`.
 
 To collect logs:
 
 1. Make sure that Universal Device Toolkit is not running (also gone from tray area).
-2. Open `Run` (Win+R) and start the app with `--trace`. During the rename, the compatibility path may still be `"%LOCALAPPDATA%\Programs\LenovoLegionToolkit\Lenovo Legion Toolkit.exe" --trace`.
+2. Open `Run` (Win+R) and start the app with `--trace`. During the rename, the compatibility path may still be `"%LOCALAPPDATA%\Programs\UniversalDeviceToolkit\Lenovo Legion Toolkit.exe" --trace`.
 3. UDT will start and in the title bar you should see: `[LOGGING ENABLED]`
 4. Reproduce the issue you have (i.e. try to use the option that causes issues)
 5. Close UDT (also make sure it's gone from tray area)
-6. Again, in `Run` (Win+R) type `"%LOCALAPPDATA%\LenovoLegionToolkit\log"`
+6. Again, in `Run` (Win+R) type `"%LOCALAPPDATA%\UniversalDeviceToolkit\log"`
 7. You should see at least one file. Theses are the logs you should attach to the issue.
 
 ## Contribution
@@ -781,7 +781,7 @@ Make sure to include the following information in your issue:
 3. List of features that seem to not work.
 4. List of features that crash the app.
 
-The more info you add, the better the app will get over time. If anything seems off, write down precisely what was wrong and attach logs (`%LOCALAPPDATA%\LenovoLegionToolkit\log`).
+The more info you add, the better the app will get over time. If anything seems off, write down precisely what was wrong and attach logs (`%LOCALAPPDATA%\UniversalDeviceToolkit\log`).
 
 ## Localization
 
@@ -847,7 +847,7 @@ Refresh procedure (keep 1300×850 logical size): see [DEPLOYMENT.md](Docs/DEPLOY
 
 Universal Device Toolkit is distributed under the GNU GPL v3.0. See [LICENSE](LICENSE).
 
-This project is a modified continuation derived from [Lenovo Legion Toolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit), originally created by Bartosz Cichecki. Original author attribution and copyright information are preserved in [NOTICE](NOTICE); Universal Device Toolkit changes are maintained by Universal Device Toolkit contributors.
+This project is a modified continuation derived from [Lenovo Legion Toolkit](https://github.com/BartoszCichecki/UniversalDeviceToolkit), originally created by Bartosz Cichecki. Original author attribution and copyright information are preserved in [NOTICE](NOTICE); Universal Device Toolkit changes are maintained by Universal Device Toolkit contributors.
 
 ---
 

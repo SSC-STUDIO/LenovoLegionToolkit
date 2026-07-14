@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features;
 using Microsoft.Win32.SafeHandles;
 using Xunit;
 

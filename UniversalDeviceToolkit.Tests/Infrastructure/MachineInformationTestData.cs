@@ -1,4 +1,4 @@
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 
 namespace UniversalDeviceToolkit.Tests;
 

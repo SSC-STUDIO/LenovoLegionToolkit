@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.DeviceSupport;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.DeviceSupport;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;

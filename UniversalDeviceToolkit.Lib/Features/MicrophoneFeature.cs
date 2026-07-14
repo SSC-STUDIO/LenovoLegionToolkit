@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using NAudio.CoreAudioApi;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public class MicrophoneFeature : IFeature<MicrophoneState>
 {

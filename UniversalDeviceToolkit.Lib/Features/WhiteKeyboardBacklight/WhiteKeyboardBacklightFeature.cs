@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers;
 
-namespace LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
+namespace UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
 
 public class WhiteKeyboardBacklightFeature(WhiteKeyboardLenovoLightingBacklightFeature feature1,
     WhiteKeyboardDriverBacklightFeature feature2,

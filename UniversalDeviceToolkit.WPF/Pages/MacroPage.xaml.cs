@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Windows;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.WPF.ViewModels;
 using Wpf.Ui.Controls;

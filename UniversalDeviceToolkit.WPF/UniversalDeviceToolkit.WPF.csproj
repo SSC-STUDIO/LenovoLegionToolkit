@@ -78,6 +78,21 @@
 		<Copy SourceFiles="@(_NetworkProxyFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="'@(_NetworkProxyFiles)' != ''" />
 	</Target>
 	<ItemGroup>
+		<!-- Prefer UDT-named SDK/Shared output; fall back to legacy filenames/paths for dual-load. -->
+		<!-- Primary: UniversalDeviceToolkit.Plugins.SDK.dll -->
+		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.SDK.dll"
+		         Link="UniversalDeviceToolkit.Plugins.SDK.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.SDK.dll')" />
+		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll"
+		         Link="UniversalDeviceToolkit.Plugins.SDK.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.SDK.dll') And Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll')" />
+		<Content Include="..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll"
+		         Link="UniversalDeviceToolkit.Plugins.SDK.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.SDK.dll') And !Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll') And Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll')" />
+		<!-- Dual-load legacy SDK filename when present on disk -->
 		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll"
 		         Link="LenovoLegionToolkit.Plugins.SDK.dll"
 		         CopyToOutputDirectory="PreserveNewest"
@@ -86,6 +101,20 @@
 		         Link="LenovoLegionToolkit.Plugins.SDK.dll"
 		         CopyToOutputDirectory="PreserveNewest"
 		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll') And Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.SDK.dll')" />
+		<!-- Primary: UniversalDeviceToolkit.Plugins.Shared.dll -->
+		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.Shared.dll"
+		         Link="UniversalDeviceToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.Shared.dll')" />
+		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll"
+		         Link="UniversalDeviceToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.Shared.dll') And Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll')" />
+		<Content Include="..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll"
+		         Link="UniversalDeviceToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="!Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\UniversalDeviceToolkit.Plugins.Shared.dll') And !Exists('..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll') And Exists('..\..\LenovoLegionToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll')" />
+		<!-- Dual-load legacy Shared filename when present on disk -->
 		<Content Include="..\..\UniversalDeviceToolkit-Plugins\Build\Shared\LenovoLegionToolkit.Plugins.Shared.dll"
 		         Link="LenovoLegionToolkit.Plugins.Shared.dll"
 		         CopyToOutputDirectory="PreserveNewest"

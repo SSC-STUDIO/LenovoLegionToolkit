@@ -1,6 +1,6 @@
 using System;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;

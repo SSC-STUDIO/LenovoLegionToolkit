@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using System.Text.Json.Serialization;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline;

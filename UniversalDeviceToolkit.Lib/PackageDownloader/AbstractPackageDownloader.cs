@@ -7,10 +7,10 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader;
 
 public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFactory) : IPackageDownloader
 {

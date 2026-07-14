@@ -1,10 +1,10 @@
 using Autofac;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
@@ -19,7 +19,7 @@ public class PluginsIoCModuleTests
         var builder = new ContainerBuilder();
         builder.Register(_ => new ApplicationSettings()).AsSelf().SingleInstance();
         builder.RegisterType<HttpClientFactory>().AsSelf().SingleInstance();
-        builder.RegisterModule<LenovoLegionToolkit.Lib.Plugins.IoCModule>();
+        builder.RegisterModule<UniversalDeviceToolkit.Lib.Plugins.IoCModule>();
         using var container = builder.Build();
 
         container.Resolve<IPluginManager>().Should().NotBeNull();

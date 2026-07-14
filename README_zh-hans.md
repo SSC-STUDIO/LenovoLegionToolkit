@@ -34,7 +34,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 - 拯救者 / LOQ 用户，想卸 Vantage 但还要 Fn+Q、RGB、独显控制
 - 随便哪台 Windows，想试试插件和系统工具（基础模式）
-- 爱折腾的：命令行 `llt.exe`、宏、代码是 GPL 开源能自己看
+- 爱折腾的：命令行 `udt-cli.exe`、宏、代码是 GPL 开源能自己看
 
 宣发文案（口语版）：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
@@ -95,11 +95,11 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 ## 下载
 
-请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 LenovoLegionToolkit 名称，用于保证旧版用户可原地升级。
+请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 UniversalDeviceToolkit 名称，用于保证旧版用户可原地升级。
 
 > [!NOTE]
 > **双发布轨道。** 稳定版：v4.2.1（Releases / Scoop 默认）。预览版：v5.0.0-preview（插件热重载与沙箱等）。稳定用户请继续使用 v4.2.1，直至 5.x 正式版。
-> **winget 说明：** 包 ID `SSC-STUDIO.LenovoLegionToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败。请先使用 Releases 或 Scoop。
+> **winget 说明：** 包 ID `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败。请先使用 Releases 或 Scoop。
 
 - **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。Full 内置语言和机型资源；Online 体积更小，会在应用内安装语言/机型资源。**当前稳定版：v4.2.1**（v4.1.0 为更名后首个稳定版）。请始终安装最新版本；4.x 保留旧 Lenovo Legion Toolkit 原地升级兼容。
 - ~~**winget**（待上架）~~：标识已预留，提交 winget-pkgs 后才会可用。
@@ -113,11 +113,11 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 | 用户可见 | 遗留标识 | 保留原因 |
 |---|---|---|
 | UI / Releases 产品名 | Universal Device Toolkit (UDT) | 当前对外品牌 |
-| winget / Scoop 包 ID | `SSC-STUDIO.LenovoLegionToolkit`、`lenovolegiontoolkit` | 旧版原地升级 |
-| CLI 可执行文件 | `llt.exe` | 脚本与自动化兼容 |
-| 数据目录 | `%LOCALAPPDATA%\LenovoLegionToolkit` | 设置/插件自动迁移 |
-| 自动化环境变量 | `LLT_*` | 用户脚本兼容 |
-| 插件/核心程序集 | `LenovoLegionToolkit.*` | 插件 ABI 稳定 |
+| winget / Scoop 包 ID | `SSC-STUDIO.UniversalDeviceToolkit`、`lenovolegiontoolkit` | 旧版原地升级 |
+| CLI 可执行文件 | `udt-cli.exe` | 脚本与自动化兼容 |
+| 数据目录 | `%LOCALAPPDATA%\UniversalDeviceToolkit` | 设置/插件自动迁移 |
+| 自动化环境变量 | `LLT_*` + `UDT_*`（双写） | 用户脚本兼容；同时提供 UDT 别名 |
+| 插件/核心程序集 | `UniversalDeviceToolkit.Lib*`（主 ABI） | 第三阶段 ABI；旧插件前缀仍可加载 |
 
 仓库目录使用 `UniversalDeviceToolkit.*`。新用户从 Releases 安装 UDT；上表遗留名为兼容别名，并非另一款产品。
 
@@ -436,7 +436,7 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 ### 命令行界面
 
-你可以在命令行内直接控制 UDT 的部分功能。UDT 命令行界面的可执行文件位于安装文件夹下，名为 `llt.exe`。
+你可以在命令行内直接控制 UDT 的部分功能。UDT 命令行界面的可执行文件位于安装文件夹下，名为 `udt-cli.exe`。
 
 命令行界面需要 UDT 在后台运行并且在设置内启用命令行界面，否则其无法正常工作。你也可以选择将命令行界面添加至你的用户 `PATH` 环境变量。
 
@@ -445,18 +445,18 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 <details>
 <summary>功能</summary>
 
-* `llt quickAction --list` - 列出所有快捷操作
-* `llt quickAction <name>` - 执行快捷操作 `<name>`
-* `llt feature --list` - 列出所有可用功能
-* `llt feature get <name>` - 打印功能 `<name>` 当前的值
-* `llt feature set <name> --list` - 列出功能 `<name>` 所有可设定的值
-* `llt feature set <name> <value>` - 将功能 `<name>` 的值设定为 `<value>`
-* `llt spectrum profile get` - 打印当前 Spectrum RGB 预设
-* `llt spectrum profile set <profile>` - 将 Spectrum RGB 预设设定为 `<profile>`
-* `llt spectrum brightness get` - 打印当前 Spectrum RGB 的亮度
-* `llt spectrum brightness set <brightness>` - 将 Spectrum RGB 的亮度设定为 `<brightness>`
-* `llt rgb get` - 打印当前四分区 RGB 预设
-* `llt rgb set <profile>` - 将四分区 RGB 预设设定为 `<preset>`
+* `udt-cli quickAction --list` - 列出所有快捷操作
+* `udt-cli quickAction <name>` - 执行快捷操作 `<name>`
+* `udt-cli feature --list` - 列出所有可用功能
+* `udt-cli feature get <name>` - 打印功能 `<name>` 当前的值
+* `udt-cli feature set <name> --list` - 列出功能 `<name>` 所有可设定的值
+* `udt-cli feature set <name> <value>` - 将功能 `<name>` 的值设定为 `<value>`
+* `udt-cli spectrum profile get` - 打印当前 Spectrum RGB 预设
+* `udt-cli spectrum profile set <profile>` - 将 Spectrum RGB 预设设定为 `<profile>`
+* `udt-cli spectrum brightness get` - 打印当前 Spectrum RGB 的亮度
+* `udt-cli spectrum brightness set <brightness>` - 将 Spectrum RGB 的亮度设定为 `<brightness>`
+* `udt-cli rgb get` - 打印当前四分区 RGB 预设
+* `udt-cli rgb set <profile>` - 将四分区 RGB 预设设定为 `<preset>`
 
 </details>
 
@@ -663,7 +663,7 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 如果你超频到 GPU 无法稳定运行，甚至无法启动 Windows 的情况，你可以通过以下两种方法尝试解决：
 
 1. 进入 BIOS，尝试找到类似于 “Enabled GPU Overclocking” 与“显卡超频”的选项并将其禁用，启动 Windows，修改UDT中的超频参数，并将此选项再次启用。
-2. 在安全模式下启动 Windows，删除 LLT 设置下的 `gpu_oc.json` 文件，该文件位于 `"%LOCALAPPDATA%\LenovoLegionToolkit`。
+2. 在安全模式下启动 Windows，删除 LLT 设置下的 `gpu_oc.json` 文件，该文件位于 `"%LOCALAPPDATA%\UniversalDeviceToolkit`。
 
 #### 我的开机画面为什么没有生效？
 
@@ -683,7 +683,7 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 
 一些并不常用的功能在 GUI 中没有对应的启动开关。这些功能需要通过在启动 UDT 时添加命令行参数，或将参数添加到 `args.txt` 中的方式启用。
 
-* `--trace` - 启用日志记录并将日志保存到 `%LOCALAPPDATA%\LenovoLegionToolkit\log`
+* `--trace` - 启用日志记录并将日志保存到 `%LOCALAPPDATA%\UniversalDeviceToolkit\log`
 * `--minimized` - 以最小化到托盘的方式启动 UDT
 * `--disable-tray-tooltip` - 当鼠标悬停在托盘图标上方时不显示 UDT 托盘自定义工具提示
 * `--allow-all-power-modes-on-battery` - 允许在未接通外部电源的情况下启用所有性能模式 _（使用该参数时 UDT 不保证能够正常运行，也不会为此参数造成的问题提供技术支持）_
@@ -698,7 +698,7 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 * `--disable-update-checker` - 禁用 UDT 自动新版本检测 _（若你希望依赖于 winget，scoop 等等软件更新 UDT，你可以启用此选项）_
 
 如果你希望将所需参数保存至 `args.txt` 文件内：
-1. 进入 `%LOCALAPPDATA%\LenovoLegionToolkit` 文件夹
+1. 进入 `%LOCALAPPDATA%\UniversalDeviceToolkit` 文件夹
 2. 在那里创建一个名为 `args.txt` 的文本文件
 3. 在文件内的每一行添加**一个**参数
 4. 启动 UDT
@@ -712,11 +712,11 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 记录 Log 日志的步骤：
 
 1. 确保 UDT 已关闭（后台也记得关掉）；
-2. 打开 `运行` （使用 Win + R 打开）然后输入 `"%LOCALAPPDATA%\Programs\LenovoLegionToolkit\Lenovo Legion Toolkit.exe" --trace` 然后点击确定；
+2. 打开 `运行` （使用 Win + R 打开）然后输入 `"%LOCALAPPDATA%\Programs\UniversalDeviceToolkit\Lenovo Legion Toolkit.exe" --trace` 然后点击确定；
 3. UDT 将会启动并且可以在左上角能看到 `[LOGGING ENABLED]` ；
 4. 复现你遇到的问题；
 5. 关闭 UDT （同样记得关掉后台）；
-6. 然后打开 `运行` （使用 Win + R 打开）然后输入 `"%LOCALAPPDATA%\LenovoLegionToolkit\log"` ；
+6. 然后打开 `运行` （使用 Win + R 打开）然后输入 `"%LOCALAPPDATA%\UniversalDeviceToolkit\log"` ；
 7. 这里就是存放日志文件的地方了，请在 Issue 内汇报 Bug 时一并提交。
 
 ## 贡献此项目
@@ -748,7 +748,7 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 3. 出错的功能
 4. 会导致崩溃闪退的功能
 
-你提交的信息越多，随着时间的推进，LLT 就会变得越来越好！如果有什么出错的地方请准确写下问题并附上日志。(日志保存地址 `%LOCALAPPDATA%\LenovoLegionToolkit\log`). 
+你提交的信息越多，随着时间的推进，LLT 就会变得越来越好！如果有什么出错的地方请准确写下问题并附上日志。(日志保存地址 `%LOCALAPPDATA%\UniversalDeviceToolkit\log`). 
 
 ## 本地化翻译
 

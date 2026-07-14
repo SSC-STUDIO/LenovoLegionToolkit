@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public interface IFeature<T> where T : struct
 {

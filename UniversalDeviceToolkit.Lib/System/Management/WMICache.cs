@@ -5,7 +5,7 @@ using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.System.Management;
+namespace UniversalDeviceToolkit.Lib.System.Management;
 
 public static class WMICache
 {

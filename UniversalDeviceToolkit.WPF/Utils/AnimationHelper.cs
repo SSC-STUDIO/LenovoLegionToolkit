@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media.Animation;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 

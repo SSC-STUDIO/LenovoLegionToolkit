@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 
@@ -309,7 +309,7 @@ public partial class FanCurveControl : UserControl
 
     /// <summary>
     /// Map slider value → canvas point. High value = top of chart (100% fan), low = bottom.
-    /// Matches original LenovoLegionToolkit FanCurveControl geometry.
+    /// Matches original UniversalDeviceToolkit FanCurveControl geometry.
     /// </summary>
     private Point GetGraphPointFromValue(Slider slider)
     {

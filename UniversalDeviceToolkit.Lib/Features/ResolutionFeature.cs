@@ -2,13 +2,13 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using WindowsDisplayAPI;
 using WindowsDisplayAPI.Native.DeviceContext;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public class ResolutionFeature : IFeature<Resolution>
 {

@@ -1,6 +1,6 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

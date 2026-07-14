@@ -1,6 +1,6 @@
 using System.Drawing;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.System;
 using Windows.Win32;
 
 // ReSharper disable all

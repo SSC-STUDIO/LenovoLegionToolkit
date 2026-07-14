@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using System.Text.Json.Serialization;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;

@@ -2,7 +2,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
 

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Extensions;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Automation;

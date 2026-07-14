@@ -1,9 +1,9 @@
 ﻿using System.ServiceProcess;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.System.Services;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 internal static class ServiceControllerExtension
 {

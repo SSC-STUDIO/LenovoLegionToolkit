@@ -4,10 +4,10 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
 
 internal static class SensorReadingHelper
 {

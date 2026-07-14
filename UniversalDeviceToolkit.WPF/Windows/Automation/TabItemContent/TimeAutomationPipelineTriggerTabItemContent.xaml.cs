@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Automation.TabItemContent
 {

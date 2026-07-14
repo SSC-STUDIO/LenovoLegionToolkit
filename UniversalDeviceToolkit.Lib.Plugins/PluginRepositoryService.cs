@@ -12,10 +12,10 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Plugins.Resources;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Service for managing online plugin repository
@@ -866,7 +866,8 @@ public class PluginRepositoryService : IDisposable
             {
                 var directoryName = Path.GetFileName(directory);
                 var normalizedDirectoryName = NormalizePluginToken(directoryName);
-                var normalizedDirectoryShortName = NormalizePluginToken(directoryName.Replace("LenovoLegionToolkit.Plugins.", string.Empty, StringComparison.OrdinalIgnoreCase));
+                var normalizedDirectoryShortName = NormalizePluginToken(
+                    PluginAssemblyNaming.StripPluginPrefixForNormalization(directoryName));
 
                 if (normalizedDirectoryName.Equals(normalizedPluginId, StringComparison.OrdinalIgnoreCase) ||
                     normalizedDirectoryShortName.Equals(normalizedPluginId, StringComparison.OrdinalIgnoreCase))
@@ -1753,8 +1754,7 @@ public class PluginRepositoryService : IDisposable
             {
                 var fileName = Path.GetFileName(path);
                 return !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase) &&
-                       !fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) &&
-                       !fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
+                       !PluginAssemblyNaming.IsSdkOrSharedDllFileName(fileName);
             })
             .ToList();
 
@@ -1778,14 +1778,14 @@ public class PluginRepositoryService : IDisposable
         if (normalizedMatches.Count > 1)
         {
             return normalizedMatches.FirstOrDefault(path =>
-                Path.GetFileName(path).StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+                PluginAssemblyNaming.IsPluginPrefixedFileName(Path.GetFileName(path)))
                 ?? normalizedMatches[0];
         }
 
         var prefixedMatch = pluginDlls.FirstOrDefault(path =>
         {
             var fileName = Path.GetFileName(path);
-            if (!fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+            if (!PluginAssemblyNaming.IsPluginPrefixedFileName(fileName))
                 return false;
 
             var normalizedFileName = NormalizePluginToken(Path.GetFileNameWithoutExtension(path));
@@ -1806,25 +1806,23 @@ public class PluginRepositoryService : IDisposable
 
     private static bool ShouldSkipPluginPayloadFile(string filePath)
     {
-        var fileName = Path.GetFileName(filePath);
-        return fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
+        return PluginAssemblyNaming.IsSdkOrSharedDllFileName(Path.GetFileName(filePath));
     }
 
     private static void TryStageCanonicalPluginSharedAssembly(string pluginDirectory)
     {
-        var sourceCandidates = new[]
-        {
-            Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"),
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll")
-        };
-
-        var sourcePath = sourceCandidates.FirstOrDefault(File.Exists);
+        var sourcePath = PluginAssemblyNaming.EnumerateAppBaseSharedCandidates().FirstOrDefault(File.Exists);
         if (string.IsNullOrWhiteSpace(sourcePath))
             return;
 
         try
         {
-            File.Copy(sourcePath, Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"), overwrite: true);
+            File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.PreferredSharedDllFileName), overwrite: true);
+
+            if (Path.GetFileName(sourcePath).Equals(PluginAssemblyNaming.LegacySharedDllFileName, StringComparison.OrdinalIgnoreCase))
+            {
+                File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.LegacySharedDllFileName), overwrite: true);
+            }
         }
         catch (Exception ex)
         {
@@ -1835,19 +1833,18 @@ public class PluginRepositoryService : IDisposable
 
     private static void TryStageCanonicalPluginSdkAssembly(string pluginDirectory)
     {
-        var sourceCandidates = new[]
-        {
-            Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.SDK.dll"),
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LenovoLegionToolkit.Plugins.SDK.dll")
-        };
-
-        var sourcePath = sourceCandidates.FirstOrDefault(File.Exists);
+        var sourcePath = PluginAssemblyNaming.EnumerateAppBaseSdkCandidates().FirstOrDefault(File.Exists);
         if (string.IsNullOrWhiteSpace(sourcePath))
             return;
 
         try
         {
-            File.Copy(sourcePath, Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.SDK.dll"), overwrite: true);
+            File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.PreferredSdkDllFileName), overwrite: true);
+
+            if (Path.GetFileName(sourcePath).Equals(PluginAssemblyNaming.LegacySdkDllFileName, StringComparison.OrdinalIgnoreCase))
+            {
+                File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.LegacySdkDllFileName), overwrite: true);
+            }
         }
         catch (Exception ex)
         {

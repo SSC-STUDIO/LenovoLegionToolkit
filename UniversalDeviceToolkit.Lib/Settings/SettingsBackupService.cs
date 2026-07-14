@@ -3,9 +3,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public sealed class SettingsBackupService
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
 namespace UniversalDeviceToolkit.WPF.Extensions;
 

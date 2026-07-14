@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 
 public class DGPUFeatureFlagsNotify(IDelayProvider delayProvider) : AbstractDGPUNotify(delayProvider)
 {

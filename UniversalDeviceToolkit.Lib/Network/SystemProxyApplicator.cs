@@ -1,10 +1,10 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>
 /// Applies / clears Windows system proxy or PAC pointing at the loopback NetworkProxy worker.

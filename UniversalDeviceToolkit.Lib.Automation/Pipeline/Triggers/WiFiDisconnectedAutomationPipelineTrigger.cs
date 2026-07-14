@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
-using LenovoLegionToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 

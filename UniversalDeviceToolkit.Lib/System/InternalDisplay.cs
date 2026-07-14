@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Devices.Display;
 using Windows.Win32.Foundation;
 using WindowsDisplayAPI;
 using WindowsDisplayAPI.DisplayConfig;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class InternalDisplay
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
+namespace UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 
 public interface IDGPUNotify
 {

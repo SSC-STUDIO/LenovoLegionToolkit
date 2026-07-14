@@ -741,7 +741,10 @@
         "resolved": "4.3.0",
         "contentHash": "7Kj9DmCCo4SOCd1jAiw4+EcMFP2nR8rLLvitAYzVtzbWToTsodkbie24+8x9C4LDLxkopWEUGX62szqqNy7oeg=="
       },
-      "LenovoLegionToolkit.Lib": {
+      "universaldevicetoolkit.cli.lib": {
+        "type": "Project"
+      },
+      "universaldevicetoolkit.lib": {
         "type": "Project",
         "dependencies": {
           "Autofac": "[9.3.0, )",
@@ -765,29 +768,26 @@
           "ZenStates-Core": "[1.0.1, )"
         }
       },
-      "LenovoLegionToolkit.Lib.Plugins": {
-        "type": "Project",
-        "dependencies": {
-          "Autofac": "[9.3.0, )",
-          "LenovoLegionToolkit.Lib": "[4.2.1, )"
-        }
-      },
-      "universaldevicetoolkit.cli.lib": {
-        "type": "Project"
-      },
       "universaldevicetoolkit.lib.automation": {
         "type": "Project",
         "dependencies": {
           "Autofac": "[9.3.0, )",
-          "LenovoLegionToolkit.Lib": "[4.2.1, )",
           "NeoSmart.AsyncLock": "[3.2.1, )",
-          "UniversalDeviceToolkit.Lib.Macro": "[4.2.1, )"
+          "UniversalDeviceToolkit.Lib": "[5.0.0, )",
+          "UniversalDeviceToolkit.Lib.Macro": "[5.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.macro": {
         "type": "Project",
         "dependencies": {
-          "LenovoLegionToolkit.Lib": "[4.2.1, )"
+          "UniversalDeviceToolkit.Lib": "[5.0.0, )"
+        }
+      },
+      "universaldevicetoolkit.lib.plugins": {
+        "type": "Project",
+        "dependencies": {
+          "Autofac": "[9.3.0, )",
+          "UniversalDeviceToolkit.Lib": "[5.0.0, )"
         }
       },
       "LibreHardwareMonitorLib": {

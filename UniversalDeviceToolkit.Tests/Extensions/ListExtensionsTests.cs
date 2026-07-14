@@ -1,6 +1,6 @@
 using System.Collections;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Extensions;

@@ -5,9 +5,9 @@ using System.Net.Http.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public class WarrantyChecker(ApplicationSettings settings, HttpClientFactory httpClientFactory)
 {

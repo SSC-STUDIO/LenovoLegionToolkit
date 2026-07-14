@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Features.PanelLogo;
+namespace UniversalDeviceToolkit.Lib.Features.PanelLogo;
 
 public class PanelLogoBacklightFeature(
     PanelLogoLenovoLightingBacklightFeature lenovoLightingFeature,

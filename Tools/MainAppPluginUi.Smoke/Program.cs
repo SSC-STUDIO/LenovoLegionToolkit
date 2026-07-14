@@ -17,9 +17,9 @@ using System.Windows.Automation;
 using UniversalDeviceToolkit.CLI.Lib;
 using UniversalDeviceToolkit.CLI.Lib.Extensions;
 using Microsoft.Win32;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace MainAppPluginUi.Smoke;
 
@@ -976,9 +976,14 @@ Environment variables:
             return string.Empty;
 
         var simpleName = pluginId;
-        const string prefix = "LenovoLegionToolkit.Plugins.";
-        if (simpleName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-            simpleName = simpleName[prefix.Length..];
+        foreach (var prefix in new[] { "UniversalDeviceToolkit.Plugins.", "LenovoLegionToolkit.Plugins." })
+        {
+            if (simpleName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                simpleName = simpleName[prefix.Length..];
+                break;
+            }
+        }
 
         return simpleName switch
         {
@@ -1503,8 +1508,8 @@ Environment variables:
         var candidateDirectories = new[]
         {
             Path.Combine(runtimePluginsDirectory, pluginId),
-            Path.Combine(runtimePluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}"),
-            Path.Combine(runtimePluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}"),
+            Path.Combine(runtimePluginsDirectory, $"UniversalDeviceToolkit.Plugins.{pluginId}"),
+            Path.Combine(runtimePluginsDirectory, $"UniversalDeviceToolkit.Plugins.{pluginId.Replace("-", string.Empty)}"),
             Path.Combine(runtimePluginsDirectory, "local", pluginId)
         };
 
@@ -1514,8 +1519,8 @@ Environment variables:
         var candidateDlls = new[]
         {
             Path.Combine(runtimePluginsDirectory, $"{pluginId}.dll"),
-            Path.Combine(runtimePluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId}.dll"),
-            Path.Combine(runtimePluginsDirectory, $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty)}.dll")
+            Path.Combine(runtimePluginsDirectory, $"UniversalDeviceToolkit.Plugins.{pluginId}.dll"),
+            Path.Combine(runtimePluginsDirectory, $"UniversalDeviceToolkit.Plugins.{pluginId.Replace("-", string.Empty)}.dll")
         };
 
         return candidateDlls.Any(File.Exists);
@@ -1602,8 +1607,8 @@ Environment variables:
             yield break;
 
         yield return pluginId;
-        yield return $"LenovoLegionToolkit.Plugins.{pluginId}";
-        yield return $"LenovoLegionToolkit.Plugins.{pluginId.Replace("-", string.Empty, StringComparison.Ordinal)}";
+        yield return $"UniversalDeviceToolkit.Plugins.{pluginId}";
+        yield return $"UniversalDeviceToolkit.Plugins.{pluginId.Replace("-", string.Empty, StringComparison.Ordinal)}";
     }
 
     private static RuntimePluginFixtureState PrepareRuntimePluginFixture(
@@ -1636,9 +1641,11 @@ Environment variables:
 
     private static string NormalizePluginIdFromDirectoryName(string pluginDirectoryName)
     {
-        const string prefix = "LenovoLegionToolkit.Plugins.";
-        if (pluginDirectoryName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-            return pluginDirectoryName[prefix.Length..];
+        foreach (var prefix in new[] { "UniversalDeviceToolkit.Plugins.", "LenovoLegionToolkit.Plugins." })
+        {
+            if (pluginDirectoryName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                return pluginDirectoryName[prefix.Length..];
+        }
 
         return pluginDirectoryName;
     }
@@ -1707,6 +1714,9 @@ Environment variables:
         var fixtures = new List<RuntimeFileFixtureState>();
         var fixtureMap = new (string FileName, string[] SourceDirectories)[]
         {
+            ("UniversalDeviceToolkit.Plugins.SDK.dll", ["SDK"]),
+            ("UniversalDeviceToolkit.Plugins.Shared.dll", ["Shared"]),
+            // Dual-load fixtures for pre-cutover host/plugin trees
             ("LenovoLegionToolkit.Plugins.SDK.dll", ["SDK"]),
             ("LenovoLegionToolkit.Plugins.Shared.dll", ["Shared"])
         };
@@ -4718,7 +4728,7 @@ Environment variables:
         if (normalized.Equals("custom-mouse", StringComparison.OrdinalIgnoreCase))
         {
             yield return basePrefix + "CustomMouse";
-            yield return basePrefix + "LenovoLegionToolkit.Plugins.CustomMouse";
+            yield return basePrefix + "UniversalDeviceToolkit.Plugins.CustomMouse";
         }
 
         if (normalized.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
@@ -4778,7 +4788,7 @@ Environment variables:
                 "WindowsOptimizationAction_custom.mouse.",
                 "WindowsOptimizationAction_custom-mouse.",
                 "WindowsOptimizationAction_custommouse.",
-                "WindowsOptimizationAction_LenovoLegionToolkit.Plugins.CustomMouse.",
+                "WindowsOptimizationAction_UniversalDeviceToolkit.Plugins.CustomMouse.",
                 "WindowsOptimizationAction_CustomMouse."
             };
             var resolvedActions = definition.ActionAutomationIds
@@ -4905,7 +4915,7 @@ Environment variables:
                     "WindowsOptimizationCategory_custom.mouse",
                     "WindowsOptimizationCategory_custom-mouse",
                     "WindowsOptimizationCategory_custommouse",
-                    "WindowsOptimizationCategory_LenovoLegionToolkit.Plugins.CustomMouse",
+                    "WindowsOptimizationCategory_UniversalDeviceToolkit.Plugins.CustomMouse",
                     "WindowsOptimizationCategory_CustomMouse"
                 },
                 new[]
@@ -4913,7 +4923,7 @@ Environment variables:
                     "WindowsOptimizationCategorySettings_custom.mouse",
                     "WindowsOptimizationCategorySettings_custom-mouse",
                     "WindowsOptimizationCategorySettings_custommouse",
-                    "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse",
+                    "WindowsOptimizationCategorySettings_UniversalDeviceToolkit.Plugins.CustomMouse",
                     "WindowsOptimizationCategorySettings_CustomMouse"
                 },
                 new[]
@@ -4960,8 +4970,8 @@ Environment variables:
                     {
                         "WindowsOptimizationCategory_custom",
                         "WindowsOptimizationCategorySettings_custom",
-                        "WindowsOptimizationCategory_LenovoLegionToolkit.Plugins.CustomMouse",
-                        "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse",
+                        "WindowsOptimizationCategory_UniversalDeviceToolkit.Plugins.CustomMouse",
+                        "WindowsOptimizationCategorySettings_UniversalDeviceToolkit.Plugins.CustomMouse",
                         "WindowsOptimizationCategory_CustomMouse",
                         "WindowsOptimizationCategorySettings_CustomMouse"
                     };
@@ -4977,7 +4987,7 @@ Environment variables:
                     }
 
                     var categoryBySettingsButtonPrefix = TryWaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_custom", focusedTimeout)
-                        ?? TryWaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse", focusedTimeout)
+                        ?? TryWaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_UniversalDeviceToolkit.Plugins.CustomMouse", focusedTimeout)
                         ?? TryWaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_CustomMouse", focusedTimeout);
                     if (categoryBySettingsButtonPrefix is not null)
                     {
@@ -5076,14 +5086,14 @@ Environment variables:
                 "WindowsOptimizationCategorySettings_custom-mouse",
                 "WindowsOptimizationCategorySettings_custommouse",
                 "WindowsOptimizationCategorySettings_custom",
-                "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse",
+                "WindowsOptimizationCategorySettings_UniversalDeviceToolkit.Plugins.CustomMouse",
                 "WindowsOptimizationCategorySettings_CustomMouse"
             };
 
             settingsButton = settingsButtonPrefixes
                 .Select(prefix => TryWaitForAutomationIdPrefix(mainWindow, prefix, timeout))
                 .FirstOrDefault(element => element is not null)
-                ?? WaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_LenovoLegionToolkit.Plugins.CustomMouse", timeout);
+                ?? WaitForAutomationIdPrefix(mainWindow, "WindowsOptimizationCategorySettings_UniversalDeviceToolkit.Plugins.CustomMouse", timeout);
             Console.WriteLine($"[main-smoke] custom-mouse optimization settings button resolved by prefix fallback: requested='{string.Join("', '", definition.SettingsButtonAutomationIds)}' actual='{settingsButton.Current.AutomationId}' name='{settingsButton.Current.Name}'");
         }
         catch (TimeoutException) when (pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
@@ -5537,7 +5547,7 @@ Environment variables:
             foreach (var mode in new[] { PowerModeState.Quiet, PowerModeState.Balance, PowerModeState.Performance, PowerModeState.GodMode })
             {
                 var resourceKey = $"PowerModeState_{mode}";
-                var localizedName = LenovoLegionToolkit.Lib.Resources.Resource.ResourceManager.GetString(resourceKey, culture);
+                var localizedName = UniversalDeviceToolkit.Lib.Resources.Resource.ResourceManager.GetString(resourceKey, culture);
                 if (NormalizeComparableText(localizedName) == normalizedText)
                     return mode;
             }

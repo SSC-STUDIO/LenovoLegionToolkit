@@ -1,7 +1,7 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -68,7 +68,7 @@ public class AppIdentityTests
     }
 
     [Fact]
-    public void LegacyDisplayName_ShouldBeLenovoLegionToolkit()
+    public void LegacyDisplayName_ShouldBeUniversalDeviceToolkit()
     {
         AppIdentity.LegacyDisplayName.Should().Be("Lenovo Legion Toolkit");
     }
@@ -98,7 +98,7 @@ public class AppIdentityTests
     }
 
     [Fact]
-    public void LegacyRepositoryName_ShouldBeLenovoLegionToolkit()
+    public void LegacyRepositoryName_ShouldBeUniversalDeviceToolkit()
     {
         AppIdentity.LegacyRepositoryName.Should().Be("LenovoLegionToolkit");
     }

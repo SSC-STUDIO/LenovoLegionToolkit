@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>
 /// Audited built-in domain groups (Steam, GitHub, etc.).

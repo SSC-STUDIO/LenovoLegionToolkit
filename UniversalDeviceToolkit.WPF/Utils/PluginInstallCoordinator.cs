@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Utils;

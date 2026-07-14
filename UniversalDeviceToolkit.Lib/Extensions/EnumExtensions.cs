@@ -5,7 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class EnumExtensions
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Controls.Automation;
 using UniversalDeviceToolkit.WPF.Controls.Automation.Steps;
 using UniversalDeviceToolkit.WPF.Windows.Dashboard;

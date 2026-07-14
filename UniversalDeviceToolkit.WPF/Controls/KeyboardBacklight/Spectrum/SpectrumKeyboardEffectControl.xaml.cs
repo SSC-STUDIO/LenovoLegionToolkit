@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.Spectrum

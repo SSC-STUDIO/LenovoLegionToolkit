@@ -1,7 +1,7 @@
 using System;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Settings;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Settings;

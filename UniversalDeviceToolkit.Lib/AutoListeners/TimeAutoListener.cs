@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Timers;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
-namespace LenovoLegionToolkit.Lib.AutoListeners;
+namespace UniversalDeviceToolkit.Lib.AutoListeners;
 
 public class TimeAutoListener : AbstractAutoListener<TimeAutoListener.ChangedEventArgs>
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class ListExtensions
 {

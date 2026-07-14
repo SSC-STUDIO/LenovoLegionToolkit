@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public static class Folders
 {

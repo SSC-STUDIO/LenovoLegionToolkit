@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.AutoListeners;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib.AutoListeners;
+using UniversalDeviceToolkit.Lib;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.AutoListeners;

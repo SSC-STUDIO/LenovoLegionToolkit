@@ -1,6 +1,6 @@
 using System;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Adapter class to convert PluginManifest to IPlugin

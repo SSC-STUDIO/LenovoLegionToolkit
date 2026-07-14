@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin file system manager interface
@@ -105,7 +105,7 @@ public class PluginFileSystemManager : IPluginFileSystemManager
         foreach (var subdir in subdirectories)
         {
             var dirName = Path.GetFileName(subdir);
-            if (_cultureFolders.Contains(dirName) || dirName.Equals("LenovoLegionToolkit.Plugins.SDK", StringComparison.OrdinalIgnoreCase))
+            if (_cultureFolders.Contains(dirName) || PluginAssemblyNaming.IsSdkDirectoryName(dirName))
                 continue;
 
             // If this is the "local" directory, scan its subdirectories
@@ -164,14 +164,13 @@ public class PluginFileSystemManager : IPluginFileSystemManager
         if (_pluginFileCache.TryGetValue(fullPath, out var cachedTime) && fileInfo.LastWriteTimeUtc <= cachedTime)
             return false;
 
-        if (fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
-            fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) ||
+        if (PluginAssemblyNaming.IsSdkOrSharedDllFileName(fileName) ||
             fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        if (fileName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+        if (PluginAssemblyNaming.IsPluginPrefixedFileName(fileName))
             return true;
 
         if (string.IsNullOrWhiteSpace(parentDirectoryName))
@@ -179,7 +178,8 @@ public class PluginFileSystemManager : IPluginFileSystemManager
 
         var normalizedDllName = NormalizePluginToken(fileNameWithoutExtension);
         var normalizedParentName = NormalizePluginToken(parentDirectoryName);
-        var normalizedParentShortName = NormalizePluginToken(parentDirectoryName.Replace("LenovoLegionToolkit.Plugins.", string.Empty, StringComparison.OrdinalIgnoreCase));
+        var normalizedParentShortName = NormalizePluginToken(
+            PluginAssemblyNaming.StripPluginPrefixForNormalization(parentDirectoryName));
 
         if (string.IsNullOrWhiteSpace(normalizedDllName))
             return false;
@@ -210,14 +210,15 @@ public class PluginFileSystemManager : IPluginFileSystemManager
         var normalized = NormalizePluginToken(pluginId);
         var pascalCase = ToPascalCasePluginId(pluginId);
 
-        var candidates = new[]
+        var candidates = new List<string>
         {
             $"{pluginId}.dll",
-            $"LenovoLegionToolkit.Plugins.{pluginId}.dll",
-            $"{normalized}.dll",
-            $"LenovoLegionToolkit.Plugins.{normalized}.dll",
-            $"LenovoLegionToolkit.Plugins.{pascalCase}.dll"
+            $"{normalized}.dll"
         };
+
+        candidates.AddRange(PluginAssemblyNaming.EnumeratePrefixedPluginDllFileNames(pluginId));
+        candidates.AddRange(PluginAssemblyNaming.EnumeratePrefixedPluginDllFileNames(normalized));
+        candidates.AddRange(PluginAssemblyNaming.EnumeratePrefixedPluginDllFileNames(pascalCase));
 
         return candidates
             .Where(candidate => !string.IsNullOrWhiteSpace(candidate))

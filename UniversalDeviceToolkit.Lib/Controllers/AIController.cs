@@ -3,16 +3,16 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.AutoListeners;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.AutoListeners;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 
-namespace LenovoLegionToolkit.Lib.Controllers;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 public class AIController(
     PowerModeListener powerModeListener,

@@ -1,6 +1,6 @@
 using System.Reflection;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF;
 using UniversalDeviceToolkit.WPF.Startup;
 using Xunit;

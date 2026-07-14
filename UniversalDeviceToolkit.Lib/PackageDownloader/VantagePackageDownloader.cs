@@ -6,10 +6,10 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using LenovoLegionToolkit.Lib.PackageDownloader.Detectors;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.PackageDownloader.Detectors;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader;
 
 public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
     : AbstractPackageDownloader(httpClientFactory)

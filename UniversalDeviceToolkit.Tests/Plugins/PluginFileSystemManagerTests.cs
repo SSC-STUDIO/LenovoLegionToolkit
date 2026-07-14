@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
@@ -18,14 +18,14 @@ public class PluginFileSystemManagerTests : TemporaryFileTestBase
 
     public PluginFileSystemManagerTests()
     {
-        _previousAppDataOverride = Environment.GetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable);
-        Environment.SetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
+        _previousAppDataOverride = Environment.GetEnvironmentVariable(UniversalDeviceToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable);
+        Environment.SetEnvironmentVariable(UniversalDeviceToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
         _fileSystemManager = new PluginFileSystemManager();
     }
 
     public override void Dispose()
     {
-        Environment.SetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
+        Environment.SetEnvironmentVariable(UniversalDeviceToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
         base.Dispose();
     }
 
@@ -57,7 +57,7 @@ public class PluginFileSystemManagerTests : TemporaryFileTestBase
     [Fact]
     public void GetPluginsDirectory_ShouldUseAppDataPluginsDirectory()
     {
-        var appDataDirectory = Environment.GetEnvironmentVariable(LenovoLegionToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable);
+        var appDataDirectory = Environment.GetEnvironmentVariable(UniversalDeviceToolkit.Lib.Utils.Folders.AppDataOverrideEnvironmentVariable);
         appDataDirectory.Should().NotBeNullOrWhiteSpace();
 
         var path = _fileSystemManager.GetPluginsDirectory();
@@ -154,7 +154,7 @@ public class PluginFileSystemManagerTests : TemporaryFileTestBase
 
         // Assert
         candidates.Should().Contain($"{pluginId}.dll");
-        candidates.Should().Contain($"LenovoLegionToolkit.Plugins.{pluginId}.dll");
+        candidates.Should().Contain($"UniversalDeviceToolkit.Plugins.{pluginId}.dll");
     }
 
     [Fact]
@@ -435,10 +435,10 @@ public class PluginFileSystemManagerTests : TemporaryFileTestBase
     public void PluginDllFiltering_ShouldIncludePluginsWithCorrectPrefix()
     {
         // Arrange
-        var pluginDllName = "LenovoLegionToolkit.Plugins.MyPlugin.dll";
+        var pluginDllName = "UniversalDeviceToolkit.Plugins.MyPlugin.dll";
 
-        // Assert - Plugin DLLs with correct prefix should be included
-        pluginDllName.Should().StartWith("LenovoLegionToolkit.Plugins.");
+        // Assert - Plugin DLLs with preferred UDT prefix should be included
+        pluginDllName.Should().StartWith("UniversalDeviceToolkit.Plugins.");
         pluginDllName.Should().NotContain("SDK");
         pluginDllName.Should().EndWith(".dll");
     }

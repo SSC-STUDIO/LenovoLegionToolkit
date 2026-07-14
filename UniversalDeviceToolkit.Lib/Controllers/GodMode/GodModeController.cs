@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Controllers.GodMode;
+namespace UniversalDeviceToolkit.Lib.Controllers.GodMode;
 
 /// <summary>
 /// God Mode controller that automatically selects V1 or V2 implementation based on hardware version.

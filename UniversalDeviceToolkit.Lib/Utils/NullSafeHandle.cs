@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public sealed class NullSafeHandle : SafeHandle
 {

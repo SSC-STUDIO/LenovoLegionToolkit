@@ -1,6 +1,6 @@
 // Derived from Lenovo Legion Toolkit.
 // Original project copyright: Copyright (C) Bartosz Cichecki and contributors.
-// Upstream sync copyright: Copyright (C) 2026 LenovoLegionToolkit-Team.
+// Upstream sync copyright: Copyright (C) 2026 UniversalDeviceToolkit-Team.
 // Modifications copyright: Copyright (C) 2026 Universal Device Toolkit Contributors.
 
 using System;
@@ -9,12 +9,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public partial class ITSModeFeature : IFeature<ITSMode>
 {

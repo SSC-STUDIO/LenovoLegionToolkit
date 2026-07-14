@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Settings;
 
-namespace LenovoLegionToolkit.Lib.Optimization;
+namespace UniversalDeviceToolkit.Lib.Optimization;
 
 public class WindowsCleanupService
 {

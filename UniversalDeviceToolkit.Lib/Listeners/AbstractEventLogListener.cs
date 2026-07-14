@@ -1,10 +1,10 @@
 using System;
 using System.Diagnostics.Eventing.Reader;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Listeners;
+namespace UniversalDeviceToolkit.Lib.Listeners;
 
 public abstract class AbstractEventLogListener : IListener<EventArgs>
 {

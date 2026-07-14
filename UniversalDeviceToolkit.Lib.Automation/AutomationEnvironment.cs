@@ -6,30 +6,31 @@ namespace UniversalDeviceToolkit.Lib.Automation;
 
 public class AutomationEnvironment
 {
-    private const string AC_ADAPTER_CONNECTED = "LLT_IS_AC_ADAPTER_CONNECTED";
-    private const string LOW_POWER_AC_ADAPTER = "LLT_IS_AC_ADAPTER_LOW_POWER";
-    private const string DISPLAY_ON = "LLT_IS_DISPLAY_ON";
-    private const string EXTERNAL_DISPLAY_CONNECTED = "LLT_IS_EXTERNAL_DISPLAY_CONNECTED";
-    private const string GAME_RUNNING = "LLT_IS_GAME_RUNNING";
-    private const string HDR_ON = "LLT_IS_HDR_ON";
-    private const string LID_OPEN = "LLT_IS_LID_OPEN";
-    private const string STARTUP = "LLT_STARTUP";
-    private const string RESUME = "LLT_RESUME";
-    private const string POWER_MODE = "LLT_POWER_MODE";
-    private const string POWER_MODE_NAME = "LLT_POWER_MODE_NAME";
-    private const string PROCESSES_STARTED = "LLT_PROCESSES_STARTED";
-    private const string PROCESSES = "LLT_PROCESSES";
-    private const string DEVICE_CONNECTED = "LLT_DEVICE_CONNECTED";
-    private const string DEVICE_INSTANCE_IDS = "LLT_DEVICE_INSTANCE_IDS";
-    private const string IS_SUNSET = "LLT_IS_SUNSET";
-    private const string IS_SUNRISE = "LLT_IS_SUNRISE";
-    private const string TIME = "LLT_TIME";
-    private const string DAYS = "LLT_DAYS";
-    private const string PERIOD = "LLT_PERIOD";
-    private const string USER_ACTIVE = "LLT_IS_USER_ACTIVE";
-    private const string WIFI_CONNECTED = "LLT_WIFI_CONNECTED";
-    private const string WIFI_SSID = "LLT_WIFI_SSID";
-    private const string SESSION_LOCKED = "LLT_SESSION_LOCKED";
+    // Primary keys are UDT_*; LLT_* aliases are dual-written for script compatibility.
+    private const string AC_ADAPTER_CONNECTED = "UDT_IS_AC_ADAPTER_CONNECTED";
+    private const string LOW_POWER_AC_ADAPTER = "UDT_IS_AC_ADAPTER_LOW_POWER";
+    private const string DISPLAY_ON = "UDT_IS_DISPLAY_ON";
+    private const string EXTERNAL_DISPLAY_CONNECTED = "UDT_IS_EXTERNAL_DISPLAY_CONNECTED";
+    private const string GAME_RUNNING = "UDT_IS_GAME_RUNNING";
+    private const string HDR_ON = "UDT_IS_HDR_ON";
+    private const string LID_OPEN = "UDT_IS_LID_OPEN";
+    private const string STARTUP = "UDT_STARTUP";
+    private const string RESUME = "UDT_RESUME";
+    private const string POWER_MODE = "UDT_POWER_MODE";
+    private const string POWER_MODE_NAME = "UDT_POWER_MODE_NAME";
+    private const string PROCESSES_STARTED = "UDT_PROCESSES_STARTED";
+    private const string PROCESSES = "UDT_PROCESSES";
+    private const string DEVICE_CONNECTED = "UDT_DEVICE_CONNECTED";
+    private const string DEVICE_INSTANCE_IDS = "UDT_DEVICE_INSTANCE_IDS";
+    private const string IS_SUNSET = "UDT_IS_SUNSET";
+    private const string IS_SUNRISE = "UDT_IS_SUNRISE";
+    private const string TIME = "UDT_TIME";
+    private const string DAYS = "UDT_DAYS";
+    private const string PERIOD = "UDT_PERIOD";
+    private const string USER_ACTIVE = "UDT_IS_USER_ACTIVE";
+    private const string WIFI_CONNECTED = "UDT_WIFI_CONNECTED";
+    private const string WIFI_SSID = "UDT_WIFI_SSID";
+    private const string SESSION_LOCKED = "UDT_SESSION_LOCKED";
 
     private const string VALUE_TRUE = "TRUE";
     private const string VALUE_FALSE = "FALSE";
@@ -105,16 +106,16 @@ public class AutomationEnvironment
 
     private readonly Dictionary<string, string?> _dictionary = [];
 
-    private static void Set(Dictionary<string, string?> dictionary, string legacyKey, string? value)
+    private static void Set(Dictionary<string, string?> dictionary, string primaryKey, string? value)
     {
-        dictionary[legacyKey] = value;
-        dictionary[ToUdtAlias(legacyKey)] = value;
+        dictionary[primaryKey] = value;
+        dictionary[ToLltAlias(primaryKey)] = value;
     }
 
-    private void Set(string legacyKey, string? value) => Set(_dictionary, legacyKey, value);
+    private void Set(string primaryKey, string? value) => Set(_dictionary, primaryKey, value);
 
-    private static string ToUdtAlias(string legacyKey) =>
-        legacyKey.StartsWith("LLT_", StringComparison.Ordinal)
-            ? "UDT_" + legacyKey[4..]
-            : legacyKey;
+    private static string ToLltAlias(string primaryKey) =>
+        primaryKey.StartsWith("UDT_", StringComparison.Ordinal)
+            ? "LLT_" + primaryKey[4..]
+            : primaryKey;
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Optimization;
+namespace UniversalDeviceToolkit.Lib.Optimization;
 
 public class WindowsOptimizationCategoryProvider
 {

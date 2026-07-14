@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Pages;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -144,7 +144,7 @@ public partial class PluginSettingsWindow : BaseWindow
                 }
                 catch (Exception ex)
                 {
-                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error loading plugin settings: {ex.Message}", ex);
+                    UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error loading plugin settings: {ex.Message}", ex);
                     hasSettingsPage = false;
                 }
             }
@@ -171,7 +171,7 @@ public partial class PluginSettingsWindow : BaseWindow
         }
         catch (Exception ex)
         {
-            LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error loading plugin settings: {ex.Message}", ex);
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error loading plugin settings: {ex.Message}", ex);
             MessageBox.Show(
                 string.Format(Resource.PluginSettingsWindow_LoadError, ex.Message),
                 Resource.PluginSettingsWindow_Error,

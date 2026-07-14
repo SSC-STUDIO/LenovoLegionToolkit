@@ -6,7 +6,7 @@ using Windows.Win32.Devices.Display;
 using WindowsDisplayAPI;
 using WindowsDisplayAPI.DisplayConfig;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class DisplayExtensions
 {

@@ -1,9 +1,9 @@
 ﻿using System;
 using Autofac;
 using Autofac.Builder;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class RegistrationBuilderExtensions
 {

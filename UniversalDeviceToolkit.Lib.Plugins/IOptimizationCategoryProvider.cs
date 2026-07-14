@@ -1,6 +1,6 @@
-using LenovoLegionToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Optimization;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Interface for plugins that can provide optimization categories

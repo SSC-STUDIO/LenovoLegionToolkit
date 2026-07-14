@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Utils;
 using System;
 using System.Threading.Tasks;
 

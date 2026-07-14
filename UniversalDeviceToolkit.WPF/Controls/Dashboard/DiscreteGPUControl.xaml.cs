@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
@@ -254,8 +254,8 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to kill GPU processes.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to kill GPU processes.", ex);
         }
         finally
         {
@@ -275,8 +275,8 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to restart GPU.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to restart GPU.", ex);
         }
         finally
         {

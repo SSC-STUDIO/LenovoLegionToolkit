@@ -6,12 +6,12 @@
 
 **错误信息**:
 ```
-error MSB3021: 无法将文件 "...LenovoLegionToolkit.Lib.dll" 复制到 "..."。
+error MSB3021: 无法将文件 "...UniversalDeviceToolkit.Lib.dll" 复制到 "..."。
 The process cannot access the file '...' because it is being used by another process.
 文件被 "testhost.exe (PID)" 锁定
 ```
 
-> 说明：核心库程序集文件名目前仍可能为 `LenovoLegionToolkit.Lib.dll`（兼容插件解析），与测试项目目录名 `UniversalDeviceToolkit.Tests` 不是同一回事。
+> 说明：核心库程序集文件名目前仍可能为 `UniversalDeviceToolkit.Lib.dll`（兼容插件解析），与测试项目目录名 `UniversalDeviceToolkit.Tests` 不是同一回事。
 
 ## 根本原因
 
@@ -255,7 +255,7 @@ dotnet Tools/MainAppPluginUi.Smoke/bin/Release/net10.0-windows/MainAppPluginUi.S
 |------|------|----------|
 | `shell-integration` 单插件 smoke | ✅ PASS | 已走过 marketplace 与 optimization route；验证了设置按钮、启用/禁用动作，并生成截图证据。 |
 | `custom-mouse` 单插件 smoke | ❌ FAIL | 已进入 Windows Optimization 页面，但等待 `WindowsOptimizationCategory_custom.mouse` 超时，说明失败点在优化分类定位，不是主程序未启动。 |
-| `network-acceleration` 单插件 smoke | ❌ FAIL | 主程序尚未启动；`PrepareRuntimePluginFixtures(...)` 删除运行时插件目录时对 `LenovoLegionToolkit.Plugins.ViveTool.resources.dll` 触发 `UnauthorizedAccessException`。 |
+| `network-acceleration` 单插件 smoke | ❌ FAIL | 主程序尚未启动；`PrepareRuntimePluginFixtures(...)` 删除运行时插件目录时对 `UniversalDeviceToolkit.Plugins.ViveTool.resources.dll` 触发 `UnauthorizedAccessException`。 |
 | 默认插件集合 smoke | ❌ FAIL | 与上面相同，启动前就被 runtime fixture 清理/文件锁定问题阻断。 |
 
 ### 如何判读这类失败

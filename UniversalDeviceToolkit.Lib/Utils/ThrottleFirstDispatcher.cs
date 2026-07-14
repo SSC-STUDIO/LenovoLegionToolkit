@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using NeoSmart.AsyncLock;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public class ThrottleFirstDispatcher
 {

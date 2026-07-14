@@ -22,7 +22,7 @@ public sealed class PackageManifestScriptTests
             Directory.CreateDirectory(Path.Combine(tempRoot, "Packaging"));
             File.WriteAllText(
                 hashManifestPath,
-                $"{installerHash.ToUpperInvariant()}  LenovoLegionToolkit_v{version}_Setup.exe{Environment.NewLine}");
+                $"{installerHash.ToUpperInvariant()}  UniversalDeviceToolkit_v{version}_Setup.exe{Environment.NewLine}");
             File.WriteAllText(
                 installerScriptPath,
                 """
@@ -44,7 +44,7 @@ public sealed class PackageManifestScriptTests
             var scoopDraftPath = Path.Combine(tempRoot, "Packaging", "scoop", $"lenovolegiontoolkit.{version}.draft.json");
             var scoopPublishedPath = Path.Combine(tempRoot, "Packaging", "scoop", "lenovolegiontoolkit.json");
 
-            File.Exists(Path.Combine(wingetDirectory, "SSC-STUDIO.LenovoLegionToolkit.installer.yaml")).Should().BeTrue();
+            File.Exists(Path.Combine(wingetDirectory, "SSC-STUDIO.UniversalDeviceToolkit.installer.yaml")).Should().BeTrue();
             File.Exists(scoopDraftPath).Should().BeTrue();
             File.Exists(scoopPublishedPath).Should().BeTrue();
 
@@ -69,8 +69,8 @@ public sealed class PackageManifestScriptTests
                 ],
                 repositoryRoot);
 
-            draftValidationOutput.Should().Contain($"Package manifests match LenovoLegionToolkit_v{version}_Setup.exe");
-            publishedValidationOutput.Should().Contain($"Package manifests match LenovoLegionToolkit_v{version}_Setup.exe");
+            draftValidationOutput.Should().Contain($"Package manifests match UniversalDeviceToolkit_v{version}_Setup.exe");
+            publishedValidationOutput.Should().Contain($"Package manifests match UniversalDeviceToolkit_v{version}_Setup.exe");
         }
         finally
         {
@@ -92,7 +92,7 @@ public sealed class PackageManifestScriptTests
         {
             File.WriteAllText(
                 hashManifestPath,
-                $"{releaseHash.ToUpperInvariant()}  LenovoLegionToolkit_v{version}_Setup.exe{Environment.NewLine}");
+                $"{releaseHash.ToUpperInvariant()}  UniversalDeviceToolkit_v{version}_Setup.exe{Environment.NewLine}");
 
             RunPowerShellScript(
                     Path.Combine(repositoryRoot, "Packaging", "Test-PackageManifests.ps1"),

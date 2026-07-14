@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.System.Management;
 
-namespace LenovoLegionToolkit.Lib.Controllers;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 public class DisplayBrightnessController
 {

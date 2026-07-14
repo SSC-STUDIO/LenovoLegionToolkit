@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader;
 
 public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
     : AbstractPackageDownloader(httpClientFactory)

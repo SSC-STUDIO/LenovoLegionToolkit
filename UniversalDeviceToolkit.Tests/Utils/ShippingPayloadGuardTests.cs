@@ -195,7 +195,7 @@ public sealed class ShippingPayloadGuardTests
                 "UniversalDeviceToolkit_v4.2.0_Online_Setup.exe",
                 "UniversalDeviceToolkit_v4.2.0_Full_win-x64.zip",
                 "UniversalDeviceToolkit_v4.2.0_Online_win-x64.zip",
-                "LenovoLegionToolkit_v4.2.0_Setup.exe",
+                "UniversalDeviceToolkit_v4.2.0_Setup.exe",
                 "UniversalDeviceToolkit_v4.2.0_SHA256.txt",
             ]);
 
@@ -212,7 +212,7 @@ public sealed class ShippingPayloadGuardTests
                 "UniversalDeviceToolkit_v5.0.0_Full_win-x64.zip",
                 "UniversalDeviceToolkit_v5.0.0_Online_win-x64.zip",
                 "UniversalDeviceToolkit_v5.0.0_CLI_cross-platform.zip",
-                "LenovoLegionToolkit_v5.0.0_Setup.exe",
+                "UniversalDeviceToolkit_v5.0.0_Setup.exe",
                 "UniversalDeviceToolkit_v5.0.0_SHA256.txt",
             ]);
 

@@ -6,10 +6,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using PresentMonFps;
 
-namespace LenovoLegionToolkit.Lib.Controllers.Sensors
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
 {
     public class FpsSensorController : IDisposable
     {

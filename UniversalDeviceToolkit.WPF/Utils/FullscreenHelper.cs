@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 

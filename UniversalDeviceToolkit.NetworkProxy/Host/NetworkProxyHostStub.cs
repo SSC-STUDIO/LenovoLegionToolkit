@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
-using LenovoLegionToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.Network;
 
 namespace UniversalDeviceToolkit.NetworkProxy.Host;
 

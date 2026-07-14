@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
 

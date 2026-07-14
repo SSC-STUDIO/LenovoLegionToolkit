@@ -5,13 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Controls.Automation;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -48,8 +48,8 @@ public partial class AutomationPage
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error initializing automation page.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error initializing automation page.", ex);
         }
     }
 
@@ -63,8 +63,8 @@ public partial class AutomationPage
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error toggling automatic pipelines.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error toggling automatic pipelines.", ex);
 
             await SnackbarHelper.ShowAsync(Resource.AutomationPage_EnableAutomaticPipelines_Error_Title,
                 Resource.AutomationPage_EnableAutomaticPipelines_Error_Message,
@@ -93,8 +93,8 @@ public partial class AutomationPage
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error adding manual pipeline.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error adding manual pipeline.", ex);
 
             await SnackbarHelper.ShowAsync(Resource.AutomationPage_AddManualPipeline_Error_Title,
                 Resource.AutomationPage_AddManualPipeline_Error_Message,
@@ -130,8 +130,8 @@ public partial class AutomationPage
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error saving automation pipelines.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error saving automation pipelines.", ex);
 
             await SnackbarHelper.ShowAsync(Resource.AutomationPage_Save_Error_Title,
                 Resource.AutomationPage_Save_Error_Message,
@@ -154,8 +154,8 @@ public partial class AutomationPage
         }
         catch (Exception ex)
         {
-            if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
-                LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Error reverting automation page.", ex);
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Error reverting automation page.", ex);
         }
     }
 

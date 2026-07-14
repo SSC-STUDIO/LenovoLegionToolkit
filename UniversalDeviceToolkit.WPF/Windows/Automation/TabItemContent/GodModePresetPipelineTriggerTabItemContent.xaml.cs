@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib.Controllers.GodMode;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Controllers.GodMode;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Automation.TabItemContent

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.System.Power;
 
-namespace LenovoLegionToolkit.Lib.GameDetection;
+namespace UniversalDeviceToolkit.Lib.GameDetection;
 
 internal unsafe class EffectiveGameModeDetector
 {

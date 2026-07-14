@@ -6,15 +6,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Features.Hybrid;
-using LenovoLegionToolkit.Lib.Network;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Hybrid;
+using UniversalDeviceToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.Settings;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Implementation strategy for <see cref="HardwareStateRecoveryService"/>.
@@ -480,13 +480,13 @@ public sealed class HardwareStateRecoveryService
         var features = new (string DisplayName, Type Type)[]
         {
             ("WhiteKeyboardLenovoLightingBacklightFeature",
-                Type.GetType("LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight.WhiteKeyboardLenovoLightingBacklightFeature, LenovoLegionToolkit.Lib", throwOnError: false)
+                Type.GetType("UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight.WhiteKeyboardLenovoLightingBacklightFeature, UniversalDeviceToolkit.Lib", throwOnError: false)
                 ?? typeof(object)),
             ("PanelLogoLenovoLightingBacklightFeature",
-                Type.GetType("LenovoLegionToolkit.Lib.Features.PanelLogo.PanelLogoLenovoLightingBacklightFeature, LenovoLegionToolkit.Lib", throwOnError: false)
+                Type.GetType("UniversalDeviceToolkit.Lib.Features.PanelLogo.PanelLogoLenovoLightingBacklightFeature, UniversalDeviceToolkit.Lib", throwOnError: false)
                 ?? typeof(object)),
             ("PortsBacklightFeature",
-                Type.GetType("LenovoLegionToolkit.Lib.Features.PortsBacklightFeature, LenovoLegionToolkit.Lib", throwOnError: false)
+                Type.GetType("UniversalDeviceToolkit.Lib.Features.PortsBacklightFeature, UniversalDeviceToolkit.Lib", throwOnError: false)
                 ?? typeof(object)),
         };
 

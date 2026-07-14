@@ -1,15 +1,15 @@
 using System.Globalization;
 using HardwareValidation;
 using System.Management;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Controllers.GodMode;
-using LenovoLegionToolkit.Lib.Controllers.Sensors;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.System.Management;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Controllers.GodMode;
+using UniversalDeviceToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.Utils;
 
 Log.Instance.IsTraceEnabled = true;
 
@@ -88,7 +88,7 @@ static class ProgramEntry
         Console.WriteLine($"RawCapabilityCPU: {capabilityCpu}");
         Console.WriteLine($"RawCapabilityGPU: {capabilityGpu}");
 
-        IoCContainer.Initialize(new LenovoLegionToolkit.Lib.IoCModule());
+        IoCContainer.Initialize(new UniversalDeviceToolkit.Lib.IoCModule());
         var sensorsController = IoCContainer.Resolve<SensorsController>();
         Console.WriteLine($"SensorsSupported: {await sensorsController.IsSupportedAsync().ConfigureAwait(false)}");
         await sensorsController.PrepareAsync().ConfigureAwait(false);

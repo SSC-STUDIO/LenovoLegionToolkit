@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
         <Copyright>$(ProjectCopyright)</Copyright>
         <IsUdtShippingApp>true</IsUdtShippingApp>
-        <AssemblyName>llt</AssemblyName>
+        <AssemblyName>udt-cli</AssemblyName>
         <Platforms>x64</Platforms>
         <NeutralLanguage>en</NeutralLanguage>
         <SatelliteResourceLanguages>en;zh-Hans</SatelliteResourceLanguages>

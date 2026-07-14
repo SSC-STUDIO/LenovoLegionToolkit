@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 
 namespace UniversalDeviceToolkit.WPF.CLI.Features;
 

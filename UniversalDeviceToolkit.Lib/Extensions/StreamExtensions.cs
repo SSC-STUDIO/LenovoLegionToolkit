@@ -2,9 +2,9 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Resources;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 // ReSharper disable LocalizableElement
 

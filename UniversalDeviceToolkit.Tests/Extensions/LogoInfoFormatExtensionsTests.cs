@@ -1,7 +1,7 @@
 using System.Drawing.Imaging;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Extensions;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Extensions;

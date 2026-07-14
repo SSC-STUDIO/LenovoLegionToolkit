@@ -1,26 +1,25 @@
-// NOTE: Do not use LenovoLegionToolkit.Lib.Compatibility as a namespace —
-// Compatibility is already a static class in LenovoLegionToolkit.Lib and a
+// NOTE: Do not use UniversalDeviceToolkit.Lib.Compatibility as a namespace —
+// Compatibility is already a static class in UniversalDeviceToolkit.Lib and a
 // child namespace would shadow it (CS0234 on Compatibility.GetMachineInformationAsync).
-namespace LenovoLegionToolkit.Lib.Branding;
+namespace UniversalDeviceToolkit.Lib.Branding;
 
 /// <summary>
-/// Non-breaking dual-surface brand and ABI constants for Phase 2 of the namespace migration.
+/// Dual-surface brand and ABI constants after the UniversalDeviceToolkit assembly cutover.
 /// </summary>
 /// <remarks>
 /// <para>
 /// User-facing product names use Universal Device Toolkit (UDT) branding.
-/// Plugin / reflection load paths continue to resolve against the retained
-/// <c>LenovoLegionToolkit.Lib*</c> assembly simple names until a coordinated
-/// TypeForwardedTo / dual-package cutover (Phase 2–3).
+/// Primary assembly simple names match project <c>AssemblyName</c> values
+/// (<c>UniversalDeviceToolkit.Lib</c> / <c>UniversalDeviceToolkit.Lib.Plugins</c>).
+/// Legacy <c>LenovoLegionToolkit.Lib*</c> strings remain for loading older plugins
+/// and AppData migration messaging.
 /// </para>
 /// <para>
-/// This type is a constants-only dual surface — it does not rename types or
-/// assemblies. See <c>Docs/NamespaceMigration.md</c> for the phased plan,
-/// dual IPC pipe names, and automation env-var <c>LLT_*</c> / <c>UDT_*</c> aliases.
+/// See <c>Docs/NamespaceMigration.md</c> for dual IPC pipe names and automation
+/// env-var <c>UDT_*</c> / <c>LLT_*</c> aliases.
 /// </para>
 /// <para>
-/// Display-name values align with <see cref="LenovoLegionToolkit.Lib.Utils.AppIdentity"/>; assembly simple
-/// names match the ABI-retained <c>AssemblyName</c> values in Lib / Lib.Plugins.
+/// Display-name values align with <see cref="UniversalDeviceToolkit.Lib.Utils.AppIdentity"/>.
 /// </para>
 /// </remarks>
 public static class BrandCompatibility
@@ -40,28 +39,25 @@ public static class BrandCompatibility
     public const string LegacyProductCompactName = "LenovoLegionToolkit";
 
     /// <summary>
-    /// ABI-retained core library assembly simple name (no extension).
-    /// Use for reflection, plugin assembly resolution, and dependency checks —
-    /// matches <c>UniversalDeviceToolkit.Lib</c> project <c>AssemblyName</c>.
-    /// </summary>
-    public const string LegacyAssemblyLib = "LenovoLegionToolkit.Lib";
-
-    /// <summary>
-    /// ABI-retained plugins host assembly simple name (no extension).
-    /// Matches <c>UniversalDeviceToolkit.Lib.Plugins</c> project <c>AssemblyName</c>.
-    /// </summary>
-    public const string LegacyAssemblyLibPlugins = "LenovoLegionToolkit.Lib.Plugins";
-
-    /// <summary>
-    /// Future preferred core library assembly simple name (documentation / planning only).
-    /// Not used for load paths until TypeForwardedTo / dual-package lands — see
-    /// <c>Docs/NamespaceMigration.md</c> Phase 2–3.
+    /// Primary core library assembly simple name (no extension).
+    /// Matches <c>UniversalDeviceToolkit.Lib</c> project <c>AssemblyName</c> after hard cutover.
+    /// Use for reflection, plugin assembly resolution, and dependency checks.
     /// </summary>
     public const string PreferredAssemblyLib = "UniversalDeviceToolkit.Lib";
 
     /// <summary>
-    /// Future preferred plugins host assembly simple name (documentation / planning only).
-    /// Not used for load paths until TypeForwardedTo / dual-package lands.
+    /// Primary plugins host assembly simple name (no extension).
+    /// Matches <c>UniversalDeviceToolkit.Lib.Plugins</c> project <c>AssemblyName</c> after hard cutover.
     /// </summary>
     public const string PreferredAssemblyLibPlugins = "UniversalDeviceToolkit.Lib.Plugins";
+
+    /// <summary>
+    /// Legacy core library assembly simple name retained for old plugins / migration messaging.
+    /// </summary>
+    public const string LegacyAssemblyLib = "LenovoLegionToolkit.Lib";
+
+    /// <summary>
+    /// Legacy plugins host assembly simple name retained for old plugins / migration messaging.
+    /// </summary>
+    public const string LegacyAssemblyLibPlugins = "LenovoLegionToolkit.Lib.Plugins";
 }

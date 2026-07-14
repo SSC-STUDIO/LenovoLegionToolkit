@@ -10,27 +10,27 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Controllers.Sensors;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Features.Hybrid;
-using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
-using LenovoLegionToolkit.Lib.Features.PanelLogo;
-using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
-using LenovoLegionToolkit.Lib.Integrations;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Network;
-using LenovoLegionToolkit.Lib.Overclocking.Amd;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
-using LenovoLegionToolkit.Lib.Services;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Hybrid;
+using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
+using UniversalDeviceToolkit.Lib.Features.PanelLogo;
+using UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
+using UniversalDeviceToolkit.Lib.Integrations;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.Overclocking.Amd;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Services;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.WPF.CLI;
@@ -40,10 +40,10 @@ using UniversalDeviceToolkit.WPF.Windows;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
 using WinFormsApp = System.Windows.Forms.Application;
 using WinFormsHighDpiMode = System.Windows.Forms.HighDpiMode;
-using SafeStartupHealthGuard = LenovoLegionToolkit.Lib.Utils.StartupHealthGuard;
-using SafeStartupStep = LenovoLegionToolkit.Lib.Utils.StartupStep;
-using SafeStartupRunner = LenovoLegionToolkit.Lib.Utils.StartupInitializationRunner;
-using SafeStartupResult = LenovoLegionToolkit.Lib.Utils.StartupInitializationResult;
+using SafeStartupHealthGuard = UniversalDeviceToolkit.Lib.Utils.StartupHealthGuard;
+using SafeStartupStep = UniversalDeviceToolkit.Lib.Utils.StartupStep;
+using SafeStartupRunner = UniversalDeviceToolkit.Lib.Utils.StartupInitializationRunner;
+using SafeStartupResult = UniversalDeviceToolkit.Lib.Utils.StartupInitializationResult;
 
 namespace UniversalDeviceToolkit.WPF.Startup
 {
@@ -80,7 +80,7 @@ namespace UniversalDeviceToolkit.WPF.Startup
         }
 
         /// <summary>
-        /// Returns the <see cref="LenovoLegionToolkit.Lib.Utils.StartupHealthGuard"/> instance created by
+        /// Returns the <see cref="UniversalDeviceToolkit.Lib.Utils.StartupHealthGuard"/> instance created by
         /// <see cref="RunAsync"/> so background work (such as
         /// <c>App.StartBackgroundInitialization</c>) can route through the same
         /// timeout + failure-tracking machinery as the foreground steps.
@@ -554,8 +554,8 @@ namespace UniversalDeviceToolkit.WPF.Startup
             RenderOptions.ProcessRenderMode = RenderingCompatibilityHelper.GetPreferredRenderMode(_settings);
 
             IoCContainer.Initialize(
-                new LenovoLegionToolkit.Lib.IoCModule(),
-                new LenovoLegionToolkit.Lib.Plugins.IoCModule(),
+                new UniversalDeviceToolkit.Lib.IoCModule(),
+                new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
                 new IoCModule()

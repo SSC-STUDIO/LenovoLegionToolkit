@@ -3,10 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Controllers.Sensors;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -431,7 +431,7 @@ public class GenericSensorsControllerTests : UnitTestBase
     public void IoCModule_ShouldResolveSensorsControllerWithGenericFallback()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterModule<LenovoLegionToolkit.Lib.IoCModule>();
+        builder.RegisterModule<UniversalDeviceToolkit.Lib.IoCModule>();
         builder.RegisterModule<TestIoCModule>();
 
         using var container = builder.Build();

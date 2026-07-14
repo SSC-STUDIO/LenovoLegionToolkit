@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
 
-namespace LenovoLegionToolkit.Lib.AutoListeners;
+namespace UniversalDeviceToolkit.Lib.AutoListeners;
 public abstract class AbstractAutoListener<TEventArgs> : IAutoListener<TEventArgs>, IDisposable where TEventArgs : EventArgs
 {
     private readonly AsyncLock _startStopLock = new();

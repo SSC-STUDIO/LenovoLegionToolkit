@@ -4,9 +4,9 @@ using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Controllers.GodMode;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Controllers.GodMode;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.WPF;
@@ -57,7 +57,7 @@ internal static class Program
                 {
                     WriteLine("Stage: Startup");
                     IoCContainer.Initialize(
-                        new LenovoLegionToolkit.Lib.IoCModule(),
+                        new UniversalDeviceToolkit.Lib.IoCModule(),
                         new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
                         new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
                         new UniversalDeviceToolkit.WPF.IoCModule());

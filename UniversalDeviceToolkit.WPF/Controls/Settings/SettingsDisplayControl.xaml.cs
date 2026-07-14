@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.WPF.Windows.Settings;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings

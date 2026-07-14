@@ -8,9 +8,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Lib.Notifications;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Notifications;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Shell;

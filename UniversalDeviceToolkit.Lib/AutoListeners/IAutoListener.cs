@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.AutoListeners;
+namespace UniversalDeviceToolkit.Lib.AutoListeners;
 
 public interface IAutoListener<T> where T : EventArgs
 {

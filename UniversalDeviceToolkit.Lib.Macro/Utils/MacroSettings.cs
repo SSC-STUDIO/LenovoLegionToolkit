@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Settings;
 
 namespace UniversalDeviceToolkit.Lib.Macro.Utils;
 

@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Features.Hybrid;
-using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Hybrid;
+using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
+using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 

@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 
 using System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Extensions;
+namespace UniversalDeviceToolkit.Lib.Extensions;
 
 public static class TaskExtensions
 {

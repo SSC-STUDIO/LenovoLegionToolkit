@@ -6,9 +6,9 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Tests.Settings;
 using Xunit;
 

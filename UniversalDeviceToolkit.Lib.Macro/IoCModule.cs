@@ -1,5 +1,5 @@
 using Autofac;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Macro.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Macro;

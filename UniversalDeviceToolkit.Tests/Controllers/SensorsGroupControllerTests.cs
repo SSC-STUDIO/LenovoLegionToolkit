@@ -1,5 +1,5 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using LibreHardwareMonitor.Hardware;
 using Moq;
 using Xunit;

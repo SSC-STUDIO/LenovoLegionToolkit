@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using Moq;
 using Xunit;
 
@@ -83,7 +83,7 @@ public class PluginManagerSecurityTests : TemporaryFileTestBase
             });
 
         return new PluginManager(
-            new LenovoLegionToolkit.Lib.Settings.ApplicationSettings(),
+            new UniversalDeviceToolkit.Lib.Settings.ApplicationSettings(),
             signatureValidator,
             loaderMock.Object,
             registry,

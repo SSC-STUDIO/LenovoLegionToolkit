@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
@@ -57,7 +57,7 @@ public partial class CompatibilityCheckErrorWindow : FluentWindow
         try
         {
             // Try to detect system theme
-            var isDarkMode = LenovoLegionToolkit.Lib.System.SystemTheme.IsDarkMode();
+            var isDarkMode = UniversalDeviceToolkit.Lib.System.SystemTheme.IsDarkMode();
             var themeType = isDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             
             if (Log.Instance.IsTraceEnabled)

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 using System.Text.Json.Serialization;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;

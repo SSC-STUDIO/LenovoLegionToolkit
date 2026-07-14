@@ -7,7 +7,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Network;
+namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>Named-pipe client for the NetworkProxy worker (JSON line protocol).</summary>
 public sealed class NetworkProxyIpcClient

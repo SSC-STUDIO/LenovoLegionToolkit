@@ -227,7 +227,7 @@ internal sealed record DoctorReport(
             return new DoctorCheck("Hardware controls", DoctorCheckStatus.Pass, "Hardware controls are available.");
 
         var detail = status.SupportLevel.StartsWith("Windows desktop", StringComparison.OrdinalIgnoreCase)
-            ? "Use the Windows desktop app or llt.exe for supported hardware controls."
+            ? "Use the Windows desktop app or udt-cli.exe for supported hardware controls."
             : "Hardware-write controls are intentionally hidden on macOS/Linux.";
 
         return new DoctorCheck("Hardware controls", DoctorCheckStatus.Warn, detail);

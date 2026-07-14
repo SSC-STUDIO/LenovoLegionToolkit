@@ -1,6 +1,6 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Steps;

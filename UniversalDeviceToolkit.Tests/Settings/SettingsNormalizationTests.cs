@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Settings;
 using Xunit;
 

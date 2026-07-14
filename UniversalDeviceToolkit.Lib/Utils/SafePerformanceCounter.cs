@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public class SafePerformanceCounter(string categoryName, string counterName, string instanceName) : IDisposable
 {

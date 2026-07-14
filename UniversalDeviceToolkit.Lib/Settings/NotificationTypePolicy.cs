@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 /// <summary>
 /// Per-notification-type policy: enable, optional persistence hint, and severity.

@@ -1,10 +1,21 @@
 # Namespace and Assembly Migration
 
-This document describes the intentional split between **user-facing Universal Device Toolkit (UDT) branding** and **retained `LenovoLegionToolkit.*` binary/namespace ABI** for plugins and CLI compatibility.
+This document records the **completed Phase 3 hard cutover** from Lenovo Legion Toolkit (LLT) binary/namespace ABI to **Universal Device Toolkit (UDT)**, plus the **remaining legacy compatibility surfaces** that intentionally still contain LLT / Lenovo tokens.
 
-> **Do not mass-rename** `LenovoLegionToolkit.Lib*` namespaces or assembly names without a documented migration (TypeForwardedTo / dual-package / coordinated plugin recompile). Full binary rename breaks third-party plugins until that story is complete.
+Related: [ARCHITECTURE.md](./ARCHITECTURE.md), [PLUGIN_DEVELOPMENT.md](./PLUGIN_DEVELOPMENT.md), CHANGELOG brand/ABI cutover notes.
 
-Related: [ARCHITECTURE.md](./ARCHITECTURE.md), [PLUGIN_DEVELOPMENT.md](./PLUGIN_DEVELOPMENT.md), CHANGELOG brand-migration notes.
+---
+
+## Status summary
+
+| Phase | Scope | Status |
+| --- | --- | --- |
+| **0** | User-facing brand (product name, WPF process, installer, AppData path migration) | **Done** |
+| **1** | Conventions for new non-ABI host code → `UniversalDeviceToolkit.*` | **Done** |
+| **2** | Non-breaking dual surfaces (IPC pipes, `BrandCompatibility`, automation env aliases) | **Done** |
+| **3** | Hard cutover: Lib / Lib.Plugins `AssemblyName` + C# namespaces + Windows CLI exe name | **Done** |
+
+Phase 3 is **complete in this repository**. New host code should use `UniversalDeviceToolkit.*` identities. Do **not** reintroduce `LenovoLegionToolkit.Lib*` as the primary assembly or namespace contract.
 
 ---
 
@@ -12,25 +23,25 @@ Related: [ARCHITECTURE.md](./ARCHITECTURE.md), [PLUGIN_DEVELOPMENT.md](./PLUGIN_
 
 Values below are explicit `RootNamespace` / `AssemblyName` when set. If `AssemblyName` is omitted, the MSBuild default is the project file name (folder/project stem).
 
-### ABI-retained (plugin / host contracts)
+### Plugin / host contracts (post–Phase 3 primary ABI)
 
 | Project folder | RootNamespace | AssemblyName | Role |
 | --- | --- | --- | --- |
-| `UniversalDeviceToolkit.Lib` | `LenovoLegionToolkit.Lib` | `LenovoLegionToolkit.Lib` | Core library; plugin and host type identity |
-| `UniversalDeviceToolkit.Lib.Plugins` | `LenovoLegionToolkit.Lib.Plugins` | `LenovoLegionToolkit.Lib.Plugins` | Host plugin surface loaded with core Lib |
+| `UniversalDeviceToolkit.Lib` | `UniversalDeviceToolkit.Lib` | `UniversalDeviceToolkit.Lib` | Core library; plugin and host type identity |
+| `UniversalDeviceToolkit.Lib.Plugins` | `UniversalDeviceToolkit.Lib.Plugins` | `UniversalDeviceToolkit.Lib.Plugins` | Host plugin surface loaded with core Lib |
 
-C# types under these projects live in `LenovoLegionToolkit.Lib*` namespaces. Official plugins (separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repo) reference `LenovoLegionToolkit.Plugins.SDK` / Shared and compile against these identities.
+C# types under these projects live in `UniversalDeviceToolkit.Lib*` namespaces (renamed from `LenovoLegionToolkit.Lib*`). Official plugins (separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repo) should target `UniversalDeviceToolkit.Plugins.*` / SDK Shared against these identities.
 
-### Migrated to UniversalDeviceToolkit (folder + RootNamespace)
+### Other projects
 
 | Project folder | RootNamespace | AssemblyName (if set) | Notes |
 | --- | --- | --- | --- |
 | `UniversalDeviceToolkit.WPF` | `UniversalDeviceToolkit.WPF` | `Universal Device Toolkit` | Shipping UI; process name is the brand |
 | `UniversalDeviceToolkit.Lib.Automation` | `UniversalDeviceToolkit.Lib.Automation` | *(project default)* | Not a public plugin ABI assembly |
 | `UniversalDeviceToolkit.Lib.Macro` | `UniversalDeviceToolkit.Lib.Macro` | *(project default)* | Not a public plugin ABI assembly |
-| `UniversalDeviceToolkit.CLI` | `UniversalDeviceToolkit.CLI` | **`llt`** | CLI executable name kept short / LLT-compatible |
+| `UniversalDeviceToolkit.CLI` | `UniversalDeviceToolkit.CLI` | **`udt-cli`** | Windows CLI executable → `udt-cli.exe` (was `llt`) |
 | `UniversalDeviceToolkit.CLI.Lib` | `UniversalDeviceToolkit.CLI.Lib` | *(project default)* | Shared CLI IPC models |
-| `UniversalDeviceToolkit.NetworkProxy` | `UniversalDeviceToolkit.NetworkProxy` | `UniversalDeviceToolkit.NetworkProxy` | Already fully UDT-named (good) |
+| `UniversalDeviceToolkit.NetworkProxy` | `UniversalDeviceToolkit.NetworkProxy` | `UniversalDeviceToolkit.NetworkProxy` | Fully UDT-named |
 | `UniversalDeviceToolkit.CrossPlatform` | `UniversalDeviceToolkit.CrossPlatform` | **`udt`** | Cross-platform CLI entry name |
 | `UniversalDeviceToolkit.Tests` | `UniversalDeviceToolkit.Tests` | *(project default)* | Tests |
 | `UniversalDeviceToolkit.CrossPlatform.Tests` | `UniversalDeviceToolkit.CrossPlatform.Tests` | *(project default)* | Tests |
@@ -39,7 +50,7 @@ C# types under these projects live in `LenovoLegionToolkit.Lib*` namespaces. Off
 
 Tools under `Tools/` use their own small RootNamespaces (`HardwareValidation`, smoke tools, etc.) and are out of the public ABI surface.
 
-### NetworkProxy (already correct)
+### NetworkProxy
 
 `UniversalDeviceToolkit.NetworkProxy` uses:
 
@@ -50,55 +61,61 @@ IPC defaults (e.g. pipe base name `udt-network-proxy`) are UDT-oriented. No rena
 
 ---
 
-## Why Lib / Lib.Plugins keep `LenovoLegionToolkit.Lib*` ABI
+## What Phase 3 changed
 
-1. **Assembly identity**: Plugins load against `LenovoLegionToolkit.Lib.dll` / `LenovoLegionToolkit.Lib.Plugins.dll`. Changing `AssemblyName` changes the assembly simple name and breaks resolution unless every plugin is rebuilt and redistributed.
-2. **Type identity**: .NET binds on assembly name + namespace + type name. Renaming `RootNamespace` / source namespaces without `TypeForwardedTo` (or equivalent dual packaging) invalidates compiled references in third-party and official plugins.
-3. **Cross-repository contract**: The plugins repo and SDK (`LenovoLegionToolkit.Plugins.SDK`, Shared) are authored against these names. Host and plugin ecosystems must move together.
-4. **CHANGELOG policy**: Brand migration already states that `LenovoLegionToolkit.*` assembly/namespace identifiers are **intentionally retained** as cross-repository ABI contracts for plugin loading.
+| Surface | Before (LLT) | After (UDT primary) |
+| --- | --- | --- |
+| Lib `RootNamespace` / `AssemblyName` | `LenovoLegionToolkit.Lib` | `UniversalDeviceToolkit.Lib` |
+| Lib.Plugins `RootNamespace` / `AssemblyName` | `LenovoLegionToolkit.Lib.Plugins` | `UniversalDeviceToolkit.Lib.Plugins` |
+| C# namespaces in Lib* | `LenovoLegionToolkit.Lib*` | `UniversalDeviceToolkit.Lib*` |
+| Windows CLI `AssemblyName` | `llt` → `llt.exe` | `udt-cli` → `udt-cli.exe` |
+| Preferred CLI IPC pipe | (introduced in Phase 2) | `UniversalDeviceToolkit-IPC-0` |
+| Legacy CLI IPC pipe | `LenovoLegionToolkit-IPC-0` | **Still accepted** (compat) |
 
-User-facing strings, window titles, installer names, and process names are already **Universal Device Toolkit**. That is independent of binary ABI.
+**Impact:** Plugins and tools compiled only against pre-cutover `LenovoLegionToolkit.Lib*` assembly/type identities will not bind to the new primary DLL simple names without rebuild or explicit compatibility handling. Host plugin load paths still accept **legacy plugin assembly prefixes** during transition (see below).
 
 ---
 
-## Phased plan
+## Remaining legacy compatibility surfaces
 
-### Phase 0 — Done: user-facing brand UDT
+Phase 3 did **not** erase every Lenovo / LLT token. The following remain on purpose. **Do not delete them in drive-by cleanups** without a separate cutover plan.
 
-- Product name, WPF `AssemblyName` (`Universal Device Toolkit`), assets, packaging Full/Online names, AppData path migration notes, env/docs brand copy.
-- Internal projects that are **not** plugin ABIs already use `UniversalDeviceToolkit.*` RootNamespaces (WPF, Automation, Macro, CLI source, NetworkProxy, CrossPlatform).
+### 1. Dual IPC named pipes (host ↔ CLI)
 
-### Phase 1 — This PR: document + enforce conventions for **new** code
-
-- This document is the source of truth for agents and contributors.
-- **New** host modules that are not part of the public plugin contract should use `UniversalDeviceToolkit.*` namespaces and project naming.
-- **Do not** “fix” Lib / Lib.Plugins by renaming `RootNamespace` / `AssemblyName` or bulk-rewriting `namespace LenovoLegionToolkit.Lib…`.
-- Prefer XML comments on those csproj properties (see projects) so automated renames are discouraged.
-- Plugin-facing public APIs added to Lib still live under the existing `LenovoLegionToolkit.Lib*` trees until Phase 2/3.
-
-### Phase 2 — TypeForwardedTo / dual-package strategy for public types
-
-**Status: In progress** (non-breaking dual surfaces only — **do not mass-rename types**).
-
-When the ecosystem is ready to introduce `UniversalDeviceToolkit.Lib*` type names **without** a hard cutover:
-
-- Ship type forwards (or a thin facade assembly) so old and new names resolve during a transition window.
-- Publish coordinated SDK / plugin template updates (`using` and package references).
-- Document which types are public ABI vs internal implementation.
-- Avoid partial renames that only update the host.
-
-#### Phase 2 progress (shipped dual surfaces)
-
-| Dual surface | Status | Notes |
+| Constant | Value | Role |
 | --- | --- | --- |
-| Dual IPC named pipes | **Shipped** | Host listens on both `LenovoLegionToolkit-IPC-0` (`DEFAULT_PIPE_NAME`) and `UniversalDeviceToolkit-IPC-0` (`PREFERRED_PIPE_NAME`); clients prefer UDT then fall back to legacy. See CLI section below. |
-| `BrandCompatibility` constants | **Shipped** | `LenovoLegionToolkit.Lib.Branding.BrandCompatibility` — product display names + legacy assembly simple names (`LenovoLegionToolkit.Lib`, `LenovoLegionToolkit.Lib.Plugins`) for reflection/plugin load. Preferred UDT assembly names are planning tokens only. (Namespace is **Branding**, not `Lib.Compatibility`, to avoid shadowing the `Compatibility` static class.) |
-| Automation env vars `LLT_*` / `UDT_*` | **Shipped (aliases)** | `AutomationEnvironment` writes each value under the legacy `LLT_*` key **and** a `UDT_*` alias (`ToUdtAlias`). Scripts may read either prefix. |
-| TypeForwardedTo / dual package for public types | **Future** | Not started. No mass renames of namespaces or `AssemblyName` until Phases 2–3 design is complete. |
+| `Constants.PREFERRED_PIPE_NAME` | `UniversalDeviceToolkit-IPC-0` | Preferred / client-first |
+| `Constants.DEFAULT_PIPE_NAME` | `LenovoLegionToolkit-IPC-0` | Legacy primary; still listened for older CLI / tooling |
 
-#### Dual env var names (`LLT_*` primary, `UDT_*` alias)
+- **Server (`IpcServer`)**: accept loops on both names (`Constants.GetServerPipeNames` — legacy then preferred for listen set).
+- **Client (`IpcClient`)**: try preferred UDT first, then fall back to legacy (`GetClientPipeNames`).
+- Isolation-path hashing suffixes **both** names the same way.
 
-Primary keys are the historical `LLT_*` names (user-script compatibility). Each is dual-written as `UDT_<suffix>` (same suffix after the underscore prefix). Inventory from `AutomationEnvironment` / host:
+### 2. `BrandCompatibility` legacy constants
+
+`UniversalDeviceToolkit.Lib/Branding/BrandCompatibility.cs` (namespace `UniversalDeviceToolkit.Lib.Branding`):
+
+| Constant | Value | Role |
+| --- | --- | --- |
+| `ProductDisplayName` / `ProductCompactName` | Universal Device Toolkit / UniversalDeviceToolkit | Current brand |
+| `LegacyProductDisplayName` / `LegacyProductCompactName` | Lenovo Legion Toolkit / LenovoLegionToolkit | Migration messaging, AppData migration, docs |
+| `PreferredAssemblyLib` / `PreferredAssemblyLibPlugins` | `UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins` | **Current** primary assembly simple names |
+| `LegacyAssemblyLib` / `LegacyAssemblyLibPlugins` | `LenovoLegionToolkit.Lib` / `LenovoLegionToolkit.Lib.Plugins` | Pre-cutover names for reflection / migration checks |
+
+Also see `AppIdentity` legacy display/compact/repository tokens used for AppData migration and historical links.
+
+### 3. Plugin assembly prefixes (transition)
+
+Host plugin discovery/install/load should accept:
+
+- **Preferred:** `UniversalDeviceToolkit.Plugins.*`
+- **Legacy:** `LenovoLegionToolkit.Plugins.*` (and historical SDK/Shared DLL simple names where still referenced)
+
+New plugins and packaging should ship under `UniversalDeviceToolkit.Plugins.*`. Legacy prefixes remain so existing plugin folders/ZIPs keep loading during transition.
+
+### 4. Automation environment variables (dual-write)
+
+`AutomationEnvironment` continues to write each automation value under the historical `LLT_*` key **and** a `UDT_*` alias (`ToUdtAlias`). Scripts may read either prefix.
 
 | Legacy (`LLT_*`) | UDT alias | Context |
 | --- | --- | --- |
@@ -126,20 +143,49 @@ Primary keys are the historical `LLT_*` names (user-script compatibility). Each 
 | `LLT_WIFI_CONNECTED` | `UDT_WIFI_CONNECTED` | Automation trigger env |
 | `LLT_WIFI_SSID` | `UDT_WIFI_SSID` | Automation trigger env |
 | `LLT_SESSION_LOCKED` | `UDT_SESSION_LOCKED` | Automation trigger env |
-| `LLT_LOG_PATH` | *(legacy-only today)* | Set by WPF startup (`StartupOrchestrator`); not yet dual-aliased |
-| `LLT_PLUGIN_SIGNATURE_MODE` | *(docs / smoke tooling)* | Plugin signature policy override (see CHANGELOG); not an automation env key |
+| `LLT_LOG_PATH` | *(legacy-only today)* | Set by WPF startup (`StartupOrchestrator`); not dual-aliased |
+| `LLT_PLUGIN_SIGNATURE_MODE` | *(docs / smoke tooling)* | Plugin signature policy override; not an automation env key |
 
-Do **not** remove `LLT_*` keys in drive-by cleanups — they remain the compatibility surface for existing scripts.
+Do **not** remove `LLT_*` keys without a dedicated script-migration notice.
 
-### Phase 3 — Assembly rename after plugin ecosystem ready
+### 5. Packaging / distribution identifiers (transition)
 
-- Change `AssemblyName` / primary namespace only after:
+- **Scoop** bucket id may still use historical tokens (e.g. `lenovolegiontoolkit`) for upgrade continuity.
+- **winget** packaging folders under this repo historically live under `Packaging/winget/.../LenovoLegionToolkit/`; package identity in drafts/docs may use `SSC-STUDIO.UniversalDeviceToolkit` and/or legacy `SSC-STUDIO.LenovoLegionToolkit` depending on submission status — treat winget as **in transition**, not fully cleaned of Lenovo tokens.
+- Crowdin project URLs and some external links may still say `llt`.
 
-  - Official plugins recompiled against the new contract (or consume TypeForwardedTo packages),
-  - Third-party guidance and a min-host / min-SDK version policy exist,
-  - Installer/update story covers mixed old/new plugin folders if needed.
+### 6. Other intentional Lenovo references
 
-- Until then, treat any PR that only renames Lib assemblies as **breaking** and out of scope.
+Device-support catalogs, hardware series enums (e.g. Legion families), driver/package names, and user-facing copy about Lenovo hardware are **product features**, not brand/ABI leftovers.
+
+---
+
+## Historical phases (archive)
+
+### Phase 0 — Done: user-facing brand UDT
+
+Product name, WPF `AssemblyName` (`Universal Device Toolkit`), assets, packaging Full/Online names, AppData path migration, env/docs brand copy.
+
+### Phase 1 — Done: conventions for new code
+
+New host modules that are not part of the public plugin contract use `UniversalDeviceToolkit.*` namespaces and project naming.
+
+### Phase 2 — Done: dual surfaces without hard ABI rename
+
+| Dual surface | Status | Notes |
+| --- | --- | --- |
+| Dual IPC named pipes | **Shipped** | Preferred `UniversalDeviceToolkit-IPC-0` + legacy `LenovoLegionToolkit-IPC-0` |
+| `BrandCompatibility` constants | **Shipped** | Display names + preferred/legacy assembly simple names |
+| Automation env vars `LLT_*` / `UDT_*` | **Shipped (aliases)** | Dual-write via `ToUdtAlias` |
+
+### Phase 3 — Done: hard cutover
+
+- `AssemblyName` / `RootNamespace` for Lib and Lib.Plugins → `UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins`
+- Source namespaces `LenovoLegionToolkit.Lib*` → `UniversalDeviceToolkit.Lib*`
+- Windows CLI `AssemblyName` `llt` → `udt-cli`
+- Primary plugin/host contract is UDT-named; legacy plugin prefixes and pipes remain as **compat**, not primary ABI
+
+TypeForwardedTo dual-package packaging for **external** consumers of the old assembly simple names was **not** required for this in-tree hard cutover; third-party plugins built against `LenovoLegionToolkit.Lib*` must recompile against `UniversalDeviceToolkit.Lib*` (or rely only on remaining host-side name tolerances where they apply).
 
 ---
 
@@ -147,47 +193,39 @@ Do **not** remove `LLT_*` keys in drive-by cleanups — they remain the compatib
 
 | Concern | Current value | Guidance |
 | --- | --- | --- |
-| CLI `AssemblyName` | `llt` (`UniversalDeviceToolkit.CLI`) | Keep `llt.exe` for scripts and docs that invoke the short name; CrossPlatform shipping uses `udt` where appropriate. |
-| Named pipe (host ↔ CLI IPC) — **legacy primary** | `LenovoLegionToolkit-IPC-0` (`Constants.DEFAULT_PIPE_NAME`) | **Server primary** listen name for full backward compatibility with older CLI / tooling that only knows the LLT pipe. |
-| Named pipe (host ↔ CLI IPC) — **preferred UDT** | `UniversalDeviceToolkit-IPC-0` (`Constants.PREFERRED_PIPE_NAME`) | **Client-preferred** name. Host dual-listens on both; clients try UDT first, then fall back to legacy DEFAULT within a short timeout. Isolation-path hashing suffixes **both** names the same way. |
-| Automation env vars | `LLT_*` primary + `UDT_*` aliases (see Phase 2 progress) | User scripts depend on `LLT_*`; host dual-writes `UDT_*` aliases. Treat as compatibility surface, not dead branding. |
-| Brand / assembly dual constants | `BrandCompatibility` in Lib | Display names + legacy assembly simple names for reflection/plugin load; TypeForwardedTo still future. |
-| Network proxy pipe | `udt-network-proxy` (and session-suffixed variants) | UDT-native; separate from CLI IPC. |
-
-Phase 2 dual-pipe behavior (non-breaking):
-
-- **Server (`IpcServer`)**: accept loops on both `DEFAULT_PIPE_NAME` and `PREFERRED_PIPE_NAME` (see `Constants.GetServerPipeNames`).
-- **Client (`IpcClient`)**: `GetClientPipeNames` order — preferred UDT, then legacy LLT.
-- Do not remove the legacy pipe constant or `llt` assembly name in drive-by cleanups until a hard cutover is deliberately planned.
-
-Phase 2 brand constants (non-breaking):
-
-- **`BrandCompatibility`** (`UniversalDeviceToolkit.Lib/Branding/BrandCompatibility.cs`, namespace `LenovoLegionToolkit.Lib.Branding`): dual product display names and legacy assembly simple names (`LenovoLegionToolkit.Lib`, `LenovoLegionToolkit.Lib.Plugins`). Preferred UDT assembly names are documentation/planning tokens only — **not** used for load paths yet.
-- **TypeForwardedTo** mass renames remain **future** work; do not mass-rename types.
+| CLI `AssemblyName` | `udt-cli` (`UniversalDeviceToolkit.CLI`) | Ship/docs use `udt-cli.exe`; CrossPlatform uses `udt` |
+| Named pipe — **preferred UDT** | `UniversalDeviceToolkit-IPC-0` (`PREFERRED_PIPE_NAME`) | Client-preferred; host dual-listens |
+| Named pipe — **legacy** | `LenovoLegionToolkit-IPC-0` (`DEFAULT_PIPE_NAME`) | Older CLI / tooling; keep until a deliberate pipe-only cutover |
+| Automation env vars | `LLT_*` + `UDT_*` dual-write | Compatibility surface for user scripts |
+| Brand / assembly dual constants | `BrandCompatibility` | Preferred = current UDT assemblies; `Legacy*` = pre–Phase 3 LLT names |
+| Network proxy pipe | `udt-network-proxy` (and session-suffixed variants) | UDT-native; separate from CLI IPC |
 
 ---
 
 ## Conventions for contributors and agents
 
 1. **User-visible brand** → Universal Device Toolkit / UDT.
-2. **Plugin ABI assemblies** → keep `LenovoLegionToolkit.Lib` and `LenovoLegionToolkit.Lib.Plugins`.
-3. **New non-ABI code** → `UniversalDeviceToolkit.*` namespaces.
-4. **No mass search-replace** of namespaces across Lib.
-5. **Before any ABI rename**: open a design note covering TypeForwardedTo (or dual package), plugins repo coordination, and release sequencing (Phases 2–3).
+2. **Primary plugin/host ABI** → `UniversalDeviceToolkit.Lib` and `UniversalDeviceToolkit.Lib.Plugins` (assemblies **and** namespaces).
+3. **New code** → `UniversalDeviceToolkit.*` namespaces; do not introduce new `LenovoLegionToolkit.*` type namespaces.
+4. **Legacy compat only** → keep dual pipes, `BrandCompatibility.Legacy*`, `LLT_*` env dual-write, and legacy plugin prefixes until a **documented** removal pass.
+5. **Do not claim “zero Lenovo tokens”** — residual compat strings and packaging paths are expected during transition.
+6. **Plugin authors** → target `UniversalDeviceToolkit.Plugins.*` / current Lib assembly names; rebuild plugins after the Phase 3 host cutover if they still reference `LenovoLegionToolkit.Lib*`.
 
 ---
 
-## Quick reference: intentional dual naming
+## Quick reference: primary vs legacy
 
 ```
-Repo / solution:     UniversalDeviceToolkit.*
-WPF process:         "Universal Device Toolkit"
-Core Lib DLL:        LenovoLegionToolkit.Lib.dll
-Plugins host DLL:    LenovoLegionToolkit.Lib.Plugins.dll
-Plugin SDK (other):  LenovoLegionToolkit.Plugins.SDK / Shared
-CLI exe (Windows):  llt.exe
-CLI IPC pipes:       UniversalDeviceToolkit-IPC-0 (preferred) + LenovoLegionToolkit-IPC-0 (legacy primary)
-Automation env:      LLT_* (primary) + UDT_* (alias dual-write)
-Brand constants:     BrandCompatibility (Lib.Branding) — dual display + assembly names
-NetworkProxy:        UniversalDeviceToolkit.NetworkProxy (fully UDT)
+Repo / solution:       UniversalDeviceToolkit.*
+WPF process:           "Universal Device Toolkit"
+Core Lib DLL:          UniversalDeviceToolkit.Lib.dll          (was LenovoLegionToolkit.Lib.dll)
+Plugins host DLL:      UniversalDeviceToolkit.Lib.Plugins.dll  (was LenovoLegionToolkit.Lib.Plugins.dll)
+Plugin prefixes:       UniversalDeviceToolkit.Plugins.* (preferred)
+                       LenovoLegionToolkit.Plugins.*   (legacy accepted)
+CLI exe (Windows):    udt-cli.exe   (was llt.exe)
+CLI IPC pipes:         UniversalDeviceToolkit-IPC-0 (preferred)
+                       LenovoLegionToolkit-IPC-0    (legacy)
+Automation env:        LLT_* + UDT_* (dual-write)
+Brand constants:       BrandCompatibility — Preferred* current; Legacy* LLT names
+NetworkProxy:          UniversalDeviceToolkit.NetworkProxy (fully UDT)
 ```

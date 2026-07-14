@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.Controllers.Sensors;
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
 
 /// <summary>
 /// Sensor controller interface for obtaining CPU/GPU temperature, frequency, fan speed, and other sensor data.

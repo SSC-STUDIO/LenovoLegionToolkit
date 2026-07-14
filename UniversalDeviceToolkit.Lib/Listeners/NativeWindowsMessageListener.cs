@@ -4,21 +4,21 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.Power;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 using Windows.Win32.UI.WindowsAndMessaging;
 
-namespace LenovoLegionToolkit.Lib.Listeners;
+namespace UniversalDeviceToolkit.Lib.Listeners;
 
 public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindowsMessageListener.ChangedEventArgs>
 {
@@ -75,7 +75,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
     {
         CreateHandle(new CreateParams
         {
-            Caption = "LenovoLegionToolkit_MessageWindow",
+            Caption = "UniversalDeviceToolkit_MessageWindow",
             Parent = new IntPtr(-3)
         });
 

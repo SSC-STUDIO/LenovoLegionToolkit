@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 

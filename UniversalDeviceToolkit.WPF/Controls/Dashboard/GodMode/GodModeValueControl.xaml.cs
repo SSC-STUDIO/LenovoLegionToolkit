@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Extensions;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard.GodMode

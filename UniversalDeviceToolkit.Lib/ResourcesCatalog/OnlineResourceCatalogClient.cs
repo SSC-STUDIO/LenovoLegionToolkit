@@ -4,11 +4,11 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Serialization;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Serialization;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.ResourcesCatalog;
+namespace UniversalDeviceToolkit.Lib.ResourcesCatalog;
 
 public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFactory)
 {

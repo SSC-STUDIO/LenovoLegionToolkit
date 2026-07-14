@@ -4,7 +4,7 @@
 
 This document describes the build, test, and deployment processes for Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit). It covers development workflows, CI/CD pipelines, and release procedures.
 
-Public release copy should use Universal Device Toolkit. Repository paths, assembly names, installer asset names, winget identifiers, and Scoop manifest names may still contain `LenovoLegionToolkit` during the compatibility transition so existing Lenovo Legion Toolkit users can upgrade directly.
+Public release copy should use Universal Device Toolkit. Repository paths, assembly names, installer asset names, winget identifiers, and Scoop manifest names may still contain `UniversalDeviceToolkit` during the compatibility transition so existing Lenovo Legion Toolkit users can upgrade directly.
 
 ## Prerequisites
 
@@ -34,7 +34,7 @@ dotnet --info
 ```
 UniversalDeviceToolkit.sln
 ├── UniversalDeviceToolkit.WPF/           # Main application
-├── UniversalDeviceToolkit.Lib/            # Core library (assembly: LenovoLegionToolkit.Lib)
+├── UniversalDeviceToolkit.Lib/            # Core library (assembly: UniversalDeviceToolkit.Lib)
 ├── UniversalDeviceToolkit.Lib.Automation/ # Automation features
 ├── UniversalDeviceToolkit.Lib.Macro/      # Macro system
 ├── UniversalDeviceToolkit.CLI/            # Command-line tool
@@ -53,7 +53,7 @@ Key configurations in `Directory.Build.props`:
 <ImplicitUsings>enable</ImplicitUsings>
 <Nullable>enable</Nullable>
 <OutputType>WinExe</OutputType>
-<AssemblyName>LenovoLegionToolkit</AssemblyName>
+<AssemblyName>UniversalDeviceToolkit</AssemblyName>
 <Version>4.x.x</Version>
 ```
 
@@ -289,8 +289,8 @@ iscc MakeInstaller.iss
 
 # Output location
 output/
-├── LenovoLegionToolkit_VERSION_x64.exe
-└── LenovoLegionToolkit_VERSION_x86.exe
+├── UniversalDeviceToolkit_VERSION_x64.exe
+└── UniversalDeviceToolkit_VERSION_x86.exe
 ```
 
 ### Installer Contents
@@ -357,8 +357,8 @@ After downloading translations:
    - Auto-updater support
 
 2. **winget Package Manager**
-   - Target package ID: `SSC-STUDIO.LenovoLegionToolkit` (kept under the old name during the Universal Device Toolkit rename)
-   - After acceptance: `winget install SSC-STUDIO.LenovoLegionToolkit`
+   - Target package ID: `SSC-STUDIO.UniversalDeviceToolkit` (kept under the old name during the Universal Device Toolkit rename)
+   - After acceptance: `winget install SSC-STUDIO.UniversalDeviceToolkit`
    - Automatic updates via Windows Package Manager
 
 3. **Scoop**
@@ -378,19 +378,19 @@ The maintainer-side manifest draft lives under `Packaging/winget`. The canonical
 
 Before submitting a new version:
 
-1. Publish a stable GitHub Release with Full and Online assets (`UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`, `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`, portable ZIPs as needed), the compatibility alias `LenovoLegionToolkit_vX.Y.Z_Setup.exe`, and `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`.
+1. Publish a stable GitHub Release with Full and Online assets (`UniversalDeviceToolkit_vX.Y.Z_Full_Setup.exe`, `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe`, portable ZIPs as needed), the compatibility alias `UniversalDeviceToolkit_vX.Y.Z_Setup.exe`, and `UniversalDeviceToolkit_vX.Y.Z_SHA256.txt`.
 2. Do not draft a new version manifest until the release asset URL and installer SHA256 are final.
 3. Generate the versioned winget folder and Scoop draft from the final release metadata:
    ```powershell
    .\Packaging\Prepare-PackageManifests.ps1 -Version X.Y.Z -ReleaseDate YYYY-MM-DD -InstallerSha256 <SHA256>
    ```
-4. Keep `PackageIdentifier` as `SSC-STUDIO.LenovoLegionToolkit` during the Universal Device Toolkit transition unless winget review requires a coordinated rename.
+4. Keep `PackageIdentifier` as `SSC-STUDIO.UniversalDeviceToolkit` during the Universal Device Toolkit transition unless winget review requires a coordinated rename.
 5. Validate the package metadata against the release checksum manifest, then validate locally on Windows:
    ```powershell
    .\Packaging\Test-PackageManifests.ps1 -Version X.Y.Z -HashManifestPath path\to\UniversalDeviceToolkit_vX.Y.Z_SHA256.txt
-   winget validate manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
-   winget install --manifest manifests\s\SSC-STUDIO\LenovoLegionToolkit\X.Y.Z
-   winget uninstall SSC-STUDIO.LenovoLegionToolkit
+   winget validate manifests\s\SSC-STUDIO\UniversalDeviceToolkit\X.Y.Z
+   winget install --manifest manifests\s\SSC-STUDIO\UniversalDeviceToolkit\X.Y.Z
+   winget uninstall SSC-STUDIO.UniversalDeviceToolkit
    ```
 6. Submit the version folder to `microsoft/winget-pkgs` and wait for automated validation.
 
@@ -426,7 +426,7 @@ When promoting a release on Chinese social platforms or after winget acceptance:
 - Link to the active `SSC-STUDIO/UniversalDeviceToolkit` repository in all promotion content.
 - Use Universal Device Toolkit as the public product name, and mention that former Lenovo Legion Toolkit users can upgrade directly.
 - Keep mirrors optional and checksum-backed; GitHub Releases and winget remain the authoritative download channels.
-- Mention that winget and Scoop commands temporarily retain the old LenovoLegionToolkit identifiers for compatibility.
+- Mention that winget and Scoop commands temporarily retain the old UniversalDeviceToolkit identifiers for compatibility.
 - Watch GitHub Issues for recurring reports: antivirus false positives, missing .NET 10 Desktop Runtime, unsupported machines, Lenovo Vantage conflicts, RGB/Vanguard conflicts, and plugin download failures.
 - Confirm `Build`, `CI Tests`, `CodeQL`, and release packaging workflows are green before pushing a promotional post.
 - Reuse `Docs/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.

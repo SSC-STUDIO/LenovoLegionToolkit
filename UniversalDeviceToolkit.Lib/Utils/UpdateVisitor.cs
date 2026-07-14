@@ -1,7 +1,7 @@
 ﻿using System;
 using LibreHardwareMonitor.Hardware;
 
-namespace LenovoLegionToolkit.Lib.Utils
+namespace UniversalDeviceToolkit.Lib.Utils
 {
     public class UpdateVisitor : IVisitor
     {

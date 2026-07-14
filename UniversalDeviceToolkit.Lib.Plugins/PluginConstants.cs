@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin constants definition, unified management of plugin IDs

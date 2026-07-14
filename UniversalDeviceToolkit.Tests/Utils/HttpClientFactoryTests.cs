@@ -4,7 +4,7 @@ using System.Net.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace LenovoLegionToolkit.Lib.ResourcesCatalog;
+namespace UniversalDeviceToolkit.Lib.ResourcesCatalog;
 
 public sealed record OnlineResourceCatalog
 {

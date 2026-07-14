@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.System.Management;
 
-namespace LenovoLegionToolkit.Lib.AutoListeners;
+namespace UniversalDeviceToolkit.Lib.AutoListeners;
 
 public class InstanceStartedEventAutoAutoListener : AbstractAutoListener<InstanceStartedEventAutoAutoListener.ChangedEventArgs>
 {

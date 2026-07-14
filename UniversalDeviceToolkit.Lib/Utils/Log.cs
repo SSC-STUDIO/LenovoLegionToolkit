@@ -9,7 +9,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public enum LogLevel
 {

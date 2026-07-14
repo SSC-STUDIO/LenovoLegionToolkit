@@ -6,7 +6,7 @@
   "notes": "Draft manifest generated from release metadata for version 4.2.0. Publish it to the Scoop bucket only after validating install and upgrade behavior.",
   "architecture": {
     "64bit": {
-      "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v4.2.0/LenovoLegionToolkit_v4.2.0_Setup.exe",
+      "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v4.2.0/UniversalDeviceToolkit_v4.2.0_Setup.exe",
       "hash": "d2090bc29f1b81bab63f51be65bb2f5ff369ec103919eb06d6e2fba34749043f"
     }
   },
@@ -24,7 +24,7 @@
   "autoupdate": {
     "architecture": {
       "64bit": {
-        "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v$version/LenovoLegionToolkit_v$version_Setup.exe"
+        "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v$version/UniversalDeviceToolkit_v$version_Setup.exe"
       }
     }
   }

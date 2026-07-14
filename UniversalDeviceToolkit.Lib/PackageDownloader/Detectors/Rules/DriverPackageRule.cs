@@ -5,9 +5,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using LenovoLegionToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Extensions;
 
-namespace LenovoLegionToolkit.Lib.PackageDownloader.Detectors.Rules;
+namespace UniversalDeviceToolkit.Lib.PackageDownloader.Detectors.Rules;
 
 internal readonly struct DriverPackageRule : IPackageRule
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading; 
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Optimization;
 using Moq;
 using Xunit;
 

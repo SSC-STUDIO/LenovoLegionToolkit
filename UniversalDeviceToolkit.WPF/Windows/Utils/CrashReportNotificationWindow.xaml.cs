@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
@@ -83,7 +83,7 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
             try
             {
                 // Try to detect system theme
-                var isDarkMode = LenovoLegionToolkit.Lib.System.SystemTheme.IsDarkMode();
+                var isDarkMode = UniversalDeviceToolkit.Lib.System.SystemTheme.IsDarkMode();
                 var themeType = isDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
 
                 if (Log.Instance.IsTraceEnabled)

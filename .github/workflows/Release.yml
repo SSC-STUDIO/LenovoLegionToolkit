@@ -78,7 +78,7 @@ jobs:
           "CLI_CROSS_PLATFORM_ASSET=UniversalDeviceToolkit_v$versionLabel" + "_CLI_cross-platform.zip" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         }
         "HASH_ASSET=UniversalDeviceToolkit_v$versionLabel" + "_SHA256.txt" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "LEGACY_SETUP_ASSET=LenovoLegionToolkit_v$versionLabel" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "LEGACY_SETUP_ASSET=UniversalDeviceToolkit_v$versionLabel" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Restore solution
       run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
@@ -120,7 +120,7 @@ jobs:
     - name: Smoke CLI help and version
       shell: pwsh
       run: |
-        $cliExePath = Join-Path $PWD "$env:BUILD_OUTPUT\llt.exe"
+        $cliExePath = Join-Path $PWD "$env:BUILD_OUTPUT\udt-cli.exe"
         $cliDllPath = Join-Path $PWD "$env:BUILD_OUTPUT\llt.dll"
         if (-not (Test-Path $cliExePath)) {
           throw "CLI executable not found at $cliExePath"
@@ -225,7 +225,7 @@ jobs:
           -HashManifestPath "$env:RELEASE_OUTPUT\$env:HASH_ASSET"
 
         if (Get-Command winget -ErrorAction SilentlyContinue) {
-          winget validate "Packaging\winget\manifests\s\SSC-STUDIO\LenovoLegionToolkit\$env:BUILD_VERSION"
+          winget validate "Packaging\winget\manifests\s\SSC-STUDIO\UniversalDeviceToolkit\$env:BUILD_VERSION"
           if ($LASTEXITCODE -ne 0) {
             throw "winget manifest validation failed."
           }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Notifications;
+using UniversalDeviceToolkit.Lib.Notifications;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Notifications;

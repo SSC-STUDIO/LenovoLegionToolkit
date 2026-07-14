@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.Listeners;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Steps;
 

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Optimization;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -20,6 +20,9 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     {
         _originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
+        // Static manifest/id caches are keyed by plugin id only — clear per fixture so
+        // AppData-override isolation is not defeated by a prior test's cache entry.
+        PluginUiCapabilityResolver.InvalidateCache();
     }
 
     public override void Dispose()
@@ -63,10 +66,10 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     public void GetPluginCategories_WhenRuntimePluginIdDiffersFromInstalledManifestId_ShouldIncludeProviderCategory()
     {
         var installedPluginId = "shell-integration";
-        var runtimePluginId = "LenovoLegionToolkit.Plugins.ShellIntegration";
+        var runtimePluginId = "UniversalDeviceToolkit.Plugins.ShellIntegration";
         var pluginDirectory = PluginPaths.GetPluginDirectory(installedPluginId);
         Directory.CreateDirectory(pluginDirectory);
-        var pluginFilePath = Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.ShellIntegration.dll");
+        var pluginFilePath = Path.Combine(pluginDirectory, "UniversalDeviceToolkit.Plugins.ShellIntegration.dll");
         File.WriteAllText(pluginFilePath, string.Empty);
         File.WriteAllText(
             Path.Combine(pluginDirectory, "plugin.manifest.json"),
@@ -310,25 +313,32 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     public void GetPluginCategories_WhenInstalledIdMatchesManifestButDirectoryNameDiffers_ShouldIncludeManifestCategory()
     {
         var pluginId = "shell-integration";
-        var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "local", "LenovoLegionToolkit.Plugins.ShellIntegration");
-        Directory.CreateDirectory(pluginDirectory);
-        File.WriteAllText(
-            Path.Combine(pluginDirectory, "plugin.manifest.json"),
-            """
-            {
-              "id": "shell-integration",
-              "name": "Shell Integration",
-              "description": "Shell manifest optimization contribution",
-              "contributes": {
-                "optimizationActions": [
-                  {
-                    "id": "shell-integration.action",
-                    "title": "Shell integration action"
+        PluginUiCapabilityResolver.InvalidateCache(pluginId);
+
+        // Prefixed folder name (assembly-style) differs from the short installed plugin id.
+        var pascalName = "ShellIntegration";
+        foreach (var folderName in PluginAssemblyNaming.EnumeratePrefixedPluginNames(pascalName))
+        {
+            var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "local", folderName);
+            Directory.CreateDirectory(pluginDirectory);
+            File.WriteAllText(
+                Path.Combine(pluginDirectory, "plugin.manifest.json"),
+                """
+                {
+                  "id": "shell-integration",
+                  "name": "Shell Integration",
+                  "description": "Shell manifest optimization contribution",
+                  "contributes": {
+                    "optimizationActions": [
+                      {
+                        "id": "shell-integration.action",
+                        "title": "Shell integration action"
+                      }
+                    ]
                   }
-                ]
-              }
-            }
-            """);
+                }
+                """);
+        }
 
         var pluginManager = new Mock<IPluginManager>();
         pluginManager.Setup(m => m.GetRegisteredPlugins()).Returns(new List<IPlugin>());
@@ -427,7 +437,7 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
     [Fact]
     public void GetPluginCategories_WhenInstalledIdUsesLegacyAssemblyName_ShouldIncludeManifestCategory()
     {
-        var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "LenovoLegionToolkit.Plugins.CustomMouse");
+        var pluginDirectory = Path.Combine(PluginPaths.GetPluginsDirectory(), "UniversalDeviceToolkit.Plugins.CustomMouse");
         Directory.CreateDirectory(pluginDirectory);
         File.WriteAllText(
             Path.Combine(pluginDirectory, "plugin.manifest.json"),

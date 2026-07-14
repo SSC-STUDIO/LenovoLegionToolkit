@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -19,19 +19,19 @@ public class GameDetectionTests
 
     private static Type GetGameConfigStoreDetectorType()
     {
-        return LibAssembly.GetType("LenovoLegionToolkit.Lib.GameDetection.GameConfigStoreDetector")
+        return LibAssembly.GetType("UniversalDeviceToolkit.Lib.GameDetection.GameConfigStoreDetector")
             ?? throw new InvalidOperationException("GameConfigStoreDetector type not found");
     }
 
     private static Type GetEffectiveGameModeDetectorType()
     {
-        return LibAssembly.GetType("LenovoLegionToolkit.Lib.GameDetection.EffectiveGameModeDetector")
+        return LibAssembly.GetType("UniversalDeviceToolkit.Lib.GameDetection.EffectiveGameModeDetector")
             ?? throw new InvalidOperationException("EffectiveGameModeDetector type not found");
     }
 
     private static Type GetGameDetectedEventArgsType()
     {
-        return LibAssembly.GetType("LenovoLegionToolkit.Lib.GameDetection.GameConfigStoreDetector+GameDetectedEventArgs")
+        return LibAssembly.GetType("UniversalDeviceToolkit.Lib.GameDetection.GameConfigStoreDetector+GameDetectedEventArgs")
             ?? throw new InvalidOperationException("GameDetectedEventArgs type not found");
     }
 

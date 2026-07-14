@@ -1,1 +1,1 @@
-global using LenovoLegionToolkit.Lib;
+global using UniversalDeviceToolkit.Lib;

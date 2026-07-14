@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using WindowsDisplayAPI;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class Displays
 {

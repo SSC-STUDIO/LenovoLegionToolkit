@@ -5,9 +5,9 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin installation service - Supports pre-compiled DLL plugins only.
@@ -60,7 +60,7 @@ public class PluginInstallationService
             pluginId = await AnalyzeAndFixPluginStructureAsync(tempDir).ConfigureAwait(false);
             if (string.IsNullOrEmpty(pluginId))
             {
-                throw new InvalidOperationException("No valid plugin DLL found in ZIP file. Plugins must be pre-compiled and include a main DLL (either LenovoLegionToolkit.Plugins.*.dll or an ID-based name like custom-mouse.dll).");
+                throw new InvalidOperationException("No valid plugin DLL found in ZIP file. Plugins must be pre-compiled and include a main DLL (either UniversalDeviceToolkit.Plugins.*.dll, legacy LenovoLegionToolkit.Plugins.*.dll, or an ID-based name like custom-mouse.dll).");
             }
 
             RemoveSharedRuntimePayloadFiles(tempDir);
@@ -290,8 +290,11 @@ public class PluginInstallationService
             var exactMatch = pluginDlls.FirstOrDefault(path =>
             {
                 var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
-                return fileNameWithoutExtension.Equals(preferredPluginId, StringComparison.OrdinalIgnoreCase) ||
-                       fileNameWithoutExtension.Equals($"LenovoLegionToolkit.Plugins.{preferredPluginId}", StringComparison.OrdinalIgnoreCase);
+                if (fileNameWithoutExtension.Equals(preferredPluginId, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                return PluginAssemblyNaming.EnumeratePrefixedPluginNames(preferredPluginId)
+                    .Any(name => fileNameWithoutExtension.Equals(name, StringComparison.OrdinalIgnoreCase));
             });
 
             if (exactMatch != null)
@@ -309,13 +312,13 @@ public class PluginInstallationService
             if (normalizedMatches.Count > 1)
             {
                 return normalizedMatches.FirstOrDefault(path =>
-                           Path.GetFileName(path).StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+                           PluginAssemblyNaming.IsPluginPrefixedFileName(Path.GetFileName(path)))
                        ?? normalizedMatches[0];
             }
         }
 
         var prefixedDlls = pluginDlls
-            .Where(path => Path.GetFileName(path).StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
+            .Where(path => PluginAssemblyNaming.IsPluginPrefixedFileName(Path.GetFileName(path)))
             .ToList();
 
         if (prefixedDlls.Count == 1)
@@ -331,15 +334,12 @@ public class PluginInstallationService
     {
         var fileName = Path.GetFileName(dllPath);
         return fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase) ||
-               fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase) ||
-               fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase);
+               PluginAssemblyNaming.IsSdkOrSharedDllFileName(fileName);
     }
 
     private static bool ShouldSkipPluginPayloadFile(string filePath)
     {
-        var fileName = Path.GetFileName(filePath);
-        return fileName.Equals("LenovoLegionToolkit.Plugins.Shared.dll", StringComparison.OrdinalIgnoreCase) ||
-               fileName.Equals("LenovoLegionToolkit.Plugins.SDK.dll", StringComparison.OrdinalIgnoreCase);
+        return PluginAssemblyNaming.IsSdkOrSharedDllFileName(Path.GetFileName(filePath));
     }
 
     private static void RemoveSharedRuntimePayloadFiles(string rootDirectory)
@@ -369,34 +369,38 @@ public class PluginInstallationService
         if (!Directory.Exists(rootDirectory))
             return;
 
-        foreach (var file in Directory.GetFiles(rootDirectory, "LenovoLegionToolkit.Plugins.SDK.dll", SearchOption.AllDirectories))
+        foreach (var sdkFileName in PluginAssemblyNaming.EnumerateSdkDllFileNames())
         {
-            try
+            foreach (var file in Directory.GetFiles(rootDirectory, sdkFileName, SearchOption.AllDirectories))
             {
-                File.Delete(file);
-            }
-            catch (Exception ex)
-            {
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Failed to remove plugin SDK payload file {file}: {ex.Message}", ex);
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to remove plugin SDK payload file {file}: {ex.Message}", ex);
+                }
             }
         }
     }
     private static void TryStageCanonicalPluginSharedAssembly(string pluginDirectory)
     {
-        var sourceCandidates = new[]
-        {
-            Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"),
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll")
-        };
-
-        var sourcePath = sourceCandidates.FirstOrDefault(File.Exists);
+        var sourcePath = PluginAssemblyNaming.EnumerateAppBaseSharedCandidates().FirstOrDefault(File.Exists);
         if (string.IsNullOrWhiteSpace(sourcePath))
             return;
 
         try
         {
-            File.Copy(sourcePath, Path.Combine(pluginDirectory, "LenovoLegionToolkit.Plugins.Shared.dll"), overwrite: true);
+            // Prefer staging under primary UDT name; also stage legacy name when source is legacy-only.
+            var preferredDest = Path.Combine(pluginDirectory, PluginAssemblyNaming.PreferredSharedDllFileName);
+            File.Copy(sourcePath, preferredDest, overwrite: true);
+
+            if (Path.GetFileName(sourcePath).Equals(PluginAssemblyNaming.LegacySharedDllFileName, StringComparison.OrdinalIgnoreCase))
+            {
+                File.Copy(sourcePath, Path.Combine(pluginDirectory, PluginAssemblyNaming.LegacySharedDllFileName), overwrite: true);
+            }
         }
         catch (Exception ex)
         {
@@ -466,8 +470,9 @@ public class PluginInstallationService
 
         var dllName = Path.GetFileNameWithoutExtension(dllPath);
 
-        if (dllName.StartsWith("LenovoLegionToolkit.Plugins.", StringComparison.OrdinalIgnoreCase))
-            return dllName.Replace("LenovoLegionToolkit.Plugins.", "", StringComparison.OrdinalIgnoreCase);
+        var fromPrefix = PluginAssemblyNaming.ExtractPluginIdFromAssemblyFileName(dllName);
+        if (!string.IsNullOrWhiteSpace(fromPrefix))
+            return fromPrefix;
 
         return dllName;
     }

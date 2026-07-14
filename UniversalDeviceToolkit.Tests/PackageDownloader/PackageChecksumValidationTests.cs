@@ -8,8 +8,8 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.PackageDownloader;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.PackageDownloader;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.PackageDownloader;

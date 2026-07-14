@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.AutoListeners;
+using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public class OneLevelWhiteKeyboardBacklightFeature() : AbstractDriverFeature<OneLevelWhiteKeyboardBacklightState>(Drivers.GetEnergy, Drivers.IOCTL_ENERGY_SETTINGS)
 {

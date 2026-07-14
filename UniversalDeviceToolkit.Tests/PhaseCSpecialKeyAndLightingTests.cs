@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Lighting;
-using LenovoLegionToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Lighting;
+using UniversalDeviceToolkit.Lib.Listeners;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

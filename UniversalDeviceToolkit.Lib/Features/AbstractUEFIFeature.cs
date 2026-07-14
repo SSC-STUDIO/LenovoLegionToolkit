@@ -2,10 +2,10 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 
-namespace LenovoLegionToolkit.Lib.Features;
+namespace UniversalDeviceToolkit.Lib.Features;
 
 public abstract class AbstractUEFIFeature<T>(string guid, string scopeName, uint scopeAttribute)
     : IFeature<T> where T : struct, Enum, IComparable

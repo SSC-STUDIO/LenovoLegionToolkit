@@ -1,9 +1,9 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Serialization;
+namespace UniversalDeviceToolkit.Lib.Serialization;
 
 /// <summary>
 /// Migrates legacy Windows power-plan instance id strings into <see cref="Guid"/> (introduced in 2.12.0).

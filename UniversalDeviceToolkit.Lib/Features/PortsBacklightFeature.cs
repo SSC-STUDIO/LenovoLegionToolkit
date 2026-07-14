@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.Lib.Features;
+﻿namespace UniversalDeviceToolkit.Lib.Features;
 
 public class PortsBacklightFeature() : AbstractLenovoLightingFeature<PortsBacklightState>(5, 1, 0)
 {

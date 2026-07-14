@@ -1,6 +1,6 @@
 using Microsoft.Win32;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Optimization;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.WPF.Controls;
 using UniversalDeviceToolkit.WPF.Controls.Dashboard;
 using UniversalDeviceToolkit.WPF.Resources;

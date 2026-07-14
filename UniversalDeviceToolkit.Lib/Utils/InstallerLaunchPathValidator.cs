@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Validates installer launch paths before elevation/execution.

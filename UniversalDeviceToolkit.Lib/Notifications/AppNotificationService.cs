@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace LenovoLegionToolkit.Lib.Notifications;
+namespace UniversalDeviceToolkit.Lib.Notifications;
 
 /// <summary>
 /// Thread-safe notification bus with short-window merge for repeated successes.

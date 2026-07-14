@@ -1,10 +1,10 @@
 ﻿using System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Storage.FileSystem;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class Drivers
 {

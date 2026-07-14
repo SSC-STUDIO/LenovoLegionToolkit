@@ -3,8 +3,8 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
@@ -127,7 +127,11 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
         var service = new PluginInstallationService(pluginManager.Object);
         var pluginsRoot = CreateTempDirectory();
         var zipPath = CreatePluginZipPackage(pluginId, includeSharedRuntimeFiles: true);
-        var canonicalSharedAssemblyPath = Path.Combine(AppContext.BaseDirectory, "LenovoLegionToolkit.Plugins.Shared.dll");
+        var preferredShared = "UniversalDeviceToolkit.Plugins.Shared.dll";
+        var preferredSdk = "UniversalDeviceToolkit.Plugins.SDK.dll";
+        var legacyShared = "LenovoLegionToolkit.Plugins.Shared.dll";
+        var legacySdk = "LenovoLegionToolkit.Plugins.SDK.dll";
+        var canonicalSharedAssemblyPath = Path.Combine(AppContext.BaseDirectory, preferredShared);
         var assemblySourcePath = Assembly.GetExecutingAssembly().Location;
         var createdCanonicalSharedAssembly = false;
 
@@ -144,8 +148,11 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
             result.Should().BeTrue();
 
             var installedPluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
-            File.Exists(Path.Combine(installedPluginDirectory, "LenovoLegionToolkit.Plugins.Shared.dll")).Should().BeTrue();
-            File.Exists(Path.Combine(installedPluginDirectory, "LenovoLegionToolkit.Plugins.SDK.dll")).Should().BeFalse();
+            // Host stages Shared under preferred UDT name (legacy package may still contain LLT-named files).
+            (File.Exists(Path.Combine(installedPluginDirectory, preferredShared)) ||
+             File.Exists(Path.Combine(installedPluginDirectory, legacyShared))).Should().BeTrue();
+            File.Exists(Path.Combine(installedPluginDirectory, preferredSdk)).Should().BeFalse();
+            File.Exists(Path.Combine(installedPluginDirectory, legacySdk)).Should().BeFalse();
         }
         finally
         {
@@ -209,6 +216,9 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
 
         if (includeSharedRuntimeFiles)
         {
+            File.Copy(assemblySourcePath, Path.Combine(packageRoot, "UniversalDeviceToolkit.Plugins.Shared.dll"), overwrite: true);
+            File.Copy(assemblySourcePath, Path.Combine(packageRoot, "UniversalDeviceToolkit.Plugins.SDK.dll"), overwrite: true);
+            // Also include legacy names so dual-load packages still exercise filtering.
             File.Copy(assemblySourcePath, Path.Combine(packageRoot, "LenovoLegionToolkit.Plugins.Shared.dll"), overwrite: true);
             File.Copy(assemblySourcePath, Path.Combine(packageRoot, "LenovoLegionToolkit.Plugins.SDK.dll"), overwrite: true);
         }

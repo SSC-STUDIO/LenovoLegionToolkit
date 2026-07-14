@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Represents a plugin dependency with version requirements

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.Optimization;
+namespace UniversalDeviceToolkit.Lib.Optimization;
 
 /// <summary>
 /// Extension point for providing additional optimization categories from plugins.
-/// Implemented by LenovoLegionToolkit.Lib.Plugins to avoid circular project references.
+/// Implemented by UniversalDeviceToolkit.Lib.Plugins to avoid circular project references.
 /// </summary>
 public interface IOptimizationCategoryExtender
 {

@@ -1,10 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.PackageDownloader;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.PackageDownloader;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

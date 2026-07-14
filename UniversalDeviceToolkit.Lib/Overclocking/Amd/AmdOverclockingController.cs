@@ -1,6 +1,6 @@
 // Derived from Lenovo Legion Toolkit.
 // Original project copyright: Copyright (C) Bartosz Cichecki and contributors.
-// Upstream sync copyright: Copyright (C) 2026 LenovoLegionToolkit-Team.
+// Upstream sync copyright: Copyright (C) 2026 UniversalDeviceToolkit-Team.
 // Modifications copyright: Copyright (C) 2026 Universal Device Toolkit Contributors.
 
 using System;
@@ -11,12 +11,12 @@ using System.Management;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using ZenStates.Core;
 
-namespace LenovoLegionToolkit.Lib.Overclocking.Amd;
+namespace UniversalDeviceToolkit.Lib.Overclocking.Amd;
 
 public sealed class AmdOverclockingController : IDisposable
 {

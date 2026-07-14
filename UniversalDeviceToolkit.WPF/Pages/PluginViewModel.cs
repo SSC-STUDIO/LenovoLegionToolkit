@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows.Media;
 using System.Linq;
 using System.Collections.Generic;
-using LenovoLegionToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 
@@ -613,7 +613,7 @@ public string PluginId
             // Add debug logging
             try
             {
-                var logger = LenovoLegionToolkit.Lib.Utils.Log.Instance;
+                var logger = UniversalDeviceToolkit.Lib.Utils.Log.Instance;
                 if (logger.IsTraceEnabled)
                 {
                     logger.Trace($"UpdateInstallButtonText for {PluginId}: {oldText} -> {InstallButtonText} (IsInstalled={IsInstalled}, UpdateAvailable={_updateAvailable})");

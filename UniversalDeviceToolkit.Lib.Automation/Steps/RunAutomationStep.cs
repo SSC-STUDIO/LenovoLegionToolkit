@@ -1,6 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System;
 using System.Text.Json.Serialization;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Steps;

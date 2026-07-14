@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;

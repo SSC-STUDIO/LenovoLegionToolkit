@@ -1,6 +1,6 @@
 using System.Drawing;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -23,7 +23,7 @@ public class ResolutionStructTests
         // Use \u00D7 so the expected multiplication sign cannot be corrupted by source encoding.
         res.DisplayName.Should().Be("2560 \u00D7 1440");
         res.DisplayName.Should().Be(string.Format(
-            LenovoLegionToolkit.Lib.Resources.Resource.Resolution_DisplayName_Format,
+            UniversalDeviceToolkit.Lib.Resources.Resource.Resolution_DisplayName_Format,
             2560,
             1440));
     }

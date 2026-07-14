@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace LenovoLegionToolkit.Lib.System.Management;
+namespace UniversalDeviceToolkit.Lib.System.Management;
 
 /// <summary>
 /// Abstraction interface for WMI (Windows Management Instrumentation) operations.

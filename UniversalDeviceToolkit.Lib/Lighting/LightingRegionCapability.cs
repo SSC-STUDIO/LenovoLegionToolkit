@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Lighting;
+namespace UniversalDeviceToolkit.Lib.Lighting;
 
 /// <summary>
 /// Capability DTO for lighting regions. UI must use this instead of raw model strings.

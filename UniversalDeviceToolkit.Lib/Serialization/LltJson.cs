@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace LenovoLegionToolkit.Lib.Serialization;
+namespace UniversalDeviceToolkit.Lib.Serialization;
 
 public static class LltJson
 {

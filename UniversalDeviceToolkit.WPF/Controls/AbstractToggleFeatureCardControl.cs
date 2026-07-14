@@ -2,10 +2,10 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using Wpf.Ui.Controls;
 

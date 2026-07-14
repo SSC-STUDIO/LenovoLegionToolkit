@@ -7,7 +7,7 @@
 | Asset | Description |
 |-------|-------------|
 | `UniversalDeviceToolkit_v5.0.0_Full_Setup.exe` | Full installer (recommended) — bundled languages & device support |
-| `LenovoLegionToolkit_v5.0.0_Setup.exe` | Legacy installer filename alias for existing updaters |
+| `UniversalDeviceToolkit_v5.0.0_Setup.exe` | Legacy installer filename alias for existing updaters |
 | `UniversalDeviceToolkit_v5.0.0_Full_win-x64.zip` | Full portable win-x64 package |
 | `UniversalDeviceToolkit_v5.0.0_CLI_cross-platform.zip` | Cross-platform diagnostics CLI (5.x) |
 | `UniversalDeviceToolkit_v5.0.0_SHA256.txt` | SHA256 checksums |

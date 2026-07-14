@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Reason supplied with a <see cref="PluginLifecycleStateMachine.TransitionResult"/>

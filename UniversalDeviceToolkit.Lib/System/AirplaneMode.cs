@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class AirplaneMode
 {

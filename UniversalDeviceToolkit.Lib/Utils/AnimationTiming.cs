@@ -1,6 +1,6 @@
 using System;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Pure duration math for UI animations (WPF applies <see cref="System.Windows.Duration"/> from these values).

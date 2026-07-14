@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public class SunriseSunsetSettings()
     : AbstractSettings<SunriseSunsetSettings.SunriseSunsetSettingsStore>("sunrise_sunset.json")

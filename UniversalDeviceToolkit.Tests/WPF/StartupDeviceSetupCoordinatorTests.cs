@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.DeviceSupport;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
 

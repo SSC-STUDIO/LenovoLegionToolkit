@@ -3,7 +3,7 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
 using System.Text.Json;
-using LenovoLegionToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.NetworkProxy.Host;
 
 namespace UniversalDeviceToolkit.NetworkProxy.Ipc;

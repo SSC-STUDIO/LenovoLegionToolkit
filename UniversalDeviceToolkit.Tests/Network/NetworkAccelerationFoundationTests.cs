@@ -1,6 +1,6 @@
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Network;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Network;

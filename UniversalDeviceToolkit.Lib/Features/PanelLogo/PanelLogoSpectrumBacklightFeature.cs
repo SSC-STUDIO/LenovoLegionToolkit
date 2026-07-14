@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers;
 
-namespace LenovoLegionToolkit.Lib.Features.PanelLogo;
+namespace UniversalDeviceToolkit.Lib.Features.PanelLogo;
 
 public class PanelLogoSpectrumBacklightFeature(SpectrumKeyboardBacklightController controller) : IFeature<PanelLogoBacklightState>
 {

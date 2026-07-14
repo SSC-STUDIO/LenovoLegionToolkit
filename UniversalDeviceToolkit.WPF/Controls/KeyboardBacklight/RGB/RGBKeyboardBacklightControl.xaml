@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
-    xmlns:lib="clr-namespace:LenovoLegionToolkit.Lib;assembly=LenovoLegionToolkit.Lib"
+    xmlns:lib="clr-namespace:UniversalDeviceToolkit.Lib;assembly=UniversalDeviceToolkit.Lib"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:rgb="clr-namespace:UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.RGB"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">

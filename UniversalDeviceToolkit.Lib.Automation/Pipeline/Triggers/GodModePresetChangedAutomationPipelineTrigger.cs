@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
-using LenovoLegionToolkit.Lib.Controllers.GodMode;
+using UniversalDeviceToolkit.Lib.Controllers.GodMode;
 using System.Text.Json.Serialization;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;

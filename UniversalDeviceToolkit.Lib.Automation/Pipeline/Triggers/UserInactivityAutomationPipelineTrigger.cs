@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.AutoListeners;
+using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Automation.Resources;
 using System.Text.Json.Serialization;
 

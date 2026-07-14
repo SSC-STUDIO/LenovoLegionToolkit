@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Optional plugin lifecycle hook invoked after the application has loaded plugins.

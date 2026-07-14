@@ -1,6 +1,6 @@
 using System;
 
-namespace LenovoLegionToolkit.Lib.Notifications;
+namespace UniversalDeviceToolkit.Lib.Notifications;
 
 public enum AppNotificationSeverity
 {

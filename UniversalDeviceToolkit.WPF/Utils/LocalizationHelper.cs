@@ -9,11 +9,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Humanizer;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
@@ -147,7 +147,7 @@ public static class LocalizationHelper
         if (showLanguageSelector)
         {
             var preferred = GetPreferredStartupLanguage(savedCultureInfo);
-            var manager = languagePackManager ?? new LanguagePackManager(new LenovoLegionToolkit.Lib.ResourcesCatalog.OnlineResourceCatalogClient(new LenovoLegionToolkit.Lib.HttpClientFactory()));
+            var manager = languagePackManager ?? new LanguagePackManager(new UniversalDeviceToolkit.Lib.ResourcesCatalog.OnlineResourceCatalogClient(new UniversalDeviceToolkit.Lib.HttpClientFactory()));
             var window = new LanguageSelectorWindow(Languages, preferred, manager, allowOfflineEnglish);
             ApplyStartupTheme(window);
             window.ShowDialog();
@@ -395,7 +395,7 @@ public static class LocalizationHelper
     public static void ApplyCoreResourceCultures(CultureInfo cultureInfo)
     {
         Resource.Culture = cultureInfo;
-        LenovoLegionToolkit.Lib.Resources.Resource.Culture = cultureInfo;
+        UniversalDeviceToolkit.Lib.Resources.Resource.Culture = cultureInfo;
         UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = cultureInfo;
         UniversalDeviceToolkit.Lib.Macro.Resources.Resource.Culture = cultureInfo;
     }
@@ -485,7 +485,7 @@ public static class LocalizationHelper
 
             var name = assembly.GetName().Name ?? string.Empty;
             if (name.Contains("Plugin", StringComparison.OrdinalIgnoreCase) ||
-                name.Contains("LenovoLegionToolkit.Plugins", StringComparison.OrdinalIgnoreCase) ||
+                name.Contains("UniversalDeviceToolkit.Plugins", StringComparison.OrdinalIgnoreCase) ||
                 name.Contains("UniversalDeviceToolkit.Plugins", StringComparison.OrdinalIgnoreCase))
                 return true;
 
@@ -494,7 +494,7 @@ public static class LocalizationHelper
             if (string.IsNullOrWhiteSpace(location))
                 return false;
 
-            var pluginsDir = LenovoLegionToolkit.Lib.Plugins.PluginPaths.GetPluginsDirectory();
+            var pluginsDir = UniversalDeviceToolkit.Lib.Plugins.PluginPaths.GetPluginsDirectory();
             return !string.IsNullOrWhiteSpace(pluginsDir) &&
                    location.StartsWith(pluginsDir, StringComparison.OrdinalIgnoreCase);
         }
@@ -514,7 +514,7 @@ public static class LocalizationHelper
             return false;
 
         if (type.Assembly == typeof(Resource).Assembly ||
-            type.Assembly == typeof(LenovoLegionToolkit.Lib.Resources.Resource).Assembly ||
+            type.Assembly == typeof(UniversalDeviceToolkit.Lib.Resources.Resource).Assembly ||
             type.Assembly == typeof(UniversalDeviceToolkit.Lib.Automation.Resources.Resource).Assembly ||
             type.Assembly == typeof(UniversalDeviceToolkit.Lib.Macro.Resources.Resource).Assembly)
             return false;
@@ -532,7 +532,7 @@ public static class LocalizationHelper
              type.FullName?.EndsWith(".Resource", StringComparison.Ordinal) == true))
             return true;
 
-        // Plugin assemblies may live under LenovoLegionToolkit.Plugins.* or UniversalDeviceToolkit.Plugins.*
+        // Plugin assemblies may live under UniversalDeviceToolkit.Plugins.* or UniversalDeviceToolkit.Plugins.*
         var assemblyName = type.Assembly.GetName().Name ?? string.Empty;
         if (assemblyName.Contains("Plugins", StringComparison.OrdinalIgnoreCase) &&
             type.Name is "Resource" or "Resources")

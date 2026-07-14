@@ -2,7 +2,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.Serialization;
+using UniversalDeviceToolkit.Lib.Serialization;
 using UniversalDeviceToolkit.WPF;
 using UniversalDeviceToolkit.WPF.Settings;
 using Xunit;

@@ -5,9 +5,9 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Resources;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Resources;
+using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -15,7 +15,7 @@ using Windows.Win32.System.Registry;
 
 // ReSharper disable StringLiteralTypo
 
-namespace LenovoLegionToolkit.Lib.System;
+namespace UniversalDeviceToolkit.Lib.System;
 
 public static class Registry
 {

@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.DeviceSupport;
+namespace UniversalDeviceToolkit.Lib.DeviceSupport;
 
 public interface IInstalledDeviceSupportProvider
 {

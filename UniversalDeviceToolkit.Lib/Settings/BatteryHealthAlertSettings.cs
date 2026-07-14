@@ -1,6 +1,6 @@
 using System;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 /// <summary>
 /// Built-in battery health alert thresholds (migrated from Battery Health plugin).

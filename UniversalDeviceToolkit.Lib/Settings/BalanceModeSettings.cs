@@ -1,6 +1,6 @@
-﻿using static LenovoLegionToolkit.Lib.Settings.BalanceModeSettings;
+﻿using static UniversalDeviceToolkit.Lib.Settings.BalanceModeSettings;
 
-namespace LenovoLegionToolkit.Lib.Settings;
+namespace UniversalDeviceToolkit.Lib.Settings;
 
 public class BalanceModeSettings() : AbstractSettings<BalanceModeSettingsStore>("balancemode.json")
 {

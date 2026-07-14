@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 public class ThreadSafeBool
 {

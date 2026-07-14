@@ -1,6 +1,6 @@
 // Derived from Lenovo Legion Toolkit.
 // Original project copyright: Copyright (C) Bartosz Cichecki and contributors.
-// Upstream sync copyright: Copyright (C) 2026 LenovoLegionToolkit-Team.
+// Upstream sync copyright: Copyright (C) 2026 UniversalDeviceToolkit-Team.
 // Modifications copyright: Copyright (C) 2026 Universal Device Toolkit Contributors.
 
 using System;
@@ -13,12 +13,12 @@ using Windows.Devices.Enumeration;
 using Windows.Devices.Lights;
 using Windows.Foundation.Metadata;
 using Windows.UI;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Lib.Utils.LampEffects;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Utils.LampEffects;
 using NeoSmart.AsyncLock;
 
-namespace LenovoLegionToolkit.Lib.Controllers;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 public class LampArrayController : IDisposable
 {

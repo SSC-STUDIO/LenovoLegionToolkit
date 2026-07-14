@@ -1,4 +1,4 @@
-using LenovoLegionToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,29 +12,29 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Runtime.InteropServices;
-using LenovoLegionToolkit.Lib;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
-using LenovoLegionToolkit.Lib.Controllers;
-using LenovoLegionToolkit.Lib.Controllers.Sensors;
-using LenovoLegionToolkit.Lib.Extensions;
-using LenovoLegionToolkit.Lib.Features;
-using LenovoLegionToolkit.Lib.Features.Hybrid;
-using LenovoLegionToolkit.Lib.Features.Hybrid.Notify;
-using LenovoLegionToolkit.Lib.Features.PanelLogo;
-using LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
-using LenovoLegionToolkit.Lib.Integrations;
-using LenovoLegionToolkit.Lib.Listeners;
-using LenovoLegionToolkit.Lib.AutoListeners;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Hybrid;
+using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
+using UniversalDeviceToolkit.Lib.Features.PanelLogo;
+using UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
+using UniversalDeviceToolkit.Lib.Integrations;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Macro;
-using LenovoLegionToolkit.Lib.Overclocking.Amd;
-using LenovoLegionToolkit.Lib.Services;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.ResourcesCatalog;
-using LenovoLegionToolkit.Lib.Settings;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
-using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.Lib.Messaging;
-using LenovoLegionToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Overclocking.Amd;
+using UniversalDeviceToolkit.Lib.Services;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.WPF.CLI;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Pages;
@@ -717,7 +717,7 @@ public partial class App
             // Stop network acceleration worker and restore system proxy/hosts before other services.
             try
             {
-                if (TryGetCachedService<LenovoLegionToolkit.Lib.Network.INetworkAccelerationService>() is { } networkAcceleration)
+                if (TryGetCachedService<UniversalDeviceToolkit.Lib.Network.INetworkAccelerationService>() is { } networkAcceleration)
                     await networkAcceleration.StopAsync().ConfigureAwait(false);
             }
             catch (Exception ex)

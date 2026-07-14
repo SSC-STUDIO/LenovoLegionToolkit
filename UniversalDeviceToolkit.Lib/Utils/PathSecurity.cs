@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace LenovoLegionToolkit.Lib.Utils;
+namespace UniversalDeviceToolkit.Lib.Utils;
 
 /// <summary>
 /// Security utilities for path validation and sanitization to prevent path traversal attacks.

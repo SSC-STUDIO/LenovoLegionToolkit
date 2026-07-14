@@ -1,4 +1,4 @@
-namespace LenovoLegionToolkit.Lib.Plugins;
+namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>
 /// Plugin interface, defines basic plugin information and behavior

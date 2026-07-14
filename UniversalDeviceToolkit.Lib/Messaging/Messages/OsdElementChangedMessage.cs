@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace LenovoLegionToolkit.Lib.Messaging.Messages;
+namespace UniversalDeviceToolkit.Lib.Messaging.Messages;
 
 public readonly struct OsdElementChangedMessage(List<OsdItem> items) : IMessage
 {

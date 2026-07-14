@@ -296,7 +296,7 @@ public class MainAppPluginUiSmokeArgumentParsingTests
 
         normalizeRuntimeFixturePluginId.Should().NotBeNull();
 
-        var result = normalizeRuntimeFixturePluginId!.Invoke(null, new object[] { "LenovoLegionToolkit.Plugins.CustomMouse" });
+        var result = normalizeRuntimeFixturePluginId!.Invoke(null, new object[] { "UniversalDeviceToolkit.Plugins.CustomMouse" });
         result.Should().Be("custom-mouse");
     }
 

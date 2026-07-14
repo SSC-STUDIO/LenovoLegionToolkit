@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Threading;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Startup
 {

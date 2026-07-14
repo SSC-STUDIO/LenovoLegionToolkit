@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using LenovoLegionToolkit.Lib.System;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
 
-namespace LenovoLegionToolkit.Lib.SoftwareDisabler;
+namespace UniversalDeviceToolkit.Lib.SoftwareDisabler;
 
 public class FnKeysDisabler : AbstractSoftwareDisabler
 {

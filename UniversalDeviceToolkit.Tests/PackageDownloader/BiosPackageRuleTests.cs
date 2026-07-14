@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib.PackageDownloader.Detectors.Rules;
+using UniversalDeviceToolkit.Lib.PackageDownloader.Detectors.Rules;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.PackageDownloader;

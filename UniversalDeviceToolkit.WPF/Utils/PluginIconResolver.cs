@@ -6,8 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using LenovoLegionToolkit.Lib.Plugins;
-using LenovoLegionToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Utils;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
@@ -221,7 +221,9 @@ internal static class PluginIconResolver
         {
             pluginId,
             Path.Combine("local", pluginId),
+            $"UniversalDeviceToolkit.Plugins.{pluginId}",
             $"LenovoLegionToolkit.Plugins.{pluginId}",
+            $"UniversalDeviceToolkit.Plugins.{normalizedPluginId}",
             $"LenovoLegionToolkit.Plugins.{normalizedPluginId}"
         };
 

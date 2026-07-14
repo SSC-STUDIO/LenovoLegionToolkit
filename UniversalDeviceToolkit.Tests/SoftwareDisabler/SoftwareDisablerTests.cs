@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using LenovoLegionToolkit.Lib;
-using LenovoLegionToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.SoftwareDisabler;
