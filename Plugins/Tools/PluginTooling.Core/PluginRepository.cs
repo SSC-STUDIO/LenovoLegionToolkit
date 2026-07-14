@@ -227,9 +227,9 @@ public sealed class PluginRepository
             manifest.Store.Description,
             manifest.Store.Icon,
             manifest.Store.IconBackground,
-            manifest.Store.Tags,
-            manifest.Store.Dependencies,
-            manifest.Store.SupportedLanguages,
+            manifest.Store.Tags ?? [],
+            manifest.Store.Dependencies ?? [],
+            manifest.Store.SupportedLanguages ?? [],
             manifest.Store.RepositoryUrl);
     }
 

@@ -540,4 +540,66 @@ public class CreateUnifiedManifestNullGuardTests
         Assert.Empty(unified.Store.Dependencies);
         Assert.Equal(["en"], unified.Store.SupportedLanguages);
     }
+
+    [Fact]
+    public void ToStoreEntry_NullCollectionFields_DoesNotProduceNullCollections()
+    {
+        // When plugin.manifest.json has "tags": null etc., PluginStoreMetadata.Tags
+        // is deserialized as null (overwriting the [] initializer). ToStoreEntry
+        // must null-coalesce so OfficialStoreEntry never carries null collections,
+        // otherwise PluginValidationService.SequenceEqual throws NRE.
+        var manifest = new UnifiedPluginManifest
+        {
+            Id = "test-plugin",
+            Name = "Test Plugin",
+            Version = "1.0.0",
+            Store = new PluginStoreMetadata
+            {
+                Description = "Test",
+                Icon = "PuzzlePiece24",
+                IconBackground = "#FFF1E2",
+                Tags = null!,
+                Dependencies = null!,
+                SupportedLanguages = null!,
+            },
+        };
+
+        var storeEntry = PluginRepository.ToStoreEntry(manifest);
+
+        Assert.NotNull(storeEntry.Tags);
+        Assert.Empty(storeEntry.Tags);
+        Assert.NotNull(storeEntry.Dependencies);
+        Assert.Empty(storeEntry.Dependencies);
+        Assert.NotNull(storeEntry.SupportedLanguages);
+        Assert.Empty(storeEntry.SupportedLanguages);
+    }
+
+    [Fact]
+    public void EntriesEqual_NullCollectionFieldsOnBothSides_DoesNotThrow()
+    {
+        // Simulates PluginValidationService comparing two OfficialStoreEntry
+        // instances where collection fields are null on both sides.
+        var left = new OfficialStoreEntry(
+            Description: "Test",
+            Icon: "PuzzlePiece24",
+            IconBackground: "#FFF1E2",
+            Tags: null!,
+            Dependencies: null!,
+            SupportedLanguages: null!,
+            RepositoryUrl: null);
+
+        var right = new OfficialStoreEntry(
+            Description: "Test",
+            Icon: "PuzzlePiece24",
+            IconBackground: "#FFF1E2",
+            Tags: null!,
+            Dependencies: null!,
+            SupportedLanguages: null!,
+            RepositoryUrl: null);
+
+        // (null ?? []).SequenceEqual(null ?? []) => [].SequenceEqual([]) => true
+        Assert.True((left.Tags ?? []).SequenceEqual(right.Tags ?? [], StringComparer.Ordinal));
+        Assert.True((left.Dependencies ?? []).SequenceEqual(right.Dependencies ?? [], StringComparer.Ordinal));
+        Assert.True((left.SupportedLanguages ?? []).SequenceEqual(right.SupportedLanguages ?? [], StringComparer.Ordinal));
+    }
 }

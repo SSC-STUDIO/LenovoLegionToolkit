@@ -409,9 +409,9 @@ public sealed class PluginValidationService
         if (!string.Equals(plugin.StoreEntry.Description, storeEntry.Description, StringComparison.Ordinal) ||
             !string.Equals(plugin.StoreEntry.Icon, storeEntry.Icon, StringComparison.Ordinal) ||
             !string.Equals(plugin.StoreEntry.IconBackground, storeEntry.IconBackground, StringComparison.Ordinal) ||
-            !plugin.StoreEntry.Tags.SequenceEqual(storeEntry.Tags, StringComparer.Ordinal) ||
-            !plugin.StoreEntry.SupportedLanguages.SequenceEqual(storeEntry.SupportedLanguages, StringComparer.Ordinal) ||
-            !plugin.StoreEntry.Dependencies.SequenceEqual(storeEntry.Dependencies, StringComparer.Ordinal) ||
+            !(plugin.StoreEntry.Tags ?? []).SequenceEqual(storeEntry.Tags ?? [], StringComparer.Ordinal) ||
+            !(plugin.StoreEntry.SupportedLanguages ?? []).SequenceEqual(storeEntry.SupportedLanguages ?? [], StringComparer.Ordinal) ||
+            !(plugin.StoreEntry.Dependencies ?? []).SequenceEqual(storeEntry.Dependencies ?? [], StringComparer.Ordinal) ||
             !string.Equals(plugin.StoreEntry.RepositoryUrl, storeEntry.RepositoryUrl, StringComparison.Ordinal))
         {
             state.Warn("store-entry.json differs from plugin.manifest.json store metadata; run migrate or promote to resync compatibility metadata.");
