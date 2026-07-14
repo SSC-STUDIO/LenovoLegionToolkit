@@ -15,8 +15,10 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 [Trait("Category", TestCategories.Unit)]
 public sealed class SkeletonShimmerTests
 {
-    private static readonly Color ShimmerStart = Color.FromArgb(0x2A, 0x8E, 0x99, 0xAA);
-    private static readonly Color ShimmerPeak = Color.FromArgb(0x52, 0xA8, 0xB2, 0xC0);
+    private static readonly Color ShimmerStart = Color.FromArgb(0x26, 0x88, 0x91, 0xA0);
+    private static readonly Color ShimmerPeak = Color.FromArgb(0x4A, 0x88, 0x91, 0xA0);
+    private static readonly Color ShimmerStartLight = Color.FromArgb(0x4A, 0x88, 0xA8, 0xC0);
+    private static readonly Color ShimmerPeakLight = Color.FromArgb(0x8A, 0x98, 0xB8, 0xD0);
 
     [Fact]
     public void CreateShimmerBrush_ShouldHaveOrderedStopsAndVisiblePeak()
@@ -27,10 +29,25 @@ public sealed class SkeletonShimmerTests
         brush.GradientStops.Should().OnlyContain(x => x.Offset >= 0 && x.Offset <= 1);
         brush.GradientStops.First().Offset.Should().Be(0);
         brush.GradientStops.Last().Offset.Should().Be(1);
+        brush.GradientStops.Single(x => Math.Abs(x.Offset - 0.48) < 0.001).Color
+            .Should().Be(SkeletonShimmer.CompositeOverlay(baseColor, ShimmerPeak));
         var peak = brush.GradientStops.Max(x => Luminance(x.Color));
         var lift = peak - Luminance(baseColor);
-        // Must be visible (not near-zero) but still a soft 流光, not a solid white flash.
         lift.Should().BeInRange(0.02, 0.22);
+    }
+
+    [Fact]
+    public void CreateShimmerBrush_OnLightBase_ShouldProduceStrongerVisiblePeak()
+    {
+        var baseColor = Color.FromRgb(0xEB, 0xEB, 0xEB);
+        var darkBrush = SkeletonShimmer.CreateShimmerBrush(baseColor, ShimmerStart, ShimmerPeak);
+        var lightBrush = SkeletonShimmer.CreateShimmerBrush(baseColor, ShimmerStartLight, ShimmerPeakLight);
+
+        var darkLift = darkBrush.GradientStops.Max(x => Luminance(x.Color)) - Luminance(baseColor);
+        var lightLift = lightBrush.GradientStops.Max(x => Luminance(x.Color)) - Luminance(baseColor);
+
+        lightLift.Should().BeGreaterThan(darkLift);
+        lightLift.Should().BeInRange(0.03, 0.28);
     }
 
     [Fact]

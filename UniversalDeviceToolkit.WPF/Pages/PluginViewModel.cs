@@ -16,7 +16,7 @@ namespace UniversalDeviceToolkit.WPF.Pages
         private string _version = "1.0.0";
         private string _iconLetter = "?";
         private SolidColorBrush _iconBackground = Brushes.Gray;
-        private string _installButtonText = "Install";
+        private string _installButtonText = Resource.PluginExtensionsPage_InstallPlugin;
         private string _pluginId = string.Empty;
         private bool _isInstalled;
         private bool _supportsConfiguration;

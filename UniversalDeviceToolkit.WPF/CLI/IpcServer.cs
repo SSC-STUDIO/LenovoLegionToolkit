@@ -342,10 +342,60 @@ public class IpcServer(
 
     private async Task<string> StartNetworkAccelerationAsync()
     {
+        // Mirror the UI path: enable master switch + a real mode before StartAsync.
+        // CLI start is explicit user consent (unlike auto-start on app launch).
+        var config = networkAccelerationService.Config;
+        var configChanged = false;
+
+        if (!config.AccelerationEnabled || config.Mode is NetworkAccelerationMode.Off)
+        {
+            config.AccelerationEnabled = true;
+            if (config.Mode is NetworkAccelerationMode.Off)
+                config.Mode = NetworkAccelerationMode.SystemProxy;
+            configChanged = true;
+        }
+
+        config.DomainGroups ??= [];
+        if (config.DomainGroups.Count == 0)
+        {
+            config.DomainGroups = BuiltinDomainGroups.CreateDefaults();
+            configChanged = true;
+        }
+
+        // Prefer selective PAC: enable built-in groups that have domains when none are enabled.
+        if (!config.DomainGroups.Any(g => g.Enabled && g.Domains is { Count: > 0 }))
+        {
+            foreach (var group in config.DomainGroups)
+            {
+                if ((group.Id is "steam" or "github") &&
+                    group.Domains is { Count: > 0 })
+                {
+                    group.Enabled = true;
+                    configChanged = true;
+                }
+            }
+
+            if (!config.DomainGroups.Any(g => g.Enabled && g.Domains is { Count: > 0 }))
+            {
+                if (configChanged)
+                    await networkAccelerationService.SaveConfigAsync().ConfigureAwait(false);
+
+                return "Network acceleration failed to start: no domain groups with domains are enabled. " +
+                       "Enable steam/github (or add custom domains) in the UI, then retry.";
+            }
+        }
+
+        if (configChanged)
+            await networkAccelerationService.SaveConfigAsync().ConfigureAwait(false);
+
+        if (!networkAccelerationService.IsBackendReady)
+            return "Network acceleration failed to start: NetworkProxy worker is not available.";
+
         var started = await networkAccelerationService.StartAsync().ConfigureAwait(false);
-        return started
-            ? BuildNetworkAccelerationStatus()
-            : "Network acceleration failed to start. System network state was not left enabled.";
+        if (!started)
+            return "Network acceleration failed to start. System network state was not left enabled.";
+
+        return "Network acceleration started." + Environment.NewLine + BuildNetworkAccelerationStatus();
     }
 
     private async Task<string> StopNetworkAccelerationAsync()

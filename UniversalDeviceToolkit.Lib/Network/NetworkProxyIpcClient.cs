@@ -44,6 +44,18 @@ public sealed class NetworkProxyIpcClient
     public Task<NetworkProxyIpcResult> ShutdownAsync(CancellationToken cancellationToken = default) =>
         SendAsync("shutdown", payload: null, cancellationToken);
 
+    /// <summary>
+    /// Pushes domain allowlist to the worker (JSON string array payload on the <c>rules</c> op).
+    /// Empty list means allow-all on the host (full-proxy path).
+    /// </summary>
+    public Task<NetworkProxyIpcResult> SetRulesAsync(
+        IReadOnlyList<string>? domains,
+        CancellationToken cancellationToken = default)
+    {
+        var payload = JsonSerializer.Serialize(domains ?? Array.Empty<string>(), JsonOptions);
+        return SendAsync("rules", payload, cancellationToken);
+    }
+
     public async Task<NetworkProxyIpcResult> SendAsync(
         string operation,
         string? payload = null,

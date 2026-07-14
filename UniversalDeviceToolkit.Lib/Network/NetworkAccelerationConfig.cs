@@ -52,6 +52,12 @@ public sealed class NetworkDomainGroup
     public string Id { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
     public bool Enabled { get; set; }
+
+    /// <summary>
+    /// User pin/favorite (Watt Toolkit-style). Favorites sort first and can be batch-started.
+    /// </summary>
+    public bool IsFavorite { get; set; }
+
     public List<string> Domains { get; set; } = [];
 }
 

@@ -3867,6 +3867,30 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Only enabled groups are rewritten by PAC / Hosts. All groups stay off by default.</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
+    <value>Click to select groups · double-click to enable/disable · use the bar to favorite or start selected.</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
+    <value>Domain group selection actions</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountZero" xml:space="preserve">
+    <value>0 items selected</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountFormat" xml:space="preserve">
+    <value>{0} items selected</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
+    <value>Favorite selected</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
+    <value>Pin or unpin selected domain groups (favorites sort first)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
+    <value>Start selected</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
+    <value>Enable selected groups and start network acceleration</value>
+  </data>
   <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
     <value>Static audited lists only — no remote rule download. Re-start acceleration after changing groups.</value>
   </data>

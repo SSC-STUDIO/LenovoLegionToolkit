@@ -89,8 +89,9 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
-    public int SelectedActionCount => Actions.Count(action => action.IsSelected);
-    public string SelectionSummary => string.Format(_selectionSummaryFormat, SelectedActionCount, Actions.Count);
+    public int VisibleActionCount => Actions.Count(action => action.IsVisible);
+    public int SelectedActionCount => Actions.Count(action => action.IsVisible && action.IsSelected);
+    public string SelectionSummary => string.Format(_selectionSummaryFormat, SelectedActionCount, VisibleActionCount);
 
     public bool IsEnabled
     {
@@ -109,7 +110,7 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            var enabledActions = Actions.Where(action => action.IsEnabled).ToList();
+            var enabledActions = Actions.Where(action => action.IsEnabled && action.IsVisible).ToList();
             if (enabledActions.Count == 0)
                 return false;
 
@@ -127,7 +128,7 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
             if (!value.HasValue)
                 return;
 
-            foreach (var action in Actions.Where(action => action.IsEnabled))
+            foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible))
                 action.IsSelected = value.Value;
 
             OnPropertyChanged(nameof(HeaderCheckState));
@@ -146,7 +147,7 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
 
     public void SelectRecommended()
     {
-        foreach (var action in Actions.Where(action => action.IsEnabled))
+        foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible))
             action.IsSelected = action.Recommended;
 
         RaiseSelectionChanged();
@@ -154,7 +155,7 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
 
     public void ClearSelection()
     {
-        foreach (var action in Actions.Where(action => action.IsEnabled))
+        foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible))
             action.IsSelected = false;
 
         RaiseSelectionChanged();
@@ -165,6 +166,7 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(HeaderCheckState));
         OnPropertyChanged(nameof(SelectionSummary));
         OnPropertyChanged(nameof(SelectedActionCount));
+        OnPropertyChanged(nameof(VisibleActionCount));
         SelectionChanged?.Invoke(this, EventArgs.Empty);
     }
 

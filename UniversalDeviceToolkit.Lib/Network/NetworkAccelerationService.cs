@@ -99,8 +99,32 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
                 return true;
             }
 
+            // Hosts→127.0.0.1 without a local TLS origin breaks HTTPS. Refuse until redesigned.
+            if (Config.Mode == NetworkAccelerationMode.Hosts)
+            {
+                Log.Instance.Warning(
+                    "NetworkAcceleration Hosts mode Start refused: mapping domains to 127.0.0.1 is disabled until a local TLS origin exists. Use SystemProxy (PAC) or DiagnosticsOnly. Hosts file helpers remain for future use.");
+                lock (_gate)
+                    _isRunning = false;
+                return false;
+            }
+
             if (!IsBackendReady)
                 return false;
+
+            // SystemProxy: require enabled domains up front — never CreateLoopbackProxy as silent fallback.
+            if (Config.Mode == NetworkAccelerationMode.SystemProxy)
+            {
+                var preDomains = CollectEnabledDomains();
+                if (!CanApplySystemProxy(preDomains))
+                {
+                    Log.Instance.Warning(
+                        "NetworkAcceleration SystemProxy Start refused: no enabled domains. Enable at least one domain group; refusing silent full-loopback proxy.");
+                    lock (_gate)
+                        _isRunning = false;
+                    return false;
+                }
+            }
 
             // Capture pre-mutation state for crash/stop recovery.
             var snapshot = await _recovery.CaptureSnapshotAsync(cancellationToken).ConfigureAwait(false);
@@ -127,8 +151,46 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
                 return false;
             }
 
+            var domains = CollectEnabledDomains();
+
+            // Re-check after worker start before mutating system proxy.
+            if (Config.Mode == NetworkAccelerationMode.SystemProxy)
+            {
+                if (!CanApplySystemProxy(domains))
+                {
+                    Log.Instance.Warning(
+                        "NetworkAcceleration SystemProxy Start aborted after worker start: no enabled domains; worker stopped, system proxy not mutated.");
+                    await _launcher.StopAsync(cancellationToken).ConfigureAwait(false);
+                    lock (_gate)
+                        _isRunning = false;
+                    return false;
+                }
+            }
+
+            // Defense-in-depth: push enabled domains so the worker rejects non-allowlisted hosts.
+            // Empty list = allow-all on the host (non-SystemProxy / pre-rules path).
+            var rulesResult = await client.SetRulesAsync(domains, cancellationToken).ConfigureAwait(false);
+            if (!rulesResult.Success)
+            {
+                Log.Instance.Warning(
+                    $"NetworkAcceleration SetRules failed after Start; stopping worker. {rulesResult.Message}");
+                try { await client.StopAsync(cancellationToken).ConfigureAwait(false); }
+                catch (Exception ex)
+                {
+                    Log.Instance.TraceOnce(
+                        "network-accel-rules-stop",
+                        "Stop after SetRules failure failed.",
+                        ex);
+                }
+
+                await _launcher.StopAsync(cancellationToken).ConfigureAwait(false);
+                lock (_gate)
+                    _isRunning = false;
+                return false;
+            }
+
             ApplySystemSideEffects(Config.ListenPort);
-            _appliedSystemMutation = Config.Mode is NetworkAccelerationMode.SystemProxy or NetworkAccelerationMode.Hosts;
+            _appliedSystemMutation = Config.Mode is NetworkAccelerationMode.SystemProxy;
 
             lock (_gate)
                 _isRunning = true;
@@ -191,39 +253,22 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
             case NetworkAccelerationMode.SystemProxy:
             {
                 var domains = CollectEnabledDomains();
-                // Prefer PAC for selective domains; fall back to full loopback proxy when empty.
-                if (domains.Count > 0)
-                    SystemProxyApplicator.Apply(SystemProxyApplicator.CreatePacProxy(port, domains.ToArray()));
-                else
-                    SystemProxyApplicator.Apply(SystemProxyApplicator.CreateLoopbackProxy(port));
+                // Selective PAC only — never CreateLoopbackProxy when the domain list is empty.
+                if (!CanApplySystemProxy(domains))
+                {
+                    Log.Instance.Warning(
+                        "SystemProxy apply refused: no enabled domains (full loopback proxy is not used).");
+                    return;
+                }
+
+                SystemProxyApplicator.Apply(SystemProxyApplicator.CreatePacProxy(port, domains.ToArray()));
                 break;
             }
             case NetworkAccelerationMode.Hosts:
             {
-                // Hosts rewrites require elevation for system hosts file — best-effort.
-                try
-                {
-                    var hostsPath = Path.Combine(
-                        Environment.GetFolderPath(Environment.SpecialFolder.System),
-                        "drivers", "etc", "hosts");
-                    var current = File.Exists(hostsPath) ? File.ReadAllText(hostsPath) : string.Empty;
-                    var lines = CollectEnabledDomains()
-                        .Select(d => $"127.0.0.1 {d}")
-                        .ToArray();
-                    if (lines.Length == 0)
-                        break;
-                    var updated = HostsMarkedBlock.Upsert(current, lines);
-                    File.WriteAllText(hostsPath, updated);
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    Log.Instance.Warning("Hosts mode requires elevation; hosts file not modified.", ex);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Warning("Hosts mode apply failed.", ex);
-                }
-
+                // Defense-in-depth: StartAsync refuses Hosts mode. Do not map domains to 127.0.0.1.
+                Log.Instance.Warning(
+                    "Hosts mode system apply is disabled until a local TLS origin exists; hosts file not modified.");
                 break;
             }
         }
@@ -239,6 +284,39 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
             .Distinct(StringComparer.Ordinal)
             .ToList();
     }
+
+    /// <summary>
+    /// Pure gate: system proxy / PAC may be applied only when at least one non-empty domain is present.
+    /// Empty lists must not fall back to a full loopback system proxy.
+    /// </summary>
+    internal static bool CanApplySystemProxy(IEnumerable<string>? domains)
+    {
+        if (domains is null)
+            return false;
+
+        foreach (var d in domains)
+        {
+            if (!string.IsNullOrWhiteSpace(d))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Pure gate for Start eligibility by mode (no worker / no system mutation).
+    /// Hosts mode is always refused until a local TLS origin exists.
+    /// SystemProxy requires enabled domains. DiagnosticsOnly is always allowed.
+    /// </summary>
+    internal static bool CanStartMode(NetworkAccelerationMode mode, IEnumerable<string>? enabledDomains) =>
+        mode switch
+        {
+            NetworkAccelerationMode.DiagnosticsOnly => true,
+            NetworkAccelerationMode.SystemProxy => CanApplySystemProxy(enabledDomains),
+            // Hosts→127.0.0.1 without local origin breaks HTTPS; helpers kept for future redesign.
+            NetworkAccelerationMode.Hosts => false,
+            _ => false
+        };
 
     /// <inheritdoc />
     public Task EnsureCleanSystemStateOnStartupAsync(CancellationToken cancellationToken = default)

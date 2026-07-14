@@ -23,6 +23,33 @@ public sealed class WindowsOptimizationPageGuardTests
             .BeLessThan(loadedHandler.IndexOf("TryApplyPendingPluginFocusRequest();", System.StringComparison.Ordinal));
     }
 
+    [Fact]
+    public void CategorySettingsButton_ShouldBindHasSettingsFromCardExpanderCategoryViewModel()
+    {
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
+        // Gear only when OptimizationCategoryViewModel.HasSettings is true.
+        // Self DataContext is required for WPF-UI PressedForeground; category fields must
+        // bind via CardExpander.DataContext — NOT Grid (Grid has neither HasSettings nor PluginId).
+        xaml.Should().Contain("DataContext.HasSettings");
+        xaml.Should().Contain("AncestorType=custom:CardExpander");
+        xaml.Should().Contain("DataContext.PluginId");
+        xaml.Should().NotContain("HasSettings, Converter={StaticResource BoolToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=Grid}");
+        xaml.Should().NotContain("PluginId, StringFormat=WindowsOptimizationCategorySettings_{0}, RelativeSource={RelativeSource AncestorType=Grid}");
+        xaml.Should().Contain("OpenStyleSettingsButton_Click");
+    }
+
+    [Fact]
+    public void CleanupAndDriverControls_ShouldExposeStableAutomationIds()
+    {
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
+        xaml.Should().Contain("WindowsOptimizationRunCleanupButton");
+        xaml.Should().Contain("WindowsOptimizationReScanCleanupButton");
+        xaml.Should().Contain("WindowsOptimizationDriverBrowseButton");
+        xaml.Should().Contain("WindowsOptimizationDriverOpenFolderButton");
+        xaml.Should().Contain("WindowsOptimizationDriverOsComboBox");
+        xaml.Should().Contain("WindowsOptimizationDriverDownloadToTextBox");
+    }
+
     private static string ReadRepositoryFile(params string[] pathParts)
     {
 var directory = new DirectoryInfo(AppContext.BaseDirectory);

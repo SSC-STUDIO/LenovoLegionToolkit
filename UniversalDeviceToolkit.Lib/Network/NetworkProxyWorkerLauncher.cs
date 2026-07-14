@@ -126,16 +126,19 @@ public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
         var pipe = $"{NetworkAccelerationDefaults.DefaultPipeName}-{Guid.NewGuid():N}"[..Math.Min(80, NetworkAccelerationDefaults.DefaultPipeName.Length + 1 + 32)];
         var port = listenPort > 0 ? listenPort : NetworkAccelerationDefaults.DefaultListenPort;
 
+        // Token goes via env (not argv) so it is not visible in process listings / WMI CommandLine.
+        // Worker still accepts --token for backward compatibility.
         var startInfo = new ProcessStartInfo
         {
             FileName = workerPath,
-            Arguments = $"--token {token} --pipe {pipe} --port {port}",
+            Arguments = $"--pipe {pipe} --port {port}",
             UseShellExecute = false,
             CreateNoWindow = true,
             RedirectStandardOutput = true,
             RedirectStandardError = true,
             WorkingDirectory = Path.GetDirectoryName(workerPath) ?? Folders.Program
         };
+        startInfo.Environment[NetworkProxySessionToken.WorkerTokenEnvironmentVariable] = token;
 
         var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
         if (!process.Start())

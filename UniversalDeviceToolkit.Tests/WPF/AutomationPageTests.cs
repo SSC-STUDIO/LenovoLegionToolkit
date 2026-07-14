@@ -26,6 +26,14 @@ public class AutomationPageTests
             .And.NotContain("Task.Delay(");
     }
 
+    [Fact]
+    public void AutomationPage_EnableToggle_ShouldExposeStableAutomationId()
+    {
+        var root = FindRepositoryRoot();
+        var xaml = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "AutomationPage.xaml"));
+        xaml.Should().Contain("AutomationProperties.AutomationId=\"AutomationEnableAutomaticPipelinesToggle\"");
+    }
+
     private static string ReadAutomationPageSource()
     {
         var root = FindRepositoryRoot();

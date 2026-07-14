@@ -50,6 +50,33 @@ public class NetworkAccelerationUiGuardTests
         xaml.Should().Contain("NetworkAccelerationConnectionsMetric");
         xaml.Should().Contain("NetworkAccelerationRulesMetric");
         xaml.Should().Contain("NetworkAccelerationRestoreButton");
+        xaml.Should().Contain("NetworkAccelerationSelectionBar");
+        xaml.Should().Contain("NetworkAccelerationSelectionCount");
+        xaml.Should().Contain("NetworkAccelerationSelectionFavoriteButton");
+        xaml.Should().Contain("NetworkAccelerationSelectionStartButton");
+    }
+
+    [Fact]
+    public void FormatSelectionCount_ShouldFormatZeroAndNonZero()
+    {
+        NetworkAccelerationControl.FormatSelectionCount("0 items selected", "{0} items selected", 0)
+            .Should().Be("0 items selected");
+        NetworkAccelerationControl.FormatSelectionCount("0 items selected", "{0} items selected", 2)
+            .Should().Be("2 items selected");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Xaml_SelectionBarUsesResourceStrings()
+    {
+        var xaml = File.ReadAllText(FindControlXaml());
+        xaml.Should().Contain("NetworkAccelerationPage_SelectionHint");
+        xaml.Should().Contain("NetworkAccelerationPage_SelectionBar");
+        xaml.Should().Contain("NetworkAccelerationPage_SelectionCountZero");
+        xaml.Should().Contain("NetworkAccelerationPage_SelectionFavorite");
+        xaml.Should().Contain("NetworkAccelerationPage_SelectionStart");
+        // Concrete actions: favorite + start selected (Watt Toolkit-style).
+        xaml.Should().Contain("SelectionFavoriteButton_Click");
+        xaml.Should().Contain("SelectionStartButton_Click");
     }
 
     [Fact]
@@ -75,8 +102,10 @@ public class NetworkAccelerationUiGuardTests
         // Status/metrics/sections come from resources. Page title is chrome-only (not a plugin).
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_State_Idle");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency");
+        xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_MetricsHeading");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading");
+        xaml.Should().NotContain("Text=\"Overview\"");
     }
 
     [Fact]
@@ -135,6 +164,19 @@ public class NetworkAccelerationUiGuardTests
         code.Should().Contain("sealed class ModeOption");
         code.Should().Contain("new ModeOption(");
         code.Should().NotContain("new ComboBoxItem");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Code_SelectionBarHasFavoriteAndStartHandlers()
+    {
+        var code = File.ReadAllText(FindControlCode());
+        code.Should().Contain("_selectedGroupIds");
+        code.Should().Contain("SelectionFavoriteButton_Click");
+        code.Should().Contain("SelectionStartButton_Click");
+        code.Should().Contain("ToggleFavoriteForIdsAsync");
+        code.Should().Contain("IsFavorite");
+        // Start selected enables groups then starts acceleration.
+        code.Should().Contain("group.Enabled = true");
     }
 
     private static string FindControlCode()

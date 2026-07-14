@@ -793,6 +793,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             return;
 
         var desiredApplied = actionVm.IsSelected;
+        var isToggleAction = OptimizationToggleActionHelper.IsToggleAction(actionVm.Key);
 
         if (IsBusy)
         {
@@ -806,38 +807,79 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         IsBusy = true;
         try
         {
-            if (desiredApplied)
-                await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None);
-            else
-                await _windowsOptimizationService.RevertActionAsync(actionVm.Key, CancellationToken.None);
-
-            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
-
-            if (isApplied != desiredApplied)
+            if (isToggleAction)
             {
-                await ShowOptimizationSnackbarAsync(
-                    string.Format(
-                        T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
-                        actionVm.Title,
-                        T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
-                    SnackbarType.Error);
+                var targetActionKey = OptimizationToggleActionHelper.ResolveTargetActionKey(actionVm.Key, desiredApplied);
+                await _windowsOptimizationService.ApplyActionAsync(targetActionKey, CancellationToken.None);
+
+                var togglePair = OptimizationToggleActionHelper.FindTogglePair(actionVm, actionVm.Category?.Actions ?? []);
+                var featureEnabled = togglePair is null
+                    ? desiredApplied
+                    : await _windowsOptimizationService.IsActionAppliedAsync(togglePair.Value.Enable.Key, CancellationToken.None);
+
+                if (featureEnabled != desiredApplied)
+                {
+                    await ShowOptimizationSnackbarAsync(
+                        string.Format(
+                            T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
+                            actionVm.Title,
+                            T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
+                        SnackbarType.Error);
+                }
+                else
+                {
+                    await ShowOptimizationSnackbarAsync(
+                        desiredApplied
+                            ? string.Format(
+                                T("WindowsOptimizationPage_Optimization_Applied_Format", "{0} applied successfully."),
+                                actionVm.Title)
+                            : string.Format(
+                                T("WindowsOptimizationPage_Optimization_Reverted_Format", "{0} reverted successfully."),
+                                actionVm.Title),
+                        SnackbarType.Success);
+                }
+
+                if (togglePair is not null)
+                    await ApplyTogglePairPresentationOnUiAsync(togglePair.Value.Enable, togglePair.Value.Disable, featureEnabled);
+                else
+                    await SetOptimizationActionSelectedOnUiAsync(actionVm, desiredApplied);
+
+                await RunOnUiAsync(SaveOptimizationSelection);
             }
             else
             {
-                // Auto-closing success toast for apply / revert.
-                await ShowOptimizationSnackbarAsync(
-                    desiredApplied
-                        ? string.Format(
-                            T("WindowsOptimizationPage_Optimization_Applied_Format", "{0} applied successfully."),
-                            actionVm.Title)
-                        : string.Format(
-                            T("WindowsOptimizationPage_Optimization_Reverted_Format", "{0} reverted successfully."),
-                            actionVm.Title),
-                    SnackbarType.Success);
-            }
+                if (desiredApplied)
+                    await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None);
+                else
+                    await _windowsOptimizationService.RevertActionAsync(actionVm.Key, CancellationToken.None);
 
-            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
-            await RunOnUiAsync(SaveOptimizationSelection);
+                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
+
+                if (isApplied != desiredApplied)
+                {
+                    await ShowOptimizationSnackbarAsync(
+                        string.Format(
+                            T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
+                            actionVm.Title,
+                            T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
+                        SnackbarType.Error);
+                }
+                else
+                {
+                    await ShowOptimizationSnackbarAsync(
+                        desiredApplied
+                            ? string.Format(
+                                T("WindowsOptimizationPage_Optimization_Applied_Format", "{0} applied successfully."),
+                                actionVm.Title)
+                            : string.Format(
+                                T("WindowsOptimizationPage_Optimization_Reverted_Format", "{0} reverted successfully."),
+                                actionVm.Title),
+                        SnackbarType.Success);
+                }
+
+                await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
+                await RunOnUiAsync(SaveOptimizationSelection);
+            }
         }
         catch (Exception ex)
         {
@@ -851,8 +893,25 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
                     ex.Message),
                 SnackbarType.Error);
 
-            var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
-            await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
+            if (isToggleAction)
+            {
+                var togglePair = OptimizationToggleActionHelper.FindTogglePair(actionVm, actionVm.Category?.Actions ?? []);
+                if (togglePair is not null)
+                {
+                    var featureEnabled = await _windowsOptimizationService.IsActionAppliedAsync(togglePair.Value.Enable.Key, CancellationToken.None);
+                    await ApplyTogglePairPresentationOnUiAsync(togglePair.Value.Enable, togglePair.Value.Disable, featureEnabled);
+                }
+                else
+                {
+                    await SetOptimizationActionSelectedOnUiAsync(actionVm, !desiredApplied);
+                }
+            }
+            else
+            {
+                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
+                await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
+            }
+
             await RunOnUiAsync(SaveOptimizationSelection);
         }
         finally
@@ -904,45 +963,65 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         _isRefreshingStates = true;
         try
         {
+            var categories = await GetOptimizationCategorySnapshotAsync();
+            var pairedActionKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var category in categories)
+            {
+                foreach (var (enable, disable) in OptimizationToggleActionHelper.FindTogglePairs(category.Actions))
+                {
+                    pairedActionKeys.Add(enable.Key);
+                    pairedActionKeys.Add(disable.Key);
+
+                    var featureEnabled = await _windowsOptimizationService.IsActionAppliedAsync(enable.Key, CancellationToken.None);
+                    await ApplyTogglePairPresentationOnUiAsync(enable, disable, featureEnabled);
+                }
+            }
+
             var actions = await GetOptimizationActionSnapshotAsync();
-            foreach (var action in actions)
+            foreach (var action in actions.Where(action => !pairedActionKeys.Contains(action.Key)))
             {
-                // Scan to detect actual system state
                 var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None);
-                
-                // Ensure UI updates happen on UI thread
-                if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
+                await RunOnUiAsync(() =>
                 {
-                    await Application.Current.Dispatcher.BeginInvoke(() => action.IsSelected = isApplied).Task;
-                }
-                else
-                {
+                    action.IsVisible = true;
                     action.IsSelected = isApplied;
-                }
+                });
             }
-            
-            // Ensure UI updates happen on UI thread
-            if (Application.Current?.Dispatcher != null && !Application.Current.Dispatcher.CheckAccess())
-            {
-                await Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    UpdateSelectedActions();
-                    // Save the scanned state (actual system state) to settings
-                    SaveOptimizationSelection();
-                }).Task;
-            }
-            else
+
+            await RunOnUiAsync(() =>
             {
                 UpdateSelectedActions();
-                // Save the scanned state (actual system state) to settings
                 SaveOptimizationSelection();
-            }
+            });
         }
         finally
         {
             _isRefreshingStates = false;
             _optimizationStateScanLock.Release();
         }
+    }
+
+    private Task ApplyTogglePairPresentationOnUiAsync(
+        OptimizationActionViewModel enable,
+        OptimizationActionViewModel disable,
+        bool featureEnabled)
+    {
+        return RunOnUiAsync(() =>
+        {
+            OptimizationToggleActionHelper.ApplyTogglePairPresentation(featureEnabled, enable, disable);
+            enable.Category?.RaiseSelectionChanged();
+            UpdateSelectedActions();
+        });
+    }
+
+    private async Task<List<OptimizationCategoryViewModel>> GetOptimizationCategorySnapshotAsync()
+    {
+        var dispatcher = Application.Current?.Dispatcher;
+        if (dispatcher != null && !dispatcher.CheckAccess())
+            return await dispatcher.InvokeAsync(SnapshotOptimizationCategories).Task;
+
+        return SnapshotOptimizationCategories();
     }
 
     private async Task<List<OptimizationActionViewModel>> GetOptimizationActionSnapshotAsync()
@@ -953,6 +1032,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
 
         return SnapshotOptimizationActions();
     }
+
+    private List<OptimizationCategoryViewModel> SnapshotOptimizationCategories() =>
+        OptimizationCategories.ToList();
 
     private List<OptimizationActionViewModel> SnapshotOptimizationActions()
     {

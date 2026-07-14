@@ -91,6 +91,7 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Margin="8,0,0,0"
+                            AutomationProperties.AutomationId="PackagesMachineTypeTextBox"
                             AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
                             ClearButtonEnabled="False"
                             PlaceholderText="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}"
@@ -100,6 +101,7 @@
                             Grid.Row="1"
                             Grid.Column="1"
                             Margin="8,8,0,0"
+                            AutomationProperties.AutomationId="PackagesOsComboBox"
                             AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_OperatingSystem}"
                             MaxDropDownHeight="Auto"
                             SelectionChanged="OsComboBox_SelectionChanged" />
@@ -116,6 +118,7 @@
                             <wpfui:TextBox
                                 x:Name="_downloadToText"
                                 Grid.Column="0"
+                                AutomationProperties.AutomationId="PackagesDownloadToTextBox"
                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
                                 ClearButtonEnabled="False"
                                 PlaceholderText="{x:Static resources:Resource.PackagesPage_DownloadTo_Placeholder}"
@@ -125,6 +128,7 @@
                                 Grid.Column="1"
                                 Margin="4,0,0,0"
                                 VerticalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PackagesBrowseButton"
                                 Click="DownloadToButton_Click"
                                 Icon="MoreHorizontal24"
                                 ToolTip="{x:Static resources:Resource.PackagesPage_DownloadTo}" />
@@ -133,6 +137,7 @@
                                 Grid.Column="2"
                                 Margin="4,0,0,-1"
                                 VerticalAlignment="Stretch"
+                                AutomationProperties.AutomationId="PackagesOpenFolderButton"
                                 Click="OpenDownloadToButton_Click"
                                 Icon="Open24"
                                 ToolTip="{x:Static resources:Resource.PackagesPage_OpenDownloadTo}" />
@@ -189,6 +194,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Bottom"
                             Appearance="Primary"
+                            AutomationProperties.AutomationId="PackagesRefreshButton"
                             Command="{Binding LoadPackagesCommand}"
                             Content="{x:Static resources:Resource.Refresh}" />
 
@@ -198,6 +204,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Bottom"
                             Appearance="Secondary"
+                            AutomationProperties.AutomationId="PackagesCancelButton"
                             Command="{Binding CancelLoadCommand}"
                             Content="{x:Static resources:Resource.Cancel}"
                             Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />

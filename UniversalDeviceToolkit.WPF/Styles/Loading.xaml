@@ -5,12 +5,12 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
 
-    <!-- Classic skeleton 流光: cool slate accent with enough alpha to read on dark/light bones. -->
-    <Color x:Key="SkeletonShimmerStartColor">#2A8E99AA</Color>
-    <Color x:Key="SkeletonShimmerPeakColor">#52A8B2C0</Color>
-    <!-- Light theme: stronger wash so the band is visible on pale card surfaces. -->
-    <Color x:Key="SkeletonShimmerStartColorLight">#1E707888</Color>
-    <Color x:Key="SkeletonShimmerPeakColorLight">#3A707888</Color>
+    <!-- Classic 4.x teal-slate 流光 wash (theme base is composited underneath at runtime). -->
+    <Color x:Key="SkeletonShimmerStartColor">#268891A0</Color>
+    <Color x:Key="SkeletonShimmerPeakColor">#4A8891A0</Color>
+    <!-- Light theme needs higher alpha so the sweep reads on pale ControlFill surfaces. -->
+    <Color x:Key="SkeletonShimmerStartColorLight">#4A88A8C0</Color>
+    <Color x:Key="SkeletonShimmerPeakColorLight">#8A98B8D0</Color>
 
     <Style x:Key="AppLoadingRingStyle" TargetType="wpfui:ProgressRing">
         <Setter Property="Width" Value="48" />
@@ -34,14 +34,11 @@
         <Setter Property="Height" Value="24" />
     </Style>
 
-    <!--
-      Bone fill: Secondary is more contrasty than Tertiary on light-theme cards.
-      SkeletonShimmer further lifts contrast at runtime if the theme brush is too pale.
-    -->
+    <!-- Bone fill at 0.85 opacity matches classic 4.x skeleton chrome. -->
     <Style x:Key="AppSkeletonBlockStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
-        <Setter Property="Opacity" Value="1" />
+        <Setter Property="Opacity" Value="0.85" />
         <Setter Property="ClipToBounds" Value="True" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />

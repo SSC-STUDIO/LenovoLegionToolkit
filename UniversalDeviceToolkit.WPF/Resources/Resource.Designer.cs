@@ -10117,10 +10117,22 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string NetworkAccelerationPage_DomainGroupsSummary { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsSummary", resourceCulture); } }
         public static string NetworkAccelerationPage_ModeHint { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeHint", resourceCulture); } }
         public static string NetworkAccelerationPage_DomainGroupsHint { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsHint", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionHint { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionHint", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionBar { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionBar", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionCountZero { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionCountZero", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionCountFormat { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionCountFormat", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionFavorite { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionFavorite", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionFavoriteTooltip { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionFavoriteTooltip", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionStart { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionStart", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectionStartTooltip { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionStartTooltip", resourceCulture); } }
         public static string NetworkAccelerationPage_DomainGroupsFootnote { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsFootnote", resourceCulture); } }
         public static string NetworkAccelerationPage_Mode_SystemProxy { get { return ResourceManager.GetString("NetworkAccelerationPage_Mode_SystemProxy", resourceCulture); } }
         public static string NetworkAccelerationPage_Mode_Hosts { get { return ResourceManager.GetString("NetworkAccelerationPage_Mode_Hosts", resourceCulture); } }
         public static string NetworkAccelerationPage_Mode_DiagnosticsOnly { get { return ResourceManager.GetString("NetworkAccelerationPage_Mode_DiagnosticsOnly", resourceCulture); } }
+        public static string NetworkAccelerationPage_ModeShort_SystemProxy { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeShort_SystemProxy", resourceCulture); } }
+        public static string NetworkAccelerationPage_ModeShort_Hosts { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeShort_Hosts", resourceCulture); } }
+        public static string NetworkAccelerationPage_ModeShort_DiagnosticsOnly { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeShort_DiagnosticsOnly", resourceCulture); } }
+        public static string NetworkAccelerationPage_MetricsHeading { get { return ResourceManager.GetString("NetworkAccelerationPage_MetricsHeading", resourceCulture); } }
         public static string NetworkAccelerationPage_StatusRunning { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusRunning", resourceCulture); } }
         public static string NetworkAccelerationPage_StatusStopped { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusStopped", resourceCulture); } }
         public static string NetworkAccelerationPage_StatusWorkerMissing { get { return ResourceManager.GetString("NetworkAccelerationPage_StatusWorkerMissing", resourceCulture); } }

@@ -282,7 +282,12 @@ public partial class WindowsOptimizationPage : Page
 
     private void OpenStyleSettingsButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is not FrameworkElement element || element.DataContext is not OptimizationCategoryViewModel categoryVm)
+        if (sender is not FrameworkElement element)
+            return;
+
+        var categoryVm = element.Tag as OptimizationCategoryViewModel
+            ?? element.DataContext as OptimizationCategoryViewModel;
+        if (categoryVm is null)
             return;
 
         if (string.IsNullOrEmpty(categoryVm.PluginId)) return;

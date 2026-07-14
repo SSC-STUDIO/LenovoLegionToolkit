@@ -25,9 +25,16 @@ WPF (Network & acceleration page)
 | Mode | Intent |
 |---|---|
 | `Off` | Default. No mutations. |
-| `SystemProxy` | Point Windows system proxy / PAC at the local worker (user-started). |
-| `Hosts` | Rewrite only the UDT-marked hosts block (`# BEGIN/END UDT-NETWORK-ACCELERATION`); may need elevation. |
+| `SystemProxy` | Point Windows system proxy / **PAC** at the local worker (user-started). **Requires ≥1 enabled domain** — never falls back to full-loopback system proxy when the domain list is empty. |
+| `Hosts` | **Start refused** (safety): mapping domains to `127.0.0.1` without a local TLS origin breaks HTTPS. Marked-block helpers (`# BEGIN/END UDT-NETWORK-ACCELERATION`) remain for a future redesign with a local origin. |
 | `DiagnosticsOnly` | Inspect / preview without changing system network state. |
+
+### Safety gates (Start)
+
+- **Default remains OFF** — never auto-starts on application launch.
+- **SystemProxy**: `StartAsync` returns `false` (and does not mutate system proxy) when no enabled domains are present. Empty list does **not** apply `CreateLoopbackProxy`.
+- **Hosts**: `StartAsync` returns `false` with a warning until a local TLS origin exists. Use SystemProxy (PAC) or DiagnosticsOnly.
+- **DiagnosticsOnly**: still allowed without domains (no system mutations).
 
 ## Domain groups
 
@@ -36,6 +43,17 @@ Built-in audited groups (disabled by default):
 - **Steam** — steampowered.com, steamcommunity.com, steamstatic.com, …
 - **GitHub** — github.com, githubusercontent.com, ghcr.io, …
 - **Custom** — user-defined list (empty by default)
+
+### Selection bar (Watt Toolkit-style UX)
+
+Bottom floating bar over the domain tiles (behavior inspired by Watt Toolkit; no GPL code):
+
+| Action | Behavior |
+|---|---|
+| **Click tile** | Multi-select / deselect |
+| **Double-click tile** | Toggle group enabled for PAC/Hosts |
+| **★ Favorite** | Pin/unpin selected groups (`IsFavorite`); favorites sort first |
+| **▶ Start selected** | Enable selected groups, turn on acceleration (SystemProxy if needed), start worker |
 
 No third-party accelerator SDKs, no remote script injection, no unreviewed online rules store.
 
@@ -62,11 +80,12 @@ No third-party accelerator SDKs, no remote script injection, no unreviewed onlin
 | `UniversalDeviceToolkit.NetworkProxy` worker + IPC | Done (HTTP + CONNECT, loopback) |
 | Lib interfaces + config + hosts/PAC helpers | Done |
 | Snapshot restore + startup heal + shutdown stop | Done |
-| System proxy / PAC apply on user Start | Done |
-| Hosts mode (marked block, best-effort elevation) | Done |
+| System proxy / PAC apply on user Start (domains required; no full-loopback fallback) | Done |
+| Hosts mode Start | **Refused** until local TLS origin; helpers kept |
 | WPF page (enable, start/stop, restore, diagnostics) | Done |
 | Mode selector (SystemProxy / Hosts / DiagnosticsOnly) | Done |
 | Domain group toggles (Steam / GitHub / Custom) | Done |
+| Multi-select bar (favorite pin + start selected) | Done |
 | Compact CardControl layout (matches Settings) | Done |
 | Built-in Steam/GitHub domain groups (off by default) | Done |
 | YARP MITM / DPAPI CA UI | Optional follow-up |

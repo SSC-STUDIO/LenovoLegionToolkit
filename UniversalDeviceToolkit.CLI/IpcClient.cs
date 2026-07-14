@@ -304,6 +304,14 @@ public static class IpcClient
                 ("CLI_Loading_UninstallShell", "Starting shell uninstallation"),
             IpcRequest.OperationType.GetAppStatus =>
                 ("CLI_Loading_GetAppStatus", "Checking app status"),
+            IpcRequest.OperationType.GetNetworkAccelerationStatus =>
+                ("CLI_Loading_GetNetworkAccelerationStatus", "Checking network acceleration"),
+            IpcRequest.OperationType.StartNetworkAcceleration =>
+                ("CLI_Loading_StartNetworkAcceleration", "Starting network acceleration"),
+            IpcRequest.OperationType.StopNetworkAcceleration =>
+                ("CLI_Loading_StopNetworkAcceleration", "Stopping network acceleration"),
+            IpcRequest.OperationType.RunNetworkDiagnostics =>
+                ("CLI_Loading_RunNetworkDiagnostics", "Running network diagnostics"),
             _ =>
                 ("CLI_Loading_Default", "Waiting for Universal Device Toolkit")
         };

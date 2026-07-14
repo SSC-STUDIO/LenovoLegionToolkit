@@ -35,6 +35,26 @@ public static class DomainMatcher
         return domainRules.Any(rule => Matches(host, rule));
     }
 
+    /// <summary>
+    /// Empty or null allowlist allows all hosts (full-proxy / pre-rules path).
+    /// Non-empty allowlist is an explicit host-suffix allowlist.
+    /// </summary>
+    public static bool IsAllowed(string? host, IEnumerable<string>? allowlist)
+    {
+        if (allowlist is null)
+            return true;
+
+        // Materialize once so emptiness and match share the same snapshot.
+        var rules = allowlist as IList<string> ?? allowlist.ToList();
+        if (rules.Count == 0)
+            return true;
+
+        if (string.IsNullOrWhiteSpace(host))
+            return false;
+
+        return MatchesAny(host, rules);
+    }
+
     public static string Normalize(string value)
     {
         var v = (value ?? string.Empty).Trim().ToLowerInvariant();

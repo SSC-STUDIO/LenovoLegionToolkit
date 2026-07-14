@@ -445,16 +445,25 @@
                                                     Text="{Binding Description}"
                                                     TextWrapping="Wrap" />
                                             </StackPanel>
+                                            <!--
+                                              Gear only when category HasSettings is true.
+                                              WPF-UI needs DataContext=Self so PressedForeground resolves on the Button
+                                              (not ContentPresenter). Real data therefore binds via CardExpander.DataContext,
+                                              not inherited Grid/Self.
+                                            -->
                                             <wpfui:Button
                                                 Grid.Column="1"
                                                 x:Name="_categorySettingsButton"
-                                                AutomationProperties.AutomationId="{Binding PluginId, StringFormat=WindowsOptimizationCategorySettings_{0}}"
+                                                DataContext="{Binding RelativeSource={RelativeSource Self}}"
+                                                PressedForeground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=custom:CardExpander}}"
+                                                AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=custom:CardExpander}, StringFormat=WindowsOptimizationCategorySettings_{0}}"
                                                 Margin="12,0,8,0"
                                                 VerticalAlignment="Center"
                                                 Appearance="Transparent"
                                                 ToolTip="{x:Static resources:Resource.Settings}"
                                                 Click="OpenStyleSettingsButton_Click"
-                                                Visibility="{Binding HasSettings, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                Visibility="{Binding DataContext.HasSettings, RelativeSource={RelativeSource AncestorType=custom:CardExpander}, Converter={StaticResource BoolToVisibilityConverter}}">
                                                 <wpfui:Button.Icon>
                                                     <wpfui:SymbolIcon Symbol="Settings24" />
                                                 </wpfui:Button.Icon>
@@ -474,7 +483,9 @@
                                         VirtualizingStackPanel.VirtualizationMode="Recycling">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid Margin="0,0,0,8" MouseLeftButtonDown="ActionItem_MouseLeftButtonDown">
+                                                <Grid Margin="0,0,0,8"
+                                                      MouseLeftButtonDown="ActionItem_MouseLeftButtonDown"
+                                                      Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
@@ -572,6 +583,7 @@
                                                 Grid.Row="1"
                                                 Grid.Column="1"
                                                 Margin="0,10,0,0"
+                                                AutomationProperties.AutomationId="WindowsOptimizationDriverOsComboBox"
                                                 AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_OperatingSystem}"
                                                 MaxDropDownHeight="Auto" />
 
@@ -594,6 +606,7 @@
                                                 <wpfui:TextBox
                                                     x:Name="_driverDownloadToText"
                                                     Grid.Column="0"
+                                                    AutomationProperties.AutomationId="WindowsOptimizationDriverDownloadToTextBox"
                                                     AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
                                                     ClearButtonEnabled="False"
                                                     PlaceholderText="{x:Static resources:Resource.PackagesPage_DownloadTo_Placeholder}"
@@ -602,6 +615,7 @@
                                                 <wpfui:Button
                                                     Grid.Column="1"
                                                     Margin="6,0,0,0"
+                                                    AutomationProperties.AutomationId="WindowsOptimizationDriverBrowseButton"
                                                     Click="DriverDownloadToButton_Click"
                                                     Style="{StaticResource DriverIconButtonStyle}"
                                                     ToolTip="{x:Static resources:Resource.PackagesPage_DownloadTo}">
@@ -613,6 +627,7 @@
                                                 <wpfui:Button
                                                     Grid.Column="2"
                                                     Margin="6,0,0,0"
+                                                    AutomationProperties.AutomationId="WindowsOptimizationDriverOpenFolderButton"
                                                     Click="DriverOpenDownloadToButton_Click"
                                                     Style="{StaticResource DriverIconButtonStyle}"
                                                     ToolTip="{x:Static resources:Resource.PackagesPage_OpenDownloadTo}">
@@ -1324,6 +1339,7 @@
                                     </wpfui:Button>
                                     <wpfui:Button
                                         x:Name="_runCleanupButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationRunCleanupButton"
                                         MinWidth="120"
                                         Margin="0,0,0,0"
                                         HorizontalAlignment="Stretch"
@@ -1352,6 +1368,7 @@
                                     </wpfui:Button>
                                     <wpfui:Button
                                         x:Name="_reScanButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationReScanCleanupButton"
                                         MinWidth="36"
                                         Margin="8,0,0,0"
                                         HorizontalAlignment="Stretch"

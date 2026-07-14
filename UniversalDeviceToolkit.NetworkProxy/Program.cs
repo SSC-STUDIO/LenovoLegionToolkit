@@ -19,6 +19,7 @@ internal static class Program
             cts.Cancel();
         };
 
+        // Prefer UDT_NETWORK_PROXY_TOKEN env (cleared after read); --token remains for back-compat.
         var sessionToken = NetworkProxyIpcServer.ResolveSessionToken(args);
         var pipeName = NetworkProxyIpcServer.ResolvePipeName(args);
         var listenPort = NetworkProxyIpcServer.ResolveListenPort(args);
@@ -48,7 +49,11 @@ internal static class Program
         finally
         {
             try { await host.StopAsync().ConfigureAwait(false); }
-            catch { /* best-effort */ }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"NetworkProxy: host stop on exit: {ex.GetType().Name}: {ex.Message}");
+            }
         }
     }
 }

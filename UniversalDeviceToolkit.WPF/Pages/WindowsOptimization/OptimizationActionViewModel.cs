@@ -8,6 +8,7 @@ public class OptimizationActionViewModel : INotifyPropertyChanged
 {
     private bool _isSelected;
     private bool _isEnabled = true;
+    private bool _isVisible = true;
 
     public OptimizationActionViewModel(WindowsOptimizationActionDefinition definition, string title, string description, string recommendedTagText)
     {
@@ -53,6 +54,19 @@ public class OptimizationActionViewModel : INotifyPropertyChanged
 
             _isEnabled = value;
             OnPropertyChanged(nameof(IsEnabled));
+        }
+    }
+
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set
+        {
+            if (_isVisible == value)
+                return;
+
+            _isVisible = value;
+            OnPropertyChanged(nameof(IsVisible));
         }
     }
 

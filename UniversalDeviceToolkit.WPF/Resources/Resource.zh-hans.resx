@@ -4225,6 +4225,30 @@ Fn 将会暂时解除锁定。</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>仅启用的域名组会进入 PAC / Hosts。默认全部关闭。</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
+    <value>单击选择域名组 · 双击启用/关闭 · 底部栏可收藏或启动所选组。</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
+    <value>域名组选择操作栏</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountZero" xml:space="preserve">
+    <value>0 个项目已选择</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountFormat" xml:space="preserve">
+    <value>{0} 个项目已选择</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
+    <value>收藏所选</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
+    <value>收藏或取消收藏所选域名组（收藏项排在前面）</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
+    <value>启动所选</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
+    <value>启用所选域名组并启动网络加速</value>
+  </data>
   <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
     <value>仅使用内置静态名单，不下载远程规则。更改域名组后请重新启动加速。</value>
   </data>

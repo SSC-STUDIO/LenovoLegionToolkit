@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Net.Sockets;
@@ -10,6 +11,7 @@ namespace UniversalDeviceToolkit.NetworkProxy.Host;
 /// <summary>
 /// Localhost-only HTTP proxy with CONNECT tunneling (no MITM / no TLS interception).
 /// Binds exclusively to 127.0.0.1 / ::1.
+/// When a non-empty domain allowlist is set, CONNECT/HTTP to non-matching hosts return 403.
 /// </summary>
 public sealed class LocalHttpProxyHost : INetworkProxyHost
 {
@@ -19,6 +21,8 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         "HTTP/1.1 200 Connection Established\r\n\r\n"u8.ToArray();
     private static readonly byte[] BadRequest =
         "HTTP/1.1 400 Bad Request\r\nConnection: close\r\nContent-Length: 0\r\n\r\n"u8.ToArray();
+    private static readonly byte[] Forbidden =
+        "HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 0\r\n\r\n"u8.ToArray();
     private static readonly byte[] BadGateway =
         "HTTP/1.1 502 Bad Gateway\r\nConnection: close\r\nContent-Length: 0\r\n\r\n"u8.ToArray();
 
@@ -30,6 +34,8 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
     private Task? _acceptLoopV6;
     private int _listenPort;
     private int _activeSessions;
+    // Empty = allow all (full-proxy / before rules are pushed).
+    private string[] _domainAllowlist = [];
 
     public LocalHttpProxyHost(int listenPort)
     {
@@ -54,10 +60,24 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
             lock (_gate)
             {
                 return IsRunning
-                    ? $"running loopback:{_listenPort} sessions={_activeSessions}"
+                    ? $"running loopback:{_listenPort} sessions={_activeSessions} allowlist={_domainAllowlist.Length}"
                     : "stopped (default off)";
             }
         }
+    }
+
+    /// <inheritdoc />
+    public void SetDomainAllowlist(IReadOnlyList<string>? domains)
+    {
+        var normalized = (domains ?? Array.Empty<string>())
+            .Where(static d => !string.IsNullOrWhiteSpace(d))
+            .Select(DomainMatcher.Normalize)
+            .Where(static d => d.Length > 0)
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        lock (_gate)
+            _domainAllowlist = normalized;
     }
 
     public Task StartAsync(CancellationToken cancellationToken = default)
@@ -119,20 +139,43 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
             _listenerV6 = null;
         }
 
-        try { cts?.Cancel(); } catch { /* ignore */ }
-        try { v4?.Stop(); } catch { /* ignore */ }
-        try { v6?.Stop(); } catch { /* ignore */ }
+        try { cts?.Cancel(); }
+        catch (ObjectDisposedException) { /* already disposed */ }
+
+        try { v4?.Stop(); }
+        catch (ObjectDisposedException) { /* already disposed */ }
+        catch (SocketException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: IPv4 listener stop: {ex.SocketErrorCode}");
+        }
+
+        try { v6?.Stop(); }
+        catch (ObjectDisposedException) { /* already disposed */ }
+        catch (SocketException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: IPv6 listener stop: {ex.SocketErrorCode}");
+        }
 
         if (loopV4 is not null)
         {
             try { await loopV4.ConfigureAwait(false); }
-            catch { /* accept loop cancellation is expected */ }
+            catch (OperationCanceledException) { /* expected on stop */ }
+            catch (ObjectDisposedException) { /* expected on stop */ }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"NetworkProxy: accept loop V4 exit: {ex.GetType().Name}");
+            }
         }
 
         if (loopV6 is not null)
         {
             try { await loopV6.ConfigureAwait(false); }
-            catch { /* accept loop cancellation is expected */ }
+            catch (OperationCanceledException) { /* expected on stop */ }
+            catch (ObjectDisposedException) { /* expected on stop */ }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"NetworkProxy: accept loop V6 exit: {ex.GetType().Name}");
+            }
         }
 
         cts?.Dispose();
@@ -181,9 +224,22 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
                 await ProcessSessionAsync(clientStream, cancellationToken).ConfigureAwait(false);
             }
         }
-        catch
+        catch (OperationCanceledException)
+        {
+            // Host stop / client abort — expected.
+        }
+        catch (IOException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: session IO: {ex.GetType().Name}: {ex.Message}");
+        }
+        catch (SocketException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: session socket: {ex.SocketErrorCode}");
+        }
+        catch (Exception ex)
         {
             // Per-connection failures must not tear down the host.
+            Debug.WriteLine($"NetworkProxy: session error: {ex.GetType().Name}: {ex.Message}");
         }
         finally
         {
@@ -191,7 +247,16 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         }
     }
 
-    private static async Task ProcessSessionAsync(NetworkStream clientStream, CancellationToken cancellationToken)
+    private bool IsHostAllowed(string host)
+    {
+        string[] allowlist;
+        lock (_gate)
+            allowlist = _domainAllowlist;
+
+        return DomainMatcher.IsAllowed(host, allowlist);
+    }
+
+    private async Task ProcessSessionAsync(NetworkStream clientStream, CancellationToken cancellationToken)
     {
         var buffer = ArrayPool<byte>.Shared.Rent(HeaderBufferSize);
         try
@@ -226,11 +291,18 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         }
     }
 
-    private static async Task HandleConnectAsync(NetworkStream clientStream, string target, CancellationToken cancellationToken)
+    private async Task HandleConnectAsync(NetworkStream clientStream, string target, CancellationToken cancellationToken)
     {
         if (!TrySplitHostPort(target, defaultPort: 443, out var host, out var port))
         {
             await clientStream.WriteAsync(BadRequest, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
+        if (!IsHostAllowed(host))
+        {
+            Debug.WriteLine($"NetworkProxy: CONNECT denied host '{host}' (allowlist)");
+            await clientStream.WriteAsync(Forbidden, cancellationToken).ConfigureAwait(false);
             return;
         }
 
@@ -241,8 +313,20 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
             connectCts.CancelAfter(TimeSpan.FromSeconds(15));
             await remote.ConnectAsync(host, port, connectCts.Token).ConfigureAwait(false);
         }
-        catch
+        catch (OperationCanceledException)
         {
+            await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        catch (SocketException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: CONNECT {host}:{port} socket {ex.SocketErrorCode}");
+            await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        catch (IOException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: CONNECT {host}:{port} IO {ex.Message}");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
         }
@@ -253,7 +337,7 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         await RelayBidirectionalAsync(clientStream, remoteStream, cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task HandleHttpAsync(
+    private async Task HandleHttpAsync(
         NetworkStream clientStream,
         ReadOnlyMemory<byte> headerBytes,
         ReadOnlyMemory<byte> bodyPrelude,
@@ -268,6 +352,13 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
             return;
         }
 
+        if (!IsHostAllowed(host))
+        {
+            Debug.WriteLine($"NetworkProxy: HTTP denied host '{host}' (allowlist)");
+            await clientStream.WriteAsync(Forbidden, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+
         using var remote = new TcpClient();
         try
         {
@@ -275,8 +366,20 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
             connectCts.CancelAfter(TimeSpan.FromSeconds(15));
             await remote.ConnectAsync(host, port, connectCts.Token).ConfigureAwait(false);
         }
-        catch
+        catch (OperationCanceledException)
         {
+            await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        catch (SocketException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: HTTP {host}:{port} socket {ex.SocketErrorCode}");
+            await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
+            return;
+        }
+        catch (IOException ex)
+        {
+            Debug.WriteLine($"NetworkProxy: HTTP {host}:{port} IO {ex.Message}");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
         }
@@ -442,7 +545,9 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         var completed = await Task.WhenAny(forward, backward).ConfigureAwait(false);
         linked.Cancel();
         try { await Task.WhenAll(forward, backward).ConfigureAwait(false); }
-        catch { /* peer close / cancel expected */ }
+        catch (OperationCanceledException) { /* peer close / cancel expected */ }
+        catch (IOException) { /* peer close expected */ }
+        catch (SocketException) { /* peer close expected */ }
         _ = completed;
     }
 

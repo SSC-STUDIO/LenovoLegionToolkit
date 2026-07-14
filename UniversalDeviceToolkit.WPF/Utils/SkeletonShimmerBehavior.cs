@@ -109,7 +109,8 @@ internal static class SkeletonShimmerBehavior
             To = SkeletonAnimationTokens.SweepTo,
             Duration = duration,
             BeginTime = beginTime,
-            RepeatBehavior = RepeatBehavior.Forever
+            RepeatBehavior = RepeatBehavior.Forever,
+            EasingFunction = ResolveEasingFunction(border)
         };
 
         transform.BeginAnimation(TranslateTransform.XProperty, animation, HandoffBehavior.SnapshotAndReplace);
@@ -153,6 +154,20 @@ internal static class SkeletonShimmerBehavior
             QueueStart(border, null);
         else
             Stop(border);
+    }
+
+    private static IEasingFunction ResolveEasingFunction(FrameworkElement element)
+    {
+        try
+        {
+            if (element.TryFindResource("AnimationEasingCubicOut") is IEasingFunction easing)
+                return easing;
+        }
+        catch (InvalidOperationException)
+        {
+        }
+
+        return new CubicEase { EasingMode = EasingMode.EaseOut };
     }
 
     private static bool IsMotionDisabled(Duration duration) =>

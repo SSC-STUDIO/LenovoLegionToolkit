@@ -110,8 +110,18 @@ public class NetworkAccelerationConfigDefaultsTests
         config.DomainGroups.Should().Contain(g => g.Id == "steam");
         config.DomainGroups.Should().Contain(g => g.Id == "github");
         config.DomainGroups.Should().OnlyContain(g => !g.Enabled);
+        config.DomainGroups.Should().OnlyContain(g => !g.IsFavorite);
         config.DomainGroups.First(g => g.Id == "steam").Domains.Should().Contain("steamcommunity.com");
         config.DomainGroups.First(g => g.Id == "github").Domains.Should().Contain("github.com");
+    }
+
+    [Fact]
+    public void NetworkDomainGroup_IsFavorite_DefaultsFalseAndIsSettable()
+    {
+        var group = new NetworkDomainGroup { Id = "steam", DisplayName = "Steam" };
+        group.IsFavorite.Should().BeFalse();
+        group.IsFavorite = true;
+        group.IsFavorite.Should().BeTrue();
     }
 }
 
@@ -133,6 +143,26 @@ public class DomainMatcherTests
     {
         DomainMatcher.MatchesAny("api.github.com", ["steamcommunity.com", "github.com"]).Should().BeTrue();
         DomainMatcher.MatchesAny("example.com", ["github.com", "steamcommunity.com"]).Should().BeFalse();
+    }
+
+    [Fact]
+    public void IsAllowed_EmptyOrNullAllowlist_AllowsAll()
+    {
+        DomainMatcher.IsAllowed("evil.example", null).Should().BeTrue();
+        DomainMatcher.IsAllowed("evil.example", Array.Empty<string>()).Should().BeTrue();
+        DomainMatcher.IsAllowed("evil.example", []).Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsAllowed_NonEmptyAllowlist_EnforcesSuffixMatch()
+    {
+        string[] rules = ["github.com", "steamcommunity.com"];
+        DomainMatcher.IsAllowed("api.github.com", rules).Should().BeTrue();
+        DomainMatcher.IsAllowed("github.com", rules).Should().BeTrue();
+        DomainMatcher.IsAllowed("notgithub.com", rules).Should().BeFalse();
+        DomainMatcher.IsAllowed("example.com", rules).Should().BeFalse();
+        DomainMatcher.IsAllowed(null, rules).Should().BeFalse();
+        DomainMatcher.IsAllowed("  ", rules).Should().BeFalse();
     }
 }
 
@@ -298,5 +328,61 @@ public class PacDomainMatchingIntegrationTests
         var pac = PacFileGenerator.Generate(34123, steam.Domains);
         pac.Should().Contain("steamcommunity.com");
         DomainMatcher.Matches("store.steampowered.com", "steampowered.com").Should().BeTrue();
+    }
+}
+
+public class NetworkAccelerationStartSafetyTests
+{
+    [Fact]
+    public void CanApplySystemProxy_WhenNullOrEmpty_IsFalse()
+    {
+        NetworkAccelerationService.CanApplySystemProxy(null).Should().BeFalse();
+        NetworkAccelerationService.CanApplySystemProxy([]).Should().BeFalse();
+        NetworkAccelerationService.CanApplySystemProxy(["", "  "]).Should().BeFalse();
+    }
+
+    [Fact]
+    public void CanApplySystemProxy_WhenAnyNonEmptyDomain_IsTrue()
+    {
+        NetworkAccelerationService.CanApplySystemProxy(["steamcommunity.com"]).Should().BeTrue();
+        NetworkAccelerationService.CanApplySystemProxy(["", "github.com"]).Should().BeTrue();
+    }
+
+    [Fact]
+    public void CanStartMode_Hosts_IsAlwaysRefused()
+    {
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.Hosts, null).Should().BeFalse();
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.Hosts, []).Should().BeFalse();
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.Hosts, ["example.com"]).Should().BeFalse();
+    }
+
+    [Fact]
+    public void CanStartMode_SystemProxy_RequiresEnabledDomains()
+    {
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.SystemProxy, null).Should().BeFalse();
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.SystemProxy, []).Should().BeFalse();
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.SystemProxy, ["steamcommunity.com"]).Should().BeTrue();
+    }
+
+    [Fact]
+    public void CanStartMode_DiagnosticsOnly_IsAlwaysAllowed()
+    {
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.DiagnosticsOnly, null).Should().BeTrue();
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.DiagnosticsOnly, []).Should().BeTrue();
+    }
+
+    [Fact]
+    public void CanStartMode_Off_IsRefused()
+    {
+        NetworkAccelerationService.CanStartMode(NetworkAccelerationMode.Off, ["x.com"]).Should().BeFalse();
+    }
+
+    [Fact]
+    public void CreateDefault_StillDisabledAndNeverImpliesRunning()
+    {
+        var config = NetworkAccelerationConfig.CreateDefault();
+        config.AccelerationEnabled.Should().BeFalse();
+        config.Mode.Should().Be(NetworkAccelerationMode.Off);
+        NetworkAccelerationService.CanStartMode(config.Mode, config.DomainGroups.SelectMany(g => g.Domains)).Should().BeFalse();
     }
 }

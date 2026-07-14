@@ -40,7 +40,7 @@
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
             <Setter Property="Padding" Value="9,4,11,4" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -111,10 +111,12 @@
         </Style>
     </UserControl.Resources>
 
+    <Grid>
     <wpfui:DynamicScrollViewer
         AutomationProperties.AutomationId="NetworkAccelerationPageScrollViewer"
         HorizontalScrollBarVisibility="Disabled"
-        VerticalScrollBarVisibility="Auto">
+        VerticalScrollBarVisibility="Auto"
+        Margin="0,0,0,56">
         <Border
             Margin="0,0,8,16"
             HorizontalAlignment="Stretch"
@@ -193,7 +195,7 @@
                 <TextBlock
                     x:Name="_metricsHeadingText"
                     Style="{StaticResource NaSectionLabelStyle}"
-                    Text="Overview" />
+                    Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricsHeading}" />
                 <WrapPanel Margin="0,4,0,0">
                     <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationLatencyMetric">
                         <StackPanel>
@@ -266,6 +268,10 @@
                     x:Name="_domainGroupsText"
                     Margin="0,2,0,0"
                     Style="{StaticResource NaMutedStyle}" />
+                <TextBlock
+                    Margin="0,4,0,0"
+                    Style="{StaticResource NaMutedStyle}"
+                    Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionHint}" />
 
                 <Border Style="{StaticResource NaDividerStyle}" />
 
@@ -370,4 +376,86 @@
             </StackPanel>
         </Border>
     </wpfui:DynamicScrollViewer>
+
+        <!--
+          Watt Toolkit-style selection bar: count + favorite (star) + start selected (play).
+          Always visible; actions enable when selection count &gt; 0.
+          Use text glyphs (not WPF-UI symbol icons) — UiGuard forbids icon controls here.
+        -->
+        <Border
+            x:Name="_selectionBar"
+            Margin="0,0,0,10"
+            Padding="14,8,10,8"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Bottom"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="{StaticResource CornerRadiusRound}"
+            SnapsToDevicePixels="True"
+            UseLayoutRounding="True"
+            AutomationProperties.AutomationId="NetworkAccelerationSelectionBar"
+            AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="18"
+                    Direction="270"
+                    Opacity="0.18"
+                    ShadowDepth="2"
+                    Color="#000000" />
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock
+                    Margin="0,0,8,0"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="☑" />
+                <TextBlock
+                    x:Name="_selectionCountText"
+                    Margin="0,0,12,0"
+                    VerticalAlignment="Center"
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
+                    AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
+                <wpfui:Button
+                    x:Name="_selectionFavoriteButton"
+                    Width="36"
+                    Height="36"
+                    Margin="0,0,6,0"
+                    Padding="0"
+                    Appearance="Secondary"
+                    AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
+                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
+                    Click="SelectionFavoriteButton_Click"
+                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}"
+                    IsEnabled="False">
+                    <TextBlock
+                        FontSize="16"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="★" />
+                </wpfui:Button>
+                <wpfui:Button
+                    x:Name="_selectionStartButton"
+                    Width="36"
+                    Height="36"
+                    Padding="0"
+                    Appearance="Primary"
+                    AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
+                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
+                    Click="SelectionStartButton_Click"
+                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}"
+                    IsEnabled="False">
+                    <TextBlock
+                        FontSize="14"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Text="▶" />
+                </wpfui:Button>
+            </StackPanel>
+        </Border>
+    </Grid>
 </UserControl>

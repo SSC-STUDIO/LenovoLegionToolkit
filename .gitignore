@@ -616,6 +616,10 @@ docs/superpowers/
 Build-*/
 obj-smoke-*/
 **/obj-codex-verify/
+_build_*/
+_test_*/
+_verify_out/
+_build-verify-*/
 *.result.txt
 *.smoke.txt
 *.stdout

@@ -9,6 +9,12 @@ public static class NetworkProxySessionToken
 {
     public const int MinimumLength = 16;
 
+    /// <summary>
+    /// Environment variable used to pass the session token to the worker process.
+    /// Prefer this over <c>--token</c> so the secret does not appear on the process command line.
+    /// </summary>
+    public const string WorkerTokenEnvironmentVariable = "UDT_NETWORK_PROXY_TOKEN";
+
     public static string Create(int byteLength = 24)
     {
         if (byteLength < 12)

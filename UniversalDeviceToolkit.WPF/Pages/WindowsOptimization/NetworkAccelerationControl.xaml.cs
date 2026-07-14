@@ -29,6 +29,9 @@ public partial class NetworkAccelerationControl : UserControl
     private ConnectionUiState _uiState = ConnectionUiState.Idle;
     private CancellationTokenSource? _diagnosticsCts;
 
+    /// <summary>Multi-select set for domain tiles (Watt Toolkit-style selection bar).</summary>
+    private readonly HashSet<string> _selectedGroupIds = new(StringComparer.OrdinalIgnoreCase);
+
     private static string T(string key, string fallback) =>
         LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
 
@@ -45,8 +48,7 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void NetworkAccelerationControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (_metricsHeadingText is not null)
-            _metricsHeadingText.Text = T("NetworkAccelerationPage_MetricsHeading", "Overview");
+        // Metrics heading is bound in XAML via NetworkAccelerationPage_MetricsHeading.
         BuildModeCombo();
         BuildDomainGroupTiles();
         RefreshUi();
@@ -123,24 +125,63 @@ public partial class NetworkAccelerationControl : UserControl
             groups = _acceleration.Config.DomainGroups;
         }
 
-        foreach (var group in groups)
+        // Favorites first (Watt Toolkit pin), then original order.
+        var ordered = groups
+            .OrderByDescending(g => g.IsFavorite)
+            .ThenBy(g => groups.IndexOf(g))
+            .ToList();
+
+        // Drop stale selection ids (renamed/removed groups).
+        _selectedGroupIds.RemoveWhere(id =>
+            !groups.Any(g => string.Equals(g.Id, id, StringComparison.OrdinalIgnoreCase)));
+
+        foreach (var group in ordered)
         {
             var domainCount = group.Domains?.Count ?? 0;
-            var tile = CreateDomainTile(group.Id, group.DisplayName, domainCount, group.Enabled);
+            var selected = _selectedGroupIds.Contains(group.Id);
+            var tile = CreateDomainTile(group, domainCount, selected);
             _domainGroupsPanel.Items.Add(tile);
         }
+
+        RefreshSelectionBar();
     }
 
-    private Border CreateDomainTile(string id, string displayName, int domainCount, bool enabled)
+    private Border CreateDomainTile(NetworkDomainGroup group, int domainCount, bool selected)
     {
+        var id = group.Id;
+        var displayName = group.DisplayName;
+        var enabled = group.Enabled;
+        var favorite = group.IsFavorite;
+
+        var titleRow = new Grid();
+        titleRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+        titleRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
         var title = new TextBlock
         {
             Text = displayName,
             FontSize = 12,
             FontWeight = FontWeights.SemiBold,
             TextTrimming = TextTrimming.CharacterEllipsis,
+            VerticalAlignment = VerticalAlignment.Center,
             Foreground = (Brush)FindResource("TextFillColorPrimaryBrush")
         };
+        Grid.SetColumn(title, 0);
+
+        var favoriteMark = new TextBlock
+        {
+            Name = "FavoriteMark",
+            Text = "★",
+            FontSize = 12,
+            Margin = new Thickness(4, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            Visibility = favorite ? Visibility.Visible : Visibility.Collapsed,
+            Foreground = (Brush)FindResource("PaletteOrangeBrush")
+        };
+        Grid.SetColumn(favoriteMark, 1);
+        titleRow.Children.Add(title);
+        titleRow.Children.Add(favoriteMark);
+
         var subtitle = new TextBlock
         {
             Text = string.Format(
@@ -166,7 +207,7 @@ public partial class NetworkAccelerationControl : UserControl
         };
 
         var stack = new StackPanel();
-        stack.Children.Add(title);
+        stack.Children.Add(titleRow);
         stack.Children.Add(subtitle);
         stack.Children.Add(stateLabel);
 
@@ -178,19 +219,26 @@ public partial class NetworkAccelerationControl : UserControl
             MinHeight = 78,
             Margin = new Thickness(0, 0, 6, 6),
             Padding = new Thickness(10, 8, 10, 8),
-            CornerRadius = TryCornerRadius("CornerRadiusControl", 10),
-            BorderThickness = new Thickness(1),
+            // Token-aligned fallbacks: Control=12, Compact=8 (DesignTokens).
+            CornerRadius = TryCornerRadius("CornerRadiusControl", 12),
+            BorderThickness = new Thickness(selected ? 2 : 1),
             Cursor = Cursors.Hand,
             Focusable = true,
             SnapsToDevicePixels = true,
-            Background = (Brush)FindResource(enabled ? "ControlFillColorSecondaryBrush" : "ControlFillColorDefaultBrush"),
-            BorderBrush = (Brush)FindResource(enabled ? "AccentFillColorDefaultBrush" : "ControlStrokeColorDefaultBrush")
+            Background = (Brush)FindResource(
+                selected ? "ControlFillColorSecondaryBrush"
+                : enabled ? "ControlFillColorSecondaryBrush" : "ControlFillColorDefaultBrush"),
+            BorderBrush = (Brush)FindResource(
+                selected ? "AccentFillColorDefaultBrush"
+                : enabled ? "AccentFillColorDefaultBrush" : "ControlStrokeColorDefaultBrush")
         };
 
         AutomationProperties.SetAutomationId(tile, $"NetworkAccelerationDomain_{id}");
         AutomationProperties.SetName(tile, displayName);
 
+        // Click = multi-select; double-click = toggle enable (quick individual control).
         tile.MouseLeftButtonUp += DomainTile_MouseLeftButtonUp;
+        tile.MouseLeftButtonDown += DomainTile_MouseLeftButtonDown;
         tile.KeyDown += DomainTile_KeyDown;
         tile.MouseEnter += (_, _) =>
         {
@@ -209,24 +257,54 @@ public partial class NetworkAccelerationControl : UserControl
         return new CornerRadius(fallback);
     }
 
-    private async void DomainTile_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    private void DomainTile_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (sender is Border tile)
-            await ToggleDomainTileAsync(tile).ConfigureAwait(true);
+        // Capture double-click before MouseLeftButtonUp selection toggles twice.
+        if (e.ClickCount == 2 && sender is Border tile)
+        {
+            e.Handled = true;
+            _ = ToggleDomainEnabledAsync(tile);
+        }
     }
 
-    private async void DomainTile_KeyDown(object sender, KeyEventArgs e)
+    private void DomainTile_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (e.Handled || e.ClickCount > 1)
+            return;
+        if (sender is Border tile)
+            ToggleDomainSelection(tile);
+    }
+
+    private void DomainTile_KeyDown(object sender, KeyEventArgs e)
     {
         if (sender is not Border tile)
             return;
         if (e.Key is Key.Space or Key.Enter)
         {
             e.Handled = true;
-            await ToggleDomainTileAsync(tile).ConfigureAwait(true);
+            ToggleDomainSelection(tile);
+        }
+        else if (e.Key == Key.F && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+        {
+            // Ctrl+F on focused tile: toggle favorite for that group only.
+            e.Handled = true;
+            _ = ToggleFavoriteForIdsAsync([tile.Tag as string ?? string.Empty]);
         }
     }
 
-    private async Task ToggleDomainTileAsync(Border tile)
+    private void ToggleDomainSelection(Border tile)
+    {
+        if (_suppressEvents || _isBusy || tile.Tag is not string id)
+            return;
+
+        if (!_selectedGroupIds.Add(id))
+            _selectedGroupIds.Remove(id);
+
+        RefreshDomainTiles();
+        RefreshSelectionBar();
+    }
+
+    private async Task ToggleDomainEnabledAsync(Border tile)
     {
         if (_suppressEvents || _isBusy || tile.Tag is not string id)
             return;
@@ -247,6 +325,108 @@ public partial class NetworkAccelerationControl : UserControl
         }
 
         RefreshUi();
+    }
+
+    private void RefreshSelectionBar()
+    {
+        var count = _selectedGroupIds.Count;
+        if (_selectionCountText is not null)
+        {
+            _selectionCountText.Text = count == 0
+                ? T("NetworkAccelerationPage_SelectionCountZero", "0 items selected")
+                : string.Format(
+                    T("NetworkAccelerationPage_SelectionCountFormat", "{0} items selected"),
+                    count);
+        }
+
+        var hasSelection = count > 0 && !_isBusy;
+        if (_selectionFavoriteButton is not null)
+            _selectionFavoriteButton.IsEnabled = hasSelection;
+        if (_selectionStartButton is not null)
+            _selectionStartButton.IsEnabled = hasSelection && _acceleration.IsBackendReady;
+    }
+
+    private async void SelectionFavoriteButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isBusy || _selectedGroupIds.Count == 0)
+            return;
+
+        await ToggleFavoriteForIdsAsync(_selectedGroupIds.ToArray()).ConfigureAwait(true);
+    }
+
+    private async Task ToggleFavoriteForIdsAsync(IReadOnlyCollection<string> ids)
+    {
+        var validIds = ids.Where(id => !string.IsNullOrWhiteSpace(id)).ToArray();
+        if (validIds.Length == 0)
+            return;
+
+        try
+        {
+            var groups = _acceleration.Config.DomainGroups ?? [];
+            var targets = groups
+                .Where(g => validIds.Any(id => string.Equals(g.Id, id, StringComparison.OrdinalIgnoreCase)))
+                .ToList();
+            if (targets.Count == 0)
+                return;
+
+            // If all selected are already favorites → unfavorite; otherwise pin all.
+            var allFavorite = targets.All(g => g.IsFavorite);
+            foreach (var g in targets)
+                g.IsFavorite = !allFavorite;
+
+            await _acceleration.SaveConfigAsync().ConfigureAwait(true);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning("Failed to update domain group favorites.", ex);
+        }
+
+        BuildDomainGroupTiles();
+        RefreshUi();
+    }
+
+    private async void SelectionStartButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isBusy || _selectedGroupIds.Count == 0)
+            return;
+
+        try
+        {
+            var groups = _acceleration.Config.DomainGroups ?? [];
+            var any = false;
+            foreach (var group in groups)
+            {
+                if (_selectedGroupIds.Contains(group.Id))
+                {
+                    group.Enabled = true;
+                    any = true;
+                }
+            }
+
+            if (!any)
+                return;
+
+            // Enable master switch + a real mode so Start applies PAC/Hosts for selected groups.
+            _acceleration.Config.AccelerationEnabled = true;
+            if (_acceleration.Config.Mode is NetworkAccelerationMode.Off or NetworkAccelerationMode.DiagnosticsOnly)
+                _acceleration.Config.Mode = NetworkAccelerationMode.SystemProxy;
+
+            await _acceleration.SaveConfigAsync().ConfigureAwait(true);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning("Failed to enable selected domain groups before start.", ex);
+            RefreshUi();
+            return;
+        }
+
+        // Restart if already running so newly enabled groups take effect.
+        if (_acceleration.IsRunning)
+        {
+            await StopAsync().ConfigureAwait(true);
+        }
+
+        await StartAsync().ConfigureAwait(true);
     }
 
     private enum ConnectionUiState
@@ -484,6 +664,7 @@ public partial class NetworkAccelerationControl : UserControl
             }
 
             RefreshDomainTiles();
+            RefreshSelectionBar();
             RefreshMetrics();
             RefreshPrimaryAction();
             if (_restoreButton is not null)
@@ -511,8 +692,15 @@ public partial class NetworkAccelerationControl : UserControl
                 var group = groups.FirstOrDefault(g =>
                     string.Equals(g.Id, id, StringComparison.OrdinalIgnoreCase));
                 var enabled = group?.Enabled == true;
-                tile.Background = (Brush)FindResource(enabled ? "ControlFillColorSecondaryBrush" : "ControlFillColorDefaultBrush");
-                tile.BorderBrush = (Brush)FindResource(enabled ? "AccentFillColorDefaultBrush" : "ControlStrokeColorDefaultBrush");
+                var favorite = group?.IsFavorite == true;
+                var selected = _selectedGroupIds.Contains(id);
+
+                tile.BorderThickness = new Thickness(selected ? 2 : 1);
+                tile.Background = (Brush)FindResource(
+                    selected || enabled ? "ControlFillColorSecondaryBrush" : "ControlFillColorDefaultBrush");
+                tile.BorderBrush = (Brush)FindResource(
+                    selected || enabled ? "AccentFillColorDefaultBrush" : "ControlStrokeColorDefaultBrush");
+
                 if (tile.Child is not StackPanel sp)
                     continue;
 
@@ -525,6 +713,14 @@ public partial class NetworkAccelerationControl : UserControl
                             : T("NetworkAccelerationPage_DomainDisabled", "Off");
                         label.SetResourceReference(TextBlock.ForegroundProperty,
                             enabled ? "PaletteGreenBrush" : "TextFillColorTertiaryBrush");
+                    }
+                    else if (child is Grid titleRow)
+                    {
+                        foreach (var inner in titleRow.Children.OfType<TextBlock>())
+                        {
+                            if (inner.Name == "FavoriteMark")
+                                inner.Visibility = favorite ? Visibility.Visible : Visibility.Collapsed;
+                        }
                     }
                 }
             }
@@ -542,6 +738,10 @@ public partial class NetworkAccelerationControl : UserControl
                 domainCount);
         }
     }
+
+    /// <summary>Formats the floating selection-bar count line (for unit tests).</summary>
+    internal static string FormatSelectionCount(string zeroText, string format, int count) =>
+        count <= 0 ? zeroText : string.Format(format, count);
 
     internal static string FormatDomainGroupsSummary(
         string format,

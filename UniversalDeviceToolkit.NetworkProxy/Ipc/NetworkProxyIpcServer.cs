@@ -37,8 +37,28 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
             throw new ArgumentException("Session token must be a non-empty random token.", nameof(sessionToken));
     }
 
+    /// <summary>
+    /// Resolves the session token: env <see cref="NetworkProxySessionToken.WorkerTokenEnvironmentVariable"/>
+    /// first (preferred; not on command line), then <c>--token</c> for backward compatibility.
+    /// Clears the env var after a successful env read so it does not linger in the process.
+    /// </summary>
     public static string ResolveSessionToken(string[] args)
     {
+        var fromEnv = Environment.GetEnvironmentVariable(NetworkProxySessionToken.WorkerTokenEnvironmentVariable);
+        if (!string.IsNullOrWhiteSpace(fromEnv))
+        {
+            // Best-effort clear so the secret is not left in the worker environment table.
+            try { Environment.SetEnvironmentVariable(NetworkProxySessionToken.WorkerTokenEnvironmentVariable, null); }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"NetworkProxy: failed to clear {NetworkProxySessionToken.WorkerTokenEnvironmentVariable}: {ex.GetType().Name}");
+            }
+
+            return fromEnv.Trim();
+        }
+
+        // Backward compat: older launchers passed --token on argv.
         var fromArgs = ReadArg(args, "--token");
         return string.IsNullOrWhiteSpace(fromArgs)
             ? NetworkProxySessionToken.Create()
@@ -147,7 +167,22 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
 
             case "rules":
                 if (!string.IsNullOrWhiteSpace(request.Payload))
+                {
+                    string[] domains;
+                    try
+                    {
+                        domains = JsonSerializer.Deserialize<string[]>(request.Payload, JsonOptions) ?? [];
+                    }
+                    catch (JsonException)
+                    {
+                        return NetworkProxyIpcResponse.Fail("invalid rules json (expected string array)");
+                    }
+
                     _rulesJson = request.Payload!;
+                    // Apply allowlist to the live host (empty = allow all).
+                    _host.SetDomainAllowlist(domains);
+                }
+
                 return NetworkProxyIpcResponse.Ok("rules", new Dictionary<string, string>
                 {
                     ["rules"] = _rulesJson

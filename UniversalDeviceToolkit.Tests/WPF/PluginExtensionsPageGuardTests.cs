@@ -83,8 +83,23 @@ public sealed class PluginExtensionsPageGuardTests
         xaml.Should().Contain("Visibility=\"Visible\"");
         xaml.Should().Contain("PluginStoreOfflineBanner");
         xaml.Should().Contain("PluginStoreRetryButton");
+        xaml.Should().Contain("PluginExtensionsPage_StoreUnavailableTitle");
+        xaml.Should().Contain("PluginExtensionsPage_StoreUnavailableMessage");
+        xaml.Should().Contain("PluginExtensionsPage_StoreRetry");
+        xaml.Should().Contain("PluginExtensionsPage_InstallAll");
+        xaml.Should().Contain("PluginExtensionsPage_InstallAllTooltip");
+        xaml.Should().NotContain("Text=\"Plugin store unavailable\"");
+        xaml.Should().NotContain("Content=\"Retry\"");
         source.Should().Contain("UpdateStoreOfflineBanner");
         source.Should().Contain("StoreRetryButton_Click");
+    }
+
+    [Fact]
+    public void PluginViewModel_DefaultInstallButtonText_ShouldUseResourceKey()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginViewModel.cs");
+        source.Should().Contain("_installButtonText = Resource.PluginExtensionsPage_InstallPlugin");
+        source.Should().NotContain("_installButtonText = \"Install\"");
     }
 
     [Fact]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,11 +12,11 @@ namespace UniversalDeviceToolkit.WPF.Utils;
 /// </summary>
 public static class SkeletonShimmer
 {
-    // Cool-slate wash; alphas sized so LiftWithinBaseHue produces a visible band on dark + light bones.
-    private static readonly Color DefaultShimmerStart = Color.FromArgb(0x2A, 0x8E, 0x99, 0xAA);
-    private static readonly Color DefaultShimmerPeak = Color.FromArgb(0x52, 0xA8, 0xB2, 0xC0);
-    private static readonly Color DefaultShimmerStartLight = Color.FromArgb(0x1E, 0x70, 0x78, 0x88);
-    private static readonly Color DefaultShimmerPeakLight = Color.FromArgb(0x3A, 0x70, 0x78, 0x88);
+    // Classic 4.x teal-slate overlay; composited over the resolved theme bone fill at runtime.
+    private static readonly Color DefaultShimmerStart = Color.FromArgb(0x26, 0x88, 0x91, 0xA0);
+    private static readonly Color DefaultShimmerPeak = Color.FromArgb(0x4A, 0x88, 0x91, 0xA0);
+    private static readonly Color DefaultShimmerStartLight = Color.FromArgb(0x4A, 0x88, 0xA8, 0xC0);
+    private static readonly Color DefaultShimmerPeakLight = Color.FromArgb(0x8A, 0x98, 0xB8, 0xD0);
 
     public static readonly DependencyProperty IsEnabledProperty =
         DependencyProperty.RegisterAttached(
@@ -94,20 +94,38 @@ public static class SkeletonShimmer
 
     internal static Color ResolveBaseColor(Border border)
     {
+        var isLight = ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light;
+
         try
         {
             if (border.Background is SolidColorBrush local && local.Color.A > 0)
                 return local.Color;
-            if (border.TryFindResource("ControlFillColorSecondaryBrush") is SolidColorBrush secondary && secondary.Color.A > 0)
-                return secondary.Color;
-            if (border.TryFindResource("ControlFillColorTertiaryBrush") is SolidColorBrush tertiary)
-                return tertiary.Color;
+
+            // Tertiary reads better on light cards; secondary keeps dark-theme contrast.
+            if (isLight)
+            {
+                if (border.TryFindResource("ControlFillColorTertiaryBrush") is SolidColorBrush tertiary && tertiary.Color.A > 0)
+                    return tertiary.Color;
+                if (border.TryFindResource("ControlFillColorSecondaryBrush") is SolidColorBrush secondary && secondary.Color.A > 0)
+                    return secondary.Color;
+            }
+            else
+            {
+                if (border.TryFindResource("ControlFillColorSecondaryBrush") is SolidColorBrush secondary && secondary.Color.A > 0)
+                    return secondary.Color;
+                if (border.TryFindResource("ControlFillColorTertiaryBrush") is SolidColorBrush tertiary)
+                    return tertiary.Color;
+            }
         }
         catch (InvalidOperationException)
         {
         }
 
-        return SystemParameters.HighContrast ? SystemColors.ControlColor : Color.FromRgb(0x5A, 0x5A, 0x5A);
+        return SystemParameters.HighContrast
+            ? SystemColors.ControlColor
+            : isLight
+                ? Color.FromRgb(0xE8, 0xE8, 0xE8)
+                : Color.FromRgb(0x5A, 0x5A, 0x5A);
     }
 
     internal static (Color Start, Color Peak) ResolveShimmerOverlayColors(FrameworkElement element)
@@ -140,14 +158,9 @@ public static class SkeletonShimmer
 
     internal static LinearGradientBrush CreateShimmerBrush(Color baseColor, Color shimmerStart, Color shimmerPeak)
     {
-        // Map overlay alpha → lift amount. Floor so pale theme brushes still show a readable band.
-        var edgeLift = Math.Max(0.07, shimmerStart.A / 255.0 * 0.55);
-        var softLift = Math.Max(0.12, shimmerStart.A / 255.0 * 0.85);
-        var peakLift = Math.Max(0.18, shimmerPeak.A / 255.0 * 0.95);
+        var edge = CompositeOverlay(baseColor, shimmerStart);
+        var peak = CompositeOverlay(baseColor, shimmerPeak);
 
-        var edge = LiftWithinBaseHue(baseColor, edgeLift);
-        var soft = LiftWithinBaseHue(baseColor, softLift);
-        var peak = LiftWithinBaseHue(baseColor, peakLift);
         var brush = new LinearGradientBrush
         {
             StartPoint = new Point(0, 0.5),
@@ -156,14 +169,12 @@ public static class SkeletonShimmer
             RelativeTransform = new TranslateTransform(SkeletonAnimationTokens.SweepFrom, 0)
         };
 
-        // Narrower, cleaner 流光 core so the sweep reads as a single highlight, not a muddy wash.
+        // Classic 4.x three-stop teal band (peak @ 0.48) with soft shoulders on the theme bone fill.
         brush.GradientStops.Add(new GradientStop(baseColor, 0.00));
-        brush.GradientStops.Add(new GradientStop(baseColor, 0.22));
+        brush.GradientStops.Add(new GradientStop(baseColor, 0.18));
         brush.GradientStops.Add(new GradientStop(edge, 0.36));
-        brush.GradientStops.Add(new GradientStop(soft, 0.44));
-        brush.GradientStops.Add(new GradientStop(peak, 0.50));
-        brush.GradientStops.Add(new GradientStop(soft, 0.56));
-        brush.GradientStops.Add(new GradientStop(edge, 0.64));
+        brush.GradientStops.Add(new GradientStop(peak, 0.48));
+        brush.GradientStops.Add(new GradientStop(edge, 0.60));
         brush.GradientStops.Add(new GradientStop(baseColor, 0.78));
         brush.GradientStops.Add(new GradientStop(baseColor, 1.00));
         return brush;
@@ -178,16 +189,6 @@ public static class SkeletonShimmer
                 Lerp(baseColor.R, overlay.R, alpha),
                 Lerp(baseColor.G, overlay.G, alpha),
                 Lerp(baseColor.B, overlay.B, alpha));
-    }
-
-    private static Color LiftWithinBaseHue(Color baseColor, double amount)
-    {
-        // Allow enough lift for a visible cool-slate highlight (old 0.08 cap made 流光 nearly invisible).
-        amount = Math.Clamp(amount, 0, 0.28);
-        return Color.FromRgb(
-            Lerp(baseColor.R, byte.MaxValue, amount),
-            Lerp(baseColor.G, byte.MaxValue, amount),
-            Lerp(baseColor.B, byte.MaxValue, amount));
     }
 
     private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

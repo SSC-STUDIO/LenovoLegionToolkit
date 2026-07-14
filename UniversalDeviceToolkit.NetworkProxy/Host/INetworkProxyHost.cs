@@ -12,4 +12,10 @@ public interface INetworkProxyHost : IAsyncDisposable
     Task StartAsync(CancellationToken cancellationToken = default);
 
     Task StopAsync();
+
+    /// <summary>
+    /// Sets host-suffix allowlist used for CONNECT/HTTP filtering.
+    /// Null or empty = allow all destinations (full-proxy / pre-rules path).
+    /// </summary>
+    void SetDomainAllowlist(IReadOnlyList<string>? domains);
 }
