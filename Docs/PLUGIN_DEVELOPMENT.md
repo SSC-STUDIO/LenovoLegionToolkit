@@ -354,7 +354,7 @@ make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 
 官方与第三方插件通常使用 **插件本地 JSON 持久化**，而非宿主 `ApplicationSettings`：
 
-- `**PluginBase.Configuration`**（`IPluginConfiguration`）：SDK 提供的按插件作用域键值存储，默认落在宿主 app-data 下的插件配置目录；适合简单设置（参见 `network-acceleration` 的 `Configuration.SetValue` / `SaveAsync` 模式）。
+- `**PluginBase.Configuration`**（`IPluginConfiguration`）：SDK 提供的按插件作用域键值存储，默认落在宿主 app-data 下的插件配置目录；适合简单设置（参见 `custom-mouse` 的 `Configuration.SetValue` / `SaveAsync` 模式）。
 - **插件仓库 `Plugins/Shared` 中的 `SettingsManager` 等辅助类**：适合结构化设置模型与文件级 JSON 读写（各官方插件的 `*Settings` 类普遍采用此模式）。
 
 贡献者不应引用宿主内部的 `IoCContainer` 或 `ApplicationSettings`。
@@ -548,7 +548,6 @@ public class MyPlugin : PluginBase { }
 | 插件 ID                    | 页面模型             | 说明                                                 |
 | ------------------------ | ---------------- | -------------------------------------------------- |
 | **custom-mouse**         | 设置页 + Windows 优化 | 无功能页（`GetFeatureExtension()` 为 `null`）；提供鼠标光标与优化动作 |
-| **network-acceleration** | 功能页 + 设置页        | 网络加速功能与独立设置界面                                      |
 | **shell-integration**    | 仅设置页（系统插件）       | `isSystemPlugin: true`，不可卸载；无功能页                   |
 | **vive-tool**            | 功能页 + 设置页        | ViVeTool 功能管理与设置                                   |
 

@@ -13,7 +13,6 @@ public class ReflectionCacheTests : UnitTestBase
     {
         public int PublicProperty { get; set; } = 42;
         public string StringProperty { get; set; } = "test";
-        private int PrivateProperty { get; set; }
     }
 
     [Fact]

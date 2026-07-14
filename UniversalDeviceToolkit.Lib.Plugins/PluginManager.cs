@@ -15,6 +15,8 @@ namespace UniversalDeviceToolkit.Lib.Plugins;
 /// </summary>
 public class PluginManager : IPluginManager
 {
+    private static readonly string[] RetiredPluginIds = ["network-acceleration"];
+
     private readonly ApplicationSettings _applicationSettings;
     private readonly IPluginSignatureValidator _signatureValidator;
     private readonly IPluginLoader _loader;
@@ -855,6 +857,23 @@ public class PluginManager : IPluginManager
             Log.Instance.Trace($"Removed {pluginId} from pending deletion list during install/reinstall.");
     }
 
+    public void PruneRetiredPlugins()
+    {
+        var installedExtensions = _applicationSettings.Store.InstalledExtensions;
+        foreach (var id in RetiredPluginIds)
+        {
+            // Retired plugins may be listed in settings after store removal; do not require
+            // on-disk DLL folders (IsInstalled also checks the plugins directory).
+            if (!installedExtensions.Contains(id, StringComparer.OrdinalIgnoreCase))
+                continue;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"PruneRetiredPlugins: uninstalling retired plugin '{id}'.");
+
+            UninstallPlugin(id);
+        }
+    }
+
     public bool UninstallPlugin(string pluginId)
     {
         // SECURITY: Validate plugin ID format
@@ -889,7 +908,7 @@ public class PluginManager : IPluginManager
             return false;
         }
 
-        installedExtensions.Remove(pluginId);
+        installedExtensions.RemoveAll(id => id.Equals(pluginId, StringComparison.OrdinalIgnoreCase));
 
         // Add to pending deletion list for actual deletion on app exit
         if (!_applicationSettings.Store.PendingDeletionExtensions.Contains(pluginId, StringComparer.OrdinalIgnoreCase))

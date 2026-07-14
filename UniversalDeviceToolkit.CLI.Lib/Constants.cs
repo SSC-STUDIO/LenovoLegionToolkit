@@ -22,12 +22,6 @@ public static class Constants
 #endif
 
     /// <summary>
-    /// Effective legacy single-name pipe (DEFAULT + isolation suffix when applicable).
-    /// Prefer <see cref="GetClientPipeNamesFromEnvironment"/> / <see cref="GetServerPipeNamesFromEnvironment"/> for dual-name IPC.
-    /// </summary>
-    public static string PIPE_NAME => GetPipeNameFromEnvironment();
-
-    /// <summary>
     /// Resolves a pipe name from the default (legacy) base name, optionally isolation-suffixed.
     /// </summary>
     public static string GetPipeName(string? isolationPath = null)
@@ -79,16 +73,6 @@ public static class Constants
             GetPipeName(isolationPath, PREFERRED_PIPE_NAME),
             GetPipeName(isolationPath, DEFAULT_PIPE_NAME)
         ];
-
-    public static string GetPipeNameFromEnvironment()
-    {
-#if UDT_TEST_HOOKS
-        var overridePath = Environment.GetEnvironmentVariable(APPDATA_OVERRIDE_ENVIRONMENT_VARIABLE);
-        return GetPipeName(overridePath);
-#else
-        return DEFAULT_PIPE_NAME;
-#endif
-    }
 
     public static string[] GetServerPipeNamesFromEnvironment()
     {

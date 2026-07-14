@@ -73,6 +73,7 @@ private string _currentSearchText = string.Empty;
         Failed
     }
     private DateTime _skeletonShownAtUtc = DateTime.MinValue;
+    private bool _skeletonSubtreeLayoutPrimed;
     private int _loadingStateVersion;
     private bool _lifecycleSubscriptionsAttached;
     private readonly DebounceDispatcher _searchDebouncer = new();
@@ -251,10 +252,13 @@ private string _currentSearchText = string.Empty;
             skeleton.Opacity = 1;
             skeleton.IsHitTestVisible = true;
             Panel.SetZIndex(skeleton, 2);
-            // First show only: force layout so IsVisible is true before walking borders.
-            // Hot re-entry skips UpdateLayout — it was a major hitch on this page.
-            if (!skeletonAlreadyLive)
+            // One-time layout prime: XAML defaults Visible so skeletonAlreadyLive is true on
+            // first paint — still need a single measure pass before walking shimmer borders.
+            if (!_skeletonSubtreeLayoutPrimed)
+            {
                 skeleton.UpdateLayout();
+                _skeletonSubtreeLayoutPrimed = true;
+            }
         }
 
         // Soft restart: keep phase of already-running sweeps (4.x-style smoothness).

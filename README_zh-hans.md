@@ -488,7 +488,7 @@ UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件�
 官方插件发布自 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)。在线目录当前包括：
 
 - **Custom Mouse（自定义鼠标）**：光标主题、指针设置与 Windows 优化动作
-- **Network Acceleration（网络加速，旧版）**：已迁移到主程序「系统优化 → 网络与加速」；商店下架，仅保留设置迁移
+- **Network Acceleration（网络加速）**：已内置到主程序「系统优化 → 网络与加速」；v5.0.0 起插件已移除
 - **Shell Integration（Shell 集成）**：右键菜单与 Shell 样式（系统插件）
 - **ViVeTool**：管理 Windows 功能标志与实验性功能
 

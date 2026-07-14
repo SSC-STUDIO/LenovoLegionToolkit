@@ -516,7 +516,7 @@ Official plugins for UDT are maintained in the separate [UniversalDeviceToolkit-
 Official plugins are published from [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins). The online catalog currently includes:
 
 - **Custom Mouse**: Cursor themes, pointer settings, and Windows optimization actions
-- **Network Acceleration (Legacy)**: Migrated into built-in **System Optimization → Network & acceleration**; store offline, migration-only
+- **Network Acceleration**: Built into **System Optimization → Network & acceleration** (plugin removed in v5.0.0)
 - **Shell Integration**: Context menu and shell styling (system plugin)
 - **ViVeTool**: Manage Windows feature flags and experimental features
 

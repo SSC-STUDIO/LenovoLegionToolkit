@@ -4,12 +4,11 @@
   "plugins": [
     {
       "id": "network-acceleration",
-      "name": "Network Acceleration (Legacy)",
-      "status": "Offline",
-      "internalMigrationOnly": true,
-      "removalVersion": "5.0.0",
+      "name": "Network Acceleration (Removed)",
+      "status": "Removed",
+      "removedIn": "5.0.0",
       "migrationTarget": "built-in:NetworkAccelerationPage",
-      "description": "Deprecated. Use built-in Network & acceleration (default off)."
+      "description": "Plugin removed in v5.0.0. Use built-in Windows Optimization → Network & acceleration (default off)."
     },
     {
       "id": "battery-health",

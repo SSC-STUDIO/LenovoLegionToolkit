@@ -167,6 +167,9 @@ public partial class App
             // They are registered directly in MainWindow.xaml as NavigationItems
             // No need to register them as plugins
 
+            // Drop retired plugins (migrated to built-in features) before loading assemblies.
+            pluginManager.PruneRetiredPlugins();
+
             // Scan and load plugins from the plugins directory
             // This will automatically discover and register external plugins
             await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);

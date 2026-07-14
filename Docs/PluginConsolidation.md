@@ -6,7 +6,7 @@ This main repo keeps planning stubs under `Packaging/plugins/`.
 
 | Plugin id | Store status (sibling) | UDT plan | Notes |
 |---|---|---|---|
-| `network-acceleration` | **Offline** / Legacy | **Built-in** Network & acceleration | Auto-start sampling and auto-optimize disabled; Winsock/IP reset not used as “acceleration”; migrate display settings only. |
+| `network-acceleration` | **Removed** (v5.0.0) | **Built-in** Network & acceleration | Plugin source deleted; host auto-uninstalls local copies on startup. |
 | `battery-health` | **Offline** / Legacy | Merge thresholds into main Battery / Sensors | Plugin retained for settings migration until removalVersion. |
 | `custom-mouse` | **Active** as **Cursor & Pointer** | Rename done; remove fake DPI/polling UI | Pointer speed, button swap, light/dark cursor, theme follow, backup/restore kept. |
 | `shell-integration` | **Active** as **Nilesoft Shell Manager** | Keep name | Requires Nilesoft Shell; show install guidance when missing. |
@@ -17,7 +17,7 @@ This main repo keeps planning stubs under `Packaging/plugins/`.
 1. Stop relying on the plugin for runtime acceleration.
 2. Use built-in **Network & acceleration** page (default off).
 3. Recovery: `--reset-network-state` + snapshot restore + **Force restore network state**.
-4. Plugin retained only to migrate existing configuration; store Offline.
+4. Plugin removed from repo and store; host prunes installed copies on startup.
 5. Do **not** migrate Gaming/Streaming mode names as real acceleration strategies.
 6. Destructive auto operations (Winsock/TCP-IP reset on startup) stay disabled.
 

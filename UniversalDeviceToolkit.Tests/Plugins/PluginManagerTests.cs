@@ -333,6 +333,32 @@ public class PluginManagerTests : IDisposable
     }
 
     [Fact]
+    public void PruneRetiredPlugins_WhenNetworkAccelerationInstalled_ShouldUninstallAndQueueDeletion()
+    {
+        const string pluginId = "network-acceleration";
+        var settings = CreateSettings();
+        settings.Store.InstalledExtensions.Add(pluginId);
+        settings.SynchronizeStore();
+
+        _mockRegistry
+            .Setup(r => r.Get(pluginId))
+            .Returns((IPlugin?)null);
+        _mockRegistry
+            .Setup(r => r.GetAll())
+            .Returns(Array.Empty<IPlugin>());
+        _mockLoader
+            .Setup(l => l.Unload(pluginId))
+            .Returns(true);
+
+        var manager = CreateManager(settings);
+
+        manager.PruneRetiredPlugins();
+
+        settings.Store.InstalledExtensions.Should().NotContain(id => id.Equals(pluginId, StringComparison.OrdinalIgnoreCase));
+        settings.Store.PendingDeletionExtensions.Should().Contain(pluginId);
+    }
+
+    [Fact]
     public void UninstallPlugin_WhenInstalled_ShouldUnloadPluginContext()
     {
         // Arrange

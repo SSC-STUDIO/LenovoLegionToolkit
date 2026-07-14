@@ -19,7 +19,7 @@ public class PluginExecutableResolverTests : IDisposable
     [Fact]
     public void TryResolve_ShouldReturnExplicitPluginExecutable()
     {
-        const string pluginId = "network-acceleration";
+        const string pluginId = "custom-mouse";
         var pluginsDirectory = Path.Combine(_root, "plugins");
         var pluginDirectory = Path.Combine(pluginsDirectory, pluginId);
         Directory.CreateDirectory(pluginDirectory);

@@ -216,11 +216,4 @@ public class StartupHealthGuardTests : IDisposable
         var path = Path.Combine(Folders.AppData, "startup_health.json");
         File.Exists(path).Should().BeFalse();
     }
-
-    private sealed class NullSafeStartLogger : ISafeStartLogger
-    {
-        public void Trace(string message, Exception? ex = null) { }
-        public void Warning(string message, Exception? ex = null) { }
-        public void Error(string message, Exception? ex = null) { }
-    }
 }

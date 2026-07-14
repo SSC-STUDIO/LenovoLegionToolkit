@@ -75,7 +75,7 @@ internal static class Program
     private static readonly TimeSpan WindowAnimationGracePeriod = TimeSpan.FromMilliseconds(150);
     private static readonly TimeSpan PowerModeHardwareReadbackTimeout = TimeSpan.FromSeconds(15);
     private static readonly TimeSpan PowerModeHardwareReadbackPollDelay = TimeSpan.FromMilliseconds(300);
-    private static readonly string[] DefaultPluginIds = { "custom-mouse", "shell-integration", "vive-tool", "network-acceleration" };
+    private static readonly string[] DefaultPluginIds = { "custom-mouse", "shell-integration", "vive-tool" };
     // Empirical values: WPF.UI MessageBox and NotificationPopup typically fit within 600x400 pixels
     private static readonly int MessageBoxMaxWidth = 600;
     private static readonly int MessageBoxMaxHeight = 400;
@@ -989,7 +989,6 @@ Environment variables:
         {
             "CustomMouse" => "custom-mouse",
             "ShellIntegration" => "shell-integration",
-            "NetworkAcceleration" => "network-acceleration",
             "ViveTool" => "vive-tool",
             _ => simpleName
         };
@@ -2625,54 +2624,6 @@ Environment variables:
         }
         WaitForPluginMarketplaceInteractionReady(mainWindow, pluginId, TimeSpan.FromSeconds(20));
 
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase) && isLastPlugin)
-        {
-            var featureRouteValidated = false;
-            var openButton = FindByAutomationId(ResolveLiveWindow(mainWindow), $"PluginOpenButton_{pluginId}");
-            if (marketplaceAvailable && openButton is not null && IsVisible(openButton))
-            {
-                try
-                {
-                    TestOpenFeaturePage(mainWindow, pluginId, returnToMarketplace: marketplaceAvailable);
-                    featureRouteValidated = true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[main-smoke] Marketplace Open route failed for '{pluginId}': {ex.Message}. Falling back to sidebar route for functional validation.");
-                    CloseStalePluginSettingsWindows(mainWindow);
-                }
-            }
-
-            if (!featureRouteValidated && isKnownInstalled)
-                TestSidebarPluginPageEntry(mainWindow, pluginId, returnToMarketplace: marketplaceAvailable);
-            else if (!featureRouteValidated)
-                Console.WriteLine($"[main-smoke] Network feature-page test skipped (no Open button): {pluginId}");
-
-            mainWindow = ResolveLiveWindow(mainWindow);
-
-            if (marketplaceAvailable && IsPluginInstalledInUi(mainWindow, pluginId))
-            {
-                var settingsRouteValidated = false;
-                try
-                {
-                    TestDoubleClickOpensSettings(mainWindow, processId, pluginId);
-                    settingsRouteValidated = true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[main-smoke] Marketplace double-click settings route failed for '{pluginId}': {ex.Message}. Continuing with Configure button validation.");
-                }
-
-                TestConfigureOpensSettings(mainWindow, processId, pluginId, settingsRouteAlreadyValidated: settingsRouteValidated);
-            }
-            else if (isKnownInstalled)
-                Console.WriteLine($"[main-smoke] Skipping marketplace settings validation for '{pluginId}' because marketplace UI is unavailable.");
-            else
-                throw new InvalidOperationException($"Plugin is not installed before settings validation: {pluginId}");
-
-            return;
-        }
-
         var featureOpenButton = FindByAutomationId(mainWindow, $"PluginOpenButton_{pluginId}");
         if (marketplaceAvailable && featureOpenButton is not null && IsVisible(featureOpenButton))
         {
@@ -2733,8 +2684,7 @@ Environment variables:
 
     private static bool ExpectsSidebarFeaturePage(string pluginId)
     {
-        return pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
-               || pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase);
+        return pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void TestOpenFeaturePage(AutomationElement mainWindow, string pluginId, bool returnToMarketplace)
@@ -2801,10 +2751,6 @@ Environment variables:
         CaptureMainWindow(mainWindow, pluginId, "feature-page");
         ObserveStep($"Feature page opened: {pluginId}", mainWindow);
 
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
-            && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
-            TestNetworkAccelerationFeatureInteractions(mainWindow);
-
         if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
             && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
             TestViveToolFeatureInteractions(mainWindow);
@@ -2854,10 +2800,6 @@ Environment variables:
         Console.WriteLine($"[main-smoke] Opened plugin feature page from sidebar: {pluginId}");
         CaptureMainWindow(mainWindow, pluginId, "feature-page-sidebar");
         ObserveStep($"Sidebar feature page opened: {pluginId}", mainWindow);
-
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
-            && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
-            TestNetworkAccelerationFeatureInteractions(mainWindow);
 
         if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
             && IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId))
@@ -2950,39 +2892,10 @@ Environment variables:
             throw new InvalidOperationException($"Plugin '{pluginId}' feature page reported a runtime load failure via {entrySource}.");
         }
 
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
-        {
-            if (PluginPageShowsCompatibilityFallback(mainWindow))
-            {
-                Console.WriteLine($"[main-smoke] Network Acceleration feature page is compatibility-gated via {entrySource}; skipping plugin-specific feature interaction checks.");
-                return;
-            }
-
-            var networkMarkerReady = WaitUntil(
-                () => IsPluginSpecificFeatureMarkerVisible(mainWindow, pluginId),
-                TimeSpan.FromSeconds(15),
-                TimeSpan.FromMilliseconds(250));
-
-            if (!networkMarkerReady)
-            {
-                DumpAutomationSnapshot(mainWindow, 350);
-                throw new InvalidOperationException($"Network plugin page appears blank via {entrySource}; expected controls were not detected.");
-            }
-        }
     }
 
     private static bool IsPluginSpecificFeatureMarkerVisible(AutomationElement mainWindow, string pluginId)
     {
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
-        {
-            return IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_FeatureRoot"))
-                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_ModeComboBox"))
-                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_QuickOptimizeButton"))
-                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_ResetStackButton"))
-                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_SaveModeButton"))
-                   || IsVisible(FindByAutomationId(mainWindow, "NetworkAcceleration_StatusText"));
-        }
-
         if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
         {
             return IsVisible(FindByAutomationId(mainWindow, "ViveToolPageRoot"))
@@ -3010,30 +2923,6 @@ Environment variables:
             "targets Wpf.Ui",
             "host is running Wpf.Ui",
             "hidden to keep the app stable");
-    }
-
-    private static void TestNetworkAccelerationFeatureInteractions(AutomationElement mainWindow)
-    {
-        var modeCombo = WaitForAutomationId(mainWindow, "NetworkAcceleration_ModeComboBox", TimeSpan.FromSeconds(12));
-        SelectComboBoxItemByNames(modeCombo, "Gaming", "??");
-
-        var saveModeButton = WaitForAutomationId(mainWindow, "NetworkAcceleration_SaveModeButton", TimeSpan.FromSeconds(8));
-        Click(saveModeButton);
-
-        var status = WaitForAutomationId(mainWindow, "NetworkAcceleration_StatusText", TimeSpan.FromSeconds(8));
-        var modeSaved = WaitUntil(
-            () => StatusTextIndicatesSaved(status)
-                  || (IsVisible(status) && !string.IsNullOrWhiteSpace(ReadElementText(status))),
-            TimeSpan.FromSeconds(10),
-            TimeSpan.FromMilliseconds(250));
-
-        if (!modeSaved)
-        {
-            DumpAutomationSnapshot(mainWindow, 320);
-            throw new InvalidOperationException("Network feature-page interaction failed: mode save status was not observed.");
-        }
-
-        Console.WriteLine("[main-smoke] Network feature-page interactions passed");
     }
 
     private static void TestViveToolFeatureInteractions(AutomationElement mainWindow)
@@ -3129,26 +3018,15 @@ Environment variables:
 
         mainWindow = ResolveLiveWindowAndDismissPopups(mainWindow, processId);
 
-        var settingsWindow = pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
-            ? WaitForPluginSettingsWindowByHandleOrName(
-                processId,
-                mainWindowHandle,
-                existingSettingsWindows,
-                TimeSpan.FromSeconds(12),
-                "network-acceleration double-click",
-                new[] { "Network Acceleration Settings", "Network Acceleration ??" })
-            : WaitForPluginSettingsWindow(
-                processId,
-                mainWindowHandle,
-                existingSettingsWindows,
-                TimeSpan.FromSeconds(7));
+        var settingsWindow = WaitForPluginSettingsWindow(
+            processId,
+            mainWindowHandle,
+            existingSettingsWindows,
+            TimeSpan.FromSeconds(7));
 
         Console.WriteLine($"[main-smoke] Double-click opened settings window for: {pluginId}");
         CapturePluginSettingsWindow(settingsWindow, pluginId, "settings-double-click");
         ObserveStep($"Settings window opened by double-click: {pluginId}", settingsWindow);
-
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
-            TestNetworkAccelerationSettingsInteractions(settingsWindow);
 
         if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
             TestViveToolSettingsInteractions(settingsWindow);
@@ -3170,9 +3048,7 @@ Environment variables:
         AutomationElement? settingsWindow = null;
         var activationModes = pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase)
             ? new[] { "invoke", "keyboard", "mouse", "mouse" }
-            : pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase)
-                ? new[] { "mouse", "invoke", "mouse" }
-                : new[] { "invoke", "mouse" };
+            : new[] { "invoke", "mouse" };
 
         for (var attempt = 0; attempt < activationModes.Length && settingsWindow is null; attempt++)
         {
@@ -3216,12 +3092,6 @@ Environment variables:
 
         if (settingsWindow is null)
         {
-            if (settingsRouteAlreadyValidated && pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
-            {
-                Console.WriteLine("[main-smoke] network-acceleration Configure did not expose a distinct settings window, but the settings route was already validated by double-click.");
-                return;
-            }
-
             if (pluginId.Equals("vive-tool", StringComparison.OrdinalIgnoreCase))
             {
                 mainWindow = ResolveLiveWindow(mainWindow);
@@ -3238,9 +3108,6 @@ Environment variables:
 
         if (pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
             TestShellIntegrationSettingsInteractions(settingsWindow, processId, mainWindowHandle);
-
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
-            TestNetworkAccelerationSettingsInteractions(settingsWindow);
 
         CloseWindowAndWait(settingsWindow, processId, TimeSpan.FromSeconds(8));
     }
@@ -3333,9 +3200,6 @@ Environment variables:
 
         if (pluginId.Equals("shell-integration", StringComparison.OrdinalIgnoreCase))
             return new[] { "Shell Integration Settings", "Shell Integration ??" };
-
-        if (pluginId.Equals("network-acceleration", StringComparison.OrdinalIgnoreCase))
-            return new[] { "Network Acceleration Settings" };
 
         return Array.Empty<string>();
     }
@@ -3471,82 +3335,6 @@ Environment variables:
         }
         DumpAutomationSnapshot(snapshotRoot ?? settingsWindow, 260);
         throw new TimeoutException($"Timed out waiting for shell-integration action button set [{string.Join(", ", automationIds)}] or names [{string.Join(", ", names)}].");
-    }
-
-    private static void TestNetworkAccelerationSettingsInteractions(AutomationElement settingsWindow)
-    {
-        if (PluginSettingsCompatibilityFallbackVisible(settingsWindow))
-        {
-            Console.WriteLine("[main-smoke] Network Acceleration settings page is compatibility-gated by host/plugin Wpf.Ui mismatch; accepting stable fallback.");
-            return;
-        }
-
-        var autoOptimize = WaitForAutomationIdOrNames(
-            settingsWindow,
-            "NetworkAcceleration_AutoOptimizeCheckBox",
-            new[] { "Auto optimize on startup" },
-            TimeSpan.FromSeconds(15));
-        var resetWinsock = WaitForAutomationIdOrNames(
-            settingsWindow,
-            "NetworkAcceleration_ResetWinsockCheckBox",
-            new[] { "Reset Winsock during quick optimization", "Reset Winsock during optimization" },
-            TimeSpan.FromSeconds(15));
-        var resetTcpIp = WaitForAutomationIdOrNames(
-            settingsWindow,
-            "NetworkAcceleration_ResetTcpIpCheckBox",
-            new[] { "Reset TCP/IP stack during quick optimization", "Reset TCP/IP during optimization" },
-            TimeSpan.FromSeconds(15));
-        var saveButton = WaitForAutomationIdOrNames(
-            settingsWindow,
-            "NetworkAcceleration_SaveSettingsButton",
-            new[] { "Save Settings", "Save" },
-            TimeSpan.FromSeconds(15));
-        var settingsWindowHandle = settingsWindow.Current.NativeWindowHandle;
-
-        Click(autoOptimize);
-        Thread.Sleep(120);
-        Click(resetWinsock);
-        Thread.Sleep(120);
-        Click(resetTcpIp);
-        Thread.Sleep(120);
-
-        Click(saveButton);
-
-        var settingsSaved = WaitUntil(
-            () =>
-            {
-                AutomationElement? liveSettingsWindow = null;
-                try
-                {
-                    liveSettingsWindow = AutomationElement.FromHandle((IntPtr)settingsWindowHandle);
-                }
-                catch (Exception ex) when (IsRecoverableAutomationException(ex))
-                {
-                    return false;
-                }
-
-                if (liveSettingsWindow is null)
-                    return false;
-
-                var status = FindByAutomationId(liveSettingsWindow, "NetworkAcceleration_SettingsStatusText");
-                if (StatusTextIndicatesSaved(status))
-                    return true;
-
-                if (status is not null && IsVisible(status) && !string.IsNullOrWhiteSpace(ReadElementText(status)))
-                    return true;
-
-                return FindVisibleTextContainsAny(liveSettingsWindow, "saved", "\u5df2\u4fdd\u5b58", "\u4fdd\u5b58");
-            },
-            TimeSpan.FromSeconds(10),
-            TimeSpan.FromMilliseconds(250));
-
-        if (!settingsSaved)
-        {
-            DumpAutomationSnapshot(settingsWindow, 250);
-            throw new InvalidOperationException("Network settings-page interaction failed: save status was not observed.");
-        }
-
-        Console.WriteLine("[main-smoke] Network settings-page interactions passed");
     }
 
     private static void TestViveToolSettingsInteractions(AutomationElement settingsWindow)
@@ -3760,9 +3548,6 @@ Environment variables:
         return FindByAutomationId(window, "_pluginSettingsFrame") is not null
                || FindByAutomationId(window, "_pluginNameTextBlock") is not null
                || FindByAutomationId(window, "PluginSettingsCloseButton") is not null
-               || FindByAutomationId(window, "NetworkAcceleration_SettingsRoot") is not null
-               || FindByAutomationId(window, "NetworkAcceleration_SaveSettingsButton") is not null
-               || FindByAutomationId(window, "NetworkAcceleration_AutoOptimizeCheckBox") is not null
                || (window.Current.Name?.Contains("settings", StringComparison.OrdinalIgnoreCase) ?? false)
                || (window.Current.Name?.Contains("??", StringComparison.Ordinal) ?? false);
     }

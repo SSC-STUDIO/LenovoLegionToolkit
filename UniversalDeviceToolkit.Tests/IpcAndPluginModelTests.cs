@@ -779,12 +779,6 @@ public class IpcAndPluginModelTests
     #region PluginConstants Tests
 
     [Fact]
-    public void PluginConstants_NetworkAcceleration_ShouldBeExpectedValue()
-    {
-        PluginConstants.NetworkAcceleration.Should().Be("NetworkAcceleration");
-    }
-
-    [Fact]
     public void PluginConstants_ViveTool_ShouldBeExpectedValue()
     {
         PluginConstants.ViveTool.Should().Be("ViveTool");

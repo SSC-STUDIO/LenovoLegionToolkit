@@ -284,7 +284,6 @@ internal struct LENOVO_SPECTRUM_STATE
     public byte Unknown3;
     [MarshalAs(UnmanagedType.ByValArray, SizeConst = 191)]
     public LENOVO_SPECTRUM_KEY_STATE[] Data;
-    public byte Unknown4;
 }
 
 #endregion

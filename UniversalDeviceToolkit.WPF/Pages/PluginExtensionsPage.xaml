@@ -86,8 +86,17 @@
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
 
+        <!-- Classic 4.x calm shimmer blocks (small radius = less overdraw than MD). -->
         <Style x:Key="SkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        </Style>
+
+        <!-- Lightweight row chrome only — no card fill/stroke; shimmer lives on child blocks. -->
+        <Style x:Key="PluginSkeletonRowStyle" TargetType="Border">
+            <Setter Property="MinHeight" Value="84" />
+            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+            <Setter Property="Background" Value="Transparent" />
         </Style>
 
         <Style x:Key="DetailActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonCompact}">
@@ -103,6 +112,9 @@
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <!-- DataTemplate: Self + PressedForeground so WPF-UI does not bind via ContentPresenter. -->
+            <Setter Property="DataContext" Value="{Binding RelativeSource={RelativeSource Self}}" />
+            <Setter Property="PressedForeground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -119,12 +131,14 @@
 
         <Style x:Key="DetailPrimaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}">
             <Setter Property="Foreground" Value="{DynamicResource SystemAccentColorBrush}" />
+            <Setter Property="PressedForeground" Value="{DynamicResource SystemAccentColorBrush}" />
         </Style>
 
         <Style x:Key="DetailSecondaryActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}" />
 
         <Style x:Key="DetailDangerActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource DetailActionButtonStyle}">
             <Setter Property="Foreground" Value="{DynamicResource StatusCriticalTextBrush}" />
+            <Setter Property="PressedForeground" Value="{DynamicResource StatusCriticalTextBrush}" />
         </Style>
 
         <Style x:Key="PluginInstallProgressRingStyle" TargetType="wpfui:ProgressRing" BasedOn="{StaticResource AppLoadingRingCompactStyle}">
@@ -509,39 +523,39 @@
                                         <StackPanel Orientation="Horizontal"
                                                     Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                             <wpfui:Button x:Name="PluginUpdateButton"
-                                                           AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginInstallButton_{0}}"
+                                                           AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginInstallButton_{0}}"
                                                            Style="{StaticResource DetailPrimaryActionButtonStyle}"
                                                            Click="PluginInstallButton_Click"
-                                                           Tag="{Binding PluginId}"
-                                                           ToolTip="{Binding InstallButtonText}"
-                                                           Visibility="{Binding ShouldShowInstallButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                           Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                           ToolTip="{Binding InstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                           Visibility="{Binding ShouldShowInstallButton, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <wpfui:Button.Icon>
                                                     <wpfui:SymbolIcon Symbol="ArrowDownload24"
                                                                       Foreground="{DynamicResource SystemAccentColorBrush}" />
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginConfigureButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginConfigureButton_{0}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
-                                                          ToolTip="{Binding ConfigureButtonText}"
-                                                          Visibility="{Binding ShouldShowConfigureButton, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                          ToolTip="{Binding ConfigureButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                          Visibility="{Binding ShouldShowConfigureButton, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                           Click="PluginConfigureButton_Click"
-                                                          Tag="{Binding PluginId}">
+                                                          Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                                 <wpfui:Button.Icon>
                                                     <wpfui:SymbolIcon Symbol="Settings24"
                                                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginOpenButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginOpenButton_{0}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
                                                           Click="PluginOpenButton_Click"
-                                                          Tag="{Binding PluginId}"
-                                                          ToolTip="{Binding OpenButtonText}">
+                                                          Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                          ToolTip="{Binding OpenButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                                 <wpfui:Button.Visibility>
                                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                                        <Binding Path="ShouldShowInstalledActions" />
-                                                        <Binding Path="SupportsOpenAction" />
+                                                        <Binding Path="ShouldShowInstalledActions" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
+                                                        <Binding Path="SupportsOpenAction" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
                                                     </MultiBinding>
                                                 </wpfui:Button.Visibility>
                                                 <wpfui:Button.Icon>
@@ -550,12 +564,12 @@
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, StringFormat=PluginUninstallButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginUninstallButton_{0}}"
                                                           Style="{StaticResource DetailDangerActionButtonStyle}"
-                                                          Visibility="{Binding ShouldShowInstalledActions, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                          Visibility="{Binding ShouldShowInstalledActions, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                           Click="PluginUninstallButton_Click"
-                                                          Tag="{Binding PluginId}"
-                                                          ToolTip="{Binding UninstallButtonText}">
+                                                          Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                          ToolTip="{Binding UninstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                                 <wpfui:Button.Icon>
                                                     <wpfui:SymbolIcon Symbol="Delete24"
                                                                       Foreground="{DynamicResource StatusCriticalTextBrush}" />
@@ -696,8 +710,8 @@
             </Grid>
 
             <!--
-              Visible + opaque by default so the first navigation frame is skeleton 流光,
-              never a blank white list cell. Code-behind snaps this in (no fade-from-0).
+              Visible by default so the first navigation frame is skeleton 流光 (code-behind snaps in).
+              Transparent host + lightweight rows (4.x-style) — only shimmer blocks animate.
             -->
             <Grid
                 x:Name="_loadingIndicator"
@@ -706,21 +720,21 @@
                 Visibility="Visible"
                 Opacity="1"
                 ClipToBounds="True"
-                Background="{DynamicResource ControlFillColorDefaultBrush}">
+                Background="Transparent">
                 <StackPanel Margin="0,4,0,0">
-                    <Border Width="132"
-                            Height="14"
-                            Margin="2,0,0,12"
+                    <Border Width="128"
+                            Height="12"
+                            Margin="2,0,0,8"
                             HorizontalAlignment="Left"
                             Style="{StaticResource SkeletonShimmerBlockStyle}" />
 
-                    <Border Style="{StaticResource AppSkeletonListItemCardStyle}" Height="92" Margin="0,0,0,8">
+                    <Border Style="{StaticResource PluginSkeletonRowStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="{StaticResource CornerRadiusCard}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
+                            <Border Width="44" Height="44" CornerRadius="{StaticResource CornerRadiusSM}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <StackPanel Grid.Column="1" Margin="12,2,0,0">
                                 <Border Width="220" Height="14" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 <Border Width="128" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
@@ -729,13 +743,13 @@
                         </Grid>
                     </Border>
 
-                    <Border Style="{StaticResource AppSkeletonListItemCardStyle}" Height="92" Margin="0,0,0,8">
+                    <Border Style="{StaticResource PluginSkeletonRowStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="{StaticResource CornerRadiusCard}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
+                            <Border Width="44" Height="44" CornerRadius="{StaticResource CornerRadiusSM}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <StackPanel Grid.Column="1" Margin="12,2,0,0">
                                 <Border Width="194" Height="14" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 <Border Width="116" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
@@ -744,32 +758,17 @@
                         </Grid>
                     </Border>
 
-                    <Border Style="{StaticResource AppSkeletonListItemCardStyle}" Height="92" Margin="0,0,0,8">
+                    <Border Style="{StaticResource PluginSkeletonRowStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="{StaticResource CornerRadiusCard}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
+                            <Border Width="44" Height="44" CornerRadius="{StaticResource CornerRadiusSM}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             <StackPanel Grid.Column="1" Margin="12,2,0,0">
                                 <Border Width="172" Height="14" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 <Border Width="98" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                                 <Border Height="10" Margin="0,12,84,0" Style="{StaticResource SkeletonShimmerBlockStyle}" />
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-
-                    <Border Style="{StaticResource AppSkeletonListItemCardStyle}" Height="92" Margin="0,0,0,8">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Border Width="42" Height="42" CornerRadius="{StaticResource CornerRadiusCard}" Style="{StaticResource SkeletonShimmerBlockStyle}" />
-                            <StackPanel Grid.Column="1" Margin="12,2,0,0">
-                                <Border Width="186" Height="14" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
-                                <Border Width="108" Height="10" Margin="0,10,0,0" HorizontalAlignment="Left" Style="{StaticResource SkeletonShimmerBlockStyle}" />
-                                <Border Height="10" Margin="0,12,60,0" Style="{StaticResource SkeletonShimmerBlockStyle}" />
                             </StackPanel>
                         </Grid>
                     </Border>

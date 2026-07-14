@@ -40,6 +40,11 @@ public interface IPluginManager : IDisposable
     bool UninstallPlugin(string pluginId);
 
     /// <summary>
+    /// Uninstall retired plugins that were removed from the catalog (e.g. migrated to built-in features).
+    /// </summary>
+    void PruneRetiredPlugins();
+
+    /// <summary>
     /// Get all installed plugin IDs
     /// </summary>
     IEnumerable<string> GetInstalledPluginIds();

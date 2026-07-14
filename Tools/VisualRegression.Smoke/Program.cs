@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -965,7 +965,7 @@ internal static partial class Program
             return false;
 
         return IsVisible(FindByAutomationId(root, "PluginCard_custom-mouse"))
-               || IsVisible(FindByAutomationId(root, "PluginCard_network-acceleration"))
+               || IsVisible(FindByAutomationId(root, "PluginCard_vive-tool"))
                || IsVisible(FindByAutomationId(root, "PluginNoPluginsMessage"))
                || IsVisible(FindByAutomationId(root, "PluginNoResultsMessage"))
                || FindVisibleTextContains(root, "Found 4 plugins")
@@ -1460,21 +1460,6 @@ internal static partial class Program
                     "iconBackground": "#2563EB",
                     "dependencies": [],
                     "tags": [ "mouse", "customization", "gaming" ]
-                  },
-                  {
-                    "id": "network-acceleration",
-                    "name": "Network Acceleration",
-                    "description": "Real-time network acceleration and optimization features",
-                    "author": "SSC-STUDIO",
-                    "version": "1.1.8",
-                    "minLLTVersion": "3.6.1",
-                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/network-acceleration-v1.1.8/network-acceleration-v1.1.8.zip",
-                    "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/network-acceleration-v1.1.8",
-                    "releaseDate": "2026-04-29T12:18:46Z",
-                    "icon": "Globe24",
-                    "iconBackground": "#DC2626",
-                    "dependencies": [],
-                    "tags": [ "network", "optimization" ]
                   },
                   {
                     "id": "shell-integration",

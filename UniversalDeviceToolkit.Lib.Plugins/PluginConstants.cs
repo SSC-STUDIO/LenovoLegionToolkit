@@ -5,6 +5,5 @@ namespace UniversalDeviceToolkit.Lib.Plugins;
 /// </summary>
 public static class PluginConstants
 {
-    public const string NetworkAcceleration = "NetworkAcceleration";
     public const string ViveTool = "ViveTool";
 }
