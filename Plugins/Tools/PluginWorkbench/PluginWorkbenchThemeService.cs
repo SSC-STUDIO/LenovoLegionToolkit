@@ -1,4 +1,5 @@
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
@@ -11,20 +12,26 @@ namespace PluginWorkbench;
 
 internal sealed class PluginWorkbenchThemeService
 {
-    private static readonly Uri[] HostDictionaryUris =
+    private static readonly string[] HostWpfAssemblyNameCandidates =
     [
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/DesignTokens.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/AnimationTokens.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/Animations.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/ButtonStyles.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/Typography.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/Badge.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/CardAction.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/CardControl.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/CardExpander.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/DynamicScrollBar.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/InfoBar.xaml", UriKind.Absolute),
-        new("pack://application:,,,/Lenovo Legion Toolkit;component/Styles/NavigationStore.xaml", UriKind.Absolute),
+        "Universal Device Toolkit",
+        "Lenovo Legion Toolkit",
+    ];
+
+    private static readonly string[] HostStyleResources =
+    [
+        "Styles/DesignTokens.xaml",
+        "Styles/AnimationTokens.xaml",
+        "Styles/Animations.xaml",
+        "Styles/ButtonStyles.xaml",
+        "Styles/Typography.xaml",
+        "Styles/Badge.xaml",
+        "Styles/CardAction.xaml",
+        "Styles/CardControl.xaml",
+        "Styles/CardExpander.xaml",
+        "Styles/DynamicScrollBar.xaml",
+        "Styles/InfoBar.xaml",
+        "Styles/NavigationStore.xaml",
     ];
 
     private readonly string _statePath;
@@ -102,11 +109,47 @@ internal sealed class PluginWorkbenchThemeService
         }
     }
 
+    internal static string ResolveHostWpfAssemblyName()
+    {
+        foreach (var candidate in HostWpfAssemblyNameCandidates)
+        {
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (string.Equals(assembly.GetName().Name, candidate, StringComparison.OrdinalIgnoreCase))
+                {
+                    return candidate;
+                }
+            }
+
+            try
+            {
+                _ = Assembly.Load(new AssemblyName(candidate));
+                return candidate;
+            }
+            catch (Exception ex) when (ex is FileNotFoundException or BadImageFormatException)
+            {
+                // Expected: assembly DLL is absent — try next candidate.
+            }
+        }
+
+        // Default to the new product name; the caller's try/catch handles load failure gracefully.
+        return HostWpfAssemblyNameCandidates[0];
+    }
+
+    internal static Uri[] GetHostDictionaryUris()
+    {
+        var assemblyName = ResolveHostWpfAssemblyName();
+        return HostStyleResources
+            .Select(style => new Uri($"pack://application:,,,/{assemblyName};component/{style}", UriKind.Absolute))
+            .ToArray();
+    }
+
     private static bool TryEnsureHostResources(out string message)
     {
         try
         {
-            foreach (var uri in HostDictionaryUris)
+            var hostUris = GetHostDictionaryUris();
+            foreach (var uri in hostUris)
             {
                 if (Application.Current.Resources.MergedDictionaries.Any(dictionary => uri.Equals(dictionary.Source)))
                 {

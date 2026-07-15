@@ -364,7 +364,7 @@ public sealed class ShellIntegrationConfigService
         var tipTime = normalized.TipTimeSeconds.ToString("0.0", CultureInfo.InvariantCulture);
 
         return
-$@"# Managed by Lenovo Legion Toolkit.
+$@"# Managed by Universal Device Toolkit.
 settings
 {{
     showdelay = {showDelay}
@@ -390,7 +390,7 @@ settings
         var normalized = profile.Normalize();
 
         return
-$@"# Managed by Lenovo Legion Toolkit.
+$@"# Managed by Universal Device Toolkit.
 theme
 {{
     name = ""{normalized.ThemeName}""
@@ -633,7 +633,7 @@ theme
         var sourcePath = ResolveLanguageSourcePath(installDirectory, preferredCulture);
         if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
         {
-            return "# Managed by Lenovo Legion Toolkit." + Environment.NewLine;
+            return "# Managed by Universal Device Toolkit." + Environment.NewLine;
         }
 
         return File.ReadAllText(sourcePath, Encoding.UTF8);

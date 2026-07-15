@@ -526,7 +526,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var paths = service.ApplyProfile(installDir, profile);
 
         var langContent = File.ReadAllText(paths!.LanguagePath);
-        Assert.Contains("Managed by Lenovo Legion Toolkit", langContent);
+        Assert.Contains("Managed by Universal Device Toolkit", langContent);
     }
 
     [Fact]
@@ -555,7 +555,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var profile = ShellIntegrationProfile.CreateDefault();
         var rendered = ShellIntegrationConfigService.RenderSettings(profile);
 
-        Assert.Contains("Managed by Lenovo Legion Toolkit", rendered);
+        Assert.Contains("Managed by Universal Device Toolkit", rendered);
     }
 
     [Fact]
@@ -641,7 +641,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var profile = ShellIntegrationProfile.CreateDefault();
         var rendered = ShellIntegrationConfigService.RenderTheme(profile);
 
-        Assert.Contains("Managed by Lenovo Legion Toolkit", rendered);
+        Assert.Contains("Managed by Universal Device Toolkit", rendered);
     }
 
     [Fact]
@@ -1012,7 +1012,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var paths = service.ApplyProfile(installDir, profile, culture);
 
         var langContent = File.ReadAllText(paths!.LanguagePath);
-        Assert.Contains("Managed by Lenovo Legion Toolkit", langContent);
+        Assert.Contains("Managed by Universal Device Toolkit", langContent);
     }
 
     #endregion
