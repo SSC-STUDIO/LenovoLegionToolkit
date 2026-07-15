@@ -3739,4 +3739,292 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   <data name="SaveButton" xml:space="preserve">
     <value>Guardar</value>
   </data>
+  <data name="AppNotificationHost_AccessibleName" xml:space="preserve">
+    <value>Notificaciones de la aplicación</value>
+  </data>
+  <data name="AppNotificationHost_Close" xml:space="preserve">
+    <value>Cerrar notificación</value>
+  </data>
+  <data name="CrashReportNotification_DetailsHeading" xml:space="preserve">
+    <value>Detalles del informe</value>
+  </data>
+  <data name="CrashReportNotification_Field_Exception" xml:space="preserve">
+    <value>Excepción</value>
+  </data>
+  <data name="CrashReportNotification_Field_Inner" xml:space="preserve">
+    <value>Interna</value>
+  </data>
+  <data name="CrashReportNotification_Field_InnerMessage" xml:space="preserve">
+    <value>Mensaje interno</value>
+  </data>
+  <data name="CrashReportNotification_Field_Message" xml:space="preserve">
+    <value>Mensaje</value>
+  </data>
+  <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
+    <value>Seguimiento de pila</value>
+  </data>
+  <data name="CrashReportNotification_Field_Time" xml:space="preserve">
+    <value>Hora</value>
+  </data>
+  <data name="CrashReportNotification_Field_Uptime" xml:space="preserve">
+    <value>Tiempo de actividad</value>
+  </data>
+  <data name="CrashReportNotification_Field_Version" xml:space="preserve">
+    <value>Versión</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyLinkUnavailable" xml:space="preserve">
+    <value>No se pudo abrir la página de soporte de Lenovo. Compruebe su red o inténtelo de nuevo más tarde.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>Confirmar guarda esta elección y continúa. Omitir por ahora mantiene el modo básico y lo muestra una vez más en el próximo inicio.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>Modo básico (solo plugins y optimización)</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>Perfil básico: plugins, optimización del sistema, idioma y tema. Los controles de hardware permanecen ocultos.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — básico</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>Hardware completo: modos de energía, sensores, ventiladores y controles Lenovo cuando el firmware los expone.</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — hardware completo</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>Confirmar guarda este perfil y continúa. Omitir por ahora mantiene el valor predeterminado y puede volver a preguntar en el próximo inicio. Esto no reinicia Windows.</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0} (recomendado)</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>Perfil del dispositivo (pack)</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>Omitir por ahora</value>
+  </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>Configuración del dispositivo</value>
+  </data>
+  <data name="FanCurveControl_FanSpeedMax" xml:space="preserve">
+    <value>100%</value>
+  </data>
+  <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
+    <value>Las extensiones de plugins están desactivadas de forma predeterminada. Actívelas en Ajustes → Elementos de navegación.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlHeading" xml:space="preserve">
+    <value>Control</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlSubtitle" xml:space="preserve">
+    <value>Aceleración local opcional. Desactivada de forma predeterminada: nunca se inicia automáticamente al arrancar.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DangerZoneHeading" xml:space="preserve">
+    <value>Zona de peligro</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
+    <value>Worker del proxy</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
+    <value>No encontrado</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
+    <value>Listo</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Doh" xml:space="preserve">
+    <value>DoH</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
+    <value>Puerta de enlace</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
+    <value>Puerto del proxy de loopback</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
+    <value>Correcto</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
+    <value>Diagnósticos</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
+    <value>Aceleración</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
+    <value>No accesible</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsCancelled" xml:space="preserve">
+    <value>Diagnósticos cancelados.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHint" xml:space="preserve">
+    <value>Comprobaciones locales rápidas solo cuando las solicite.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainCountFormat" xml:space="preserve">
+    <value>{0} dominios</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainDisabled" xml:space="preserve">
+    <value>Desactivado</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainEnabled" xml:space="preserve">
+    <value>Habilitado</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
+    <value>Solo listas estáticas auditadas: sin descarga remota de reglas. Reinicie la aceleración tras cambiar los grupos.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
+    <value>Solo se aplican los grupos habilitados mediante PAC (proxy del sistema). Todos los grupos permanecen desactivados de forma predeterminada.</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
+    <value>Desbloquea la selección de modo y el inicio manual. No cambia el proxy del sistema hasta que inicie.</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledDetail" xml:space="preserve">
+    <value>Hosts→127.0.0.1 no está disponible hasta que exista un origen TLS local. Elija Proxy del sistema o Solo diagnósticos.</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledNote" xml:space="preserve">
+    <value>Modo Hosts desactivado: use el proxy del sistema</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Connections" xml:space="preserve">
+    <value>Conexiones</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Download" xml:space="preserve">
+    <value>Descarga</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Latency" xml:space="preserve">
+    <value>Latencia</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Rules" xml:space="preserve">
+    <value>Reglas activas</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Unavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Upload" xml:space="preserve">
+    <value>Carga</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricsHeading" xml:space="preserve">
+    <value>Resumen</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Ms" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Rate" xml:space="preserve">
+    <value>KB/s</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
+    <value>Solo diagnósticos (sin cambios del sistema)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
+    <value>Reescritura de Hosts (reservado / desactivado)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_SystemProxy" xml:space="preserve">
+    <value>Proxy del sistema (PAC / proxy local)</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
+    <value>Elija Proxy del sistema (PAC) o Solo diagnósticos. La reescritura de Hosts está reservada hasta que exista un origen TLS local.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
+    <value>Solo diagnósticos</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_HostsDisabled" xml:space="preserve">
+    <value>Hosts desactivado</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
+    <value>Proxy del sistema</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
+    <value>Restaura el proxy del sistema y los cambios de Hosts marcados por UDT desde la última instantánea. No vuelve a habilitar la aceleración.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Retry" xml:space="preserve">
+    <value>Reintentar</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunningDiagnostics" xml:space="preserve">
+    <value>Ejecutando diagnósticos…</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
+    <value>Acciones de selección de grupos de dominios</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountFormat" xml:space="preserve">
+    <value>{0} elementos seleccionados</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountZero" xml:space="preserve">
+    <value>0 elementos seleccionados</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
+    <value>Marcar favoritos seleccionados</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
+    <value>Fijar o desfijar los grupos de dominios seleccionados (los favoritos se ordenan primero)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
+    <value>Clic para seleccionar grupos · doble clic para habilitar/deshabilitar · use la barra para marcar favoritos o iniciar la selección.</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
+    <value>Iniciar selección</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
+    <value>Habilitar los grupos seleccionados e iniciar la aceleración de red</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
+    <value>Conectado</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Failed" xml:space="preserve">
+    <value>Error al iniciar</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Idle" xml:space="preserve">
+    <value>No iniciado</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Restoring" xml:space="preserve">
+    <value>Restaurando…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Starting" xml:space="preserve">
+    <value>Iniciando…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Stopping" xml:space="preserve">
+    <value>Deteniendo…</value>
+  </data>
+  <data name="NetworkAccelerationPage_TargetsHeading" xml:space="preserve">
+    <value>Destinos de aceleración</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Message" xml:space="preserve">
+    <value>Reproducir un sonido breve del sistema cuando aparezca un toast.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Title" xml:space="preserve">
+    <value>Sonido de notificación</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Message" xml:space="preserve">
+    <value>Mostrar toasts cuando se instalen plugins, se apliquen optimizaciones o finalice la limpieza. La posición permanece abajo a la derecha.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Title" xml:space="preserve">
+    <value>Notificaciones de éxito</value>
+  </data>
+  <data name="PluginExtensionsPage_FetchTimeoutMessage" xml:space="preserve">
+    <value>La solicitud a la tienda agotó el tiempo de espera. Los plugins instalados siguen disponibles.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreRetry" xml:space="preserve">
+    <value>Reintentar</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreTimeoutTitle" xml:space="preserve">
+    <value>Tiempo de espera de la tienda de plugins agotado</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableMessage" xml:space="preserve">
+    <value>Los plugins instalados siguen disponibles. Reintente cuando la red vuelva a estar disponible.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableTitle" xml:space="preserve">
+    <value>Tienda de plugins no disponible</value>
+  </data>
+  <data name="SensorsControl_Details" xml:space="preserve">
+    <value>Detalles del sensor</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
+    <value>Se liberaron {0}. {1} correctos, {2} con error.</value>
+  </data>
 </root>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Plugin_Error_DependencyResolution_Circular" xml:space="preserve">
+    <value>循環依存が検出されました: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Unresolved" xml:space="preserve">
+    <value>次の依存関係を解決できませんでした: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_VersionConflict" xml:space="preserve">
+    <value>次のバージョン競合が検出されました: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Failed" xml:space="preserve">
+    <value>依存関係の解決エラー: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_NotFound" xml:space="preserve">
+    <value>プラグインのサンドボックスが見つかりません: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_ResourceLimit" xml:space="preserve">
+    <value>リソース制限を超えました</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_OperationTimeout" xml:space="preserve">
+    <value>操作がタイムアウトしました</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_Violation" xml:space="preserve">
+    <value>サンドボックス違反: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Disabled" xml:space="preserve">
+    <value>検証は無効です</value>
+  </data>
+  <data name="Plugin_Error_Signature_FileNotFound" xml:space="preserve">
+    <value>プラグイン ファイルが見つかりません: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_TrustedPackage" xml:space="preserve">
+    <value>プラグインは署名されていません。信頼済みオンライン パッケージのハッシュと一致するため許可されます。</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_AllowUnsigned" xml:space="preserve">
+    <value>プラグインは署名されていません。ポリシーにより許可されます。</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_Required" xml:space="preserve">
+    <value>プラグインは署名されていません。ポリシーにより署名が必要です。</value>
+  </data>
+  <data name="Plugin_Error_Signature_ValidationFailed" xml:space="preserve">
+    <value>検証エラー: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Expired" xml:space="preserve">
+    <value>証明書の有効期限が切れました: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotYetValid" xml:space="preserve">
+    <value>証明書は {0} まで無効です</value>
+  </data>
+  <data name="Plugin_Error_Signature_ChainFailed" xml:space="preserve">
+    <value>証明書チェーンの検証に失敗しました: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_TestCertificate" xml:space="preserve">
+    <value>証明書チェーンの検証に成功しました（テスト証明書を許可）</value>
+  </data>
+  <data name="Plugin_Error_Signature_CertificateError" xml:space="preserve">
+    <value>証明書の検証エラー: {0}</value>
+  </data>
+  <data name="Plugin_Error_Repository_Deserialize" xml:space="preserve">
+    <value>プラグイン ストアの応答の逆シリアル化に失敗しました。</value>
+  </data>
+  <data name="Plugin_Error_Repository_HostIncompatible" xml:space="preserve">
+    <value>プラグイン {0} には Universal Device Toolkit {1} 以降が必要です。</value>
+  </data>
+  <data name="Plugin_Error_Repository_DownloadFailed" xml:space="preserve">
+    <value>{0} のダウンロードに失敗しました</value>
+  </data>
+  <data name="Plugin_Error_Repository_NotLoadable" xml:space="preserve">
+    <value>プラグイン {0} はディスクにインストールされましたが、ホストで読み込めませんでした。</value>
+  </data>
+  <data name="Plugin_Error_Repository_FetchFailed" xml:space="preserve">
+    <value>既知のすべての URL からプラグイン ストアのメタデータを取得できませんでした。</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_InvalidPluginId" xml:space="preserve">
+    <value>プラグイン ID を null または空にすることはできません</value>
+  </data>
+  <data name="Plugin_Error_Repository_PathTraversal" xml:space="preserve">
+    <value>Zip エントリ '{0}' がパストラバーサルを試行しています。</value>
+  </data>
+</root>

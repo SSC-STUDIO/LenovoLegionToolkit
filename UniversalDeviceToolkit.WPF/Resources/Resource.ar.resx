@@ -3734,4 +3734,292 @@
   <data name="SaveButton" xml:space="preserve">
     <value>حفظ</value>
   </data>
+  <data name="AppNotificationHost_AccessibleName" xml:space="preserve">
+    <value>إشعارات التطبيق</value>
+  </data>
+  <data name="AppNotificationHost_Close" xml:space="preserve">
+    <value>إغلاق الإشعار</value>
+  </data>
+  <data name="CrashReportNotification_DetailsHeading" xml:space="preserve">
+    <value>تفاصيل التقرير</value>
+  </data>
+  <data name="CrashReportNotification_Field_Exception" xml:space="preserve">
+    <value>الاستثناء</value>
+  </data>
+  <data name="CrashReportNotification_Field_Inner" xml:space="preserve">
+    <value>داخلي</value>
+  </data>
+  <data name="CrashReportNotification_Field_InnerMessage" xml:space="preserve">
+    <value>الرسالة الداخلية</value>
+  </data>
+  <data name="CrashReportNotification_Field_Message" xml:space="preserve">
+    <value>الرسالة</value>
+  </data>
+  <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
+    <value>تتبع المكدس</value>
+  </data>
+  <data name="CrashReportNotification_Field_Time" xml:space="preserve">
+    <value>الوقت</value>
+  </data>
+  <data name="CrashReportNotification_Field_Uptime" xml:space="preserve">
+    <value>مدة التشغيل</value>
+  </data>
+  <data name="CrashReportNotification_Field_Version" xml:space="preserve">
+    <value>الإصدار</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyLinkUnavailable" xml:space="preserve">
+    <value>تعذّر فتح صفحة دعم Lenovo. تحقق من الشبكة أو حاول لاحقًا.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>«تأكيد» يحفظ هذا الاختيار ويتابع. «تخطٍّ الآن» يُبقي الوضع الأساسي ويعرض هذا مرة أخرى عند التشغيل التالي.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>الوضع الأساسي (الإضافات والتحسين فقط)</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>ملف أساسي: الإضافات وتحسين النظام واللغة والمظهر. تظل عناصر التحكم بالأجهزة مخفية.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — أساسي</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>تأكيد</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>أجهزة كاملة: أوضاع الطاقة والمستشعرات والمراوح وعناصر تحكم Lenovo عندما تتيحها البرامج الثابتة.</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — أجهزة كاملة</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>«تأكيد» يحفظ هذا الملف ويتابع. «تخطٍّ الآن» يُبقي الافتراضي وقد يسأل مجددًا عند التشغيل التالي. لا يعيد تشغيل Windows.</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0} (موصى به)</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>ملف الجهاز (الحزمة)</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>تخطٍّ الآن</value>
+  </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>إعداد الجهاز</value>
+  </data>
+  <data name="FanCurveControl_FanSpeedMax" xml:space="preserve">
+    <value>100%</value>
+  </data>
+  <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
+    <value>ملحقات الإضافات معطّلة افتراضيًا. فعّلها من الإعدادات ← عناصر التنقل.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlHeading" xml:space="preserve">
+    <value>التحكم</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlSubtitle" xml:space="preserve">
+    <value>تسريع محلي اختياري. معطّل افتراضيًا — لا يبدأ تلقائيًا عند التشغيل.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DangerZoneHeading" xml:space="preserve">
+    <value>منطقة الخطر</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
+    <value>عامل الوكيل</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
+    <value>غير موجود</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
+    <value>جاهز</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Doh" xml:space="preserve">
+    <value>DoH</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
+    <value>البوابة</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
+    <value>منفذ وكيل loopback</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
+    <value>موافق</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
+    <value>التشخيص</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
+    <value>التسريع</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
+    <value>غير قابل للوصول</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsCancelled" xml:space="preserve">
+    <value>تم إلغاء التشخيص.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHint" xml:space="preserve">
+    <value>فحوصات محلية سريعة فقط عند الطلب.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainCountFormat" xml:space="preserve">
+    <value>{0} نطاقات</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainDisabled" xml:space="preserve">
+    <value>إيقاف</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainEnabled" xml:space="preserve">
+    <value>مفعّل</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
+    <value>قوائم ثابتة مُدقّقة فقط — بلا تنزيل قواعد عن بُعد. أعد تشغيل التسريع بعد تغيير المجموعات.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
+    <value>تُطبَّق المجموعات المفعّلة فقط عبر PAC (وكيل النظام). تبقى كل المجموعات معطّلة افتراضيًا.</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
+    <value>يفتح اختيار الوضع والبدء اليدوي. لا يغيّر وكيل النظام حتى تبدأ.</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledDetail" xml:space="preserve">
+    <value>Hosts→127.0.0.1 غير متاح حتى يوجد مصدر TLS محلي. اختر وكيل النظام أو التشخيص فقط.</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledNote" xml:space="preserve">
+    <value>وضع Hosts معطّل — استخدم وكيل النظام</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Connections" xml:space="preserve">
+    <value>الاتصالات</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Download" xml:space="preserve">
+    <value>التنزيل</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Latency" xml:space="preserve">
+    <value>زمن الاستجابة</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Rules" xml:space="preserve">
+    <value>القواعد النشطة</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Unavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Upload" xml:space="preserve">
+    <value>الرفع</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricsHeading" xml:space="preserve">
+    <value>نظرة عامة</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Ms" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Rate" xml:space="preserve">
+    <value>KB/s</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
+    <value>التشخيص فقط (بدون تغييرات على النظام)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
+    <value>إعادة كتابة Hosts (محجوز / معطّل)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_SystemProxy" xml:space="preserve">
+    <value>وكيل النظام (PAC / وكيل محلي)</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
+    <value>اختر وكيل النظام (PAC) أو التشخيص فقط. إعادة كتابة Hosts محجوزة حتى يتوفر مصدر TLS محلي.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
+    <value>التشخيص فقط</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_HostsDisabled" xml:space="preserve">
+    <value>Hosts معطّل</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
+    <value>وكيل النظام</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
+    <value>يستعيد وكيل النظام وتغييرات Hosts الموسومة بـ UDT من آخر لقطة. لا يعيد تفعيل التسريع.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Retry" xml:space="preserve">
+    <value>إعادة المحاولة</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunningDiagnostics" xml:space="preserve">
+    <value>جاري تشغيل التشخيص…</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
+    <value>إجراءات تحديد مجموعات النطاقات</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountFormat" xml:space="preserve">
+    <value>تم تحديد {0} عناصر</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountZero" xml:space="preserve">
+    <value>تم تحديد 0 عناصر</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
+    <value>تفضيل المحدد</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
+    <value>تثبيت أو إلغاء تثبيت مجموعات النطاقات المحددة (المفضلة تظهر أولًا)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
+    <value>انقر لتحديد المجموعات · انقر نقرًا مزدوجًا للتفعيل/التعطيل · استخدم الشريط للتفضيل أو بدء المحدد.</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
+    <value>بدء المحدد</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
+    <value>تفعيل المجموعات المحددة وبدء تسريع الشبكة</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
+    <value>متصل</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Failed" xml:space="preserve">
+    <value>فشل البدء</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Idle" xml:space="preserve">
+    <value>لم يبدأ</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Restoring" xml:space="preserve">
+    <value>جاري الاستعادة…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Starting" xml:space="preserve">
+    <value>جاري البدء…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Stopping" xml:space="preserve">
+    <value>جاري الإيقاف…</value>
+  </data>
+  <data name="NetworkAccelerationPage_TargetsHeading" xml:space="preserve">
+    <value>أهداف التسريع</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Message" xml:space="preserve">
+    <value>تشغيل صوت نظام قصير عند ظهور إشعار toast.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Title" xml:space="preserve">
+    <value>صوت الإشعار</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Message" xml:space="preserve">
+    <value>عرض إشعارات toast عند تثبيت الإضافات أو تطبيق التحسينات أو اكتمال التنظيف. الموضع يبقى أسفل اليمين.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Title" xml:space="preserve">
+    <value>إشعارات النجاح</value>
+  </data>
+  <data name="PluginExtensionsPage_FetchTimeoutMessage" xml:space="preserve">
+    <value>انتهت مهلة طلب المتجر. الإضافات المثبتة ما زالت متاحة.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreRetry" xml:space="preserve">
+    <value>إعادة المحاولة</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreTimeoutTitle" xml:space="preserve">
+    <value>انتهت مهلة متجر الإضافات</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableMessage" xml:space="preserve">
+    <value>تظل الإضافات المثبتة متاحة. أعد المحاولة عند عودة الشبكة.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableTitle" xml:space="preserve">
+    <value>متجر الإضافات غير متاح</value>
+  </data>
+  <data name="SensorsControl_Details" xml:space="preserve">
+    <value>تفاصيل المستشعر</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
+    <value>تم تحرير {0}. نجح {1}، فشل {2}.</value>
+  </data>
 </root>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Plugin_Error_DependencyResolution_Circular" xml:space="preserve">
+    <value>Körkörös függőségek észlelve: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Unresolved" xml:space="preserve">
+    <value>Nem sikerült feloldani a függőségeket: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_VersionConflict" xml:space="preserve">
+    <value>Verzióütközések észlelve: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Failed" xml:space="preserve">
+    <value>Függőségfeloldási hiba: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_NotFound" xml:space="preserve">
+    <value>A bővítmény sandboxa nem található: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_ResourceLimit" xml:space="preserve">
+    <value>Erőforráskorlát túllépve</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_OperationTimeout" xml:space="preserve">
+    <value>A művelet időtúllépése</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_Violation" xml:space="preserve">
+    <value>Sandbox-sértés: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Disabled" xml:space="preserve">
+    <value>Az ellenőrzés le van tiltva</value>
+  </data>
+  <data name="Plugin_Error_Signature_FileNotFound" xml:space="preserve">
+    <value>A bővítményfájl nem található: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_TrustedPackage" xml:space="preserve">
+    <value>A bővítmény nincs aláírva. Engedélyezve, mert egy megbízható online csomag hash-ével egyezik.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_AllowUnsigned" xml:space="preserve">
+    <value>A bővítmény nincs aláírva. A házirend szerint engedélyezve.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_Required" xml:space="preserve">
+    <value>A bővítmény nincs aláírva. A házirend szerint aláírás szükséges.</value>
+  </data>
+  <data name="Plugin_Error_Signature_ValidationFailed" xml:space="preserve">
+    <value>Ellenőrzési hiba: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Expired" xml:space="preserve">
+    <value>A tanúsítvány lejárt ekkor: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotYetValid" xml:space="preserve">
+    <value>A tanúsítvány eddig nem érvényes: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_ChainFailed" xml:space="preserve">
+    <value>A tanúsítványlánc ellenőrzése sikertelen: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_TestCertificate" xml:space="preserve">
+    <value>A tanúsítványlánc ellenőrzése sikeres (teszttanúsítvány engedélyezve)</value>
+  </data>
+  <data name="Plugin_Error_Signature_CertificateError" xml:space="preserve">
+    <value>Tanúsítványellenőrzési hiba: {0}</value>
+  </data>
+  <data name="Plugin_Error_Repository_Deserialize" xml:space="preserve">
+    <value>A bővítményáruház válaszának deszerializálása sikertelen.</value>
+  </data>
+  <data name="Plugin_Error_Repository_HostIncompatible" xml:space="preserve">
+    <value>A(z) {0} bővítmény Universal Device Toolkit {1} vagy újabb verziót igényel.</value>
+  </data>
+  <data name="Plugin_Error_Repository_DownloadFailed" xml:space="preserve">
+    <value>A(z) {0} letöltése sikertelen</value>
+  </data>
+  <data name="Plugin_Error_Repository_NotLoadable" xml:space="preserve">
+    <value>A(z) {0} bővítmény telepítve van a lemezre, de a gazdaalkalmazás nem tudta betölteni.</value>
+  </data>
+  <data name="Plugin_Error_Repository_FetchFailed" xml:space="preserve">
+    <value>Nem sikerült a bővítményáruház metaadatainak lekérése az összes ismert URL-ről.</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_InvalidPluginId" xml:space="preserve">
+    <value>A bővítményazonosító nem lehet null vagy üres</value>
+  </data>
+  <data name="Plugin_Error_Repository_PathTraversal" xml:space="preserve">
+    <value>A(z) '{0}' zip-bejegyzés útvonalbejárást kísérel meg.</value>
+  </data>
+</root>

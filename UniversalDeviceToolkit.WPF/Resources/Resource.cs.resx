@@ -3789,4 +3789,292 @@ Vyžaduje restart.</value>
   <data name="SaveButton" xml:space="preserve">
     <value>Uložit</value>
   </data>
+  <data name="AppNotificationHost_AccessibleName" xml:space="preserve">
+    <value>Oznámení aplikace</value>
+  </data>
+  <data name="AppNotificationHost_Close" xml:space="preserve">
+    <value>Zavřít oznámení</value>
+  </data>
+  <data name="CrashReportNotification_DetailsHeading" xml:space="preserve">
+    <value>Podrobnosti hlášení</value>
+  </data>
+  <data name="CrashReportNotification_Field_Exception" xml:space="preserve">
+    <value>Výjimka</value>
+  </data>
+  <data name="CrashReportNotification_Field_Inner" xml:space="preserve">
+    <value>Vnitřní</value>
+  </data>
+  <data name="CrashReportNotification_Field_InnerMessage" xml:space="preserve">
+    <value>Vnitřní zpráva</value>
+  </data>
+  <data name="CrashReportNotification_Field_Message" xml:space="preserve">
+    <value>Zpráva</value>
+  </data>
+  <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
+    <value>Trasování zásobníku</value>
+  </data>
+  <data name="CrashReportNotification_Field_Time" xml:space="preserve">
+    <value>Čas</value>
+  </data>
+  <data name="CrashReportNotification_Field_Uptime" xml:space="preserve">
+    <value>Doba běhu</value>
+  </data>
+  <data name="CrashReportNotification_Field_Version" xml:space="preserve">
+    <value>Verze</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyLinkUnavailable" xml:space="preserve">
+    <value>Nepodařilo se otevřít stránku podpory Lenovo. Zkontrolujte síť nebo to zkuste znovu později.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>Potvrzení uloží tuto volbu a pokračuje. Přeskočit zatím ponechá základní režim a při příštím spuštění se zobrazí znovu.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>Základní režim (pouze pluginy a optimalizace)</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>Základní profil: pluginy, optimalizace systému, jazyk a motiv. Hardwarové ovládací prvky zůstanou skryté.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — základní</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>Potvrdit</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>Plný hardware: režimy napájení, senzory, ventilátory a ovládání Lenovo, pokud je firmware poskytuje.</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — plný hardware</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>Potvrzení uloží tento profil a pokračuje. Přeskočit zatím ponechá výchozí a může se znovu zeptat při příštím spuštění. Tím se Windows nerestartuje.</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0} (doporučeno)</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>Profil zařízení (sada)</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>Přeskočit zatím</value>
+  </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>Nastavení zařízení</value>
+  </data>
+  <data name="FanCurveControl_FanSpeedMax" xml:space="preserve">
+    <value>100%</value>
+  </data>
+  <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
+    <value>Rozšíření pluginů je ve výchozím stavu vypnuto. Povolte je v Nastavení → Položky navigace.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlHeading" xml:space="preserve">
+    <value>Ovládání</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlSubtitle" xml:space="preserve">
+    <value>Volitelná místní akcelerace. Ve výchozím stavu vypnuto — při spuštění se nikdy nespouští automaticky.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DangerZoneHeading" xml:space="preserve">
+    <value>Nebezpečná zóna</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
+    <value>Proxy worker</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
+    <value>Nenalezeno</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
+    <value>Připraveno</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Doh" xml:space="preserve">
+    <value>DoH</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
+    <value>Brána</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
+    <value>Port loopback proxy</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
+    <value>Diagnostika</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
+    <value>Akcelerace</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
+    <value>Nedostupné</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsCancelled" xml:space="preserve">
+    <value>Diagnostika zrušena.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHint" xml:space="preserve">
+    <value>Rychlé místní kontroly pouze na vyžádání.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainCountFormat" xml:space="preserve">
+    <value>{0} domén</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainDisabled" xml:space="preserve">
+    <value>Vyp.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainEnabled" xml:space="preserve">
+    <value>Zapnuto</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
+    <value>Pouze statické auditované seznamy — bez stahování vzdálených pravidel. Po změně skupin znovu spusťte akceleraci.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
+    <value>PAC (systémový proxy) používá pouze zapnuté skupiny. Všechny skupiny jsou ve výchozím stavu vypnuté.</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
+    <value>Odemkne výběr režimu a ruční Spustit. Systémový proxy se do spuštění nezmění.</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledDetail" xml:space="preserve">
+    <value>Hosts→127.0.0.1 není k dispozici, dokud neexistuje místní TLS origin. Zvolte System proxy nebo pouze diagnostiku.</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledNote" xml:space="preserve">
+    <value>Režim Hosts vypnut — použijte System proxy</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Connections" xml:space="preserve">
+    <value>Připojení</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Download" xml:space="preserve">
+    <value>Stahování</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Latency" xml:space="preserve">
+    <value>Latence</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Rules" xml:space="preserve">
+    <value>Aktivní pravidla</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Unavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Upload" xml:space="preserve">
+    <value>Odesílání</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricsHeading" xml:space="preserve">
+    <value>Přehled</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Ms" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Rate" xml:space="preserve">
+    <value>KB/s</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
+    <value>Pouze diagnostika (bez změn systému)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
+    <value>Přepis Hosts (vyhrazeno / vypnuto)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_SystemProxy" xml:space="preserve">
+    <value>System proxy (PAC / místní proxy)</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
+    <value>Zvolte System proxy (PAC) nebo pouze diagnostiku. Přepis Hosts je vyhrazen, dokud neexistuje místní TLS origin.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
+    <value>Pouze diagnostika</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_HostsDisabled" xml:space="preserve">
+    <value>Hosts vypnuto</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
+    <value>System proxy</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
+    <value>Obnoví systémový proxy a změny Hosts označené UDT z posledního snímku. Akceleraci znovu nezapne.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Retry" xml:space="preserve">
+    <value>Zkusit znovu</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunningDiagnostics" xml:space="preserve">
+    <value>Probíhá diagnostika…</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
+    <value>Akce výběru skupin domén</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountFormat" xml:space="preserve">
+    <value>Vybráno položek: {0}</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountZero" xml:space="preserve">
+    <value>Vybráno položek: 0</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
+    <value>Oblíbené vybrané</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
+    <value>Připnout nebo odepnout vybrané skupiny domén (oblíbené se řadí první)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
+    <value>Kliknutím vyberte skupiny · dvojklikem zapněte/vypněte · lištou označte oblíbené nebo spusťte vybrané.</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
+    <value>Spustit vybrané</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
+    <value>Zapne vybrané skupiny a spustí síťovou akceleraci</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
+    <value>Připojeno</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Failed" xml:space="preserve">
+    <value>Spuštění selhalo</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Idle" xml:space="preserve">
+    <value>Nespouštěno</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Restoring" xml:space="preserve">
+    <value>Obnovování…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Starting" xml:space="preserve">
+    <value>Spouštění…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Stopping" xml:space="preserve">
+    <value>Zastavování…</value>
+  </data>
+  <data name="NetworkAccelerationPage_TargetsHeading" xml:space="preserve">
+    <value>Cíle akcelerace</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Message" xml:space="preserve">
+    <value>Přehrát krátký systémový zvuk při zobrazení toastu.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Title" xml:space="preserve">
+    <value>Zvuk oznámení</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Message" xml:space="preserve">
+    <value>Zobrazit toast při instalaci pluginů, použití optimalizací nebo dokončení úklidu. Pozice zůstává vpravo dole.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Title" xml:space="preserve">
+    <value>Oznámení o úspěchu</value>
+  </data>
+  <data name="PluginExtensionsPage_FetchTimeoutMessage" xml:space="preserve">
+    <value>Požadavek na obchod vypršel. Nainstalované pluginy jsou stále k dispozici.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreRetry" xml:space="preserve">
+    <value>Zkusit znovu</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreTimeoutTitle" xml:space="preserve">
+    <value>Vypršel čas obchodu pluginů</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableMessage" xml:space="preserve">
+    <value>Nainstalované pluginy zůstávají k dispozici. Zkuste znovu, až bude síť dostupná.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableTitle" xml:space="preserve">
+    <value>Obchod pluginů nedostupný</value>
+  </data>
+  <data name="SensorsControl_Details" xml:space="preserve">
+    <value>Podrobnosti senzoru</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
+    <value>Uvolněno {0}. Úspěšných: {1}, neúspěšných: {2}.</value>
+  </data>
 </root>

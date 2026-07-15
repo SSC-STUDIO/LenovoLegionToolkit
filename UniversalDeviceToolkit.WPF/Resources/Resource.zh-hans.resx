@@ -64,7 +64,7 @@
     <value>应用并关闭</value>
   </data>
   <data name="AutomationPage_ActionsEnable_Message" xml:space="preserve">
-    <value>只有在本程序运行时，自动化才可生效。</value>
+    <value>Universal Device Toolkit 必须处于运行状态，自动操作才能生效。</value>
   </data>
   <data name="AutomationPage_ActionsEnabled_Title" xml:space="preserve">
     <value>启用自动化</value>
@@ -398,7 +398,7 @@ CPU/GPU 性能。
     <value>取消选择某个刷新率你在使用 Fn + R 快捷键时不想使用的刷新率。</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Message" xml:space="preserve">
-    <value>请确保笔记本屏幕已打开，否则本软件无法获取刷新率信息。</value>
+    <value>请确保笔记本屏幕已打开。Universal Device Toolkit 无法获取未开启显示器的刷新率信息。</value>
   </data>
   <data name="ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title" xml:space="preserve">
     <value>未发现可调节刷新率</value>
@@ -2633,7 +2633,7 @@ Fn 将会暂时解除锁定。</value>
     <value>不重复</value>
   </data>
   <data name="MacroPage_Enable_Subtitle" xml:space="preserve">
-    <value>只有在本程序运行时，宏才能生效。</value>
+    <value>Universal Device Toolkit 必须处于运行状态，宏才能生效。</value>
   </data>
   <data name="MacroPage_Enable_Title" xml:space="preserve">
     <value>启用宏</value>
@@ -2747,10 +2747,7 @@ Fn 将会暂时解除锁定。</value>
     <value>本次会话已禁用更新检查</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>应用程序启动时带有 {0} 参数。
-本次会话中自动和手动更新检查
-以及下方更新设置都会禁用；
-去掉该启动参数后重新启动即可恢复。</value>
+    <value>Universal Device Toolkit 启动时带有 {0} 参数。在去掉该启动参数并重新启动之前，本次会话中的自动和手动更新检查以及下方更新设置都会被禁用。</value>
   </data>
   <data name="MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message" xml:space="preserve">
     <value>已达到 API 访问频率上限，请稍后再试。</value>
@@ -2862,7 +2859,7 @@ Fn 将会暂时解除锁定。</value>
     <value>设备包：基础模式</value>
   </data>
   <data name="DeviceSetupWindow_MatchingPackSummary" xml:space="preserve">
-    <value>通用设备工具包已找到匹配的设备包。请确认应用，或在自动识别有误时选择其他配置文件。</value>
+    <value>Universal Device Toolkit 已找到匹配的设备包。请确认应用，或在自动识别有误时选择其他配置文件。</value>
   </data>
   <data name="DeviceSetupWindow_DevicePackFormat" xml:space="preserve">
     <value>设备包：{0}</value>
@@ -3027,7 +3024,7 @@ Fn 将会暂时解除锁定。</value>
     <value>没有可用的插件</value>
   </data>
   <data name="PluginExtensionsPage_EmptyStoreMessage" xml:space="preserve">
-    <value>插件商城目前为空，敬请期待未来的插件更新</value>
+    <value>插件商城目前为空，敬请期待未来的插件更新。</value>
   </data>
   <data name="PluginExtensionsPage_Configure" xml:space="preserve">
     <value>配置</value>
@@ -3045,7 +3042,7 @@ Fn 将会暂时解除锁定。</value>
     <value>批量导入</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportTooltip" xml:space="preserve">
-    <value>从本地ZIP文件导入插件</value>
+    <value>从本地 ZIP 文件导入插件</value>
   </data>
   <data name="PluginExtensionsPage_ImportFromFiles" xml:space="preserve">
     <value>从文件导入</value>
@@ -3063,7 +3060,7 @@ Fn 将会暂时解除锁定。</value>
     <value>批量导入失败</value>
   </data>
   <data name="PluginExtensionsPage_BulkImportFailedMessage" xml:space="preserve">
-    <value>无法导入插件: {0}</value>
+    <value>无法导入插件：{0}</value>
   </data>
   <data name="PluginExtensionsPage_ImportProgress" xml:space="preserve">
     <value>正在导入插件...</value>
@@ -3078,7 +3075,7 @@ Fn 将会暂时解除锁定。</value>
     <value>安装失败</value>
   </data>
   <data name="PluginExtensionsPage_InstallFailedMessage" xml:space="preserve">
-    <value>无法安装插件: {0}</value>
+    <value>无法安装插件：{0}</value>
   </data>
   <data name="PluginExtensionsPage_UninstallSuccess" xml:space="preserve">
     <value>插件卸载成功</value>
@@ -3090,7 +3087,7 @@ Fn 将会暂时解除锁定。</value>
     <value>卸载失败</value>
   </data>
   <data name="PluginExtensionsPage_UninstallFailedMessage" xml:space="preserve">
-    <value>无法卸载插件: {0}</value>
+    <value>无法卸载插件：{0}</value>
   </data>
   <data name="PluginExtensionsPage_OpenFailed" xml:space="preserve">
     <value>打开失败</value>

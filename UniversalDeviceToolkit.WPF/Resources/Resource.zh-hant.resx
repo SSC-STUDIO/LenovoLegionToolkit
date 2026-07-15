@@ -3757,4 +3757,277 @@
   <data name="SaveButton" xml:space="preserve">
     <value>儲存</value>
   </data>
+  <data name="AppNotificationHost_AccessibleName" xml:space="preserve">
+    <value>應用通知</value>
+  </data>
+  <data name="AppNotificationHost_Close" xml:space="preserve">
+    <value>關閉通知</value>
+  </data>
+  <data name="CrashReportNotification_DetailsHeading" xml:space="preserve">
+    <value>報告詳情</value>
+  </data>
+  <data name="CrashReportNotification_Field_Exception" xml:space="preserve">
+    <value>異常</value>
+  </data>
+  <data name="CrashReportNotification_Field_Inner" xml:space="preserve">
+    <value>內部異常</value>
+  </data>
+  <data name="CrashReportNotification_Field_InnerMessage" xml:space="preserve">
+    <value>內部訊息</value>
+  </data>
+  <data name="CrashReportNotification_Field_Message" xml:space="preserve">
+    <value>訊息</value>
+  </data>
+  <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
+    <value>堆疊追蹤</value>
+  </data>
+  <data name="CrashReportNotification_Field_Time" xml:space="preserve">
+    <value>時間</value>
+  </data>
+  <data name="CrashReportNotification_Field_Uptime" xml:space="preserve">
+    <value>執行時間</value>
+  </data>
+  <data name="CrashReportNotification_Field_Version" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="DeviceInformationWindow_WarrantyLinkUnavailable" xml:space="preserve">
+    <value>無法開啟聯想服務頁面。請檢查網絡後重試。</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>基礎模式（僅插件與系統優化）</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>基礎配置：插件、系統優化、語言與主題。硬體控件保持隱藏。</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — 基礎</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>完整硬體：在韌體支援時提供電源模式、感測器、風扇與聯想硬體控制。</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — 完整硬體</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0}（建議）</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>裝置設定檔（裝置套件）</value>
+  </data>
+  <data name="FanCurveControl_FanSpeedMax" xml:space="preserve">
+    <value>100%</value>
+  </data>
+  <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
+    <value>插件擴展預設關閉。可在「設置 → 導航項」中開啟。</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlHeading" xml:space="preserve">
+    <value>控制</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlSubtitle" xml:space="preserve">
+    <value>可選的本機加速。預設關閉 — 啟動時不會自動開啟。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DangerZoneHeading" xml:space="preserve">
+    <value>危險操作</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
+    <value>代理進程</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
+    <value>未找到</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
+    <value>就緒</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Doh" xml:space="preserve">
+    <value>DoH</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
+    <value>閘道</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
+    <value>本機代理連接埠</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
+    <value>診斷</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
+    <value>加速狀態</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
+    <value>無法連線</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsCancelled" xml:space="preserve">
+    <value>診斷已取消。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHint" xml:space="preserve">
+    <value>僅在你主動要求時執行本機快速檢查。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainCountFormat" xml:space="preserve">
+    <value>{0} 個網域</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainDisabled" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainEnabled" xml:space="preserve">
+    <value>已啟用</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
+    <value>僅使用內建靜態名單，不下載遠端規則。變更網域組後請重新啟動加速。</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
+    <value>僅啟用的網域組會進入 PAC（系統代理）。預設全部關閉。</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
+    <value>解鎖模式選擇與手動啟動。在點擊啟動前不會修改系統代理。</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledDetail" xml:space="preserve">
+    <value>在提供本機 TLS 來源之前，Hosts→127.0.0.1 無法使用。請選擇系統代理或僅診斷。</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledNote" xml:space="preserve">
+    <value>Hosts 模式已停用 — 請使用系統代理</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Ms" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Rate" xml:space="preserve">
+    <value>KB/s</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Connections" xml:space="preserve">
+    <value>連線數</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Download" xml:space="preserve">
+    <value>下載</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Latency" xml:space="preserve">
+    <value>延遲</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Rules" xml:space="preserve">
+    <value>啟用規則</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Unavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Upload" xml:space="preserve">
+    <value>上傳</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricsHeading" xml:space="preserve">
+    <value>執行概覽</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
+    <value>請選擇系統代理（PAC）或僅診斷。Hosts 改寫已預留，待本機 TLS 來源就緒後再開放。</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
+    <value>僅診斷</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_HostsDisabled" xml:space="preserve">
+    <value>Hosts 已停用</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
+    <value>系統代理</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
+    <value>僅診斷（不改系統）</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
+    <value>Hosts 改寫（預留 / 已停用）</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_SystemProxy" xml:space="preserve">
+    <value>系統代理（PAC / 本機代理）</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
+    <value>從上次快照還原系統代理與 UDT 標記的 Hosts 修改。不會重新啟用加速。</value>
+  </data>
+  <data name="NetworkAccelerationPage_Retry" xml:space="preserve">
+    <value>重試</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunningDiagnostics" xml:space="preserve">
+    <value>正在診斷…</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
+    <value>網域組選擇操作列</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountFormat" xml:space="preserve">
+    <value>已選取 {0} 個項目</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountZero" xml:space="preserve">
+    <value>已選取 0 個項目</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
+    <value>收藏所選</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
+    <value>收藏或取消收藏所選網域組（收藏項排在前面）</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
+    <value>單擊選擇網域組 · 雙擊啟用/關閉 · 底部列可收藏或啟動所選組。</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
+    <value>啟動所選</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
+    <value>啟用所選網域組並啟動網絡加速</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
+    <value>已連線</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Failed" xml:space="preserve">
+    <value>啟動失敗</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Idle" xml:space="preserve">
+    <value>未啟動</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Restoring" xml:space="preserve">
+    <value>還原中…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Starting" xml:space="preserve">
+    <value>正在啟動…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Stopping" xml:space="preserve">
+    <value>正在停止…</value>
+  </data>
+  <data name="NetworkAccelerationPage_TargetsHeading" xml:space="preserve">
+    <value>加速目標</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Message" xml:space="preserve">
+    <value>出現通知時播放短促系統提示音。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Title" xml:space="preserve">
+    <value>通知聲音</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Message" xml:space="preserve">
+    <value>在插件安裝、優化套用或清理完成時顯示提示。位置固定為右下角。</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Title" xml:space="preserve">
+    <value>成功通知</value>
+  </data>
+  <data name="PluginExtensionsPage_FetchTimeoutMessage" xml:space="preserve">
+    <value>商店請求逾時。已安裝的插件仍可使用。</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreRetry" xml:space="preserve">
+    <value>重試</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreTimeoutTitle" xml:space="preserve">
+    <value>插件商店請求逾時</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableMessage" xml:space="preserve">
+    <value>已安裝的插件仍可使用。網絡恢復後可重試。</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableTitle" xml:space="preserve">
+    <value>插件商店無法使用</value>
+  </data>
+  <data name="SensorsControl_Details" xml:space="preserve">
+    <value>感測器詳細資訊</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
+    <value>已釋放 {0}。成功 {1} 項，失敗 {2} 項。</value>
+  </data>
 </root>

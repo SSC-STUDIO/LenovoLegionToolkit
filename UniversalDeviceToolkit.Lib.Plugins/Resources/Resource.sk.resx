@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Plugin_Error_DependencyResolution_Circular" xml:space="preserve">
+    <value>Zistené kruhové závislosti: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Unresolved" xml:space="preserve">
+    <value>Nepodarilo sa vyriešiť závislosti pre: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_VersionConflict" xml:space="preserve">
+    <value>Zistené konflikty verzií pre: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Failed" xml:space="preserve">
+    <value>Chyba pri riešení závislostí: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_NotFound" xml:space="preserve">
+    <value>Sandbox pre doplnok nebol nájdený: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_ResourceLimit" xml:space="preserve">
+    <value>Prekročený limit prostriedkov</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_OperationTimeout" xml:space="preserve">
+    <value>Operácia vypršala</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_Violation" xml:space="preserve">
+    <value>Porušenie sandboxu: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Disabled" xml:space="preserve">
+    <value>Overenie je vypnuté</value>
+  </data>
+  <data name="Plugin_Error_Signature_FileNotFound" xml:space="preserve">
+    <value>Súbor doplnku nebol nájdený: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_TrustedPackage" xml:space="preserve">
+    <value>Doplnok nie je podpísaný. Povolené, pretože sa zhoduje s hašom dôveryhodného online balíka.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_AllowUnsigned" xml:space="preserve">
+    <value>Doplnok nie je podpísaný. Povolené podľa politiky.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_Required" xml:space="preserve">
+    <value>Doplnok nie je podpísaný. Podľa politiky sa vyžaduje podpis.</value>
+  </data>
+  <data name="Plugin_Error_Signature_ValidationFailed" xml:space="preserve">
+    <value>Chyba overenia: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Expired" xml:space="preserve">
+    <value>Certifikát vypršal dňa {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotYetValid" xml:space="preserve">
+    <value>Certifikát nie je platný do {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_ChainFailed" xml:space="preserve">
+    <value>Overenie reťazca certifikátov zlyhalo: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_TestCertificate" xml:space="preserve">
+    <value>Overenie reťazca certifikátov prebehlo úspešne (testovací certifikát povolený)</value>
+  </data>
+  <data name="Plugin_Error_Signature_CertificateError" xml:space="preserve">
+    <value>Chyba overenia certifikátu: {0}</value>
+  </data>
+  <data name="Plugin_Error_Repository_Deserialize" xml:space="preserve">
+    <value>Nepodarilo sa deserializovať odpoveď obchodu s doplnkami.</value>
+  </data>
+  <data name="Plugin_Error_Repository_HostIncompatible" xml:space="preserve">
+    <value>Doplnok {0} vyžaduje Universal Device Toolkit {1} alebo novší.</value>
+  </data>
+  <data name="Plugin_Error_Repository_DownloadFailed" xml:space="preserve">
+    <value>Sťahovanie {0} zlyhalo</value>
+  </data>
+  <data name="Plugin_Error_Repository_NotLoadable" xml:space="preserve">
+    <value>Doplnok {0} bol nainštalovaný na disk, ale hostiteľ ho nemohol načítať.</value>
+  </data>
+  <data name="Plugin_Error_Repository_FetchFailed" xml:space="preserve">
+    <value>Nepodarilo sa načítať metaúdaje obchodu s doplnkami zo všetkých známych adries URL.</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_InvalidPluginId" xml:space="preserve">
+    <value>ID doplnku nesmie byť null ani prázdne</value>
+  </data>
+  <data name="Plugin_Error_Repository_PathTraversal" xml:space="preserve">
+    <value>Položka Zip '{0}' sa pokúša o prechod cesty.</value>
+  </data>
+</root>

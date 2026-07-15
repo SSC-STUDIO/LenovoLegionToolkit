@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Plugin_Error_DependencyResolution_Circular" xml:space="preserve">
+    <value>Phát hiện phụ thuộc vòng: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Unresolved" xml:space="preserve">
+    <value>Không thể giải quyết phụ thuộc cho: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_VersionConflict" xml:space="preserve">
+    <value>Phát hiện xung đột phiên bản cho: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Failed" xml:space="preserve">
+    <value>Lỗi giải quyết phụ thuộc: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_NotFound" xml:space="preserve">
+    <value>Không tìm thấy sandbox cho plugin: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_ResourceLimit" xml:space="preserve">
+    <value>Đã vượt giới hạn tài nguyên</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_OperationTimeout" xml:space="preserve">
+    <value>Thao tác đã hết thời gian chờ</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_Violation" xml:space="preserve">
+    <value>Vi phạm sandbox: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Disabled" xml:space="preserve">
+    <value>Xác thực đã bị tắt</value>
+  </data>
+  <data name="Plugin_Error_Signature_FileNotFound" xml:space="preserve">
+    <value>Không tìm thấy tệp plugin: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_TrustedPackage" xml:space="preserve">
+    <value>Plugin chưa được ký. Được phép vì khớp với hàm băm gói trực tuyến đáng tin cậy.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_AllowUnsigned" xml:space="preserve">
+    <value>Plugin chưa được ký. Được phép theo chính sách.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_Required" xml:space="preserve">
+    <value>Plugin chưa được ký. Chính sách yêu cầu chữ ký.</value>
+  </data>
+  <data name="Plugin_Error_Signature_ValidationFailed" xml:space="preserve">
+    <value>Lỗi xác thực: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Expired" xml:space="preserve">
+    <value>Chứng chỉ đã hết hạn vào {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotYetValid" xml:space="preserve">
+    <value>Chứng chỉ chưa hợp lệ cho đến {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_ChainFailed" xml:space="preserve">
+    <value>Xác thực chuỗi chứng chỉ thất bại: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_TestCertificate" xml:space="preserve">
+    <value>Xác thực chuỗi chứng chỉ thành công (cho phép chứng chỉ thử nghiệm)</value>
+  </data>
+  <data name="Plugin_Error_Signature_CertificateError" xml:space="preserve">
+    <value>Lỗi xác thực chứng chỉ: {0}</value>
+  </data>
+  <data name="Plugin_Error_Repository_Deserialize" xml:space="preserve">
+    <value>Không thể giải tuần tự hóa phản hồi cửa hàng plugin.</value>
+  </data>
+  <data name="Plugin_Error_Repository_HostIncompatible" xml:space="preserve">
+    <value>Plugin {0} yêu cầu Universal Device Toolkit {1} trở lên.</value>
+  </data>
+  <data name="Plugin_Error_Repository_DownloadFailed" xml:space="preserve">
+    <value>Không thể tải xuống {0}</value>
+  </data>
+  <data name="Plugin_Error_Repository_NotLoadable" xml:space="preserve">
+    <value>Plugin {0} đã được cài đặt trên đĩa nhưng máy chủ không thể tải nó.</value>
+  </data>
+  <data name="Plugin_Error_Repository_FetchFailed" xml:space="preserve">
+    <value>Không thể lấy siêu dữ liệu cửa hàng plugin từ tất cả các URL đã biết.</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_InvalidPluginId" xml:space="preserve">
+    <value>ID plugin không được null hoặc trống</value>
+  </data>
+  <data name="Plugin_Error_Repository_PathTraversal" xml:space="preserve">
+    <value>Mục Zip '{0}' cố gắng duyệt đường dẫn.</value>
+  </data>
+</root>

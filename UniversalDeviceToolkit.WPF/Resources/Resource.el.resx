@@ -3737,4 +3737,292 @@
   <data name="SaveButton" xml:space="preserve">
     <value>Αποθήκευση</value>
   </data>
+  <data name="DeviceInformationWindow_WarrantyLinkUnavailable" xml:space="preserve">
+    <value>Δεν ήταν δυνατό το άνοιγμα της σελίδας υποστήριξης Lenovo. Ελέγξτε το δίκτυό σας ή δοκιμάστε ξανά αργότερα.</value>
+  </data>
+  <data name="FanCurveControl_FanSpeedMax" xml:space="preserve">
+    <value>100%</value>
+  </data>
+  <data name="CrashReportNotification_DetailsHeading" xml:space="preserve">
+    <value>Λεπτομέρειες αναφοράς</value>
+  </data>
+  <data name="CrashReportNotification_Field_Time" xml:space="preserve">
+    <value>Ώρα</value>
+  </data>
+  <data name="CrashReportNotification_Field_Version" xml:space="preserve">
+    <value>Έκδοση</value>
+  </data>
+  <data name="CrashReportNotification_Field_Uptime" xml:space="preserve">
+    <value>Χρόνος λειτουργίας</value>
+  </data>
+  <data name="CrashReportNotification_Field_Exception" xml:space="preserve">
+    <value>Εξαίρεση</value>
+  </data>
+  <data name="CrashReportNotification_Field_Message" xml:space="preserve">
+    <value>Μήνυμα</value>
+  </data>
+  <data name="CrashReportNotification_Field_Inner" xml:space="preserve">
+    <value>Εσωτερική</value>
+  </data>
+  <data name="CrashReportNotification_Field_InnerMessage" xml:space="preserve">
+    <value>Εσωτερικό μήνυμα</value>
+  </data>
+  <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
+    <value>Ίχνος στοίβας</value>
+  </data>
+  <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
+    <value>Οι επεκτάσεις πρόσθετων είναι απενεργοποιημένες από προεπιλογή. Ενεργοποιήστε τις στις Ρυθμίσεις → Στοιχεία πλοήγησης.</value>
+  </data>
+  <data name="DeviceSetupWindow_Title" xml:space="preserve">
+    <value>Ρύθμιση συσκευής</value>
+  </data>
+  <data name="DeviceSetupWindow_SkipButton" xml:space="preserve">
+    <value>Παράλειψη προς το παρόν</value>
+  </data>
+  <data name="DeviceSetupWindow_ConfirmButton" xml:space="preserve">
+    <value>Επιβεβαίωση</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModeHint" xml:space="preserve">
+    <value>Η επιβεβαίωση αποθηκεύει αυτή την επιλογή και συνεχίζει. Η παράλειψη διατηρεί τη βασική λειτουργία και εμφανίζει αυτό ξανά στην επόμενη εκκίνηση.</value>
+  </data>
+  <data name="DeviceSetupWindow_MatchingPackHint" xml:space="preserve">
+    <value>Η επιβεβαίωση αποθηκεύει αυτό το προφίλ και συνεχίζει. Η παράλειψη διατηρεί την προεπιλογή και μπορεί να ρωτήσει ξανά στην επόμενη εκκίνηση. Δεν γίνεται επανεκκίνηση των Windows.</value>
+  </data>
+  <data name="DeviceSetupWindow_SelectPackLabel" xml:space="preserve">
+    <value>Προφίλ συσκευής (πακέτο)</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicModePackName" xml:space="preserve">
+    <value>Βασική λειτουργία (μόνο πρόσθετα και βελτιστοποίηση)</value>
+  </data>
+  <data name="DeviceSetupWindow_RecommendedPackFormat" xml:space="preserve">
+    <value>{0} (προτεινόμενο)</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackFormat" xml:space="preserve">
+    <value>{0} — πλήρες υλικό</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackFormat" xml:space="preserve">
+    <value>{0} — βασικό</value>
+  </data>
+  <data name="DeviceSetupWindow_HardwarePackDetail" xml:space="preserve">
+    <value>Πλήρες υλικό: λειτουργίες ισχύος, αισθητήρες, ανεμιστήρες και στοιχεία ελέγχου Lenovo όταν τα παρέχει το υλικολογισμικό.</value>
+  </data>
+  <data name="DeviceSetupWindow_BasicPackDetail" xml:space="preserve">
+    <value>Βασικό προφίλ: πρόσθετα, βελτιστοποίηση συστήματος, γλώσσα και θέμα. Τα στοιχεία ελέγχου υλικού παραμένουν κρυφά.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlHeading" xml:space="preserve">
+    <value>Έλεγχος</value>
+  </data>
+  <data name="NetworkAccelerationPage_ControlSubtitle" xml:space="preserve">
+    <value>Προαιρετική τοπική επιτάχυνση. Απενεργοποιημένη από προεπιλογή — δεν ξεκινά ποτέ αυτόματα στην εκκίνηση.</value>
+  </data>
+  <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
+    <value>Ξεκλειδώνει την επιλογή λειτουργίας και τη χειροκίνητη έναρξη. Δεν αλλάζει το proxy συστήματος μέχρι να ξεκινήσετε.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsHint" xml:space="preserve">
+    <value>Γρήγοροι τοπικοί έλεγχοι μόνο όταν τους ζητήσετε.</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Idle" xml:space="preserve">
+    <value>Δεν έχει ξεκινήσει</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Starting" xml:space="preserve">
+    <value>Έναρξη…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
+    <value>Συνδεδεμένο</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Stopping" xml:space="preserve">
+    <value>Διακοπή…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Restoring" xml:space="preserve">
+    <value>Επαναφορά…</value>
+  </data>
+  <data name="NetworkAccelerationPage_State_Failed" xml:space="preserve">
+    <value>Αποτυχία έναρξης</value>
+  </data>
+  <data name="NetworkAccelerationPage_Retry" xml:space="preserve">
+    <value>Επανάληψη</value>
+  </data>
+  <data name="NetworkAccelerationPage_TargetsHeading" xml:space="preserve">
+    <value>Στόχοι επιτάχυνσης</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainEnabled" xml:space="preserve">
+    <value>Ενεργό</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainDisabled" xml:space="preserve">
+    <value>Ανενεργό</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainCountFormat" xml:space="preserve">
+    <value>{0} τομείς</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Latency" xml:space="preserve">
+    <value>Καθυστέρηση</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Upload" xml:space="preserve">
+    <value>Αποστολή</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Download" xml:space="preserve">
+    <value>Λήψη</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Connections" xml:space="preserve">
+    <value>Συνδέσεις</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Rules" xml:space="preserve">
+    <value>Ενεργοί κανόνες</value>
+  </data>
+  <data name="NetworkAccelerationPage_Metric_Unavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Ms" xml:space="preserve">
+    <value>ms</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricUnit_Rate" xml:space="preserve">
+    <value>KB/s</value>
+  </data>
+  <data name="NetworkAccelerationPage_RunningDiagnostics" xml:space="preserve">
+    <value>Εκτέλεση διαγνωστικών…</value>
+  </data>
+  <data name="NetworkAccelerationPage_DiagnosticsCancelled" xml:space="preserve">
+    <value>Τα διαγνωστικά ακυρώθηκαν.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DangerZoneHeading" xml:space="preserve">
+    <value>Επικίνδυνη ζώνη</value>
+  </data>
+  <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
+    <value>Επαναφέρει το proxy συστήματος και τις αλλαγές Hosts με σήμανση UDT από το τελευταίο στιγμιότυπο. Δεν επανενεργοποιεί την επιτάχυνση.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
+    <value>Proxy worker</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
+    <value>Έτοιμο</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
+    <value>Δεν βρέθηκε</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
+    <value>Επιτάχυνση</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
+    <value>Θύρα τοπικού proxy</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
+    <value>Πύλη</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Doh" xml:space="preserve">
+    <value>DoH</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
+    <value>Διαγνωστικά</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
+    <value>Μη προσβάσιμο</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeHint" xml:space="preserve">
+    <value>Επιλέξτε proxy συστήματος (PAC) ή μόνο διαγνωστικά. Η επανεγγραφή Hosts είναι δεσμευμένη έως ότου υπάρχει τοπική προέλευση TLS.</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
+    <value>Μόνο οι ενεργοποιημένες ομάδες εφαρμόζονται μέσω PAC (proxy συστήματος). Όλες οι ομάδες παραμένουν απενεργοποιημένες από προεπιλογή.</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
+    <value>Κλικ για επιλογή ομάδων · διπλό κλικ για ενεργοποίηση/απενεργοποίηση · η γραμμή για αγαπημένα ή έναρξη επιλεγμένων.</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
+    <value>Ενέργειες επιλογής ομάδων τομέων</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountZero" xml:space="preserve">
+    <value>0 επιλεγμένα στοιχεία</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionCountFormat" xml:space="preserve">
+    <value>{0} επιλεγμένα στοιχεία</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
+    <value>Αγαπημένα επιλεγμένων</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
+    <value>Καρφίτσωμα ή ξεκαρφίτσωμα επιλεγμένων ομάδων τομέων (τα αγαπημένα εμφανίζονται πρώτα)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
+    <value>Έναρξη επιλεγμένων</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
+    <value>Ενεργοποιεί τις επιλεγμένες ομάδες και ξεκινά την επιτάχυνση δικτύου</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
+    <value>Μόνο στατικές ελεγμένες λίστες — χωρίς λήψη απομακρυσμένων κανόνων. Επανεκκινήστε την επιτάχυνση μετά από αλλαγές στις ομάδες.</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_SystemProxy" xml:space="preserve">
+    <value>Proxy συστήματος (PAC / τοπικό proxy)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_Hosts" xml:space="preserve">
+    <value>Επανεγγραφή Hosts (δεσμευμένο / απενεργοποιημένο)</value>
+  </data>
+  <data name="NetworkAccelerationPage_Mode_DiagnosticsOnly" xml:space="preserve">
+    <value>Μόνο διαγνωστικά (χωρίς αλλαγές συστήματος)</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
+    <value>Proxy συστήματος</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_Hosts" xml:space="preserve">
+    <value>Hosts</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_HostsDisabled" xml:space="preserve">
+    <value>Hosts απενεργοποιημένο</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledNote" xml:space="preserve">
+    <value>Η λειτουργία Hosts είναι απενεργοποιημένη — χρησιμοποιήστε proxy συστήματος</value>
+  </data>
+  <data name="NetworkAccelerationPage_HostsDisabledDetail" xml:space="preserve">
+    <value>Το Hosts→127.0.0.1 δεν είναι διαθέσιμο έως ότου υπάρχει τοπική προέλευση TLS. Επιλέξτε proxy συστήματος ή μόνο διαγνωστικά.</value>
+  </data>
+  <data name="NetworkAccelerationPage_ModeShort_DiagnosticsOnly" xml:space="preserve">
+    <value>Μόνο διαγνωστικά</value>
+  </data>
+  <data name="NetworkAccelerationPage_MetricsHeading" xml:space="preserve">
+    <value>Επισκόπηση</value>
+  </data>
+  <data name="AppNotificationHost_AccessibleName" xml:space="preserve">
+    <value>Ειδοποιήσεις εφαρμογής</value>
+  </data>
+  <data name="AppNotificationHost_Close" xml:space="preserve">
+    <value>Κλείσιμο ειδοποίησης</value>
+  </data>
+  <data name="SensorsControl_Details" xml:space="preserve">
+    <value>Λεπτομέρειες αισθητήρα</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableTitle" xml:space="preserve">
+    <value>Το κατάστημα πρόσθετων δεν είναι διαθέσιμο</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreTimeoutTitle" xml:space="preserve">
+    <value>Λήξη χρόνου καταστήματος πρόσθετων</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreUnavailableMessage" xml:space="preserve">
+    <value>Τα εγκατεστημένα πρόσθετα παραμένουν διαθέσιμα. Δοκιμάστε ξανά όταν επανέλθει το δίκτυο.</value>
+  </data>
+  <data name="PluginExtensionsPage_StoreRetry" xml:space="preserve">
+    <value>Επανάληψη</value>
+  </data>
+  <data name="PluginExtensionsPage_FetchTimeoutMessage" xml:space="preserve">
+    <value>Το αίτημα στο κατάστημα έληξε. Τα εγκατεστημένα πρόσθετα εξακολουθούν να είναι διαθέσιμα.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Title" xml:space="preserve">
+    <value>Ειδοποιήσεις επιτυχίας</value>
+  </data>
+  <data name="NotificationsSettingsWindow_SuccessNotifications_Message" xml:space="preserve">
+    <value>Εμφάνιση ειδοποιήσεων όταν εγκαθίστανται πρόσθετα, εφαρμόζονται βελτιστοποιήσεις ή ολοκληρώνεται ο καθαρισμός. Η θέση παραμένει κάτω δεξιά.</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Title" xml:space="preserve">
+    <value>Ήχος ειδοποίησης</value>
+  </data>
+  <data name="NotificationsSettingsWindow_NotificationSound_Message" xml:space="preserve">
+    <value>Αναπαραγωγή σύντομου ήχου συστήματος όταν εμφανίζεται μια ειδοποίηση.</value>
+  </data>
+  <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
+    <value>Ελευθερώθηκαν {0}. Επιτυχία {1}, αποτυχία {2}.</value>
+  </data>
 </root>

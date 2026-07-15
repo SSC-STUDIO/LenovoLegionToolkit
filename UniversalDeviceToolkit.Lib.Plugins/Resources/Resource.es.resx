@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Plugin_Error_DependencyResolution_Circular" xml:space="preserve">
+    <value>Dependencias circulares detectadas: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Unresolved" xml:space="preserve">
+    <value>No se pudieron resolver las dependencias de: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_VersionConflict" xml:space="preserve">
+    <value>Conflictos de versión detectados para: {0}</value>
+  </data>
+  <data name="Plugin_Error_DependencyResolution_Failed" xml:space="preserve">
+    <value>Error de resolución de dependencias: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_NotFound" xml:space="preserve">
+    <value>No se encontró el entorno aislado del complemento: {0}</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_ResourceLimit" xml:space="preserve">
+    <value>Se superó el límite de recursos</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_OperationTimeout" xml:space="preserve">
+    <value>La operación agotó el tiempo de espera</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_Violation" xml:space="preserve">
+    <value>Violación del entorno aislado: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Disabled" xml:space="preserve">
+    <value>Validación deshabilitada</value>
+  </data>
+  <data name="Plugin_Error_Signature_FileNotFound" xml:space="preserve">
+    <value>No se encontró el archivo del complemento: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_TrustedPackage" xml:space="preserve">
+    <value>El complemento no está firmado. Se permite porque coincide con el hash de un paquete en línea de confianza.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_AllowUnsigned" xml:space="preserve">
+    <value>El complemento no está firmado. Permitido según la directiva.</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotSigned_Required" xml:space="preserve">
+    <value>El complemento no está firmado. Se requiere firma según la directiva.</value>
+  </data>
+  <data name="Plugin_Error_Signature_ValidationFailed" xml:space="preserve">
+    <value>Error de validación: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_Expired" xml:space="preserve">
+    <value>El certificado expiró el {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_NotYetValid" xml:space="preserve">
+    <value>El certificado no es válido hasta el {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_ChainFailed" xml:space="preserve">
+    <value>Error en la validación de la cadena de certificados: {0}</value>
+  </data>
+  <data name="Plugin_Error_Signature_TestCertificate" xml:space="preserve">
+    <value>Validación de la cadena de certificados superada (certificado de prueba permitido)</value>
+  </data>
+  <data name="Plugin_Error_Signature_CertificateError" xml:space="preserve">
+    <value>Error de validación del certificado: {0}</value>
+  </data>
+  <data name="Plugin_Error_Repository_Deserialize" xml:space="preserve">
+    <value>No se pudo deserializar la respuesta de la tienda de complementos.</value>
+  </data>
+  <data name="Plugin_Error_Repository_HostIncompatible" xml:space="preserve">
+    <value>El complemento {0} requiere Universal Device Toolkit {1} o una versión posterior.</value>
+  </data>
+  <data name="Plugin_Error_Repository_DownloadFailed" xml:space="preserve">
+    <value>Error al descargar {0}</value>
+  </data>
+  <data name="Plugin_Error_Repository_NotLoadable" xml:space="preserve">
+    <value>El complemento {0} se instaló en el disco, pero el host no pudo cargarlo.</value>
+  </data>
+  <data name="Plugin_Error_Repository_FetchFailed" xml:space="preserve">
+    <value>No se pudieron obtener los metadatos de la tienda de complementos desde ninguna URL conocida.</value>
+  </data>
+  <data name="Plugin_Error_Sandbox_InvalidPluginId" xml:space="preserve">
+    <value>El id. del complemento no puede ser nulo ni estar vacío</value>
+  </data>
+  <data name="Plugin_Error_Repository_PathTraversal" xml:space="preserve">
+    <value>La entrada Zip '{0}' intenta un recorrido de ruta.</value>
+  </data>
+</root>

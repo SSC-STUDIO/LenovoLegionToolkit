@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1225,7 +1225,7 @@ Restart is recommended after changing this option.</value>
     <value>Include subfolders</value>
   </data>
   <data name="CustomCleanupRuleWindow_Browse_Button" xml:space="preserve">
-    <value>Browse…</value>
+    <value>Browse</value>
   </data>
   <data name="CustomCleanupRuleWindow_Error_Folder" xml:space="preserve">
     <value>Please choose a folder.</value>
