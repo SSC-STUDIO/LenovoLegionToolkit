@@ -466,4 +466,70 @@
   <data name="PreviewTertiaryHint" xml:space="preserve">
     <value>Regular menu item using the generated background palette.</value>
   </data>
+  <data name="ExportProfileButton" xml:space="preserve">
+    <value>プロファイルをエクスポート</value>
+  </data>
+  <data name="ImportProfileButton" xml:space="preserve">
+    <value>プロファイルをインポート</value>
+  </data>
+  <data name="OpenManagedConfigButton" xml:space="preserve">
+    <value>管理構成を開く</value>
+  </data>
+  <data name="ProfileFileDialogFilter" xml:space="preserve">
+    <value>JSON ファイル (*.json)|*.json|すべてのファイル (*.*)|*.*</value>
+  </data>
+  <data name="ResetManagedConfigButton" xml:space="preserve">
+    <value>管理構成をリセット</value>
+  </data>
+  <data name="StatusManagedConfigFolderUnavailable" xml:space="preserve">
+    <value>管理構成フォルダーを使用できません。</value>
+  </data>
+  <data name="StatusManagedConfigResetCompleted" xml:space="preserve">
+    <value>管理構成を既定値にリセットしました。</value>
+  </data>
+  <data name="StatusManagedConfigResetFailed" xml:space="preserve">
+    <value>管理構成のリセットに失敗しました。</value>
+  </data>
+  <data name="StatusManagedConfigSyncCompleted" xml:space="preserve">
+    <value>管理構成を同期しました。</value>
+  </data>
+  <data name="StatusManagedConfigSyncFailed" xml:space="preserve">
+    <value>管理構成の同期に失敗しました。</value>
+  </data>
+  <data name="StatusOpenedManagedConfig" xml:space="preserve">
+    <value>管理構成フォルダーを開きました。</value>
+  </data>
+  <data name="StatusProfileExportCompleted" xml:space="preserve">
+    <value>プロファイルをエクスポートしました。</value>
+  </data>
+  <data name="StatusProfileExportFailed" xml:space="preserve">
+    <value>プロファイルのエクスポートに失敗しました。</value>
+  </data>
+  <data name="StatusProfileImportCompleted" xml:space="preserve">
+    <value>プロファイルをインポートしました。</value>
+  </data>
+  <data name="StatusProfileImportFailed" xml:space="preserve">
+    <value>プロファイルのインポートに失敗しました。</value>
+  </data>
+  <data name="SyncManagedConfigButton" xml:space="preserve">
+    <value>管理構成を同期</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Windows コンテキスト メニューから Nilesoft Shell の登録を解除します。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>シェル統合を無効化</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Nilesoft Shell を登録し、管理構成を適用します。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>シェル統合を有効化</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Nilesoft Shell と Windows コンテキスト メニューの統合を有効または無効にします。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
 </root>

@@ -202,4 +202,40 @@
   <data name="ManualThemeState" xml:space="preserve">
     <value>Manual</value>
   </data>
+  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+    <value>Windows 既定</value>
+  </data>
+  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+    <value>Windows 既定に戻す</value>
+  </data>
+  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+    <value>Windows 既定のカーソル スキームの復元に失敗しました。</value>
+  </data>
+  <data name="StatusSyncedFromWindows" xml:space="preserve">
+    <value>現在の Windows マウス状態を同期しました。</value>
+  </data>
+  <data name="StatusWindowsDefaultRestored" xml:space="preserve">
+    <value>Windows 既定のカーソル スキームを復元しました。</value>
+  </data>
+  <data name="SyncFromWindowsButton" xml:space="preserve">
+    <value>Windows から同期</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Windows テーマの変更に応じたカーソル テーマの自動切替を停止します。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>自動テーマ カーソルを無効化</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>現在の Windows テーマに基づき、ライトまたはダークのカーソル テーマを自動適用します。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>自動テーマ カーソルを有効化</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Windows のライト/ダーク モードに基づく自動テーマ カーソル スタイルの有効/無効を切り替えます。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>カスタム マウス</value>
+  </data>
 </root>

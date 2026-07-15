@@ -209,39 +209,39 @@
     <value>已为"{0}"主题应用光标样式。</value>
   </data>
   <data name="SyncFromWindowsButton" xml:space="preserve">
-    <value>Sync from Windows</value>
+    <value>从 Windows 同步</value>
   </data>
   <data name="RestoreWindowsDefaultButton" xml:space="preserve">
-    <value>Restore Windows Default</value>
+    <value>恢复 Windows 默认</value>
   </data>
   <data name="StatusSyncedFromWindows" xml:space="preserve">
-    <value>Current Windows mouse state synced.</value>
+    <value>已从 Windows 同步当前鼠标状态。</value>
   </data>
   <data name="StatusWindowsDefaultRestored" xml:space="preserve">
-    <value>Windows default cursor scheme restored.</value>
+    <value>已恢复 Windows 默认光标方案。</value>
   </data>
   <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
-    <value>Failed to restore the Windows default cursor scheme.</value>
+    <value>恢复 Windows 默认光标方案失败。</value>
   </data>
   <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
-    <value>Windows Default</value>
+    <value>Windows 默认</value>
   </data>
   <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
-    <value>Custom Mouse</value>
+    <value>光标与指针</value>
   </data>
   <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
-    <value>Enable or disable auto theme cursor style based on Windows light/dark mode.</value>
+    <value>根据 Windows 浅色/深色模式启用或禁用自动主题光标样式。</value>
   </data>
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
-    <value>Enable Auto Theme Cursor</value>
+    <value>启用自动主题光标</value>
   </data>
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
-    <value>Automatically apply light or dark cursor theme based on current Windows theme.</value>
+    <value>根据当前 Windows 主题自动应用浅色或深色光标主题。</value>
   </data>
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
-    <value>Disable Auto Theme Cursor</value>
+    <value>禁用自动主题光标</value>
   </data>
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
-    <value>Stop automatically changing cursor theme based on Windows theme changes.</value>
+    <value>停止根据 Windows 主题变化自动切换光标主题。</value>
   </data>
 </root>

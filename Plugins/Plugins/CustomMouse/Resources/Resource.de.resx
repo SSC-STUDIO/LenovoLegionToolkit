@@ -202,4 +202,40 @@
   <data name="ManualThemeState" xml:space="preserve">
     <value>Manual</value>
   </data>
+  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+    <value>Windows-Standard</value>
+  </data>
+  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+    <value>Windows-Standard wiederherstellen</value>
+  </data>
+  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+    <value>Windows-Standard-Cursorschema konnte nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="StatusSyncedFromWindows" xml:space="preserve">
+    <value>Aktueller Windows-Mausstatus synchronisiert.</value>
+  </data>
+  <data name="StatusWindowsDefaultRestored" xml:space="preserve">
+    <value>Windows-Standard-Cursorschema wiederhergestellt.</value>
+  </data>
+  <data name="SyncFromWindowsButton" xml:space="preserve">
+    <value>Mit Windows synchronisieren</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Automatischen Wechsel des Cursor-Themas bei Windows-Themenänderungen beenden.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Auto-Thema-Cursor deaktivieren</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Hell- oder Dunkel-Cursor-Thema automatisch anhand des aktuellen Windows-Themas anwenden.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Auto-Thema-Cursor aktivieren</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Auto-Thema-Cursor-Stil basierend auf dem Windows Hell-/Dunkelmodus aktivieren oder deaktivieren.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Custom Mouse</value>
+  </data>
 </root>

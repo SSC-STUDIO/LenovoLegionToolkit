@@ -466,4 +466,70 @@
   <data name="PreviewTertiaryHint" xml:space="preserve">
     <value>Regular menu item using the generated background palette.</value>
   </data>
+  <data name="ExportProfileButton" xml:space="preserve">
+    <value>Profil exportieren</value>
+  </data>
+  <data name="ImportProfileButton" xml:space="preserve">
+    <value>Profil importieren</value>
+  </data>
+  <data name="OpenManagedConfigButton" xml:space="preserve">
+    <value>Verwaltete Konfiguration öffnen</value>
+  </data>
+  <data name="ProfileFileDialogFilter" xml:space="preserve">
+    <value>JSON-Dateien (*.json)|*.json|Alle Dateien (*.*)|*.*</value>
+  </data>
+  <data name="ResetManagedConfigButton" xml:space="preserve">
+    <value>Verwaltete Konfiguration zurücksetzen</value>
+  </data>
+  <data name="StatusManagedConfigFolderUnavailable" xml:space="preserve">
+    <value>Ordner der verwalteten Konfiguration nicht verfügbar.</value>
+  </data>
+  <data name="StatusManagedConfigResetCompleted" xml:space="preserve">
+    <value>Verwaltete Konfiguration auf Standard zurückgesetzt.</value>
+  </data>
+  <data name="StatusManagedConfigResetFailed" xml:space="preserve">
+    <value>Zurücksetzen der verwalteten Konfiguration fehlgeschlagen.</value>
+  </data>
+  <data name="StatusManagedConfigSyncCompleted" xml:space="preserve">
+    <value>Verwaltete Konfiguration synchronisiert.</value>
+  </data>
+  <data name="StatusManagedConfigSyncFailed" xml:space="preserve">
+    <value>Synchronisierung der verwalteten Konfiguration fehlgeschlagen.</value>
+  </data>
+  <data name="StatusOpenedManagedConfig" xml:space="preserve">
+    <value>Ordner der verwalteten Konfiguration geöffnet.</value>
+  </data>
+  <data name="StatusProfileExportCompleted" xml:space="preserve">
+    <value>Profil exportiert.</value>
+  </data>
+  <data name="StatusProfileExportFailed" xml:space="preserve">
+    <value>Profilexport fehlgeschlagen.</value>
+  </data>
+  <data name="StatusProfileImportCompleted" xml:space="preserve">
+    <value>Profil importiert.</value>
+  </data>
+  <data name="StatusProfileImportFailed" xml:space="preserve">
+    <value>Profilimport fehlgeschlagen.</value>
+  </data>
+  <data name="SyncManagedConfigButton" xml:space="preserve">
+    <value>Verwaltete Konfiguration synchronisieren</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Nilesoft Shell aus den Windows-Kontextmenüs abmelden.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Shell-Integration deaktivieren</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Nilesoft Shell registrieren und verwaltete Konfiguration anwenden.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Shell-Integration aktivieren</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Nilesoft-Shell-Integration mit Windows-Kontextmenüs aktivieren oder deaktivieren.</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
 </root>

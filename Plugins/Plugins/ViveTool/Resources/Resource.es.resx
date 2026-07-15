@@ -274,4 +274,28 @@
   <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
     <value>ViVeTool Binary Path</value>
   </data>
+  <data name="ViveTool_Export" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="ViveTool_ExportFailed" xml:space="preserve">
+    <value>Error al exportar la lista de características.</value>
+  </data>
+  <data name="ViveTool_ExportFailedWithMessage" xml:space="preserve">
+    <value>Error al exportar la lista de características: {0}</value>
+  </data>
+  <data name="ViveTool_ExportFileDialogFilter" xml:space="preserve">
+    <value>Archivos JSON (*.json)|*.json|Todos los archivos (*.*)|*.*</value>
+  </data>
+  <data name="ViveTool_ExportNoFeatures" xml:space="preserve">
+    <value>No hay características disponibles para exportar.</value>
+  </data>
+  <data name="ViveTool_ExportSuccess" xml:space="preserve">
+    <value>Exportación correcta</value>
+  </data>
+  <data name="ViveTool_ExportSuccessMessage" xml:space="preserve">
+    <value>Se exportaron correctamente {0} marca(s) de característica a {1}</value>
+  </data>
+  <data name="ViveTool_StatusFilterAll" xml:space="preserve">
+    <value>Todos los estados</value>
+  </data>
 </root>

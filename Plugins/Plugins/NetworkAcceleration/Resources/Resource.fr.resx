@@ -343,4 +343,35 @@
   <data name="StatusServiceStarted" xml:space="preserve">
     <value>Acceleration started.</value>
   </data>
+  <data name="NoPlannedOptimizationSteps" xml:space="preserve">
+    <value>Aucune étape d'optimisation n'est actuellement planifiée.</value>
+  </data>
+  <data name="OptimizationPlanStepFormat" xml:space="preserve">
+    <value>{0}. {1}  [{3}]
+{2}</value>
+  </data>
+  <data name="PlannedStepsDescription" xml:space="preserve">
+    <value>Aperçu des commandes exactes que l'optimisation rapide exécutera avec le mode et les options actuels.</value>
+  </data>
+  <data name="PlannedStepsLabel" xml:space="preserve">
+    <value>Étapes planifiées</value>
+  </data>
+  <data name="PlannedStepsTitle" xml:space="preserve">
+    <value>Plan d'optimisation</value>
+  </data>
+  <data name="StepFlushDns" xml:space="preserve">
+    <value>Vider le cache DNS</value>
+  </data>
+  <data name="StepResetTcpIp" xml:space="preserve">
+    <value>Réinitialiser la pile TCP/IP</value>
+  </data>
+  <data name="StepResetWinsock" xml:space="preserve">
+    <value>Réinitialiser le catalogue Winsock</value>
+  </data>
+  <data name="StepSourceModeDriven" xml:space="preserve">
+    <value>inclus par le mode sélectionné</value>
+  </data>
+  <data name="StepSourceRequired" xml:space="preserve">
+    <value>explicitement activé</value>
+  </data>
 </root>

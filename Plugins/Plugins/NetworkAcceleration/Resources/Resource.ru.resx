@@ -343,4 +343,35 @@
   <data name="StatusServiceStarted" xml:space="preserve">
     <value>Acceleration started.</value>
   </data>
+  <data name="NoPlannedOptimizationSteps" xml:space="preserve">
+    <value>Сейчас нет запланированных шагов оптимизации.</value>
+  </data>
+  <data name="OptimizationPlanStepFormat" xml:space="preserve">
+    <value>{0}. {1}  [{3}]
+{2}</value>
+  </data>
+  <data name="PlannedStepsDescription" xml:space="preserve">
+    <value>Предпросмотр точных команд, которые выполнит быстрая оптимизация при текущем режиме и переключателях.</value>
+  </data>
+  <data name="PlannedStepsLabel" xml:space="preserve">
+    <value>Запланированные шаги</value>
+  </data>
+  <data name="PlannedStepsTitle" xml:space="preserve">
+    <value>План оптимизации</value>
+  </data>
+  <data name="StepFlushDns" xml:space="preserve">
+    <value>Очистить кэш DNS</value>
+  </data>
+  <data name="StepResetTcpIp" xml:space="preserve">
+    <value>Сбросить стек TCP/IP</value>
+  </data>
+  <data name="StepResetWinsock" xml:space="preserve">
+    <value>Сбросить каталог Winsock</value>
+  </data>
+  <data name="StepSourceModeDriven" xml:space="preserve">
+    <value>включено выбранным режимом</value>
+  </data>
+  <data name="StepSourceRequired" xml:space="preserve">
+    <value>явно включено</value>
+  </data>
 </root>

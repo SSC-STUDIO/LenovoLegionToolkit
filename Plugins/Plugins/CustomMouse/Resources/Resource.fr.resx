@@ -202,4 +202,40 @@
   <data name="ManualThemeState" xml:space="preserve">
     <value>Manual</value>
   </data>
+  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+    <value>Par défaut Windows</value>
+  </data>
+  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+    <value>Restaurer le défaut Windows</value>
+  </data>
+  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+    <value>Échec de la restauration du schéma de curseur Windows par défaut.</value>
+  </data>
+  <data name="StatusSyncedFromWindows" xml:space="preserve">
+    <value>État actuel de la souris Windows synchronisé.</value>
+  </data>
+  <data name="StatusWindowsDefaultRestored" xml:space="preserve">
+    <value>Schéma de curseur Windows par défaut restauré.</value>
+  </data>
+  <data name="SyncFromWindowsButton" xml:space="preserve">
+    <value>Synchroniser depuis Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Arrêter le changement automatique du thème du curseur selon les changements de thème Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Désactiver le curseur à thème auto</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Appliquer automatiquement le thème de curseur clair ou sombre selon le thème Windows actuel.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Activer le curseur à thème auto</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Activer ou désactiver le style de curseur à thème automatique selon le mode clair/sombre de Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Souris personnalisée</value>
+  </data>
 </root>

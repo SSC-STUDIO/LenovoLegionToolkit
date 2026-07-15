@@ -343,4 +343,35 @@
   <data name="StatusServiceStarted" xml:space="preserve">
     <value>Acceleration started.</value>
   </data>
+  <data name="NoPlannedOptimizationSteps" xml:space="preserve">
+    <value>現在計画されている最適化ステップはありません。</value>
+  </data>
+  <data name="OptimizationPlanStepFormat" xml:space="preserve">
+    <value>{0}. {1}  [{3}]
+{2}</value>
+  </data>
+  <data name="PlannedStepsDescription" xml:space="preserve">
+    <value>現在のモードとトグルでクイック最適化が実行する正確なコマンドをプレビューします。</value>
+  </data>
+  <data name="PlannedStepsLabel" xml:space="preserve">
+    <value>計画されたステップ</value>
+  </data>
+  <data name="PlannedStepsTitle" xml:space="preserve">
+    <value>最適化プラン</value>
+  </data>
+  <data name="StepFlushDns" xml:space="preserve">
+    <value>DNS キャッシュをフラッシュ</value>
+  </data>
+  <data name="StepResetTcpIp" xml:space="preserve">
+    <value>TCP/IP スタックをリセット</value>
+  </data>
+  <data name="StepResetWinsock" xml:space="preserve">
+    <value>Winsock カタログをリセット</value>
+  </data>
+  <data name="StepSourceModeDriven" xml:space="preserve">
+    <value>選択したモードにより含む</value>
+  </data>
+  <data name="StepSourceRequired" xml:space="preserve">
+    <value>明示的に有効</value>
+  </data>
 </root>

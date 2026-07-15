@@ -208,4 +208,40 @@
   <data name="CursorAppliedFormat" xml:space="preserve">
     <value>?????????????????{0}??</value>
   </data>
+  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+    <value>Windows 預設</value>
+  </data>
+  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+    <value>還原 Windows 預設</value>
+  </data>
+  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+    <value>還原 Windows 預設游標配置失敗。</value>
+  </data>
+  <data name="StatusSyncedFromWindows" xml:space="preserve">
+    <value>已從 Windows 同步目前滑鼠狀態。</value>
+  </data>
+  <data name="StatusWindowsDefaultRestored" xml:space="preserve">
+    <value>已還原 Windows 預設游標配置。</value>
+  </data>
+  <data name="SyncFromWindowsButton" xml:space="preserve">
+    <value>從 Windows 同步</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>停止依 Windows 主題變更自動切換游標主題。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>停用自動主題游標</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>依目前 Windows 主題自動套用淺色或深色游標主題。</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>啟用自動主題游標</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>依 Windows 淺色/深色模式啟用或停用自動主題游標樣式。</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>自訂滑鼠</value>
+  </data>
 </root>

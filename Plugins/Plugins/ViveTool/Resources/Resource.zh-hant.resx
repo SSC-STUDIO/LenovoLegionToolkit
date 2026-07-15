@@ -241,4 +241,28 @@
   <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
     <value>ViVeTool 二进制路径</value>
   </data>
+  <data name="ViveTool_Export" xml:space="preserve">
+    <value>匯出</value>
+  </data>
+  <data name="ViveTool_ExportFailed" xml:space="preserve">
+    <value>匯出功能清單失敗。</value>
+  </data>
+  <data name="ViveTool_ExportFailedWithMessage" xml:space="preserve">
+    <value>匯出功能清單失敗：{0}</value>
+  </data>
+  <data name="ViveTool_ExportFileDialogFilter" xml:space="preserve">
+    <value>JSON 檔案 (*.json)|*.json|所有檔案 (*.*)|*.*</value>
+  </data>
+  <data name="ViveTool_ExportNoFeatures" xml:space="preserve">
+    <value>沒有可匯出的功能。</value>
+  </data>
+  <data name="ViveTool_ExportSuccess" xml:space="preserve">
+    <value>匯出成功</value>
+  </data>
+  <data name="ViveTool_ExportSuccessMessage" xml:space="preserve">
+    <value>已成功將 {0} 個功能旗標匯出到 {1}</value>
+  </data>
+  <data name="ViveTool_StatusFilterAll" xml:space="preserve">
+    <value>全部狀態</value>
+  </data>
 </root>

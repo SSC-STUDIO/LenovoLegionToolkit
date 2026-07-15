@@ -208,4 +208,40 @@
   <data name="CursorAppliedFormat" xml:space="preserve">
     <value>Custom cursor style applied for current system theme ({0}).</value>
   </data>
+  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+    <value>Padrão do Windows</value>
+  </data>
+  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+    <value>Restaurar padrão do Windows</value>
+  </data>
+  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+    <value>Falha ao restaurar o esquema de cursor padrão do Windows.</value>
+  </data>
+  <data name="StatusSyncedFromWindows" xml:space="preserve">
+    <value>Estado atual do mouse do Windows sincronizado.</value>
+  </data>
+  <data name="StatusWindowsDefaultRestored" xml:space="preserve">
+    <value>Esquema de cursor padrão do Windows restaurado.</value>
+  </data>
+  <data name="SyncFromWindowsButton" xml:space="preserve">
+    <value>Sincronizar do Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Parar de alterar automaticamente o tema do cursor com base nas mudanças de tema do Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Desativar cursor de tema automático</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Aplicar automaticamente o tema de cursor claro ou escuro com base no tema atual do Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Ativar cursor de tema automático</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Ativar ou desativar o estilo de cursor de tema automático com base no modo claro/escuro do Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Mouse personalizado</value>
+  </data>
 </root>

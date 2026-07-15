@@ -343,4 +343,35 @@
   <data name="StatusServiceStarted" xml:space="preserve">
     <value>加速已启动。</value>
   </data>
+  <data name="NoPlannedOptimizationSteps" xml:space="preserve">
+    <value>目前沒有計劃中的最佳化步驟。</value>
+  </data>
+  <data name="OptimizationPlanStepFormat" xml:space="preserve">
+    <value>{0}. {1}  [{3}]
+{2}</value>
+  </data>
+  <data name="PlannedStepsDescription" xml:space="preserve">
+    <value>預覽在目前模式與開關下，快速最佳化將執行的確切命令。</value>
+  </data>
+  <data name="PlannedStepsLabel" xml:space="preserve">
+    <value>計劃步驟</value>
+  </data>
+  <data name="PlannedStepsTitle" xml:space="preserve">
+    <value>最佳化計劃</value>
+  </data>
+  <data name="StepFlushDns" xml:space="preserve">
+    <value>清除 DNS 快取</value>
+  </data>
+  <data name="StepResetTcpIp" xml:space="preserve">
+    <value>重設 TCP/IP 堆疊</value>
+  </data>
+  <data name="StepResetWinsock" xml:space="preserve">
+    <value>重設 Winsock 目錄</value>
+  </data>
+  <data name="StepSourceModeDriven" xml:space="preserve">
+    <value>由所選模式包含</value>
+  </data>
+  <data name="StepSourceRequired" xml:space="preserve">
+    <value>已明確啟用</value>
+  </data>
 </root>

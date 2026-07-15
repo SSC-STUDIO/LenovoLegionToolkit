@@ -311,18 +311,66 @@
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Enable or disable Nilesoft Shell integration with Windows context menus.</value>
+    <value>启用或禁用 Nilesoft Shell 与 Windows 上下文菜单的集成。</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Shell Integration</value>
+    <value>启用 Shell 集成</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell and apply managed configuration.</value>
+    <value>注册 Nilesoft Shell 并应用托管配置。</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Shell Integration</value>
+    <value>禁用 Shell 集成</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell from Windows context menus.</value>
+    <value>从 Windows 上下文菜单注销 Nilesoft Shell。</value>
+  </data>
+  <data name="ExportProfileButton" xml:space="preserve">
+    <value>导出配置文件</value>
+  </data>
+  <data name="ImportProfileButton" xml:space="preserve">
+    <value>导入配置文件</value>
+  </data>
+  <data name="OpenManagedConfigButton" xml:space="preserve">
+    <value>打开托管配置</value>
+  </data>
+  <data name="ProfileFileDialogFilter" xml:space="preserve">
+    <value>JSON 文件 (*.json)|*.json|所有文件 (*.*)|*.*</value>
+  </data>
+  <data name="ResetManagedConfigButton" xml:space="preserve">
+    <value>重置托管配置</value>
+  </data>
+  <data name="StatusManagedConfigFolderUnavailable" xml:space="preserve">
+    <value>托管配置文件夹不可用。</value>
+  </data>
+  <data name="StatusManagedConfigResetCompleted" xml:space="preserve">
+    <value>托管配置已重置为默认值。</value>
+  </data>
+  <data name="StatusManagedConfigResetFailed" xml:space="preserve">
+    <value>托管配置重置失败。</value>
+  </data>
+  <data name="StatusManagedConfigSyncCompleted" xml:space="preserve">
+    <value>托管配置已同步。</value>
+  </data>
+  <data name="StatusManagedConfigSyncFailed" xml:space="preserve">
+    <value>托管配置同步失败。</value>
+  </data>
+  <data name="StatusOpenedManagedConfig" xml:space="preserve">
+    <value>已打开托管配置文件夹。</value>
+  </data>
+  <data name="StatusProfileExportCompleted" xml:space="preserve">
+    <value>配置文件已导出。</value>
+  </data>
+  <data name="StatusProfileExportFailed" xml:space="preserve">
+    <value>配置文件导出失败。</value>
+  </data>
+  <data name="StatusProfileImportCompleted" xml:space="preserve">
+    <value>配置文件已导入。</value>
+  </data>
+  <data name="StatusProfileImportFailed" xml:space="preserve">
+    <value>配置文件导入失败。</value>
+  </data>
+  <data name="SyncManagedConfigButton" xml:space="preserve">
+    <value>同步托管配置</value>
   </data>
 </root>

@@ -307,4 +307,70 @@
   <data name="PreviewTertiaryHint" xml:space="preserve">
     <value>Neutral item using the generated background palette.</value>
   </data>
+  <data name="ExportProfileButton" xml:space="preserve">
+    <value>Exportar perfil</value>
+  </data>
+  <data name="ImportProfileButton" xml:space="preserve">
+    <value>Importar perfil</value>
+  </data>
+  <data name="OpenManagedConfigButton" xml:space="preserve">
+    <value>Abrir config. gerenciada</value>
+  </data>
+  <data name="ProfileFileDialogFilter" xml:space="preserve">
+    <value>Arquivos JSON (*.json)|*.json|Todos os arquivos (*.*)|*.*</value>
+  </data>
+  <data name="ResetManagedConfigButton" xml:space="preserve">
+    <value>Redefinir config. gerenciada</value>
+  </data>
+  <data name="StatusManagedConfigFolderUnavailable" xml:space="preserve">
+    <value>Pasta de configuração gerenciada indisponível.</value>
+  </data>
+  <data name="StatusManagedConfigResetCompleted" xml:space="preserve">
+    <value>Configuração gerenciada redefinida para os padrões.</value>
+  </data>
+  <data name="StatusManagedConfigResetFailed" xml:space="preserve">
+    <value>Falha ao redefinir a configuração gerenciada.</value>
+  </data>
+  <data name="StatusManagedConfigSyncCompleted" xml:space="preserve">
+    <value>Configuração gerenciada sincronizada.</value>
+  </data>
+  <data name="StatusManagedConfigSyncFailed" xml:space="preserve">
+    <value>Falha ao sincronizar a configuração gerenciada.</value>
+  </data>
+  <data name="StatusOpenedManagedConfig" xml:space="preserve">
+    <value>Pasta de configuração gerenciada aberta.</value>
+  </data>
+  <data name="StatusProfileExportCompleted" xml:space="preserve">
+    <value>Perfil exportado.</value>
+  </data>
+  <data name="StatusProfileExportFailed" xml:space="preserve">
+    <value>Falha ao exportar o perfil.</value>
+  </data>
+  <data name="StatusProfileImportCompleted" xml:space="preserve">
+    <value>Perfil importado.</value>
+  </data>
+  <data name="StatusProfileImportFailed" xml:space="preserve">
+    <value>Falha ao importar o perfil.</value>
+  </data>
+  <data name="SyncManagedConfigButton" xml:space="preserve">
+    <value>Sincronizar config. gerenciada</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Cancelar o registro do Nilesoft Shell nos menus de contexto do Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Desativar integração do Shell</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Registrar o Nilesoft Shell e aplicar a configuração gerenciada.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Ativar integração do Shell</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Ativar ou desativar a integração do Nilesoft Shell com os menus de contexto do Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
 </root>

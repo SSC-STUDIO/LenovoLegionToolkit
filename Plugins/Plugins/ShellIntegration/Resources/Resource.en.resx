@@ -233,4 +233,70 @@
   <data name="PreviewTertiaryHint" xml:space="preserve">
     <value>Regular menu item using the generated background palette.</value>
   </data>
+  <data name="ExportProfileButton" xml:space="preserve">
+    <value>Export Profile</value>
+  </data>
+  <data name="ImportProfileButton" xml:space="preserve">
+    <value>Import Profile</value>
+  </data>
+  <data name="OpenManagedConfigButton" xml:space="preserve">
+    <value>Open Managed Config</value>
+  </data>
+  <data name="ProfileFileDialogFilter" xml:space="preserve">
+    <value>JSON Files (*.json)|*.json|All Files (*.*)|*.*</value>
+  </data>
+  <data name="ResetManagedConfigButton" xml:space="preserve">
+    <value>Reset Managed Config</value>
+  </data>
+  <data name="StatusManagedConfigFolderUnavailable" xml:space="preserve">
+    <value>Managed config folder unavailable.</value>
+  </data>
+  <data name="StatusManagedConfigResetCompleted" xml:space="preserve">
+    <value>Managed config reset to defaults.</value>
+  </data>
+  <data name="StatusManagedConfigResetFailed" xml:space="preserve">
+    <value>Managed config reset failed.</value>
+  </data>
+  <data name="StatusManagedConfigSyncCompleted" xml:space="preserve">
+    <value>Managed config synchronized.</value>
+  </data>
+  <data name="StatusManagedConfigSyncFailed" xml:space="preserve">
+    <value>Managed config synchronization failed.</value>
+  </data>
+  <data name="StatusOpenedManagedConfig" xml:space="preserve">
+    <value>Opened managed config folder.</value>
+  </data>
+  <data name="StatusProfileExportCompleted" xml:space="preserve">
+    <value>Profile exported.</value>
+  </data>
+  <data name="StatusProfileExportFailed" xml:space="preserve">
+    <value>Profile export failed.</value>
+  </data>
+  <data name="StatusProfileImportCompleted" xml:space="preserve">
+    <value>Profile imported.</value>
+  </data>
+  <data name="StatusProfileImportFailed" xml:space="preserve">
+    <value>Profile import failed.</value>
+  </data>
+  <data name="SyncManagedConfigButton" xml:space="preserve">
+    <value>Sync Managed Config</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Unregister Nilesoft Shell from Windows context menus.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Disable Shell Integration</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Register Nilesoft Shell and apply managed configuration.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Enable Shell Integration</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Enable or disable Nilesoft Shell integration with Windows context menus.</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
 </root>

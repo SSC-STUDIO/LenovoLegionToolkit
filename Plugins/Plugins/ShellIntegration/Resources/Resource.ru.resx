@@ -466,4 +466,70 @@
   <data name="PreviewTertiaryHint" xml:space="preserve">
     <value>Regular menu item using the generated background palette.</value>
   </data>
+  <data name="ExportProfileButton" xml:space="preserve">
+    <value>Экспорт профиля</value>
+  </data>
+  <data name="ImportProfileButton" xml:space="preserve">
+    <value>Импорт профиля</value>
+  </data>
+  <data name="OpenManagedConfigButton" xml:space="preserve">
+    <value>Открыть управляемую конфигурацию</value>
+  </data>
+  <data name="ProfileFileDialogFilter" xml:space="preserve">
+    <value>Файлы JSON (*.json)|*.json|Все файлы (*.*)|*.*</value>
+  </data>
+  <data name="ResetManagedConfigButton" xml:space="preserve">
+    <value>Сбросить управляемую конфигурацию</value>
+  </data>
+  <data name="StatusManagedConfigFolderUnavailable" xml:space="preserve">
+    <value>Папка управляемой конфигурации недоступна.</value>
+  </data>
+  <data name="StatusManagedConfigResetCompleted" xml:space="preserve">
+    <value>Управляемая конфигурация сброшена к значениям по умолчанию.</value>
+  </data>
+  <data name="StatusManagedConfigResetFailed" xml:space="preserve">
+    <value>Не удалось сбросить управляемую конфигурацию.</value>
+  </data>
+  <data name="StatusManagedConfigSyncCompleted" xml:space="preserve">
+    <value>Управляемая конфигурация синхронизирована.</value>
+  </data>
+  <data name="StatusManagedConfigSyncFailed" xml:space="preserve">
+    <value>Не удалось синхронизировать управляемую конфигурацию.</value>
+  </data>
+  <data name="StatusOpenedManagedConfig" xml:space="preserve">
+    <value>Открыта папка управляемой конфигурации.</value>
+  </data>
+  <data name="StatusProfileExportCompleted" xml:space="preserve">
+    <value>Профиль экспортирован.</value>
+  </data>
+  <data name="StatusProfileExportFailed" xml:space="preserve">
+    <value>Не удалось экспортировать профиль.</value>
+  </data>
+  <data name="StatusProfileImportCompleted" xml:space="preserve">
+    <value>Профиль импортирован.</value>
+  </data>
+  <data name="StatusProfileImportFailed" xml:space="preserve">
+    <value>Не удалось импортировать профиль.</value>
+  </data>
+  <data name="SyncManagedConfigButton" xml:space="preserve">
+    <value>Синхронизировать управляемую конфигурацию</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>Отменить регистрацию Nilesoft Shell в контекстных меню Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>Отключить интеграцию оболочки</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>Зарегистрировать Nilesoft Shell и применить управляемую конфигурацию.</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>Включить интеграцию оболочки</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>Включить или отключить интеграцию Nilesoft Shell с контекстными меню Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
 </root>

@@ -202,4 +202,40 @@
   <data name="ManualThemeState" xml:space="preserve">
     <value>Manual</value>
   </data>
+  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+    <value>Predeterminado de Windows</value>
+  </data>
+  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+    <value>Restaurar predeterminado de Windows</value>
+  </data>
+  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+    <value>No se pudo restaurar el esquema de cursor predeterminado de Windows.</value>
+  </data>
+  <data name="StatusSyncedFromWindows" xml:space="preserve">
+    <value>Estado actual del ratón de Windows sincronizado.</value>
+  </data>
+  <data name="StatusWindowsDefaultRestored" xml:space="preserve">
+    <value>Esquema de cursor predeterminado de Windows restaurado.</value>
+  </data>
+  <data name="SyncFromWindowsButton" xml:space="preserve">
+    <value>Sincronizar desde Windows</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+    <value>Dejar de cambiar automáticamente el tema del cursor según los cambios de tema de Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+    <value>Desactivar cursor de tema automático</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+    <value>Aplicar automáticamente el tema de cursor claro u oscuro según el tema actual de Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+    <value>Activar cursor de tema automático</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+    <value>Activar o desactivar el estilo de cursor de tema automático según el modo claro/oscuro de Windows.</value>
+  </data>
+  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+    <value>Ratón personalizado</value>
+  </data>
 </root>

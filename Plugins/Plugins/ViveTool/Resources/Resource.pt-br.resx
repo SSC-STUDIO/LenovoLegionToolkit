@@ -274,4 +274,28 @@
   <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
     <value>ViVeTool Binary Path</value>
   </data>
+  <data name="ViveTool_Export" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="ViveTool_ExportFailed" xml:space="preserve">
+    <value>Falha ao exportar a lista de recursos.</value>
+  </data>
+  <data name="ViveTool_ExportFailedWithMessage" xml:space="preserve">
+    <value>Falha ao exportar a lista de recursos: {0}</value>
+  </data>
+  <data name="ViveTool_ExportFileDialogFilter" xml:space="preserve">
+    <value>Arquivos JSON (*.json)|*.json|Todos os arquivos (*.*)|*.*</value>
+  </data>
+  <data name="ViveTool_ExportNoFeatures" xml:space="preserve">
+    <value>Nenhum recurso disponível para exportar.</value>
+  </data>
+  <data name="ViveTool_ExportSuccess" xml:space="preserve">
+    <value>Exportação bem-sucedida</value>
+  </data>
+  <data name="ViveTool_ExportSuccessMessage" xml:space="preserve">
+    <value>Exportado(s) com sucesso {0} sinalizador(es) de recurso para {1}</value>
+  </data>
+  <data name="ViveTool_StatusFilterAll" xml:space="preserve">
+    <value>Todos os status</value>
+  </data>
 </root>

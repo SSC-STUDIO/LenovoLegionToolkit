@@ -242,27 +242,27 @@
     <value>ViVeTool Binary Path</value>
   </data>
   <data name="ViveTool_Export" xml:space="preserve">
-    <value>Export</value>
+    <value>Exportieren</value>
   </data>
   <data name="ViveTool_ExportFileDialogFilter" xml:space="preserve">
-    <value>JSON Files (*.json)|*.json|All Files (*.*)|*.*</value>
+    <value>JSON-Dateien (*.json)|*.json|Alle Dateien (*.*)|*.*</value>
   </data>
   <data name="ViveTool_ExportSuccess" xml:space="preserve">
-    <value>Export Successful</value>
+    <value>Export erfolgreich</value>
   </data>
   <data name="ViveTool_ExportSuccessMessage" xml:space="preserve">
-    <value>Successfully exported {0} feature flag(s) to {1}</value>
+    <value>{0} Feature-Flag(s) erfolgreich nach {1} exportiert</value>
   </data>
   <data name="ViveTool_ExportFailed" xml:space="preserve">
-    <value>Failed to export feature list.</value>
+    <value>Feature-Liste konnte nicht exportiert werden.</value>
   </data>
   <data name="ViveTool_ExportFailedWithMessage" xml:space="preserve">
-    <value>Failed to export feature list: {0}</value>
+    <value>Feature-Liste konnte nicht exportiert werden: {0}</value>
   </data>
   <data name="ViveTool_ExportNoFeatures" xml:space="preserve">
-    <value>No features available to export.</value>
+    <value>Keine Features zum Exportieren verfügbar.</value>
   </data>
   <data name="ViveTool_StatusFilterAll" xml:space="preserve">
-    <value>All Statuses</value>
+    <value>Alle Status</value>
   </data>
 </root>
