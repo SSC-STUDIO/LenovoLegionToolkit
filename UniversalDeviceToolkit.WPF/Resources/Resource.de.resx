@@ -2970,7 +2970,7 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
     <value>Optimize</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Schnell öffnen</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
     <value>Settings</value>
@@ -3492,25 +3492,25 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Nilesoft Shell-Integration verwalten</value>
+    <value>Nilesoft Shell-Kontextmenü-Registrierung und -Integration verwalten.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
     <value>Nilesoft Shell aktivieren</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Aktiviert die Nilesoft Shell-Integration</value>
+    <value>Nilesoft Shell als Windows-Kontextmenü-Handler registrieren.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
     <value>Nilesoft Shell deaktivieren</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Deaktiviert die Nilesoft Shell-Integration</value>
+    <value>Nilesoft Shell abmelden und das Standard-Kontextmenü wiederherstellen.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>Nicht verifiziert</value>
+    <value>Die Änderung konnte nicht bestätigt werden. Möglicherweise sind Administratorrechte erforderlich.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Bitte warten…</value>
+    <value>Bitte warten Sie, bis die aktuelle Optimierung abgeschlossen ist.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Speichern fehlgeschlagen</value>

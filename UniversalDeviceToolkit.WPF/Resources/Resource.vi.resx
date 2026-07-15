@@ -2970,7 +2970,7 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Optimize</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Mở nhanh</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
     <value>Settings</value>
@@ -2988,7 +2988,7 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Đã cài đặt</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
-    <value>Store Pulse</value>
+    <value>Trạng thái cửa hàng</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
     <value>Tổng số plugin</value>
@@ -3489,25 +3489,25 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Quản lý đăng ký và tích hợp menu ngữ cảnh Nilesoft Shell.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Bật Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Đăng ký Nilesoft Shell làm trình xử lý menu ngữ cảnh Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Tắt Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Hủy đăng ký Nilesoft Shell và khôi phục menu ngữ cảnh mặc định.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>Không thể xác minh thay đổi. Có thể cần quyền quản trị viên.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Vui lòng đợi quá trình tối ưu hóa hiện tại hoàn tất.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Không thể lưu</value>
@@ -3759,7 +3759,7 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Thông báo</value>
   </data>
   <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
-    <value>Stack trace</value>
+    <value>Dấu vết ngăn xếp</value>
   </data>
   <data name="CrashReportNotification_Field_Time" xml:space="preserve">
     <value>Thời gian</value>

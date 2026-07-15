@@ -3486,25 +3486,25 @@
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Керування реєстрацією та інтеграцією контекстного меню Nilesoft Shell.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Увімкнути Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Зареєструвати Nilesoft Shell як обробник контекстного меню Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Вимкнути Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Скасувати реєстрацію Nilesoft Shell і відновити стандартне контекстне меню.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>Не вдалося перевірити зміну. Можуть знадобитися права адміністратора.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Зачекайте, доки завершиться поточна оптимізація.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Не вдалося зберегти</value>
@@ -3822,7 +3822,7 @@
     <value>Небезпечна зона</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
-    <value>Proxy worker</value>
+    <value>Проксі-воркер</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
     <value>Не знайдено</value>
@@ -3933,7 +3933,7 @@
     <value>Hosts вимкнено</value>
   </data>
   <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
-    <value>System proxy</value>
+    <value>Системний проксі</value>
   </data>
   <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
     <value>Відновлює системний проксі та позначені UDT зміни Hosts з останнього знімка. Не вмикає прискорення знову.</value>

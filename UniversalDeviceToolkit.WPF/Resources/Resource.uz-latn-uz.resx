@@ -3357,7 +3357,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Optimize</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Tez ochish</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
     <value>Settings</value>
@@ -3366,43 +3366,43 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Update</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
-    <value>Checking plugin availability...</value>
+    <value>Plaginlar mavjudligi tekshirilmoqda...</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableLabel" xml:space="preserve">
-    <value>Available to install</value>
+    <value>O‘rnatish mumkin</value>
   </data>
   <data name="PluginExtensionsPage_SummaryDiscoverableMessage" xml:space="preserve">
     <value>{0} additional plugin(s) are available in the current feed.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryInstalled" xml:space="preserve">
-    <value>Installed</value>
+    <value>O‘rnatilgan</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
-    <value>Store Pulse</value>
+    <value>Do‘kon holati</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
-    <value>Total Plugins</value>
+    <value>Jami plaginlar</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDate" xml:space="preserve">
-    <value>All detected plugins are currently up to date.</value>
+    <value>Aniqlangan barcha plaginlar hozircha yangilangan.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpToDateShort" xml:space="preserve">
-    <value>Up to date</value>
+    <value>Yangilangan</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesAvailableLabel" xml:space="preserve">
-    <value>Updates available</value>
+    <value>Yangilanishlar mavjud</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReady" xml:space="preserve">
-    <value>Updates Ready</value>
+    <value>Yangilanishlarga tayyor</value>
   </data>
   <data name="PluginExtensionsPage_SummaryUpdatesReadyMessage" xml:space="preserve">
     <value>{0} plugin update(s) are ready to install.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadata" xml:space="preserve">
-    <value>Waiting for plugin metadata to load.</value>
+    <value>Plagin metama’lumotlari yuklanishi kutilmoqda.</value>
   </data>
   <data name="PluginExtensionsPage_SummaryWaitingMetadataShort" xml:space="preserve">
-    <value>Loading metadata</value>
+    <value>Metama’lumot yuklanmoqda</value>
   </data>
   <data name="SettingsPage_Appearance_Description" xml:space="preserve">
     <value>Customize language, temperature unit, theme and accent color.</value>
@@ -3420,31 +3420,31 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Update checks are disabled for this session</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
-    <value>Check the selected source and network connection, then scan again.</value>
+    <value>Tanlangan manba va tarmoq ulanishini tekshiring, so‘ng qayta skanerlang.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Title" xml:space="preserve">
-    <value>Driver scan did not complete</value>
+    <value>Drayver skanerlash tugamadi</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message" xml:space="preserve">
-    <value>Adjust the filter, update-only option, or hidden-download list.</value>
+    <value>Filtr, faqat yangilanishlar yoki yashirilgan yuklab olishlar ro‘yxatini o‘zgartiring.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoFilterResults_Title" xml:space="preserve">
-    <value>No matching downloads found</value>
+    <value>Mos yuklab olishlar topilmadi</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Message" xml:space="preserve">
-    <value>Try a different source, operating system, or machine type.</value>
+    <value>Boshqa manba, operatsion tizim yoki qurilma turini sinab ko‘ring.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NoResults_Title" xml:space="preserve">
-    <value>No driver downloads found</value>
+    <value>Drayver yuklab olishlari topilmadi</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Message" xml:space="preserve">
-    <value>Choose a source and scan to list compatible driver downloads.</value>
+    <value>Mos drayver yuklab olishlarini ko‘rish uchun manba tanlang va skanerlang.</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_NotScanned_Title" xml:space="preserve">
-    <value>Scan for driver packages</value>
+    <value>Drayver paketlari uchun skanerlash</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Error_Format" xml:space="preserve">
-    <value>Failed to apply {0}: {1}</value>
+    <value>{0} qo‘llanilmadi: {1}</value>
   </data>
   <data name="CrashReportNotification_Close" xml:space="preserve">
     <value>Yopish</value>
@@ -3805,7 +3805,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Yadro harorati</value>
   </data>
   <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
-    <value>GPU Hot Spot</value>
+    <value>GPU issiq nuqta</value>
   </data>
   <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
     <value>VRAM harorati</value>
@@ -3888,7 +3888,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="Watt" xml:space="preserve">
     <value>Vt</value>
   </data>
-<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell kontekst menyusi roʻyxatga olish va integratsiyasini boshqarish.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shellni yoqish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Nilesoft Shell Windows kontekst menyusi ishlovchisi sifatida roʻyxatga olinadi.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shellni oʻchirish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Nilesoft Shell roʻyxatdan chiqariladi va standart kontekst menyusi tiklanadi.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>Oʻzgarish tasdiqlanmadi. Administrator huquqlari talab qilinishi mumkin.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Joriy optimallashtirish tugashini kuting.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
+<data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve"><value>Nilesoft Shell</value></data><data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve"><value>Nilesoft Shell kontekst menyusi ro‘yxatdan o‘tishi va integratsiyasini boshqaring.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve"><value>Nilesoft Shell’ni yoqish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve"><value>Nilesoft Shell’ni Windows kontekst menyusi ishlovchisi sifatida ro‘yxatdan o‘tkazing.</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve"><value>Nilesoft Shell’ni o‘chirish</value></data><data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve"><value>Nilesoft Shell ro‘yxatdan chiqarilsin va standart kontekst menyusi tiklansin.</value></data><data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve"><value>O‘zgarishni tekshirib bo‘lmadi. Administrator huquqlari kerak bo‘lishi mumkin.</value></data><data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve"><value>Joriy optimallashtirish tugashini kuting.</value></data>  <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Saqlab bo‘lmadi</value>
   </data>
   <data name="AutomationPage_Save_Error_Message" xml:space="preserve">

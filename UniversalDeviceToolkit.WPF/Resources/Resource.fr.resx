@@ -1614,7 +1614,7 @@ AVERTISSEMENT : Cette action ne fonctionnera pas correctement si le GPU dédié 
     <value>Mégahertz</value>
   </data>
   <data name="SensorsControl_Maximum" xml:space="preserve">
-    <value>Maximum: {0}</value>
+    <value>Maximum : {0}</value>
   </data>
   <data name="SensorsControl_CPU_Title" xml:space="preserve">
     <value>Processeur</value>
@@ -2970,7 +2970,7 @@ Nécessite un redémarrage.</value>
     <value>Optimize</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Ouverture rapide</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
     <value>Settings</value>
@@ -3489,25 +3489,25 @@ Nécessite un redémarrage.</value>
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Gérer l’enregistrement et l’intégration du menu contextuel Nilesoft Shell.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Activer Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Enregistrer Nilesoft Shell comme gestionnaire du menu contextuel Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Désactiver Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Désinscrire Nilesoft Shell et rétablir le menu contextuel par défaut.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>La modification n’a pas pu être vérifiée. Des droits d’administrateur peuvent être nécessaires.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Veuillez attendre la fin de l’optimisation en cours.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Échec de l’enregistrement</value>
@@ -3633,7 +3633,7 @@ Nécessite un redémarrage.</value>
     <value>Arrêter</value>
   </data>
   <data name="NetworkAccelerationPage_DiagnosticsHeading" xml:space="preserve">
-    <value>Diagnostics</value>
+    <value>Diagnostic</value>
   </data>
   <data name="NetworkAccelerationPage_DiagnosticsPlaceholder" xml:space="preserve">
     <value>Exécutez une vérification rapide de la configuration, du port d’écoute loopback et du résumé de la passerelle. Les diagnostics ne s’exécutent que sur demande.</value>
@@ -3849,7 +3849,7 @@ Nécessite un redémarrage.</value>
     <value>OK</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
-    <value>Diagnostics</value>
+    <value>Diagnostic</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Running" xml:space="preserve">
     <value>Accélération</value>

@@ -2975,7 +2975,7 @@ Richiede il riavvio.</value>
     <value>Installati</value>
   </data>
   <data name="PluginExtensionsPage_SummaryStorePulse" xml:space="preserve">
-    <value>Store Pulse</value>
+    <value>Stato store</value>
   </data>
   <data name="PluginExtensionsPage_SummaryTotal" xml:space="preserve">
     <value>Plugin totali</value>
@@ -3476,25 +3476,25 @@ Richiede il riavvio.</value>
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Gestisci la registrazione e l’integrazione del menu contestuale di Nilesoft Shell.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Abilita Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Registra Nilesoft Shell come gestore del menu contestuale di Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Disabilita Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Annulla la registrazione di Nilesoft Shell e ripristina il menu contestuale predefinito.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>Impossibile verificare la modifica. Potrebbero essere necessari privilegi di amministratore.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Attendi il completamento dell’ottimizzazione in corso.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Impossibile salvare</value>
@@ -3746,7 +3746,7 @@ Richiede il riavvio.</value>
     <value>Messaggio</value>
   </data>
   <data name="CrashReportNotification_Field_Stack" xml:space="preserve">
-    <value>Stack trace</value>
+    <value>Stack della chiamata</value>
   </data>
   <data name="CrashReportNotification_Field_Time" xml:space="preserve">
     <value>Ora</value>
@@ -3812,7 +3812,7 @@ Richiede il riavvio.</value>
     <value>Zona pericolosa</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
-    <value>Worker del proxy</value>
+    <value>Worker proxy</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
     <value>Non trovato</value>

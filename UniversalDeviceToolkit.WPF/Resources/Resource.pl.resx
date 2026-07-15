@@ -3489,25 +3489,25 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Zarządzaj rejestracją i integracją menu kontekstowego Nilesoft Shell.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Włącz Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Zarejestruj Nilesoft Shell jako procedurę obsługi menu kontekstowego Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Wyłącz Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Wyrejestruj Nilesoft Shell i przywróć domyślne menu kontekstowe.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>Nie można zweryfikować zmiany. Mogą być wymagane uprawnienia administratora.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Poczekaj na zakończenie bieżącej optymalizacji.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Nie można zapisać</value>
@@ -3825,7 +3825,7 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Strefa niebezpieczna</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
-    <value>Proxy worker</value>
+    <value>Worker proxy</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
     <value>Nie znaleziono</value>
@@ -3936,7 +3936,7 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Hosts wyłączone</value>
   </data>
   <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
-    <value>System proxy</value>
+    <value>Proxy systemowe</value>
   </data>
   <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
     <value>Przywraca proxy systemowe i oznaczone UDT zmiany Hosts z ostatniej migawki. Nie włącza ponownie przyspieszania.</value>

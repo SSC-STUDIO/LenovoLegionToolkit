@@ -3513,25 +3513,25 @@
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Управление на регистрацията и интеграцията на контекстното меню на Nilesoft Shell.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Активиране на Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Регистриране на Nilesoft Shell като обработчик на контекстното меню на Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Деактивиране на Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Премахване на регистрацията на Nilesoft Shell и възстановяване на стандартното контекстно меню.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>Промяната не можа да бъде потвърдена. Може да са необходими администраторски права.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Изчакайте текущата оптимизация да приключи.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Не може да се запази</value>
@@ -3915,7 +3915,7 @@
     <value>Възстановява системния прокси и Hosts промените, маркирани от UDT, от последния момент. Не включва отново ускорението.</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
-    <value>Proxy worker</value>
+    <value>Прокси worker</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_BackendOk" xml:space="preserve">
     <value>Готов</value>

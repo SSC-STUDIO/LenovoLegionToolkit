@@ -3407,7 +3407,7 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Mag hőmérséklet</value>
   </data>
   <data name="SensorsControl_GpuHotSpotTemperature_Title" xml:space="preserve">
-    <value>GPU Hot Spot</value>
+    <value>GPU forró pont</value>
   </data>
   <data name="SensorsControl_GpuMemoryTemperature_Title" xml:space="preserve">
     <value>VRAM hőmérséklet</value>
@@ -3488,25 +3488,25 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>A Nilesoft Shell helyi menü regisztrációjának és integrációjának kezelése.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Nilesoft Shell engedélyezése</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>A Nilesoft Shell regisztrálása a Windows helyi menükezelőjeként.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Nilesoft Shell letiltása</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>A Nilesoft Shell regisztrációjának törlése és az alapértelmezett helyi menü visszaállítása.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>A módosítást nem sikerült ellenőrizni. Rendszergazdai jogosultságra lehet szükség.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Várja meg, amíg a jelenlegi optimalizálás befejeződik.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Nem sikerült menteni</value>
@@ -3824,7 +3824,7 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Veszélyes zóna</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
-    <value>Proxy worker</value>
+    <value>Proxy folyamat</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
     <value>Nem található</value>
@@ -3842,7 +3842,7 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Átjáró</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Loopback" xml:space="preserve">
-    <value>Loopback proxy port</value>
+    <value>Helyi (loopback) proxy port</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
     <value>OK</value>
@@ -3935,7 +3935,7 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
     <value>Hosts letiltva</value>
   </data>
   <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
-    <value>System proxy</value>
+    <value>Rendszerproxy</value>
   </data>
   <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
     <value>Visszaállítja a rendszerproxy-t és az UDT-jelölt Hosts módosításokat az utolsó pillanatfelvételről. A gyorsítást nem kapcsolja be újra.</value>

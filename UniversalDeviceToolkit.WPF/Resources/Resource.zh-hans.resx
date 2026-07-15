@@ -3618,25 +3618,25 @@ Fn 将会暂时解除锁定。</value>
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>管理 Nilesoft Shell 上下文菜单的注册与集成。</value>
+    <value>管理 Nilesoft Shell 右键菜单注册与集成。</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
     <value>启用 Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>将 Nilesoft Shell 注册为 Windows 上下文菜单处理程序。</value>
+    <value>将 Nilesoft Shell 注册为 Windows 右键菜单处理程序。</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
     <value>禁用 Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>取消注册 Nilesoft Shell 并恢复默认上下文菜单。</value>
+    <value>取消注册 Nilesoft Shell 并恢复默认右键菜单。</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>更改无法验证，可能需要管理员权限。</value>
+    <value>无法验证更改。可能需要管理员权限。</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>请等待当前优化操作完成。</value>
+    <value>请等待当前优化完成。</value>
   </data>
   <data name="NetworkAccelerationPage_Title" xml:space="preserve">
     <value>网络与加速</value>

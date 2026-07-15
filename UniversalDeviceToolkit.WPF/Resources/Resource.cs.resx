@@ -2978,7 +2978,7 @@ Vyžaduje restart.</value>
     <value>Optimize</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
-    <value>Quick Open</value>
+    <value>Rychlé otevření</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
     <value>Settings</value>
@@ -3541,25 +3541,25 @@ Vyžaduje restart.</value>
     <value>Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
-    <value>Manage Nilesoft Shell context menu registration and integration.</value>
+    <value>Spravujte registraci a integraci místní nabídky Nilesoft Shell.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
-    <value>Enable Nilesoft Shell</value>
+    <value>Povolit Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
-    <value>Register Nilesoft Shell as the Windows context menu handler.</value>
+    <value>Zaregistrujte Nilesoft Shell jako obsluhu místní nabídky Windows.</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
-    <value>Disable Nilesoft Shell</value>
+    <value>Zakázat Nilesoft Shell</value>
   </data>
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
-    <value>Unregister Nilesoft Shell and restore the default context menu.</value>
+    <value>Zrušte registraci Nilesoft Shell a obnovte výchozí místní nabídku.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_NotVerified" xml:space="preserve">
-    <value>The change could not be verified. Administrator privileges may be required.</value>
+    <value>Změnu se nepodařilo ověřit. Mohou být vyžadována oprávnění správce.</value>
   </data>
   <data name="WindowsOptimizationPage_Optimization_Busy_Wait" xml:space="preserve">
-    <value>Please wait for the current optimization to finish.</value>
+    <value>Počkejte na dokončení aktuální optimalizace.</value>
   </data>
   <data name="AutomationPage_Save_Error_Title" xml:space="preserve">
     <value>Nelze uložit</value>
@@ -3877,7 +3877,7 @@ Vyžaduje restart.</value>
     <value>Nebezpečná zóna</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Backend" xml:space="preserve">
-    <value>Proxy worker</value>
+    <value>Proces proxy</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_BackendMissing" xml:space="preserve">
     <value>Nenalezeno</value>
@@ -3988,7 +3988,7 @@ Vyžaduje restart.</value>
     <value>Hosts vypnuto</value>
   </data>
   <data name="NetworkAccelerationPage_ModeShort_SystemProxy" xml:space="preserve">
-    <value>System proxy</value>
+    <value>Systémový proxy</value>
   </data>
   <data name="NetworkAccelerationPage_RestoreHint" xml:space="preserve">
     <value>Obnoví systémový proxy a změny Hosts označené UDT z posledního snímku. Akceleraci znovu nezapne.</value>
