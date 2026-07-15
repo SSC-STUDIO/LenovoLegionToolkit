@@ -16,6 +16,14 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
+    public void CiTestsWorkflow_ShouldGateWpfL10nCoverageScript()
+    {
+        var workflow = ReadRepositoryFile(".github", "workflows", "Ci-tests.yml");
+        workflow.Should().Contain("Assert-WpfL10nCoverage.ps1");
+        workflow.Should().Contain("Assert WPF l10n coverage");
+    }
+
+    [Fact]
     public void FlaUiNightlyWorkflow_ShouldRunOnSelfHostedDesktopRunner()
     {
         var workflow = ReadRepositoryFile(".github", "workflows", "flaui-tests.yml");
