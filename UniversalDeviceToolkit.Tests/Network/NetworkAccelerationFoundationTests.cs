@@ -146,11 +146,12 @@ public class DomainMatcherTests
     }
 
     [Fact]
-    public void IsAllowed_EmptyOrNullAllowlist_AllowsAll()
+    public void IsAllowed_EmptyOrNullAllowlist_DeniesAll()
     {
-        DomainMatcher.IsAllowed("evil.example", null).Should().BeTrue();
-        DomainMatcher.IsAllowed("evil.example", Array.Empty<string>()).Should().BeTrue();
-        DomainMatcher.IsAllowed("evil.example", []).Should().BeTrue();
+        // Fail closed: empty/null allowlist must not open the loopback proxy to all hosts.
+        DomainMatcher.IsAllowed("evil.example", null).Should().BeFalse();
+        DomainMatcher.IsAllowed("evil.example", Array.Empty<string>()).Should().BeFalse();
+        DomainMatcher.IsAllowed("evil.example", []).Should().BeFalse();
     }
 
     [Fact]

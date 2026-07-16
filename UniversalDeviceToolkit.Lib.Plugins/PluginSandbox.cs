@@ -676,23 +676,28 @@ public class PluginSandbox : IPluginSandbox, IDisposable
             }
 
             var assemblyPath = _resolver.ResolveAssemblyToPath(assemblyName);
-            if (assemblyPath != null)
-            {
-                return LoadFromAssemblyPath(assemblyPath);
-            }
+            if (assemblyPath is null || !File.Exists(assemblyPath))
+                return null;
 
-            return null;
+            // Contain managed deps to the plugin directory (same as unmanaged).
+            var fullPath = Path.GetFullPath(assemblyPath);
+            if (!IsPathWithinDirectory(fullPath, _pluginDirectory))
+                return null;
+
+            return LoadFromAssemblyPath(fullPath);
         }
 
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
         {
             var libraryPath = _resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
-            if (libraryPath != null && IsPathWithinDirectory(libraryPath, _pluginDirectory))
-            {
-                return LoadUnmanagedDllFromPath(libraryPath);
-            }
+            if (libraryPath is null || !File.Exists(libraryPath))
+                return IntPtr.Zero;
 
-            return IntPtr.Zero;
+            var fullPath = Path.GetFullPath(libraryPath);
+            if (!IsPathWithinDirectory(fullPath, _pluginDirectory))
+                return IntPtr.Zero;
+
+            return LoadUnmanagedDllFromPath(fullPath);
         }
     }
 

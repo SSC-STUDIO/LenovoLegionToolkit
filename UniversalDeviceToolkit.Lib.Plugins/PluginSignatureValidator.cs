@@ -98,7 +98,11 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                     string.Format(Resource.Plugin_Error_Signature_FileNotFound, dllPath));
             }
 
-            // Try to extract the Authenticode signature certificate
+            // Integrity first: WinVerifyTrust checks the Authenticode digest over file bytes.
+            // Extracting a cert blob alone is insufficient (tampered PE can still carry a cert).
+            var authenticodeOk = AuthenticodeVerifier.TryVerifyFile(dllPath, out var trustStatus);
+
+            // Try to extract the Authenticode signature certificate (for chain/expiry details)
             X509Certificate2? certificate = null;
             try
             {
@@ -137,6 +141,33 @@ public class PluginSignatureValidator : IPluginSignatureValidator
 
                 return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
                     Resource.Plugin_Error_Signature_NotSigned_Required);
+            }
+
+            if (!authenticodeOk)
+            {
+                // Cert present but digest/trust failed — treat as invalid unless policy allows unsigned
+                // and package is hash-trusted (online store path).
+                if (_settings.ValidationMode == PluginSignatureValidationMode.RequireSignature &&
+                    TrustedPluginPackageStore.IsTrustedFile(dllPath))
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Plugin {dllPath} Authenticode verify failed (0x{trustStatus:X8}) but trusted package hash matches.");
+
+                    return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
+                        Resource.Plugin_Error_Signature_NotSigned_TrustedPackage)
+                    { IsAllowedByPolicy = true };
+                }
+
+                if (_settings.ValidationMode == PluginSignatureValidationMode.AllowUnsigned)
+                {
+                    return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
+                        Resource.Plugin_Error_Signature_NotSigned_AllowUnsigned)
+                    { IsAllowedByPolicy = true };
+                }
+
+                Log.Instance.Warning($"Plugin {dllPath} Authenticode integrity check failed. WinVerifyTrust=0x{trustStatus:X8}");
+                return new PluginSignatureResult(PluginSignatureStatus.Invalid,
+                    string.Format(Resource.Plugin_Error_Signature_ValidationFailed, $"WinVerifyTrust=0x{trustStatus:X8}"));
             }
 
             // Validate the certificate

@@ -11,7 +11,8 @@ namespace UniversalDeviceToolkit.NetworkProxy.Host;
 /// <summary>
 /// Localhost-only HTTP proxy with CONNECT tunneling (no MITM / no TLS interception).
 /// Binds exclusively to 127.0.0.1 / ::1.
-/// When a non-empty domain allowlist is set, CONNECT/HTTP to non-matching hosts return 403.
+/// CONNECT/HTTP to hosts outside the domain allowlist return 403.
+/// Empty allowlist denies all destinations (fail closed until rules are pushed).
 /// </summary>
 public sealed class LocalHttpProxyHost : INetworkProxyHost
 {
@@ -34,7 +35,7 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
     private Task? _acceptLoopV6;
     private int _listenPort;
     private int _activeSessions;
-    // Empty = allow all (full-proxy / before rules are pushed).
+    // Empty = deny all until SetDomainAllowlist receives rules (fail closed).
     private string[] _domainAllowlist = [];
 
     public LocalHttpProxyHost(int listenPort)

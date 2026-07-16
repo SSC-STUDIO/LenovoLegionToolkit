@@ -36,18 +36,18 @@ public static class DomainMatcher
     }
 
     /// <summary>
-    /// Empty or null allowlist allows all hosts (full-proxy / pre-rules path).
-    /// Non-empty allowlist is an explicit host-suffix allowlist.
+    /// Explicit host-suffix allowlist. Null or empty means <b>deny all</b> (fail closed):
+    /// a loopback proxy must not become an open forwarder before rules are applied.
     /// </summary>
     public static bool IsAllowed(string? host, IEnumerable<string>? allowlist)
     {
         if (allowlist is null)
-            return true;
+            return false;
 
         // Materialize once so emptiness and match share the same snapshot.
         var rules = allowlist as IList<string> ?? allowlist.ToList();
         if (rules.Count == 0)
-            return true;
+            return false;
 
         if (string.IsNullOrWhiteSpace(host))
             return false;

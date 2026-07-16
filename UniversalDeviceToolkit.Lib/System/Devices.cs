@@ -209,7 +209,9 @@ public static class Devices
             if (fileHandle.IsInvalid)
                 PInvokeExtensions.ThrowIfWin32Error("CreateFile");
 
+            var previous = _battery;
             _battery = fileHandle;
+            previous?.Dispose();
         }
 
         return _battery;
@@ -234,7 +236,9 @@ public static class Devices
             const ushort PRODUCT_ID_MASK = 0xFF00;
             const ushort DESCRIPTOR_LENGTH = 0x21;
 
+            var previous = _rgbKeyboard;
             _rgbKeyboard = FindHidDevice(VENDOR_ID, PRODUCT_ID_MASK, PRODUCT_ID_MASKED, DESCRIPTOR_LENGTH);
+            previous?.Dispose();
         }
 
         return _rgbKeyboard;
@@ -255,7 +259,9 @@ public static class Devices
             const ushort PRODUCT_ID_MASK = 0xFF00;
             const ushort DESCRIPTOR_LENGTH = 0x03C0;
 
+            var previous = _spectrumRgbKeyboard;
             _spectrumRgbKeyboard = FindHidDevice(VENDOR_ID, PRODUCT_ID_MASK, PRODUCT_ID_MASKED, DESCRIPTOR_LENGTH);
+            previous?.Dispose();
         }
 
         return _spectrumRgbKeyboard;
@@ -325,8 +331,14 @@ public static class Devices
                 FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_NORMAL,
                 null);
 
-            if (!PInvoke.HidD_GetAttributes(fileHandle, out var hidAttributes))
+            if (fileHandle.IsInvalid)
                 continue;
+
+            if (!PInvoke.HidD_GetAttributes(fileHandle, out var hidAttributes))
+            {
+                fileHandle.Dispose();
+                continue;
+            }
 
             PHIDP_PREPARSED_DATA preParsedData = default;
             var matched = false;
@@ -353,6 +365,20 @@ public static class Devices
         }
 
         return null;
+    }
+
+    /// <summary>Dispose cached device handles (call on app shutdown).</summary>
+    public static void Cleanup()
+    {
+        lock (Lock)
+        {
+            _battery?.Dispose();
+            _battery = null;
+            _rgbKeyboard?.Dispose();
+            _rgbKeyboard = null;
+            _spectrumRgbKeyboard?.Dispose();
+            _spectrumRgbKeyboard = null;
+        }
     }
 
     #endregion

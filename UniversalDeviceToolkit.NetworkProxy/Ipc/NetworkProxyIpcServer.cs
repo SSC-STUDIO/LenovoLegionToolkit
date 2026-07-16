@@ -179,7 +179,7 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
                     }
 
                     _rulesJson = request.Payload!;
-                    // Apply allowlist to the live host (empty = allow all).
+                    // Apply allowlist to the live host (empty = deny all / fail closed).
                     _host.SetDomainAllowlist(domains);
                 }
 

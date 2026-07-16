@@ -714,10 +714,15 @@ public class PluginLoader : IPluginLoader
         protected override IntPtr LoadUnmanagedDll(string unmanagedDllName)
         {
             var libraryPath = _resolver.ResolveUnmanagedDllToPath(unmanagedDllName);
-            if (!string.IsNullOrWhiteSpace(libraryPath) && File.Exists(libraryPath))
-                return LoadUnmanagedDllFromPath(libraryPath);
+            if (string.IsNullOrWhiteSpace(libraryPath) || !File.Exists(libraryPath))
+                return IntPtr.Zero;
 
-            return IntPtr.Zero;
+            // Mirror managed load: never load native code outside the plugin tree.
+            var fullPath = Path.GetFullPath(libraryPath);
+            if (!IsPathWithinDirectory(fullPath, _pluginDirectory))
+                return IntPtr.Zero;
+
+            return LoadUnmanagedDllFromPath(fullPath);
         }
 
         private static Assembly? ResolveSharedHostAssembly(AssemblyName assemblyName)

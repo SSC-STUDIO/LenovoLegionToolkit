@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -65,8 +66,23 @@ public sealed class SettingsBackupService
                 entry.ExtractToFile(Path.Combine(staging, entry.Name), overwrite: true);
 
             Directory.CreateDirectory(Folders.AppData);
+
+            // Replace semantics (not merge): apply backup files, then remove AppData *.json
+            // that are not present in the backup so stale settings cannot survive import.
+            var importedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var file in Directory.EnumerateFiles(staging, "*.json", SearchOption.TopDirectoryOnly))
-                File.Copy(file, Path.Combine(Folders.AppData, Path.GetFileName(file)), overwrite: true);
+            {
+                var name = Path.GetFileName(file);
+                File.Copy(file, Path.Combine(Folders.AppData, name), overwrite: true);
+                importedNames.Add(name);
+            }
+
+            foreach (var existing in Directory.EnumerateFiles(Folders.AppData, "*.json", SearchOption.TopDirectoryOnly))
+            {
+                var name = Path.GetFileName(existing);
+                if (!importedNames.Contains(name))
+                    File.Delete(existing);
+            }
 
             return rollback;
         }
@@ -96,6 +112,8 @@ public sealed class SettingsBackupService
     {
         using var archive = ZipFile.OpenRead(backupFile);
         Directory.CreateDirectory(Folders.AppData);
+
+        var restoredNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         foreach (var entry in archive.Entries.Where(entry =>
                      entry.FullName.StartsWith("settings/", StringComparison.Ordinal)
                      && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
@@ -103,6 +121,21 @@ public sealed class SettingsBackupService
             if (!PathSecurity.IsValidFileName(entry.Name))
                 continue;
             entry.ExtractToFile(Path.Combine(Folders.AppData, entry.Name), overwrite: true);
+            restoredNames.Add(entry.Name);
+        }
+
+        // Mirror import replace semantics on rollback.
+        foreach (var existing in Directory.EnumerateFiles(Folders.AppData, "*.json", SearchOption.TopDirectoryOnly))
+        {
+            var name = Path.GetFileName(existing);
+            if (!restoredNames.Contains(name))
+            {
+                try { File.Delete(existing); }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    Log.Instance.Warning($"Failed to remove leftover settings file during restore: {existing}", ex);
+                }
+            }
         }
     }
 

@@ -15,7 +15,7 @@ public interface INetworkProxyHost : IAsyncDisposable
 
     /// <summary>
     /// Sets host-suffix allowlist used for CONNECT/HTTP filtering.
-    /// Null or empty = allow all destinations (full-proxy / pre-rules path).
+    /// Null or empty = deny all destinations (fail closed until rules are set).
     /// </summary>
     void SetDomainAllowlist(IReadOnlyList<string>? domains);
 }

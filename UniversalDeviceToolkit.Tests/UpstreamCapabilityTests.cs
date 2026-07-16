@@ -54,10 +54,13 @@ public sealed class UpstreamCapabilityTests : IDisposable
         var backup = Path.Combine(_temp, "export.udtbackup");
         service.Export(backup);
         File.WriteAllText(Path.Combine(_temp, "settings.json"), "{\"value\":2}");
+        // Extra file present only after export — import must remove it (replace, not merge).
+        File.WriteAllText(Path.Combine(_temp, "orphan.json"), "{\"orphan\":true}");
 
         var rollback = service.Import(backup);
 
         File.ReadAllText(Path.Combine(_temp, "settings.json")).Should().Contain("1");
+        File.Exists(Path.Combine(_temp, "orphan.json")).Should().BeFalse();
         File.Exists(rollback).Should().BeTrue();
     }
 

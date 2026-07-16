@@ -168,7 +168,7 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
             }
 
             // Defense-in-depth: push enabled domains so the worker rejects non-allowlisted hosts.
-            // Empty list = allow-all on the host (non-SystemProxy / pre-rules path).
+            // Empty list = deny-all on the host (fail closed; no open loopback forwarder).
             var rulesResult = await client.SetRulesAsync(domains, cancellationToken).ConfigureAwait(false);
             if (!rulesResult.Success)
             {
