@@ -153,6 +153,7 @@ public class FoldersTests
             var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var newDirectory = Path.Combine(localAppData, AppIdentity.CompactName);
             var legacyDirectory = Path.Combine(localAppData, AppIdentity.LegacyCompactName);
+            var markerFile = Path.Combine(newDirectory, ".legacy-appdata-migrated");
             var migratedFile = Path.Combine(newDirectory, "udt_migration_test", "legacy.txt");
             var legacyFile = Path.Combine(legacyDirectory, "udt_migration_test", "legacy.txt");
             var existingFile = Path.Combine(newDirectory, "udt_migration_test", "existing.txt");
@@ -160,18 +161,26 @@ public class FoldersTests
 
             Directory.CreateDirectory(Path.GetDirectoryName(legacyFile)!);
             Directory.CreateDirectory(Path.GetDirectoryName(existingFile)!);
+            // Clear prior one-shot marker so this test can exercise migration.
+            SafeDeleteFile(markerFile);
             File.WriteAllText(legacyFile, "legacy");
             File.WriteAllText(legacyExistingFile, "legacy should not overwrite");
             File.WriteAllText(existingFile, "new");
 
             try
             {
-                // Act
+                // Act — first access migrates missing files only
                 _ = Folders.AppData;
 
                 // Assert
                 File.ReadAllText(migratedFile).Should().Be("legacy");
                 File.ReadAllText(existingFile).Should().Be("new");
+                File.Exists(markerFile).Should().BeTrue("migration should be marked complete");
+
+                // One-shot: deleting a migrated file must not resurrect it from legacy.
+                SafeDeleteFile(migratedFile);
+                _ = Folders.AppData;
+                File.Exists(migratedFile).Should().BeFalse();
             }
             finally
             {
@@ -179,6 +188,7 @@ public class FoldersTests
                 SafeDeleteFile(legacyFile);
                 SafeDeleteFile(existingFile);
                 SafeDeleteFile(legacyExistingFile);
+                SafeDeleteFile(markerFile);
                 SafeDeleteDirectory(Path.Combine(newDirectory, "udt_migration_test"));
                 SafeDeleteDirectory(Path.Combine(legacyDirectory, "udt_migration_test"));
             }
