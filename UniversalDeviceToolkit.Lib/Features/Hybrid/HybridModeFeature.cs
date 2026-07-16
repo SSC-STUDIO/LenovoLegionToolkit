@@ -71,12 +71,21 @@ public class HybridModeFeature(
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (_ensureDGPUEjectedIfNeededCts is { } cts)
+        // Serialize CTS swap so concurrent SetStateAsync cannot double-dispose.
+        var newCts = new CancellationTokenSource();
+        var previousCts = Interlocked.Exchange(ref _ensureDGPUEjectedIfNeededCts, newCts);
+        if (previousCts is not null)
         {
-            await cts.CancelAsync().ConfigureAwait(false);
-            cts.Dispose();
+            try
+            {
+                await previousCts.CancelAsync().ConfigureAwait(false);
+                previousCts.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Another caller already disposed it.
+            }
         }
-        _ensureDGPUEjectedIfNeededCts = new CancellationTokenSource();
 
         var (gSync, igpuMode) = Unpack(state);
 
@@ -87,6 +96,7 @@ public class HybridModeFeature(
         var igpuModeSupported = await igpuModeFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
 
         var gSyncChanged = false;
+        var igpuModeChanged = false;
 
         if (gSyncSupported && await gSyncFeature.GetStateAsync(cancellationToken).ConfigureAwait(false) != gSync)
         {
@@ -99,6 +109,7 @@ public class HybridModeFeature(
             try
             {
                 await igpuModeFeature.SetStateAsync(igpuMode, cancellationToken).ConfigureAwait(false);
+                igpuModeChanged = true;
             }
             catch (IGPUModeChangeException ex)
             {
@@ -115,6 +126,10 @@ public class HybridModeFeature(
                     await dgpuNotify.NotifyLaterIfNeededAsync().ConfigureAwait(false);
             }
         }
+
+        // iGPU-only must actively eject the discrete GPU; NotifyLater is only for Default/Auto.
+        if (igpuModeChanged && igpuMode == IGPUModeState.IGPUOnly)
+            await EnsureDGPUEjectedIfNeededAsync().ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"State set to {state} [gSync={gSync}, igpuMode={igpuMode}]");

@@ -45,6 +45,18 @@ public class BatteryFeature() : AbstractDriverFeature<BatteryState>(Drivers.GetE
 
     public override async Task SetStateAsync(BatteryState state, CancellationToken cancellationToken = default)
     {
+        // ToInternalAsync branches on LastState for multi-code transitions. Default(enum) is
+        // Conservation (0); without a prior GetState, CLI/set-from-cold can send the wrong codes.
+        try
+        {
+            await GetStateAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Could not refresh battery LastState before set; using previous value.", ex);
+        }
+
         await base.SetStateAsync(state, cancellationToken).ConfigureAwait(false);
         SetStateInRegistry(state);
     }

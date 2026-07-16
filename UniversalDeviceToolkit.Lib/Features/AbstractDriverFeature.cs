@@ -81,9 +81,12 @@ public abstract class AbstractDriverFeature<T>(Func<SafeFileHandle> driverHandle
             cancellationToken.ThrowIfCancellationRequested();
             await SendCodeAsync(DriverHandle(), ControlCode, code, cancellationToken).ConfigureAwait(false);
         }
-        LastState = state;
 
         await VerifyStateSetAsync(state, cancellationToken).ConfigureAwait(false);
+
+        // Only commit LastState after verify succeeds so failed transitions keep the prior mode
+        // for correct multi-step ToInternal sequences (e.g. battery RapidCharge → Conservation).
+        LastState = state;
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"State set to {state} [feature={GetType().Name}]");

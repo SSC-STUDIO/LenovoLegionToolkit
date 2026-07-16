@@ -40,6 +40,8 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
 
         var value = await TryGetFeatureValueAsync(CapabilityID.IGPUMode).ConfigureAwait(false)
                     ?? throw CreateUnavailableException(CapabilityID.IGPUMode);
+        if (value < 0)
+            throw CreateUnavailableException(CapabilityID.IGPUMode);
         cancellationToken.ThrowIfCancellationRequested();
         var result = (IGPUModeState)value;
 
@@ -57,10 +59,12 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
             Log.Instance.Trace($"Setting state to {state}...");
 
         await WMI.LenovoOtherMethod.SetFeatureValueAsync(CapabilityID.IGPUMode, (int)state).ConfigureAwait(false);
-        if (await TryGetFeatureValueAsync(CapabilityID.IGPUModeChangeStatus).ConfigureAwait(false) == 0)
+        // Success is strictly positive change status; 0 = failed, negative/unavailable = failed.
+        var changeStatus = await TryGetFeatureValueAsync(CapabilityID.IGPUModeChangeStatus).ConfigureAwait(false);
+        if (changeStatus is null or < 1)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Set state to {state}, but dGPU check failed.");
+                Log.Instance.Trace($"Set state to {state}, but dGPU check failed. [status={changeStatus}]");
 
             throw new IGPUModeChangeException(state);
         }

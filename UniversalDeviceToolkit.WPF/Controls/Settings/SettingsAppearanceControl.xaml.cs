@@ -31,15 +31,23 @@ public partial class SettingsAppearanceControl
     public SettingsAppearanceControl()
     {
         InitializeComponent();
-        _themeManager.ThemeApplied += ThemeManager_ThemeApplied;
-        _languagePackInstallCoordinator.Changed += LanguagePackInstallCoordinator_Changed;
+        Loaded += SettingsAppearanceControl_Loaded;
         Unloaded += SettingsAppearanceControl_Unloaded;
-        Loaded += (_, _) => SyncLanguageInstallUi();
         IsVisibleChanged += (_, e) =>
         {
             if (e.NewValue is true)
                 SyncLanguageInstallUi();
         };
+    }
+
+    private void SettingsAppearanceControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Control is reused when Settings content is swapped; re-subscribe after Unloaded.
+        _themeManager.ThemeApplied -= ThemeManager_ThemeApplied;
+        _themeManager.ThemeApplied += ThemeManager_ThemeApplied;
+        _languagePackInstallCoordinator.Changed -= LanguagePackInstallCoordinator_Changed;
+        _languagePackInstallCoordinator.Changed += LanguagePackInstallCoordinator_Changed;
+        SyncLanguageInstallUi();
     }
 
     private void SettingsAppearanceControl_Unloaded(object sender, RoutedEventArgs e)

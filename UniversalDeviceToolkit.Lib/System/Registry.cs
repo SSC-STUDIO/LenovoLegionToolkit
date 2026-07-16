@@ -203,11 +203,27 @@ public static class Registry
         }
         catch (UnauthorizedAccessException)
         {
-            if (fixPermissions && AddPermissions(hive, subKey))
-                SetValue(hive, subKey, valueName, value, false, valueKind);
-            else
+            // AddPermissions used to restore the DACL in finally *before* the retry write,
+            // so elevation never covered the actual SetValue. Perform the write while elevated.
+            if (!fixPermissions || !TrySetValueWithElevatedPermissions(hive, subKey, valueName, value, valueKind))
                 throw;
         }
+    }
+
+    /// <summary>
+    /// Take ownership + grant FullControl, write the value, then restore DACL/owner.
+    /// </summary>
+    private static bool TrySetValueWithElevatedPermissions<T>(
+        string hive,
+        string subKey,
+        string valueName,
+        T value,
+        RegistryValueKind valueKind) where T : notnull
+    {
+        return WithElevatedPermissions(hive, subKey, () =>
+        {
+            Microsoft.Win32.Registry.SetValue(@$"{hive}\{subKey}", valueName, value, valueKind);
+        });
     }
 
     public static void Delete(string hive, string subKey)
@@ -219,10 +235,15 @@ public static class Registry
         baseKey.DeleteSubKeyTree(subKey);
     }
 
-    private static bool AddPermissions(string hive, string subKey)
+    /// <summary>
+    /// Elevates registry key ACLs long enough to run <paramref name="action"/>, then restores
+    /// the original DACL and owner. Returns false if elevation could not be established.
+    /// </summary>
+    private static bool WithElevatedPermissions(string hive, string subKey, Action action)
     {
         IdentityReference? originalOwner = null;
         RegistrySecurity? originalSecurity = null;
+        var elevated = false;
 
         try
         {
@@ -237,7 +258,7 @@ public static class Registry
             }
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Attempting to add permissions to {hive}\\{subKey} for {current.Name}...");
+                Log.Instance.Trace($"Attempting to elevate permissions on {hive}\\{subKey} for {current.Name}...");
 
             var user = current.User;
             if (user is null)
@@ -273,16 +294,21 @@ public static class Registry
             const AccessControlType TYPE = AccessControlType.Allow;
             accessControl.AddAccessRule(new(user, RIGHTS, TYPE));
             key.SetAccessControl(accessControl);
+            elevated = true;
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Permissions added on {hive}\\{subKey} for {current.Name}. [rights={RIGHTS}, type={TYPE}]");
+                Log.Instance.Trace($"Permissions elevated on {hive}\\{subKey} for {current.Name}. [rights={RIGHTS}, type={TYPE}]");
 
+            action();
             return true;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to add permissions for {hive}\\{subKey}.", ex);
+                Log.Instance.Trace($"Failed elevated registry operation on {hive}\\{subKey}.", ex);
+
+            if (!elevated)
+                return false;
 
             throw;
         }
