@@ -551,16 +551,16 @@ public class PluginLoaderTests : IDisposable
     }
 
     [Fact]
-    public void IsVersionCompatible_WithInvalidVersion_ShouldReturnTrue()
+    public void IsVersionCompatible_WithInvalidVersion_ShouldReturnFalse()
     {
         // Arrange
         var method = GetPrivateStaticMethod("IsVersionCompatible");
 
-        // Act - Invalid version format should default to allowing
+        // Act - Invalid version format must fail closed (do not install)
         var result = InvokePrivateBoolMethod(method, "invalid-version");
 
-        // Assert - Returns true for backward compatibility
-        result.Should().BeTrue();
+        // Assert
+        result.Should().BeFalse();
     }
 
     [Fact]

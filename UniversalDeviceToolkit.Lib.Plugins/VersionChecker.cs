@@ -73,14 +73,15 @@ public class VersionChecker
 
         try
         {
-            var minVersion = new Version(minimumHostVersion);
-            var currentVersion = new Version(_currentHostVersion);
+            var minVersion = new Version(minimumHostVersion.TrimStart('v', 'V'));
+            var currentVersion = new Version(_currentHostVersion.TrimStart('v', 'V'));
             return currentVersion >= minVersion;
         }
         catch (Exception ex)
         {
-            Log.Instance.Warning($"Error checking version compatibility: {ex.Message}");
-            return true;
+            // Fail closed: unparseable host requirements must not allow installs.
+            Log.Instance.Warning($"Error checking version compatibility (rejecting): {ex.Message}");
+            return false;
         }
     }
 

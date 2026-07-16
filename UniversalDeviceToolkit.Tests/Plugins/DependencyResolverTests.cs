@@ -185,7 +185,7 @@ public class DependencyResolverTests
     }
 
     [Fact]
-    public void ValidateInstallation_WhenUnparsableInstalledVersion_TreatedAsCompatible()
+    public void ValidateInstallation_WhenUnparsableInstalledVersion_TreatedAsIncompatible()
     {
         var deps = new List<PluginDependency>
         {
@@ -193,7 +193,8 @@ public class DependencyResolverTests
         };
         var installed = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { ["dep"] = "not-a-version" };
 
-        _resolver.ValidateInstallation("plugin", deps, installed).Should().BeTrue();
+        // Fail closed: garbage versions must not satisfy MinVersion constraints.
+        _resolver.ValidateInstallation("plugin", deps, installed).Should().BeFalse();
     }
 
     [Fact]
@@ -323,7 +324,7 @@ public class DependencyResolverTests
     }
 
     [Fact]
-    public void ResolveDependencies_WhenActualVersionUnparsable_SkipsConflictAndSucceeds()
+    public void ResolveDependencies_WhenActualVersionUnparsable_ReportsConflict()
     {
         var plugins = new Dictionary<string, List<PluginDependency>>(StringComparer.OrdinalIgnoreCase)
         {
@@ -337,7 +338,7 @@ public class DependencyResolverTests
 
         var result = _resolver.ResolveDependencies(plugins, versions);
 
-        result.Success.Should().BeTrue();
-        result.VersionConflicts.Should().BeEmpty();
+        result.Success.Should().BeFalse();
+        result.VersionConflicts.Should().NotBeEmpty();
     }
 }

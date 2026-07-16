@@ -445,6 +445,9 @@ public partial class MainWindow
         // Unsubscribe from special key listener
         _specialKeyListener.Changed -= SpecialKeyListener_Changed;
 
+        // PubSub keeps strong refs; without this, App.RestartMainWindow leaves zombie handlers.
+        MessagingCenter.Unsubscribe<MainWindowVisibilityMessage>(this);
+
         _trayHelper?.Dispose();
         _trayHelper = null;
     }

@@ -92,6 +92,15 @@ public class PathSecurityExpandedTests
         PathSecurity.IsValidDriverPath(@"C:\Windows\System32\drivers\test.dll").Should().BeFalse();
     }
 
+    [Fact]
+    public void IsValidDriverPath_WithPrefixSiblingDirectory_ShouldReturnFalse()
+    {
+        // Classic prefix bypass: "…\driversEvil" must not match root "…\drivers".
+        var systemDir = Environment.SystemDirectory;
+        PathSecurity.IsValidDriverPath(Path.Combine(systemDir, "driversEvil", "payload.sys")).Should().BeFalse();
+        PathSecurity.IsValidDriverPath(Path.Combine(systemDir, "DriverStoreX", "payload.sys")).Should().BeFalse();
+    }
+
     #endregion
 
     #region SanitizeFileName

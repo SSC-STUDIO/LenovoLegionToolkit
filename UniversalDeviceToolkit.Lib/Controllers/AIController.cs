@@ -52,7 +52,8 @@ public class AIController(
 
             await gameAutoListener.SubscribeChangedAsync(GameAutoListener_Changed).ConfigureAwait(false);
 
-            await RefreshAsync().ConfigureAwait(false);
+            // RefreshCoreAsync: already under _startStopLock (AsyncLock is not reentrant).
+            await RefreshCoreAsync().ConfigureAwait(false);
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"AI controller started");
@@ -136,13 +137,17 @@ public class AIController(
             return;
 
         using (await _startStopLock.LockAsync().ConfigureAwait(false))
-        {
-            if (await ShouldDisableAsync().ConfigureAwait(false))
-                await DisableAsync().ConfigureAwait(false);
+            await RefreshCoreAsync().ConfigureAwait(false);
+    }
 
-            if (await ShouldEnableAsync().ConfigureAwait(false))
-                await EnableAsync().ConfigureAwait(false);
-        }
+    /// <summary>Caller must hold <see cref="_startStopLock"/> (or guarantee exclusive access).</summary>
+    private async Task RefreshCoreAsync()
+    {
+        if (await ShouldDisableAsync().ConfigureAwait(false))
+            await DisableAsync().ConfigureAwait(false);
+
+        if (await ShouldEnableAsync().ConfigureAwait(false))
+            await EnableAsync().ConfigureAwait(false);
     }
 
     private static async Task<bool> IsSupportedAndLogAsync()

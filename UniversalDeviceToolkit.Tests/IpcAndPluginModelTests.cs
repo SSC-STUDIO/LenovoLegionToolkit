@@ -618,10 +618,10 @@ public class IpcAndPluginModelTests
     }
 
     [Fact]
-    public void VersionChecker_IsCompatible_WhenInvalidVersion_ShouldReturnTrue()
+    public void VersionChecker_IsCompatible_WhenInvalidVersion_ShouldReturnFalse()
     {
         var checker = new VersionChecker("1.0.0");
-        checker.IsCompatible("not-a-version").Should().BeTrue();
+        checker.IsCompatible("not-a-version").Should().BeFalse();
     }
 
     [Fact]

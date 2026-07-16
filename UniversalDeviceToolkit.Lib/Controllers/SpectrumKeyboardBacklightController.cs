@@ -543,9 +543,12 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     }
                 }
 
-                avgR /= items.Count;
-                avgG /= items.Count;
-                avgB /= items.Count;
+                if (items.Count > 0)
+                {
+                    avgR /= items.Count;
+                    avgG /= items.Count;
+                    avgB /= items.Count;
+                }
 
                 for (var x = 0; x < width; x++)
                 {
@@ -553,7 +556,8 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     if (keyCode < 1)
                         continue;
 
-                    items.Add(new(keyCode, new((byte)avgR, (byte)avgB, (byte)avgG)));
+                    // RGB order must match main key path: (R, G, B) — not (R, B, G).
+                    items.Add(new(keyCode, new((byte)avgR, (byte)avgG, (byte)avgB)));
                 }
 
                 token.ThrowIfCancellationRequested();

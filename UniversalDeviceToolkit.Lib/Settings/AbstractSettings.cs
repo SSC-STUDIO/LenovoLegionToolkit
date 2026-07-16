@@ -58,7 +58,7 @@ public abstract class AbstractSettings<T> where T : class, new()
         lock (_lock)
         {
             var settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
-            File.WriteAllText(SettingsFilePath, settingsSerialized);
+            AtomicWriteAllText(SettingsFilePath, settingsSerialized);
             _lastLoadTime = DateTime.UtcNow;
         }
     }
@@ -69,10 +69,60 @@ public abstract class AbstractSettings<T> where T : class, new()
         lock (_lock)
         {
             settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
-            _lastLoadTime = DateTime.UtcNow;
         }
 
-        await File.WriteAllTextAsync(SettingsFilePath, settingsSerialized).ConfigureAwait(false);
+        await AtomicWriteAllTextAsync(SettingsFilePath, settingsSerialized).ConfigureAwait(false);
+
+        lock (_lock)
+        {
+            _lastLoadTime = DateTime.UtcNow;
+        }
+    }
+
+    /// <summary>
+    /// Write via temp + replace so a crash mid-write cannot leave an empty/partial JSON file
+    /// (which would force defaults and lose user settings on next load).
+    /// </summary>
+    private static void AtomicWriteAllText(string path, string contents)
+    {
+        var directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+
+        var tempPath = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            File.WriteAllText(tempPath, contents);
+            File.Move(tempPath, path, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                try { File.Delete(tempPath); } catch { /* best-effort */ }
+            }
+        }
+    }
+
+    private static async Task AtomicWriteAllTextAsync(string path, string contents)
+    {
+        var directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+
+        var tempPath = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            await File.WriteAllTextAsync(tempPath, contents).ConfigureAwait(false);
+            File.Move(tempPath, path, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                try { File.Delete(tempPath); } catch { /* best-effort */ }
+            }
+        }
     }
 
     public virtual T? LoadStore()

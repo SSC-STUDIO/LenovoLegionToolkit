@@ -489,7 +489,10 @@ public static partial class Compatibility
             &capabilities,
             (uint)Marshal.SizeOf<SYSTEM_POWER_CAPABILITIES>());
 
-        if (result.SeverityCode == NTSTATUS.Severity.Success)
+        // CallNtPowerInformation returns NTSTATUS: Success severity means the
+        // SYSTEM_POWER_CAPABILITIES buffer is valid. The previous check inverted this
+        // and always reported AoAc as unsupported on success.
+        if (result.SeverityCode != NTSTATUS.Severity.Success)
             return (false, false);
 
         return (capabilities.AoAc, capabilities.AoAcConnectivitySupported);

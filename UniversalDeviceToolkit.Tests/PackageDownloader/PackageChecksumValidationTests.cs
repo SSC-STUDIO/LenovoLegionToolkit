@@ -62,6 +62,52 @@ public sealed class PackageChecksumValidationTests
         }
     }
 
+    [Fact]
+    public async Task TryValidateChecksum_WhenCatalogHashMismatches_ShouldRejectEvenIfSidecarMatches()
+    {
+        var packageBytes = "package-payload"u8.ToArray();
+        var realHash = Convert.ToHexString(SHA256.HashData(packageBytes));
+        var wrongCatalogHash = new string('0', 64);
+        var sidecar = $"{realHash}  package.exe";
+
+        var package = new Package
+        {
+            Title = "Test",
+            FileName = "package.exe",
+            FileLocation = "https://example.test/package.exe",
+            FileCrc = wrongCatalogHash
+        };
+
+        var handler = new StaticResponseHandler(new Dictionary<string, HttpResponseMessage>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["https://example.test/package.exe.sha256"] = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(sidecar)
+            }
+        });
+
+        var tempPath = Path.Combine(Path.GetTempPath(), $"udt-checksum-{Guid.NewGuid():N}.bin");
+        await File.WriteAllBytesAsync(tempPath, packageBytes);
+
+        try
+        {
+            var method = typeof(AbstractPackageDownloader).GetMethod(
+                "TryValidateChecksum",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            method.Should().NotBeNull();
+
+            using var httpClient = new HttpClient(handler, disposeHandler: true);
+            var action = async () => await (Task)method!.Invoke(null, [package, tempPath, httpClient, CancellationToken.None])!;
+
+            await action.Should().ThrowAsync<Exception>();
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+                File.Delete(tempPath);
+        }
+    }
+
     private sealed class StaticResponseHandler(IReadOnlyDictionary<string, HttpResponseMessage> responses) : HttpMessageHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

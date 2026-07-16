@@ -23,18 +23,30 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
         using var httpClient = httpClientFactory.Create();
 
         var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        var moved = false;
 
-        using (var fileStream = File.OpenWrite(tempPath))
-            await httpClient.DownloadAsync(package.FileLocation, fileStream, progress, token).ConfigureAwait(false);
+        try
+        {
+            using (var fileStream = File.OpenWrite(tempPath))
+                await httpClient.DownloadAsync(package.FileLocation, fileStream, progress, token).ConfigureAwait(false);
 
-        await TryValidateChecksum(package, tempPath, httpClient, token).ConfigureAwait(false);
+            await TryValidateChecksum(package, tempPath, httpClient, token).ConfigureAwait(false);
 
-        var filename = SanitizeFileName(package.Title) + " - " + SanitizeFileName(Path.GetFileName(package.FileName));
-        var finalPath = Path.Combine(location, filename);
+            var filename = SanitizeFileName(package.Title) + " - " + SanitizeFileName(Path.GetFileName(package.FileName));
+            var finalPath = Path.Combine(location, filename);
 
-        File.Move(tempPath, finalPath, true);
+            File.Move(tempPath, finalPath, true);
+            moved = true;
 
-        return finalPath;
+            return finalPath;
+        }
+        finally
+        {
+            if (!moved && File.Exists(tempPath))
+            {
+                try { File.Delete(tempPath); } catch { /* best-effort */ }
+            }
+        }
     }
 
     private static async Task TryValidateChecksum(Package package, string tempPath, HttpClient httpClient, CancellationToken token)
@@ -45,11 +57,21 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
         var fileSha256Bytes = await managedSha256.ComputeHashAsync(fileStream, token).ConfigureAwait(false);
         var fileSha256 = fileSha256Bytes.Aggregate(string.Empty, (current, b) => current + b.ToString("X2"));
 
-        if (!string.IsNullOrEmpty(package.FileCrc) && fileSha256.Equals(package.FileCrc, StringComparison.OrdinalIgnoreCase))
+        // Catalog hash is authoritative. Never accept a co-located sidecar when FileCrc is set
+        // but does not match (CDN-compromised blob + .sha256 would otherwise bypass the catalog).
+        if (!string.IsNullOrEmpty(package.FileCrc))
         {
+            if (fileSha256.Equals(package.FileCrc, StringComparison.OrdinalIgnoreCase))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Package file checksum match. [fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");
+                return;
+            }
+
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Package file checksum match. [fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");
-            return;
+                Log.Instance.Trace($"Catalog checksum mismatch. [fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");
+
+            throw ExceptionHelper.FileChecksumMismatch();
         }
 
         try
@@ -59,14 +81,14 @@ public abstract class AbstractPackageDownloader(HttpClientFactory httpClientFact
             if (externalSha256 is not null && fileSha256.Equals(externalSha256, StringComparison.OrdinalIgnoreCase))
             {
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"External file checksum match. [fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");
+                    Log.Instance.Trace($"External file checksum match. [fileName={package.FileName}, fileLocation={package.FileLocation}]");
                 return;
             }
         }
         catch (HttpRequestException ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"External file checksum not found. [statusCode={ex.StatusCode}, fileName={package.FileName}, fileLocation={package.FileLocation}, fileCrc={package.FileCrc}]");
+                Log.Instance.Trace($"External file checksum not found. [statusCode={ex.StatusCode}, fileName={package.FileName}, fileLocation={package.FileLocation}]");
         }
 
         if (Log.Instance.IsTraceEnabled)

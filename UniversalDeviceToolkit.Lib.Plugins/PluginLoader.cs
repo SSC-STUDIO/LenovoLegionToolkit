@@ -818,22 +818,27 @@ public class PluginLoader : IPluginLoader
     /// <summary>
     /// Check if the current host version meets the plugin's minimum requirements
     /// </summary>
-    private static bool IsVersionCompatible(string minimumHostVersion)
+    private static bool IsVersionCompatible(string? minimumHostVersion)
     {
+        // No requirement specified.
+        if (string.IsNullOrWhiteSpace(minimumHostVersion))
+            return true;
+
         try
         {
             var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
             if (currentVersion == null)
                 return false;
 
-            if (!Version.TryParse(minimumHostVersion, out var minVersion))
-                return true; // If we can't parse, allow it (backward compatibility)
+            var normalized = minimumHostVersion.Trim().TrimStart('v', 'V');
+            if (!Version.TryParse(normalized, out var minVersion))
+                return false; // Fail closed on unparseable requirements
 
             return currentVersion >= minVersion;
         }
         catch
         {
-            return true; // Default to allowing if check fails
+            return false; // Fail closed if the check itself throws
         }
     }
 

@@ -325,11 +325,21 @@ public static class PathSecurity
         {
             var fullPath = Path.GetFullPath(driverPath);
 
-            // Must start with an allowed driver root
+            // Must be under an allowed driver root (directory boundary, not bare prefix).
+            // Without a trailing separator, "…\System32\driversEvil\x.sys" would match "…\drivers".
             bool inAllowedLocation = false;
             foreach (var root in AllowedDriverRoots)
             {
-                if (fullPath.StartsWith(root, StringComparison.OrdinalIgnoreCase))
+                var fullRoot = Path.GetFullPath(root);
+                if (!fullRoot.EndsWith(Path.DirectorySeparatorChar) &&
+                    !fullRoot.EndsWith(Path.AltDirectorySeparatorChar))
+                {
+                    fullRoot += Path.DirectorySeparatorChar;
+                }
+
+                if (fullPath.StartsWith(fullRoot, StringComparison.OrdinalIgnoreCase) ||
+                    fullPath.Equals(fullRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                        StringComparison.OrdinalIgnoreCase))
                 {
                     inAllowedLocation = true;
                     break;

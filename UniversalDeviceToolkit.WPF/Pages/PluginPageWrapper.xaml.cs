@@ -67,8 +67,9 @@ public partial class PluginPageWrapper : Page
                             _pluginId = mappedPluginId;
                         }
                         // If PageTag format is "plugin:{pluginId}", parse it directly
+                        else if (pageTag.StartsWith("plugin:", StringComparison.OrdinalIgnoreCase))
                         {
-                            _pluginId = pageTag.Substring("plugin:".Length);
+                            _pluginId = pageTag["plugin:".Length..];
                         }
                     }
                 }

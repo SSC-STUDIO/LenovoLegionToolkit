@@ -378,7 +378,8 @@ public class DependencyResolver : IDependencyResolver
     {
         if (!PluginVersionParser.TryParse(actualVersion, out var actual))
         {
-            return true; // If we can't parse, assume compatible
+            // Fail closed: garbage versions must not satisfy Min/Max constraints.
+            return false;
         }
 
         if (!string.IsNullOrEmpty(minVersion))

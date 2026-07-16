@@ -39,5 +39,6 @@ public class AndAutomationPipelineTrigger(IAutomationPipelineTrigger[] triggers)
             trigger.UpdateEnvironment(environment);
     }
 
-    public IAutomationPipelineTrigger DeepCopy() => new AndAutomationPipelineTrigger(Triggers);
+    public IAutomationPipelineTrigger DeepCopy() =>
+        new AndAutomationPipelineTrigger(Triggers.Select(trigger => trigger.DeepCopy()).ToArray());
 }
