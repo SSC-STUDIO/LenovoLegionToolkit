@@ -13,6 +13,7 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 {
     private IDisposable? _disposable;
     private readonly SemaphoreSlim _eventHandlerLock = new(1, 1);
+    private readonly SemaphoreSlim _lifecycleLock = new(1, 1);
     private bool _disposed;
     private bool _isUnsupported;
 
@@ -21,15 +22,19 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
     public async Task StartAsync()
     {
-        if (_isUnsupported)
+        if (_disposed || _isUnsupported)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Listener marked unsupported. Skipping start. [listener={GetType().Name}]");
+                Log.Instance.Trace($"Listener marked unsupported/disposed. Skipping start. [listener={GetType().Name}]");
             return;
         }
 
+        await _lifecycleLock.WaitAsync().ConfigureAwait(false);
         try
         {
+            if (_disposed || _isUnsupported)
+                return;
+
             if (_disposable is not null)
             {
                 if (Log.Instance.IsTraceEnabled)
@@ -56,10 +61,15 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
         {
             Log.Instance.Error($"Couldn't start listener. [listener={GetType().Name}]", ex);
         }
+        finally
+        {
+            _lifecycleLock.Release();
+        }
     }
 
-    public Task StopAsync()
+    public async Task StopAsync()
     {
+        await _lifecycleLock.WaitAsync().ConfigureAwait(false);
         try
         {
             if (Log.Instance.IsTraceEnabled)
@@ -72,8 +82,10 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
         {
             Log.Instance.Error($"Couldn't stop listener. [listener={GetType().Name}]", ex);
         }
-
-        return Task.CompletedTask;
+        finally
+        {
+            _lifecycleLock.Release();
+        }
     }
 
     protected abstract TValue GetValue(TRawValue value);
@@ -86,11 +98,17 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
 
     private async Task HandlerAsync(TRawValue properties, CancellationToken cancellationToken = default)
     {
+        if (_disposed)
+            return;
+
         bool lockAcquired = false;
         try
         {
             await _eventHandlerLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             lockAcquired = true;
+
+            if (_disposed)
+                return;
 
             var value = GetValue(properties);
 
@@ -100,6 +118,10 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
             await OnChangedAsync(value).ConfigureAwait(false);
             RaiseChanged(value);
         }
+        catch (ObjectDisposedException)
+        {
+            // Listener disposed mid-event.
+        }
         catch (Exception ex)
         {
             Log.Instance.Error($"Failed to handle event. [listener={GetType().Name}]", ex);
@@ -107,13 +129,18 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
         finally
         {
             if (lockAcquired)
-                _eventHandlerLock.Release();
+            {
+                try { _eventHandlerLock.Release(); }
+                catch (ObjectDisposedException) { /* disposed */ }
+            }
         }
     }
 
     // Event handler wrapper that properly handles async task
     private void Handler(TRawValue properties)
     {
+        if (_disposed)
+            return;
         HandlerAsync(properties).Forget($"{GetType().Name}.HandlerAsync");
     }
 
@@ -128,12 +155,24 @@ public abstract class AbstractWMIListener<TEventArgs, TValue, TRawValue>(Func<Ac
         if (_disposed)
             return;
 
+        // Mark disposed first so in-flight handlers bail out.
+        _disposed = true;
+
         if (disposing)
         {
-            StopAsync().Forget($"{GetType().Name}.StopAsync");
-            Changed = null;
-        }
+            try
+            {
+                StopAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Error stopping WMI listener during dispose. [listener={GetType().Name}]", ex);
+            }
 
-        _disposed = true;
+            Changed = null;
+
+            try { _eventHandlerLock.Dispose(); } catch { /* best-effort */ }
+            try { _lifecycleLock.Dispose(); } catch { /* best-effort */ }
+        }
     }
 }

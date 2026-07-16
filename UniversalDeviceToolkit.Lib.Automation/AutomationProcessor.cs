@@ -180,11 +180,16 @@ public class AutomationProcessor(
 
     private async Task RunAsync(IAutomationEvent automationEvent)
     {
+        if (_disposed)
+            return;
+
         // Cancel the previous run before waiting for the lock so in-flight delays/steps
         // can observe cancellation instead of only being replaced after they finish.
         CancellationTokenSource? oldCts;
         lock (_ctsLock)
         {
+            if (_disposed)
+                return;
             oldCts = _cts;
             _cts = new CancellationTokenSource();
         }
@@ -205,7 +210,7 @@ public class AutomationProcessor(
 
         using (await _runLock.LockAsync().ConfigureAwait(false))
         {
-            if (!IsEnabled)
+            if (_disposed || !IsEnabled)
                 return;
 
             List<AutomationPipeline> pipelines;
@@ -465,6 +470,9 @@ public class AutomationProcessor(
 
     private async Task ProcessEvent(IAutomationEvent e)
     {
+        if (_disposed)
+            return;
+
         // Do not pre-evaluate triggers here. Stateful triggers (battery %, sensors) arm
         // cooldown/_lastMatchedAt inside IsMatchingEvent; a separate pre-check would
         // consume the match so RunAsync always fails cooldown (pipelines never run).
@@ -576,6 +584,9 @@ public class AutomationProcessor(
         if (_disposed)
             return;
 
+        // Block new ProcessEvent/RunAsync before tearing down listeners.
+        _disposed = true;
+
         if (disposing)
         {
             try
@@ -586,6 +597,27 @@ public class AutomationProcessor(
                 powerModeListener.Changed -= PowerModeListener_Changed;
                 godModeController.PresetChanged -= GodModeController_PresetChanged;
                 sessionLockUnlockListener.Changed -= SessionLockUnlockListener_Changed;
+
+                // AutoListeners were only unsubscribed in UpdateListenersAsync; dispose must
+                // also detach them so late ticks cannot allocate a new CTS after dispose.
+                try
+                {
+                    gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                    processAutoListener.UnsubscribeChangedAsync(ProcessAutoListener_Changed)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                    timeAutoListener.UnsubscribeChangedAsync(TimeAutoListener_Changed)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                    userInactivityAutoListener.UnsubscribeChangedAsync(UserInactivityAutoListener_Changed)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                    wifiAutoListener.UnsubscribeChangedAsync(WiFiAutoListener_Changed)
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace("Error unsubscribing auto listeners during disposal", ex);
+                }
 
                 CancellationTokenSource? ctsToDispose;
                 lock (_ctsLock)
@@ -614,8 +646,6 @@ public class AutomationProcessor(
                     Log.Instance.Trace($"Error during AutomationProcessor disposal", ex);
             }
         }
-
-        _disposed = true;
     }
 
     #endregion

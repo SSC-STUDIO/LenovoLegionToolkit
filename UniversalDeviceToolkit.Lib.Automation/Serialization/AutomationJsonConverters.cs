@@ -118,7 +118,21 @@ internal sealed class AutomationPipelineTriggerJsonConverter : JsonConverter<IAu
         try
         {
             if (names.Contains("Triggers"))
+            {
+                // And uses newline-joined DisplayName; Or uses a localized "OR" separator.
+                // Prefer DisplayName hint when present; otherwise default to And (historical).
+                if (root.TryGetProperty("DisplayName", out var compositeName) &&
+                    compositeName.ValueKind == JsonValueKind.String)
+                {
+                    var dn = compositeName.GetString() ?? string.Empty;
+                    if (dn.Contains(" OR ", StringComparison.OrdinalIgnoreCase) ||
+                        dn.Contains(" || ", StringComparison.Ordinal) ||
+                        dn.Contains("或", StringComparison.Ordinal))
+                        return JsonSerializer.Deserialize<OrAutomationPipelineTrigger>(raw, options);
+                }
+
                 return JsonSerializer.Deserialize<AndAutomationPipelineTrigger>(raw, options);
+            }
 
             if (names.Contains("Ssids"))
                 return JsonSerializer.Deserialize<WiFiConnectedAutomationPipelineTrigger>(raw, options);
@@ -130,10 +144,42 @@ internal sealed class AutomationPipelineTriggerJsonConverter : JsonConverter<IAu
                 return JsonSerializer.Deserialize<GodModePresetChangedAutomationPipelineTrigger>(raw, options);
 
             if (names.Contains("Processes"))
+            {
+                // Same shape for start/stop; use DisplayName / ProcessesStarted when available.
+                if (root.TryGetProperty("DisplayName", out var procName) &&
+                    procName.ValueKind == JsonValueKind.String)
+                {
+                    var dn = procName.GetString() ?? string.Empty;
+                    if (dn.Contains("stop", StringComparison.OrdinalIgnoreCase) ||
+                        dn.Contains("关闭", StringComparison.Ordinal) ||
+                        dn.Contains("停止", StringComparison.Ordinal))
+                        return JsonSerializer.Deserialize<ProcessesStopRunningAutomationPipelineTrigger>(raw, options);
+                }
+
+                if (root.TryGetProperty("ProcessesStarted", out var started) &&
+                    started.ValueKind is JsonValueKind.False)
+                    return JsonSerializer.Deserialize<ProcessesStopRunningAutomationPipelineTrigger>(raw, options);
+
                 return JsonSerializer.Deserialize<ProcessesAreRunningAutomationPipelineTrigger>(raw, options);
+            }
 
             if (names.Contains("InstanceIds"))
+            {
+                if (root.TryGetProperty("DisplayName", out var devName) &&
+                    devName.ValueKind == JsonValueKind.String)
+                {
+                    var dn = devName.GetString() ?? string.Empty;
+                    if (dn.Contains("disconnect", StringComparison.OrdinalIgnoreCase) ||
+                        dn.Contains("断开", StringComparison.Ordinal))
+                        return JsonSerializer.Deserialize<DeviceDisconnectedAutomationPipelineTrigger>(raw, options);
+                }
+
+                if (root.TryGetProperty("DeviceConnected", out var conn) &&
+                    conn.ValueKind is JsonValueKind.False)
+                    return JsonSerializer.Deserialize<DeviceDisconnectedAutomationPipelineTrigger>(raw, options);
+
                 return JsonSerializer.Deserialize<DeviceConnectedAutomationPipelineTrigger>(raw, options);
+            }
 
             if (names.Contains("InactivityTimeSpan"))
                 return JsonSerializer.Deserialize<UserInactivityAutomationPipelineTrigger>(raw, options);
