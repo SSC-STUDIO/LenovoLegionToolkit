@@ -613,11 +613,21 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                         Log.Instance.Trace($"Refreshing handle... [retry={i + 1}]");
 
                     var tempDeviceHandle = Devices.GetSpectrumRGBKeyboard(true);
-                    if (tempDeviceHandle is not null && await IsReadyAsync(tempDeviceHandle).ConfigureAwait(false))
+                    if (tempDeviceHandle is null)
+                    {
+                        if (i < RETRIES - 1)
+                            await _delayProvider.Delay(TimeSpan.FromMilliseconds(DELAY), default).ConfigureAwait(false);
+                        continue;
+                    }
+
+                    if (await IsReadyAsync(tempDeviceHandle).ConfigureAwait(false))
                     {
                         newDeviceHandle = tempDeviceHandle;
                         break;
                     }
+
+                    // Not ready — dispose before next retry (forceRefresh opens a new handle each time).
+                    tempDeviceHandle.Dispose();
 
                     if (i < RETRIES - 1)
                         await _delayProvider.Delay(TimeSpan.FromMilliseconds(DELAY), default).ConfigureAwait(false);
@@ -640,6 +650,7 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Handle not compatible.");
 
+                    newDeviceHandle.Dispose();
                     return null;
                 }
 
@@ -1033,10 +1044,24 @@ var result = new LENOVO_SPECTRUM_EFFECT(header, index + 1, colors, keys);
             {
                 try
                 {
+                    _listener.Changed -= Listener_Changed;
+
+                    // Stop Aurora and wait briefly so SetFeature cannot race a disposed handle.
+                    try
+                    {
+                        StopAuroraIfNeededAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace("Error stopping Aurora during dispose", ex);
+                    }
+
                     _auroraRefreshCancellationTokenSource?.Cancel();
                     _auroraRefreshCancellationTokenSource?.Dispose();
                     _auroraRefreshCancellationTokenSource = null;
                     _deviceHandle?.Dispose();
+                    _deviceHandle = null;
                 }
                 catch (Exception ex)
                 {

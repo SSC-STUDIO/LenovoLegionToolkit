@@ -32,6 +32,17 @@ public class DependencyResolver : IDependencyResolver
                 return result;
             }
 
+            // Required deps missing from the plugin set must fail (previously silently dropped).
+            var missingRequired = CollectMissingRequiredDependencies(plugins);
+            if (missingRequired.Count > 0)
+            {
+                result.Success = false;
+                result.ErrorMessage = string.Format(
+                    Resource.Plugin_Error_DependencyResolution_Unresolved,
+                    string.Join(", ", missingRequired));
+                return result;
+            }
+
             // Build dependency graph
             var graph = BuildDependencyGraph(plugins);
             var inDegree = CalculateInDegrees(graph);
@@ -254,9 +265,33 @@ public class DependencyResolver : IDependencyResolver
 
     #region Private Methods
 
+    private static List<string> CollectMissingRequiredDependencies(
+        Dictionary<string, List<PluginDependency>> plugins)
+    {
+        var missing = new List<string>();
+        var keys = new HashSet<string>(plugins.Keys, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var (pluginId, dependencies) in plugins)
+        {
+            foreach (var dependency in dependencies)
+            {
+                if (dependency.IsOptional)
+                    continue;
+
+                if (string.IsNullOrWhiteSpace(dependency.PluginId))
+                    continue;
+
+                if (!keys.Contains(dependency.PluginId))
+                    missing.Add($"{pluginId}->{dependency.PluginId}");
+            }
+        }
+
+        return missing;
+    }
+
     private Dictionary<string, List<string>> BuildDependencyGraph(Dictionary<string, List<PluginDependency>> plugins)
     {
-        var graph = new Dictionary<string, List<string>>();
+        var graph = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var pluginId in plugins.Keys)
         {

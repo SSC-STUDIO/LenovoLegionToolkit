@@ -101,11 +101,16 @@ protected void RaiseChanged(TEventArgs value) => Changed?.Invoke(this, value);
             {
                 try
                 {
-                    StopAsync().ContinueWith(static (t, _) =>
+                    // Stop under the same lock as Start/Stop so we do not race Subscribe/Start.
+                    using (_startStopLock.LockAsync().ConfigureAwait(false).GetAwaiter().GetResult())
                     {
-                        if (t.Exception is not null)
-                            Log.Instance.Error($"Error during AbstractAutoListener disposal", t.Exception);
-                    }, null);
+                        if (_started)
+                        {
+                            StopAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                            _started = false;
+                        }
+                    }
+
                     Changed = null;
                 }
                 catch (Exception ex)

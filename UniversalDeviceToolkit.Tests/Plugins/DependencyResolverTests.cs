@@ -341,4 +341,40 @@ public class DependencyResolverTests
         result.Success.Should().BeFalse();
         result.VersionConflicts.Should().NotBeEmpty();
     }
+
+    [Fact]
+    public void ResolveDependencies_WhenRequiredDependencyMissingFromSet_Fails()
+    {
+        var plugins = new Dictionary<string, List<PluginDependency>>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["host"] =
+            [
+                new PluginDependency { PluginId = "missing-dep", IsOptional = false }
+            ]
+            // missing-dep intentionally not present in the set
+        };
+
+        var result = _resolver.ResolveDependencies(plugins);
+
+        result.Success.Should().BeFalse();
+        result.ErrorMessage.Should().NotBeNullOrWhiteSpace();
+        result.ErrorMessage.Should().Contain("missing-dep");
+    }
+
+    [Fact]
+    public void ResolveDependencies_WhenMissingDependencyIsOptional_StillSucceeds()
+    {
+        var plugins = new Dictionary<string, List<PluginDependency>>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["host"] =
+            [
+                new PluginDependency { PluginId = "optional-missing", IsOptional = true }
+            ]
+        };
+
+        var result = _resolver.ResolveDependencies(plugins);
+
+        result.Success.Should().BeTrue();
+        result.LoadOrder.Should().Contain("host");
+    }
 }

@@ -41,11 +41,19 @@ public class TimeAutoListener : AbstractAutoListener<TimeAutoListener.ChangedEve
 
     protected override void Dispose(bool disposing)
     {
+        // Base stops the listener (sets Enabled = false) before we dispose the Timer,
+        // avoiding ObjectDisposedException from StopAsync after Dispose.
         if (disposing)
         {
-            _timer.Elapsed -= Timer_Elapsed;
-            _timer.Dispose();
+            try { _timer.Enabled = false; } catch { /* best-effort */ }
+            try { _timer.Elapsed -= Timer_Elapsed; } catch { /* best-effort */ }
         }
+
         base.Dispose(disposing);
+
+        if (disposing)
+        {
+            try { _timer.Dispose(); } catch { /* best-effort */ }
+        }
     }
 }

@@ -98,8 +98,26 @@ public class PowerStateListener : IListener<PowerStateListener.ChangedEventArgs>
 
         if (disposing)
         {
-            _ = StopAsync();
-            _recipientHandle.Dispose();
+            // Stop synchronously so OS callbacks cannot race a disposed recipient handle.
+            try
+            {
+                StopAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Error stopping PowerStateListener during dispose", ex);
+            }
+
+            try
+            {
+                _recipientHandle.Dispose();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Error disposing PowerStateListener recipient handle", ex);
+            }
         }
 
         _disposed = true;
