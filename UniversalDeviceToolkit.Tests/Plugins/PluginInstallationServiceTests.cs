@@ -82,7 +82,7 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task ExtractAndInstallPluginAsync_ShouldTrustImportedPayloadForProductionSignaturePolicy()
+    public async Task ExtractAndInstallPluginAsync_ShouldNotTrustImportedPayloadForProductionSignaturePolicy()
     {
         const string pluginId = "test-local-plugin";
         var originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
@@ -109,9 +109,10 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
             var signatureResult = await new PluginSignatureValidator(PluginSignatureSettings.Production)
                 .ValidateAsync(installedDll);
 
+            // Local ZIP import must not bypass RequireSignature via the trust store.
             signatureResult.Status.Should().Be(PluginSignatureStatus.NotSigned);
-            signatureResult.IsAllowedByPolicy.Should().BeTrue();
-            signatureResult.IsValid.Should().BeTrue();
+            signatureResult.IsAllowedByPolicy.Should().BeFalse();
+            signatureResult.IsValid.Should().BeFalse();
         }
         finally
         {

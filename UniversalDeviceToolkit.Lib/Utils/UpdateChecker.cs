@@ -214,9 +214,11 @@ public class UpdateChecker
             if (latestUpdate.Url is null)
                 throw ExceptionHelper.SetupFileUrlNotFound();
 
-            using var fileStream = File.OpenWrite(tempPath);
             using var httpClient = _httpClientFactory.Create();
-            await httpClient.DownloadAsync(latestUpdate.Url, fileStream, progress, cancellationToken).ConfigureAwait(false);
+
+            // Fully close the write handle before integrity validation (OpenRead / delete on failure).
+            using (var fileStream = File.OpenWrite(tempPath))
+                await httpClient.DownloadAsync(latestUpdate.Url, fileStream, progress, cancellationToken).ConfigureAwait(false);
 
             // Validate SHA256 integrity after download (security check)
             await ValidateUpdatePackageAsync(tempPath, latestUpdate, httpClient, cancellationToken).ConfigureAwait(false);
@@ -357,14 +359,18 @@ public class UpdateChecker
 
         if (packageFileNames.Count != 0)
         {
-            foreach (var line in lines)
+            // Prefer longer names first so "Foo_Setup.exe" wins over a shorter substring.
+            foreach (var fileName in packageFileNames.OrderByDescending(n => n.Length))
             {
-                if (!packageFileNames.Any(fileName => line.Contains(fileName, StringComparison.OrdinalIgnoreCase)))
-                    continue;
+                foreach (var line in lines)
+                {
+                    if (!LineReferencesFileName(line, fileName))
+                        continue;
 
-                var lineHash = TryExtractFirstSha256Hash(line);
-                if (lineHash is not null)
-                    return lineHash;
+                    var lineHash = TryExtractFirstSha256Hash(line);
+                    if (lineHash is not null)
+                        return lineHash;
+                }
             }
         }
 
@@ -436,14 +442,40 @@ public class UpdateChecker
         if (string.IsNullOrWhiteSpace(fileName))
             return [];
 
-        var candidates = new List<string> { fileName };
-        if (!fileName.Equals("setup.exe", StringComparison.OrdinalIgnoreCase) &&
-            fileName.EndsWith("setup.exe", StringComparison.OrdinalIgnoreCase))
-            candidates.Add("setup.exe");
+        // Only the full package file name. Adding a bare "setup.exe" candidate caused
+        // multi-asset SHA256 lists to match the wrong line via substring Contains().
+        return [fileName];
+    }
 
-        return candidates
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+    /// <summary>
+    /// True when <paramref name="line"/> references <paramref name="fileName"/> as a whole token
+    /// (not a shorter substring of another asset name).
+    /// </summary>
+    private static bool LineReferencesFileName(string line, string fileName)
+    {
+        if (string.IsNullOrEmpty(line) || string.IsNullOrEmpty(fileName))
+            return false;
+
+        var index = line.IndexOf(fileName, StringComparison.OrdinalIgnoreCase);
+        if (index < 0)
+            return false;
+
+        if (index > 0)
+        {
+            var before = line[index - 1];
+            if (!char.IsWhiteSpace(before) && before is not ('(' or '/' or '\\' or '*' or '=' or '"' or '\''))
+                return false;
+        }
+
+        var afterIndex = index + fileName.Length;
+        if (afterIndex < line.Length)
+        {
+            var after = line[afterIndex];
+            if (!char.IsWhiteSpace(after) && after is not (')' or '"' or '\'' or ',' or ';'))
+                return false;
+        }
+
+        return true;
     }
 
     public void UpdateMinimumTimeSpanForRefresh() => _minimumTimeSpanForRefresh = _updateCheckSettings.Store.UpdateCheckFrequency switch

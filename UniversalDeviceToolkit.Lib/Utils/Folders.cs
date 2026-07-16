@@ -7,6 +7,7 @@ namespace UniversalDeviceToolkit.Lib.Utils;
 public static class Folders
 {
     public static string AppDataOverrideEnvironmentVariable => string.Concat("UDT", "_APPDATA", "_OVERRIDE");
+    private const string LegacyMigrationMarkerFileName = ".legacy-appdata-migrated";
 
     public static string Program => AppDomain.CurrentDomain.SetupInformation.ApplicationBase ?? string.Empty;
     public static string LegacyAppData => Path.Combine(
@@ -31,10 +32,17 @@ public static class Folders
             var folderPath = Path.Combine(appData, AppIdentity.CompactName);
             var legacyFolderPath = Path.Combine(appData, AppIdentity.LegacyCompactName);
 
-            if (Directory.Exists(legacyFolderPath))
-                TryCopyMissingDirectoryEntries(legacyFolderPath, folderPath);
-
             Directory.CreateDirectory(folderPath);
+
+            // One-shot migration only. Re-copying on every getter resurrected deleted
+            // settings files from LenovoLegionToolkit whenever the legacy folder remained.
+            var markerPath = Path.Combine(folderPath, LegacyMigrationMarkerFileName);
+            if (Directory.Exists(legacyFolderPath) && !File.Exists(markerPath))
+            {
+                TryCopyMissingDirectoryEntries(legacyFolderPath, folderPath);
+                TryWriteMigrationMarker(markerPath);
+            }
+
             return folderPath;
         }
     }
@@ -42,9 +50,28 @@ public static class Folders
     public static string GetAppDataSubdirectory(string subdirectory)
     {
         var targetDirectory = Path.Combine(AppData, subdirectory);
-        MigrateLegacyAppDataSubdirectory(subdirectory, targetDirectory);
         Directory.CreateDirectory(targetDirectory);
+
+        var markerPath = Path.Combine(targetDirectory, LegacyMigrationMarkerFileName);
+        if (!File.Exists(markerPath))
+        {
+            MigrateLegacyAppDataSubdirectory(subdirectory, targetDirectory);
+            TryWriteMigrationMarker(markerPath);
+        }
+
         return targetDirectory;
+    }
+
+    private static void TryWriteMigrationMarker(string markerPath)
+    {
+        try
+        {
+            File.WriteAllText(markerPath, DateTime.UtcNow.ToString("O"));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
+        {
+            Log.Instance.Warning($"Failed to write legacy AppData migration marker \"{markerPath}\": {ex.Message}", ex);
+        }
     }
 
     public static string Temp

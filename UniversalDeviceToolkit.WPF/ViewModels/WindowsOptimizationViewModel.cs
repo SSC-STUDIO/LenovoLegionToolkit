@@ -959,10 +959,15 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
 
     public async Task ScanOptimizationStatesAsync(CancellationToken cancellationToken = default)
     {
+        if (_disposed)
+            return;
+
         await _optimizationStateScanLock.WaitAsync(cancellationToken);
         _isRefreshingStates = true;
         try
         {
+            if (_disposed)
+                return;
             var categories = await GetOptimizationCategorySnapshotAsync();
             var pairedActionKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 

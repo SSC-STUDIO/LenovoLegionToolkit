@@ -130,8 +130,9 @@ public partial class WindowsOptimizationPage : Page
         // Unsubscribe from driver package PropertyChanged handlers to prevent memory leaks
         UnsubscribeFromPackageControlHandlers();
 
-        // Dispose the ViewModel which releases any CTS instances held by it
-        _viewModel.Dispose();
+        // Do NOT dispose the ViewModel here. NavigationStore caches this page; Unloaded
+        // then Loaded reuses the same instance. Disposing the VM frees SemaphoreSlim and
+        // breaks ScanOptimizationStatesAsync on re-entry (ObjectDisposedException).
     }
 
     private void TryApplyPendingPluginFocusRequest()

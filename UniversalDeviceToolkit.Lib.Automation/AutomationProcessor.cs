@@ -180,29 +180,31 @@ public class AutomationProcessor(
 
     private async Task RunAsync(IAutomationEvent automationEvent)
     {
+        // Cancel the previous run before waiting for the lock so in-flight delays/steps
+        // can observe cancellation instead of only being replaced after they finish.
+        CancellationTokenSource? oldCts;
+        lock (_ctsLock)
+        {
+            oldCts = _cts;
+            _cts = new CancellationTokenSource();
+        }
+
+        if (oldCts is not null)
+        {
+            try
+            {
+                await oldCts.CancelAsync().ConfigureAwait(false);
+                oldCts.Dispose();
+            }
+            catch (ObjectDisposedException ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("CTS already disposed during cancellation", ex);
+            }
+        }
+
         using (await _runLock.LockAsync().ConfigureAwait(false))
         {
-            CancellationTokenSource? oldCts;
-            lock (_ctsLock)
-            {
-                oldCts = _cts;
-                _cts = new CancellationTokenSource();
-            }
-
-            if (oldCts is not null)
-            {
-                try
-                {
-                    await oldCts.CancelAsync().ConfigureAwait(false);
-                    oldCts.Dispose();
-                }
-                catch (ObjectDisposedException ex)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace("CTS already disposed during cancellation", ex);
-                }
-            }
-
             if (!IsEnabled)
                 return;
 
@@ -463,23 +465,13 @@ public class AutomationProcessor(
 
     private async Task ProcessEvent(IAutomationEvent e)
     {
-        var potentialMatch = await HasMatchingTriggerAsync(e).ConfigureAwait(false);
-
-        if (!potentialMatch)
-            return;
-
+        // Do not pre-evaluate triggers here. Stateful triggers (battery %, sensors) arm
+        // cooldown/_lastMatchedAt inside IsMatchingEvent; a separate pre-check would
+        // consume the match so RunAsync always fails cooldown (pipelines never run).
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Processing event {e}... [type={e.GetType().Name}]");
 
         await RunAsync(e).ConfigureAwait(false);
-    }
-
-    private async Task<bool> HasMatchingTriggerAsync(IAutomationEvent e)
-    {
-        var triggers = _pipelines.SelectMany(p => p.AllTriggers).ToList();
-        var tasks = triggers.Select(t => t.IsMatchingEvent(e));
-        var results = await Task.WhenAll(tasks).ConfigureAwait(false);
-        return results.Any(r => r);
     }
 
     #endregion
@@ -528,7 +520,15 @@ public class AutomationProcessor(
             await processAutoListener.SubscribeChangedAsync(ProcessAutoListener_Changed).ConfigureAwait(false);
         }
 
-        if (triggers.OfType<ITimeAutomationPipelineTrigger>().Any() || triggers.OfType<IPeriodicAutomationPipelineTrigger>().Any())
+        // Battery % / hardware-sensor triggers only re-evaluate when some listener fires.
+        // Poll via the time listener so Duration/cooldown edge detection can work.
+        var needsTimePolling =
+            triggers.OfType<ITimeAutomationPipelineTrigger>().Any() ||
+            triggers.OfType<IPeriodicAutomationPipelineTrigger>().Any() ||
+            triggers.OfType<BatteryPercentageAutomationPipelineTrigger>().Any() ||
+            triggers.OfType<HardwareSensorAutomationPipelineTrigger>().Any();
+
+        if (needsTimePolling)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Starting time listener...");

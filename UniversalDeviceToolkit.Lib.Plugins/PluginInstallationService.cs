@@ -99,7 +99,10 @@ public class PluginInstallationService
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Successfully installed plugin {pluginId} to {targetDir}");
 
-            TrustedPluginPackageStore.TrustPluginDirectory(pluginId, targetDir);
+            // Do NOT auto-trust local ZIP imports. Under production RequireSignature policy,
+            // TrustedPluginPackageStore would let unsigned DLLs load as "trusted online package".
+            // Local ZIPs must either be Authenticode-signed or use AllowUnsigned/dev mode.
+            // Official marketplace installs still call TrustPluginDirectory after hash verification.
 
             // Force-load the imported payload before marking it installed so runtime
             // capabilities such as optimization categories are immediately available.
