@@ -30,7 +30,7 @@ internal static class AuthenticodeVerifier
     {
         trustStatus = unchecked((int)0x800B0100); // TRUST_E_NOSIGNATURE default
 
-        if (string.IsNullOrWhiteSpace(filePath) || !System.IO.File.Exists(filePath))
+        if (string.IsNullOrWhiteSpace(filePath) || !global::System.IO.File.Exists(filePath))
             return false;
 
         var fileInfo = new WINTRUST_FILE_INFO
