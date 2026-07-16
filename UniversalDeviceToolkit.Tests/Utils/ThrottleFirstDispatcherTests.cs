@@ -361,19 +361,19 @@ public class ThrottleFirstDispatcherTests
     [Fact]
     public async Task DispatchAsync_MultipleCallsOverTime_ShouldOnlyExecuteFirst()
     {
-        // Arrange
-        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromMilliseconds(200));
+        // Arrange — long window so slow CI Task.Delay jitter cannot open a second slot.
+        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromSeconds(5));
         var executionCount = 0;
 
-        // Act - Call multiple times quickly
+        // Act - Call multiple times with small gaps, all within the throttle window
         for (int i = 0; i < 5; i++)
         {
             await dispatcher.DispatchAsync(async () =>
             {
                 await Task.CompletedTask;
-                executionCount++;
+                Interlocked.Increment(ref executionCount);
             });
-            await Task.Delay(10);
+            await Task.Delay(5);
         }
 
         // Assert
