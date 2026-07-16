@@ -26,17 +26,32 @@ public abstract class UnitTestBase : IDisposable
 {
     protected UnitTestBase()
     {
+        // Force English for string assertions. Parallel localization tests may mutate
+        // DefaultThreadCurrentUICulture (e.g. SetLanguageAsync("de")); pinning each
+        // Resource.Culture to en-US keeps ResourceManager.GetString culture-stable even
+        // when the process-wide UI culture races.
         var culture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
         System.Threading.Thread.CurrentThread.CurrentCulture = culture;
         System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
         System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
 
-        try { UniversalDeviceToolkit.WPF.Resources.Resource.Culture = null; } catch { /* Culture may not be initialized in test context */ }
-        try { UniversalDeviceToolkit.Lib.Resources.Resource.Culture = null; } catch { /* Culture may not be initialized in test context */ }
-        try { UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = null; } catch { /* Culture may not be initialized in test context */ }
+        ForceKnownResourceCultures(culture);
 
         Setup();
+    }
+
+    /// <summary>
+    /// Pins generated Resource.Culture on all known assemblies so English fallback
+    /// strings are returned regardless of concurrent culture changes.
+    /// </summary>
+    internal static void ForceKnownResourceCultures(System.Globalization.CultureInfo culture)
+    {
+        try { UniversalDeviceToolkit.WPF.Resources.Resource.Culture = culture; } catch { /* not loaded */ }
+        try { UniversalDeviceToolkit.Lib.Resources.Resource.Culture = culture; } catch { /* not loaded */ }
+        try { UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = culture; } catch { /* not loaded */ }
+        try { UniversalDeviceToolkit.Lib.Macro.Resources.Resource.Culture = culture; } catch { /* not loaded */ }
+        try { UniversalDeviceToolkit.Lib.Plugins.Resources.Resource.Culture = culture; } catch { /* not loaded */ }
     }
 
     protected virtual void Setup()

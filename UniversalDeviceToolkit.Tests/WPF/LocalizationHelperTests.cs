@@ -108,6 +108,24 @@ public sealed class LocalizationHelperTests : IDisposable
 
     public void Dispose()
     {
+        // SetLanguageAsync mutates process-wide UI culture and Resource.Culture statics.
+        // Restore English so parallel unit tests that assert English plugin/host strings
+        // cannot observe a leaked "de" (or other) culture after this fixture runs.
+        try
+        {
+            var english = CultureInfo.GetCultureInfo("en-US");
+            System.Threading.Thread.CurrentThread.CurrentCulture = english;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = english;
+            CultureInfo.DefaultThreadCurrentCulture = english;
+            CultureInfo.DefaultThreadCurrentUICulture = english;
+            LocalizationHelper.ApplyCoreResourceCultures(english);
+            UnitTestBase.ForceKnownResourceCultures(english);
+        }
+        catch
+        {
+            // best-effort; tests may run without full WPF stack
+        }
+
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
 
         try

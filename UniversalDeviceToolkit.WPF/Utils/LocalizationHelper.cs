@@ -398,6 +398,8 @@ public static class LocalizationHelper
         UniversalDeviceToolkit.Lib.Resources.Resource.Culture = cultureInfo;
         UniversalDeviceToolkit.Lib.Automation.Resources.Resource.Culture = cultureInfo;
         UniversalDeviceToolkit.Lib.Macro.Resources.Resource.Culture = cultureInfo;
+        // Host-side plugin error strings (signature/sandbox/dependency) live here.
+        UniversalDeviceToolkit.Lib.Plugins.Resources.Resource.Culture = cultureInfo;
     }
 
     /// <summary>
@@ -484,8 +486,12 @@ public static class LocalizationHelper
                 return false;
 
             var name = assembly.GetName().Name ?? string.Empty;
+            // Host assemblies that merely contain "Plugin" in the name are not plugins.
+            if (name.Equals("UniversalDeviceToolkit.Lib.Plugins", StringComparison.OrdinalIgnoreCase) ||
+                name.Equals("UniversalDeviceToolkit.Tests", StringComparison.OrdinalIgnoreCase))
+                return false;
+
             if (name.Contains("Plugin", StringComparison.OrdinalIgnoreCase) ||
-                name.Contains("UniversalDeviceToolkit.Plugins", StringComparison.OrdinalIgnoreCase) ||
                 name.Contains("UniversalDeviceToolkit.Plugins", StringComparison.OrdinalIgnoreCase))
                 return true;
 
@@ -513,10 +519,13 @@ public static class LocalizationHelper
         if (type is null || type.IsAbstract || type.IsInterface)
             return false;
 
+        // Host libraries (not third-party plugins). Lib.Plugins hosts signature/sandbox
+        // error strings and is applied via ApplyCoreResourceCultures, not plugin scanning.
         if (type.Assembly == typeof(Resource).Assembly ||
             type.Assembly == typeof(UniversalDeviceToolkit.Lib.Resources.Resource).Assembly ||
             type.Assembly == typeof(UniversalDeviceToolkit.Lib.Automation.Resources.Resource).Assembly ||
-            type.Assembly == typeof(UniversalDeviceToolkit.Lib.Macro.Resources.Resource).Assembly)
+            type.Assembly == typeof(UniversalDeviceToolkit.Lib.Macro.Resources.Resource).Assembly ||
+            type.Assembly == typeof(UniversalDeviceToolkit.Lib.Plugins.Resources.Resource).Assembly)
             return false;
 
         var cultureProperty = type.GetProperty("Culture", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
