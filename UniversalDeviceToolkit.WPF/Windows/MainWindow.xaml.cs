@@ -1021,8 +1021,9 @@ public partial class MainWindow
                     // Register the page tag mapping
                     PluginPageWrapper.RegisterPluginPageTag($"plugin:{plugin.Id}", plugin.Id);
                     var pluginId = plugin.Id;
+                    // Single Click path only (NavigationStore skips plugin: tags). Avoid
+                    // PreviewMouseLeftButtonUp + Click double-navigation races.
                     navItem.Click += (_, _) => NavigateToPluginPage(pluginId);
-                    navItem.PreviewMouseLeftButtonUp += (_, _) => NavigateToPluginPage(pluginId);
                     navItem.KeyDown += (_, e) =>
                     {
                         if (e.Key != Key.Enter && e.Key != Key.Space)

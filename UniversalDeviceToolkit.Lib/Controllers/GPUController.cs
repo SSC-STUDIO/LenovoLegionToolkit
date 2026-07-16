@@ -304,7 +304,12 @@ public class GPUController : IDisposable
             return;
         }
 
-        TryGetPerformanceState(gpu);
+        // If NVAPI reports the GPU is powered off, do not let DetermineGpuState overwrite it.
+        if (TryGetPerformanceState(gpu))
+        {
+            CheckStateChange(previousState);
+            return;
+        }
 
         var pnpDeviceIdPart = NVAPI.GetGPUId(gpu);
         var gpuInstanceId = await TryGetGpuInstanceIdAsync(pnpDeviceIdPart).ConfigureAwait(false);
@@ -347,7 +352,11 @@ public class GPUController : IDisposable
         CheckStateChange(previousState);
     }
 
-    private void TryGetPerformanceState(NvAPIWrapper.GPU.PhysicalGPU gpu)
+    /// <summary>
+    /// Reads NVAPI performance state. Returns <c>true</c> when the GPU is powered off
+    /// and refresh should stop (do not run <see cref="DetermineGpuState"/>).
+    /// </summary>
+    private bool TryGetPerformanceState(NvAPIWrapper.GPU.PhysicalGPU gpu)
     {
         try
         {
@@ -355,12 +364,13 @@ public class GPUController : IDisposable
             _performanceState = Resource.GPUController_PoweredOn;
             if (!string.IsNullOrWhiteSpace(stateId))
                 _performanceState += $", {stateId}";
+            return false;
         }
         catch (Exception ex) when (ex.Message == "NVAPI_GPU_NOT_POWERED")
         {
             _state = GPUState.PoweredOff;
             _performanceState = Resource.GPUController_PoweredOff;
-            CheckStateChange(_state);
+            return true;
         }
         catch (Exception ex)
         {
@@ -369,6 +379,7 @@ public class GPUController : IDisposable
                 "Failed to read NVAPI performance state; reporting Unknown.",
                 ex);
             _performanceState = "Unknown";
+            return false;
         }
     }
 

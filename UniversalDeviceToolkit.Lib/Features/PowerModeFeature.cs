@@ -104,7 +104,9 @@ public class PowerModeFeature(
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (!await IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+        // IsSupportedAsync may be true via capability flags without GameZone SmartFan WMI.
+        // Writes always go through SmartFan — require the WMI write backend to be present.
+        if (!await IsWmiSupportedAsync(cancellationToken).ConfigureAwait(false))
             throw ExceptionHelper.PowerModeNotSupported();
 
         if (state == PowerModeState.Extreme)

@@ -749,7 +749,9 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
             if (await gpuController.IsSupportedAsync().ConfigureAwait(false))
                 await gpuController.StartAsync().ConfigureAwait(false);
 
-            if (await gpuController.GetLastKnownStateAsync().ConfigureAwait(false) is GPUState.PoweredOff or GPUState.Unknown)
+            // Only skip NVAPI when we know the dGPU is off. Unknown (pre-first-refresh)
+            // must not block sensor reads forever.
+            if (await gpuController.GetLastKnownStateAsync().ConfigureAwait(false) is GPUState.PoweredOff)
                 return GPUInfo.Empty;
         }
 

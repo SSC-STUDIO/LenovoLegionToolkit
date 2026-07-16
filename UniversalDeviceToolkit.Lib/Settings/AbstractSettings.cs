@@ -15,6 +15,8 @@ public abstract class AbstractSettings<T> where T : class, new()
     private T? _cachedStore;
     private DateTime _lastLoadTime = DateTime.MinValue;
     private readonly TimeSpan _cacheDuration = TimeSpan.FromSeconds(5);
+    /// <summary>Bumped on successful synchronize so in-flight loads do not clobber newer cache.</summary>
+    private int _storeGeneration;
 
     protected virtual T Default => new();
 
@@ -60,6 +62,7 @@ public abstract class AbstractSettings<T> where T : class, new()
             var settingsSerialized = JsonSerializer.Serialize(_cachedStore ?? Default, JsonSerializerOptions);
             AtomicWriteAllText(SettingsFilePath, settingsSerialized);
             _lastLoadTime = DateTime.UtcNow;
+            _storeGeneration++;
         }
     }
 
@@ -76,6 +79,7 @@ public abstract class AbstractSettings<T> where T : class, new()
         lock (_lock)
         {
             _lastLoadTime = DateTime.UtcNow;
+            _storeGeneration++;
         }
     }
 
@@ -166,18 +170,22 @@ public abstract class AbstractSettings<T> where T : class, new()
 
     public virtual async Task<T?> LoadStoreAsync()
     {
-        T? store = null;
-
+        int generation;
         lock (_lock)
         {
             if (_cachedStore != null && DateTime.UtcNow - _lastLoadTime < _cacheDuration)
                 return _cachedStore;
+            generation = _storeGeneration;
         }
+
+        T? store = null;
+        var loadSucceeded = false;
 
         try
         {
             var settingsSerialized = await File.ReadAllTextAsync(SettingsFilePath).ConfigureAwait(false);
             store = JsonSerializer.Deserialize<T>(settingsSerialized, JsonSerializerOptions);
+            loadSucceeded = store is not null;
 
             if (store is null)
                 TryBackup();
@@ -201,11 +209,18 @@ public abstract class AbstractSettings<T> where T : class, new()
 
         lock (_lock)
         {
+            // A concurrent SynchronizeStore bumped generation — keep the newer in-memory cache.
+            if (generation != _storeGeneration)
+                return _cachedStore;
+
+            // Do not wipe a populated cache with null after a transient IO/deserialize failure.
+            if (!loadSucceeded && _cachedStore is not null)
+                return _cachedStore;
+
             _cachedStore = store;
             _lastLoadTime = DateTime.UtcNow;
+            return store;
         }
-
-        return store;
     }
 
     public void InvalidateCache()
@@ -214,6 +229,7 @@ public abstract class AbstractSettings<T> where T : class, new()
         {
             _cachedStore = null;
             _lastLoadTime = DateTime.MinValue;
+            _storeGeneration++;
         }
     }
 

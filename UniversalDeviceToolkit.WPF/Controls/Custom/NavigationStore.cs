@@ -358,8 +358,16 @@ public class NavigationStore : Control
 
     private void NavigationItem_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is NavigationItem item)
-            Navigate(item);
+        if (sender is not NavigationItem item)
+            return;
+
+        // Plugin host pages are owned by MainWindow.NavigateToPluginPage (needs plugin id).
+        // Activator.CreateInstance(PluginPageWrapper) would open an empty/wrong host page.
+        if (item.PageTag is string tag &&
+            tag.StartsWith("plugin:", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        Navigate(item);
     }
 
     private bool Navigate(NavigationItem item)
