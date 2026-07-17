@@ -36,7 +36,7 @@ The solution has 16 projects. Build sequentially (-m:1) to avoid VBCSCompiler lo
 | `Smoke` | Lightweight smoke contracts | Yes |
 | `Coverage` | Optional padding (avoid for new tests) | Full suite only |
 
-Process-wide mutable tests (UI culture / shared settings) must use `[Collection(TestCollections.Localization)]` or `[Collection(TestCollections.Settings)]` so other collections can run in parallel.
+Process-wide mutable tests (UI culture / shared settings / plugin temp roots) must use the matching `[Collection(TestCollections.…)]`. The suite currently runs **serially** (`parallelizeTestCollections: false`) because plugin path fixtures still share process state; do not re-enable collection parallelism without isolating `Folders.AppDataOverride` and plugin roots per test.
 
 <br/>
 **1. Before reporting an issue make yourself familiar with the README**

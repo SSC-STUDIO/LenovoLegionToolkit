@@ -38,14 +38,16 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void TestRunner_ShouldAllowCollectionParallelismWithIsolatedCollections()
+    public void TestRunner_ShouldStaySerialUntilSharedStateIsFullyIsolated()
     {
+        // Plugin/path tests share Folders.AppDataOverride and temp plugin roots.
+        // Keep the suite serial until those fixtures are process-isolated.
         var runner = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Tests", "xunit.runner.json");
         var collections = RepositoryPaths.ReadFile(
             "UniversalDeviceToolkit.Tests", "Infrastructure", "TestCollections.cs");
 
-        runner.Should().Contain("\"parallelizeTestCollections\": true");
-        runner.Should().Contain("\"maxParallelThreads\": 4");
+        runner.Should().Contain("\"parallelizeTestCollections\": false");
+        runner.Should().Contain("\"maxParallelThreads\": 1");
         collections.Should().Contain("DisableParallelization = true");
         collections.Should().Contain("Localization");
         collections.Should().Contain("Settings");

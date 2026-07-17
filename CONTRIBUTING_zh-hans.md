@@ -20,7 +20,7 @@ _由于 Issues 总量的增加，不符合标准的 Issue 会在无预先警告�
 5. 运行测试：`dotnet test -c Release`  
    或仅跑 CI fail-fast 分层：`pwsh ./Scripts/Run-TestFailFast.ps1`
 
-**测试分类**（`TestCategories`）：为用例打上 `[Trait("Category", TestCategories.…)]`，以便 CI fail-fast 过滤生效。常用：`Security`、`Guard`、`Plugin`、`Unit`、`Smoke`。进程级可变状态（UI 文化、共享设置）须使用 `[Collection(TestCollections.Localization)]` 或 `[Collection(TestCollections.Settings)]`。
+**测试分类**（`TestCategories`）：为用例打上 `[Trait("Category", TestCategories.…)]`，以便 CI fail-fast 过滤生效。常用：`Security`、`Guard`、`Plugin`、`Unit`、`Smoke`。进程级可变状态（UI 文化、共享设置、插件临时目录）须使用对应 `[Collection(TestCollections.…)]`。当前套件仍为**串行**（`parallelizeTestCollections: false`），因插件路径仍共享进程状态；未隔离 `Folders.AppDataOverride` 前不要重新开启集合并行。
 
 NuGet 还原通过各项目已提交的 `packages.lock.json` 保证可复现（`Directory.Build.props` 中启用了 `RestorePackagesWithLockFile`）。CI 始终使用 `dotnet restore … --locked-mode`。本地对齐 CI 时请带上该参数；仅在有意更新包版本后刷新锁文件时省略，并将更新后的 `packages.lock.json` 一并提交。`Make.bat` 与多数本地脚本依赖构建/发布时的隐式还原，不会强制 `--locked-mode`，因此一般离线构建不会因锁文件严格校验而中断。
 
