@@ -12,7 +12,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
     /// Uses both native FlaUI element tree inspection and (when available) WinRT OCR.
     /// </summary>
     [Trait("Category", "UI")]
-    [Collection("FlaUI Tests")]
+    [Collection(TestCollections.FlaUI)]
     public class MainWindowVisualTests : FlaUiTestBase
     {
         [SkippableFact]

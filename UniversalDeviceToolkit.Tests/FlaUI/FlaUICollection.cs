@@ -2,18 +2,9 @@
 // Copyright (c) SSC-STUDIO. All rights reserved.
 // </copyright>
 
-using Xunit;
+// Collection definition lives in Infrastructure/TestCollections.cs (TestCollections.FlaUI).
+// FlaUI tests continue to use [Collection(TestCollections.FlaUI)] / TestCollections.FlaUI.
 
-namespace UniversalDeviceToolkit.Tests.FlaUI
-{
-    /// <summary>
-    /// Collection definition for FlaUI tests.
-    /// All FlaUI tests share this collection to prevent parallel execution,
-    /// since they interact with a single running UDT application instance.
-    /// </summary>
-    [CollectionDefinition("FlaUI Tests")]
-    public class FlaUICollection
-    {
-        // This class has no code; it's just to define the collection
-    }
-}
+namespace UniversalDeviceToolkit.Tests.FlaUI;
+
+// Intentionally empty — see UniversalDeviceToolkit.Tests.TestCollections.

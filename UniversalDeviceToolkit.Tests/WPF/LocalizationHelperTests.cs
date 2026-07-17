@@ -30,6 +30,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 ///     <see cref="ResourceQualityTests.NonEastAsianLanguages_ShouldNotContainCjkCharacters"/>).
 /// All file-based checks skip when the resource tree is not present.
 /// </summary>
+[Collection(TestCollections.Localization)]
 [Trait("Category", TestCategories.Unit)]
 public sealed class LocalizationHelperTests : IDisposable
 {

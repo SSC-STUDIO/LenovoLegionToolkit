@@ -15,7 +15,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
     /// These tests require a running desktop session and administrator privileges.
     /// </summary>
     [Trait("Category", "UI.MainWindow")]
-    [Collection("FlaUI Tests")]
+    [Collection(TestCollections.FlaUI)]
     public class FlaUIMainWindowTests : FlaUiTestBase
     {
         [SkippableFact]

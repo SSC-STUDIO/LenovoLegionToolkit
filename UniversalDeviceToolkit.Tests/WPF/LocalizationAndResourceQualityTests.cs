@@ -8,6 +8,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
 
+[Collection(TestCollections.Localization)]
 public class LocalizationAndResourceQualityTests
 {
     [Theory]

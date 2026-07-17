@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Settings;
 
-[Collection("Settings Tests")]
+[Collection(TestCollections.Settings)]
 [Trait("Category", TestCategories.Unit)]
 public class ApplicationSettingsTests : IDisposable
 {

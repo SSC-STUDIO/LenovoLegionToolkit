@@ -6,6 +6,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
+[Collection(TestCollections.Localization)]
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginMetadataLocalizationTests

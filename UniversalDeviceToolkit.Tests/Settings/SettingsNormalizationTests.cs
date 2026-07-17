@@ -9,6 +9,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Settings;
 
+[Collection(TestCollections.Settings)]
 [Trait("Category", TestCategories.Unit)]
 public class SettingsNormalizationTests
 {

@@ -13,7 +13,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
     /// These tests DO NOT require a running UDT application.
     /// </summary>
     [Trait("Category", "UI.Infrastructure")]
-    [Collection("FlaUI Tests")]
+    [Collection(TestCollections.FlaUI)]
     public class FlaUISetupTests
     {
         [Fact]

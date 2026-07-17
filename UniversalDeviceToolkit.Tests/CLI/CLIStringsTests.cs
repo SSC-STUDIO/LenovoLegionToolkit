@@ -8,6 +8,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.CLI;
 
+[Collection(TestCollections.Localization)]
 [Trait("Category", TestCategories.Unit)]
 public class CLIStringsTests
 {

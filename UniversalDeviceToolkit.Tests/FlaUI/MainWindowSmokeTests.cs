@@ -19,7 +19,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
     /// The CI environment check in FlaUiTestBase will auto-skip these.
     /// </summary>
     [Trait("Category", "UI")]
-    [Collection("FlaUI Tests")]
+    [Collection(TestCollections.FlaUI)]
     public class MainWindowSmokeTests : FlaUiTestBase
     {
         [SkippableFact]

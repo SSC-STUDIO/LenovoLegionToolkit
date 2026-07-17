@@ -38,6 +38,31 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
+    public void TestRunner_ShouldAllowCollectionParallelismWithIsolatedCollections()
+    {
+        var runner = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Tests", "xunit.runner.json");
+        var collections = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Tests", "Infrastructure", "TestCollections.cs");
+
+        runner.Should().Contain("\"parallelizeTestCollections\": true");
+        runner.Should().Contain("\"maxParallelThreads\": 4");
+        collections.Should().Contain("DisableParallelization = true");
+        collections.Should().Contain("Localization");
+        collections.Should().Contain("Settings");
+        collections.Should().Contain("FlaUI");
+    }
+
+    [Fact]
+    public void FailFastScript_ShouldMirrorCiLayers()
+    {
+        var script = RepositoryPaths.ReadFile("Scripts", "Run-TestFailFast.ps1");
+        script.Should().Contain("Category=Security|Category=Guard");
+        script.Should().Contain("Category=Plugin");
+        script.Should().Contain("Category=Unit&Category!=Coverage");
+        script.Should().Contain("Category=Smoke");
+    }
+
+    [Fact]
     public void CiTestsWorkflow_ShouldGateMainAppPluginUiSmokeContract()
     {
         var workflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");

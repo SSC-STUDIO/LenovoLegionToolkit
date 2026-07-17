@@ -26,6 +26,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 /// must remain hard-coded.  Only [L10N_REQUIRED] entries - strings shown to
 /// the end user - must round-trip through a resource key.
 /// </summary>
+[Collection(TestCollections.Localization)]
 [Trait("Category", TestCategories.Unit)]
 [Trait("Category", TestCategories.Guard)]
 public sealed class ResourceHardcodingGuardTests

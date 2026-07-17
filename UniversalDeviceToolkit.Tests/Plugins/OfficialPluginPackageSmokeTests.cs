@@ -13,6 +13,7 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 /// Skips cleanly when assets are not available (e.g. core-only CI checkout).
 /// </summary>
 [Trait("Category", TestCategories.Plugin)]
+[Trait("Category", TestCategories.Smoke)]
 [Trait("Category", TestCategories.Unit)]
 public class OfficialPluginPackageSmokeTests
 {

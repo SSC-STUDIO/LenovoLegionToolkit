@@ -18,11 +18,25 @@ _Due to large number of issues created, those that do not meet the criteria will
 2. Clone the repo: git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git
 3. Restore (CI-aligned): `dotnet restore UniversalDeviceToolkit.sln --locked-mode`
 4. Build: `dotnet build -c Release -m:1 --no-restore`
-5. Run tests: `dotnet test -c Release`
+5. Run tests: `dotnet test -c Release`  
+   Or CI fail-fast layers only: `pwsh ./Scripts/Run-TestFailFast.ps1`
 
 NuGet restores are reproducible via committed per-project `packages.lock.json` files (`RestorePackagesWithLockFile` in `Directory.Build.props`). CI always uses `dotnet restore … --locked-mode`. Use that flag locally when validating against CI; omit it only when you intentionally refresh lock files after package version changes, then commit the updated `packages.lock.json` files. `Make.bat` and most local scripts rely on implicit restore during build/publish and do not force `--locked-mode`, so casual offline builds are not blocked by a strict lock mismatch.
 
 The solution has 16 projects. Build sequentially (-m:1) to avoid VBCSCompiler lock conflicts. See Docs/ARCHITECTURE.md for the full project map.
+
+**Test categories** (`TestCategories` in `UniversalDeviceToolkit.Tests`): use `[Trait("Category", TestCategories.…)]` so CI fail-fast filters stay meaningful.
+
+| Category | Intent | CI fail-fast |
+|---|---|---|
+| `Security` | Injection, path traversal, signatures, integrity | Yes (first) |
+| `Guard` | Repo/CI/XAML/payload contracts | Yes (first) |
+| `Plugin` | Plugin host/lifecycle | Yes |
+| `Unit` | General unit tests | Yes (excludes pure Coverage) |
+| `Smoke` | Lightweight smoke contracts | Yes |
+| `Coverage` | Optional padding (avoid for new tests) | Full suite only |
+
+Process-wide mutable tests (UI culture / shared settings) must use `[Collection(TestCollections.Localization)]` or `[Collection(TestCollections.Settings)]` so other collections can run in parallel.
 
 <br/>
 **1. Before reporting an issue make yourself familiar with the README**

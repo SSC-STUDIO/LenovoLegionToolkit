@@ -40,6 +40,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 /// tree is missing (e.g. a stripped-down build) each test reports a skip notice
 /// instead of failing.
 /// </summary>
+[Collection(TestCollections.Localization)]
 [Trait("Category", TestCategories.Unit)]
 public sealed class ResourceQualityTests
 {

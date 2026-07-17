@@ -1,10 +1,6 @@
-using Xunit;
+// Collection definition lives in Infrastructure/TestCollections.cs (TestCollections.Settings).
+// This file is kept so existing using/docs links remain stable.
 
 namespace UniversalDeviceToolkit.Tests.Settings;
 
-[CollectionDefinition("Settings Tests", DisableParallelization = true)]
-public class SettingsTestCollection
-{
-    // This class is never instantiated. It's just a marker for xUnit
-    // to disable parallelization for tests in this collection.
-}
+// Intentionally empty — see UniversalDeviceToolkit.Tests.TestCollections.
