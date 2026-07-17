@@ -6,7 +6,7 @@ namespace UniversalDeviceToolkit.CrossPlatform.Tests;
 
 public sealed class CrossPlatformProjectTests
 {
-    private static readonly string RepositoryRoot = FindRepositoryRoot();
+    private static readonly string RepositoryRoot = RepositoryPaths.FindRoot();
 
     [Fact]
     public void CrossPlatformCli_ShouldTargetPlainNet10()
@@ -45,19 +45,5 @@ public sealed class CrossPlatformProjectTests
         scriptText.Should().Contain("'README.txt'");
         scriptText.Should().Contain("dotnet \"$SCRIPT_DIR/udt.dll\" \"$@\"");
         scriptText.Should().Contain("dotnet \"%~dp0udt.dll\" %*");
-    }
-
-    private static string FindRepositoryRoot()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-                return directory.FullName;
-
-            directory = directory.Parent;
-        }
-
-        throw new InvalidOperationException("Repository root could not be located.");
     }
 }

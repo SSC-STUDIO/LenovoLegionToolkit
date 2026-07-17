@@ -7,6 +7,8 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
 
+[Trait("Category", TestCategories.Guard)]
+[Trait("Category", TestCategories.Unit)]
 public class NetworkAccelerationUiGuardTests
 {
     [Fact]

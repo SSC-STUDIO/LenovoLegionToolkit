@@ -29,38 +29,15 @@ public class AutomationPageTests
     [Fact]
     public void AutomationPage_EnableToggle_ShouldExposeStableAutomationId()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         var xaml = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "AutomationPage.xaml"));
         xaml.Should().Contain("AutomationProperties.AutomationId=\"AutomationEnableAutomaticPipelinesToggle\"");
     }
 
     private static string ReadAutomationPageSource()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "AutomationPage.xaml.cs"));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
-            Directory.GetCurrentDirectory(),
-            AppContext.BaseDirectory
-        };
-
-        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
-        {
-            var current = Path.GetFullPath(candidate!);
-            while (!string.IsNullOrWhiteSpace(current))
-            {
-                if (File.Exists(Path.Combine(current, "UniversalDeviceToolkit.sln")))
-                    return current;
-
-                current = Directory.GetParent(current)?.FullName;
-            }
-        }
-
-        throw new DirectoryNotFoundException("Could not locate UniversalDeviceToolkit.sln.");
-    }
 }

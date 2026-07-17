@@ -195,32 +195,9 @@ public class ChartsControlTests
 
     private static string ReadWpfText(params string[] relativeSegments)
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         var segments = new[] { root, "UniversalDeviceToolkit.WPF" }.Concat(relativeSegments).ToArray();
         return File.ReadAllText(Path.Combine(segments));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
-            Directory.GetCurrentDirectory(),
-            AppContext.BaseDirectory
-        };
-
-        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
-        {
-            var current = Path.GetFullPath(candidate!);
-            while (!string.IsNullOrWhiteSpace(current))
-            {
-                if (File.Exists(Path.Combine(current, "UniversalDeviceToolkit.sln")))
-                    return current;
-
-                current = Directory.GetParent(current)?.FullName;
-            }
-        }
-
-        throw new DirectoryNotFoundException("Could not locate UniversalDeviceToolkit.sln.");
-    }
 }

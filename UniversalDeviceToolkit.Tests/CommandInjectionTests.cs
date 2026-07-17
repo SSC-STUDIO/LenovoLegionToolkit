@@ -14,6 +14,8 @@ namespace UniversalDeviceToolkit.Tests;
 /// <summary>
 /// Unit tests for command injection prevention and driver interface security.
 /// </summary>
+[Trait("Category", TestCategories.Security)]
+[Trait("Category", TestCategories.Unit)]
 public class CommandInjectionTests
 {
     #region CommandInjectionValidator Tests

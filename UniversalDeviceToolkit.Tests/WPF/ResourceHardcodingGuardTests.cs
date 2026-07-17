@@ -27,6 +27,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 /// the end user - must round-trip through a resource key.
 /// </summary>
 [Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Guard)]
 public sealed class ResourceHardcodingGuardTests
 {
     private static readonly string[] L10nAttributeStems =

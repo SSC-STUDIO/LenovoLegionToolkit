@@ -3,6 +3,8 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
+[Trait("Category", TestCategories.Guard)]
+[Trait("Category", TestCategories.Unit)]
 public sealed class HardwareValidationGuardTests
 {
     [Fact]
@@ -189,31 +191,8 @@ public sealed class HardwareValidationGuardTests
 
     private static string ReadRepositoryFile(params string[] pathParts)
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine([repositoryRoot, .. pathParts]));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
-            Directory.GetCurrentDirectory(),
-            AppContext.BaseDirectory
-        };
-
-        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
-        {
-            var directory = new DirectoryInfo(Path.GetFullPath(candidate!));
-            while (directory is not null)
-            {
-                if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-                    return directory.FullName;
-
-                directory = directory.Parent;
-            }
-        }
-
-        throw new DirectoryNotFoundException("Could not find repository root.");
-    }
 }

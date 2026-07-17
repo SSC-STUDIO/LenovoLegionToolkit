@@ -784,43 +784,20 @@ public class SensorsControlTests
 
     private static string ReadSensorsControlXaml()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml"));
     }
 
     private static string ReadSensorsControlCode()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml.cs"));
     }
 
     private static string ReadSensorDetailsWindowXaml()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "SensorDetailsWindow.xaml"));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
-            Directory.GetCurrentDirectory(),
-            AppContext.BaseDirectory
-        };
-
-        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
-        {
-            var current = Path.GetFullPath(candidate!);
-            while (!string.IsNullOrWhiteSpace(current))
-            {
-                if (File.Exists(Path.Combine(current, "UniversalDeviceToolkit.sln")))
-                    return current;
-
-                current = Directory.GetParent(current)?.FullName;
-            }
-        }
-
-        throw new DirectoryNotFoundException("Could not locate UniversalDeviceToolkit.sln.");
-    }
 }

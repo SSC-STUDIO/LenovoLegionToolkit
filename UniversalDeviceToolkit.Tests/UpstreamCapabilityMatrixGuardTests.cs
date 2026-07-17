@@ -6,6 +6,8 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
 
+[Trait("Category", TestCategories.Guard)]
+[Trait("Category", TestCategories.Unit)]
 public sealed class UpstreamCapabilityMatrixGuardTests
 {
     [Fact]

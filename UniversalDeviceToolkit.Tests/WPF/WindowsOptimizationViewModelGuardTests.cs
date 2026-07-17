@@ -6,6 +6,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.WPF;
 
 [Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Guard)]
 public sealed class WindowsOptimizationViewModelGuardTests
 {
     [Fact]

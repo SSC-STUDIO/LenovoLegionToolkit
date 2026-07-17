@@ -15,6 +15,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.PackageDownloader;
 
 [Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Security)]
 public sealed class PackageChecksumValidationTests
 {
     [Fact]

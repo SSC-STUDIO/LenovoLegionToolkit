@@ -5,6 +5,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Utils;
 
 [Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Security)]
 public class PathSecurityTests
 {
     #region IsValidFileName

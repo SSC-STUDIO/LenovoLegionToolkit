@@ -9,6 +9,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
 [Trait("Category", TestCategories.Plugin)]
+[Trait("Category", TestCategories.Security)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginManagerSecurityTests : TemporaryFileTestBase
 {

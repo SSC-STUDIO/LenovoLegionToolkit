@@ -12,6 +12,7 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 /// verify store.json integrity digests match the packaged ZIPs and main DLLs.
 /// Skips cleanly when assets are not available (e.g. core-only CI checkout).
 /// </summary>
+[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class OfficialPluginPackageSmokeTests
 {

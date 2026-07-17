@@ -159,37 +159,14 @@ public class DashboardPageTests
 
     private static string ReadDashboardPageXaml()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "DashboardPage.xaml"));
     }
 
     private static string ReadDashboardPageSource()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Pages", "DashboardPage.xaml.cs"));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
-            Directory.GetCurrentDirectory(),
-            AppContext.BaseDirectory
-        };
-
-        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
-        {
-            var current = Path.GetFullPath(candidate!);
-            while (!string.IsNullOrWhiteSpace(current))
-            {
-                if (File.Exists(Path.Combine(current, "UniversalDeviceToolkit.sln")))
-                    return current;
-
-                current = Directory.GetParent(current)?.FullName;
-            }
-        }
-
-        throw new DirectoryNotFoundException("Could not locate UniversalDeviceToolkit.sln.");
-    }
 }

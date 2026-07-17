@@ -57,27 +57,14 @@ public class InstallerLanguageOwnershipTests
 
     private static string ReadInstallerScript()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(repositoryRoot, "MakeInstaller.iss"));
     }
 
     private static string ReadRepositoryFile(params string[] pathParts)
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine([repositoryRoot, .. pathParts]));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "MakeInstaller.iss")))
-                return directory.FullName;
-
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("Could not find repository root.");
-    }
 }

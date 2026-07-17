@@ -5,6 +5,20 @@ name: Cross-Platform CLI
 # be merged even though cross-platform builds and tests are essential for this project.
 
 on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'UniversalDeviceToolkit.CrossPlatform/**'
+      - 'UniversalDeviceToolkit.CrossPlatform.Tests/**'
+      - 'Scripts/Build-CrossPlatformCliAsset.ps1'
+      - '.github/workflows/CrossPlatformCli.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'UniversalDeviceToolkit.CrossPlatform/**'
+      - 'UniversalDeviceToolkit.CrossPlatform.Tests/**'
+      - 'Scripts/Build-CrossPlatformCliAsset.ps1'
+      - '.github/workflows/CrossPlatformCli.yml'
   workflow_dispatch:
 
 jobs:

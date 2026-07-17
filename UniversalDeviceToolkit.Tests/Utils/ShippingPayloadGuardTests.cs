@@ -4,6 +4,8 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
+[Trait("Category", TestCategories.Guard)]
+[Trait("Category", TestCategories.Unit)]
 public sealed class ShippingPayloadGuardTests
 {
     [Fact]
@@ -39,7 +41,7 @@ public sealed class ShippingPayloadGuardTests
     [Fact]
     public void ShippingPayloadGuard_ShouldRejectPayloadMissingPluginRuntime()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var payloadRoot = NewTempDirectory("UDT-shipping-missing-runtime");
         File.WriteAllBytes(Path.Combine(payloadRoot, "Universal Device Toolkit.dll"), [0x01]);
 
@@ -64,7 +66,7 @@ public sealed class ShippingPayloadGuardTests
     [Fact]
     public void ShippingPayloadGuard_ShouldRejectUtf16BinaryTestHookMarkers()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var payloadRoot = NewTempDirectory("UDT-shipping-marker-payload");
 
         try
@@ -179,7 +181,7 @@ public sealed class ShippingPayloadGuardTests
     [Fact]
     public void MainAppProject_ShouldNotReferenceTestOrValidationTools()
     {
-        var projectPath = Path.Combine(FindRepositoryRoot(), "UniversalDeviceToolkit.WPF", "UniversalDeviceToolkit.WPF.csproj");
+        var projectPath = Path.Combine(RepositoryPaths.FindRoot(), "UniversalDeviceToolkit.WPF", "UniversalDeviceToolkit.WPF.csproj");
         var project = XDocument.Load(projectPath);
         var projectReferences = project
             .Descendants("ProjectReference")
@@ -199,7 +201,7 @@ public sealed class ShippingPayloadGuardTests
     [Fact]
     public void Repository_ShouldNotContainMainAppDebugPatchScripts()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var files = Directory
             .EnumerateFiles(repositoryRoot, "*", SearchOption.AllDirectories)
             .Where(path => !IsIgnoredRepositoryPath(repositoryRoot, path))
@@ -262,7 +264,7 @@ public sealed class ShippingPayloadGuardTests
 
         releaseNotesFailure.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
 
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         RunPowerShellScript(
                 Path.Combine(repositoryRoot, "Scripts", "Build-LanguageAssets.ps1"),
                 [
@@ -294,7 +296,7 @@ public sealed class ShippingPayloadGuardTests
 
     private static string RunReleaseNotesScript(string version, string[] assetNames, bool expectSuccess = true)
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var tempDirectory = Path.Combine(Path.GetTempPath(), $"UDT-release-notes-{Guid.NewGuid():N}");
         Directory.CreateDirectory(tempDirectory);
 
@@ -441,28 +443,8 @@ public sealed class ShippingPayloadGuardTests
 
     private static string ReadRepositoryFile(params string[] pathParts)
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine([repositoryRoot, .. pathParts]));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var overrideRoot = Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT");
-        if (!string.IsNullOrWhiteSpace(overrideRoot) &&
-            File.Exists(Path.Combine(overrideRoot, "UniversalDeviceToolkit.sln")))
-        {
-            return Path.GetFullPath(overrideRoot);
-        }
-
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-                return directory.FullName;
-
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("Could not find repository root.");
-    }
 }

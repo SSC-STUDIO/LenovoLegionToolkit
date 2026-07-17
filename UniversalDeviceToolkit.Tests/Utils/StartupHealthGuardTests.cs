@@ -10,6 +10,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Utils;
 
 [Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Guard)]
 public class StartupHealthGuardTests : IDisposable
 {
     private readonly string _tempAppDataRoot;

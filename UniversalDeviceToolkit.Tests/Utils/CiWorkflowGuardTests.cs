@@ -3,12 +3,44 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
+[Trait("Category", TestCategories.Guard)]
+[Trait("Category", TestCategories.Unit)]
 public sealed class CiWorkflowGuardTests
 {
     [Fact]
+    public void CiTestsWorkflow_ShouldGateSecurityAndGuardFailFast()
+    {
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");
+
+        workflow.Should().Contain("Test (Security + Guard — fail fast)");
+        workflow.Should().Contain("Category=Security|Category=Guard");
+        workflow.Should().Contain("UniversalDeviceToolkit.Tests.SecurityGuard.trx");
+    }
+
+    [Fact]
+    public void CiTestsWorkflow_ShouldGatePluginFailFast()
+    {
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");
+
+        workflow.Should().Contain("Test (Plugin category — fail fast)");
+        workflow.Should().Contain("Category=Plugin");
+        workflow.Should().Contain("UniversalDeviceToolkit.Tests.Plugin.trx");
+    }
+
+    [Fact]
+    public void CiTestsWorkflow_ShouldGateUnitFailFastExcludingCoveragePadding()
+    {
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");
+
+        workflow.Should().Contain("Test (Unit category — fail fast)");
+        workflow.Should().Contain("Category=Unit&Category!=Coverage");
+        workflow.Should().Contain("UniversalDeviceToolkit.Tests.Unit.trx");
+    }
+
+    [Fact]
     public void CiTestsWorkflow_ShouldGateMainAppPluginUiSmokeContract()
     {
-        var workflow = ReadRepositoryFile(".github", "workflows", "Ci-tests.yml");
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");
 
         workflow.Should().Contain("Test (Main app plugin UI smoke contract");
         workflow.Should().Contain("--filter \"Category=Smoke\"");
@@ -18,15 +50,40 @@ public sealed class CiWorkflowGuardTests
     [Fact]
     public void CiTestsWorkflow_ShouldGateWpfL10nCoverageScript()
     {
-        var workflow = ReadRepositoryFile(".github", "workflows", "Ci-tests.yml");
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");
         workflow.Should().Contain("Assert-WpfL10nCoverage.ps1");
         workflow.Should().Contain("Assert WPF l10n coverage");
     }
 
     [Fact]
+    public void CrossPlatformCliWorkflow_ShouldRunOnPullRequests()
+    {
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "CrossPlatformCli.yml");
+
+        workflow.Should().Contain("pull_request:");
+        workflow.Should().Contain("UniversalDeviceToolkit.CrossPlatform/**");
+        workflow.Should().Contain("UniversalDeviceToolkit.CrossPlatform.Tests/**");
+        workflow.Should().Contain("workflow_dispatch:");
+    }
+
+    [Fact]
+    public void LinuxCiWorkflow_ShouldRunCrossPlatformTestsOnPullRequests()
+    {
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "linux.yml");
+
+        workflow.Should().Contain("pull_request:");
+        workflow.Should().Contain("UniversalDeviceToolkit.CrossPlatform.Tests");
+        workflow.Should().Contain("dotnet test");
+        workflow.Should().Contain("Smoke diagnostics CLI");
+        workflow.Should().Contain("-- status");
+        workflow.Should().Contain("-- doctor");
+        workflow.Should().Contain("-- json");
+    }
+
+    [Fact]
     public void FlaUiNightlyWorkflow_ShouldRunOnSelfHostedDesktopRunner()
     {
-        var workflow = ReadRepositoryFile(".github", "workflows", "flaui-tests.yml");
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "flaui-tests.yml");
 
         workflow.Should().Contain("schedule:");
         workflow.Should().Contain("cron: '0 3 * * *'");
@@ -40,7 +97,7 @@ public sealed class CiWorkflowGuardTests
     [Fact]
     public void FlaUiTestBase_ShouldResolveX64BuildOutputPaths()
     {
-        var source = ReadRepositoryFile(
+        var source = RepositoryPaths.ReadFile(
             "UniversalDeviceToolkit.Tests",
             "FlaUI",
             "FlaUiTestBase.cs");
@@ -48,32 +105,5 @@ public sealed class CiWorkflowGuardTests
         source.Should().Contain("UniversalDeviceToolkit.WPF\", \"bin\", \"x64\", \"Release\", \"net10.0-windows10.0.26100.0\", \"win-x64\"");
         source.Should().Contain("RUNNER_ENVIRONMENT");
         source.Should().Contain("UDT_ALLOW_FLAUI_TESTS");
-    }
-
-    private static string ReadRepositoryFile(params string[] pathParts)
-    {
-        var repositoryRoot = FindRepositoryRoot();
-        return File.ReadAllText(Path.Combine([repositoryRoot, .. pathParts]));
-    }
-
-    private static string FindRepositoryRoot()
-    {
-        var overrideRoot = Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT");
-        if (!string.IsNullOrWhiteSpace(overrideRoot) &&
-            File.Exists(Path.Combine(overrideRoot, "UniversalDeviceToolkit.sln")))
-        {
-            return Path.GetFullPath(overrideRoot);
-        }
-
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-                return directory.FullName;
-
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("Could not find repository root.");
     }
 }

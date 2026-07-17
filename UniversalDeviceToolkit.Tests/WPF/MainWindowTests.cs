@@ -74,37 +74,14 @@ public class MainWindowTests
 
     private static string ReadMainWindowXaml()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Windows", "MainWindow.xaml"));
     }
 
     private static string ReadTypographyXaml()
     {
-        var root = FindRepositoryRoot();
+        var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Styles", "Typography.xaml"));
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
-            Directory.GetCurrentDirectory(),
-            AppContext.BaseDirectory
-        };
-
-        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
-        {
-            var current = Path.GetFullPath(candidate!);
-            while (!string.IsNullOrWhiteSpace(current))
-            {
-                if (File.Exists(Path.Combine(current, "UniversalDeviceToolkit.sln")))
-                    return current;
-
-                current = Directory.GetParent(current)?.FullName;
-            }
-        }
-
-        throw new DirectoryNotFoundException("Could not locate UniversalDeviceToolkit.sln.");
-    }
 }

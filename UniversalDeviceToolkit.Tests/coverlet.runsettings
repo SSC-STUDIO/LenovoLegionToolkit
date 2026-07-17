@@ -6,11 +6,20 @@
         <Configuration>
           <Format>cobertura,opencover</Format>
           <Include>
-            [LenovoLegionToolkit.Lib.Plugins]*
             [UniversalDeviceToolkit.Lib]*
+            [UniversalDeviceToolkit.Lib.Plugins]*
+            [UniversalDeviceToolkit.Lib.Automation]*
+            [UniversalDeviceToolkit.Lib.Macro]*
             [UniversalDeviceToolkit.WPF]*
+            [UniversalDeviceToolkit.CLI]*
+            [UniversalDeviceToolkit.CLI.Lib]*
+            [UniversalDeviceToolkit.CrossPlatform]*
           </Include>
-          <Exclude>[LenovoLegionToolkit.Tests]*</Exclude>
+          <Exclude>
+            [UniversalDeviceToolkit.Tests]*
+            [UniversalDeviceToolkit.CrossPlatform.Tests]*
+            [*.Tests]*
+          </Exclude>
           <SkipAutoProps>true</SkipAutoProps>
           <Threshold>50</Threshold>
           <ThresholdType>line</ThresholdType>

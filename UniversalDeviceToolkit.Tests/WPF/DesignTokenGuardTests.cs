@@ -5,6 +5,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.WPF;
 
 [Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Guard)]
 public sealed class DesignTokenGuardTests
 {
     private static readonly Regex LiteralCornerRadius = new(
@@ -14,7 +15,7 @@ public sealed class DesignTokenGuardTests
     [Fact]
     public void ApplicationXaml_ShouldUseSemanticCornerRadiusTokens()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var wpfRoot = Path.Combine(repositoryRoot, "UniversalDeviceToolkit.WPF");
         var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
@@ -37,7 +38,7 @@ public sealed class DesignTokenGuardTests
     [Fact]
     public void DesignTokens_ShouldExposeModernRadiusHierarchy()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var tokens = File.ReadAllText(Path.Combine(repositoryRoot, "UniversalDeviceToolkit.WPF", "Styles", "DesignTokens.xaml"));
         tokens.Should().Contain("x:Key=\"CornerRadiusCompact\">8<");
         tokens.Should().Contain("x:Key=\"CornerRadiusControl\">12<");
@@ -45,11 +46,4 @@ public sealed class DesignTokenGuardTests
         tokens.Should().Contain("x:Key=\"CornerRadiusSurface\">20<");
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var current = new DirectoryInfo(AppContext.BaseDirectory);
-        while (current is not null && !File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit.sln")))
-            current = current.Parent;
-        return current?.FullName ?? throw new DirectoryNotFoundException("Could not find repository root.");
-    }
 }

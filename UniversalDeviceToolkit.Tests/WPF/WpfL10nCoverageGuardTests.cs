@@ -10,6 +10,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 /// UI strings must not remain English copies (except short technical tokens).
 /// </summary>
 [Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Guard)]
 public sealed class WpfL10nCoverageGuardTests
 {
     private static readonly string[] PriorityPrefixes =
@@ -115,7 +116,7 @@ public sealed class WpfL10nCoverageGuardTests
     [Fact]
     public void AssertWpfL10nCoverageScript_ShouldExistAndReferenceResourcesPath()
     {
-        var script = Path.Combine(FindRepositoryRoot(), "Scripts", "Assert-WpfL10nCoverage.ps1");
+        var script = Path.Combine(RepositoryPaths.FindRoot(), "Scripts", "Assert-WpfL10nCoverage.ps1");
         File.Exists(script).Should().BeTrue();
         var text = File.ReadAllText(script);
         text.Should().Contain("UniversalDeviceToolkit.WPF");
@@ -127,7 +128,7 @@ public sealed class WpfL10nCoverageGuardTests
         PriorityPrefixes.Any(p => key.StartsWith(p, StringComparison.Ordinal));
 
     private static string ResourcesDirectory() =>
-        Path.Combine(FindRepositoryRoot(), "UniversalDeviceToolkit.WPF", "Resources");
+        Path.Combine(RepositoryPaths.FindRoot(), "UniversalDeviceToolkit.WPF", "Resources");
 
     private static HashSet<string> LoadKeys(string path)
     {
@@ -154,23 +155,4 @@ public sealed class WpfL10nCoverageGuardTests
         return map;
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var overrideRoot = Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT");
-        if (!string.IsNullOrWhiteSpace(overrideRoot) &&
-            File.Exists(Path.Combine(overrideRoot, "UniversalDeviceToolkit.sln")))
-        {
-            return Path.GetFullPath(overrideRoot);
-        }
-
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-                return directory.FullName;
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("Could not find repository root.");
-    }
 }

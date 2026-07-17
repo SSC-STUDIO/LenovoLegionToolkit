@@ -8,7 +8,7 @@ using FluentAssertions;
 namespace UniversalDeviceToolkit.Tests;
 
 /// <summary>
-/// Test categories for organizing tests
+/// Test categories for organizing tests and CI fail-fast filters.
 /// </summary>
 public static class TestCategories
 {
@@ -17,6 +17,18 @@ public static class TestCategories
     public const string Utils = "Utils";
     public const string Controller = "Controller";
     public const string Smoke = "Smoke";
+
+    /// <summary>Security-sensitive paths (injection, signatures, path traversal).</summary>
+    public const string Security = "Security";
+
+    /// <summary>Repository/architecture contract guards (CI YAML, design tokens, payloads).</summary>
+    public const string Guard = "Guard";
+
+    /// <summary>
+    /// Low-signal coverage padding (enum/struct enumeration). Still runs in the full suite
+    /// but is excluded from Category=Unit fail-fast when not co-tagged.
+    /// </summary>
+    public const string Coverage = "Coverage";
 }
 
 /// <summary>

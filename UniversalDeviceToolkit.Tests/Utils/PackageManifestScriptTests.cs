@@ -9,7 +9,7 @@ public sealed class PackageManifestScriptTests
     [Fact]
     public void PrepareAndTestPackageManifests_ShouldRoundTripReleaseMetadata()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var tempRoot = NewTempDirectory("UDT-package-manifests");
         const string version = "9.8.7";
         const string releaseDate = "2026-06-06";
@@ -81,7 +81,7 @@ public sealed class PackageManifestScriptTests
     [Fact]
     public void TestPackageManifests_ShouldRejectHashThatDiffersFromReleaseManifest()
     {
-        var repositoryRoot = FindRepositoryRoot();
+        var repositoryRoot = RepositoryPaths.FindRoot();
         var tempRoot = NewTempDirectory("UDT-package-manifest-hash-mismatch");
         const string version = "9.8.6";
         var releaseHash = new string('b', 64);
@@ -157,24 +157,4 @@ public sealed class PackageManifestScriptTests
         return path;
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var overrideRoot = Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT");
-        if (!string.IsNullOrWhiteSpace(overrideRoot) &&
-            File.Exists(Path.Combine(overrideRoot, "UniversalDeviceToolkit.sln")))
-        {
-            return Path.GetFullPath(overrideRoot);
-        }
-
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-                return directory.FullName;
-
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("Could not find repository root.");
-    }
 }

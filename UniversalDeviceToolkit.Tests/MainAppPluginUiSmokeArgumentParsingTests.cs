@@ -12,7 +12,7 @@ public class MainAppPluginUiSmokeArgumentParsingTests
     [Fact]
     public void ResolveRepositoryRoot_WithNamedArguments_ReturnsExplicitRepoRoot()
     {
-        var repoRoot = FindRepositoryRoot();
+        var repoRoot = RepositoryPaths.FindRoot();
         var programType = Assembly.Load("MainAppPluginUi.Smoke").GetType("MainAppPluginUi.Smoke.Program", throwOnError: true)!;
         var resolveRepositoryRoot = programType.GetMethod("ResolveRepositoryRoot", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -39,7 +39,7 @@ public class MainAppPluginUiSmokeArgumentParsingTests
     [Fact]
     public void ResolveRepositoryRoot_WithPositionalArgument_ReturnsExplicitRepoRoot()
     {
-        var repoRoot = FindRepositoryRoot();
+        var repoRoot = RepositoryPaths.FindRoot();
         var programType = Assembly.Load("MainAppPluginUi.Smoke").GetType("MainAppPluginUi.Smoke.Program", throwOnError: true)!;
         var resolveRepositoryRoot = programType.GetMethod("ResolveRepositoryRoot", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -313,28 +313,4 @@ public class MainAppPluginUiSmokeArgumentParsingTests
         result.Should().Be("shell-integration");
     }
 
-    private static string FindRepositoryRoot()
-    {
-        var candidates = new[]
-        {
-            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
-            Directory.GetCurrentDirectory(),
-            AppContext.BaseDirectory
-        };
-
-        foreach (var candidate in candidates.Where(static candidate => !string.IsNullOrWhiteSpace(candidate)))
-        {
-            var current = new DirectoryInfo(Path.GetFullPath(candidate!));
-            while (current is not null)
-            {
-                var solutionPath = Path.Combine(current.FullName, "UniversalDeviceToolkit.sln");
-                if (File.Exists(solutionPath))
-                    return current.FullName;
-
-                current = current.Parent;
-            }
-        }
-
-        throw new DirectoryNotFoundException("Could not locate repository root for MainAppPluginUi.Smoke argument parsing tests.");
-    }
 }

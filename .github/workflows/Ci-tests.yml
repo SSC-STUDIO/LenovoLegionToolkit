@@ -41,13 +41,20 @@ jobs:
           MSBUILDDISABLENODEREUSE: 1
         run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore -m:1 --disable-build-servers
 
-      # Fast subset: tests that declare [Trait("Category", "Unit")]. Full suite below still runs everything.
+      # Fail-fast layers: Security/Guard first, then Unit (excludes pure Coverage padding),
+      # then Smoke contract. Full suite + coverage still runs everything below.
       - name: Assert WPF l10n coverage (fail fast)
         shell: pwsh
         run: ./Scripts/Assert-WpfL10nCoverage.ps1
 
+      - name: Test (Security + Guard — fail fast)
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Security|Category=Guard" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.SecurityGuard.trx"
+
+      - name: Test (Plugin category — fail fast)
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Plugin" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Plugin.trx"
+
       - name: Test (Unit category — fail fast)
-        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Unit" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Unit.trx"
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Unit&Category!=Coverage" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Unit.trx"
 
       - name: Test (Main app plugin UI smoke contract — fail fast)
         run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Smoke" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Smoke.trx"
