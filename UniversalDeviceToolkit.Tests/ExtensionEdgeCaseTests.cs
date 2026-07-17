@@ -50,7 +50,8 @@ public sealed class ExtensionEdgeCaseTests
     {
         IList list = new ArrayList { null, "test", null };
         var result = list.ToArray();
-        result.Should().Equal(null, "test", null);
+        // Avoid Equal(null, ...) — FluentAssertions treats a leading null as the expectation sequence.
+        result.Should().Equal(new object?[] { null, "test", null });
     }
 
     [Fact]
