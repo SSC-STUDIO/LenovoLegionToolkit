@@ -177,9 +177,17 @@ public class StartupHealthGuard
 
         try
         {
+            // Soft timeout: action is not aborted mid-flight (may hold locks / native
+            // resources). We detect overrun after return via CTS and elapsed wall time
+            // so short budgets remain reliable when timer resolution is coarse (CI VMs).
+            var startedMs = Environment.TickCount64;
             action();
+            var elapsedMs = Environment.TickCount64 - startedMs;
+            var timedOut = cts.IsCancellationRequested
+                || (timeout != Timeout.InfiniteTimeSpan
+                    && elapsedMs >= timeout.TotalMilliseconds);
 
-            if (cts.IsCancellationRequested)
+            if (timedOut)
             {
                 error = new TimeoutException(
                     $"Step '{name}' exceeded its timeout of {timeout}.");

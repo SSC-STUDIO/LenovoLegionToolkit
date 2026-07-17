@@ -66,9 +66,18 @@ public class StartupHealthGuardTests : IDisposable
     public void TryRunStep_TimeoutStep_ReturnsFalseWithTimeoutException()
     {
         var guard = new StartupHealthGuard();
-        guard.RegisterStep("slow", TimeSpan.FromMilliseconds(80));
+        // Keep a wide margin vs. OS timer resolution on hosted CI runners.
+        guard.RegisterStep("slow", TimeSpan.FromMilliseconds(50));
 
-        var ok = guard.TryRunStep("slow", () => Thread.Sleep(TimeSpan.FromMilliseconds(500)), out var error);
+        var ok = guard.TryRunStep(
+            "slow",
+            () =>
+            {
+                var deadline = Environment.TickCount64 + 400;
+                while (Environment.TickCount64 < deadline)
+                    Thread.SpinWait(64);
+            },
+            out var error);
 
         ok.Should().BeFalse();
         error.Should().NotBeNull();
