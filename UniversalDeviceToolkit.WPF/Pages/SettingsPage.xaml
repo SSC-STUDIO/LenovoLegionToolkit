@@ -77,13 +77,13 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                             <wpfui:SymbolIcon
-                                FontSize="18"
+                                FontSize="{StaticResource IconSizeMD}"
                                 Symbol="{Binding Icon}"
                                 Margin="0,0,12,0"
                                 VerticalAlignment="Center" />
                             <TextBlock
                                 VerticalAlignment="Center"
-                                FontSize="14"
+                                FontSize="{StaticResource FontSizeCaption}"
                                 Text="{Binding Title}" />
                         </StackPanel>
                     </DataTemplate>
@@ -105,7 +105,7 @@
                                         Padding="16,12,12,12"
                                         CornerRadius="{StaticResource CornerRadiusControl}">
                                         <Grid>
-                                            <!-- Blue indicator rectangle - matches main navigation bar style -->
+                                            <!-- Accent indicator — matches main NavigationStore selection chrome -->
                                             <Rectangle
                                                 x:Name="ActiveRectangle"
                                                 Width="4"
@@ -126,70 +126,26 @@
                                         </Grid>
                                     </Border>
                                     <ControlTemplate.Triggers>
+                                        <!-- Theme-aware fills (no hardcoded #26000000 — broken in light/presets). -->
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Trigger.EnterActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="ActiveRectangle"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="1.0"
-                                                            Duration="{StaticResource AnimationDurationMedium}"
-                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="Bd"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#26000000"
-                                                            Duration="{StaticResource AnimationDurationMedium}"
-                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </Trigger.EnterActions>
-                                            <Trigger.ExitActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="ActiveRectangle"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.0"
-                                                            Duration="{StaticResource AnimationDurationMedium}"
-                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="Bd"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="Transparent"
-                                                            Duration="{StaticResource AnimationDurationMedium}"
-                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </Trigger.ExitActions>
+                                            <Setter TargetName="ActiveRectangle" Property="Opacity" Value="1.0" />
+                                            <Setter TargetName="Bd" Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="{DynamicResource ControlFillColorDefault}" />
+                                                </Setter.Value>
+                                            </Setter>
                                         </Trigger>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Trigger.EnterActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="Bd"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#26000000"
-                                                            Duration="{StaticResource AnimationDurationFast}"
-                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </Trigger.EnterActions>
-                                            <Trigger.ExitActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="Bd"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="Transparent"
-                                                            Duration="{StaticResource AnimationDurationFast}"
-                                                            EasingFunction="{StaticResource AnimationEasingCubicOut}" />
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </Trigger.ExitActions>
-                                        </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="False" />
+                                                <Condition Property="IsMouseOver" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter TargetName="Bd" Property="Background">
+                                                <Setter.Value>
+                                                    <SolidColorBrush Color="{DynamicResource ControlFillColorSecondary}" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </MultiTrigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>
                             </Setter.Value>
