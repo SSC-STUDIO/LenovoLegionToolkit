@@ -55,75 +55,81 @@
                 <wpfui:SymbolIcon FontSize="56" Symbol="ErrorCircle24" />
             </StackPanel>
 
-            <StackPanel Grid.Row="0" Grid.Column="1">
-                <TextBlock
-                    Margin="0,0,0,16"
-                    Focusable="True"
-                    FontWeight="Medium"
-                    Text="{x:Static resources:Resource.UnsupportedWindow_Message}"
-                    TextWrapping="Wrap" />
-                <TextBlock
-                    Margin="0,0,0,12"
-                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    Text="{x:Static resources:Resource.UnsupportedWindow_DisableHint}"
-                    TextWrapping="Wrap" />
-
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
+            <ScrollViewer
+                Grid.Row="0"
+                Grid.Column="1"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled">
+                <StackPanel>
                     <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="0"
+                        Margin="0,0,0,16"
                         Focusable="True"
                         FontWeight="Medium"
-                        Text="{x:Static resources:Resource.UnsupportedWindow_Vendor}" />
+                        Text="{x:Static resources:Resource.UnsupportedWindow_Message}"
+                        TextWrapping="Wrap" />
                     <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="0"
+                        Margin="0,0,0,12"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.UnsupportedWindow_DisableHint}"
+                        TextWrapping="Wrap" />
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Focusable="True"
+                            FontWeight="Medium"
+                            Text="{x:Static resources:Resource.UnsupportedWindow_Vendor}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Focusable="True"
+                            FontWeight="Medium"
+                            Text="{x:Static resources:Resource.UnsupportedWindow_Model}" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Focusable="True"
+                            FontWeight="Medium"
+                            Text="{x:Static resources:Resource.UnsupportedWindow_MachineType}" />
+
+                        <TextBlock
+                            x:Name="_vendorText"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Focusable="True" />
+                        <TextBlock
+                            x:Name="_modelText"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Focusable="True" />
+                        <TextBlock
+                            x:Name="_machineTypeText"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Focusable="True" />
+                    </Grid>
+
+                    <TextBlock
+                        Margin="0,16,0,24"
                         Focusable="True"
-                        FontWeight="Medium"
-                        Text="{x:Static resources:Resource.UnsupportedWindow_Model}" />
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Focusable="True"
-                        FontWeight="Medium"
-                        Text="{x:Static resources:Resource.UnsupportedWindow_MachineType}" />
+                        Text="{x:Static resources:Resource.UnsupportedWindow_Disclaimer}"
+                        TextWrapping="Wrap" />
 
-                    <TextBlock
-                        x:Name="_vendorText"
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Focusable="True" />
-                    <TextBlock
-                        x:Name="_modelText"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Focusable="True" />
-                    <TextBlock
-                        x:Name="_machineTypeText"
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Focusable="True" />
-                </Grid>
+                    <wpfui:HyperlinkButton Content="{x:Static resources:Resource.UnsupportedWindow_Disclaimer_GitHub}" Click="ContributionLink_Click" />
 
-                <TextBlock
-                    Margin="0,16,0,24"
-                    Focusable="True"
-                    Text="{x:Static resources:Resource.UnsupportedWindow_Disclaimer}"
-                    TextWrapping="Wrap" />
-
-                <wpfui:HyperlinkButton Content="{x:Static resources:Resource.UnsupportedWindow_Disclaimer_GitHub}" Click="ContributionLink_Click" />
-
-            </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
 
             <Grid
                 Grid.Row="1"

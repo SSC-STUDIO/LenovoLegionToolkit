@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:UniversalDeviceToolkit.WPF.Windows"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:sys="clr-namespace:System.Windows;assembly=PresentationFramework"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.GodModeSettingsWindow_EditPreset_Title}"
     Width="420"
@@ -11,6 +12,7 @@
     MinWidth="380"
     MinHeight="184"
     MaxWidth="520"
+    MaxHeight="{Binding Source={x:Static sys:SystemParameters.WorkArea}, Path=Height}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
     SizeToContent="Height"
@@ -30,28 +32,32 @@
             ShowMaximize="False"
             ShowMinimize="False" />
 
-        <Grid
+        <ScrollViewer
             Grid.Row="1"
-            Margin="20,12,20,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled">
+            <Grid
+                Margin="20,12,20,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <TextBlock
-                x:Name="_titleTextBlock"
-                Grid.Row="0"
-                Margin="0,0,0,12"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
-                TextWrapping="Wrap" />
+                <TextBlock
+                    x:Name="_titleTextBlock"
+                    Grid.Row="0"
+                    Margin="0,0,0,12"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Style="{StaticResource AppSubsectionTitleTextBlockStyle}"
+                    TextWrapping="Wrap" />
 
-            <ui:TextBox
-                x:Name="_textBox"
-                Grid.Row="1"
-                AutomationProperties.AutomationId="InputDialogTextBox"
-                MaxLength="50" />
-        </Grid>
+                <ui:TextBox
+                    x:Name="_textBox"
+                    Grid.Row="1"
+                    AutomationProperties.AutomationId="InputDialogTextBox"
+                    MaxLength="50" />
+            </Grid>
+        </ScrollViewer>
 
         <StackPanel
             Grid.Row="2"

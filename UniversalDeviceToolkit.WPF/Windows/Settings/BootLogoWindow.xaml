@@ -48,77 +48,82 @@
                 Text="{x:Static resources:Resource.BootLogoWindow_Title}" />
         </Grid>
 
-        <Grid Grid.Row="1" Margin="12,12,12,12">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <ScrollViewer
+            Grid.Row="1"
+            VerticalScrollBarVisibility="Auto"
+            HorizontalScrollBarVisibility="Disabled">
+            <Grid Margin="12,12,12,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                Focusable="True"
-                Text="{x:Static resources:Resource.BootLogoWindow_Status}" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Focusable="True"
+                    Text="{x:Static resources:Resource.BootLogoWindow_Status}" />
 
-            <TextBlock
-                x:Name="_defaultStatus"
-                Grid.Row="0"
-                Grid.Column="1"
-                Focusable="True"
-                FontWeight="Medium"
-                Text="{x:Static resources:Resource.BootLogoWindow_DefaultLogoSet}"
-                TextAlignment="Right"
-                Visibility="Collapsed" />
+                <TextBlock
+                    x:Name="_defaultStatus"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Focusable="True"
+                    FontWeight="Medium"
+                    Text="{x:Static resources:Resource.BootLogoWindow_DefaultLogoSet}"
+                    TextAlignment="Right"
+                    Visibility="Collapsed" />
 
-            <TextBlock
-                x:Name="_customStatus"
-                Grid.Row="0"
-                Grid.Column="1"
-                Focusable="True"
-                FontWeight="Medium"
-                Text="{x:Static resources:Resource.BootLogoWindow_CustomLogoSet}"
-                TextAlignment="Right"
-                Visibility="Collapsed" />
+                <TextBlock
+                    x:Name="_customStatus"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Focusable="True"
+                    FontWeight="Medium"
+                    Text="{x:Static resources:Resource.BootLogoWindow_CustomLogoSet}"
+                    TextAlignment="Right"
+                    Visibility="Collapsed" />
 
-            <TextBlock
-                x:Name="_descriptionTextBlock"
-                Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,24,0,0"
-                Focusable="True"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                TextWrapping="Wrap" />
+                <TextBlock
+                    x:Name="_descriptionTextBlock"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,24,0,0"
+                    Focusable="True"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap" />
 
-            <TextBlock
-                x:Name="_resultTextBlock"
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,24,0,0"
-                FontWeight="Medium"
-                TextAlignment="Center"
-                TextWrapping="Wrap">
-                <TextBlock.Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground" Value="{DynamicResource StatusCriticalTextBrush}" />
-                        <Style.Triggers>
-                            <Trigger Property="Text" Value="{x:Static resources:Resource.BootLogoWindow_SetCustomSuccess}">
-                                <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
-                            </Trigger>
-                            <Trigger Property="Text" Value="{x:Static resources:Resource.BootLogoWindow_SetDefaultSuccess}">
-                                <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
-        </Grid>
+                <TextBlock
+                    x:Name="_resultTextBlock"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,24,0,0"
+                    FontWeight="Medium"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{DynamicResource StatusCriticalTextBrush}" />
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static resources:Resource.BootLogoWindow_SetCustomSuccess}">
+                                    <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Static resources:Resource.BootLogoWindow_SetDefaultSuccess}">
+                                    <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </ScrollViewer>
 
         <Grid Grid.Row="2" Margin="12">
             <Grid.ColumnDefinitions>
