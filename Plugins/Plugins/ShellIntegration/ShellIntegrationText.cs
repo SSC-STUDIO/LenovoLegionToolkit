@@ -5,7 +5,7 @@ namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
 public static class ShellIntegrationText
 {
-public static string PluginName => T(nameof(PluginName), "Nilesoft Shell Manager");
+    public static string PluginName => T(nameof(PluginName), "Nilesoft Shell Manager");
     public static string PluginDescription => T(nameof(PluginDescription), "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.");
     public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Nilesoft Shell Manager");
     public static string Subtitle => T(nameof(Subtitle), "Manage Nilesoft Shell registration and open style editor.");
@@ -65,6 +65,8 @@ public static string PluginName => T(nameof(PluginName), "Nilesoft Shell Manager
     public static string ProfileFileDialogFilter => T(nameof(ProfileFileDialogFilter), "JSON Files (*.json)|*.json|All Files (*.*)|*.*");
     public static string VersionLabel => T(nameof(VersionLabel), "Version");
     public static string ErrorPrefix => T(nameof(ErrorPrefix), "Error");
+    public static string OpenFileButton => T(nameof(OpenFileButton), "Open File");
+    public static string OpenFolderButton => T(nameof(OpenFolderButton), "Open Folder");
 
     private static readonly System.Resources.ResourceManager ResourceManager =
         new("UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource", typeof(ShellIntegrationText).Assembly);

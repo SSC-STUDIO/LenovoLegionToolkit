@@ -44,18 +44,19 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
 
         var titleTextBlock = new TextBlock
         {
-            Margin = new Thickness(0, 0, 0, 18),
+            Margin = new Thickness(0, 0, 0, 12),
             Text = ShellIntegrationText.SettingsPageTitle,
             FontSize = 22,
             FontWeight = FontWeights.SemiBold,
-            TextWrapping = TextWrapping.Wrap
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = ResolveBrush("TextFillColorPrimaryBrush", SystemColors.ControlTextBrush)
         };
         AutomationProperties.SetAutomationId(titleTextBlock, "ShellIntegrationStyleSettingsTitle");
         stack.Children.Add(titleTextBlock);
 
         _statusTextBlock = new TextBlock
         {
-            Margin = new Thickness(0, 0, 0, 18),
+            Margin = new Thickness(0, 0, 0, 12),
             TextWrapping = TextWrapping.Wrap,
             FontSize = 12,
             Visibility = Visibility.Collapsed,
@@ -64,11 +65,13 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         AutomationProperties.SetAutomationId(_statusTextBlock, "ShellIntegrationStyleSettingsStatusText");
         stack.Children.Add(_statusTextBlock);
 
-        stack.Children.Add(CreatePathRow("shell.nss", configPath, "Open File"));
-        stack.Children.Add(CreatePathRow("theme.nss", themePath, "Open File"));
-        stack.Children.Add(CreatePathRow("images.nss", imagesPath, "Open File"));
-        stack.Children.Add(CreatePathRow("modify.nss", modifyPath, "Open File"));
-        stack.Children.Add(CreatePathRow("imports", importsFolder, "Open Folder", isDirectory: true));
+        var openFile = ShellIntegrationText.OpenFileButton;
+        var openFolder = ShellIntegrationText.OpenFolderButton;
+        stack.Children.Add(CreatePathRow("shell.nss", configPath, openFile));
+        stack.Children.Add(CreatePathRow("theme.nss", themePath, openFile));
+        stack.Children.Add(CreatePathRow("images.nss", imagesPath, openFile));
+        stack.Children.Add(CreatePathRow("modify.nss", modifyPath, openFile));
+        stack.Children.Add(CreatePathRow("imports", importsFolder, openFolder, isDirectory: true));
         stack.Children.Add(CreatePathRow("Shell Folder", shellFolder, ShellIntegrationText.OpenShellFolderButton, isDirectory: true, isLast: true));
 
         return new ScrollViewer
@@ -83,9 +86,12 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         var automationSegment = NormalizeAutomationSegment(title);
         var border = new Border
         {
+            Background = ResolveBrush("ControlFillColorDefaultBrush", SystemColors.ControlBrush),
             BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", Brushes.Gainsboro),
-            BorderThickness = isLast ? new Thickness(0) : new Thickness(0, 0, 0, 1),
-            Padding = new Thickness(0, 12, 0, 12)
+            BorderThickness = new Thickness(1),
+            CornerRadius = new CornerRadius(12),
+            Padding = new Thickness(14, 12, 14, 12),
+            Margin = new Thickness(0, 0, 0, isLast ? 0 : 10)
         };
         AutomationProperties.SetAutomationId(border, $"ShellIntegrationStyleRow_{automationSegment}");
 
@@ -97,7 +103,8 @@ internal sealed class ShellIntegrationStyleSettingsWindow : Window
         var titleTextBlock = new TextBlock
         {
             Text = title,
-            FontWeight = FontWeights.SemiBold
+            FontWeight = FontWeights.SemiBold,
+            Foreground = ResolveBrush("TextFillColorPrimaryBrush", SystemColors.ControlTextBrush)
         };
         AutomationProperties.SetAutomationId(titleTextBlock, $"ShellIntegrationStyleTitle_{automationSegment}");
         textPanel.Children.Add(titleTextBlock);

@@ -5,7 +5,12 @@
       Fallback design tokens for plugin standalone tests / workbench when the host
       DesignTokens dictionary is not available. Values must match UDT host:
       Compact 8 / Control 12 / Card 18 / Surface 20 / Round 999.
+
+      Prefer StaticResource CornerRadius* / PluginCornerRadius* keys in plugin XAML.
+      Colors must remain DynamicResource host/WPF-UI brushes — never hardcode hex chrome.
     -->
+
+    <!-- Corner radius scale (host SoT) -->
     <CornerRadius x:Key="CornerRadiusNone">0</CornerRadius>
     <CornerRadius x:Key="CornerRadiusProgressBar">3</CornerRadius>
     <CornerRadius x:Key="CornerRadiusSmall">8</CornerRadius>
@@ -19,6 +24,30 @@
     <CornerRadius x:Key="CornerRadiusLG">18</CornerRadius>
     <CornerRadius x:Key="CornerRadiusXL">20</CornerRadius>
 
+    <!-- Plugin-local aliases used by NetworkAcceleration / BatteryHealth / ViveTool -->
+    <CornerRadius x:Key="PluginCornerRadiusCompact">8</CornerRadius>
+    <CornerRadius x:Key="PluginCornerRadiusControl">12</CornerRadius>
+    <CornerRadius x:Key="PluginCornerRadiusCard">18</CornerRadius>
+    <CornerRadius x:Key="PluginCornerRadiusSurface">20</CornerRadius>
+
+    <!-- Spacing (Thickness) — optional; pages may still use raw margins carefully -->
+    <Thickness x:Key="PluginSpacingXXS">4</Thickness>
+    <Thickness x:Key="PluginSpacingXS">8</Thickness>
+    <Thickness x:Key="PluginSpacingSM">12</Thickness>
+    <Thickness x:Key="PluginSpacingMD">16</Thickness>
+    <Thickness x:Key="PluginSpacingLG">24</Thickness>
+    <Thickness x:Key="PluginCardPadding">16,14</Thickness>
+    <Thickness x:Key="PluginSectionMargin">0,0,0,16</Thickness>
+
+    <!-- Button heights match host -->
     <sys:Double x:Key="ButtonHeightCompact" xmlns:sys="clr-namespace:System;assembly=mscorlib">32</sys:Double>
     <sys:Double x:Key="ButtonHeightStandard" xmlns:sys="clr-namespace:System;assembly=mscorlib">36</sys:Double>
+
+    <!-- Typography scale (subset of host) -->
+    <sys:Double x:Key="PluginFontSizeCaption" xmlns:sys="clr-namespace:System;assembly=mscorlib">12</sys:Double>
+    <sys:Double x:Key="PluginFontSizeBody" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
+    <sys:Double x:Key="PluginFontSizeSection" xmlns:sys="clr-namespace:System;assembly=mscorlib">15</sys:Double>
+    <sys:Double x:Key="PluginFontSizeMetric" xmlns:sys="clr-namespace:System;assembly=mscorlib">28</sys:Double>
+    <sys:Double x:Key="PluginIconSizeMD" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
+    <sys:Double x:Key="PluginIconSizeLG" xmlns:sys="clr-namespace:System;assembly=mscorlib">24</sys:Double>
 </ResourceDictionary>

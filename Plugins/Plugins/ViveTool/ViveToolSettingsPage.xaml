@@ -10,6 +10,14 @@
              d:DesignWidth="720"
              AutomationProperties.AutomationId="ViveToolSettingsRoot">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/DesignTokens.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <!-- Compact host-settings style: no hero banner / multi-card stack. -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
@@ -121,7 +129,7 @@
             </Grid>
 
             <Border Padding="10,8"
-                    CornerRadius="6"
+                    CornerRadius="{StaticResource PluginCornerRadiusCompact}"
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
                     BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
                     BorderThickness="1">
