@@ -36,4 +36,4 @@ When running under Windows PowerShell 5.1:
 
 ## Docs map
 
-See `Docs/README.md` for current vs historical documentation.
+See `Docs/README.md` for the current documentation set.

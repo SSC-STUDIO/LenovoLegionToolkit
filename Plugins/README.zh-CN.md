@@ -28,8 +28,6 @@
 | 上架 | **光标与指针** | v1.0.17 | 主题感知光标、指针速度、主按键交换、安全备份/还原 | `custom-mouse` |
 | 上架 | **ViVeTool** | v1.2.3 | 可视化浏览/开关 Windows 隐藏功能标志 | `vive-tool` |
 | 上架 | **Nilesoft Shell 管理器** | v1.0.13 | 管理 Nilesoft Shell 注册与 UDT 配置（需单独安装 Shell） | `shell-integration` |
-| 已迁移 | 电池健康 | v1.0.0 | **不在商店** — 功能已并入宿主；源码仅供设置迁移 | `battery-health` |
-| 已迁移 | 网络加速 | v1.2.0 | **不在商店** — 功能已并入宿主；源码仅供设置迁移 | `network-acceleration` |
 
 > 版本以各插件 `plugin.manifest.json` 为准；上架清单见根目录 [`store.json`](./store.json)（发布生成物）。
 
@@ -50,7 +48,7 @@ SDK、脚手架与 **PluginWorkbench** 支持不启动完整宿主即可预览�
 官方插件提供约 **32** 种资源区域（含 `en` / `zh-Hans` / `zh-Hant`）。
 
 ### 测试
-Shared + 官方插件约 **600** 项单元测试，GitHub Actions 覆盖构建/校验/发布。
+Shared + 官方插件有完整单元测试，GitHub Actions 覆盖构建/校验/发布。
 
 ---
 
@@ -70,9 +68,6 @@ Shared + 官方插件约 **600** 项单元测试，GitHub Actions 覆盖构建/�
 - 在 UDT 中注册/注销 Nilesoft Shell
 - 应用或回滚 UDT 管理的配置项
 - 需要本机已安装 Nilesoft Shell
-
-### 已迁移（宿主内置）
-**电池健康**、**网络加速** 已并入 Universal Device Toolkit 本体。对应插件项目仅保留迁移路径，**不会**在商店展示。
 
 ---
 

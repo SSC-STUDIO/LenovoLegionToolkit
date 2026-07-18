@@ -8,7 +8,6 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 |------|--------|
 | Host app | Universal Device Toolkit **v5.0.0** (`Dependencies/Host/host-release.json`) |
 | Official store plugins | `custom-mouse` 1.0.17 · `vive-tool` 1.2.3 · `shell-integration` 1.0.13 |
-| Migrated (not in store) | `battery-health`, `network-acceleration` |
 | Tooling entry | `udt-plugin.cmd` (`llt-plugin.cmd` alias) |
 | Min host field | `plugin.manifest.json` → `minHostVersion` = **5.0.0**; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
 | Version SoT | each `plugin.manifest.json` → `version` |
@@ -34,7 +33,17 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
   - Product facts live in README + `plugin.manifest.json` + `host-release.json`
   - After host major ABI bumps, sync `minHostVersion` / `MinLltVersion` / `MinimumHostVersion` together
   - Prefer `udt-plugin.cmd` in new docs; keep `llt-plugin.cmd` as alias only
-  - Mark campaign/sprint notes historical via `Docs/README.md` — do not “fix” their version numbers as product truth
+  - Product facts live in README + manifests; do not invent parallel version tables in ad-hoc notes
+- **.NET/OS Version**: .NET 10, host UDT 5.0.0
+
+### [2026-07-18] Removed migrated plugin sources (BatteryHealth / NetworkAcceleration)
+- **Symptom / Pitfall**: Repo still carried full plugin projects after features shipped in the host, plus campaign handovers, bak files, and accidental `Plugins/*/*.dll` build outputs.
+- **Root Cause**: “Keep source for migration” outlived the migration need; promotional and day-audit artifacts were never pruned.
+- **Enforced Rule**:
+  - Official plugin set is only `CustomMouse`, `ShellIntegration`, `ViveTool` (+ `Shared` / SDK / Tools)
+  - Do not re-add `battery-health` / `network-acceleration` plugin projects; host owns those features
+  - Do not commit `Plugins/<Name>/*.dll` next to sources (`Bundled/` is the only intentional binary drop-in)
+  - Prefer GitHub Issues over growing root `BUGS.md` day dumps
 - **.NET/OS Version**: .NET 10, host UDT 5.0.0
 
 ### [2026-07-06] Zero-Warnings Build Achievement

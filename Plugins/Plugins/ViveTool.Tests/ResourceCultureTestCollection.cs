@@ -9,7 +9,7 @@ namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 /// culture-dependent <c>Resource.*</c> properties, so xUnit must never run them concurrently:
 /// a half-mutated static culture or a racing lazy cache initialization could leak across reads.
 /// Mirrors the <c>DisableParallelization</c> collection already enforced by the other four
-/// plugins (BatteryHealth/CustomMouse/NetworkAcceleration/ShellIntegration) per Pillar B.
+/// plugins (CustomMouse/ShellIntegration/ViveTool) per Pillar B.
 /// </summary>
 [CollectionDefinition("ViveToolResourceCulture", DisableParallelization = true)]
 public class ViveToolResourceCultureCollectionDefinition

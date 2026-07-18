@@ -24,22 +24,15 @@ UniversalDeviceToolkit-Plugins/
 │   │   ├── ProcessRunner.cs       # 安全进程执行器
 │   │   ├── SettingsManager.cs    # 统一设置持久化管理
 │   │   └── Constants.cs           # 魔法数字集中定义
-│   ├── Shared.Tests/             # 共享库测试 (140 tests)
-│   ├── CustomMouse/              # 鼠标自定义插件
-│   ├── CustomMouse.Tests/        # 鼠标插件测试 (40 tests)
-│   ├── ShellIntegration/         # Shell集成插件
-│   ├── ShellIntegration.Tests/    # Shell插件测试 (93 tests)
-│   ├── NetworkAcceleration/      # 网络加速插件
-│   ├── NetworkAcceleration.Tests/ # 网络插件测试 (33 tests)
-│   ├── ViveTool/                 # ViVeTool功能控制插件
+│   ├── Shared.Tests/             # 共享库测试
+│   ├── CustomMouse/              # 光标与指针插件
+│   ├── CustomMouse.Tests/
+│   ├── ShellIntegration/         # Nilesoft Shell 管理插件
+│   ├── ShellIntegration.Tests/
+│   ├── ViveTool/                 # ViVeTool 功能标志插件
+│   │   ├── Bundled/             # ViVeTool 运行时依赖
 │   │   └── Services/            # 拆分后的服务层
-│   │       ├── IViveToolService.cs
-│   │       ├── ViveToolService.cs        # 聚合服务 (198行)
-│   │       ├── ViveToolFeatureService.cs  # Feature操作 (456行)
-│   │       ├── ViveToolDownloadService.cs # 下载服务 (313行)
-│   │       ├── ViveToolPathService.cs      # 路径服务 (239行)
-│   │       └── ViveToolProcessService.cs   # 进程服务 (48行)
-│   └── ViveTool.Tests/          # ViveTool测试 (217 tests)
+│   └── ViveTool.Tests/
 ├── Dependencies/                # 外部依赖
 │   └── Host/                    # 宿主应用引用与基线清单
 │       └── host-release.json    # 独立开发使用的主程序 release 基线
@@ -158,15 +151,13 @@ Load → Start → [Runtime Loop] → Stop → Unload
 
 ## 测试覆盖
 
-| 项目 | 测试数（约，Fact/Theory） | 备注 |
-|------|---------------------------|------|
-| Shared | 167 | 共享库 |
-| ViveTool | 170 | 功能标志插件 |
-| ShellIntegration | 130 | Nilesoft Shell |
-| CustomMouse | 37 | 光标与指针 |
-| NetworkAcceleration | 58 | 已迁移（源码/测试保留） |
-| BatteryHealth | 36 | 已迁移（源码/测试保留） |
-| **合计** | **~598** | 以 `dotnet test` 为准 |
+| 项目 | 测试数（约） | 备注 |
+|------|--------------|------|
+| Shared | ~167 | 共享库 |
+| ViveTool | ~170 | 功能标志插件 |
+| ShellIntegration | ~130 | Nilesoft Shell |
+| CustomMouse | ~37 | 光标与指针 |
+| **合计** | **~500+** | 以 `dotnet test` 为准 |
 
 ## 安全实践
 

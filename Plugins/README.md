@@ -44,8 +44,6 @@
 | Active | **Cursor & Pointer** | v1.0.17 | Theme-aware cursor styles, Windows pointer speed, button swapping, safe cursor backup/restore | `custom-mouse` |
 | Active | **ViVeTool** | v1.2.3 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
 | Active | **Nilesoft Shell Manager** | v1.0.13 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
-| Migrated | Battery Health | v1.0.0 | **Not in store** — built into Universal Device Toolkit; source kept for settings migration only | `battery-health` |
-| Migrated | Network Acceleration | v1.2.0 | **Not in store** — built into Universal Device Toolkit; source kept for settings migration only | `network-acceleration` |
 
 > Catalog versions match `Plugins/*/plugin.manifest.json` (source of truth). Active store listings live in generated root [`store.json`](./store.json).
 
@@ -77,7 +75,7 @@ Clean SDK, scaffolder, and **PluginWorkbench** so you can preview plugins withou
 Official plugins ship resource satellites for **32 cultures** (including `en`, `zh-Hans`, `zh-Hant`).
 
 ### Tested
-~600 unit tests across Shared + official plugins, plus CI workflows for build/validate/release.
+Hundreds of unit tests across Shared + official plugins, plus CI workflows for build/validate/release.
 
 ---
 
@@ -97,9 +95,6 @@ Official plugins ship resource satellites for **32 cultures** (including `en`, `
 - Register/unregister Nilesoft Shell from UDT
 - Apply or roll back UDT-managed configuration
 - Requires a separate Nilesoft Shell install
-
-### Migrated (host built-ins)
-**Battery Health** and **Network Acceleration** features now ship inside Universal Device Toolkit. Plugin projects remain for upgrade migration only and are **not** offered in the marketplace.
 
 ---
 
@@ -167,9 +162,7 @@ UniversalDeviceToolkit-Plugins/
 │   ├── Shared/              # Shared helpers (settings, process, HTTP, …)
 │   ├── CustomMouse/
 │   ├── ShellIntegration/
-│   ├── ViveTool/
-│   ├── BatteryHealth/       # Migrated (not in store)
-│   └── NetworkAcceleration/ # Migrated (not in store)
+│   └── ViveTool/
 ├── SDK/                     # Plugin SDK surfaces
 ├── Dependencies/Host/       # Vendored host refs (see host-release.json → v5.0.0)
 ├── Tools/                   # PluginWorkbench + PluginTooling.CLI

@@ -25,19 +25,6 @@ CLI entry: **`../udt-plugin.cmd`** (`llt-plugin.cmd` is a compatibility alias).
 | [../CHANGELOG.md](../CHANGELOG.md) | Project changelog |
 | [../SECURITY.md](../SECURITY.md) | Vulnerability reporting |
 | [../KNOWLEDGE_BASE.md](../KNOWLEDGE_BASE.md) | Durable engineering rules (ABI, migration paths) |
-| [../BUGS.md](../BUGS.md) | Known issues tracker |
+| [../BUGS.md](../BUGS.md) | Known issues (open items only) |
 
-## Historical / campaign material
-
-The following were produced during launch and sprint days. **Version numbers and plugin counts may be stale**; do not treat them as source of truth. Prefer manifests + docs above.
-
-| Doc | Kind |
-|-----|------|
-| `AUTONOMOUS_DAY4_SUMMARY.md`, `SPRINT_DAY3_UPDATE.md`, `DAY5_HANDOVER.md` | Sprint notes |
-| `HANDOVER_SUMMARY_2026-07-07.md`, `../HANDOVER_SUMMARY_2026-07-06.md` | Session handovers |
-| `PROMOTION.md`, `PROMOTION_CHECKLIST.md`, `PROMOTION_COPIES.md` | Marketing drafts |
-| `REDDIT_POSTS.md`, `REDDIT_PUBLISHING_CHECKLIST.md`, `DAY6_REDDIT_PUBLISHING_GUIDE.md` | Social drafts |
-| `DEVTO_POST.md`, `HN_POST.md`, `CHIPELL_POST.md` | Blog drafts |
-| `STAR_CAMPAIGN_STATUS.md`, `USER_ACTION_GUIDE.md` | Campaign trackers |
-
-When updating product facts, edit **README / PLUGIN_*** / manifests first, then regenerate marketing copy if needed.
+When updating product facts, edit **README / PLUGIN_*** / manifests first.

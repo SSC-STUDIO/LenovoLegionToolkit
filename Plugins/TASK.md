@@ -13,6 +13,5 @@ Tracking notes for maintainers. Prefer GitHub Issues for public work.
 
 ## Engineering backlog (open)
 
-- Keep migrated plugins (`battery-health`, `network-acceleration`) out of `store.json`
 - When host ships a new minor, bump `Dependencies/Host/host-release.json` and re-vendor DLLs
 - Watch KNOWLEDGE_BASE / BUGS for ABI and migration rules before “cleanup renames”
