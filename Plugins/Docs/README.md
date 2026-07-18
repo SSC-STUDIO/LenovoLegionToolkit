@@ -15,6 +15,8 @@ CLI entry: **`../udt-plugin.cmd`** (`llt-plugin.cmd` is a compatibility alias).
 | [SDK_CHANGELOG.md](./SDK_CHANGELOG.md) | Authors tracking host/SDK | Compatibility matrix |
 | [BUILD_SMOKE.md](./BUILD_SMOKE.md) | CI / local gates | Minimal smoke sequence |
 | [AI_AGENT_WORKFLOW.md](./AI_AGENT_WORKFLOW.md) | Automation / AI agents | JSON reports under `artifacts/agent/` |
+| [VISUAL_AUDIT_20260718.md](./VISUAL_AUDIT_20260718.md) | Maintainers / reviewers | 屏幕适配与视觉效果审计报告（事实与风险） |
+| [VISUAL_DESIGN_RECOMMENDATIONS.md](./VISUAL_DESIGN_RECOMMENDATIONS.md) | Maintainers / authors | 屏幕适配与视觉效果改进建议（含路线图与验收） |
 
 ## Root docs (repo)
 
