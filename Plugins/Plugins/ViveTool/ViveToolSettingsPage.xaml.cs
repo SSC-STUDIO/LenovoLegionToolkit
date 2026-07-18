@@ -104,7 +104,7 @@ public partial class ViveToolSettingsPage
         {
             BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", SystemColors.ControlDarkBrush),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
+            CornerRadius = new CornerRadius(12),
             Background = ResolveBrush("ControlFillColorSecondaryBrush", SystemColors.ControlBrush),
             Padding = new Thickness(14),
             Margin = new Thickness(0, 0, 0, 12)
@@ -124,7 +124,7 @@ public partial class ViveToolSettingsPage
         {
             BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", SystemColors.ControlDarkBrush),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
+            CornerRadius = new CornerRadius(12),
             Background = ResolveBrush("ControlFillColorSecondaryBrush", SystemColors.ControlBrush),
             Padding = new Thickness(14)
         };

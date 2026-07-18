@@ -18,32 +18,34 @@
     UseLayoutRounding="True">
 
     <UserControl.Resources>
-        <CornerRadius x:Key="PluginCornerRadiusCompact">8</CornerRadius>
-        <CornerRadius x:Key="PluginCornerRadiusControl">12</CornerRadius>
-        <CornerRadius x:Key="PluginCornerRadiusCard">18</CornerRadius>
-        <CornerRadius x:Key="PluginCornerRadiusSurface">20</CornerRadius>
-        <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
-        <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/DesignTokens.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style x:Key="FeatureRowStyle" TargetType="DataGridRow">
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
-            <Setter Property="Padding" Value="0,4" />
-            <Setter Property="MinHeight" Value="46" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Status}" Value="1">
-                    <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Status}" Value="2">
-                    <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
-                </DataTrigger>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+            <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+            <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
+
+            <Style x:Key="FeatureRowStyle" TargetType="DataGridRow">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="MinHeight" Value="46" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Status}" Value="1">
+                        <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Status}" Value="2">
+                        <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
+                    </DataTrigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"

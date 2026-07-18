@@ -24,7 +24,7 @@
     <CornerRadius x:Key="CornerRadiusLG">18</CornerRadius>
     <CornerRadius x:Key="CornerRadiusXL">20</CornerRadius>
 
-    <!-- Plugin-local aliases used by NetworkAcceleration / BatteryHealth / ViveTool -->
+    <!-- Plugin-local aliases used by ViveTool (available to every plugin merging this dictionary) -->
     <CornerRadius x:Key="PluginCornerRadiusCompact">8</CornerRadius>
     <CornerRadius x:Key="PluginCornerRadiusControl">12</CornerRadius>
     <CornerRadius x:Key="PluginCornerRadiusCard">18</CornerRadius>

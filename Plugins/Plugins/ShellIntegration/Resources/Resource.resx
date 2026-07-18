@@ -251,4 +251,7 @@
   <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
     <value>Unregister Nilesoft Shell from Windows context menus.</value>
   </data>
+  <data name="StatusWorking" xml:space="preserve">
+    <value>Working...</value>
+  </data>
 </root>

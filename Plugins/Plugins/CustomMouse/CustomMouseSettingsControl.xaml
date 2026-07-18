@@ -10,6 +10,15 @@
              d:DesignWidth="720"
              AutomationProperties.AutomationId="CustomMouseSettingsRoot">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/DesignTokens.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/PluginUiStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <!-- Compact single-column layout: matches host Settings cards (flat, minimal nesting). -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
@@ -155,12 +164,22 @@
 
             <Separator Margin="0,0,0,10" />
 
-            <TextBlock x:Name="_statusTextBlock"
-                       AutomationProperties.AutomationId="CustomMouse_StatusText"
-                       Margin="0,0,0,10"
-                       FontSize="12"
-                       TextWrapping="Wrap"
-                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <StackPanel Margin="0,0,0,10"
+                        Orientation="Horizontal">
+                <wpfui:ProgressRing x:Name="_applyProgressRing"
+                                    Width="18"
+                                    Height="18"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    IsIndeterminate="True"
+                                    Visibility="Collapsed" />
+                <TextBlock x:Name="_statusTextBlock"
+                           AutomationProperties.AutomationId="CustomMouse_StatusText"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
             <WrapPanel>
                 <wpfui:Button Content="{x:Static text:CustomMouseText.SyncFromWindowsButton}"
                               AutomationProperties.AutomationId="SyncFromWindowsButton"

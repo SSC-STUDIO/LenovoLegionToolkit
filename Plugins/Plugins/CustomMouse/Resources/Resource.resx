@@ -133,6 +133,15 @@
   <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
     <value>Failed to restore the Windows default cursor scheme.</value>
   </data>
+  <data name="ApplyFailedPrefix" xml:space="preserve">
+    <value>Apply failed:</value>
+  </data>
+  <data name="ApplyCursorThemeFailedPrefix" xml:space="preserve">
+    <value>Apply cursor theme failed:</value>
+  </data>
+  <data name="StatusApplying" xml:space="preserve">
+    <value>Applying...</value>
+  </data>
   <data name="StatusResetDefaults" xml:space="preserve">
     <value>Mouse profile reset to defaults.</value>
   </data>

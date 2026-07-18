@@ -14,6 +14,7 @@ namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 public partial class ShellIntegrationSettingsControl : UserControl
 {
     private readonly ShellIntegrationPlugin _plugin;
+    private bool _isShellActionBusy;
 
     public ShellIntegrationSettingsControl(ShellIntegrationPlugin plugin)
     {
@@ -113,6 +114,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
     private void RefreshStatus(string? suffix = null, bool? isError = null)
     {
+        _isShellActionBusy = false;
         if (_statusTextBlock is null)
         {
             return;
@@ -218,6 +220,41 @@ public partial class ShellIntegrationSettingsControl : UserControl
         return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
     }
 
+    private void SetShellActionBusy(bool isBusy)
+    {
+        if (isBusy)
+        {
+            _isShellActionBusy = true;
+
+            if (_enableButton is not null)
+            {
+                _enableButton.IsEnabled = false;
+            }
+
+            if (_disableButton is not null)
+            {
+                _disableButton.IsEnabled = false;
+            }
+
+            if (_statusTextBlock is not null)
+            {
+                _statusTextBlock.Text = ShellIntegrationText.StatusWorking;
+                _statusTextBlock.Foreground = ResolveBrush("TextFillColorSecondaryBrush", SystemColors.ControlTextBrush);
+            }
+
+            return;
+        }
+
+        if (!_isShellActionBusy)
+        {
+            // RefreshStatus already ran and restored capability-based button state and text.
+            return;
+        }
+
+        _isShellActionBusy = false;
+        RefreshStatus();
+    }
+
     private bool IsShellCurrentlyRegistered()
     {
         try
@@ -232,6 +269,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
     private async void EnableButton_Click(object sender, RoutedEventArgs e)
     {
+        SetShellActionBusy(true);
         try
         {
             var success = await _plugin.EnableShellAsync().ConfigureAwait(true);
@@ -242,10 +280,15 @@ public partial class ShellIntegrationSettingsControl : UserControl
             RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
             PluginLog.Trace($"EnableButton_Click error: {ex.Message}", ex);
         }
+        finally
+        {
+            SetShellActionBusy(false);
+        }
     }
 
     private async void DisableButton_Click(object sender, RoutedEventArgs e)
     {
+        SetShellActionBusy(true);
         try
         {
             var success = await _plugin.DisableShellAsync().ConfigureAwait(true);
@@ -255,6 +298,10 @@ public partial class ShellIntegrationSettingsControl : UserControl
         {
             RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
             PluginLog.Trace($"DisableButton_Click error: {ex.Message}", ex);
+        }
+        finally
+        {
+            SetShellActionBusy(false);
         }
     }
 
