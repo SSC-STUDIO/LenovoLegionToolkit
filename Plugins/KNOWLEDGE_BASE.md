@@ -2,6 +2,17 @@
 
 This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Plugins project. Every time an AI agent or human developer solves a complex bug, discovers a Windows OS quirk, or optimizes an architecture, they MUST append a structured entry here.
 
+## Current baseline (keep in sync)
+
+| Item | Value |
+|------|--------|
+| Host app | Universal Device Toolkit **v5.0.0** (`Dependencies/Host/host-release.json`) |
+| Official store plugins | `custom-mouse` 1.0.17 · `vive-tool` 1.2.3 · `shell-integration` 1.0.13 |
+| Migrated (not in store) | `battery-health`, `network-acceleration` |
+| Tooling entry | `udt-plugin.cmd` (`llt-plugin.cmd` alias) |
+| Min host field | `plugin.manifest.json` → `minHostVersion` = **5.0.0**; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
+| Version SoT | each `plugin.manifest.json` → `version` |
+
 ---
 
 ## 📚 Format Template
@@ -15,6 +26,16 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 ```
 
 ---
+
+### [2026-07-18] Docs / minHostVersion alignment with host v5.0.0
+- **Symptom / Pitfall**: README catalog versions lagged manifests; CONTRIBUTING had mojibake; docs still said host 4.2.1 while `host-release.json` and Phase 3 ABI are **5.0.0**; CLI still branded `llt-plugin.cmd` only.
+- **Root Cause**: Sprint/promo docs and partial rebrand left multiple sources of truth; `[Plugin] MinimumHostVersion` never tracked host bumps after 3.6.x.
+- **Enforced Rule**:
+  - Product facts live in README + `plugin.manifest.json` + `host-release.json`
+  - After host major ABI bumps, sync `minHostVersion` / `MinLltVersion` / `MinimumHostVersion` together
+  - Prefer `udt-plugin.cmd` in new docs; keep `llt-plugin.cmd` as alias only
+  - Mark campaign/sprint notes historical via `Docs/README.md` — do not “fix” their version numbers as product truth
+- **.NET/OS Version**: .NET 10, host UDT 5.0.0
 
 ### [2026-07-06] Zero-Warnings Build Achievement
 - **Symptom / Pitfall**: Multiple Roslyn analyzer warnings (CA1062, CA2024, CS1591) accumulating in build output
@@ -40,7 +61,7 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
   - `plugin.json` MUST be auto-generated from `plugin.manifest.json` (or strictly synced)
   - `.csproj` `<Version>` / `<FileVersion>` / `<AssemblyVersion>` MUST match `plugin.manifest.json` version
   - `[Plugin(... version: "...")]` in `*Plugin.cs` MUST match `plugin.manifest.json` version
-  - Use `.\llt-plugin.cmd bump-version --plugin <id> --part patch|minor|major` to bump, or `sync-version` to propagate without bumping
+  - Use `.\udt-plugin.cmd bump-version --plugin <id> --part patch|minor|major` to bump, or `sync-version` to propagate without bumping
   - `promote` only prepares store metadata (`store-entry.json`); it does **not** bump versions
 - **.NET/OS Version**: .NET 10, Windows 11 24H2
 
@@ -131,7 +152,7 @@ When evaluating UI via FlaUI + WinRT OCR:
 ## 📊 CI/CD Rules (持续集成规则)
 
 ### Multi-Plugin Validation
-- ALL plugins MUST pass `.\llt-plugin.cmd validate --profile contributor`
+- ALL plugins MUST pass `.\udt-plugin.cmd validate --profile contributor`
 - Version consistency check: `plugin.json` = `plugin.manifest.json` = `.csproj <Version>`
 - Build output MUST have 0 warnings, 0 errors (enforced via `TreatWarningsAsErrors`)
 
@@ -141,7 +162,7 @@ When evaluating UI via FlaUI + WinRT OCR:
 - Release assets are the single source for `fileSize`/`hash`; only present `release-assets/<id>-v<ver>.zip` entries may carry nonzero sizes.
 
 ### Release Automation
-- Use `.\llt-plugin.cmd promote` to generate `store-entry.json`
+- Use `.\udt-plugin.cmd promote` to generate `store-entry.json`
 - Release ZIP naming convention: `<plugin-id>-v<version>.zip`
 - Tag format: `v<version>-<plugin-id>` (e.g., `v1.2.0-network-acceleration`)
 

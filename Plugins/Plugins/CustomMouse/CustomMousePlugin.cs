@@ -23,7 +23,7 @@ namespace UniversalDeviceToolkit.Plugins.CustomMouse;
     version: "1.0.17",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
-    MinimumHostVersion = "3.6.1",
+    MinimumHostVersion = "5.0.0",
     Icon = "Pen24"
 )]
 public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin

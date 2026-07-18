@@ -1,87 +1,97 @@
 # SDK 接口变更日志
 
-本文档记录 `SDK/` 目录中接口的变更历史，确保插件与主应用保持兼容。
+记录 `SDK/` 与宿主兼容约定的变更，便于插件与 **Universal Device Toolkit** 主应用对齐。
 
 ## 版本控制
 
-SDK 版本遵循 **主应用版本号**：
-- 主应用 v4.2.1 → SDK 版本 4.2.1
-- 插件必须声明 `MinimumHostVersion` 匹配 SDK 版本
+- SDK 能力随 **宿主** 发布基线演进；当前 vendored 宿主见 `Dependencies/Host/host-release.json`。
+- 插件必须在 `plugin.manifest.json` 中声明 `minHostVersion`。
+- 运行时兼容文件 `plugin.json` 仍使用宿主 ABI 字段名 `MinLltVersion`（值 = UDT 最低宿主版本）。
 
 ## 变更记录
 
+### v5.0.0 (2026-07-14 起 / 文档对齐 2026-07-18)
+
+**宿主**
+
+- Phase 3 ABI hard cutover：编译标识 `LenovoLegionToolkit.*` → `UniversalDeviceToolkit.*`
+- Host assemblies：`UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins` / `Universal Device Toolkit`
+- Vendored host baseline：`5.0.0`
+
+**插件仓库**
+
+- 官方插件 `minHostVersion` / `MinLltVersion` / `[Plugin] MinimumHostVersion` 统一为 **5.0.0**
+- 工具入口推荐 `udt-plugin.cmd`（`llt-plugin.cmd` 兼容别名）
+
+**迁移指南**
+
+- 旧 `LenovoLegionToolkit.Plugins.*` 包需在新宿主下重新编译发布
+- `%LocalAppData%\LenovoLegionToolkit\` 仍可能作为**只读**设置迁移源；写入根为 `%LocalAppData%\UniversalDeviceToolkit\`
+
 ### v4.2.1 (2026-07-06)
-**新增**:
-- `PluginHostContext.cs`: 添加 `SetPluginResourceCultures()` 方法
-- `IPluginHostContext.cs`: 添加 `IsPreviewMode` 属性
 
-**修改**: 无
+**新增**
 
-**弃用**: 无
+- `PluginHostContext.SetPluginResourceCultures()`
+- `IPluginHostContext.IsPreviewMode`
 
-**移除**: 无
+**说明**
 
-**迁移指南**: 无
+- 曾作为 4.x 系列宿主基线；新插件应面向 5.0.0+
 
 ### v4.0.0 (2026-06-07)
-**新增**:
-- `IAppStartupPlugin.cs`: 应用启动插件接口
-- `IOptimizationCategoryProvider.cs`: 优化类别提供器接口
-- `PluginHostContext.cs`: 完整的宿主上下文实现
 
-**修改**:
-- `PluginBase.cs`: 添加 `GetFeatureExtension()` 和 `GetOptimizationCategory()` 虚拟方法
+**新增**
 
-**弃用**: 无
+- `IAppStartupPlugin`
+- `IOptimizationCategoryProvider`
+- 完整 `PluginHostContext`
 
-**移除**: 无
+**修改**
 
-**迁移指南**: 插件应继承 `PluginBase` 而非直接实现 `IPlugin`。
+- `PluginBase`：`GetFeatureExtension()` / `GetOptimizationCategory()`
+
+**迁移指南**
+
+- 插件应继承 `PluginBase`，而非直接实现 `IPlugin`
 
 ### v3.6.1 (2026-03-01)
-**新增**:
-- `IPluginPage.cs`: 插件页面接口
-- `IPluginHostContext.cs`: 插件宿主上下文接口
 
-**修改**: 无
+**新增**
 
-**弃用**: 无
-
-**移除**: 无
-
-**迁移指南**: 无
+- `IPluginPage`
+- `IPluginHostContext`
 
 ## 兼容性矩阵
 
-| 插件 SDK 版本 | 最低主应用版本 | 兼容主应用版本 |
-|---------------|----------------|----------------|
-| 4.2.1         | 4.2.1          | 4.2.1+        |
-| 4.0.0         | 4.0.0          | 4.0.0+        |
-| 3.6.1         | 3.6.1          | 3.6.1+        |
+| 插件 / SDK 基线 | 最低主应用 | 说明 |
+|-----------------|------------|------|
+| 5.0.0           | 5.0.0+     | 当前官方插件与 vendored 宿主 |
+| 4.2.1           | 4.2.1+     | 历史 4.x 基线 |
+| 4.0.0           | 4.0.0+     | 历史 |
+| 3.6.1           | 3.6.1+     | 历史 |
 
-## 检查清单
+## 发布前检查清单
 
-在发布新版本前，确认：
-- [ ] 所有接口变更记录在本文档
-- [ ] 插件 `plugin.manifest.json` 中的 `minHostVersion` 已更新
-- [ ] 主应用版本号与 SDK 版本号一致
-- [ ] 弃用接口已标记 `[Obsolete]`
-- [ ] 迁移指南已提供
+- [ ] 接口变更写入本文档
+- [ ] 各插件 `plugin.manifest.json` 的 `minHostVersion` 已更新
+- [ ] `[Plugin] MinimumHostVersion` 与 manifest 一致
+- [ ] `plugin.json` 的 `MinLltVersion` 已同步（字段名保持 ABI）
+- [ ] 弃用 API 标记 `[Obsolete]` 并附迁移说明
 
 ## 自动检查
 
-运行以下命令验证 SDK 版本一致性：
-
 ```powershell
-# 检查 SDK 版本
-Select-Xml -Path "SDK\*.csproj" -XPath "//Version" | ForEach-Object { $_.Node.InnerText }
-
-# 检查插件 minHostVersion
+# 插件 minHostVersion
 Get-ChildItem -Path "Plugins\*\plugin.manifest.json" | ForEach-Object {
     $manifest = Get-Content $_.FullName | ConvertFrom-Json
-    Write-Host "$($_.Directory.Name): minHostVersion = $($manifest.minHostVersion)"
+    Write-Host "$($_.Directory.Name): minHostVersion = $($manifest.minHostVersion)  version = $($manifest.version)"
 }
+
+# 与 host-release 对照
+Get-Content Dependencies\Host\host-release.json
 ```
 
 ---
-*本文档由自主维护工作流自动更新。*
+
+*维护时优先更新 manifest / host-release，再同步本文档。*

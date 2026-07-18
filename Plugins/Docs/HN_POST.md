@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 ﻿# Show HN: Universal Device Toolkit Plugins – Open-source WPF plugin ecosystem for Windows
 
 **URL**: https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins

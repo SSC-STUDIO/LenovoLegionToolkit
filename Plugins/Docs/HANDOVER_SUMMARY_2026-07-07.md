@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 # Handover Summary 2026-07-07 (Session 23)
 
 ## Session Scope

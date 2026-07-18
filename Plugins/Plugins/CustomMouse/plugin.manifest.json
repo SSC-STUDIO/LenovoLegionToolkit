@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "custom-mouse",
-  "name": "Cursor \u0026 Pointer",
+  "name": "Cursor & Pointer",
   "version": "1.0.17",
-  "minHostVersion": "4.2.1",
+  "minHostVersion": "5.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
@@ -12,7 +12,7 @@
     "featurePage": null,
     "settingsPage": {
       "class": "UniversalDeviceToolkit.Plugins.CustomMouse.CustomMouseSettingsControl",
-      "title": "Cursor \u0026 Pointer"
+      "title": "Cursor & Pointer"
     },
     "runtime": {
       "class": "UniversalDeviceToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
@@ -20,7 +20,7 @@
     "optimizationActions": [
       {
         "id": "custom.mouse",
-        "title": "Cursor \u0026 Pointer"
+        "title": "Cursor & Pointer"
       }
     ]
   },

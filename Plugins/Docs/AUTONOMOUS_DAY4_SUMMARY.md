@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 # 自主维护工作流 — Day 4 总结
 
 **日期**: 2026-07-06  

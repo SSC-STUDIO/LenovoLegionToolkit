@@ -1,8 +1,8 @@
 @echo off
 setlocal
 
-REM Compatibility alias. Prefer udt-plugin.cmd.
-REM Kept so older docs, scripts, and muscle memory keep working.
+REM Canonical plugin tooling entry for Universal Device Toolkit Plugins.
+REM llt-plugin.cmd is kept as a compatibility alias.
 
 set SCRIPT_DIR=%~dp0
 set REPO_ROOT=%SCRIPT_DIR:~0,-1%

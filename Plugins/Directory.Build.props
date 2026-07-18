@@ -3,7 +3,7 @@
 
 
   <!-- Shipped plugin ZIP versions live in each plugin's plugin.manifest.json.
-       Use llt-plugin.cmd bump-version, then package and generate-store. -->
+       Use udt-plugin.cmd bump-version, then package and generate-store. -->
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>

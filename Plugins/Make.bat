@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM ============================================================
-REM Lenovo Legion Toolkit Plugins Tooling Wrapper
+REM Universal Device Toolkit Plugins Tooling Wrapper
 REM ============================================================
 REM This script keeps short commands available while delegating to
 REM the standard plugin-tooling CLI and workbench flows.
@@ -162,16 +162,17 @@ EXIT /B %ERRORLEVEL%
 
 :HELP
 ECHO ============================================================
-ECHO Lenovo Legion Toolkit Plugins Tooling Wrapper
+ECHO Universal Device Toolkit Plugins Tooling Wrapper
 ECHO ============================================================
 ECHO.
 ECHO Preferred commands:
-ECHO   llt-plugin.cmd doctor
-ECHO   llt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
-ECHO   llt-plugin.cmd dev --plugin my-plugin --theme system
-ECHO   llt-plugin.cmd validate --profile contributor --plugin my-plugin
-ECHO   llt-plugin.cmd preview --plugin my-plugin --theme system
-ECHO   llt-plugin.cmd package --plugin my-plugin --build-first
+ECHO   (llt-plugin.cmd is a compatibility alias for udt-plugin.cmd)
+ECHO   udt-plugin.cmd doctor
+ECHO   udt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+ECHO   udt-plugin.cmd dev --plugin my-plugin --theme system
+ECHO   udt-plugin.cmd validate --profile contributor --plugin my-plugin
+ECHO   udt-plugin.cmd preview --plugin my-plugin --theme system
+ECHO   udt-plugin.cmd package --plugin my-plugin --build-first
 ECHO   dotnet build UniversalDeviceToolkit-Plugins.sln -c Release
 ECHO   dotnet build Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release
 ECHO   dotnet run --project Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
@@ -204,7 +205,7 @@ ECHO   make.bat smoke        - run UI smoke flow
 ECHO   make.bat clean        - dotnet clean solution
 ECHO.
 ECHO Notes:
-ECHO   - llt-plugin.cmd publishes and reuses a stable CLI executable under Build\tooling.
+ECHO   - udt-plugin.cmd publishes and reuses a stable CLI executable under Build\tooling.
 ECHO   - plugin.manifest.json is the authoring source of truth; plugin.json is emitted for host compatibility.
 ECHO   - store.json should be treated as generated release output; official metadata lives in plugin.manifest.json store metadata.
 ECHO   - PluginWorkbench loads plugin build outputs or local ZIPs without needing the main repo checkout.

@@ -1,3 +1,5 @@
+> **Historical document** — session/sprint notes. Prefer `README.md`, `Docs/`, and plugin manifests for current facts.
+
 # 📋 Handover Summary — 2026-07-06 (End of Day 3)
 
 This is the **mandatory handover summary** generated at the end of an AI agent session, following the **4-Step Handover Protocol** from `AUTONOMOUS_MAINTENANCE_AND_EVOLUTION_WORKFLOW.md`.

@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 ﻿# Chiphell 推荐贴 — 开源 Windows 设备管理插件生态系统
 
 **板块**: 分享交流 / 软件应用

@@ -4,29 +4,31 @@ This document is for AI agents and automation running against the plugin reposit
 
 ## Start
 
-1. Read the machine-wide workstation context from `/mnt/c/Users/96152/.agents/skills/workstation-context/SKILL.md`.
-2. Check `git status --short --branch`.
+1. Read root `README.md`, `Docs/README.md`, and `KNOWLEDGE_BASE.md` for durable rules.
+2. Check `git status --short --branch` (default branch: `master`).
 3. Preserve unrelated dirty changes. Do not revert user work.
 4. Use the repository tooling shim for plugin commands. It publishes the CLI once under `Build/tooling` and reuses the executable:
 
 ```bat
-llt-plugin.cmd doctor
+udt-plugin.cmd doctor
 ```
+
+`llt-plugin.cmd` is a compatibility alias. Host baseline is **v5.0.0** (`Dependencies/Host/host-release.json`).
 
 ## Agent Evidence Paths
 
 Use `artifacts/agent/` for machine-readable reports:
 
 ```sh
-./llt-plugin.cmd \
+./udt-plugin.cmd \
   doctor \
   --json-report-path artifacts/agent/doctor.json
 
-./llt-plugin.cmd \
+./udt-plugin.cmd \
   inspect \
   --json-report-path artifacts/agent/inspect.json
 
-./llt-plugin.cmd \
+./udt-plugin.cmd \
   validate \
   --profile contributor \
   --skip-build \
@@ -37,7 +39,7 @@ Use `artifacts/agent/` for machine-readable reports:
 Run full candidate validation when the repository is ready for a slower check:
 
 ```sh
-./llt-plugin.cmd \
+./udt-plugin.cmd \
   validate \
   --profile official-candidate \
   --json-report-path artifacts/agent/validate-official.json
@@ -46,9 +48,9 @@ Run full candidate validation when the repository is ready for a slower check:
 ## Version Management
 
 - Plugin SemVer source of truth: `Plugins/<Name>/plugin.manifest.json` → `version`
-- Bump: `./llt-plugin.cmd bump-version --plugin <id> --part patch`
-- Propagate without bumping: `./llt-plugin.cmd sync-version --plugin <id>`
-- Drift check: `./llt-plugin.cmd sync-version --plugin-ids <ids> --check`
+- Bump: `./udt-plugin.cmd bump-version --plugin <id> --part patch`
+- Propagate without bumping: `./udt-plugin.cmd sync-version --plugin <id>`
+- Drift check: `./udt-plugin.cmd sync-version --plugin-ids <ids> --check`
 - Do not hand-edit `.csproj`, `plugin.json`, `[Plugin]` attribute, or `store.json` version fields for routine releases
 
 ## Store Generation
@@ -58,7 +60,7 @@ Root `store.json` should be reproducible from `plugin.manifest.json` store metad
 Check without writing:
 
 ```sh
-./llt-plugin.cmd \
+./udt-plugin.cmd \
   generate-store \
   --check \
   --release-date 2026-04-21T15:03:21.2902122+00:00
@@ -67,7 +69,7 @@ Check without writing:
 Regenerate only when the store diff is intentional:
 
 ```sh
-./llt-plugin.cmd \
+./udt-plugin.cmd \
   generate-store \
   --release-date 2026-04-21T15:03:21.2902122+00:00
 ```
@@ -75,7 +77,7 @@ Regenerate only when the store diff is intentional:
 When updating only a selected release set, preserve the other published entries and fail if the expected ZIP is missing:
 
 ```sh
-./llt-plugin.cmd \
+./udt-plugin.cmd \
   generate-store \
   --plugin-ids custom-mouse,shell-integration \
   --asset-root Build/release-assets \

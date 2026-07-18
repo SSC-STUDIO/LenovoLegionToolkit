@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 # Reddit 发布内容（最终版 — 2026-07-08 优化）
 
 本文件包含针对 Reddit 各子版块的**最终优化版**发布内容。所有内容已根据 Day 1-5 的实际进展更新。

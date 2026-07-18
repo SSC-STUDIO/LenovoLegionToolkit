@@ -12,12 +12,12 @@ Closes #[issue number]
 
 ## Checklist
 
-- [ ] I have tested this change locally (`llt-plugin.cmd test --plugin <name>`)
-- [ ] I have updated `CHANGELOG.md` (if user-facing)
-- [ ] I have updated `store.json` (if adding/modifying a plugin)
-- [ ] My code follows the [Coding Standards](./Docs/CODING_STANDARDS.md)
-- [ ] I have added/updated tests where applicable
-- [ ] All CI checks pass
+- [ ] I tested locally (`udt-plugin.cmd test --plugin <id>` or `dotnet test`)
+- [ ] I updated plugin `CHANGELOG.md` / root `CHANGELOG.md` when user-facing
+- [ ] If this is an official store change: metadata is in `plugin.manifest.json` and I regenerated `store.json` via tooling (not hand-edited casually)
+- [ ] Code follows [Docs/CODING_STANDARDS.md](../Docs/CODING_STANDARDS.md)
+- [ ] Tests added/updated when behavior changes
+- [ ] CI checks pass
 
 ## Screenshots (if UI-related)
 

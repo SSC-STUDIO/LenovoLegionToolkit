@@ -8,10 +8,11 @@ body:
     attributes:
       label: Which plugin is affected?
       options:
-        - Network Acceleration
-        - Custom Mouse
-        - ViVeTool GUI
-        - Shell Integration
+        - Cursor & Pointer (custom-mouse)
+        - ViVeTool (vive-tool)
+        - Nilesoft Shell Manager (shell-integration)
+        - Battery Health (migrated / legacy)
+        - Network Acceleration (migrated / legacy)
         - Plugin SDK / Tooling
         - Other (not plugin-specific)
     validations:
@@ -32,8 +33,8 @@ body:
     id: udt_version
     attributes:
       label: Universal Device Toolkit version
-      description: "Found in UDT → Settings → About"
-      placeholder: "e.g., v1.2.0"
+      description: "Found in UDT → Settings → About. Official plugins require host v5.0.0+."
+      placeholder: "e.g., v5.0.0"
     validations:
       required: true
 

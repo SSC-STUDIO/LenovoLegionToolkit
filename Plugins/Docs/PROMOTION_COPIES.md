@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 # 🌏 多平台推广文案汇总 (Ready-to-Post Copies)
 
 > 使用前请替换 `[当前star数]` 为实际数字

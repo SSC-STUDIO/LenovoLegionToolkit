@@ -23,144 +23,126 @@
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions">
     <img src="https://img.shields.io/badge/Discussions-Welcome!-blue?style=for-the-badge&logo=github&logoColor=white&labelColor=222" alt="Discussions" />
   </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/watchers">
-    <img src="https://img.shields.io/github/watchers/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=green&logo=github&labelColor=222" alt="Watchers" />
-  </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/network/members">
-    <img src="https://img.shields.io/github/forks/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=orange&logo=github&labelColor=222" alt="Forks" />
-  </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/search?q=is%3Apr+label%3Aenhancement&type=Issues">
-    <img src="https://img.shields.io/github/issues-search/SSC-STUDIO/UniversalDeviceToolkit-Plugins?query=is%3Apr+label%3Aenhancement&style=for-the-badge&color=purple&logo=github&label=enhancements&labelColor=222" alt="Enhancements" />
-  </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/CHANGELOG.md">
-    <img src="https://img.shields.io/badge/Changelog-Updated-brightgreen?style=for-the-badge&logo=git&logoColor=white&labelColor=222" alt="Changelog" />
-  </a>
 </p>
 
 <p align="center">
-  <b>Official plugin ecosystem for Universal Device Toolkit</b><br/>
-  <i>Free. Open-source. No ads. No telemetry. Just better Windows.</i>
+  <b>Official plugin ecosystem for <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit">Universal Device Toolkit</a></b><br/>
+  <i>Free. Open-source. No ads. No telemetry. Just better Windows.</i><br/>
+  <i>Requires host <b>v5.0.0+</b> · .NET 10 · WPF-UI 4.3.0</i>
+</p>
+
+<p align="center">
+  <a href="README.zh-CN.md">中文说明</a>
 </p>
 
 ---
 
 ## Plugin Catalog
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Settings%20Load-1.4ms-brightgreen?style=flat-square&logo=lightning&logoColor=white" />
-  <img src="https://img.shields.io/badge/Settings%20Save-21ms-yellow?style=flat-square&logo=lightning&logoColor=white" />
-  <img src="https://img.shields.io/badge/Cache%20Hit-0ms-brightgreen?style=flat-square&logo=lightning&logoColor=white" />
-  <img src="https://img.shields.io/badge/Performance-Tested-blue?style=flat-square&logo=codecov&logoColor=white" />
-</p>
+| Status | Plugin | Version | Description | Install ID |
+|--------|--------|---------|-------------|------------|
+| Active | **Cursor & Pointer** | v1.0.17 | Theme-aware cursor styles, Windows pointer speed, button swapping, safe cursor backup/restore | `custom-mouse` |
+| Active | **ViVeTool** | v1.2.3 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
+| Active | **Nilesoft Shell Manager** | v1.0.13 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
+| Migrated | Battery Health | v1.0.0 | **Not in store** — built into Universal Device Toolkit; source kept for settings migration only | `battery-health` |
+| Migrated | Network Acceleration | v1.2.0 | **Not in store** — built into Universal Device Toolkit; source kept for settings migration only | `network-acceleration` |
 
-| # | Plugin | Version | Description | Install |
-|---|--------|---------|-------------|---------|
-| — | ~~Battery Health~~ / ~~Network Acceleration~~ | — | **Delisted from store** — features are built into Universal Device Toolkit. Source kept for migration only, not offered in marketplace. | — |
-| 🌐 | **Network Acceleration (Migrated)** | v1.2.0 | Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. Retained only for settings migration. | `network-acceleration` |
-| ??? **Cursor & Pointer** | v1.0.16 | Theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore. Auto-adapts to Light/Dark mode. | `custom-mouse` |
-| 🔧 | **ViVeTool** | v1.2.2 | Unlock hidden Windows feature flags from a searchable GUI. No command-line needed ��browse, search, enable, and disable features safely. | `vive-tool` |
-| 🔗 | **Nilesoft Shell Manager** | v1.0.12 | Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed. | `shell-integration` |
-
-> **Looking for more plugins?** Check the [plugin store](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/store.json) or [build your own](#author-workflow).
+> Catalog versions match `Plugins/*/plugin.manifest.json` (source of truth). Active store listings live in generated root [`store.json`](./store.json).
 
 ---
 
 ## Quick Install
 
-1. Open **Universal Device Toolkit**
-2. Navigate to **Plugins** ��**Browse Store**
-3. Click **Install** on any plugin
-4. Restart the application
+1. Open **Universal Device Toolkit** (v5.0.0 or later)
+2. Go to **Plugins → Browse Store**
+3. Click **Install** on a plugin
+4. Restart the app if prompted
 
-That's it ��no manual downloads, no complex setup.
+No manual downloads required for store plugins.
 
 ---
 
 ## Why These Plugins?
 
-### ?? 100% Free & Open Source
-No paywalls, no premium tiers, no ads. Every line of code is on GitHub under the MIT License. Audit it, fork it, contribute back.
+### 100% Free & Open Source
+No paywalls, premium tiers, or ads. MIT-licensed source on GitHub.
 
-### ??? Native Windows 11 Look & Feel
-Built with .NET 10 and WPF-UI 4.3.0, these plugins use real Fluent Design tokens. They adapt to your Windows theme automatically ��no "light mode only" or "dark mode broken" bugs.
+### Native Windows 11 Look & Feel
+Built with **.NET 10** and **WPF-UI 4.3.0** using Fluent Design tokens. Light/Dark theme support is first-class.
 
-### ?? Extensible by Design
-The plugin SDK is clean and well-documented. Want a plugin that does X? Fork the repo, run `init`, and you're building in 2 minutes. The included PluginWorkbench lets you preview plugins without launching the full host app.
+### Extensible by Design
+Clean SDK, scaffolder, and **PluginWorkbench** so you can preview plugins without launching the full host app.
 
-### ?? Localized
-All plugins support 32 languages including English and Chinese out of the box. Adding a new language is as simple as adding a `.resx` file.
+### Localized
+Official plugins ship resource satellites for **32 cultures** (including `en`, `zh-Hans`, `zh-Hant`).
 
-### ?? Battle-Tested
-Every official plugin ships with unit tests, visual smoke tests (Light + Dark themes), and automated CI/CD via GitHub Actions.
+### Tested
+~600 unit tests across Shared + official plugins, plus CI workflows for build/validate/release.
 
 ---
 
 ## Feature Highlights
 
-### Battery Health (Migrated)
-**Deprecated** — battery health monitoring and alerts are now built into Universal Device Toolkit. This plugin is retained only for users upgrading from earlier releases; new users should use the built-in battery health feature.
-
-### Network Acceleration (Migrated)
-**Deprecated** — network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This plugin is retained only for users upgrading from earlier releases; new users should use the built-in network diagnostics feature.
-
-### Cursor & Pointer
-- Theme-aware cursor styles (auto-switch with Windows Dark/Light mode)
-- Windows pointer speed and button-swapping controls
+### Cursor & Pointer (`custom-mouse`)
+- Theme-aware cursor styles (follow Windows Light/Dark)
+- Pointer speed and primary-button swap
 - Safe cursor backup and restore
-- Seamless Windows integration via the optimization panel
 
-### ViVeTool
-- Browse and toggle hidden Windows feature flags
-- Insider-build style tweaks without joining Insider
-- Clean table UI with search and filtering
-- Safe defaults —nothing breaks on toggle
+### ViVeTool (`vive-tool`)
+- Searchable feature-flag browser
+- Enable/disable without hand-written CLI
+- Safe defaults; feature pages + settings page
 
-### Nilesoft Shell Manager
-- Manage Nilesoft Shell registration directly from Universal Device Toolkit
-- Apply or roll back UDT-managed configuration entries
-- Requires Nilesoft Shell to be installed separately
+### Nilesoft Shell Manager (`shell-integration`)
+- Register/unregister Nilesoft Shell from UDT
+- Apply or roll back UDT-managed configuration
+- Requires a separate Nilesoft Shell install
+
+### Migrated (host built-ins)
+**Battery Health** and **Network Acceleration** features now ship inside Universal Device Toolkit. Plugin projects remain for upgrade migration only and are **not** offered in the marketplace.
 
 ---
 
 ## Author Workflow
 
-This repository includes a complete plugin authoring toolchain:
+Canonical CLI entry: **`udt-plugin.cmd`**  
+(`llt-plugin.cmd` is a compatibility alias with the same behavior.)
 
 ```powershell
-# Check your environment
-.\llt-plugin.cmd doctor
+# Environment check
+.\udt-plugin.cmd doctor
 
-# Create a new plugin
-.\llt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+# Scaffold
+.\udt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
 
-# Develop with live preview
-.\llt-plugin.cmd dev --plugin my-plugin --theme system --view feature
+# Inner loop
+.\udt-plugin.cmd dev --plugin my-plugin --theme system --view feature
 
-# Test, validate, package
-.\llt-plugin.cmd test --plugin my-plugin
-.\llt-plugin.cmd validate --plugin my-plugin --profile contributor
-.\llt-plugin.cmd package --plugin my-plugin --build-first
+# Test / validate / package
+.\udt-plugin.cmd test --plugin my-plugin
+.\udt-plugin.cmd validate --plugin my-plugin --profile contributor
+.\udt-plugin.cmd package --plugin my-plugin --build-first
 ```
 
-### Plugin Tooling Commands
+| Command | Purpose |
+|---------|---------|
+| `doctor` | Environment + host dependency checks |
+| `init` | Scaffold from `settings-only` / `feature-settings` / `runtime-optimization` |
+| `dev` | Build + PluginWorkbench preview loop |
+| `test` | Unit tests |
+| `validate` | Authoring / store metadata gates (`contributor`, `official-candidate`, …) |
+| `package` | Installable ZIP |
+| `bump-version` / `sync-version` | SemVer source of truth → project files |
+| `promote` | Official store metadata in `plugin.manifest.json` |
+| `generate-store` | Regenerate root `store.json` from manifests + assets |
 
-| Command | Description |
-|---------|-------------|
-| `doctor` | Diagnose environment and dependencies |
-| `init` | Scaffold a new plugin from a template |
-| `dev` | Build + live preview loop |
-| `test` | Run unit tests |
-| `validate` | Check authoring and store metadata |
-| `package` | Produce installable ZIP |
-| `promote` | Prepare official store entry |
-
-> The toolchain mirrors the **VS Code extension development model**: `plugin.manifest.json` is your `package.json`, `dev` is your `npm run dev`, and `package` is your `vsce package`.
+> Mental model (VS Code extension-like): `plugin.manifest.json` ≈ `package.json`, `dev` ≈ `npm run dev`, `package` ≈ `vsce package`.
 
 ---
 
-## PluginWorkbench ��Standalone Preview
+## PluginWorkbench
 
-Don't want to launch the full host app? Use **PluginWorkbench**:
+Preview without the full host:
 
 ```powershell
 dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
@@ -170,11 +152,10 @@ dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
   --view settings
 ```
 
-Features:
-- Loads built plugin outputs or local ZIPs
-- Host-style preview shell (matches the real UI)
-- `System` / `Light` / `Dark` theme switching
-- Safe `Preview` mode (no real actions) with explicit `Real Runtime` confirmation
+- Loads build outputs or local ZIPs  
+- Host-style shell (feature / settings / optimization cards)  
+- System / Light / Dark  
+- Safe **Preview** mode by default; **Real Runtime** is explicit  
 
 ---
 
@@ -182,53 +163,69 @@ Features:
 
 ```
 UniversalDeviceToolkit-Plugins/
-├── Plugins/              # Official plugin projects
-�? ├── BatteryHealth/
-�? ├── CustomMouse/
-�? ├── NetworkAcceleration/
-�? ├── ShellIntegration/
-�? └── ViveTool/
-├── SDK/                  # Plugin SDK (interfaces & helpers)
-├── Dependencies/         # Shared dependencies
-├── Tools/                # PluginWorkbench + PluginTooling.CLI
-├── Scripts/              # Automation scripts
-├── Docs/                 # Architecture & authoring guides
-├── store.json            # Plugin store catalog (release output)
-└── Make.bat             # Convenience wrapper for common tasks
+├── Plugins/                 # Official plugin projects + tests
+│   ├── Shared/              # Shared helpers (settings, process, HTTP, …)
+│   ├── CustomMouse/
+│   ├── ShellIntegration/
+│   ├── ViveTool/
+│   ├── BatteryHealth/       # Migrated (not in store)
+│   └── NetworkAcceleration/ # Migrated (not in store)
+├── SDK/                     # Plugin SDK surfaces
+├── Dependencies/Host/       # Vendored host refs (see host-release.json → v5.0.0)
+├── Tools/                   # PluginWorkbench + PluginTooling.CLI
+├── Scripts/                 # Host bootstrap, governance, helpers
+├── Docs/                    # Authoring & architecture (see Docs/README.md)
+├── store.json               # Generated store catalog (release output)
+├── udt-plugin.cmd           # Canonical tooling entry
+├── llt-plugin.cmd           # Compatibility alias
+└── Make.bat                 # Convenience wrappers
+```
+
+---
+
+## Version Rules
+
+| Layer | Source of truth | Current baseline |
+|-------|-----------------|------------------|
+| Host app | sibling `UniversalDeviceToolkit` / `Dependencies/Host/host-release.json` | **5.0.0** |
+| Each plugin SemVer | `Plugins/<Name>/plugin.manifest.json` → `version` | see catalog |
+| Min host | `minHostVersion` in manifest; runtime `plugin.json` still exposes ABI field `MinLltVersion` | **5.0.0** |
+| Store catalog | Generated `store.json` | release output only |
+
+Do not hand-edit root `store.json` for routine authoring. Prefer:
+
+```powershell
+.\udt-plugin.cmd bump-version --plugin custom-mouse --part patch
+.\udt-plugin.cmd package --plugin custom-mouse --build-first
+.\udt-plugin.cmd generate-store --plugin-ids custom-mouse --merge-existing --require-assets
 ```
 
 ---
 
 ## Contributing
 
-We welcome contributions! Whether you're fixing a bug, adding a feature, or creating a brand-new plugin:
+1. Fork and branch from `master`
+2. `.\udt-plugin.cmd doctor`
+3. Develop with `.\udt-plugin.cmd dev`
+4. `validate` + tests green
+5. Open a PR
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-plugin`)
-3. Run `.\llt-plugin.cmd doctor` to validate your environment
-4. Develop your plugin with `.\llt-plugin.cmd dev`
-5. Submit a pull request
-
-Please read [CONTRIBUTING.md](./CONTRIBUTING.md) and the [Plugin Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) before getting started.
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) and [Docs/PLUGIN_DEVELOPMENT.md](./Docs/PLUGIN_DEVELOPMENT.md).
 
 ---
 
 ## Documentation
 
-- [Quick Start](./Docs/PLUGIN_QUICKSTART.md) ��Get your first plugin running in 5 minutes
-- [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) ��Deep dive into the plugin API
-- [Architecture](./Docs/ARCHITECTURE.md) ��System design and dependency map
-- [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md) ��Automation-friendly workflow docs
-- [Coding Standards](./Docs/CODING_STANDARDS.md) ��Naming, patterns, and forbidden anti-patterns
-- [Changelog](./CHANGELOG.md) ��Release history
-
----
-
-## �?Star History
-
-If you find this project useful, please consider giving it a �?It helps us reach more developers and grow the plugin ecosystem.
-
-[![Star History Chart](https://api.star-history.com/svg?repos=SSC-STUDIO/UniversalDeviceToolkit-Plugins&type=Date)](https://star-history.com/#SSC-STUDIO/UniversalDeviceToolkit-Plugins&type=Date)
+| Doc | Description |
+|-----|-------------|
+| [Docs/README.md](./Docs/README.md) | Documentation index |
+| [Quick Start](./Docs/PLUGIN_QUICKSTART.md) | First plugin in minutes |
+| [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) | API, validation, release flow |
+| [Architecture](./Docs/ARCHITECTURE.md) | Layout and dependency map |
+| [SDK Changelog](./Docs/SDK_CHANGELOG.md) | SDK / host compatibility |
+| [Coding Standards](./Docs/CODING_STANDARDS.md) | Style and anti-patterns |
+| [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md) | Automation-friendly commands |
+| [Changelog](./CHANGELOG.md) | Project history |
 
 ---
 
@@ -236,16 +233,16 @@ If you find this project useful, please consider giving it a �?It helps us rea
 
 - **Issues**: [GitHub Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions)
-- **Main Application**: [Universal Device Toolkit](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)
+- **Host app**: [Universal Device Toolkit](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)
 
 ---
 
 ## License
 
-This project is open-source. See individual plugin licenses for details.
+MIT — see [LICENSE](./LICENSE). Individual plugins ship under the same license unless noted.
 
 ---
 
 <p align="center">
-  Built with ❤️ by the SSC-STUDIO team and the Universal Device Toolkit community.
+  Built with care by SSC-STUDIO and the Universal Device Toolkit community.
 </p>

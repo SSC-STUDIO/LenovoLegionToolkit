@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 # 🚀 10-Day Sprint: 100+ Stars Promotion Plan — Day 3 Update
 
 ## 📊 Current Status (End of Day 3)

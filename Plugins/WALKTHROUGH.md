@@ -1,3 +1,5 @@
+> **Historical document** — session/sprint notes. Prefer `README.md`, `Docs/`, and plugin manifests for current facts.
+
 # Walkthrough
 
 We have successfully resolved all outstanding issues, ran the full test suite, cleaned the workspace, resolved the WMI hardware deadlock issues under Remote Desktop, and launched the application.

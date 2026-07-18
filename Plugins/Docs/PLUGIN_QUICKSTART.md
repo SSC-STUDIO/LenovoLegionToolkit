@@ -1,11 +1,14 @@
 # Universal Device Toolkit Plugin Quick Start
 
-This is the shortest path for creating a new plugin in this repository.
+Shortest path for creating a plugin in this repository.
 
-## 1. Check The Environment
+**Host baseline:** Universal Device Toolkit **v5.0.0+**  
+**CLI:** `udt-plugin.cmd` (`udt-plugin.cmd` is a compatibility alias)
+
+## 1. Check the environment
 
 ```powershell
-.\llt-plugin.cmd doctor
+.\udt-plugin.cmd doctor
 ```
 
 If host references are missing:
@@ -14,18 +17,18 @@ If host references are missing:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-dependencies.ps1
 ```
 
-## 2. Create A Scaffold
+This uses `Dependencies/Host/host-release.json` (currently `5.0.0`).
 
-Pick one archetype:
+## 2. Scaffold
+
+Templates:
 
 - `settings-only`
 - `feature-settings`
 - `runtime-optimization`
 
-Example:
-
 ```powershell
-.\llt-plugin.cmd `
+.\udt-plugin.cmd `
   init `
   --template feature-settings `
   --folder MyPlugin `
@@ -33,97 +36,61 @@ Example:
   --name "My Plugin"
 ```
 
-This generates:
+Generates:
 
 - `Plugins/MyPlugin/`
 - `Plugins/MyPlugin.Tests/`
-- `plugin.manifest.json`
-- `plugin.json`
+- `plugin.manifest.json` (authoring source of truth)
+- `plugin.json` (host runtime compatibility output)
 - plugin `CHANGELOG.md`
-- resource files
-- a test project
+- resources + test project
 
-## 3. Build The Plugin
-
-```powershell
-.\llt-plugin.cmd `
-  build `
-  --plugin my-plugin
-```
-
-## 4. Preview In The Host Shell
+## 3. Build
 
 ```powershell
-.\llt-plugin.cmd `
-  preview `
-  --plugin my-plugin `
-  --theme system `
-  --view feature
+.\udt-plugin.cmd build --plugin my-plugin
 ```
 
-Use `dev` for the normal inner loop:
+## 4. Preview
 
 ```powershell
-.\llt-plugin.cmd `
-  dev `
-  --plugin my-plugin `
-  --theme system `
-  --view feature
+.\udt-plugin.cmd preview --plugin my-plugin --theme system --view feature
 ```
 
-`PluginWorkbench` is the standard preview host. It supports:
-
-- `System / Light / Dark`
-- host-style feature preview
-- host-style settings preview
-- optimization preview
-- `Preview / Real Runtime`
-
-## 5. Validate Author Requirements
+Inner loop:
 
 ```powershell
-.\llt-plugin.cmd `
-  validate `
-  --plugin my-plugin `
-  --profile contributor
+.\udt-plugin.cmd dev --plugin my-plugin --theme system --view feature
 ```
 
-## 6. Pack A Local ZIP
+PluginWorkbench supports System / Light / Dark, host-style shells, and Preview vs Real Runtime.
+
+## 5. Validate (contributor)
 
 ```powershell
-.\llt-plugin.cmd `
-  package `
-  --plugin my-plugin `
-  --build-first
+.\udt-plugin.cmd validate --plugin my-plugin --profile contributor
 ```
 
-## 7. Promote Only For Official Store Candidates
-
-If the plugin should become an official plugin:
+## 6. Package a local ZIP
 
 ```powershell
-.\llt-plugin.cmd `
-  promote `
-  --plugin my-plugin
+.\udt-plugin.cmd package --plugin my-plugin --build-first
 ```
 
-That ensures the `store` object in `plugin.manifest.json` is ready and writes the legacy `store-entry.json` compatibility file. After that, validate with:
+## 7. Official store candidates only
 
 ```powershell
-.\llt-plugin.cmd `
-  validate `
-  --plugin my-plugin `
-  --profile official-candidate
+.\udt-plugin.cmd promote --plugin my-plugin
+.\udt-plugin.cmd validate --plugin my-plugin --profile official-candidate
 ```
 
-## 8. Do Not Start With Root store.json
+## 8. Do not start from root `store.json`
 
-For new plugin authoring:
+Author flow:
 
-- edit `plugin.manifest.json`
-- implement the plugin
-- preview it
-- validate it
-- package it
+1. Edit `plugin.manifest.json`
+2. Implement plugin
+3. Preview / test / validate
+4. Package
 
-`plugin.json` is kept as a host-compatibility output. Root `store.json` is release output, not the normal starting point for contributors.
+Root `store.json` is **release output** for active marketplace plugins only.

@@ -2,7 +2,7 @@
   "Id": "battery-health",
   "Name": "Battery Health (Legacy)",
   "Version": "1.0.0",
-  "MinLltVersion": "4.2.1",
+  "MinLltVersion": "5.0.0",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": false,
   "Repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",

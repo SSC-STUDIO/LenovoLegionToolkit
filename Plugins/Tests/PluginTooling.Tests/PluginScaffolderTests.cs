@@ -51,8 +51,8 @@ public class PluginScaffolderChineseLocalizationTests
 
     /// <summary>
     /// Regression test for mojibake in the scaffolded CHANGELOG.md.
-    /// The Chinese text must be "初始插件骨架" (initial plugin scaffold),
-    /// not the mojibake "鍒濆鎻掍欢楠ㄦ灦" that was previously generated.
+    /// zh-Hans changelog text must be the correct UTF-8 string for
+    /// "initial plugin scaffold", not the previously generated mojibake.
     /// </summary>
     [Fact]
     public void BuildPluginChangelog_ContainsCorrectChineseText()
@@ -66,7 +66,7 @@ public class PluginScaffolderChineseLocalizationTests
 
     /// <summary>
     /// Regression test for mojibake in the scaffolded zh-Hans .resx file.
-    /// The Chinese strings must be "设置", "功能预览", "设置预览",
+    /// zh-Hans resource strings must be Settings / Feature preview / Settings preview,
     /// not the mojibake equivalents that were previously generated.
     /// </summary>
     [Fact]

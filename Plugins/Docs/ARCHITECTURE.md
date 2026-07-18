@@ -158,14 +158,15 @@ Load → Start → [Runtime Loop] → Stop → Unload
 
 ## 测试覆盖
 
-| 项目 | 测试数 | 覆盖率 |
-|------|--------|--------|
-| Shared | 140 | ~80% |
-| ViveTool | 217 | ~70% |
-| ShellIntegration | 93 | ~60% |
-| CustomMouse | 40 | ~60% |
-| NetworkAcceleration | 33 | ~60% |
-| **总计** | **523** | - |
+| 项目 | 测试数（约，Fact/Theory） | 备注 |
+|------|---------------------------|------|
+| Shared | 167 | 共享库 |
+| ViveTool | 170 | 功能标志插件 |
+| ShellIntegration | 130 | Nilesoft Shell |
+| CustomMouse | 37 | 光标与指针 |
+| NetworkAcceleration | 58 | 已迁移（源码/测试保留） |
+| BatteryHealth | 36 | 已迁移（源码/测试保留） |
+| **合计** | **~598** | 以 `dotnet test` 为准 |
 
 ## 安全实践
 

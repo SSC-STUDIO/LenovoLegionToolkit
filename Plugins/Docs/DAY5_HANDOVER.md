@@ -1,3 +1,7 @@
+> **Historical document** — launch/sprint material. Version numbers and plugin counts may be outdated.
+> Source of truth: root `README.md`, `Docs/PLUGIN_*.md`, and `Plugins/*/plugin.manifest.json`.
+> See also [Docs/README.md](./README.md).
+
 # Day 5 收尾总结 (2026-07-07)
 
 **Sprint**: 10-Day Quality & Promotion Sprint (Day 5 of 10)  

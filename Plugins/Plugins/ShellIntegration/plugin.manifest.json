@@ -3,7 +3,7 @@
   "id": "shell-integration",
   "name": "Nilesoft Shell Manager",
   "version": "1.0.13",
-  "minHostVersion": "4.2.1",
+  "minHostVersion": "5.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": true,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",

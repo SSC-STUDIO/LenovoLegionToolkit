@@ -1,8 +1,8 @@
 {
   "Id": "custom-mouse",
-  "Name": "Cursor \u0026 Pointer",
+  "Name": "Cursor & Pointer",
   "Version": "1.0.17",
-  "MinLltVersion": "4.2.1",
+  "MinLltVersion": "5.0.0",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": false,
   "Repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",

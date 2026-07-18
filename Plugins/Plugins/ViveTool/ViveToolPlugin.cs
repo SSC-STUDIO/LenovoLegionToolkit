@@ -11,7 +11,7 @@ namespace UniversalDeviceToolkit.Plugins.ViveTool;
     version: "1.2.3",
     description: "Manage Windows feature flags using ViVeTool",
     author: "SSC-STUDIO",
-    MinimumHostVersion = "3.6.1",
+    MinimumHostVersion = "5.0.0",
     Icon = "Code24"
 )]
 public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase

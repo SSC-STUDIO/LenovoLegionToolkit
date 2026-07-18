@@ -1,18 +1,18 @@
 {
-  "lastUpdated": "2026-07-14T00:00:00.0000000\u002B00:00",
+  "lastUpdated": "2026-07-18T00:00:00.0000000+00:00",
   "storeVersion": "1.1.2",
   "plugins": [
     {
       "id": "custom-mouse",
-      "name": "Cursor \u0026 Pointer",
+      "name": "Cursor & Pointer",
       "description": "Personalize your mouse experience with theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore.",
       "localizedNames": {
-        "default": "Cursor \u0026 Pointer",
-        "zh-Hans": "\u5149\u6807\u4E0E\u6307\u9488"
+        "default": "Cursor & Pointer",
+        "zh-Hans": "光标与指针"
       },
       "localizedDescriptions": {
         "default": "Personalize your mouse experience with theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore.",
-        "zh-Hans": "\u901A\u8FC7\u968F\u4E3B\u9898\u53D8\u5316\u7684\u5149\u6807\u6837\u5F0F\u3001Windows \u6307\u9488\u901F\u5EA6\u3001\u6309\u952E\u4EA4\u6362\u4EE5\u53CA\u5B89\u5168\u7684\u5149\u6807\u5907\u4EFD\u4E0E\u8FD8\u539F\uFF0C\u4E2A\u6027\u5316\u4F60\u7684\u9F20\u6807\u4F53\u9A8C\u3002"
+        "zh-Hans": "通过随主题变化的光标样式、Windows 指针速度、按键交换以及安全的光标备份与还原，个性化你的鼠标体验。"
       },
       "localizedTags": {
         "default": [
@@ -22,22 +22,22 @@
           "productivity"
         ],
         "zh-Hans": [
-          "\u9F20\u6807",
-          "\u81EA\u5B9A\u4E49",
-          "\u5149\u6807",
-          "\u751F\u4EA7\u529B"
+          "鼠标",
+          "自定义",
+          "光标",
+          "生产力"
         ]
       },
       "author": "SSC-STUDIO",
       "version": "1.0.17",
-      "minLLTVersion": "4.2.1",
+      "minLLTVersion": "5.0.0",
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.17/custom-mouse-v1.0.17.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/custom-mouse-v1.0.17",
       "fileSize": 4476870,
       "fileHash": "68b82d16ca69fcdad2500127695dfe613dc714b2d171f8b8971791b72997556d",
       "zipHash": "694f36db6f5deb787be69bdd10db511df34d6641ce6cf937f39455576bb275cd",
-      "releaseDate": "2026-07-14T00:00:00.0000000\u002B00:00",
+      "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -90,11 +90,11 @@
       "description": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
       "localizedNames": {
         "default": "Nilesoft Shell Manager",
-        "zh-Hans": "Nilesoft Shell \u7BA1\u7406\u5668"
+        "zh-Hans": "Nilesoft Shell 管理器"
       },
       "localizedDescriptions": {
         "default": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
-        "zh-Hans": "\u7BA1\u7406 Nilesoft Shell \u6CE8\u518C\u53CA\u5176\u7531 UDT \u7BA1\u7406\u7684\u914D\u7F6E\u3002\u9700\u8981\u5DF2\u5B89\u88C5 Nilesoft Shell\u3002"
+        "zh-Hans": "管理 Nilesoft Shell 注册及其由 UDT 管理的配置。需要已安装 Nilesoft Shell。"
       },
       "localizedTags": {
         "default": [
@@ -105,23 +105,23 @@
           "windows"
         ],
         "zh-Hans": [
-          "\u7CFB\u7EDF",
+          "系统",
           "Shell",
-          "\u96C6\u6210",
-          "\u53F3\u952E\u83DC\u5355",
+          "集成",
+          "右键菜单",
           "Windows"
         ]
       },
       "author": "SSC-STUDIO",
       "version": "1.0.13",
-      "minLLTVersion": "4.2.1",
+      "minLLTVersion": "5.0.0",
       "isSystemPlugin": true,
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.13/shell-integration-v1.0.13.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.13",
       "fileSize": 3844281,
       "fileHash": "2d95a6a06312906a07efa7776770257178770b9c5103d7fbf70f96a6787101ba",
       "zipHash": "cdaa0b08aaa9ae2768c8c1a603e74a3150c8e17e5be19cb8580a4f49fa3ee999",
-      "releaseDate": "2026-07-14T00:00:00.0000000\u002B00:00",
+      "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -173,14 +173,14 @@
     {
       "id": "vive-tool",
       "name": "ViVeTool",
-      "description": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
+      "description": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
       "localizedNames": {
         "default": "ViVeTool",
         "zh-Hans": "ViVeTool"
       },
       "localizedDescriptions": {
-        "default": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
-        "zh-Hans": "\u4F7F\u7528 ViVeTool \u89E3\u9501\u9690\u85CF\u7684 Windows \u529F\u80FD\u5E76\u81EA\u5B9A\u4E49\u7CFB\u7EDF \u2014 \u7EC8\u6781 Windows \u529F\u80FD\u6807\u5FD7\u7BA1\u7406\u5668\u3002"
+        "default": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
+        "zh-Hans": "使用 ViVeTool 解锁隐藏的 Windows 功能并自定义系统 — 终极 Windows 功能标志管理器。"
       },
       "localizedTags": {
         "default": [
@@ -192,22 +192,22 @@
         ],
         "zh-Hans": [
           "Windows",
-          "\u529F\u80FD\u6807\u5FD7",
+          "功能标志",
           "ViVeTool",
-          "\u81EA\u5B9A\u4E49",
-          "\u8C03\u6574"
+          "自定义",
+          "调整"
         ]
       },
       "author": "SSC-STUDIO",
       "version": "1.2.3",
-      "minLLTVersion": "4.2.1",
+      "minLLTVersion": "5.0.0",
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/vive-tool-v1.2.3/vive-tool-v1.2.3.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/vive-tool-v1.2.3",
       "fileSize": 3620777,
       "fileHash": "0ad6d65fb6bd7d15d825e42b59c00efc271313c8258ee5a9df57deec3bbf8ea1",
       "zipHash": "080638d3a6a0306f0783c4c2a5e04e8ef9cc45a8c2464be2c85a6c683131795e",
-      "releaseDate": "2026-07-14T00:00:00.0000000\u002B00:00",
+      "releaseDate": "2026-07-14T00:00:00.0000000+00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",

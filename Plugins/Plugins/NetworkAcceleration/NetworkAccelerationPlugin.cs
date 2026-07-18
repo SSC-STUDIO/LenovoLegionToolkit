@@ -14,7 +14,7 @@ namespace UniversalDeviceToolkit.Plugins.NetworkAcceleration;
     version: "1.2.0",
     description: "Deprecated: network diagnostics and selective proxy acceleration are now built into Universal Device Toolkit. This legacy plugin is retained only for settings migration.",
     author: "SSC-STUDIO",
-    MinimumHostVersion = "3.6.1",
+    MinimumHostVersion = "5.0.0",
     Icon = "Rocket24"
 )]
 public class NetworkAccelerationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin

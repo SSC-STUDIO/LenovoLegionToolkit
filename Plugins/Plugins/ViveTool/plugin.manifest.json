@@ -3,7 +3,7 @@
   "id": "vive-tool",
   "name": "ViVeTool",
   "version": "1.2.3",
-  "minHostVersion": "4.2.1",
+  "minHostVersion": "5.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
@@ -30,7 +30,7 @@
     ]
   },
   "store": {
-    "description": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
+    "description": "Unlock hidden Windows features and customize your system with ViVeTool — the ultimate Windows feature flag manager.",
     "icon": "Code24",
     "iconBackground": "#7C3AED",
     "tags": [
