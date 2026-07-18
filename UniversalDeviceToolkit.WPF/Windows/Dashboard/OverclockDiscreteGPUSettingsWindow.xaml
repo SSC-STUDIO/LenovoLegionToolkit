@@ -51,125 +51,130 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="75" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Text="{x:Static resources:Resource.StatusTrayPopup_Preset}" />
-                <Grid
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,12,0,0">
+            <ScrollViewer
+                Grid.Row="0"
+                VerticalScrollBarVisibility="Auto"
+                HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="75" />
                     </Grid.ColumnDefinitions>
 
-                    <ComboBox
-                        x:Name="_profilesComboBox"
+                    <TextBlock
+                        Grid.Row="0"
                         Grid.Column="0"
-                        SelectionChanged="ProfilesComboBox_SelectionChanged" />
+                        Grid.ColumnSpan="3"
+                        Text="{x:Static resources:Resource.StatusTrayPopup_Preset}" />
+                    <Grid
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                    <wpfui:Button
-                        Grid.Column="1"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Stretch"
-                        Click="RenameProfileButton_Click"
-                        ToolTip="{x:Static resources:Resource.Rename}">
-                        <wpfui:Button.Icon>
-                            <wpfui:SymbolIcon Symbol="Edit24" />
-                        </wpfui:Button.Icon>
-                    </wpfui:Button>
-                    <wpfui:Button
-                        x:Name="_deleteProfileButton"
+                        <ComboBox
+                            x:Name="_profilesComboBox"
+                            Grid.Column="0"
+                            SelectionChanged="ProfilesComboBox_SelectionChanged" />
+
+                        <wpfui:Button
+                            Grid.Column="1"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Stretch"
+                            Click="RenameProfileButton_Click"
+                            ToolTip="{x:Static resources:Resource.Rename}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="Edit24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
+                        <wpfui:Button
+                            x:Name="_deleteProfileButton"
+                            Grid.Column="2"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Stretch"
+                            Click="DeleteProfileButton_Click"
+                            ToolTip="{x:Static resources:Resource.Delete}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="Delete24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
+                        <wpfui:Button
+                            Grid.Column="3"
+                            Margin="8,0,0,0"
+                            VerticalAlignment="Stretch"
+                            Appearance="Primary"
+                            Click="AddProfileButton_Click"
+                            Content="{x:Static resources:Resource.Add}">
+                            <wpfui:Button.Icon>
+                                <wpfui:SymbolIcon Symbol="Add24" />
+                            </wpfui:Button.Icon>
+                        </wpfui:Button>
+                    </Grid>
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="0,16,0,0"
+                        Text="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title}" />
+                    <Slider
+                        x:Name="_coreSlider"
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="0,16,8,0"
+                        AutomationProperties.Name="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title}"
+                        IsSnapToTickEnabled="True"
+                        Minimum="0"
+                        TickFrequency="1"
+                        ValueChanged="CoreSlider_OnValueChanged" />
+                    <Label
+                        x:Name="_coreLabel"
+                        Grid.Row="3"
                         Grid.Column="2"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Stretch"
-                        Click="DeleteProfileButton_Click"
-                        ToolTip="{x:Static resources:Resource.Delete}">
-                        <wpfui:Button.Icon>
-                            <wpfui:SymbolIcon Symbol="Delete24" />
-                        </wpfui:Button.Icon>
-                    </wpfui:Button>
-                    <wpfui:Button
-                        Grid.Column="3"
-                        Margin="8,0,0,0"
-                        VerticalAlignment="Stretch"
-                        Appearance="Primary"
-                        Click="AddProfileButton_Click"
-                        Content="{x:Static resources:Resource.Add}">
-                        <wpfui:Button.Icon>
-                            <wpfui:SymbolIcon Symbol="Add24" />
-                        </wpfui:Button.Icon>
-                    </wpfui:Button>
+                        Margin="0,16,0,0"
+                        HorizontalContentAlignment="Right" />
+
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="0,16,0,0"
+                        Text="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title}" />
+                    <Slider
+                        x:Name="_memorySlider"
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="0,16,8,0"
+                        AutomationProperties.Name="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title}"
+                        IsSnapToTickEnabled="True"
+                        Minimum="0"
+                        TickFrequency="1"
+                        ValueChanged="MemorySlider_OnValueChanged" />
+                    <Label
+                        x:Name="_memoryLabel"
+                        Grid.Row="5"
+                        Grid.Column="2"
+                        Margin="0,16,0,0"
+                        HorizontalContentAlignment="Right" />
                 </Grid>
-
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,16,0,0"
-                    Text="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title}" />
-                <Slider
-                    x:Name="_coreSlider"
-                    Grid.Row="3"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="0,16,8,0"
-                    AutomationProperties.Name="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title}"
-                    IsSnapToTickEnabled="True"
-                    Minimum="0"
-                    TickFrequency="1"
-                    ValueChanged="CoreSlider_OnValueChanged" />
-                <Label
-                    x:Name="_coreLabel"
-                    Grid.Row="3"
-                    Grid.Column="2"
-                    Margin="0,16,0,0"
-                    HorizontalContentAlignment="Right" />
-
-                <TextBlock
-                    Grid.Row="4"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    Margin="0,16,0,0"
-                    Text="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title}" />
-                <Slider
-                    x:Name="_memorySlider"
-                    Grid.Row="5"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Margin="0,16,8,0"
-                    AutomationProperties.Name="{x:Static resources:Resource.OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title}"
-                    IsSnapToTickEnabled="True"
-                    Minimum="0"
-                    TickFrequency="1"
-                    ValueChanged="MemorySlider_OnValueChanged" />
-                <Label
-                    x:Name="_memoryLabel"
-                    Grid.Row="5"
-                    Grid.Column="2"
-                    Margin="0,16,0,0"
-                    HorizontalContentAlignment="Right" />
-            </Grid>
+            </ScrollViewer>
 
             <Grid
                 x:Name="_applyCloseGrid"

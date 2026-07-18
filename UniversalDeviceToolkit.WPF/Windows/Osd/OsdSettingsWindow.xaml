@@ -191,66 +191,68 @@
 
             <TabControl Grid.Row="0">
                 <TabItem Header="{x:Static resources:Resource.OsdSettings_Tabs_General}">
-                    <StackPanel>
-                        <custom:CardControl Margin="0,0,0,8" Icon="Window24">
-                            <custom:CardControl.Header>
-                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_OverlayStyle}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            </custom:CardControl.Header>
-                            <ComboBox
-                                x:Name="_osdStyleComboBox"
-                                Width="140"
-                                SelectionChanged="StyleComboBox_SelectionChanged">
-                                <ComboBoxItem Content="{x:Static resources:Resource.Osd_Style_Panel}" Tag="Panel" />
-                                <ComboBoxItem Content="{x:Static resources:Resource.Osd_Style_Bar}" Tag="Bar" />
-                            </ComboBox>
-                        </custom:CardControl>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,12,0">
+                            <custom:CardControl Margin="0,0,0,8" Icon="Window24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_OverlayStyle}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <ComboBox
+                                    x:Name="_osdStyleComboBox"
+                                    Width="140"
+                                    SelectionChanged="StyleComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="{x:Static resources:Resource.Osd_Style_Panel}" Tag="Panel" />
+                                    <ComboBoxItem Content="{x:Static resources:Resource.Osd_Style_Bar}" Tag="Bar" />
+                                </ComboBox>
+                            </custom:CardControl>
 
-                        <custom:CardControl Margin="0,0,0,8" Icon="Timer24">
-                            <custom:CardControl.Header>
-                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_RefreshInterval}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            </custom:CardControl.Header>
-                            <wpfui:NumberBox
-                                x:Name="_osdRefreshInterval"
-                                ToolTip="{x:Static resources:Resource.OsdSettings_General_RefreshInterval_Tooltip}"
-                                Width="100"
-                                Maximum="10"
-                                Minimum="0.1"
-                                SmallChange="0.1"
-                                LargeChange="0.5"
-                                MaxDecimalPlaces="1"
-                                SpinButtonPlacementMode="Compact"
-                                ValueChanged="OsdRefreshInterval_ValueChanged" />
-                        </custom:CardControl>
+                            <custom:CardControl Margin="0,0,0,8" Icon="Timer24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_RefreshInterval}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <wpfui:NumberBox
+                                    x:Name="_osdRefreshInterval"
+                                    ToolTip="{x:Static resources:Resource.OsdSettings_General_RefreshInterval_Tooltip}"
+                                    Width="100"
+                                    Maximum="10"
+                                    Minimum="0.1"
+                                    SmallChange="0.1"
+                                    LargeChange="0.5"
+                                    MaxDecimalPlaces="1"
+                                    SpinButtonPlacementMode="Compact"
+                                    ValueChanged="OsdRefreshInterval_ValueChanged" />
+                            </custom:CardControl>
 
-                        <custom:CardControl Margin="0,0,0,8" Icon="Target24">
-                            <custom:CardControl.Header>
-                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_SnapThreshold}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            </custom:CardControl.Header>
-                            <wpfui:NumberBox
-                                x:Name="_osdSnapThreshold"
-                                Width="100"
-                                Maximum="100"
-                                Minimum="0"
-                                SpinButtonPlacementMode="Compact"
-                                ValueChanged="OsdSnapThreshold_ValueChanged" />
-                        </custom:CardControl>
+                            <custom:CardControl Margin="0,0,0,8" Icon="Target24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_SnapThreshold}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <wpfui:NumberBox
+                                    x:Name="_osdSnapThreshold"
+                                    Width="100"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    SpinButtonPlacementMode="Compact"
+                                    ValueChanged="OsdSnapThreshold_ValueChanged" />
+                            </custom:CardControl>
 
-                        <custom:CardControl Margin="0,0,0,8" Icon="LockClosed24">
-                            <custom:CardControl.Header>
-                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_LockPosition}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                            </custom:CardControl.Header>
-                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <wpfui:Button
-                                    Padding="8,4"
-                                    Margin="0,0,12,0"
-                                    VerticalAlignment="Center"
-                                    Click="ResetPositionButton_Click"
-                                    ToolTip="{x:Static resources:Resource.OsdSettings_General_ResetPosition}"
-                                    Icon="ArrowReset24" />
-                                <wpfui:ToggleSwitch x:Name="_osdLockPosition" VerticalAlignment="Center" Checked="OsdLockPosition_CheckedOrUnchecked" Unchecked="OsdLockPosition_CheckedOrUnchecked" />
-                            </StackPanel>
-                        </custom:CardControl>
-                    </StackPanel>
+                            <custom:CardControl Margin="0,0,0,8" Icon="LockClosed24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_LockPosition}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <wpfui:Button
+                                        Padding="8,4"
+                                        Margin="0,0,12,0"
+                                        VerticalAlignment="Center"
+                                        Click="ResetPositionButton_Click"
+                                        ToolTip="{x:Static resources:Resource.OsdSettings_General_ResetPosition}"
+                                        Icon="ArrowReset24" />
+                                    <wpfui:ToggleSwitch x:Name="_osdLockPosition" VerticalAlignment="Center" Checked="OsdLockPosition_CheckedOrUnchecked" Unchecked="OsdLockPosition_CheckedOrUnchecked" />
+                                </StackPanel>
+                            </custom:CardControl>
+                        </StackPanel>
+                    </ScrollViewer>
                 </TabItem>
 
                 <TabItem Header="{x:Static resources:Resource.OsdSettings_Tabs_Appearance}">
