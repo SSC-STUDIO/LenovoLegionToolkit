@@ -710,7 +710,7 @@
             </Grid>
 
             <!--
-              Visible by default so the first navigation frame is skeleton 流光 (code-behind snaps in).
+              Visible by default so the first navigation frame is skeleton shimmer (code-behind snaps in).
               Transparent host + lightweight rows (4.x-style) — only shimmer blocks animate.
             -->
             <Grid

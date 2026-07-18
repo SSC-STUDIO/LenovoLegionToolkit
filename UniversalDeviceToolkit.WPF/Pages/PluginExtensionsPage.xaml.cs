@@ -54,7 +54,7 @@ private string _currentSearchText = string.Empty;
     private bool _isPluginInstallCoordinatorSubscribed;
 
     /// <summary>
-    /// Minimum skeleton hold so 流光 is actually perceived (including re-entry), without
+    /// Minimum skeleton hold so shimmer is actually perceived (including re-entry), without
     /// a multi-second artificial freeze (was 1500ms). Long enough to outlast nav handoff.
     /// </summary>
     private static readonly TimeSpan MinSkeletonVisible = TimeSpan.FromMilliseconds(520);
@@ -167,7 +167,7 @@ private string _currentSearchText = string.Empty;
         try
         {
             // Manual refresh: keep list when we already have cards (classic smooth path).
-            // Full skeleton only when the page is empty so first-load 流光 still appears.
+            // Full skeleton only when the page is empty so first-load shimmer still appears.
             var showFullSkeleton = _pluginViewModels.Count == 0;
             await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton: showFullSkeleton);
         }
@@ -195,7 +195,7 @@ private string _currentSearchText = string.Empty;
             return;
         }
 
-        // Honor minimum skeleton visibility so first-open 流光 is actually seen.
+        // Honor minimum skeleton visibility so first-open shimmer is actually seen.
         var version = ++_loadingStateVersion;
         var elapsed = _skeletonShownAtUtc == DateTime.MinValue
             ? MinSkeletonVisible
@@ -213,7 +213,7 @@ private string _currentSearchText = string.Empty;
     /// <summary>
     /// First-step chrome: skeleton fully opaque and list collapsed. Never fade-from-0
     /// (that left a blank white region until the fade finished, or forever if interrupted).
-    /// Always restarts the hold clock so re-entry cannot skip 流光 because of a stale timestamp.
+    /// Always restarts the hold clock so re-entry cannot skip shimmer because of a stale timestamp.
     /// </summary>
     private void ShowSkeletonImmediate()
     {
@@ -895,7 +895,7 @@ private string _currentSearchText = string.Empty;
     {
         AttachPageLifecycleSubscriptions();
 
-        // Always paint skeleton + 流光 first — including hot re-entry / page cache hits.
+        // Always paint skeleton + shimmer first — including hot re-entry / page cache hits.
         // Skipping to ShowCachedContentImmediate made skeleton feel first-open-only.
         // Do NOT call SetPluginResourceCultures here — scanning all assemblies freezes UI.
         ShowSkeletonImmediate();

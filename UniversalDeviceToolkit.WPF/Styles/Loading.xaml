@@ -5,7 +5,7 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
 
-    <!-- Classic 4.x teal-slate 流光 wash (theme base is composited underneath at runtime). -->
+    <!-- Classic 4.x teal-slate shimmer wash (theme base is composited underneath at runtime). -->
     <Color x:Key="SkeletonShimmerStartColor">#268891A0</Color>
     <Color x:Key="SkeletonShimmerPeakColor">#4A8891A0</Color>
     <!-- Light theme needs higher alpha so the sweep reads on pale ControlFill surfaces. -->
@@ -45,8 +45,8 @@
     </Style>
 
     <!--
-      Classic cool-slate shimmer (娴佸厜) via utils:SkeletonShimmer.
-      Border is a Decorator 鈥?no Control.Template; per-instance Freezables are required.
+      Classic cool-slate shimmer (shimmer) via utils:SkeletonShimmer.
+      Border is a Decorator —no Control.Template; per-instance Freezables are required.
     -->
     <Style x:Key="AppSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonBlockStyle}">
         <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />

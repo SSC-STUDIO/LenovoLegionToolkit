@@ -95,7 +95,7 @@
         </Style>
         <!--
           Legend item = (dot + label) as one WrapPanel child so narrow cards wrap whole entries
-          instead of splitting Chinese labels mid-string (e.g. "温度" → only "度" visible).
+          instead of splitting CJK labels mid-string (e.g. a two-char label showing only the second character).
         -->
         <Style x:Key="LegendItemStyle" TargetType="StackPanel">
             <Setter Property="Orientation" Value="Horizontal" />

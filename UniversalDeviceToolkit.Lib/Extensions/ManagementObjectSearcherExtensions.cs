@@ -46,7 +46,7 @@ public static class ManagementObjectSearcherExtensions
 
     /// <summary>
     /// Enumerate WMI results without calling <see cref="ManagementObjectCollection.Count"/>
-    /// (Count also throws ManagementException "不支持" on some providers).
+    /// (Count also throws ManagementException "not supported" on some providers).
     /// Soft failures return an empty array instead of throwing.
     /// </summary>
     [DebuggerNonUserCode]
@@ -82,7 +82,7 @@ public static class ManagementObjectSearcherExtensions
     }
 
     /// <summary>
-    /// Capability / platform probes: provider missing, class missing, "not supported" (不支持), etc.
+    /// Capability / platform probes: provider missing, class missing, "not supported", etc.
     /// </summary>
     private static bool IsSoftQueryFailure(ManagementException ex)
     {

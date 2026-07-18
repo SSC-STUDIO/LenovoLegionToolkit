@@ -66,7 +66,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
     private int? _cpuMaxFanSpeedCache;
     private int? _gpuMaxFanSpeedCache;
 
-    // Sensor data cache 鈥?short TTL collapses concurrent callers (UI + HWiNFO + OSD).
+    // Sensor data cache — short TTL collapses concurrent callers (UI + HWiNFO + OSD).
     private readonly object _cacheLock = new();
     private SensorsData? _cachedSensorsData;
     private bool _cachedSensorsDetailed;

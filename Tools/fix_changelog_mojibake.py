@@ -295,7 +295,7 @@ def main() -> None:
             final.append(line)
             continue
 
-        # Chinese-first without clean ' / ' separator: e.g. "中文?/ English"
+        # Chinese-first without clean ' / ' separator: e.g. "zh text?/ English"
         m = re.match(
             r"^(\s*-\s*)(.+?)(?:\s*/\s*|\?/\s*)([A-Z][A-Za-z].*)$",
             line,

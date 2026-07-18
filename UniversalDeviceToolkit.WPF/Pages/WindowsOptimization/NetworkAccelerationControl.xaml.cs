@@ -669,7 +669,7 @@ public partial class NetworkAccelerationControl : UserControl
             if (_modeSummaryText is not null)
             {
                 // Hosts: saved config may still say Hosts — surface that it is disabled (combo shows SystemProxy).
-                // Diagnostics: put the safety note under the short chip (chip stays "仅诊断").
+                // Diagnostics: put the safety note under the short chip (chip stays "Diagnostics only").
                 if (hostsDisabled)
                 {
                     _modeSummaryText.Text = T(

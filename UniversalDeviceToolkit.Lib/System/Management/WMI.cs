@@ -99,7 +99,7 @@ public static partial class WMI
         }
         catch (ManagementException ex) when (IsSoftWmiFailure(ex))
         {
-            // Soft-fail including Invalid object / 无效的对象 — never rethrow.
+            // Soft-fail including Invalid object / invalid object — never rethrow.
             // Lenovo providers often invalidate the MO between Get() and InvokeMethod();
             // TryCallInternalAsync re-queries a fresh instance on the next attempt.
             // Rethrowing here only spammed first-chance exceptions in the debugger while
@@ -374,7 +374,7 @@ public static partial class WMI
                 if (_softFailedMethodKeys.ContainsKey(softKey))
                     return null;
 
-                // Null = transient soft invoke fail (Invalid object / 无效的对象, bad fan ID…).
+                // Null = transient soft invoke fail (Invalid object / invalid object, bad fan ID…).
                 // Re-query once: each TryExecuteWmiMethodCall does a fresh Get(), matching the
                 // historical contract when Lenovo invalidates the MO between Get and Invoke.
                 // Previously Invalid object was rethrown only to hit catch-retry — that worked

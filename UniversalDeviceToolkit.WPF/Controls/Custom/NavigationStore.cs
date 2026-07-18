@@ -401,7 +401,7 @@ public class NavigationStore : Control
             }
 
             // Pages that own loading chrome (plugin store, etc.) must not SoftFadeIn from 0 —
-            // that hides their skeleton 流光 for the whole crossfade and feels like "no second animation".
+            // that hides their skeleton shimmer for the whole crossfade and feels like "no second animation".
             var animateReturn = !OwnsLoadingChrome(item.PageType);
             PresentPage(cached, animate: animateReturn);
             // Immediate commit path only — do not cancel SoftFadeIn for normal pages.

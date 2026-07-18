@@ -188,7 +188,7 @@ public class ThemeManager
 
         // Style presets (Official Cool / Midnight / Forest) must also retint cards, charts,
         // and notification glass — otherwise sensors + Hotkeys toast stay neutral grey on a
-        // colored shell (user report: 官方炫酷模式适配).
+        // colored shell (user report: Official Cool mode adaptation).
         if (palette is not null)
         {
             ApplyPresetSurfaceResources(palette, isDark);
