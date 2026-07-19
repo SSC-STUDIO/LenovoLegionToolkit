@@ -79,7 +79,7 @@
                             VerticalAlignment="Center">
                     <Border Width="38"
                             Height="38"
-                            CornerRadius="9"
+                            CornerRadius="8"
                             Background="{DynamicResource ControlFillColorSecondaryBrush}"
                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                             BorderThickness="1">
@@ -95,7 +95,7 @@
                                     Height="12"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Bottom"
-                                    CornerRadius="4"
+                                    CornerRadius="8"
                                     Background="{DynamicResource SystemAccentColorPrimaryBrush}"
                                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                     BorderThickness="1"
@@ -117,7 +117,7 @@
                         <StackPanel Orientation="Horizontal"
                                     Margin="0,3,0,0">
                             <Border Padding="7,2"
-                                    CornerRadius="6"
+                                    CornerRadius="8"
                                     Background="{DynamicResource ControlFillColorSecondaryBrush}">
                                 <TextBlock x:Name="ModeStateTextBlock"
                                            FontSize="10"
@@ -126,7 +126,7 @@
                                            AutomationProperties.AutomationId="ModeStateTextBlock" />
                             </Border>
                             <Border Padding="7,2"
-                                    CornerRadius="6"
+                                    CornerRadius="8"
                                     Margin="6,0,0,0"
                                     Background="{DynamicResource ControlFillColorSecondaryBrush}">
                                 <TextBlock x:Name="ThemeStateTextBlock"
@@ -371,7 +371,7 @@
                                         </StackPanel>
                                         <Border Grid.Column="1"
                                                 Padding="6,2"
-                                                CornerRadius="6"
+                                                CornerRadius="8"
                                                 VerticalAlignment="Center"
                                                 Background="{DynamicResource ControlFillColorDefaultBrush}">
                                             <TextBlock FontSize="10"

@@ -169,7 +169,7 @@ public partial class CustomMouseSettingsControl : UserControl
             Orientation = Orientation.Horizontal,
             Margin = new Thickness(0, 0, 0, 14)
         };
-        pointerHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Cursor24, 18, new Thickness(0, 0, 10, 0)));
+        pointerHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Cursor24, ResolveFontSize("PluginIconSizeMD", 18), new Thickness(0, 0, 10, 0)));
         pointerHeader.Children.Add(CreateFallbackSectionTitle(CustomMouseText.WindowsSettingsTitle));
         pointerPanel.Children.Add(pointerHeader);
 
@@ -199,7 +199,7 @@ public partial class CustomMouseSettingsControl : UserControl
             Orientation = Orientation.Horizontal,
             Margin = new Thickness(0, 0, 0, 10)
         };
-        cursorHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.PaintBrush24, 18, new Thickness(0, 0, 10, 0)));
+        cursorHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.PaintBrush24, ResolveFontSize("PluginIconSizeMD", 18), new Thickness(0, 0, 10, 0)));
         cursorHeader.Children.Add(CreateFallbackSectionTitle(CustomMouseText.CursorThemeModeLabel));
         cursorPanel.Children.Add(cursorHeader);
         cursorPanel.Children.Add(CreateFallbackBodyText(CustomMouseText.CursorHint, new Thickness(0)));

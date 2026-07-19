@@ -139,7 +139,7 @@
         <Border Grid.Row="1"
                 Margin="0,12,0,12"
                 Padding="10"
-                CornerRadius="6"
+                CornerRadius="8"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
@@ -197,7 +197,7 @@
         <Border Grid.Row="3"
                 Margin="0,12,0,0"
                 Padding="8"
-                CornerRadius="6"
+                CornerRadius="8"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
