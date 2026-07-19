@@ -7,7 +7,6 @@
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
-    x:Name="_unsupportedWindow"
     Title="{x:Static resources:Resource.UnsupportedWindow_Title}"
     MinWidth="650"
     MinHeight="420"
