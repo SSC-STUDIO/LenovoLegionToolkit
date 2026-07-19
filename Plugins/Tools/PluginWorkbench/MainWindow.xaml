@@ -6,7 +6,7 @@
         Icon="Assets/UniversalDeviceToolkit.ico"
         Width="1540"
         Height="940"
-        MinWidth="1180"
+        MinWidth="1024"
         MinHeight="760"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource ApplicationBackgroundBrush}"

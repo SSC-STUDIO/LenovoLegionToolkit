@@ -35,7 +35,10 @@
                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1">
-            <ContentControl x:Name="ContentHost" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <ContentControl x:Name="ContentHost" />
+            </ScrollViewer>
         </Border>
 
         <DockPanel Grid.Row="2">
