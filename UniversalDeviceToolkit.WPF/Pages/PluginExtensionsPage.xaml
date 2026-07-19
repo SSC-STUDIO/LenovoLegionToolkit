@@ -148,6 +148,10 @@
         </Style>
     </Page.Resources>
 
+    <wpfui:DynamicScrollViewer
+        x:Name="_scrollViewer"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
     <Grid Margin="0,0,12,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -822,4 +826,5 @@
             </StackPanel>
         </Grid>
     </Grid>
+    </wpfui:DynamicScrollViewer>
 </Page>

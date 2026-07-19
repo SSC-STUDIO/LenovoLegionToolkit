@@ -33,11 +33,14 @@
         </StackPanel>
         
         <!-- Plugin Content -->
-        <ContentControl
-            x:Name="_pluginContentHost"
-            AutomationProperties.AutomationId="PluginPageContentFrame"
+        <wpfui:DynamicScrollViewer
             Grid.Row="1"
-            BorderThickness="0" />
+            VerticalScrollBarVisibility="Auto">
+            <ContentControl
+                x:Name="_pluginContentHost"
+                AutomationProperties.AutomationId="PluginPageContentFrame"
+                BorderThickness="0" />
+        </wpfui:DynamicScrollViewer>
 
         <Border
             x:Name="_emptyStateBorder"

@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device">
 
-    <Grid>
+    <Viewbox Stretch="Uniform">
+    <Grid Width="660" Height="244">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -606,5 +607,6 @@
         </Grid>
 
     </Grid>
+    </Viewbox>
 
 </UserControl>
