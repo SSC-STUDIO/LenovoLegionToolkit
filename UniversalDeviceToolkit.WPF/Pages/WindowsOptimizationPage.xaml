@@ -278,7 +278,7 @@
                             VerticalAlignment="Center"
                             Text=""
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            FontSize="14"
+                            FontSize="{StaticResource FontSizeCaption}"
                             Visibility="Collapsed" />
 
                         <!-- Same tab-row chrome slot for bulk actions (opt/cleanup/drivers) and NA selection.
@@ -473,11 +473,84 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Category list for optimization, cleanup, and beautification modes -->
+                <controls:LoadableControl
+                    x:Name="_categoriesLoader"
+                    Grid.Column="0"
+                    Margin="0,0,16,0"
+                    ContentVisibilityWhileLoading="Collapsed">
+                    <controls:LoadableControl.Style>
+                        <Style TargetType="controls:LoadableControl">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:LoadableControl.Style>
+                    <controls:LoadableControl.LoadingContent>
+                        <!-- Mirrors collapsed CardExpander category rows: title + description stack, selection summary right. -->
+                        <StackPanel>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="220" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="160" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="72" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="180" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="132" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="64" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="240" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="176" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="80" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="196" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="144" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="68" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </controls:LoadableControl.LoadingContent>
                 <ScrollViewer
                     x:Name="_categoriesList"
                     AutomationProperties.AutomationId="WindowsOptimizationCategoryList"
-                    Grid.Column="0"
-                    Margin="0,0,16,0"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     CanContentScroll="False"
@@ -518,7 +591,7 @@
                                                     Text="{Binding Title}" />
                                                 <TextBlock
                                                     Margin="0,4,0,0"
-                                                    FontSize="12"
+                                                    FontSize="{StaticResource FontSizeSmallCaption}"
                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                     Text="{Binding Description}"
                                                     TextWrapping="Wrap" />
@@ -596,6 +669,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+                </controls:LoadableControl>
 
                 <!-- Content for driver download mode -->
                 <Grid Grid.Column="0" Margin="0,0,16,0">
@@ -748,7 +822,7 @@
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_PrimarySource}" />
                                                     <TextBlock
-                                                        FontSize="12"
+                                                        FontSize="{StaticResource FontSizeSmallCaption}"
                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}"
                                                         TextTrimming="CharacterEllipsis" />
@@ -766,7 +840,7 @@
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
                                                     <TextBlock
-                                                        FontSize="12"
+                                                        FontSize="{StaticResource FontSizeSmallCaption}"
                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}"
                                                         TextTrimming="CharacterEllipsis" />
@@ -1056,14 +1130,14 @@
                                                 HorizontalAlignment="Center">
                                                 <wpfui:SymbolIcon
                                                     HorizontalAlignment="Center"
-                                                    FontSize="28"
+                                                    FontSize="{StaticResource IconSizeDialog}"
                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                     Symbol="Search24" />
                                                 <TextBlock
                                                     x:Name="_driverEmptyStateTitleTextBlock"
                                                     Margin="0,10,0,0"
                                                     HorizontalAlignment="Center"
-                                                    FontSize="15"
+                                                    FontSize="{StaticResource FontSizeBody}"
                                                     FontWeight="SemiBold"
                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                     TextAlignment="Center"
@@ -1168,7 +1242,7 @@
 
                                 <TextBlock
                                     Grid.Row="0"
-                                    FontSize="16"
+                                    FontSize="{StaticResource FontSizePageDescription}"
                                     FontWeight="Medium"
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}" />
                                 <TextBlock
@@ -1283,7 +1357,7 @@
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupInfo}" />
                                 <TextBlock
                                     Margin="0,0,0,12"
-                                    FontSize="12"
+                                    FontSize="{StaticResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupDescription}"
                                     TextWrapping="Wrap" />
@@ -1331,7 +1405,7 @@
                                 </TextBlock>
                                 <TextBlock
                                     Margin="0,0,0,8"
-                                    FontSize="12"
+                                    FontSize="{StaticResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding PendingText}"
                                     TextWrapping="Wrap">
@@ -1353,7 +1427,7 @@
                                 <!-- Current deleting file -->
                                 <TextBlock
                                     Margin="0,0,0,12"
-                                    FontSize="12"
+                                    FontSize="{StaticResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding CurrentDeletingFile}"
                                     TextWrapping="Wrap"
@@ -1387,7 +1461,7 @@
                                     </StackPanel.Style>
                                     <TextBlock 
                                         Text="{Binding CurrentOperationText}" 
-                                        FontSize="12" 
+                                        FontSize="{StaticResource FontSizeSmallCaption}" 
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                         Margin="0,0,0,4" />
                                     <ProgressBar IsIndeterminate="True" Height="4" />
@@ -1499,7 +1573,7 @@
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Header}" />
                                         <TextBlock
                                             Margin="0,0,0,12"
-                                            FontSize="12"
+                                            FontSize="{StaticResource FontSizeSmallCaption}"
                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Description}"
                                             TextWrapping="Wrap" />

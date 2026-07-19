@@ -56,9 +56,110 @@
                 />
         </StackPanel>
 
+        <controls:LoadableControl
+            x:Name="_loader"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            ContentVisibilityWhileLoading="Collapsed">
+            <controls:LoadableControl.LoadingContent>
+                <!-- Mirrors: left nav rows (icon + label) + right settings cards while nav items and first control load. -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="240" MinWidth="180" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border
+                        Grid.Column="0"
+                        Background="{DynamicResource PageBackgroundFillColorDefaultBrush}"
+                        BorderBrush="Transparent"
+                        BorderThickness="0">
+                        <StackPanel Margin="16,12,12,0">
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="118" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="96" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="132" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="84" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="108" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource AppSkeletonListItemIconStyle}" />
+                                <Border Grid.Column="1" Width="124" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="24,0,0,0">
+                        <Border Margin="0,0,0,16" Style="{StaticResource AppSkeletonCardStyle}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <Border Width="180" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                    <Border Width="260" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Style="{StaticResource AppSkeletonToggleSwitchStyle}" />
+                            </Grid>
+                        </Border>
+                        <Border MinHeight="120" Style="{StaticResource AppSkeletonCardStyle}">
+                            <StackPanel VerticalAlignment="Center">
+                                <Border Width="200" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                <Border Width="320" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                <Border Height="28" Margin="0,14,0,0" Style="{StaticResource AppSkeletonShimmerBlockStyle}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </controls:LoadableControl.LoadingContent>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="240" MinWidth="180" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
         <!-- Left Navigation Bar -->
         <Border
-            Grid.Row="1"
             Grid.Column="0"
             Background="{DynamicResource PageBackgroundFillColorDefaultBrush}"
             BorderBrush="Transparent"
@@ -158,13 +259,14 @@
         <!-- Right Content Area -->
         <ContentControl
             x:Name="_contentControl"
-            Grid.Row="1"
             Grid.Column="1"
             Margin="24,0,0,0">
             <ContentControl.RenderTransform>
                 <TranslateTransform />
             </ContentControl.RenderTransform>
         </ContentControl>
+            </Grid>
+        </controls:LoadableControl>
     </Grid>
 </Page>
 

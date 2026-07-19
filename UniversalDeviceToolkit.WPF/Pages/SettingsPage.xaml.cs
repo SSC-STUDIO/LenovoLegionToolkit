@@ -93,6 +93,8 @@ public partial class SettingsPage
         }
         catch (Exception ex)
         {
+            _loader.IsLoading = false;
+
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error initializing settings page.", ex);
         }
@@ -142,6 +144,9 @@ public partial class SettingsPage
             SelectNavigationItem("Application");
             await _applicationBehaviorControl.RefreshAsync();
         }
+
+        // Initial settings data is ready - crossfade the skeleton out.
+        _loader.IsLoading = false;
 
         // Load other controls in the background, but keep WPF control updates on the UI dispatcher.
         _ = RefreshRemainingControlsAsync();

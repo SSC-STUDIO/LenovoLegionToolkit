@@ -40,6 +40,7 @@ public partial class WindowsOptimizationPage : Page
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private CancellationTokenSource? _pluginRefreshCancellationTokenSource;
     private int _pluginRefreshVersion;
+    private bool _hasCompletedInitialCategoriesLoad;
     
     private SelectedActionsWindow? _selectedActionsWindow;
     private ActionDetailsWindow? _actionDetailsWindow;
@@ -78,6 +79,33 @@ public partial class WindowsOptimizationPage : Page
         SyncNavButtonToCurrentMode();
         AttachNetworkAccelerationSelectionChrome();
         TryApplyPendingPluginFocusRequest();
+
+        if (!_hasCompletedInitialCategoriesLoad)
+            _ = RunInitialCategoriesLoadAsync();
+    }
+
+    /// <summary>
+    /// First load only: InitializeCore starts a fire-and-forget optimization state scan that
+    /// resolves every action's real system state. Keep the categories skeleton up until this
+    /// instance's scan drains (queued behind the in-flight one), then crossfade to the list.
+    /// Later navigations keep the already-populated list live during re-scans.
+    /// </summary>
+    private async Task RunInitialCategoriesLoadAsync()
+    {
+        try
+        {
+            await ViewModel.ScanOptimizationStatesAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Initial optimization state scan failed.", ex);
+        }
+        finally
+        {
+            _hasCompletedInitialCategoriesLoad = true;
+            _categoriesLoader.IsLoading = false;
+        }
     }
 
     /// <summary>
