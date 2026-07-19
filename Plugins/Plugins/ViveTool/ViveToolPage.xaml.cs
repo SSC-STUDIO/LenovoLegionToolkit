@@ -340,7 +340,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             Text = Resource.ViveTool_NoFeaturesFound,
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
-            FontSize = 14,
+            FontSize = ResolveFontSize("PluginFontSizeBody", 14),
             Margin = new Thickness(0, 12, 0, 0),
             Foreground = Application.Current?.TryFindResource("TextFillColorSecondaryBrush") as Brush
                 ?? Brushes.Gray
@@ -359,7 +359,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             VerticalAlignment = VerticalAlignment.Center,
             TextAlignment = TextAlignment.Right,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12)
         };
         _featureCountTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
         AutomationProperties.SetAutomationId(_featureCountTextBlock, "ViveToolFeatureCountText");
@@ -464,7 +464,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         heroStack.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_PageTitle,
-            FontSize = 20,
+            FontSize = ResolveFontSize("PluginFontSizeTitle", 20),
             FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         });
@@ -473,7 +473,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             Text = Resource.ViveTool_PageDescription,
             Margin = new Thickness(0, 6, 0, 0),
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12)
         });
         heroCard.Child = heroStack;
 
@@ -490,7 +490,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             Text = Resource.ViveTool_WarningMessage,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12)
         };
 
         rootStack.Children.Add(heroCard);
@@ -504,6 +504,11 @@ public partial class ViveToolPage : INotifyPropertyChanged
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             Content = rootStack
         };
+    }
+
+    private static double ResolveFontSize(string resourceKey, double fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) is double size ? size : fallback;
     }
 
     private void InitializeFeatureUi()

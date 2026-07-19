@@ -16,6 +16,13 @@
                 <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/DesignTokens.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/PluginUiStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Shared caution banner chrome (local copy; PluginUiStyles.xaml is shared-owned) -->
+            <Style x:Key="PluginCautionBannerStyle" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource SystemFillColorCautionBackgroundBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorCautionBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -25,7 +32,7 @@
         <StackPanel Margin="0,0,4,12">
 
             <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_ViveToolStatus}"
-                       FontSize="15"
+                       FontSize="{StaticResource PluginFontSizeSection}"
                        FontWeight="SemiBold"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <Grid Margin="0,6,0,8">
@@ -35,7 +42,7 @@
                 </Grid.ColumnDefinitions>
                 <wpfui:SymbolIcon x:Name="_statusIcon"
                                   Symbol="CheckmarkCircle24"
-                                  FontSize="16"
+                                  FontSize="{StaticResource PluginIconSizeMD}"
                                   Margin="0,2,8,0"
                                   VerticalAlignment="Top"
                                   Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
@@ -43,7 +50,7 @@
                            Grid.Column="1"
                            AutomationProperties.AutomationId="ViveToolSettingsStatusText"
                            TextWrapping="Wrap"
-                           FontSize="12"
+                           FontSize="{StaticResource PluginFontSizeCaption}"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </Grid>
 
@@ -61,7 +68,7 @@
                 <TextBlock x:Name="_downloadProgressText"
                            AutomationProperties.AutomationId="ViveToolSettingsDownloadProgressText"
                            Margin="0,6,0,0"
-                           FontSize="11"
+                           FontSize="{StaticResource PluginFontSizeSmall}"
                            Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
             </StackPanel>
 
@@ -100,13 +107,13 @@
             <Separator Margin="0,0,0,12" />
 
             <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_BinaryPathTitle}"
-                       FontSize="13"
+                       FontSize="{StaticResource PluginFontSizeLabel}"
                        FontWeight="SemiBold"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <TextBlock Margin="0,4,0,8"
                        Text="{x:Static pluginRes:Resource.ViveTool_PathDescription}"
                        TextWrapping="Wrap"
-                       FontSize="12"
+                       FontSize="{StaticResource PluginFontSizeCaption}"
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <Grid Margin="0,0,0,12">
                 <Grid.ColumnDefinitions>
@@ -129,14 +136,12 @@
                               VerticalAlignment="Center" />
             </Grid>
 
-            <Border Padding="10,8"
-                    CornerRadius="{StaticResource PluginCornerRadiusCompact}"
-                    Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
-                    BorderBrush="{DynamicResource SystemFillColorCautionBrush}"
-                    BorderThickness="1">
+            <Border Style="{StaticResource PluginCautionBannerStyle}"
+                    Padding="10,8"
+                    CornerRadius="{StaticResource PluginCornerRadiusCompact}">
                 <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_WarningMessage}"
                            TextWrapping="Wrap"
-                           FontSize="12"
+                           FontSize="{StaticResource PluginFontSizeCaption}"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </Border>
         </StackPanel>
