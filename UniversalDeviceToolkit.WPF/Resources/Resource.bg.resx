@@ -3953,6 +3953,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Само активираните групи се прилагат чрез PAC (системен прокси). Всички групи са изключени по подразбиране.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Няма групи домейни</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Няма конфигурирани цели за ускорение. Вградените групи по подразбиране се добавят автоматично при пускане.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Клик за избор на групи · двоен клик за вкл./изкл. · лентата за любими или старт на избраните.</value>
   </data>
@@ -4048,5 +4054,14 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Освободени {0}. Успешни {1}, неуспешни {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Шрифт</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Изберете шрифта, използван в интерфейса на приложението.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>По подразбиране</value>
   </data>
 </root>

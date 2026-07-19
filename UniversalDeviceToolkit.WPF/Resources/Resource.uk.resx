@@ -3875,6 +3875,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>PAC (системний проксі) застосовує лише ввімкнені групи. Усі групи типово вимкнені.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Немає груп доменів</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Цілі прискорення не налаштовано. Вбудовані типові групи додаються автоматично під час старту.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Розблоковує вибір режиму та ручний запуск. Не змінює системний проксі, доки ви не запустите.</value>
   </data>
@@ -4021,5 +4027,14 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Звільнено {0}. Успішно: {1}, з помилкою: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Шрифт</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Виберіть шрифт, що використовується в інтерфейсі застосунку.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Типовий</value>
   </data>
 </root>

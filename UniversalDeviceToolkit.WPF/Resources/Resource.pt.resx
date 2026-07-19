@@ -3930,6 +3930,12 @@ ex. C:\Drivers</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Apenas os grupos ativados são aplicados pelo PAC (proxy do sistema). Todos os grupos ficam desligados por predefinição.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Sem grupos de domínios</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nenhum alvo de aceleração configurado. Os grupos predefinidos integrados são adicionados automaticamente no arranque.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Clique para selecionar grupos · clique duplo para ativar/desativar · use a barra para favoritos ou iniciar selecionados.</value>
   </data>
@@ -4025,5 +4031,14 @@ ex. C:\Drivers</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Libertados {0}. {1} com êxito, {2} falharam.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Tipo de letra</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Escolha o tipo de letra utilizado na interface da aplicação.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Predefinição</value>
   </data>
 </root>

@@ -3879,6 +3879,12 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Yalnızca etkin gruplar PAC (sistem proxy) tarafından uygulanır. Tüm gruplar varsayılan olarak kapalıdır.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Etki alanı grubu yok</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Yapılandırılmış hızlandırma hedefi yok. Yerleşik varsayılan gruplar başlangıçta otomatik olarak eklenir.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Mod seçimini ve elle Başlat'ı açar. Siz başlatana kadar sistem proxy'sini değiştirmez.</value>
   </data>
@@ -4025,5 +4031,14 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} boşaltıldı. {1} başarılı, {2} başarısız.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Yazı tipi</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Uygulama arayüzünde kullanılan yazı tipini seçin.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Varsayılan</value>
   </data>
 </root>

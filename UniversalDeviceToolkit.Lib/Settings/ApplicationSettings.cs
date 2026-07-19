@@ -43,6 +43,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public RGBColor? AccentColor { get; set; }
         public AccentColorSource AccentColorSource { get; set; }
         public WindowBackdropStyle WindowBackdropStyle { get; set; } = WindowBackdropStyle.Windows;
+        public AppFontStyle AppFontStyle { get; set; } = AppFontStyle.Default;
         public PowerModeMappingMode PowerModeMappingMode { get; set; } = PowerModeMappingMode.WindowsPowerMode;
         public Dictionary<PowerModeState, Guid> PowerPlans { get; set; } = [];
         public Dictionary<PowerModeState, WindowsPowerMode> PowerModes { get; set; } = [];

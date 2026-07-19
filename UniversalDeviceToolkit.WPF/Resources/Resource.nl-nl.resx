@@ -4309,6 +4309,12 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Alleen ingeschakelde groepen worden toegepast via PAC (systeemproxy). Alle groepen staan standaard uit.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Geen domeingroepen</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Er zijn geen versnellingsdoelen geconfigureerd. Ingebouwde standaardgroepen worden automatisch toegevoegd bij opstarten.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Klik om groepen te selecteren · dubbelklik om in/uit te schakelen · gebruik de balk voor favorieten of start selectie.</value>
   </data>
@@ -4404,5 +4410,14 @@ Ondersteunde formaten zijn: {1}.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} vrijgemaakt. {1} geslaagd, {2} mislukt.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Lettertype</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Kies het lettertype dat in de app-interface wordt gebruikt.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Standaard</value>
   </data>
 </root>

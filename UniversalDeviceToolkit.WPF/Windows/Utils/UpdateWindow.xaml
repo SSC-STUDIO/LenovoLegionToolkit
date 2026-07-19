@@ -143,7 +143,7 @@
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                         <markdig:MarkdownViewer.Resources>
                             <Style TargetType="{x:Type FlowDocument}">
-                                <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}" />
+                                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
                                 <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
                                 <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <Setter Property="PagePadding" Value="0" />

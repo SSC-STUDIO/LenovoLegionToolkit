@@ -4308,6 +4308,12 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Faqat yoqilgan guruhlar PAC (tizim proksisi) orqali qo'llanadi. Barcha guruhlar sukut bo'yicha o'chiq.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Domen guruhlari yo‘q</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Tezlashtirish maqsadlari sozlanmagan. O‘rnatilgan standart guruhlar ishga tushishda avtomatik qo‘shiladi.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Guruhlarni tanlash uchun bosing · yoqish/o'chirish uchun ikki marta bosing · sevimli yoki tanlanganlarni boshlash uchun paneldan foydalaning.</value>
   </data>
@@ -4403,5 +4409,14 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} bo'shatildi. {1} muvaffaqiyatli, {2} muvaffaqiyatsiz.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Shrift</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Ilova interfeysida ishlatiladigan shriftni tanlang.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Standart</value>
   </data>
 </root>

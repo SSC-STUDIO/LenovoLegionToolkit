@@ -7293,6 +7293,33 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Choose the font used across the app interface..
+        /// </summary>
+        public static string SettingsPage_Font_Description {
+            get {
+                return ResourceManager.GetString("SettingsPage_Font_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Font.
+        /// </summary>
+        public static string SettingsPage_Font_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_Font_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        public static string SettingsPage_Font_Default {
+            get {
+                return ResourceManager.GetString("SettingsPage_Font_Default", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string SettingsPage_Title {

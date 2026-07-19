@@ -3930,6 +3930,12 @@ Vyžaduje restart.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>PAC (systémový proxy) používá pouze zapnuté skupiny. Všechny skupiny jsou ve výchozím stavu vypnuté.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Žádné skupiny domén</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nejsou nakonfigurovány žádné cíle akcelerace. Vestavěné výchozí skupiny se přidají automaticky při spuštění.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Odemkne výběr režimu a ruční Spustit. Systémový proxy se do spuštění nezmění.</value>
   </data>
@@ -4076,5 +4082,14 @@ Vyžaduje restart.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Uvolněno {0}. Úspěšných: {1}, neúspěšných: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Písmo</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Vyberte písmo používané v rozhraní aplikace.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Výchozí</value>
   </data>
 </root>

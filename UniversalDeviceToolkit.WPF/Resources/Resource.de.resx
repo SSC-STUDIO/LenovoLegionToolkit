@@ -3878,6 +3878,12 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Nur aktivierte Gruppen werden über PAC (Systemproxy) angewendet. Alle Gruppen sind standardmäßig aus.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Keine Domänengruppen</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Es sind keine Beschleunigungsziele konfiguriert. Integrierte Standardgruppen werden beim Start automatisch hinzugefügt.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Entsperrt die Modusauswahl und den manuellen Start. Ändert den Systemproxy erst, wenn Sie starten.</value>
   </data>
@@ -4024,5 +4030,14 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} freigegeben. {1} erfolgreich, {2} fehlgeschlagen.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Schriftart</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Wählen Sie die Schriftart für die App-Oberfläche.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Standard</value>
   </data>
 </root>

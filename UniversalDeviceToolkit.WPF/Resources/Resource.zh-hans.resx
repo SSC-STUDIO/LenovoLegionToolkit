@@ -3818,6 +3818,12 @@ Fn 将会暂时解除锁定。</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>仅启用的域名组会进入 PAC（系统代理）。默认全部关闭。</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>没有域名组</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>尚未配置加速目标。内置默认组会在启动时自动添加。</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>单击选择域名组 · 双击启用/关闭 · 底部栏可收藏或启动所选组。</value>
   </data>
@@ -4033,5 +4039,14 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>已释放 {0}。成功 {1} 项，失败 {2} 项。</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>选择应用界面使用的字体。</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>默认</value>
   </data>
 </root>

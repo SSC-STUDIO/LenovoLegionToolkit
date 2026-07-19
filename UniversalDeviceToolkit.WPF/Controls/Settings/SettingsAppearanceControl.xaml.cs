@@ -71,6 +71,7 @@ public partial class SettingsAppearanceControl
         });
         _themeComboBox.SetItems(Enum.GetValues<Theme>(), _settings.Store.Theme, t => t.GetDisplayName());
         _themeStylePresetComboBox.SetItems(Enum.GetValues<ThemeStylePreset>(), _settings.Store.ThemeStylePreset, t => t.GetDisplayName());
+        _fontComboBox.SetItems(Enum.GetValues<AppFontStyle>(), _settings.Store.AppFontStyle, GetFontStyleDisplayName);
 
         UpdateAccentColorPicker();
         _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
@@ -79,6 +80,7 @@ public partial class SettingsAppearanceControl
         _temperatureComboBox.Visibility = Visibility.Visible;
         _themeComboBox.Visibility = Visibility.Visible;
         _themeStylePresetComboBox.Visibility = Visibility.Visible;
+        _fontComboBox.Visibility = Visibility.Visible;
 
         var language = await languageTask;
         _currentLanguage = language;
@@ -234,6 +236,30 @@ public partial class SettingsAppearanceControl
         _settings.SynchronizeStore();
         _themeManager.Apply();
     }
+
+    private void FontComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_fontComboBox.TryGetSelectedItem(out AppFontStyle state))
+            return;
+
+        _settings.Store.AppFontStyle = state;
+        _settings.SynchronizeStore();
+        AppFontManager.Apply(state);
+    }
+
+    // Font stack names are proper nouns; only the "Default" option is localized.
+    private static object GetFontStyleDisplayName(AppFontStyle style) => style switch
+    {
+        AppFontStyle.Default => Resource.SettingsPage_Font_Default,
+        AppFontStyle.FluentVariable => "Segoe UI Variable",
+        AppFontStyle.YaHeiUI => "Microsoft YaHei UI",
+        AppFontStyle.DengXian => "DengXian",
+        AppFontStyle.NotoSans => "Noto Sans CJK SC",
+        _ => style.ToString()
+    };
 
     private void AccentColorPicker_Changed(object sender, EventArgs e)
     {

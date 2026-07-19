@@ -3875,6 +3875,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>تُطبَّق المجموعات المفعّلة فقط عبر PAC (وكيل النظام). تبقى كل المجموعات معطّلة افتراضيًا.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>لا توجد مجموعات نطاقات</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>لم يتم تكوين أي أهداف للتسريع. تُضاف المجموعات الافتراضية المدمجة تلقائيًا عند التشغيل.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>يفتح اختيار الوضع والبدء اليدوي. لا يغيّر وكيل النظام حتى تبدأ.</value>
   </data>
@@ -4021,5 +4027,14 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>تم تحرير {0}. نجح {1}، فشل {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>الخط</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>اختر الخط المستخدم في واجهة التطبيق.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>الافتراضي</value>
   </data>
 </root>

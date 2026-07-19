@@ -3878,6 +3878,12 @@ Nécessite un redémarrage.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Seuls les groupes activés sont appliqués par PAC (proxy système). Tous les groupes restent désactivés par défaut.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Aucun groupe de domaines</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Aucune cible d’accélération n’est configurée. Des groupes par défaut intégrés sont ajoutés automatiquement au lancement.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Déverrouille la sélection du mode et le démarrage manuel. Ne modifie pas le proxy système tant que vous n'avez pas démarré.</value>
   </data>
@@ -4024,5 +4030,14 @@ Nécessite un redémarrage.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} libérés. {1} réussis, {2} échoués.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Police</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Choisissez la police utilisée dans l'interface de l'application.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Par défaut</value>
   </data>
 </root>

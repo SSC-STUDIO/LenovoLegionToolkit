@@ -3865,6 +3865,12 @@ Richiede il riavvio.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Solo i gruppi abilitati vengono applicati da PAC (proxy di sistema). Tutti i gruppi restano disattivati per impostazione predefinita.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Nessun gruppo di domini</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nessuna destinazione di accelerazione configurata. I gruppi predefiniti integrati vengono aggiunti automaticamente all’avvio.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Sblocca la selezione della modalità e l'avvio manuale. Non modifica il proxy di sistema finché non avvii.</value>
   </data>
@@ -4011,5 +4017,14 @@ Richiede il riavvio.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Liberati {0}. {1} riusciti, {2} non riusciti.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Carattere</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Scegli il carattere usato nell'interfaccia dell'app.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Predefinito</value>
   </data>
 </root>

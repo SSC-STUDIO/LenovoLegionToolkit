@@ -731,6 +731,17 @@ public enum WindowBackdropStyle
     macOS
 }
 
+// No Display attributes: option labels are font names (proper nouns) resolved
+// WPF-side, like TemperatureUnit.
+public enum AppFontStyle
+{
+    Default,
+    FluentVariable,
+    YaHeiUI,
+    DengXian,
+    NotoSans
+}
+
 public enum TemperatureUnit
 {
     C,

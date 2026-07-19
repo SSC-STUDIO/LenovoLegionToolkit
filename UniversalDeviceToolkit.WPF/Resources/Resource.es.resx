@@ -3880,6 +3880,12 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Solo se aplican los grupos habilitados mediante PAC (proxy del sistema). Todos los grupos permanecen desactivados de forma predeterminada.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>No hay grupos de dominios</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>No hay destinos de aceleración configurados. Los grupos predeterminados integrados se agregan automáticamente al arrancar.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Desbloquea la selección de modo y el inicio manual. No cambia el proxy del sistema hasta que inicie.</value>
   </data>
@@ -4026,5 +4032,14 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Se liberaron {0}. {1} correctos, {2} con error.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Fuente</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Elige la fuente usada en la interfaz de la aplicación.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Predeterminado</value>
   </data>
 </root>

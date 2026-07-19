@@ -3877,6 +3877,12 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>A PAC (rendszerproxy) csak az engedélyezett csoportokat alkalmazza. Minden csoport alapértelmezés szerint ki van kapcsolva.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Nincsenek doméncsoportok</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nincsenek konfigurált gyorsítási célok. A beépített alapértelmezett csoportok automatikusan hozzáadódnak indításkor.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Feloldja a módválasztást és a kézi Indítást. A rendszerproxy nem változik, amíg el nem indítja.</value>
   </data>
@@ -4023,5 +4029,14 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Felszabadítva: {0}. Sikeres: {1}, sikertelen: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Betűtípus</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Válassza ki az alkalmazás felületén használt betűtípust.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Alapértelmezett</value>
   </data>
 </root>

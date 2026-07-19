@@ -3875,6 +3875,12 @@ Necesită repornirea.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Doar grupurile activate sunt aplicate de PAC (proxy de sistem). Toate grupurile rămân oprite implicit.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Niciun grup de domenii</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nu este configurată nicio țintă de accelerare. Grupurile implicite integrate sunt adăugate automat la lansare.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Deblochează selectarea modului și pornirea manuală. Nu modifică proxy-ul de sistem până la pornire.</value>
   </data>
@@ -4021,5 +4027,14 @@ Necesită repornirea.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Eliberat {0}. Reușite: {1}, eșecuri: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Alegeți fontul utilizat în interfața aplicației.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Implicit</value>
   </data>
 </root>

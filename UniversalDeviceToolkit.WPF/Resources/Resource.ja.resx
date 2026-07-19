@@ -3877,6 +3877,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>有効なグループのみが PAC（システムプロキシ）に適用されます。すべてのグループは既定でオフです。</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>ドメイン グループがありません</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>加速対象が構成されていません。組み込みの既定グループは起動時に自動的に追加されます。</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>モード選択と手動開始のロックを解除します。開始するまでシステムプロキシは変更しません。</value>
   </data>
@@ -4023,5 +4029,14 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} を解放しました。成功 {1}、失敗 {2}。</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>フォント</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>アプリのインターフェイスで使用するフォントを選択します。</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>既定</value>
   </data>
 </root>

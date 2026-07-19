@@ -3929,6 +3929,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Μόνο οι ενεργοποιημένες ομάδες εφαρμόζονται μέσω PAC (proxy συστήματος). Όλες οι ομάδες παραμένουν απενεργοποιημένες από προεπιλογή.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Δεν υπάρχουν ομάδες τομέων</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Δεν έχουν διαμορφωθεί στόχοι επιτάχυνσης. Οι ενσωματωμένες προεπιλεγμένες ομάδες προστίθενται αυτόματα κατά την εκκίνηση.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Κλικ για επιλογή ομάδων · διπλό κλικ για ενεργοποίηση/απενεργοποίηση · η γραμμή για αγαπημένα ή έναρξη επιλεγμένων.</value>
   </data>
@@ -4024,5 +4030,14 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Ελευθερώθηκαν {0}. Επιτυχία {1}, αποτυχία {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Γραμματοσειρά</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Επιλέξτε τη γραμματοσειρά που χρησιμοποιείται στο περιβάλλον της εφαρμογής.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Προεπιλογή</value>
   </data>
 </root>
