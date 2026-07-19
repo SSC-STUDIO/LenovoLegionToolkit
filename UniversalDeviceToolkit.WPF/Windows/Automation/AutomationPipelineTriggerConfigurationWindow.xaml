@@ -50,14 +50,10 @@
 
             </Grid>
 
-            <ScrollViewer
+            <TabControl
+                x:Name="_tabControl"
                 Grid.Row="1"
-                VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Disabled">
-                <TabControl
-                    x:Name="_tabControl"
-                    Margin="16" />
-            </ScrollViewer>
+                Margin="16" />
 
             <Grid Grid.Row="2" Margin="0,0,12,12">
                 <Grid.ColumnDefinitions>

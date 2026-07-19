@@ -27,9 +27,8 @@ internal static class DpiAwareTypography
         if (double.IsNaN(dpiScale) || double.IsInfinity(dpiScale) || dpiScale <= 0)
             return 1d;
 
-        // WPF already scales layout for DPI. Keep the correction intentionally light (max ~4% shrink)
-        // so high-DPI users who raise scaling to READ text are not counteracted.
-        return Math.Clamp(1d / Math.Sqrt(dpiScale), 0.96d, 1.04d);
+        // WPF already scales layout for DPI; only apply a light correction so text stays readable on 125–200% displays.
+        return Math.Clamp(1d / Math.Sqrt(dpiScale), 0.92d, 1.04d);
     }
 
     public static void Apply(Window window)

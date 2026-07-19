@@ -50,76 +50,70 @@
                 <wpfui:SymbolIcon FontSize="56" Symbol="Laptop24" />
             </StackPanel>
 
-            <ScrollViewer
-                Grid.Row="0"
-                Grid.Column="1"
-                VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
-                    <TextBlock
-                        x:Name="_titleText"
-                        Margin="0,0,0,8"
-                        Focusable="True"
-                        FontWeight="Normal"
-                        TextWrapping="Wrap" />
+            <StackPanel Grid.Row="0" Grid.Column="1">
+                <TextBlock
+                    x:Name="_titleText"
+                    Margin="0,0,0,8"
+                    Focusable="True"
+                    FontWeight="Normal"
+                    TextWrapping="Wrap" />
 
-                    <TextBlock
-                        x:Name="_summaryText"
-                        Margin="0,0,0,14"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap" />
+                <TextBlock
+                    x:Name="_summaryText"
+                    Margin="0,0,0,14"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap" />
 
-                    <Grid Margin="0,0,0,12">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+                <Grid Margin="0,0,0,12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Medium" Text="{x:Static resources:Resource.UnsupportedWindow_Vendor}" />
-                        <TextBlock x:Name="_vendorText" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" />
-                        <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Medium" Text="{x:Static resources:Resource.UnsupportedWindow_Model}" />
-                        <TextBlock x:Name="_modelText" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" />
-                        <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Medium" Text="{x:Static resources:Resource.UnsupportedWindow_MachineType}" />
-                        <TextBlock x:Name="_machineTypeText" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" />
-                    </Grid>
+                    <TextBlock Grid.Row="0" Grid.Column="0" FontWeight="Medium" Text="{x:Static resources:Resource.UnsupportedWindow_Vendor}" />
+                    <TextBlock x:Name="_vendorText" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" FontWeight="Medium" Text="{x:Static resources:Resource.UnsupportedWindow_Model}" />
+                    <TextBlock x:Name="_modelText" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" FontWeight="Medium" Text="{x:Static resources:Resource.UnsupportedWindow_MachineType}" />
+                    <TextBlock x:Name="_machineTypeText" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" />
+                </Grid>
 
-                    <!-- Manual pack selection: auto-detect pre-selects; user can override. -->
-                    <TextBlock
-                        x:Name="_packLabelText"
-                        Margin="0,0,0,6"
-                        FontWeight="Medium"
-                        TextWrapping="Wrap" />
-                    <ComboBox
-                        x:Name="_packComboBox"
-                        MinHeight="36"
-                        Margin="0,0,0,8"
-                        AutomationProperties.AutomationId="DeviceSetupPackComboBox"
-                        SelectionChanged="PackComboBox_SelectionChanged" />
+                <!-- Manual pack selection: auto-detect pre-selects; user can override. -->
+                <TextBlock
+                    x:Name="_packLabelText"
+                    Margin="0,0,0,6"
+                    FontWeight="Medium"
+                    TextWrapping="Wrap" />
+                <ComboBox
+                    x:Name="_packComboBox"
+                    MinHeight="36"
+                    Margin="0,0,0,8"
+                    AutomationProperties.AutomationId="DeviceSetupPackComboBox"
+                    SelectionChanged="PackComboBox_SelectionChanged" />
 
-                    <TextBlock
-                        x:Name="_packDetailText"
-                        Margin="0,0,0,8"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap" />
+                <TextBlock
+                    x:Name="_packDetailText"
+                    Margin="0,0,0,8"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap" />
 
-                    <TextBlock
-                        x:Name="_hintText"
-                        Margin="0,0,0,12"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap" />
+                <TextBlock
+                    x:Name="_hintText"
+                    Margin="0,0,0,12"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap" />
 
-                    <TextBlock
-                        x:Name="_statusText"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap"
-                        Visibility="Collapsed" />
-                </StackPanel>
-            </ScrollViewer>
+                <TextBlock
+                    x:Name="_statusText"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    TextWrapping="Wrap"
+                    Visibility="Collapsed" />
+            </StackPanel>
 
             <Grid
                 Grid.Row="1"
