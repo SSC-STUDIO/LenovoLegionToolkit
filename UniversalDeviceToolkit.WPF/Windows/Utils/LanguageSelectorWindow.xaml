@@ -1,7 +1,8 @@
-<wpfui:FluentWindow
+<local:BaseWindow
     x:Class="UniversalDeviceToolkit.WPF.Windows.Utils.LanguageSelectorWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:UniversalDeviceToolkit.WPF.Windows"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
@@ -18,8 +19,7 @@
     ResizeMode="NoResize"
     Topmost="True"
     WindowStartupLocation="CenterScreen"
-    Background="{DynamicResource ApplicationBackgroundBrush}"
-    WindowBackdropType="None">
+    Background="{DynamicResource ApplicationBackgroundBrush}">
 
     <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
         <Grid.RowDefinitions>
@@ -144,4 +144,4 @@
         </Grid>
     </Grid>
 
-</wpfui:FluentWindow>
+</local:BaseWindow>

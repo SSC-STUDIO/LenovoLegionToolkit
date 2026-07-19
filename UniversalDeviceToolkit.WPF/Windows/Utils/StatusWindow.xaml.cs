@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -188,7 +188,6 @@ public partial class StatusWindow
 
         WindowStyle = System.Windows.WindowStyle.None;
         WindowStartupLocation = WindowStartupLocation.Manual;
-        WindowBackdropType = WindowBackdropType.None;
         ResizeMode = ResizeMode.NoResize;
         SizeToContent = SizeToContent.WidthAndHeight;
 

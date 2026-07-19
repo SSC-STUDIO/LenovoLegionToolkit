@@ -6,11 +6,10 @@ using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
-public partial class CompatibilityCheckErrorWindow : FluentWindow
+public partial class CompatibilityCheckErrorWindow : BaseWindow
 {
     private readonly Exception _exception;
     private readonly string _logFilePath;
