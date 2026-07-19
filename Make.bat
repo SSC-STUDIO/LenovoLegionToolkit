@@ -54,6 +54,10 @@ IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
+REM Stage plugin runtime DLLs (SDK/Shared) from the sibling plugins repo before the payload assert.
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-PluginRuntimeAssets.ps1" -DestinationPath "%BUILD_DIR%" -Configuration Release
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
 CALL :PRUNE_RELEASE_OUTPUT "%BUILD_DIR%"
