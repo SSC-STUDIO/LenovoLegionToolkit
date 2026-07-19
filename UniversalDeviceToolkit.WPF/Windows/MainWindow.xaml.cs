@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -249,7 +249,7 @@ public partial class MainWindow
 
     private void MainWindow_SourceInitialized(object? sender, EventArgs e)
     {
-        RestoreSize();
+        RestoreWindowPlacement();
 
         if (PresentationSource.FromVisual(this) is HwndSource source)
             source.AddHook(MainWindowHwndSourceHook);
@@ -681,6 +681,90 @@ public partial class MainWindow
         }
     }
 
+    private void RestoreWindowPlacement()
+    {
+        var placement = _applicationSettings.Store.WindowPlacement;
+
+        // Settings written before position persistence only carry WindowSize.
+        if (!placement.HasValue)
+        {
+            RestoreSize();
+            return;
+        }
+
+        var saved = placement.Value;
+
+        // Hand-edited / corrupt settings can carry non-finite or non-positive values.
+        if (!IsValidPlacement(saved))
+            return;
+
+        // Min-size floor (MinWidth/MinHeight = 1024x640) applied before any clamping.
+        var width = Math.Max(MinWidth, saved.Width);
+        var height = Math.Max(MinHeight, saved.Height);
+
+        ScreenHelper.UpdateScreenInfos();
+
+        var center = new Point(saved.Left + width / 2, saved.Top + height / 2);
+        if (!IsOnConnectedDisplay(center))
+        {
+            // Saved position sits on a disconnected display (e.g. unplugged monitor) —
+            // restore the size centered on the primary work area instead of losing the window.
+            Width = width;
+            Height = height;
+            CenterOnPrimaryScreen();
+            ApplySavedWindowState(saved.IsMaximized);
+            return;
+        }
+
+        // Clamp into the current virtual screen so resolution/DPI changes or a shifted
+        // virtual-screen origin can never push the window past the reachable edge.
+        var bounds = ClampToVirtualScreen(new Rect(saved.Left, saved.Top, width, height));
+        Left = bounds.Left;
+        Top = bounds.Top;
+        Width = bounds.Width;
+        Height = bounds.Height;
+
+        ApplySavedWindowState(saved.IsMaximized);
+    }
+
+    private static bool IsValidPlacement(Lib.WindowPlacement placement) =>
+        double.IsFinite(placement.Left)
+        && double.IsFinite(placement.Top)
+        && double.IsFinite(placement.Width)
+        && double.IsFinite(placement.Height)
+        && placement.Width > 0
+        && placement.Height > 0;
+
+    private static bool IsOnConnectedDisplay(Point point)
+    {
+        foreach (var screen in ScreenHelper.GetScreensSnapshot())
+        {
+            if (screen.WorkArea.Contains(point))
+                return true;
+        }
+
+        return false;
+    }
+
+    private static Rect ClampToVirtualScreen(Rect bounds)
+    {
+        var width = Math.Min(bounds.Width, SystemParameters.VirtualScreenWidth);
+        var height = Math.Min(bounds.Height, SystemParameters.VirtualScreenHeight);
+        var left = Math.Clamp(bounds.Left, SystemParameters.VirtualScreenLeft,
+            SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth - width);
+        var top = Math.Clamp(bounds.Top, SystemParameters.VirtualScreenTop,
+            SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight - height);
+        return new Rect(left, top, width, height);
+    }
+
+    private void ApplySavedWindowState(bool isMaximized)
+    {
+        // Only Maximized is ever restored — reopening straight into Minimized would
+        // send the window to the tray and look like the app failed to launch.
+        if (isMaximized)
+            WindowState = WindowState.Maximized;
+    }
+
     private void RestoreSize()
     {
         if (!_applicationSettings.Store.WindowSize.HasValue)
@@ -689,6 +773,11 @@ public partial class MainWindow
         Width = Math.Max(MinWidth, _applicationSettings.Store.WindowSize.Value.Width);
         Height = Math.Max(MinHeight, _applicationSettings.Store.WindowSize.Value.Height);
 
+        CenterOnPrimaryScreen();
+    }
+
+    private void CenterOnPrimaryScreen()
+    {
         ScreenHelper.UpdateScreenInfos();
         var primaryScreen = ScreenHelper.PrimaryScreen;
 
@@ -702,17 +791,23 @@ public partial class MainWindow
 
     private async Task SaveSizeAsync()
     {
-        _applicationSettings.Store.WindowSize = WindowState != WindowState.Normal
-            ? new(RestoreBounds.Width, RestoreBounds.Height)
-            : new(Width, Height);
+        // RestoreBounds is the normal-state rect when the window is maximized/minimized.
+        var bounds = WindowState != WindowState.Normal
+            ? RestoreBounds
+            : new Rect(Left, Top, Width, Height);
+
+        _applicationSettings.Store.WindowSize = new(bounds.Width, bounds.Height);
+        _applicationSettings.Store.WindowPlacement = new Lib.WindowPlacement(
+            bounds.Left, bounds.Top, bounds.Width, bounds.Height,
+            WindowState == WindowState.Maximized);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Saving window size asynchronously...");
+            Log.Instance.Trace($"Saving window placement asynchronously...");
 
         await _applicationSettings.SynchronizeStoreAsync();
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Window size saved asynchronously.");
+            Log.Instance.Trace($"Window placement saved asynchronously.");
     }
 
     private void BringToForeground() => WindowExtensions.BringToForeground(this);

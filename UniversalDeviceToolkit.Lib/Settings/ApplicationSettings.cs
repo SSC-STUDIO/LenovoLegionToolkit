@@ -49,6 +49,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool MinimizeToTray { get; set; } = true;
         public bool MinimizeOnClose { get; set; }
         public WindowSize? WindowSize { get; set; }
+        public WindowPlacement? WindowPlacement { get; set; }
         public bool DontShowNotifications { get; set; }
         public NotificationPosition NotificationPosition { get; set; } = NotificationPosition.BottomRight;
         public NotificationDuration NotificationDuration { get; set; } = NotificationDuration.Normal;

@@ -1133,3 +1133,16 @@ public readonly struct WindowSize(double width, double height)
     public double Width { get; } = width;
     public double Height { get; } = height;
 }
+
+/// <summary>
+/// Persisted main-window restore bounds (WPF DIPs) plus whether the window was maximized.
+/// Minimized is intentionally never persisted — only normal bounds and the maximized flag.
+/// </summary>
+public readonly struct WindowPlacement(double left, double top, double width, double height, bool isMaximized)
+{
+    public double Left { get; } = left;
+    public double Top { get; } = top;
+    public double Width { get; } = width;
+    public double Height { get; } = height;
+    public bool IsMaximized { get; } = isMaximized;
+}

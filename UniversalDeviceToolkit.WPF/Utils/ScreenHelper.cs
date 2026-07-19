@@ -24,6 +24,13 @@ public static class ScreenHelper
         }
     }
 
+    /// <summary>Thread-safe snapshot of the currently connected displays (work areas in WPF DIPs).</summary>
+    public static ScreenInfo[] GetScreensSnapshot()
+    {
+        lock (_screenLock)
+            return Screens.ToArray();
+    }
+
     public static void UpdateScreenInfos()
     {
         lock (_screenLock)
