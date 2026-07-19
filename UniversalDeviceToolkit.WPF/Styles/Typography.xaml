@@ -115,4 +115,45 @@
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
+
+    <!-- Dense wrapped hint/caption text (promoted from NetworkAccelerationControl). -->
+    <Style x:Key="AppMutedTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeDenseCaption}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="LineHeight" Value="15" />
+    </Style>
+
+    <!-- Compact in-card section heading (smaller than AppSubsectionTitleTextBlockStyle). -->
+    <Style x:Key="AppSectionLabelTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Margin" Value="0,0,0,2" />
+    </Style>
+
+    <!-- Label inside AppStatusPillBorderStyle. -->
+    <Style x:Key="AppStatusPillTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineHeight" Value="16" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+
+    <!-- Metric tile readout value (pairs with AppMetricTileBorderStyle). -->
+    <Style x:Key="AppMetricValueTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSizePageDescription}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+    </Style>
+
+    <Style x:Key="AppMetricUnitTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource AppMutedTextBlockStyle}">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeMicro}" />
+        <Setter Property="Margin" Value="4,0,0,2" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+    </Style>
 </ResourceDictionary>

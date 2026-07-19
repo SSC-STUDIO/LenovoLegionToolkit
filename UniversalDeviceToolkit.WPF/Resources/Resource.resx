@@ -3867,6 +3867,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Only enabled groups are applied by PAC (system proxy). All groups stay off by default.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>No domain groups</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>No acceleration targets are configured. Built-in default groups are added automatically at startup.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Click to select groups · double-click to enable/disable · use the bar to favorite or start selected.</value>
   </data>

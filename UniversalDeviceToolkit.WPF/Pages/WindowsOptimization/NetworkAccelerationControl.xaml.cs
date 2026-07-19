@@ -131,11 +131,13 @@ public partial class NetworkAccelerationControl : UserControl
             return;
 
         _domainGroupsPanel.Items.Clear();
+        // No UI-side seeding: rendering must not mutate config. The service seeds built-in
+        // defaults at startup (EnsureBuiltinDomainGroups); an empty list shows the EmptyState.
         var groups = _acceleration.Config.DomainGroups;
         if (groups is null || groups.Count == 0)
         {
-            _acceleration.Config.DomainGroups = BuiltinDomainGroups.CreateDefaults();
-            groups = _acceleration.Config.DomainGroups;
+            RefreshSelectionBar();
+            return;
         }
 
         // Favorites first (Watt Toolkit pin), then original order.
@@ -741,6 +743,16 @@ public partial class NetworkAccelerationControl : UserControl
     private void RefreshDomainTiles()
     {
         var groups = _acceleration.Config.DomainGroups ?? [];
+
+        // Empty state swaps with the tiles panel (inverse visibility).
+        var hasGroups = groups.Count > 0;
+        if (_domainGroupsPanel is not null)
+            _domainGroupsPanel.Visibility = hasGroups ? Visibility.Visible : Visibility.Collapsed;
+        if (_domainGroupsEmptyState is not null)
+            _domainGroupsEmptyState.Visibility = hasGroups ? Visibility.Collapsed : Visibility.Visible;
+        if (_domainGroupsText is not null)
+            _domainGroupsText.Visibility = hasGroups ? Visibility.Visible : Visibility.Collapsed;
+
         if (_domainGroupsPanel is not null)
         {
             foreach (var tile in _domainGroupsPanel.Items.OfType<Border>())

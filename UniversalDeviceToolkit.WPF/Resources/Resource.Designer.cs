@@ -10117,6 +10117,8 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string NetworkAccelerationPage_DomainGroupsSummary { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsSummary", resourceCulture); } }
         public static string NetworkAccelerationPage_ModeHint { get { return ResourceManager.GetString("NetworkAccelerationPage_ModeHint", resourceCulture); } }
         public static string NetworkAccelerationPage_DomainGroupsHint { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsHint", resourceCulture); } }
+        public static string NetworkAccelerationPage_DomainGroupsEmptyTitle { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsEmptyTitle", resourceCulture); } }
+        public static string NetworkAccelerationPage_DomainGroupsEmptyDescription { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsEmptyDescription", resourceCulture); } }
         public static string NetworkAccelerationPage_SelectionHint { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionHint", resourceCulture); } }
         public static string NetworkAccelerationPage_SelectionBar { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionBar", resourceCulture); } }
         public static string NetworkAccelerationPage_SelectionCountZero { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionCountZero", resourceCulture); } }

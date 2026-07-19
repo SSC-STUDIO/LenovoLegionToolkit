@@ -20,18 +20,6 @@
             <Setter Property="SnapsToDevicePixels" Value="True" />
             <Setter Property="UseLayoutRounding" Value="True" />
         </Style>
-        <Style x:Key="NaSectionLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Setter Property="Margin" Value="0,0,0,2" />
-        </Style>
-        <Style x:Key="NaMutedStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeDenseCaption}" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="LineHeight" Value="15" />
-        </Style>
         <!-- Segmented selection-bar action cell: tag/chip look (Watt Toolkit reference). -->
         <Style x:Key="NaSelectionActionButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="36" />
@@ -78,65 +66,6 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <!--
-          Content-hugging status chip. Keep HorizontalAlignment=Left — Stretch + CornerRadius=999
-          paints a full-width capsule streak across the page.
-        -->
-        <Style x:Key="NaStatusPillStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
-            <Setter Property="Padding" Value="9,4,11,4" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-            <Setter Property="UseLayoutRounding" Value="True" />
-        </Style>
-        <Style x:Key="NaStatusDotStyle" TargetType="Ellipse">
-            <Setter Property="Width" Value="7" />
-            <Setter Property="Height" Value="7" />
-            <Setter Property="Margin" Value="0,0,7,0" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-        </Style>
-        <Style x:Key="NaStatusTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="LineHeight" Value="16" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="TextWrapping" Value="NoWrap" />
-            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-        </Style>
-        <Style x:Key="NaMetricTileStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
-            <Setter Property="Padding" Value="10,8" />
-            <Setter Property="Margin" Value="0,0,6,6" />
-            <Setter Property="MinWidth" Value="108" />
-            <Setter Property="MinHeight" Value="56" />
-            <Setter Property="SnapsToDevicePixels" Value="True" />
-        </Style>
-        <Style x:Key="NaMetricValueStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizePageDescription}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Setter Property="VerticalAlignment" Value="Bottom" />
-        </Style>
-        <Style x:Key="NaMetricUnitStyle" TargetType="TextBlock" BasedOn="{StaticResource NaMutedStyle}">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeMicro}" />
-            <Setter Property="Margin" Value="4,0,0,2" />
-            <Setter Property="VerticalAlignment" Value="Bottom" />
-        </Style>
-        <Style x:Key="NaDividerStyle" TargetType="Border">
-            <Setter Property="Height" Value="1" />
-            <Setter Property="Margin" Value="0,10,0,10" />
-            <Setter Property="Background" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="Opacity" Value="0.4" />
-        </Style>
         <Style x:Key="NaPrimaryButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
             <Setter Property="MinWidth" Value="88" />
             <Setter Property="MinHeight" Value="32" />
@@ -176,19 +105,19 @@
                 -->
                 <Border
                     x:Name="_statusPill"
-                    Style="{StaticResource NaStatusPillStyle}"
+                    Style="{StaticResource AppStatusPillBorderStyle}"
                     HorizontalAlignment="Left"
                     MaxWidth="420"
                     AutomationProperties.AutomationId="NetworkAccelerationStatusPill">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse
                             x:Name="_statusDot"
-                            Style="{StaticResource NaStatusDotStyle}"
+                            Style="{StaticResource AppStatusDotEllipseStyle}"
                             Fill="{DynamicResource TextFillColorSecondaryBrush}"
                             AutomationProperties.AutomationId="NetworkAccelerationStatusIndicator" />
                         <TextBlock
                             x:Name="_statusText"
-                            Style="{StaticResource NaStatusTextStyle}"
+                            Style="{StaticResource AppStatusPillTextBlockStyle}"
                             Text="{x:Static resources:Resource.NetworkAccelerationPage_State_Idle}"
                             AutomationProperties.AutomationId="NetworkAccelerationStatusText" />
                     </StackPanel>
@@ -197,7 +126,7 @@
                 <TextBlock
                     x:Name="_modeSummaryText"
                     Margin="2,5,0,0"
-                    Style="{StaticResource NaMutedStyle}"
+                    Style="{StaticResource AppMutedTextBlockStyle}"
                     Text="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="NoWrap" />
@@ -243,71 +172,71 @@
                         SelectionChanged="ModeComboBox_SelectionChanged" />
                 </Grid>
 
-                <Border Style="{StaticResource NaDividerStyle}" />
+                <Border Style="{StaticResource AppDividerBorderStyle}" />
 
                 <!-- 2. Metrics — dense wrap tiles -->
                 <TextBlock
                     x:Name="_metricsHeadingText"
-                    Style="{StaticResource NaSectionLabelStyle}"
+                    Style="{StaticResource AppSectionLabelTextBlockStyle}"
                     Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricsHeading}" />
                 <WrapPanel Margin="0,4,0,0">
-                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationLatencyMetric">
+                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationLatencyMetric">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency}" />
+                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency}" />
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock x:Name="_metricLatencyValue" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                                <TextBlock x:Name="_metricLatencyValue" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
                                 <TextBlock
                                     x:Name="_metricLatencyUnit"
-                                    Style="{StaticResource NaMetricUnitStyle}"
+                                    Style="{StaticResource AppMetricUnitTextBlockStyle}"
                                     Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Ms}" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationUploadMetric">
+                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationUploadMetric">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Upload}" />
+                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Upload}" />
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock x:Name="_metricUploadValue" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                                <TextBlock x:Name="_metricUploadValue" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
                                 <TextBlock
-                                    Style="{StaticResource NaMetricUnitStyle}"
+                                    Style="{StaticResource AppMetricUnitTextBlockStyle}"
                                     Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Rate}" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationDownloadMetric">
+                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationDownloadMetric">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Download}" />
+                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Download}" />
                             <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock x:Name="_metricDownloadValue" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                                <TextBlock x:Name="_metricDownloadValue" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
                                 <TextBlock
-                                    Style="{StaticResource NaMetricUnitStyle}"
+                                    Style="{StaticResource AppMetricUnitTextBlockStyle}"
                                     Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Rate}" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationConnectionsMetric">
+                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationConnectionsMetric">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Connections}" />
-                            <TextBlock x:Name="_metricConnectionsValue" Margin="0,4,0,0" Style="{StaticResource NaMetricValueStyle}" Text="—" MinWidth="22" />
+                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Connections}" />
+                            <TextBlock x:Name="_metricConnectionsValue" Margin="0,4,0,0" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource NaMetricTileStyle}" AutomationProperties.AutomationId="NetworkAccelerationRulesMetric">
+                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationRulesMetric">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource NaMutedStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Rules}" />
-                            <TextBlock x:Name="_metricRulesValue" Margin="0,4,0,0" Style="{StaticResource NaMetricValueStyle}" Text="0" MinWidth="22" />
+                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Rules}" />
+                            <TextBlock x:Name="_metricRulesValue" Margin="0,4,0,0" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="0" MinWidth="22" />
                         </StackPanel>
                     </Border>
                 </WrapPanel>
 
-                <Border Style="{StaticResource NaDividerStyle}" />
+                <Border Style="{StaticResource AppDividerBorderStyle}" />
 
                 <!-- 3. Acceleration targets -->
                 <TextBlock
-                    Style="{StaticResource NaSectionLabelStyle}"
+                    Style="{StaticResource AppSectionLabelTextBlockStyle}"
                     Text="{x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading}" />
                 <TextBlock
                     Margin="0,0,0,6"
-                    Style="{StaticResource NaMutedStyle}"
+                    Style="{StaticResource AppMutedTextBlockStyle}"
                     Text="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsHint}" />
                 <ItemsControl
                     x:Name="_domainGroupsPanel"
@@ -318,16 +247,25 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
+                <!-- Empty state swaps with _domainGroupsPanel (inverse visibility set in RefreshDomainTiles). -->
+                <custom:EmptyState
+                    x:Name="_domainGroupsEmptyState"
+                    Margin="0,8,0,8"
+                    Icon="Globe24"
+                    Title="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsEmptyTitle}"
+                    Description="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsEmptyDescription}"
+                    Visibility="Collapsed"
+                    AutomationProperties.AutomationId="NetworkAccelerationDomainGroupsEmptyState" />
                 <TextBlock
                     x:Name="_domainGroupsText"
                     Margin="0,2,0,0"
-                    Style="{StaticResource NaMutedStyle}" />
+                    Style="{StaticResource AppMutedTextBlockStyle}" />
                 <TextBlock
                     Margin="0,4,0,0"
-                    Style="{StaticResource NaMutedStyle}"
+                    Style="{StaticResource AppMutedTextBlockStyle}"
                     Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionHint}" />
 
-                <Border Style="{StaticResource NaDividerStyle}" />
+                <Border Style="{StaticResource AppDividerBorderStyle}" />
 
                 <!-- 4. Diagnostics -->
                 <Grid AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsCard">
@@ -337,10 +275,10 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" Margin="0,0,8,0" VerticalAlignment="Center">
                         <TextBlock
-                            Style="{StaticResource NaSectionLabelStyle}"
+                            Style="{StaticResource AppSectionLabelTextBlockStyle}"
                             Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHeading}" />
                         <TextBlock
-                            Style="{StaticResource NaMutedStyle}"
+                            Style="{StaticResource AppMutedTextBlockStyle}"
                             Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHint}" />
                     </StackPanel>
                     <wpfui:Button
@@ -368,7 +306,7 @@
                     Visibility="Collapsed"
                     AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsText" />
 
-                <Border Style="{StaticResource NaDividerStyle}" />
+                <Border Style="{StaticResource AppDividerBorderStyle}" />
 
                 <!-- 5. Advanced -->
                 <Expander
@@ -384,7 +322,7 @@
                     </Expander.Header>
                     <StackPanel Margin="0,8,0,0">
                         <TextBlock
-                            Style="{StaticResource NaMutedStyle}"
+                            Style="{StaticResource AppMutedTextBlockStyle}"
                             Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedBody}" />
                         <TextBlock
                             x:Name="_modeText"
@@ -412,7 +350,7 @@
                                     Text="{x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading}" />
                                 <TextBlock
                                     Margin="0,4,0,8"
-                                    Style="{StaticResource NaMutedStyle}"
+                                    Style="{StaticResource AppMutedTextBlockStyle}"
                                     Text="{x:Static resources:Resource.NetworkAccelerationPage_RestoreHint}" />
                                 <wpfui:Button
                                     x:Name="_restoreButton"
