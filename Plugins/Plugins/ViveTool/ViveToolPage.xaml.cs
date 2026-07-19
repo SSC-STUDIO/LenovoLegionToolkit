@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Plugins;
@@ -1263,6 +1264,32 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
     }
 
+    // V5 (Docs/VISUAL_DESIGN_RECOMMENDATIONS.md): the single sanctioned micro-animation in the
+    // plugin ecosystem — plugins otherwise add no shadows/animations (Docs/CODING_STANDARDS.md,
+    // 视觉词汇 section). 150ms + CubicEase Out matches the host AnimationTokens Fast/Medium feel;
+    // plugins don't merge host animation tokens, so the duration is hardcoded here.
+    // WPF has no built-in ReducedMotion API, so there is no system setting to honor here.
+    private static void FadeIn(UIElement element)
+    {
+        var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(150)))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        element.BeginAnimation(UIElement.OpacityProperty, animation);
+    }
+
+    private static void ShowWithFade(UIElement element)
+    {
+        // Guard: don't restart the fade on an element that is already visible.
+        if (element.Visibility == Visibility.Visible)
+        {
+            return;
+        }
+
+        element.Visibility = Visibility.Visible;
+        FadeIn(element);
+    }
+
     private void UpdateLoadingVisibility()
     {
         if (!_isFeatureUiReady)
@@ -1270,8 +1297,16 @@ public partial class ViveToolPage : INotifyPropertyChanged
             return;
         }
 
-        _loadingPanel.Visibility = IsLoading ? Visibility.Visible : Visibility.Collapsed;
-        _featuresDataGrid.Visibility = IsLoading ? Visibility.Collapsed : Visibility.Visible;
+        if (IsLoading)
+        {
+            ShowWithFade(_loadingPanel);
+            _featuresDataGrid.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            _loadingPanel.Visibility = Visibility.Collapsed;
+            ShowWithFade(_featuresDataGrid);
+        }
     }
 
     private void UpdateFeatureSummary()
@@ -1317,13 +1352,13 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
         if (Features.Count == 0 && !IsLoading)
         {
-            _emptyStatePanel.Visibility = Visibility.Visible;
+            ShowWithFade(_emptyStatePanel);
             _featuresDataGrid.Visibility = Visibility.Collapsed;
         }
         else
         {
             _emptyStatePanel.Visibility = Visibility.Collapsed;
-            _featuresDataGrid.Visibility = Visibility.Visible;
+            ShowWithFade(_featuresDataGrid);
         }
     }
 
