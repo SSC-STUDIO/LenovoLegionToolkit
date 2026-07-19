@@ -13,7 +13,7 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="{StaticResource IconSizeMD}" />
             <Setter Property="Appearance" Value="Secondary" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
@@ -24,7 +24,7 @@
         </Style>
 
         <Style x:Key="PackageMetadataTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />

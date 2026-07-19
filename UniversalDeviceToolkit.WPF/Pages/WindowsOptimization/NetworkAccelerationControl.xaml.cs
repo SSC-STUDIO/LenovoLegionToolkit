@@ -231,7 +231,7 @@ public partial class NetworkAccelerationControl : UserControl
             Width = 140,
             MinHeight = 78,
             Margin = new Thickness(0, 0, 6, 6),
-            Padding = new Thickness(10, 8, 10, 8),
+            Padding = selected ? new Thickness(9, 7, 9, 7) : new Thickness(10, 8, 10, 8),
             // Token-aligned fallbacks: Control=12, Compact=8 (DesignTokens).
             CornerRadius = TryCornerRadius("CornerRadiusControl", 12),
             BorderThickness = new Thickness(selected ? 2 : 1),
@@ -725,6 +725,8 @@ public partial class NetworkAccelerationControl : UserControl
             RefreshPrimaryAction();
             if (_restoreButton is not null)
                 _restoreButton.IsEnabled = !_isBusy;
+            if (_busyRing is not null)
+                _busyRing.Visibility = _isBusy ? Visibility.Visible : Visibility.Collapsed;
             if (_diagnosticsButton is not null)
                 _diagnosticsButton.IsEnabled = !_isBusy;
             if (_domainGroupsPanel is not null)
@@ -752,6 +754,8 @@ public partial class NetworkAccelerationControl : UserControl
                 var selected = _selectedGroupIds.Contains(id);
 
                 tile.BorderThickness = new Thickness(selected ? 2 : 1);
+                // Compensate the thicker selected border so tile content never shifts by 1px.
+                tile.Padding = selected ? new Thickness(9, 7, 9, 7) : new Thickness(10, 8, 10, 8);
                 tile.Background = (Brush)FindResource(
                     selected || enabled ? "ControlFillColorSecondaryBrush" : "ControlFillColorDefaultBrush");
                 tile.BorderBrush = (Brush)FindResource(

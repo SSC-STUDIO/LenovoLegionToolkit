@@ -27,7 +27,7 @@
             <Setter Property="Padding" Value="18,8,18,9" />
             <Setter Property="MinHeight" Value="42" />
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallBody}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />

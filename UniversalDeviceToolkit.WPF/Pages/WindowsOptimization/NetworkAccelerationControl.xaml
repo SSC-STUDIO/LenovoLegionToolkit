@@ -21,13 +21,13 @@
             <Setter Property="UseLayoutRounding" Value="True" />
         </Style>
         <Style x:Key="NaSectionLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="Margin" Value="0,0,0,2" />
         </Style>
         <Style x:Key="NaMutedStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeDenseCaption}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="LineHeight" Value="15" />
@@ -73,7 +73,7 @@
         </Style>
         <Style x:Key="NaSelectionGlyphStyle" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol" />
-            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontSize" Value="{StaticResource IconSizeSM}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -101,7 +101,7 @@
             <Setter Property="SnapsToDevicePixels" Value="True" />
         </Style>
         <Style x:Key="NaStatusTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="LineHeight" Value="16" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -121,13 +121,13 @@
             <Setter Property="SnapsToDevicePixels" Value="True" />
         </Style>
         <Style x:Key="NaMetricValueStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizePageDescription}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
         </Style>
         <Style x:Key="NaMetricUnitStyle" TargetType="TextBlock" BasedOn="{StaticResource NaMutedStyle}">
-            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeMicro}" />
             <Setter Property="Margin" Value="4,0,0,2" />
             <Setter Property="VerticalAlignment" Value="Bottom" />
         </Style>
@@ -141,18 +141,18 @@
             <Setter Property="MinWidth" Value="88" />
             <Setter Property="MinHeight" Value="32" />
             <Setter Property="Padding" Value="12,4" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
         </Style>
         <Style x:Key="NaSecondaryButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
             <Setter Property="MinHeight" Value="30" />
             <Setter Property="Padding" Value="10,4" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
         </Style>
         <!-- Based on app-wide rounded ComboBox so the drop-down popup is not square. -->
         <Style x:Key="NaModeComboStyle" TargetType="ComboBox" BasedOn="{StaticResource AppComboBoxStyle}">
             <Setter Property="MinWidth" Value="168" />
             <Setter Property="MinHeight" Value="32" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
@@ -212,17 +212,25 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" MinWidth="160" />
                     </Grid.ColumnDefinitions>
-                    <wpfui:Button
-                        x:Name="_primaryActionButton"
-                        Grid.Column="0"
-                        Margin="0,0,8,0"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource NaPrimaryButtonStyle}"
-                        Appearance="Primary"
-                        AutomationProperties.AutomationId="NetworkAccelerationPrimaryActionButton"
-                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_Start}"
-                        Click="PrimaryActionButton_Click"
-                        Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}" />
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <wpfui:Button
+                            x:Name="_primaryActionButton"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource NaPrimaryButtonStyle}"
+                            Appearance="Primary"
+                            AutomationProperties.AutomationId="NetworkAccelerationPrimaryActionButton"
+                            AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_Start}"
+                            Click="PrimaryActionButton_Click"
+                            Content="{x:Static resources:Resource.NetworkAccelerationPage_Start}" />
+                        <wpfui:ProgressRing
+                            x:Name="_busyRing"
+                            Width="18"
+                            Height="18"
+                            IsIndeterminate="True"
+                            VerticalAlignment="Center"
+                            Visibility="Collapsed" />
+                    </StackPanel>
                     <ComboBox
                         x:Name="_modeComboBox"
                         Grid.Column="1"
@@ -354,8 +362,8 @@
                 <TextBlock
                     x:Name="_diagnosticsText"
                     Margin="0,6,0,0"
-                    FontSize="{StaticResource FontSizeMicro}"
-                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                    FontSize="{StaticResource FontSizeSmallCaption}"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     TextWrapping="Wrap"
                     Visibility="Collapsed"
                     AutomationProperties.AutomationId="NetworkAccelerationDiagnosticsText" />
