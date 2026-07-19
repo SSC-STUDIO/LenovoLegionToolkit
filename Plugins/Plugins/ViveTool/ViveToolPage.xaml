@@ -48,13 +48,18 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Disabled"
-                  PanningMode="VerticalOnly">
-        <StackPanel Margin="20">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
             <!-- Hero Header -->
-            <Border Margin="0,0,0,16"
+            <Border Grid.Row="0"
+                    Margin="0,0,0,16"
                     Padding="16,14"
                     CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -92,7 +97,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2"
-                                MinWidth="220"
+                                MinWidth="160"
                                 Margin="16,0,0,0"
                                 VerticalAlignment="Center">
                         <TextBlock Text="{Binding ViveToolStatusDescription}"
@@ -105,7 +110,6 @@
                                    AutomationProperties.AutomationId="ViveToolPathText"
                                    Margin="0,3,0,0"
                                    TextWrapping="Wrap"
-                                   TextTrimming="CharacterEllipsis"
                                    TextAlignment="Right"
                                    FontSize="11"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
@@ -114,7 +118,8 @@
             </Border>
 
             <!-- Warning Banner -->
-            <Border Margin="0,0,0,16"
+            <Border Grid.Row="1"
+                    Margin="0,0,0,16"
                     Padding="14,10"
                     CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
@@ -140,7 +145,8 @@
             </Border>
 
             <!-- Missing Tool Banner -->
-            <Border Margin="0,0,0,16"
+            <Border Grid.Row="2"
+                    Margin="0,0,0,16"
                     Padding="16,14"
                     CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource SystemFillColorCautionBackgroundBrush}"
@@ -183,7 +189,8 @@
             </Border>
 
             <!-- Search & Actions Toolbar -->
-            <Border Margin="0,0,0,12"
+            <Border Grid.Row="3"
+                    Margin="0,0,0,12"
                     Padding="12,10"
                     CornerRadius="{StaticResource PluginCornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"
@@ -267,7 +274,8 @@
             </Border>
 
             <!-- Feature Grid -->
-            <Grid Visibility="{Binding IsViveToolAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Grid.Row="4"
+                  Visibility="{Binding IsViveToolAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel x:Name="_loadingPanel"
                             AutomationProperties.AutomationId="ViveToolLoadingPanel"
                             HorizontalAlignment="Center"
@@ -295,8 +303,6 @@
                           HeadersVisibility="Column"
                           IsReadOnly="True"
                           ItemsSource="{Binding Features}"
-                          MaxHeight="700"
-                          MinHeight="360"
                           RowHeight="46"
                           RowStyle="{StaticResource FeatureRowStyle}"
                           ColumnHeaderHeight="36"
@@ -319,7 +325,8 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Id}"
                                             Header="{x:Static pluginRes:Resource.ViveTool_FeatureId}"
-                                            Width="110">
+                                            MinWidth="90"
+                                            Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
@@ -343,7 +350,8 @@
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding Status, Converter={StaticResource FeatureStatusConverter}}"
                                             Header="{x:Static pluginRes:Resource.ViveTool_Status}"
-                                            Width="110">
+                                            MinWidth="90"
+                                            Width="*">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="VerticalAlignment" Value="Center" />
@@ -362,7 +370,8 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTemplateColumn Header="{x:Static pluginRes:Resource.ViveTool_Actions}"
-                                                Width="230">
+                                                MinWidth="180"
+                                                Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel HorizontalAlignment="Center"
@@ -398,7 +407,7 @@
                             VerticalAlignment="Center"
                             Visibility="Collapsed">
                     <wpfui:SymbolIcon Symbol="Search24"
-                                      FontSize="26"
+                                      FontSize="{StaticResource PluginIconSizeLG}"
                                       HorizontalAlignment="Center"
                                       Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     <TextBlock Margin="0,12,0,0"
@@ -409,6 +418,5 @@
                 </StackPanel>
             </Grid>
 
-        </StackPanel>
-    </ScrollViewer>
+    </Grid>
 </UserControl>

@@ -276,8 +276,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             AutoGenerateColumns = false,
             IsReadOnly = true,
-            MinHeight = 360,
-            MaxHeight = 700,
             RowHeight = 46,
             ColumnHeaderHeight = 36,
             HeadersVisibility = DataGridHeadersVisibility.Column,
@@ -322,16 +320,30 @@ public partial class ViveToolPage : INotifyPropertyChanged
         _emptyStatePanel = new StackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 48, 0, 40),
             Visibility = Visibility.Collapsed
         };
         AutomationProperties.SetAutomationId(_emptyStatePanel, "ViveToolEmptyStatePanel");
+        _emptyStatePanel.Children.Add(new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = Wpf.Ui.Controls.SymbolRegular.Search24,
+            FontSize = Application.Current?.TryFindResource("PluginIconSizeLG") is double emptyStateIconSize
+                ? emptyStateIconSize
+                : 24,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Foreground = Application.Current?.TryFindResource("TextFillColorTertiaryBrush") as Brush
+                ?? Brushes.Gray
+        });
         _emptyStatePanel.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_NoFeaturesFound,
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
-            FontSize = 14
+            FontSize = 14,
+            Margin = new Thickness(0, 12, 0, 0),
+            Foreground = Application.Current?.TryFindResource("TextFillColorSecondaryBrush") as Brush
+                ?? Brushes.Gray
         });
 
         var searchRow = new Grid();
