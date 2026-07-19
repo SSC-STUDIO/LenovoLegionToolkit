@@ -354,7 +354,7 @@
                 <TextBlock
                     x:Name="_diagnosticsText"
                     Margin="0,6,0,0"
-                    FontSize="10"
+                    FontSize="{StaticResource FontSizeMicro}"
                     Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                     TextWrapping="Wrap"
                     Visibility="Collapsed"
@@ -369,7 +369,7 @@
                     AutomationProperties.AutomationId="NetworkAccelerationAdvancedExpander">
                     <Expander.Header>
                         <TextBlock
-                            FontSize="12"
+                            FontSize="{StaticResource FontSizeSmallCaption}"
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedHeading}" />
@@ -381,12 +381,12 @@
                         <TextBlock
                             x:Name="_modeText"
                             Margin="0,8,0,0"
-                            FontSize="12"
+                            FontSize="{StaticResource FontSizeSmallCaption}"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         <TextBlock
                             x:Name="_portText"
                             Margin="0,2,0,8"
-                            FontSize="12"
+                            FontSize="{StaticResource FontSizeSmallCaption}"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Border
@@ -398,7 +398,7 @@
                             CornerRadius="{StaticResource CornerRadiusControl}">
                             <StackPanel>
                                 <TextBlock
-                                    FontSize="12"
+                                    FontSize="{StaticResource FontSizeSmallCaption}"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading}" />

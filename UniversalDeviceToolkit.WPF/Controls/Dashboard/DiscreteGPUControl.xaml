@@ -61,7 +61,7 @@
                     Margin="8,0,0,0"
                     AutomationProperties.HelpText="{x:Static resources:Resource.Information}"
                     AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
-                    FontSize="20"
+                    FontSize="{StaticResource IconSizeCardGlyph}"
                     Icon="QuestionCircle24"
                     ToolTipService.InitialShowDelay="200"
                     ToolTipService.BetweenShowDelay="200"

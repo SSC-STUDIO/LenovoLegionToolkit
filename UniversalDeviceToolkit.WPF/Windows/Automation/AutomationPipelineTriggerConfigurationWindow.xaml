@@ -44,7 +44,7 @@
                 <TextBlock
                     Grid.Column="0"
                     VerticalAlignment="Center"
-                    FontSize="12"
+                    FontSize="{StaticResource FontSizeSmallCaption}"
                     IsHitTestVisible="False"
                     Text="{x:Static resources:Resource.AutomationPipelineTriggerConfigurationWindow_Title}" />
 

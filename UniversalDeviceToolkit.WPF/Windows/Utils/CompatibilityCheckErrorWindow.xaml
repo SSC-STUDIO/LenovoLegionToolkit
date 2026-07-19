@@ -52,7 +52,7 @@
                 Margin="0,0,20,0"
                 VerticalAlignment="Top">
                 <wpfui:SymbolIcon 
-                    FontSize="64" 
+                    FontSize="{StaticResource IconSizeHeroXXL}" 
                     Symbol="ErrorCircle24"
                     Foreground="{DynamicResource StatusCriticalBrush}" />
             </StackPanel>
@@ -90,7 +90,7 @@
                     <TextBlock
                         x:Name="_errorDetailsTextBlock"
                         FontFamily="Consolas, Courier New"
-                        FontSize="12"
+                        FontSize="{StaticResource FontSizeSmallCaption}"
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         TextWrapping="Wrap" />
                 </ScrollViewer>

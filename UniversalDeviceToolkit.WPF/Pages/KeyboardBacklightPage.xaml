@@ -46,7 +46,7 @@
                 <StackPanel x:Name="_content" Margin="0,0,8,0">
                 <TextBlock
                     x:Name="_noKeyboardsText"
-                    FontSize="14"
+                    FontSize="{StaticResource FontSizeCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="{x:Static resources:Resource.KeyboardBacklightPage_NoCompatibleKeyboardsFound}"
                     Visibility="Collapsed" />

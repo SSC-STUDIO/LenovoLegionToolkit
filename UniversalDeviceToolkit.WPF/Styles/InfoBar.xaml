@@ -63,7 +63,7 @@
                                         x:Name="SymbolIcon"
                                         VerticalAlignment="Top"
                                         Filled="True"
-                                        FontSize="16" />
+                                        FontSize="{StaticResource IconSizeCompact}" />
                                 </Border>
 
                                 <StackPanel
@@ -127,7 +127,7 @@
                                         PressedForeground="{DynamicResource TextFillColorPrimaryBrush}"
                                         IsEnabled="True"
                                         ToolTip="{x:Static resources:Resource.Close_Tooltip}">
-                                        <controls:SymbolIcon FontSize="14" Symbol="Dismiss20" />
+                                        <controls:SymbolIcon FontSize="{StaticResource IconSizeSM}" Symbol="Dismiss20" />
                                     </controls:Button>
                                 </Border>
                             </Grid>

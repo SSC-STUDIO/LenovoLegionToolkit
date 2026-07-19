@@ -30,7 +30,7 @@
                 <!-- Action title -->
                 <TextBlock
                     x:Name="_titleTextBlock"
-                    FontSize="20"
+                    FontSize="{StaticResource FontSizeMidHeader}"
                     FontWeight="Medium"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Margin="0,0,0,8"
@@ -39,7 +39,7 @@
                 <!-- Action description -->
                 <TextBlock
                     x:Name="_descriptionTextBlock"
-                    FontSize="14"
+                    FontSize="{StaticResource FontSizeCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Margin="0,0,0,20"
                     TextWrapping="Wrap" />
@@ -48,7 +48,7 @@
                 <wpfui:CardControl Margin="0,0,0,16">
                     <wpfui:CardControl.Header>
                         <TextBlock
-                            FontSize="16"
+                            FontSize="{StaticResource FontSizePageDescription}"
                             FontWeight="Medium"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{x:Static resources:Resource.ActionDetailsWindow_TechnicalDetails}" />

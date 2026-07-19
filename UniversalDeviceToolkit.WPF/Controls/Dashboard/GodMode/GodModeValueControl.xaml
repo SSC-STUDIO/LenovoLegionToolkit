@@ -43,7 +43,7 @@
                 <TextBlock
                     x:Name="_descriptionTextBlock"
                     Margin="0,2,0,0"
-                    FontSize="11"
+                    FontSize="{StaticResource FontSizeDenseCaption}"
                     LineHeight="14"
                     MaxHeight="28"
                     Opacity="0.78"
@@ -88,7 +88,7 @@
                 Click="ResetToDefaultButton_OnClick"
                 ToolTip="{x:Static resources:Resource.Default}">
                 <wpfui:Button.Icon>
-                    <wpfui:SymbolIcon FontSize="14" Symbol="ArrowClockwise24" />
+                    <wpfui:SymbolIcon FontSize="{StaticResource IconSizeSM}" Symbol="ArrowClockwise24" />
                 </wpfui:Button.Icon>
             </wpfui:Button>
         </Grid>

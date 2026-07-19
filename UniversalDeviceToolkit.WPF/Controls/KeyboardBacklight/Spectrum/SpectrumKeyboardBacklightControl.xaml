@@ -188,19 +188,19 @@
                     <wpfui:Button
                         Margin="0,0,0,8"
                         Click="SelectAll_Click"
-                        FontSize="20"
+                        FontSize="{StaticResource IconSizeCardGlyph}"
                         Icon="SelectAllOn24"
                         ToolTip="{x:Static resources:Resource.SpectrumKeyboardBacklightControl_SelectAll_ToolTip}" />
                     <wpfui:Button
                         Margin="0,0,0,8"
                         Click="DeselectAll_Click"
-                        FontSize="20"
+                        FontSize="{StaticResource IconSizeCardGlyph}"
                         Icon="SelectAllOff24"
                         ToolTip="{x:Static resources:Resource.SpectrumKeyboardBacklightControl_DeselectAll_ToolTip}" />
                     <wpfui:Button
                         Margin="0,0,0,8"
                         Click="SwitchKeyboardLayout_Click"
-                        FontSize="20"
+                        FontSize="{StaticResource IconSizeCardGlyph}"
                         Icon="ArrowRepeatAll24"
                         ToolTip="{x:Static resources:Resource.SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip}" />
 
@@ -220,7 +220,7 @@
                 <TextBlock
                     Grid.Column="0"
                     Focusable="True"
-                    FontSize="20"
+                    FontSize="{StaticResource FontSizeMidHeader}"
                     FontWeight="Medium"
                     Text="{x:Static resources:Resource.SpectrumKeyboardBacklightControl_Effects}" />
 

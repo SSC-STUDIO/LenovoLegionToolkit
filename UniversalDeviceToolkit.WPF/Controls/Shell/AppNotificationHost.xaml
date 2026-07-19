@@ -72,21 +72,21 @@
                                 Grid.Column="0"
                                 Width="28"
                                 Height="28"
-                                FontSize="20"
+                                FontSize="{StaticResource IconSizeCardGlyph}"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
                                 Symbol="{Binding IconSymbol}"
                                 Foreground="{Binding IconBrush}" />
                             <StackPanel Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center">
                                 <TextBlock
-                                    FontSize="13"
+                                    FontSize="{StaticResource FontSizeSmallBody}"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{Binding DisplayTitle}"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,2,0,0"
-                                    FontSize="12"
+                                    FontSize="{StaticResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding Message}"
                                     TextWrapping="Wrap"
@@ -101,7 +101,7 @@
                                 AutomationProperties.Name="{x:Static resources:Resource.AppNotificationHost_Close}"
                                 Click="CloseButton_Click"
                                 Tag="{Binding Id}">
-                                <wpfui:SymbolIcon Symbol="Dismiss24" FontSize="14" />
+                                <wpfui:SymbolIcon Symbol="Dismiss24" FontSize="{StaticResource IconSizeSM}" />
                             </wpfui:Button>
                             </Grid>
                     </Border>

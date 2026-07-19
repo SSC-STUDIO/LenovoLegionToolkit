@@ -11,13 +11,18 @@ internal static class DpiAwareTypography
 
     private static readonly IReadOnlyDictionary<string, double> BaseFontSizes = new Dictionary<string, double>
     {
+        ["FontSizeMicro"] = 10d,
+        ["FontSizeDenseCaption"] = 11d,
+        ["FontSizeSmallCaption"] = 12d,
         ["FontSizeSmallBody"] = 13d,
         ["FontSizeCaption"] = 14d,
         ["FontSizeBody"] = 15d,
         ["FontSizeTitleBarDeviceInfo"] = 16d,
         ["FontSizePageDescription"] = 16d,
         ["FontSizeSubsection"] = 17d,
+        ["FontSizeGaugeValue"] = 18d,
         ["FontSizeSection"] = 19d,
+        ["FontSizeMidHeader"] = 20d,
         ["FontSizeDisplaySection"] = 25d,
         ["FontSizePageTitle"] = 29d,
     };

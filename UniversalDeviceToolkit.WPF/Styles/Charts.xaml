@@ -41,13 +41,13 @@
                             <TextBlock
                                 x:Name="PART_ValueText"
                                 HorizontalAlignment="Center"
-                                FontSize="18"
+                                FontSize="{StaticResource FontSizeGaugeValue}"
                                 FontWeight="SemiBold"
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             <TextBlock
                                 x:Name="PART_CaptionText"
                                 HorizontalAlignment="Center"
-                                FontSize="11"
+                                FontSize="{StaticResource FontSizeDenseCaption}"
                                 Opacity="0.7"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>

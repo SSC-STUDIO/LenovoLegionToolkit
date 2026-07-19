@@ -58,7 +58,7 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock
                         x:Name="_pluginNameTextBlock"
-                        FontSize="14"
+                        FontSize="{StaticResource FontSizeCaption}"
                         FontWeight="SemiBold"
                         Text="{x:Static resources:Resource.PluginSettingsWindow_PluginName}"
                         TextTrimming="CharacterEllipsis"
@@ -73,7 +73,7 @@
                             Background="{DynamicResource ControlFillColorSecondaryBrush}">
                             <TextBlock
                                 x:Name="_pluginVersionTextBlock"
-                                FontSize="11"
+                                FontSize="{StaticResource FontSizeDenseCaption}"
                                 FontWeight="SemiBold"
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                 Text="v1.0.0" />
@@ -86,7 +86,7 @@
                             Background="{DynamicResource ControlFillColorSecondaryBrush}">
                             <TextBlock
                                 x:Name="_pluginAuthorTextBlock"
-                                FontSize="11"
+                                FontSize="{StaticResource FontSizeDenseCaption}"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="Author" />
                         </Border>
@@ -144,14 +144,14 @@
                     <StackPanel Margin="0,4,0,0">
                         <TextBlock
                             x:Name="_emptyStateTitleTextBlock"
-                            FontSize="13"
+                            FontSize="{StaticResource FontSizeSmallBody}"
                             FontWeight="SemiBold"
                             Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         <TextBlock
                             x:Name="_emptyStateHintTextBlock"
                             Margin="0,6,0,0"
-                            FontSize="12"
+                            FontSize="{StaticResource FontSizeSmallCaption}"
                             TextWrapping="Wrap"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}" />

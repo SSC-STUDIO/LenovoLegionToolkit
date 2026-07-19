@@ -52,7 +52,7 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Margin="0,0,16,0">
-                <wpfui:SymbolIcon FontSize="56" Symbol="ErrorCircle24" />
+                <wpfui:SymbolIcon FontSize="{StaticResource IconSizeHeroXL}" Symbol="ErrorCircle24" />
             </StackPanel>
 
             <ScrollViewer

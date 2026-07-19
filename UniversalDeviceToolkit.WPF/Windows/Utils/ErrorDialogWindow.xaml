@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
-            <ui:SymbolIcon Symbol="ErrorCircle24" FontSize="32" Foreground="{DynamicResource StatusCriticalBrush}" />
+            <ui:SymbolIcon Symbol="ErrorCircle24" FontSize="{StaticResource IconSizeXL}" Foreground="{DynamicResource StatusCriticalBrush}" />
             <TextBlock
                 x:Name="_titleText"
                 Text="{x:Static resources:Resource.UnexpectedException}"

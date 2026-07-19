@@ -112,7 +112,7 @@
                                     <ContentPresenter x:Name="ElementContentPresenter" HorizontalAlignment="Center">
                                         <ContentPresenter.Content>
                                             <TextBlock
-                                                FontSize="10"
+                                                FontSize="{StaticResource FontSizeMicro}"
                                                 Foreground="{TemplateBinding Foreground}"
                                                 Text="{TemplateBinding Content}"
                                                 TextAlignment="Center"
@@ -163,7 +163,7 @@
                                     Grid.Column="1"
                                     Margin="8,0,0,0"
                                     VerticalAlignment="Center"
-                                    FontSize="13"
+                                    FontSize="{StaticResource FontSizeSmallBody}"
                                     Foreground="{TemplateBinding Foreground}"
                                     Text="{TemplateBinding Content}"
                                     TextTrimming="CharacterEllipsis" />
@@ -489,12 +489,12 @@
                                 <Grid>
                                     <controls:SymbolIcon
                                         x:Name="PART_CollapseIcon"
-                                        FontSize="16"
+                                        FontSize="{StaticResource IconSizeCompact}"
                                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=wpfui:Button}}"
                                         Symbol="ChevronLeft24" />
                                     <controls:SymbolIcon
                                         x:Name="PART_ExpandIcon"
-                                        FontSize="16"
+                                        FontSize="{StaticResource IconSizeCompact}"
                                         Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=wpfui:Button}}"
                                         Symbol="ChevronRight24"
                                         Visibility="Collapsed" />
