@@ -33,10 +33,10 @@ IF %ERROR_COUNT% NEQ 0 GOTO END
 
 where iscc >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo Inno Setup compiler (iscc.exe) not found in PATH.
+    echo Inno Setup compiler iscc.exe not found in PATH.
     echo Download from https://jrsoftware.org/isdl.php
     set ERROR_COUNT=1
-    goto :BUILD_FAILED
+    goto :END
 )
 
 CALL :CLEAN_WORKSPACE
