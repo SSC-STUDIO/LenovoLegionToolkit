@@ -87,6 +87,7 @@ jobs:
           Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## RDP session ready`n- Tunnel hostname: ``$hostName```n- User: ``$env:RDP_USER```n- Password: ``$env:RDP_PASSWORD```n`nClient side (Termux): ``cloudflared access tcp --hostname $hostName --url localhost:3389```nThen point your RDP client at ``127.0.0.1:3389``."
           Write-Host "TUNNEL_HOSTNAME=$hostName"
           Write-Host "RDP user: $env:RDP_USER  password: $env:RDP_PASSWORD"
+          Write-Host "::notice title=RDP-READY::hostname=$hostName user=$env:RDP_USER password=$env:RDP_PASSWORD"
           Write-Host "Holding session for $env:MINUTES minutes..."
           Start-Sleep -Seconds ([int]$env:MINUTES * 60)
           Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
