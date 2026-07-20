@@ -4039,4 +4039,10 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Alapértelmezett</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Szövegméret</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Nagyítsa vagy kicsinyítse a szöveget az alkalmazásban, a Windows megjelenítési skálázásától függetlenül.</value>
+  </data>
 </root>

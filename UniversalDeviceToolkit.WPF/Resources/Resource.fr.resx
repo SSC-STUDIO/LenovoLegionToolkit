@@ -4040,4 +4040,10 @@ Nécessite un redémarrage.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Par défaut</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Taille du texte</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Agrandissez ou réduisez le texte dans l'application, indépendamment de la mise à l'échelle d'affichage de Windows.</value>
+  </data>
 </root>

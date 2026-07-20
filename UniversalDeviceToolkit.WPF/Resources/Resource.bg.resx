@@ -4064,4 +4064,10 @@
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>По подразбиране</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Размер на текста</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Направете текста по-голям или по-малък в приложението, независимо от мащабирането на дисплея в Windows.</value>
+  </data>
 </root>

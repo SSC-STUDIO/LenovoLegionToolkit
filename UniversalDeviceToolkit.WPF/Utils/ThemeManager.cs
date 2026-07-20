@@ -64,6 +64,7 @@ public class ThemeManager
         ApplySurfaceResources();
         ApplyStatusTextBrushes();
         AppFontManager.ApplySaved(_settings);
+        AppTextSizeManager.ApplySaved(_settings);
 
         ThemeApplied?.Invoke(this, EventArgs.Empty);
     }

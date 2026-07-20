@@ -4092,4 +4092,10 @@ Vyžaduje restart.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Výchozí</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Velikost textu</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Zvětšete nebo zmenšete text v aplikaci nezávisle na škálování zobrazení Windows.</value>
+  </data>
 </root>

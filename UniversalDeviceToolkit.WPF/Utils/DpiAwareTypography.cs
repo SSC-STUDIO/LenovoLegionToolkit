@@ -37,6 +37,41 @@ internal static class DpiAwareTypography
         return Math.Clamp(1d / Math.Sqrt(dpiScale), 0.96d, 1.04d);
     }
 
+    private static double _userScale = 1d;
+
+    /// <summary>
+    /// User-chosen text size multiplier (Settings → Appearance → Text size), orthogonal
+    /// to the DPI correction above. Clamped to 0.85–1.35. Setting it re-applies the
+    /// font-size tokens on every open window immediately (live, no restart).
+    /// </summary>
+    public static double UserScale
+    {
+        get => _userScale;
+        set
+        {
+            var clamped = Math.Clamp(value, 0.85d, 1.35d);
+            if (clamped.Equals(_userScale))
+                return;
+
+            _userScale = clamped;
+            ApplyToAllWindows();
+        }
+    }
+
+    /// <summary>
+    /// Re-applies typography on every open window using that window's current DPI,
+    /// so a UserScale change takes effect live. Safe before any window exists.
+    /// </summary>
+    public static void ApplyToAllWindows()
+    {
+        var app = Application.Current;
+        if (app is null)
+            return;
+
+        foreach (Window window in app.Windows)
+            Apply(window);
+    }
+
     public static void Apply(Window window)
     {
         var dpiScale = 1d;
@@ -55,7 +90,8 @@ internal static class DpiAwareTypography
 
     public static void Apply(ResourceDictionary resources, double dpiScale)
     {
-        var fontScale = GetFontScaleForDpi(dpiScale);
+        // DPI correction and the user text-size setting are independent knobs multiplied together.
+        var fontScale = GetFontScaleForDpi(dpiScale) * UserScale;
 
         foreach (var (key, baseSize) in BaseFontSizes)
             resources[key] = Math.Round(baseSize * fontScale, 1, MidpointRounding.AwayFromZero);

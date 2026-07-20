@@ -4037,4 +4037,10 @@ Necesită repornirea.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Implicit</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Dimensiune text</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Faceți textul mai mare sau mai mic în aplicație, independent de scalarea afișajului Windows.</value>
+  </data>
 </root>

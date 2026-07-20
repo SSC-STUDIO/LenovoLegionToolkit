@@ -4027,4 +4027,10 @@ Richiede il riavvio.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Predefinito</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Dimensione del testo</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Ingrandisci o riduci il testo nell'app, indipendentemente dal ridimensionamento dello schermo di Windows.</value>
+  </data>
 </root>

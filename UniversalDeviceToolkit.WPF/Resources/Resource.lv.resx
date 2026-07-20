@@ -4040,4 +4040,10 @@ Nepieciešama restartēšana.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Noklusējums</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Teksta lielums</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Padariet tekstu lietotnē lielāku vai mazāku neatkarīgi no Windows displeja mērogošanas.</value>
+  </data>
 </root>

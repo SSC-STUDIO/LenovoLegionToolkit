@@ -7320,6 +7320,24 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Text size.
+        /// </summary>
+        public static string SettingsPage_TextSize_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_TextSize_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Make text larger or smaller across the app, independent of Windows display scaling..
+        /// </summary>
+        public static string SettingsPage_TextSize_Description {
+            get {
+                return ResourceManager.GetString("SettingsPage_TextSize_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string SettingsPage_Title {

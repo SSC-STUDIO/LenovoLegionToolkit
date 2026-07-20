@@ -72,6 +72,7 @@ public partial class SettingsAppearanceControl
         _themeComboBox.SetItems(Enum.GetValues<Theme>(), _settings.Store.Theme, t => t.GetDisplayName());
         _themeStylePresetComboBox.SetItems(Enum.GetValues<ThemeStylePreset>(), _settings.Store.ThemeStylePreset, t => t.GetDisplayName());
         _fontComboBox.SetItems(Enum.GetValues<AppFontStyle>(), _settings.Store.AppFontStyle, GetFontStyleDisplayName);
+        _textSizeComboBox.SetItems(Enum.GetValues<AppTextSize>(), _settings.Store.AppTextSize, GetTextSizeDisplayName);
 
         UpdateAccentColorPicker();
         _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
@@ -81,6 +82,7 @@ public partial class SettingsAppearanceControl
         _themeComboBox.Visibility = Visibility.Visible;
         _themeStylePresetComboBox.Visibility = Visibility.Visible;
         _fontComboBox.Visibility = Visibility.Visible;
+        _textSizeComboBox.Visibility = Visibility.Visible;
 
         var language = await languageTask;
         _currentLanguage = language;
@@ -259,6 +261,29 @@ public partial class SettingsAppearanceControl
         AppFontStyle.DengXian => "DengXian",
         AppFontStyle.NotoSans => "Noto Sans CJK SC",
         _ => style.ToString()
+    };
+
+    private void TextSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_textSizeComboBox.TryGetSelectedItem(out AppTextSize state))
+            return;
+
+        _settings.Store.AppTextSize = state;
+        _settings.SynchronizeStore();
+        AppTextSizeManager.Apply(state);
+    }
+
+    // Percentages are culture-neutral; only the "Default" marker on 100% is localized.
+    private static object GetTextSizeDisplayName(AppTextSize size) => size switch
+    {
+        AppTextSize.Compact => "90%",
+        AppTextSize.Standard => $"100% ({Resource.SettingsPage_Font_Default})",
+        AppTextSize.Large => "110%",
+        AppTextSize.ExtraLarge => "125%",
+        _ => size.ToString()
     };
 
     private void AccentColorPicker_Changed(object sender, EventArgs e)

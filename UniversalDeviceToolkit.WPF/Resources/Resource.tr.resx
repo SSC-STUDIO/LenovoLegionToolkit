@@ -4041,4 +4041,10 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Varsayılan</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Metin boyutu</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Windows ekran ölçeklendirmesinden bağımsız olarak uygulamadaki metni büyütün veya küçültün.</value>
+  </data>
 </root>

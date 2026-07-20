@@ -4040,4 +4040,10 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Domyślna</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Rozmiar tekstu</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Powiększ lub pomniejsz tekst w aplikacji niezależnie od skalowania ekranu Windows.</value>
+  </data>
 </root>

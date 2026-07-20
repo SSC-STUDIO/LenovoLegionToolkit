@@ -1615,6 +1615,12 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Default</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Text size</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Make text larger or smaller across the app, independent of Windows display scaling.</value>
+  </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Appearance</value>
   </data>

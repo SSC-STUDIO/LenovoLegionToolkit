@@ -4040,4 +4040,10 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Mặc định</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Cỡ chữ</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Làm cho văn bản lớn hơn hoặc nhỏ hơn trong ứng dụng, độc lập với tỷ lệ hiển thị của Windows.</value>
+  </data>
 </root>

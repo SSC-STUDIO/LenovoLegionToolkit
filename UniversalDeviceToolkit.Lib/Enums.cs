@@ -742,6 +742,17 @@ public enum AppFontStyle
     NotoSans
 }
 
+// No Display attributes: option labels are percentages (with a localized "Default"
+// marker on Standard) resolved WPF-side, like AppFontStyle. The numeric scale
+// mapping (90/100/110/125%) lives in the WPF layer.
+public enum AppTextSize
+{
+    Compact,
+    Standard,
+    Large,
+    ExtraLarge
+}
+
 public enum TemperatureUnit
 {
     C,

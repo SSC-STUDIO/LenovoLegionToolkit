@@ -4049,4 +4049,10 @@ Fn 将会暂时解除锁定。</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>默认</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>文本大小</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>放大或缩小应用内的文本，独立于 Windows 显示缩放。</value>
+  </data>
 </root>

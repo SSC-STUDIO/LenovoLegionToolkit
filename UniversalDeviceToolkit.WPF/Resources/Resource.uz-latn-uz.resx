@@ -4419,4 +4419,10 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Standart</value>
   </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Matn o'lchami</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Windows displey masshtabidan qat'i nazar, ilovadagi matnni kattaroq yoki kichikroq qiling.</value>
+  </data>
 </root>
