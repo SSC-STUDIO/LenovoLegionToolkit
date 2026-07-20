@@ -37,8 +37,9 @@ jobs:
         shell: pwsh
         run: |
           $zip = "$env:RUNNER_TEMP\bore.zip"
-          $rel = (Invoke-RestMethod 'https://api.github.com/repos/ekzhang/bore/releases/latest').tag_name
-          Invoke-WebRequest "https://github.com/ekzhang/bore/releases/download/$rel/bore-x86_64-pc-windows-msvc.zip" -OutFile $zip
+          $asset = (Invoke-RestMethod 'https://api.github.com/repos/ekzhang/bore/releases/latest').assets | Where-Object { $_.name -like '*x86_64-pc-windows-msvc.zip' } | Select-Object -First 1
+          if (-not $asset) { throw 'no windows bore asset found in latest release' }
+          Invoke-WebRequest $asset.browser_download_url -OutFile $zip
           Expand-Archive $zip -DestinationPath "$env:RUNNER_TEMP\bore" -Force
           $boreExe = (Get-ChildItem "$env:RUNNER_TEMP\bore" -Recurse -Filter bore.exe | Select-Object -First 1).FullName
           "BORE_EXE=$boreExe" | Out-File $env:GITHUB_ENV -Append
