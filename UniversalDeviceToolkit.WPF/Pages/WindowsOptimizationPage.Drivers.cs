@@ -233,11 +233,11 @@ public partial class WindowsOptimizationPage
         if (_driverEmptyStateBorder is null)
             return;
 
-        if (_driverEmptyStateTitleTextBlock is not null)
-            _driverEmptyStateTitleTextBlock.Text = title;
-
-        if (_driverEmptyStateMessageTextBlock is not null)
-            _driverEmptyStateMessageTextBlock.Text = message;
+        if (_driverEmptyStateControl is not null)
+        {
+            _driverEmptyStateControl.Title = title;
+            _driverEmptyStateControl.Description = message;
+        }
 
         _driverEmptyStateBorder.Visibility = Visibility.Visible;
     }

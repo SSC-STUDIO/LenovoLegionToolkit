@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="UniversalDeviceToolkit.WPF.Pages.WindowsOptimizationPage"
     x:Name="PageRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -1119,37 +1119,15 @@
                                             x:Name="_driverEmptyStateBorder"
                                             AutomationProperties.AutomationId="WindowsOptimizationDriverEmptyState"
                                             Margin="0,4,0,12"
-                                            Padding="24"
                                             Background="{DynamicResource ControlFillColorDefaultBrush}"
                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                             BorderThickness="1"
                                             CornerRadius="{StaticResource CornerRadiusCard}"
                                             Visibility="Collapsed">
-                                            <StackPanel
+                                            <custom:EmptyState
+                                                x:Name="_driverEmptyStateControl"
                                                 MaxWidth="520"
-                                                HorizontalAlignment="Center">
-                                                <wpfui:SymbolIcon
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="{StaticResource IconSizeDialog}"
-                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                    Symbol="Search24" />
-                                                <TextBlock
-                                                    x:Name="_driverEmptyStateTitleTextBlock"
-                                                    Margin="0,10,0,0"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="{StaticResource FontSizeBody}"
-                                                    FontWeight="SemiBold"
-                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    TextAlignment="Center"
-                                                    TextWrapping="Wrap" />
-                                                <TextBlock
-                                                    x:Name="_driverEmptyStateMessageTextBlock"
-                                                    Margin="0,6,0,0"
-                                                    HorizontalAlignment="Center"
-                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                    TextAlignment="Center"
-                                                    TextWrapping="Wrap" />
-                                            </StackPanel>
+                                                Icon="Search24" />
                                         </Border>
 
                                         <StackPanel x:Name="_driverPackagesStackPanel" Margin="0,0,0,12" />
@@ -1648,12 +1626,12 @@
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                        <TextBlock
+                                        <custom:EmptyState
                                             Margin="0,0,0,12"
-                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                            Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Empty}">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
+                                            Icon="Delete24"
+                                            Title="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Empty}">
+                                            <custom:EmptyState.Style>
+                                                <Style BasedOn="{StaticResource {x:Type custom:EmptyState}}" TargetType="custom:EmptyState">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding CustomCleanupRules.Count}" Value="0">
@@ -1661,8 +1639,8 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                            </custom:EmptyState.Style>
+                                        </custom:EmptyState>
                                     </StackPanel>
                                 </ScrollViewer>
 
