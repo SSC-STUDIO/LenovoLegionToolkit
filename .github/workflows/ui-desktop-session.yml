@@ -1,0 +1,80 @@
+name: UI Desktop Session
+
+# Spin up a temporary interactive Windows desktop on a hosted runner,
+# reachable via a free Cloudflare quick tunnel (no account/token needed).
+# Use it to run UI smoke manually, capture screenshots, or record promo footage.
+
+on:
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: Session length in minutes (max 350)
+        required: false
+        default: '120'
+      build_run_id:
+        description: Build.yml run id to pre-download release-assets from (empty = latest successful)
+        required: false
+        default: ''
+
+jobs:
+  desktop:
+    runs-on: windows-2022
+    timeout-minutes: 360
+    steps:
+      - name: Enable Remote Desktop
+        shell: pwsh
+        run: |
+          Set-ItemProperty 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0
+          Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'
+          Set-ItemProperty 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -Name UserAuthentication -Value 0
+          $pw = -join ((48..57)+(65..90)+(97..122) | Get-Random -Count 16 | ForEach-Object {[char]$_})
+          net user runneradmin "$pw" | Out-Null
+          "RDP_USER=runneradmin" | Out-File $env:GITHUB_ENV -Append
+          "RDP_PASSWORD=$pw" | Out-File $env:GITHUB_ENV -Append
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "- RDP user: ``runneradmin``  password: ``$pw``"
+
+      - name: Install cloudflared
+        shell: pwsh
+        run: choco install cloudflared -y --no-progress
+
+      - name: Pre-download installer (optional)
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILD_RUN_ID: ${{ inputs.build_run_id }}
+        run: |
+          New-Item -ItemType Directory -Path C:\udt -Force | Out-Null
+          $rid = $env:BUILD_RUN_ID
+          if ([string]::IsNullOrWhiteSpace($rid)) {
+            $rid = (gh run list --repo ${{ github.repository }} --workflow Build.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+          }
+          if ($rid) {
+            gh run download $rid --repo ${{ github.repository }} --name release-assets --dir C:\udt
+            Get-ChildItem C:\udt -Recurse -File | Select-Object -First 10 | ForEach-Object { Write-Host "staged: $($_.FullName)" }
+          } else {
+            Write-Host "no successful Build run found; skipping installer staging"
+          }
+
+      - name: Start tunnel and hold session
+        shell: pwsh
+        env:
+          MINUTES: ${{ inputs.minutes }}
+        run: |
+          $log = "$env:RUNNER_TEMP\cloudflared.log"
+          $proc = Start-Process -FilePath cloudflared -ArgumentList 'tunnel','--url','tcp://localhost:3389','--logfile',"$log" -PassThru -WindowStyle Hidden
+          $url = $null
+          for ($i = 0; $i -lt 30 -and -not $url; $i++) {
+            Start-Sleep -Seconds 2
+            if (Test-Path $log) {
+              $m = Select-String -Path $log -Pattern 'https://[a-z0-9-]+\.trycloudflare\.com' | Select-Object -First 1
+              if ($m) { $url = $m.Matches[0].Value }
+            }
+          }
+          if (-not $url) { Get-Content $log -ErrorAction SilentlyContinue; throw 'cloudflared did not produce a tunnel URL' }
+          $hostName = $url -replace '^https://',''
+          Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "## RDP session ready`n- Tunnel hostname: ``$hostName```n- User: ``$env:RDP_USER```n- Password: ``$env:RDP_PASSWORD```n`nClient side (Termux): ``cloudflared access tcp --hostname $hostName --url localhost:3389```nThen point your RDP client at ``127.0.0.1:3389``."
+          Write-Host "TUNNEL_HOSTNAME=$hostName"
+          Write-Host "RDP user: $env:RDP_USER  password: $env:RDP_PASSWORD"
+          Write-Host "Holding session for $env:MINUTES minutes..."
+          Start-Sleep -Seconds ([int]$env:MINUTES * 60)
+          Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
