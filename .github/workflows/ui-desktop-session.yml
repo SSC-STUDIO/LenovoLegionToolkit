@@ -46,14 +46,20 @@ jobs:
           New-Item -ItemType Directory -Path C:\udt -Force | Out-Null
           $rid = $env:BUILD_RUN_ID
           if ([string]::IsNullOrWhiteSpace($rid)) {
-            $rid = (gh run list --repo ${{ github.repository }} --workflow Build.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId')
+            for ($i = 0; $i -lt 5 -and -not $rid; $i++) {
+              $rid = (gh run list --repo ${{ github.repository }} --workflow Build.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId' 2>$null)
+              if (-not $rid) { Start-Sleep -Seconds 10 }
+            }
           }
           if ($rid) {
-            gh run download $rid --repo ${{ github.repository }} --name release-assets --dir C:\udt
-            Get-ChildItem C:\udt -Recurse -File | Select-Object -First 10 | ForEach-Object { Write-Host "staged: $($_.FullName)" }
+            gh run download $rid --repo ${{ github.repository }} --name release-assets --dir C:\udt 2>$null
+            Get-ChildItem C:\udt -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 10 | ForEach-Object { Write-Host "staged: $($_.FullName)" }
           } else {
             Write-Host "no successful Build run found; skipping installer staging"
           }
+          # Staging is best-effort: never fail the session over it.
+          $global:LASTEXITCODE = 0
+          exit 0
 
       - name: Start tunnel and hold session
         shell: pwsh
@@ -61,14 +67,20 @@ jobs:
           MINUTES: ${{ inputs.minutes }}
         run: |
           $log = "$env:RUNNER_TEMP\cloudflared.log"
-          $proc = Start-Process -FilePath cloudflared -ArgumentList 'tunnel','--url','tcp://localhost:3389','--logfile',"$log" -PassThru -WindowStyle Hidden
           $url = $null
-          for ($i = 0; $i -lt 30 -and -not $url; $i++) {
-            Start-Sleep -Seconds 2
-            if (Test-Path $log) {
-              $m = Select-String -Path $log -Pattern 'https://[a-z0-9-]+\.trycloudflare\.com' | Select-Object -First 1
-              if ($m) { $url = $m.Matches[0].Value }
+          foreach ($attempt in 1..2) {
+            $proc = Start-Process -FilePath cloudflared -ArgumentList 'tunnel','--url','tcp://localhost:3389','--logfile',"$log" -PassThru -WindowStyle Hidden
+            for ($i = 0; $i -lt 30 -and -not $url; $i++) {
+              Start-Sleep -Seconds 2
+              if (Test-Path $log) {
+                $m = Select-String -Path $log -Pattern 'https://[a-z0-9-]+\.trycloudflare\.com' | Select-Object -First 1
+                if ($m) { $url = $m.Matches[0].Value }
+              }
             }
+            if ($url) { break }
+            Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+            Remove-Item $log -Force -ErrorAction SilentlyContinue
+            Write-Host "cloudflared attempt $attempt produced no URL; retrying"
           }
           if (-not $url) { Get-Content $log -ErrorAction SilentlyContinue; throw 'cloudflared did not produce a tunnel URL' }
           $hostName = $url -replace '^https://',''
