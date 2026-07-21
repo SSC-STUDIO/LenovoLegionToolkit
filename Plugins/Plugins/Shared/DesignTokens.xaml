@@ -12,7 +12,7 @@
 
     <!-- Corner radius scale (host SoT) -->
     <CornerRadius x:Key="CornerRadiusNone">0</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusProgressBar">3</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusProgressBar">2</CornerRadius>
     <CornerRadius x:Key="CornerRadiusSmall">8</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCompact">8</CornerRadius>
     <CornerRadius x:Key="CornerRadiusControl">12</CornerRadius>
@@ -23,6 +23,11 @@
     <CornerRadius x:Key="CornerRadiusMD">12</CornerRadius>
     <CornerRadius x:Key="CornerRadiusLG">18</CornerRadius>
     <CornerRadius x:Key="CornerRadiusXL">20</CornerRadius>
+    <!-- Edge variants (host SoT): top-left only on surfaces, both top corners on cards -->
+    <CornerRadius x:Key="CornerRadiusSurfaceTop">20,0,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSurfaceBottom">0,0,20,20</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCardTop">18,18,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCardBottom">0,0,18,18</CornerRadius>
 
     <!-- Plugin-local aliases used by ViveTool (available to every plugin merging this dictionary) -->
     <CornerRadius x:Key="PluginCornerRadiusCompact">8</CornerRadius>
@@ -36,6 +41,8 @@
     <Thickness x:Key="PluginSpacingSM">12</Thickness>
     <Thickness x:Key="PluginSpacingMD">16</Thickness>
     <Thickness x:Key="PluginSpacingLG">24</Thickness>
+    <Thickness x:Key="PluginSpacingXL">32</Thickness>
+    <Thickness x:Key="PluginContentPaddingPage">24</Thickness>
     <Thickness x:Key="PluginCardPadding">16,14</Thickness>
     <Thickness x:Key="PluginSectionMargin">0,0,0,16</Thickness>
 
@@ -54,6 +61,7 @@
     <!-- Fallback-only text sizes outside the core scale (ViveTool BuildFallbackUi) -->
     <sys:Double x:Key="PluginFontSizeHeading" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
     <sys:Double x:Key="PluginFontSizeTitle" xmlns:sys="clr-namespace:System;assembly=mscorlib">20</sys:Double>
+    <sys:Double x:Key="PluginIconSizeSM" xmlns:sys="clr-namespace:System;assembly=mscorlib">14</sys:Double>
     <sys:Double x:Key="PluginIconSizeMD" xmlns:sys="clr-namespace:System;assembly=mscorlib">18</sys:Double>
     <sys:Double x:Key="PluginIconSizeLG" xmlns:sys="clr-namespace:System;assembly=mscorlib">24</sys:Double>
 </ResourceDictionary>

@@ -6,8 +6,8 @@
         Icon="Assets/UniversalDeviceToolkit.ico"
         Width="1540"
         Height="940"
-        MinWidth="1024"
-        MinHeight="760"
+        MinWidth="1280"
+        MinHeight="800"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource ApplicationBackgroundBrush}"
         UseLayoutRounding="True"
@@ -175,7 +175,6 @@
                            VerticalAlignment="Center">
                     <ComboBox x:Name="ThemeComboBox"
                               Width="104"
-                              Height="32"
                               FontSize="12"
                               SelectionChanged="ThemeComboBox_SelectionChanged"
                               AutomationProperties.AutomationId="ThemeComboBox">
@@ -185,7 +184,6 @@
                     </ComboBox>
                     <ComboBox x:Name="ModeComboBox"
                               Width="124"
-                              Height="32"
                               Margin="6,0,0,0"
                               FontSize="12"
                               SelectionChanged="ModeComboBox_SelectionChanged"
