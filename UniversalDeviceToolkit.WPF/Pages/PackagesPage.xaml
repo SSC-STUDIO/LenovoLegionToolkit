@@ -172,7 +172,7 @@
                             <StackPanel>
                                 <TextBlock Text="{x:Static resources:Resource.PackagesPage_PrimarySource}" />
                                 <TextBlock
-                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}" />
                             </StackPanel>
@@ -186,7 +186,7 @@
                             <StackPanel>
                                 <TextBlock Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
                                 <TextBlock
-                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}" />
                             </StackPanel>
@@ -329,18 +329,18 @@
                                     <custom:CardControl Margin="0,0,0,8">
                                         <StackPanel Margin="8">
                                             <TextBlock
-                                                FontSize="{StaticResource FontSizeCaption}"
+                                                FontSize="{DynamicResource FontSizeCaption}"
                                                 FontWeight="SemiBold"
                                                 Text="{Binding Title}"
                                                 TextTrimming="CharacterEllipsis" />
                                             <TextBlock
                                                 Margin="0,4,0,0"
-                                                FontSize="{StaticResource FontSizeSmallCaption}"
+                                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                 Text="{Binding Category}" />
                                             <TextBlock
                                                 Margin="0,2,0,0"
-                                                FontSize="{StaticResource FontSizeSmallCaption}"
+                                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                 Text="{Binding Description}"
                                                 TextWrapping="Wrap"

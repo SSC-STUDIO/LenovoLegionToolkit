@@ -184,7 +184,7 @@
                                 VerticalAlignment="Center" />
                             <TextBlock
                                 VerticalAlignment="Center"
-                                FontSize="{StaticResource FontSizeCaption}"
+                                FontSize="{DynamicResource FontSizeCaption}"
                                 Text="{Binding Title}" />
                         </StackPanel>
                     </DataTemplate>

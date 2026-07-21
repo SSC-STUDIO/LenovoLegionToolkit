@@ -1771,6 +1771,9 @@ WAARSCHUWING: Deze actie zal niet correct uitgevoerd worden als de externe video
     <value>{0} energiemodus is niet beschikbaar zonder een oplader.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensoren</value>
   </data>
@@ -4333,6 +4336,12 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Geselecteerde domeingroepen vastzetten of losmaken (favorieten eerst)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Selecteer eerst een of meer domeingroepen hieronder.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Het backend-onderdeel voor versnelling ontbreekt, waardoor starten niet beschikbaar is.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Selectie starten</value>
   </data>
@@ -4419,6 +4428,12 @@ Ondersteunde formaten zijn: {1}.</value>
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Standaard</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Tekstgrootte</value>

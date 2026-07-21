@@ -45,6 +45,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public WindowBackdropStyle WindowBackdropStyle { get; set; } = WindowBackdropStyle.Windows;
         public AppFontStyle AppFontStyle { get; set; } = AppFontStyle.Default;
         public AppTextSize AppTextSize { get; set; } = AppTextSize.Standard;
+        public AppScale AppScale { get; set; } = AppScale.Standard;
         public PowerModeMappingMode PowerModeMappingMode { get; set; } = PowerModeMappingMode.WindowsPowerMode;
         public Dictionary<PowerModeState, Guid> PowerPlans { get; set; } = [];
         public Dictionary<PowerModeState, WindowsPowerMode> PowerModes { get; set; } = [];

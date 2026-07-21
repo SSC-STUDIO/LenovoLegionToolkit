@@ -90,7 +90,7 @@
                     <TextBlock
                         x:Name="_errorDetailsTextBlock"
                         FontFamily="Consolas, Courier New"
-                        FontSize="{StaticResource FontSizeSmallCaption}"
+                        FontSize="{DynamicResource FontSizeSmallCaption}"
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         TextWrapping="Wrap" />
                 </ScrollViewer>

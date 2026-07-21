@@ -1938,6 +1938,9 @@ Přepínání režimů může vyžadovat restart.</value>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>Režim napájení {0} není dostupný bez připojeného napájení AC.</value>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
     <value>Není možné změnit režim napájení</value>
   </data>
@@ -4020,6 +4023,12 @@ Vyžaduje restart.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Připnout nebo odepnout vybrané skupiny domén (oblíbené se řadí první)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Nejprve níže vyberte jednu nebo více skupin domén.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Součást back-endu akcelerace chybí, takže spuštění není k dispozici.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Kliknutím vyberte skupiny · dvojklikem zapněte/vypněte · lištou označte oblíbené nebo spusťte vybrané.</value>
   </data>
@@ -4091,6 +4100,12 @@ Vyžaduje restart.</value>
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Výchozí</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Velikost textu</value>

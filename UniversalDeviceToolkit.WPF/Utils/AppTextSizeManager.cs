@@ -1,3 +1,4 @@
+using System;
 using UniversalDeviceToolkit.Lib.Settings;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
@@ -20,4 +21,26 @@ public static class AppTextSizeManager
         AppTextSize.ExtraLarge => 1.25d,
         _ => 1.0d
     };
+}
+
+public static class AppScaleManager
+{
+    public static event EventHandler? ScaleChanged;
+
+    public static double CurrentScale { get; private set; } = 1d;
+
+    public static void Apply(AppScale scale)
+    {
+        var nextScale = GetScale(scale);
+        if (nextScale.Equals(CurrentScale))
+            return;
+
+        CurrentScale = nextScale;
+        ScaleChanged?.Invoke(null, EventArgs.Empty);
+    }
+
+    public static void ApplySaved(ApplicationSettings settings) => Apply(settings.Store.AppScale);
+
+    internal static double GetScale(AppScale scale) =>
+        Enum.IsDefined(scale) ? (int)scale / 100d : 1d;
 }

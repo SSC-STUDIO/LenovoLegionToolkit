@@ -739,7 +739,10 @@ public enum AppFontStyle
     FluentVariable,
     YaHeiUI,
     DengXian,
-    NotoSans
+    NotoSans,
+    SimHei,
+    SimSun,
+    KaiTi
 }
 
 // No Display attributes: option labels are percentages (with a localized "Default"
@@ -751,6 +754,15 @@ public enum AppTextSize
     Standard,
     Large,
     ExtraLarge
+}
+
+public enum AppScale
+{
+    Compact = 80,
+    Small = 90,
+    Standard = 100,
+    Large = 110,
+    ExtraLarge = 125
 }
 
 public enum TemperatureUnit

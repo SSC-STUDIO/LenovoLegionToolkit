@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -121,6 +121,11 @@ public partial class WindowsOptimizationPage : Page
             _networkAccelerationSelectionCount,
             _networkAccelerationSelectionFavoriteButton,
             _networkAccelerationSelectionStartButton);
+    }
+
+    private void NetworkAccelerationSelectionCountButton_Click(object sender, RoutedEventArgs e)
+    {
+        _networkAccelerationControl?.HandleSelectionCountClicked();
     }
 
     private void SyncNavButtonToCurrentMode()

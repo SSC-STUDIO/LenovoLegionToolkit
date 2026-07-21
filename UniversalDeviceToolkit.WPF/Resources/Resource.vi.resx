@@ -1667,6 +1667,9 @@ CẢNH BÁO: Hành động này có thể chạy không đúng nếu GPU rời k
     <value>{0} Power mode không khả dụng nếu không kết nối với bộ sạc.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Cảm biến</value>
   </data>
@@ -3968,6 +3971,12 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Ghim hoặc bỏ ghim các nhóm miền đã chọn (yêu thích xếp trước)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Trước tiên hãy chọn một hoặc nhiều nhóm miền bên dưới.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Thiếu thành phần nền tảng tăng tốc nên không thể bắt đầu.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Nhấp để chọn nhóm · nhấp đúp để bật/tắt · dùng thanh để yêu thích hoặc bắt đầu mục đã chọn.</value>
   </data>
@@ -4039,6 +4048,12 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Mặc định</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Cỡ chữ</value>

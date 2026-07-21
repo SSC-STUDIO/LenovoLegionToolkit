@@ -29,7 +29,7 @@
     <CornerRadius x:Key="CornerRadiusCard">18</CornerRadius>
     <CornerRadius x:Key="CornerRadiusSurface">20</CornerRadius>
     <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
-    <CornerRadius x:Key="CornerRadiusSurfaceTop">20,20,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSurfaceTop">20,0,0,0</CornerRadius>
     <CornerRadius x:Key="CornerRadiusSurfaceBottom">0,0,20,20</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCardTop">18,18,0,0</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCardBottom">0,0,18,18</CornerRadius>

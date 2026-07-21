@@ -24,7 +24,7 @@
         </Style>
 
         <Style x:Key="PackageMetadataTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -80,7 +80,7 @@
                     <TextBlock
                         x:Name="_titleTextBlock"
                         Grid.Column="0"
-                        FontSize="{StaticResource FontSizeCaption}"
+                        FontSize="{DynamicResource FontSizeCaption}"
                         FontWeight="SemiBold"
                         MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
                         TextTrimming="CharacterEllipsis" />
@@ -114,7 +114,7 @@
                                 Symbol="Clock24" />
                             <TextBlock
                                 x:Name="_statusTextBlock"
-                                FontSize="{StaticResource FontSizeSmallCaption}"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 TextTrimming="CharacterEllipsis" />
@@ -156,7 +156,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="0,8,16,0"
-                    FontSize="{StaticResource FontSizeSmallBody}"
+                    FontSize="{DynamicResource FontSizeSmallBody}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
                     TextWrapping="Wrap" />
@@ -166,7 +166,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="0,8,16,0"
-                    FontSize="{StaticResource FontSizeSmallCaption}"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
                     TextTrimming="CharacterEllipsis" />
@@ -188,7 +188,7 @@
                                 Foreground="{DynamicResource StatusSuccessBrush}"
                                 Symbol="ArrowSync24" />
                             <TextBlock
-                                FontSize="{StaticResource FontSizeSmallCaption}"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource StatusSuccessBrush}"
                                 Text="{x:Static resources:Resource.PackageControl_IsUpdateInfo}"
@@ -208,7 +208,7 @@
                                 Symbol="Warning24" />
                             <TextBlock
                                 x:Name="_rebootTextBlock"
-                                FontSize="{StaticResource FontSizeSmallCaption}"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource StatusWarningBrush}"
                                 Text="{x:Static resources:Resource.PackageControl_RebootRecommended}"
@@ -222,7 +222,7 @@
                     Grid.Row="5"
                     Grid.Column="1"
                     Margin="0,8,16,0"
-                    FontSize="{StaticResource FontSizeSmallCaption}"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
                     FontWeight="Medium"
                     Foreground="{DynamicResource StatusWarningBrush}"
                     Text="{x:Static resources:Resource.PackageControl_OldPackageWarning}"

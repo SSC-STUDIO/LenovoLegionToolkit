@@ -5853,6 +5853,15 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Failed to switch power mode. The device did not accept the change..
+        /// </summary>
+        public static string PowerModeControl_SwitchFailed_Message {
+            get {
+                return ResourceManager.GetString("PowerModeControl_SwitchFailed_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Cannot change Power Mode.
         /// </summary>
         public static string PowerModeUnavailableWithoutACException_Title {
@@ -7334,6 +7343,24 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string SettingsPage_TextSize_Description {
             get {
                 return ResourceManager.GetString("SettingsPage_TextSize_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to App scale.
+        /// </summary>
+        public static string SettingsPage_AppScale_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_AppScale_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Scale the entire app interface independently of Windows display scaling..
+        /// </summary>
+        public static string SettingsPage_AppScale_Description {
+            get {
+                return ResourceManager.GetString("SettingsPage_AppScale_Description", resourceCulture);
             }
         }
 
@@ -10170,6 +10197,8 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string NetworkAccelerationPage_SelectionCountFormat { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionCountFormat", resourceCulture); } }
         public static string NetworkAccelerationPage_SelectionFavorite { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionFavorite", resourceCulture); } }
         public static string NetworkAccelerationPage_SelectionFavoriteTooltip { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionFavoriteTooltip", resourceCulture); } }
+        public static string NetworkAccelerationPage_SelectGroupsFirst_Hint { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectGroupsFirst_Hint", resourceCulture); } }
+        public static string NetworkAccelerationPage_BackendMissing_Hint { get { return ResourceManager.GetString("NetworkAccelerationPage_BackendMissing_Hint", resourceCulture); } }
         public static string NetworkAccelerationPage_SelectionStart { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionStart", resourceCulture); } }
         public static string NetworkAccelerationPage_SelectionStartTooltip { get { return ResourceManager.GetString("NetworkAccelerationPage_SelectionStartTooltip", resourceCulture); } }
         public static string NetworkAccelerationPage_DomainGroupsFootnote { get { return ResourceManager.GetString("NetworkAccelerationPage_DomainGroupsFootnote", resourceCulture); } }

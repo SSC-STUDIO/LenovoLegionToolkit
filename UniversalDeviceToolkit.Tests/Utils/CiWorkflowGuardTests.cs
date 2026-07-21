@@ -115,7 +115,7 @@ public sealed class CiWorkflowGuardTests
         workflow.Should().Contain("schedule:");
         workflow.Should().Contain("cron: '0 3 * * *'");
         workflow.Should().Contain("workflow_dispatch:");
-        workflow.Should().Contain("runs-on: [self-hosted, Windows, LLT-UI-SMOKE]");
+        workflow.Should().Contain("runs-on: [self-hosted, Windows, udt]");
         workflow.Should().Contain("UDT_ALLOW_FLAUI_TESTS: true");
         workflow.Should().Contain("--filter \"FullyQualifiedName~FlaUI\"");
         workflow.Should().NotContain("if: false");

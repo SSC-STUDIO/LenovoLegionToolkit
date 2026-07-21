@@ -36,7 +36,7 @@
                             <TextBlock
                                 x:Name="TitleText"
                                 HorizontalAlignment="Center"
-                                FontSize="{StaticResource FontSizeSubsection}"
+                                FontSize="{DynamicResource FontSizeSubsection}"
                                 FontWeight="SemiBold"
                                 Text="{TemplateBinding Title}"
                                 TextAlignment="Center"
@@ -63,7 +63,7 @@
                                 x:Name="DescriptionText"
                                 Margin="0,8,0,0"
                                 HorizontalAlignment="Center"
-                                FontSize="{StaticResource FontSizeCaption}"
+                                FontSize="{DynamicResource FontSizeCaption}"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Text="{TemplateBinding Description}"
                                 TextAlignment="Center"

@@ -1654,6 +1654,9 @@ Atenção: Esta ação não irá correr corretamente se a GPU discreta estiver i
     <value>O esquema de energia {0} não está disponível em bateria.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensores</value>
   </data>
@@ -3954,6 +3957,12 @@ ex. C:\Drivers</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Afixixar ou desafixar grupos de domínios selecionados (favoritos ordenam primeiro)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Selecione primeiro um ou mais grupos de domínios abaixo.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>O componente de back-end de aceleração está em falta, pelo que o início não está disponível.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Iniciar selecionados</value>
   </data>
@@ -4040,6 +4049,12 @@ ex. C:\Drivers</value>
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Predefinição</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Tamanho do texto</value>

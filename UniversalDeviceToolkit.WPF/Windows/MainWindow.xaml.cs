@@ -61,6 +61,8 @@ public partial class MainWindow
     private bool _pluginExtensionsNoticeDismissed;
     private bool _pluginExtensionsSettingsPersisted;
 
+    protected override FrameworkElement? AppScaleTarget => _contentGrid;
+
     public bool TrayTooltipEnabled { get; set; } = true;
     public bool SuppressClosingEventHandler { get; set; }
 

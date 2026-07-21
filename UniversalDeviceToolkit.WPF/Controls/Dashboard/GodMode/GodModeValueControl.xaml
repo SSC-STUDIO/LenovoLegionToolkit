@@ -43,7 +43,7 @@
                 <TextBlock
                     x:Name="_descriptionTextBlock"
                     Margin="0,2,0,0"
-                    FontSize="{StaticResource FontSizeDenseCaption}"
+                    FontSize="{DynamicResource FontSizeDenseCaption}"
                     LineHeight="14"
                     MaxHeight="28"
                     Opacity="0.78"

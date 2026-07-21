@@ -164,7 +164,7 @@ public partial class WindowsOptimizationPage
                     ViewModel.IsBusy = false;
                     ViewModel.IsCleaning = false;
                     ViewModel.CurrentOperationText = string.Empty;
-                    ViewModel.RunCleanupButtonText = string.Empty;
+                    ViewModel.ResetRunCleanupButtonText();
                 });
 
                 await ViewModel.UpdateEstimatedCleanupSizeAsync();

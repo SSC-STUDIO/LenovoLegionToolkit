@@ -82,7 +82,7 @@
 
         <Style x:Key="PluginCardSecondaryLineStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,4,0,0" />
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
@@ -205,14 +205,14 @@
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock
                         x:Name="_storeOfflineTitleText"
-                        FontSize="{StaticResource FontSizeSmallBody}"
+                        FontSize="{DynamicResource FontSizeSmallBody}"
                         FontWeight="SemiBold"
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         Text="{x:Static resources:Resource.PluginExtensionsPage_StoreUnavailableTitle}" />
                     <TextBlock
                         x:Name="_storeOfflineMessageText"
                         Margin="0,2,0,0"
-                        FontSize="{StaticResource FontSizeSmallCaption}"
+                        FontSize="{DynamicResource FontSizeSmallCaption}"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         TextWrapping="Wrap"
                         Text="{x:Static resources:Resource.PluginExtensionsPage_StoreUnavailableMessage}" />
@@ -379,7 +379,7 @@
                     AutomationProperties.AutomationId="PluginResultsCountText"
                     Grid.Row="0"
                     Margin="2,0,0,6"
-                    FontSize="{StaticResource FontSizeSmallCaption}"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Visibility="Collapsed" />
 
@@ -442,7 +442,7 @@
                                             Background="{Binding IconBackground}">
                                             <Grid>
                                                 <TextBlock Text="{Binding IconLetter}"
-                                                           FontSize="{StaticResource FontSizePageDescription}"
+                                                           FontSize="{DynamicResource FontSizePageDescription}"
                                                            FontWeight="SemiBold"
                                                            Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                                                            HorizontalAlignment="Center"
@@ -470,26 +470,26 @@
                                                     VerticalAlignment="Center">
                                             <WrapPanel VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Name}"
-                                                           FontSize="{StaticResource FontSizeBody}"
+                                                           FontSize="{DynamicResource FontSizeBody}"
                                                            FontWeight="SemiBold"
                                                            MaxWidth="320"
                                                            TextTrimming="CharacterEllipsis"
                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                                 <TextBlock Text="{Binding Version}"
                                                            Margin="8,1,0,0"
-                                                           FontSize="{StaticResource FontSizeSmallCaption}"
+                                                           FontSize="{DynamicResource FontSizeSmallCaption}"
                                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 <Border Style="{StaticResource PluginStatusBadgeStyle}"
                                                         Visibility="{Binding ShouldShowStatusBadge, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding StatusText}"
-                                                               FontSize="{StaticResource FontSizeDenseCaption}"
+                                                               FontSize="{DynamicResource FontSizeDenseCaption}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 </Border>
                                                 <Border Style="{StaticResource PluginStatusBadgeStyle}"
                                                         Visibility="{Binding IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_LocalBadge}"
-                                                               FontSize="{StaticResource FontSizeDenseCaption}"
+                                                               FontSize="{DynamicResource FontSizeDenseCaption}"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 </Border>
                                             </WrapPanel>
@@ -510,7 +510,7 @@
                                                     <DataTemplate>
                                                         <Border Style="{StaticResource PluginStatusBadgeStyle}">
                                                             <TextBlock Text="{Binding}"
-                                                                       FontSize="{StaticResource FontSizeDenseCaption}"
+                                                                       FontSize="{DynamicResource FontSizeDenseCaption}"
                                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                         </Border>
                                                     </DataTemplate>
@@ -591,7 +591,7 @@
                                     <TextBlock Grid.Row="1"
                                                Grid.Column="1"
                                                Margin="0,6,12,0"
-                                               FontSize="{StaticResource FontSizeSmallCaption}"
+                                               FontSize="{DynamicResource FontSizeSmallCaption}"
                                                Text="{Binding Description}"
                                                TextWrapping="Wrap"
                                                TextTrimming="CharacterEllipsis"
@@ -632,7 +632,7 @@
                                                 </wpfui:SymbolIcon>
                                                 <TextBlock Text="{Binding ToggleDetailsText}"
                                                            VerticalAlignment="Center"
-                                                           FontSize="{StaticResource FontSizeSmallCaption}" />
+                                                           FontSize="{DynamicResource FontSizeSmallCaption}" />
                                             </StackPanel>
                                         </wpfui:Button>
                                     </Grid>
@@ -650,7 +650,7 @@
                                             <StackPanel>
                                                 <StackPanel Visibility="{Binding HasDetailedDescription, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding DetailsLabel}"
-                                                               FontSize="{StaticResource FontSizeSmallCaption}"
+                                                               FontSize="{DynamicResource FontSizeSmallCaption}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                     <TextBlock Text="{Binding DetailedDescription}"
@@ -662,7 +662,7 @@
                                                 <StackPanel Margin="0,10,0,0"
                                                             Visibility="{Binding HasUsageGuide, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding UsageGuideLabel}"
-                                                               FontSize="{StaticResource FontSizeSmallCaption}"
+                                                               FontSize="{DynamicResource FontSizeSmallCaption}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                     <TextBlock Text="{Binding UsageGuide}"
@@ -804,7 +804,7 @@
                 <TextBlock
                     Text="{x:Static resources:Resource.PluginExtensionsPage_NoResults}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    FontSize="{StaticResource FontSizeCaption}"
+                    FontSize="{DynamicResource FontSizeCaption}"
                     TextAlignment="Center" />
             </StackPanel>
         </Grid>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -158,14 +159,8 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
             if (e.ProcessCount > 0)
             {
                 processesStringBuilder.Append(Resource.DiscreteGPUControl_Processes);
-                var processNames = e.Processes
-                    .Select(TryGetProcessName)
-                    .Where(name => !string.IsNullOrWhiteSpace(name))
-                    .OrderBy(name => name, StringComparer.CurrentCultureIgnoreCase)
-                    .ToArray();
-
-                foreach (var processName in processNames)
-                    processesStringBuilder.AppendLine().Append("  \u2022 ").Append(processName);
+                foreach (var line in FormatProcessListLines(e.Processes.Select(TryGetProcessName)))
+                    processesStringBuilder.AppendLine().Append(line);
             }
             else
             {
@@ -230,6 +225,21 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         {
             return null;
         }
+    }
+
+    /// <summary>
+    /// Groups same-name GPU processes (multi-process apps like msedge) into one tooltip
+    /// line each, with a "× N" count suffix. Sorted by count desc, then name.
+    /// Display-only: the upstream PID list must stay ungrouped for KillGPUProcessesAsync.
+    /// </summary>
+    internal static IEnumerable<string> FormatProcessListLines(IEnumerable<string?> processNames)
+    {
+        return processNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .GroupBy(name => name!, StringComparer.CurrentCultureIgnoreCase)
+            .OrderByDescending(g => g.Count())
+            .ThenBy(g => g.Key, StringComparer.CurrentCultureIgnoreCase)
+            .Select(g => g.Count() > 1 ? $"  • {g.Key} × {g.Count()}" : $"  • {g.Key}");
     }
 
     private void DeactivateGPUButton_Click(object sender, RoutedEventArgs e)

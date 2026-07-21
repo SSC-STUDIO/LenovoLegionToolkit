@@ -378,9 +378,41 @@ public partial class NetworkAccelerationControl : UserControl
 
         var hasSelection = count > 0 && !_isBusy;
         if (_selectionFavoriteButton is not null)
+        {
             _selectionFavoriteButton.IsEnabled = hasSelection;
+            // Disabled buttons still explain themselves (ToolTipService.ShowOnDisabled is set in XAML).
+            _selectionFavoriteButton.ToolTip = hasSelection
+                ? Resource.NetworkAccelerationPage_SelectionFavoriteTooltip
+                : Resource.NetworkAccelerationPage_SelectGroupsFirst_Hint;
+        }
         if (_selectionStartButton is not null)
-            _selectionStartButton.IsEnabled = hasSelection && _acceleration.IsBackendReady;
+        {
+            var backendReady = _acceleration.IsBackendReady;
+            _selectionStartButton.IsEnabled = hasSelection && backendReady;
+            _selectionStartButton.ToolTip = !hasSelection
+                ? Resource.NetworkAccelerationPage_SelectGroupsFirst_Hint
+                : backendReady
+                    ? Resource.NetworkAccelerationPage_SelectionStartTooltip
+                    : Resource.NetworkAccelerationPage_BackendMissing_Hint;
+        }
+    }
+
+    /// <summary>
+    /// Count chip click: with no selection explain how to select; otherwise scroll the
+    /// first selected domain tile into view.
+    /// </summary>
+    public void HandleSelectionCountClicked()
+    {
+        if (_selectedGroupIds.Count == 0)
+        {
+            SnackbarHelper.Show(Resource.SettingsPage_WindowsOptimization_Title, Resource.NetworkAccelerationPage_SelectGroupsFirst_Hint, SnackbarType.Info);
+            return;
+        }
+
+        var firstId = _selectedGroupIds.FirstOrDefault();
+        var tile = _domainGroupsPanel?.Items.OfType<Border>().FirstOrDefault(b =>
+            string.Equals(b.Tag as string, firstId, StringComparison.OrdinalIgnoreCase));
+        tile?.BringIntoView();
     }
 
     private async void SelectionFavoriteButton_Click(object sender, RoutedEventArgs e)
@@ -492,18 +524,18 @@ public partial class NetworkAccelerationControl : UserControl
 
     private void ApplyStatusVisual(StatusVisual visual)
     {
-        // Soft-tint chip: low-alpha fill + mid-alpha border + solid accent dot/label.
+        // Match InfoBar chrome: ~20% status surface + solid accent dot + neutral hairline border.
         // Always content-hugging (HorizontalAlignment=Left) — never Stretch.
-        var accentKey = visual switch
+        var (surfaceKey, accentKey, textKey) = visual switch
         {
-            StatusVisual.Running => "PaletteGreenBrush",
-            StatusVisual.Caution => "PaletteOrangeBrush",
-            StatusVisual.Danger => "PaletteRedBrush",
-            StatusVisual.Info => "PaletteLightBlueBrush",
-            _ => null
+            StatusVisual.Running => ("StatusSuccessBackgroundBrush", "StatusSuccessBrush", "StatusSuccessBrush"),
+            StatusVisual.Caution => ("StatusWarningBackgroundBrush", "StatusWarningBrush", "StatusWarningBrush"),
+            StatusVisual.Danger => ("StatusCriticalBackgroundBrush", "StatusCriticalBrush", "StatusCriticalTextBrush"),
+            StatusVisual.Info => ("StatusInfoBackgroundBrush", "StatusInfoBrush", "StatusInfoBrush"),
+            _ => (null, null, null)
         };
 
-        if (accentKey is null || ResolveSolidColor(accentKey) is not { } accent)
+        if (surfaceKey is null)
         {
             ApplyNeutralStatusChrome();
             return;
@@ -511,15 +543,16 @@ public partial class NetworkAccelerationControl : UserControl
 
         if (_statusPill is not null)
         {
-            _statusPill.Background = SoftBrush(accent, alpha: 0x22);
-            _statusPill.BorderBrush = SoftBrush(accent, alpha: 0x55);
+            _statusPill.SetResourceReference(Border.BackgroundProperty, surfaceKey);
+            // Neutral hairline like InfoBar — no colored outline.
+            _statusPill.SetResourceReference(Border.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
         }
 
         if (_statusDot is not null)
-            _statusDot.Fill = new SolidColorBrush(accent);
+            _statusDot.SetResourceReference(Shape.FillProperty, accentKey);
 
         if (_statusText is not null)
-            _statusText.Foreground = SoftBrush(accent, alpha: 0xEE);
+            _statusText.SetResourceReference(TextBlock.ForegroundProperty, textKey);
     }
 
     private void ApplyNeutralStatusChrome()
@@ -536,26 +569,6 @@ public partial class NetworkAccelerationControl : UserControl
         if (_statusText is not null)
             _statusText.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
     }
-
-    private Color? ResolveSolidColor(string brushKey)
-    {
-        try
-        {
-            if (TryFindResource(brushKey) is SolidColorBrush solid)
-                return solid.Color;
-            if (TryFindResource(brushKey) is Color color)
-                return color;
-        }
-        catch
-        {
-            // Resource missing in design-time / tests — fall back to neutral chrome.
-        }
-
-        return null;
-    }
-
-    private static SolidColorBrush SoftBrush(Color baseColor, byte alpha) =>
-        new(Color.FromArgb(alpha, baseColor.R, baseColor.G, baseColor.B));
 
     private static void TrySetResourceBrush(FrameworkElement? element, DependencyProperty property, string key, string fallbackKey)
     {
@@ -1135,10 +1148,10 @@ public partial class NetworkAccelerationControl : UserControl
         };
         TrySetResourceBrush(dot, Shape.FillProperty, severity switch
         {
-            StatusVisual.Running => "PaletteGreenBrush",
-            StatusVisual.Caution => "PaletteOrangeBrush",
-            StatusVisual.Danger => "PaletteRedBrush",
-            StatusVisual.Info => "PaletteLightBlueBrush",
+            StatusVisual.Running => "StatusSuccessBrush",
+            StatusVisual.Caution => "StatusWarningBrush",
+            StatusVisual.Danger => "StatusCriticalBrush",
+            StatusVisual.Info => "StatusInfoBrush",
             _ => "TextFillColorSecondaryBrush"
         }, "TextFillColorSecondaryBrush");
 

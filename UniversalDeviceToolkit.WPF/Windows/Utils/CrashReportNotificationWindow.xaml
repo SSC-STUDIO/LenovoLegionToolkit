@@ -69,14 +69,14 @@
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                         <TextBlock
                             x:Name="_mainMessageTextBlock"
-                            FontSize="{StaticResource FontSizePageDescription}"
+                            FontSize="{DynamicResource FontSizePageDescription}"
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{x:Static resources:Resource.CrashReportNotification_Message}"
                             TextWrapping="Wrap" />
                         <TextBlock
                             Margin="0,6,0,0"
-                            FontSize="{StaticResource FontSizeSmallBody}"
+                            FontSize="{DynamicResource FontSizeSmallBody}"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{x:Static resources:Resource.CrashReportNotification_Description}"
                             TextWrapping="Wrap" />
@@ -107,7 +107,7 @@
                         BorderThickness="0,0,0,1"
                         Background="{DynamicResource ControlFillColorSecondaryBrush}">
                         <TextBlock
-                            FontSize="{StaticResource FontSizeSmallCaption}"
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{x:Static resources:Resource.CrashReportNotification_DetailsHeading}" />
@@ -122,7 +122,7 @@
                         <TextBlock
                             x:Name="_crashDetailsTextBlock"
                             FontFamily="Cascadia Mono, Consolas, Courier New"
-                            FontSize="{StaticResource FontSizeSmallCaption}"
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
                             LineHeight="18"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             TextWrapping="Wrap" />
@@ -154,7 +154,7 @@
                     <TextBlock
                         x:Name="_reportPathTextBlock"
                         Grid.Column="1"
-                        FontSize="{StaticResource FontSizeSmallCaption}"
+                        FontSize="{DynamicResource FontSizeSmallCaption}"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         TextWrapping="Wrap"
                         TextTrimming="CharacterEllipsis" />

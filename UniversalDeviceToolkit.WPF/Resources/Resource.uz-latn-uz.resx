@@ -1740,6 +1740,9 @@ ESKERTIW: Diskret GPU ámeldegi bolmasa, bul ámel tuwrı atqarılmaydı.</value
     <value>Elektr quwatsız {0} quwat rejimi joq.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensor</value>
   </data>
@@ -4332,6 +4335,12 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Tanlangan domen guruhlarini qadash yoki yechish (sevimlilar birinchi)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Avval quyidagi bir yoki bir nechta domen guruhini tanlang.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Tezlashtirish server komponenti topilmadi, shuning uchun ishga tushirish imkonsiz.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Tanlanganlarni boshlash</value>
   </data>
@@ -4418,6 +4427,12 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Standart</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Matn o'lchami</value>

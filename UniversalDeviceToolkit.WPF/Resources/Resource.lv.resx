@@ -1639,6 +1639,9 @@ BRĪDINĀJUMS. Ja nav pieejams atsevišķs GPU, šī darbība nedarbosies pareiz
     <value>{0} jaudas režīms nav pieejams bez maiņstrāvas pieslēguma.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensori</value>
   </data>
@@ -3953,6 +3956,12 @@ Nepieciešama restartēšana.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Piespraust vai atspraust atlasītās domēnu grupas (favorīti tiek rādīti pirmie)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Vispirms tālāk atlasiet vienu vai vairākas domēnu grupas.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Trūkst paātrinājuma aizmugures komponenta, tāpēc sākšana nav pieejama.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Palaist atlasītos</value>
   </data>
@@ -4039,6 +4048,12 @@ Nepieciešama restartēšana.</value>
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Noklusējums</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Teksta lielums</value>

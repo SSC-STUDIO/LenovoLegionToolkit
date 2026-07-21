@@ -59,7 +59,7 @@
                             <StackPanel>
                                  <TextBlock Text="{TemplateBinding Header}" 
                                             FontWeight="SemiBold" 
-                                            FontSize="{StaticResource FontSizeCaption}" 
+                                            FontSize="{DynamicResource FontSizeCaption}" 
                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
                                             Margin="0,0,0,12" />
                                 <ContentPresenter />
@@ -177,7 +177,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FontSize="{StaticResource FontSizeSmallCaption}"
+                FontSize="{DynamicResource FontSizeSmallCaption}"
                 IsHitTestVisible="False"
                 Text="{Binding Source={x:Static resources:Resource.OsdWindow_Title}}" />
 
@@ -262,7 +262,7 @@
                                 <custom:CardControl.Header>
                                     <StackPanel>
                                         <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_Opacity}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                        <TextBlock x:Name="_opacityValueText" FontSize="{StaticResource FontSizeDenseCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                        <TextBlock x:Name="_opacityValueText" FontSize="{DynamicResource FontSizeDenseCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                                     </StackPanel>
                                 </custom:CardControl.Header>
                                 <Slider
@@ -279,7 +279,7 @@
                                 <custom:CardControl.Header>
                                     <StackPanel>
                                         <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_CornerRadius}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                        <TextBlock x:Name="_cornerRadiusValueText" FontSize="{StaticResource FontSizeDenseCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                        <TextBlock x:Name="_cornerRadiusValueText" FontSize="{DynamicResource FontSizeDenseCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                                     </StackPanel>
                                 </custom:CardControl.Header>
                                 <StackPanel Orientation="Vertical">

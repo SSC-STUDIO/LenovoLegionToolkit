@@ -28,6 +28,10 @@ public static class AppFontManager
         AppFontStyle.YaHeiUI => "Microsoft YaHei UI, Segoe UI, Microsoft YaHei",
         AppFontStyle.DengXian => "DengXian, Segoe UI, Microsoft YaHei UI",
         AppFontStyle.NotoSans => "Noto Sans CJK SC, Source Han Sans SC, Segoe UI, Microsoft YaHei UI",
+        // Windows-builtin CJK faces so every option renders Chinese visibly differently.
+        AppFontStyle.SimHei => "SimHei, Microsoft YaHei UI, Segoe UI",
+        AppFontStyle.SimSun => "SimSun, NSimSun, Microsoft YaHei UI, Segoe UI",
+        AppFontStyle.KaiTi => "KaiTi, Microsoft YaHei UI, Segoe UI",
         _ => "Segoe UI, Microsoft YaHei UI, Microsoft YaHei, Noto Sans CJK SC, SimSun"
     };
 }

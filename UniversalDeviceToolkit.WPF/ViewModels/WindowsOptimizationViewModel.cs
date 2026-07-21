@@ -223,6 +223,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
+    public void ResetRunCleanupButtonText() => RunCleanupButtonText = T("WindowsOptimizationPage_RunCleanup_Button", "Run Cleanup");
+
     private bool _isCompactView;
     public bool IsCompactView
     {

@@ -27,7 +27,7 @@
             <Setter Property="Padding" Value="18,8,18,9" />
             <Setter Property="MinHeight" Value="42" />
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallBody}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -278,7 +278,7 @@
                             VerticalAlignment="Center"
                             Text=""
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            FontSize="{StaticResource FontSizeCaption}"
+                            FontSize="{DynamicResource FontSizeCaption}"
                             Visibility="Collapsed" />
 
                         <!-- Same tab-row chrome slot for bulk actions (opt/cleanup/drivers) and NA selection.
@@ -310,17 +310,23 @@
                                 <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
                                     <Setter Property="MinHeight" Value="40" />
                                     <Setter Property="Padding" Value="12,7" />
+                                    <Style.Triggers>
+                                        <!-- Secondary chrome keeps disabled buttons readable but clearly inactive. -->
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0.45" />
+                                        </Trigger>
+                                    </Style.Triggers>
                                 </Style>
                             </Border.Resources>
                             <StackPanel Orientation="Horizontal">
-                                <!-- Count summary (display-only; bulk mode opens a list window on click) -->
+                                <!-- Count summary: click scrolls to the first selected tile (or explains how to select) -->
                                 <wpfui:Button
                                     MinWidth="148"
                                     Margin="0,0,4,0"
                                     Appearance="Secondary"
                                     Focusable="False"
-                                    IsHitTestVisible="False"
                                     IsTabStop="False"
+                                    Click="NetworkAccelerationSelectionCountButton_Click"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
                                     <StackPanel Orientation="Horizontal">
@@ -340,6 +346,7 @@
                                     Margin="0,0,4,0"
                                     Appearance="Secondary"
                                     IsEnabled="False"
+                                    ToolTipService.ShowOnDisabled="True"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}">
@@ -351,6 +358,7 @@
                                     Margin="0"
                                     Appearance="Secondary"
                                     IsEnabled="False"
+                                    ToolTipService.ShowOnDisabled="True"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
@@ -591,7 +599,7 @@
                                                     Text="{Binding Title}" />
                                                 <TextBlock
                                                     Margin="0,4,0,0"
-                                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                     Text="{Binding Description}"
                                                     TextWrapping="Wrap" />
@@ -822,7 +830,7 @@
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_PrimarySource}" />
                                                     <TextBlock
-                                                        FontSize="{StaticResource FontSizeSmallCaption}"
+                                                        FontSize="{DynamicResource FontSizeSmallCaption}"
                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}"
                                                         TextTrimming="CharacterEllipsis" />
@@ -840,7 +848,7 @@
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
                                                     <TextBlock
-                                                        FontSize="{StaticResource FontSizeSmallCaption}"
+                                                        FontSize="{DynamicResource FontSizeSmallCaption}"
                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}"
                                                         TextTrimming="CharacterEllipsis" />
@@ -1220,7 +1228,7 @@
 
                                 <TextBlock
                                     Grid.Row="0"
-                                    FontSize="{StaticResource FontSizePageDescription}"
+                                    FontSize="{DynamicResource FontSizePageDescription}"
                                     FontWeight="Medium"
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}" />
                                 <TextBlock
@@ -1335,7 +1343,7 @@
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupInfo}" />
                                 <TextBlock
                                     Margin="0,0,0,12"
-                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupDescription}"
                                     TextWrapping="Wrap" />
@@ -1360,6 +1368,7 @@
                                 <TextBlock
                                     x:Name="_estimatedCleanupText"
                                     Margin="0,0,0,4"
+                                    FontWeight="SemiBold"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{Binding EstimatedCleanupSizeText}"
                                     TextWrapping="Wrap">
@@ -1383,7 +1392,7 @@
                                 </TextBlock>
                                 <TextBlock
                                     Margin="0,0,0,8"
-                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding PendingText}"
                                     TextWrapping="Wrap">
@@ -1405,7 +1414,7 @@
                                 <!-- Current deleting file -->
                                 <TextBlock
                                     Margin="0,0,0,12"
-                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding CurrentDeletingFile}"
                                     TextWrapping="Wrap"
@@ -1439,7 +1448,7 @@
                                     </StackPanel.Style>
                                     <TextBlock 
                                         Text="{Binding CurrentOperationText}" 
-                                        FontSize="{StaticResource FontSizeSmallCaption}" 
+                                        FontSize="{DynamicResource FontSizeSmallCaption}" 
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                         Margin="0,0,0,4" />
                                     <ProgressBar IsIndeterminate="True" Height="4" />
@@ -1507,9 +1516,11 @@
                                         MinWidth="36"
                                         Margin="8,0,0,0"
                                         HorizontalAlignment="Stretch"
+                                        ToolTip="{x:Static resources:Resource.Refresh}"
+                                        AutomationProperties.Name="{x:Static resources:Resource.Refresh}"
                                         Click="ScanCleanupButton_Click">
                                         <wpfui:Button.Style>
-                                            <Style TargetType="wpfui:Button" BasedOn="{StaticResource CleanupActionButtonStyle}">
+                                            <Style TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonStandard}">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                 <Style.Triggers>
                                                     <MultiDataTrigger>
@@ -1551,7 +1562,7 @@
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Header}" />
                                         <TextBlock
                                             Margin="0,0,0,12"
-                                            FontSize="{StaticResource FontSizeSmallCaption}"
+                                            FontSize="{DynamicResource FontSizeSmallCaption}"
                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Description}"
                                             TextWrapping="Wrap" />

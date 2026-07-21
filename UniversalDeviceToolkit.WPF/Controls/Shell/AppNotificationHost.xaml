@@ -79,14 +79,14 @@
                                 Foreground="{Binding IconBrush}" />
                             <StackPanel Grid.Column="1" Margin="8,0,8,0" VerticalAlignment="Center">
                                 <TextBlock
-                                    FontSize="{StaticResource FontSizeSmallBody}"
+                                    FontSize="{DynamicResource FontSizeSmallBody}"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{Binding DisplayTitle}"
                                     TextWrapping="Wrap" />
                                 <TextBlock
                                     Margin="0,2,0,0"
-                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding Message}"
                                     TextWrapping="Wrap"

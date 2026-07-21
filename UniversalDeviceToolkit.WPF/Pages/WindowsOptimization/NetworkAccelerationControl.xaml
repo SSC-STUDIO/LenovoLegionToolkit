@@ -70,18 +70,18 @@
             <Setter Property="MinWidth" Value="88" />
             <Setter Property="MinHeight" Value="32" />
             <Setter Property="Padding" Value="12,4" />
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
         </Style>
         <Style x:Key="NaSecondaryButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
             <Setter Property="MinHeight" Value="30" />
             <Setter Property="Padding" Value="10,4" />
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
         </Style>
         <!-- Based on app-wide rounded ComboBox so the drop-down popup is not square. -->
         <Style x:Key="NaModeComboStyle" TargetType="ComboBox" BasedOn="{StaticResource AppComboBoxStyle}">
             <Setter Property="MinWidth" Value="168" />
             <Setter Property="MinHeight" Value="32" />
-            <Setter Property="FontSize" Value="{StaticResource FontSizeSmallCaption}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
@@ -300,7 +300,7 @@
                 <TextBlock
                     x:Name="_diagnosticsText"
                     Margin="0,6,0,0"
-                    FontSize="{StaticResource FontSizeSmallCaption}"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     TextWrapping="Wrap"
                     Visibility="Collapsed"
@@ -315,7 +315,7 @@
                     AutomationProperties.AutomationId="NetworkAccelerationAdvancedExpander">
                     <Expander.Header>
                         <TextBlock
-                            FontSize="{StaticResource FontSizeSmallCaption}"
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
                             FontWeight="SemiBold"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedHeading}" />
@@ -327,12 +327,12 @@
                         <TextBlock
                             x:Name="_modeText"
                             Margin="0,8,0,0"
-                            FontSize="{StaticResource FontSizeSmallCaption}"
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         <TextBlock
                             x:Name="_portText"
                             Margin="0,2,0,8"
-                            FontSize="{StaticResource FontSizeSmallCaption}"
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Border
@@ -344,7 +344,7 @@
                             CornerRadius="{StaticResource CornerRadiusControl}">
                             <StackPanel>
                                 <TextBlock
-                                    FontSize="{StaticResource FontSizeSmallCaption}"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     FontWeight="SemiBold"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading}" />

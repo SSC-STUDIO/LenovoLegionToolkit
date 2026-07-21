@@ -112,7 +112,7 @@
                                     <ContentPresenter x:Name="ElementContentPresenter" HorizontalAlignment="Center">
                                         <ContentPresenter.Content>
                                             <TextBlock
-                                                FontSize="{StaticResource FontSizeMicro}"
+                                                FontSize="{DynamicResource FontSizeMicro}"
                                                 Foreground="{TemplateBinding Foreground}"
                                                 Text="{TemplateBinding Content}"
                                                 TextAlignment="Center"
@@ -163,7 +163,7 @@
                                     Grid.Column="1"
                                     Margin="8,0,0,0"
                                     VerticalAlignment="Center"
-                                    FontSize="{StaticResource FontSizeSmallBody}"
+                                    FontSize="{DynamicResource FontSizeSmallBody}"
                                     Foreground="{TemplateBinding Foreground}"
                                     Text="{TemplateBinding Content}"
                                     TextTrimming="CharacterEllipsis" />

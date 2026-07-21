@@ -1660,6 +1660,9 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha nem áll rendelkez
     <value>{0} üzemmód nem érhető el hálózati AC áram nélkül.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Szenzorok</value>
   </data>
@@ -3967,6 +3970,12 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Kiválasztott domaincsoportok rögzítése vagy feloldása (a kedvencek elöl jelennek meg)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Először válasszon ki egy vagy több tartománycsoportot lent.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>A gyorsítási háttérkomponens hiányzik, ezért az indítás nem érhető el.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Kattintással jelöljön ki csoportokat · dupla kattintással engedélyez/tilt · a sávval kedvencezhet vagy indíthatja a kijelölteket.</value>
   </data>
@@ -4038,6 +4047,12 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Alapértelmezett</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Szövegméret</value>

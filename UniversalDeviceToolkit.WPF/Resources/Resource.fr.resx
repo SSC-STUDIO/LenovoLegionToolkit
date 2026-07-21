@@ -1659,6 +1659,9 @@ AVERTISSEMENT : Cette action ne fonctionnera pas correctement si le GPU dédié 
     <value>Le mode d'alimentation {0} n'est pas disponible sans le chargeur secteur.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Capteurs</value>
   </data>
@@ -3968,6 +3971,12 @@ Nécessite un redémarrage.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Épingler ou désépingler les groupes de domaines sélectionnés (favoris en premier)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Sélectionnez d'abord un ou plusieurs groupes de domaines ci-dessous.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Le composant backend d'accélération est manquant, le démarrage est donc indisponible.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Cliquez pour sélectionner des groupes · double-cliquez pour activer/désactiver · utilisez la barre pour mettre en favori ou démarrer la sélection.</value>
   </data>
@@ -4039,6 +4048,12 @@ Nécessite un redémarrage.</value>
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Par défaut</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Taille du texte</value>

@@ -220,7 +220,7 @@
                 <TextBlock
                     Grid.Column="0"
                     Focusable="True"
-                    FontSize="{StaticResource FontSizeMidHeader}"
+                    FontSize="{DynamicResource FontSizeMidHeader}"
                     FontWeight="Medium"
                     Text="{x:Static resources:Resource.SpectrumKeyboardBacklightControl_Effects}" />
 

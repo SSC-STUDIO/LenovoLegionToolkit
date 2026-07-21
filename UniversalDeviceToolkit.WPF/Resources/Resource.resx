@@ -1615,6 +1615,12 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Default</value>
   </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Text size</value>
   </data>
@@ -2369,6 +2375,9 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>{0} power mode is not available without AC power.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensors</value>
@@ -3905,6 +3914,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Pin or unpin selected domain groups (favorites sort first)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Select one or more domain groups below first.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>The acceleration backend component is missing, so start is unavailable.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Start selected</value>

@@ -42,7 +42,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FontSize="{StaticResource FontSizeSmallCaption}"
+                FontSize="{DynamicResource FontSizeSmallCaption}"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.NavigationItemsSettingsWindow_Title}" />
         </Grid>
@@ -51,7 +51,7 @@
             <StackPanel Margin="0,0,16,0">
                 <TextBlock
                     Margin="0,0,0,16"
-                    FontSize="{StaticResource FontSizeCaption}"
+                    FontSize="{DynamicResource FontSizeCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Text="{x:Static resources:Resource.NavigationItemsSettingsWindow_Description}"
                     TextWrapping="Wrap" />
