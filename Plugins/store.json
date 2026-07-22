@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-07-22T17:13:40.0854264\u002B00:00",
-  "storeVersion": "1.1.4",
+  "lastUpdated": "2026-07-22T17:20:34.1532880\u002B00:00",
+  "storeVersion": "1.1.5",
   "plugins": [
     {
       "id": "custom-mouse",
@@ -34,10 +34,10 @@
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.18/custom-mouse-v1.0.18.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/custom-mouse-v1.0.18",
-      "fileSize": 4484059,
-      "fileHash": "e67d46d78baf4dcb78cc970f940fc2069f7dfbda9e5bbb9fac7d5d9352f2636b",
-      "zipHash": "732321df221b5257bcdab94c866c936d25039e00a438f45212facd40fdec71c1",
-      "releaseDate": "2026-07-22T15:30:27.6589861\u002B00:00",
+      "fileSize": 4484250,
+      "fileHash": "789ecf3d93bc51ceebdeb6b36cf28b1bd57617129bbcd0e88d9ab164c0a3b909",
+      "zipHash": "c0e194b2fde87b0572bed0b0ea1ae0861417d4e6820ae3c62c74d5c5ccf790df",
+      "releaseDate": "2026-07-22T17:20:34.1532880\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -112,15 +112,15 @@
         ]
       },
       "author": "SSC-STUDIO",
-      "version": "1.0.13",
+      "version": "1.0.14",
       "minLLTVersion": "5.0.0",
       "isSystemPlugin": true,
-      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.13/shell-integration-v1.0.13.zip",
-      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.13",
-      "fileSize": 3853297,
-      "fileHash": "084cf731e83eed07cdacec5ae7d77eacfe8e2e551bd2c4ae3ff3fc9411aad7ca",
-      "zipHash": "b83b77b33d2f3660afe9127618d5f342478143fa8f6e822b0324833d12ba036a",
-      "releaseDate": "2026-07-22T17:13:40.0854264\u002B00:00",
+      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.14/shell-integration-v1.0.14.zip",
+      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.14",
+      "fileSize": 3864455,
+      "fileHash": "2afff4b3ea847b65438313e51d6e9e4704d2902b28bb4a5bfbc1e8c254e0d11b",
+      "zipHash": "3bfd145626eadb9569f35aa6c860025492014d06e6c13e63ccdba786d8188a0d",
+      "releaseDate": "2026-07-22T17:20:34.1532880\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -195,15 +195,15 @@
         ]
       },
       "author": "SSC-STUDIO",
-      "version": "1.2.3",
+      "version": "1.2.4",
       "minLLTVersion": "5.0.0",
       "isSystemPlugin": false,
-      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/vive-tool-v1.2.3/vive-tool-v1.2.3.zip",
-      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/vive-tool-v1.2.3",
-      "fileSize": 3620777,
-      "fileHash": "0ad6d65fb6bd7d15d825e42b59c00efc271313c8258ee5a9df57deec3bbf8ea1",
-      "zipHash": "080638d3a6a0306f0783c4c2a5e04e8ef9cc45a8c2464be2c85a6c683131795e",
-      "releaseDate": "2026-07-14T00:00:00.0000000\u002B00:00",
+      "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/vive-tool-v1.2.4/vive-tool-v1.2.4.zip",
+      "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/vive-tool-v1.2.4",
+      "fileSize": 3640088,
+      "fileHash": "a773cfe91595aa9b8c134fdab5fdcb7b561a42801da8c29984738e641b4621d9",
+      "zipHash": "02a302c2db58444e3cd55418fee1c75ef115420b282d67bc9f2e1c4a145b82c4",
+      "releaseDate": "2026-07-22T17:20:34.1532880\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -245,10 +245,7 @@
       "tags": [
         "windows",
         "feature-flags",
-        "vivetool",
-        "customization",
-        "tweaks",
-        "insider"
+        "tweaks"
       ],
       "status": "Active"
     }
