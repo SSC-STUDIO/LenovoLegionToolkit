@@ -16,6 +16,7 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
     public const string CatalogUrlEnvironmentVariable = "UDT_RESOURCE_CATALOG_URL";
     private const string JsdelivrCatalogUrl = "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/catalog.json";
     private const string RawCatalogUrl = "https://raw.githubusercontent.com/SSC-STUDIO/UniversalDeviceToolkit/master/resources/stable/catalog.json";
+    private static readonly TimeSpan CatalogAttemptTimeout = TimeSpan.FromSeconds(20);
     private static readonly JsonSerializerOptions JsonOptions = LltJson.CreateCompactOptions();
 
     private static IEnumerable<string> GetCatalogUrlCandidates()
@@ -53,8 +54,11 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
 
             try
             {
+                using var attemptCts = CancellationTokenSource.CreateLinkedTokenSource(token);
+                attemptCts.CancelAfter(CatalogAttemptTimeout);
+
                 using var httpClient = httpClientFactory.Create();
-                var json = await httpClient.GetStringAsync(candidateUrl, token).ConfigureAwait(false);
+                var json = await httpClient.GetStringAsync(candidateUrl, attemptCts.Token).ConfigureAwait(false);
                 return JsonSerializer.Deserialize<OnlineResourceCatalog>(json, JsonOptions)
                        ?? throw ExceptionHelper.ResourceCatalogEmpty();
             }
