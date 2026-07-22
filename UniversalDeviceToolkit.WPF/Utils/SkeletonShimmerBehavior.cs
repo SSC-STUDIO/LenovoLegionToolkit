@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -126,6 +126,21 @@ internal static class SkeletonShimmerBehavior
         };
 
         transform.BeginAnimation(TranslateTransform.XProperty, animation, HandoffBehavior.SnapshotAndReplace);
+
+        // Gentle opacity breathing in lockstep with the sweep so bone blocks feel alive
+        // between passes instead of statically waiting for the next band.
+        var breathing = new DoubleAnimation
+        {
+            From = 1.0,
+            To = SkeletonAnimationTokens.BreathingFloorOpacity,
+            Duration = duration,
+            BeginTime = beginTime,
+            AutoReverse = true,
+            RepeatBehavior = RepeatBehavior.Forever,
+            EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut }
+        };
+        border.BeginAnimation(UIElement.OpacityProperty, breathing, HandoffBehavior.SnapshotAndReplace);
+
         state.IsRunning = true;
         TrackActive(border);
     }

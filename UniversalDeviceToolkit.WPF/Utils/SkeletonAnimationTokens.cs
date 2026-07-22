@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace UniversalDeviceToolkit.WPF.Utils;
 
@@ -11,4 +11,7 @@ internal static class SkeletonAnimationTokens
     // Wider stagger than the ultra-tight wave — fewer borders peak on the same frame (smoother GPU).
     internal const double StaggerStepSeconds = 0.055;
     internal const double StaggerMaxSeconds = 0.32;
+    // Opacity breathing floor while the shimmer runs; subtle enough to keep text-shaped
+    // blocks readable, deep enough to feel alive between sweep passes.
+    internal const double BreathingFloorOpacity = 0.82;
 }

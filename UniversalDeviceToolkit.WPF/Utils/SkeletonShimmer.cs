@@ -181,13 +181,14 @@ public static class SkeletonShimmer
             RelativeTransform = new TranslateTransform(SkeletonAnimationTokens.SweepFrom, 0)
         };
 
-        // Classic 4.x three-stop teal band (peak @ 0.48) with soft shoulders on the theme bone fill.
+        // Wide soft-shoulder band (peak @ 0.48): the sweep reads as a smooth wave rather
+        // than a narrow stripe, especially on wide card skeletons.
         brush.GradientStops.Add(new GradientStop(baseColor, 0.00));
-        brush.GradientStops.Add(new GradientStop(baseColor, 0.18));
-        brush.GradientStops.Add(new GradientStop(edge, 0.36));
+        brush.GradientStops.Add(new GradientStop(baseColor, 0.14));
+        brush.GradientStops.Add(new GradientStop(edge, 0.30));
         brush.GradientStops.Add(new GradientStop(peak, 0.48));
-        brush.GradientStops.Add(new GradientStop(edge, 0.60));
-        brush.GradientStops.Add(new GradientStop(baseColor, 0.78));
+        brush.GradientStops.Add(new GradientStop(edge, 0.66));
+        brush.GradientStops.Add(new GradientStop(baseColor, 0.84));
         brush.GradientStops.Add(new GradientStop(baseColor, 1.00));
         return brush;
     }
