@@ -1,7 +1,7 @@
 {
   "Id": "custom-mouse",
-  "Name": "Cursor & Pointer",
-  "Version": "1.0.17",
+  "Name": "Cursor \u0026 Pointer",
+  "Version": "1.0.18",
   "MinLltVersion": "5.0.0",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": false,

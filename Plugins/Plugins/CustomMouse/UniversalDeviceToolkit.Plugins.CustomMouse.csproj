@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <Version>1.0.17</Version>
-    <FileVersion>1.0.17</FileVersion>
-    <AssemblyVersion>1.0.17</AssemblyVersion>
+    <Version>1.0.18</Version>
+    <FileVersion>1.0.18</FileVersion>
+    <AssemblyVersion>1.0.18</AssemblyVersion>
     <AssemblyName>UniversalDeviceToolkit.Plugins.CustomMouse</AssemblyName>
   </PropertyGroup>
 

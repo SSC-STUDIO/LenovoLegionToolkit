@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "custom-mouse",
-  "name": "Cursor & Pointer",
-  "version": "1.0.17",
+  "name": "Cursor \u0026 Pointer",
+  "version": "1.0.18",
   "minHostVersion": "5.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
@@ -12,7 +12,7 @@
     "featurePage": null,
     "settingsPage": {
       "class": "UniversalDeviceToolkit.Plugins.CustomMouse.CustomMouseSettingsControl",
-      "title": "Cursor & Pointer"
+      "title": "Cursor \u0026 Pointer"
     },
     "runtime": {
       "class": "UniversalDeviceToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
@@ -20,12 +20,12 @@
     "optimizationActions": [
       {
         "id": "custom.mouse",
-        "title": "Cursor & Pointer"
+        "title": "Cursor \u0026 Pointer"
       }
     ]
   },
   "package": {
-    "assetName": "custom-mouse-v1.0.17.zip",
+    "assetName": "custom-mouse-v1.0.18.zip",
     "requiredFiles": [
       "UniversalDeviceToolkit.Plugins.CustomMouse.dll",
       "UniversalDeviceToolkit.Plugins.SDK.dll",
@@ -79,5 +79,8 @@
     ],
     "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
   },
-  "lifecycle": "Active"
+  "lifecycle": "Active",
+  "localizedNames": {},
+  "localizedDescriptions": {},
+  "localizedTags": {}
 }
