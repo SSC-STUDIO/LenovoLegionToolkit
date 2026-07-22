@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="UniversalDeviceToolkit.WPF.Pages.WindowsOptimizationPage"
     x:Name="PageRoot"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -27,7 +27,7 @@
             <Setter Property="Padding" Value="18,8,18,9" />
             <Setter Property="MinHeight" Value="42" />
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
@@ -278,7 +278,7 @@
                             VerticalAlignment="Center"
                             Text=""
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            FontSize="14"
+                            FontSize="{DynamicResource FontSizeCaption}"
                             Visibility="Collapsed" />
 
                         <!-- Same tab-row chrome slot for bulk actions (opt/cleanup/drivers) and NA selection.
@@ -310,17 +310,23 @@
                                 <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
                                     <Setter Property="MinHeight" Value="40" />
                                     <Setter Property="Padding" Value="12,7" />
+                                    <Style.Triggers>
+                                        <!-- Secondary chrome keeps disabled buttons readable but clearly inactive. -->
+                                        <Trigger Property="IsEnabled" Value="False">
+                                            <Setter Property="Opacity" Value="0.45" />
+                                        </Trigger>
+                                    </Style.Triggers>
                                 </Style>
                             </Border.Resources>
                             <StackPanel Orientation="Horizontal">
-                                <!-- Count summary (display-only; bulk mode opens a list window on click) -->
+                                <!-- Count summary: click scrolls to the first selected tile (or explains how to select) -->
                                 <wpfui:Button
                                     MinWidth="148"
                                     Margin="0,0,4,0"
                                     Appearance="Secondary"
                                     Focusable="False"
-                                    IsHitTestVisible="False"
                                     IsTabStop="False"
+                                    Click="NetworkAccelerationSelectionCountButton_Click"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
                                     <StackPanel Orientation="Horizontal">
@@ -340,6 +346,7 @@
                                     Margin="0,0,4,0"
                                     Appearance="Secondary"
                                     IsEnabled="False"
+                                    ToolTipService.ShowOnDisabled="True"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}">
@@ -351,6 +358,7 @@
                                     Margin="0"
                                     Appearance="Secondary"
                                     IsEnabled="False"
+                                    ToolTipService.ShowOnDisabled="True"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
@@ -473,11 +481,84 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Category list for optimization, cleanup, and beautification modes -->
+                <controls:LoadableControl
+                    x:Name="_categoriesLoader"
+                    Grid.Column="0"
+                    Margin="0,0,16,0"
+                    ContentVisibilityWhileLoading="Collapsed">
+                    <controls:LoadableControl.Style>
+                        <Style TargetType="controls:LoadableControl">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsDriverDownloadMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </controls:LoadableControl.Style>
+                    <controls:LoadableControl.LoadingContent>
+                        <!-- Mirrors collapsed CardExpander category rows: title + description stack, selection summary right. -->
+                        <StackPanel>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="220" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="160" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="72" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="180" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="132" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="64" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="240" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="176" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="80" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                            <Border Style="{StaticResource AppSkeletonListItemCardStyle}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="196" Style="{StaticResource AppSkeletonListItemPrimaryLineStyle}" />
+                                        <Border Width="144" Style="{StaticResource AppSkeletonListItemSecondaryLineStyle}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="68" Margin="12,0,0,0" Style="{StaticResource AppSkeletonListItemSingleLineStyle}" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </controls:LoadableControl.LoadingContent>
                 <ScrollViewer
                     x:Name="_categoriesList"
                     AutomationProperties.AutomationId="WindowsOptimizationCategoryList"
-                    Grid.Column="0"
-                    Margin="0,0,16,0"
                     VerticalScrollBarVisibility="Auto"
                     HorizontalScrollBarVisibility="Disabled"
                     CanContentScroll="False"
@@ -518,7 +599,7 @@
                                                     Text="{Binding Title}" />
                                                 <TextBlock
                                                     Margin="0,4,0,0"
-                                                    FontSize="12"
+                                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                     Text="{Binding Description}"
                                                     TextWrapping="Wrap" />
@@ -596,6 +677,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
+                </controls:LoadableControl>
 
                 <!-- Content for driver download mode -->
                 <Grid Grid.Column="0" Margin="0,0,16,0">
@@ -748,7 +830,7 @@
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_PrimarySource}" />
                                                     <TextBlock
-                                                        FontSize="12"
+                                                        FontSize="{DynamicResource FontSizeSmallCaption}"
                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}"
                                                         TextTrimming="CharacterEllipsis" />
@@ -766,7 +848,7 @@
                                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
                                                     <TextBlock
-                                                        FontSize="12"
+                                                        FontSize="{DynamicResource FontSizeSmallCaption}"
                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                         Text="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}"
                                                         TextTrimming="CharacterEllipsis" />
@@ -1045,37 +1127,15 @@
                                             x:Name="_driverEmptyStateBorder"
                                             AutomationProperties.AutomationId="WindowsOptimizationDriverEmptyState"
                                             Margin="0,4,0,12"
-                                            Padding="24"
                                             Background="{DynamicResource ControlFillColorDefaultBrush}"
                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                             BorderThickness="1"
                                             CornerRadius="{StaticResource CornerRadiusCard}"
                                             Visibility="Collapsed">
-                                            <StackPanel
+                                            <custom:EmptyState
+                                                x:Name="_driverEmptyStateControl"
                                                 MaxWidth="520"
-                                                HorizontalAlignment="Center">
-                                                <wpfui:SymbolIcon
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="28"
-                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                    Symbol="Search24" />
-                                                <TextBlock
-                                                    x:Name="_driverEmptyStateTitleTextBlock"
-                                                    Margin="0,10,0,0"
-                                                    HorizontalAlignment="Center"
-                                                    FontSize="15"
-                                                    FontWeight="SemiBold"
-                                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                    TextAlignment="Center"
-                                                    TextWrapping="Wrap" />
-                                                <TextBlock
-                                                    x:Name="_driverEmptyStateMessageTextBlock"
-                                                    Margin="0,6,0,0"
-                                                    HorizontalAlignment="Center"
-                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                    TextAlignment="Center"
-                                                    TextWrapping="Wrap" />
-                                            </StackPanel>
+                                                Icon="Search24" />
                                         </Border>
 
                                         <StackPanel x:Name="_driverPackagesStackPanel" Margin="0,0,0,12" />
@@ -1168,7 +1228,7 @@
 
                                 <TextBlock
                                     Grid.Row="0"
-                                    FontSize="16"
+                                    FontSize="{DynamicResource FontSizePageDescription}"
                                     FontWeight="Medium"
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}" />
                                 <TextBlock
@@ -1283,7 +1343,7 @@
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupInfo}" />
                                 <TextBlock
                                     Margin="0,0,0,12"
-                                    FontSize="12"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupDescription}"
                                     TextWrapping="Wrap" />
@@ -1308,6 +1368,7 @@
                                 <TextBlock
                                     x:Name="_estimatedCleanupText"
                                     Margin="0,0,0,4"
+                                    FontWeight="SemiBold"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{Binding EstimatedCleanupSizeText}"
                                     TextWrapping="Wrap">
@@ -1331,7 +1392,7 @@
                                 </TextBlock>
                                 <TextBlock
                                     Margin="0,0,0,8"
-                                    FontSize="12"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding PendingText}"
                                     TextWrapping="Wrap">
@@ -1353,7 +1414,7 @@
                                 <!-- Current deleting file -->
                                 <TextBlock
                                     Margin="0,0,0,12"
-                                    FontSize="12"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                     Text="{Binding CurrentDeletingFile}"
                                     TextWrapping="Wrap"
@@ -1387,7 +1448,7 @@
                                     </StackPanel.Style>
                                     <TextBlock 
                                         Text="{Binding CurrentOperationText}" 
-                                        FontSize="12" 
+                                        FontSize="{DynamicResource FontSizeSmallCaption}" 
                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                         Margin="0,0,0,4" />
                                     <ProgressBar IsIndeterminate="True" Height="4" />
@@ -1455,9 +1516,11 @@
                                         MinWidth="36"
                                         Margin="8,0,0,0"
                                         HorizontalAlignment="Stretch"
+                                        ToolTip="{x:Static resources:Resource.Refresh}"
+                                        AutomationProperties.Name="{x:Static resources:Resource.Refresh}"
                                         Click="ScanCleanupButton_Click">
                                         <wpfui:Button.Style>
-                                            <Style TargetType="wpfui:Button" BasedOn="{StaticResource CleanupActionButtonStyle}">
+                                            <Style TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonStandard}">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                 <Style.Triggers>
                                                     <MultiDataTrigger>
@@ -1499,7 +1562,7 @@
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Header}" />
                                         <TextBlock
                                             Margin="0,0,0,12"
-                                            FontSize="12"
+                                            FontSize="{DynamicResource FontSizeSmallCaption}"
                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                             Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Description}"
                                             TextWrapping="Wrap" />
@@ -1574,12 +1637,12 @@
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-                                        <TextBlock
+                                        <custom:EmptyState
                                             Margin="0,0,0,12"
-                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                            Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Empty}">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
+                                            Icon="Delete24"
+                                            Title="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Empty}">
+                                            <custom:EmptyState.Style>
+                                                <Style BasedOn="{StaticResource {x:Type custom:EmptyState}}" TargetType="custom:EmptyState">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding CustomCleanupRules.Count}" Value="0">
@@ -1587,8 +1650,8 @@
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </TextBlock.Style>
-                                        </TextBlock>
+                                            </custom:EmptyState.Style>
+                                        </custom:EmptyState>
                                     </StackPanel>
                                 </ScrollViewer>
 

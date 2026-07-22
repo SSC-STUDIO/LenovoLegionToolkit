@@ -70,7 +70,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number7}"
                     Click="NumberPadButton_Click"
                     Content="7"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x67" />
                 <wpfui:Button
@@ -82,7 +82,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number8}"
                     Click="NumberPadButton_Click"
                     Content="8"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x68" />
                 <wpfui:Button
@@ -94,7 +94,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number9}"
                     Click="NumberPadButton_Click"
                     Content="9"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x69" />
 
@@ -107,7 +107,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number4}"
                     Click="NumberPadButton_Click"
                     Content="4"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x64" />
                 <wpfui:Button
@@ -119,7 +119,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number5}"
                     Click="NumberPadButton_Click"
                     Content="5"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x65" />
                 <wpfui:Button
@@ -131,7 +131,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number6}"
                     Click="NumberPadButton_Click"
                     Content="6"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x66" />
 
@@ -144,7 +144,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number1}"
                     Click="NumberPadButton_Click"
                     Content="1"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x61" />
                 <wpfui:Button
@@ -156,7 +156,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number2}"
                     Click="NumberPadButton_Click"
                     Content="2"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x62" />
                 <wpfui:Button
@@ -168,7 +168,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number3}"
                     Click="NumberPadButton_Click"
                     Content="3"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x63" />
 
@@ -181,7 +181,7 @@
                     AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Number0}"
                     Click="NumberPadButton_Click"
                     Content="0"
-                    FontSize="18"
+                    FontSize="{DynamicResource FontSizeGaugeValue}"
                     FontWeight="SemiBold"
                     Tag="0x60" />
 

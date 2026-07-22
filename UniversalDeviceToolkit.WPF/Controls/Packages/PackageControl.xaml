@@ -13,7 +13,7 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="{StaticResource IconSizeMD}" />
             <Setter Property="Appearance" Value="Secondary" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
@@ -24,7 +24,7 @@
         </Style>
 
         <Style x:Key="PackageMetadataTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
@@ -80,7 +80,7 @@
                     <TextBlock
                         x:Name="_titleTextBlock"
                         Grid.Column="0"
-                        FontSize="14"
+                        FontSize="{DynamicResource FontSizeCaption}"
                         FontWeight="SemiBold"
                         MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
                         TextTrimming="CharacterEllipsis" />
@@ -109,12 +109,12 @@
                             <wpfui:SymbolIcon
                                 x:Name="_statusIcon"
                                 Margin="0,0,4,0"
-                                FontSize="15"
+                                FontSize="{StaticResource IconSizeBadge}"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 Symbol="Clock24" />
                             <TextBlock
                                 x:Name="_statusTextBlock"
-                                FontSize="12"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                 TextTrimming="CharacterEllipsis" />
@@ -156,7 +156,7 @@
                     Grid.Row="2"
                     Grid.Column="1"
                     Margin="0,8,16,0"
-                    FontSize="13"
+                    FontSize="{DynamicResource FontSizeSmallBody}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
                     TextWrapping="Wrap" />
@@ -166,7 +166,7 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Margin="0,8,16,0"
-                    FontSize="12"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
                     TextTrimming="CharacterEllipsis" />
@@ -183,12 +183,12 @@
                         <StackPanel Orientation="Horizontal">
                             <wpfui:SymbolIcon
                                 Margin="0,0,4,0"
-                                FontSize="15"
+                                FontSize="{StaticResource IconSizeBadge}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource StatusSuccessBrush}"
                                 Symbol="ArrowSync24" />
                             <TextBlock
-                                FontSize="12"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource StatusSuccessBrush}"
                                 Text="{x:Static resources:Resource.PackageControl_IsUpdateInfo}"
@@ -202,13 +202,13 @@
                         <StackPanel Orientation="Horizontal">
                             <wpfui:SymbolIcon
                                 Margin="0,0,4,0"
-                                FontSize="15"
+                                FontSize="{StaticResource IconSizeBadge}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource StatusWarningBrush}"
                                 Symbol="Warning24" />
                             <TextBlock
                                 x:Name="_rebootTextBlock"
-                                FontSize="12"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
                                 FontWeight="Medium"
                                 Foreground="{DynamicResource StatusWarningBrush}"
                                 Text="{x:Static resources:Resource.PackageControl_RebootRecommended}"
@@ -222,7 +222,7 @@
                     Grid.Row="5"
                     Grid.Column="1"
                     Margin="0,8,16,0"
-                    FontSize="12"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
                     FontWeight="Medium"
                     Foreground="{DynamicResource StatusWarningBrush}"
                     Text="{x:Static resources:Resource.PackageControl_OldPackageWarning}"

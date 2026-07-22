@@ -2,6 +2,7 @@
     x:Class="UniversalDeviceToolkit.WPF.Pages.PluginPageWrapper"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     x:Name="PluginPageWrapperRoot"
@@ -24,7 +25,7 @@
             <wpfui:SymbolIcon
                 x:Name="_pluginIcon"
                 Margin="0,0,12,0"
-                FontSize="28"
+                FontSize="{StaticResource IconSizeDialog}"
                 VerticalAlignment="Center" />
             <TextBlock
                 x:Name="_pluginTitle"
@@ -33,11 +34,14 @@
         </StackPanel>
         
         <!-- Plugin Content -->
-        <ContentControl
-            x:Name="_pluginContentHost"
-            AutomationProperties.AutomationId="PluginPageContentFrame"
+        <wpfui:DynamicScrollViewer
             Grid.Row="1"
-            BorderThickness="0" />
+            VerticalScrollBarVisibility="Auto">
+            <ContentControl
+                x:Name="_pluginContentHost"
+                AutomationProperties.AutomationId="PluginPageContentFrame"
+                BorderThickness="0" />
+        </wpfui:DynamicScrollViewer>
 
         <Border
             x:Name="_emptyStateBorder"
@@ -47,10 +51,9 @@
             Padding="24"
             Background="{DynamicResource ControlFillColorSecondaryBrush}"
             Visibility="Collapsed">
-            <TextBlock
-                x:Name="_emptyStateTextBlock"
-                TextWrapping="Wrap"
-                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <custom:EmptyState
+                x:Name="_emptyStateControl"
+                Icon="ErrorCircle24" />
         </Border>
     </Grid>
 </Page>

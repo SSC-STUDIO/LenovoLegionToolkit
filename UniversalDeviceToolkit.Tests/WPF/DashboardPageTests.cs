@@ -30,6 +30,17 @@ public class DashboardPageTests
     }
 
     [Fact]
+    public void FormatProcessListLines_ShouldGroupDuplicateProcessNamesWithCount()
+    {
+        var lines = DiscreteGPUControl.FormatProcessListLines(["msedge", "msedgewebview2", "msedge", "dwm"]).ToArray();
+
+        lines.Should().Equal(
+            "  • msedge × 2",
+            "  • dwm",
+            "  • msedgewebview2");
+    }
+
+    [Fact]
     public void DashboardPage_ShouldUseCancelableLatestWinsLoading()
     {
         ReadDashboardPageSource()

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     x:Name="PluginExtensionsPageRoot"
@@ -81,7 +82,7 @@
 
         <Style x:Key="PluginCardSecondaryLineStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,4,0,0" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
@@ -105,7 +106,7 @@
             <Setter Property="Height" Value="32" />
             <Setter Property="Padding" Value="0" />
             <Setter Property="Margin" Value="0,0,6,0" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="{StaticResource IconSizeMD}" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
             <Setter Property="Appearance" Value="Secondary" />
             <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
@@ -148,6 +149,10 @@
         </Style>
     </Page.Resources>
 
+    <wpfui:DynamicScrollViewer
+        x:Name="_scrollViewer"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
     <Grid Margin="0,0,12,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -194,20 +199,20 @@
                     Grid.Column="0"
                     Margin="0,0,10,0"
                     VerticalAlignment="Center"
-                    FontSize="18"
+                    FontSize="{StaticResource IconSizeMD}"
                     Symbol="CloudDismiss24"
                     Foreground="{DynamicResource StatusWarningBrush}" />
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                     <TextBlock
                         x:Name="_storeOfflineTitleText"
-                        FontSize="13"
+                        FontSize="{DynamicResource FontSizeSmallBody}"
                         FontWeight="SemiBold"
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                         Text="{x:Static resources:Resource.PluginExtensionsPage_StoreUnavailableTitle}" />
                     <TextBlock
                         x:Name="_storeOfflineMessageText"
                         Margin="0,2,0,0"
-                        FontSize="12"
+                        FontSize="{DynamicResource FontSizeSmallCaption}"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         TextWrapping="Wrap"
                         Text="{x:Static resources:Resource.PluginExtensionsPage_StoreUnavailableMessage}" />
@@ -236,25 +241,25 @@
             <DockPanel LastChildFill="True">
                 <WrapPanel DockPanel.Dock="Left" VerticalAlignment="Center">
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
-                        <wpfui:SymbolIcon Symbol="Apps24" FontSize="15" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
+                        <wpfui:SymbolIcon Symbol="Apps24" FontSize="{StaticResource IconSizeBadge}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryTotal}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="_summaryTotalTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
 
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
-                        <wpfui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="15" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
+                        <wpfui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="{StaticResource IconSizeBadge}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryInstalled}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="_summaryInstalledTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
 
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
-                        <wpfui:SymbolIcon Symbol="ArrowCircleUp24" FontSize="15" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
+                        <wpfui:SymbolIcon Symbol="ArrowCircleUp24" FontSize="{StaticResource IconSizeBadge}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryUpdatesReady}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="_summaryUpdatesTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
 
                     <StackPanel Style="{StaticResource InlineMetricStyle}">
-                        <wpfui:SymbolIcon Symbol="Pulse24" FontSize="15" Foreground="{DynamicResource SystemAccentColorBrush}" Margin="0,0,6,0" />
+                        <wpfui:SymbolIcon Symbol="Pulse24" FontSize="{StaticResource IconSizeBadge}" Foreground="{DynamicResource SystemAccentColorBrush}" Margin="0,0,6,0" />
                         <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_SummaryStorePulse}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock x:Name="_summaryStorePulseValueTextBlock" Margin="6,0,0,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="0" />
                     </StackPanel>
@@ -374,7 +379,7 @@
                     AutomationProperties.AutomationId="PluginResultsCountText"
                     Grid.Row="0"
                     Margin="2,0,0,6"
-                    FontSize="12"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                     Visibility="Collapsed" />
 
@@ -437,7 +442,7 @@
                                             Background="{Binding IconBackground}">
                                             <Grid>
                                                 <TextBlock Text="{Binding IconLetter}"
-                                                           FontSize="16"
+                                                           FontSize="{DynamicResource FontSizePageDescription}"
                                                            FontWeight="SemiBold"
                                                            Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
                                                            HorizontalAlignment="Center"
@@ -453,7 +458,7 @@
                                                         BorderThickness="2"
                                                         Visibility="{Binding ShouldShowInstalledActions, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <wpfui:SymbolIcon Symbol="Checkmark12"
-                                                                      FontSize="9"
+                                                                      FontSize="{StaticResource IconSizeOverlay}"
                                                                       Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
                                                 </Border>
                                             </Grid>
@@ -465,26 +470,26 @@
                                                     VerticalAlignment="Center">
                                             <WrapPanel VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Name}"
-                                                           FontSize="15"
+                                                           FontSize="{DynamicResource FontSizeBody}"
                                                            FontWeight="SemiBold"
                                                            MaxWidth="320"
                                                            TextTrimming="CharacterEllipsis"
                                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                                 <TextBlock Text="{Binding Version}"
                                                            Margin="8,1,0,0"
-                                                           FontSize="12"
+                                                           FontSize="{DynamicResource FontSizeSmallCaption}"
                                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 <Border Style="{StaticResource PluginStatusBadgeStyle}"
                                                         Visibility="{Binding ShouldShowStatusBadge, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding StatusText}"
-                                                               FontSize="11"
+                                                               FontSize="{DynamicResource FontSizeDenseCaption}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 </Border>
                                                 <Border Style="{StaticResource PluginStatusBadgeStyle}"
                                                         Visibility="{Binding IsLocal, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{x:Static resources:Resource.PluginExtensionsPage_LocalBadge}"
-                                                               FontSize="11"
+                                                               FontSize="{DynamicResource FontSizeDenseCaption}"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                 </Border>
                                             </WrapPanel>
@@ -505,7 +510,7 @@
                                                     <DataTemplate>
                                                         <Border Style="{StaticResource PluginStatusBadgeStyle}">
                                                             <TextBlock Text="{Binding}"
-                                                                       FontSize="11"
+                                                                       FontSize="{DynamicResource FontSizeDenseCaption}"
                                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                         </Border>
                                                     </DataTemplate>
@@ -586,7 +591,7 @@
                                     <TextBlock Grid.Row="1"
                                                Grid.Column="1"
                                                Margin="0,6,12,0"
-                                               FontSize="12"
+                                               FontSize="{DynamicResource FontSizeSmallCaption}"
                                                Text="{Binding Description}"
                                                TextWrapping="Wrap"
                                                TextTrimming="CharacterEllipsis"
@@ -611,7 +616,7 @@
                                             ToolTip="{Binding ToggleDetailsTooltip}"
                                             Visibility="{Binding HasExpandableContent, Converter={StaticResource BooleanToVisibilityConverter}}">
                                             <StackPanel Orientation="Horizontal">
-                                                <wpfui:SymbolIcon FontSize="14"
+                                                <wpfui:SymbolIcon FontSize="{StaticResource IconSizeSM}"
                                                                   Margin="0,0,6,0"
                                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}">
                                                     <wpfui:SymbolIcon.Style>
@@ -627,7 +632,7 @@
                                                 </wpfui:SymbolIcon>
                                                 <TextBlock Text="{Binding ToggleDetailsText}"
                                                            VerticalAlignment="Center"
-                                                           FontSize="12" />
+                                                           FontSize="{DynamicResource FontSizeSmallCaption}" />
                                             </StackPanel>
                                         </wpfui:Button>
                                     </Grid>
@@ -645,7 +650,7 @@
                                             <StackPanel>
                                                 <StackPanel Visibility="{Binding HasDetailedDescription, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding DetailsLabel}"
-                                                               FontSize="12"
+                                                               FontSize="{DynamicResource FontSizeSmallCaption}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                     <TextBlock Text="{Binding DetailedDescription}"
@@ -657,7 +662,7 @@
                                                 <StackPanel Margin="0,10,0,0"
                                                             Visibility="{Binding HasUsageGuide, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <TextBlock Text="{Binding UsageGuideLabel}"
-                                                               FontSize="12"
+                                                               FontSize="{DynamicResource FontSizeSmallCaption}"
                                                                FontWeight="SemiBold"
                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                                                     <TextBlock Text="{Binding UsageGuide}"
@@ -775,34 +780,16 @@
                 </StackPanel>
             </Grid>
 
-            <StackPanel
+            <custom:EmptyState
                 x:Name="_noPluginsMessage"
                 AutomationProperties.AutomationId="PluginNoPluginsMessage"
-                VerticalAlignment="Center"
+                Margin="24"
                 HorizontalAlignment="Center"
+                VerticalAlignment="Center"
                 Visibility="Collapsed"
-                Margin="24">
-                <wpfui:SymbolIcon
-                    Symbol="Archive24"
-                    FontSize="42"
-                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,14" />
-                <TextBlock
-                    Text="{x:Static resources:Resource.PluginExtensionsPage_NoPluginsAvailable}"
-                    FontSize="16"
-                    FontWeight="Medium"
-                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    HorizontalAlignment="Center"
-                    TextAlignment="Center" />
-                <TextBlock
-                    Text="{x:Static resources:Resource.PluginExtensionsPage_EmptyStoreMessage}"
-                    FontSize="14"
-                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
-                    HorizontalAlignment="Center"
-                    TextAlignment="Center"
-                    Margin="0,8,0,0" />
-            </StackPanel>
+                Description="{x:Static resources:Resource.PluginExtensionsPage_EmptyStoreMessage}"
+                Icon="Archive24"
+                Title="{x:Static resources:Resource.PluginExtensionsPage_NoPluginsAvailable}" />
 
             <StackPanel
                 x:Name="_noResultsStackPanel"
@@ -811,15 +798,16 @@
                 VerticalAlignment="Center"
                 Visibility="Collapsed">
                 <wpfui:SymbolIcon Symbol="SearchVisual24"
-                                  FontSize="42"
+                                  FontSize="{StaticResource IconSizeHeroSM}"
                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}"
                                   Margin="0,0,0,14" />
                 <TextBlock
                     Text="{x:Static resources:Resource.PluginExtensionsPage_NoResults}"
                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                    FontSize="14"
+                    FontSize="{DynamicResource FontSizeCaption}"
                     TextAlignment="Center" />
             </StackPanel>
         </Grid>
     </Grid>
+    </wpfui:DynamicScrollViewer>
 </Page>

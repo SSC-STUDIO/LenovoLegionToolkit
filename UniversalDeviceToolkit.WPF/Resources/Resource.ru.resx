@@ -1665,6 +1665,9 @@
     <value>Режим питания {0} недоступна без питания от сети.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Датчики</value>
   </data>
@@ -3879,6 +3882,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>PAC (системный прокси) применяет только включённые группы. Все группы по умолчанию выключены.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Нет групп доменов</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Цели ускорения не настроены. Встроенные группы по умолчанию добавляются автоматически при старте.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Разблокирует выбор режима и ручной запуск. Не меняет системный прокси, пока вы не запустите.</value>
   </data>
@@ -3963,6 +3972,12 @@
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Закрепить или открепить выбранные группы доменов (избранное сверху)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Сначала выберите ниже одну или несколько групп доменов.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Отсутствует компонент серверной части ускорения, поэтому запуск недоступен.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Щёлкните, чтобы выбрать группы · дважды щёлкните для вкл./выкл. · используйте панель, чтобы добавить в избранное или запустить выбранные.</value>
   </data>
@@ -4025,5 +4040,26 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Освобождено {0}. Успешно: {1}, с ошибкой: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Шрифт</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Выберите шрифт, используемый в интерфейсе приложения.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Размер текста</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Сделайте текст в приложении больше или меньше независимо от масштабирования дисплея Windows.</value>
   </data>
 </root>

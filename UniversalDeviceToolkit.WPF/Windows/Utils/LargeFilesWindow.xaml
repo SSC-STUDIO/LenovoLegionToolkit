@@ -36,7 +36,7 @@
             <TextBlock
                 Grid.Row="0"
                 Margin="0,0,0,16"
-                FontSize="14"
+                FontSize="{DynamicResource FontSizeCaption}"
                 Text="{x:Static resources:Resource.LargeFilesWindow_Description}"
                 TextWrapping="Wrap" />
 

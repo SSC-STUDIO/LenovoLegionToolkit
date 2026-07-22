@@ -67,7 +67,7 @@
                 </custom:CardControl.Header>
                 <wpfui:SymbolIcon
                     Margin="4,0,0,0"
-                    FontSize="20"
+                    FontSize="{StaticResource IconSizeCardGlyph}"
                     Symbol="Open24" />
             </custom:CardControl>
 

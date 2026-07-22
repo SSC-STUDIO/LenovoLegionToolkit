@@ -41,11 +41,13 @@
         <TextBlock
             x:Name="_copyright"
             Focusable="True"
-            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            TextWrapping="Wrap" />
         <TextBlock
             x:Name="_translationCredit"
             Padding="0,8,0,0"
             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            TextWrapping="Wrap"
             Text="{x:Static resources:Resource.AboutPage_TranslationCredit}" />
 
         <TextBlock

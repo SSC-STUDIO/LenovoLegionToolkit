@@ -1923,6 +1923,9 @@ Schimbarea modurilor poate necesita repornirea.</value>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>Modul de alimentare {0} nu este disponibil fără alimentare AC.</value>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
     <value>Nu se poate schimba Modul de alimentare</value>
   </data>
@@ -3875,6 +3878,12 @@ Necesită repornirea.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Doar grupurile activate sunt aplicate de PAC (proxy de sistem). Toate grupurile rămân oprite implicit.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Niciun grup de domenii</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nu este configurată nicio țintă de accelerare. Grupurile implicite integrate sunt adăugate automat la lansare.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Deblochează selectarea modului și pornirea manuală. Nu modifică proxy-ul de sistem până la pornire.</value>
   </data>
@@ -3959,6 +3968,12 @@ Necesită repornirea.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Fixează sau defixează grupurile de domenii selectate (preferatele apar primele)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Selectați mai întâi una sau mai multe grupuri de domenii de mai jos.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Componenta backend de accelerare lipsește, deci pornirea nu este disponibilă.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Clic pentru a selecta grupuri · dublu-clic pentru activare/dezactivare · utilizați bara pentru preferate sau pornirea selectatelor.</value>
   </data>
@@ -4021,5 +4036,26 @@ Necesită repornirea.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Eliberat {0}. Reușite: {1}, eșecuri: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Alegeți fontul utilizat în interfața aplicației.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Implicit</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Dimensiune text</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Faceți textul mai mare sau mai mic în aplicație, independent de scalarea afișajului Windows.</value>
   </data>
 </root>

@@ -169,14 +169,12 @@
                                 Click="EnableAutomaticPipelinesToggle_Click" />
                         </custom:CardControl>
 
-                        <TextBlock
+                        <custom:EmptyState
                             x:Name="_noAutomaticActionsText"
                             Margin="0,16,0,16"
-                            HorizontalAlignment="Center"
                             Focusable="True"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{x:Static resources:Resource.AutomationPage_Actions_Empty}" />
+                            Icon="ArrowSync24"
+                            Title="{x:Static resources:Resource.AutomationPage_Actions_Empty}" />
 
                         <StackPanel x:Name="_automaticPipelinesStackPanel" />
 
@@ -303,14 +301,12 @@
                     </controls:LoadableControl.LoadingContent>
                     <StackPanel>
 
-                        <TextBlock
+                        <custom:EmptyState
                             x:Name="_noManualActionsText"
                             Margin="0,16,0,16"
-                            HorizontalAlignment="Center"
                             Focusable="True"
-                            FontWeight="Medium"
-                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                            Text="{x:Static resources:Resource.AutomationPage_QuickActions_Empty}" />
+                            Icon="Play24"
+                            Title="{x:Static resources:Resource.AutomationPage_QuickActions_Empty}" />
 
                         <StackPanel x:Name="_manualPipelinesStackPanel" />
 

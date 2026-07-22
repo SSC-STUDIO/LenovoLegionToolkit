@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -6,11 +6,10 @@ using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
-public partial class UnsupportedWindow : FluentWindow
+public partial class UnsupportedWindow : BaseWindow
 {
     private readonly TaskCompletionSource<bool> _taskCompletionSource = new();
 

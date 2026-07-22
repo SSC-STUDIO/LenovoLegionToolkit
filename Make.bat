@@ -33,10 +33,10 @@ IF %ERROR_COUNT% NEQ 0 GOTO END
 
 where iscc >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo Inno Setup compiler (iscc.exe) not found in PATH.
+    echo Inno Setup compiler iscc.exe not found in PATH.
     echo Download from https://jrsoftware.org/isdl.php
     set ERROR_COUNT=1
-    goto :BUILD_FAILED
+    goto :END
 )
 
 CALL :CLEAN_WORKSPACE
@@ -52,6 +52,10 @@ dotnet publish UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj -c r
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
+REM Stage plugin runtime DLLs (SDK/Shared) from the sibling plugins repo before the payload assert.
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-PluginRuntimeAssets.ps1" -DestinationPath "%BUILD_DIR%" -Configuration Release
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 IF %ERROR_COUNT% NEQ 0 GOTO END

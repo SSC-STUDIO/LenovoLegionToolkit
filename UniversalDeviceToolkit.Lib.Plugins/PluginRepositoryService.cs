@@ -434,8 +434,12 @@ public class PluginRepositoryService : IDisposable
             // machines than through the managed HTTP stack. Prefer that fast path first so the
             // UI smoke flow does not spend multiple long socket timeouts before falling back.
             var preferNativeCurl = ShouldUseNativeCurlDownloadFallback(candidateUrl);
-            if (preferNativeCurl)
-                return await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
+            if (preferNativeCurl &&
+                await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
+            {
+                return true;
+            }
+            // Fall through to the managed retry loop when curl is unavailable or fails.
 
             for (var attempt = 1; attempt <= RemoteDownloadRetryCount; attempt++)
             {

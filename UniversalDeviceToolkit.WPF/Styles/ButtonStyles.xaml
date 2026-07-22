@@ -26,7 +26,7 @@
     <Style x:Key="AppButtonCompact" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthCompact}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightCompact}" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
         <Setter Property="PressedForeground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
@@ -35,7 +35,7 @@
     <Style x:Key="AppButtonStandard" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightStandard}" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
     </Style>
 
@@ -44,7 +44,7 @@
         <Setter Property="Appearance" Value="Primary" />
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthStandard}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightStandard}" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
         <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
@@ -57,7 +57,7 @@
     <Style x:Key="AppButtonLarge" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
         <Setter Property="MinWidth" Value="{StaticResource ButtonMinWidthLarge}" />
         <Setter Property="Height" Value="{StaticResource ButtonHeightLarge}" />
-        <Setter Property="FontSize" Value="{StaticResource FontSizeSubsection}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeSubsection}" />
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
     </Style>
 

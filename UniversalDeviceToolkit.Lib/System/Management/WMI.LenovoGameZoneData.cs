@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -66,22 +67,36 @@ public static partial class WMI
             [],
             pdc => Convert.ToInt32(pdc["Data"].Value));
 
-        public static Task<int> IsSupportSmartFanAsync() => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-            "IsSupportSmartFan",
-            [],
-            pdc => Convert.ToInt32(pdc["Data"].Value));
+        public static Task<int> IsSupportSmartFanAsync() => CallGameZoneMethodWithCimFallbackAsync("IsSupportSmartFan", []);
 
-        public static Task<int> GetSmartFanModeAsync() => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-            "GetSmartFanMode",
-            [],
-            pdc => Convert.ToInt32(pdc["Data"].Value));
+        public static Task<int> GetSmartFanModeAsync() => CallGameZoneMethodWithCimFallbackAsync("GetSmartFanMode", []);
 
-        public static Task SetSmartFanModeAsync(int data) => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-            "SetSmartFanMode",
-            new() { { "Data", data } });
+        public static async Task SetSmartFanModeAsync(int data)
+        {
+            // Classic invoke first (works on most machines); the CIM-process invoke makes the
+            // write also land on providers that do not marshal out-parameters via
+            // System.Management. Same-value double write is idempotent.
+            await CallAsync("root\\WMI",
+                $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+                "SetSmartFanMode",
+                new() { { "Data", data } }).ConfigureAwait(false);
+            await InvokeGameZoneMethodViaCimProcessAsync("SetSmartFanMode", data).ConfigureAwait(false);
+        }
+
+        private static async Task<int> CallGameZoneMethodWithCimFallbackAsync(string methodName, Dictionary<string, object> methodParams)
+        {
+            var classic = await CallAsync("root\\WMI",
+                $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+                methodName,
+                methodParams,
+                pdc => Convert.ToInt32(pdc["Data"].Value)).ConfigureAwait(false);
+
+            // Mode/support values are always >= 1; 0 means the provider returned empty out-parameters.
+            if (classic > 0)
+                return classic;
+
+            return await InvokeGameZoneMethodViaCimProcessAsync(methodName).ConfigureAwait(false);
+        }
 
         public static Task<int> GetIntelligentSubModeAsync() => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_GAMEZONE_DATA",

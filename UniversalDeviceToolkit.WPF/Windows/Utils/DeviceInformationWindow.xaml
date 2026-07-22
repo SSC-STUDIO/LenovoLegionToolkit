@@ -286,7 +286,7 @@
                                 Grid.Column="0"
                                 Margin="0,0,12,0"
                                 VerticalAlignment="Center"
-                                FontSize="20"
+                                FontSize="{StaticResource IconSizeCardGlyph}"
                                 Symbol="Open24" />
                             <TextBlock
                                 Grid.Column="1"

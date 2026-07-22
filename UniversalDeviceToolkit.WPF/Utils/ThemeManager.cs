@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
@@ -63,6 +63,9 @@ public class ThemeManager
         ApplyStylePreset();
         ApplySurfaceResources();
         ApplyStatusTextBrushes();
+        AppFontManager.ApplySaved(_settings);
+        AppTextSizeManager.ApplySaved(_settings);
+        AppScaleManager.ApplySaved(_settings);
 
         ThemeApplied?.Invoke(this, EventArgs.Empty);
     }

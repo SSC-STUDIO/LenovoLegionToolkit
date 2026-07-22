@@ -74,6 +74,14 @@ public class ApplicationSettingsStoreDefaultsTests
     }
 
     [Fact]
+    public void AppScale_ShouldDefaultToStandard()
+    {
+        var store = new ApplicationSettings.ApplicationSettingsStore();
+
+        store.AppScale.Should().Be(AppScale.Standard);
+    }
+
+    [Fact]
     public void NotificationPosition_ShouldDefaultToBottomRight()
     {
         var store = new ApplicationSettings.ApplicationSettingsStore();

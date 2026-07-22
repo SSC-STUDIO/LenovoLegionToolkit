@@ -2241,6 +2241,9 @@ UYARI: Harici GPU mevcut değilse, bu işlem doğru çalışmaz.</value>
     <value>{0} güç modu, AC gücü olmadan kullanılamaz.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensörler</value>
   </data>
@@ -3879,6 +3882,12 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Yalnızca etkin gruplar PAC (sistem proxy) tarafından uygulanır. Tüm gruplar varsayılan olarak kapalıdır.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Etki alanı grubu yok</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Yapılandırılmış hızlandırma hedefi yok. Yerleşik varsayılan gruplar başlangıçta otomatik olarak eklenir.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Mod seçimini ve elle Başlat'ı açar. Siz başlatana kadar sistem proxy'sini değiştirmez.</value>
   </data>
@@ -3963,6 +3972,12 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Seçili etki alanı gruplarını sabitle veya kaldır (favoriler önce sıralanır)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Önce aşağıdan bir veya daha fazla etki alanı grubu seçin.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Hızlandırma arka uç bileşeni eksik, bu nedenle başlatma kullanılamıyor.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Grup seçmek için tıklayın · etkinleştir/devre dışı bırakmak için çift tıklayın · çubuğu favori veya seçileni başlatmak için kullanın.</value>
   </data>
@@ -4025,5 +4040,26 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} boşaltıldı. {1} başarılı, {2} başarısız.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Yazı tipi</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Uygulama arayüzünde kullanılan yazı tipini seçin.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Varsayılan</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Metin boyutu</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Windows ekran ölçeklendirmesinden bağımsız olarak uygulamadaki metni büyütün veya küçültün.</value>
   </data>
 </root>

@@ -156,6 +156,11 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
                 string.Format(Resource.PowerModeUnavailableWithoutACException_Message, ex1.PowerMode.GetDisplayName()),
                 SnackbarType.Warning);
         }
+        else
+        {
+            // Any other failure silently reverted the combo selection — tell the user why.
+            SnackbarHelper.Show(Resource.PowerModeControl_Title, Resource.PowerModeControl_SwitchFailed_Message, SnackbarType.Warning);
+        }
     }
 
     protected override FrameworkElement GetAccessory(ComboBox comboBox)

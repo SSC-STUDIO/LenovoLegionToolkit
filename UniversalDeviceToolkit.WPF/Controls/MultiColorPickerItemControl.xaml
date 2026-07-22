@@ -21,7 +21,7 @@
             </Border.RenderTransform>
 
             <wpfui:SymbolIcon
-                FontSize="11"
+                FontSize="{StaticResource IconSizeChip}"
                 FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                 Symbol="Dismiss12" />

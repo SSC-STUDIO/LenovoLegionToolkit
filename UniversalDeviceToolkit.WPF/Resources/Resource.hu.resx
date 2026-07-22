@@ -1660,6 +1660,9 @@ FIGYELMEZTETÉS: Ez a művelet nem fog megfelelően futni, ha nem áll rendelkez
     <value>{0} üzemmód nem érhető el hálózati AC áram nélkül.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Szenzorok</value>
   </data>
@@ -3877,6 +3880,12 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>A PAC (rendszerproxy) csak az engedélyezett csoportokat alkalmazza. Minden csoport alapértelmezés szerint ki van kapcsolva.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Nincsenek doméncsoportok</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nincsenek konfigurált gyorsítási célok. A beépített alapértelmezett csoportok automatikusan hozzáadódnak indításkor.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Feloldja a módválasztást és a kézi Indítást. A rendszerproxy nem változik, amíg el nem indítja.</value>
   </data>
@@ -3961,6 +3970,12 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Kiválasztott domaincsoportok rögzítése vagy feloldása (a kedvencek elöl jelennek meg)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Először válasszon ki egy vagy több tartománycsoportot lent.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>A gyorsítási háttérkomponens hiányzik, ezért az indítás nem érhető el.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Kattintással jelöljön ki csoportokat · dupla kattintással engedélyez/tilt · a sávval kedvencezhet vagy indíthatja a kijelölteket.</value>
   </data>
@@ -4023,5 +4038,26 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Felszabadítva: {0}. Sikeres: {1}, sikertelen: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Betűtípus</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Válassza ki az alkalmazás felületén használt betűtípust.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Alapértelmezett</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Szövegméret</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Nagyítsa vagy kicsinyítse a szöveget az alkalmazásban, a Windows megjelenítési skálázásától függetlenül.</value>
   </data>
 </root>

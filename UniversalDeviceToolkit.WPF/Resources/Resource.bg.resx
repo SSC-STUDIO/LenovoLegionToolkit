@@ -1633,6 +1633,9 @@
     <value>{0} режим на захранване не е наличен без свързано зарядно.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Сензори</value>
   </data>
@@ -3953,6 +3956,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Само активираните групи се прилагат чрез PAC (системен прокси). Всички групи са изключени по подразбиране.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Няма групи домейни</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Няма конфигурирани цели за ускорение. Вградените групи по подразбиране се добавят автоматично при пускане.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Клик за избор на групи · двоен клик за вкл./изкл. · лентата за любими или старт на избраните.</value>
   </data>
@@ -3970,6 +3979,12 @@
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Закачете или откачете избраните групи домейни (любимите са първи)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Първо изберете една или повече групи домейни по-долу.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Компонентът на бекенда за ускоряване липсва, затова стартирането е недостъпно.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Стартирай избраните</value>
@@ -4048,5 +4063,26 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Освободени {0}. Успешни {1}, неуспешни {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Шрифт</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Изберете шрифта, използван в интерфейса на приложението.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>По подразбиране</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Размер на текста</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Направете текста по-голям или по-малък в приложението, независимо от мащабирането на дисплея в Windows.</value>
   </data>
 </root>

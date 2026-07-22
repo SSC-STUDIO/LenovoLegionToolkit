@@ -2264,6 +2264,9 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
     <value>{0} power mode is not available without AC power.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensors</value>
   </data>
@@ -3773,6 +3776,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Only enabled groups are applied by PAC (system proxy). All groups stay off by default.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>No domain groups</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>No acceleration targets are configured. Built-in default groups are added automatically at startup.</value>
+  </data>
   <data name="NetworkAccelerationPage_DomainGroupsLabel" xml:space="preserve">
     <value>Domain groups</value>
   </data>
@@ -3880,6 +3889,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Pin or unpin selected domain groups (favorites sort first)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Select one or more domain groups below first.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>The acceleration backend component is missing, so start is unavailable.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Click to select groups · double-click to enable/disable · use the bar to favorite or start selected.</value>
@@ -4024,5 +4039,26 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Freed {0}. {1} succeeded, {2} failed.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Choose the font used across the app interface.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Text size</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Make text larger or smaller across the app, independent of Windows display scaling.</value>
   </data>
 </root>

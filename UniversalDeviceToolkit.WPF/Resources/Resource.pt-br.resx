@@ -1654,6 +1654,9 @@ Atenção: Esta ação não irá correr corretamente se a GPU discreta estiver i
     <value>O esquema de energia {0} não está disponível em bateria.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensores</value>
   </data>
@@ -3930,6 +3933,12 @@ ex. C:\Drivers</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Somente os grupos ativados são aplicados pelo PAC (proxy do sistema). Todos os grupos ficam desligados por padrão.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Nenhum grupo de domínios</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nenhum alvo de aceleração configurado. Os grupos padrão integrados são adicionados automaticamente na inicialização.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Clique para selecionar grupos · clique duplo para ativar/desativar · use a barra para favoritar ou iniciar selecionados.</value>
   </data>
@@ -3947,6 +3956,12 @@ ex. C:\Drivers</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Fixar ou desafixar grupos de domínios selecionados (favoritos aparecem primeiro)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Selecione primeiro um ou mais grupos de domínios abaixo.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>O componente de back-end de aceleração está ausente, portanto o início está indisponível.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Iniciar selecionados</value>
@@ -4025,5 +4040,26 @@ ex. C:\Drivers</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Liberados {0}. {1} com sucesso, {2} falharam.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Fonte</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Escolha a fonte usada na interface do aplicativo.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Padrão</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Tamanho do texto</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Deixe o texto maior ou menor no aplicativo, independentemente do dimensionamento de tela do Windows.</value>
   </data>
 </root>

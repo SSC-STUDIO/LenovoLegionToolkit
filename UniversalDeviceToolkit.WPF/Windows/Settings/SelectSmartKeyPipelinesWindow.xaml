@@ -43,7 +43,7 @@
                 x:Name="_title"
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="{DynamicResource FontSizeSmallCaption}"
                 IsHitTestVisible="False" />
         </Grid>
 

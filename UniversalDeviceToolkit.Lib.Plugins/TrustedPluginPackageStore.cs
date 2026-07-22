@@ -25,7 +25,9 @@ internal static class TrustedPluginPackageStore
         try
         {
             var normalizedDirectory = Path.GetFullPath(pluginDirectory);
-            var dlls = Directory.GetFiles(normalizedDirectory, "*.dll", SearchOption.TopDirectoryOnly)
+            // Include nested runtimes/ dependencies — a top-level-only scan leaves unsigned
+            // helper DLLs in subdirectories untrusted and they fail signature checks at load.
+            var dlls = Directory.GetFiles(normalizedDirectory, "*.dll", SearchOption.AllDirectories)
                 .Where(path => !Path.GetFileName(path).Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
                 .Select(path => new TrustedPluginFile
                 {

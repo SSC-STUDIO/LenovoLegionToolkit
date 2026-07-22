@@ -731,6 +731,40 @@ public enum WindowBackdropStyle
     macOS
 }
 
+// No Display attributes: option labels are font names (proper nouns) resolved
+// WPF-side, like TemperatureUnit.
+public enum AppFontStyle
+{
+    Default,
+    FluentVariable,
+    YaHeiUI,
+    DengXian,
+    NotoSans,
+    SimHei,
+    SimSun,
+    KaiTi
+}
+
+// No Display attributes: option labels are percentages (with a localized "Default"
+// marker on Standard) resolved WPF-side, like AppFontStyle. The numeric scale
+// mapping (90/100/110/125%) lives in the WPF layer.
+public enum AppTextSize
+{
+    Compact,
+    Standard,
+    Large,
+    ExtraLarge
+}
+
+public enum AppScale
+{
+    Compact = 80,
+    Small = 90,
+    Standard = 100,
+    Large = 110,
+    ExtraLarge = 125
+}
+
 public enum TemperatureUnit
 {
     C,

@@ -13,7 +13,7 @@
       Single width token for every in-app notification card:
       Snackbar, AppNotificationHost stack, AppStatusBanner.
     -->
-    <sys:Double x:Key="NotificationToastWidth">360</sys:Double>
+    <sys:Double x:Key="NotificationToastWidth">400</sys:Double>
     <Thickness x:Key="NotificationToastPadding">12,10</Thickness>
     <Thickness x:Key="NotificationToastMargin">0,0,0,0</Thickness>
 
@@ -74,9 +74,12 @@
                 <ControlTemplate TargetType="{x:Type controls:Snackbar}">
                     <Grid
                         x:Name="CardBorderContainer"
-                        Margin="0,0,0,-200"
                         Opacity="0"
                         AutomationProperties.Name="{TemplateBinding Title}">
+                        <!-- Off-canvas rest state lives on the render path (was Margin 0,0,0,-200). -->
+                        <Grid.RenderTransform>
+                            <TranslateTransform Y="200" />
+                        </Grid.RenderTransform>
                         <Border
                             x:Name="CardBorder"
                             MinHeight="{TemplateBinding MinHeight}"
@@ -119,7 +122,7 @@
                                         Content="{TemplateBinding Title}"
                                         ContentTemplate="{TemplateBinding TitleTemplate}"
                                         TextElement.FontSize="{DynamicResource FontSizeBody}"
-                                        TextElement.FontWeight="SemiBold"
+                                        TextElement.FontWeight="Regular"
                                         TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                         <ContentPresenter.Resources>
                                             <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
@@ -174,38 +177,41 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ThicknessAnimationUsingKeyFrames
+                                        <!-- Slide/fade on the render path; no layout pass per frame. -->
+                                        <DoubleAnimation
                                             BeginTime="00:00:00"
                                             Storyboard.TargetName="CardBorderContainer"
-                                            Storyboard.TargetProperty="Margin">
-                                            <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,0,0,-200" />
-                                            <SplineThicknessKeyFrame KeyTime="00:00:.26" Value="0,0,0,0" />
-                                        </ThicknessAnimationUsingKeyFrames>
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                            From="200"
+                                            To="0"
+                                            Duration="{StaticResource AnimationDurationSlow}"
+                                            EasingFunction="{StaticResource AnimationEasingExpoOut}" />
                                         <DoubleAnimation
                                             Storyboard.TargetName="CardBorderContainer"
-                                            Storyboard.TargetProperty="(Grid.Opacity)"
-                                            From="0"
-                                            To="1"
-                                            Duration="0:0:.26" />
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="{StaticResource AnimationOpacityStart}"
+                                            To="{StaticResource AnimationOpacityEnd}"
+                                            Duration="{StaticResource AnimationDurationSlow}" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ThicknessAnimationUsingKeyFrames
+                                        <DoubleAnimation
                                             BeginTime="00:00:00"
                                             Storyboard.TargetName="CardBorderContainer"
-                                            Storyboard.TargetProperty="Margin">
-                                            <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,0,0,0" />
-                                            <SplineThicknessKeyFrame KeyTime="00:00:.32" Value="0,0,0,-200" />
-                                        </ThicknessAnimationUsingKeyFrames>
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                            From="0"
+                                            To="200"
+                                            Duration="{StaticResource AnimationDurationSlow}"
+                                            EasingFunction="{StaticResource AnimationEasingExpoOut}" />
                                         <DoubleAnimation
                                             Storyboard.TargetName="CardBorderContainer"
-                                            Storyboard.TargetProperty="(Grid.Opacity)"
-                                            From="1"
-                                            To="0"
-                                            Duration="0:0:.32" />
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="{StaticResource AnimationOpacityEnd}"
+                                            To="{StaticResource AnimationOpacityStart}"
+                                            Duration="{StaticResource AnimationDurationSlow}" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>

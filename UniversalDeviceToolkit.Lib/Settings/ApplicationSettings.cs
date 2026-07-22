@@ -43,12 +43,16 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public RGBColor? AccentColor { get; set; }
         public AccentColorSource AccentColorSource { get; set; }
         public WindowBackdropStyle WindowBackdropStyle { get; set; } = WindowBackdropStyle.Windows;
+        public AppFontStyle AppFontStyle { get; set; } = AppFontStyle.Default;
+        public AppTextSize AppTextSize { get; set; } = AppTextSize.Standard;
+        public AppScale AppScale { get; set; } = AppScale.Standard;
         public PowerModeMappingMode PowerModeMappingMode { get; set; } = PowerModeMappingMode.WindowsPowerMode;
         public Dictionary<PowerModeState, Guid> PowerPlans { get; set; } = [];
         public Dictionary<PowerModeState, WindowsPowerMode> PowerModes { get; set; } = [];
         public bool MinimizeToTray { get; set; } = true;
         public bool MinimizeOnClose { get; set; }
         public WindowSize? WindowSize { get; set; }
+        public WindowPlacement? WindowPlacement { get; set; }
         public bool DontShowNotifications { get; set; }
         public NotificationPosition NotificationPosition { get; set; } = NotificationPosition.BottomRight;
         public NotificationDuration NotificationDuration { get; set; } = NotificationDuration.Normal;

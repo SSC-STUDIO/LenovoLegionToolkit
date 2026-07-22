@@ -76,7 +76,7 @@ concurrency:
 
 jobs:
   ui-smoke:
-    runs-on: [self-hosted, Windows, LLT-UI-SMOKE]
+    runs-on: [self-hosted, Windows, udt]
     timeout-minutes: 90
 
     steps:

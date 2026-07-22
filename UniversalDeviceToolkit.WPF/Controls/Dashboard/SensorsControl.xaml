@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="UniversalDeviceToolkit.WPF.Controls.Dashboard.SensorsControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -442,11 +442,7 @@
                     <WrapPanel x:Name="_batteryLegend" Style="{StaticResource LegendPanelStyle}">
                         <StackPanel Style="{StaticResource LegendItemStyle}">
                             <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartBatteryBrush}" />
-                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Charge}" />
-                        </StackPanel>
-                        <StackPanel Style="{StaticResource LegendItemStyle}">
-                            <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartCoreClockBrush}" />
-                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Health}" />
+                            <TextBlock Style="{StaticResource LegendTextStyle}" Text="{x:Static resources:Resource.SensorsControl_Rate}" />
                         </StackPanel>
                         <StackPanel Style="{StaticResource LegendItemStyle}">
                             <Ellipse Style="{StaticResource LegendDotStyle}" Fill="{DynamicResource ChartTemperatureBrush}" />

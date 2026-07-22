@@ -37,7 +37,7 @@
                 Height="28"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="20"
+                FontSize="{StaticResource IconSizeCardGlyph}"
                 Foreground="{DynamicResource StatusWarningBrush}"
                 Symbol="Warning24" />
 
@@ -67,7 +67,7 @@
                 <wpfui:SymbolIcon
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="14"
+                    FontSize="{StaticResource IconSizeSM}"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Symbol="ChevronRight24" />
             </Border>
@@ -82,7 +82,7 @@
                 Click="CloseButton_Click"
                 PreviewMouseLeftButtonDown="CloseButton_PreviewMouseLeftButtonDown"
                 ToolTip="{x:Static resources:Resource.Close_Tooltip}">
-                <wpfui:SymbolIcon FontSize="14" Symbol="Dismiss20" />
+                <wpfui:SymbolIcon FontSize="{StaticResource IconSizeSM}" Symbol="Dismiss20" />
             </wpfui:Button>
         </Grid>
     </Border>

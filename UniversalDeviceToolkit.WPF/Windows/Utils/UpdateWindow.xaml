@@ -74,7 +74,7 @@
                     <wpfui:SymbolIcon
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        FontSize="24"
+                        FontSize="{StaticResource IconSizeLG}"
                         Foreground="{DynamicResource StatusInfoBrush}"
                         Symbol="ArrowCircleUp24" />
                 </Border>
@@ -134,87 +134,91 @@
                 BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                 BorderThickness="1"
                 CornerRadius="{StaticResource CornerRadiusCard}">
-                <markdig:MarkdownViewer
-                    x:Name="_markdownViewer"
-                    Focusable="True"
-                    Foreground="{DynamicResource TextFillColorPrimaryBrush}">
-                    <markdig:MarkdownViewer.Resources>
-                        <Style TargetType="{x:Type FlowDocument}">
-                            <Setter Property="FontFamily" Value="{StaticResource AppFontFamily}" />
-                            <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                            <Setter Property="PagePadding" Value="0" />
-                            <Setter Property="TextAlignment" Value="Left" />
-                        </Style>
-                        <Style TargetType="{x:Type Paragraph}">
-                            <Setter Property="Margin" Value="0,0,0,10" />
-                            <Setter Property="LineHeight" Value="22" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </Style>
-                        <Style TargetType="{x:Type List}">
-                            <Setter Property="Margin" Value="0,0,0,10" />
-                            <Setter Property="Padding" Value="18,0,0,0" />
-                        </Style>
-                        <Style TargetType="{x:Type ListItem}">
-                            <Setter Property="Margin" Value="0,0,0,4" />
-                        </Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </Style>
-                        <Style TargetType="{x:Type Span}">
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </Style>
-                        <Style TargetType="{x:Type Run}">
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                        </Style>
-                        <Style TargetType="{x:Type Hyperlink}">
-                            <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
-                            <Setter Property="TextDecorations" Value="Underline" />
-                        </Style>
-                        <Style x:Key="{x:Static markdig:Styles.HyperlinkStyleKey}" TargetType="Hyperlink" BasedOn="{StaticResource {x:Type Hyperlink}}" />
-                        <Style x:Key="{x:Static markdig:Styles.CodeStyleKey}" TargetType="{x:Type Run}">
-                            <Setter Property="FontFamily" Value="Consolas, Cascadia Mono, Courier New" />
-                            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                        </Style>
-                        <Style x:Key="{x:Static markdig:Styles.CodeBlockStyleKey}" TargetType="{x:Type Paragraph}">
-                            <Setter Property="FontFamily" Value="Consolas, Cascadia Mono, Courier New" />
-                            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                            <Setter Property="Padding" Value="10,8" />
-                            <Setter Property="Margin" Value="0,0,0,12" />
-                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-                            <Setter Property="BorderThickness" Value="1" />
-                        </Style>
-                        <Style x:Key="{x:Static markdig:Styles.QuoteBlockStyleKey}" TargetType="{x:Type Section}">
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
-                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-                            <Setter Property="BorderThickness" Value="3,0,0,0" />
-                            <Setter Property="Padding" Value="12,0,0,0" />
-                            <Setter Property="Margin" Value="0,0,0,10" />
-                        </Style>
-                        <Style x:Key="{x:Static markdig:Styles.Heading1StyleKey}" TargetType="{x:Type Paragraph}">
-                            <Setter Property="FontSize" Value="{DynamicResource FontSizeSubsection}" />
-                            <Setter Property="FontWeight" Value="SemiBold" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                            <Setter Property="Margin" Value="0,4,0,8" />
-                        </Style>
-                        <Style x:Key="{x:Static markdig:Styles.Heading2StyleKey}" TargetType="{x:Type Paragraph}">
-                            <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
-                            <Setter Property="FontWeight" Value="SemiBold" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                            <Setter Property="Margin" Value="0,4,0,8" />
-                        </Style>
-                        <Style x:Key="{x:Static markdig:Styles.Heading3StyleKey}" TargetType="{x:Type Paragraph}">
-                            <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
-                            <Setter Property="FontWeight" Value="Medium" />
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                            <Setter Property="Margin" Value="0,2,0,6" />
-                        </Style>
-                    </markdig:MarkdownViewer.Resources>
-                </markdig:MarkdownViewer>
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled">
+                    <markdig:MarkdownViewer
+                        x:Name="_markdownViewer"
+                        Focusable="True"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+                        <markdig:MarkdownViewer.Resources>
+                            <Style TargetType="{x:Type FlowDocument}">
+                                <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
+                                <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <Setter Property="PagePadding" Value="0" />
+                                <Setter Property="TextAlignment" Value="Left" />
+                            </Style>
+                            <Style TargetType="{x:Type Paragraph}">
+                                <Setter Property="Margin" Value="0,0,0,10" />
+                                <Setter Property="LineHeight" Value="22" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Style>
+                            <Style TargetType="{x:Type List}">
+                                <Setter Property="Margin" Value="0,0,0,10" />
+                                <Setter Property="Padding" Value="18,0,0,0" />
+                            </Style>
+                            <Style TargetType="{x:Type ListItem}">
+                                <Setter Property="Margin" Value="0,0,0,4" />
+                            </Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Style>
+                            <Style TargetType="{x:Type Span}">
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Style>
+                            <Style TargetType="{x:Type Run}">
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Style>
+                            <Style TargetType="{x:Type Hyperlink}">
+                                <Setter Property="Foreground" Value="{DynamicResource AccentTextFillColorPrimaryBrush}" />
+                                <Setter Property="TextDecorations" Value="Underline" />
+                            </Style>
+                            <Style x:Key="{x:Static markdig:Styles.HyperlinkStyleKey}" TargetType="Hyperlink" BasedOn="{StaticResource {x:Type Hyperlink}}" />
+                            <Style x:Key="{x:Static markdig:Styles.CodeStyleKey}" TargetType="{x:Type Run}">
+                                <Setter Property="FontFamily" Value="Consolas, Cascadia Mono, Courier New" />
+                                <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            </Style>
+                            <Style x:Key="{x:Static markdig:Styles.CodeBlockStyleKey}" TargetType="{x:Type Paragraph}">
+                                <Setter Property="FontFamily" Value="Consolas, Cascadia Mono, Courier New" />
+                                <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                <Setter Property="Padding" Value="10,8" />
+                                <Setter Property="Margin" Value="0,0,0,12" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter Property="BorderThickness" Value="1" />
+                            </Style>
+                            <Style x:Key="{x:Static markdig:Styles.QuoteBlockStyleKey}" TargetType="{x:Type Section}">
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter Property="BorderThickness" Value="3,0,0,0" />
+                                <Setter Property="Padding" Value="12,0,0,0" />
+                                <Setter Property="Margin" Value="0,0,0,10" />
+                            </Style>
+                            <Style x:Key="{x:Static markdig:Styles.Heading1StyleKey}" TargetType="{x:Type Paragraph}">
+                                <Setter Property="FontSize" Value="{DynamicResource FontSizeSubsection}" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <Setter Property="Margin" Value="0,4,0,8" />
+                            </Style>
+                            <Style x:Key="{x:Static markdig:Styles.Heading2StyleKey}" TargetType="{x:Type Paragraph}">
+                                <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <Setter Property="Margin" Value="0,4,0,8" />
+                            </Style>
+                            <Style x:Key="{x:Static markdig:Styles.Heading3StyleKey}" TargetType="{x:Type Paragraph}">
+                                <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
+                                <Setter Property="FontWeight" Value="Medium" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <Setter Property="Margin" Value="0,2,0,6" />
+                            </Style>
+                        </markdig:MarkdownViewer.Resources>
+                    </markdig:MarkdownViewer>
+                </ScrollViewer>
             </Border>
 
             <!-- Progress + horizontal action bar -->

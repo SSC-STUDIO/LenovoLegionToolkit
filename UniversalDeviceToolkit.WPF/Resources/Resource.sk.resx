@@ -1957,6 +1957,9 @@ Prepínanie režimov môže vyžadovať reštart.</value>
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>Režim napájania {0} nie je dostupný bez pripojenia na AC napájanie.</value>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
     <value>Nie je možné zmeniť režim napájania</value>
   </data>
@@ -3876,6 +3879,12 @@ Vyžaduje reštart.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>PAC (systémový proxy) používa len zapnuté skupiny. Všetky skupiny sú vo predvolenom stave vypnuté.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Žiadne skupiny domén</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nie sú nakonfigurované žiadne ciele akcelerácie. Vstavané predvolené skupiny sa automaticky pridajú pri spustení.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Odomkne výber režimu a ručné Spustiť. Systémový proxy sa do spustenia nezmení.</value>
   </data>
@@ -3960,6 +3969,12 @@ Vyžaduje reštart.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Pripnúť alebo odopnúť vybrané skupiny domén (obľúbené sa radia prvé)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Najprv nižšie vyberte jednu alebo viac skupín domén.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Chýba komponent back-endu akcelerácie, takže spustenie nie je k dispozícii.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Kliknutím vyberte skupiny · dvojklikom zapnite/vypnite · lištou označte obľúbené alebo spustite vybrané.</value>
   </data>
@@ -4022,5 +4037,26 @@ Vyžaduje reštart.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Uvoľnených {0}. Úspešných: {1}, neúspešných: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Písmo</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Vyberte písmo používané v rozhraní aplikácie.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Predvolené</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Veľkosť textu</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Zväčšite alebo zmenšite text v aplikácii nezávisle od škálovania zobrazenia Windows.</value>
   </data>
 </root>

@@ -43,7 +43,7 @@
                 <wpfui:Button
                     Grid.Column="1"
                     Click="AddButton_Click"
-                    FontSize="18"
+                    FontSize="{StaticResource IconSizeMD}"
                     Icon="Add24"
                     ToolTip="{x:Static resources:Resource.Add}" />
 
@@ -51,7 +51,7 @@
                     Grid.Column="2"
                     Margin="8,0,0,0"
                     Click="DeleteAllButton_Click"
-                    FontSize="18"
+                    FontSize="{StaticResource IconSizeMD}"
                     Icon="Delete24"
                     ToolTip="{x:Static resources:Resource.Delete}" />
 
@@ -59,7 +59,7 @@
                     Grid.Column="3"
                     Margin="8,0,0,0"
                     Click="CopyShortcut"
-                    FontSize="18"
+                    FontSize="{StaticResource IconSizeMD}"
                     Icon="Copy24"
                     ToolTip="{x:Static resources:Resource.CopyAll}" />
 
@@ -67,7 +67,7 @@
                     Grid.Column="4"
                     Margin="8,0,0,0"
                     Click="PasteShortcut"
-                    FontSize="18"
+                    FontSize="{StaticResource IconSizeMD}"
                     Icon="ClipboardPaste24"
                     ToolTip="{x:Static resources:Resource.Paste}" />
             </Grid>

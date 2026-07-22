@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xs:schema id="root">
@@ -1606,6 +1606,27 @@ Restart is recommended after changing this option.</value>
   <data name="SettingsPage_Theme_Title" xml:space="preserve">
     <value>Theme</value>
   </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Choose the font used across the app interface.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Text size</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Make text larger or smaller across the app, independent of Windows display scaling.</value>
+  </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
     <value>Appearance</value>
   </data>
@@ -2354,6 +2375,9 @@ WARNING: This action will not run correctly, if discrete GPU is not available.</
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>{0} power mode is not available without AC power.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
+  </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensors</value>
@@ -3867,6 +3891,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Only enabled groups are applied by PAC (system proxy). All groups stay off by default.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>No domain groups</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>No acceleration targets are configured. Built-in default groups are added automatically at startup.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Click to select groups · double-click to enable/disable · use the bar to favorite or start selected.</value>
   </data>
@@ -3884,6 +3914,12 @@ It won't affect other full screen windows, but you will not be able to click on 
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Pin or unpin selected domain groups (favorites sort first)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Select one or more domain groups below first.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>The acceleration backend component is missing, so start is unavailable.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Start selected</value>

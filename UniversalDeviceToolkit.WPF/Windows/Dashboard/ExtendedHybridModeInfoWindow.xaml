@@ -40,7 +40,7 @@
             <TextBlock
                 Grid.Column="0"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="{DynamicResource FontSizeSmallCaption}"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Title}" />
 
@@ -51,7 +51,7 @@
 
                 <StackPanel x:Name="_hybridPanel">
                     <TextBlock
-                        FontSize="16"
+                        FontSize="{DynamicResource FontSizePageDescription}"
                         FontWeight="Medium"
                         Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Hybrid_Title}" />
                     <TextBlock
@@ -63,7 +63,7 @@
 
                 <StackPanel x:Name="_hybridIgpuPanel">
                     <TextBlock
-                        FontSize="16"
+                        FontSize="{DynamicResource FontSizePageDescription}"
                         FontWeight="Medium"
                         Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_IGPU_Title}" />
                     <TextBlock
@@ -81,7 +81,7 @@
 
                 <StackPanel x:Name="_hybridAutoPanel">
                     <TextBlock
-                        FontSize="16"
+                        FontSize="{DynamicResource FontSizePageDescription}"
                         FontWeight="Medium"
                         Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Auto_Title}" />
                     <TextBlock
@@ -93,7 +93,7 @@
 
                 <StackPanel x:Name="_dgpuPanel">
                     <TextBlock
-                        FontSize="16"
+                        FontSize="{DynamicResource FontSizePageDescription}"
                         FontWeight="Medium"
                         Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_DGPU_Title}" />
                     <TextBlock

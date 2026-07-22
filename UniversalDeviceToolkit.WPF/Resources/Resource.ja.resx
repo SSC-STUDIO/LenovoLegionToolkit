@@ -2095,6 +2095,9 @@
   <data name="PowerModeUnavailableWithoutACException_Message" xml:space="preserve">
     <value>AC電源がないと{0}電源モードは使用できません。</value>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
     <value>WindowsはこのノートパソコンがModern Standbyをサポートしていると報告しています。バランス型以外の電力プランを使用すると予期しない挙動が起こる可能性があります。</value>
   </data>
@@ -3877,6 +3880,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>有効なグループのみが PAC（システムプロキシ）に適用されます。すべてのグループは既定でオフです。</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>ドメイン グループがありません</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>加速対象が構成されていません。組み込みの既定グループは起動時に自動的に追加されます。</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>モード選択と手動開始のロックを解除します。開始するまでシステムプロキシは変更しません。</value>
   </data>
@@ -3961,6 +3970,12 @@
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>選択したドメイン グループを固定または解除（優先表示は先頭に並びます）</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>まず下のドメイン グループを 1 つ以上選択してください。</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>アクセラレーション バックエンド コンポーネントが見つからないため、開始できません。</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>クリックでグループを選択 · ダブルクリックで有効/無効 · バーで優先表示または選択を開始。</value>
   </data>
@@ -4023,5 +4038,26 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} を解放しました。成功 {1}、失敗 {2}。</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>フォント</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>アプリのインターフェイスで使用するフォントを選択します。</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>既定</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>テキスト サイズ</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Windows のディスプレイ スケーリングとは独立して、アプリ内のテキストを大きくまたは小さくします。</value>
   </data>
 </root>

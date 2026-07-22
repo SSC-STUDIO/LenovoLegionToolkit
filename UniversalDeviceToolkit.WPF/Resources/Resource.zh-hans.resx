@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -2302,6 +2302,9 @@ ImController 可能
     <value>在未接入全功率电源适配器时无法启用{0}</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>切换功耗模式失败，设备未接受该更改。</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>硬件监控信息</value>
   </data>
@@ -3818,6 +3821,12 @@ Fn 将会暂时解除锁定。</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>仅启用的域名组会进入 PAC（系统代理）。默认全部关闭。</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>没有域名组</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>尚未配置加速目标。内置默认组会在启动时自动添加。</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>单击选择域名组 · 双击启用/关闭 · 底部栏可收藏或启动所选组。</value>
   </data>
@@ -3835,6 +3844,12 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>收藏或取消收藏所选域名组（收藏项排在前面）</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>请先在下方选择要操作的域名组。</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>加速后端组件缺失，无法启动。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>启动所选</value>
@@ -4033,5 +4048,26 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>已释放 {0}。成功 {1} 项，失败 {2} 项。</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>字体</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>选择应用界面使用的字体。</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>默认</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>应用缩放</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>独立于 Windows 显示缩放，调整整个应用界面的大小。</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>文本大小</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>放大或缩小应用内的文本，独立于 Windows 显示缩放。</value>
   </data>
 </root>

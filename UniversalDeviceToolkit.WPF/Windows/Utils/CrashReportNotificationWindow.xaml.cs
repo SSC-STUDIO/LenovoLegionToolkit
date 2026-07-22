@@ -7,14 +7,13 @@ using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
     /// <summary>
     /// Window to notify users about a previous crash and allow them to view or delete the crash report.
     /// </summary>
-    public partial class CrashReportNotificationWindow : FluentWindow
+    public partial class CrashReportNotificationWindow : BaseWindow
     {
         private readonly string _crashReportPath;
         private readonly CrashReport? _crashReport;

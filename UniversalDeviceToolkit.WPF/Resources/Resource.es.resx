@@ -1664,6 +1664,9 @@ AVISO: Esta acción no se ejecutará correctamente si no se dispone de una GPU e
     <value>El modo de energía {0} no está disponible sin alimentación de corriente eléctrica.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensores</value>
   </data>
@@ -3880,6 +3883,12 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Solo se aplican los grupos habilitados mediante PAC (proxy del sistema). Todos los grupos permanecen desactivados de forma predeterminada.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>No hay grupos de dominios</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>No hay destinos de aceleración configurados. Los grupos predeterminados integrados se agregan automáticamente al arrancar.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Desbloquea la selección de modo y el inicio manual. No cambia el proxy del sistema hasta que inicie.</value>
   </data>
@@ -3964,6 +3973,12 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Fijar o desfijar los grupos de dominios seleccionados (los favoritos se ordenan primero)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Seleccione primero uno o más grupos de dominios a continuación.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Falta el componente backend de aceleración, por lo que el inicio no está disponible.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Clic para seleccionar grupos · doble clic para habilitar/deshabilitar · use la barra para marcar favoritos o iniciar la selección.</value>
   </data>
@@ -4026,5 +4041,26 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Se liberaron {0}. {1} correctos, {2} con error.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Fuente</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Elige la fuente usada en la interfaz de la aplicación.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Predeterminado</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Tamaño del texto</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Haz el texto más grande o más pequeño en la aplicación, independientemente del escalado de pantalla de Windows.</value>
   </data>
 </root>

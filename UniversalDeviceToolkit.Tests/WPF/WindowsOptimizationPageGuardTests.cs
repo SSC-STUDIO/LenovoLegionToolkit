@@ -54,6 +54,14 @@ public sealed class WindowsOptimizationPageGuardTests
     }
 
     [Fact]
+    public void CleanupCompletion_ShouldRestoreRunButtonText()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.Cleanup.cs");
+        source.Should().Contain("ViewModel.ResetRunCleanupButtonText();");
+        source.Should().NotContain("ViewModel.RunCleanupButtonText = string.Empty;");
+    }
+
+    [Fact]
     public void DriverFilterForm_ShouldNotBeStuffedIntoCardControlHeader()
     {
         // Multi-field filter forms belong in card body/surface chrome, not CardControl.Header

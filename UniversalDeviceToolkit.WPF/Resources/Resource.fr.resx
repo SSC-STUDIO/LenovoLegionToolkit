@@ -1659,6 +1659,9 @@ AVERTISSEMENT : Cette action ne fonctionnera pas correctement si le GPU dédié 
     <value>Le mode d'alimentation {0} n'est pas disponible sans le chargeur secteur.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Capteurs</value>
   </data>
@@ -3878,6 +3881,12 @@ Nécessite un redémarrage.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Seuls les groupes activés sont appliqués par PAC (proxy système). Tous les groupes restent désactivés par défaut.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Aucun groupe de domaines</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Aucune cible d’accélération n’est configurée. Des groupes par défaut intégrés sont ajoutés automatiquement au lancement.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Déverrouille la sélection du mode et le démarrage manuel. Ne modifie pas le proxy système tant que vous n'avez pas démarré.</value>
   </data>
@@ -3962,6 +3971,12 @@ Nécessite un redémarrage.</value>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Épingler ou désépingler les groupes de domaines sélectionnés (favoris en premier)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Sélectionnez d'abord un ou plusieurs groupes de domaines ci-dessous.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Le composant backend d'accélération est manquant, le démarrage est donc indisponible.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Cliquez pour sélectionner des groupes · double-cliquez pour activer/désactiver · utilisez la barre pour mettre en favori ou démarrer la sélection.</value>
   </data>
@@ -4024,5 +4039,26 @@ Nécessite un redémarrage.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} libérés. {1} réussis, {2} échoués.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Police</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Choisissez la police utilisée dans l'interface de l'application.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Par défaut</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Taille du texte</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Agrandissez ou réduisez le texte dans l'application, indépendamment de la mise à l'échelle d'affichage de Windows.</value>
   </data>
 </root>

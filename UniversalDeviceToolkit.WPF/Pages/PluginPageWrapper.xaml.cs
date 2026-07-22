@@ -301,14 +301,14 @@ public partial class PluginPageWrapper : Page
     private void ShowEmptyState(string message)
     {
         var emptyStateBorder = this.FindName("_emptyStateBorder") as Border;
-        var emptyStateText = this.FindName("_emptyStateTextBlock") as TextBlock;
+        var emptyStateControl = this.FindName("_emptyStateControl") as EmptyState;
         var contentHost = this.FindName("_pluginContentHost") as ContentControl;
 
         if (contentHost != null)
             contentHost.Content = null;
 
-        if (emptyStateText != null)
-            emptyStateText.Text = message;
+        if (emptyStateControl != null)
+            emptyStateControl.Description = message;
 
         if (emptyStateBorder != null)
             emptyStateBorder.Visibility = Visibility.Visible;
@@ -349,9 +349,9 @@ public partial class PluginPageWrapper : Page
         if (emptyStateBorder != null)
             emptyStateBorder.Visibility = Visibility.Collapsed;
 
-        var emptyStateText = this.FindName("_emptyStateTextBlock") as TextBlock;
-        if (emptyStateText != null)
-            emptyStateText.Text = string.Empty;
+        var emptyStateControl = this.FindName("_emptyStateControl") as EmptyState;
+        if (emptyStateControl != null)
+            emptyStateControl.Description = string.Empty;
     }
 
     private static string T(string key, string fallback)

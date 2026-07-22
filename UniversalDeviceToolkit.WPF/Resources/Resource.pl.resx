@@ -2240,6 +2240,9 @@ OSTRZEŻENIE: Ta akcja nie zadziała poprawnie, jeśli dedykowana karta graficzn
     <value>{0} tryb wydajności nie jest dostępny bez zasilania sieciowego.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Czujniki</value>
   </data>
@@ -3878,6 +3881,12 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>PAC (proxy systemowe) stosuje tylko włączone grupy. Wszystkie grupy są domyślnie wyłączone.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Brak grup domen</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Nie skonfigurowano żadnych celów przyspieszania. Wbudowane grupy domyślne są dodawane automatycznie przy uruchomieniu.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>Odblokowuje wybór trybu i ręczny start. Nie zmienia proxy systemowego, dopóki nie uruchomisz.</value>
   </data>
@@ -3962,6 +3971,12 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Przypnij lub odepnij wybrane grupy domen (ulubione na początku)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Najpierw wybierz poniżej jedną lub więcej grup domen.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Brakuje komponentu zaplecza przyspieszania, więc uruchomienie jest niedostępne.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Kliknij, aby wybrać grupy · kliknij dwukrotnie, aby włączyć/wyłączyć · użyj paska, aby dodać do ulubionych lub uruchomić wybrane.</value>
   </data>
@@ -4024,5 +4039,26 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>Zwolniono {0}. Udane: {1}, nieudane: {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Czcionka</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Wybierz czcionkę używaną w interfejsie aplikacji.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Domyślna</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Rozmiar tekstu</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Powiększ lub pomniejsz tekst w aplikacji niezależnie od skalowania ekranu Windows.</value>
   </data>
 </root>

@@ -1771,6 +1771,9 @@ WAARSCHUWING: Deze actie zal niet correct uitgevoerd worden als de externe video
     <value>{0} energiemodus is niet beschikbaar zonder een oplader.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensoren</value>
   </data>
@@ -4309,6 +4312,12 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>Alleen ingeschakelde groepen worden toegepast via PAC (systeemproxy). Alle groepen staan standaard uit.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>Geen domeingroepen</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>Er zijn geen versnellingsdoelen geconfigureerd. Ingebouwde standaardgroepen worden automatisch toegevoegd bij opstarten.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>Klik om groepen te selecteren · dubbelklik om in/uit te schakelen · gebruik de balk voor favorieten of start selectie.</value>
   </data>
@@ -4326,6 +4335,12 @@ Ondersteunde formaten zijn: {1}.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>Geselecteerde domeingroepen vastzetten of losmaken (favorieten eerst)</value>
+  </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>Selecteer eerst een of meer domeingroepen hieronder.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>Het backend-onderdeel voor versnelling ontbreekt, waardoor starten niet beschikbaar is.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
     <value>Selectie starten</value>
@@ -4404,5 +4419,26 @@ Ondersteunde formaten zijn: {1}.</value>
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>{0} vrijgemaakt. {1} geslaagd, {2} mislukt.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>Lettertype</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>Kies het lettertype dat in de app-interface wordt gebruikt.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>Tekstgrootte</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>Maak de tekst in de app groter of kleiner, onafhankelijk van de weergaveschaling van Windows.</value>
   </data>
 </root>

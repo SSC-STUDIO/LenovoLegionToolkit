@@ -56,7 +56,7 @@
                 <StackPanel Margin="0,0,0,8">
                     <TextBlock
                         Margin="0,0,0,4"
-                        FontSize="12"
+                        FontSize="{DynamicResource FontSizeSmallCaption}"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="{x:Static resources:Resource.SettingsPage_UpdateRepository_Owner_Label}" />
                     <wpfui:TextBox
@@ -69,7 +69,7 @@
                         TextChanged="UpdateRepositoryOwnerTextBox_TextChanged" />
                     <TextBlock
                         Margin="0,0,0,4"
-                        FontSize="12"
+                        FontSize="{DynamicResource FontSizeSmallCaption}"
                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="{x:Static resources:Resource.SettingsPage_UpdateRepository_Name_Label}" />
                     <wpfui:TextBox

@@ -50,4 +50,51 @@
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
+    <!--
+      Content-hugging status pill (dot + label, promoted from NetworkAccelerationControl).
+      Keep HorizontalAlignment=Left — Stretch + CornerRadius=999 paints a full-width
+      capsule streak across the page. Distinct from AppStatusChipBorderStyle (asymmetric
+      padding + layout setters); do not merge without re-checking rendered metrics.
+    -->
+    <Style x:Key="AppStatusPillBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
+        <Setter Property="Padding" Value="9,4,11,4" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+    </Style>
+
+    <Style x:Key="AppStatusDotEllipseStyle" TargetType="Ellipse">
+        <Setter Property="Width" Value="7" />
+        <Setter Property="Height" Value="7" />
+        <Setter Property="Margin" Value="0,0,7,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+    <!-- Compact metric tile (WrapPanel-friendly; pairs with AppMetric*TextBlockStyle). -->
+    <Style x:Key="AppMetricTileBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="Margin" Value="0,0,6,6" />
+        <Setter Property="MinWidth" Value="108" />
+        <Setter Property="MinHeight" Value="56" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+    <!-- Thin horizontal section divider. -->
+    <Style x:Key="AppDividerBorderStyle" TargetType="Border">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Margin" Value="0,10,0,10" />
+        <Setter Property="Background" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="Opacity" Value="0.4" />
+    </Style>
+
 </ResourceDictionary>

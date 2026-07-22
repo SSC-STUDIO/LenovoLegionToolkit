@@ -213,8 +213,7 @@ public partial class SensorsControl : IDisposable
     private const string TrendUtilizationKey = "util";
     private const string TrendCoreClockKey = "clock";
     private const string TrendTemperatureKey = "temp";
-    private const string TrendBatteryChargeKey = "battery-charge";
-    private const string TrendBatteryHealthKey = "battery-health";
+    private const string TrendBatteryRateKey = "battery-rate";
     private const string TrendBatteryTemperatureKey = "battery-temp";
 
     private void InitializeTrendCharts()
@@ -231,8 +230,7 @@ public partial class SensorsControl : IDisposable
 
         if (_batteryTrendChart is not null)
         {
-            _batteryTrendChart.DefineSeries(TrendBatteryChargeKey, GetChartColor("ChartBatteryColor", System.Windows.Media.Colors.MediumSeaGreen), 100);
-            _batteryTrendChart.DefineSeries(TrendBatteryHealthKey, GetChartColor("ChartCoreClockColor", System.Windows.Media.Colors.SeaGreen), 100);
+            _batteryTrendChart.DefineSeries(TrendBatteryRateKey, GetChartColor("ChartBatteryColor", System.Windows.Media.Colors.MediumSeaGreen));
             _batteryTrendChart.DefineSeries(TrendBatteryTemperatureKey, GetChartColor("ChartTemperatureColor", System.Windows.Media.Colors.Goldenrod), 60);
         }
     }
@@ -1237,19 +1235,12 @@ public partial class SensorsControl : IDisposable
         if (_batteryTrendChart is null)
             return;
 
-        if (info.BatteryPercentage >= 0)
-        {
-            _batteryTrendChart.AddSample(TrendBatteryChargeKey, info.BatteryPercentage);
-            if (recordTrendHistory)
-                RecordTrendSample(BatteryScope, TrendBatteryChargeKey, info.BatteryPercentage);
-        }
-
-        if (info.BatteryHealth >= 0)
-        {
-            _batteryTrendChart.AddSample(TrendBatteryHealthKey, info.BatteryHealth);
-            if (recordTrendHistory)
-                RecordTrendSample(BatteryScope, TrendBatteryHealthKey, info.BatteryHealth);
-        }
+        // Charge % and health % are near-constant — charting them produces flat lines.
+        // Chart the quantities that actually move: charge/discharge rate and temperature.
+        var rateWatts = Math.Abs(info.DischargeRate / 1000.0);
+        _batteryTrendChart.AddSample(TrendBatteryRateKey, rateWatts);
+        if (recordTrendHistory)
+            RecordTrendSample(BatteryScope, TrendBatteryRateKey, rateWatts);
 
         if (info.BatteryTemperatureC is { } temperature)
         {

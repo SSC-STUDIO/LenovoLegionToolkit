@@ -70,7 +70,7 @@
                     <TextBlock
                         x:Name="_fpsHeader"
                         Margin="0,0,0,5"
-                        FontSize="14"
+                        FontSize="{DynamicResource FontSizeCaption}"
                         FontWeight="Bold"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Fps}, StringFormat='— {0} —'}" />
@@ -133,7 +133,7 @@
                     <TextBlock
                         x:Name="_cpuHeader"
                         Margin="0,0,0,5"
-                        FontSize="14"
+                        FontSize="{DynamicResource FontSizeCaption}"
                         FontWeight="Bold"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Cpu}, StringFormat='— {0} —'}" />
@@ -257,7 +257,7 @@
                     <TextBlock
                         x:Name="_gpuHeader"
                         Margin="0,0,0,5"
-                        FontSize="14"
+                        FontSize="{DynamicResource FontSizeCaption}"
                         FontWeight="Bold"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Gpu}, StringFormat='— {0} —'}" />
@@ -381,7 +381,7 @@
                     <TextBlock
                         x:Name="_memHeader"
                         Margin="0,0,0,5"
-                        FontSize="14"
+                        FontSize="{DynamicResource FontSizeCaption}"
                         FontWeight="Bold"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.SensorsControl_Memory_Title}, StringFormat='— {0} —'}" />
@@ -425,7 +425,7 @@
                     <TextBlock
                         x:Name="_pchHeader"
                         Margin="0,0,0,5"
-                        FontSize="14"
+                        FontSize="{DynamicResource FontSizeCaption}"
                         FontWeight="Bold"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Pch}, StringFormat='— {0} —'}" />

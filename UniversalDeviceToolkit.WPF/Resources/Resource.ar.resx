@@ -2237,6 +2237,9 @@
     <value>وضع الطاقة {0} غير متوفر للعمل دون توصيل محول طاقة التيار المتردد هذا الإعداد يؤثر على سلوك التطبيق.</value>
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
+  <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
+    <value>Failed to switch power mode. The device did not accept the change.</value>
+  </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>قسم المستشعرات</value>
   </data>
@@ -3875,6 +3878,12 @@
   <data name="NetworkAccelerationPage_DomainGroupsHint" xml:space="preserve">
     <value>تُطبَّق المجموعات المفعّلة فقط عبر PAC (وكيل النظام). تبقى كل المجموعات معطّلة افتراضيًا.</value>
   </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyTitle" xml:space="preserve">
+    <value>لا توجد مجموعات نطاقات</value>
+  </data>
+  <data name="NetworkAccelerationPage_DomainGroupsEmptyDescription" xml:space="preserve">
+    <value>لم يتم تكوين أي أهداف للتسريع. تُضاف المجموعات الافتراضية المدمجة تلقائيًا عند التشغيل.</value>
+  </data>
   <data name="NetworkAccelerationPage_EnableHint" xml:space="preserve">
     <value>يفتح اختيار الوضع والبدء اليدوي. لا يغيّر وكيل النظام حتى تبدأ.</value>
   </data>
@@ -3959,6 +3968,12 @@
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
     <value>تثبيت أو إلغاء تثبيت مجموعات النطاقات المحددة (المفضلة تظهر أولًا)</value>
   </data>
+  <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
+    <value>حدد أولاً مجموعة نطاقات واحدة أو أكثر أدناه.</value>
+  </data>
+  <data name="NetworkAccelerationPage_BackendMissing_Hint" xml:space="preserve">
+    <value>مكوّن الخلفية الخاص بالتسريع مفقود، لذا لا يمكن البدء.</value>
+  </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
     <value>انقر لتحديد المجموعات · انقر نقرًا مزدوجًا للتفعيل/التعطيل · استخدم الشريط للتفضيل أو بدء المحدد.</value>
   </data>
@@ -4021,5 +4036,26 @@
   </data>
   <data name="WindowsOptimizationPage_CleanupPartialSummary" xml:space="preserve">
     <value>تم تحرير {0}. نجح {1}، فشل {2}.</value>
+  </data>
+  <data name="SettingsPage_Font_Title" xml:space="preserve">
+    <value>الخط</value>
+  </data>
+  <data name="SettingsPage_Font_Description" xml:space="preserve">
+    <value>اختر الخط المستخدم في واجهة التطبيق.</value>
+  </data>
+  <data name="SettingsPage_Font_Default" xml:space="preserve">
+    <value>الافتراضي</value>
+  </data>
+  <data name="SettingsPage_AppScale_Title" xml:space="preserve">
+    <value>App scale</value>
+  </data>
+  <data name="SettingsPage_AppScale_Description" xml:space="preserve">
+    <value>Scale the entire app interface independently of Windows display scaling.</value>
+  </data>
+  <data name="SettingsPage_TextSize_Title" xml:space="preserve">
+    <value>حجم النص</value>
+  </data>
+  <data name="SettingsPage_TextSize_Description" xml:space="preserve">
+    <value>اجعل النص أكبر أو أصغر في التطبيق، بشكل مستقل عن تحجيم العرض في Windows.</value>
   </data>
 </root>
