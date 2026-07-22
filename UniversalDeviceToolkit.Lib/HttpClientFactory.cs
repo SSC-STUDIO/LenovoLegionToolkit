@@ -18,7 +18,11 @@ public class HttpClientFactory
     public virtual HttpClientHandler CreateHandler()
     {
         var handler = new HttpClientHandler();
-        handler.CheckCertificateRevocationList = true;
+        // Do not hard-require CRL/OCSP at the SCHANNEL level: in networks where CA
+        // revocation endpoints are unreachable the TLS handshake stalls until the
+        // client timeout. ValidateServerCertificate already tolerates exactly this
+        // "revocation unavailable" case while still rejecting broken chains.
+        handler.CheckCertificateRevocationList = false;
         handler.ServerCertificateCustomValidationCallback = ValidateServerCertificate;
 
         if (_url is not null)
