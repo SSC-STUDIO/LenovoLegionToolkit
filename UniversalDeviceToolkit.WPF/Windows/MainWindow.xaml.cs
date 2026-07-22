@@ -266,7 +266,6 @@ public partial class MainWindow
         _specialKeyListener.Changed += SpecialKeyListener_Changed;
 
         _contentGrid.Visibility = Visibility.Visible;
-        ShellChromeHelper.ApplyContentSurfaceEffects(_contentSurfaceBorder, _applicationSettings);
 
         _ = LoadDeviceInfo();
         UpdateIndicators();
