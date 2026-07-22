@@ -139,6 +139,30 @@ public partial class MainWindow : Window
         }
     }
 
+    private bool _isLoadingPluginFromSelection;
+
+    private async void PluginListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // Single-click loads the plugin directly — no extra "Load Selected" round trip.
+        if (_isLoadingPluginFromSelection || PluginListBox.SelectedItem is not PluginListEntry entry)
+            return;
+
+        try
+        {
+            _isLoadingPluginFromSelection = true;
+            await LoadPluginFromBuildEntryAsync(entry);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[plugin] Selection load failed: {ex.Message}");
+            StatusTextBlock.Text = "Failed to load plugin.";
+        }
+        finally
+        {
+            _isLoadingPluginFromSelection = false;
+        }
+    }
+
     private async void LoadSelectedButton_Click(object sender, RoutedEventArgs e)
     {
         try

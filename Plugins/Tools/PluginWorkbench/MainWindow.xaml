@@ -91,21 +91,6 @@
                                    Source="Assets/UniversalDeviceToolkit.ico"
                                    RenderOptions.BitmapScalingMode="HighQuality"
                                    AutomationProperties.AutomationId="WorkbenchAppIconImage" />
-                            <Border Padding="3,0"
-                                    Height="12"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Bottom"
-                                    CornerRadius="8"
-                                    Background="{DynamicResource SystemAccentColorPrimaryBrush}"
-                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                    BorderThickness="1"
-                                    AutomationProperties.AutomationId="WorkbenchTestBadgeBorder">
-                                <TextBlock FontSize="7"
-                                           FontWeight="Bold"
-                                           Foreground="White"
-                                           Text="TEST"
-                                           AutomationProperties.AutomationId="WorkbenchTestBadgeTextBlock" />
-                            </Border>
                         </Grid>
                     </Border>
                     <StackPanel Margin="10,0,0,0"
@@ -174,7 +159,7 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center">
                     <ComboBox x:Name="ThemeComboBox"
-                              Width="104"
+                              MinWidth="104"
                               FontSize="12"
                               SelectionChanged="ThemeComboBox_SelectionChanged"
                               AutomationProperties.AutomationId="ThemeComboBox">
@@ -183,7 +168,7 @@
                         <ComboBoxItem Content="Dark" Tag="Dark" />
                     </ComboBox>
                     <ComboBox x:Name="ModeComboBox"
-                              Width="124"
+                              MinWidth="140"
                               Margin="6,0,0,0"
                               FontSize="12"
                               SelectionChanged="ModeComboBox_SelectionChanged"
@@ -315,6 +300,7 @@
                              Padding="0"
                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                              MouseDoubleClick="PluginListBox_MouseDoubleClick"
+                             SelectionChanged="PluginListBox_SelectionChanged"
                              AutomationProperties.AutomationId="PluginListBox">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
