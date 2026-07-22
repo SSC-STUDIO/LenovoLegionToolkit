@@ -46,7 +46,7 @@
     </Style>
 
     <Style x:Key="PluginMetricLabelTextStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontSize" Value="{StaticResource PluginFontSizeSmall}" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
         <Setter Property="TextWrapping" Value="Wrap" />
     </Style>

@@ -14,12 +14,31 @@ namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 public partial class ShellIntegrationSettingsControl : UserControl
 {
     private readonly ShellIntegrationPlugin _plugin;
+    private bool _isShellActionBusy;
 
     public ShellIntegrationSettingsControl(ShellIntegrationPlugin plugin)
     {
         _plugin = plugin;
         WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
         RefreshStatus();
+    }
+
+    /// <summary>
+    /// Fallback-path button factory: MinWidth + Padding instead of fixed Width so
+    /// localized text never clips (was "Apply Compact Darl…" truncated at fixed width).
+    /// </summary>
+    private static Wpf.Ui.Controls.Button MakeButton(object content, string automationId, RoutedEventHandler clickHandler, double minWidth)
+    {
+        var button = new Wpf.Ui.Controls.Button
+        {
+            Content = content,
+            MinWidth = minWidth,
+            Padding = new Thickness(12, 6, 12, 6),
+            Margin = new Thickness(0, 0, 8, 8)
+        };
+        AutomationProperties.SetAutomationId(button, automationId);
+        button.Click += clickHandler;
+        return button;
     }
 
     private void BuildFallbackUi()
@@ -30,7 +49,6 @@ public partial class ShellIntegrationSettingsControl : UserControl
             TextWrapping = TextWrapping.Wrap
         };
         AutomationProperties.SetAutomationId(_statusTextBlock, "ShellIntegration_StatusText");
-
         var root = new Grid { Margin = new Thickness(16) };
         AutomationProperties.SetAutomationId(root, "ShellIntegrationSettingsRoot");
         root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -52,45 +70,19 @@ public partial class ShellIntegrationSettingsControl : UserControl
         root.Children.Add(_statusTextBlock);
 
         var buttonPanel = new WrapPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 12, 0, 0) };
-        _enableButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.EnableButton, Width = 90 };
-        AutomationProperties.SetAutomationId(_enableButton, "EnableButton");
-        _enableButton.Click += EnableButton_Click;
-        _disableButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.DisableButton, Width = 90, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_disableButton, "DisableButton");
-        _disableButton.Click += DisableButton_Click;
-        _openStyleSettingsButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenStyleShortButton, Width = 120, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_openStyleSettingsButton, "OpenStyleSettingsButton");
-        _openStyleSettingsButton.Click += OpenStyleButton_Click;
-        _openShellFolderButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenShellFolderButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_openShellFolderButton, "OpenShellFolderButton");
-        _openShellFolderButton.Click += OpenShellFolderButton_Click;
-        _openConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenConfigButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_openConfigButton, "OpenConfigButton");
-        _openConfigButton.Click += OpenConfigButton_Click;
-        _syncManagedConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.SyncManagedConfigButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_syncManagedConfigButton, "SyncManagedConfigButton");
-        _syncManagedConfigButton.Click += SyncManagedConfigButton_Click;
-        _resetManagedConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.ResetManagedConfigButton, Width = 170, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_resetManagedConfigButton, "ResetManagedConfigButton");
-        _resetManagedConfigButton.Click += ResetManagedConfigButton_Click;
-        _openManagedConfigButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.OpenManagedConfigButton, Width = 170, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_openManagedConfigButton, "OpenManagedConfigButton");
-        _openManagedConfigButton.Click += OpenManagedConfigButton_Click;
-        _exportProfileButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.ExportProfileButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_exportProfileButton, "ExportProfileButton");
-        _exportProfileButton.Click += ExportProfileButton_Click;
-        _importProfileButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.ImportProfileButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_importProfileButton, "ImportProfileButton");
-        _importProfileButton.Click += ImportProfileButton_Click;
-        _applyDefaultPresetButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.PresetDefaultButton, Width = 140, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_applyDefaultPresetButton, "ApplyDefaultPresetButton");
-        _applyDefaultPresetButton.Click += ApplyDefaultPresetButton_Click;
-        _applyCompactDarkPresetButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.PresetCompactDarkButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_applyCompactDarkPresetButton, "ApplyCompactDarkPresetButton");
-        _applyCompactDarkPresetButton.Click += ApplyCompactDarkPresetButton_Click;
-        _applyMinimalLightPresetButton = new Wpf.Ui.Controls.Button { Content = ShellIntegrationText.PresetMinimalLightButton, Width = 160, Margin = new Thickness(8, 0, 0, 0) };
-        AutomationProperties.SetAutomationId(_applyMinimalLightPresetButton, "ApplyMinimalLightPresetButton");
-        _applyMinimalLightPresetButton.Click += ApplyMinimalLightPresetButton_Click;
+        _enableButton = MakeButton(ShellIntegrationText.EnableButton, "EnableButton", EnableButton_Click, 90);
+        _disableButton = MakeButton(ShellIntegrationText.DisableButton, "DisableButton", DisableButton_Click, 90);
+        _openStyleSettingsButton = MakeButton(ShellIntegrationText.OpenStyleShortButton, "OpenStyleSettingsButton", OpenStyleButton_Click, 120);
+        _openShellFolderButton = MakeButton(ShellIntegrationText.OpenShellFolderButton, "OpenShellFolderButton", OpenShellFolderButton_Click, 150);
+        _openConfigButton = MakeButton(ShellIntegrationText.OpenConfigButton, "OpenConfigButton", OpenConfigButton_Click, 130);
+        _syncManagedConfigButton = MakeButton(ShellIntegrationText.SyncManagedConfigButton, "SyncManagedConfigButton", SyncManagedConfigButton_Click, 150);
+        _resetManagedConfigButton = MakeButton(ShellIntegrationText.ResetManagedConfigButton, "ResetManagedConfigButton", ResetManagedConfigButton_Click, 150);
+        _openManagedConfigButton = MakeButton(ShellIntegrationText.OpenManagedConfigButton, "OpenManagedConfigButton", OpenManagedConfigButton_Click, 150);
+        _exportProfileButton = MakeButton(ShellIntegrationText.ExportProfileButton, "ExportProfileButton", ExportProfileButton_Click, 130);
+        _importProfileButton = MakeButton(ShellIntegrationText.ImportProfileButton, "ImportProfileButton", ImportProfileButton_Click, 130);
+        _applyDefaultPresetButton = MakeButton(ShellIntegrationText.PresetDefaultButton, "ApplyDefaultPresetButton", ApplyDefaultPresetButton_Click, 130);
+        _applyCompactDarkPresetButton = MakeButton(ShellIntegrationText.PresetCompactDarkButton, "ApplyCompactDarkPresetButton", ApplyCompactDarkPresetButton_Click, 150);
+        _applyMinimalLightPresetButton = MakeButton(ShellIntegrationText.PresetMinimalLightButton, "ApplyMinimalLightPresetButton", ApplyMinimalLightPresetButton_Click, 150);
         buttonPanel.Children.Add(_enableButton);
         buttonPanel.Children.Add(_disableButton);
         buttonPanel.Children.Add(_openStyleSettingsButton);
@@ -113,6 +105,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
     private void RefreshStatus(string? suffix = null, bool? isError = null)
     {
+        _isShellActionBusy = false;
         if (_statusTextBlock is null)
         {
             return;
@@ -218,6 +211,41 @@ public partial class ShellIntegrationSettingsControl : UserControl
         return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
     }
 
+    private void SetShellActionBusy(bool isBusy)
+    {
+        if (isBusy)
+        {
+            _isShellActionBusy = true;
+
+            if (_enableButton is not null)
+            {
+                _enableButton.IsEnabled = false;
+            }
+
+            if (_disableButton is not null)
+            {
+                _disableButton.IsEnabled = false;
+            }
+
+            if (_statusTextBlock is not null)
+            {
+                _statusTextBlock.Text = ShellIntegrationText.StatusWorking;
+                _statusTextBlock.Foreground = ResolveBrush("TextFillColorSecondaryBrush", SystemColors.ControlTextBrush);
+            }
+
+            return;
+        }
+
+        if (!_isShellActionBusy)
+        {
+            // RefreshStatus already ran and restored capability-based button state and text.
+            return;
+        }
+
+        _isShellActionBusy = false;
+        RefreshStatus();
+    }
+
     private bool IsShellCurrentlyRegistered()
     {
         try
@@ -232,6 +260,7 @@ public partial class ShellIntegrationSettingsControl : UserControl
 
     private async void EnableButton_Click(object sender, RoutedEventArgs e)
     {
+        SetShellActionBusy(true);
         try
         {
             var success = await _plugin.EnableShellAsync().ConfigureAwait(true);
@@ -242,10 +271,15 @@ public partial class ShellIntegrationSettingsControl : UserControl
             RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
             PluginLog.Trace($"EnableButton_Click error: {ex.Message}", ex);
         }
+        finally
+        {
+            SetShellActionBusy(false);
+        }
     }
 
     private async void DisableButton_Click(object sender, RoutedEventArgs e)
     {
+        SetShellActionBusy(true);
         try
         {
             var success = await _plugin.DisableShellAsync().ConfigureAwait(true);
@@ -255,6 +289,10 @@ public partial class ShellIntegrationSettingsControl : UserControl
         {
             RefreshStatus($"{ShellIntegrationText.ErrorPrefix}: {ex.Message}", true);
             PluginLog.Trace($"DisableButton_Click error: {ex.Message}", ex);
+        }
+        finally
+        {
+            SetShellActionBusy(false);
         }
     }
 

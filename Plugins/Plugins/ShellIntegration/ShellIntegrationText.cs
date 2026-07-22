@@ -62,6 +62,7 @@ public static class ShellIntegrationText
     public static string StatusPresetAppliedCompactDark => T(nameof(StatusPresetAppliedCompactDark), "Applied the compact dark Shell preset.");
     public static string StatusPresetAppliedMinimalLight => T(nameof(StatusPresetAppliedMinimalLight), "Applied the minimal light Shell preset.");
     public static string StatusPresetApplyFailed => T(nameof(StatusPresetApplyFailed), "Preset apply failed.");
+    public static string StatusWorking => T(nameof(StatusWorking), "Working...");
     public static string ProfileFileDialogFilter => T(nameof(ProfileFileDialogFilter), "JSON Files (*.json)|*.json|All Files (*.*)|*.*");
     public static string VersionLabel => T(nameof(VersionLabel), "Version");
     public static string ErrorPrefix => T(nameof(ErrorPrefix), "Error");

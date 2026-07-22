@@ -12,16 +12,18 @@ Use this when you are developing a plugin locally, in a fork, or for an early PR
 ### Standard Commands
 
 ```powershell
-.\llt-plugin.cmd doctor
-.\llt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
-.\llt-plugin.cmd dev --plugin my-plugin --theme system
-.\llt-plugin.cmd build --plugin my-plugin
-.\llt-plugin.cmd preview --plugin my-plugin --theme system
-.\llt-plugin.cmd validate --plugin my-plugin --profile contributor
-.\llt-plugin.cmd package --plugin my-plugin --build-first
+.\udt-plugin.cmd doctor
+.\udt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
+.\udt-plugin.cmd dev --plugin my-plugin --theme system
+.\udt-plugin.cmd build --plugin my-plugin
+.\udt-plugin.cmd preview --plugin my-plugin --theme system
+.\udt-plugin.cmd validate --plugin my-plugin --profile contributor
+.\udt-plugin.cmd package --plugin my-plugin --build-first
 ```
 
-`llt-plugin.cmd` publishes the tooling CLI into `Build/tooling` and reuses that executable. This avoids repeated `dotnet run` builds and the file-lock failures that can happen when multiple validation commands start together.
+`udt-plugin.cmd` is the canonical entry (`llt-plugin.cmd` is a compatibility alias). It publishes the tooling CLI into `Build/tooling` and reuses that executable. This avoids repeated `dotnet run` builds and the file-lock failures that can happen when multiple validation commands start together.
+
+**Host baseline:** Universal Device Toolkit **v5.0.0** (`Dependencies/Host/host-release.json`). Official plugins declare `minHostVersion: "5.0.0"`.
 
 ### Validation Profile
 
@@ -62,7 +64,7 @@ The `store` object contains:
 Create or synchronize the initial store metadata with:
 
 ```powershell
-.\llt-plugin.cmd promote --plugin my-plugin
+.\udt-plugin.cmd promote --plugin my-plugin
 ```
 
 `promote` also writes `store-entry.json` for compatibility with older release tooling.
@@ -75,7 +77,7 @@ Create or synchronize the initial store metadata with:
 Example:
 
 ```powershell
-.\llt-plugin.cmd `
+.\udt-plugin.cmd `
   validate `
   --plugin my-plugin `
   --profile official-candidate
@@ -155,10 +157,10 @@ Do **not** treat `UniversalDeviceToolkit-Plugins/Directory.Build.props` as a plu
 ### Bump a plugin (recommended)
 
 ```powershell
-.\llt-plugin.cmd bump-version --plugin custom-mouse --part patch
-.\llt-plugin.cmd validate --plugin custom-mouse --profile official-candidate
-.\llt-plugin.cmd package --plugin custom-mouse --build-first --output-dir Build\release-assets
-.\llt-plugin.cmd generate-store --plugin-ids custom-mouse --asset-root Build\release-assets --merge-existing --require-assets
+.\udt-plugin.cmd bump-version --plugin custom-mouse --part patch
+.\udt-plugin.cmd validate --plugin custom-mouse --profile official-candidate
+.\udt-plugin.cmd package --plugin custom-mouse --build-first --output-dir Build\release-assets
+.\udt-plugin.cmd generate-store --plugin-ids custom-mouse --asset-root Build\release-assets --merge-existing --require-assets
 ```
 
 `bump-version` updates `plugin.manifest.json`, then `sync-version` propagates to:
@@ -172,7 +174,7 @@ Do **not** treat `UniversalDeviceToolkit-Plugins/Directory.Build.props` as a plu
 ### Check drift without writing
 
 ```powershell
-.\llt-plugin.cmd sync-version --plugin-ids custom-mouse,shell-integration,vive-tool --check
+.\udt-plugin.cmd sync-version --plugin-ids custom-mouse,shell-integration,vive-tool --check
 ```
 
 `migrate` is an alias for `sync-version` (same behavior).

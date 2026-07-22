@@ -10,6 +10,15 @@
              d:DesignWidth="720"
              AutomationProperties.AutomationId="CustomMouseSettingsRoot">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/DesignTokens.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/PluginUiStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <!-- Compact single-column layout: matches host Settings cards (flat, minimal nesting). -->
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
@@ -18,18 +27,17 @@
             <!-- Kept for code-behind status glyph updates (compact: no hero banner). -->
             <wpfui:SymbolIcon x:Name="_statusIcon"
                               Symbol="CheckmarkCircle24"
-                              FontSize="1"
                               Width="0"
                               Height="0"
                               Visibility="Collapsed" />
 
             <TextBlock Text="{x:Static text:CustomMouseText.SettingsOverviewTitle}"
-                       FontSize="15"
+                       FontSize="{StaticResource PluginFontSizeSection}"
                        FontWeight="SemiBold"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <TextBlock Margin="0,4,0,12"
                        Text="{x:Static text:CustomMouseText.WindowsSettingsDescription}"
-                       FontSize="12"
+                       FontSize="{StaticResource PluginFontSizeCaption}"
                        TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
 
@@ -43,36 +51,36 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0">
                     <TextBlock Text="{x:Static text:CustomMouseText.PointerPreviewLabel}"
-                               FontSize="11"
+                               FontSize="{StaticResource PluginFontSizeSmall}"
                                Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     <TextBlock x:Name="_pointerPreviewValueTextBlock"
                                AutomationProperties.AutomationId="CustomMousePointerPreviewText"
                                Margin="0,2,0,0"
-                               FontSize="13"
+                               FontSize="{StaticResource PluginFontSizeLabel}"
                                FontWeight="SemiBold"
                                TextWrapping="Wrap"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 </StackPanel>
                 <StackPanel Grid.Column="2">
                     <TextBlock Text="{x:Static text:CustomMouseText.ButtonLayoutLabel}"
-                               FontSize="11"
+                               FontSize="{StaticResource PluginFontSizeSmall}"
                                Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     <TextBlock x:Name="_buttonLayoutValueTextBlock"
                                AutomationProperties.AutomationId="CustomMouseButtonLayoutText"
                                Margin="0,2,0,0"
-                               FontSize="13"
+                               FontSize="{StaticResource PluginFontSizeLabel}"
                                FontWeight="SemiBold"
                                TextWrapping="Wrap"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 </StackPanel>
                 <StackPanel Grid.Column="4">
                     <TextBlock Text="{x:Static text:CustomMouseText.CursorThemeStatusLabel}"
-                               FontSize="11"
+                               FontSize="{StaticResource PluginFontSizeSmall}"
                                Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     <TextBlock x:Name="_cursorThemeValueTextBlock"
                                AutomationProperties.AutomationId="CustomMouseCursorThemeText"
                                Margin="0,2,0,0"
-                               FontSize="13"
+                               FontSize="{StaticResource PluginFontSizeLabel}"
                                FontWeight="SemiBold"
                                TextWrapping="Wrap"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -82,7 +90,7 @@
             <Separator Margin="0,0,0,12" />
 
             <TextBlock Text="{x:Static text:CustomMouseText.WindowsSettingsTitle}"
-                       FontSize="13"
+                       FontSize="{StaticResource PluginFontSizeLabel}"
                        FontWeight="SemiBold"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <Grid Margin="0,8,0,0">
@@ -91,14 +99,14 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{x:Static text:CustomMouseText.PointerSpeedLabel}"
-                           FontSize="12"
+                           FontSize="{StaticResource PluginFontSizeCaption}"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 <TextBlock x:Name="_pointerSpeedValueLabel"
                            Grid.Column="1"
                            MinWidth="40"
                            TextAlignment="Right"
-                           FontSize="13"
+                           FontSize="{StaticResource PluginFontSizeLabel}"
                            FontWeight="SemiBold"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             </Grid>
@@ -118,20 +126,19 @@
                       Unchecked="SettingsInputChanged" />
 
             <TextBlock Text="{x:Static text:CustomMouseText.CursorThemeModeLabel}"
-                       FontSize="13"
+                       FontSize="{StaticResource PluginFontSizeLabel}"
                        FontWeight="SemiBold"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <TextBlock Margin="0,4,0,8"
                        Text="{x:Static text:CustomMouseText.CursorHint}"
-                       FontSize="12"
+                       FontSize="{StaticResource PluginFontSizeCaption}"
                        TextWrapping="Wrap"
                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             <ComboBox x:Name="_cursorThemeModeComboBox"
                       AutomationProperties.AutomationId="CursorThemeModeComboBox"
                       Margin="0,0,0,10"
                       MinHeight="32"
-                      HorizontalAlignment="Left"
-                      MinWidth="220"
+                      MinWidth="180"
                       SelectionChanged="CursorThemeModeComboBox_SelectionChanged">
                 <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeAuto}" Tag="Auto" />
                 <ComboBoxItem Content="{x:Static text:CustomMouseText.CursorThemeModeLight}" Tag="Light" />
@@ -155,12 +162,22 @@
 
             <Separator Margin="0,0,0,10" />
 
-            <TextBlock x:Name="_statusTextBlock"
-                       AutomationProperties.AutomationId="CustomMouse_StatusText"
-                       Margin="0,0,0,10"
-                       FontSize="12"
-                       TextWrapping="Wrap"
-                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <StackPanel Margin="0,0,0,10"
+                        Orientation="Horizontal">
+                <wpfui:ProgressRing x:Name="_applyProgressRing"
+                                    Width="18"
+                                    Height="18"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    IsIndeterminate="True"
+                                    Visibility="Collapsed" />
+                <TextBlock x:Name="_statusTextBlock"
+                           AutomationProperties.AutomationId="CustomMouse_StatusText"
+                           FontSize="{StaticResource PluginFontSizeCaption}"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
             <WrapPanel>
                 <wpfui:Button Content="{x:Static text:CustomMouseText.SyncFromWindowsButton}"
                               AutomationProperties.AutomationId="SyncFromWindowsButton"

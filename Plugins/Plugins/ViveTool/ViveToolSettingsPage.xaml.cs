@@ -104,7 +104,7 @@ public partial class ViveToolSettingsPage
         {
             BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", SystemColors.ControlDarkBrush),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
+            CornerRadius = new CornerRadius(12),
             Background = ResolveBrush("ControlFillColorSecondaryBrush", SystemColors.ControlBrush),
             Padding = new Thickness(14),
             Margin = new Thickness(0, 0, 0, 12)
@@ -113,7 +113,7 @@ public partial class ViveToolSettingsPage
         statusStack.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_ViveToolStatus,
-            FontSize = 18
+            FontSize = ResolveFontSize("PluginFontSizeHeading", 18)
         });
         statusStack.Children.Add(_statusTextBlock);
         statusStack.Children.Add(_downloadProgressGrid);
@@ -124,7 +124,7 @@ public partial class ViveToolSettingsPage
         {
             BorderBrush = ResolveBrush("ControlStrokeColorDefaultBrush", SystemColors.ControlDarkBrush),
             BorderThickness = new Thickness(1),
-            CornerRadius = new CornerRadius(10),
+            CornerRadius = new CornerRadius(12),
             Background = ResolveBrush("ControlFillColorSecondaryBrush", SystemColors.ControlBrush),
             Padding = new Thickness(14)
         };
@@ -132,7 +132,7 @@ public partial class ViveToolSettingsPage
         pathStack.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_BinaryPathTitle,
-            FontSize = 18,
+            FontSize = ResolveFontSize("PluginFontSizeHeading", 18),
             Margin = new Thickness(0, 0, 0, 10)
         });
         pathStack.Children.Add(pathRow);
@@ -213,6 +213,11 @@ public partial class ViveToolSettingsPage
     private static Brush ResolveBrush(string resourceKey, Brush fallback)
     {
         return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
+    }
+
+    private static double ResolveFontSize(string resourceKey, double fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) is double size ? size : fallback;
     }
 
     private async void BrowseViveToolButton_Click(object sender, RoutedEventArgs e)

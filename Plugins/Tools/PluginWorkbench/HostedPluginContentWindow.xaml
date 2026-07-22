@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <Border Padding="20"
-                CornerRadius="24"
+                CornerRadius="20"
                 Background="{DynamicResource ControlFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1">
@@ -31,11 +31,14 @@
         <Border Grid.Row="1"
                 Margin="0,16,0,16"
                 Padding="20"
-                CornerRadius="24"
+                CornerRadius="20"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1">
-            <ContentControl x:Name="ContentHost" />
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <ContentControl x:Name="ContentHost" />
+            </ScrollViewer>
         </Border>
 
         <DockPanel Grid.Row="2">

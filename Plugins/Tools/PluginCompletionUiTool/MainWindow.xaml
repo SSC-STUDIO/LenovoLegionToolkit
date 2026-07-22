@@ -9,7 +9,7 @@
         Height="860"
         Width="1280"
         MinHeight="700"
-        MinWidth="1000"
+        MinWidth="960"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="16">
         <Grid.RowDefinitions>
@@ -96,30 +96,35 @@
                            VerticalAlignment="Center"
                            Margin="0,0,8,0"
                            Text="Configuration:" />
-                <ComboBox x:Name="ConfigurationComboBox"
-                          AutomationProperties.AutomationId="ConfigurationComboBox"
-                          Grid.Row="2"
-                          Grid.Column="1"
-                          Width="160"
-                          HorizontalAlignment="Left"
-                          SelectedIndex="0">
-                    <ComboBoxItem Content="Release" />
-                    <ComboBoxItem Content="Debug" />
-                </ComboBox>
-                <CheckBox x:Name="SkipBuildCheckBox"
-                          AutomationProperties.AutomationId="SkipBuildCheckBox"
-                          Grid.Row="2"
-                          Grid.Column="1"
-                          Margin="180,0,0,0"
-                          VerticalAlignment="Center"
-                          Content="Skip Build" />
-                <CheckBox x:Name="SkipTestsCheckBox"
-                          AutomationProperties.AutomationId="SkipTestsCheckBox"
-                          Grid.Row="2"
-                          Grid.Column="1"
-                          Margin="300,0,0,0"
-                          VerticalAlignment="Center"
-                          Content="Skip Tests" />
+                <Grid Grid.Row="2"
+                      Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="ConfigurationComboBox"
+                              AutomationProperties.AutomationId="ConfigurationComboBox"
+                              Grid.Column="0"
+                              Width="160"
+                              HorizontalAlignment="Left"
+                              SelectedIndex="0">
+                        <ComboBoxItem Content="Release" />
+                        <ComboBoxItem Content="Debug" />
+                    </ComboBox>
+                    <CheckBox x:Name="SkipBuildCheckBox"
+                              AutomationProperties.AutomationId="SkipBuildCheckBox"
+                              Grid.Column="1"
+                              Margin="20,0,0,0"
+                              VerticalAlignment="Center"
+                              Content="Skip Build" />
+                    <CheckBox x:Name="SkipTestsCheckBox"
+                              AutomationProperties.AutomationId="SkipTestsCheckBox"
+                              Grid.Column="2"
+                              Margin="12,0,0,0"
+                              VerticalAlignment="Center"
+                              Content="Skip Tests" />
+                </Grid>
                 <Button x:Name="RunButton"
                         AutomationProperties.AutomationId="RunButton"
                         Grid.Row="2"
@@ -134,7 +139,7 @@
         <Border Grid.Row="1"
                 Margin="0,12,0,12"
                 Padding="10"
-                CornerRadius="6"
+                CornerRadius="8"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}">
@@ -192,7 +197,7 @@
         <Border Grid.Row="3"
                 Margin="0,12,0,0"
                 Padding="8"
-                CornerRadius="6"
+                CornerRadius="8"
                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 Background="{DynamicResource ControlFillColorSecondaryBrush}">

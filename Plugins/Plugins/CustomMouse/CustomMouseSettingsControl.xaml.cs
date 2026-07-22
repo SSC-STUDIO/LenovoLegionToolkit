@@ -92,7 +92,7 @@ public partial class CustomMouseSettingsControl : UserControl
         var overviewTitle = new TextBlock
         {
             Text = CustomMouseText.SettingsOverviewTitle,
-            FontSize = 16,
+            FontSize = ResolveFontSize("PluginFontSizeSection", 15),
             FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         };
@@ -115,17 +115,17 @@ public partial class CustomMouseSettingsControl : UserControl
         _statusIcon = new Wpf.Ui.Controls.SymbolIcon
         {
             Symbol = Wpf.Ui.Controls.SymbolRegular.CheckmarkCircle24,
-            FontSize = 15,
+            FontSize = ResolveFontSize("PluginIconSizeMD", 18),
             Margin = new Thickness(0, 0, 6, 0),
             VerticalAlignment = VerticalAlignment.Center,
-            Foreground = ResolveBrush("SystemFillColorSuccessBrush", Brushes.Green)
+            Foreground = ResolveBrush("SystemFillColorSuccessBrush", ResolveBrush("SystemAccentColorPrimaryBrush", SystemColors.HighlightBrush))
         };
         statusPillPanel.Children.Add(_statusIcon);
 
         var readyText = new TextBlock
         {
             Text = CustomMouseText.ProfileReady,
-            FontSize = 12,
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12),
             FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -169,7 +169,7 @@ public partial class CustomMouseSettingsControl : UserControl
             Orientation = Orientation.Horizontal,
             Margin = new Thickness(0, 0, 0, 14)
         };
-        pointerHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Cursor24, 18, new Thickness(0, 0, 10, 0)));
+        pointerHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Cursor24, ResolveFontSize("PluginIconSizeMD", 18), new Thickness(0, 0, 10, 0)));
         pointerHeader.Children.Add(CreateFallbackSectionTitle(CustomMouseText.WindowsSettingsTitle));
         pointerPanel.Children.Add(pointerHeader);
 
@@ -199,7 +199,7 @@ public partial class CustomMouseSettingsControl : UserControl
             Orientation = Orientation.Horizontal,
             Margin = new Thickness(0, 0, 0, 10)
         };
-        cursorHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.PaintBrush24, 18, new Thickness(0, 0, 10, 0)));
+        cursorHeader.Children.Add(CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.PaintBrush24, ResolveFontSize("PluginIconSizeMD", 18), new Thickness(0, 0, 10, 0)));
         cursorHeader.Children.Add(CreateFallbackSectionTitle(CustomMouseText.CursorThemeModeLabel));
         cursorPanel.Children.Add(cursorHeader);
         cursorPanel.Children.Add(CreateFallbackBodyText(CustomMouseText.CursorHint, new Thickness(0)));
@@ -231,13 +231,29 @@ public partial class CustomMouseSettingsControl : UserControl
         actionGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         actionGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-        var infoIcon = CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Info24, 16, new Thickness(0, 1, 10, 0));
+        var infoIcon = CreateFallbackSymbol(Wpf.Ui.Controls.SymbolRegular.Info24, ResolveFontSize("PluginIconSizeMD", 18), new Thickness(0, 1, 10, 0));
         infoIcon.Foreground = ResolveBrush("TextFillColorTertiaryBrush", SystemColors.ControlTextBrush);
         Grid.SetColumn(infoIcon, 0);
         actionGrid.Children.Add(infoIcon);
 
-        Grid.SetColumn(_statusTextBlock, 1);
-        actionGrid.Children.Add(_statusTextBlock);
+        _applyProgressRing = new Wpf.Ui.Controls.ProgressRing
+        {
+            Width = 18,
+            Height = 18,
+            Margin = new Thickness(0, 0, 8, 0),
+            VerticalAlignment = VerticalAlignment.Center,
+            IsIndeterminate = true,
+            Visibility = Visibility.Collapsed
+        };
+        var statusPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        statusPanel.Children.Add(_applyProgressRing);
+        statusPanel.Children.Add(_statusTextBlock);
+        Grid.SetColumn(statusPanel, 1);
+        actionGrid.Children.Add(statusPanel);
 
         var mainActionsPanel = new WrapPanel
         {
@@ -279,7 +295,7 @@ public partial class CustomMouseSettingsControl : UserControl
         var textBlock = new TextBlock
         {
             Text = text,
-            FontSize = 14,
+            FontSize = ResolveFontSize("PluginFontSizeBody", 14),
             FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         };
@@ -293,7 +309,7 @@ public partial class CustomMouseSettingsControl : UserControl
         {
             Text = text,
             Margin = margin,
-            FontSize = 12,
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12),
             TextWrapping = TextWrapping.Wrap
         };
         textBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
@@ -305,7 +321,7 @@ public partial class CustomMouseSettingsControl : UserControl
         var textBlock = new TextBlock
         {
             Text = text,
-            FontSize = 13,
+            FontSize = ResolveFontSize("PluginFontSizeBody", 14),
             VerticalAlignment = VerticalAlignment.Center,
             TextWrapping = TextWrapping.Wrap
         };
@@ -320,7 +336,7 @@ public partial class CustomMouseSettingsControl : UserControl
             MinWidth = 48,
             TextAlignment = TextAlignment.Right,
             VerticalAlignment = VerticalAlignment.Center,
-            FontSize = 13,
+            FontSize = ResolveFontSize("PluginFontSizeBody", 14),
             FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         };
@@ -333,7 +349,7 @@ public partial class CustomMouseSettingsControl : UserControl
         var icon = new Wpf.Ui.Controls.SymbolIcon
         {
             Symbol = symbol,
-            FontSize = 21,
+            FontSize = ResolveFontSize("PluginIconSizeLG", 24),
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
             Foreground = ResolveBrush("TextOnAccentFillColorPrimaryBrush", Brushes.White)
@@ -370,10 +386,10 @@ public partial class CustomMouseSettingsControl : UserControl
         valueTextBlock.Margin = new Thickness(0, 5, 0, 0);
         valueTextBlock.MinWidth = 0;
         valueTextBlock.TextAlignment = TextAlignment.Left;
-        valueTextBlock.FontSize = 15;
+        valueTextBlock.FontSize = ResolveFontSize("PluginFontSizeSection", 15);
 
         var labelText = CreateFallbackBodyText(label, new Thickness(0));
-        labelText.FontSize = 11;
+        labelText.FontSize = ResolveFontSize("PluginFontSizeCaption", 12);
         labelText.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
 
         var panel = new StackPanel();
@@ -536,6 +552,8 @@ public partial class CustomMouseSettingsControl : UserControl
 
     private async void ApplyButton_Click(object sender, RoutedEventArgs e)
     {
+        var applyButton = sender as Button;
+        SetApplyBusy(true, applyButton);
         try
         {
             if (_pointerSpeedSlider is null || _swapButtonsCheckBox is null || _statusTextBlock is null)
@@ -572,13 +590,19 @@ public partial class CustomMouseSettingsControl : UserControl
         }
         catch (Exception ex)
         {
-            SetStatus($"Apply failed: {ex.Message}", true);
+            SetStatus($"{CustomMouseText.ApplyFailedPrefix} {ex.Message}", true);
             PluginLog.Trace($"ApplyButton_Click error: {ex.Message}", ex);
+        }
+        finally
+        {
+            SetApplyBusy(false, applyButton);
         }
     }
 
     private async void ApplyCursorThemeNowButton_Click(object sender, RoutedEventArgs e)
     {
+        var applyButton = sender as Button;
+        SetApplyBusy(true, applyButton);
         try
         {
             if (_statusTextBlock is null)
@@ -594,8 +618,12 @@ public partial class CustomMouseSettingsControl : UserControl
         }
         catch (Exception ex)
         {
-            SetStatus($"Apply cursor theme failed: {ex.Message}", true);
+            SetStatus($"{CustomMouseText.ApplyCursorThemeFailedPrefix} {ex.Message}", true);
             PluginLog.Trace($"ApplyCursorThemeNowButton_Click error: {ex.Message}", ex);
+        }
+        finally
+        {
+            SetApplyBusy(false, applyButton);
         }
     }
 
@@ -641,6 +669,25 @@ public partial class CustomMouseSettingsControl : UserControl
         }
     }
 
+    private void SetApplyBusy(bool isBusy, Button? button)
+    {
+        if (button is not null)
+        {
+            button.IsEnabled = !isBusy;
+        }
+
+        if (_applyProgressRing is not null)
+        {
+            _applyProgressRing.Visibility = isBusy ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        if (isBusy && _statusTextBlock is not null)
+        {
+            _statusTextBlock.Text = CustomMouseText.StatusApplying;
+            _statusTextBlock.Foreground = ResolveBrush("TextFillColorSecondaryBrush", SystemColors.ControlTextBrush);
+        }
+    }
+
     private void SetStatus(string text, bool isError)
     {
         if (_statusTextBlock is null)
@@ -665,6 +712,11 @@ public partial class CustomMouseSettingsControl : UserControl
     private static Brush ResolveBrush(string resourceKey, Brush fallback)
     {
         return Application.Current?.TryFindResource(resourceKey) as Brush ?? fallback;
+    }
+
+    private static double ResolveFontSize(string resourceKey, double fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) is double size ? size : fallback;
     }
 
     private void UpdateSummaryCards()

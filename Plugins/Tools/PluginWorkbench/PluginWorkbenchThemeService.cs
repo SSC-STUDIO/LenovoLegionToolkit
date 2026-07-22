@@ -21,16 +21,22 @@ internal sealed class PluginWorkbenchThemeService
     private static readonly string[] HostStyleResources =
     [
         "Styles/DesignTokens.xaml",
+        "Styles/ElevationTokens.xaml",
         "Styles/AnimationTokens.xaml",
         "Styles/Animations.xaml",
         "Styles/ButtonStyles.xaml",
+        "Styles/ControlStyles.xaml",
         "Styles/Typography.xaml",
+        "Styles/Loading.xaml",
         "Styles/Badge.xaml",
         "Styles/CardAction.xaml",
         "Styles/CardControl.xaml",
         "Styles/CardExpander.xaml",
+        "Styles/Charts.xaml",
         "Styles/DynamicScrollBar.xaml",
+        "Styles/EmptyState.xaml",
         "Styles/InfoBar.xaml",
+        "Styles/NotificationToast.xaml",
         "Styles/NavigationStore.xaml",
     ];
 
@@ -146,27 +152,40 @@ internal sealed class PluginWorkbenchThemeService
 
     private static bool TryEnsureHostResources(out string message)
     {
-        try
+        var hostUris = GetHostDictionaryUris();
+        var failures = new List<string>();
+        var merged = 0;
+
+        foreach (var uri in hostUris)
         {
-            var hostUris = GetHostDictionaryUris();
-            foreach (var uri in hostUris)
+            try
             {
                 if (Application.Current.Resources.MergedDictionaries.Any(dictionary => uri.Equals(dictionary.Source)))
                 {
+                    merged++;
                     continue;
                 }
 
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = uri });
+                merged++;
             }
-
-            message = "Host resources loaded successfully.";
-            return true;
+            catch (Exception ex)
+            {
+                // One bad dictionary must not drop the rest — keep merging the others.
+                failures.Add($"{Path.GetFileName(uri.OriginalString)}: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        if (merged == 0)
         {
-            message = $"Run Bootstrap Host and confirm Dependencies/Host matches the main app baseline. Details: {ex.Message}";
+            message = $"Run Bootstrap Host and confirm Dependencies/Host matches the main app baseline. Details: {string.Join("; ", failures)}";
             return false;
         }
+
+        message = failures.Count > 0
+            ? $"Host resources partially loaded ({merged}/{hostUris.Length}). Missing: {string.Join("; ", failures)}"
+            : "Host resources loaded successfully.";
+        return true;
     }
 
     internal sealed record ThemeApplyResult(bool Success, string Message);

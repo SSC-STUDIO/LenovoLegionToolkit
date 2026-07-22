@@ -31,6 +31,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] — v1.3.0-quality (Day 1-5 sprint)
 
+### Changed / 变更
+
+- **Phase 3 ABI hard cutover (2026-07-14)**: Renamed all compile identifiers from `LenovoLegionToolkit.*` → `UniversalDeviceToolkit.*` (namespaces, assemblies, solution/csproj, manifests, tooling, docs). SDK/Shared outputs are now `UniversalDeviceToolkit.Plugins.SDK.dll` / `UniversalDeviceToolkit.Plugins.Shared.dll`. Host deps: `UniversalDeviceToolkit.Lib.dll` / `UniversalDeviceToolkit.Lib.Plugins.dll`. Intentionally retained pre-rebrand migration path segments under `%LocalAppData%\LenovoLegionToolkit\`.
+- **Version tooling / 版本工具链**: Added `sync-version` and `bump-version` CLI commands; `migrate` now propagates `plugin.manifest.json` version to csproj, `[Plugin]` attribute, `plugin.json`, and `store-entry.json`. Removed misleading repo-wide version from `Directory.Build.props`.
+- **Store release / 商店上架**: Bumped active plugin versions for plugin-center testing — custom-mouse 1.0.17, shell-integration 1.0.13, vive-tool 1.2.3; regenerated `store.json` with release asset sizes.
+
 ### Fixed
 
 - Harmonized BatteryHealth plugin author to SSC-STUDIO across plugin.json, plugin.manifest.json, and Plugin attribute (was EliuaK_Csy)
@@ -46,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Battery Health UI redesign**: Full feature page and settings page redesign following the CustomMouse pattern (WpfFallbackHelper fallback, DynamicResource theme binding, CornerRadius cards, SymbolIcon glyphs, animated status pills)
 - **Battery Health store promotion**: Generated store-entry.json and merged battery-health into root store.json with Universal Device Toolkit branding (32 languages, BatteryCharge24 icon)
 - **Battery Health tests**: Fixed threshold theory inline-data bug; 16/16 unit tests green (0 warnings, 0 errors)
-- **Cross-repo naming TODO**: Brand user-visible text as Universal Device Toolkit; internal LenovoLegionToolkit.* namespaces retained for host ABI compatibility (see BUGS.md M-010)
+- **Cross-repo naming TODO**: Brand user-visible text as Universal Device Toolkit; internal UniversalDeviceToolkit.* namespaces retained for host ABI compatibility (see BUGS.md M-010)
 - **Performance optimization / 性能优化**:
   - SaveWithDebounce() — Batch rapid saves (97% I/O reduction)
   - SaveAsync() — Non-blocking async file I/O
@@ -63,9 +69,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Battery Health settings UI**: Fixed CS0104 type ambiguity between Wpf.Ui.Controls and System.Windows.Controls
 - **Brand generalization rewrite / 品牌通用化重写**: Generalized all user-visible Lenovo-specific framing to universal Windows/OEM scope across 15 docs — 
 /LenovoLegion→
-/pcmasterrace, "Lenovo Legion laptops"→"your Windows setup", 插件数 4→5, 项目数 6→7. M-010 ABI gate preserved (LenovoLegionToolkit.* namespaces, solution name, x:Class, manifest class, DLL names, host-release.json intentionally retained). Intentionally kept: 
+/pcmasterrace, "Lenovo Legion laptops"→"your Windows setup", 插件数 4→5, 项目数 6→7. M-010 ABI gate preserved (UniversalDeviceToolkit.* namespaces, solution name, x:Class, manifest class, DLL names, host-release.json intentionally retained). Intentionally kept: 
 /Lenovo community, Lenovo Vantage competitor comparison, lenovo-legion GitHub topic. Verification: 0 residual branding issues, build 0 warnings/0 errors, tests 409/409.
-- **Cross-repo data-root alignment verification / 跨仓库数据根对齐验证**: Confirmed plugin SettingsManager<T> writes to root %LocalAppData%\UniversalDeviceToolkit\plugins\ (L21-24) aligned with host Folders.AppData (%LocalAppData%\UniversalDeviceToolkit, Main Folders.cs L29-30). LenovoLegionToolkit path segments retained as read-only migration source (unchanged).
+- **Cross-repo data-root alignment verification / 跨仓库数据根对齐验证**: Confirmed plugin SettingsManager<T> writes to root %LocalAppData%\UniversalDeviceToolkit\plugins\ (L21-24) aligned with host Folders.AppData (%LocalAppData%\UniversalDeviceToolkit, Main Folders.cs L29-30). UniversalDeviceToolkit path segments retained as read-only migration source (unchanged).
 - **Brand residual final-audit cleanup / 品牌残留终审清理**: Docs/ARCHITECTURE.md L5 project name migrated to Universal Device Toolkit Plugins, Docs/CODING_STANDARDS.md L5 project name synced. M-010 ABI markers preserved in namespace declarations and output path patterns.
 - **Session backup file cleanup / 会话备份文件清理**: Removed 6 accumulated session backup files — workspace remains clean.
 - **Store promotion / 商店上架**: Generated store-entry.json and merged battery-health into root store.json (5 plugins, battery-health featured, Universal Device Toolkit branding).
@@ -109,8 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2026-07-07] Session 25 — Host v4.2.1 Sync + Serilog Transitive Dependency Fix
 
 ### Added / 新增
-- **Host DLL sync to v4.2.1** (from stale v3.6.14): LenovoLegionToolkit.Lib.dll, LenovoLegionToolkit.Lib.Plugins.dll (newly added), and Universal Device Toolkit.dll (renamed from Lenovo Legion Toolkit.dll) all synced to v4.2.1.0
-- **Serilog transitive dependency**: Vendored Serilog.dll v4.3.0, Serilog.Sinks.Async.dll v2.1.0, and Serilog.Sinks.File.dll v7.0.0 into Dependencies\Host\ (v4.2.1 LenovoLegionToolkit.Lib.dll requires Serilog 4.3.0 at runtime via Log..ctor())
+- **Host DLL sync to v4.2.1** (from stale v3.6.14): UniversalDeviceToolkit.Lib.dll, UniversalDeviceToolkit.Lib.Plugins.dll (newly added), and Universal Device Toolkit.dll (renamed from Lenovo Legion Toolkit.dll) all synced to v4.2.1.0
+- **Serilog transitive dependency**: Vendored Serilog.dll v4.3.0, Serilog.Sinks.Async.dll v2.1.0, and Serilog.Sinks.File.dll v7.0.0 into Dependencies\Host\ (v4.2.1 UniversalDeviceToolkit.Lib.dll requires Serilog 4.3.0 at runtime via Log..ctor())
 - **CopyHostDependenciesToOutput target**: New MSBuild target in Directory.Build.targets that copies all Dependencies\Host\*.dll to test/tool project output directories (IsPluginTestProject == True OR IsPluginToolProject == True)
 - **BatteryHealth Workbench load fix**: PluginLoader.IsVersionCompatible now accepts v4.2.1 host (was rejecting with null due to 3.6.14 < 3.6.15 MinimumHostVersion mismatch)
 
@@ -128,11 +134,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PluginWorkbenchHostContext.cs / PluginWorkbenchSession.cs**: Verified no ambiguity (only import SDK namespace / fully-qualify PluginHostMode as SDK)
 
 ### Verification / 验证
-- dotnet build LenovoLegionToolkit-Plugins.sln -c Release → 0 warnings / 0 errors (11.0s)
+- dotnet build UniversalDeviceToolkit-Plugins.sln -c Release → 0 warnings / 0 errors (11.0s)
 - dotnet test → **409/409 PASS** (BatteryHealth 16, CustomMouse 54, ShellIntegration 114, NetworkAcceleration 39, ViveTool 186)
 - PluginWorkbench.Smoke → **10/10 PASS** (5 plugins × {Dark, Light} themes)
 - Visual captures saved to rtifacts\workbench-visual\{plugin}-{theme}\{preview,settings,real-runtime}.png
 
 ### M-010 Constraint Honored / M-010 约束遵守
-- **NOT renamed** (per M-010 ABI gate): LenovoLegionToolkit.Plugins.* namespaces, LenovoLegionToolkit-Plugins.sln filename, *.csproj filenames, plugin assembly names, plugin.manifest.json class field, DLL names, store.json minLLTVersion JSON property name
+- **NOT renamed** (per M-010 ABI gate): UniversalDeviceToolkit.Plugins.* namespaces, UniversalDeviceToolkit-Plugins.sln filename, *.csproj filenames, plugin assembly names, plugin.manifest.json class field, DLL names, store.json minLLTVersion JSON property name
 - **Renamed** (user-visible/build references only): WPF AssemblyName Lenovo Legion Toolkit → Universal Device Toolkit, host-release.json package/URL, cross-csproj <Reference> names

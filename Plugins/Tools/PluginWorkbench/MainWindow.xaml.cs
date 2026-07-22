@@ -53,6 +53,9 @@ public partial class MainWindow : Window
             TryOpenPluginSettings);
 
         PluginHostContext.Current = _hostContext;
+        UniversalDeviceToolkit.Plugins.Shared.WpfFallbackHelper.ComponentInitializationFailed += (controlType, error) =>
+            Dispatcher.BeginInvoke(() =>
+                AppendLog($"[fallback] {controlType.Name} fell back to code-built UI: {error.GetType().Name}: {error.Message}"));
         InitializeSelectors();
         RefreshPluginCatalog();
         ApplyModeToHosts();
@@ -133,6 +136,30 @@ public partial class MainWindow : Window
                 AppendLog($"[plugin] Double-click load failed: {ex.Message}");
                 StatusTextBlock.Text = "Failed to load plugin.";
             }
+        }
+    }
+
+    private bool _isLoadingPluginFromSelection;
+
+    private async void PluginListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        // Single-click loads the plugin directly — no extra "Load Selected" round trip.
+        if (_isLoadingPluginFromSelection || PluginListBox.SelectedItem is not PluginListEntry entry)
+            return;
+
+        try
+        {
+            _isLoadingPluginFromSelection = true;
+            await LoadPluginFromBuildEntryAsync(entry);
+        }
+        catch (Exception ex)
+        {
+            AppendLog($"[plugin] Selection load failed: {ex.Message}");
+            StatusTextBlock.Text = "Failed to load plugin.";
+        }
+        finally
+        {
+            _isLoadingPluginFromSelection = false;
         }
     }
 

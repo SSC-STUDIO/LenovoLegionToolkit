@@ -23,3 +23,6 @@ Plugins/*/*.xml
 *.tmp
 .DS_Store
 Thumbs.db
+
+# Local tooling config (machine-specific MCP bridge)
+.mcp.json

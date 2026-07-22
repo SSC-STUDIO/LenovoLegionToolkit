@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Plugins;
@@ -276,8 +277,6 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             AutoGenerateColumns = false,
             IsReadOnly = true,
-            MinHeight = 360,
-            MaxHeight = 700,
             RowHeight = 46,
             ColumnHeaderHeight = 36,
             HeadersVisibility = DataGridHeadersVisibility.Column,
@@ -322,16 +321,30 @@ public partial class ViveToolPage : INotifyPropertyChanged
         _emptyStatePanel = new StackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
             Margin = new Thickness(0, 48, 0, 40),
             Visibility = Visibility.Collapsed
         };
         AutomationProperties.SetAutomationId(_emptyStatePanel, "ViveToolEmptyStatePanel");
+        _emptyStatePanel.Children.Add(new Wpf.Ui.Controls.SymbolIcon
+        {
+            Symbol = Wpf.Ui.Controls.SymbolRegular.Search24,
+            FontSize = Application.Current?.TryFindResource("PluginIconSizeLG") is double emptyStateIconSize
+                ? emptyStateIconSize
+                : 24,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Foreground = Application.Current?.TryFindResource("TextFillColorTertiaryBrush") as Brush
+                ?? Brushes.Gray
+        });
         _emptyStatePanel.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_NoFeaturesFound,
             TextWrapping = TextWrapping.Wrap,
             TextAlignment = TextAlignment.Center,
-            FontSize = 14
+            FontSize = ResolveFontSize("PluginFontSizeBody", 14),
+            Margin = new Thickness(0, 12, 0, 0),
+            Foreground = Application.Current?.TryFindResource("TextFillColorSecondaryBrush") as Brush
+                ?? Brushes.Gray
         });
 
         var searchRow = new Grid();
@@ -347,7 +360,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             VerticalAlignment = VerticalAlignment.Center,
             TextAlignment = TextAlignment.Right,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12)
         };
         _featureCountTextBlock.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
         AutomationProperties.SetAutomationId(_featureCountTextBlock, "ViveToolFeatureCountText");
@@ -452,7 +465,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         heroStack.Children.Add(new TextBlock
         {
             Text = Resource.ViveTool_PageTitle,
-            FontSize = 20,
+            FontSize = ResolveFontSize("PluginFontSizeTitle", 20),
             FontWeight = FontWeights.SemiBold,
             TextWrapping = TextWrapping.Wrap
         });
@@ -461,7 +474,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
             Text = Resource.ViveTool_PageDescription,
             Margin = new Thickness(0, 6, 0, 0),
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12)
         });
         heroCard.Child = heroStack;
 
@@ -478,7 +491,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
         {
             Text = Resource.ViveTool_WarningMessage,
             TextWrapping = TextWrapping.Wrap,
-            FontSize = 12
+            FontSize = ResolveFontSize("PluginFontSizeCaption", 12)
         };
 
         rootStack.Children.Add(heroCard);
@@ -492,6 +505,11 @@ public partial class ViveToolPage : INotifyPropertyChanged
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             Content = rootStack
         };
+    }
+
+    private static double ResolveFontSize(string resourceKey, double fallback)
+    {
+        return Application.Current?.TryFindResource(resourceKey) is double size ? size : fallback;
     }
 
     private void InitializeFeatureUi()
@@ -1246,6 +1264,32 @@ public partial class ViveToolPage : INotifyPropertyChanged
         }
     }
 
+    // V5 (Docs/VISUAL_DESIGN_RECOMMENDATIONS.md): the single sanctioned micro-animation in the
+    // plugin ecosystem — plugins otherwise add no shadows/animations (Docs/CODING_STANDARDS.md,
+    // 视觉词汇 section). 150ms + CubicEase Out matches the host AnimationTokens Fast/Medium feel;
+    // plugins don't merge host animation tokens, so the duration is hardcoded here.
+    // WPF has no built-in ReducedMotion API, so there is no system setting to honor here.
+    private static void FadeIn(UIElement element)
+    {
+        var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(150)))
+        {
+            EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+        };
+        element.BeginAnimation(UIElement.OpacityProperty, animation);
+    }
+
+    private static void ShowWithFade(UIElement element)
+    {
+        // Guard: don't restart the fade on an element that is already visible.
+        if (element.Visibility == Visibility.Visible)
+        {
+            return;
+        }
+
+        element.Visibility = Visibility.Visible;
+        FadeIn(element);
+    }
+
     private void UpdateLoadingVisibility()
     {
         if (!_isFeatureUiReady)
@@ -1253,8 +1297,16 @@ public partial class ViveToolPage : INotifyPropertyChanged
             return;
         }
 
-        _loadingPanel.Visibility = IsLoading ? Visibility.Visible : Visibility.Collapsed;
-        _featuresDataGrid.Visibility = IsLoading ? Visibility.Collapsed : Visibility.Visible;
+        if (IsLoading)
+        {
+            ShowWithFade(_loadingPanel);
+            _featuresDataGrid.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            _loadingPanel.Visibility = Visibility.Collapsed;
+            ShowWithFade(_featuresDataGrid);
+        }
     }
 
     private void UpdateFeatureSummary()
@@ -1300,13 +1352,13 @@ public partial class ViveToolPage : INotifyPropertyChanged
 
         if (Features.Count == 0 && !IsLoading)
         {
-            _emptyStatePanel.Visibility = Visibility.Visible;
+            ShowWithFade(_emptyStatePanel);
             _featuresDataGrid.Visibility = Visibility.Collapsed;
         }
         else
         {
             _emptyStatePanel.Visibility = Visibility.Collapsed;
-            _featuresDataGrid.Visibility = Visibility.Visible;
+            ShowWithFade(_featuresDataGrid);
         }
     }
 

@@ -12,6 +12,12 @@ namespace UniversalDeviceToolkit.Plugins.Shared;
 public static class WpfFallbackHelper
 {
     /// <summary>
+    /// Raised when InitializeComponent throws and the fallback builder runs.
+    /// Hosts can subscribe to surface the real parse/load error in their diagnostics.
+    /// </summary>
+    public static event Action<Type, Exception>? ComponentInitializationFailed;
+
+    /// <summary>
     /// Attempts to initialize a WPF component, falling back to manual construction if it fails.
     /// </summary>
     /// <typeparam name="T">The type of the control</typeparam>
@@ -31,9 +37,14 @@ public static class WpfFallbackHelper
                 return true;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            // InitializeComponent failed, use fallback
+            // InitializeComponent failed, use fallback — but no longer silently.
+            var error = ex is System.Reflection.TargetInvocationException { InnerException: not null } targetEx
+                ? targetEx.InnerException!
+                : ex;
+            System.Diagnostics.Debug.WriteLine($"[WpfFallbackHelper] InitializeComponent failed for {typeof(T).FullName}: {error}");
+            ComponentInitializationFailed?.Invoke(typeof(T), error);
         }
 
         fallbackBuilder();

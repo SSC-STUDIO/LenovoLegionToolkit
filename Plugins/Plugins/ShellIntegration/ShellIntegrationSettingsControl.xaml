@@ -26,7 +26,6 @@
             <!-- Kept for code-behind status glyph updates (compact: no hero banner). -->
             <wpfui:SymbolIcon x:Name="_statusIcon"
                               Symbol="CheckmarkCircle24"
-                              FontSize="1"
                               Width="0"
                               Height="0"
                               Visibility="Collapsed" />

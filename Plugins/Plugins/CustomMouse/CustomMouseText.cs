@@ -50,6 +50,9 @@ public static class CustomMouseText
     public static string StatusSyncedFromWindows => T(nameof(StatusSyncedFromWindows), "Current Windows mouse state synced.");
     public static string StatusWindowsDefaultRestored => T(nameof(StatusWindowsDefaultRestored), "Windows default cursor scheme restored.");
     public static string StatusRestoreWindowsDefaultFailed => T(nameof(StatusRestoreWindowsDefaultFailed), "Failed to restore the Windows default cursor scheme.");
+    public static string ApplyFailedPrefix => T(nameof(ApplyFailedPrefix), "Apply failed:");
+    public static string ApplyCursorThemeFailedPrefix => T(nameof(ApplyCursorThemeFailedPrefix), "Apply cursor theme failed:");
+    public static string StatusApplying => T(nameof(StatusApplying), "Applying...");
 
     public static string CursorThemeModeLabel => T(nameof(CursorThemeModeLabel), "Cursor Theme Mode");
     public static string CursorThemeModeAuto => T(nameof(CursorThemeModeAuto), "Follow System");
