@@ -355,7 +355,9 @@ public class PluginRepositoryService : IDisposable
                 manifest.Version = publishedAsset.Version;
         }
 
-        foreach (var candidateUrl in candidateUrls)
+        foreach (var candidateUrl in candidateUrls
+                     .SelectMany(GitHubDownloadMirrors.WithMirrorFallbacks)
+                     .Where(IsUrlAllowed))
         {
             var downloaded = await TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
             if (downloaded)
@@ -576,7 +578,6 @@ public class PluginRepositoryService : IDisposable
         return candidates
             .Where(url => !string.IsNullOrWhiteSpace(url))
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .SelectMany(GitHubDownloadMirrors.WithMirrorFallbacks)
             .Where(IsUrlAllowed)
             .ToList();
     }
