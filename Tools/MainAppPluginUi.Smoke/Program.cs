@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -1100,6 +1100,15 @@ Environment variables:
         };
         root["MinimizeToTray"] = false;
         root["MinimizeOnClose"] = false;
+
+        // Plugin extensions are opt-in by default; the smoke exercises plugin flows,
+        // so enable them explicitly in the sandbox.
+        root["ExtensionsEnabled"] = true;
+        root["PluginExtensionsOptInMigrationDone"] = true;
+        root["NavigationItemsVisibility"] = new JsonObject
+        {
+            ["pluginExtensions"] = true
+        };
 
         // Inject animation settings for faster test execution (single write)
         var animationSettingsMessage = string.Empty;

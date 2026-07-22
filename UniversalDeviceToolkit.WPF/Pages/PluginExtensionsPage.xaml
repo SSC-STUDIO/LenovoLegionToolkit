@@ -528,39 +528,39 @@
                                         <StackPanel Orientation="Horizontal"
                                                     Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                             <wpfui:Button x:Name="PluginUpdateButton"
-                                                           AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginInstallButton_{0}}"
+                                                           AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginInstallButton_{0}}"
                                                            Style="{StaticResource DetailPrimaryActionButtonStyle}"
                                                            Click="PluginInstallButton_Click"
-                                                           Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                           ToolTip="{Binding InstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                           Visibility="{Binding ShouldShowInstallButton, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                           Tag="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                           ToolTip="{Binding DataContext.InstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                           Visibility="{Binding DataContext.ShouldShowInstallButton, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                 <wpfui:Button.Icon>
                                                     <wpfui:SymbolIcon Symbol="ArrowDownload24"
                                                                       Foreground="{DynamicResource SystemAccentColorBrush}" />
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginConfigureButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginConfigureButton_{0}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
-                                                          ToolTip="{Binding ConfigureButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                          Visibility="{Binding ShouldShowConfigureButton, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                          ToolTip="{Binding DataContext.ConfigureButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                          Visibility="{Binding DataContext.ShouldShowConfigureButton, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                           Click="PluginConfigureButton_Click"
-                                                          Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
+                                                          Tag="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                                 <wpfui:Button.Icon>
                                                     <wpfui:SymbolIcon Symbol="Settings24"
                                                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginOpenButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginOpenButton_{0}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
                                                           Click="PluginOpenButton_Click"
-                                                          Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                          ToolTip="{Binding OpenButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
+                                                          Tag="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                          ToolTip="{Binding DataContext.OpenButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                                 <wpfui:Button.Visibility>
                                                     <MultiBinding Converter="{StaticResource BooleanAndConverter}">
-                                                        <Binding Path="ShouldShowInstalledActions" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
-                                                        <Binding Path="SupportsOpenAction" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
+                                                        <Binding Path="DataContext.ShouldShowInstalledActions" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
+                                                        <Binding Path="DataContext.SupportsOpenAction" RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
                                                     </MultiBinding>
                                                 </wpfui:Button.Visibility>
                                                 <wpfui:Button.Icon>
@@ -569,12 +569,12 @@
                                                 </wpfui:Button.Icon>
                                             </wpfui:Button>
 
-                                            <wpfui:Button AutomationProperties.AutomationId="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginUninstallButton_{0}}"
+                                            <wpfui:Button AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginUninstallButton_{0}}"
                                                           Style="{StaticResource DetailDangerActionButtonStyle}"
-                                                          Visibility="{Binding ShouldShowInstalledActions, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                          Visibility="{Binding DataContext.ShouldShowInstalledActions, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                           Click="PluginUninstallButton_Click"
-                                                          Tag="{Binding PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
-                                                          ToolTip="{Binding UninstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
+                                                          Tag="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                                          ToolTip="{Binding DataContext.UninstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}">
                                                 <wpfui:Button.Icon>
                                                     <wpfui:SymbolIcon Symbol="Delete24"
                                                                       Foreground="{DynamicResource StatusCriticalTextBrush}" />

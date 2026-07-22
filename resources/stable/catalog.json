@@ -1,0 +1,176 @@
+{
+    "productName":  "Universal Device Toolkit",
+    "generatedAt":  "2026-07-22T11:54:45.6698279Z",
+    "appVersion":  "5.0.0",
+    "schemaVersion":  1,
+    "languages":  [
+                      {
+                          "culture":  "ar",
+                          "displayName":  "العربية",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/ar.zip",
+                          "sha256":  "8d39a0a9c51e9eaacc760e3763ebfae188d5c08126f70a5ce876f9e7b2d44adb",
+                          "size":  52768
+                      },
+                      {
+                          "culture":  "bg",
+                          "displayName":  "български",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/bg.zip",
+                          "sha256":  "527c3bbff7b2cdb4038495ca44be372b285beb80e923a9c980b2679251906f40",
+                          "size":  48839
+                      },
+                      {
+                          "culture":  "cs",
+                          "displayName":  "čeština",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/cs.zip",
+                          "sha256":  "4a4853863a3dd3bf7f6d32479fc3f4fb9f4864bad122c90e3b78d8c68db58e56",
+                          "size":  44777
+                      },
+                      {
+                          "culture":  "de",
+                          "displayName":  "Deutsch",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/de.zip",
+                          "sha256":  "88f495180ef9efc32d9010b2bd875f674b7b2628a02cffa7184f29b182334acc",
+                          "size":  44823
+                      },
+                      {
+                          "culture":  "el",
+                          "displayName":  "Ελληνικά",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/el.zip",
+                          "sha256":  "f4474eb2cdf444a1805e56b77918235b27382e1a59a3b6fe110d19c5ba82e144",
+                          "size":  49493
+                      },
+                      {
+                          "culture":  "es",
+                          "displayName":  "español",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/es.zip",
+                          "sha256":  "08f066bee77bf6b3dbed5b1119e427ea65a3cc1e9d1f81d98ff7553b84cecc42",
+                          "size":  44577
+                      },
+                      {
+                          "culture":  "fr",
+                          "displayName":  "français",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/fr.zip",
+                          "sha256":  "0abb5a76ef253dcdd0ef49fdb7a6bc8688e235ce55041ba377179bbecb1c80b3",
+                          "size":  45166
+                      },
+                      {
+                          "culture":  "hu",
+                          "displayName":  "magyar",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/hu.zip",
+                          "sha256":  "510ff87127a40a5e496e11606e0ddcd416d3bdb49ef7974c5a1e11be3b7750da",
+                          "size":  45778
+                      },
+                      {
+                          "culture":  "it",
+                          "displayName":  "italiano",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/it.zip",
+                          "sha256":  "5704c2a1bdb9d8fe2ef777c51b444183673ac3254cf0a326b779728c08b3e1f1",
+                          "size":  44294
+                      },
+                      {
+                          "culture":  "ja",
+                          "displayName":  "日本語",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/ja.zip",
+                          "sha256":  "67d1a892f352bf612c8f6a50c92a42fad1038a072f02b76a7452f4aac4524464",
+                          "size":  44917
+                      },
+                      {
+                          "culture":  "lv",
+                          "displayName":  "latviešu",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/lv.zip",
+                          "sha256":  "2e6ba5f107811feb4c4b9c00373a33ed908db69b29e71d529e58818171371e0e",
+                          "size":  44833
+                      },
+                      {
+                          "culture":  "nl-nl",
+                          "displayName":  "Nederlands (Nederland)",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/nl-nl.zip",
+                          "sha256":  "ea29f811510c71df977acda43cca10c04022270764d6ae50768f71acf5083f39",
+                          "size":  48519
+                      },
+                      {
+                          "culture":  "pl",
+                          "displayName":  "polski",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/pl.zip",
+                          "sha256":  "3bbb7519c37f0efb897e4ae52468dc62a20ee343e63152a303058150bbdbffac",
+                          "size":  44448
+                      },
+                      {
+                          "culture":  "pt",
+                          "displayName":  "português",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/pt.zip",
+                          "sha256":  "b2376d47756472e0a0fff578fc88ac760d6a0ff5ab15147f013b072d37d32f93",
+                          "size":  44318
+                      },
+                      {
+                          "culture":  "pt-br",
+                          "displayName":  "português (Brasil)",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/pt-br.zip",
+                          "sha256":  "ea3a46e7148b47d39fb43b134f6b5c126476fcf7f5d9bf0bd35c49ffb73d4ad0",
+                          "size":  44333
+                      },
+                      {
+                          "culture":  "ro",
+                          "displayName":  "română",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/ro.zip",
+                          "sha256":  "a3ad048aae7329262e5a02dec845ea97e6acfed1ef9e4d4a9d4ecdbb28a2c679",
+                          "size":  44659
+                      },
+                      {
+                          "culture":  "ru",
+                          "displayName":  "русский",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/ru.zip",
+                          "sha256":  "3ce59c6286737be4a2f507b727a995adefc032ce36a51352d84e8be174fbca72",
+                          "size":  48271
+                      },
+                      {
+                          "culture":  "sk",
+                          "displayName":  "slovenčina",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/sk.zip",
+                          "sha256":  "723a6747b11bd2c0d3e47d95f057ee19e31f638d5b8d6f274820228a56b32f5c",
+                          "size":  44913
+                      },
+                      {
+                          "culture":  "tr",
+                          "displayName":  "Türkçe",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/tr.zip",
+                          "sha256":  "0e9774c2b5d606a7d5447604d27875193c04a3e1fcfb58e282ed083f14149a87",
+                          "size":  44006
+                      },
+                      {
+                          "culture":  "uk",
+                          "displayName":  "українська",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/uk.zip",
+                          "sha256":  "d38248237d21245ad2cb0c0316b74e1871826a8190b17c8e952eeb85b4dc1fb0",
+                          "size":  48326
+                      },
+                      {
+                          "culture":  "uz-latn-uz",
+                          "displayName":  "o‘zbek (Oʻzbekiston)",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/uz-latn-uz.zip",
+                          "sha256":  "8172dad4b62856c3194adc1795351b288db85bb8a7cb32d7b42f4806341e326f",
+                          "size":  50098
+                      },
+                      {
+                          "culture":  "vi",
+                          "displayName":  "Tiếng Việt",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/vi.zip",
+                          "sha256":  "9e5ffbe48e264d6d9bdda77755eead9ceaca29b0a98f5448d3b6535811ee5a82",
+                          "size":  44140
+                      },
+                      {
+                          "culture":  "zh-hans",
+                          "displayName":  "中文(简体)",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/zh-hans.zip",
+                          "sha256":  "c8b9deca7dfd4012b994a0e2c21ab6ab948eef5f663a7d21865b473dcca357cf",
+                          "size":  42950
+                      },
+                      {
+                          "culture":  "zh-hant",
+                          "displayName":  "中文(繁體)",
+                          "url":  "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.0/languages/zh-hant.zip",
+                          "sha256":  "6797b645bc607d129f271370f336518a99b3ee1a28b81d84a8737ee4b700bcb8",
+                          "size":  43476
+                      }
+                  ]
+}

@@ -529,6 +529,8 @@ public class PluginRepositoryService : IDisposable
         "raw.githubusercontent.com",
         "jsdelivr.net",
         "cdn.jsdelivr.net",
+        "gh-proxy.com",
+        "ghfast.top",
     };
 
     private List<string> GetDownloadUrlCandidates(PluginManifest manifest)
@@ -574,6 +576,7 @@ public class PluginRepositoryService : IDisposable
         return candidates
             .Where(url => !string.IsNullOrWhiteSpace(url))
             .Distinct(StringComparer.OrdinalIgnoreCase)
+            .SelectMany(GitHubDownloadMirrors.WithMirrorFallbacks)
             .Where(IsUrlAllowed)
             .ToList();
     }
@@ -676,6 +679,7 @@ public class PluginRepositoryService : IDisposable
         }
         catch (OperationCanceledException)
         {
+            KillProcessTree(process);
             DeletePartialDownload(destinationPath);
 
             if (Log.Instance.IsTraceEnabled)
@@ -685,6 +689,7 @@ public class PluginRepositoryService : IDisposable
         }
         catch (Exception ex)
         {
+            KillProcessTree(process);
             DeletePartialDownload(destinationPath);
 
             if (Log.Instance.IsTraceEnabled)
@@ -694,22 +699,26 @@ public class PluginRepositoryService : IDisposable
         }
         finally
         {
-            if (process is { HasExited: false })
-            {
-                try
-                {
-                    process.Kill(entireProcessTree: true);
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.TraceOnce(
-                        "plugin-repo-curl-kill",
-                        "Failed to kill native curl download process during cleanup.",
-                        ex);
-                }
-            }
-
+            KillProcessTree(process);
             process?.Dispose();
+        }
+    }
+
+    private static void KillProcessTree(Process? process)
+    {
+        if (process is not { HasExited: false })
+            return;
+
+        try
+        {
+            process.Kill(entireProcessTree: true);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.TraceOnce(
+                "plugin-repo-curl-kill",
+                "Failed to kill native curl download process during cleanup.",
+                ex);
         }
     }
 
@@ -1790,17 +1799,29 @@ public class PluginRepositoryService : IDisposable
 
     private static void DeletePartialDownload(string destinationPath)
     {
-        try
+        // A just-finished (or just-killed) downloader may still hold the file handle
+        // for a brief moment; retry a few times before giving up.
+        for (var attempt = 1; attempt <= 3; attempt++)
         {
-            if (File.Exists(destinationPath))
-                File.Delete(destinationPath);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.TraceOnce(
-                "plugin-repo-partial-cleanup",
-                $"Failed to delete partial plugin download: {destinationPath}",
-                ex);
+            try
+            {
+                if (File.Exists(destinationPath))
+                    File.Delete(destinationPath);
+                return;
+            }
+            catch (Exception ex) when (attempt < 3)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Retrying partial plugin download cleanup (attempt {attempt}/3): {destinationPath} ({ex.Message})");
+                Thread.Sleep(250);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.TraceOnce(
+                    "plugin-repo-partial-cleanup",
+                    $"Failed to delete partial plugin download: {destinationPath}",
+                    ex);
+            }
         }
     }
 
