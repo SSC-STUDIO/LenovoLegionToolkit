@@ -20,7 +20,7 @@ namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Cursor & Pointer",
-    version: "1.0.17",
+    version: "1.0.18",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
     MinimumHostVersion = "5.0.0",

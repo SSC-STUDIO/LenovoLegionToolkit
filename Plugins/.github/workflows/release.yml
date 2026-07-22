@@ -7,6 +7,10 @@ on:
         description: 'Comma-separated plugin ids to publish'
         required: true
         default: 'custom-mouse'
+  # Tag push trigger: pushing e.g. custom-mouse-v1.0.18 publishes that plugin.
+  push:
+    tags:
+      - '*-v*'
 
 permissions:
   contents: write
@@ -14,12 +18,25 @@ permissions:
 jobs:
   release:
     runs-on: windows-latest
+    env:
+      PLUGIN_IDS: ${{ github.event.inputs.plugin_ids || startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
 
     steps:
+      - name: Resolve plugin ids from tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $pluginId = "${{ github.ref_name }}" -replace '-v[0-9].*$', ''
+          "PLUGIN_IDS=$pluginId" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Host "Tag trigger: plugin id = $pluginId"
+
       - name: Checkout code
         uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
+          # Tag triggers check out master (tag points at master's tip) so the
+          # store.json commit step can push; detached tag HEADs cannot push.
+          ref: ${{ startsWith(github.ref, 'refs/tags/') && 'master' || github.ref }}
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v5.2.0
@@ -36,13 +53,13 @@ jobs:
         run: |
           .\Scripts\Invoke-PluginTooling.ps1 `
             validate `
-            --plugin-ids "${{ github.event.inputs.plugin_ids }}" `
+            --plugin-ids "${{ env.PLUGIN_IDS }}" `
             --profile official-candidate
 
       - name: Build selected plugins
         shell: pwsh
         run: |
-          $pluginIds = "${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          $pluginIds = "${{ env.PLUGIN_IDS }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           foreach ($pluginId in $pluginIds) {
             .\Scripts\Invoke-PluginTooling.ps1 `
               build `
@@ -52,7 +69,7 @@ jobs:
       - name: Pack selected plugins
         shell: pwsh
         run: |
-          $pluginIds = "${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          $pluginIds = "${{ env.PLUGIN_IDS }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           New-Item -ItemType Directory -Path .\Build\release-assets -Force | Out-Null
           foreach ($pluginId in $pluginIds) {
             .\Scripts\Invoke-PluginTooling.ps1 `
@@ -64,7 +81,7 @@ jobs:
       - name: Publish GitHub releases
         shell: pwsh
         run: |
-          $pluginIds = "${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          $pluginIds = "${{ env.PLUGIN_IDS }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
           foreach ($pluginId in $pluginIds) {
             $manifestPath = $null
             foreach ($pluginDirectory in Get-ChildItem -Path .\Plugins -Directory) {
@@ -101,7 +118,7 @@ jobs:
         run: |
           .\Scripts\Invoke-PluginTooling.ps1 `
             generate-store `
-            --plugin-ids "${{ github.event.inputs.plugin_ids }}" `
+            --plugin-ids "${{ env.PLUGIN_IDS }}" `
             --asset-root .\Build\release-assets `
             --output .\store.json `
             --merge-existing `
@@ -115,4 +132,4 @@ jobs:
           git add store.json
           git diff --cached --quiet && exit 0
           git commit -m "chore(store): update store metadata for released plugins"
-          git push
+          git push origin HEAD:master
