@@ -53,6 +53,9 @@ public partial class MainWindow : Window
             TryOpenPluginSettings);
 
         PluginHostContext.Current = _hostContext;
+        UniversalDeviceToolkit.Plugins.Shared.WpfFallbackHelper.ComponentInitializationFailed += (controlType, error) =>
+            Dispatcher.BeginInvoke(() =>
+                AppendLog($"[fallback] {controlType.Name} fell back to code-built UI: {error.GetType().Name}: {error.Message}"));
         InitializeSelectors();
         RefreshPluginCatalog();
         ApplyModeToHosts();
