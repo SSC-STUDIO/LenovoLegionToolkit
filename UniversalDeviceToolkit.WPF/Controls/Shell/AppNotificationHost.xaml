@@ -31,13 +31,13 @@
                         <Grid Height="{TemplateBinding Height}" SnapsToDevicePixels="True">
                             <Border
                                 Background="{TemplateBinding Background}"
-                                CornerRadius="2.5" />
+                                CornerRadius="{StaticResource CornerRadiusProgressBar}" />
                             <Grid x:Name="PART_Track" ClipToBounds="True">
                                 <Border
                                     x:Name="PART_Indicator"
                                     HorizontalAlignment="Left"
                                     Background="{TemplateBinding Foreground}"
-                                    CornerRadius="2.5" />
+                                    CornerRadius="{StaticResource CornerRadiusProgressBar}" />
                             </Grid>
                         </Grid>
                     </ControlTemplate>
@@ -95,7 +95,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Stretch"
                                 Margin="8,12"
-                                CornerRadius="2"
+                                CornerRadius="{StaticResource CornerRadiusProgressBar}"
                                 Background="{Binding IconBrush}" />
                             <Grid Margin="22,10,12,10">
                             <Grid.ColumnDefinitions>
@@ -110,7 +110,7 @@
                                 Height="34"
                                 VerticalAlignment="Center">
                                 <Border
-                                    CornerRadius="10"
+                                    CornerRadius="{StaticResource CornerRadiusSmall}"
                                     Background="{Binding IconBrush}"
                                     Opacity="0.14" />
                                 <wpfui:SymbolIcon
