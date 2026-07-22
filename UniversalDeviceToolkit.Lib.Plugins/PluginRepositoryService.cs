@@ -360,10 +360,17 @@ public class PluginRepositoryService : IDisposable
                      .Where(IsUrlAllowed))
         {
             var downloaded = await TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
-            if (downloaded)
-                return new PluginDownloadResult(
-                    Success: true,
-                    TrustAsOfficialOnlinePackage: ShouldTrustDownloadedPluginPackage(candidateUrl, manifest.Id));
+            if (!downloaded)
+                continue;
+
+            var trustAsOfficial = ShouldTrustDownloadedPluginPackage(candidateUrl, manifest.Id);
+            if (await VerifyDownloadedPackageIntegrityAsync(destinationPath, manifest, trustAsOfficial).ConfigureAwait(false))
+                return new PluginDownloadResult(Success: true, TrustAsOfficialOnlinePackage: trustAsOfficial);
+
+            // Corrupted or truncated payload (e.g. a mirror that closed the connection
+            // mid-body) — do not stop at this candidate; try the next one.
+            Log.Instance.Warning($"Plugin package integrity failed for {manifest.Id} from {candidateUrl}; trying next candidate.");
+            DeletePartialDownload(destinationPath);
         }
 
         if (publishedAsset is not null)
@@ -494,6 +501,27 @@ public class PluginRepositoryService : IDisposable
                             TotalBytes = totalBytes > 0 ? totalBytes : 0,
                             ProgressPercentage = progress
                         });
+                    }
+
+                    // A proxy or server that closes the connection mid-body ends the read
+                    // loop without an exception; treat a short body as a transient failure
+                    // so we retry, then fall through to the next mirror candidate.
+                    if (totalBytes > 0 && bytesDownloaded < totalBytes)
+                    {
+                        DeletePartialDownload(destinationPath);
+
+                        if (attempt < RemoteDownloadRetryCount)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Incomplete download for plugin {manifest.Id} from {candidateUrl}: {bytesDownloaded}/{totalBytes} bytes on attempt {attempt}/{RemoteDownloadRetryCount}. Retrying...");
+
+                            await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                            continue;
+                        }
+
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Download URL failed for plugin {manifest.Id}: {candidateUrl} incomplete body {bytesDownloaded}/{totalBytes} bytes");
+                        return false;
                     }
 
                     if (Log.Instance.IsTraceEnabled)
