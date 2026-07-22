@@ -1,7 +1,7 @@
 {
   "Id": "shell-integration",
   "Name": "Nilesoft Shell Manager",
-  "Version": "1.0.13",
+  "Version": "1.0.14",
   "MinLltVersion": "5.0.0",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": true,

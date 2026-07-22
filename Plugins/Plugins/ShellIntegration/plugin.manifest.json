@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "shell-integration",
   "name": "Nilesoft Shell Manager",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "minHostVersion": "5.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": true,
@@ -23,7 +23,7 @@
     ]
   },
   "package": {
-    "assetName": "shell-integration-v1.0.13.zip",
+    "assetName": "shell-integration-v1.0.14.zip",
     "requiredFiles": [
       "UniversalDeviceToolkit.Plugins.ShellIntegration.dll",
       "UniversalDeviceToolkit.Plugins.SDK.dll",
@@ -77,5 +77,8 @@
     ],
     "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
   },
-  "lifecycle": "Active"
+  "lifecycle": "Active",
+  "localizedNames": {},
+  "localizedDescriptions": {},
+  "localizedTags": {}
 }

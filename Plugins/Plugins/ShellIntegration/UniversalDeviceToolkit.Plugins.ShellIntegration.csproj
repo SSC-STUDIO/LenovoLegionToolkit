@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
@@ -6,9 +6,9 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <Version>1.0.13</Version>
-    <FileVersion>1.0.13</FileVersion>
-    <AssemblyVersion>1.0.13</AssemblyVersion>
+    <Version>1.0.14</Version>
+    <FileVersion>1.0.14</FileVersion>
+    <AssemblyVersion>1.0.14</AssemblyVersion>
     <AssemblyName>UniversalDeviceToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
@@ -78,20 +78,14 @@
   </ItemGroup>
 
   <!-- Auto-fetch Shell binaries if neither local repo nor cache has them -->
-  <Target Name="FetchShellBinaries"
-          BeforeTargets="BeforeBuild"
-          Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true'">
+  <Target Name="FetchShellBinaries" BeforeTargets="BeforeBuild" Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true'">
     <Message Importance="high" Text="Shell binaries not found locally or in cache. Running fetch script..." />
-    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          ConsoleToMSBuild="true"
-          StandardOutputImportance="normal" />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true" StandardOutputImportance="normal" />
     <!-- Re-evaluate after download so the ItemGroup picks up the files -->
     <PropertyGroup>
       <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
     </PropertyGroup>
-    <Error Condition="'$(_ShellCachedExists)' != 'true'"
-           Text="Shell binaries could not be fetched. Build aborted because shell.exe is required for a valid Shell Integration package." />
+    <Error Condition="'$(_ShellCachedExists)' != 'true'" Text="Shell binaries could not be fetched. Build aborted because shell.exe is required for a valid Shell Integration package." />
   </Target>
 
 </Project>
