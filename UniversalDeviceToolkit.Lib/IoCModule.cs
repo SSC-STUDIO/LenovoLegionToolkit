@@ -34,7 +34,7 @@ public class IoCModule : Module
 {
     protected override void Load(ContainerBuilder builder)
     {
-        builder.Register<HttpClientFactory>();
+        builder.Register<HttpClientFactory>().SingleInstance();
         builder.Register<OnlineResourceCatalogClient>();
         builder.RegisterType<AppNotificationService>().As<IAppNotificationService>().SingleInstance();
 

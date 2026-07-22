@@ -355,11 +355,12 @@ private string _currentSearchText = string.Empty;
         ReconcileAvailableUpdatesWithInstalledVersions();
 
         if (_bulkUpdateButton != null)
-            _bulkUpdateButton.Visibility = Visibility.Collapsed;
+            _bulkUpdateButton.Visibility = _availableUpdates.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
         if (_bulkInstallButton != null)
         {
-            _bulkInstallButton.Visibility = Visibility.Collapsed;
+            var hasInstallCandidates = _onlinePlugins.Any(plugin => !IsPluginInstalledForUi(plugin.Id));
+            _bulkInstallButton.Visibility = hasInstallCandidates ? Visibility.Visible : Visibility.Collapsed;
             _bulkInstallButton.ToolTip = LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "PluginExtensionsPage_InstallAllTooltip", "Install all available plugins", Resource.Culture);
         }
 
