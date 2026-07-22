@@ -6,9 +6,23 @@ namespace UniversalDeviceToolkit.Lib.Plugins;
 
 public class IoCModule : Module
 {
+    /// <summary>
+    /// Optional environment override for plugin signature validation
+    /// (require | development | disable). Defaults to Production (require).
+    /// Intended for local plugin development with unsigned builds.
+    /// </summary>
+    public const string SignatureModeEnvironmentVariable = "UDT_PLUGIN_SIGNATURE_MODE";
+
     protected override void Load(ContainerBuilder builder)
     {
-        builder.Register(_ => new PluginSignatureValidator(PluginSignatureSettings.Production))
+        builder.Register(_ =>
+            {
+                var mode = global::System.Environment.GetEnvironmentVariable(SignatureModeEnvironmentVariable);
+                return new PluginSignatureValidator(
+                    PluginSignatureSettings.TryCreateFromEnvironmentValue(mode, out var settings)
+                        ? settings
+                        : PluginSignatureSettings.Production);
+            })
             .As<IPluginSignatureValidator>()
             .SingleInstance();
 

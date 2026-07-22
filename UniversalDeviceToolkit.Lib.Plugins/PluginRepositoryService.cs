@@ -1535,6 +1535,14 @@ public class PluginRepositoryService : IDisposable
         if (!uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
             return false;
 
+        // Proxy-mirror URLs wrap the real GitHub URL in their path
+        // (https://mirror/https://github.com/...); evaluate the inner URL instead.
+        if (GitHubDownloadMirrors.IsMirrorHost(uri.Host))
+        {
+            var innerUrl = uri.AbsolutePath.TrimStart('/');
+            return ShouldTrustDownloadedPluginPackage(innerUrl, pluginId);
+        }
+
         var segments = uri.AbsolutePath
             .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .Select(Uri.UnescapeDataString)
