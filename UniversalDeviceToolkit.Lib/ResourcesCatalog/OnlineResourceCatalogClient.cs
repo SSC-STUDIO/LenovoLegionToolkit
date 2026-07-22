@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -13,9 +14,11 @@ namespace UniversalDeviceToolkit.Lib.ResourcesCatalog;
 public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFactory)
 {
     public const string CatalogUrlEnvironmentVariable = "UDT_RESOURCE_CATALOG_URL";
+    private const string JsdelivrCatalogUrl = "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/catalog.json";
+    private const string RawCatalogUrl = "https://raw.githubusercontent.com/SSC-STUDIO/UniversalDeviceToolkit/master/resources/stable/catalog.json";
     private static readonly JsonSerializerOptions JsonOptions = LltJson.CreateCompactOptions();
 
-    public async Task<OnlineResourceCatalog> GetCatalogAsync(CancellationToken token = default)
+    private static IEnumerable<string> GetCatalogUrlCandidates()
     {
         var catalogUrl = Environment.GetEnvironmentVariable(CatalogUrlEnvironmentVariable);
         if (!string.IsNullOrWhiteSpace(catalogUrl))
@@ -27,13 +30,49 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
             }
         }
 
-        if (string.IsNullOrWhiteSpace(catalogUrl))
-            catalogUrl = AppIdentity.StableResourceCatalogUrl;
+        // An explicit override is authoritative (used by offline smoke tests).
+        if (!string.IsNullOrWhiteSpace(catalogUrl))
+        {
+            yield return catalogUrl;
+            yield break;
+        }
 
-        using var httpClient = httpClientFactory.Create();
-        var json = await httpClient.GetStringAsync(catalogUrl, token).ConfigureAwait(false);
-        return JsonSerializer.Deserialize<OnlineResourceCatalog>(json, JsonOptions)
-               ?? throw ExceptionHelper.ResourceCatalogEmpty();
+        yield return AppIdentity.StableResourceCatalogUrl;
+        yield return JsdelivrCatalogUrl;
+        foreach (var rawCandidate in GitHubDownloadMirrors.WithMirrorFallbacks(RawCatalogUrl))
+            yield return rawCandidate;
+    }
+
+    public async Task<OnlineResourceCatalog> GetCatalogAsync(CancellationToken token = default)
+    {
+        Exception? lastError = null;
+
+        foreach (var candidateUrl in GetCatalogUrlCandidates())
+        {
+            token.ThrowIfCancellationRequested();
+
+            try
+            {
+                using var httpClient = httpClientFactory.Create();
+                var json = await httpClient.GetStringAsync(candidateUrl, token).ConfigureAwait(false);
+                return JsonSerializer.Deserialize<OnlineResourceCatalog>(json, JsonOptions)
+                       ?? throw ExceptionHelper.ResourceCatalogEmpty();
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.TraceOnce(
+                    "resource-catalog-candidate",
+                    $"Resource catalog candidate failed: {candidateUrl}",
+                    ex);
+                lastError = ex;
+            }
+        }
+
+        throw lastError ?? ExceptionHelper.ResourceCatalogEmpty();
     }
 
     public async Task DownloadAndVerifyAsync(string url, string expectedSha256, string destinationPath, IProgress<float>? progress = null, CancellationToken token = default)
@@ -44,21 +83,45 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
 
     public async Task DownloadAsync(string url, string destinationPath, IProgress<float>? progress = null, CancellationToken token = default)
     {
-        try
+        Exception? lastError = null;
+
+        foreach (var candidateUrl in GitHubDownloadMirrors.WithMirrorFallbacks(url))
         {
-            using (var stream = File.Create(destinationPath))
+            token.ThrowIfCancellationRequested();
+
+            try
             {
-                using var httpClient = httpClientFactory.Create();
-                await httpClient.DownloadAsync(url, stream, progress, token).ConfigureAwait(false);
+                using (var stream = File.Create(destinationPath))
+                {
+                    using var httpClient = httpClientFactory.Create();
+                    await httpClient.DownloadAsync(candidateUrl, stream, progress, token).ConfigureAwait(false);
+                }
+
+                return;
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                TryDelete(destinationPath);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.TraceOnce(
+                    "resource-download-candidate",
+                    $"Resource download candidate failed: {candidateUrl}",
+                    ex);
+                lastError = ex;
+                TryDelete(destinationPath);
             }
         }
-        catch
-        {
-            try { File.Delete(destinationPath); }
-            catch { /* ignore cleanup failure */ }
 
-            throw;
-        }
+        throw lastError ?? ExceptionHelper.ResourceCatalogEmpty();
+    }
+
+    private static void TryDelete(string path)
+    {
+        try { File.Delete(path); }
+        catch { /* ignore cleanup failure */ }
     }
 
     public async Task VerifySha256Async(string path, string expectedSha256, CancellationToken token = default)
