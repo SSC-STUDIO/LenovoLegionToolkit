@@ -13,7 +13,7 @@
       Single width token for every in-app notification card:
       Snackbar, AppNotificationHost stack, AppStatusBanner.
     -->
-    <sys:Double x:Key="NotificationToastWidth">360</sys:Double>
+    <sys:Double x:Key="NotificationToastWidth">400</sys:Double>
     <Thickness x:Key="NotificationToastPadding">12,10</Thickness>
     <Thickness x:Key="NotificationToastMargin">0,0,0,0</Thickness>
 

@@ -62,9 +62,6 @@ internal static class RemoteSessionHelper
     [DllImport("kernel32.dll")]
     private static extern uint WTSGetActiveConsoleSessionId();
 
-    [DllImport("kernel32.dll")]
-    private static extern uint WTSGetCurrentProcessId();
-
     [DllImport("kernel32.dll", SetLastError = true)]
     private static extern bool ProcessIdToSessionId(uint processId, out uint sessionId);
 
@@ -72,7 +69,10 @@ internal static class RemoteSessionHelper
     {
         try
         {
-            ProcessIdToSessionId(WTSGetCurrentProcessId(), out var sessionId);
+            // NOTE: there is no WTSGetCurrentProcessId entry point in kernel32 —
+            // using it threw EntryPointNotFoundException and made every session
+            // read as id 0, which looked like a remote session (backdrop disabled).
+            ProcessIdToSessionId((uint)Environment.ProcessId, out var sessionId);
             return sessionId;
         }
         catch (Exception ex)

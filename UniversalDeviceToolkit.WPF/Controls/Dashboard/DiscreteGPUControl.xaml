@@ -61,11 +61,26 @@
                     Margin="8,0,0,0"
                     AutomationProperties.HelpText="{x:Static resources:Resource.Information}"
                     AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
-                    FontSize="{StaticResource IconSizeCardGlyph}"
-                    Icon="QuestionCircle24"
                     ToolTipService.InitialShowDelay="200"
                     ToolTipService.BetweenShowDelay="200"
-                    ToolTipService.ShowDuration="15000" />
+                    ToolTipService.ShowDuration="15000">
+                    <wpfui:Button.Resources>
+                        <!-- Crisp, theme-aware tooltip card: ClearType + display formatting + layout
+                             rounding — plain ToolTip text renders blurry at 150% DPI. -->
+                        <Style TargetType="ToolTip">
+                            <Setter Property="Padding" Value="12,9" />
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+                            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+                            <Setter Property="SnapsToDevicePixels" Value="True" />
+                            <Setter Property="UseLayoutRounding" Value="True" />
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
+                        </Style>
+                    </wpfui:Button.Resources>
+                    <wpfui:SymbolIcon Symbol="QuestionCircle24" FontSize="{StaticResource IconSizeCardGlyph}" />
+                </wpfui:Button>
             </Grid>
             <wpfui:Button
                 x:Name="_deactivateGPUButton"
