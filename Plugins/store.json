@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-07-22T17:20:34.1532880\u002B00:00",
-  "storeVersion": "1.1.5",
+  "lastUpdated": "2026-07-22T17:25:52.1710050\u002B00:00",
+  "storeVersion": "1.1.6",
   "plugins": [
     {
       "id": "custom-mouse",
@@ -117,10 +117,10 @@
       "isSystemPlugin": true,
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.14/shell-integration-v1.0.14.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/shell-integration-v1.0.14",
-      "fileSize": 3864455,
-      "fileHash": "2afff4b3ea847b65438313e51d6e9e4704d2902b28bb4a5bfbc1e8c254e0d11b",
-      "zipHash": "3bfd145626eadb9569f35aa6c860025492014d06e6c13e63ccdba786d8188a0d",
-      "releaseDate": "2026-07-22T17:20:34.1532880\u002B00:00",
+      "fileSize": 3853383,
+      "fileHash": "2ebcc247f0a3c7fee0ab49b1c539d293be1b8cfe694c9c30bf891468baeb96a0",
+      "zipHash": "bcf368d702d36eef459dd8925af1943c6cd8ce5f5d08bbee9f14e9fd26448140",
+      "releaseDate": "2026-07-22T17:25:52.1710050\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
