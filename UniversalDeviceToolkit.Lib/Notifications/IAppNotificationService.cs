@@ -14,6 +14,9 @@ public interface IAppNotificationService
 
     void Dismiss(Guid id);
 
+    /// <summary>Updates progress (and optionally the message) of an existing toast in place.</summary>
+    void UpdateProgress(Guid id, double percent, string? message = null);
+
     Guid ShowSuccess(string title, string? message = null, string? mergeKey = null);
 
     Guid ShowInfo(string title, string? message = null, string? mergeKey = null);

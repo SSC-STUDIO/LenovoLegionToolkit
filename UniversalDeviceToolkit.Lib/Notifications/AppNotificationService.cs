@@ -60,6 +60,7 @@ public sealed class AppNotificationService : IAppNotificationService
             Duration = duration,
             IsPersistent = request.IsPersistent,
             MergeKey = request.MergeKey,
+            ProgressPercent = request.ProgressPercent,
             CreatedAt = DateTimeOffset.UtcNow
         };
 
@@ -82,6 +83,25 @@ public sealed class AppNotificationService : IAppNotificationService
         {
             Notification = new AppNotificationRequest { Id = id, Title = string.Empty },
             IsDismiss = true
+        });
+    }
+
+    public void UpdateProgress(Guid id, double percent, string? message = null)
+    {
+        if (id == Guid.Empty)
+            return;
+
+        Volatile.Read(ref Changed)?.Invoke(this, new AppNotificationChangedEventArgs
+        {
+            Notification = new AppNotificationRequest
+            {
+                Id = id,
+                Title = string.Empty,
+                Message = string.IsNullOrWhiteSpace(message) ? null : message.Trim(),
+                ProgressPercent = Math.Clamp(percent, 0, 100)
+            },
+            IsDismiss = false,
+            MergeCount = 1
         });
     }
 

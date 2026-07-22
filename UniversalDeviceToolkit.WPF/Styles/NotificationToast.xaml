@@ -122,7 +122,7 @@
                                         Content="{TemplateBinding Title}"
                                         ContentTemplate="{TemplateBinding TitleTemplate}"
                                         TextElement.FontSize="{DynamicResource FontSizeBody}"
-                                        TextElement.FontWeight="Regular"
+                                        TextElement.FontWeight="Medium"
                                         TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                         <ContentPresenter.Resources>
                                             <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">

@@ -251,6 +251,8 @@ public partial class AppNotificationHost : UserControl
         private int _mergeCount;
         private string _title;
         private string? _message;
+        private double _progressPercent;
+        private bool _hasProgress;
 
         public NotificationItemViewModel(
             AppNotificationRequest request,
@@ -264,6 +266,8 @@ public partial class AppNotificationHost : UserControl
             _title = request.Title;
             _message = request.Message;
             _mergeCount = Math.Max(1, mergeCount);
+            _progressPercent = request.ProgressPercent ?? 0;
+            _hasProgress = request.ProgressPercent.HasValue;
             _onExpired = onExpired;
             _remaining = duration <= TimeSpan.Zero || duration == Timeout.InfiniteTimeSpan
                 ? TimeSpan.Zero
@@ -281,6 +285,11 @@ public partial class AppNotificationHost : UserControl
             _mergeCount > 1 ? $"{_title} ×{_mergeCount}" : _title;
 
         public string? Message => _message;
+
+        public double ProgressPercent => _progressPercent;
+
+        public Visibility ProgressVisibility =>
+            _hasProgress ? Visibility.Visible : Visibility.Collapsed;
 
         public Visibility MessageVisibility =>
             string.IsNullOrWhiteSpace(_message) ? Visibility.Collapsed : Visibility.Visible;
@@ -308,7 +317,7 @@ public partial class AppNotificationHost : UserControl
                     AppNotificationSeverity.Success => "StatusSuccessBrush",
                     AppNotificationSeverity.Warning => "StatusWarningBrush",
                     AppNotificationSeverity.Error => "StatusCriticalBrush",
-                    _ => "TextFillColorSecondaryBrush"
+                    _ => "StatusInfoBrush"
                 };
                 return Application.Current?.TryFindResource(key) as Brush
                        ?? new SolidColorBrush(Severity switch
@@ -316,7 +325,7 @@ public partial class AppNotificationHost : UserControl
                            AppNotificationSeverity.Success => Color.FromRgb(0x2E, 0xB8, 0x71),
                            AppNotificationSeverity.Warning => Color.FromRgb(0xE6, 0xA2, 0x3C),
                            AppNotificationSeverity.Error => Color.FromRgb(0xE8, 0x4A, 0x5F),
-                           _ => Color.FromRgb(0x88, 0x88, 0x88)
+                           _ => Color.FromRgb(0x3E, 0x8A, 0xE0)
                        });
             }
         }
@@ -326,8 +335,17 @@ public partial class AppNotificationHost : UserControl
         public void ApplyMerge(int mergeCount, AppNotificationRequest request)
         {
             _mergeCount = Math.Max(_mergeCount, mergeCount);
+            if (!string.IsNullOrWhiteSpace(request.Title))
+                _title = request.Title;
             if (!string.IsNullOrWhiteSpace(request.Message))
                 _message = request.Message;
+            if (request.ProgressPercent.HasValue)
+            {
+                _progressPercent = request.ProgressPercent.Value;
+                _hasProgress = true;
+                OnPropertyChanged(nameof(ProgressPercent));
+                OnPropertyChanged(nameof(ProgressVisibility));
+            }
             OnPropertyChanged(nameof(DisplayTitle));
             OnPropertyChanged(nameof(Message));
             OnPropertyChanged(nameof(MessageVisibility));

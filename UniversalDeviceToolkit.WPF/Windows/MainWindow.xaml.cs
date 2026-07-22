@@ -48,6 +48,7 @@ public partial class MainWindow
 
     private readonly ApplicationSettings _applicationSettings;
     private readonly IPluginManager _pluginManager;
+    private PluginInstallNotificationBridge? _pluginInstallNotificationBridge;
     private readonly SpecialKeyListener _specialKeyListener;
     private readonly VantageDisabler _vantageDisabler;
     private readonly LegionZoneDisabler _legionZoneDisabler;
@@ -267,6 +268,18 @@ public partial class MainWindow
 
         _contentGrid.Visibility = Visibility.Visible;
 
+        try
+        {
+            _pluginInstallNotificationBridge = new PluginInstallNotificationBridge(UniversalDeviceToolkit.Lib.IoCContainer.Resolve<PluginInstallCoordinator>());
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.TraceOnce(
+                "plugin-install-toast-bridge",
+                "Failed to start plugin install notification bridge.",
+                ex);
+        }
+
         _ = LoadDeviceInfo();
         UpdateIndicators();
         _ = CheckForUpdates();
@@ -429,6 +442,7 @@ public partial class MainWindow
         StateChanged -= MainWindow_StateChanged;
         _updateIndicator.MouseLeftButtonDown -= UpdateIndicator_Click;
         _updateIndicator.MouseRightButtonDown -= UpdateIndicator_Click;
+        _pluginInstallNotificationBridge?.Dispose();
 
         // Unsubscribe from frame navigation events
         if (_rootFrame is not null)

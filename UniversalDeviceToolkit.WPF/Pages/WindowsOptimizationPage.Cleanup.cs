@@ -31,6 +31,7 @@ public partial class WindowsOptimizationPage
 
     private async void RunCleanupButton_Click(object sender, RoutedEventArgs e)
     {
+        var cleanupToastId = Guid.Empty;
         try
         {
             var selectedActions = ViewModel.CleanupCategories
@@ -50,6 +51,7 @@ public partial class WindowsOptimizationPage
             // Logic for running cleanup with progress reporting
             ViewModel.IsBusy = true;
             ViewModel.IsCleaning = true;
+            cleanupToastId = ProgressToastHelper.Start(Resource.SettingsPage_WindowsOptimization_Title);
             var swOverall = Stopwatch.StartNew();
             long totalFreedBytes = 0;
             var successCount = 0;
@@ -66,6 +68,11 @@ public partial class WindowsOptimizationPage
                     ViewModel.CurrentOperationText = string.Format(LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_RunningStep", "Running {0}...", Resource.Culture), action.Title);
                     ViewModel.RunCleanupButtonText = string.Format(Resource.WindowsOptimizationPage_RunCleanupButtonText_Format, progress);
                 });
+
+                ProgressToastHelper.Update(
+                    cleanupToastId,
+                    progress,
+                    string.Format(LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, "WindowsOptimizationPage_RunningStep", "Running {0}...", Resource.Culture), action.Title));
 
                 long sizeBefore = 0;
                 try
@@ -156,6 +163,8 @@ public partial class WindowsOptimizationPage
         }
         finally
         {
+            ProgressToastHelper.Complete(cleanupToastId);
+
             try
             {
                 // Update UI on UI thread

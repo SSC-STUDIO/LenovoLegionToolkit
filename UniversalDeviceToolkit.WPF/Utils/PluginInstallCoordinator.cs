@@ -23,6 +23,7 @@ public sealed class PluginInstallCoordinator(
 
     private Task? _processTask;
     private string _pluginId = string.Empty;
+    private string _pluginDisplayName = string.Empty;
     private double _progress;
     private string _statusText = string.Empty;
     private bool _progressHandlerAttached;
@@ -44,6 +45,15 @@ public sealed class PluginInstallCoordinator(
         {
             lock (_sync)
                 return string.IsNullOrWhiteSpace(_pluginId) ? null : _pluginId;
+        }
+    }
+
+    public string? PluginDisplayName
+    {
+        get
+        {
+            lock (_sync)
+                return string.IsNullOrWhiteSpace(_pluginDisplayName) ? null : _pluginDisplayName;
         }
     }
 
@@ -158,6 +168,7 @@ public sealed class PluginInstallCoordinator(
         lock (_sync)
         {
             _pluginId = manifest.Id;
+            _pluginDisplayName = string.IsNullOrWhiteSpace(manifest.Name) ? manifest.Id : manifest.Name;
             _progress = 0;
             _statusText = Resource.PluginExtensionsPage_PreparingDownload;
         }
@@ -181,6 +192,7 @@ public sealed class PluginInstallCoordinator(
             {
                 IsActive = false;
                 _pluginId = string.Empty;
+                _pluginDisplayName = string.Empty;
                 _progress = 0;
                 _statusText = string.Empty;
             }

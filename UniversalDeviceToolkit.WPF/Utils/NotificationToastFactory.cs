@@ -34,7 +34,7 @@ public static class NotificationToastFactory
             Name = "_snackbarTitle",
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = Application.Current.TryFindResource("FontSizeBody") is double bodySize ? bodySize : 15,
-            FontWeight = FontWeights.SemiBold,
+            FontWeight = FontWeights.Medium,
             TextWrapping = TextWrapping.WrapWithOverflow
         };
         snackbarTitle.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");

@@ -24,6 +24,8 @@ public sealed class AppNotificationRequest
     public bool IsPersistent { get; init; }
     /// <summary>When set, short-window duplicates merge into a count badge instead of a storm.</summary>
     public string? MergeKey { get; init; }
+    /// <summary>Determinate progress (0-100) shown as a bar inside the toast; null hides the bar.</summary>
+    public double? ProgressPercent { get; init; }
     public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 }
 
