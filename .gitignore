@@ -681,4 +681,5 @@ _size_bench_publish/
 # Local zip dumps only — force-track intentional fixtures (e.g. LanguagePackMockBackend/_serve/*.zip)
 *.zip
 !Tools/LanguagePackMockBackend/**/*.zip
+!resources/**/*.zip
 build_debug_log.txt
