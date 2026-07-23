@@ -50,9 +50,21 @@ public partial class SettingsUpdateControl
 
         _checkUpdatesCard.IsEnabled = !isDisabledByStartupFlag;
         _updateCheckFrequencyCard.IsEnabled = !isDisabledByStartupFlag;
+        _updateChannelCard.IsEnabled = !isDisabledByStartupFlag;
         _updateRepositoryCard.IsEnabled = !isDisabledByStartupFlag;
 
+        _includePrereleaseUpdatesToggle.IsChecked = _updateCheckSettings.Store.IncludePrereleaseUpdates;
+
         _isRefreshing = false;
+    }
+
+    private void IncludePrereleaseUpdatesToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        _updateCheckSettings.Store.IncludePrereleaseUpdates = _includePrereleaseUpdatesToggle.IsChecked is true;
+        _updateCheckSettings.SynchronizeStore();
     }
 
     private async void CheckUpdates_Click(object sender, RoutedEventArgs e)

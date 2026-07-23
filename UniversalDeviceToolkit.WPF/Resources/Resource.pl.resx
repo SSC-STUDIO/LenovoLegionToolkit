@@ -2686,6 +2686,12 @@ Obsługiwane formaty: {1}.</value>
   <data name="SettingsPage_UpdateCheckFrequency_Title" xml:space="preserve">
     <value>Automatycznie sprawdzaj aktualizacje</value>
   </data>
+  <data name="SettingsPage_IncludePrereleaseUpdates_Title" xml:space="preserve">
+    <value>Include preview versions</value>
+  </data>
+  <data name="SettingsPage_IncludePrereleaseUpdates_Message" xml:space="preserve">
+    <value>When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions.</value>
+  </data>
   <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
     <value>Repozytorium aktualizacji</value>
   </data>

@@ -7383,6 +7383,24 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions..
+        /// </summary>
+        public static string SettingsPage_IncludePrereleaseUpdates_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_IncludePrereleaseUpdates_Message", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Include preview versions.
+        /// </summary>
+        public static string SettingsPage_IncludePrereleaseUpdates_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_IncludePrereleaseUpdates_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Universal Device Toolkit was started with {0}. Automatic and manual update ch....
         /// </summary>
         public static string SettingsPage_UpdateDisabled_Message {

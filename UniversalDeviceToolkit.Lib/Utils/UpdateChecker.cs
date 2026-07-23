@@ -120,9 +120,12 @@ public class UpdateChecker
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Current version: {thisReleaseVersion}, Found releases: {releases.Count}");
 
-                var publicReleases = releases.Where(r => !r.Draft).ToArray();
+                var includePrerelease = _updateCheckSettings.Store.IncludePrereleaseUpdates;
+                var publicReleases = releases
+                    .Where(r => !r.Draft && (includePrerelease || !r.Prerelease))
+                    .ToArray();
                 if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Public releases (non-draft): {publicReleases.Length}");
+                    Log.Instance.Trace($"Public releases (non-draft{(includePrerelease ? ", incl. prereleases" : ", stable only")}): {publicReleases.Length}");
 
                 var updates = publicReleases
                     .Select(r =>
