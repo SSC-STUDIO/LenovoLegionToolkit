@@ -26,8 +26,7 @@
             TargetType="{x:Type wpfui:Button}">
             <Setter Property="MinWidth" Value="48" />
             <Setter Property="MinHeight" Value="24" />
-            <Setter Property="Height" Value="24" />
-            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="Padding" Value="8,2" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
             <Setter Property="FontSize" Value="{DynamicResource FontSizeTitleBarDeviceInfo}" />
             <Setter Property="FontWeight" Value="Normal" />

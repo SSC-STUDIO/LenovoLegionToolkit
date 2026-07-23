@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="UniversalDeviceToolkit.WPF.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -154,9 +154,21 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="240" MinWidth="180" />
+                    <ColumnDefinition Width="240" MinWidth="180" MaxWidth="480" />
+                    <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+
+        <!-- Draggable splitter: makes the left nav width user-adjustable instead of fixed 240. -->
+        <GridSplitter
+            Grid.Row="0"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            Cursor="SizeWE"
+            Focusable="False"
+            ShowsPreview="False" />
 
         <!-- Left Navigation Bar -->
         <Border
@@ -259,8 +271,8 @@
         <!-- Right Content Area -->
         <ContentControl
             x:Name="_contentControl"
-            Grid.Column="1"
-            Margin="24,0,0,0">
+            Grid.Column="2"
+            Margin="16,0,0,0">
             <ContentControl.RenderTransform>
                 <TranslateTransform />
             </ContentControl.RenderTransform>
