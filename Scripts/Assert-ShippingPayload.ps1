@@ -1,6 +1,10 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$PayloadPath
+    [string]$PayloadPath,
+
+    # Standalone payloads that intentionally ship no plugin runtime (e.g. the
+    # cross-platform CLI zip) can skip the plugin SDK/Shared presence check.
+    [switch]$SkipPluginRuntimeCheck
 )
 
 $ErrorActionPreference = 'Stop'
@@ -110,10 +114,12 @@ function Test-ContainsBinaryMarker {
 }
 
 $missingRequired = @()
-foreach ($requiredName in $requiredExactNames) {
-    $requiredPath = Join-Path $payloadRoot $requiredName
-    if (-not (Test-Path -LiteralPath $requiredPath)) {
-        $missingRequired += $requiredName
+if (-not $SkipPluginRuntimeCheck) {
+    foreach ($requiredName in $requiredExactNames) {
+        $requiredPath = Join-Path $payloadRoot $requiredName
+        if (-not (Test-Path -LiteralPath $requiredPath)) {
+            $missingRequired += $requiredName
+        }
     }
 }
 
