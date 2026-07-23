@@ -3,14 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Startup="Application_Startup">
     <Application.Resources>
+        <!-- Dark palette mirroring the main app (AppNavigationBackgroundBrush #202020). -->
         <SolidColorBrush x:Key="AccentBrush" Color="#0067C0"/>
         <SolidColorBrush x:Key="AccentHoverBrush" Color="#1975C5"/>
         <SolidColorBrush x:Key="AccentPressedBrush" Color="#005A9E"/>
-        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1B1B1B"/>
-        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#5D5D5D"/>
-        <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="PageBrush" Color="#F9F9F9"/>
-        <SolidColorBrush x:Key="BorderBrush" Color="#E0E0E0"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#B3B3B3"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#2D2D2D"/>
+        <SolidColorBrush x:Key="PageBrush" Color="#202020"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#3F3F3F"/>
 
         <Style x:Key="BaseButtonStyle" TargetType="Button">
             <Setter Property="FontSize" Value="13"/>
@@ -46,10 +47,44 @@
         </Style>
 
         <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
-            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="Background" Value="#333333"/>
             <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
-            <Setter Property="Tag" Value="#F0F0F0"/>
+            <Setter Property="BorderBrush" Value="#454545"/>
+            <Setter Property="Tag" Value="#404040"/>
+        </Style>
+
+        <!-- Windows 11 style caption buttons for the custom title bar.
+             Tag carries the hover color (same pattern as BaseButtonStyle). -->
+        <Style x:Key="CaptionButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Tag" Value="#1AFFFFFF"/>
+            <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#0DFFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CaptionCloseButtonStyle" TargetType="Button" BasedOn="{StaticResource CaptionButtonStyle}">
+            <Setter Property="Tag" Value="#E81123"/>
         </Style>
 
         <Style x:Key="PageTitleStyle" TargetType="TextBlock">
