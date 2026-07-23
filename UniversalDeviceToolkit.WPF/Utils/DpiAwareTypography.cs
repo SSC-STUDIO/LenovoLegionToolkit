@@ -95,5 +95,16 @@ internal static class DpiAwareTypography
 
         foreach (var (key, baseSize) in BaseFontSizes)
             resources[key] = Math.Round(baseSize * fontScale, 1, MidpointRounding.AwayFromZero);
+
+        // ControlTemplates from app-level dictionaries (nav chrome, charts, empty states,
+        // legacy snackbar) resolve DynamicResource font tokens from the APPLICATION scope
+        // only, so per-window token writes never reach them. Mirror the scaled tokens into
+        // the app resources too, or those templates ignore the 文本大小 setting.
+        var appResources = Application.Current?.Resources;
+        if (appResources is not null && !ReferenceEquals(appResources, resources))
+        {
+            foreach (var (key, baseSize) in BaseFontSizes)
+                appResources[key] = Math.Round(baseSize * fontScale, 1, MidpointRounding.AwayFromZero);
+        }
     }
 }
