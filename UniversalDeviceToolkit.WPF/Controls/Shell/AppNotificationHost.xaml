@@ -123,7 +123,7 @@
                             <StackPanel Grid.Column="1" Margin="10,0,8,0" VerticalAlignment="Center">
                                 <TextBlock
                                     FontSize="{DynamicResource FontSizeSmallBody}"
-                                    FontWeight="Regular"
+                                    FontWeight="Medium"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{Binding DisplayTitle}"
                                     TextWrapping="Wrap" />
