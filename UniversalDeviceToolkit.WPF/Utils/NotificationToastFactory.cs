@@ -34,7 +34,7 @@ public static class NotificationToastFactory
             Name = "_snackbarTitle",
             VerticalAlignment = VerticalAlignment.Center,
             FontSize = Application.Current.TryFindResource("FontSizeBody") is double bodySize ? bodySize : 15,
-            FontWeight = FontWeights.Medium,
+            FontWeight = FontWeights.Regular,
             TextWrapping = TextWrapping.WrapWithOverflow
         };
         snackbarTitle.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
@@ -46,7 +46,7 @@ public static class NotificationToastFactory
             FontSize = Application.Current.TryFindResource("FontSizeCaption") is double captionSize ? captionSize : 14,
             TextWrapping = TextWrapping.WrapWithOverflow
         };
-        snackbarMessage.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorSecondaryBrush");
+        snackbarMessage.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorTertiaryBrush");
 
         var panel = new StackPanel
         {

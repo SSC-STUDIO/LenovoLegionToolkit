@@ -1,4 +1,4 @@
-<!--
+﻿<!--
     UDT notification toast language — glass card matching AppStatusBanner.
     Template structure adapted from WPF-UI Snackbar (MIT) with UDT tokens.
 -->
@@ -55,7 +55,7 @@
 
     <Style TargetType="{x:Type controls:Snackbar}">
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-        <Setter Property="ContentForeground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="ContentForeground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
         <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
         <Setter Property="Margin" Value="{StaticResource NotificationToastMargin}" />
@@ -122,7 +122,7 @@
                                         Content="{TemplateBinding Title}"
                                         ContentTemplate="{TemplateBinding TitleTemplate}"
                                         TextElement.FontSize="{DynamicResource FontSizeBody}"
-                                        TextElement.FontWeight="Medium"
+                                        TextElement.FontWeight="Regular"
                                         TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                         <ContentPresenter.Resources>
                                             <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
