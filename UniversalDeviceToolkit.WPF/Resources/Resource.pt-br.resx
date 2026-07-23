@@ -4056,6 +4056,12 @@ ex. C:\Drivers</value>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>Padrão</value>
   </data>
+  <data name="SettingsPage_UiScale_Title" xml:space="preserve">
+    <value>Interface scale</value>
+  </data>
+  <data name="SettingsPage_UiScale_Description" xml:space="preserve">
+    <value>Scale text and the whole interface together, independent of Windows display scaling.</value>
+  </data>
   <data name="SettingsPage_AppScale_Title" xml:space="preserve">
     <value>App scale</value>
   </data>

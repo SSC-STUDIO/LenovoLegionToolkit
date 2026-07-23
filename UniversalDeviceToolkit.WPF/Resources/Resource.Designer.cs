@@ -7383,6 +7383,24 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to Scale text and the whole interface together, independent of Windows display scaling..
+        /// </summary>
+        public static string SettingsPage_UiScale_Description {
+            get {
+                return ResourceManager.GetString("SettingsPage_UiScale_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Interface scale.
+        /// </summary>
+        public static string SettingsPage_UiScale_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_UiScale_Title", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions..
         /// </summary>
         public static string SettingsPage_IncludePrereleaseUpdates_Message {

@@ -73,8 +73,7 @@ public partial class SettingsAppearanceControl
         _themeComboBox.SetItems(Enum.GetValues<Theme>(), _settings.Store.Theme, t => t.GetDisplayName());
         _themeStylePresetComboBox.SetItems(Enum.GetValues<ThemeStylePreset>(), _settings.Store.ThemeStylePreset, t => t.GetDisplayName());
         _fontComboBox.SetItems(Enum.GetValues<AppFontStyle>(), _settings.Store.AppFontStyle, GetFontStyleDisplayName);
-        _textSizeComboBox.SetItems(Enum.GetValues<AppTextSize>(), _settings.Store.AppTextSize, GetTextSizeDisplayName);
-        _appScaleComboBox.SetItems(Enum.GetValues<AppScale>(), _settings.Store.AppScale, GetAppScaleDisplayName);
+        _uiScaleComboBox.SetItems(UiScaleSteps, GetCurrentUiScaleStep(), GetUiScaleDisplayName);
 
         UpdateAccentColorPicker();
         _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
@@ -84,8 +83,7 @@ public partial class SettingsAppearanceControl
         _themeComboBox.Visibility = Visibility.Visible;
         _themeStylePresetComboBox.Visibility = Visibility.Visible;
         _fontComboBox.Visibility = Visibility.Visible;
-        _textSizeComboBox.Visibility = Visibility.Visible;
-        _appScaleComboBox.Visibility = Visibility.Visible;
+        _uiScaleComboBox.Visibility = Visibility.Visible;
 
         var language = await languageTask;
         _currentLanguage = language;
@@ -269,44 +267,41 @@ public partial class SettingsAppearanceControl
         _ => style.ToString()
     };
 
-    private void TextSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    // 界面缩放 steps drive text size and layout scale together (merged from the
+    // former separate 文本大小 / 应用缩放 combos, which users found redundant).
+    private static readonly (AppTextSize TextSize, AppScale Scale)[] UiScaleSteps =
+    [
+        (AppTextSize.Compact, AppScale.Small),
+        (AppTextSize.Standard, AppScale.Standard),
+        (AppTextSize.Large, AppScale.Large),
+        (AppTextSize.ExtraLarge, AppScale.ExtraLarge),
+    ];
+
+    private (AppTextSize TextSize, AppScale Scale) GetCurrentUiScaleStep()
+    {
+        var textSize = _settings.Store.AppTextSize;
+        var scale = _settings.Store.AppScale;
+        var match = UiScaleSteps.FirstOrDefault(s => s.TextSize == textSize && s.Scale == scale);
+        return match == default ? UiScaleSteps[1] : match;
+    }
+
+    private void UiScaleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (_isRefreshing)
             return;
 
-        if (!_textSizeComboBox.TryGetSelectedItem(out AppTextSize state))
+        if (!_uiScaleComboBox.TryGetSelectedItem(out (AppTextSize TextSize, AppScale Scale) step))
             return;
 
-        _settings.Store.AppTextSize = state;
+        _settings.Store.AppTextSize = step.TextSize;
+        _settings.Store.AppScale = step.Scale;
         _settings.SynchronizeStore();
-        AppTextSizeManager.Apply(state);
+        AppTextSizeManager.Apply(step.TextSize);
+        AppScaleManager.Apply(step.Scale);
     }
 
-    private void AppScaleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (_isRefreshing)
-            return;
-
-        if (!_appScaleComboBox.TryGetSelectedItem(out AppScale state))
-            return;
-
-        _settings.Store.AppScale = state;
-        _settings.SynchronizeStore();
-        AppScaleManager.Apply(state);
-    }
-
-    private static object GetAppScaleDisplayName(AppScale scale) =>
-        scale == AppScale.Standard ? $"{(int)scale}% ({Resource.SettingsPage_Font_Default})" : $"{(int)scale}%";
-
-    // Percentages are culture-neutral; only the "Default" marker on 100% is localized.
-    private static object GetTextSizeDisplayName(AppTextSize size) => size switch
-    {
-        AppTextSize.Compact => "90%",
-        AppTextSize.Standard => $"100% ({Resource.SettingsPage_Font_Default})",
-        AppTextSize.Large => "110%",
-        AppTextSize.ExtraLarge => "125%",
-        _ => size.ToString()
-    };
+    private static object GetUiScaleDisplayName((AppTextSize TextSize, AppScale Scale) step) =>
+        step.Scale == AppScale.Standard ? $"{(int)step.Scale}% ({Resource.SettingsPage_Font_Default})" : $"{(int)step.Scale}%";
 
     private void AccentColorPicker_Changed(object sender, EventArgs e)
     {

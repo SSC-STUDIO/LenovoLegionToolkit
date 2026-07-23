@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -4063,6 +4063,12 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="SettingsPage_Font_Default" xml:space="preserve">
     <value>默认</value>
+  </data>
+  <data name="SettingsPage_UiScale_Title" xml:space="preserve">
+    <value>界面缩放</value>
+  </data>
+  <data name="SettingsPage_UiScale_Description" xml:space="preserve">
+    <value>统一放大或缩小应用内的文本与整个界面，独立于 Windows 显示缩放。</value>
   </data>
   <data name="SettingsPage_AppScale_Title" xml:space="preserve">
     <value>应用缩放</value>
