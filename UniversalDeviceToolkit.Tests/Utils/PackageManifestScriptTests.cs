@@ -15,7 +15,7 @@ public sealed class PackageManifestScriptTests
         const string releaseDate = "2026-06-06";
         var installerHash = new string('a', 64);
         var hashManifestPath = Path.Combine(tempRoot, "UniversalDeviceToolkit_v9.8.7_SHA256.txt");
-        var installerScriptPath = Path.Combine(tempRoot, "MakeInstaller.iss");
+        var installerScriptPath = Path.Combine(tempRoot, "InstallerMetadata.defines");
 
         try
         {

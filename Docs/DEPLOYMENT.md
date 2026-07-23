@@ -268,7 +268,7 @@ jobs:
           dotnet build --configuration Release
           dotnet publish -c Release -o ./publish
       - name: Create Installer
-        run: iscc MakeInstaller.iss
+        run: ./Scripts/Build-InstallerAssets.ps1 -Version $env:VERSION
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
@@ -279,19 +279,26 @@ jobs:
 
 ## Installer Creation
 
-### Using Inno Setup
+### Self-built WPF installer (Inno Setup retired)
 
-The project uses Inno Setup (`MakeInstaller.iss`) to create Windows installers:
+The project ships its own WPF installer (`Tools/Installer`) — Inno Setup and
+`MakeInstaller.iss` are retired. Both flavors are produced by
+`Scripts/Build-InstallerAssets.ps1` (also wired into `Make.bat` and the Release
+workflow):
 
 ```bash
-# Build installer (requires Inno Setup installed)
-iscc MakeInstaller.iss
+# Build both installers (requires the payload zips in release-assets/)
+./Scripts/Build-InstallerAssets.ps1 -Version X.Y.Z
 
 # Output location
-output/
-├── UniversalDeviceToolkit_VERSION_x64.exe
-└── UniversalDeviceToolkit_VERSION_x86.exe
+BuildInstaller/
+├── UniversalDeviceToolkitSetup-Full.exe     # offline: payload zip embedded
+└── UniversalDeviceToolkitSetup-Online.exe   # ~0.3 MB: downloads payload at install time
 ```
+
+The installer follows the OS display language and deliberately offers no
+language picker — the app owns language selection on first run. It supports
+`--uninstall`, `--silent`, `--dir=<path>` and `--delete-data`.
 
 ### Installer Contents
 

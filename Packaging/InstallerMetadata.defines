@@ -1,0 +1,10 @@
+; Shared installer metadata — single source of truth for packaging scripts now
+; that Inno Setup is retired. The installer itself lives in Tools/Installer and
+; reads its constants from InstallerConstants.cs; packaging scripts parse this
+; file with the same "#define Name "Value"" grammar they used for the .iss.
+#define MyAppName "Universal Device Toolkit"
+#define MyAppNameCompact "UniversalDeviceToolkit"
+#define MyAppPublisher "SSC-STUDIO"
+#define MyAppURL "https://github.com/SSC-STUDIO/UniversalDeviceToolkit"
+#define MyAppExeName "Universal Device Toolkit.exe"
+#define MyAppId "{{0C37B9AC-9C3D-4302-8ABB-125C7C7D83D5}}"

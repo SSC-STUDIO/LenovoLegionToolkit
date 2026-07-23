@@ -1,0 +1,68 @@
+<Application x:Class="UniversalDeviceToolkit.Installer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Startup="Application_Startup">
+    <Application.Resources>
+        <SolidColorBrush x:Key="AccentBrush" Color="#0067C0"/>
+        <SolidColorBrush x:Key="AccentHoverBrush" Color="#1975C5"/>
+        <SolidColorBrush x:Key="AccentPressedBrush" Color="#005A9E"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#1B1B1B"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#5D5D5D"/>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="PageBrush" Color="#F9F9F9"/>
+        <SolidColorBrush x:Key="BorderBrush" Color="#E0E0E0"/>
+
+        <Style x:Key="BaseButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="18,7"/>
+            <Setter Property="MinWidth" Value="96"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AccentButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Tag" Value="{StaticResource AccentHoverBrush}"/>
+        </Style>
+
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="Tag" Value="#F0F0F0"/>
+        </Style>
+
+        <Style x:Key="PageTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        </Style>
+
+        <Style x:Key="PageTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="19"/>
+        </Style>
+    </Application.Resources>
+</Application>

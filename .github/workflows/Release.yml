@@ -42,8 +42,6 @@ jobs:
         key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v3
-    - name: Install Inno Setup
-      run: choco install innosetup -y
 
     - name: Resolve release version
       shell: pwsh
@@ -111,7 +109,11 @@ jobs:
 
         $prunePaths = @(
           (Join-Path $env:BUILD_OUTPUT 'x86'),
-          (Join-Path $env:BUILD_OUTPUT 'arm64')
+          (Join-Path $env:BUILD_OUTPUT 'arm64'),
+          # POSIX-only LibreHardwareMonitor helpers are never P/Invoked on Windows;
+          # dropping them keeps the installer lean without touching any Windows path.
+          (Join-Path $env:BUILD_OUTPUT 'libMonoPosixHelper.dll'),
+          (Join-Path $env:BUILD_OUTPUT 'Mono.Posix.NETStandard.dll')
         )
 
         foreach ($path in $prunePaths) {
@@ -120,7 +122,7 @@ jobs:
           }
         }
 
-        ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT -AllowedCultures 'ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant'
+        ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT -AllowedCultures 'en;zh-hans;zh-hant'
         ./Scripts/Build-PluginRuntimeAssets.ps1 `
           -PluginsRepositoryRoot "$env:GITHUB_WORKSPACE/UniversalDeviceToolkit-Plugins" `
           -HostSourceDir $env:BUILD_OUTPUT `
@@ -171,29 +173,14 @@ jobs:
     - name: Build installers
       shell: pwsh
       run: |
-        New-Item -ItemType Directory -Path $env:INSTALLER_OUTPUT -Force | Out-Null
-
-        iscc /O"$env:INSTALLER_OUTPUT" /F"UniversalDeviceToolkitSetup-Full" MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir="$env:BUILD_OUTPUT"
-        if ($LASTEXITCODE -ne 0) {
-          throw "Full Inno Setup build failed."
-        }
-
-        iscc /O"$env:INSTALLER_OUTPUT" /F"UniversalDeviceToolkitSetup-Online" MakeInstaller.iss /DMyAppVersion=$env:VERSION /DMyAppSourceDir="$env:ONLINE_BUILD_OUTPUT"
-        if ($LASTEXITCODE -ne 0) {
-          throw "Online Inno Setup build failed."
-        }
-
-        $expectedInstallerPaths = @(
-          "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Full.exe",
-          "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup-Online.exe"
-        )
-
-        Get-ChildItem -LiteralPath $env:INSTALLER_OUTPUT -Filter '*.exe' | Select-Object Name, Length, LastWriteTime | Format-Table -AutoSize
-        foreach ($installerPath in $expectedInstallerPaths) {
-          if (-not (Test-Path -LiteralPath $installerPath)) {
-            throw "Expected installer output was not created: $installerPath"
-          }
-        }
+        # Self-built WPF installer (Tools/Installer) — Inno Setup is retired.
+        # Online flavor (~0.3 MB) downloads the Online payload zip at install time
+        # (direct + mirror fallbacks, SHA-256 verified); the Full flavor embeds the
+        # Full payload zip as a resource for fully offline installs.
+        ./Scripts/Build-InstallerAssets.ps1 `
+          -Version $env:VERSION `
+          -ReleaseOutput $env:RELEASE_OUTPUT `
+          -InstallerOutput $env:INSTALLER_OUTPUT
 
     - name: Publish cross-platform CLI asset
       if: ${{ env.ENABLE_CROSS_PLATFORM_CLI == 'true' }}

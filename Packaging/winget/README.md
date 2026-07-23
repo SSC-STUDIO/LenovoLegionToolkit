@@ -50,4 +50,4 @@ The repo may contain a versioned draft folder such as `manifests/s/SSC-STUDIO/Le
 - Use the GitHub Release installer, not local build output.
 - Do not point winget at mirror URLs. Mirrors can be listed in community posts, but winget should use the authoritative GitHub Release URL.
 - Keep the PackageIdentifier stable after acceptance. Do not rename it just for the Universal Device Toolkit branding change.
-- If winget review requires the installer publisher to match more closely, update `MakeInstaller.iss` and the manifest together in a normal release commit.
+- If winget review requires the installer publisher to match more closely, update `Packaging/InstallerMetadata.defines` and the manifest together in a normal release commit.

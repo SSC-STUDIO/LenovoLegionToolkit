@@ -6,25 +6,32 @@ namespace UniversalDeviceToolkit.Tests.Utils;
 public class InstallerLanguageOwnershipTests
 {
     [Fact]
-    public void MakeInstaller_ShouldNotOfferInnoLanguageSelection()
+    public void Installer_ShouldNotOfferLanguageSelection()
     {
-        var script = ReadInstallerScript();
+        foreach (var source in ReadInstallerSources())
+        {
+            source.Should().NotContain("[Languages]");
+            source.Should().NotContain("MessagesFile:");
+            source.Should().NotContain("compiler:Languages");
+            source.Should().NotContain("InnoDependencies\\Chinese");
+            source.Should().NotContain("LanguageSelectorWindow");
+        }
 
-        script.Should().NotContain("[Languages]");
-        script.Should().NotContain("MessagesFile:");
-        script.Should().NotContain("compiler:Languages");
-        script.Should().NotContain("InnoDependencies\\Chinese");
+        // The wizard must not contain a language picker of any kind.
+        var mainWindow = ReadRepositoryFile("Tools", "Installer", "MainWindow.xaml");
+        mainWindow.Should().NotContain("ComboBox");
     }
 
     [Fact]
-    public void MakeInstaller_ShouldNotPersistAppLanguageFromSetup()
+    public void Installer_ShouldNotPersistAppLanguageFromSetup()
     {
-        var script = ReadInstallerScript();
-
-        script.Should().NotContain("SetupLanguageToAppCulture");
-        script.Should().NotContain("ActiveLanguage");
-        script.Should().NotContain("LangPath");
-        script.Should().NotContain("SaveStringToFile");
+        foreach (var source in ReadInstallerSources())
+        {
+            source.Should().NotContain("SetupLanguageToAppCulture");
+            source.Should().NotContain("ActiveLanguage");
+            source.Should().NotContain("LangPath");
+            source.Should().NotContain("SaveStringToFile");
+        }
     }
 
     [Fact]
@@ -45,20 +52,26 @@ public class InstallerLanguageOwnershipTests
     }
 
     [Fact]
-    public void MakeInstaller_ShouldCleanRuntimeDownloadedLanguagePacks()
+    public void Installer_ShouldRemoveWholeInstallTreeIncludingLanguagePacks()
     {
-        var script = ReadInstallerScript();
+        // The payload ships satellite folders (en/zh-hans/zh-hant) and the app can
+        // download more packs at runtime; recursive deletion removes them all by
+        // construction, replacing Inno's per-folder [UninstallDelete] list.
+        var engine = ReadRepositoryFile("Tools", "Installer", "InstallerEngine.cs");
 
-        script.Should().Contain(@"Name: ""{app}\zh""");
-        script.Should().Contain(@"Name: ""{app}\zh-hans""");
-        script.Should().Contain(@"Name: ""{app}\pt-br""");
-        script.Should().Contain(@"Name: ""{app}\uz-latn-uz""");
+        engine.Should().Contain("Directory.Delete(path, recursive: true)");
+        engine.Should().Contain("TryDeleteDirectory(installDir)");
+        engine.Should().Contain("DeleteDirectoryContentsExcept(installDir");
     }
 
-    private static string ReadInstallerScript()
+    private static string[] ReadInstallerSources()
     {
         var repositoryRoot = RepositoryPaths.FindRoot();
-        return File.ReadAllText(Path.Combine(repositoryRoot, "MakeInstaller.iss"));
+        var installerDir = Path.Combine(repositoryRoot, "Tools", "Installer");
+        return Directory
+            .EnumerateFiles(installerDir, "*.cs")
+            .Select(File.ReadAllText)
+            .ToArray();
     }
 
     private static string ReadRepositoryFile(params string[] pathParts)

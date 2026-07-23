@@ -31,14 +31,6 @@ IF "%VERSION%"=="" (
 CALL :RESOLVE_CROSS_PLATFORM_CLI_POLICY
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
-where iscc >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo Inno Setup compiler iscc.exe not found in PATH.
-    echo Download from https://jrsoftware.org/isdl.php
-    set ERROR_COUNT=1
-    goto :END
-)
-
 CALL :CLEAN_WORKSPACE
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
@@ -69,17 +61,10 @@ IF %ERRORLEVEL% NEQ 0 (
     set ERROR_COUNT=1
 )
 
-if not exist "BuildInstaller" mkdir "BuildInstaller"
-
-iscc /O"BuildInstaller" /F"UniversalDeviceToolkitSetup-Full" MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_DIR%"
+REM Self-built WPF installer (Tools\Installer) — Inno Setup is retired.
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-InstallerAssets.ps1" -Version "%VERSION%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -InstallerOutput "BuildInstaller"
 IF %ERRORLEVEL% NEQ 0 (
-    echo Inno Setup failed for full installer.
-    set ERROR_COUNT=1
-)
-
-iscc /O"BuildInstaller" /F"UniversalDeviceToolkitSetup-Online" MakeInstaller.iss /DMyAppVersion=%VERSION% /DMyAppSourceDir="%BUILD_ONLINE_DIR%"
-IF %ERRORLEVEL% NEQ 0 (
-    echo Inno Setup failed for online installer.
+    echo Installer build failed.
     set ERROR_COUNT=1
 )
 
@@ -218,7 +203,7 @@ exit /b 0
 set TARGET_DIR=%~1
 if "%TARGET_DIR%"=="" exit /b 0
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Prune-ShippingFootprint.ps1" -PayloadPath "%TARGET_DIR%" -AllowedCultures "ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant"
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Prune-ShippingFootprint.ps1" -PayloadPath "%TARGET_DIR%" -AllowedCultures "en;zh-hans;zh-hant"
 IF %ERRORLEVEL% NEQ 0 (
     echo Shipping footprint prune failed.
     set ERROR_COUNT=1

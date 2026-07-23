@@ -98,6 +98,7 @@ public sealed class ShippingPayloadGuardTests
         var languageAssetsScript = ReadRepositoryFile("Scripts", "Build-LanguageAssets.ps1");
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
         var makeScript = ReadRepositoryFile("Make.bat");
+        var installerAssetsScript = ReadRepositoryFile("Scripts", "Build-InstallerAssets.ps1");
         var mainAppSmokeWorkflow = ReadRepositoryFile(".github", "workflows", "MainAppPluginUi.Smoke.yml");
 
         workflow.Should().Contain("SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel");
@@ -113,10 +114,16 @@ public sealed class ShippingPayloadGuardTests
         workflow.Should().Contain("$env:CLI_CROSS_PLATFORM_ASSET");
         workflow.Should().Contain("./Packaging/Prepare-PackageManifests.ps1");
         workflow.Should().Contain("-HashManifestPath \"$env:RELEASE_OUTPUT\\$env:HASH_ASSET\"");
-        workflow.Should().Contain("iscc /O\"$env:INSTALLER_OUTPUT\" /F\"UniversalDeviceToolkitSetup-Full\" MakeInstaller.iss");
-        workflow.Should().Contain("iscc /O\"$env:INSTALLER_OUTPUT\" /F\"UniversalDeviceToolkitSetup-Online\" MakeInstaller.iss");
-        workflow.Should().Contain("Expected installer output was not created");
+        workflow.Should().Contain("./Scripts/Build-InstallerAssets.ps1");
+        workflow.Should().NotContain("iscc");
+        workflow.Should().NotContain("MakeInstaller.iss");
         workflow.Should().Contain("$finalizeArgs = @{");
+
+        installerAssetsScript.Should().Contain("Tools\\Installer\\UniversalDeviceToolkit.Installer.csproj");
+        installerAssetsScript.Should().Contain("-p:PayloadZipPath=$fullZipPath");
+        installerAssetsScript.Should().Contain("UniversalDeviceToolkitSetup-Full.exe");
+        installerAssetsScript.Should().Contain("UniversalDeviceToolkitSetup-Online.exe");
+        installerAssetsScript.Should().Contain("Expected installer output was not created");
         workflow.Should().Contain("FinalizeOnly = $true");
         workflow.Should().Contain("Repository = '${{ github.repository }}'");
         workflow.Should().Contain("$finalizeArgs['IncludeCrossPlatformCli'] = $true");
@@ -148,8 +155,8 @@ public sealed class ShippingPayloadGuardTests
         makeScript.Should().Contain("ENABLE_CROSS_PLATFORM_CLI");
         makeScript.Should().Contain("IF !VERSION_MAJOR! GEQ 5 SET ENABLE_CROSS_PLATFORM_CLI=1");
         makeScript.Should().Contain("%CROSS_PLATFORM_CLI_FINALIZE_ARG%");
-        makeScript.Should().Contain("iscc /O\"BuildInstaller\" /F\"UniversalDeviceToolkitSetup-Full\" MakeInstaller.iss");
-        makeScript.Should().Contain("iscc /O\"BuildInstaller\" /F\"UniversalDeviceToolkitSetup-Online\" MakeInstaller.iss");
+        makeScript.Should().Contain("Scripts\\Build-InstallerAssets.ps1");
+        makeScript.Should().NotContain("iscc");
         makeScript.Should().Contain("Expected online installer was not created.");
         makeScript.IndexOf("Scripts\\Build-CrossPlatformCliAsset.ps1", StringComparison.Ordinal)
             .Should()

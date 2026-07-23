@@ -14,7 +14,7 @@ param(
 
     [string]$ExpectedPublisher = 'SSC-STUDIO',
 
-    [string]$InstallerScriptPath = 'MakeInstaller.iss',
+    [string]$InstallerScriptPath = 'Packaging\InstallerMetadata.defines',
 
     [string]$WingetManifestDirectory,
 
@@ -160,8 +160,8 @@ Assert-Equal 'winget PackageName' (Read-YamlScalar -Lines $wingetLocaleLines -Ke
 $wingetLines = Get-Content -LiteralPath $wingetInstallerManifestPath
 Assert-Equal 'winget installer PackageIdentifier' (Read-YamlScalar -Lines $wingetLines -Key 'PackageIdentifier') $ExpectedPackageIdentifier
 Assert-Equal 'winget PackageVersion' (Read-YamlScalar -Lines $wingetLines -Key 'PackageVersion') $Version
-Assert-Equal 'winget InstallerType' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerType') 'inno'
-Assert-Equal 'winget Scope' (Read-YamlScalar -Lines $wingetLines -Key 'Scope') 'machine'
+Assert-Equal 'winget InstallerType' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerType') 'exe'
+Assert-Equal 'winget Scope' (Read-YamlScalar -Lines $wingetLines -Key 'Scope') 'user'
 Assert-Equal 'winget InstallerUrl' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerUrl') $expectedInstallerUrl
 Assert-Equal 'winget InstallerSha256' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerSha256').ToUpperInvariant() $expectedInstallerSha256Upper
 

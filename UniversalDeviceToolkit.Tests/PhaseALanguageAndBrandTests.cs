@@ -88,8 +88,9 @@ public sealed class PhaseALanguageAndBrandTests
         readme.Should().Contain("Assets/Logo.png");
 
         // Installer uninstall icon uses the app executable (embeds Icon.ico).
-        var iss = File.ReadAllText(Path.Combine(root, "MakeInstaller.iss"));
-        iss.Should().Contain("UninstallDisplayIcon={app}\\{#MyAppExeName}");
+        var engine = File.ReadAllText(Path.Combine(root, "Tools", "Installer", "InstallerEngine.cs"));
+        engine.Should().Contain("DisplayIcon");
+        engine.Should().Contain("InstallerConstants.MainExeName");
 
         // Tray helper uses AssetResources.icon (from Icon.ico).
         var tray = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Utils", "TrayHelper.cs"));

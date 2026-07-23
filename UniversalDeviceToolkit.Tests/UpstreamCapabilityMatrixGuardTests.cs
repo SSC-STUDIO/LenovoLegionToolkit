@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
@@ -42,9 +42,12 @@ public sealed class UpstreamCapabilityMatrixGuardTests
     public void BrandAssets_InstallerAndSite_ReferenceCanonicalIcons()
     {
         var root = FindRoot();
-        var iss = File.ReadAllText(Path.Combine(root, "MakeInstaller.iss"));
-        iss.Should().Contain("SetupIconFile=Assets\\Icon.ico");
-        iss.Should().Contain("UninstallDisplayIcon={app}\\{#MyAppExeName}");
+        var installerProject = File.ReadAllText(Path.Combine(root, "Tools", "Installer", "UniversalDeviceToolkit.Installer.csproj"));
+        installerProject.Should().Contain(@"ApplicationIcon>..\..\Assets\Icon.ico");
+
+        var engine = File.ReadAllText(Path.Combine(root, "Tools", "Installer", "InstallerEngine.cs"));
+        engine.Should().Contain("DisplayIcon");
+        engine.Should().Contain("InstallerConstants.MainExeName");
 
         var site = File.ReadAllText(Path.Combine(root, "site", "index.html"));
         site.Should().Contain("og-preview.png");

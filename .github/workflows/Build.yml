@@ -28,8 +28,6 @@ jobs:
       with:
         path: ~/.nuget/packages
         key: nuget-${{ runner.os }}-${{ hashFiles('**/Directory.Packages.props') }}
-    - name: Install Inno Setup
-      run: choco install innosetup -y
     - name: Build
       run: .\Make.bat
     - name: Upload artifact
