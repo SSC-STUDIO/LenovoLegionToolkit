@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-22T17:56:16.9328554\u002B00:00",
+  "lastUpdated": "2026-07-23T00:15:13.6565505\u002B00:00",
   "storeVersion": "1.1.7",
   "plugins": [
     {
@@ -34,10 +34,10 @@
       "isSystemPlugin": false,
       "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.18/custom-mouse-v1.0.18.zip",
       "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/tag/custom-mouse-v1.0.18",
-      "fileSize": 4484250,
-      "fileHash": "789ecf3d93bc51ceebdeb6b36cf28b1bd57617129bbcd0e88d9ab164c0a3b909",
-      "zipHash": "c0e194b2fde87b0572bed0b0ea1ae0861417d4e6820ae3c62c74d5c5ccf790df",
-      "releaseDate": "2026-07-22T17:20:34.1532880\u002B00:00",
+      "fileSize": 4484059,
+      "fileHash": "e67d46d78baf4dcb78cc970f940fc2069f7dfbda9e5bbb9fac7d5d9352f2636b",
+      "zipHash": "732321df221b5257bcdab94c866c936d25039e00a438f45212facd40fdec71c1",
+      "releaseDate": "2026-07-23T00:15:13.6565505\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
@@ -203,7 +203,7 @@
       "fileSize": 3625169,
       "fileHash": "2af3c28a73758f6aa3de0721a0ab7395315a43988c399417bdfb7b4b2d8e555c",
       "zipHash": "3bdc7ed602d7e0b2638e03d819ff2ba6176382ab0be9cf11a2cb4b9cae9d7a9b",
-      "releaseDate": "2026-07-22T17:56:16.9328554\u002B00:00",
+      "releaseDate": "2026-07-23T00:15:13.6565505\u002B00:00",
       "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
       "supportedLanguages": [
         "ar",
