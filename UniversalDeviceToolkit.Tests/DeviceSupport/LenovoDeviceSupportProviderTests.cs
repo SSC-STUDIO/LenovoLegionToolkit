@@ -98,6 +98,28 @@ public sealed class LenovoDeviceSupportProviderTests
         availability.DevicePackId.Should().Be(expectedPackId);
     }
 
+    [Theory]
+    [InlineData("ASUSTeK COMPUTER INC.", "ROG Zephyrus G16")]
+    [InlineData("ASUSTEK", "TUF Gaming F15")]
+    [InlineData("ASUS", "Vivobook Pro 15")]
+    public void Evaluate_WhenAsusMachineMatches_ShouldEnableAsusHardwarePack(string vendor, string model)
+    {
+        var machineInformation = new MachineInformation
+        {
+            Vendor = vendor,
+            MachineType = "0000",
+            Model = model
+        };
+
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.DevicePackId.Should().Be("asus-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
     [Fact]
     public async Task BuiltInCatalog_ShouldExposeManyHardwarePacksForStartupDeviceSetup()
     {
@@ -200,8 +222,6 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("LENOVO", "Lenovo V15 G4", "lenovo-v-series-basic")]
     [InlineData("Dell Inc.", "Alienware m18", "dell-basic")]
     [InlineData("Dell", "Latitude 7450", "dell-basic")]
-    [InlineData("ASUSTeK COMPUTER INC.", "ROG Zephyrus G16", "asus-basic")]
-    [InlineData("ASUS", "ExpertBook B9", "asus-basic")]
     [InlineData("HP", "OMEN Transcend 14", "hp-basic")]
     [InlineData("HP Inc.", "Spectre x360", "hp-basic")]
     [InlineData("Acer", "Predator Helios Neo", "acer-basic")]
@@ -303,14 +323,12 @@ public sealed class LenovoDeviceSupportProviderTests
 
     [Theory]
     [InlineData("DELL INCORPORATED", "Alienware m18", "dell-basic")]
-    [InlineData("ASUSTEK COMPUTER INC", "ROG Zephyrus G16", "asus-basic")]
     [InlineData("MICRO STAR INTERNATIONAL CO LTD", "Raider 18 HX", "msi-basic")]
     [InlineData("Samsung Electronics Co Ltd", "Galaxy Book4 Pro", "samsung-basic")]
     [InlineData("Apple Computer Inc", "MacBook Air", "apple-basic")]
     [InlineData("GIGA-BYTE Technology Co Ltd", "AORUS 16X", "gigabyte-basic")]
     [InlineData("Dynabook Incorporated", "Portégé X40", "dynabook-basic")]
     [InlineData("HEWLETT PACKARD", "Pavilion 15", "hp-basic")]
-    [InlineData("ASUSTEK", "TUF Gaming F15", "asus-basic")]
     [InlineData("ASROCK INC", "B650M Pro RS", "universal-motherboard-basic")]
     [InlineData("SUPER MICRO COMPUTER INC", "SYS-741GE", "universal-motherboard-basic")]
     public void Evaluate_WhenVendorUsesDifferentDmiFormatting_ShouldStillMatchBasicPack(string vendor, string model, string expectedPackId)

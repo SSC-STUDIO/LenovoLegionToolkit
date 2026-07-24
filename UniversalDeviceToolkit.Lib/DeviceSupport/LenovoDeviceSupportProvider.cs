@@ -301,7 +301,16 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["ASUS", "ROG", "TUF", "ProArt", "Zenbook", "Vivobook", "ExpertBook"],
                 [],
                 [],
-                ["ROG", "ROG Strix", "ROG Flow", "ROG Zephyrus", "ROG Ally", "ROG Ally X", "TUF", "TUF Gaming", "Zephyrus", "Strix", "VivoBook", "Vivobook", "Zenbook", "ProArt", "ExpertBook", "Chromebook", "Chromebook Plus"]),
+                ["ROG", "ROG Strix", "ROG Flow", "ROG Zephyrus", "ROG Ally", "ROG Ally X", "TUF", "TUF Gaming", "Zephyrus", "Strix", "VivoBook", "Vivobook", "Zenbook", "ProArt", "ExpertBook", "Chromebook", "Chromebook Plus"])
+                with
+                {
+                    // First non-Lenovo hardware provider: ATKACPI performance modes +
+                    // ATK/LHM sensors. "lenovo-hardware-controls" is the generic
+                    // hardware gate id (kept for compatibility). Fan curves, GPU
+                    // overclock and keyboard backlight stay hidden for now.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "dell-basic",
                 "Dell Basic",

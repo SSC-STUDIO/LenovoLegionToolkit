@@ -281,7 +281,17 @@ internal static class InstallerEngine
             }
 
             if (!string.IsNullOrWhiteSpace(options.DevicePackId))
+            {
                 FirstRunState.SaveDeviceSetup(options.DevicePackId, options.DeviceBasicMode);
+
+                if (!options.DeviceBasicMode &&
+                    !options.DevicePackId.Equals(DevicePackSnapshot.GenericBasicPackId, StringComparison.OrdinalIgnoreCase))
+                {
+                    progress.Report(new EngineProgress { Percent = 98, Status = Strings.Get("StatusLanguagePack") });
+                    await DevicePackInstaller.TryInstallAsync(options.DevicePackId, PayloadManifest.Version, ct)
+                        .ConfigureAwait(false);
+                }
+            }
         }
         catch (OperationCanceledException)
         {

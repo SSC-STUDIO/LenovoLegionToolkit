@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -2875,6 +2875,12 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="DeviceSetupWindow_Preparing" xml:space="preserve">
     <value>正在准备设备设置...</value>
+  </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>正在下载设备支持包…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>设备支持包下载失败。请检查网络后点击“确认”重试，或选择“暂时跳过”，下次启动时会再次询问。</value>
   </data>
   <data name="DeviceSetupWindow_Title" xml:space="preserve">
     <value>设备设置</value>

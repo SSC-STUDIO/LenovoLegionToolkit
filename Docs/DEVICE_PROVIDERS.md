@@ -1,0 +1,65 @@
+# Adding a hardware provider (brand EC adaptation)
+
+UDT ships Lenovo hardware control built in. Since 5.x the architecture accepts
+additional **brand providers** behind vendor seams — ASUS (ATKACPI) is the
+reference implementation. This document describes how to add another brand.
+
+## The moving parts
+
+| Layer | Where | Role |
+|---|---|---|
+| Device catalog | `UniversalDeviceToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` | Detection (vendor aliases, model keywords, MTMs) + feature gate per pack |
+| Catalog JSON | `resources/device-packs.json` | Generated mirror of the catalog — **the single source the release pipeline and installers read**. Regenerate after any catalog edit |
+| Protocol channel | e.g. `UniversalDeviceToolkit.Lib/System/AsusAtkDriver.cs` | Brand-specific hardware path (WMI/ACPI, USB HID, EC) |
+| Feature backend | e.g. `UniversalDeviceToolkit.Lib/Features/Asus/AsusPowerModeFeature.cs` | `IFeature<T>` implementation; dashboard cards light up automatically |
+| Facade | `UniversalDeviceToolkit.Lib/Features/PowerModeFeature.cs` | Vendor-agnostic concrete facade, Lenovo first then other brands |
+| Sensors probe | `UniversalDeviceToolkit.Lib/Controllers/Sensors/SensorsController.cs` | Probe chain V5→…→V1→brand→generic |
+| IoC | `UniversalDeviceToolkit.Lib/IoCModule.cs` | Brand feature (`selfOnly: true`), driver singleton, sensors controller |
+| On-demand packs | `DevicePackManager` + `StartupDeviceSetupCoordinator` | device-pack.json download/install like language packs |
+
+## Rules of the road
+
+1. **Self-disable, always.** Every probe (`IsSupportedAsync`) must check vendor
+   match AND protocol presence, and return `false` on any error. A provider must
+   never poke hardware that is not there. The ATK implementation only writes on
+   explicit user action and verifies by read-back.
+2. **No hardware, no claims.** Do not ship a provider for hardware nobody can
+   test. Reference implementations (G-Helper, OmenMon, Linux drivers) are the
+   protocol source of truth; verify constants against them, never from memory.
+3. **One catalog.** Packs live in `LenovoDeviceSupportProvider.BuiltInCatalog`.
+   Hardware packs list `"lenovo-hardware-controls"` (the generic hardware gate
+   id — the name predates multi-vendor support) in `EnabledFeatures`; basic
+   packs keep it in `HiddenFeatures`.
+4. **Regenerate the mirrors** after catalog edits:
+   - `resources/device-packs.json` (packdump tool)
+   - `Tools/Installer/DevicePackSnapshot.cs` (gen-snapshot.py) —
+     `DevicePackSnapshotGuardTests` fails if they drift.
+
+## Step-by-step (new brand "ACME")
+
+1. Add/upgrade the pack in `LenovoDeviceSupportProvider.cs` with the brand's
+   vendor aliases and model keywords. Start as a basic pack; flip
+   `EnabledFeatures` to include `"lenovo-hardware-controls", "sensors",
+   "power-modes"` only when a protocol provider actually ships.
+2. Write the protocol channel (`IAsusAtkDriver`/`AsusAtkDriver` is the
+   template): open the device lazily, expose `IsAvailable`, wrap reads/writes
+   with never-throw guards.
+3. Implement the feature backend (`AsusPowerModeFeature` is the template):
+   map brand states onto `PowerModeState` (Quiet/Balance/Performance), reject
+   vendor-specific states the UI cannot represent, verify writes by read-back.
+4. Register the backend in the facade (`PowerModeFeature`) after Lenovo, and in
+   `IoCModule` with `selfOnly: true`.
+5. For sensors, subclass `GenericSensorsController` (like
+   `AsusSensorsController`) and insert it into the probe chain before
+   `GenericSensorsController`.
+6. Tests with fakes only (see `AsusPowerModeFeatureTests`): state mapping,
+   endpoint probing order, self-disable on wrong vendor / missing device,
+   write-verification failure paths, facade preference order.
+
+## Roadmap candidates (not scheduled)
+
+- **HP OMEN** — WMI BIOS protocol, reference: OmenMon.
+- **Razer** — USB HID reports (no EC pokes), reference: razer-laptop-control.
+- **Clevo/Tongfang** — EC port I/O via signed PawnIO module; highest risk, last.
+- **Fan curves / per-brand tuning** — phase 2, requires community testers per
+  brand.

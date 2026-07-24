@@ -1,0 +1,4585 @@
+[
+  {
+    "id": "lenovo-legion-pro-7",
+    "displayName": "Lenovo Legion Pro 7",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "16IAX",
+      "16IRX",
+      "16IRX10",
+      "16IAX10",
+      "16IAX10H",
+      "16ARX",
+      "16ARX10",
+      "IRX10",
+      "IAX10",
+      "16IRX9",
+      "16IAX9",
+      "16IRX11",
+      "16IAX11",
+      "16IRX12",
+      "16IAX12",
+      "18IRX",
+      "18IAX"
+    ],
+    "modelKeywords": [
+      "Legion Pro 7",
+      "Legion Pro 7i",
+      "Legion Pro 7 16",
+      "Legion Pro 7 18",
+      "Y9000K",
+      "R9000K",
+      "Y9000K 2024",
+      "Y9000K 2025",
+      "Y9000K 2026",
+      "R9000K 2024",
+      "R9000K 2025",
+      "R9000K 2026",
+      "\u62EF\u6551\u8005 Y9000K",
+      "\u62EF\u6551\u8005 R9000K",
+      "Y9000P Ultimate",
+      "Pro 7i"
+    ],
+    "machineTypes": [
+      "83RU",
+      "83F5",
+      "83DE",
+      "82WR",
+      "82WQ",
+      "82WS",
+      "82WT"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-legion-pro-5",
+    "displayName": "Lenovo Legion Pro 5",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "16IAX",
+      "16IRX",
+      "16IRX10",
+      "16IAX10",
+      "16IAX10H",
+      "16ARX",
+      "16ARX10",
+      "16IRX9",
+      "16IAX9",
+      "16ARP",
+      "16ARH",
+      "16ADR",
+      "16AFR",
+      "16ADR10",
+      "16AFR10",
+      "16IRX11",
+      "16IAX11",
+      "16IRX12",
+      "16IAX12",
+      "16ARP10",
+      "16ARH10"
+    ],
+    "modelKeywords": [
+      "Legion Pro 5",
+      "Legion Pro 5i",
+      "Legion Pro 5 16",
+      "Y9000P",
+      "R9000P",
+      "Y9000P IRX9",
+      "Y9000P IAX9",
+      "Y9000P IRX10",
+      "Y9000P IAX10",
+      "Y9000P IRX11",
+      "Y9000P IAX11",
+      "Y9000P 2023",
+      "Y9000P 2024",
+      "Y9000P 2025",
+      "Y9000P 2026",
+      "R9000P 2023",
+      "R9000P 2024",
+      "R9000P 2025",
+      "R9000P 2026",
+      "\u62EF\u6551\u8005 Y9000P",
+      "\u62EF\u6551\u8005 R9000P",
+      "Pro 5i"
+    ],
+    "machineTypes": [
+      "83LT",
+      "83F3",
+      "83DF",
+      "83F2",
+      "83LU",
+      "82WM",
+      "83NN",
+      "82WK",
+      "82JQ",
+      "82RF",
+      "82RG",
+      "83DG",
+      "83LR",
+      "83LS",
+      "83LV",
+      "83LW",
+      "83LX",
+      "82SN",
+      "82SM",
+      "83F4",
+      "83F6",
+      "83RV",
+      "83QC",
+      "83QD",
+      "83QF",
+      "82JS",
+      "82JD",
+      "82JF"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-legion-9",
+    "displayName": "Lenovo Legion 9",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "16IRX",
+      "16IAX",
+      "18IAX",
+      "16IRX9",
+      "16IAX9",
+      "18IRX",
+      "18IAX10",
+      "16IRX10",
+      "16IAX10",
+      "18IRX10",
+      "16IRX11",
+      "18IAX11"
+    ],
+    "modelKeywords": [
+      "Legion 9",
+      "Legion 9i",
+      "Legion 9 16",
+      "Legion 9 18",
+      "\u62EF\u6551\u8005 Legion 9",
+      "\u62EF\u6551\u8005\u521B\u4E16"
+    ],
+    "machineTypes": [
+      "83G0",
+      "83EY",
+      "83AG"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-legion-7",
+    "displayName": "Lenovo Legion 7",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "16ACH",
+      "16ARH",
+      "16IAH",
+      "16IAX",
+      "16IRH",
+      "16IRX",
+      "16IRX9",
+      "16IAX9",
+      "16IRX10",
+      "16IAX10",
+      "16IRX11",
+      "16IAX11"
+    ],
+    "modelKeywords": [
+      "Legion 7",
+      "Legion 7i",
+      "Legion 7 16",
+      "Legion Slim 7",
+      "Legion 7a",
+      "Legion C7",
+      "Y9000X",
+      "\u62EF\u6551\u8005 Y9000X",
+      "R9000X",
+      "R9000X 2026",
+      "Y9000K 2020",
+      "Y9000K 2021",
+      "\u62EF\u6551\u8005 Legion 7"
+    ],
+    "machineTypes": [
+      "83KY",
+      "83FD",
+      "83Q8",
+      "83V9",
+      "82UH",
+      "82TD",
+      "82N6",
+      "82N7",
+      "83FE",
+      "83FF",
+      "81YT",
+      "81YU",
+      "81YV",
+      "81YW",
+      "82K6",
+      "81TH",
+      "81YY",
+      "82BD",
+      "82EH"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-legion-slim-5",
+    "displayName": "Lenovo Legion Slim 5",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion",
+      "Lenovo Slim"
+    ],
+    "modelPrefixes": [
+      "14AHP",
+      "14APH",
+      "14AKP",
+      "14IRP",
+      "14IRX",
+      "14IAX",
+      "14AHP10",
+      "14AKP10",
+      "14IRX10",
+      "14IAX10",
+      "16AHP",
+      "16APH",
+      "16IRX",
+      "16IAX",
+      "16AHP10",
+      "16APH10"
+    ],
+    "modelKeywords": [
+      "Legion Slim 5",
+      "Legion Slim 5i",
+      "Legion Slim 7",
+      "Legion Slim 7i",
+      "Legion S7",
+      "R9000X 2021",
+      "R9000X 2021R",
+      "R9000X 2023",
+      "\u62EF\u6551\u8005 Slim"
+    ],
+    "machineTypes": [
+      "83DH",
+      "83EX",
+      "82Y5",
+      "82Y9",
+      "82YA",
+      "82YB",
+      "83D6",
+      "83D0",
+      "83D1",
+      "82K8",
+      "82HN",
+      "82HM",
+      "82BC"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-legion-go",
+    "displayName": "Lenovo Legion Go",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "NX",
+      "8APU1",
+      "NX10",
+      "NX11",
+      "8APU2"
+    ],
+    "modelKeywords": [
+      "Legion Go",
+      "Legion Go S",
+      "Legion Go 2",
+      "Legion Go Gen 2",
+      "\u62EF\u6551\u8005 Go"
+    ],
+    "machineTypes": [
+      "83E1",
+      "83N0",
+      "83L3",
+      "83N6"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-loq",
+    "displayName": "Lenovo LOQ",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "LOQ"
+    ],
+    "modelPrefixes": [
+      "15IAX",
+      "15IRH",
+      "15IRX",
+      "15ARP",
+      "15APH",
+      "15AHP",
+      "15IAX9",
+      "15IRX9",
+      "15ARP9",
+      "15APH11",
+      "15IPH11",
+      "15ARP10",
+      "15IRX10",
+      "15IAX10",
+      "15APH10",
+      "15IRX11",
+      "15IAX11",
+      "16IRH",
+      "16IAX",
+      "16APH",
+      "16IRX",
+      "16ARP",
+      "16IRX10",
+      "16IAX10",
+      "17IRX",
+      "17IAX",
+      "17IRX9",
+      "17IRX10",
+      "17IRX11"
+    ],
+    "modelKeywords": [
+      "LOQ",
+      "LOQ 15",
+      "LOQ 16",
+      "LOQ 17",
+      "LOQ 15IRX",
+      "LOQ 15IAX",
+      "LOQ 15APH",
+      "LOQ Essential",
+      "G5000",
+      "\u62EF\u6551\u8005 LOQ",
+      "\u62EF\u6551\u8005G5000",
+      "\u62EF\u6551\u8005 G5000"
+    ],
+    "machineTypes": [
+      "83GS",
+      "83GT",
+      "83GU",
+      "83GV",
+      "83GW",
+      "83JC",
+      "83JD",
+      "83JE",
+      "83JF",
+      "83JG",
+      "83JH",
+      "82XV",
+      "82XW",
+      "82XT",
+      "82XU",
+      "83DV",
+      "83DW",
+      "83DX",
+      "83DY",
+      "83AQ",
+      "83AR",
+      "83AS",
+      "83Q1",
+      "83S0",
+      "83SC",
+      "83VA",
+      "83SL",
+      "83TN"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-legion-5",
+    "displayName": "Lenovo Legion 5",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "15ACH",
+      "15AKP",
+      "15AHP",
+      "15APH",
+      "15ARH",
+      "15ARP",
+      "15IAH",
+      "15IAX",
+      "15IHU",
+      "15IMH",
+      "15IRH",
+      "15IRX",
+      "15ITH",
+      "15ARP10",
+      "15IRX10",
+      "15IAX10",
+      "15AKP10",
+      "15AHP10",
+      "15APH11",
+      "15IRX11",
+      "15IAX11",
+      "16ACH",
+      "16ADR",
+      "16AFR",
+      "16AHP",
+      "16APH",
+      "16ARH",
+      "16ARP",
+      "16ARX",
+      "16IAH",
+      "16IAX",
+      "16IRH",
+      "16IRX",
+      "16ITH",
+      "16IRX9",
+      "16IRX10",
+      "16IAX10",
+      "16IRX11",
+      "17ACH",
+      "17ARH",
+      "17IRX",
+      "17ITH",
+      "17IMH",
+      "17IRX10",
+      "17IRX11"
+    ],
+    "modelKeywords": [
+      "Legion 5",
+      "Legion 5i",
+      "Legion 5 Pro",
+      "Legion 5a",
+      "Legion 5 15",
+      "Legion 5 16",
+      "Legion 5 17",
+      "Y7000",
+      "Y7000P",
+      "Y7000X",
+      "R7000X",
+      "Y7000P 2020H",
+      "Y7000P2020H",
+      "Y7000P IRX9",
+      "Y7000P IRX10",
+      "Y7000P IRX11",
+      "Y7000 2023",
+      "Y7000 2024",
+      "Y7000 2025",
+      "Y7000 2026",
+      "Y7000P 2023",
+      "Y7000P 2024",
+      "Y7000P 2025",
+      "Y7000P 2026",
+      "R7000",
+      "R7000P",
+      "R7000P 2021",
+      "R7000P 2023",
+      "R7000P 2024",
+      "R7000P 2025",
+      "R7000P 2026",
+      "\u62EF\u6551\u8005 Y7000",
+      "\u62EF\u6551\u8005 Y7000P",
+      "\u62EF\u6551\u8005 Y7000X",
+      "\u62EF\u6551\u8005 R7000X",
+      "\u62EF\u6551\u8005 R7000",
+      "\u62EF\u6551\u8005 R7000P"
+    ],
+    "machineTypes": [
+      "83F0",
+      "83F1",
+      "83M0",
+      "83NX",
+      "83N2",
+      "83LY",
+      "83EW",
+      "83EG",
+      "83JJ",
+      "82RC",
+      "82RB",
+      "82TB",
+      "83EF",
+      "82RE",
+      "82RD",
+      "82AX",
+      "82B0",
+      "82GR",
+      "82JU",
+      "82JV",
+      "82JW",
+      "82JY",
+      "82K0",
+      "82K1",
+      "82K2",
+      "82N4",
+      "82N5",
+      "82NW",
+      "83FG",
+      "83FH",
+      "83G1",
+      "83G2",
+      "83LL",
+      "83LM",
+      "83LN",
+      "83DT",
+      "83DU",
+      "83C6",
+      "83C7",
+      "83Q6",
+      "83Q7",
+      "83RW",
+      "83QE",
+      "83VK",
+      "82B1",
+      "82B2",
+      "82B3",
+      "82B4",
+      "82B5",
+      "82AU",
+      "81Y6",
+      "82CF",
+      "81Y8",
+      "82GN",
+      "82AY",
+      "82AW",
+      "82GU",
+      "82AV",
+      "81Y7",
+      "82B6",
+      "82JH",
+      "82JK"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-chromebook-basic",
+    "displayName": "Lenovo Chromebook Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Chromebook",
+      "IdeaPad"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Chromebook",
+      "Chromebook Plus",
+      "Flex Chromebook",
+      "IdeaPad Chromebook"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-ideapad-gaming",
+    "displayName": "Lenovo IdeaPad Gaming",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "IdeaPad Gaming",
+      "IdeaPad"
+    ],
+    "modelPrefixes": [
+      "15ACH",
+      "15ARH",
+      "15IAH",
+      "15IAU",
+      "15IRH",
+      "15IHU",
+      "15IMH",
+      "16ACH",
+      "16ARH",
+      "16IAH",
+      "16IRH",
+      "16IAH7",
+      "15IAH7"
+    ],
+    "modelKeywords": [
+      "IdeaPad Gaming",
+      "IdeaPad Gaming 3",
+      "IdeaPad Gaming 3i",
+      "IdeaPad Gaming 3 15",
+      "IdeaPad Gaming 3 16",
+      "IdeaPad Gaming 3 15IAH7",
+      "IdeaPad Gaming 3 16IAH7",
+      "\u62EF\u6551\u8005 IdeaPad Gaming",
+      "\u5C0F\u65B0 Gaming"
+    ],
+    "machineTypes": [
+      "82EY",
+      "82S9",
+      "82UJ",
+      "82SA",
+      "82SB",
+      "82UK",
+      "82SC",
+      "82SD",
+      "82SE",
+      "82SF",
+      "83C8",
+      "83C9",
+      "83CA",
+      "83CB",
+      "83CC",
+      "83CD",
+      "83Z0",
+      "83Z1",
+      "83Z2",
+      "83Z3",
+      "81Y4",
+      "81LK",
+      "81LL"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-ideapad",
+    "displayName": "Lenovo IdeaPad",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "IdeaPad"
+    ],
+    "modelPrefixes": [
+      "IdeaPad"
+    ],
+    "modelKeywords": [
+      "IdeaPad",
+      "IdeaPad Slim",
+      "IdeaPad Flex",
+      "IdeaPad 1",
+      "IdeaPad 3",
+      "IdeaPad 5",
+      "IdeaPad Pro"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-thinkbook",
+    "displayName": "Lenovo ThinkBook",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "ThinkBook"
+    ],
+    "modelPrefixes": [
+      "ThinkBook"
+    ],
+    "modelKeywords": [
+      "ThinkBook",
+      "ThinkBook 14",
+      "ThinkBook 16",
+      "ThinkBook Plus"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-yoga",
+    "displayName": "Lenovo YOGA",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "YOGA"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "YOGA",
+      "Yoga",
+      "Yoga Pro",
+      "Yoga Slim",
+      "Yoga Book",
+      "Yoga 7",
+      "Yoga 9"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-legion-desktop-basic",
+    "displayName": "Lenovo Legion Desktop Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Legion T",
+      "Legion Tower",
+      "Legion C",
+      "Legion Desktop"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-legacy-limited",
+    "displayName": "Lenovo Legacy Limited",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "18IAX",
+      "17IR",
+      "15IR",
+      "15IC",
+      "15IK",
+      "G5000",
+      "R9000",
+      "R7000",
+      "Y9000",
+      "Y7000"
+    ],
+    "modelKeywords": [
+      "Legion",
+      "Y530",
+      "Y730",
+      "Y540",
+      "Y545",
+      "Y740",
+      "Y7000 2018",
+      "Y7000 2019",
+      "Y7000P 2018",
+      "Y7000P 2019",
+      "Y9000K 2019"
+    ],
+    "machineTypes": [
+      "81FV",
+      "81LB",
+      "81HD",
+      "81HG",
+      "81FW",
+      "81LC",
+      "81HC",
+      "81LD",
+      "81LE",
+      "81LF",
+      "81SX",
+      "81SY",
+      "81RJ",
+      "81Q4",
+      "81T3",
+      "81Q6",
+      "81T2",
+      "81QV",
+      "81HE",
+      "81UF",
+      "81UH",
+      "81QW",
+      "81HH",
+      "81UG",
+      "81UJ",
+      "81NS",
+      "81T0",
+      "81V4",
+      "81Q5",
+      "81T1",
+      "81JA",
+      "81UK"
+    ],
+    "enabledFeatures": [
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes",
+      "battery",
+      "plugins",
+      "system-optimization"
+    ],
+    "hiddenFeatures": []
+  },
+  {
+    "id": "lenovo-thinkpad-basic",
+    "displayName": "Lenovo ThinkPad Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "ThinkPad"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "ThinkPad",
+      "ThinkPad P",
+      "ThinkPad T",
+      "ThinkPad X",
+      "ThinkPad E",
+      "ThinkPad L",
+      "ThinkPad Z",
+      "ThinkPad X1",
+      "ThinkPad X1 Carbon",
+      "ThinkPad X1 Yoga",
+      "ThinkPad T14",
+      "ThinkPad T16",
+      "ThinkPad P14s",
+      "ThinkPad P16",
+      "ThinkPad E14",
+      "ThinkPad E16",
+      "ThinkPad L14",
+      "ThinkPad L16"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-thinkcentre-basic",
+    "displayName": "Lenovo ThinkCentre Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "ThinkCentre"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "ThinkCentre",
+      "ThinkCentre M",
+      "ThinkCentre Neo"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-thinkstation-basic",
+    "displayName": "Lenovo ThinkStation Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "ThinkStation"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "ThinkStation",
+      "ThinkStation P"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-ideacentre-basic",
+    "displayName": "Lenovo IdeaCentre Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "IdeaCentre"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "IdeaCentre",
+      "Yoga AIO"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-xiaoxin-basic",
+    "displayName": "Lenovo XiaoXin Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "XiaoXin"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "XiaoXin",
+      "Xiaoxin",
+      "\u5C0F\u65B0"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-y-series-legacy",
+    "displayName": "Lenovo Y Series Legacy",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "IdeaPad",
+      "Legion"
+    ],
+    "modelPrefixes": [
+      "Y520",
+      "Y530",
+      "Y540",
+      "Y545",
+      "Y700",
+      "Y7000",
+      "Y9000"
+    ],
+    "modelKeywords": [
+      "Lenovo Y",
+      "Y Series"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-v-series-basic",
+    "displayName": "Lenovo V Series Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Lenovo V"
+    ],
+    "modelPrefixes": [
+      "V14",
+      "V15",
+      "V17"
+    ],
+    "modelKeywords": [
+      "Lenovo V",
+      "V14",
+      "V15",
+      "V17"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lenovo-slim-basic",
+    "displayName": "Lenovo Slim Basic",
+    "vendor": "LENOVO",
+    "vendorAliases": [],
+    "families": [
+      "Lenovo Slim",
+      "IdeaPad Slim"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Lenovo Slim",
+      "IdeaPad Slim",
+      "Slim 7",
+      "Slim 5"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "motorola-lenovo-basic",
+    "displayName": "Motorola Lenovo Basic",
+    "vendor": "MOTOROLA",
+    "vendorAliases": [],
+    "families": [
+      "Motorola"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Legion",
+      "ThinkPhone",
+      "Moto"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "asus-basic",
+    "displayName": "ASUS Basic",
+    "vendor": "ASUSTeK COMPUTER INC.",
+    "vendorAliases": [
+      "ASUS",
+      "ASUSTeK COMPUTER INC",
+      "ASUSTeK COMPUTER INCORPORATED",
+      "ASUSTEK",
+      "ROG",
+      "Republic of Gamers",
+      "TUF Gaming"
+    ],
+    "families": [
+      "ASUS",
+      "ROG",
+      "TUF",
+      "ProArt",
+      "Zenbook",
+      "Vivobook",
+      "ExpertBook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "ROG",
+      "ROG Strix",
+      "ROG Flow",
+      "ROG Zephyrus",
+      "ROG Ally",
+      "ROG Ally X",
+      "TUF",
+      "TUF Gaming",
+      "Zephyrus",
+      "Strix",
+      "VivoBook",
+      "Vivobook",
+      "Zenbook",
+      "ProArt",
+      "ExpertBook",
+      "Chromebook",
+      "Chromebook Plus"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
+    ],
+    "hiddenFeatures": [
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve",
+      "keyboard-backlight"
+    ]
+  },
+  {
+    "id": "dell-basic",
+    "displayName": "Dell Basic",
+    "vendor": "Dell Inc.",
+    "vendorAliases": [
+      "Dell",
+      "Dell Computer Corporation",
+      "Alienware"
+    ],
+    "families": [
+      "Dell",
+      "Alienware",
+      "Inspiron",
+      "XPS",
+      "Precision",
+      "G Series",
+      "Latitude",
+      "OptiPlex"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Alienware",
+      "Alienware m",
+      "Alienware x",
+      "XPS",
+      "Inspiron",
+      "Precision",
+      "Latitude",
+      "Dell G",
+      "G15",
+      "G16",
+      "OptiPlex",
+      "Vostro",
+      "Chromebook",
+      "Chromebook Plus"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "hp-basic",
+    "displayName": "HP Basic",
+    "vendor": "HP",
+    "vendorAliases": [
+      "HP Inc.",
+      "Hewlett-Packard",
+      "Hewlett-Packard Company",
+      "Hewlett Packard",
+      "OMEN",
+      "Victus"
+    ],
+    "families": [
+      "HP",
+      "OMEN",
+      "Victus",
+      "Pavilion",
+      "Envy",
+      "EliteBook",
+      "ProBook",
+      "ZBook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "OMEN",
+      "Omen Max",
+      "OMEN Transcend",
+      "Victus",
+      "Pavilion",
+      "Envy",
+      "EliteBook",
+      "ProBook",
+      "ZBook",
+      "Spectre",
+      "Dragonfly",
+      "Chromebook",
+      "Chromebook Plus"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "acer-basic",
+    "displayName": "Acer Basic",
+    "vendor": "Acer",
+    "vendorAliases": [
+      "Acer Incorporated",
+      "Acer Inc.",
+      "Predator",
+      "Nitro"
+    ],
+    "families": [
+      "Acer",
+      "Predator",
+      "Nitro",
+      "Swift",
+      "Aspire",
+      "TravelMate"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Predator",
+      "Predator Helios",
+      "Predator Triton",
+      "Nitro",
+      "Swift",
+      "Aspire",
+      "TravelMate",
+      "ConceptD",
+      "Extensa",
+      "Spin",
+      "Chromebook",
+      "Chromebook Plus"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "msi-basic",
+    "displayName": "MSI Basic",
+    "vendor": "Micro-Star International Co., Ltd.",
+    "vendorAliases": [
+      "MSI",
+      "Micro-Star International",
+      "MICRO-STAR INTERNATIONAL CO., LTD"
+    ],
+    "families": [
+      "MSI"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MSI",
+      "Raider",
+      "Stealth",
+      "Vector",
+      "Katana",
+      "Cyborg",
+      "Creator",
+      "Prestige",
+      "Modern",
+      "Summit",
+      "Crosshair",
+      "Pulse",
+      "Sword",
+      "Thin"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "microsoft-surface-basic",
+    "displayName": "Microsoft Surface Basic",
+    "vendor": "Microsoft Corporation",
+    "vendorAliases": [
+      "Microsoft"
+    ],
+    "families": [
+      "Surface"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Surface Laptop",
+      "Surface Pro",
+      "Surface Book",
+      "Surface Studio",
+      "Surface Go"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "gigabyte-basic",
+    "displayName": "GIGABYTE Basic",
+    "vendor": "GIGABYTE",
+    "vendorAliases": [
+      "Gigabyte Technology Co., Ltd.",
+      "Gigabyte Technology Co., Ltd",
+      "AORUS"
+    ],
+    "families": [
+      "GIGABYTE",
+      "AORUS",
+      "AERO"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "AORUS",
+      "AERO",
+      "GIGABYTE G"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "razer-basic",
+    "displayName": "Razer Basic",
+    "vendor": "Razer",
+    "vendorAliases": [
+      "Razer Inc.",
+      "Razer Inc"
+    ],
+    "families": [
+      "Razer Blade"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Blade",
+      "Razer Book"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "samsung-basic",
+    "displayName": "Samsung Basic",
+    "vendor": "SAMSUNG ELECTRONICS CO., LTD.",
+    "vendorAliases": [
+      "Samsung",
+      "Samsung Electronics",
+      "SAMSUNG ELECTRONICS CO., LTD"
+    ],
+    "families": [
+      "Samsung",
+      "Galaxy Book"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Galaxy Book",
+      "Notebook 9",
+      "Galaxy Chromebook",
+      "Chromebook",
+      "Chromebook Plus"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "google-chromebook-basic",
+    "displayName": "Google Chromebook Basic",
+    "vendor": "Google",
+    "vendorAliases": [
+      "Google LLC",
+      "Google Inc.",
+      "Google Inc"
+    ],
+    "families": [
+      "Google",
+      "Chromebook",
+      "Pixelbook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Pixelbook",
+      "Pixel Slate",
+      "Chromebook",
+      "Chromebook Plus"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "apple-basic",
+    "displayName": "Apple Basic",
+    "vendor": "Apple Inc.",
+    "vendorAliases": [
+      "Apple",
+      "Apple Computer, Inc."
+    ],
+    "families": [
+      "Mac",
+      "MacBook",
+      "iMac"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MacBook",
+      "MacBook Pro",
+      "MacBook Air",
+      "iMac",
+      "Mac mini",
+      "Mac Studio",
+      "Mac Pro"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "huawei-basic",
+    "displayName": "HUAWEI Basic",
+    "vendor": "HUAWEI",
+    "vendorAliases": [
+      "Huawei",
+      "Huawei Technologies",
+      "Huawei Technologies Co., Ltd.",
+      "Huawei Technologies Co., Ltd"
+    ],
+    "families": [
+      "HUAWEI",
+      "MateBook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MateBook",
+      "MateBook X",
+      "MateBook D",
+      "MateBook E",
+      "MateBook GT",
+      "Qingyun"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "xiaomi-basic",
+    "displayName": "Xiaomi Basic",
+    "vendor": "Xiaomi",
+    "vendorAliases": [
+      "Xiaomi Inc.",
+      "Xiaomi Corporation",
+      "Redmi",
+      "TIMI"
+    ],
+    "families": [
+      "Xiaomi",
+      "RedmiBook",
+      "Mi Notebook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Mi Notebook",
+      "RedmiBook",
+      "Redmi G",
+      "Xiaomi Book",
+      "Xiaomi Book Pro",
+      "Book Pro"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "realme-basic",
+    "displayName": "realme Basic",
+    "vendor": "realme",
+    "vendorAliases": [
+      "realme Chongqing MobileTelecommunications Corp., Ltd.",
+      "realme"
+    ],
+    "families": [
+      "realme",
+      "realme Book"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "realme Book"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "infinix-basic",
+    "displayName": "Infinix Basic",
+    "vendor": "INFINIX",
+    "vendorAliases": [
+      "Infinix Mobility Limited",
+      "Infinix"
+    ],
+    "families": [
+      "Infinix",
+      "INBook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "INBook",
+      "Inbook"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "honor-basic",
+    "displayName": "HONOR Basic",
+    "vendor": "HONOR",
+    "vendorAliases": [
+      "Honor Device Co., Ltd.",
+      "Honor Device Co., Ltd"
+    ],
+    "families": [
+      "HONOR",
+      "MagicBook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MagicBook"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "lg-basic",
+    "displayName": "LG Basic",
+    "vendor": "LG Electronics",
+    "vendorAliases": [
+      "LG Electronics Inc.",
+      "LG Electronics Inc",
+      "LG"
+    ],
+    "families": [
+      "LG gram",
+      "LG"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "gram",
+      "UltraPC"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "framework-basic",
+    "displayName": "Framework Basic",
+    "vendor": "Framework",
+    "vendorAliases": [
+      "Framework Computer Inc.",
+      "Framework Computer"
+    ],
+    "families": [
+      "Framework Laptop"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Framework Laptop"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "panasonic-basic",
+    "displayName": "Panasonic Basic",
+    "vendor": "Panasonic",
+    "vendorAliases": [
+      "Panasonic Corporation"
+    ],
+    "families": [
+      "Panasonic",
+      "TOUGHBOOK",
+      "Lets note"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "TOUGHBOOK",
+      "Let\u0027s note",
+      "Lets note"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "dynabook-basic",
+    "displayName": "Dynabook Basic",
+    "vendor": "Dynabook Inc.",
+    "vendorAliases": [
+      "Dynabook",
+      "TOSHIBA",
+      "TOSHIBA CORPORATION"
+    ],
+    "families": [
+      "Dynabook",
+      "Toshiba"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Port\u00E9g\u00E9",
+      "Portege",
+      "Tecra",
+      "Satellite"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "nec-lavie-basic",
+    "displayName": "NEC LAVIE Basic",
+    "vendor": "NEC",
+    "vendorAliases": [
+      "NEC Personal Computers, Ltd.",
+      "NEC Personal Computers",
+      "NEC Corporation",
+      "LAVIE"
+    ],
+    "families": [
+      "NEC",
+      "LAVIE",
+      "VersaPro"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "LAVIE",
+      "LaVie",
+      "VersaPro"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "sharp-basic",
+    "displayName": "Sharp Basic",
+    "vendor": "SHARP",
+    "vendorAliases": [
+      "Sharp Corporation",
+      "Sharp"
+    ],
+    "families": [
+      "Sharp",
+      "Mebius",
+      "Dynabook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Mebius",
+      "Dynabook",
+      "Chromebook"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "fujitsu-basic",
+    "displayName": "Fujitsu Basic",
+    "vendor": "FUJITSU",
+    "vendorAliases": [
+      "FUJITSU CLIENT COMPUTING LIMITED",
+      "Fujitsu Client Computing Limited"
+    ],
+    "families": [
+      "Fujitsu",
+      "LIFEBOOK"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "LIFEBOOK",
+      "CELSIUS"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "vaio-basic",
+    "displayName": "VAIO Basic",
+    "vendor": "VAIO Corporation",
+    "vendorAliases": [
+      "VAIO"
+    ],
+    "families": [
+      "VAIO"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "VAIO"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "gateway-basic",
+    "displayName": "Gateway Basic",
+    "vendor": "Gateway",
+    "vendorAliases": [
+      "Gateway Inc.",
+      "Acer Gateway"
+    ],
+    "families": [
+      "Gateway"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Gateway"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "chuwi-basic",
+    "displayName": "CHUWI Basic",
+    "vendor": "CHUWI",
+    "vendorAliases": [
+      "Chuwi Innovation And Technology",
+      "CHUWI Innovation Limited"
+    ],
+    "families": [
+      "CHUWI"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "HeroBook",
+      "CoreBook",
+      "MiniBook",
+      "GemiBook",
+      "FreeBook"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "teclast-basic",
+    "displayName": "TECLAST Basic",
+    "vendor": "TECLAST",
+    "vendorAliases": [
+      "Teclast",
+      "Guangzhou Shangke Information Technology"
+    ],
+    "families": [
+      "TECLAST"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "F15",
+      "F16",
+      "F7",
+      "X6"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "jumper-basic",
+    "displayName": "Jumper Basic",
+    "vendor": "Jumper",
+    "vendorAliases": [
+      "Jumper Computer",
+      "Jumper Tech"
+    ],
+    "families": [
+      "Jumper"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "EZbook",
+      "EZpad"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "medion-basic",
+    "displayName": "MEDION Basic",
+    "vendor": "MEDION",
+    "vendorAliases": [
+      "MEDION AG",
+      "ERAZER"
+    ],
+    "families": [
+      "MEDION",
+      "ERAZER"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "ERAZER",
+      "AKOYA"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "xmg-schenker-basic",
+    "displayName": "XMG/SCHENKER Basic",
+    "vendor": "SCHENKER",
+    "vendorAliases": [
+      "Schenker Technologies GmbH",
+      "XMG",
+      "TUXEDO"
+    ],
+    "families": [
+      "XMG",
+      "SCHENKER",
+      "TUXEDO"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "XMG",
+      "SCHENKER",
+      "TUXEDO",
+      "InfinityBook",
+      "Stellaris",
+      "Pulse",
+      "Polaris",
+      "Aura"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "hasee-basic",
+    "displayName": "Hasee Basic",
+    "vendor": "HASEE",
+    "vendorAliases": [
+      "Hasee",
+      "Hasee Computer"
+    ],
+    "families": [
+      "Hasee"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Hasee",
+      "ZhanShen",
+      "Zhan Shen"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "thunderobot-basic",
+    "displayName": "THUNDEROBOT Basic",
+    "vendor": "THUNDEROBOT",
+    "vendorAliases": [
+      "Thunderobot",
+      "Raytheon"
+    ],
+    "families": [
+      "THUNDEROBOT",
+      "Thunderobot"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Thunderobot",
+      "911",
+      "Zero",
+      "Black Warrior"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "machenike-basic",
+    "displayName": "MACHENIKE Basic",
+    "vendor": "MACHENIKE",
+    "vendorAliases": [
+      "Machenike"
+    ],
+    "families": [
+      "MACHENIKE",
+      "Machenike"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MACHENIKE",
+      "Machenike",
+      "T58",
+      "F117",
+      "L16"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "colorful-basic",
+    "displayName": "COLORFUL Basic",
+    "vendor": "COLORFUL",
+    "vendorAliases": [
+      "Colorful Technology And Development Co., Ltd.",
+      "Colorful"
+    ],
+    "families": [
+      "COLORFUL",
+      "Colorful"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "COLORFUL",
+      "Evol",
+      "X15",
+      "MEOW"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "maibenben-basic",
+    "displayName": "MAIBENBEN Basic",
+    "vendor": "MAIBENBEN",
+    "vendorAliases": [
+      "Maibenben",
+      "MaiBenBen"
+    ],
+    "families": [
+      "MAIBENBEN",
+      "Maibenben"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Maibenben",
+      "MaiBook",
+      "Xiaomai"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "mechrevo-basic",
+    "displayName": "MECHREVO Basic",
+    "vendor": "MECHREVO",
+    "vendorAliases": [
+      "Mechanical Revolution",
+      "MECHREVO INC.",
+      "Tongfang",
+      "THTF",
+      "Tsinghua Tongfang"
+    ],
+    "families": [
+      "MECHREVO",
+      "Mechanical Revolution"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MECHREVO",
+      "Mechanical Revolution",
+      "Jiaolong",
+      "Kuangshi",
+      "Code",
+      "Unbounded",
+      "F1"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "valve-handheld-basic",
+    "displayName": "Valve Handheld Basic",
+    "vendor": "Valve",
+    "vendorAliases": [
+      "Valve Corporation"
+    ],
+    "families": [
+      "Steam Deck"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Steam Deck"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "gpd-handheld-basic",
+    "displayName": "GPD Handheld Basic",
+    "vendor": "GPD",
+    "vendorAliases": [
+      "GamePad Digital",
+      "Shenzhen GPD Technology Co., Ltd."
+    ],
+    "families": [
+      "GPD"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "GPD WIN",
+      "GPD Win",
+      "Win Max",
+      "Win Mini",
+      "Pocket",
+      "Duo"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "ayaneo-handheld-basic",
+    "displayName": "AYANEO Handheld Basic",
+    "vendor": "AYANEO",
+    "vendorAliases": [
+      "AYANEO",
+      "AOKZOE",
+      "Ayn Technologies",
+      "AYN"
+    ],
+    "families": [
+      "AYANEO",
+      "AOKZOE",
+      "AYN"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "AYANEO",
+      "AOKZOE",
+      "Loki",
+      "NEXT",
+      "Air Plus",
+      "Odin",
+      "Odin2"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "anbernic-handheld-basic",
+    "displayName": "Anbernic Handheld Basic",
+    "vendor": "Anbernic",
+    "vendorAliases": [
+      "ANBERNIC",
+      "Shenzhen Yangliming Electronic Technology"
+    ],
+    "families": [
+      "Anbernic",
+      "RG"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Anbernic",
+      "RG35",
+      "RG40",
+      "RG505",
+      "RG552",
+      "RG556",
+      "RG Arc",
+      "Win600"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "retroid-handheld-basic",
+    "displayName": "Retroid Handheld Basic",
+    "vendor": "Retroid",
+    "vendorAliases": [
+      "RETROID",
+      "Moorechip Technologies",
+      "GoRetroid"
+    ],
+    "families": [
+      "Retroid",
+      "Pocket"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Retroid",
+      "Retroid Pocket",
+      "Pocket 4",
+      "Pocket 5"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "orange-pi-handheld-basic",
+    "displayName": "Orange Pi Handheld Basic",
+    "vendor": "Orange Pi",
+    "vendorAliases": [
+      "Shenzhen Xunlong Software",
+      "Xunlong",
+      "OrangePi",
+      "Orange Pi"
+    ],
+    "families": [
+      "Orange Pi"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Orange Pi",
+      "OrangePi",
+      "Orange Pi Neo"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "one-netbook-handheld-basic",
+    "displayName": "ONE-NETBOOK Handheld Basic",
+    "vendor": "ONE-NETBOOK",
+    "vendorAliases": [
+      "One-Netbook",
+      "ONE-NETBOOK Technology",
+      "ONEXPLAYER",
+      "OneXPlayer"
+    ],
+    "families": [
+      "ONE-NETBOOK",
+      "ONEXPLAYER"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "OneXPlayer",
+      "ONEXPLAYER",
+      "One-Netbook",
+      "OneMix",
+      "OneGx"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "minisforum-basic",
+    "displayName": "MINISFORUM Basic",
+    "vendor": "MINISFORUM",
+    "vendorAliases": [
+      "Micro Computer (HK) Tech Limited",
+      "Minisforum"
+    ],
+    "families": [
+      "MINISFORUM"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MINISFORUM",
+      "UM",
+      "HX",
+      "Venus Series"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "beelink-basic",
+    "displayName": "Beelink Basic",
+    "vendor": "Beelink",
+    "vendorAliases": [
+      "AZW",
+      "Shenzhen AZW Technology Co., Ltd.",
+      "Beelink"
+    ],
+    "families": [
+      "Beelink"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "SER",
+      "GTR",
+      "EQ",
+      "Beelink"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "geekom-basic",
+    "displayName": "GEEKOM Basic",
+    "vendor": "GEEKOM",
+    "vendorAliases": [
+      "Geekom",
+      "GEEKOM"
+    ],
+    "families": [
+      "GEEKOM"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Mini IT",
+      "MiniAir",
+      "A7",
+      "GT"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "gmktec-basic",
+    "displayName": "GMKtec Basic",
+    "vendor": "GMKtec",
+    "vendorAliases": [
+      "GMK",
+      "GMKtec",
+      "Shenzhen GMKtec"
+    ],
+    "families": [
+      "GMKtec",
+      "NucBox"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "NucBox",
+      "EVO-X",
+      "K8",
+      "K6",
+      "M7",
+      "M5"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "morefine-basic",
+    "displayName": "Morefine Basic",
+    "vendor": "Morefine",
+    "vendorAliases": [
+      "MORE FINE",
+      "Shenzhen Morefine"
+    ],
+    "families": [
+      "Morefine"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Morefine",
+      "S500",
+      "S600",
+      "M600",
+      "M9"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "acemagic-basic",
+    "displayName": "ACEMAGIC Basic",
+    "vendor": "ACEMAGIC",
+    "vendorAliases": [
+      "Ace Magician",
+      "ACEMAGICIAN",
+      "ACEMAGIC",
+      "KAMRUI"
+    ],
+    "families": [
+      "ACEMAGIC",
+      "ACEMAGICIAN",
+      "KAMRUI"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "ACEMAGIC",
+      "Kron",
+      "F5A",
+      "Tank",
+      "AM",
+      "AD",
+      "S1"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "aoostar-basic",
+    "displayName": "AOOSTAR Basic",
+    "vendor": "AOOSTAR",
+    "vendorAliases": [
+      "AOOSTAR",
+      "Aoostar"
+    ],
+    "families": [
+      "AOOSTAR"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "GEM",
+      "GOD",
+      "WTR",
+      "MN",
+      "N1",
+      "R7 NAS"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "regional-mini-pc-basic",
+    "displayName": "Regional Mini PC Basic",
+    "vendor": "TRIGKEY",
+    "vendorAliases": [
+      "TRIGKEY",
+      "Trigkey",
+      "BOSGAME",
+      "Bosgame",
+      "FIREBAT",
+      "Firebat",
+      "CHATREEY",
+      "Chatreey",
+      "SZBOX",
+      "FEVM",
+      "NiPoGi",
+      "Nipogi",
+      "PELADN",
+      "KODLIX",
+      "Topdon",
+      "KTC"
+    ],
+    "families": [
+      "Mini PC",
+      "MiniPC"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "mele-basic",
+    "displayName": "MeLE Basic",
+    "vendor": "MeLE",
+    "vendorAliases": [
+      "Mele",
+      "MeLE Technologies",
+      "Shenzhen MeLE Digital Technology"
+    ],
+    "families": [
+      "MeLE",
+      "Quieter"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Quieter",
+      "Overclock",
+      "PCG",
+      "Mini PC"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "bmax-ninkear-basic",
+    "displayName": "BMAX/Ninkear Basic",
+    "vendor": "BMAX",
+    "vendorAliases": [
+      "BMAX",
+      "Ninkear",
+      "KUU",
+      "N-one",
+      "N-ONE",
+      "MALLRACE"
+    ],
+    "families": [
+      "BMAX",
+      "Ninkear",
+      "KUU",
+      "N-one"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "BMAX",
+      "Ninkear",
+      "KUU",
+      "N-one",
+      "N-one Nbook",
+      "Mini PC",
+      "Y13",
+      "Y14",
+      "X14",
+      "X15"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "zotac-basic",
+    "displayName": "ZOTAC Basic",
+    "vendor": "ZOTAC",
+    "vendorAliases": [
+      "ZOTAC International"
+    ],
+    "families": [
+      "ZOTAC",
+      "ZBOX"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "ZBOX",
+      "MAGNUS",
+      "ZOTAC"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "system76-basic",
+    "displayName": "System76 Basic",
+    "vendor": "System76",
+    "vendorAliases": [
+      "System76, Inc.",
+      "System 76",
+      "Notebook"
+    ],
+    "families": [
+      "System76",
+      "Pop!_OS",
+      "Thelio"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Adder WS",
+      "addw",
+      "Bonobo WS",
+      "bonw",
+      "Darter Pro",
+      "darp",
+      "Galago Pro",
+      "galp",
+      "Gazelle",
+      "gaze",
+      "Kudu",
+      "Lemur Pro",
+      "lemp",
+      "Meerkat",
+      "meer",
+      "Oryx Pro",
+      "oryp",
+      "Pangolin Pro",
+      "panp",
+      "Serval WS",
+      "serw",
+      "Thelio"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "star-labs-basic",
+    "displayName": "Star Labs Basic",
+    "vendor": "Star Labs",
+    "vendorAliases": [
+      "Star Labs Systems",
+      "StarLabs",
+      "Star Labs Systems Ltd"
+    ],
+    "families": [
+      "Star Labs",
+      "StarBook",
+      "StarLite"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "StarFighter",
+      "StarBook",
+      "StarLite",
+      "StarLite Mk",
+      "Byte"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "slimbook-basic",
+    "displayName": "Slimbook Basic",
+    "vendor": "SLIMBOOK",
+    "vendorAliases": [
+      "Slimbook",
+      "Slimbook S.L.",
+      "Slimbook SL"
+    ],
+    "families": [
+      "Slimbook"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Elemental",
+      "Excalibur",
+      "EVO",
+      "Executive",
+      "Creative",
+      "KDE Slimbook",
+      "Fedora Slimbook",
+      "Manjaro Slimbook",
+      "Slimbook One",
+      "Slimbook Zero"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "clevo-tongfang-basic",
+    "displayName": "Clevo/Tongfang Basic",
+    "vendor": "CLEVO",
+    "vendorAliases": [
+      "Notebook",
+      "Tongfang",
+      "Eluktronics",
+      "MECHREVO",
+      "THUNDEROBOT",
+      "Hasee",
+      "SAGER"
+    ],
+    "families": [
+      "Clevo",
+      "Tongfang",
+      "Barebone"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MECHREVO",
+      "THUNDEROBOT",
+      "Hasee",
+      "SAGER",
+      "Eluktronics",
+      "Maingear",
+      "Illegear",
+      "Aftershock",
+      "Hyperbook"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "eluktronics-basic",
+    "displayName": "Eluktronics Basic",
+    "vendor": "Eluktronics",
+    "vendorAliases": [
+      "Eluktronics",
+      "Eluktronics Inc."
+    ],
+    "families": [
+      "Eluktronics"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Eluktronics",
+      "RP",
+      "MAX",
+      "MECH",
+      "Prometheus",
+      "Hydroc"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "maingear-basic",
+    "displayName": "MAINGEAR Basic",
+    "vendor": "MAINGEAR",
+    "vendorAliases": [
+      "Maingear",
+      "MAINGEAR"
+    ],
+    "families": [
+      "MAINGEAR"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "MAINGEAR",
+      "Vector",
+      "ML",
+      "MG"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "monster-tulpar-basic",
+    "displayName": "Monster/Tulpar Basic",
+    "vendor": "Monster",
+    "vendorAliases": [
+      "Monster Notebook",
+      "Monster Computer",
+      "Tulpar"
+    ],
+    "families": [
+      "Monster",
+      "Tulpar"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Tulpar",
+      "Abra",
+      "Semruk",
+      "Huma"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "dream-machines-basic",
+    "displayName": "Dream Machines Basic",
+    "vendor": "Dream Machines",
+    "vendorAliases": [
+      "Dream Machines",
+      "Dream Machines Sp. z o.o."
+    ],
+    "families": [
+      "Dream Machines"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Dream Machines",
+      "RG",
+      "RT",
+      "RX",
+      "RS"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "pcspecialist-basic",
+    "displayName": "PCSpecialist Basic",
+    "vendor": "PCSpecialist",
+    "vendorAliases": [
+      "PC Specialist",
+      "PC Specialist Ltd",
+      "PCSpecialist"
+    ],
+    "families": [
+      "PCSpecialist",
+      "PC Specialist"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Recoil",
+      "Defiance",
+      "Ionico",
+      "Elimina",
+      "Lafite"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "eurocom-basic",
+    "displayName": "Eurocom Basic",
+    "vendor": "EUROCOM",
+    "vendorAliases": [
+      "Eurocom",
+      "Eurocom Corporation"
+    ],
+    "families": [
+      "EUROCOM"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Sky",
+      "Nightsky",
+      "Raptor",
+      "Commander",
+      "Panther"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "origin-pc-basic",
+    "displayName": "Origin PC Basic",
+    "vendor": "Origin PC",
+    "vendorAliases": [
+      "ORIGIN PC",
+      "OriginPC",
+      "Corsair"
+    ],
+    "families": [
+      "Origin PC",
+      "OriginPC"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "EON",
+      "EON16",
+      "EON17",
+      "NS",
+      "NT"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "corsair-basic",
+    "displayName": "Corsair Basic",
+    "vendor": "Corsair",
+    "vendorAliases": [
+      "CORSAIR",
+      "Corsair Memory, Inc.",
+      "Corsair Components, Inc."
+    ],
+    "families": [
+      "Corsair",
+      "Voyager"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Voyager",
+      "Corsair One",
+      "Vengeance"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "cyberpower-ibuypower-basic",
+    "displayName": "CyberPower/iBUYPOWER Basic",
+    "vendor": "CyberPowerPC",
+    "vendorAliases": [
+      "CyberPowerPC",
+      "CyberPower Inc.",
+      "iBUYPOWER",
+      "iBUYPOWER Computer"
+    ],
+    "families": [
+      "CyberPowerPC",
+      "iBUYPOWER"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Tracer",
+      "Gamer",
+      "Slate",
+      "Y60",
+      "RDY"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "casper-excalibur-basic",
+    "displayName": "Casper/Excalibur Basic",
+    "vendor": "Casper",
+    "vendorAliases": [
+      "Casper Bilgisayar",
+      "Casper",
+      "Excalibur"
+    ],
+    "families": [
+      "Casper",
+      "Excalibur"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Excalibur",
+      "Nirvana"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "nexstgo-avita-basic",
+    "displayName": "Nexstgo/Avita Basic",
+    "vendor": "Nexstgo",
+    "vendorAliases": [
+      "Nexstgo",
+      "Nexstgo Company Limited",
+      "Avita",
+      "AVITA"
+    ],
+    "families": [
+      "Nexstgo",
+      "Avita"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "AVITA",
+      "Avita",
+      "LIBER",
+      "ADMIROR",
+      "PURA"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "positivo-basic",
+    "displayName": "Positivo Basic",
+    "vendor": "Positivo",
+    "vendorAliases": [
+      "Positivo Tecnologia",
+      "Positivo Informatica",
+      "Positivo"
+    ],
+    "families": [
+      "Positivo"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Motion",
+      "Vision",
+      "Master",
+      "Duo"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "wortmann-terra-basic",
+    "displayName": "Wortmann/TERRA Basic",
+    "vendor": "Wortmann",
+    "vendorAliases": [
+      "Wortmann AG",
+      "WORTMANN",
+      "TERRA"
+    ],
+    "families": [
+      "Wortmann",
+      "TERRA"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "TERRA",
+      "Mobile",
+      "Pad",
+      "PC"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "shinelon-basic",
+    "displayName": "Shinelon Basic",
+    "vendor": "Shinelon",
+    "vendorAliases": [
+      "Hasee",
+      "Shinelon Computer"
+    ],
+    "families": [
+      "Shinelon",
+      "\u70AB\u9F99"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Shinelon",
+      "\u70AB\u9F99"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "dere-basic",
+    "displayName": "Dere Basic",
+    "vendor": "Dere",
+    "vendorAliases": [
+      "DERE",
+      "\u6234\u777F"
+    ],
+    "families": [
+      "Dere",
+      "\u6234\u777F"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Dere",
+      "\u6234\u777F"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "tcl-basic",
+    "displayName": "TCL Basic",
+    "vendor": "TCL",
+    "vendorAliases": [
+      "TCL Technology",
+      "TCL Communication"
+    ],
+    "families": [
+      "TCL"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "TCL Book",
+      "TCL"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "adata-xpg-basic",
+    "displayName": "ADATA/XPG Basic",
+    "vendor": "ADATA",
+    "vendorAliases": [
+      "ADATA Technology",
+      "ADATA Technology Co., Ltd.",
+      "XPG"
+    ],
+    "families": [
+      "XPG"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "XPG",
+      "Xenia"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "transsion-basic",
+    "displayName": "Tecno/Itel Basic",
+    "vendor": "TRANSSION",
+    "vendorAliases": [
+      "Tecno",
+      "Itel",
+      "TRANSSION HOLDINGS",
+      "Transsion"
+    ],
+    "families": [
+      "Tecno",
+      "Itel"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Tecno",
+      "Megabook",
+      "Itel"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "multilaser-basic",
+    "displayName": "Multilaser Basic",
+    "vendor": "Multilaser",
+    "vendorAliases": [
+      "Multilaser Industrial",
+      "Multilaser Industrial S.A.",
+      "MUL"
+    ],
+    "families": [
+      "Multilaser"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Multilaser",
+      "Ultra"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "vestel-basic",
+    "displayName": "Vestel Basic",
+    "vendor": "Vestel",
+    "vendorAliases": [
+      "Vestel Elektronik",
+      "Vestel Elektronik Sanayi"
+    ],
+    "families": [
+      "Vestel"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Vestel"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "axioo-basic",
+    "displayName": "Axioo Basic",
+    "vendor": "Axioo",
+    "vendorAliases": [
+      "Axioo International",
+      "PT Axioo International"
+    ],
+    "families": [
+      "Axioo"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Axioo",
+      "Hype"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "advan-basic",
+    "displayName": "Advan Basic",
+    "vendor": "Advan",
+    "vendorAliases": [
+      "Advan Digital",
+      "PT Advan Digital"
+    ],
+    "families": [
+      "Advan"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Advan"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "universal-workstation-basic",
+    "displayName": "Universal Workstation Basic",
+    "vendor": "*",
+    "vendorAliases": [],
+    "families": [
+      "Workstation"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Workstation",
+      "Precision",
+      "ZBook",
+      "ThinkStation",
+      "ProArt Station",
+      "Creator Workstation"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "universal-motherboard-basic",
+    "displayName": "Universal Motherboard Basic",
+    "vendor": "*",
+    "vendorAliases": [
+      "ASUSTeK COMPUTER INC.",
+      "ASUS",
+      "Gigabyte Technology Co., Ltd.",
+      "GIGABYTE",
+      "Micro-Star International Co., Ltd.",
+      "MSI",
+      "ASRock",
+      "ASRock Inc.",
+      "BIOSTAR",
+      "EVGA",
+      "NZXT",
+      "Supermicro",
+      "Super Micro Computer, Inc.",
+      "Intel Corporation"
+    ],
+    "families": [
+      "Motherboard",
+      "Custom PC"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "To Be Filled By O.E.M.",
+      "SYS-",
+      "MS-7",
+      "B650",
+      "X670",
+      "Z690",
+      "Z790",
+      "B760",
+      "X570",
+      "B550",
+      "TRX40",
+      "WRX80"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "universal-desktop-basic",
+    "displayName": "Universal Desktop Basic",
+    "vendor": "*",
+    "vendorAliases": [],
+    "families": [
+      "Desktop",
+      "Tower",
+      "Mini PC",
+      "All-in-One"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Desktop",
+      "Tower",
+      "Mini PC",
+      "MiniPC",
+      "AIO",
+      "All-in-One",
+      "All in One",
+      "System Product Name"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "universal-barebone-basic",
+    "displayName": "Universal Barebone Basic",
+    "vendor": "*",
+    "vendorAliases": [
+      "CLEVO",
+      "Tongfang",
+      "Notebook",
+      "Hasee",
+      "SAGER",
+      "Eluktronics",
+      "MECHREVO",
+      "THUNDEROBOT"
+    ],
+    "families": [
+      "Barebone"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [
+      "Barebone",
+      "Notebook",
+      "To Be Filled By O.E.M.",
+      "Default string"
+    ],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  },
+  {
+    "id": "generic-pc-basic",
+    "displayName": "Universal PC Basic",
+    "vendor": "*",
+    "vendorAliases": [],
+    "families": [
+      "Generic PC",
+      "Windows PC"
+    ],
+    "modelPrefixes": [],
+    "modelKeywords": [],
+    "machineTypes": [],
+    "enabledFeatures": [
+      "plugins",
+      "system-optimization",
+      "language",
+      "theme",
+      "updates",
+      "logs"
+    ],
+    "hiddenFeatures": [
+      "lenovo-hardware-controls",
+      "power-modes",
+      "keyboard-backlight",
+      "god-mode",
+      "gpu-overclock",
+      "fan-curve"
+    ]
+  }
+]

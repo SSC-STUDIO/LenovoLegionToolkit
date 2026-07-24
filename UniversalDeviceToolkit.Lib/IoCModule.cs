@@ -6,6 +6,7 @@ using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
@@ -24,6 +25,7 @@ using UniversalDeviceToolkit.Lib.ResourcesCatalog;
 using UniversalDeviceToolkit.Lib.Services;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Driver;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -49,6 +51,7 @@ public class IoCModule : Module
         // Register hardware abstraction wrappers
         builder.Register<WMIWrapper>().As<IWMIWrapper>().SingleInstance();
         builder.Register<DriverWrapper>().As<IDriverWrapper>().SingleInstance();
+        builder.Register<AsusAtkDriver>().As<IAsusAtkDriver>().SingleInstance();
 
         builder.Register<FnKeysDisabler>();
         builder.Register<LegionZoneDisabler>();
@@ -98,6 +101,8 @@ public class IoCModule : Module
         builder.Register<PanelLogoLenovoLightingBacklightFeature>(true);
         builder.Register<PortsBacklightFeature>();
         builder.Register<PowerModeFeature>();
+        builder.Register<LenovoPowerModeFeature>(true);
+        builder.Register<AsusPowerModeFeature>(true);
         builder.Register<RefreshRateFeature>();
         builder.Register<ResolutionFeature>();
         builder.Register<SpeakerFeature>();
@@ -151,6 +156,7 @@ public class IoCModule : Module
         builder.Register<SensorsControllerV3>(true);
         builder.Register<SensorsControllerV4>(true);
         builder.Register<SensorsControllerV5>(true);
+        builder.Register<AsusSensorsController>(true);
         builder.Register<GenericSensorsController>(true);
         builder.Register<SensorsGroupController>(true);
         builder.Register<FpsSensorController>();

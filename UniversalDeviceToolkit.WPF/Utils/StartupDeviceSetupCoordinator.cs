@@ -102,6 +102,33 @@ public sealed class StartupDeviceSetupCoordinator
             if (!result.Confirmed)
                 return;
 
+            // Language-pack style on-demand download: a selected support pack that
+            // is neither built in nor installed yet gets fetched now. On failure the
+            // window stays open (retry on next launch) and nothing is persisted.
+            if (!result.IsBasicMode &&
+                !string.IsNullOrWhiteSpace(result.DevicePackId) &&
+                !await IsBuiltInPackAsync(result.DevicePackId).ConfigureAwait(true) &&
+                !_devicePackManager.IsInstalled(result.DevicePackId))
+            {
+                result.Window?.SetInstalling(T("DeviceSetupWindow_DownloadingPack", "Downloading the device support pack…"));
+                try
+                {
+                    await _devicePackManager.InstallAsync(result.DevicePackId).ConfigureAwait(true);
+                    LoadInstalledCatalog();
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.WarningOnce(
+                        $"device-pack-install-{result.DevicePackId}",
+                        $"Failed to install device pack '{result.DevicePackId}'.",
+                        ex);
+                    result.Window?.SetFailed(T(
+                        "DeviceSetupWindow_PackDownloadFailed",
+                        "Could not download the device support pack. Check your connection and confirm to retry, or skip and we will ask again next launch."));
+                    return;
+                }
+            }
+
             // Prefer the user's pick for basic vs hardware over auto-detect alone.
             _saveSetupState(result.DevicePackId, result.IsBasicMode);
             ApplyPreferredPack(result.DevicePackId);
@@ -235,6 +262,16 @@ public sealed class StartupDeviceSetupCoordinator
             return new DeviceSupportCatalog();
         }
     }
+
+    private async Task<bool> IsBuiltInPackAsync(string packId)
+    {
+        var catalog = await GetCatalogOrBuiltInAsync().ConfigureAwait(false);
+        return (catalog.DevicePacks ?? []).Any(p =>
+            p.Id.Equals(packId, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static string T(string key, string fallback) =>
+        LocalizationHelper.GetStringOrEnglish(Resources.Resource.ResourceManager, key, fallback, Resources.Resource.Culture);
 
     private static DevicePack? FindRecommendedPack(
         MachineInformation machineInformation,

@@ -38,8 +38,6 @@ public sealed class DeviceSupportModelSimulationTests
     }
 
     [Theory]
-    [InlineData("ROG", "G835", "asus-basic")]
-    [InlineData("TUF Gaming", "FA608", "asus-basic")]
     [InlineData("Alienware", "m18 R2", "dell-basic")]
     [InlineData("OMEN", "Max 16", "hp-basic")]
     [InlineData("Victus", "16", "hp-basic")]
@@ -80,11 +78,32 @@ public sealed class DeviceSupportModelSimulationTests
         availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
     }
 
+    [Theory]
+    [MemberData(nameof(AsusHardwareScenarios))]
+    public void Evaluate_WithSimulatedAsusMachine_ShouldUseAsusHardwarePack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("asus-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> AsusHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("ASUSTeK COMPUTER INC.", "ROG Strix SCAR 18 G835"),
+        MachineInformationTestData.Create("ASUS", "TUF Gaming A16 FA608"),
+        MachineInformationTestData.Create("ASUSTEK COMPUTER INCORPORATED", "Zenbook S 14 UX5406"),
+        MachineInformationTestData.Create("ROG", "G835"),
+        MachineInformationTestData.Create("TUF Gaming", "FA608"),
+        MachineInformationTestData.WithComputerSystem("", "", "ASUSTeK COMPUTER INC.", "System Product Name", "ROG Flow"),
+    };
+
     public static TheoryData<MachineInformation, string> MultiBrandBasicModeScenarios() => new()
     {
-        { MachineInformationTestData.Create("ASUSTeK COMPUTER INC.", "ROG Strix SCAR 18 G835"), "asus-basic" },
-        { MachineInformationTestData.Create("ASUS", "TUF Gaming A16 FA608"), "asus-basic" },
-        { MachineInformationTestData.Create("ASUSTEK COMPUTER INCORPORATED", "Zenbook S 14 UX5406"), "asus-basic" },
         { MachineInformationTestData.Create("MECHREVO", "Jiaolong 16 Pro"), "mechrevo-basic" },
         { MachineInformationTestData.Create("Mechanical Revolution", "Kuangshi 16 Super"), "mechrevo-basic" },
         { MachineInformationTestData.Create("HP", "OMEN Max 16"), "hp-basic" },
@@ -154,15 +173,6 @@ public sealed class DeviceSupportModelSimulationTests
 
     public static TheoryData<MachineInformation, string> HardwareSignalScenarios() => new()
     {
-        {
-            MachineInformationTestData.WithComputerSystem(
-                "",
-                "",
-                "ASUSTeK COMPUTER INC.",
-                "System Product Name",
-                "ROG Flow"),
-            "asus-basic"
-        },
         {
             MachineInformationTestData.WithBaseBoard(
                 "",

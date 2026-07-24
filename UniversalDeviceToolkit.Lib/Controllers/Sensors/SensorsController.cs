@@ -10,6 +10,7 @@ public class SensorsController(
     SensorsControllerV3 controllerV3,
     SensorsControllerV4 controllerV4,
     SensorsControllerV5 controllerV5,
+    AsusSensorsController asusController,
     GenericSensorsController genericController)
     : ISensorsController
 {
@@ -63,6 +64,9 @@ public class SensorsController(
 
         if (await ProbeControllerAsync(controllerV1).ConfigureAwait(false))
             return _controller = controllerV1;
+
+        if (await ProbeControllerAsync(asusController).ConfigureAwait(false))
+            return _controller = asusController;
 
         if (await ProbeControllerAsync(genericController).ConfigureAwait(false))
             return _controller = genericController;

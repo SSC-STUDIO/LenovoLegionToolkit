@@ -160,7 +160,7 @@ public class PowerModeFeatureTests : UnitTestBase
                 Properties = new MachineInformation.PropertyData()
             });
 
-            var feature = new PowerModeFeature(
+            var feature = new LenovoPowerModeFeature(
                 null!,
                 null!,
                 null!,
@@ -195,7 +195,7 @@ public class PowerModeFeatureTests : UnitTestBase
                 Properties = new MachineInformation.PropertyData()
             });
 
-            var feature = new PowerModeFeature(
+            var feature = new LenovoPowerModeFeature(
                 null!,
                 null!,
                 null!,
@@ -233,7 +233,7 @@ public class PowerModeFeatureTests : UnitTestBase
                 }
             });
 
-            var feature = new PowerModeFeature(
+            var feature = new LenovoPowerModeFeature(
                 null!,
                 null!,
                 null!,
@@ -274,7 +274,7 @@ public class PowerModeFeatureTests : UnitTestBase
                 }
             });
 
-            var feature = new PowerModeFeature(
+            var feature = new LenovoPowerModeFeature(
                 null!,
                 null!,
                 null!,
@@ -309,7 +309,7 @@ public class PowerModeFeatureTests : UnitTestBase
                 Properties = new MachineInformation.PropertyData()
             });
 
-            var feature = new PowerModeFeature(
+            var feature = new LenovoPowerModeFeature(
                 null!,
                 null!,
                 null!,
@@ -484,7 +484,7 @@ public class PowerModeFeatureTests : UnitTestBase
         typeof(Compatibility).GetField("_isCompatible", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, null);
     }
 
-    private sealed class TestPowerModeFeature(Func<Task<PowerModeState>> readState, bool wmiSupported = true) : PowerModeFeature(
+    private sealed class TestPowerModeFeature(Func<Task<PowerModeState>> readState, bool wmiSupported = true) : LenovoPowerModeFeature(
         null!,
         null!,
         null!,

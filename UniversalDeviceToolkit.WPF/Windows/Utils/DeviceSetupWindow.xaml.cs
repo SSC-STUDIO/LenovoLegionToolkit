@@ -183,7 +183,7 @@ public partial class DeviceSetupWindow
     {
         try
         {
-            if (_isPreparing)
+            if (_isPreparing || _taskCompletionSource.Task.IsCompleted)
                 return;
 
             _isPreparing = true;
