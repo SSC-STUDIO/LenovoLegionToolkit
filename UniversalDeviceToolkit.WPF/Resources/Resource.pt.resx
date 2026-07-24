@@ -4074,4 +4074,10 @@ ex. C:\Drivers</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Torne o texto maior ou mais pequeno na aplicação, independentemente do dimensionamento de ecrã do Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>A transferir o pacote de suporte do dispositivo…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Não foi possível transferir o pacote de suporte do dispositivo. Verifique a ligação e confirme para tentar novamente, ou ignore – perguntaremos de novo no próximo arranque.</value>
+  </data>
 </root>

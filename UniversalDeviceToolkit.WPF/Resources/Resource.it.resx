@@ -4060,4 +4060,10 @@ Richiede il riavvio.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Ingrandisci o riduci il testo nell'app, indipendentemente dal ridimensionamento dello schermo di Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Download del pacchetto di supporto del dispositivo…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Impossibile scaricare il pacchetto di supporto del dispositivo. Controlla la connessione e conferma per riprovare, oppure salta: te lo chiederemo di nuovo al prossimo avvio.</value>
+  </data>
 </root>

@@ -4072,4 +4072,10 @@ Nincs hatással a többi teljes képernyős ablakokra, de nem lehet kattintani a
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Nagyítsa vagy kicsinyítse a szöveget az alkalmazásban, a Windows megjelenítési skálázásától függetlenül.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Az eszköztámogatási csomag letöltése…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Nem sikerült letölteni az eszköztámogatási csomagot. Ellenőrizze a kapcsolatot, és erősítse meg az újrapróbálást, vagy hagyja ki – a következő indításkor újra megkérdezzük.</value>
+  </data>
 </root>

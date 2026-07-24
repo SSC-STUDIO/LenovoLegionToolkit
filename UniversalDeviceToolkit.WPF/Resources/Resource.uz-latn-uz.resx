@@ -4452,4 +4452,10 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Windows displey masshtabidan qat'i nazar, ilovadagi matnni kattaroq yoki kichikroq qiling.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Qurilma qo‘llab-quvvatlash paketi yuklab olinmoqda…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Qurilma qo‘llab-quvvatlash paketini yuklab bo‘lmadi. Ulanishni tekshirib, qayta urinish uchun tasdiqlang yoki o‘tkazib yuboring — keyingi ishga tushirishda yana so‘raymiz.</value>
+  </data>
 </root>

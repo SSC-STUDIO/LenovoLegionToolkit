@@ -4070,4 +4070,10 @@
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Зробіть текст у застосунку більшим або меншим незалежно від масштабування дисплея Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Завантаження пакета підтримки пристрою…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Не вдалося завантажити пакет підтримки пристрою. Перевірте з'єднання та підтвердьте для повторної спроби або пропустіть — ми запитаємо знову під час наступного запуску.</value>
+  </data>
 </root>

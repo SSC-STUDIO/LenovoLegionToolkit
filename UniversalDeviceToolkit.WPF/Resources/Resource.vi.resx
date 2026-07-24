@@ -4073,4 +4073,10 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Làm cho văn bản lớn hơn hoặc nhỏ hơn trong ứng dụng, độc lập với tỷ lệ hiển thị của Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Đang tải gói hỗ trợ thiết bị…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Không thể tải gói hỗ trợ thiết bị. Kiểm tra kết nối và xác nhận để thử lại, hoặc bỏ qua – chúng tôi sẽ hỏi lại ở lần khởi động tiếp theo.</value>
+  </data>
 </root>

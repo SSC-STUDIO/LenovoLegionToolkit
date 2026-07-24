@@ -4070,4 +4070,10 @@
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>اجعل النص أكبر أو أصغر في التطبيق، بشكل مستقل عن تحجيم العرض في Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>جارٍ تنزيل حزمة دعم الجهاز…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>تعذر تنزيل حزمة دعم الجهاز. تحقق من اتصالك واضغط تأكيد لإعادة المحاولة، أو تخطَّ وسنسألك مرة أخرى عند التشغيل التالي.</value>
+  </data>
 </root>

@@ -4078,4 +4078,10 @@
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>放大或縮小應用程式內的文字，獨立於 Windows 顯示縮放。</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>正在下載裝置支援套件…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>無法下載裝置支援套件。請檢查網路連線後按「確認」重試，或選擇「暫時略過」，下次啟動時會再次詢問。</value>
+  </data>
 </root>

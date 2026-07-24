@@ -4070,4 +4070,10 @@ Necesită repornirea.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Faceți textul mai mare sau mai mic în aplicație, independent de scalarea afișajului Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Se descarcă pachetul de asistență pentru dispozitiv…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Pachetul de asistență pentru dispozitiv nu a putut fi descărcat. Verificați conexiunea și confirmați pentru a reîncerca, sau omiteți – vom întreba din nou la următoarea pornire.</value>
+  </data>
 </root>

@@ -4072,4 +4072,10 @@
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Windows のディスプレイ スケーリングとは独立して、アプリ内のテキストを大きくまたは小さくします。</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>デバイスサポートパックをダウンロードしています…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>デバイスサポートパックをダウンロードできませんでした。接続を確認して「確認」を押して再試行するか、スキップしてください。次回起動時に再度お尋ねします。</value>
+  </data>
 </root>

@@ -4073,4 +4073,10 @@ Nepieciešama restartēšana.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Padariet tekstu lietotnē lielāku vai mazāku neatkarīgi no Windows displeja mērogošanas.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Notiek ierīces atbalsta pakotnes lejupielāde…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Neizdevās lejupielādēt ierīces atbalsta pakotni. Pārbaudiet savienojumu un apstipriniet, lai mēģinātu vēlreiz, vai izlaidiet – jautāsim vēlreiz nākamajā palaišanas reizē.</value>
+  </data>
 </root>

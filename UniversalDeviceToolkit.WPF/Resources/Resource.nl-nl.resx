@@ -4453,4 +4453,10 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Maak de tekst in de app groter of kleiner, onafhankelijk van de weergaveschaling van Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Het apparaatondersteuningspakket wordt gedownload…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Het apparaatondersteuningspakket kon niet worden gedownload. Controleer je verbinding en bevestig om opnieuw te proberen, of sla over – we vragen het opnieuw bij de volgende start.</value>
+  </data>
 </root>

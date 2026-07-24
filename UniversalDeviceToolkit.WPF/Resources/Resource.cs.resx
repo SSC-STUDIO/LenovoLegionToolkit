@@ -4125,4 +4125,10 @@ Vyžaduje restart.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Zvětšete nebo zmenšete text v aplikaci nezávisle na škálování zobrazení Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Stahování balíčku podpory zařízení…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Balíček podpory zařízení se nepodařilo stáhnout. Zkontrolujte připojení a potvrďte pro opakování, nebo přeskočte – zeptáme se znovu při příštím spuštění.</value>
+  </data>
 </root>

@@ -4097,4 +4097,10 @@
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Направете текста по-голям или по-малък в приложението, независимо от мащабирането на дисплея в Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Изтегляне на пакета за поддръжка на устройството…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Пакетът за поддръжка на устройството не можа да бъде изтеглен. Проверете връзката си и натиснете „Потвърди“ за повторен опит, или пропуснете – ще попитаме отново при следващото стартиране.</value>
+  </data>
 </root>

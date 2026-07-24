@@ -4074,4 +4074,10 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Windows ekran ölçeklendirmesinden bağımsız olarak uygulamadaki metni büyütün veya küçültün.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Cihaz destek paketi indiriliyor…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Cihaz destek paketi indirilemedi. Bağlantınızı kontrol edin ve yeniden denemek için onaylayın ya da atlayın; bir sonraki başlatmada tekrar soracağız.</value>
+  </data>
 </root>

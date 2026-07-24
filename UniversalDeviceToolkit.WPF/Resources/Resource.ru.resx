@@ -4074,4 +4074,10 @@
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Сделайте текст в приложении больше или меньше независимо от масштабирования дисплея Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Загрузка пакета поддержки устройства…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Не удалось загрузить пакет поддержки устройства. Проверьте подключение и нажмите «Подтвердить» для повторной попытки или пропустите — мы спросим снова при следующем запуске.</value>
+  </data>
 </root>

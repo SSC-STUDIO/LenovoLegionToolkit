@@ -4073,4 +4073,10 @@ Nécessite un redémarrage.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Agrandissez ou réduisez le texte dans l'application, indépendamment de la mise à l'échelle d'affichage de Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Téléchargement du pack de prise en charge de l'appareil…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Impossible de télécharger le pack de prise en charge de l'appareil. Vérifiez votre connexion et confirmez pour réessayer, ou ignorez – nous redemanderons au prochain lancement.</value>
+  </data>
 </root>

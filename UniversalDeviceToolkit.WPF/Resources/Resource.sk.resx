@@ -4071,4 +4071,10 @@ Vyžaduje reštart.</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Zväčšite alebo zmenšite text v aplikácii nezávisle od škálovania zobrazenia Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Sťahuje sa balíček podpory zariadenia…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Balíček podpory zariadenia sa nepodarilo stiahnuť. Skontrolujte pripojenie a potvrďte pre opakovanie, alebo preskočte – opýtame sa znova pri ďalšom spustení.</value>
+  </data>
 </root>

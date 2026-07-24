@@ -4073,4 +4073,10 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Powiększ lub pomniejsz tekst w aplikacji niezależnie od skalowania ekranu Windows.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Pobieranie pakietu obsługi urządzenia…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Nie udało się pobrać pakietu obsługi urządzenia. Sprawdź połączenie i potwierdź, aby spróbować ponownie, lub pomiń – zapytamy ponownie przy następnym uruchomieniu.</value>
+  </data>
 </root>

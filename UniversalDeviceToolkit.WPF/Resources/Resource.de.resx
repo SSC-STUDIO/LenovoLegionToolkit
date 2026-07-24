@@ -4073,4 +4073,10 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>Vergrößern oder verkleinern Sie den Text in der App – unabhängig von der Windows-Anzeigeskalierung.</value>
   </data>
+  <data name="DeviceSetupWindow_DownloadingPack" xml:space="preserve">
+    <value>Das Geräteunterstützungspaket wird heruntergeladen…</value>
+  </data>
+  <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
+    <value>Das Geräteunterstützungspaket konnte nicht heruntergeladen werden. Prüfen Sie Ihre Verbindung und bestätigen Sie zum Wiederholen, oder überspringen Sie – wir fragen beim nächsten Start erneut.</value>
+  </data>
 </root>
