@@ -45,11 +45,11 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 "Lenovo Legion Pro 7",
                 ["Legion"],
                 ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "IRX10", "IAX10", "16IRX9", "16IAX9", "16IRX11", "16IAX11", "16IRX12", "16IAX12", "18IRX", "18IAX"],
-                // Pro 7 / Y9000K / R9000K MTM span 2022–2026 (CN + WW).
-                ["83RU", "83F5", "83DE", "82WR", "82WQ", "82WS", "82WT", "83RS", "83RT", "83RV", "83RW", "83RX", "83RY",
-                 "83F4", "83F6", "83F7", "83F8", "83F9", "83FA", "83FB", "83FC", "83FD",
-                 "83S0", "83S1", "83S2", "83S3", "83S4", "83S5", "83S6", "83S7", "83S8", "83S9",
-                 "83T0", "83T1", "83T2", "83T3", "83T4", "83T5"],
+                // Pro 7 / Y9000K / 至尊版 — PSREF-verified set only:
+                // 83F5 = Pro 7 16IAX10H (Y9000P 2025 至尊版), 83RU = Pro 7 16AFR10H,
+                // 83DE = Pro 7 16IRX9H, 82W* = 2022 Pro 7. (83F4/83F6 are Pro 5-class,
+                // 83FD is Legion 7, 83S0 is LOQ — do not re-add them here.)
+                ["83RU", "83F5", "83DE", "82WR", "82WQ", "82WS", "82WT"],
                 // Avoid bare Y9000P/IRX keywords here — those belong to Pro 5 (e.g. 83DF IRX9).
                 ["Legion Pro 7", "Legion Pro 7i", "Legion Pro 7 16", "Legion Pro 7 18", "Y9000K", "R9000K",
                  "Y9000K 2024", "Y9000K 2025", "Y9000K 2026", "R9000K 2024", "R9000K 2025", "R9000K 2026",
@@ -59,12 +59,14 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 "Lenovo Legion Pro 5",
                 ["Legion"],
                 ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "16IRX9", "16IAX9", "16ARP", "16ARH", "16ADR", "16AFR", "16ADR10", "16AFR10", "16IRX11", "16IAX11", "16IRX12", "16IAX12", "16ARP10", "16ARH10"],
-                // 83DF = Legion Y9000P IRX9 (CN) — full hardware pack; expand 2023–2026 refreshes.
+                // 83DF = Legion Y9000P IRX9 (CN) — full hardware pack.
+                // PSREF-verified Gen 10 additions: 83NN 16IRX10 (Y7000P IRX10 2025),
+                // 83F3 16IAX10, 83F2 16AFR10, 83LT 16ADR10, 83LU 16IAX10H;
+                // China-verified: 83F4 (Y9000P IAX10), 83F6 (R9000P AFR10),
+                // 83LV/83RV (R9000P ADR10/ADR10H), 83QC/83QD (R9000P ADR10M/AFR10M),
+                // 83QF (Y9000P IRX11/IPX11 2026).
                 ["83LT", "83F3", "83DF", "83F2", "83LU", "82WM", "83NN", "82WK", "82JQ", "82RF", "82RG", "83DG", "83LR", "83LS", "83LV", "83LW", "83LX", "82SN", "82SM",
-                 "83J0", "83J1", "83J2", "83J3", "83J4", "83J5", "83J6", "83J7",
-                 "83M1", "83M2", "83M3", "83M4", "83M5", "83N3", "83N4", "83N5",
-                 "83P4", "83P5", "83P6", "83P7", "83P8", "83P9",
-                 "83Q0", "83Q1", "83Q2", "83Q3", "83Q4", "83Q5"],
+                 "83F4", "83F6", "83RV", "83QC", "83QD", "83QF"],
                 ["Legion Pro 5", "Legion Pro 5i", "Legion Pro 5 16", "Y9000P", "R9000P",
                  "Y9000P IRX9", "Y9000P IAX9", "Y9000P IRX10", "Y9000P IAX10", "Y9000P IRX11", "Y9000P IAX11",
                  "Y9000P 2023", "Y9000P 2024", "Y9000P 2025", "Y9000P 2026",
@@ -75,51 +77,52 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 "Lenovo Legion 9",
                 ["Legion"],
                 ["16IRX", "16IAX", "18IAX", "16IRX9", "16IAX9", "18IRX", "18IAX10", "16IRX10", "16IAX10", "18IRX10", "16IRX11", "18IAX11"],
-                ["83G0", "83EY", "83EZ", "83G9", "83GA", "83GB", "83GC", "83GD", "83GE", "83GF",
-                 "83R0", "83R1", "83R2", "83R3", "83R4", "83R5"],
-                ["Legion 9", "Legion 9i", "Legion 9 16", "Legion 9 18", "拯救者 Legion 9"]),
+                // Verified: 83G0 = Legion 9 16IRX9 (Y9000K 2024), 83EY = Legion 9 18IAX10
+                // (Gen 10 18", 拯救者创世), 83AG = Legion 9 16IRX8 (2023).
+                ["83G0", "83EY", "83AG"],
+                ["Legion 9", "Legion 9i", "Legion 9 16", "Legion 9 18", "拯救者 Legion 9", "拯救者创世"]),
             LenovoHardwarePack(
                 "lenovo-legion-7",
                 "Lenovo Legion 7",
                 ["Legion"],
                 ["16ACH", "16ARH", "16IAH", "16IAX", "16IRH", "16IRX", "16IRX9", "16IAX9", "16IRX10", "16IAX10", "16IRX11", "16IAX11"],
-                // 83FD is Pro 7; 83K6–83KD reserved for LOQ; 83L4+ for Legion Go.
-                ["83KY", "82UH", "82TD", "82N6", "82N7", "83FE", "83FF", "83K0", "83K1", "83AG",
-                 "83K2", "83K3", "83K4", "83K5",
-                 "83L0", "83L1", "83L2", "83L3",
-                 "83U0", "83U1", "83U2", "83U3", "83U4", "83U5"],
-                ["Legion 7", "Legion 7i", "Legion 7 16", "Legion Slim 7", "拯救者 Legion 7"]),
+                // Verified: 83KY = Legion 7 16IAX10 (Y9000X 2025, 2026 refresh same MT),
+                // 83FD = Legion 7 16IRX9 (Y9000X 2024), 83Q8 = Legion 7 16AGP11 (2026),
+                // 83V9 = Legion 7 15ASH11 (R9000X 2026). (83L3 is Legion Go S, 83L0 is Yoga —
+                // do not re-add them here.)
+                ["83KY", "83FD", "83Q8", "83V9", "82UH", "82TD", "82N6", "82N7", "83FE", "83FF"],
+                ["Legion 7", "Legion 7i", "Legion 7 16", "Legion Slim 7", "Legion 7a", "Y9000X", "拯救者 Y9000X", "R9000X", "R9000X 2026", "拯救者 Legion 7"]),
             LenovoHardwarePack(
                 "lenovo-legion-slim-5",
                 "Lenovo Legion Slim 5",
                 ["Legion", "Lenovo Slim"],
                 ["14AHP", "14APH", "14AKP", "14IRP", "14IRX", "14IAX", "14AHP10", "14AKP10", "14IRX10", "14IAX10", "16AHP", "16APH", "16IRX", "16IAX", "16AHP10", "16APH10"],
-                ["83DH", "83EX", "82Y5", "82Y9", "82YA", "83D6", "83D0", "83D1", "83G5", "83G6", "83G7", "83G8",
-                 "83H6", "83H7", "83H8", "83H9", "83HA", "83HB", "83HC", "83HD",
-                 "83J8", "83J9", "83JA", "83JB",
-                 "83V0", "83V1", "83V2", "83V3", "83V4", "83V5"],
-                ["Legion Slim 5", "Legion Slim 5i", "Legion Slim 7", "Legion Slim 7i", "拯救者 Slim"]),
+                // Slim line ended at Gen 9 (2024). Verified: 83DH = 16AHP9 (R7000P 2024),
+                // 83EX = 16ARP9, 82Y5 = 14APH8 (R9000X 2023), 82Y9 = 16APH8,
+                // 82YA/82YB = 16IRH8 (Y7000P IRH8 2023).
+                ["83DH", "83EX", "82Y5", "82Y9", "82YA", "82YB", "83D6", "83D0", "83D1"],
+                ["Legion Slim 5", "Legion Slim 5i", "Legion Slim 7", "Legion Slim 7i", "R9000X 2023", "拯救者 Slim"]),
             LenovoHardwarePack(
                 "lenovo-legion-go",
                 "Lenovo Legion Go",
                 ["Legion"],
                 ["NX", "8APU1", "NX10", "NX11", "8APU2"],
-                // 83L0–83L3 are Legion 7; Go uses 83E1/83N* and later 83L4+.
-                ["83E1", "83N0", "83N1", "83L4", "83L5", "83L6", "83L7", "83L8", "83L9",
-                 "83W0", "83W1", "83W2", "83W3"],
+                // Verified: 83E1 = Go 8APU1, 83L3 = Go S 8ARP1, 83N6 = Go S 8APU1,
+                // 83N0 = Go 2 8ASP2 — one MT per platform.
+                ["83E1", "83N0", "83L3", "83N6"],
                 ["Legion Go", "Legion Go S", "Legion Go 2", "Legion Go Gen 2", "拯救者 Go"]),
             LenovoHardwarePack(
                 "lenovo-loq",
                 "Lenovo LOQ",
                 ["LOQ"],
                 ["15IAX", "15IRH", "15IRX", "15ARP", "15APH", "15AHP", "15IAX9", "15IRX9", "15ARP9", "15APH11", "15IPH11", "15ARP10", "15IRX10", "15IAX10", "15APH10", "15IRX11", "15IAX11", "16IRH", "16IAX", "16APH", "16IRX", "16ARP", "16IRX10", "16IAX10", "17IRX", "17IAX", "17IRX9", "17IRX10", "17IRX11"],
-                // Keep LOQ MTMs distinct from Legion 7 (83K0–83K5) and Legion 5.
-                ["83GS", "83GT", "83GU", "83GV", "83GW", "83JC", "83JD", "83JE", "83JF", "82XV", "82XW", "83DV", "83DW", "83DX", "83DY", "83AQ", "83AR", "83AS",
-                 "83GX", "83GY", "83GZ", "83H0", "83H1", "83H2", "83H3", "83H4", "83H5",
-                 "83JI", "83JK", "83JL", "83JM", "83JN", "83JP", "83JQ", "83JR",
-                 "83K6", "83K7", "83K8", "83K9", "83KA", "83KB", "83KC", "83KD",
-                 "83X0", "83X1", "83X2", "83X3", "83X4", "83X5"],
-                ["LOQ", "LOQ 15", "LOQ 16", "LOQ 17", "LOQ 15IRX", "LOQ 15IAX", "LOQ 15APH", "G5000", "拯救者 LOQ", "拯救者G5000", "拯救者 G5000"]),
+                // Keep LOQ MTMs distinct from Legion 5/7.
+                // Verified Gen 10/11: 83JE/83Q1 = 15IRX10, 83JG = 15AHP10, 83JH = 17IRX10,
+                // 83S0 = Essential 15ARP10E, 83SC = Essential 15IRX11, 83VA = Essential 15ARP11,
+                // 83SL = 15IPH11, 83TN = 15AHP11; Gen 8: 82XT/82XV/82XU/82XW.
+                ["83GS", "83GT", "83GU", "83GV", "83GW", "83JC", "83JD", "83JE", "83JF", "83JG", "83JH", "82XV", "82XW", "82XT", "82XU", "83DV", "83DW", "83DX", "83DY", "83AQ", "83AR", "83AS",
+                 "83Q1", "83S0", "83SC", "83VA", "83SL", "83TN"],
+                ["LOQ", "LOQ 15", "LOQ 16", "LOQ 17", "LOQ 15IRX", "LOQ 15IAX", "LOQ 15APH", "LOQ Essential", "G5000", "拯救者 LOQ", "拯救者G5000", "拯救者 G5000"]),
             LenovoHardwarePack(
                 "lenovo-legion-5",
                 "Lenovo Legion 5",
@@ -127,13 +130,13 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["15ACH", "15AKP", "15AHP", "15APH", "15ARH", "15ARP", "15IAH", "15IAX", "15IHU", "15IMH", "15IRH", "15IRX", "15ITH", "15ARP10", "15IRX10", "15IAX10", "15AKP10", "15AHP10", "15APH11", "15IRX11", "15IAX11", "16ACH", "16ADR", "16AFR", "16AHP", "16APH", "16ARH", "16ARP", "16ARX", "16IAH", "16IAX", "16IRH", "16IRX", "16ITH", "16IRX9", "16IRX10", "16IAX10", "16IRX11", "17ACH", "17ARH", "17IRX", "17ITH", "17IMH", "17IRX10", "17IRX11"],
                 // Machine types cover 2020–2026 Legion 5 / Y7000 / R7000 family refreshes.
                 // IdeaPad Gaming MTMs live in lenovo-ideapad-gaming only.
-                ["83F0", "83F1", "83M0", "83NX", "83N2", "83LY", "83EW", "83EG", "83JJ", "83JG", "83JH", "82RC", "82RB", "82TB", "83EF", "82RE", "82RD", "82AX", "82B0", "82GR", "82JU", "82JV", "82JW", "82JY", "82K0", "82K1", "82K2", "82N4", "82N5", "82NW", "83FG", "83FH", "83G1", "83G2", "83LL", "83LM", "83LN", "83DT", "83DU", "83C6", "83C7",
-                 "83M6", "83M7", "83M8", "83M9", "83MA", "83MB", "83MC", "83MD",
-                 "83N6", "83N7", "83N8", "83N9", "83NA", "83NB", "83NC", "83ND",
-                 "83P0", "83P1", "83P2", "83P3", "83PA", "83PB", "83PC", "83PD",
-                 "83Q6", "83Q7", "83Q8", "83Q9", "83QA", "83QB", "83QC", "83QD",
-                 "82B1", "82B2", "82B3", "82B4", "82B5",
-                 "83Y0", "83Y1", "83Y2", "83Y3", "83Y4", "83Y5"],
+                // Verified additions: 83F0/83N2 15IAX10, 83F1 15AKP10, 83M0 15AHP10 (R7000 2025),
+                // 83LY 15IRX10 (Y7000 2025), 83NX 16IAX10; Gen 11: 83RW 15IPH11,
+                // 83QE/83VK 15IAX11, 83Q6 15AGP11, 83Q7 15AHP11.
+                // (83JG/83JH are LOQ, 83Q8 is Legion 7, 83QC/83QD are Pro 5 — do not re-add.)
+                ["83F0", "83F1", "83M0", "83NX", "83N2", "83LY", "83EW", "83EG", "83JJ", "82RC", "82RB", "82TB", "83EF", "82RE", "82RD", "82AX", "82B0", "82GR", "82JU", "82JV", "82JW", "82JY", "82K0", "82K1", "82K2", "82N4", "82N5", "82NW", "83FG", "83FH", "83G1", "83G2", "83LL", "83LM", "83LN", "83DT", "83DU", "83C6", "83C7",
+                 "83Q6", "83Q7", "83RW", "83QE", "83VK",
+                 "82B1", "82B2", "82B3", "82B4", "82B5"],
                 ["Legion 5", "Legion 5i", "Legion 5 Pro", "Legion 5a", "Legion 5 15", "Legion 5 16", "Legion 5 17",
                  "Y7000", "Y7000P", "Y7000P 2020H", "Y7000P2020H", "Y7000P IRX9", "Y7000P IRX10", "Y7000P IRX11",
                  "Y7000 2023", "Y7000 2024", "Y7000 2025", "Y7000 2026", "Y7000P 2023", "Y7000P 2024", "Y7000P 2025", "Y7000P 2026",
@@ -151,8 +154,9 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 "Lenovo IdeaPad Gaming",
                 ["IdeaPad Gaming", "IdeaPad"],
                 ["15ACH", "15ARH", "15IAH", "15IAU", "15IRH", "15IHU", "15IMH", "16ACH", "16ARH", "16IAH", "16IRH", "16IAH7", "15IAH7"],
-                // Distinct from Legion 5 (82K0–82K2, 82B1) and Legion 7 (83L0–83L3).
-                ["82EY", "82S9", "82SA", "82SB", "82SC", "82SD", "82SE", "82SF",
+                // Verified: 82S9/82UJ = 15IAH7, 82SB/82UK = 15ARH7, 82SA = 16IAH7, 82SC = 16ARH7
+                // (Gen 7 only — the line was succeeded by LOQ from 2023).
+                ["82EY", "82S9", "82UJ", "82SA", "82SB", "82UK", "82SC", "82SD", "82SE", "82SF",
                  "83C8", "83C9", "83CA", "83CB", "83CC", "83CD",
                  "83Z0", "83Z1", "83Z2", "83Z3"],
                 ["IdeaPad Gaming", "IdeaPad Gaming 3", "IdeaPad Gaming 3i", "IdeaPad Gaming 3 15", "IdeaPad Gaming 3 16",
