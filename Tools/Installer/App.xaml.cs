@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,20 @@ public sealed class InstallerArguments
     public bool DeleteAppData { get; private set; }
     public bool DesktopShortcut { get; private set; }
     public string? InstallDir { get; private set; }
+    public string? LanguageCulture { get; private set; }
+    public string? DevicePackId { get; private set; }
+
+    private static string? OptionValue(string arg, string name, string[] args, ref int index)
+    {
+        var prefix = name + "=";
+        if (arg.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return arg[prefix.Length..].Trim('"');
+
+        if (arg.Equals(name, StringComparison.OrdinalIgnoreCase) && index + 1 < args.Length)
+            return args[++index].Trim('"');
+
+        return null;
+    }
 
     public static InstallerArguments Parse(string[] args)
     {
@@ -39,17 +54,14 @@ public sealed class InstallerArguments
                     result.DesktopShortcut = true;
                     break;
                 default:
-                    if (arg.StartsWith("/dir=", StringComparison.OrdinalIgnoreCase) ||
-                        arg.StartsWith("--dir=", StringComparison.OrdinalIgnoreCase))
-                    {
-                        result.InstallDir = arg[(arg.IndexOf('=') + 1)..].Trim('"');
-                    }
-                    else if ((arg.Equals("/dir", StringComparison.OrdinalIgnoreCase) ||
-                              arg.Equals("--dir", StringComparison.OrdinalIgnoreCase)) &&
-                             i + 1 < args.Length)
-                    {
-                        result.InstallDir = args[++i].Trim('"');
-                    }
+                    if (OptionValue(arg, "--dir", args, ref i) is { } dir)
+                        result.InstallDir = dir;
+                    else if (OptionValue(arg, "/dir", args, ref i) is { } dir2)
+                        result.InstallDir = dir2;
+                    else if (OptionValue(arg, "--lang", args, ref i) is { } lang)
+                        result.LanguageCulture = lang;
+                    else if (OptionValue(arg, "--device-pack", args, ref i) is { } pack)
+                        result.DevicePackId = pack;
                     break;
             }
         }
@@ -148,12 +160,32 @@ public partial class App : Application
             }
             else
             {
+                string? devicePackId = null;
+                var deviceBasicMode = false;
+                if (!string.IsNullOrWhiteSpace(args.DevicePackId))
+                {
+                    var pack = DevicePackSnapshot.Packs.FirstOrDefault(p =>
+                        p.Id.Equals(args.DevicePackId, StringComparison.OrdinalIgnoreCase));
+                    if (pack is null)
+                    {
+                        InstallerLog.Error($"Unknown --device-pack id '{args.DevicePackId}'; skipping device seeding.");
+                    }
+                    else
+                    {
+                        devicePackId = pack.Id;
+                        deviceBasicMode = !pack.IsHardware;
+                    }
+                }
+
                 Task.Run(() => InstallerEngine.InstallAsync(
                     new InstallOptions
                     {
                         InstallDir = args.InstallDir ?? InstallerConstants.DefaultInstallDir,
                         CreateDesktopShortcut = args.DesktopShortcut,
                         LaunchAfterInstall = false,
+                        LanguageCulture = args.LanguageCulture,
+                        DevicePackId = devicePackId,
+                        DeviceBasicMode = deviceBasicMode,
                     },
                     progress, CancellationToken.None)).GetAwaiter().GetResult();
             }

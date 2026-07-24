@@ -296,9 +296,12 @@ BuildInstaller/
 └── UniversalDeviceToolkitSetup-Online.exe   # ~0.3 MB: downloads payload at install time
 ```
 
-The installer follows the OS display language and deliberately offers no
-language picker — the app owns language selection on first run. It supports
-`--uninstall`, `--silent`, `--dir=<path>` and `--delete-data`.
+The installer follows the OS display language and Windows light/dark mode.
+Its wizard includes language and device-model pages whose answers are written
+to the app's first-run state (`lang` / `device-setup`), so the app does not
+ask again on first launch; non-bundled language packs are downloaded from the
+stable resource catalog during setup. It supports `--uninstall`, `--silent`,
+`--dir=<path>`, `--lang=<culture>`, `--device-pack=<id>` and `--delete-data`.
 
 ### Installer Contents
 

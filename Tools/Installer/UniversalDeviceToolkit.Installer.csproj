@@ -25,9 +25,9 @@
     <!-- No NuGet dependencies; opting out of the repo-wide lock file keeps
          locked-mode restore immune to SDK-band ILLink pack drift. -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
-    <!-- The installer never offers a language choice and never persists one:
-         UI strings follow the OS display language (EN/zh built in); the app
-         language stays owned by the first-run selector inside the app. -->
+    <!-- The wizard seeds the app's first-run state (language + device model) in
+         the app's own formats, so the app skips its first-run selectors after
+         setup. UI strings follow the OS display language. -->
   </PropertyGroup>
 
   <ItemGroup>

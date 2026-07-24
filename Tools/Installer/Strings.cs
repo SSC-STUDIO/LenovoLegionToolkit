@@ -3,8 +3,9 @@ using System.Globalization;
 namespace UniversalDeviceToolkit.Installer;
 
 /// <summary>
-/// Built-in EN/zh UI strings. The installer follows the OS display language and
-/// deliberately offers no language picker — the app owns language selection.
+/// Built-in EN/zh UI strings for the installer itself (follows the OS display
+/// language). The app language is chosen on the wizard's language page and
+/// seeded into the app's first-run state.
 /// </summary>
 internal static class Strings
 {
@@ -20,6 +21,15 @@ internal static class Strings
         ["RuntimeFailed"] = ("Runtime installation failed. Please install it manually and click Retry.", "运行时安装失败。请手动安装后点击“重试”。"),
         ["LocationTitle"] = ("Choose install location", "选择安装位置"),
         ["LocationText"] = ("Setup will install Universal Device Toolkit into the following folder.", "安装程序将把 Universal Device Toolkit 安装到以下文件夹。"),
+        ["LanguageTitle"] = ("Choose your language", "选择语言"),
+        ["LanguageText"] = ("The app will use this language. You can change it later in Settings.", "应用将使用此语言，之后可在设置中更改。"),
+        ["DeviceTitle"] = ("Choose your device", "选择你的设备"),
+        ["DeviceDetected"] = ("Detected: {0}", "检测到：{0}"),
+        ["DeviceText"] = ("This decides which features the app enables. You can change it later in Settings.", "这将决定应用启用哪些功能，之后可在设置中更改。"),
+        ["DeviceHardwareNote"] = ("Hardware controls will be enabled for this device.", "将为该机型启用硬件控制功能。"),
+        ["DeviceBasicNote"] = ("Basic mode: plugins and system optimization only (no hardware controls).", "基础模式：仅插件与系统优化（不含硬件控制）。"),
+        ["DeviceAskLater"] = ("Ask me on first run", "首次启动时再询问我"),
+        ["StatusLanguagePack"] = ("Downloading language pack…", "正在下载语言包…"),
         ["Browse"] = ("Browse…", "浏览…"),
         ["DesktopShortcut"] = ("Create a desktop shortcut", "创建桌面快捷方式"),
         ["ProgressTitle"] = ("Installing", "正在安装"),

@@ -16,6 +16,13 @@ internal sealed class InstallOptions
     public required string InstallDir { get; init; }
     public bool CreateDesktopShortcut { get; init; }
     public bool LaunchAfterInstall { get; init; }
+
+    /// <summary>Culture to pre-seed as the app language (e.g. "zh-hans"); null = let the app ask.</summary>
+    public string? LanguageCulture { get; init; }
+
+    /// <summary>Device pack to pre-seed; null = let the app ask on first run.</summary>
+    public string? DevicePackId { get; init; }
+    public bool DeviceBasicMode { get; init; }
 }
 
 internal sealed class UninstallOptions
@@ -228,6 +235,8 @@ internal static class InstallerEngine
         progress.Report(new EngineProgress { Percent = 95, Status = Strings.Get("StatusFinishing") });
         WriteUninstallRegistryEntry(installDir);
 
+        await SeedFirstRunStateAsync(options, installDir, progress, ct).ConfigureAwait(false);
+
         progress.Report(new EngineProgress { Percent = 100, Status = Strings.Get("DoneTitle") });
 
         if (options.LaunchAfterInstall)
@@ -243,6 +252,44 @@ internal static class InstallerEngine
             {
                 // Launch failure must not fail the install.
             }
+        }
+    }
+
+    /// <summary>
+    /// Pre-seeds the app's first-run state (language + device model) when the user
+    /// answered those pages in the wizard. Best-effort: never fails the install.
+    /// </summary>
+    private static async Task SeedFirstRunStateAsync(
+        InstallOptions options,
+        string installDir,
+        IProgress<EngineProgress> progress,
+        CancellationToken ct)
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(options.LanguageCulture))
+            {
+                FirstRunState.SaveLanguage(options.LanguageCulture);
+
+                if (!AppLanguages.IsBundled(options.LanguageCulture))
+                {
+                    progress.Report(new EngineProgress { Percent = 97, Status = Strings.Get("StatusLanguagePack") });
+                    await LanguagePackInstaller.TryInstallAsync(
+                            options.LanguageCulture, installDir, PayloadManifest.Version, ct)
+                        .ConfigureAwait(false);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(options.DevicePackId))
+                FirstRunState.SaveDeviceSetup(options.DevicePackId, options.DeviceBasicMode);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            InstallerLog.Error("First-run state seeding failed (the app asks on first run instead)", ex);
         }
     }
 

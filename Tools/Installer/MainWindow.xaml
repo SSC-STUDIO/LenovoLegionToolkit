@@ -95,6 +95,42 @@
                     </Border>
                 </StackPanel>
 
+                <!-- Language -->
+                <StackPanel x:Name="PageLanguage" Visibility="Collapsed">
+                    <TextBlock x:Name="LanguageTitle" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock x:Name="LanguageText" Style="{StaticResource PageTextStyle}" Margin="0,14,0,0"/>
+                    <ComboBox x:Name="LanguageCombo" Margin="0,16,0,0" FontSize="13"
+                              Style="{StaticResource ThemedComboBoxStyle}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NativeName}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Device -->
+                <StackPanel x:Name="PageDevice" Visibility="Collapsed">
+                    <TextBlock x:Name="DeviceTitle" Style="{StaticResource PageTitleStyle}"/>
+                    <TextBlock x:Name="DeviceDetectedText" Margin="0,14,0,0" FontSize="13" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock x:Name="DeviceText" Style="{StaticResource PageTextStyle}" Margin="0,6,0,0"/>
+                    <ComboBox x:Name="DeviceCombo" Margin="0,16,0,0" FontSize="13"
+                              Style="{StaticResource ThemedComboBoxStyle}"
+                              SelectionChanged="DeviceCombo_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Display}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Border x:Name="DeviceNote" Visibility="Collapsed"
+                            Background="{DynamicResource NoticeInfoBrush}" BorderBrush="{DynamicResource NoticeInfoBorderBrush}" BorderThickness="1"
+                            CornerRadius="4" Padding="12,8" Margin="0,14,0,0">
+                        <TextBlock x:Name="DeviceNoteText" FontSize="12.5" Foreground="{DynamicResource NoticeInfoTextBrush}" TextWrapping="Wrap"/>
+                    </Border>
+                </StackPanel>
+
                 <!-- Location -->
                 <StackPanel x:Name="PageLocation" Visibility="Collapsed">
                     <TextBlock x:Name="LocationTitle" Style="{StaticResource PageTitleStyle}"/>

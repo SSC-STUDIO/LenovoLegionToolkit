@@ -6,43 +6,48 @@ namespace UniversalDeviceToolkit.Tests.Utils;
 public class InstallerLanguageOwnershipTests
 {
     [Fact]
-    public void Installer_ShouldNotOfferLanguageSelection()
+    public void Installer_ShouldSeedFirstRunStateInAppFormat()
     {
-        foreach (var source in ReadInstallerSources())
-        {
-            source.Should().NotContain("[Languages]");
-            source.Should().NotContain("MessagesFile:");
-            source.Should().NotContain("compiler:Languages");
-            source.Should().NotContain("InnoDependencies\\Chinese");
-            source.Should().NotContain("LanguageSelectorWindow");
-        }
+        // The installer owns the first-run answers now: it writes the very same
+        // files the app would, so the app must not ask again on first launch.
+        var firstRunState = ReadRepositoryFile("Tools", "Installer", "FirstRunState.cs");
 
-        // The wizard must not contain a language picker of any kind.
-        var mainWindow = ReadRepositoryFile("Tools", "Installer", "MainWindow.xaml");
-        mainWindow.Should().NotContain("ComboBox");
+        firstRunState.Should().Contain("\"lang\"");
+        firstRunState.Should().Contain("\"device-setup\"");
+        firstRunState.Should().Contain("devicePackId=");
+        firstRunState.Should().Contain("basicMode=");
+        firstRunState.Should().Contain("confirmedAtUtc=");
     }
 
     [Fact]
-    public void Installer_ShouldNotPersistAppLanguageFromSetup()
+    public void Installer_ShouldKeepUninstallCoverageForSeededState()
     {
-        foreach (var source in ReadInstallerSources())
-        {
-            source.Should().NotContain("SetupLanguageToAppCulture");
-            source.Should().NotContain("ActiveLanguage");
-            source.Should().NotContain("LangPath");
-            source.Should().NotContain("SaveStringToFile");
-        }
+        // The seeded files live in %LocalAppData%\UniversalDeviceToolkit; the
+        // uninstaller's app-data purge must cover them.
+        var engine = ReadRepositoryFile("Tools", "Installer", "InstallerEngine.cs");
+
+        engine.Should().Contain("TryDeleteDirectory(InstallerConstants.AppDataDir)");
+        engine.Should().Contain("DeleteAppData");
     }
 
     [Fact]
-    public void AppStartup_ShouldOwnInteractiveLanguageInitialization()
+    public void App_ShouldSkipSelectorsWhenFirstRunStateIsSeeded()
+    {
+        var localizationHelper = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Utils", "LocalizationHelper.cs");
+        var setupCoordinator = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Utils", "StartupDeviceSetupCoordinator.cs");
+
+        localizationHelper.Should().Contain("showLanguageSelector = interactive && (savedCultureInfo is null || !deviceSetupExists)");
+        setupCoordinator.Should().Contain("if (_isSetupComplete())");
+    }
+
+    [Fact]
+    public void AppStartup_ShouldKeepSelectorFallbackForUnseededInstalls()
     {
         var appStartup = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Startup", "StartupOrchestrator.cs");
         var localizationHelper = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Utils", "LocalizationHelper.cs");
         var languageWindow = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Utils", "LanguageSelectorWindow.xaml.cs");
 
         appStartup.Should().Contain("SetLanguageAsync(true");
-        localizationHelper.Should().Contain("showLanguageSelector = interactive && (savedCultureInfo is null || !deviceSetupExists)");
         localizationHelper.Should().Contain("new LanguageSelectorWindow(Languages");
         localizationHelper.Should().Contain("LanguagePackManager? languagePackManager");
         languageWindow.Should().Contain("EnsureLanguageInstalledAsync");
@@ -52,16 +57,17 @@ public class InstallerLanguageOwnershipTests
     }
 
     [Fact]
-    public void Installer_ShouldRemoveWholeInstallTreeIncludingLanguagePacks()
+    public void Installer_ShouldNotContainInnoLeftovers()
     {
-        // The payload ships satellite folders (en/zh-hans/zh-hant) and the app can
-        // download more packs at runtime; recursive deletion removes them all by
-        // construction, replacing Inno's per-folder [UninstallDelete] list.
-        var engine = ReadRepositoryFile("Tools", "Installer", "InstallerEngine.cs");
-
-        engine.Should().Contain("Directory.Delete(path, recursive: true)");
-        engine.Should().Contain("TryDeleteDirectory(installDir)");
-        engine.Should().Contain("DeleteDirectoryContentsExcept(installDir");
+        foreach (var source in ReadInstallerSources())
+        {
+            source.Should().NotContain("[Languages]");
+            source.Should().NotContain("MessagesFile:");
+            source.Should().NotContain("compiler:Languages");
+            source.Should().NotContain("InnoDependencies\\Chinese");
+            source.Should().NotContain("SetupLanguageToAppCulture");
+            source.Should().NotContain("SaveStringToFile");
+        }
     }
 
     private static string[] ReadInstallerSources()

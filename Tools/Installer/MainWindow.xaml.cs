@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,10 +10,18 @@ public partial class MainWindow : Window
     private enum WizardPage
     {
         Welcome,
+        Language,
+        Device,
         Location,
         Progress,
         Done,
         UninstallConfirm,
+    }
+
+    private sealed record DeviceChoice(string? Id, string Display, bool IsHardware)
+    {
+        public bool AskLater => Id is null;
+        public bool IsBasicMode => Id is not null && !IsHardware;
     }
 
     private readonly InstallerArguments _args;
@@ -21,6 +30,8 @@ public partial class MainWindow : Window
     private bool _operationRunning;
     private bool _forceClose;
     private bool _lastOperationFailed;
+    private bool _languagePageInitialized;
+    private bool _devicePageInitialized;
 
     public MainWindow(InstallerArguments args)
     {
@@ -58,6 +69,8 @@ public partial class MainWindow : Window
     {
         _currentPage = page;
         PageWelcome.Visibility = page == WizardPage.Welcome ? Visibility.Visible : Visibility.Collapsed;
+        PageLanguage.Visibility = page == WizardPage.Language ? Visibility.Visible : Visibility.Collapsed;
+        PageDevice.Visibility = page == WizardPage.Device ? Visibility.Visible : Visibility.Collapsed;
         PageLocation.Visibility = page == WizardPage.Location ? Visibility.Visible : Visibility.Collapsed;
         PageProgress.Visibility = page == WizardPage.Progress ? Visibility.Visible : Visibility.Collapsed;
         PageDone.Visibility = page == WizardPage.Done ? Visibility.Visible : Visibility.Collapsed;
@@ -82,6 +95,65 @@ public partial class MainWindow : Window
         }
 
         CheckRuntimeAsync();
+    }
+
+    private void ShowLanguage()
+    {
+        SwitchTo(WizardPage.Language);
+        if (!_languagePageInitialized)
+        {
+            _languagePageInitialized = true;
+            LanguageTitle.Text = Strings.Get("LanguageTitle");
+            LanguageText.Text = Strings.Get("LanguageText");
+            LanguageCombo.ItemsSource = AppLanguages.All;
+            LanguageCombo.SelectedItem = AppLanguages.GetPreferred();
+        }
+
+        NextButton.Content = Strings.Get("Next");
+        BackButton.Visibility = Visibility.Visible;
+        CancelButton.Visibility = Visibility.Visible;
+        NextButton.Visibility = Visibility.Visible;
+    }
+
+    private void ShowDevice()
+    {
+        SwitchTo(WizardPage.Device);
+        if (!_devicePageInitialized)
+        {
+            _devicePageInitialized = true;
+            DeviceTitle.Text = Strings.Get("DeviceTitle");
+            DeviceText.Text = Strings.Get("DeviceText");
+
+            var machine = MachineDetector.Detect();
+            DeviceDetectedText.Text = Strings.Format("DeviceDetected",
+                string.IsNullOrWhiteSpace(machine.Vendor) ? "—" : machine.ToString());
+
+            var choices = DevicePackMatcher.BuildSelectable(machine)
+                .Select(p => new DeviceChoice(p.Id, p.DisplayName, p.IsHardware))
+                .ToList();
+            choices.Add(new DeviceChoice(null, Strings.Get("DeviceAskLater"), IsHardware: false));
+            DeviceCombo.ItemsSource = choices;
+
+            var recommended = DevicePackMatcher.FindRecommended(machine);
+            DeviceCombo.SelectedItem = choices.FirstOrDefault(c => c.Id == recommended.Id) ?? choices[0];
+        }
+
+        NextButton.Content = Strings.Get("Next");
+        BackButton.Visibility = Visibility.Visible;
+        CancelButton.Visibility = Visibility.Visible;
+        NextButton.Visibility = Visibility.Visible;
+    }
+
+    private void DeviceCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (DeviceCombo.SelectedItem is not DeviceChoice choice || choice.AskLater)
+        {
+            DeviceNote.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        DeviceNoteText.Text = Strings.Get(choice.IsHardware ? "DeviceHardwareNote" : "DeviceBasicNote");
+        DeviceNote.Visibility = Visibility.Visible;
     }
 
     private void ShowLocation()
@@ -198,8 +270,18 @@ public partial class MainWindow : Window
 
     private void BackButton_Click(object sender, RoutedEventArgs e)
     {
-        if (_currentPage == WizardPage.Location)
-            ShowWelcome();
+        switch (_currentPage)
+        {
+            case WizardPage.Language:
+                ShowWelcome();
+                break;
+            case WizardPage.Device:
+                ShowLanguage();
+                break;
+            case WizardPage.Location:
+                ShowDevice();
+                break;
+        }
     }
 
     private async void NextButton_Click(object sender, RoutedEventArgs e)
@@ -207,6 +289,12 @@ public partial class MainWindow : Window
         switch (_currentPage)
         {
             case WizardPage.Welcome:
+                ShowLanguage();
+                break;
+            case WizardPage.Language:
+                ShowDevice();
+                break;
+            case WizardPage.Device:
                 ShowLocation();
                 break;
             case WizardPage.Location:
@@ -297,11 +385,15 @@ public partial class MainWindow : Window
 
         try
         {
+            var deviceChoice = DeviceCombo.SelectedItem as DeviceChoice;
             var options = new InstallOptions
             {
                 InstallDir = InstallDirBox.Text.Trim(),
                 CreateDesktopShortcut = DesktopShortcutCheck.IsChecked == true,
                 LaunchAfterInstall = LaunchCheck.IsChecked == true,
+                LanguageCulture = (LanguageCombo.SelectedItem as AppLanguage)?.Culture,
+                DevicePackId = deviceChoice is { AskLater: false } ? deviceChoice.Id : null,
+                DeviceBasicMode = deviceChoice?.IsBasicMode ?? false,
             };
             await Task.Run(() => InstallerEngine.InstallAsync(options, progress, _cts.Token));
             ShowDone(uninstall: false, error: null);
