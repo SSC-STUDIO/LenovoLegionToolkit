@@ -63,6 +63,7 @@ public partial class App : Application
     private void Application_Startup(object sender, StartupEventArgs e)
     {
         InstallerLog.Enable();
+        ApplySystemTheme();
         var args = InstallerArguments.Parse(e.Args);
 
         if (args.Silent)
@@ -74,6 +75,58 @@ public partial class App : Application
 
         var window = new MainWindow(args);
         window.Show();
+    }
+
+    /// <summary>
+    /// Follows the Windows app color mode: resources default to the dark palette
+    /// (main app's default); when AppsUseLightTheme=1 they are overwritten with the
+    /// light palette before any window is created, so StaticResource lookups resolve
+    /// to the themed values.
+    /// </summary>
+    private static void ApplySystemTheme()
+    {
+        var light = false;
+        try
+        {
+            using var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+                @"SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            light = key?.GetValue("AppsUseLightTheme") is int value && value != 0;
+        }
+        catch
+        {
+            // Keep the dark default.
+        }
+
+        if (!light)
+            return;
+
+        void Set(string name, string color) =>
+            Current.Resources[name] = new System.Windows.Media.SolidColorBrush(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color));
+
+        Set("TextPrimaryBrush", "#1B1B1B");
+        Set("TextSecondaryBrush", "#5D5D5D");
+        Set("SurfaceBrush", "#FFFFFF");
+        Set("PageBrush", "#F9F9F9");
+        Set("BorderBrush", "#E0E0E0");
+        Set("WindowBorderBrush", "#D0D0D0");
+        Set("TitleBarBrush", "#F3F3F3");
+        Set("TitleBarTextBrush", "#1B1B1B");
+        Set("CaptionForegroundBrush", "#1B1B1B");
+        Set("CaptionHoverBrush", "#1A000000");
+        Set("CaptionPressedBrush", "#0D000000");
+        Set("SecondaryButtonBrush", "#FFFFFF");
+        Set("SecondaryButtonHoverBrush", "#F0F0F0");
+        Set("SecondaryButtonBorderBrush", "#D0D0D0");
+        Set("InputBrush", "#FFFFFF");
+        Set("InputBorderBrush", "#D0D0D0");
+        Set("ProgressTrackBrush", "#E6E6E6");
+        Set("NoticeInfoBrush", "#EFF6FC");
+        Set("NoticeInfoBorderBrush", "#B4D6FA");
+        Set("NoticeInfoTextBrush", "#1B4B7A");
+        Set("NoticeWarnBrush", "#FFF4CE");
+        Set("NoticeWarnBorderBrush", "#F2C94C");
+        Set("NoticeWarnTextBrush", "#5D4A00");
     }
 
     private static int RunSilent(InstallerArguments args)
