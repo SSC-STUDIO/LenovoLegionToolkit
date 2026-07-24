@@ -23,17 +23,16 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="38"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Custom title bar (matches the main app's 38 px bar) -->
+            <!-- Custom title bar — same pattern as the main app: "Name - action" -->
             <Grid Grid.Row="0" Background="{DynamicResource TitleBarBrush}"
                   MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
                     <Image Width="16" Height="16" Source="pack://application:,,,/Icon.ico"/>
-                    <TextBlock Text="Universal Device Toolkit" Margin="8,0,0,0"
+                    <TextBlock x:Name="TitleBarText" Margin="8,0,0,0"
                                FontSize="13" Foreground="{DynamicResource TitleBarTextBrush}" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -50,39 +49,23 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Header (icon lives in the title bar — no duplicate here) -->
-            <Border Grid.Row="1"
-                    Background="{DynamicResource SurfaceBrush}"
-                    BorderBrush="{DynamicResource BorderBrush}"
-                    BorderThickness="0,0,0,1"
-                    Padding="24,16">
-                <StackPanel>
-                    <TextBlock Text="Universal Device Toolkit"
-                               FontSize="15" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"/>
-                    <TextBlock x:Name="HeaderSubtitle"
-                               FontSize="12"
-                               Foreground="{DynamicResource TextSecondaryBrush}"/>
-                </StackPanel>
-            </Border>
-
             <!-- Pages -->
-            <Grid Grid.Row="2" Margin="28,22">
+            <Grid Grid.Row="1" Margin="28,20">
 
                 <!-- Welcome -->
                 <StackPanel x:Name="PageWelcome" Visibility="Collapsed">
                     <TextBlock x:Name="WelcomeTitle" Style="{StaticResource PageTitleStyle}"/>
-                    <TextBlock x:Name="WelcomeText" Style="{StaticResource PageTextStyle}" Margin="0,14,0,0"/>
+                    <TextBlock x:Name="WelcomeText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
 
                     <Border x:Name="UpgradeNotice" Visibility="Collapsed"
                             Background="{DynamicResource NoticeInfoBrush}" BorderBrush="{DynamicResource NoticeInfoBorderBrush}" BorderThickness="1"
-                            CornerRadius="4" Padding="12,8" Margin="0,14,0,0">
+                            CornerRadius="8" Padding="14,10" Margin="0,14,0,0">
                         <TextBlock x:Name="UpgradeNoticeText" FontSize="12.5" Foreground="{DynamicResource NoticeInfoTextBrush}" TextWrapping="Wrap"/>
                     </Border>
 
                     <Border x:Name="RuntimePanel" Visibility="Collapsed"
                             Background="{DynamicResource NoticeWarnBrush}" BorderBrush="{DynamicResource NoticeWarnBorderBrush}" BorderThickness="1"
-                            CornerRadius="4" Padding="12" Margin="0,14,0,0">
+                            CornerRadius="8" Padding="14,10" Margin="0,14,0,0">
                         <StackPanel>
                             <TextBlock x:Name="RuntimeWarningText" FontSize="12.5" Foreground="{DynamicResource NoticeWarnTextBrush}" TextWrapping="Wrap"/>
                             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
@@ -98,35 +81,41 @@
                 <!-- Language -->
                 <StackPanel x:Name="PageLanguage" Visibility="Collapsed">
                     <TextBlock x:Name="LanguageTitle" Style="{StaticResource PageTitleStyle}"/>
-                    <TextBlock x:Name="LanguageText" Style="{StaticResource PageTextStyle}" Margin="0,14,0,0"/>
-                    <ComboBox x:Name="LanguageCombo" Margin="0,16,0,0" FontSize="13"
-                              Style="{StaticResource ThemedComboBoxStyle}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding NativeName}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <TextBlock x:Name="LanguageText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <ComboBox x:Name="LanguageCombo" FontSize="13"
+                                  Style="{StaticResource ThemedComboBoxStyle}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding NativeName}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Border>
                 </StackPanel>
 
                 <!-- Device -->
                 <StackPanel x:Name="PageDevice" Visibility="Collapsed">
                     <TextBlock x:Name="DeviceTitle" Style="{StaticResource PageTitleStyle}"/>
-                    <TextBlock x:Name="DeviceDetectedText" Margin="0,14,0,0" FontSize="13" FontWeight="SemiBold"
-                               Foreground="{DynamicResource TextPrimaryBrush}"/>
-                    <TextBlock x:Name="DeviceText" Style="{StaticResource PageTextStyle}" Margin="0,6,0,0"/>
-                    <ComboBox x:Name="DeviceCombo" Margin="0,16,0,0" FontSize="13"
-                              Style="{StaticResource ThemedComboBoxStyle}"
-                              SelectionChanged="DeviceCombo_SelectionChanged">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Display}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <TextBlock x:Name="DeviceText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <StackPanel>
+                            <TextBlock x:Name="DeviceDetectedText" FontSize="13" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"/>
+                            <ComboBox x:Name="DeviceCombo" Margin="0,12,0,0" FontSize="13"
+                                      Style="{StaticResource ThemedComboBoxStyle}"
+                                      SelectionChanged="DeviceCombo_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Display}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
                     <Border x:Name="DeviceNote" Visibility="Collapsed"
                             Background="{DynamicResource NoticeInfoBrush}" BorderBrush="{DynamicResource NoticeInfoBorderBrush}" BorderThickness="1"
-                            CornerRadius="4" Padding="12,8" Margin="0,14,0,0">
+                            CornerRadius="8" Padding="14,10" Margin="0,12,0,0">
                         <TextBlock x:Name="DeviceNoteText" FontSize="12.5" Foreground="{DynamicResource NoticeInfoTextBrush}" TextWrapping="Wrap"/>
                     </Border>
                 </StackPanel>
@@ -134,41 +123,49 @@
                 <!-- Location -->
                 <StackPanel x:Name="PageLocation" Visibility="Collapsed">
                     <TextBlock x:Name="LocationTitle" Style="{StaticResource PageTitleStyle}"/>
-                    <TextBlock x:Name="LocationText" Style="{StaticResource PageTextStyle}" Margin="0,14,0,0"/>
-                    <Grid Margin="0,14,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox x:Name="InstallDirBox" Grid.Column="0"
-                                 FontSize="13" Padding="8,6" VerticalContentAlignment="Center"
-                                 Background="{DynamicResource InputBrush}" Foreground="{DynamicResource TextPrimaryBrush}"
-                                 CaretBrush="{DynamicResource TextPrimaryBrush}"
-                                 BorderBrush="{DynamicResource InputBorderBrush}"/>
-                        <Button x:Name="BrowseButton" Grid.Column="1" Margin="8,0,0,0"
-                                Style="{StaticResource SecondaryButtonStyle}" MinWidth="0"
-                                Padding="14,6" Click="BrowseButton_Click"/>
-                    </Grid>
-                    <CheckBox x:Name="DesktopShortcutCheck" Margin="0,16,0,0" FontSize="13"
-                              Foreground="{DynamicResource TextPrimaryBrush}"/>
+                    <TextBlock x:Name="LocationText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
+                    <Border Style="{StaticResource CardBorderStyle}">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Name="InstallDirBox" Grid.Column="0"
+                                         FontSize="13" Padding="8,6" VerticalContentAlignment="Center"
+                                         Background="{DynamicResource InputBrush}" Foreground="{DynamicResource TextPrimaryBrush}"
+                                         CaretBrush="{DynamicResource TextPrimaryBrush}"
+                                         BorderBrush="{DynamicResource InputBorderBrush}"/>
+                                <Button x:Name="BrowseButton" Grid.Column="1" Margin="8,0,0,0"
+                                        Style="{StaticResource SecondaryButtonStyle}" MinWidth="0"
+                                        Padding="14,6" Click="BrowseButton_Click"/>
+                            </Grid>
+                            <CheckBox x:Name="DesktopShortcutCheck" Margin="0,14,0,0" FontSize="13"
+                                      Foreground="{DynamicResource TextPrimaryBrush}"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <!-- Progress -->
                 <StackPanel x:Name="PageProgress" Visibility="Collapsed">
                     <TextBlock x:Name="ProgressTitle" Style="{StaticResource PageTitleStyle}"/>
-                    <TextBlock x:Name="ProgressStatus" Style="{StaticResource PageTextStyle}" Margin="0,18,0,0"/>
-                    <ProgressBar x:Name="ProgressBar" Height="6" Margin="0,14,0,0"
-                                 Minimum="0" Maximum="100" Value="0"
-                                 Background="{DynamicResource ProgressTrackBrush}"
-                                 Foreground="{DynamicResource AccentBrush}"/>
-                    <TextBlock x:Name="ProgressDetail" FontSize="11.5" Margin="0,10,0,0"
-                               Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                    <Border Style="{StaticResource CardBorderStyle}" Margin="0,16,0,0">
+                        <StackPanel>
+                            <TextBlock x:Name="ProgressStatus" Style="{StaticResource PageTextStyle}"/>
+                            <ProgressBar x:Name="ProgressBar" Height="6" Margin="0,14,0,0"
+                                         Minimum="0" Maximum="100" Value="0"
+                                         Background="{DynamicResource ProgressTrackBrush}"
+                                         Foreground="{DynamicResource AccentBrush}"/>
+                            <TextBlock x:Name="ProgressDetail" FontSize="11.5" Margin="0,10,0,0"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <!-- Done / Error -->
                 <StackPanel x:Name="PageDone" Visibility="Collapsed">
                     <TextBlock x:Name="DoneTitle" Style="{StaticResource PageTitleStyle}"/>
-                    <TextBlock x:Name="DoneText" Style="{StaticResource PageTextStyle}" Margin="0,14,0,0"/>
+                    <TextBlock x:Name="DoneText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
                     <CheckBox x:Name="LaunchCheck" Margin="0,16,0,0" FontSize="13" IsChecked="True"
                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                 </StackPanel>
@@ -176,26 +173,30 @@
                 <!-- Uninstall confirm -->
                 <StackPanel x:Name="PageUninstallConfirm" Visibility="Collapsed">
                     <TextBlock x:Name="UninstallConfirmTitle" Style="{StaticResource PageTitleStyle}"/>
-                    <TextBlock x:Name="UninstallConfirmText" Style="{StaticResource PageTextStyle}" Margin="0,14,0,0"/>
+                    <TextBlock x:Name="UninstallConfirmText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
                     <CheckBox x:Name="DeleteDataCheck" Margin="0,16,0,0" FontSize="13"
                               Foreground="{DynamicResource TextPrimaryBrush}"/>
                 </StackPanel>
             </Grid>
 
-            <!-- Footer -->
-            <Border Grid.Row="3"
+            <!-- Footer: version left (main-app status-line role), buttons right -->
+            <Border Grid.Row="2"
                     Background="{DynamicResource SurfaceBrush}"
                     BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="0,1,0,0"
                     Padding="24,12">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="BackButton" Style="{StaticResource SecondaryButtonStyle}"
-                            Margin="0,0,8,0" Click="BackButton_Click"/>
-                    <Button x:Name="NextButton" Style="{StaticResource AccentButtonStyle}"
-                            Margin="0,0,8,0" Click="NextButton_Click"/>
-                    <Button x:Name="CancelButton" Style="{StaticResource SecondaryButtonStyle}"
-                            Click="CancelButton_Click"/>
-                </StackPanel>
+                <Grid>
+                    <TextBlock x:Name="FooterVersion" VerticalAlignment="Center"
+                               FontSize="11.5" Foreground="{DynamicResource TextSecondaryBrush}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BackButton" Style="{StaticResource SecondaryButtonStyle}"
+                                Margin="0,0,8,0" Click="BackButton_Click"/>
+                        <Button x:Name="NextButton" Style="{StaticResource AccentButtonStyle}"
+                                Margin="0,0,8,0" Click="NextButton_Click"/>
+                        <Button x:Name="CancelButton" Style="{StaticResource SecondaryButtonStyle}"
+                                Click="CancelButton_Click"/>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Grid>
     </Border>

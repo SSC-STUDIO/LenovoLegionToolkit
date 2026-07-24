@@ -42,6 +42,7 @@ public partial class MainWindow : Window
         Title = Strings.Get("WindowTitle");
         Icon = System.Windows.Media.Imaging.BitmapFrame.Create(
             new Uri("pack://application:,,,/Icon.ico"));
+        FooterVersion.Text = $"v{PayloadManifest.Version}";
 
         if (_args.Uninstall)
             ShowUninstallConfirm();
@@ -80,7 +81,7 @@ public partial class MainWindow : Window
     private void ShowWelcome()
     {
         SwitchTo(WizardPage.Welcome);
-        HeaderSubtitle.Text = $"{Strings.Get("Install")} · v{PayloadManifest.Version}";
+        TitleBarText.Text = $"Universal Device Toolkit - {Strings.Get("Install")}";
         WelcomeTitle.Text = Strings.Get("WelcomeTitle");
         WelcomeText.Text = Strings.Format("WelcomeText", PayloadManifest.Version);
         NextButton.Content = Strings.Get("Next");
@@ -172,7 +173,7 @@ public partial class MainWindow : Window
         SwitchTo(WizardPage.UninstallConfirm);
         var installDir = _args.InstallDir ?? DetectExistingInstallDir() ?? InstallerConstants.DefaultInstallDir;
         InstallDirBox.Text = installDir; // reused later by the uninstall runner
-        HeaderSubtitle.Text = Strings.Get("Uninstall");
+        TitleBarText.Text = $"Universal Device Toolkit - {Strings.Get("Uninstall")}";
         UninstallConfirmTitle.Text = Strings.Get("UninstallConfirmTitle");
         UninstallConfirmText.Text = Strings.Format("UninstallConfirmText", installDir);
         NextButton.Content = Strings.Get("Uninstall");
