@@ -38,7 +38,6 @@ public sealed class DeviceSupportModelSimulationTests
     }
 
     [Theory]
-    [InlineData("AORUS", "16X", "gigabyte-basic")]
     [InlineData("ERAZER", "Beast X40", "medion-basic")]
     public void Evaluate_WhenDmiVendorUsesGamingSubBrandAndModelUsesSku_ShouldUseParentBasicPack(
         string vendor,
@@ -165,6 +164,28 @@ public sealed class DeviceSupportModelSimulationTests
         MachineInformationTestData.Create("Predator", "PHN16"),
         MachineInformationTestData.Create("Nitro", "ANV16"),
         MachineInformationTestData.WithBaseBoard("", "", "Acer", "Nitro ANV16"),
+    };
+
+    [Theory]
+    [MemberData(nameof(GigabyteHardwareScenarios))]
+    public void Evaluate_WithSimulatedGigabyteMachine_ShouldUseGigabyteSensorsOnlyPack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("gigabyte-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors"]);
+        availability.EnabledFeatures.Should().NotContain("power-modes");
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["power-modes", "fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> GigabyteHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("Gigabyte Technology Co., Ltd.", "AORUS 16X"),
+        MachineInformationTestData.Create("GIGABYTE", "AERO 16 OLED"),
+        MachineInformationTestData.Create("AORUS", "16X"),
     };
 
     public static TheoryData<MachineInformation, string> MultiBrandBasicModeScenarios() => new()

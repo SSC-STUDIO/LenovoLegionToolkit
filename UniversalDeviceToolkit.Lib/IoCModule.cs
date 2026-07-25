@@ -60,6 +60,7 @@ public class IoCModule : Module
         builder.Register<HpWmiBios>().As<IHpWmiBios>().SingleInstance();
         builder.Register<AlienwareWmi>().As<IAlienwareWmi>().SingleInstance();
         builder.Register<AcerWmi>().As<IAcerWmi>().SingleInstance();
+        builder.Register<GigabyteWmi>().As<IGigabyteWmi>().SingleInstance();
         builder.Register<RazerHidDriver>().As<IRazerHid>().SingleInstance();
         builder.Register<RazerHidController>().As<IRazerHidController>().SingleInstance();
 
@@ -175,6 +176,7 @@ public class IoCModule : Module
         builder.Register<RazerSensorsController>(true);
         builder.Register<AlienwareSensorsController>(true);
         builder.Register<AcerSensorsController>(true);
+        builder.Register<GigabyteSensorsController>(true);
         builder.Register<GenericSensorsController>(true);
         builder.Register<SensorsGroupController>(true);
         builder.Register<FpsSensorController>();

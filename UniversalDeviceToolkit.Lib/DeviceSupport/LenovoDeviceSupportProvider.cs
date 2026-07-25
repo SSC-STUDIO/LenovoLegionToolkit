@@ -386,7 +386,15 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["GIGABYTE", "AORUS", "AERO"],
                 [],
                 [],
-                ["AORUS", "AERO", "GIGABYTE G"]),
+                ["AORUS", "AERO", "GIGABYTE G"])
+                with
+                {
+                    // Gigabyte GB_WMIACPI provider, phase 1: sensors only. No
+                    // platform power profile exists on this vendor (fan modes /
+                    // GPU boost need raw WMBD writes with unproven semantics).
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors"],
+                    HiddenFeatures = ["power-modes", "god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "razer-basic",
                 "Razer Basic",

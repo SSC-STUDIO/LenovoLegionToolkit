@@ -15,6 +15,7 @@ public class SensorsController(
     RazerSensorsController razerController,
     AlienwareSensorsController alienwareController,
     AcerSensorsController acerController,
+    GigabyteSensorsController gigabyteController,
     GenericSensorsController genericController)
     : ISensorsController
 {
@@ -83,6 +84,9 @@ public class SensorsController(
 
         if (await ProbeControllerAsync(acerController).ConfigureAwait(false))
             return _controller = acerController;
+
+        if (await ProbeControllerAsync(gigabyteController).ConfigureAwait(false))
+            return _controller = gigabyteController;
 
         if (await ProbeControllerAsync(genericController).ConfigureAwait(false))
             return _controller = genericController;
