@@ -4,6 +4,7 @@ using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Features.Razer;
 using UniversalDeviceToolkit.Lib.System;
@@ -186,7 +187,7 @@ public class AsusPowerModeFeatureTests
         atk.Seed(RogEndpoint, 0);
 
         var lenovo = new TestLenovoBackend(supported: true);
-        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp(), UnavailableRazer());
+        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp(), UnavailableRazer(), UnavailableAlienware());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Balance);
@@ -205,7 +206,8 @@ public class AsusPowerModeFeatureTests
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(atk),
             UnavailableHp(),
-            UnavailableRazer());
+            UnavailableRazer(),
+            UnavailableAlienware());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Quiet);
@@ -220,7 +222,8 @@ public class AsusPowerModeFeatureTests
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(new FakeAtkDriver()),
             UnavailableHp(),
-            UnavailableRazer());
+            UnavailableRazer(),
+            UnavailableAlienware());
 
         (await facade.IsSupportedAsync()).Should().BeFalse();
         await Assert.ThrowsAnyAsync<Exception>(() => facade.GetStateAsync());
@@ -237,6 +240,14 @@ public class AsusPowerModeFeatureTests
     private static HpPowerModeFeature UnavailableHp() => new(new UnavailableHpBios());
 
     private static RazerPowerModeFeature UnavailableRazer() => new(new UnavailableRazerHidController());
+
+    private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
+
+    private sealed class UnavailableAwccWmi : IAlienwareWmi
+    {
+        public bool IsAvailable => false;
+        public int Execute(string methodName, byte operation, byte arg1 = 0, byte arg2 = 0, byte arg3 = 0) => -1;
+    }
 
     private sealed class UnavailableRazerHidController : IRazerHidController
     {

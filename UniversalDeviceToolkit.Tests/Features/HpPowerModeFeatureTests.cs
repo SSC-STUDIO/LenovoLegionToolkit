@@ -4,6 +4,7 @@ using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Features.Razer;
 using UniversalDeviceToolkit.Lib.System;
@@ -167,7 +168,8 @@ public class HpPowerModeFeatureTests
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(new UnavailableAtk()),
             new HpPowerModeFeature(bios),
-            new RazerPowerModeFeature(new UnavailableRazerHidController()));
+            new RazerPowerModeFeature(new UnavailableRazerHidController()),
+            UnavailableAlienware());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         await facade.SetStateAsync(PowerModeState.Performance);
@@ -195,6 +197,14 @@ public class HpPowerModeFeatureTests
         public int? GetPerformanceMode(byte zone) => null;
         public bool SetPerformanceMode(byte zone, byte mode, bool manualFan) => false;
         public int? GetFanRpm(byte zone) => null;
+    }
+
+    private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
+
+    private sealed class UnavailableAwccWmi : IAlienwareWmi
+    {
+        public bool IsAvailable => false;
+        public int Execute(string methodName, byte operation, byte arg1 = 0, byte arg2 = 0, byte arg3 = 0) => -1;
     }
 
     private sealed class TestLenovoBackend(bool supported) : LenovoPowerModeFeature(null!, null!, null!, null!, null!)

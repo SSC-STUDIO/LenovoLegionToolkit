@@ -38,7 +38,6 @@ public sealed class DeviceSupportModelSimulationTests
     }
 
     [Theory]
-    [InlineData("Alienware", "m18 R2", "dell-basic")]
     [InlineData("Predator", "PHN16", "acer-basic")]
     [InlineData("Nitro", "ANV16", "acer-basic")]
     [InlineData("AORUS", "16X", "gigabyte-basic")]
@@ -124,12 +123,33 @@ public sealed class DeviceSupportModelSimulationTests
         MachineInformationTestData.WithComputerSystem("", "", "HP", "OMEN Transcend Laptop 14"),
     };
 
+    [Theory]
+    [MemberData(nameof(DellHardwareScenarios))]
+    public void Evaluate_WithSimulatedAlienwareMachine_ShouldUseDellHardwarePack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("dell-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> DellHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("Dell Inc.", "Alienware m18 R2"),
+        MachineInformationTestData.Create("Dell Computer Corporation", "Dell G16 7630"),
+        MachineInformationTestData.Create("Alienware", "m18 R2"),
+        MachineInformationTestData.Create("Dell", "G15 5530"),
+        MachineInformationTestData.WithComputerSystem("", "", "Dell Inc.", "Alienware m18 R2"),
+    };
+
     public static TheoryData<MachineInformation, string> MultiBrandBasicModeScenarios() => new()
     {
         { MachineInformationTestData.Create("MECHREVO", "Jiaolong 16 Pro"), "mechrevo-basic" },
         { MachineInformationTestData.Create("Mechanical Revolution", "Kuangshi 16 Super"), "mechrevo-basic" },
-        { MachineInformationTestData.Create("Dell Inc.", "Alienware m18 R2"), "dell-basic" },
-        { MachineInformationTestData.Create("Dell Computer Corporation", "Dell G16 7630"), "dell-basic" },
         { MachineInformationTestData.Create("Acer Incorporated", "Predator Helios Neo 16"), "acer-basic" },
         { MachineInformationTestData.Create("Acer", "Nitro V 16"), "acer-basic" },
         { MachineInformationTestData.Create("LENOVO", "IdeaPad Flex 5 Chromebook Plus"), "lenovo-chromebook-basic" },
@@ -199,14 +219,6 @@ public sealed class DeviceSupportModelSimulationTests
                 "MECHREVO",
                 "Jiaolong Series"),
             "mechrevo-basic"
-        },
-        {
-            MachineInformationTestData.WithComputerSystem(
-                "",
-                "",
-                "Dell Inc.",
-                "Alienware m18 R2"),
-            "dell-basic"
         },
         {
             MachineInformationTestData.WithBaseBoard(

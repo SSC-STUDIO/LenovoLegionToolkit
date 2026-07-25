@@ -264,6 +264,11 @@ public class LenovoPowerModeFeature(
         if (!Compatibility.IsSupportedDevice(machineInformation))
             return false;
 
+        // Capability flags are Lenovo firmware data — never credit them to other
+        // brands whose packs now also enable hardware features.
+        if (machineInformation.Vendor?.Contains("LENOVO", StringComparison.OrdinalIgnoreCase) != true)
+            return false;
+
         var supportedPowerModes = machineInformation.SupportedPowerModes ?? [];
         return supportedPowerModes.Any(mode => mode is PowerModeState.Quiet or PowerModeState.Balance or PowerModeState.Performance or PowerModeState.GodMode)
                || machineInformation.Properties.SupportsGodMode;

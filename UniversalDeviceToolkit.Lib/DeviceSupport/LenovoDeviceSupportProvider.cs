@@ -319,7 +319,15 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["Dell", "Alienware", "Inspiron", "XPS", "Precision", "G Series", "Latitude", "OptiPlex"],
                 [],
                 [],
-                ["Alienware", "Alienware m", "Alienware x", "XPS", "Inspiron", "Precision", "Latitude", "Dell G", "G15", "G16", "OptiPlex", "Vostro", "Chromebook", "Chromebook Plus"]),
+                ["Alienware", "Alienware m", "Alienware x", "XPS", "Inspiron", "Precision", "Latitude", "Dell G", "G15", "G16", "OptiPlex", "Vostro", "Chromebook", "Chromebook Plus"])
+                with
+                {
+                    // Alienware AWCC (WMAX) provider: thermal profiles + sensors on
+                    // Alienware / Dell G models; other Dell machines self-disable
+                    // to the generic path.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "hp-basic",
                 "HP Basic",

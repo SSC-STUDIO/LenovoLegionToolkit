@@ -7,6 +7,7 @@ using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
 using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Features.Razer;
@@ -56,6 +57,7 @@ public class IoCModule : Module
         builder.Register<DriverWrapper>().As<IDriverWrapper>().SingleInstance();
         builder.Register<AsusAtkDriver>().As<IAsusAtkDriver>().SingleInstance();
         builder.Register<HpWmiBios>().As<IHpWmiBios>().SingleInstance();
+        builder.Register<AlienwareWmi>().As<IAlienwareWmi>().SingleInstance();
         builder.Register<RazerHidDriver>().As<IRazerHid>().SingleInstance();
         builder.Register<RazerHidController>().As<IRazerHidController>().SingleInstance();
 
@@ -111,6 +113,7 @@ public class IoCModule : Module
         builder.Register<AsusPowerModeFeature>(true);
         builder.Register<HpPowerModeFeature>(true);
         builder.Register<RazerPowerModeFeature>(true);
+        builder.Register<AlienwarePowerModeFeature>(true);
         builder.Register<RefreshRateFeature>();
         builder.Register<ResolutionFeature>();
         builder.Register<SpeakerFeature>();
@@ -167,6 +170,7 @@ public class IoCModule : Module
         builder.Register<AsusSensorsController>(true);
         builder.Register<HpSensorsController>(true);
         builder.Register<RazerSensorsController>(true);
+        builder.Register<AlienwareSensorsController>(true);
         builder.Register<GenericSensorsController>(true);
         builder.Register<SensorsGroupController>(true);
         builder.Register<FpsSensorController>();
