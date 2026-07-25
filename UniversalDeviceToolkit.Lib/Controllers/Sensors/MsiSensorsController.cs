@@ -1,0 +1,102 @@
+using System;
+using System.Threading.Tasks;
+using UniversalDeviceToolkit.Lib.System.EC;
+using UniversalDeviceToolkit.Lib.Utils;
+
+namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
+
+/// <summary>
+/// Sensors for MSI machines: generic snapshot plus EC readings — CPU/GPU temps
+/// (0x68 / 0x80, direct °C) and fan tachometer counters (0xC8–0xCB, 16-bit
+/// big-endian; RPM = 480000 / count, count 0 = stopped). Self-disables on
+/// non-MSI machines or when no EC channel is present.
+/// </summary>
+public class MsiSensorsController(GPUController gpuController, IEcChannel ec) : GenericSensorsController(gpuController)
+{
+    private const byte CpuTempAddress = 0x68;
+    private const byte GpuTempAddress = 0x80;
+    private const byte CpuFanCounterHigh = 0xC8;
+    private const byte GpuFanCounterHigh = 0xCA;
+
+    public override async Task<bool> IsSupportedAsync()
+    {
+        try
+        {
+            if (!ec.IsAvailable || !await IsMsiMachineAsync().ConfigureAwait(false))
+                return false;
+
+            return await base.IsSupportedAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error checking MSI sensors support. [type={GetType().Name}]", ex);
+
+            return false;
+        }
+    }
+
+    protected override Task<int> GetCpuCurrentTemperatureAsync() =>
+        Task.FromResult(ReadTemp(CpuTempAddress, base.GetCpuCurrentTemperatureAsync()));
+
+    protected override Task<int> GetGpuCurrentTemperatureAsync() =>
+        Task.FromResult(ReadTemp(GpuTempAddress, base.GetGpuCurrentTemperatureAsync()));
+
+    protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
+        Task.FromResult(ReadRpm(CpuFanCounterHigh, base.GetCpuCurrentFanSpeedAsync()));
+
+    protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
+        Task.FromResult(ReadRpm(GpuFanCounterHigh, base.GetGpuCurrentFanSpeedAsync()));
+
+    private int ReadTemp(byte address, Task<int> fallback)
+    {
+        try
+        {
+            if (ec.TryRead(address, out var value) && value > 0)
+                return value;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"MSI EC temp read failed; using fallback. [address=0x{address:X2}]", ex);
+        }
+
+        return fallback.GetAwaiter().GetResult();
+    }
+
+    private int ReadRpm(byte counterHighAddress, Task<int> fallback)
+    {
+        try
+        {
+            if (ec.TryRead(counterHighAddress, out var high) &&
+                ec.TryRead((byte)(counterHighAddress + 1), out var low))
+            {
+                var count = (high << 8) | low;
+                if (count > 0)
+                    return 480000 / count; // kernel & MControlCenter formula
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"MSI EC fan read failed; using fallback. [address=0x{counterHighAddress:X2}]", ex);
+        }
+
+        return fallback.GetAwaiter().GetResult();
+    }
+
+    private static async Task<bool> IsMsiMachineAsync()
+    {
+        try
+        {
+            var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            var vendor = mi.Vendor ?? string.Empty;
+            return vendor.Contains("Micro-Star", StringComparison.OrdinalIgnoreCase) ||
+                   vendor.Contains("MSI", StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+}

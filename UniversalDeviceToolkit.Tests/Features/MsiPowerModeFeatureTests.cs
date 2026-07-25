@@ -20,107 +20,118 @@ namespace UniversalDeviceToolkit.Tests.Features;
 
 [Trait("Category", TestCategories.Unit)]
 [Collection("PowerModeFeatureTests")]
-public class AcerPowerModeFeatureTests
+public class MsiPowerModeFeatureTests
 {
-    private const string GetGamingMiscSetting = "GetGamingMiscSetting";
-    private const string SetGamingMiscSetting = "SetGamingMiscSetting";
-    private const string GetGamingSysInfo = "GetGamingSysInfo";
-
-    private sealed class FakeAcerWmi : IAcerWmi
+    private sealed class FakeEcChannel : IEcChannel
     {
+        private readonly Dictionary<byte, byte> _ram = new();
         public bool Available { get; set; } = true;
-        public List<(string Method, uint Input)> Calls { get; } = [];
-        public int CurrentProfile { get; set; } = 0x01;
-        public long SysInfoMask { get; set; } = 0xFFL << 24; // nonzero supported mask
+        public List<(byte Address, byte Value)> Writes { get; } = [];
         public bool WriteSucceeds { get; set; } = true;
 
         public bool IsAvailable => Available;
 
-        public (bool Ok, long Output) Execute(string methodName, uint input)
+        public void Seed(byte address, byte value) => _ram[address] = value;
+
+        public bool TryRead(byte address, out byte value)
         {
-            Calls.Add((methodName, input));
-
-            if (methodName == GetGamingSysInfo)
-                return (true, SysInfoMask);
-
-            if (methodName == GetGamingMiscSetting)
-                return (true, (long)CurrentProfile << 8);
-
-            if (methodName == SetGamingMiscSetting)
+            if (_ram.TryGetValue(address, out var stored))
             {
-                if (!WriteSucceeds)
-                    return (false, -1);
-
-                CurrentProfile = (int)((input >> 8) & 0xFF);
-                return (true, 0);
+                value = stored;
+                return true;
             }
 
-            return (false, -1);
+            value = 0;
+            return false;
+        }
+
+        public bool TryWrite(byte address, byte value)
+        {
+            Writes.Add((address, value));
+            if (!WriteSucceeds)
+                return false;
+
+            _ram[address] = value;
+            return true;
         }
     }
 
-    [Fact]
-    public async Task IsSupported_ShouldBeFalse_WhenWmiUnavailable()
+    private static FakeEcChannel Gen2Ec(byte shiftMode = 0xC1)
     {
-        SetMachineInformation(AcerMachine());
-        var feature = new AcerPowerModeFeature(new FakeAcerWmi { Available = false });
+        var ec = new FakeEcChannel();
+        ec.Seed(0xD2, shiftMode);
+        return ec;
+    }
+
+    [Fact]
+    public async Task IsSupported_ShouldBeFalse_WhenEcUnavailable()
+    {
+        SetMachineInformation(MsiMachine());
+        var feature = new MsiPowerModeFeature(new FakeEcChannel { Available = false });
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Fact]
-    public async Task IsSupported_ShouldBeFalse_OnNonAcerMachine()
+    public async Task IsSupported_ShouldBeFalse_OnNonMsiMachine()
     {
         SetMachineInformation(new MachineInformation { Vendor = "LENOVO", MachineType = "83DF", Model = "Legion Y9000P IRX9" });
-        var feature = new AcerPowerModeFeature(new FakeAcerWmi());
+        var feature = new MsiPowerModeFeature(Gen2Ec());
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Fact]
-    public async Task IsSupported_ShouldBeFalse_WhenNoSensorsReported()
+    public async Task IsSupported_ShouldDetectGen2Layout()
     {
-        SetMachineInformation(AcerMachine());
-        var feature = new AcerPowerModeFeature(new FakeAcerWmi { SysInfoMask = 0 });
+        SetMachineInformation(MsiMachine());
+        var feature = new MsiPowerModeFeature(Gen2Ec(0xC0));
+
+        (await feature.IsSupportedAsync()).Should().BeTrue();
+        (await feature.GetStateAsync()).Should().Be(PowerModeState.Performance);
+        ResetCompatibilityCache();
+    }
+
+    [Fact]
+    public async Task IsSupported_ShouldFallBackToGen1Layout()
+    {
+        SetMachineInformation(MsiMachine());
+        var ec = new FakeEcChannel();
+        ec.Seed(0xF2, 0xC1);
+
+        var feature = new MsiPowerModeFeature(ec);
+
+        (await feature.IsSupportedAsync()).Should().BeTrue();
+        (await feature.GetStateAsync()).Should().Be(PowerModeState.Balance);
+        ResetCompatibilityCache();
+    }
+
+    [Fact]
+    public async Task IsSupported_ShouldBeFalse_WhenNoLayoutMatches()
+    {
+        SetMachineInformation(MsiMachine());
+        var feature = new MsiPowerModeFeature(new FakeEcChannel()); // empty RAM
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Theory]
-    [InlineData(0x00, PowerModeState.Quiet)]
-    [InlineData(0x01, PowerModeState.Balance)]
-    [InlineData(0x04, PowerModeState.Performance)]
-    [InlineData(0x05, PowerModeState.Performance)] // turbo
-    [InlineData(0x06, PowerModeState.Quiet)]      // eco
-    public async Task GetState_ShouldMapProfiles(int profile, PowerModeState expected)
+    [InlineData(PowerModeState.Quiet, 0xC2)]
+    [InlineData(PowerModeState.Balance, 0xC1)]
+    [InlineData(PowerModeState.Performance, 0xC0)]
+    public async Task SetState_ShouldWriteAndVerifyReadBack(PowerModeState state, byte expectedMode)
     {
-        SetMachineInformation(AcerMachine());
-        var wmi = new FakeAcerWmi { CurrentProfile = profile };
+        SetMachineInformation(MsiMachine());
+        var ec = Gen2Ec();
 
-        var feature = new AcerPowerModeFeature(wmi);
-
-        (await feature.GetStateAsync()).Should().Be(expected);
-        ResetCompatibilityCache();
-    }
-
-    [Theory]
-    [InlineData(PowerModeState.Quiet, 0x00)]
-    [InlineData(PowerModeState.Balance, 0x01)]
-    [InlineData(PowerModeState.Performance, 0x04)]
-    public async Task SetState_ShouldWriteAndVerifyReadBack(PowerModeState state, int expectedProfile)
-    {
-        SetMachineInformation(AcerMachine());
-        var wmi = new FakeAcerWmi();
-
-        var feature = new AcerPowerModeFeature(wmi);
+        var feature = new MsiPowerModeFeature(ec);
         await feature.SetStateAsync(state);
 
-        wmi.Calls.Should().Contain(c =>
-            c.Method == SetGamingMiscSetting &&
-            c.Input == (0x0Bu | ((uint)expectedProfile << 8)));
+        ec.Writes.Should().ContainSingle()
+            .Which.Should().Be((0xD2, expectedMode));
         (await feature.GetStateAsync()).Should().Be(state);
         ResetCompatibilityCache();
     }
@@ -128,10 +139,11 @@ public class AcerPowerModeFeatureTests
     [Fact]
     public async Task SetState_ShouldThrow_WhenWriteFails()
     {
-        SetMachineInformation(AcerMachine());
-        var wmi = new FakeAcerWmi { WriteSucceeds = false };
+        SetMachineInformation(MsiMachine());
+        var ec = Gen2Ec();
+        ec.WriteSucceeds = false;
 
-        var feature = new AcerPowerModeFeature(wmi);
+        var feature = new MsiPowerModeFeature(ec);
 
         await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.Quiet));
         ResetCompatibilityCache();
@@ -140,8 +152,8 @@ public class AcerPowerModeFeatureTests
     [Fact]
     public async Task SetState_ShouldRejectGodModeAndExtreme()
     {
-        SetMachineInformation(AcerMachine());
-        var feature = new AcerPowerModeFeature(new FakeAcerWmi());
+        SetMachineInformation(MsiMachine());
+        var feature = new MsiPowerModeFeature(Gen2Ec());
 
         await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.GodMode));
         await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.Extreme));
@@ -149,9 +161,9 @@ public class AcerPowerModeFeatureTests
     }
 
     [Fact]
-    public async Task Facade_ShouldUseAcerBackend_WhenEarlierBackendsUnsupported()
+    public async Task Facade_ShouldUseMsiBackend_WhenEarlierBackendsUnsupported()
     {
-        SetMachineInformation(AcerMachine());
+        SetMachineInformation(MsiMachine());
 
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
@@ -159,36 +171,35 @@ public class AcerPowerModeFeatureTests
             new HpPowerModeFeature(new UnavailableHpBios()),
             new RazerPowerModeFeature(new UnavailableRazerHidController()),
             UnavailableAlienware(),
-            new AcerPowerModeFeature(new FakeAcerWmi { CurrentProfile = 0x04 }),
-            UnavailableMsi());
+            UnavailableAcer(),
+            new MsiPowerModeFeature(Gen2Ec(0xC0)));
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Performance);
         ResetCompatibilityCache();
     }
 
-    private static MachineInformation AcerMachine() => new()
+    private static MachineInformation MsiMachine() => new()
     {
-        Vendor = "Acer Incorporated",
+        Vendor = "Micro-Star International Co., Ltd.",
         MachineType = "0000",
-        Model = "Predator Helios Neo 16"
+        Model = "MSI Raider 18"
     };
 
     private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
-
-    private static MsiPowerModeFeature UnavailableMsi() => new(new UnavailableEcChannel());
-
-    private sealed class UnavailableEcChannel : IEcChannel
-    {
-        public bool IsAvailable => false;
-        public bool TryRead(byte address, out byte value) { value = 0; return false; }
-        public bool TryWrite(byte address, byte value) => false;
-    }
 
     private sealed class UnavailableAwccWmi : IAlienwareWmi
     {
         public bool IsAvailable => false;
         public int Execute(string methodName, byte operation, byte arg1 = 0, byte arg2 = 0, byte arg3 = 0) => -1;
+    }
+
+    private static AcerPowerModeFeature UnavailableAcer() => new(new UnavailableAcerWmi());
+
+    private sealed class UnavailableAcerWmi : IAcerWmi
+    {
+        public bool IsAvailable => false;
+        public (bool Ok, long Output) Execute(string methodName, uint input) => (false, -1);
     }
 
     private sealed class UnavailableAtk : IAsusAtkDriver

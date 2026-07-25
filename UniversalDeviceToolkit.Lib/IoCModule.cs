@@ -11,6 +11,7 @@ using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
 using UniversalDeviceToolkit.Lib.Features.Hp;
+using UniversalDeviceToolkit.Lib.Features.Msi;
 using UniversalDeviceToolkit.Lib.Features.Razer;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
@@ -31,6 +32,7 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Driver;
+using UniversalDeviceToolkit.Lib.System.EC;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.System.Razer;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -61,6 +63,7 @@ public class IoCModule : Module
         builder.Register<AlienwareWmi>().As<IAlienwareWmi>().SingleInstance();
         builder.Register<AcerWmi>().As<IAcerWmi>().SingleInstance();
         builder.Register<GigabyteWmi>().As<IGigabyteWmi>().SingleInstance();
+        builder.Register<PawnIoEcChannel>().As<IEcChannel>().SingleInstance();
         builder.Register<RazerHidDriver>().As<IRazerHid>().SingleInstance();
         builder.Register<RazerHidController>().As<IRazerHidController>().SingleInstance();
 
@@ -118,6 +121,7 @@ public class IoCModule : Module
         builder.Register<RazerPowerModeFeature>(true);
         builder.Register<AlienwarePowerModeFeature>(true);
         builder.Register<AcerPowerModeFeature>(true);
+        builder.Register<MsiPowerModeFeature>(true);
         builder.Register<RefreshRateFeature>();
         builder.Register<ResolutionFeature>();
         builder.Register<SpeakerFeature>();
@@ -177,6 +181,7 @@ public class IoCModule : Module
         builder.Register<AlienwareSensorsController>(true);
         builder.Register<AcerSensorsController>(true);
         builder.Register<GigabyteSensorsController>(true);
+        builder.Register<MsiSensorsController>(true);
         builder.Register<GenericSensorsController>(true);
         builder.Register<SensorsGroupController>(true);
         builder.Register<FpsSensorController>();

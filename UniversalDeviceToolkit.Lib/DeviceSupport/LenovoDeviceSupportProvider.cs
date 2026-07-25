@@ -368,7 +368,15 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["MSI"],
                 [],
                 [],
-                ["MSI", "Raider", "Stealth", "Vector", "Katana", "Cyborg", "Creator", "Prestige", "Modern", "Summit", "Crosshair", "Pulse", "Sword", "Thin"]),
+                ["MSI", "Raider", "Stealth", "Vector", "Katana", "Cyborg", "Creator", "Prestige", "Modern", "Summit", "Crosshair", "Pulse", "Sword", "Thin"])
+                with
+                {
+                    // MSI EC provider (PawnIO-backed EC channel): shift modes +
+                    // sensors. Fan curves, GPU OC and keyboard backlight stay
+                    // hidden for now.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "microsoft-surface-basic",
                 "Microsoft Surface Basic",

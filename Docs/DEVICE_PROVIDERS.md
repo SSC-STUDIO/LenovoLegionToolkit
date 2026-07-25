@@ -3,8 +3,22 @@
 UDT ships Lenovo hardware control built in. Since 5.x the architecture accepts
 additional **brand providers** behind vendor seams — ASUS (ATKACPI), HP
 (WMI BIOS), Razer (EC over USB HID), Alienware/Dell (AWCC WMAX), Acer
-(WMID Gaming) and Gigabyte (GB_WMIACPI, sensors-only for now) are the
-reference implementations. This document describes how to add another brand.
+(WMID Gaming), Gigabyte (GB_WMIACPI, sensors-only) and MSI (EC port I/O
+over PawnIO) are the reference implementations. This document describes
+how to add another brand.
+
+### EC port I/O (PawnIO)
+
+Brands whose control lives in EC RAM (MSI today, Clevo next) go through
+`IEcChannel` / `PawnIoEcChannel` (`Lib/System/EC/`): standard ACPI
+transactions on ports 0x66/0x62 backed by the PawnIO driver via
+RAMSPDToolkit-NDD's `DriverManager` (already in the dependency closure via
+LibreHardwareMonitorLib — no bundled kernel driver, no custom signed
+module). Discipline: every transaction serialized through the named
+`Global\Access_EC` mutex, status-bit polling with timeouts, all failures
+degrade to `IsAvailable = false`. EC writes happen only on explicit user
+mode switches, and each brand probes its register layout read-only first
+(see `MsiPowerModeFeature`'s Gen1/Gen2 detection).
 
 ## The moving parts
 
@@ -60,11 +74,11 @@ reference implementations. This document describes how to add another brand.
 
 ## Roadmap candidates (not scheduled)
 
+- **Clevo/Tongfang** — same EC channel as MSI (Uniwill EC map per
+  clevo-xsm-wmi / NBFC); next candidate, protocol research first.
 - **Gigabyte phase 2** — fan modes (Silent/Gaming/Custom) and GPU QBoost via
   raw WMBD writes; needs the semantics proven on real AORUS/AERO hardware
   (no friendly WMI class exists and the vendor docs warn of machine damage).
-- **Clevo/Tongfang, MSI** — EC port I/O via signed PawnIO module; blocked on
-  the signed-module capability (see below).
 - **HP phase 2** — true fan RPM + performance-mode read-back via EC registers
   (OmenMon's EC map), which needs a signed PawnIO module or a WinRing0-style
   driver; the current WMI-only implementation tracks session state instead.

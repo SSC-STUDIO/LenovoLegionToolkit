@@ -229,7 +229,7 @@
         "82WT"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-pro-7.zip",
-      "sha256": "7695f421ee6bc2cecfc2de10ab636c6bf57bbd26b4e3a84c2b46f314e2fe50af",
+      "sha256": "e88bfd7a487e9e0773f7d0ad4a75c02bd167e10cdfbdc7cfcddf6ee9b6ea0f8c",
       "size": 495
     },
     {
@@ -318,7 +318,7 @@
         "82JF"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-pro-5.zip",
-      "sha256": "eff17ed0ffcd164a8f4937726ce411d9e0625f5f38179765d0e576fc5bc34fd4",
+      "sha256": "59faac0ea06bb5556428656a567a1ec1b238a644165baf920d7febe79d275b8e",
       "size": 574
     },
     {
@@ -357,7 +357,7 @@
         "83AG"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-9.zip",
-      "sha256": "b6498e682e7ecc1fcf51d552c6cc7ca4f844b826e6a70e9c865c6aaf18c35613",
+      "sha256": "d118589ce183032b472b28dcd5c89f81596796c318516f54902bfefab4730712",
       "size": 430
     },
     {
@@ -419,7 +419,7 @@
         "82EH"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-7.zip",
-      "sha256": "05e003649ae67262d7b79ab782760965422e4a12d3b28943e26a0edb7f9f7b8a",
+      "sha256": "54b275d1cbb9fd431c3faf4d100f6a17d76b346b62b074e0284837aca36470a2",
       "size": 499
     },
     {
@@ -476,7 +476,7 @@
         "82BC"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-slim-5.zip",
-      "sha256": "ba3ca4e2801406bbb8cc527447a47194df78247a8a8676d19f399250d6785852",
+      "sha256": "37c7dca5a5394045e45b7bfa6ba5777408987fe4d63657da31258e60da7149f8",
       "size": 489
     },
     {
@@ -508,7 +508,7 @@
         "83N6"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-go.zip",
-      "sha256": "455fda61554b96eb7dc89acf4afead64c40d873aeebfac072f38c94b547747e2",
+      "sha256": "565260298a5a1c0cc113185582dcb9321b368fd40d4571f4955dd72f3c009214",
       "size": 401
     },
     {
@@ -595,7 +595,7 @@
         "83TN"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-loq.zip",
-      "sha256": "80da8786c5a9df5342382ba10920c9d8272e03b8c03d66e65d5490f6823214a9",
+      "sha256": "6499e17a2f65218dceccf70ea5131c3dbb94b4e9dcd4115ca80fde2689d2e92c",
       "size": 553
     },
     {
@@ -757,7 +757,7 @@
         "82JK"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-5.zip",
-      "sha256": "89d7a0218d383749b1ec48a15cef4832179512f5367b10f2f175844eb81f73aa",
+      "sha256": "b70354896c7f95e5de4a5ef069308f769eff0f02091c025f82555dc9c139334d",
       "size": 753
     },
     {
@@ -778,7 +778,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-chromebook-basic.zip",
-      "sha256": "2834e87f7bb5a08b8e5b5d5198e72d05f6ce521394a36443a0da8e99b2e46981",
+      "sha256": "fca70c28e39242725e719372649ed0ab4b3c0b696c13838d867b4508197ea4d4",
       "size": 403
     },
     {
@@ -842,7 +842,7 @@
         "81LL"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-ideapad-gaming.zip",
-      "sha256": "da86b600bfd9f49a719962f35f239cf9af9bc1771ca2e80faded67a5590a91f8",
+      "sha256": "e7ee8a994bfbbb0242012dd39a25cab5a624975d807bf47700d508ef4875fdfe",
       "size": 501
     },
     {
@@ -867,7 +867,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-ideapad.zip",
-      "sha256": "79aaee78c719ce43d2c8c5c333f69d3f2a52563ab2469d30d26afb2c85b2743f",
+      "sha256": "d52ebfabc0d08c593e1e54bb0f3aeb98e008654887ec1c245ad87f3b856bd7a3",
       "size": 395
     },
     {
@@ -889,7 +889,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-thinkbook.zip",
-      "sha256": "f70a8ce5da4b89df372b6a5b918d92c52a3248e96679ff550cdee234448cfd5d",
+      "sha256": "64d57eb776492fcf46c1835c7b67bd51fac0a48cfddfb6743442b483da644401",
       "size": 388
     },
     {
@@ -912,7 +912,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-yoga.zip",
-      "sha256": "2592f5fba756a7497fd8c00bf30d7d16aedfd1b51bd78c0d6dc778dd290686ea",
+      "sha256": "7b2eefd22e95e6d39dd2c5ab87b3ecdfa5549de3a41c663aa2bd5bf97b5aa2fd",
       "size": 394
     },
     {
@@ -932,7 +932,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legion-desktop-basic.zip",
-      "sha256": "eac424cf63ce9d0cfa6a29eaa6e1e821f3607aeaf47b0c05e9f82f921dd649b5",
+      "sha256": "133981a58cf081658c15bb810985122217d07470ccbe412962b170057cfb7b24",
       "size": 398
     },
     {
@@ -1003,7 +1003,7 @@
         "81UK"
       ],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-legacy-limited.zip",
-      "sha256": "acf900b16f1c4933a05714a4d123a4ac7bdf0ece120b6f63f88c56f3b669f116",
+      "sha256": "78f2af014722eaada2da34326a69f1aa2f9f3d1ef085849220150cb12b92cc38",
       "size": 494
     },
     {
@@ -1037,7 +1037,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-thinkpad-basic.zip",
-      "sha256": "0c3208b1300a9354bed54fb86c5b9343b8ce4973e56142e50ceaf21ff192f2f0",
+      "sha256": "6b6391a59accb767fcc15a53b0d2351fba732dd22cb72ea6d2aac5e8be0490d4",
       "size": 442
     },
     {
@@ -1056,7 +1056,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-thinkcentre-basic.zip",
-      "sha256": "51578009cfdd60f6998a6fa9ba90bf3bf6592d9f968b530014b5c36c3413f82a",
+      "sha256": "3169a7c1c91419e5deed64bc70da7414924f412ec5a3ed7f1bf5ac550b72114e",
       "size": 392
     },
     {
@@ -1074,7 +1074,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-thinkstation-basic.zip",
-      "sha256": "8956fcce5a8d51d1489303dbdaaa1d66f29c7e32013856c14cef025bfdcc1e43",
+      "sha256": "f30e17459d121d904842aeccdc52d26a96e4c22ad1594112b3d42d34d1696e6b",
       "size": 388
     },
     {
@@ -1092,7 +1092,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-ideacentre-basic.zip",
-      "sha256": "0afdbba79afb2d10917b37e2922de3e1096f8d9063e03f776f1289a46240aa5b",
+      "sha256": "8a10dfba107184ed82c4ae01fa053bcbb498876bf20d5bc0e83df9e6c9cd71f7",
       "size": 391
     },
     {
@@ -1111,7 +1111,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-xiaoxin-basic.zip",
-      "sha256": "7ba59551bb9072e8f8483aee7ec01ad594f6a7db1ecfc85c584952834eb9ceb5",
+      "sha256": "e6186d11f541a53e67e58f6b68daf63f1d5e526957a815172d5871192a4c2e40",
       "size": 398
     },
     {
@@ -1138,7 +1138,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-y-series-legacy.zip",
-      "sha256": "f9ec9c07157eb217e71dd524e1d5b27d4637ae8186ca9e0cee8e9da8c05c145d",
+      "sha256": "4b69032f0b9a037f808b0148310002173276d5d0638deccf3dce7a0c19c80cbc",
       "size": 419
     },
     {
@@ -1162,7 +1162,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-v-series-basic.zip",
-      "sha256": "16843b028ca5db1817db7f5fc00ea5af87d91721ae07e3b54b6bbbad1d884112",
+      "sha256": "9301a9c84468c024113e7392f4969f0d5d0b5f0bf8d30158d4044e6eea7b12d1",
       "size": 396
     },
     {
@@ -1183,7 +1183,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lenovo-slim-basic.zip",
-      "sha256": "d20fb3e26af5114596ea1fdb85047e91b276198dd906db22e6398213584a855f",
+      "sha256": "0be23f54cf8efdb5de9a1ad70d3b5e18813f12d0bb78d5e51c08e7163aa5e75c",
       "size": 394
     },
     {
@@ -1202,7 +1202,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/motorola-lenovo-basic.zip",
-      "sha256": "bb4dd72677c61504dc06ec0ef20eaae83666ce1441b51fb401ec8d12c42e208b",
+      "sha256": "709959b75a34439f6c058c4c675f25e88dfff62831676922e982f8b36ff93760",
       "size": 390
     },
     {
@@ -1249,7 +1249,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/asus-basic.zip",
-      "sha256": "c5d692a694e79fad37cc11b106f14673a6b9fbbf5e24bf374538d848d7e31beb",
+      "sha256": "192f677103fb0e337a618875c70efc746270aa634dd331239e556e6ca44275b6",
       "size": 525
     },
     {
@@ -1290,7 +1290,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/dell-basic.zip",
-      "sha256": "cc86aa347ca15c4a6a71357a44b7bbbcc15821667441dad35757f2be6297ea79",
+      "sha256": "2caab701702915eb3447afb891f3f8dbab100dd4d6f37393cfc50f341a3afc58",
       "size": 480
     },
     {
@@ -1333,7 +1333,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/hp-basic.zip",
-      "sha256": "be569f3134d41b217a097766dd8737977d84d6ef71264394ff0fdbc39fdb5c54",
+      "sha256": "45f7fc24f525bb565f94d072ce91e6c089b95462b340c65ddb26d196e3584d0a",
       "size": 479
     },
     {
@@ -1371,7 +1371,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/acer-basic.zip",
-      "sha256": "5edb19a6a341ae414600c38a72bb4054bd15ef7111d4d129be98aa71beab0926",
+      "sha256": "dd9cba33548514af76efc16d2ffba60f07dbb39064a78d721c4b1f9c192efc2d",
       "size": 461
     },
     {
@@ -1405,8 +1405,8 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/msi-basic.zip",
-      "sha256": "7686a38dde19d4c39bc7efcf1e40e76440d091b2ae3fdd72e5112226457aac3b",
-      "size": 484
+      "sha256": "f427adc22a4c9629e704b24531745c12cb0aae937991a8a3c66a253043ff5f9b",
+      "size": 487
     },
     {
       "id": "microsoft-surface-basic",
@@ -1428,7 +1428,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/microsoft-surface-basic.zip",
-      "sha256": "32571c47e4078f06cdc532626be5e136891f2f32875622715d28ad5af78a0b7b",
+      "sha256": "d6607181b3f515600847faa9d1a10179304a71138dedc0b95b3b709e768b43a4",
       "size": 407
     },
     {
@@ -1453,7 +1453,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/gigabyte-basic.zip",
-      "sha256": "14733ba055c80be9415787ffc6bcb6fea7e357e8053b959eb7ebe5b84c7c2b32",
+      "sha256": "0095620fb064c943ceb09298152e67143c4dd5be4861ca7a8f742b14d9a18972",
       "size": 422
     },
     {
@@ -1474,7 +1474,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/razer-basic.zip",
-      "sha256": "4ed539f94eac331e14597eea65f3ff084cfe25c2605b4458ab19ab306da3b8b3",
+      "sha256": "22da3d5ce403fe979971c21c7c82988087b5d8273e16b96bb5674f7f0730f804",
       "size": 386
     },
     {
@@ -1500,7 +1500,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/samsung-basic.zip",
-      "sha256": "601730106707a8f44dd449f241eaa56346fa3a07e7c04a066ad2341c748d6936",
+      "sha256": "0ab606ea4fce384fcdc46c4dfba6e00431e7d6ab7be88694dcbb353de6489e68",
       "size": 442
     },
     {
@@ -1526,7 +1526,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/google-chromebook-basic.zip",
-      "sha256": "6d0f49726444ae06c946c10d18f1af8c7c183fe5fc930b8c77642c85d1d64bac",
+      "sha256": "ec7b3c176ceb61b352293e83077b6a3805b5c871f214aa384a6c7bbce8b30f99",
       "size": 414
     },
     {
@@ -1554,7 +1554,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/apple-basic.zip",
-      "sha256": "2d9a1d1a44558997832432f09806a0f43c0db08c123420a1d06b3076b8452117",
+      "sha256": "ad9fbf5aa3e0027bd41baa2c2f024332f8e9af63517eac3d3d10de5fc2d1a986",
       "size": 414
     },
     {
@@ -1582,7 +1582,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/huawei-basic.zip",
-      "sha256": "b261b4c3f7f3f57bdc6ed9dace17a6064f45170563a243013e8f0601518f0546",
+      "sha256": "8d5c9ed3b9a246e4b593c1c4c575942c37c5e76d607fcc22c939d03c86db4ed8",
       "size": 428
     },
     {
@@ -1611,7 +1611,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/xiaomi-basic.zip",
-      "sha256": "98c9e4ef0026a89f6a8ab141713f71594986cf82ffdbea3f1db6bfc7335358f4",
+      "sha256": "a9f91c320ec905f7921a4e83050efaef19e062c1d9f400dbbb0f9069f76b6093",
       "size": 419
     },
     {
@@ -1632,7 +1632,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/realme-basic.zip",
-      "sha256": "08985b70fca41b341eb569d1bd1e024b6ea9a70951ed2f3f96b365a8c2478cf9",
+      "sha256": "7fbfc6638bf304a8e05c02acde3aa5869721afd1bdf12430a1a7326629fabe81",
       "size": 400
     },
     {
@@ -1654,7 +1654,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/infinix-basic.zip",
-      "sha256": "2f1a405a09986ca88a4d2632743987bae1ddb0b3268e2fac513d6ae52abf14e3",
+      "sha256": "f57f635c4838ab56e48292165b5610f0b34c87a614823ddff8c1e509101ea7ca",
       "size": 396
     },
     {
@@ -1675,7 +1675,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/honor-basic.zip",
-      "sha256": "b1682b65e0923965961992fe3b52d56581bcfa5ad9b3b3d9bd8b042fe55c15a3",
+      "sha256": "8a9046c6c24a49fdebb1cfdff3a7e81e51a524e2c25bc7fe6d9dd726bb161db2",
       "size": 394
     },
     {
@@ -1698,7 +1698,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/lg-basic.zip",
-      "sha256": "6745ead044dd95c50801565cb8b2ff359855e36f1f3b94a2d5b85deed79e8970",
+      "sha256": "8377b11c3933ed639561a87b50bc23c97452a5f1462ce990a450cbc813703fdd",
       "size": 390
     },
     {
@@ -1718,7 +1718,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/framework-basic.zip",
-      "sha256": "c232185931cd6dd62cc7b675985d2ed02c640fbe3e8823e27e741e8a6828c8ba",
+      "sha256": "387b865332feb815e26a286f04830860bc977f4401a660fd4a2266e4b236309e",
       "size": 386
     },
     {
@@ -1741,7 +1741,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/panasonic-basic.zip",
-      "sha256": "81802aaf4c7f0bee5962506313609fa2a271595afc816ae8e9cf8bdfaa1164b4",
+      "sha256": "1735afe946cd4133f8da33ad7582dfadbebe9165d49da6f9fc71906ff6a80b3f",
       "size": 406
     },
     {
@@ -1766,7 +1766,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/dynabook-basic.zip",
-      "sha256": "3b50719d506d2cf319c5d3d6b4064642b4a3c560de9dd44443bcb6998e8eb61f",
+      "sha256": "58d7ac58e43749a66a91feb11706ad308fa7f8a181dced5f9d448c71f4d2d9c1",
       "size": 422
     },
     {
@@ -1792,7 +1792,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/nec-lavie-basic.zip",
-      "sha256": "e029efa409ce89892d61f7929e218d1a671a7eb9445bc1b1e9352b7b6de96891",
+      "sha256": "25ec97e088e8d9c29f5e89eb95acfdcfaa7f65a28516537598fbaa98af7627ad",
       "size": 419
     },
     {
@@ -1816,7 +1816,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/sharp-basic.zip",
-      "sha256": "e6395a8e54221460690f4b78d041928eddbf1860ec254ce493a1060ed1124432",
+      "sha256": "dc8f98ef9c984e04271c7d17f85542bb9c837fbd3173f9c2ad1cd17e7be663d4",
       "size": 397
     },
     {
@@ -1838,7 +1838,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/fujitsu-basic.zip",
-      "sha256": "2654c1dfd72edb3dd9376bf7e3b9e441956b1ba4611a4c185997ecb95a5ea981",
+      "sha256": "18c61adac8f9277afe5d71f050161ecdb5945e0c5e76542bf73fc480efd1ae6e",
       "size": 436
     },
     {
@@ -1857,7 +1857,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/vaio-basic.zip",
-      "sha256": "2da9f51ffd62d584dcf0e5b1168636eefbcb0345a1a4a15a21ab46f42f71bfb0",
+      "sha256": "4d130dcc365122f53a642f49d2bcf84ef89eb75a53bb56b5e6ec448c2d63bfd5",
       "size": 368
     },
     {
@@ -1877,7 +1877,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/gateway-basic.zip",
-      "sha256": "98ee59ee172186676455ade76b17abccbe3954dc8033fbfb8dda8a861fe439cb",
+      "sha256": "382b86d4207900a1735752152d8dc4e5563ae114c0823f23c17745687de18e48",
       "size": 376
     },
     {
@@ -1901,7 +1901,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/chuwi-basic.zip",
-      "sha256": "2f161a3c5c74727ccd51c968f2aa4bd574b4362310cb5f6fbab6be4b24b2b257",
+      "sha256": "a7dd706c439745a08e6a9df69914f480efa7917e4e733b26951cf5b30a916971",
       "size": 421
     },
     {
@@ -1924,7 +1924,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/teclast-basic.zip",
-      "sha256": "35ceb082f121084a6d2b45aac74ea08f6d60f6164a888f89b5c579d413418b3c",
+      "sha256": "8ff0571abe7418c0cd2b8c8464ba6f427a26a73a0c972ca26bb4f734aa3f65c6",
       "size": 417
     },
     {
@@ -1945,7 +1945,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/jumper-basic.zip",
-      "sha256": "0b3fe3fba83fa8a995ebcc87c2960e58b90d1ee610860001d50e95a9fe45923c",
+      "sha256": "546ad4e2e4a70c9a071e3eeebe00c7a7ae2966ae27a58dab427eaaac94a603fa",
       "size": 386
     },
     {
@@ -1967,7 +1967,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/medion-basic.zip",
-      "sha256": "a85ffff858baa7f8831c4c980b2b22a69a5082261a303f7f2ed1d4ff7b3de978",
+      "sha256": "49f518fb76fd6ee0d1e681566a8327713fdce9786a220d0da6b09fd08f94155f",
       "size": 388
     },
     {
@@ -1997,7 +1997,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/xmg-schenker-basic.zip",
-      "sha256": "f2e3f8d55b96e2f893438f4cb8c92514abb59efbe02d411c8e1bcb54286d07c9",
+      "sha256": "fc3c0ba54ad2f192ab8c51e26eef1b51c18ae4d1ec34714e464b8be304f948fa",
       "size": 442
     },
     {
@@ -2019,7 +2019,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/hasee-basic.zip",
-      "sha256": "42931e1bf212477a6d692b4b02f4b386cbd50b8e861dabe59b1ebfaa8f00c31e",
+      "sha256": "fcad77971cf7b665113f99bfbcbefecd5280c32a6b4c09c23ac7c7091511df89",
       "size": 384
     },
     {
@@ -2043,7 +2043,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/thunderobot-basic.zip",
-      "sha256": "9bbb94f5e0af1227b4685958405c7a37235a47613a37ac551d6e9e55f6f0c4fd",
+      "sha256": "6171a606eb1aa777448f86e1c838ef753237e3f9cf49d3d71877a21061a1a0ad",
       "size": 413
     },
     {
@@ -2067,7 +2067,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/machenike-basic.zip",
-      "sha256": "e20ac15ea472c393581f5027b715768a8b84377188410a76f86b3ed31ce10b7e",
+      "sha256": "250a51863c36300dbc04e8f21864395d22d8605a856b257786bdff2d39aaa776",
       "size": 395
     },
     {
@@ -2091,7 +2091,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/colorful-basic.zip",
-      "sha256": "5e7a889e8dfac1564ee83fda57a613fdf10ee5cd3657d6f88cf38c8aee13bc6e",
+      "sha256": "df932368593b62f77f60f9be50acfa346a07ecd240955bc30f1ee2ca05ab23d8",
       "size": 424
     },
     {
@@ -2114,7 +2114,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/maibenben-basic.zip",
-      "sha256": "de1e734468611a14d56731bc4e997387ec28e8bc29cbe086108424796d03c1b3",
+      "sha256": "4a1d115773035cb643053e148505ed7a2284fa50710bf81616aaabfef6a61728",
       "size": 393
     },
     {
@@ -2144,7 +2144,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/mechrevo-basic.zip",
-      "sha256": "7ae93bf8252a01d7a27740d21cfd859aa67449a23914007344ada3807af52a8e",
+      "sha256": "ef384cff425650cd0fcca4c858e983a111b8fb47d9fe8186f64866864cdfc0b4",
       "size": 444
     },
     {
@@ -2163,7 +2163,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/valve-handheld-basic.zip",
-      "sha256": "82165a19fc33f01e4777a3e2b024c4d816479be71b0218f479b414598eefb419",
+      "sha256": "ec2223175320871aa8230f0be29fbdcc5078889e7624f17f49362d71889ff6b4",
       "size": 389
     },
     {
@@ -2188,7 +2188,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/gpd-handheld-basic.zip",
-      "sha256": "42b8cb9e12730d5c844ba4947177e9dd1fb538df8bc1dfc452b67307d787e9b2",
+      "sha256": "ee4c55f737ae7cf49050538bb20845e8226ef8205b132d0249cfa5016fd7baa7",
       "size": 436
     },
     {
@@ -2218,7 +2218,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/ayaneo-handheld-basic.zip",
-      "sha256": "cb65b63bfdcddbdfd833549fcfb774a91c8640f813f8249166f99846ae87eadc",
+      "sha256": "5bec58b0f57de9b59b641bc3fe8c55d5d83abfb602ffd9583ecf9387e785d1b3",
       "size": 423
     },
     {
@@ -2246,7 +2246,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/anbernic-handheld-basic.zip",
-      "sha256": "66945bd239516db8055ef73feb4282863158cf472bb40e0d8d2577c3e83b9f8e",
+      "sha256": "01fbc58d7a8f8717a717808ab1bad4312f9a551f71ea8a4352cc30914d0a1ee3",
       "size": 450
     },
     {
@@ -2271,7 +2271,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/retroid-handheld-basic.zip",
-      "sha256": "16029109cfdec4a1b2d2ae2df3dacddef0419790741c0e657be237e18bd7aab1",
+      "sha256": "db219c50286b1c2647e5bcf4721aa4ad73639b62269ac91d44aa49ab68b2a7f5",
       "size": 419
     },
     {
@@ -2295,7 +2295,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/orange-pi-handheld-basic.zip",
-      "sha256": "3e587c13df30d68696adf0d5e15cc80cb127ec28ec1c95f553e9310584965561",
+      "sha256": "774f7c64cbd36d15adc1fd7064d907e2cc24cf0e8418351d9acffb817efff735",
       "size": 414
     },
     {
@@ -2322,7 +2322,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/one-netbook-handheld-basic.zip",
-      "sha256": "f52f7301e2bbd9f1f8d635deaaed12a980660e759146830cd5048a90ba3557d2",
+      "sha256": "74368c09cd9a97165561d3df989400a2b552b3ddb3395c9c0f8d116732e1daaa",
       "size": 437
     },
     {
@@ -2345,7 +2345,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/minisforum-basic.zip",
-      "sha256": "cd6fac6aeb4c548eef069aaea1fe5e5ca088ec85d2ce635fcc266ef55593d13e",
+      "sha256": "1c46b51e83c548f42775b3625bdc26ce15d59d8363de4cae519f11ab3bff9e2f",
       "size": 422
     },
     {
@@ -2369,7 +2369,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/beelink-basic.zip",
-      "sha256": "3417c961c8a237efb56641f3f632cf4b6d28884e1a30af855c6b2896838dc909",
+      "sha256": "e38eb234338d6557dceb9f144ecc89a9cb0b40d3ff9e0569bedf10039e8bf0a2",
       "size": 408
     },
     {
@@ -2392,7 +2392,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/geekom-basic.zip",
-      "sha256": "a818a02848cde8f50cb4a4abccaadabcf22dd0962e225704881b577517d8e8a1",
+      "sha256": "4ba3731a48f9dfe8d7ed9137bed847ae97de7108871b2f71b1f42ee8e5bd5e4d",
       "size": 388
     },
     {
@@ -2419,7 +2419,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/gmktec-basic.zip",
-      "sha256": "4f02b099beacdc396f65e521b30b5208357079f9af50e79f6443d3fe340c5f78",
+      "sha256": "6223d3e49063fb4d17560fd0aff8317000664dccaa7ee12af14d171716a474fd",
       "size": 406
     },
     {
@@ -2443,7 +2443,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/morefine-basic.zip",
-      "sha256": "4dd8194ebd70f3b64b921fed93429d13868d14249df9a017493160f1ef250954",
+      "sha256": "97f46fed7cbd954cfb89eab333a37e7c7a64c9a74aac52321ed9010659b7dbaf",
       "size": 396
     },
     {
@@ -2473,7 +2473,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/acemagic-basic.zip",
-      "sha256": "9934feeb1836277d6d0ce18fe570cbd43cf2444d426a3fdbb1d0a837c4cb5434",
+      "sha256": "b406b7245e02bb4c9b7741a3bd1c9cd8c004793237898084167ac5c28b3835a5",
       "size": 419
     },
     {
@@ -2498,7 +2498,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/aoostar-basic.zip",
-      "sha256": "889bcbce0a6ced174f1dbbe82b4e6fc50cd77941347f045c89e8c3367854fbe8",
+      "sha256": "9024033ce2f28e07b474cfd052a7f371178d001a35d775723ee3a028b6a57bc8",
       "size": 400
     },
     {
@@ -2531,7 +2531,7 @@
       "modelKeywords": [],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/regional-mini-pc-basic.zip",
-      "sha256": "feb80f756e4236a751c99c005ed2e7038d4f2b43ed017d5fe94701f600572237",
+      "sha256": "a1eb3d03ecce22e12a1b8039131ce27de1f0c55942ada7d29809a007acd9bfce",
       "size": 475
     },
     {
@@ -2556,7 +2556,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/mele-basic.zip",
-      "sha256": "7582583d74594f24b266a257ac4cc936b2747f5980171488f6c44f3baa6ed549",
+      "sha256": "5423cd8f750a58d581dc8a67eda904e6840e29ee762dae3d54a497ac23164a3b",
       "size": 416
     },
     {
@@ -2592,7 +2592,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/bmax-ninkear-basic.zip",
-      "sha256": "d038ee5bd7ff30fd6e4e0eb9793452f1be7858eb2c6624e9be813f2fc38b9c5b",
+      "sha256": "a0c1bc036132fbbc9f5b274343eea5ba5f7c774c9b983afd973d2e19259cdce0",
       "size": 429
     },
     {
@@ -2614,7 +2614,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/zotac-basic.zip",
-      "sha256": "6916ebdc2e473e12d912cc6674013dd2c5861e67b6b35464fe0db20344434fd9",
+      "sha256": "fc2e5c2a28dc42775770ac9d3f13b4790de0b0b2fd2229b9d3b95b89d611d1e6",
       "size": 395
     },
     {
@@ -2658,7 +2658,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/system76-basic.zip",
-      "sha256": "0df770c27168f89722296c0ac7bdddcc8f30224638588035a385fabb4756cc0e",
+      "sha256": "c36ac81da948338934edb74efdab1f8cc7da96a4e44bbaa82497d981a04ed7c7",
       "size": 496
     },
     {
@@ -2685,7 +2685,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/star-labs-basic.zip",
-      "sha256": "9bda4bccbcb08d1bf3e60dd558b392a27148f45d309a40e9e4d5e0b0e10296fd",
+      "sha256": "35d7f56e0367b87a44e4f4529213d196df9dee6cb154e7f58c91649ba9ad92c7",
       "size": 404
     },
     {
@@ -2715,7 +2715,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/slimbook-basic.zip",
-      "sha256": "3929e642ac704aa254a520fe4fad4ea0eb7d55e452394bb0ffa79648c51aab2f",
+      "sha256": "711cb1623c8a6d2d480c56d57cd8035233a1f970439a990c0881052bc24e0635",
       "size": 444
     },
     {
@@ -2750,7 +2750,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/clevo-tongfang-basic.zip",
-      "sha256": "d19afbeb409a970c3459968de2a513013ca231bf5788cc779261c9bdd61b4c88",
+      "sha256": "249ff51c135a937ca09ce6c32532caffb6c6810f87a71991e807ee229c8c6c97",
       "size": 464
     },
     {
@@ -2775,7 +2775,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/eluktronics-basic.zip",
-      "sha256": "18a4fb7752e104f392d90422f88c97b37872b3d2e0fc1577c669ae9268bf3961",
+      "sha256": "b6dde88b44752b6f14748f801dc6ec1e2f554e8dd6ceebe6050e92d938e96cf2",
       "size": 402
     },
     {
@@ -2798,7 +2798,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/maingear-basic.zip",
-      "sha256": "1f6df0a91298eab3fe5de30c69c9619e66ddfce37af53132434ac79d55225d9a",
+      "sha256": "e10bb83af2f2cd17ceffb341d56cd63c8c308f347b6accd00c9a15c97b60c4f0",
       "size": 387
     },
     {
@@ -2823,7 +2823,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/monster-tulpar-basic.zip",
-      "sha256": "49cfd8dee29c36330922317e334d119869f9384758513ddd5284d67492f34d93",
+      "sha256": "86421dafd1ef00f0f09236667d87a2adf10f497431360a5ec2206ec6b3a488fa",
       "size": 408
     },
     {
@@ -2847,7 +2847,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/dream-machines-basic.zip",
-      "sha256": "04c193dbf6429dfbce2243e7564e62a60bf2615e7b23ec36a544fceffb57a01b",
+      "sha256": "12b2d37f3aa1fe0b06e276c38285ef627ea69fa4b8e62e666b4a12d56979fd5c",
       "size": 396
     },
     {
@@ -2873,7 +2873,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/pcspecialist-basic.zip",
-      "sha256": "ff2a51109426dae42c138a4716f13db0f8c9a0ffc985421e4d9c5d1c1f3245ec",
+      "sha256": "421086a23b8dcc377090d328e92ae1c9c8a9cb8787831f7c923075977c66b062",
       "size": 413
     },
     {
@@ -2897,7 +2897,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/eurocom-basic.zip",
-      "sha256": "07e39d9c51a077f209336996700593de65dd812ba8f9f3d5b37edc86f09ca40b",
+      "sha256": "e54c7f7a6c54111894dfd80a8a4c889173f413fee4bd8f2d3322fe7a7b33f4a1",
       "size": 407
     },
     {
@@ -2923,7 +2923,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/origin-pc-basic.zip",
-      "sha256": "b4201d9e6a386d42881232b968818e0ee0614592cd24a01e3367621c096a166d",
+      "sha256": "5ac641e48579a6fc7ccd5cf4742b4564ef1b1d4438ce99bdad1845900763cb89",
       "size": 406
     },
     {
@@ -2947,7 +2947,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/corsair-basic.zip",
-      "sha256": "72e77c921a7ed296268ddff8295fc7e94fd01a9a1fd2e3a699c1b45d53b8788e",
+      "sha256": "4b43fdb3ea1771840f1265a52ddbd266a7270068ed999dc41956ee7014bc94e5",
       "size": 411
     },
     {
@@ -2974,7 +2974,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/cyberpower-ibuypower-basic.zip",
-      "sha256": "7c0f905d4370f51f37c0aafd4f3078f266ea1fce7664148f7385638d885244e7",
+      "sha256": "18acaf25fba3006b4bf3cc72ccbb1a3840d4afca675afda2adaaab99a2e30cc5",
       "size": 433
     },
     {
@@ -2997,7 +2997,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/casper-excalibur-basic.zip",
-      "sha256": "2be6cf0403cc004b76f7d18308d65cafc60820d0a191eb3e40ac336229f240b2",
+      "sha256": "bfa790e4b024098e70e6dce003dd7912f2c2a3c74986fc8bd594dd9b512799d1",
       "size": 396
     },
     {
@@ -3024,7 +3024,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/nexstgo-avita-basic.zip",
-      "sha256": "b66d029a85e7016ebe628556d32f9e02f9a8101872fd7a7de50a47dad0512555",
+      "sha256": "f980b4bd4e66f9353f032f33f70d7bea6ca637f77663d961924d2c5cdb1c3a3f",
       "size": 419
     },
     {
@@ -3048,7 +3048,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/positivo-basic.zip",
-      "sha256": "16967c3dffd4f01d561e50f380a1af9f203f36220cbd6300985cd81a1c812565",
+      "sha256": "dab46e956959f3c17199077030f1f77e158634c978da793ef716e512febb0f1b",
       "size": 399
     },
     {
@@ -3073,7 +3073,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/wortmann-terra-basic.zip",
-      "sha256": "d257d8be82283997bf6acd63c14e50636860dd5629f1be2703db2fd6bb9cda4d",
+      "sha256": "8041e9c86113499e16c1c59afc975000781d4f2b31596026250b7589458017af",
       "size": 408
     },
     {
@@ -3095,7 +3095,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/shinelon-basic.zip",
-      "sha256": "1d4630e8a95f4892ed3daa5ba8c94dbd597e8d39d3b292b1831955cc30e09455",
+      "sha256": "3d17ec94f686fd010f0c8004566489cab91129142c8fc3599b7bebc0567708e5",
       "size": 392
     },
     {
@@ -3117,7 +3117,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/dere-basic.zip",
-      "sha256": "a5083f9eae1ce1fa48e19ccd1888877b548876228fc067af9d14c69c65cecf16",
+      "sha256": "7a856bd53bc096a985b3eb6b96709107360caf501739711653e839edfb435b6f",
       "size": 384
     },
     {
@@ -3138,7 +3138,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/tcl-basic.zip",
-      "sha256": "1fd64a285adfdf1ea2fbab1a08bb829e86eb0f147616c7260e6550157108e86c",
+      "sha256": "5d53c5a0651ea246803e46ffa4952f147efebef70f8ed8bee09c406123c2d40f",
       "size": 384
     },
     {
@@ -3160,7 +3160,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/adata-xpg-basic.zip",
-      "sha256": "a0fee76160aaa7c1a4f860373e629a2e5f893197b4ea8ed8e576b039f896a0fc",
+      "sha256": "1245b657fc177792fbee22b0321b2f69c77f8328979e3aff8e81faea43afadb8",
       "size": 401
     },
     {
@@ -3185,7 +3185,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/transsion-basic.zip",
-      "sha256": "cb8bcf0653433e80b5e83fd0447ae15fc929ef8221542284f6cd6f1053ab3484",
+      "sha256": "046fbff398cd7d3eea02048ae63d444f8522316f399cc8c65600f2c101a1a3c3",
       "size": 406
     },
     {
@@ -3207,7 +3207,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/multilaser-basic.zip",
-      "sha256": "9a9dfd2981fa57f8f85613ef976c6e092179d384d23a65a4c28bf1ecb81fea5d",
+      "sha256": "95e99b29eda4c23af96cbee2248bb4c3b496877ccb1f7ff3dd4bbcf5b16da82c",
       "size": 395
     },
     {
@@ -3227,7 +3227,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/vestel-basic.zip",
-      "sha256": "9be3878762fffebfd2efadd1c08091feb66665a687a460ec70a8452510c7f58e",
+      "sha256": "393bc7c091b2c028e33f01366fc2c55b1c4acefe87f7b84e9aff19e2b66e90e8",
       "size": 380
     },
     {
@@ -3248,7 +3248,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/axioo-basic.zip",
-      "sha256": "3cf20f6d1cef474bd95c1bf6e24433eba133454e5fd19262d53dd4d3026b147c",
+      "sha256": "63f9a47ed1d98eb4d187ba236b9c0f2ac13794031f2644aa9b0ec9a1b95bd33a",
       "size": 383
     },
     {
@@ -3268,7 +3268,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/advan-basic.zip",
-      "sha256": "483025f7ff35e4aefd42c648759e0dd39c95f2a63ead5ecc2323217bc7894215",
+      "sha256": "b3b4446e5b38415a1e7b51bb2116b277c3ef1f176d0d60925f5011475959ef50",
       "size": 373
     },
     {
@@ -3290,7 +3290,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/universal-workstation-basic.zip",
-      "sha256": "57d2b9089d711ecc1ddb71bab3a38974849eae03c9423dca0632a71bb4985db1",
+      "sha256": "88801ac4650f8e571d13d436bbf102f5d3c7c4003195b4ac848d51a43e437e66",
       "size": 409
     },
     {
@@ -3334,7 +3334,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/universal-motherboard-basic.zip",
-      "sha256": "d8ec9559a41173111d97309a6b6f505ab9c1d321392654b73005f16d8177f10f",
+      "sha256": "d5e5b7a5276b3528fe509b7d3821d2f62570324bde406d008103fe880d4a6915",
       "size": 585
     },
     {
@@ -3361,7 +3361,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/universal-desktop-basic.zip",
-      "sha256": "2e7569f69f136c274b43dcaace0ccd8f39b9f74e8551598313cbeb7c3eeea7ff",
+      "sha256": "65775a62d52d67ca8cc4dda48a394f011ad52a1b93b87deaaad463ecde43d15b",
       "size": 423
     },
     {
@@ -3390,7 +3390,7 @@
       ],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/universal-barebone-basic.zip",
-      "sha256": "648bfaebb03d72f2bbeacba22679784f2bdc45293f84654371474ddfb15d9805",
+      "sha256": "64f0bb7af854423b848d5eb09af7f93562daa924c68260b329aae6a60ce817a9",
       "size": 465
     },
     {
@@ -3406,7 +3406,7 @@
       "modelKeywords": [],
       "machineTypes": [],
       "url": "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/5.0.1/devices/generic-pc-basic.zip",
-      "sha256": "816b76d0124541a433733e64e9b34c39529b32e4f8a17bb97959a1d6c344d899",
+      "sha256": "970855456ae0372ff84b52b1b38c7558834d51b379313b937f411dbde0088e99",
       "size": 384
     }
   ]

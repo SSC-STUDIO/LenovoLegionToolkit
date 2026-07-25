@@ -188,6 +188,27 @@ public sealed class DeviceSupportModelSimulationTests
         MachineInformationTestData.Create("AORUS", "16X"),
     };
 
+    [Theory]
+    [MemberData(nameof(MsiHardwareScenarios))]
+    public void Evaluate_WithSimulatedMsiMachine_ShouldUseMsiHardwarePack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("msi-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> MsiHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("Micro-Star International Co., Ltd.", "MSI Raider 18"),
+        MachineInformationTestData.Create("MSI", "Katana 15 B13V"),
+        MachineInformationTestData.Create("MICRO STAR INTERNATIONAL CO LTD", "Cyborg 15"),
+    };
+
     public static TheoryData<MachineInformation, string> MultiBrandBasicModeScenarios() => new()
     {
         { MachineInformationTestData.Create("MECHREVO", "Jiaolong 16 Pro"), "mechrevo-basic" },

@@ -4,6 +4,7 @@ using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
+using UniversalDeviceToolkit.Lib.Features.Msi;
 using UniversalDeviceToolkit.Lib.Features.Razer;
 using UniversalDeviceToolkit.Lib.Utils;
 
@@ -23,7 +24,8 @@ public class PowerModeFeature(
     HpPowerModeFeature hpFeature,
     RazerPowerModeFeature razerFeature,
     AlienwarePowerModeFeature alienwareFeature,
-    AcerPowerModeFeature acerFeature) : IFeature<PowerModeState>
+    AcerPowerModeFeature acerFeature,
+    MsiPowerModeFeature msiFeature) : IFeature<PowerModeState>
 {
     private readonly LenovoPowerModeFeature _lenovoFeature = lenovoFeature;
     private readonly AsusPowerModeFeature _asusFeature = asusFeature;
@@ -31,6 +33,7 @@ public class PowerModeFeature(
     private readonly RazerPowerModeFeature _razerFeature = razerFeature;
     private readonly AlienwarePowerModeFeature _alienwareFeature = alienwareFeature;
     private readonly AcerPowerModeFeature _acerFeature = acerFeature;
+    private readonly MsiPowerModeFeature _msiFeature = msiFeature;
     private IFeature<PowerModeState>? _backend;
 
     public bool AllowAllPowerModesOnBattery
@@ -75,6 +78,7 @@ public class PowerModeFeature(
         _razerFeature.InvalidateResolution();
         _alienwareFeature.InvalidateResolution();
         _acerFeature.InvalidateResolution();
+        _msiFeature.InvalidateResolution();
     }
 
     // --- Lenovo-specific flows (delegated; no-ops on machines without Lenovo support) ---
@@ -110,6 +114,9 @@ public class PowerModeFeature(
 
         if (await _acerFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
             return _backend = _acerFeature;
+
+        if (await _msiFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+            return _backend = _msiFeature;
 
         return null;
     }

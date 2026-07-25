@@ -7,8 +7,10 @@ using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
+using UniversalDeviceToolkit.Lib.Features.Msi;
 using UniversalDeviceToolkit.Lib.Features.Razer;
 using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.EC;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.System.Razer;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -171,7 +173,8 @@ public class HpPowerModeFeatureTests
             new HpPowerModeFeature(bios),
             new RazerPowerModeFeature(new UnavailableRazerHidController()),
             UnavailableAlienware(),
-            UnavailableAcer());
+            UnavailableAcer(),
+            UnavailableMsi());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         await facade.SetStateAsync(PowerModeState.Performance);
@@ -204,6 +207,15 @@ public class HpPowerModeFeatureTests
     private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
 
     private static AcerPowerModeFeature UnavailableAcer() => new(new UnavailableAcerWmi());
+
+    private static MsiPowerModeFeature UnavailableMsi() => new(new UnavailableEcChannel());
+
+    private sealed class UnavailableEcChannel : IEcChannel
+    {
+        public bool IsAvailable => false;
+        public bool TryRead(byte address, out byte value) { value = 0; return false; }
+        public bool TryWrite(byte address, byte value) => false;
+    }
 
     private sealed class UnavailableAcerWmi : IAcerWmi
     {
