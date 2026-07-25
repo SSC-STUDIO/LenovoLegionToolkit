@@ -1,9 +1,9 @@
 # Adding a hardware provider (brand EC adaptation)
 
 UDT ships Lenovo hardware control built in. Since 5.x the architecture accepts
-additional **brand providers** behind vendor seams — ASUS (ATKACPI) and HP
-(WMI BIOS) are the reference implementations. This document describes how to
-add another brand.
+additional **brand providers** behind vendor seams — ASUS (ATKACPI), HP
+(WMI BIOS) and Razer (EC over USB HID) are the reference implementations.
+This document describes how to add another brand.
 
 ## The moving parts
 
@@ -59,10 +59,11 @@ add another brand.
 
 ## Roadmap candidates (not scheduled)
 
-- **Razer** — USB HID reports (no EC pokes), reference: razer-laptop-control.
 - **Clevo/Tongfang** — EC port I/O via signed PawnIO module; highest risk, last.
 - **HP phase 2** — true fan RPM + performance-mode read-back via EC registers
   (OmenMon's EC map), which needs a signed PawnIO module or a WinRing0-style
   driver; the current WMI-only implementation tracks session state instead.
+- **Razer phase 2** — manual fan control (class 0x0D cmd 0x01) and Boost levels
+  (cmd 0x07), gated per model year (Silent/Custom only on 2023 Blades).
 - **Fan curves / per-brand tuning** — phase 2, requires community testers per
   brand.

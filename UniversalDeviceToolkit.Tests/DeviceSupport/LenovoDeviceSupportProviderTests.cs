@@ -227,7 +227,6 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("MSI", "Summit E16", "msi-basic")]
     [InlineData("Microsoft Corporation", "Surface Laptop Studio", "microsoft-surface-basic")]
     [InlineData("Gigabyte Technology Co., Ltd.", "AORUS 16X", "gigabyte-basic")]
-    [InlineData("Razer Inc.", "Razer Blade 16", "razer-basic")]
     [InlineData("Samsung", "Galaxy Book4 Pro", "samsung-basic")]
     [InlineData("Apple Inc.", "MacBook Pro", "apple-basic")]
     [InlineData("Huawei Technologies Co., Ltd.", "MateBook X Pro", "huawei-basic")]

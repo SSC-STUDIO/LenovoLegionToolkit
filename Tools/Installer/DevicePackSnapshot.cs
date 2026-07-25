@@ -53,7 +53,7 @@ internal static class DevicePackSnapshot
         new("msi-basic", "MSI Basic", "Micro-Star International Co., Ltd.", ["MSI", "Micro-Star International", "MICRO-STAR INTERNATIONAL CO., LTD"], ["MSI", "Raider", "Stealth", "Vector", "Katana", "Cyborg", "Creator", "Prestige", "Modern", "Summit", "Crosshair", "Pulse", "Sword", "Thin"], [], false),
         new("microsoft-surface-basic", "Microsoft Surface Basic", "Microsoft Corporation", ["Microsoft"], ["Surface Laptop", "Surface Pro", "Surface Book", "Surface Studio", "Surface Go"], [], false),
         new("gigabyte-basic", "GIGABYTE Basic", "GIGABYTE", ["Gigabyte Technology Co., Ltd.", "Gigabyte Technology Co., Ltd", "AORUS"], ["AORUS", "AERO", "GIGABYTE G"], [], false),
-        new("razer-basic", "Razer Basic", "Razer", ["Razer Inc.", "Razer Inc"], ["Blade", "Razer Book"], [], false),
+        new("razer-basic", "Razer Basic", "Razer", ["Razer Inc.", "Razer Inc"], ["Blade", "Razer Book"], [], true),
         new("samsung-basic", "Samsung Basic", "SAMSUNG ELECTRONICS CO., LTD.", ["Samsung", "Samsung Electronics", "SAMSUNG ELECTRONICS CO., LTD"], ["Galaxy Book", "Notebook 9", "Galaxy Chromebook", "Chromebook", "Chromebook Plus"], [], false),
         new("google-chromebook-basic", "Google Chromebook Basic", "Google", ["Google LLC", "Google Inc.", "Google Inc"], ["Pixelbook", "Pixel Slate", "Chromebook", "Chromebook Plus"], [], false),
         new("apple-basic", "Apple Basic", "Apple Inc.", ["Apple", "Apple Computer, Inc."], ["MacBook", "MacBook Pro", "MacBook Air", "iMac", "Mac mini", "Mac Studio", "Mac Pro"], [], false),

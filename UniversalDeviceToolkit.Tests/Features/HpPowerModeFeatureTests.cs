@@ -5,8 +5,10 @@ using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Hp;
+using UniversalDeviceToolkit.Lib.Features.Razer;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.System.Razer;
 using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
@@ -164,7 +166,8 @@ public class HpPowerModeFeatureTests
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(new UnavailableAtk()),
-            new HpPowerModeFeature(bios));
+            new HpPowerModeFeature(bios),
+            new RazerPowerModeFeature(new UnavailableRazerHidController()));
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         await facade.SetStateAsync(PowerModeState.Performance);
@@ -184,6 +187,14 @@ public class HpPowerModeFeatureTests
         public bool IsAvailable => false;
         public int DeviceGet(uint deviceId) => -1;
         public int DeviceSet(uint deviceId, int value) => -1;
+    }
+
+    private sealed class UnavailableRazerHidController : IRazerHidController
+    {
+        public bool Probe() => false;
+        public int? GetPerformanceMode(byte zone) => null;
+        public bool SetPerformanceMode(byte zone, byte mode, bool manualFan) => false;
+        public int? GetFanRpm(byte zone) => null;
     }
 
     private sealed class TestLenovoBackend(bool supported) : LenovoPowerModeFeature(null!, null!, null!, null!, null!)

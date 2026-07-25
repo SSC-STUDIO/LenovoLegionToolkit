@@ -5,8 +5,10 @@ using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Hp;
+using UniversalDeviceToolkit.Lib.Features.Razer;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
+using UniversalDeviceToolkit.Lib.System.Razer;
 using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
@@ -184,7 +186,7 @@ public class AsusPowerModeFeatureTests
         atk.Seed(RogEndpoint, 0);
 
         var lenovo = new TestLenovoBackend(supported: true);
-        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp());
+        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp(), UnavailableRazer());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Balance);
@@ -202,7 +204,8 @@ public class AsusPowerModeFeatureTests
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(atk),
-            UnavailableHp());
+            UnavailableHp(),
+            UnavailableRazer());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Quiet);
@@ -216,7 +219,8 @@ public class AsusPowerModeFeatureTests
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(new FakeAtkDriver()),
-            UnavailableHp());
+            UnavailableHp(),
+            UnavailableRazer());
 
         (await facade.IsSupportedAsync()).Should().BeFalse();
         await Assert.ThrowsAnyAsync<Exception>(() => facade.GetStateAsync());
@@ -231,6 +235,16 @@ public class AsusPowerModeFeatureTests
     };
 
     private static HpPowerModeFeature UnavailableHp() => new(new UnavailableHpBios());
+
+    private static RazerPowerModeFeature UnavailableRazer() => new(new UnavailableRazerHidController());
+
+    private sealed class UnavailableRazerHidController : IRazerHidController
+    {
+        public bool Probe() => false;
+        public int? GetPerformanceMode(byte zone) => null;
+        public bool SetPerformanceMode(byte zone, byte mode, bool manualFan) => false;
+        public int? GetFanRpm(byte zone) => null;
+    }
 
     private sealed class UnavailableHpBios : IHpWmiBios
     {

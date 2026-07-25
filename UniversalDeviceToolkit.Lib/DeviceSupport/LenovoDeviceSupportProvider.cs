@@ -380,7 +380,14 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["Razer Blade"],
                 [],
                 [],
-                ["Blade", "Razer Book"]),
+                ["Blade", "Razer Book"])
+                with
+                {
+                    // Razer EC-over-HID provider: performance modes + fan reads.
+                    // Fan curves, GPU OC and keyboard backlight stay hidden for now.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "samsung-basic",
                 "Samsung Basic",
