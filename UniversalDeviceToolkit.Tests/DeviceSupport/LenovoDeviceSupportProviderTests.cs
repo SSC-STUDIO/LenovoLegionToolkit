@@ -222,8 +222,6 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("LENOVO", "Lenovo V15 G4", "lenovo-v-series-basic")]
     [InlineData("Dell Inc.", "Alienware m18", "dell-basic")]
     [InlineData("Dell", "Latitude 7450", "dell-basic")]
-    [InlineData("HP", "OMEN Transcend 14", "hp-basic")]
-    [InlineData("HP Inc.", "Spectre x360", "hp-basic")]
     [InlineData("Acer", "Predator Helios Neo", "acer-basic")]
     [InlineData("Micro-Star International Co., Ltd.", "MSI Raider 18", "msi-basic")]
     [InlineData("MSI", "Summit E16", "msi-basic")]
@@ -328,7 +326,6 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("Apple Computer Inc", "MacBook Air", "apple-basic")]
     [InlineData("GIGA-BYTE Technology Co Ltd", "AORUS 16X", "gigabyte-basic")]
     [InlineData("Dynabook Incorporated", "Portégé X40", "dynabook-basic")]
-    [InlineData("HEWLETT PACKARD", "Pavilion 15", "hp-basic")]
     [InlineData("ASROCK INC", "B650M Pro RS", "universal-motherboard-basic")]
     [InlineData("SUPER MICRO COMPUTER INC", "SYS-741GE", "universal-motherboard-basic")]
     public void Evaluate_WhenVendorUsesDifferentDmiFormatting_ShouldStillMatchBasicPack(string vendor, string model, string expectedPackId)

@@ -39,8 +39,6 @@ public sealed class DeviceSupportModelSimulationTests
 
     [Theory]
     [InlineData("Alienware", "m18 R2", "dell-basic")]
-    [InlineData("OMEN", "Max 16", "hp-basic")]
-    [InlineData("Victus", "16", "hp-basic")]
     [InlineData("Predator", "PHN16", "acer-basic")]
     [InlineData("Nitro", "ANV16", "acer-basic")]
     [InlineData("AORUS", "16X", "gigabyte-basic")]
@@ -102,13 +100,34 @@ public sealed class DeviceSupportModelSimulationTests
         MachineInformationTestData.WithComputerSystem("", "", "ASUSTeK COMPUTER INC.", "System Product Name", "ROG Flow"),
     };
 
+    [Theory]
+    [MemberData(nameof(HpHardwareScenarios))]
+    public void Evaluate_WithSimulatedHpMachine_ShouldUseHpHardwarePack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("hp-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> HpHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("HP", "OMEN Max 16"),
+        MachineInformationTestData.Create("HP Inc.", "Victus 16"),
+        MachineInformationTestData.Create("Hewlett-Packard Company", "OMEN Transcend 14"),
+        MachineInformationTestData.Create("OMEN", "Max 16"),
+        MachineInformationTestData.Create("Victus", "16"),
+        MachineInformationTestData.WithComputerSystem("", "", "HP", "OMEN Transcend Laptop 14"),
+    };
+
     public static TheoryData<MachineInformation, string> MultiBrandBasicModeScenarios() => new()
     {
         { MachineInformationTestData.Create("MECHREVO", "Jiaolong 16 Pro"), "mechrevo-basic" },
         { MachineInformationTestData.Create("Mechanical Revolution", "Kuangshi 16 Super"), "mechrevo-basic" },
-        { MachineInformationTestData.Create("HP", "OMEN Max 16"), "hp-basic" },
-        { MachineInformationTestData.Create("HP Inc.", "Victus 16"), "hp-basic" },
-        { MachineInformationTestData.Create("Hewlett-Packard Company", "ZBook Fury 16 G11"), "hp-basic" },
         { MachineInformationTestData.Create("Dell Inc.", "Alienware m18 R2"), "dell-basic" },
         { MachineInformationTestData.Create("Dell Computer Corporation", "Dell G16 7630"), "dell-basic" },
         { MachineInformationTestData.Create("Acer Incorporated", "Predator Helios Neo 16"), "acer-basic" },
@@ -180,14 +199,6 @@ public sealed class DeviceSupportModelSimulationTests
                 "MECHREVO",
                 "Jiaolong Series"),
             "mechrevo-basic"
-        },
-        {
-            MachineInformationTestData.WithComputerSystem(
-                "",
-                "",
-                "HP",
-                "OMEN Transcend Laptop 14"),
-            "hp-basic"
         },
         {
             MachineInformationTestData.WithComputerSystem(

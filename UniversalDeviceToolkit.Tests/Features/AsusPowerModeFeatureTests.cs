@@ -4,7 +4,9 @@ using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
@@ -182,7 +184,7 @@ public class AsusPowerModeFeatureTests
         atk.Seed(RogEndpoint, 0);
 
         var lenovo = new TestLenovoBackend(supported: true);
-        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk));
+        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Balance);
@@ -199,7 +201,8 @@ public class AsusPowerModeFeatureTests
 
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
-            new AsusPowerModeFeature(atk));
+            new AsusPowerModeFeature(atk),
+            UnavailableHp());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Quiet);
@@ -212,7 +215,8 @@ public class AsusPowerModeFeatureTests
         SetMachineInformation(new MachineInformation { Vendor = "Dell Inc.", MachineType = "0000", Model = "XPS 15" });
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
-            new AsusPowerModeFeature(new FakeAtkDriver()));
+            new AsusPowerModeFeature(new FakeAtkDriver()),
+            UnavailableHp());
 
         (await facade.IsSupportedAsync()).Should().BeFalse();
         await Assert.ThrowsAnyAsync<Exception>(() => facade.GetStateAsync());
@@ -225,6 +229,14 @@ public class AsusPowerModeFeatureTests
         MachineType = "0000",
         Model = "ROG Zephyrus G16"
     };
+
+    private static HpPowerModeFeature UnavailableHp() => new(new UnavailableHpBios());
+
+    private sealed class UnavailableHpBios : IHpWmiBios
+    {
+        public bool IsAvailable => false;
+        public (int ReturnCode, byte[] Data) Execute(uint commandType, byte[] input) => (-1, []);
+    }
 
     private sealed class TestLenovoBackend(bool supported) : LenovoPowerModeFeature(null!, null!, null!, null!, null!)
     {

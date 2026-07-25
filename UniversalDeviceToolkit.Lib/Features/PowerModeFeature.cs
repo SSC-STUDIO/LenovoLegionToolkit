@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Features;
@@ -15,10 +16,12 @@ namespace UniversalDeviceToolkit.Lib.Features;
 /// </summary>
 public class PowerModeFeature(
     LenovoPowerModeFeature lenovoFeature,
-    AsusPowerModeFeature asusFeature) : IFeature<PowerModeState>
+    AsusPowerModeFeature asusFeature,
+    HpPowerModeFeature hpFeature) : IFeature<PowerModeState>
 {
     private readonly LenovoPowerModeFeature _lenovoFeature = lenovoFeature;
     private readonly AsusPowerModeFeature _asusFeature = asusFeature;
+    private readonly HpPowerModeFeature _hpFeature = hpFeature;
     private IFeature<PowerModeState>? _backend;
 
     public bool AllowAllPowerModesOnBattery
@@ -59,6 +62,7 @@ public class PowerModeFeature(
         _backend = null;
         _lenovoFeature.InvalidateResolution();
         _asusFeature.InvalidateResolution();
+        _hpFeature.InvalidateResolution();
     }
 
     // --- Lenovo-specific flows (delegated; no-ops on machines without Lenovo support) ---
@@ -82,6 +86,9 @@ public class PowerModeFeature(
 
         if (await _asusFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
             return _backend = _asusFeature;
+
+        if (await _hpFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+            return _backend = _hpFeature;
 
         return null;
     }

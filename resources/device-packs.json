@@ -1432,15 +1432,16 @@
       "language",
       "theme",
       "updates",
-      "logs"
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
     ],
     "hiddenFeatures": [
-      "lenovo-hardware-controls",
-      "power-modes",
-      "keyboard-backlight",
       "god-mode",
       "gpu-overclock",
-      "fan-curve"
+      "fan-curve",
+      "keyboard-backlight"
     ]
   },
   {

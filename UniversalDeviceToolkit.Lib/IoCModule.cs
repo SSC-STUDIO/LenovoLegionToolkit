@@ -8,6 +8,7 @@ using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
+using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 using UniversalDeviceToolkit.Lib.Features.InstantBoot;
@@ -52,6 +53,7 @@ public class IoCModule : Module
         builder.Register<WMIWrapper>().As<IWMIWrapper>().SingleInstance();
         builder.Register<DriverWrapper>().As<IDriverWrapper>().SingleInstance();
         builder.Register<AsusAtkDriver>().As<IAsusAtkDriver>().SingleInstance();
+        builder.Register<HpWmiBios>().As<IHpWmiBios>().SingleInstance();
 
         builder.Register<FnKeysDisabler>();
         builder.Register<LegionZoneDisabler>();
@@ -103,6 +105,7 @@ public class IoCModule : Module
         builder.Register<PowerModeFeature>();
         builder.Register<LenovoPowerModeFeature>(true);
         builder.Register<AsusPowerModeFeature>(true);
+        builder.Register<HpPowerModeFeature>(true);
         builder.Register<RefreshRateFeature>();
         builder.Register<ResolutionFeature>();
         builder.Register<SpeakerFeature>();
@@ -157,6 +160,7 @@ public class IoCModule : Module
         builder.Register<SensorsControllerV4>(true);
         builder.Register<SensorsControllerV5>(true);
         builder.Register<AsusSensorsController>(true);
+        builder.Register<HpSensorsController>(true);
         builder.Register<GenericSensorsController>(true);
         builder.Register<SensorsGroupController>(true);
         builder.Register<FpsSensorController>();

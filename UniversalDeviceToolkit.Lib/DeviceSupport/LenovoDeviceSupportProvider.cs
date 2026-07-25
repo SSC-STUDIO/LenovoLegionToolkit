@@ -328,7 +328,14 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["HP", "OMEN", "Victus", "Pavilion", "Envy", "EliteBook", "ProBook", "ZBook"],
                 [],
                 [],
-                ["OMEN", "Omen Max", "OMEN Transcend", "Victus", "Pavilion", "Envy", "EliteBook", "ProBook", "ZBook", "Spectre", "Dragonfly", "Chromebook", "Chromebook Plus"]),
+                ["OMEN", "Omen Max", "OMEN Transcend", "Victus", "Pavilion", "Envy", "EliteBook", "ProBook", "ZBook", "Spectre", "Dragonfly", "Chromebook", "Chromebook Plus"])
+                with
+                {
+                    // HP WMI BIOS provider (OMEN/Victus): performance modes + sensors.
+                    // Fan curves, GPU OC and keyboard backlight stay hidden for now.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "acer-basic",
                 "Acer Basic",
