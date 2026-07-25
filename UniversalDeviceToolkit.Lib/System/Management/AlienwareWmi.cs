@@ -53,7 +53,31 @@ public sealed class AlienwareWmi : IAlienwareWmi
                 if (result is null)
                     return -1;
 
-                var value = Convert.ToUInt32(result);
+                uint value;
+                if (result["argr"] is not null)
+                {
+                    value = Convert.ToUInt32(result["argr"]);
+                }
+                else
+                {
+                    // Defensive: some firmware exposes the result under a
+                    // different property name — take the first uint property.
+                    value = 0;
+                    var found = false;
+                    foreach (var property in result.Properties)
+                    {
+                        if (property.Value is uint u)
+                        {
+                            value = u;
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                        return -1;
+                }
+
                 return Array.Exists(FailureCodes, code => code == value) ? -1 : (int)value;
             }
         }

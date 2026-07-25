@@ -352,7 +352,14 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["Acer", "Predator", "Nitro", "Swift", "Aspire", "TravelMate"],
                 [],
                 [],
-                ["Predator", "Predator Helios", "Predator Triton", "Nitro", "Swift", "Aspire", "TravelMate", "ConceptD", "Extensa", "Spin", "Chromebook", "Chromebook Plus"]),
+                ["Predator", "Predator Helios", "Predator Triton", "Nitro", "Swift", "Aspire", "TravelMate", "ConceptD", "Extensa", "Spin", "Chromebook", "Chromebook Plus"])
+                with
+                {
+                    // Acer WMID Gaming provider: thermal profiles + sensors on
+                    // Predator/Nitro; other Acer lines self-disable to generic.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "msi-basic",
                 "MSI Basic",

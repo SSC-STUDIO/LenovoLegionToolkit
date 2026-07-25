@@ -3,6 +3,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
@@ -187,7 +188,7 @@ public class AsusPowerModeFeatureTests
         atk.Seed(RogEndpoint, 0);
 
         var lenovo = new TestLenovoBackend(supported: true);
-        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp(), UnavailableRazer(), UnavailableAlienware());
+        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp(), UnavailableRazer(), UnavailableAlienware(), UnavailableAcer());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Balance);
@@ -207,7 +208,8 @@ public class AsusPowerModeFeatureTests
             new AsusPowerModeFeature(atk),
             UnavailableHp(),
             UnavailableRazer(),
-            UnavailableAlienware());
+            UnavailableAlienware(),
+            UnavailableAcer());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Quiet);
@@ -223,7 +225,8 @@ public class AsusPowerModeFeatureTests
             new AsusPowerModeFeature(new FakeAtkDriver()),
             UnavailableHp(),
             UnavailableRazer(),
-            UnavailableAlienware());
+            UnavailableAlienware(),
+            UnavailableAcer());
 
         (await facade.IsSupportedAsync()).Should().BeFalse();
         await Assert.ThrowsAnyAsync<Exception>(() => facade.GetStateAsync());
@@ -242,6 +245,14 @@ public class AsusPowerModeFeatureTests
     private static RazerPowerModeFeature UnavailableRazer() => new(new UnavailableRazerHidController());
 
     private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
+
+    private static AcerPowerModeFeature UnavailableAcer() => new(new UnavailableAcerWmi());
+
+    private sealed class UnavailableAcerWmi : IAcerWmi
+    {
+        public bool IsAvailable => false;
+        public (bool Ok, long Output) Execute(string methodName, uint input) => (false, -1);
+    }
 
     private sealed class UnavailableAwccWmi : IAlienwareWmi
     {

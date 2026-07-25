@@ -2,8 +2,9 @@
 
 UDT ships Lenovo hardware control built in. Since 5.x the architecture accepts
 additional **brand providers** behind vendor seams — ASUS (ATKACPI), HP
-(WMI BIOS), Razer (EC over USB HID) and Alienware/Dell (AWCC WMAX) are the
-reference implementations. This document describes how to add another brand.
+(WMI BIOS), Razer (EC over USB HID), Alienware/Dell (AWCC WMAX) and Acer
+(WMID Gaming) are the reference implementations. This document describes
+how to add another brand.
 
 ## The moving parts
 
@@ -59,9 +60,8 @@ reference implementations. This document describes how to add another brand.
 
 ## Roadmap candidates (not scheduled)
 
-- **Acer Predator / Gigabyte AORUS** — WMI-based like HP/Alienware; next
-  candidates once protocol details are verified against acer-wmi /
-  gigabyte-wmi in mainline.
+- **Gigabyte AORUS** — WMI-based like HP/Alienware/Acer; next candidate once
+  gigabyte-wmi protocol details are verified.
 - **Clevo/Tongfang, MSI** — EC port I/O via signed PawnIO module; blocked on
   the signed-module capability (see below).
 - **HP phase 2** — true fan RPM + performance-mode read-back via EC registers

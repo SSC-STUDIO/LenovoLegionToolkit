@@ -220,7 +220,6 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("LENOVO", "XiaoXin Pro 16", "lenovo-xiaoxin-basic")]
     [InlineData("LENOVO", "小新 Pro 16 2024", "lenovo-xiaoxin-basic")]
     [InlineData("LENOVO", "Lenovo V15 G4", "lenovo-v-series-basic")]
-    [InlineData("Acer", "Predator Helios Neo", "acer-basic")]
     [InlineData("Micro-Star International Co., Ltd.", "MSI Raider 18", "msi-basic")]
     [InlineData("MSI", "Summit E16", "msi-basic")]
     [InlineData("Microsoft Corporation", "Surface Laptop Studio", "microsoft-surface-basic")]

@@ -18,121 +18,118 @@ namespace UniversalDeviceToolkit.Tests.Features;
 
 [Trait("Category", TestCategories.Unit)]
 [Collection("PowerModeFeatureTests")]
-public class HpPowerModeFeatureTests
+public class AcerPowerModeFeatureTests
 {
-    private const uint CmdFanCount = 0x10;
-    private const uint CmdSetPerformanceMode = 0x1A;
-    private const uint CmdSystemDesignData = 0x28;
+    private const string GetGamingMiscSetting = "GetGamingMiscSetting";
+    private const string SetGamingMiscSetting = "SetGamingMiscSetting";
+    private const string GetGamingSysInfo = "GetGamingSysInfo";
 
-    private sealed class FakeHpBios : IHpWmiBios
+    private sealed class FakeAcerWmi : IAcerWmi
     {
-        private readonly Dictionary<uint, (int Rc, byte[] Data)> _responses = new();
         public bool Available { get; set; } = true;
-        public List<(uint CmdType, byte[] Input)> Calls { get; } = [];
+        public List<(string Method, uint Input)> Calls { get; } = [];
+        public int CurrentProfile { get; set; } = 0x01;
+        public long SysInfoMask { get; set; } = 0xFFL << 24; // nonzero supported mask
+        public bool WriteSucceeds { get; set; } = true;
 
         public bool IsAvailable => Available;
 
-        public void Seed(uint cmdType, int rc, params byte[] data) => _responses[cmdType] = (rc, data);
-
-        public (int ReturnCode, byte[] Data) Execute(uint commandType, byte[] input)
+        public (bool Ok, long Output) Execute(string methodName, uint input)
         {
-            Calls.Add((commandType, input));
-            return _responses.TryGetValue(commandType, out var response)
-                ? response
-                : (-1, []);
+            Calls.Add((methodName, input));
+
+            if (methodName == GetGamingSysInfo)
+                return (true, SysInfoMask);
+
+            if (methodName == GetGamingMiscSetting)
+                return (true, (long)CurrentProfile << 8);
+
+            if (methodName == SetGamingMiscSetting)
+            {
+                if (!WriteSucceeds)
+                    return (false, -1);
+
+                CurrentProfile = (int)((input >> 8) & 0xFF);
+                return (true, 0);
+            }
+
+            return (false, -1);
         }
     }
 
-    private static FakeHpBios SupportedBios(bool v1 = true)
-    {
-        var bios = new FakeHpBios();
-        bios.Seed(CmdFanCount, 0, 0x02);
-        bios.Seed(CmdSystemDesignData, 0, 0, 0, 0, v1 ? (byte)1 : (byte)0);
-        bios.Seed(CmdSetPerformanceMode, 0);
-        return bios;
-    }
-
     [Fact]
-    public async Task IsSupported_ShouldBeFalse_WhenBiosUnavailable()
+    public async Task IsSupported_ShouldBeFalse_WhenWmiUnavailable()
     {
-        SetMachineInformation(HpMachine());
-        var feature = new HpPowerModeFeature(new FakeHpBios { Available = false });
+        SetMachineInformation(AcerMachine());
+        var feature = new AcerPowerModeFeature(new FakeAcerWmi { Available = false });
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Fact]
-    public async Task IsSupported_ShouldBeFalse_OnNonHpMachine()
+    public async Task IsSupported_ShouldBeFalse_OnNonAcerMachine()
     {
         SetMachineInformation(new MachineInformation { Vendor = "LENOVO", MachineType = "83DF", Model = "Legion Y9000P IRX9" });
-        var feature = new HpPowerModeFeature(SupportedBios());
+        var feature = new AcerPowerModeFeature(new FakeAcerWmi());
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Fact]
-    public async Task IsSupported_ShouldBeFalse_WhenProbeReturnsError()
+    public async Task IsSupported_ShouldBeFalse_WhenNoSensorsReported()
     {
-        SetMachineInformation(HpMachine());
-        var bios = new FakeHpBios();
-        bios.Seed(CmdFanCount, 3); // unknown command
-
-        var feature = new HpPowerModeFeature(bios);
+        SetMachineInformation(AcerMachine());
+        var feature = new AcerPowerModeFeature(new FakeAcerWmi { SysInfoMask = 0 });
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Theory]
-    [InlineData(PowerModeState.Quiet, 0x50)]
-    [InlineData(PowerModeState.Balance, 0x30)]
-    [InlineData(PowerModeState.Performance, 0x31)]
-    public async Task SetState_ShouldWriteV1Values(PowerModeState state, byte expectedMode)
+    [InlineData(0x00, PowerModeState.Quiet)]
+    [InlineData(0x01, PowerModeState.Balance)]
+    [InlineData(0x04, PowerModeState.Performance)]
+    [InlineData(0x05, PowerModeState.Performance)] // turbo
+    [InlineData(0x06, PowerModeState.Quiet)]      // eco
+    public async Task GetState_ShouldMapProfiles(int profile, PowerModeState expected)
     {
-        SetMachineInformation(HpMachine());
-        var bios = SupportedBios(v1: true);
+        SetMachineInformation(AcerMachine());
+        var wmi = new FakeAcerWmi { CurrentProfile = profile };
 
-        var feature = new HpPowerModeFeature(bios);
+        var feature = new AcerPowerModeFeature(wmi);
+
+        (await feature.GetStateAsync()).Should().Be(expected);
+        ResetCompatibilityCache();
+    }
+
+    [Theory]
+    [InlineData(PowerModeState.Quiet, 0x00)]
+    [InlineData(PowerModeState.Balance, 0x01)]
+    [InlineData(PowerModeState.Performance, 0x04)]
+    public async Task SetState_ShouldWriteAndVerifyReadBack(PowerModeState state, int expectedProfile)
+    {
+        SetMachineInformation(AcerMachine());
+        var wmi = new FakeAcerWmi();
+
+        var feature = new AcerPowerModeFeature(wmi);
         await feature.SetStateAsync(state);
 
-        bios.Calls.Should().Contain(c =>
-            c.CmdType == CmdSetPerformanceMode &&
-            c.Input.Length == 4 &&
-            c.Input[0] == 0xFF &&
-            c.Input[1] == expectedMode);
+        wmi.Calls.Should().Contain(c =>
+            c.Method == SetGamingMiscSetting &&
+            c.Input == (0x0Bu | ((uint)expectedProfile << 8)));
         (await feature.GetStateAsync()).Should().Be(state);
         ResetCompatibilityCache();
     }
 
-    [Theory]
-    [InlineData(PowerModeState.Quiet, 0x02)]
-    [InlineData(PowerModeState.Balance, 0x00)]
-    [InlineData(PowerModeState.Performance, 0x01)]
-    public async Task SetState_ShouldWriteV0Values(PowerModeState state, byte expectedMode)
-    {
-        SetMachineInformation(HpMachine());
-        var bios = SupportedBios(v1: false);
-
-        var feature = new HpPowerModeFeature(bios);
-        await feature.SetStateAsync(state);
-
-        bios.Calls.Should().Contain(c =>
-            c.CmdType == CmdSetPerformanceMode &&
-            c.Input[1] == expectedMode);
-        ResetCompatibilityCache();
-    }
-
     [Fact]
-    public async Task SetState_ShouldThrow_WhenBiosReturnsError()
+    public async Task SetState_ShouldThrow_WhenWriteFails()
     {
-        SetMachineInformation(HpMachine());
-        var bios = new FakeHpBios();
-        bios.Seed(CmdFanCount, 0, 0x02);
-        bios.Seed(CmdSetPerformanceMode, 5); // invalid parameters
+        SetMachineInformation(AcerMachine());
+        var wmi = new FakeAcerWmi { WriteSucceeds = false };
 
-        var feature = new HpPowerModeFeature(bios);
+        var feature = new AcerPowerModeFeature(wmi);
 
         await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.Quiet));
         ResetCompatibilityCache();
@@ -141,8 +138,8 @@ public class HpPowerModeFeatureTests
     [Fact]
     public async Task SetState_ShouldRejectGodModeAndExtreme()
     {
-        SetMachineInformation(HpMachine());
-        var feature = new HpPowerModeFeature(SupportedBios());
+        SetMachineInformation(AcerMachine());
+        var feature = new AcerPowerModeFeature(new FakeAcerWmi());
 
         await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.GodMode));
         await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.Extreme));
@@ -150,41 +147,37 @@ public class HpPowerModeFeatureTests
     }
 
     [Fact]
-    public async Task GetState_ShouldDefaultToBalance_BeforeAnyWrite()
+    public async Task Facade_ShouldUseAcerBackend_WhenEarlierBackendsUnsupported()
     {
-        SetMachineInformation(HpMachine());
-        var feature = new HpPowerModeFeature(SupportedBios());
-
-        (await feature.GetStateAsync()).Should().Be(PowerModeState.Balance);
-        ResetCompatibilityCache();
-    }
-
-    [Fact]
-    public async Task Facade_ShouldUseHpBackend_WhenLenovoAndAsusUnsupported()
-    {
-        SetMachineInformation(HpMachine());
-        var bios = SupportedBios();
+        SetMachineInformation(AcerMachine());
 
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(new UnavailableAtk()),
-            new HpPowerModeFeature(bios),
+            new HpPowerModeFeature(new UnavailableHpBios()),
             new RazerPowerModeFeature(new UnavailableRazerHidController()),
             UnavailableAlienware(),
-            UnavailableAcer());
+            new AcerPowerModeFeature(new FakeAcerWmi { CurrentProfile = 0x04 }));
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
-        await facade.SetStateAsync(PowerModeState.Performance);
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Performance);
         ResetCompatibilityCache();
     }
 
-    private static MachineInformation HpMachine() => new()
+    private static MachineInformation AcerMachine() => new()
     {
-        Vendor = "HP Inc.",
+        Vendor = "Acer Incorporated",
         MachineType = "0000",
-        Model = "OMEN 16"
+        Model = "Predator Helios Neo 16"
     };
+
+    private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
+
+    private sealed class UnavailableAwccWmi : IAlienwareWmi
+    {
+        public bool IsAvailable => false;
+        public int Execute(string methodName, byte operation, byte arg1 = 0, byte arg2 = 0, byte arg3 = 0) => -1;
+    }
 
     private sealed class UnavailableAtk : IAsusAtkDriver
     {
@@ -193,28 +186,18 @@ public class HpPowerModeFeatureTests
         public int DeviceSet(uint deviceId, int value) => -1;
     }
 
+    private sealed class UnavailableHpBios : IHpWmiBios
+    {
+        public bool IsAvailable => false;
+        public (int ReturnCode, byte[] Data) Execute(uint commandType, byte[] input) => (-1, []);
+    }
+
     private sealed class UnavailableRazerHidController : IRazerHidController
     {
         public bool Probe() => false;
         public int? GetPerformanceMode(byte zone) => null;
         public bool SetPerformanceMode(byte zone, byte mode, bool manualFan) => false;
         public int? GetFanRpm(byte zone) => null;
-    }
-
-    private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
-
-    private static AcerPowerModeFeature UnavailableAcer() => new(new UnavailableAcerWmi());
-
-    private sealed class UnavailableAcerWmi : IAcerWmi
-    {
-        public bool IsAvailable => false;
-        public (bool Ok, long Output) Execute(string methodName, uint input) => (false, -1);
-    }
-
-    private sealed class UnavailableAwccWmi : IAlienwareWmi
-    {
-        public bool IsAvailable => false;
-        public int Execute(string methodName, byte operation, byte arg1 = 0, byte arg2 = 0, byte arg3 = 0) => -1;
     }
 
     private sealed class TestLenovoBackend(bool supported) : LenovoPowerModeFeature(null!, null!, null!, null!, null!)

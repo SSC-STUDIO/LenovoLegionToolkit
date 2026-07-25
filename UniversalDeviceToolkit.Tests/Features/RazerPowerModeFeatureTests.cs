@@ -3,6 +3,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
@@ -264,7 +265,8 @@ public class RazerPowerModeFeatureTests
             new AsusPowerModeFeature(new UnavailableAtk()),
             new HpPowerModeFeature(new UnavailableHpBios()),
             new RazerPowerModeFeature(new FakeController { CpuMode = 0x01 }),
-            UnavailableAlienware());
+            UnavailableAlienware(),
+            UnavailableAcer());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Performance);
@@ -292,6 +294,14 @@ public class RazerPowerModeFeatureTests
     }
 
     private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
+
+    private static AcerPowerModeFeature UnavailableAcer() => new(new UnavailableAcerWmi());
+
+    private sealed class UnavailableAcerWmi : IAcerWmi
+    {
+        public bool IsAvailable => false;
+        public (bool Ok, long Output) Execute(string methodName, uint input) => (false, -1);
+    }
 
     private sealed class UnavailableAwccWmi : IAlienwareWmi
     {

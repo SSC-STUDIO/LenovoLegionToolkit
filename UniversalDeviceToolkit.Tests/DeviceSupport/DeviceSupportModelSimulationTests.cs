@@ -38,8 +38,6 @@ public sealed class DeviceSupportModelSimulationTests
     }
 
     [Theory]
-    [InlineData("Predator", "PHN16", "acer-basic")]
-    [InlineData("Nitro", "ANV16", "acer-basic")]
     [InlineData("AORUS", "16X", "gigabyte-basic")]
     [InlineData("ERAZER", "Beast X40", "medion-basic")]
     public void Evaluate_WhenDmiVendorUsesGamingSubBrandAndModelUsesSku_ShouldUseParentBasicPack(
@@ -146,12 +144,33 @@ public sealed class DeviceSupportModelSimulationTests
         MachineInformationTestData.WithComputerSystem("", "", "Dell Inc.", "Alienware m18 R2"),
     };
 
+    [Theory]
+    [MemberData(nameof(AcerHardwareScenarios))]
+    public void Evaluate_WithSimulatedAcerMachine_ShouldUseAcerHardwarePack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("acer-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> AcerHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("Acer Incorporated", "Predator Helios Neo 16"),
+        MachineInformationTestData.Create("Acer", "Nitro V 16"),
+        MachineInformationTestData.Create("Predator", "PHN16"),
+        MachineInformationTestData.Create("Nitro", "ANV16"),
+        MachineInformationTestData.WithBaseBoard("", "", "Acer", "Nitro ANV16"),
+    };
+
     public static TheoryData<MachineInformation, string> MultiBrandBasicModeScenarios() => new()
     {
         { MachineInformationTestData.Create("MECHREVO", "Jiaolong 16 Pro"), "mechrevo-basic" },
         { MachineInformationTestData.Create("Mechanical Revolution", "Kuangshi 16 Super"), "mechrevo-basic" },
-        { MachineInformationTestData.Create("Acer Incorporated", "Predator Helios Neo 16"), "acer-basic" },
-        { MachineInformationTestData.Create("Acer", "Nitro V 16"), "acer-basic" },
         { MachineInformationTestData.Create("LENOVO", "IdeaPad Flex 5 Chromebook Plus"), "lenovo-chromebook-basic" },
         { MachineInformationTestData.Create("Google LLC", "Pixelbook Go"), "google-chromebook-basic" },
         { MachineInformationTestData.Create("SAMSUNG ELECTRONICS CO., LTD.", "Galaxy Chromebook Plus"), "samsung-basic" },
@@ -219,14 +238,6 @@ public sealed class DeviceSupportModelSimulationTests
                 "MECHREVO",
                 "Jiaolong Series"),
             "mechrevo-basic"
-        },
-        {
-            MachineInformationTestData.WithBaseBoard(
-                "",
-                "",
-                "Acer",
-                "Nitro ANV16"),
-            "acer-basic"
         },
         {
             MachineInformationTestData.WithComputerSystem(
