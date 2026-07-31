@@ -113,7 +113,7 @@ public class ChartsControlTests
             .Contain("Foreground=\"{DynamicResource TextFillColorPrimaryBrush}\"")
             .And.Contain("Foreground=\"{DynamicResource TextFillColorSecondaryBrush}\"")
             .And.Contain("RingBrush\" Value=\"{DynamicResource ChartUtilizationBrush}\"")
-            .And.Contain("<BlurEffect");
+            .And.Contain("x:Name=\"PART_Glow\"");
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public class ChartsControlTests
     }
 
     [Fact]
-    public void BuildPlotPoints_WhenSingleSample_ShouldEaseInFromBaseline()
+    public void BuildPlotPoints_WhenSingleSample_ShouldExtendFlatSegmentLeft()
     {
         var series = new TrendSeries("util", 10);
         series.Add(50);
@@ -167,8 +167,10 @@ public class ChartsControlTests
         points.Should().HaveCount(2);
         points[0].X.Should().BeApproximately(100.0 - step, 0.01);
         points[1].X.Should().BeApproximately(100.0, 0.01);
-        points[0].Y.Should().BeApproximately(39.0, 0.01);
-        points[1].Y.Should().BeLessThan(points[0].Y);
+        // Both points at same Y (vertical start, no diagonal ease-in from baseline).
+        // Y = height - (value/max * (height-2)) - 1 = 40 - 0.5*38 - 1 = 20.0
+        points[0].Y.Should().BeApproximately(20.0, 0.01);
+        points[1].Y.Should().BeApproximately(20.0, 0.01);
     }
 
     [Fact]
@@ -182,15 +184,14 @@ public class ChartsControlTests
         var points = TrendChartControl.BuildPlotPoints(series, width: 80, height: 40, max: 100);
 
         // Capacity 5 → step = 20; 3 samples occupy slots 2,3,4 → x = 40, 60, 80.
-        points.Should().HaveCount(4);
-        points[0].X.Should().BeApproximately(20.0, 0.01);
-        points[0].Y.Should().BeApproximately(39.0, 0.01);
-        points[1].X.Should().BeApproximately(40.0, 0.01);
-        points[2].X.Should().BeApproximately(60.0, 0.01);
-        points[3].X.Should().BeApproximately(80.0, 0.01);
-        // Peak sample is highest on the plot (lowest Y).
-        points[2].Y.Should().BeLessThan(points[1].Y);
-        points[2].Y.Should().BeLessThan(points[3].Y);
+        // No diagonal ease-in: exactly 3 points (one per sample).
+        points.Should().HaveCount(3);
+        points[0].X.Should().BeApproximately(40.0, 0.01);
+        points[1].X.Should().BeApproximately(60.0, 0.01);
+        points[2].X.Should().BeApproximately(80.0, 0.01);
+        // Peak sample (value=100, index 1) is highest on the plot (lowest Y).
+        points[1].Y.Should().BeLessThan(points[0].Y);
+        points[1].Y.Should().BeLessThan(points[2].Y);
     }
 
     private static string ReadWpfText(params string[] relativeSegments)

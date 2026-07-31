@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:pages="using:UniversalDeviceToolkit.Avalonia.Pages"
+        x:Class="UniversalDeviceToolkit.Avalonia.MainWindow"
+        Title="Universal Device Toolkit"
+        Width="1200" Height="800"
+        MinWidth="900" MinHeight="600">
+    <Window.Styles>
+        <Style Selector="Button.navButton">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="CornerRadius" Value="{DynamicResource CornerRadiusCompact}" />
+        </Style>
+        <Style Selector="Button.navButton.active">
+            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </Window.Styles>
+    <DockPanel>
+        <!-- Navigation sidebar -->
+        <Border DockPanel.Dock="Left" Width="280" Background="{DynamicResource NavigationPaneBackgroundBrush}">
+            <StackPanel Spacing="8" Margin="16">
+                <TextBlock Text="Navigation" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           FontSize="14"
+                           Margin="0,8,0,16"/>
+                
+                <!-- Dashboard Page Navigation Button -->
+                <Button x:Name="DashboardButton"
+                        Classes="navButton"
+                        Content="🏠 Dashboard"
+                        Click="DashboardButton_Click"/>
+
+                <!-- About Page Navigation Button -->
+                <Button x:Name="AboutButton"
+                        Classes="navButton"
+                        Content="ℹ About"
+                        Click="AboutButton_Click"
+                        Margin="0,4,0,0"/>
+
+                <!-- Settings Page Navigation Button -->
+                <Button x:Name="SettingsButton"
+                        Classes="navButton"
+                        Content="⚙ Settings"
+                        Click="SettingsButton_Click"
+                        Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+        
+        <!-- Main content area -->
+        <Border Background="{DynamicResource AppSurfaceCardBrush}">
+            <ContentControl x:Name="MainContent"/>
+        </Border>
+    </DockPanel>
+</Window>

@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\WPF\PluginExtensionsPageGuardTests.cs
+UniversalDeviceToolkit.Tests\WPF\PluginIconResolverTests.cs
+UniversalDeviceToolkit.Tests\WPF\PluginSettingsWindowTests.cs
+UniversalDeviceToolkit.Tests\WPF\PowerModeControlTests.cs
+UniversalDeviceToolkit.Tests\WPF\ResourceHardcodingGuardTests.cs
+UniversalDeviceToolkit.Tests\WPF\ResourceQualityTests.cs
+UniversalDeviceToolkit.Tests\WPF\SensorsControlTests.cs
+UniversalDeviceToolkit.Tests\WPF\SingleInstanceMutexTests.cs
+UniversalDeviceToolkit.Tests\WPF\SkeletonShimmerTests.cs
+UniversalDeviceToolkit.Tests\WPF\StartupDeviceSetupCoordinatorTests.cs
+UniversalDeviceToolkit.Tests\WPF\StartupWindowsGuardTests.cs
+UniversalDeviceToolkit.Tests\WPF\StatusWindowTests.cs
+UniversalDeviceToolkit.Tests\WPF\WindowsOptimizationPageGuardTests.cs

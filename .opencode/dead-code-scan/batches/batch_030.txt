@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoFanTableData.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoGameZoneData.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoGameZoneKeyLockStatusEvent.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoGameZoneLightProfileChangeEvent.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoGameZoneSmartFanModeEvent.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoGameZoneThermalModeEvent.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoGpuMethod.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoIntelligentOPList.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoLightingData.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoLightingEvent.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoLightingMethod.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoOtherMethod.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.LenovoUtilityEvent.cs

@@ -9,8 +9,6 @@ using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
-using NvAPIWrapper.Native;
-using NvAPIWrapper.Native.GPU;
 using Windows.Win32;
 using Windows.Win32.System.Power;
 
@@ -757,27 +755,25 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
 
         try
         {
-            var gpu = NVAPI.GetGPU();
-            if (gpu is null)
+            var gpuNullable = NVAPI.GetGPU();
+            if (gpuNullable is not { } gpu)
                 return GPUInfo.Empty;
 
-            var utilization = Math.Min(100, Math.Max(gpu.UsageInformation.GPU.Percentage, gpu.UsageInformation.VideoEngine.Percentage));
+            var utilization = NVAPI.GetUsage(gpu);
 
-            var currentCoreClock = (int)gpu.CurrentClockFrequencies.GraphicsClock.Frequency / 1000;
-            var currentMemoryClock = (int)gpu.CurrentClockFrequencies.MemoryClock.Frequency / 1000;
+            var (currentGfxKHz, currentMemKHz) = NVAPI.GetCurrentClockFrequencies(gpu);
+            var currentCoreClock = currentGfxKHz / 1000;
+            var currentMemoryClock = currentMemKHz / 1000;
 
-            var maxCoreClock = (int)gpu.BoostClockFrequencies.GraphicsClock.Frequency / 1000;
-            var maxMemoryClock = (int)gpu.BoostClockFrequencies.MemoryClock.Frequency / 1000;
+            var (boostGfxKHz, boostMemKHz) = NVAPI.GetBoostClockFrequencies(gpu);
+            var maxCoreClock = boostGfxKHz / 1000;
+            var maxMemoryClock = boostMemKHz / 1000;
 
             // Get current performance state
-            var currentPerformanceState = PerformanceStateId.P0_3DPerformance;
+            var currentPerformanceState = NvPerformanceStateId.P0_3DPerformance;
             try
             {
-                var stateIdString = gpu.PerformanceStatesInfo.CurrentPerformanceState.StateId.ToString();
-                if (Enum.TryParse<PerformanceStateId>(stateIdString, out var parsedState))
-                {
-                    currentPerformanceState = parsedState;
-                }
+                currentPerformanceState = NVAPI.GetCurrentPstate(gpu);
             }
             catch (Exception ex)
             {
@@ -787,15 +783,12 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                     ex);
             }
 
-            var states = GPUApi.GetPerformanceStates20(gpu.Handle);
-            
             // Try to get overclock offsets for current performance state, fall back to P0 if not available
             int maxCoreClockOffset = 0;
             int maxMemoryClockOffset = 0;
             try
             {
-                maxCoreClockOffset = states.Clocks[currentPerformanceState][0].FrequencyDeltaInkHz.DeltaValue / 1000;
-                maxMemoryClockOffset = states.Clocks[currentPerformanceState][1].FrequencyDeltaInkHz.DeltaValue / 1000;
+                (maxCoreClockOffset, maxMemoryClockOffset) = NVAPI.GetOverclockDelta(gpu, currentPerformanceState);
             }
             catch (Exception ex)
             {
@@ -803,11 +796,9 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                     "sensors-gpu-oc-current",
                     "Failed to read GPU OC offsets for current p-state; trying P0.",
                     ex);
-                // Fall back to P0_3DPerformance if current state doesn't have offsets
                 try
                 {
-                    maxCoreClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][0].FrequencyDeltaInkHz.DeltaValue / 1000;
-                    maxMemoryClockOffset = states.Clocks[PerformanceStateId.P0_3DPerformance][1].FrequencyDeltaInkHz.DeltaValue / 1000;
+                    (maxCoreClockOffset, maxMemoryClockOffset) = NVAPI.GetOverclockDelta(gpu, NvPerformanceStateId.P0_3DPerformance);
                 }
                 catch (Exception ex2)
                 {
@@ -815,19 +806,14 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                         "sensors-gpu-oc-p0",
                         "No GPU overclock offsets available from NVAPI.",
                         ex2);
-                    // No overclock offsets available
                 }
             }
 
-            var temperatureSensor = gpu.ThermalInformation.ThermalSensors.FirstOrDefault();
-            var currentTemperature = temperatureSensor?.CurrentTemperature ?? -1;
-            var maxTemperature = temperatureSensor?.DefaultMaximumTemperature ?? -1;
+            var thermalSensors = NVAPI.GetThermalSensors(gpu);
+            var currentTemperature = thermalSensors.Length > 0 ? thermalSensors[0].CurrentTemperature : -1;
+            var maxTemperature = thermalSensors.Length > 0 ? thermalSensors[0].DefaultMaximumTemperature : -1;
 
-            // Get GPU Power and Voltage via helper methods.
-            // GPUInfoHelper centralizes the NvAPIWrapper reflection logic for
-            // power, voltage, and power-topology queries, keeping the duplication
-            // in one place and fixing the previous power-topology bug where the
-            // PCM value was read but never assigned to currentWattage.
+            // Get GPU Power and Voltage via helper methods
             var currentWattage = GPUInfoHelper.GetWattage(gpu);
             var currentVoltage = GPUInfoHelper.GetVoltage(gpu);
 

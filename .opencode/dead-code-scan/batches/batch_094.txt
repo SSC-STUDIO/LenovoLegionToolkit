@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Windows\Dashboard\AddDashboardItemWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Dashboard\BalanceModeSettingsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Dashboard\EditDashboardWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Dashboard\ExtendedHybridModeInfoWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Dashboard\GodModeSettingsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Dashboard\OverclockDiscreteGPUSettingsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Dashboard\SensorDetailsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\KeyboardBacklight\Spectrum\SpectrumKeyboardBacklightEditEffectWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Macro\MacroRecordingWindow.cs
+UniversalDeviceToolkit.WPF\Windows\Osd\OsdBarWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Osd\OsdPanelWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Osd\OsdSettingsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Osd\OsdWindowBase.cs

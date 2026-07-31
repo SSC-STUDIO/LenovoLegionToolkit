@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Avalonia\Pages\AboutPage.axaml.cs
+UniversalDeviceToolkit.Avalonia\Pages\AboutPageViewModel.cs
+UniversalDeviceToolkit.Avalonia\Pages\DashboardPage.axaml.cs
+UniversalDeviceToolkit.Avalonia\Pages\DashboardPageViewModel.cs
+UniversalDeviceToolkit.Avalonia\Pages\SettingsAppearanceView.axaml.cs
+UniversalDeviceToolkit.Avalonia\Pages\SettingsApplicationBehaviorView.axaml.cs
+UniversalDeviceToolkit.Avalonia\Pages\SettingsDisplayView.axaml.cs
+UniversalDeviceToolkit.Avalonia\Pages\SettingsPage.axaml.cs
+UniversalDeviceToolkit.Avalonia\Pages\SettingsPageViewModel.cs
+UniversalDeviceToolkit.CLI\ConsoleLoadingAnimation.cs
+UniversalDeviceToolkit.CLI\IpcClient.cs
+UniversalDeviceToolkit.CLI\Program.cs
+UniversalDeviceToolkit.CLI\Strings.cs

@@ -224,10 +224,8 @@
           "ManagedNativeWifi": "[3.0.2, )",
           "NAudio.Wasapi": "[2.3.0, )",
           "NeoSmart.AsyncLock": "[3.2.1, )",
-          "NvAPIWrapper.Net": "[0.8.1.101, )",
           "Octokit": "[14.0.0, )",
           "PresentMonFps-Modified": "[2.0.7, )",
-          "PubSub": "[4.0.2, )",
           "RAMSPDToolkit-NDD": "[1.4.2, )",
           "Serilog": "[4.3.1, )",
           "Serilog.Sinks.Async": "[2.1.0, )",
@@ -297,12 +295,6 @@
         "resolved": "13.0.4",
         "contentHash": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
       },
-      "NvAPIWrapper.Net": {
-        "type": "CentralTransitive",
-        "requested": "[0.8.1.101, )",
-        "resolved": "0.8.1.101",
-        "contentHash": "qX+5EQ32tCTqBkX/9BNfx7w4HPi18s3XhMubjbxSjPhYQ6pXWL+HGnaZEmGvFlOxvsQN+/6eV3x5bRo1CDY/mQ=="
-      },
       "Octokit": {
         "type": "CentralTransitive",
         "requested": "[14.0.0, )",
@@ -317,12 +309,6 @@
         "dependencies": {
           "Microsoft.Diagnostics.Tracing.TraceEvent": "3.1.28"
         }
-      },
-      "PubSub": {
-        "type": "CentralTransitive",
-        "requested": "[4.0.2, )",
-        "resolved": "4.0.2",
-        "contentHash": "nXGvMNDh11hiiL42dK2EbIOUfyPKZLjTnmZ8lABG2rkHqo74SZCuv1DTzQwXMXt533U+6i5Zaz4iHEeGBPWjpQ=="
       },
       "RAMSPDToolkit-NDD": {
         "type": "CentralTransitive",

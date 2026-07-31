@@ -4088,4 +4088,97 @@ Fn 将会暂时解除锁定。</value>
   <data name="SettingsPage_TextSize_Description" xml:space="preserve">
     <value>放大或缩小应用内的文本，独立于 Windows 显示缩放。</value>
   </data>
+  <data name="NaDiag_NatTitle" xml:space="preserve">
+    <value>NAT 类型检测</value>
+  </data>
+  <data name="NaDiag_NatType" xml:space="preserve">
+    <value>NAT 类型:</value>
+  </data>
+  <data name="NaDiag_LocalIp" xml:space="preserve">
+    <value>本机 IP 地址:</value>
+  </data>
+  <data name="NaDiag_PublicIp" xml:space="preserve">
+    <value>对外 IP 地址:</value>
+  </data>
+  <data name="NaDiag_Internet" xml:space="preserve">
+    <value>互联网连通:</value>
+  </data>
+  <data name="NaDiag_DnsTitle" xml:space="preserve">
+    <value>DNS 检测</value>
+  </data>
+  <data name="NaDiag_DnsDomain" xml:space="preserve">
+    <value>待检测的域名:</value>
+  </data>
+  <data name="NaDiag_CustomDns" xml:space="preserve">
+    <value>自定义代理 DNS:</value>
+  </data>
+  <data name="NaDiag_EnableDoh" xml:space="preserve">
+    <value>启用 DoH:</value>
+  </data>
+  <data name="NaDiag_DohUrl" xml:space="preserve">
+    <value>自定义 DoH 地址:</value>
+  </data>
+  <data name="NaDiag_Latency" xml:space="preserve">
+    <value>延迟:</value>
+  </data>
+  <data name="NaDiag_LatencyFormat" xml:space="preserve">
+    <value>{0} ms</value>
+  </data>
+  <data name="NaDiag_Failed" xml:space="preserve">
+    <value>检测失败</value>
+  </data>
+  <data name="NaDiag_Ipv6Title" xml:space="preserve">
+    <value>IPv6 检测</value>
+  </data>
+  <data name="NaDiag_Ipv6Support" xml:space="preserve">
+    <value>支持情况:</value>
+  </data>
+  <data name="NaDiag_Ipv6Address" xml:space="preserve">
+    <value>IPv6 地址:</value>
+  </data>
+  <data name="NaDiag_Supported" xml:space="preserve">
+    <value>已支持</value>
+  </data>
+  <data name="NaDiag_NotSupported" xml:space="preserve">
+    <value>不支持</value>
+  </data>
+  <data name="NaDiag_Detect" xml:space="preserve">
+    <value>检测</value>
+  </data>
+  <data name="NaDiag_Unknown" xml:space="preserve">
+    <value>未知</value>
+  </data>
+  <data name="NaDiag_NatOpen" xml:space="preserve">
+    <value>开放型 NAT</value>
+  </data>
+  <data name="NaDiag_NatRestricted" xml:space="preserve">
+    <value>限制型 NAT</value>
+  </data>
+  <data name="NaDiag_UdpBlocked" xml:space="preserve">
+    <value>UDP 被阻断</value>
+  </data>
+  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve">
+    <value>操作失败</value>
+  </data>
+  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve">
+    <value>无法停止 Lenovo Vantage: {0}</value>
+  </data>
+  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve">
+    <value>无法停止 Legion Zone: {0}</value>
+  </data>
+  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve">
+    <value>无法停止 Lenovo Hotkeys: {0}</value>
+  </data>
+  <data name="Theme_Auto" xml:space="preserve">
+    <value>自动</value>
+  </data>
+  <data name="Theme_Light" xml:space="preserve">
+    <value>亮色</value>
+  </data>
+  <data name="Theme_Dark" xml:space="preserve">
+    <value>暗色</value>
+  </data>
+  <data name="Theme_System" xml:space="preserve">
+    <value>跟随系统</value>
+  </data>
 </root>

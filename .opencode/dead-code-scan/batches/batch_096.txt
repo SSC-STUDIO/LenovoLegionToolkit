@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Windows\Utils\DeviceInformationWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\DeviceSetupWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\ErrorDialogWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\INotificationWindow.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\InputDialogWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\ISelectedActionViewModel.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\LanguageSelectorWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\LargeFilesWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\NativeLayeredWindow.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\NotificationAoTWindow.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\NotificationWindow.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\SelectedActionsViewModel.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\SelectedActionsWindow.xaml.cs

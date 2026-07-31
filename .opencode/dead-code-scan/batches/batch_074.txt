@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\WPF\WindowsOptimizationViewModelGuardTests.cs
+UniversalDeviceToolkit.Tests\WPF\WpfL10nCoverageGuardTests.cs
+UniversalDeviceToolkit.ViewModels\KeyboardBacklightViewModel.cs
+UniversalDeviceToolkit.ViewModels\MacroViewModel.cs
+UniversalDeviceToolkit.ViewModels\PackagesViewModel.cs
+UniversalDeviceToolkit.ViewModels\SettingsNavigationViewModel.cs
+UniversalDeviceToolkit.WPF\App.xaml.cs
+UniversalDeviceToolkit.WPF\Constants.cs
+UniversalDeviceToolkit.WPF\Enums.cs
+UniversalDeviceToolkit.WPF\Flags.cs
+UniversalDeviceToolkit.WPF\GlobalSuppressions.cs
+UniversalDeviceToolkit.WPF\GlobalUsings.cs
+UniversalDeviceToolkit.WPF\IoCModule.cs

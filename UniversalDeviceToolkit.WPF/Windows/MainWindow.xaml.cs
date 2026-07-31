@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.Lib.Messaging;
@@ -460,12 +461,16 @@ public partial class MainWindow
         // Unsubscribe from special key listener
         _specialKeyListener.Changed -= SpecialKeyListener_Changed;
 
-        // PubSub keeps strong refs; without this, App.RestartMainWindow leaves zombie handlers.
+        // Weak reference table to subscribers; GC can reclaim unsubscribed objects automatically.
         MessagingCenter.Unsubscribe<MainWindowVisibilityMessage>(this);
 
         _trayHelper?.Dispose();
         _trayHelper = null;
     }
+
+    private CacheMode? _savedContentCacheMode;
+    private bool _stateTransitionCacheApplied;
+    private UIElement? _stateCachedContent;
 
     private void MainWindow_StateChanged(object? sender, EventArgs e)
     {
@@ -481,16 +486,90 @@ public partial class MainWindow
             case WindowState.Normal:
                 SetEfficiencyMode(false);
                 BringToForeground();
-                // Settle rail width after restore (skipped during live resize).
-                if (IsLoaded)
-                    _navigationStore.RefreshWidthForHostWindow();
+                BeginStateTransitionSmooth();
                 break;
             case WindowState.Maximized:
-                // Work-area maximize (MyDockFinder / taskbar friendly) — stay interactive.
                 SetEfficiencyMode(false);
+                BeginStateTransitionSmooth();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Snapshot content as bitmap so the native maximize/restore animation scales a frozen
+    /// frame (like edge-drag), then restore + fade in once the animation completes.
+    /// Prevents the jarring mid-animation layout reflow that causes visual "snap".
+    /// </summary>
+    private void BeginStateTransitionSmooth()
+    {
+        if (!IsLoaded)
+            return;
+
+        try
+        {
+            // 1) Freeze content as bitmap so DWM scales it smoothly during native animation.
+            if (Content is UIElement content)
+            {
+                _stateCachedContent = content;
+                _savedContentCacheMode = content.CacheMode;
+                content.CacheMode = new BitmapCache
+                {
+                    EnableClearType = false,
+                    RenderAtScale = 1.0,
+                    SnapsToDevicePixels = true,
+                };
+                _stateTransitionCacheApplied = true;
+                RenderOptions.SetBitmapScalingMode(content, BitmapScalingMode.LowQuality);
+            }
+
+            // 2) Defer layout refresh + restore until native animation finishes.
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RestoreStateTransitionSmooth();
                 if (IsLoaded)
                     _navigationStore.RefreshWidthForHostWindow();
-                break;
+            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("State transition smooth begin failed.", ex);
+            RestoreStateTransitionSmooth();
+        }
+    }
+
+    private void RestoreStateTransitionSmooth()
+    {
+        try
+        {
+            if (_stateTransitionCacheApplied && _stateCachedContent is not null)
+            {
+                if (_savedContentCacheMode is null)
+                    _stateCachedContent.ClearValue(UIElement.CacheModeProperty);
+                else
+                    _stateCachedContent.CacheMode = _savedContentCacheMode;
+
+                RenderOptions.SetBitmapScalingMode(_stateCachedContent, BitmapScalingMode.Unspecified);
+
+                // Soft fade-in so the restored frame doesn't pop in.
+                if (_stateCachedContent is FrameworkElement fe)
+                {
+                    var fade = new DoubleAnimation(0.0, 1.0, TimeSpan.FromMilliseconds(120))
+                    {
+                        EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
+                        FillBehavior = FillBehavior.Stop,
+                    };
+                    fade.Completed += (_, _) => fe.BeginAnimation(UIElement.OpacityProperty, null);
+                    fe.BeginAnimation(UIElement.OpacityProperty, fade);
+                }
+            }
+        }
+        catch { /* non-fatal */ }
+        finally
+        {
+            _savedContentCacheMode = null;
+            _stateTransitionCacheApplied = false;
+            _stateCachedContent = null;
         }
     }
 

@@ -109,7 +109,7 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
         await UpdateConfigButtonVisibilityAsync();
 
-        if (await Power.IsPowerAdapterConnectedAsync() != PowerAdapterStatus.Connected
+        if (await Power.IsPowerAdapterConnectedAsync() == PowerAdapterStatus.Disconnected
             && TryGetSelectedItem(out var state)
             && state is PowerModeState.Performance or PowerModeState.GodMode)
             Warning = Resource.PowerModeControl_Warning;

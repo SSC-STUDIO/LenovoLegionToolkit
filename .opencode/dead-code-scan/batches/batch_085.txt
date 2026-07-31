@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Controls\Settings\SettingsDisplayControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Settings\SettingsIntegrationsControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Settings\SettingsPowerControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Settings\SettingsSmartKeysControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Settings\SettingsUpdateControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Shell\AppNotificationHost.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Shell\AppStatusBanner.xaml.cs
+UniversalDeviceToolkit.WPF\Extensions\AutomationPipelineTriggerExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\ClipboardExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\ColorExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\ComboBoxExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\DashboardItemExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\DispatcherExtensions.cs

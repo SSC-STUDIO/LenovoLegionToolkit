@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Controls\Dashboard\DiscreteGPUControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\DpiScaleControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\FlipToStartControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\FnLockControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\HDRControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\HybridModeControlFactory.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\InstantBootControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\MicrophoneControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\OneLevelWhiteKeyboardBacklightControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\OverclockDiscreteGPUControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\OverDriveControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\PanelLogoBacklightControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\PortsBacklightControl.cs

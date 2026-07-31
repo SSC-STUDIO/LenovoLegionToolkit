@@ -61,12 +61,6 @@
         "resolved": "3.2.1",
         "contentHash": "bYIpqtgA5oZWdSgcsGA4XLkKVYuz6Qc+aEVfTYPOIX2rSFbb8NFxHcBb5V62qio8Q6Au/Xn+7ci86VW9vqIk0w=="
       },
-      "NvAPIWrapper.Net": {
-        "type": "Direct",
-        "requested": "[0.8.1.101, )",
-        "resolved": "0.8.1.101",
-        "contentHash": "qX+5EQ32tCTqBkX/9BNfx7w4HPi18s3XhMubjbxSjPhYQ6pXWL+HGnaZEmGvFlOxvsQN+/6eV3x5bRo1CDY/mQ=="
-      },
       "Octokit": {
         "type": "Direct",
         "requested": "[14.0.0, )",
@@ -81,12 +75,6 @@
         "dependencies": {
           "Microsoft.Diagnostics.Tracing.TraceEvent": "3.1.28"
         }
-      },
-      "PubSub": {
-        "type": "Direct",
-        "requested": "[4.0.2, )",
-        "resolved": "4.0.2",
-        "contentHash": "nXGvMNDh11hiiL42dK2EbIOUfyPKZLjTnmZ8lABG2rkHqo74SZCuv1DTzQwXMXt533U+6i5Zaz4iHEeGBPWjpQ=="
       },
       "RAMSPDToolkit-NDD": {
         "type": "Direct",

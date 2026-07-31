@@ -134,9 +134,7 @@
 [BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: Microsoft.CSharp
 [BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: NAudio.Wasapi
 [BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: Newtonsoft.Json
-[BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: NvAPIWrapper.Net
 [BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: Octokit
-[BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: PubSub
 [BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: System.Management
 [BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: TaskScheduler
 [BRAND] :: UniversalDeviceToolkit.WPF/Pages/AboutPage.xaml :: WindowsDisplayAPI
@@ -153,6 +151,13 @@
 [TECH_ABBREV] :: UniversalDeviceToolkit.WPF/Controls/FanCurveControl.xaml :: 40%
 [TECH_ABBREV] :: UniversalDeviceToolkit.WPF/Controls/FanCurveControl.xaml :: 20%
 [TECH_ABBREV] :: UniversalDeviceToolkit.WPF/Controls/FanCurveControl.xaml :: "100 °C"
+
+# ---------------------------------------------------------------------------
+# Network Acceleration diagnostics — default input values (technical, not localised).
+# ---------------------------------------------------------------------------
+[TECH_DEFAULT] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: store.steampowered.com
+[TECH_DEFAULT] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: 223.5.5.5
+[GLYPH] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: ▾
 
 # ---------------------------------------------------------------------------
 # End of whitelist.

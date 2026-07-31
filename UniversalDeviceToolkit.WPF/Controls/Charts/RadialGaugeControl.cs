@@ -41,6 +41,9 @@ public class RadialGaugeControl : Control
     private Size _cachedTrackSize;
     private double _cachedTrackThickness;
 
+    // Cached per-frame values to skip redundant property sets during animation
+    private double _lastAppliedThickness = double.NaN;
+
     static RadialGaugeControl()
     {
         DefaultStyleKeyProperty.OverrideMetadata(
@@ -171,6 +174,8 @@ public class RadialGaugeControl : Control
             gauge._cachedGlowBrush = null;
             gauge._cachedTipBrush = null;
         }
+        if (e.Property == RingThicknessProperty)
+            gauge._lastAppliedThickness = double.NaN;
         gauge.RedrawAll();
     }
 
@@ -279,10 +284,16 @@ public class RadialGaugeControl : Control
         }
 
         _trackPath.Data = _cachedTrackGeometry;
-        _trackPath.StrokeThickness = RingThickness;
-        _trackPath.Stroke = TrackBrush ?? (TryFindResource("ChartTrackBrush") as Brush) ?? Brushes.Gray;
-        _trackPath.StrokeStartLineCap = PenLineCap.Round;
-        _trackPath.StrokeEndLineCap = PenLineCap.Round;
+
+        var trackBrush = TrackBrush ?? (TryFindResource("ChartTrackBrush") as Brush) ?? Brushes.Gray;
+        if (Math.Abs(_trackPath.StrokeThickness - RingThickness) > double.Epsilon)
+        {
+            _trackPath.StrokeThickness = RingThickness;
+            _trackPath.StrokeStartLineCap = PenLineCap.Round;
+            _trackPath.StrokeEndLineCap = PenLineCap.Round;
+        }
+        if (!ReferenceEquals(_trackPath.Stroke, trackBrush))
+            _trackPath.Stroke = trackBrush;
     }
 
     private void DrawValueArc()
@@ -302,27 +313,43 @@ public class RadialGaugeControl : Control
         }
 
         var sweep = SweepAngle * Math.Clamp(_renderedValue, 0.0, 1.0);
+        var glowThickness = RingThickness + 5.0;
 
-        _valuePath.StrokeThickness = RingThickness;
-        _valuePath.Stroke = BuildArcStroke();
-        _valuePath.StrokeStartLineCap = PenLineCap.Round;
-        _valuePath.StrokeEndLineCap = PenLineCap.Round;
+        // Only update stroke properties when thickness changes
+        if (Math.Abs(_lastAppliedThickness - RingThickness) > double.Epsilon)
+        {
+            _valuePath.StrokeThickness = RingThickness;
+            _valuePath.StrokeStartLineCap = PenLineCap.Round;
+            _valuePath.StrokeEndLineCap = PenLineCap.Round;
+
+            if (_glowPath is not null)
+            {
+                _glowPath.StrokeThickness = glowThickness;
+                _glowPath.StrokeStartLineCap = PenLineCap.Round;
+                _glowPath.StrokeEndLineCap = PenLineCap.Round;
+            }
+            _lastAppliedThickness = RingThickness;
+        }
+
+        // Update brushes only when RingBrush changes (cached)
+        var arcStroke = BuildArcStroke();
+        if (!ReferenceEquals(_valuePath.Stroke, arcStroke))
+            _valuePath.Stroke = arcStroke;
+
+        var glowBrush = ExtractRingColorBrush(96);
+        if (_glowPath is not null && !ReferenceEquals(_glowPath.Stroke, glowBrush))
+            _glowPath.Stroke = glowBrush;
 
         // Avoid a zero-length arc (renders nothing / a dot) when value is ~0.
         var arc = sweep < 0.5 ? null : BuildArc(center, radius, StartAngle, sweep);
         _valuePath.Data = arc;
 
-        // Soft glow underlay traces the same arc with a thicker, translucent, blurred stroke.
         if (_glowPath is not null)
-        {
             _glowPath.Data = arc;
-            _glowPath.StrokeThickness = RingThickness + 3.5;
-            _glowPath.Stroke = ExtractRingColorBrush(96);
-            _glowPath.StrokeStartLineCap = PenLineCap.Round;
-            _glowPath.StrokeEndLineCap = PenLineCap.Round;
-        }
 
         // Bright dot riding the leading edge of the value arc.
+        // Theme-adaptive: white fill + colored stroke ensures visibility in both
+        // light and dark themes (solid color dot blends into dark backgrounds).
         if (_tip is not null)
         {
             if (arc is null)
@@ -332,11 +359,13 @@ public class RadialGaugeControl : Control
             else
             {
                 var tipCenter = PointOnCircle(center, radius, StartAngle + sweep);
-                var tipDiameter = Math.Max(3.0, RingThickness + 1.0);
+                var tipDiameter = Math.Max(5.0, RingThickness + 3.0);
 
                 _tip.Width = tipDiameter;
                 _tip.Height = tipDiameter;
-                _tip.Fill = ExtractRingColorBrush(255);
+                _tip.Fill = Brushes.White;
+                _tip.Stroke = ExtractRingColorBrush(255);
+                _tip.StrokeThickness = Math.Max(1.5, RingThickness * 0.35);
                 _tip.Margin = new Thickness(
                     tipCenter.X - tipDiameter / 2.0,
                     tipCenter.Y - tipDiameter / 2.0,

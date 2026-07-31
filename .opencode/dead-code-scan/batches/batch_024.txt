@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\IPackageRule.cs
+UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\NotPackageRule.cs
+UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\OrPackageRule.cs
+UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\OsPackageRule.cs
+UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\PnPIdPackageRule.cs
+UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\RegistryKeyPackageRule.cs
+UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\RegistryKeyValuePackageRule.cs
+UniversalDeviceToolkit.Lib\PackageDownloader\Detectors\Rules\WindowsBuildVersionPackageRule.cs
+UniversalDeviceToolkit.Lib\Plugins\LegacyPluginContracts.cs
+UniversalDeviceToolkit.Lib\Plugins\PluginConfiguration.cs
+UniversalDeviceToolkit.Lib\Plugins\PluginHostContext.cs
+UniversalDeviceToolkit.Lib\Properties\AssemblyInfo.cs
+UniversalDeviceToolkit.Lib\Resources\Resource.Designer.cs

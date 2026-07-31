@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib.Plugins\DependencyResolver.cs
+UniversalDeviceToolkit.Lib.Plugins\IAppStartupPlugin.cs
+UniversalDeviceToolkit.Lib.Plugins\IDependencyResolver.cs
+UniversalDeviceToolkit.Lib.Plugins\IoCModule.cs
+UniversalDeviceToolkit.Lib.Plugins\IOptimizationCategoryProvider.cs
+UniversalDeviceToolkit.Lib.Plugins\IPlugin.cs
+UniversalDeviceToolkit.Lib.Plugins\IPluginConfiguration.cs
+UniversalDeviceToolkit.Lib.Plugins\IPluginHostContext.cs
+UniversalDeviceToolkit.Lib.Plugins\IPluginHotReload.cs
+UniversalDeviceToolkit.Lib.Plugins\IPluginManager.cs
+UniversalDeviceToolkit.Lib.Plugins\IPluginPage.cs
+UniversalDeviceToolkit.Lib.Plugins\IPluginSandbox.cs
+UniversalDeviceToolkit.Lib.Plugins\OptimizationCategoryExtender.cs

@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib.Automation\Steps\OneLevelWhiteKeyboardBacklightAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\OsdAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\OverclockDiscreteGPUAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\OverDriveAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\PanelLogoBacklightAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\PlaySoundAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\PortsBacklightAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\PowerModeAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\QuickActionAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\RefreshRateAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\ResolutionAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\RGBKeyboardBacklightAutomationStep.cs
+UniversalDeviceToolkit.Lib.Automation\Steps\RunAutomationStep.cs

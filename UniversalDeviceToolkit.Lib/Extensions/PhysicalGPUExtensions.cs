@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
-using NvAPIWrapper.GPU;
-using NvAPIWrapper.Native;
 
 namespace UniversalDeviceToolkit.Lib.Extensions;
 
@@ -16,16 +15,18 @@ public static class NVAPIExtensions
         "explorer.exe",
     ];
 
-    public static List<Process> GetActiveProcesses(PhysicalGPU gpu)
+    internal static List<Process> GetActiveProcesses(NvPhysicalGpuHandle gpu)
     {
         var processes = new List<Process>();
-        var apps = GPUApi.QueryActiveApps(gpu.Handle).Where(app => !Exclusions.Contains(app.ProcessName, StringComparer.OrdinalIgnoreCase));
+        var apps = NVAPI.GetActiveApps(gpu).Where(app =>
+            !string.IsNullOrEmpty(app.ProcessName) &&
+            !Exclusions.Contains(app.ProcessName, StringComparer.OrdinalIgnoreCase));
 
         foreach (var app in apps)
         {
             try
             {
-                var process = Process.GetProcessById(app.ProcessId);
+                var process = Process.GetProcessById((int)app.ProcessId);
                 processes.Add(process);
             }
             catch (ArgumentException ex)

@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\DeviceSupport\LenovoDeviceSupportProvider.cs
+UniversalDeviceToolkit.Lib\Extensions\AssemblyExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\ContainerBuilderExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\DateTimeExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\DictionaryExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\DisplayExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\DisplayPossibleSettingExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\DisplaySettingExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\EnumerableExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\EnumExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\HttpClientExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\IntExtensions.cs
+UniversalDeviceToolkit.Lib\Extensions\ListExtensions.cs

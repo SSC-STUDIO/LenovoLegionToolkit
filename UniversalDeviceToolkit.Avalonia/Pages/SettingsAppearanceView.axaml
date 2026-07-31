@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsAppearanceView">
+    <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
+        <TextBlock Text="Appearance"
+                   FontSize="{StaticResource FontSizeDisplaySection}"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+
+        <TextBlock Text="Customize the look and feel of the application."
+                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,8"/>
+
+        <!-- Theme Selection -->
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}"
+                Padding="16">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Theme"
+                           FontSize="{StaticResource FontSizeSubsection}"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                <TextBlock Text="Choose between light and dark appearance."
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmallCaption}"/>
+                <ComboBox x:Name="ThemeComboBox" MinWidth="160" HorizontalAlignment="Left"
+                          Margin="0,8,0,0" SelectionChanged="ThemeComboBox_SelectionChanged">
+                    <ComboBoxItem Content="System Default" Tag="Default" />
+                    <ComboBoxItem Content="Light" Tag="Light" />
+                    <ComboBoxItem Content="Dark" Tag="Dark" />
+                </ComboBox>
+            </StackPanel>
+        </Border>
+
+        <!-- Language -->
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}"
+                Padding="16">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Language"
+                           FontSize="{StaticResource FontSizeSubsection}"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                <TextBlock Text="Select the display language for the application."
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmallCaption}"/>
+                <ComboBox SelectedIndex="0" MinWidth="160" HorizontalAlignment="Left"
+                          Margin="0,8,0,0">
+                    <ComboBoxItem Content="English"/>
+                    <ComboBoxItem Content="中文（简体）"/>
+                    <ComboBoxItem Content="日本語"/>
+                </ComboBox>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\Settings\RGBKeyboardSettingsTests.cs
+UniversalDeviceToolkit.Tests\Settings\SettingsCleanupHelper.cs
+UniversalDeviceToolkit.Tests\Settings\SettingsNormalizationTests.cs
+UniversalDeviceToolkit.Tests\Settings\SettingsTestCollection.cs
+UniversalDeviceToolkit.Tests\Settings\UpdateCheckSettingsTests.cs
+UniversalDeviceToolkit.Tests\SoftwareDisabler\SoftwareDisablerTests.cs
+UniversalDeviceToolkit.Tests\Utils\AnimationTimingEdgeCaseTests.cs
+UniversalDeviceToolkit.Tests\Utils\AnimationTimingTests.cs
+UniversalDeviceToolkit.Tests\Utils\BackgroundInitOrchestrationTests.cs
+UniversalDeviceToolkit.Tests\Utils\CiWorkflowGuardTests.cs
+UniversalDeviceToolkit.Tests\Utils\CompatibilityTests.cs
+UniversalDeviceToolkit.Tests\Utils\Crc32AdlerTests.cs
+UniversalDeviceToolkit.Tests\Utils\CurveNodeTests.cs

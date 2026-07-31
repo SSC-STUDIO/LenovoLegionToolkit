@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\Controllers\Sensors\SensorsControllerV1.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\SensorsControllerV2.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\SensorsControllerV3.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\SensorsControllerV4.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\SensorsControllerV5.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\SensorsGroupController.cs
+UniversalDeviceToolkit.Lib\DeviceSupport\CatalogDeviceSupportProvider.cs
+UniversalDeviceToolkit.Lib\DeviceSupport\DeviceFeatureAvailability.cs
+UniversalDeviceToolkit.Lib\DeviceSupport\DevicePack.cs
+UniversalDeviceToolkit.Lib\DeviceSupport\DevicePackManager.cs
+UniversalDeviceToolkit.Lib\DeviceSupport\DeviceSupportCatalog.cs
+UniversalDeviceToolkit.Lib\DeviceSupport\IDeviceSupportProvider.cs
+UniversalDeviceToolkit.Lib\DeviceSupport\IInstalledDeviceSupportProvider.cs

@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib.Automation\AutomationContext.cs
+UniversalDeviceToolkit.Lib.Automation\AutomationEnvironment.cs
+UniversalDeviceToolkit.Lib.Automation\AutomationProcessor.cs
+UniversalDeviceToolkit.Lib.Automation\Enums.cs
+UniversalDeviceToolkit.Lib.Automation\GlobalSuppressions.cs
+UniversalDeviceToolkit.Lib.Automation\GlobalUsings.cs
+UniversalDeviceToolkit.Lib.Automation\IAutomationEvent.cs
+UniversalDeviceToolkit.Lib.Automation\IoCModule.cs
+UniversalDeviceToolkit.Lib.Automation\Structs.cs
+UniversalDeviceToolkit.Lib.Automation\Pipeline\AutomationPipeline.cs
+UniversalDeviceToolkit.Lib.Automation\Pipeline\Triggers\ACAdapterConnectedAutomationPipelineTrigger.cs
+UniversalDeviceToolkit.Lib.Automation\Pipeline\Triggers\ACAdapterDisconnectedAutomationPipelineTrigger.cs
+UniversalDeviceToolkit.Lib.Automation\Pipeline\Triggers\AndAutomationPipelineTrigger.cs

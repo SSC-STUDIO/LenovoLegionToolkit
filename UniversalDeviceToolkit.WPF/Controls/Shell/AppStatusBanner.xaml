@@ -47,7 +47,7 @@
                 Margin="10,0,8,0"
                 VerticalAlignment="Center"
                 Focusable="True"
-                FontWeight="SemiBold"
+                FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                 Style="{StaticResource AppBodyTextBlockStyle}"
                 Text="{Binding Message, RelativeSource={RelativeSource AncestorType=shell:AppStatusBanner}}"

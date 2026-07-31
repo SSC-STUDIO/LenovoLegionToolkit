@@ -71,6 +71,10 @@ jobs:
           json="$(dotnet run --project "$project" --configuration Release --no-build -- json)"
           echo "$json" | grep -q 'Universal Device Toolkit'
 
+      - name: Build Avalonia libraries
+        run: |
+          dotnet build UniversalDeviceToolkit.Avalonia/UniversalDeviceToolkit.Avalonia.csproj --configuration Release
+
       - name: Upload test results
         uses: actions/upload-artifact@v7
         if: always()

@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Windows\Settings\BootLogoWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\ExcludeRefreshRatesWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\HardwareSensorSectionsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\NavigationItemsSettingsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\NotificationsSettingsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\PluginSettingsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\SelectSmartKeyPipelinesWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\WindowsPowerModesWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Settings\WindowsPowerPlansWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\ActionDetailsWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\CompatibilityCheckErrorWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\CrashReportNotificationWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\CustomCleanupRuleWindow.xaml.cs

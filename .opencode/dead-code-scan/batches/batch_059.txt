@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\Automation\PipelineNameLocalizerTests.cs
+UniversalDeviceToolkit.Tests\CLI\CLIStringsTests.cs
+UniversalDeviceToolkit.Tests\CLI\ConstantsTests.cs
+UniversalDeviceToolkit.Tests\CLI\IpcResponseTests.cs
+UniversalDeviceToolkit.Tests\Controllers\AIControllerTests.cs
+UniversalDeviceToolkit.Tests\Controllers\FanSpeedReadCoordinatorTests.cs
+UniversalDeviceToolkit.Tests\Controllers\GigabyteSensorsControllerTests.cs
+UniversalDeviceToolkit.Tests\Controllers\GodModeControllerTests.cs
+UniversalDeviceToolkit.Tests\Controllers\GPUControllerTests.cs
+UniversalDeviceToolkit.Tests\Controllers\GPUHardwareManagerEdgeCaseTests.cs
+UniversalDeviceToolkit.Tests\Controllers\GPUHardwareManagerTests.cs
+UniversalDeviceToolkit.Tests\Controllers\GPUProcessManagerTests.cs
+UniversalDeviceToolkit.Tests\Controllers\RGBKeyboardBacklightControllerTests.cs

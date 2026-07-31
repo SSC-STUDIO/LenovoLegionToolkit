@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\Plugins\OptimizationCategoryExtenderTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginConfigurationTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginErrorMessageTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginFileSystemManagerTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginHostContextTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginHotReloadTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginInfrastructureTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginInstallationServiceTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginLifecycleStateMachineTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginLoaderTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginManagerSecurityTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginManagerTests.cs
+UniversalDeviceToolkit.Tests\Plugins\PluginMetadataLocalizationTests.cs

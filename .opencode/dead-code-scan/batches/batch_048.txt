@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib.Plugins\VersionChecker.cs
+UniversalDeviceToolkit.Lib.Plugins\Resources\Resource.Designer.cs
+UniversalDeviceToolkit.Lib.Shared\Logging\SharedLog.cs
+UniversalDeviceToolkit.Lib.Shared\Messaging\IMessage.cs
+UniversalDeviceToolkit.Lib.Shared\Messaging\MessagingCenter.cs
+UniversalDeviceToolkit.Lib.Shared\Serialization\LltJson.cs
+UniversalDeviceToolkit.Lib.Shared\Settings\AbstractSettings.cs
+UniversalDeviceToolkit.Lib.Shared\Utils\AppIdentity.cs
+UniversalDeviceToolkit.Lib.Shared\Utils\ExceptionHelper.cs
+UniversalDeviceToolkit.Lib.Shared\Utils\Folders.cs
+UniversalDeviceToolkit.Lib.Shared\Utils\PathSecurity.cs
+UniversalDeviceToolkit.NetworkProxy\Program.cs
+UniversalDeviceToolkit.NetworkProxy\Host\INetworkProxyHost.cs

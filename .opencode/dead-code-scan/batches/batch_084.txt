@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Controls\KeyboardBacklight\Spectrum\Device\SpectrumKeyboardJisControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\KeyboardBacklight\Spectrum\Device\SpectrumZoneControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Loading\ILoadingChromeOwner.cs
+UniversalDeviceToolkit.WPF\Controls\Loading\LoadSession.cs
+UniversalDeviceToolkit.WPF\Controls\Loading\LoadState.cs
+UniversalDeviceToolkit.WPF\Controls\Loading\LoadStateCoordinator.cs
+UniversalDeviceToolkit.WPF\Controls\Macro\AbstractMacroEventControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Macro\MacroSequenceControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Macro\MultiAbstractMacroEventControl.cs
+UniversalDeviceToolkit.WPF\Controls\Macro\SingleAbstractMacroEventControl.cs
+UniversalDeviceToolkit.WPF\Controls\Packages\PackageControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Settings\SettingsAppearanceControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Settings\SettingsApplicationBehaviorControl.xaml.cs

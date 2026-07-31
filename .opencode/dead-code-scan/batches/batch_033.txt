@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\Utils\IExtensionProvider.cs
+UniversalDeviceToolkit.Lib\Utils\IMainThreadDispatcher.cs
+UniversalDeviceToolkit.Lib\Utils\InstallerLaunchPathValidator.cs
+UniversalDeviceToolkit.Lib\Utils\LambdaAsyncDisposable.cs
+UniversalDeviceToolkit.Lib\Utils\LambdaDisposable.cs
+UniversalDeviceToolkit.Lib\Utils\Log.cs
+UniversalDeviceToolkit.Lib\Utils\NullSafeHandle.cs
+UniversalDeviceToolkit.Lib\Utils\PathSecurity.cs
+UniversalDeviceToolkit.Lib\Utils\PawnIOHelper.cs
+UniversalDeviceToolkit.Lib\Utils\ReflectionCache.cs
+UniversalDeviceToolkit.Lib\Utils\ResourceQualityAuditor.cs
+UniversalDeviceToolkit.Lib\Utils\RetryHelper.cs
+UniversalDeviceToolkit.Lib\Utils\SafePerformanceCounter.cs

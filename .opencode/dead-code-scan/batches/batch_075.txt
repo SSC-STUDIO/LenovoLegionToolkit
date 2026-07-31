@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Structs.cs
+UniversalDeviceToolkit.WPF\Assets\AssetResources.Designer.cs
+UniversalDeviceToolkit.WPF\Behaviors\ProgressBarAnimateBehavior.cs
+UniversalDeviceToolkit.WPF\Behaviors\TextOverflowFadeBehavior.cs
+UniversalDeviceToolkit.WPF\CLI\IpcServer.cs
+UniversalDeviceToolkit.WPF\CLI\Features\FeatureRegistration.cs
+UniversalDeviceToolkit.WPF\CLI\Features\FeatureRegistry.cs
+UniversalDeviceToolkit.WPF\CLI\Features\IFeatureRegistration.cs
+UniversalDeviceToolkit.WPF\Controls\AbstractComboBoxFeatureCardControl.cs
+UniversalDeviceToolkit.WPF\Controls\AbstractRefreshingControl.cs
+UniversalDeviceToolkit.WPF\Controls\AbstractToggleFeatureCardControl.cs
+UniversalDeviceToolkit.WPF\Controls\CardHeaderControl.cs
+UniversalDeviceToolkit.WPF\Controls\ColorPickerControl.xaml.cs

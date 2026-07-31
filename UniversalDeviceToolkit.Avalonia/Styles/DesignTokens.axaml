@@ -1,0 +1,247 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Spacing Tokens (Thickness) -->
+    <Thickness x:Key="SpacingXXS">4</Thickness>
+    <Thickness x:Key="SpacingXS">8</Thickness>
+    <Thickness x:Key="SpacingSM">12</Thickness>
+    <Thickness x:Key="SpacingMD">16</Thickness>
+    <Thickness x:Key="SpacingLG">24</Thickness>
+    <Thickness x:Key="SpacingXL">32</Thickness>
+    <Thickness x:Key="ContentPaddingPage">24</Thickness>
+
+    <!--
+      Corner radius scale (UI modernization):
+        Compact / badge / color swatch : 8
+        Button / input / list item     : 12
+        Card / settings group / plugin : 18
+        Dialog / main content surface  : 20
+        Capsule / status pill          : 999
+      Micro chart tracks may use ProgressBar (3). Avoid literal radii in views.
+    -->
+    <CornerRadius x:Key="CornerRadiusNone">0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusProgressBar">2</CornerRadius>
+    <!-- Compact-scale micro chrome (badges, chips). Prefer Compact over Small in new XAML. -->
+    <CornerRadius x:Key="CornerRadiusSmall">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCompact">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusControl">12</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCard">18</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSurface">20</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusRound">999</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSurfaceTop">20,0,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSurfaceBottom">0,0,20,20</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCardTop">18,18,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCardBottom">0,0,18,18</CornerRadius>
+
+    <!-- Compatibility aliases for existing views. -->
+    <CornerRadius x:Key="CornerRadiusSM">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMD">12</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusLG">18</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusXL">20</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusContentSurfaceTop">20,20,0,0</CornerRadius>
+
+    <!-- Font Size Tokens -->
+    <!-- Note: Avalonia uses x:Double instead of WPF's sys:Double -->
+    <!-- Tiny nav-item content text. -->
+    <x:Double x:Key="FontSizeMicro">10</x:Double>
+    <!-- Dense tertiary captions, badges and value readouts. -->
+    <x:Double x:Key="FontSizeDenseCaption">11</x:Double>
+    <!-- Small secondary/description text in dialogs and cards. -->
+    <x:Double x:Key="FontSizeSmallCaption">12</x:Double>
+    <x:Double x:Key="FontSizeSmallBody">13</x:Double>
+    <x:Double x:Key="FontSizeCaption">14</x:Double>
+    <x:Double x:Key="FontSizeBody">15</x:Double>
+    <x:Double x:Key="FontSizeTitleBarDeviceInfo">16</x:Double>
+    <x:Double x:Key="FontSizePageDescription">16</x:Double>
+    <x:Double x:Key="FontSizeSubsection">17</x:Double>
+    <!-- Gauge/chart value readout text. -->
+    <x:Double x:Key="FontSizeGaugeValue">18</x:Double>
+    <x:Double x:Key="FontSizeSection">19</x:Double>
+    <!-- Mid-size headers (dialog titles, card section headers) between Section and DisplaySection. -->
+    <x:Double x:Key="FontSizeMidHeader">20</x:Double>
+    <x:Double x:Key="FontSizeDisplaySection">25</x:Double>
+    <x:Double x:Key="FontSizePageTitle">29</x:Double>
+
+    <!-- Icon Size Tokens -->
+    <!-- Tiny overlay badge glyph (installed-check on plugin icons). -->
+    <x:Double x:Key="IconSizeOverlay">9</x:Double>
+    <!-- Tiny dismiss glyph on removable color chips. -->
+    <x:Double x:Key="IconSizeChip">11</x:Double>
+    <x:Double x:Key="IconSizeSM">14</x:Double>
+    <!-- Status badge glyph paired with small caption text. -->
+    <x:Double x:Key="IconSizeBadge">15</x:Double>
+    <!-- Compact chrome glyph (nav chevrons, InfoBar symbol, inline folder). -->
+    <x:Double x:Key="IconSizeCompact">16</x:Double>
+    <x:Double x:Key="IconSizeMD">18</x:Double>
+    <!-- Medium glyph for card/banner/notification icons and icon-only buttons. -->
+    <x:Double x:Key="IconSizeCardGlyph">20</x:Double>
+    <x:Double x:Key="IconSizeLG">24</x:Double>
+    <!-- Large status/header glyph (dialog headers, plugin headers, empty-state panels). -->
+    <x:Double x:Key="IconSizeDialog">28</x:Double>
+    <x:Double x:Key="IconSizeXL">32</x:Double>
+    <!-- Large centered empty/search-state glyph. -->
+    <x:Double x:Key="IconSizeHeroSM">42</x:Double>
+    <x:Double x:Key="IconSizeHero">48</x:Double>
+    <!-- Full-window hero glyph (device setup, unsupported OS). -->
+    <x:Double x:Key="IconSizeHeroXL">56</x:Double>
+    <!-- Error window hero glyph. -->
+    <x:Double x:Key="IconSizeHeroXXL">64</x:Double>
+
+    <!-- Button Size Tokens -->
+    <x:Double x:Key="ButtonMinWidthCompact">80</x:Double>
+    <x:Double x:Key="ButtonMinWidthStandard">120</x:Double>
+    <x:Double x:Key="ButtonMinWidthLarge">160</x:Double>
+    <x:Double x:Key="ButtonHeightCompact">32</x:Double>
+    <x:Double x:Key="ButtonHeightStandard">36</x:Double>
+    <x:Double x:Key="ButtonHeightLarge">40</x:Double>
+
+    <!-- Chart / Visualization Palette -->
+    <!-- Series colors shared by trend charts, radial gauges and legends. -->
+    <Color x:Key="ChartUtilizationColor">#FF4F9DF7</Color>
+    <Color x:Key="ChartCoreClockColor">#FF6FBF73</Color>
+    <Color x:Key="ChartTemperatureColor">#FFD9883B</Color>
+    <Color x:Key="ChartBatteryColor">#FF6FBF73</Color>
+    <Color x:Key="ChartCautionColor">#FFE0A92E</Color>
+    <Color x:Key="ChartCriticalColor">#FFE05656</Color>
+
+    <SolidColorBrush x:Key="ChartUtilizationBrush" Color="{StaticResource ChartUtilizationColor}" />
+    <SolidColorBrush x:Key="ChartCoreClockBrush" Color="{StaticResource ChartCoreClockColor}" />
+    <SolidColorBrush x:Key="ChartTemperatureBrush" Color="{StaticResource ChartTemperatureColor}" />
+    <SolidColorBrush x:Key="ChartBatteryBrush" Color="{StaticResource ChartBatteryColor}" />
+    <SolidColorBrush x:Key="ChartCautionBrush" Color="{StaticResource ChartCautionColor}" />
+    <SolidColorBrush x:Key="ChartCriticalBrush" Color="{StaticResource ChartCriticalColor}" />
+    <!-- Chart track / surface / gridline brushes moved to ThemeDictionaries (Light/Dark). -->
+    <!-- Warm baseline accent under filled trend bands (reference area chart). -->
+    <SolidColorBrush x:Key="ChartBaselineBrush" Color="#D9A85A" />
+
+    <!-- Gauge Size Tokens -->
+    <x:Double x:Key="GaugeSizeSM">88</x:Double>
+    <x:Double x:Key="GaugeSizeMD">110</x:Double>
+    <x:Double x:Key="GaugeSizeLG">132</x:Double>
+
+    <!-- ===== Semantic Status Color Tokens ===== -->
+    <!-- One status vocabulary aliased to the shared visualization palette so charts,
+         badges, info bars and controls stay in sync. Intentionally theme-stable: a
+         "danger" tone must read the same in light and dark. -->
+    <SolidColorBrush x:Key="StatusSuccessBrush" Color="{StaticResource ChartCoreClockColor}" />
+    <SolidColorBrush x:Key="StatusWarningBrush" Color="{StaticResource ChartCautionColor}" />
+    <SolidColorBrush x:Key="StatusInfoBrush" Color="{StaticResource ChartUtilizationColor}" />
+    <SolidColorBrush x:Key="StatusCriticalBrush" Color="{StaticResource ChartCriticalColor}" />
+
+    <!-- Status background colors moved to ThemeDictionaries (Light/Dark alpha variants). -->
+
+    <!-- Lifted critical tone reserved for SMALL TEXT. Raises contrast to >=4.5:1 on the
+         dark app surface; keep StatusCriticalBrush for fills, borders and large icons. -->
+    <Color x:Key="StatusCriticalTextColor">#FFEB6B6B</Color>
+    <SolidColorBrush x:Key="StatusCriticalTextBrush" Color="{StaticResource StatusCriticalTextColor}" />
+
+    <!-- ===== Focus / Accessibility Tokens ===== -->
+    <x:Double x:Key="FocusStrokeThickness">2</x:Double>
+    <x:Double x:Key="FocusVisualCornerRadius">12</x:Double>
+    <Thickness x:Key="FocusVisualMargin">-2</Thickness>
+
+    <!--
+      Note: WPF's DefaultControlFocusVisualStyle (ControlTemplate-based) is not
+      directly portable to Avalonia. Avalonia handles keyboard focus via :focus
+      pseudo-class selectors in control styles. Define focus visuals per-control
+      in Avalonia styles instead.
+    -->
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- Theme-aware tokens: Light / Dark variants               -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Dark">
+            <!-- Chart -->
+            <SolidColorBrush x:Key="ChartTrackBrush" Color="#33FFFFFF" />
+            <!-- Slightly stronger chart frame so empty/first-open trends still show clear edges. -->
+            <SolidColorBrush x:Key="ChartSurfaceBrush" Color="#0CFFFFFF" />
+            <SolidColorBrush x:Key="ChartSurfaceBorderBrush" Color="#30FFFFFF" />
+            <SolidColorBrush x:Key="ChartGridlineBrush" Color="#1AFFFFFF" />
+
+            <!-- Notification -->
+            <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#FF202020" />
+            <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#48FFFFFF" />
+
+            <!-- Status backgrounds (~20% alpha in dark) -->
+            <Color x:Key="StatusSuccessBackgroundColor">#336FBF73</Color>
+            <Color x:Key="StatusWarningBackgroundColor">#33E0A92E</Color>
+            <Color x:Key="StatusCriticalBackgroundColor">#33E05656</Color>
+            <Color x:Key="StatusInfoBackgroundColor">#334F9DF7</Color>
+            <Color x:Key="StatusNeutralBackgroundColor">#14FFFFFF</Color>
+            <SolidColorBrush x:Key="StatusSuccessBackgroundBrush" Color="{StaticResource StatusSuccessBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusWarningBackgroundBrush" Color="{StaticResource StatusWarningBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusCriticalBackgroundBrush" Color="{StaticResource StatusCriticalBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusInfoBackgroundBrush" Color="{StaticResource StatusInfoBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusNeutralBackgroundBrush" Color="{StaticResource StatusNeutralBackgroundColor}" />
+
+            <!-- Layer 0/1/2 surface -->
+            <SolidColorBrush x:Key="NavigationPaneBackgroundBrush" Color="#FF191919" />
+            <SolidColorBrush x:Key="AppSurfaceCardBrush" Color="#FF242424" />
+            <SolidColorBrush x:Key="AccentBackgroundBrush" Color="#FF0078D4" />
+            <SolidColorBrush x:Key="AccentBackgroundBrushDark" Color="#FF0063B1" />
+
+            <!-- Surface hierarchy brushes -->
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FF202020" />
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FF2B2B2B" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#33FFFFFF" />
+            <SolidColorBrush x:Key="PluginCardBackgroundBrush" Color="#FF242424" />
+            <SolidColorBrush x:Key="PluginCardBorderBrush" Color="#33FFFFFF" />
+            <SolidColorBrush x:Key="InfoBarBackgroundBrush" Color="#FF2D2D30" />
+            <SolidColorBrush x:Key="InfoBarBorderBrush" Color="#33FFFFFF" />
+            <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#FF303030" />
+
+            <!-- ScrollBar -->
+            <SolidColorBrush x:Key="ScrollBarThumbFill" Color="#44FFFFFF" />
+            <SolidColorBrush x:Key="ScrollBarThumbFillHover" Color="#88FFFFFF" />
+            <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#AAFFFFFF" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Light">
+            <!-- Chart -->
+            <SolidColorBrush x:Key="ChartTrackBrush" Color="#33000000" />
+            <SolidColorBrush x:Key="ChartSurfaceBrush" Color="#0C000000" />
+            <SolidColorBrush x:Key="ChartSurfaceBorderBrush" Color="#30000000" />
+            <SolidColorBrush x:Key="ChartGridlineBrush" Color="#1A000000" />
+
+            <!-- Notification -->
+            <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#FFF5F5F5" />
+            <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#48000000" />
+
+            <!-- Status backgrounds (~10% alpha in light) -->
+            <Color x:Key="StatusSuccessBackgroundColor">#1A6FBF73</Color>
+            <Color x:Key="StatusWarningBackgroundColor">#1AE0A92E</Color>
+            <Color x:Key="StatusCriticalBackgroundColor">#1AE05656</Color>
+            <Color x:Key="StatusInfoBackgroundColor">#1A4F9DF7</Color>
+            <Color x:Key="StatusNeutralBackgroundColor">#14000000</Color>
+            <SolidColorBrush x:Key="StatusSuccessBackgroundBrush" Color="{StaticResource StatusSuccessBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusWarningBackgroundBrush" Color="{StaticResource StatusWarningBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusCriticalBackgroundBrush" Color="{StaticResource StatusCriticalBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusInfoBackgroundBrush" Color="{StaticResource StatusInfoBackgroundColor}" />
+            <SolidColorBrush x:Key="StatusNeutralBackgroundBrush" Color="{StaticResource StatusNeutralBackgroundColor}" />
+
+            <!-- Layer 0/1/2 surface -->
+            <SolidColorBrush x:Key="NavigationPaneBackgroundBrush" Color="#FFEDEDED" />
+            <SolidColorBrush x:Key="AppSurfaceCardBrush" Color="#FFF7F7F7" />
+            <SolidColorBrush x:Key="AccentBackgroundBrush" Color="#FF0078D4" />
+            <SolidColorBrush x:Key="AccentBackgroundBrushLight" Color="#FF50A3E8" />
+
+            <!-- Surface hierarchy brushes -->
+            <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FFF3F3F3" />
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFFFF" />
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#0F000000" />
+            <SolidColorBrush x:Key="PluginCardBackgroundBrush" Color="#FFF7F7F7" />
+            <SolidColorBrush x:Key="PluginCardBorderBrush" Color="#0F000000" />
+            <SolidColorBrush x:Key="InfoBarBackgroundBrush" Color="#FFF0F0F0" />
+            <SolidColorBrush x:Key="InfoBarBorderBrush" Color="#0F000000" />
+            <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#FFFBFBFB" />
+
+            <!-- ScrollBar -->
+            <SolidColorBrush x:Key="ScrollBarThumbFill" Color="#44000000" />
+            <SolidColorBrush x:Key="ScrollBarThumbFillHover" Color="#88000000" />
+            <SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="#AA000000" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+</ResourceDictionary>

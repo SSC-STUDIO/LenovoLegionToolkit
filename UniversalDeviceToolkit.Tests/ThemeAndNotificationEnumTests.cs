@@ -15,15 +15,16 @@ public class ThemeAndNotificationEnumTests
     #region Theme Enum Tests
 
     [Fact]
-    public void Theme_ShouldHaveThreeValues()
+    public void Theme_ShouldHaveFourValues()
     {
-        Enum.GetValues<Theme>().Should().HaveCount(3);
+        Enum.GetValues<Theme>().Should().HaveCount(4);
     }
 
     [Theory]
     [InlineData(Theme.System, 0)]
     [InlineData(Theme.Light, 1)]
     [InlineData(Theme.Dark, 2)]
+    [InlineData(Theme.Auto, 3)]
     public void Theme_ShouldHaveExpectedValues(Theme theme, int expectedValue)
     {
         ((int)theme).Should().Be(expectedValue);

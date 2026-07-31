@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\Utils\LampEffects\AuroraSyncEffect.cs
+UniversalDeviceToolkit.Lib\Utils\LampEffects\BaseLampEffect.cs
+UniversalDeviceToolkit.Lib\Utils\LampEffects\BasicEffects.cs
+UniversalDeviceToolkit.Lib\Utils\LampEffects\CustomPatternEffect.cs
+UniversalDeviceToolkit.Lib\Utils\LampEffects\ILampEffect.cs
+UniversalDeviceToolkit.Lib\View\IFanControlView.cs
+UniversalDeviceToolkit.Lib.Abstractions\Hardware\IGpuBackend.cs
+UniversalDeviceToolkit.Lib.Abstractions\Hardware\IKeyboardBacklightDetectionService.cs
+UniversalDeviceToolkit.Lib.Abstractions\Hardware\IPowerProfileProvider.cs
+UniversalDeviceToolkit.Lib.Abstractions\Hardware\ISensorBackend.cs
+UniversalDeviceToolkit.Lib.Abstractions\Ipc\IIpcTransport.cs
+UniversalDeviceToolkit.Lib.Abstractions\Lifecycle\IAutorunManager.cs
+UniversalDeviceToolkit.Lib.Abstractions\Lifecycle\ISingleInstanceManager.cs

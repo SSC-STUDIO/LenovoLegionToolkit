@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Controls\Dashboard\PowerModeControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\RefreshRateControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\ResolutionControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\SensorsControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\TouchpadLockControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\TurnOffMonitorsControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\WhiteKeyboardBacklightControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\WinKeyControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\Edit\EditDashboardGroupControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\Edit\EditDashboardItemControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\GodMode\GodModeValueControl.xaml.cs
+UniversalDeviceToolkit.WPF\Controls\KeyboardBacklight\RGB\AbstractComboBoxRGBKeyboardCardControl.cs
+UniversalDeviceToolkit.WPF\Controls\KeyboardBacklight\RGB\RGBKeyboardBacklightBrightnessCardControl.cs

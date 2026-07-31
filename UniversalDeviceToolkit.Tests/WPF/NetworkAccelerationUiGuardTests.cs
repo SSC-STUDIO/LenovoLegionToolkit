@@ -12,39 +12,20 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public class NetworkAccelerationUiGuardTests
 {
     [Fact]
-    public void DomainGroupsSummary_ShouldSupportCurrentAndLegacyPlaceholderShapes()
-    {
-        NetworkAccelerationControl.FormatDomainGroupsSummary(
-                "{0}/{1} groups enabled · {2} domains",
-                "Domain groups",
-                1,
-                3,
-                14)
-            .Should().Be("1/3 groups enabled · 14 domains");
-
-        NetworkAccelerationControl.FormatDomainGroupsSummary(
-                "{0}: {1}/{2} enabled, {3} domains",
-                "Domain groups",
-                1,
-                3,
-                14)
-            .Should().Be("Domain groups: 1/3 enabled, 14 domains");
-    }
-
-    [Fact]
-    public void NetworkAccelerationControl_Xaml_HasCoreAutomationIdsAndPrimaryAction()
+    public void NetworkAccelerationControl_Xaml_HasCoreAutomationIds()
     {
         var xaml = File.ReadAllText(FindControlXaml());
 
         xaml.Should().Contain("NetworkAccelerationPageScrollViewer");
         xaml.Should().Contain("NetworkAccelerationControlCard");
         xaml.Should().Contain("NetworkAccelerationDomainsCard");
-        xaml.Should().Contain("NetworkAccelerationDiagnosticsCard");
-        xaml.Should().Contain("NetworkAccelerationDiagnosticsButton");
-        xaml.Should().Contain("NetworkAccelerationDiagnosticsText");
+        xaml.Should().Contain("NetworkAccelerationNatSection");
+        xaml.Should().Contain("NetworkAccelerationDnsSection");
+        xaml.Should().Contain("NetworkAccelerationIpv6Section");
+        xaml.Should().Contain("NetworkAccelerationNatDetectButton");
+        xaml.Should().Contain("NetworkAccelerationDnsDetectButton");
+        xaml.Should().Contain("NetworkAccelerationIpv6DetectButton");
         xaml.Should().Contain("NetworkAccelerationAdvancedExpander");
-        xaml.Should().Contain("NetworkAccelerationPrimaryActionButton");
-        xaml.Should().Contain("NetworkAccelerationStatusIndicator");
         xaml.Should().Contain("NetworkAccelerationModeSelector");
         xaml.Should().Contain("NetworkAccelerationLatencyMetric");
         xaml.Should().Contain("NetworkAccelerationUploadMetric");
@@ -52,52 +33,53 @@ public class NetworkAccelerationUiGuardTests
         xaml.Should().Contain("NetworkAccelerationConnectionsMetric");
         xaml.Should().Contain("NetworkAccelerationRulesMetric");
         xaml.Should().Contain("NetworkAccelerationRestoreButton");
-        // Selection chrome lives on WindowsOptimizationPage tab toolbar (not floating in the control).
+        // Status pill and primary action button removed in Watt Toolkit redesign.
+        xaml.Should().NotContain("NetworkAccelerationPrimaryActionButton");
+        xaml.Should().NotContain("NetworkAccelerationStatusIndicator");
+        xaml.Should().NotContain("NetworkAccelerationStatusPill");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Xaml_ServiceListAndSelectionHint()
+    {
+        var xaml = File.ReadAllText(FindControlXaml());
+        xaml.Should().Contain("NetworkAccelerationDomainsCard");
+        xaml.Should().Contain("NetworkAccelerationPage_SelectionHint");
         xaml.Should().NotContain("NetworkAccelerationSelectionBar");
     }
 
     [Fact]
-    public void WindowsOptimizationPage_Xaml_HostsNetworkAccelerationSelectionBarInTabToolbar()
+    public void NetworkAccelerationControl_Xaml_HasDiagnosticsSections()
     {
-        var pageXaml = File.ReadAllText(FindPageXaml());
-        pageXaml.Should().Contain("NetworkAccelerationSelectionBar");
-        pageXaml.Should().Contain("NetworkAccelerationSelectionCount");
-        pageXaml.Should().Contain("NetworkAccelerationSelectionFavoriteButton");
-        pageXaml.Should().Contain("NetworkAccelerationSelectionStartButton");
-        pageXaml.Should().Contain("_networkAccelerationControl");
-        pageXaml.Should().Contain("IsNetworkAccelerationMode");
-        // Visual parity with bulk SelectedActions chrome (Tertiary + Card + wpfui Secondary).
-        pageXaml.Should().Contain("ControlFillColorTertiaryBrush");
-        pageXaml.Should().Contain("CornerRadiusCard");
-        pageXaml.Should().Contain("DocumentBulletList24");
-        pageXaml.Should().Contain("Star24");
-        pageXaml.Should().Contain("Play24");
+        var xaml = File.ReadAllText(FindControlXaml());
+        // Watt Toolkit-style diagnostics: NAT, DNS, IPv6 sections with detect buttons.
+        xaml.Should().Contain("NetworkAccelerationNatSection");
+        xaml.Should().Contain("NetworkAccelerationDnsSection");
+        xaml.Should().Contain("NetworkAccelerationIpv6Section");
+        xaml.Should().Contain("NetworkAccelerationNatDetectButton");
+        xaml.Should().Contain("NetworkAccelerationDnsDetectButton");
+        xaml.Should().Contain("NetworkAccelerationIpv6DetectButton");
     }
 
     [Fact]
-    public void FormatSelectionCount_ShouldFormatZeroAndNonZero()
+    public void NetworkAccelerationControl_Xaml_HasNaDiagResourceStrings()
     {
-        NetworkAccelerationControl.FormatSelectionCount("0 items selected", "{0} items selected", 0)
-            .Should().Be("0 items selected");
-        NetworkAccelerationControl.FormatSelectionCount("0 items selected", "{0} items selected", 2)
-            .Should().Be("2 items selected");
+        var xaml = File.ReadAllText(FindControlXaml());
+        // Diagnostics panel uses NaDiag_ resource keys.
+        xaml.Should().Contain("NaDiag_NatTitle");
+        xaml.Should().Contain("NaDiag_DnsTitle");
+        xaml.Should().Contain("NaDiag_Ipv6Title");
+        xaml.Should().Contain("NaDiag_Detect");
     }
 
     [Fact]
-    public void NetworkAccelerationControl_Xaml_SelectionBarUsesResourceStrings()
+    public void NetworkAccelerationControl_Code_HasNatDnsIpv6Handlers()
     {
-        var controlXaml = File.ReadAllText(FindControlXaml());
-        var pageXaml = File.ReadAllText(FindPageXaml());
         var code = File.ReadAllText(FindControlCode());
-        controlXaml.Should().Contain("NetworkAccelerationPage_SelectionHint");
-        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionBar");
-        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionCountZero");
-        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionFavorite");
-        pageXaml.Should().Contain("NetworkAccelerationPage_SelectionStart");
-        // Handlers stay on the control; chrome is hosted by the page tab toolbar.
-        code.Should().Contain("SelectionFavoriteButton_Click");
-        code.Should().Contain("SelectionStartButton_Click");
-        code.Should().Contain("AttachSelectionChrome");
+        code.Should().Contain("NatDetectButton_Click");
+        code.Should().Contain("DnsDetectButton_Click");
+        code.Should().Contain("Ipv6DetectButton_Click");
+        code.Should().Contain("BuildServiceList");
     }
 
     [Fact]
@@ -121,7 +103,6 @@ public class NetworkAccelerationUiGuardTests
     {
         var xaml = File.ReadAllText(FindControlXaml());
         // Status/metrics/sections come from resources. Page title is chrome-only (not a plugin).
-        xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_State_Idle");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_MetricsHeading");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading");
@@ -167,10 +148,9 @@ public class NetworkAccelerationUiGuardTests
     public void NetworkAccelerationControl_Xaml_PrimaryActionAndModeSelectorShareGridNotWrapPanel()
     {
         var xaml = File.ReadAllText(FindControlXaml());
-        // Start button + mode combo must not share a WrapPanel (overlap with long mode labels).
-        xaml.Should().Contain("NetworkAccelerationPrimaryActionButton");
-        xaml.Should().Contain("NetworkAccelerationModeSelector");
-        // Mode selector lives in a Grid column next to the primary action.
+        // Start button + mode combo removed in Watt Toolkit redesign (auto start/stop via service list).
+        // Mode selector lives in a Grid column next to the mode label.
+        // Mode label + combo share a Grid row (compact single-row layout).
         var modeIdx = xaml.IndexOf("NetworkAccelerationModeSelector", StringComparison.Ordinal);
         modeIdx.Should().BeGreaterThan(0);
         var slice = xaml.Substring(Math.Max(0, modeIdx - 400), Math.Min(500, xaml.Length - Math.Max(0, modeIdx - 400)));
@@ -193,14 +173,14 @@ public class NetworkAccelerationUiGuardTests
         var code = File.ReadAllText(FindControlCode());
         // Hosts is refused at the service layer; do not offer it in the mode combo.
         code.Should().Contain("ToSelectableMode");
-        code.Should().Contain("HostsDisabledNote");
+        // Hosts is not selectable: the combo only contains SystemProxy + DiagnosticsOnly.
         // Only the BuildModeCombo method body — not ToSelectableMode / Start coerce helpers / their docs.
         var buildStart = code.IndexOf("private void BuildModeCombo()", StringComparison.Ordinal);
         buildStart.Should().BeGreaterThan(0);
         // End at the closing brace of BuildModeCombo (before ToSelectableMode docs or next method).
         var afterBuild = code.IndexOf("private static NetworkAccelerationMode ToSelectableMode", StringComparison.Ordinal);
         if (afterBuild < 0)
-            afterBuild = code.IndexOf("private void BuildDomainGroupTiles()", StringComparison.Ordinal);
+            afterBuild = code.IndexOf("private void BuildServiceList()", StringComparison.Ordinal);
         afterBuild.Should().BeGreaterThan(buildStart);
         // Slice only the method: stop at the last '}' before ToSelectableMode so XML docs are excluded.
         var slice = code.Substring(buildStart, afterBuild - buildStart);
@@ -215,16 +195,12 @@ public class NetworkAccelerationUiGuardTests
     }
 
     [Fact]
-    public void NetworkAccelerationControl_Code_SelectionBarHasFavoriteAndStartHandlers()
+    public void NetworkAccelerationControl_Code_HasServiceListBuilder()
     {
         var code = File.ReadAllText(FindControlCode());
-        code.Should().Contain("_selectedGroupIds");
-        code.Should().Contain("SelectionFavoriteButton_Click");
-        code.Should().Contain("SelectionStartButton_Click");
-        code.Should().Contain("ToggleFavoriteForIdsAsync");
-        code.Should().Contain("IsFavorite");
-        // Start selected enables groups then starts acceleration.
-        code.Should().Contain("group.Enabled = true");
+        code.Should().Contain("BuildServiceList");
+        code.Should().Contain("CreateServiceGroupRow");
+        code.Should().Contain("CreateSubItemRow");
     }
 
     private static string FindControlCode()

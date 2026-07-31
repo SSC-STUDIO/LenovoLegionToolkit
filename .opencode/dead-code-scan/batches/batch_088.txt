@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Pages\WindowsOptimization\SelectedDriverPackageViewModel.cs
+UniversalDeviceToolkit.WPF\Properties\AssemblyInfo.cs
+UniversalDeviceToolkit.WPF\Resources\Resource.Designer.cs
+UniversalDeviceToolkit.WPF\Settings\DashboardSettings.cs
+UniversalDeviceToolkit.WPF\Settings\HardwareSensorSettings.cs
+UniversalDeviceToolkit.WPF\Settings\PluginSettings.cs
+UniversalDeviceToolkit.WPF\Startup\SingleInstanceGuard.cs
+UniversalDeviceToolkit.WPF\Startup\StartupOrchestrator.cs
+UniversalDeviceToolkit.WPF\Utils\AnimationHelper.cs
+UniversalDeviceToolkit.WPF\Utils\AppDisplayName.cs
+UniversalDeviceToolkit.WPF\Utils\AppFontManager.cs
+UniversalDeviceToolkit.WPF\Utils\AppTextSizeManager.cs
+UniversalDeviceToolkit.WPF\Utils\BooleanAndConverter.cs

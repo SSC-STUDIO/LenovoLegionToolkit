@@ -312,14 +312,16 @@ public class SensorsGroupController : IDisposable
     private static readonly string[] GPU_VRAM_TOTAL_SENSOR_PREFERENCES =
     [
         "GPU Memory Total",
-        "D3D Shared Memory Total",
         "GPU Dedicated Memory Total",
         "Dedicated Memory Total",
         "Dedicated Video Memory Total",
-        "Shared Memory Total",
         "VRAM Total",
         "Memory Total",
         "GPU Memory",
+        // Shared-memory totals rank last: they describe system RAM loaned to the GPU,
+        // not dedicated VRAM, and mismatch the dedicated "used" sensor picked above.
+        "D3D Shared Memory Total",
+        "Shared Memory Total",
     ];
     private static readonly string[] GPU_VRAM_FREE_SENSOR_PREFERENCES =
     [

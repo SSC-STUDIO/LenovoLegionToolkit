@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Controls\Charts\TrendChartControl.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\Badge.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\CardAction.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\CardControl.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\CardExpander.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\EmptyState.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\InfoBar.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\NavigationItem.cs
+UniversalDeviceToolkit.WPF\Controls\Custom\NavigationStore.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\AlwaysOnUSBControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\BatteryModeControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\BatteryNightChargeModeControl.cs
+UniversalDeviceToolkit.WPF\Controls\Dashboard\DashboardGroupControl.cs

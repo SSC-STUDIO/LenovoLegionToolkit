@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage"
+             xmlns:vm="using:UniversalDeviceToolkit.Avalonia.Pages">
+
+    <UserControl.DataContext>
+        <vm:DashboardPageViewModel />
+    </UserControl.DataContext>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="24" Margin="24">
+
+            <!-- Page Title -->
+            <TextBlock Text="Dashboard"
+                       FontSize="{StaticResource FontSizePageTitle}"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+            <!-- Feature Groups -->
+            <TextBlock Text="Feature Groups"
+                       FontSize="{StaticResource FontSizeSubsection}"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+            <ItemsControl ItemsSource="{Binding FeatureGroups}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Classes="cardControl" Width="280" Margin="0,0,12,12">
+                            <StackPanel Spacing="8" Margin="4">
+                                <TextBlock Text="{Binding Title}"
+                                           Classes="cardTitle" />
+                                <TextBlock Text="{Binding Description}"
+                                           Classes="cardDescription" />
+                                <Border Classes="badge" HorizontalAlignment="Left"
+                                        Margin="0,4,0,0">
+                                    <TextBlock Text="{Binding Status}" />
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- Sensors Panel -->
+            <TextBlock Text="Sensors"
+                       FontSize="{StaticResource FontSizeSubsection}"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                       Margin="0,8,0,0" />
+
+            <Border Classes="cardControl" Padding="16">
+                <StackPanel Spacing="8">
+                    <ItemsControl ItemsSource="{Binding SensorReadings}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,6">
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding DisplayValue}"
+                                               FontWeight="SemiBold"
+                                               FontSize="{StaticResource FontSizeGaugeValue}"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

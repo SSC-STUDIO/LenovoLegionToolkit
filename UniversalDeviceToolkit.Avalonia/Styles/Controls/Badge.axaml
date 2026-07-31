@@ -1,0 +1,30 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Badge: small label for status or count display -->
+    <Style Selector="Border.badge">
+        <Setter Property="Padding" Value="8,4" />
+        <Setter Property="CornerRadius" Value="{DynamicResource CornerRadiusCompact}" />
+        <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+    </Style>
+    <Style Selector="Border.badge > TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!-- Badge appearance variants -->
+    <Style Selector="Border.badge.success">
+        <Setter Property="Background" Value="{DynamicResource StatusSuccessBrush}" />
+    </Style>
+    <Style Selector="Border.badge.warning">
+        <Setter Property="Background" Value="{DynamicResource StatusWarningBrush}" />
+    </Style>
+    <Style Selector="Border.badge.danger">
+        <Setter Property="Background" Value="{DynamicResource StatusCriticalBrush}" />
+    </Style>
+    <Style Selector="Border.badge.info">
+        <Setter Property="Background" Value="{DynamicResource StatusInfoBrush}" />
+    </Style>
+
+</Styles>

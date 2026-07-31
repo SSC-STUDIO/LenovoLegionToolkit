@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsDisplayView">
+    <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
+        <TextBlock Text="Display"
+                   FontSize="{StaticResource FontSizeDisplaySection}"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+
+        <TextBlock Text="Adjust display-related settings for your device."
+                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,8"/>
+
+        <!-- Refresh Rate -->
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}"
+                Padding="16">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Refresh Rate"
+                           FontSize="{StaticResource FontSizeSubsection}"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                <TextBlock Text="Select the display refresh rate (requires supported hardware)."
+                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                           FontSize="{StaticResource FontSizeSmallCaption}"/>
+                <ComboBox SelectedIndex="0" MinWidth="160" HorizontalAlignment="Left"
+                          Margin="0,8,0,0">
+                    <ComboBoxItem Content="60 Hz"/>
+                    <ComboBoxItem Content="120 Hz"/>
+                    <ComboBoxItem Content="144 Hz"/>
+                    <ComboBoxItem Content="165 Hz"/>
+                </ComboBox>
+            </StackPanel>
+        </Border>
+
+        <!-- Overdrive -->
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}"
+                Padding="16">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="Overdrive"
+                               FontSize="{StaticResource FontSizeBody}"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                    <TextBlock Text="Enable display overdrive for faster pixel response times."
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmallCaption}"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+                <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="False"/>
+            </Grid>
+        </Border>
+    </StackPanel>
+</UserControl>

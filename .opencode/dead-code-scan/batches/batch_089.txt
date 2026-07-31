@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Utils\CollectionSplitConverters.cs
+UniversalDeviceToolkit.WPF\Utils\CrashReportHelper.cs
+UniversalDeviceToolkit.WPF\Utils\CtsSwap.cs
+UniversalDeviceToolkit.WPF\Utils\DebounceDispatcher.cs
+UniversalDeviceToolkit.WPF\Utils\DpiAwareTypography.cs
+UniversalDeviceToolkit.WPF\Utils\EnumToBoolConverter.cs
+UniversalDeviceToolkit.WPF\Utils\FullscreenHelper.cs
+UniversalDeviceToolkit.WPF\Utils\InverseBooleanToVisibilityConverter.cs
+UniversalDeviceToolkit.WPF\Utils\LanguagePackInstallCoordinator.cs
+UniversalDeviceToolkit.WPF\Utils\LanguagePackManager.cs
+UniversalDeviceToolkit.WPF\Utils\LanguagePackModels.cs
+UniversalDeviceToolkit.WPF\Utils\LocalizationHelper.cs
+UniversalDeviceToolkit.WPF\Utils\MainAppPluginHostContext.cs

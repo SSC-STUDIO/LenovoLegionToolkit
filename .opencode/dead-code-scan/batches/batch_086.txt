@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Extensions\ImageSourceExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\ItemCollectionExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\NavigationStoreExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\PowerModeStateExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\RGBColorExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\UIElementExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\UriExtensions.cs
+UniversalDeviceToolkit.WPF\Extensions\WindowExtensions.cs
+UniversalDeviceToolkit.WPF\Pages\AboutPage.xaml.cs
+UniversalDeviceToolkit.WPF\Pages\AutomationPage.xaml.cs
+UniversalDeviceToolkit.WPF\Pages\DashboardPage.xaml.cs
+UniversalDeviceToolkit.WPF\Pages\KeyboardBacklightPage.xaml.cs
+UniversalDeviceToolkit.WPF\Pages\MacroPage.xaml.cs

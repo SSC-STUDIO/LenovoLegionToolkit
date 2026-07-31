@@ -1,0 +1,160 @@
+﻿{
+  "analysis_metadata": {
+    "project_path": "C:\\Users\\Administrator\\OneDrive\\Documents\\My-Program\\UniversalDeviceToolkit",
+    "total_interfaces_found": 101,
+    "analysis_date": "2026-07-31",
+    "confidence_threshold": 0.70,
+    "methodology": "Searched all .cs files for 'interface I[A-Z]' definitions, then for each interface checked: (1) class implementations via ': IInterface' pattern, (2) type usage as field/parameter/property, (3) DI container registrations in IoCModule files"
+  },
+  "dead_interfaces": [
+    {
+      "interface_name": "IBatteryDischargeRateMonitorService",
+      "confidence": 0.95,
+      "definition_file": "UniversalDeviceToolkit.Lib\\Services\\IBatteryDischargeRateMonitorService.cs",
+      "line": 8,
+      "reason": "Interface is never implemented. The concrete class BatteryDischargeRateMonitorService implements IDisposable, not this interface. No DI registration for the interface. No usage of the interface type outside its definition file.",
+      "implementations": 0,
+      "type_usage_references": 0,
+      "di_registration": false,
+      "recommendation": "Remove the interface file. The concrete class BatteryDischargeRateMonitorService is registered and used directly via IoC."
+    },
+    {
+      "interface_name": "IIpcTransport",
+      "confidence": 0.95,
+      "definition_file": "UniversalDeviceToolkit.Lib.Abstractions\\Ipc\\IIpcTransport.cs",
+      "line": 7,
+      "reason": "Zero implementations found anywhere in the codebase. Zero usage as a type reference outside its definition. No DI registration. The abstraction was defined but never wired up.",
+      "implementations": 0,
+      "type_usage_references": 0,
+      "di_registration": false,
+      "recommendation": "Remove the interface file. If IPC transport is needed in the future, it can be re-introduced."
+    },
+    {
+      "interface_name": "IMacroController",
+      "confidence": 0.90,
+      "definition_file": "UniversalDeviceToolkit.Lib.Abstractions\\Macro\\IMacroController.cs",
+      "line": 6,
+      "reason": "Interface is used as a constructor parameter type in MacroViewModel, but no class implements it. MacroController class only implements IDisposable. The IoC module registers MacroController directly (not as IMacroController). Consumers would fail at runtime if resolved via DI.",
+      "implementations": 0,
+      "type_usage_references": 3,
+      "di_registration": false,
+      "recommendation": "Either make MacroController implement IMacroController and register via .As<IMacroController>(), or remove the interface and update MacroViewModel to accept MacroController directly."
+    },
+    {
+      "interface_name": "IHiddenPackagesManager",
+      "confidence": 0.90,
+      "definition_file": "UniversalDeviceToolkit.Lib.Abstractions\\PackageDownloader\\IHiddenPackagesManager.cs",
+      "line": 6,
+      "reason": "Interface is used as a constructor parameter type in PackagesViewModel, but no class implements it anywhere. No DI registration. Would cause a runtime DI resolution failure.",
+      "implementations": 0,
+      "type_usage_references": 2,
+      "di_registration": false,
+      "recommendation": "Create a concrete implementation, or remove the interface and refactor PackagesViewModel."
+    },
+    {
+      "interface_name": "INotificationService",
+      "confidence": 0.90,
+      "definition_file": "UniversalDeviceToolkit.Lib.Abstractions\\Notifications\\INotificationService.cs",
+      "line": 24,
+      "reason": "Interface is used as a constructor parameter type in PackagesViewModel, but no class implements it anywhere. Note: IAppNotificationService is a separate, actively-used interface. This INotificationService has no implementation and no DI registration.",
+      "implementations": 0,
+      "type_usage_references": 2,
+      "di_registration": false,
+      "recommendation": "Create a concrete implementation (possibly wrapping IAppNotificationService), or remove and refactor PackagesViewModel."
+    },
+    {
+      "interface_name": "IKeyboardBacklightDetectionService",
+      "confidence": 0.90,
+      "definition_file": "UniversalDeviceToolkit.Lib.Abstractions\\Hardware\\IKeyboardBacklightDetectionService.cs",
+      "line": 6,
+      "reason": "Interface is used as a constructor parameter type in KeyboardBacklightViewModel, but no class implements it anywhere. No DI registration. Would cause a runtime DI resolution failure.",
+      "implementations": 0,
+      "type_usage_references": 2,
+      "di_registration": false,
+      "recommendation": "Create a concrete implementation, or remove and refactor KeyboardBacklightViewModel."
+    },
+    {
+      "interface_name": "IPackageDownloaderFactory",
+      "confidence": 0.90,
+      "definition_file": "UniversalDeviceToolkit.Lib.Abstractions\\PackageDownloader\\IPackageDownloaderFactory.cs",
+      "line": 26,
+      "reason": "Interface is used as a constructor parameter type in PackagesViewModel, but the concrete PackageDownloaderFactory class does NOT implement it. The interface uses PackageDownloaderType enum while the concrete class uses its own Type enum. No DI registration for the interface.",
+      "implementations": 0,
+      "type_usage_references": 2,
+      "di_registration": false,
+      "recommendation": "Make PackageDownloaderFactory implement IPackageDownloaderFactory (reconciling enum types), or remove the interface and refactor PackagesViewModel."
+    },
+    {
+      "interface_name": "IScreenCaptureProvider",
+      "confidence": 0.85,
+      "definition_file": "UniversalDeviceToolkit.Lib\\Controllers\\LampArrayController.cs",
+      "line": 25,
+      "reason": "Nested interface inside LampArrayController. Zero implementations found. SetScreenCaptureProvider() method is defined but never called from anywhere in the codebase. Used only as a nullable private field in the parent class.",
+      "implementations": 0,
+      "type_usage_references": 2,
+      "di_registration": false,
+      "recommendation": "Remove the interface and the unused SetScreenCaptureProvider method, or implement and wire up a screen capture provider if the feature is needed."
+    },
+    {
+      "interface_name": "ISharedLogSink",
+      "confidence": 0.80,
+      "definition_file": "UniversalDeviceToolkit.Lib.Shared\\Logging\\SharedLog.cs",
+      "line": 44,
+      "reason": "Interface is defined in SharedLog.cs with a SetSink() method, but SetSink() is never called from anywhere in the codebase. No class implements ISharedLogSink. The _sink field is always null.",
+      "implementations": 0,
+      "type_usage_references": 2,
+      "di_registration": false,
+      "recommendation": "Remove the interface and SetSink method if the log sink pattern is not needed. Otherwise, wire up an implementation at application startup."
+    },
+    {
+      "interface_name": "IExtensionProvider",
+      "confidence": 0.80,
+      "definition_file": "UniversalDeviceToolkit.Lib\\Utils\\IExtensionProvider.cs",
+      "line": 5,
+      "reason": "Zero implementations found. Used only via reflection in FanCurveManager.cs (IsAssignableFrom scan of loaded assemblies). The reflection-based discovery suggests an external extension point, but no extension assembly implementing this interface exists in the codebase.",
+      "implementations": 0,
+      "type_usage_references": 4,
+      "di_registration": false,
+      "recommendation": "Remove if no external extensions are planned. Otherwise, document the extension point contract."
+    },
+    {
+      "interface_name": "IFanControlView",
+      "confidence": 0.75,
+      "definition_file": "UniversalDeviceToolkit.Lib\\View\\IFanControlView.cs",
+      "line": 3,
+      "reason": "Zero implementations found in the codebase. Used as parameter type in FanCurveManager (RegisterViewModel/UnregisterViewModel methods) and as a Dictionary value type. No concrete class implements this interface.",
+      "implementations": 0,
+      "type_usage_references": 2,
+      "di_registration": false,
+      "recommendation": "Check if WPF/Avalonia fan control pages implement this interface. If not, remove or create implementations."
+    }
+  ],
+  "dead_project": {
+    "project_name": "UniversalDeviceToolkit.Plugins.Abstractions",
+    "confidence": 0.95,
+    "path": "UniversalDeviceToolkit.Plugins.Abstractions\\UniversalDeviceToolkit.Plugins.Abstractions.csproj",
+    "reason": "The entire project is unreferenced by any other project in the solution. It contains 6 interface files that are exact duplicates of interfaces already defined in UniversalDeviceToolkit.Lib.Plugins. No project depends on this assembly.",
+    "duplicated_interfaces": [
+      "IPlugin (also in Lib.Plugins\\IPlugin.cs)",
+      "IPluginPage (also in Lib.Plugins\\IPluginPage.cs)",
+      "IPluginConfiguration (also in Lib.Plugins\\IPluginConfiguration.cs)",
+      "IPluginHostContext (also in Lib.Plugins\\IPluginHostContext.cs)",
+      "IAppStartupPlugin (also in Lib.Plugins\\IAppStartupPlugin.cs)"
+    ],
+    "recommendation": "Remove the entire UniversalDeviceToolkit.Plugins.Abstractions project. All interfaces it defines are actively maintained in UniversalDeviceToolkit.Lib.Plugins."
+  },
+  "legacy_duplicates": {
+    "confidence": 0.70,
+    "file": "UniversalDeviceToolkit.Lib\\Plugins\\LegacyPluginContracts.cs",
+    "reason": "This file contains duplicate definitions of 6 interfaces that also exist in UniversalDeviceToolkit.Lib.Plugins (a separate assembly, same namespace). Both assemblies are referenced by WPF. The legacy copies provide backward compatibility for older plugins but create namespace ambiguity. Active implementations and consumers use the Lib.Plugins versions.",
+    "duplicated_interfaces": [
+      "IPlugin",
+      "IPluginPage",
+      "IPluginConfiguration",
+      "IPluginHostContext",
+      "IOptimizationCategoryProvider",
+      "IAppStartupPlugin"
+    ],
+    "recommendation": "Verify no external plugins depend on the Lib assembly versions. If none do, remove LegacyPluginContracts.cs to eliminate type ambiguity."
+  }
+}

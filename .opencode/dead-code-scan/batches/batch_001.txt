@@ -1,0 +1,13 @@
+﻿Tools\Installer\Strings.cs
+Tools\LanguagePackInstallProgressSmoke\Program.cs
+Tools\LanguagePackUi.Smoke\Program.cs
+Tools\MainAppPluginUi.Smoke\Program.cs
+Tools\PresetUiValidation\Program.cs
+Tools\SensorInventoryDump\Program.cs
+Tools\UiPerformance.Smoke\Program.cs
+Tools\VisualRegression.Smoke\Program.cs
+UniversalDeviceToolkit.Avalonia\App.axaml.cs
+UniversalDeviceToolkit.Avalonia\MainWindow.axaml.cs
+UniversalDeviceToolkit.Avalonia\Program.cs
+UniversalDeviceToolkit.Avalonia\Localization\FallbackStringLocalizer.cs
+UniversalDeviceToolkit.Avalonia\Localization\ResxStringLocalizer.cs

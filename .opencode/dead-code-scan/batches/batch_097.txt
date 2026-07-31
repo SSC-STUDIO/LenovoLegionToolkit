@@ -1,0 +1,4 @@
+﻿UniversalDeviceToolkit.WPF\Windows\Utils\StatusWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\SymbolRegularPicker.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\UnsupportedWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Utils\UpdateWindow.xaml.cs

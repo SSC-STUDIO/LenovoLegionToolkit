@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Settings;
@@ -70,7 +71,6 @@ public partial class SettingsAppearanceControl
             TemperatureUnit.F => FahrenheitUnit,
             _ => new ArgumentOutOfRangeException(nameof(t))
         });
-        _themeComboBox.SetItems(Enum.GetValues<Theme>(), _settings.Store.Theme, t => t.GetDisplayName());
         _themeStylePresetComboBox.SetItems(Enum.GetValues<ThemeStylePreset>(), _settings.Store.ThemeStylePreset, t => t.GetDisplayName());
         _fontComboBox.SetItems(Enum.GetValues<AppFontStyle>(), _settings.Store.AppFontStyle, GetFontStyleDisplayName);
         _uiScaleComboBox.SetItems(UiScaleSteps, GetCurrentUiScaleStep(), GetUiScaleDisplayName);
@@ -80,7 +80,7 @@ public partial class SettingsAppearanceControl
 
         // Show controls immediately
         _temperatureComboBox.Visibility = Visibility.Visible;
-        _themeComboBox.Visibility = Visibility.Visible;
+        UpdateThemeCardSelection();
         _themeStylePresetComboBox.Visibility = Visibility.Visible;
         _fontComboBox.Visibility = Visibility.Visible;
         _uiScaleComboBox.Visibility = Visibility.Visible;
@@ -227,17 +227,38 @@ public partial class SettingsAppearanceControl
         _settings.SynchronizeStore();
     }
 
-    private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void ThemeCard_Click(object sender, RoutedEventArgs e)
     {
-        if (_isRefreshing)
+        if (_isRefreshing || sender is not System.Windows.Controls.Button { Tag: string tag })
             return;
 
-        if (!_themeComboBox.TryGetSelectedItem(out Theme state))
+        if (!Enum.TryParse<Theme>(tag, out var theme))
             return;
 
-        _settings.Store.Theme = state;
+        _settings.Store.Theme = theme;
         _settings.SynchronizeStore();
         _themeManager.Apply();
+        UpdateThemeCardSelection();
+    }
+
+    private void UpdateThemeCardSelection()
+    {
+        var current = _settings.Store.Theme;
+        UpdateCardBorder(_themeLightCard, current == Theme.Light);
+        UpdateCardBorder(_themeDarkCard, current == Theme.Dark);
+        UpdateCardBorder(_themeAutoCard, current == Theme.Auto);
+        UpdateCardBorder(_themeSystemCard, current == Theme.System);
+    }
+
+    private static void UpdateCardBorder(System.Windows.Controls.Button? card, bool selected)
+    {
+        if (card?.Content is not StackPanel sp || sp.Children.Count < 1 || sp.Children[0] is not Border border)
+            return;
+
+        border.BorderThickness = selected ? new Thickness(2.5) : new Thickness(1);
+        border.BorderBrush = selected
+            ? (Brush)card.FindResource("AccentFillColorDefaultBrush")
+            : (Brush)card.FindResource("ControlStrokeColorDefaultBrush");
     }
 
     private void FontComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

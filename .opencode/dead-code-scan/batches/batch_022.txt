@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\Network\NetworkTrafficSnapshot.cs
+UniversalDeviceToolkit.Lib\Network\PacFileGenerator.cs
+UniversalDeviceToolkit.Lib\Network\SystemProxyApplicator.cs
+UniversalDeviceToolkit.Lib\Notifications\AppNotificationModels.cs
+UniversalDeviceToolkit.Lib\Notifications\AppNotificationService.cs
+UniversalDeviceToolkit.Lib\Notifications\IAppNotificationService.cs
+UniversalDeviceToolkit.Lib\Optimization\IOptimizationCategoryExtender.cs
+UniversalDeviceToolkit.Lib\Optimization\RegistryValueDefinition.cs
+UniversalDeviceToolkit.Lib\Optimization\WindowsCleanupService.cs
+UniversalDeviceToolkit.Lib\Optimization\WindowsOptimizationCategoryProvider.cs
+UniversalDeviceToolkit.Lib\Optimization\WindowsOptimizationDefinitions.cs
+UniversalDeviceToolkit.Lib\Optimization\WindowsOptimizationHelper.cs
+UniversalDeviceToolkit.Lib\Optimization\WindowsOptimizationService.cs

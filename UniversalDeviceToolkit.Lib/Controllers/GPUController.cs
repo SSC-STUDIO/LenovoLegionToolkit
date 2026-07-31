@@ -297,8 +297,7 @@ public class GPUController : IDisposable
         var previousState = _state;
         ResetState();
 
-        var gpu = NVAPI.GetGPU();
-        if (gpu is null)
+        if (NVAPI.GetGPU() is not { } gpu)
         {
             HandleGpuNotFound(previousState);
             return;
@@ -356,17 +355,20 @@ public class GPUController : IDisposable
     /// Reads NVAPI performance state. Returns <c>true</c> when the GPU is powered off
     /// and refresh should stop (do not run <see cref="DetermineGpuState"/>).
     /// </summary>
-    private bool TryGetPerformanceState(NvAPIWrapper.GPU.PhysicalGPU gpu)
+    private bool TryGetPerformanceState(NvPhysicalGpuHandle gpu)
     {
         try
         {
-            var stateId = gpu.PerformanceStatesInfo.CurrentPerformanceState.StateId.ToString().GetUntilOrEmpty("_");
+            var pstateText = NVAPI.GetCurrentPstate(gpu).ToString();
+            var stateId = pstateText.Contains('_')
+                ? pstateText.GetUntilOrEmpty("_")
+                : pstateText; // fallback: use full text for values without underscore (e.g. "Undefined")
             _performanceState = Resource.GPUController_PoweredOn;
             if (!string.IsNullOrWhiteSpace(stateId))
                 _performanceState += $", {stateId}";
             return false;
         }
-        catch (Exception ex) when (ex.Message == "NVAPI_GPU_NOT_POWERED")
+        catch (Exception ex) when (ex.Message.Contains("GpuNotPowered"))
         {
             _state = GPUState.PoweredOff;
             _performanceState = Resource.GPUController_PoweredOff;
@@ -383,7 +385,7 @@ public class GPUController : IDisposable
         }
     }
 
-    private void DetermineGpuState(NvAPIWrapper.GPU.PhysicalGPU gpu, string? gpuInstanceId, List<Process> processNames, GPUState previousState)
+    private void DetermineGpuState(NvPhysicalGpuHandle gpu, string? gpuInstanceId, List<Process> processNames, GPUState previousState)
     {
         if (NVAPI.IsDisplayConnected(gpu))
         {

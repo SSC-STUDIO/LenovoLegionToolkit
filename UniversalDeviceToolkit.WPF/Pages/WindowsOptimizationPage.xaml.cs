@@ -114,18 +114,12 @@ public partial class WindowsOptimizationPage : Page
     /// </summary>
     private void AttachNetworkAccelerationSelectionChrome()
     {
-        if (_networkAccelerationControl is null)
-            return;
-
-        _networkAccelerationControl.AttachSelectionChrome(
-            _networkAccelerationSelectionCount,
-            _networkAccelerationSelectionFavoriteButton,
-            _networkAccelerationSelectionStartButton);
+        // Selection bar removed in Watt Toolkit redesign — no-op.
     }
 
     private void NetworkAccelerationSelectionCountButton_Click(object sender, RoutedEventArgs e)
     {
-        _networkAccelerationControl?.HandleSelectionCountClicked();
+        // Selection bar removed in Watt Toolkit redesign — no-op.
     }
 
     private void SyncNavButtonToCurrentMode()

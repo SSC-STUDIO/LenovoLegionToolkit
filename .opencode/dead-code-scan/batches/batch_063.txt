@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\FlaUI\FlaUIMainWindowTests.cs
+UniversalDeviceToolkit.Tests\FlaUI\FlaUISetupTests.cs
+UniversalDeviceToolkit.Tests\FlaUI\FlaUiTestBase.cs
+UniversalDeviceToolkit.Tests\FlaUI\MainWindowSmokeTests.cs
+UniversalDeviceToolkit.Tests\FlaUI\MainWindowVisualTests.cs
+UniversalDeviceToolkit.Tests\FlaUI\WinRTOcrHelper.cs
+UniversalDeviceToolkit.Tests\GameDetection\GameDetectorTests.cs
+UniversalDeviceToolkit.Tests\Infrastructure\DeviceProfile.cs
+UniversalDeviceToolkit.Tests\Infrastructure\DeviceProfiles.cs
+UniversalDeviceToolkit.Tests\Infrastructure\DeviceProfileTests.cs
+UniversalDeviceToolkit.Tests\Infrastructure\DeviceTestBase.cs
+UniversalDeviceToolkit.Tests\Infrastructure\HardwareFakeFactory.cs
+UniversalDeviceToolkit.Tests\Infrastructure\MachineInformationTestData.cs

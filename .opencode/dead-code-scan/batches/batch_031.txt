@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\System\Management\WMI.Win32.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.WmiMonitorBrightnessEvent.cs
+UniversalDeviceToolkit.Lib\System\Management\WMI.WmiMonitorBrightnessMethods.cs
+UniversalDeviceToolkit.Lib\System\Management\WMICache.cs
+UniversalDeviceToolkit.Lib\System\Management\WMIWrapper.cs
+UniversalDeviceToolkit.Lib\System\Razer\RazerHidController.cs
+UniversalDeviceToolkit.Lib\System\Razer\RazerHidDriver.cs
+UniversalDeviceToolkit.Lib\System\Razer\RazerPacket.cs
+UniversalDeviceToolkit.Lib\Utils\AnimationTiming.cs
+UniversalDeviceToolkit.Lib\Utils\AppIdentity.cs
+UniversalDeviceToolkit.Lib\Utils\Compatibility.cs
+UniversalDeviceToolkit.Lib\Utils\CompatibilityService.cs
+UniversalDeviceToolkit.Lib\Utils\Crc32Adler.cs

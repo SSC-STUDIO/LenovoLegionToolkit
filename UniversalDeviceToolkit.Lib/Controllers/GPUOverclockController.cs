@@ -10,10 +10,6 @@ using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
-using NvAPIWrapper.GPU;
-using NvAPIWrapper.Native;
-using NvAPIWrapper.Native.GPU;
-using NvAPIWrapper.Native.GPU.Structures;
 
 namespace UniversalDeviceToolkit.Lib.Controllers;
 
@@ -295,8 +291,7 @@ public class GPUOverclockController : IDisposable
             {
                 NVAPI.Initialize();
 
-                var gpu = NVAPI.GetGPU();
-                if (gpu is null)
+                if (NVAPI.GetGPU() is not { } gpu)
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"dGPU not found.");
@@ -366,34 +361,24 @@ private async Task NativeWindowsMessageListenerOnChangedAsync(object? sender, Na
         _ = NativeWindowsMessageListenerOnChangedAsync(sender, e);
     }
 
-    private static int GetMaxMemoryDeltaMhz(PhysicalGPU? gpu) => gpu?.MemoryInformation.RAMMaker switch
+    private static int GetMaxMemoryDeltaMhz(NvPhysicalGpuHandle? gpu)
     {
-        GPUMemoryMaker.Samsung => 1500,
-        _ => 750
-    };
+        // TODO(#142): Samsung RAM maker detection requires additional NVAPI_PRIVATE calls.
+        // Until memory-maker query is implemented, use 1000 MHz as a safer compromise
+        // between the non-Samsung limit (750) and the Samsung limit (1500).
+        return gpu is null ? 1000 : 1000;
+    }
 
-    private static void SetOverclockInfo(PhysicalGPU gpu, GPUOverclockInfo info)
+    private static void SetOverclockInfo(NvPhysicalGpuHandle gpu, GPUOverclockInfo info)
     {
         var coreDelta = Math.Clamp(info.CoreDeltaMhz, 0, GetMaxCoreDeltaMhz());
         var memoryDelta = Math.Clamp(info.MemoryDeltaMhz, 0, GetMaxMemoryDeltaMhz(gpu));
-
-        var clockEntries = new[]
-        {
-            new PerformanceStates20ClockEntryV1(PublicClockDomain.Graphics, new PerformanceStates20ParameterDelta(coreDelta * 1000)),
-            new PerformanceStates20ClockEntryV1(PublicClockDomain.Memory, new PerformanceStates20ParameterDelta(memoryDelta * 1000))
-        };
-        var voltageEntries = Array.Empty<PerformanceStates20BaseVoltageEntryV1>();
-        var performanceStateInfo = new[] { new PerformanceStates20InfoV1.PerformanceState20(PerformanceStateId.P0_3DPerformance, clockEntries, voltageEntries) };
-
-        var overclock = new PerformanceStates20InfoV1(performanceStateInfo, 2, 0);
-        GPUApi.SetPerformanceStates20(gpu.Handle, overclock);
+        NVAPI.SetOverclock(gpu, coreDelta, memoryDelta);
     }
 
-    private static GPUOverclockInfo GetOverclockInfo(PhysicalGPU gpu)
+    private static GPUOverclockInfo GetOverclockInfo(NvPhysicalGpuHandle gpu)
     {
-        var states = GPUApi.GetPerformanceStates20(gpu.Handle);
-        var core = states.Clocks[PerformanceStateId.P0_3DPerformance][0].FrequencyDeltaInkHz.DeltaValue / 1000;
-        var memory = states.Clocks[PerformanceStateId.P0_3DPerformance][1].FrequencyDeltaInkHz.DeltaValue / 1000;
+        var (core, memory) = NVAPI.GetOverclockInfo(gpu);
         return new(core, memory);
     }
 

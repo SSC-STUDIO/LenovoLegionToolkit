@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.WPF\Utils\TextToVisibilityConverter.cs
+UniversalDeviceToolkit.WPF\Utils\ThemeManager.cs
+UniversalDeviceToolkit.WPF\Utils\TrayHelper.cs
+UniversalDeviceToolkit.WPF\Utils\WindowMaximizeWorkAreaHelper.cs
+UniversalDeviceToolkit.WPF\Utils\WindowResizeStabilityHelper.cs
+UniversalDeviceToolkit.WPF\ViewModels\KeyboardBacklightViewModel.cs
+UniversalDeviceToolkit.WPF\ViewModels\MacroViewModel.cs
+UniversalDeviceToolkit.WPF\ViewModels\PackagesViewModel.cs
+UniversalDeviceToolkit.WPF\ViewModels\SettingsViewModel.cs
+UniversalDeviceToolkit.WPF\ViewModels\WindowsOptimizationViewModel.cs
+UniversalDeviceToolkit.WPF\Windows\BaseWindow.cs
+UniversalDeviceToolkit.WPF\Windows\MainWindow.xaml.cs
+UniversalDeviceToolkit.WPF\Windows\Automation\AddAutomationStepWindow.xaml.cs

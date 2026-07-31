@@ -24,12 +24,10 @@
 		  <PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="NAudio.Wasapi" />
-		<PackageReference Include="PubSub" />
 		<PackageReference Include="LibreHardwareMonitorLib" />
 		<PackageReference Include="System.Management" />
 		<PackageReference Include="System.ServiceProcess.ServiceController" />
 		<PackageReference Include="NeoSmart.AsyncLock" />
-		<PackageReference Include="NvAPIWrapper.Net" />
 		<PackageReference Include="Octokit" />
 		<PackageReference Include="PresentMonFps-Modified" />
 		<PackageReference Include="RAMSPDToolkit-NDD" />

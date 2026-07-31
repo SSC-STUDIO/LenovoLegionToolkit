@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:UniversalDeviceToolkit.Avalonia.Pages"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsPage">
+
+    <UserControl.DataContext>
+        <vm:SettingsPageViewModel />
+    </UserControl.DataContext>
+
+    <Grid ColumnDefinitions="280,Auto,*">
+        <!-- Left Navigation Bar -->
+        <Border Grid.Column="0"
+                Background="{DynamicResource NavigationPaneBackgroundBrush}"
+                Padding="12,16">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"
+                           Text="Settings"
+                           FontSize="{StaticResource FontSizeDisplaySection}"
+                           FontWeight="Bold"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           Margin="12,0,0,16"/>
+
+                <ListBox ItemsSource="{Binding NavigationItems}"
+                         SelectedIndex="{Binding SelectedNavigationIndex}"
+                         BorderThickness="0"
+                         Background="Transparent">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="0,2">
+                                <TextBlock Text="{Binding IconIdentifier}"
+                                           FontSize="{StaticResource IconSizeMD}"
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,12,0"
+                                           Width="24"
+                                           TextAlignment="Center"/>
+                                <TextBlock Text="{Binding Title}"
+                                           FontSize="{StaticResource FontSizeCaption}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Padding" Value="16,12,12,12"/>
+                            <Setter Property="Margin" Value="0,0,0,2"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}"/>
+                        </Style>
+                    </ListBox.Styles>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <!-- Splitter area (visual separator) -->
+        <Border Grid.Column="1" Width="1"
+                Background="{DynamicResource CardStrokeColorDefaultBrush}"/>
+
+        <!-- Right Content Area -->
+        <ScrollViewer Grid.Column="2"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <Border Background="{DynamicResource AppSurfaceCardBrush}"
+                    Padding="{StaticResource ContentPaddingPage}">
+                <ContentControl Content="{Binding SelectedContent}" />
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <DisableUdtForceX64>true</DisableUdtForceX64>
+    <RootNamespace>UniversalDeviceToolkit.Avalonia</RootNamespace>
+    <AssemblyName>udt</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <ProjectReference Include="..\UniversalDeviceToolkit.ViewModels\UniversalDeviceToolkit.ViewModels.csproj" />
+    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
+    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Shared\UniversalDeviceToolkit.Lib.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Use the root-level icon as the tray icon resource -->
+    <AvaloniaResource Include="..\Assets\Icon.ico" Link="Assets\udt-icon.ico" />
+  </ItemGroup>
+
+</Project>

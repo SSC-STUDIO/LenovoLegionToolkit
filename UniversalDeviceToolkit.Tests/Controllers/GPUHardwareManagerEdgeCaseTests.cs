@@ -1,67 +1,121 @@
+using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
+using UniversalDeviceToolkit.Tests.Infrastructure;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;
 
 [Trait("Category", TestCategories.Controller)]
-public class GPUHardwareManagerEdgeCaseTests : UnitTestBase
+public class GPUHardwareManagerEdgeCaseTests : DeviceTestBase
 {
-    private GPUHardwareManager _manager = null!;
+    private Mock<IGPUProcessManager> _processManagerMock = null!;
+    private Mock<IGPUHardwareManager> _hardwareManagerMock = null!;
+    private GPUController _controller = null!;
 
     protected override void Setup()
     {
-        _manager = new GPUHardwareManager();
+        // Initialize with default device profile for non-parameterized tests
+        InitController();
     }
 
-    [Fact]
-    public async Task RestartGPUAsync_WithNullInstanceId_ShouldNotThrow()
+    /// <summary>
+    /// Creates mock dependencies and GPUController instance.
+    /// </summary>
+    protected virtual void InitController()
     {
-        var act = async () => await _manager.RestartGPUAsync(null!);
+        _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Loose);
+        _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
+        _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object, new DefaultDelayProvider());
+    }
+
+    [Theory]
+    [MemberData(nameof(DeviceProfiles))]
+    public async Task RestartGPUAsync_WithNullInstanceId_ShouldNotThrow(DeviceProfile profile)
+    {
+        InitController(); // Re-initialize per profile
+        
+        var act = async () => await _controller.RestartGPUAsync();
 
         await act.Should().NotThrowAsync();
     }
 
-    [Fact]
-    public async Task RestartGPUAsync_WithEmptyInstanceId_ShouldNotThrow()
+    [Theory]
+    [MemberData(nameof(DeviceProfiles))]
+    public async Task RestartGPUAsync_WithEmptyInstanceId_ShouldNotThrow(DeviceProfile profile)
     {
-        var act = async () => await _manager.RestartGPUAsync(string.Empty);
+        InitController(); // Re-initialize per profile
+        
+        var act = async () => await _controller.RestartGPUAsync();
 
         await act.Should().NotThrowAsync();
     }
 
-    [Fact]
-    public async Task RestartGPUAsync_WithWhitespaceInstanceId_ShouldNotThrow()
+    [Theory]
+    [MemberData(nameof(DeviceProfiles))]
+    public async Task RestartGPUAsync_WithWhitespaceInstanceId_ShouldNotThrow(DeviceProfile profile)
     {
-        var act = async () => await _manager.RestartGPUAsync("   ");
+        InitController(); // Re-initialize per profile
+        
+        var act = async () => await _controller.RestartGPUAsync();
 
         await act.Should().NotThrowAsync();
     }
 
-    [Fact(Skip = "Requires pnputil (Windows only)")]
-    public async Task RestartGPUAsync_WithValidInstanceIdFormat_ShouldHandleGracefully()
+    [Theory]
+    [InlineData("", null!)] // Empty string + no device profile
+    [InlineData("   ", null!)] // Whitespace-only + no device profile
+    public async Task RestartGPUAsync_WithInvalidInstanceId_ShouldNotThrow(string instanceId, DeviceProfile? profile)
     {
-        // pnputil will fail in test environment, but the method should complete
-        // via the exception path rather than throwing up
-        var act = async () => await _manager.RestartGPUAsync("PCI\\VEN_10DE&DEV_1F95&SUBSYS_17AA38A9&REV_A1\\4&2B6F1C0&0&00E6");
+        InitController(); // Re-initialize per instance
+        
+        var act = async () => await _controller.RestartGPUAsync();
+
+        await act.Should().NotThrowAsync();
+        
+        _hardwareManagerMock.Verify(
+            m => m.RestartGPUAsync(It.IsAny<string>()),
+            Times.Never);
+    }
+
+    [Theory]
+    [MemberData(nameof(DeviceProfiles))]
+    public async Task RestartGPUAsync_WithMinimalInstanceId_ShouldNotThrow(DeviceProfile profile)
+    {
+        InitController(); // Re-initialize per profile
+        
+        var act = async () => await _controller.RestartGPUAsync();
 
         await act.Should().NotThrowAsync();
     }
 
-    [Fact]
-    public async Task RestartGPUAsync_WithMinimalInstanceId_ShouldNotThrow()
+    [Theory]
+    [InlineData("TEST&ID_123&REV_A1", null!)] // Special chars instance ID + no device profile (for parameterization coverage)
+    [InlineData("PCI\\VEN_10DE&DEV_1F95&SUBSYS_17AA38A9&REV_A1\\4&2B6F1C0&0&00E6", null!)] // Complex PCI ID + no device profile
+    public async Task RestartGPUAsync_WithSpecialCharsInstanceId_ShouldDelegateToHardwareManager(string instanceId, DeviceProfile? profile)
     {
-        var act = async () => await _manager.RestartGPUAsync("A");
+        // Set up the controller with mocked dependencies
+        InitController();
 
-        await act.Should().NotThrowAsync();
-    }
+        // Use reflection to set internal state and gpuInstanceId field
+        var stateField = typeof(GPUController).GetField("_state", BindingFlags.NonPublic | BindingFlags.Instance);
+        var gpuInstanceIdField = typeof(GPUController).GetField("_gpuInstanceId", BindingFlags.NonPublic | BindingFlags.Instance);
+        
+        stateField!.SetValue(_controller, Lib.GPUState.Active);
+        gpuInstanceIdField!.SetValue(_controller, instanceId);
 
-    [Fact(Skip = "Requires pnputil (Windows only)")]
-    public async Task RestartGPUAsync_WithSpecialCharsInstanceId_ShouldNotThrow()
-    {
-        var act = async () => await _manager.RestartGPUAsync("TEST&ID_123&REV_A1");
+        // Mock hardware manager to verify it gets called
+        _hardwareManagerMock.Setup(m => m.RestartGPUAsync(instanceId)).Returns(Task.CompletedTask);
 
-        await act.Should().NotThrowAsync();
+        // Execute
+        await _controller.RestartGPUAsync();
+
+        // Verify hardware manager was called with correct instance ID
+        _hardwareManagerMock.Verify(
+            m => m.RestartGPUAsync(instanceId),
+            Times.Once);
     }
 }

@@ -98,11 +98,9 @@
                 <wpfui:HyperlinkButton Content="Microsoft.CSharp" NavigateUri="https://github.com/dotnet/runtime" />
                 <wpfui:HyperlinkButton Content="NAudio.Wasapi" NavigateUri="https://github.com/naudio/NAudio" />
                 <wpfui:HyperlinkButton Content="Newtonsoft.Json" NavigateUri="https://github.com/JamesNK/Newtonsoft.Json" />
-                <wpfui:HyperlinkButton Content="NvAPIWrapper.Net" NavigateUri="https://github.com/falahati/NvAPIWrapper" />
             </StackPanel>
             <StackPanel Grid.Column="2">
                 <wpfui:HyperlinkButton Content="Octokit" NavigateUri="https://github.com/octokit/octokit.net" />
-                <wpfui:HyperlinkButton Content="PubSub" NavigateUri="https://github.com/upta/pubsub" />
                 <wpfui:HyperlinkButton Content="System.Management" NavigateUri="https://github.com/dotnet/runtime" />
                 <wpfui:HyperlinkButton Content="TaskScheduler" NavigateUri="https://github.com/dahall/TaskScheduler" />
                 <wpfui:HyperlinkButton Content="WindowsDisplayAPI" NavigateUri="https://github.com/falahati/WindowsDisplayAPI" />

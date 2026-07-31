@@ -116,13 +116,73 @@
                 <custom:CardControl.Header>
                     <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Theme_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Theme_Description}" />
                 </custom:CardControl.Header>
-                <ComboBox
-                    x:Name="_themeComboBox"
-                    MinWidth="160"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Theme_Title}"
-                    MaxDropDownHeight="Auto"
-                    SelectionChanged="ThemeComboBox_SelectionChanged" />
+                <!-- Watt Toolkit-style theme mode cards: preview thumbnail + label + selected border. -->
+                <WrapPanel x:Name="_themeCardsPanel" Margin="0,0,0,8">
+                    <!-- Light -->
+                    <Button x:Name="_themeLightCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="Light">
+                        <StackPanel>
+                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Background="#F6F6F6">
+                                <Grid Margin="6">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Background="#FFFFFF" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
+                                    <Border Grid.Row="1" Height="12" Background="#E0E0E0" CornerRadius="{StaticResource CornerRadiusSmall}" />
+                                </Grid>
+                            </Border>
+                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Light}" />
+                        </StackPanel>
+                    </Button>
+                    <!-- Dark -->
+                    <Button x:Name="_themeDarkCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="Dark">
+                        <StackPanel>
+                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Background="#202020">
+                                <Grid Margin="6">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Background="#2D2D2D" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
+                                    <Border Grid.Row="1" Height="12" Background="#404040" CornerRadius="{StaticResource CornerRadiusSmall}" />
+                                </Grid>
+                            </Border>
+                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Dark}" />
+                        </StackPanel>
+                    </Button>
+                    <!-- Auto -->
+                    <Button x:Name="_themeAutoCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="Auto">
+                        <StackPanel>
+                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource AccentFillColorDefaultBrush}" BorderThickness="2" Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                                <Grid Margin="6">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
+                                    <Border Grid.Row="1" Height="12" Background="{DynamicResource ControlFillColorTertiaryBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" />
+                                </Grid>
+                            </Border>
+                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Auto}" />
+                        </StackPanel>
+                    </Button>
+                    <!-- System -->
+                    <Button x:Name="_themeSystemCard" Margin="0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="System">
+                        <StackPanel>
+                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                                <Grid Margin="6">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
+                                    <Border Grid.Row="1" Height="12" Background="{DynamicResource ControlFillColorTertiaryBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" />
+                                </Grid>
+                            </Border>
+                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_System}" />
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="TextFontSize24">

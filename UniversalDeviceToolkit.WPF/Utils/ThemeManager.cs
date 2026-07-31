@@ -115,6 +115,10 @@ public class ThemeManager
 
                     return true;
                 }
+            case Theme.Auto:
+                // Time-based auto: light 06:00-18:00, dark 18:00-06:00.
+                var hour = DateTime.Now.Hour;
+                return hour < 6 || hour >= 18;
             default:
                 return true;
         }

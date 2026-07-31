@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\System\InternalDisplay.cs
+UniversalDeviceToolkit.Lib\System\KnownFolders.cs
+UniversalDeviceToolkit.Lib\System\NVAPI.cs
+UniversalDeviceToolkit.Lib\System\NvApiInterop.cs
+UniversalDeviceToolkit.Lib\System\NvApiTypes.cs
+UniversalDeviceToolkit.Lib\System\Power.cs
+UniversalDeviceToolkit.Lib\System\Registry.cs
+UniversalDeviceToolkit.Lib\System\SystemPath.cs
+UniversalDeviceToolkit.Lib\System\SystemTheme.cs
+UniversalDeviceToolkit.Lib\System\WiFi.cs
+UniversalDeviceToolkit.Lib\System\Driver\DriverWrapper.cs
+UniversalDeviceToolkit.Lib\System\Driver\IDriverWrapper.cs
+UniversalDeviceToolkit.Lib\System\EC\PawnIoEcChannel.cs

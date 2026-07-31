@@ -59,6 +59,25 @@ public sealed class NetworkDomainGroup
     public bool IsFavorite { get; set; }
 
     public List<string> Domains { get; set; } = [];
+
+    /// <summary>Structured sub-items for tree-style CDN configuration (Watt Toolkit reference).</summary>
+    public List<NetworkDomainSubItem> SubItems { get; set; } = [];
+
+    /// <summary>Icon resource key for brand logos (e.g. "SteamLogo", "GitHubLogo").</summary>
+    public string? IconKey { get; set; }
+
+    /// <summary>Short description shown below the group name.</summary>
+    public string? Description { get; set; }
+}
+
+/// <summary>Individual domain entry within a group, with optional beta flag.</summary>
+public sealed class NetworkDomainSubItem
+{
+    public string Id { get; set; } = string.Empty;
+    public string DisplayName { get; set; } = string.Empty;
+    public string Domain { get; set; } = string.Empty;
+    public bool Enabled { get; set; } = true;
+    public bool IsBeta { get; set; }
 }
 
 /// <summary>Metadata describing the last successful recovery / snapshot restore.</summary>

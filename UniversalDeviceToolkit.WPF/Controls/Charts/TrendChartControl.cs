@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
@@ -216,16 +217,43 @@ public class TrendChartControl : FrameworkElement
         set => SetValue(BaselineBrushProperty, value);
     }
 
+    /// <summary>Brush for Y-axis scale labels (100%, 75%, 50%, 25%).</summary>
+    public static readonly DependencyProperty ScaleLabelBrushProperty = DependencyProperty.Register(
+        nameof(ScaleLabelBrush), typeof(Brush), typeof(TrendChartControl),
+        new FrameworkPropertyMetadata(Brushes.Gray, FrameworkPropertyMetadataOptions.AffectsRender));
+
+    public Brush ScaleLabelBrush
+    {
+        get => (Brush)GetValue(ScaleLabelBrushProperty);
+        set => SetValue(ScaleLabelBrushProperty, value);
+    }
+
+    /// <summary>Padding around the plot area so scale labels and strokes don't clip at edges.</summary>
+    public static readonly DependencyProperty PlotPaddingProperty = DependencyProperty.Register(
+        nameof(PlotPadding), typeof(Thickness), typeof(TrendChartControl),
+        new FrameworkPropertyMetadata(new Thickness(4, 4, 4, 4), FrameworkPropertyMetadataOptions.AffectsRender));
+
+    public Thickness PlotPadding
+    {
+        get => (Thickness)GetValue(PlotPaddingProperty);
+        set => SetValue(PlotPaddingProperty, value);
+    }
+
     protected override void OnRender(DrawingContext dc)
     {
         base.OnRender(dc);
 
-        var width = ActualWidth;
-        var height = ActualHeight;
+        var pad = PlotPadding;
+        var width = ActualWidth - pad.Left - pad.Right;
+        var height = ActualHeight - pad.Top - pad.Bottom;
         if (width <= 1 || height <= 1)
             return;
 
-        DrawGridlines(dc, width, height, GridlineBrush, BaselineBrush);
+        var dpiScale = VisualTreeHelper.GetDpi(this);
+        var translate = new TranslateTransform(pad.Left, pad.Top);
+        dc.PushTransform(translate);
+
+        DrawGridlines(dc, width, height, GridlineBrush, BaselineBrush, ScaleLabelBrush, dpiScale.PixelsPerDip);
 
         foreach (var series in _orderedSeries)
             DrawSeries(dc, series, width, height, drawFill: true, drawLine: false);
@@ -233,22 +261,51 @@ public class TrendChartControl : FrameworkElement
         // Draw every crest after all fills so no later series can cover an earlier line.
         foreach (var series in _orderedSeries)
             DrawSeries(dc, series, width, height, drawFill: false, drawLine: true);
+
+        dc.Pop();
     }
 
     /// <summary>
     /// Soft horizontal guides and a warmer baseline accent (reference band chart).
+    /// Y-axis scale labels at 100%, 75%, 50%, 25% positions (Watt Toolkit reference).
     /// No outer rectangular frame.
     /// </summary>
-    private static void DrawGridlines(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush)
+    private static void DrawGridlines(DrawingContext dc, double width, double height, Brush gridlineBrush, Brush baselineBrush, Brush scaleLabelBrush, double pixelsPerDip)
     {
         var grid = new Pen(gridlineBrush, 0.5);
         // Baseline is the warm accent edge under the filled band (see reference chart).
         var baseline = new Pen(baselineBrush, 1.0);
 
-        for (var fraction = 0.25; fraction < 1.0; fraction += 0.25)
+        // Scale label positions: fraction of height → label text.
+        // 0% at top (height=0), 100% at bottom (height=H). But charts plot
+        // value-up, so fraction 0.25 from top = 75% value, etc.
+        var scaleMarks = new (double fraction, string label)[]
+        {
+            (0.0, "100%"),
+            (0.25, "75%"),
+            (0.50, "50%"),
+            (0.75, "25%"),
+        };
+
+        foreach (var (fraction, label) in scaleMarks)
         {
             var y = Math.Round(height * fraction) + 0.5;
-            dc.DrawLine(grid, new Point(0, y), new Point(width, y));
+
+            // Draw gridline (skip the very top — 100% has no gridline to avoid clipping).
+            if (fraction > 0.01 && fraction < 0.99)
+                dc.DrawLine(grid, new Point(0, y), new Point(width, y));
+
+            // Draw scale label (small text pinned to the left edge).
+            var ft = new FormattedText(
+                label,
+                CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                new Typeface("Segoe UI, Segoe UI Variable Text, sans-serif"),
+                9.0,
+                scaleLabelBrush,
+                pixelsPerDip > 0 ? pixelsPerDip : 1.0);
+            // Offset: 2px from left, vertically centered on the gridline.
+            dc.DrawText(ft, new Point(3, y - ft.Height / 2.0));
         }
 
         dc.DrawLine(baseline, new Point(0, height - 0.5), new Point(width, height - 0.5));
@@ -350,15 +407,6 @@ public class TrendChartControl : FrameworkElement
             var y = height - ratio * (height - 2) - 1;
             points.Add(new Point(x, y));
             i++;
-        }
-
-        // While history is still filling, ease the visible series in from the baseline.
-        // This avoids the first real sample appearing as a vertical wall in the middle of
-        // the chart and matches the natural entry used by Task Manager-style graphs.
-        if (points.Count > 0 && startSlot > 0)
-        {
-            var first = points[0];
-            points.Insert(0, new Point(Math.Max(0, first.X - stepX), height - 1));
         }
 
         // One sample: extend a flat segment one step to the left of the right edge.

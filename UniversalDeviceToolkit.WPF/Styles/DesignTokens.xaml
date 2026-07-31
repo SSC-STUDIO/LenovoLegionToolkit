@@ -118,7 +118,7 @@
     <SolidColorBrush x:Key="ChartGridlineBrush" Color="#1AFFFFFF" />
     <!-- Warm baseline accent under filled trend bands (reference area chart). -->
     <SolidColorBrush x:Key="ChartBaselineBrush" Color="#D9A85A" />
-    <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#A6202020" />
+    <SolidColorBrush x:Key="NotificationGlassSurfaceBrush" Color="#FF202020" />
     <SolidColorBrush x:Key="NotificationGlassBorderBrush" Color="#48FFFFFF" />
 
     <!-- Gauge Size Tokens -->

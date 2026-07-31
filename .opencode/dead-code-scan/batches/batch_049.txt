@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.NetworkProxy\Host\LocalHttpProxyHost.cs
+UniversalDeviceToolkit.NetworkProxy\Host\ProxyTrafficTracker.cs
+UniversalDeviceToolkit.NetworkProxy\Ipc\NetworkProxyIpcServer.cs
+UniversalDeviceToolkit.PerformanceTest\Program.cs
+UniversalDeviceToolkit.Platform.Linux\LinuxPlatformServices.cs
+UniversalDeviceToolkit.Platform.Linux\Hardware\LinuxGpuBackend.cs
+UniversalDeviceToolkit.Platform.Linux\Hardware\LinuxPowerProfileProvider.cs
+UniversalDeviceToolkit.Platform.Linux\Hardware\LinuxSensorBackend.cs
+UniversalDeviceToolkit.Platform.Linux\Lifecycle\LinuxAutorunManager.cs
+UniversalDeviceToolkit.Platform.Linux\Lifecycle\LinuxSingleInstanceManager.cs
+UniversalDeviceToolkit.Platform.Linux\Platform\LinuxConfigurationStore.cs
+UniversalDeviceToolkit.Platform.MacOS\MacOSPlatformServices.cs
+UniversalDeviceToolkit.Platform.MacOS\Hardware\MacOSGpuBackend.cs

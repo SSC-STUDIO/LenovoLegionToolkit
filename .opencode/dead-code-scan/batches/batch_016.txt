@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\Features\Hybrid\HybridModeFeature.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\IGPUModeCapabilityFeature.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\IGPUModeChangeException.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\IGPUModeFeature.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\IGPUModeFeatureFlagsFeature.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\IGPUModeGamezoneFeature.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\IGSyncFeature.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\IIGPUModeFeature.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\Notify\AbstractDGPUNotify.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\Notify\DGPUCapabilityNotify.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\Notify\DGPUFeatureFlagsNotify.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\Notify\DGPUGamezoneNotify.cs
+UniversalDeviceToolkit.Lib\Features\Hybrid\Notify\DGPUNotify.cs

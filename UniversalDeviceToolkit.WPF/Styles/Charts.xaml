@@ -6,13 +6,14 @@
     <Style TargetType="{x:Type charts:TrendChartControl}">
         <Setter Property="GridlineBrush" Value="{DynamicResource ChartGridlineBrush}" />
         <Setter Property="BaselineBrush" Value="{DynamicResource ChartBaselineBrush}" />
+        <Setter Property="ScaleLabelBrush" Value="{DynamicResource TextFillColorTertiaryBrush}" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
     </Style>
 
     <!-- Default template for the self-drawn radial gauge. -->
     <Style TargetType="{x:Type charts:RadialGaugeControl}">
         <Setter Property="RingBrush" Value="{DynamicResource ChartUtilizationBrush}" />
-        <Setter Property="RingThickness" Value="5" />
+        <Setter Property="RingThickness" Value="14" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
@@ -22,12 +23,8 @@
                 <ControlTemplate TargetType="{x:Type charts:RadialGaugeControl}">
                     <Grid>
                         <Path x:Name="PART_Track" />
-                        <!-- Blurred underlay that gives the value arc a soft glow. -->
-                        <Path x:Name="PART_Glow" Opacity="0.55">
-                            <Path.Effect>
-                                <BlurEffect Radius="5" KernelType="Gaussian" />
-                            </Path.Effect>
-                        </Path>
+                        <!-- Soft glow underlay: thicker semi-transparent stroke instead of BlurEffect (GPU-expensive). -->
+                        <Path x:Name="PART_Glow" Opacity="0.4" />
                         <Path x:Name="PART_Value" />
                         <!-- Bright dot riding the leading edge of the value arc. -->
                         <Ellipse

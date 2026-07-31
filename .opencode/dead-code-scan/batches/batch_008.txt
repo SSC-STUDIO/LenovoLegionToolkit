@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\Controllers\RGBKeyboardBacklightController.cs
+UniversalDeviceToolkit.Lib\Controllers\SmartFnLockController.cs
+UniversalDeviceToolkit.Lib\Controllers\SpectrumKeyboardBacklightController.cs
+UniversalDeviceToolkit.Lib\Controllers\WindowsPowerModeController.cs
+UniversalDeviceToolkit.Lib\Controllers\WindowsPowerPlanController.cs
+UniversalDeviceToolkit.Lib\Controllers\GodMode\AbstractGodModeController.cs
+UniversalDeviceToolkit.Lib\Controllers\GodMode\GodModeController.cs
+UniversalDeviceToolkit.Lib\Controllers\GodMode\GodModeControllerV1.cs
+UniversalDeviceToolkit.Lib\Controllers\GodMode\GodModeControllerV2.cs
+UniversalDeviceToolkit.Lib\Controllers\GodMode\IGodModeController.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\AbstractSensorsController.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\AbstractSensorsController.FanSpeed.cs
+UniversalDeviceToolkit.Lib\Controllers\Sensors\AcerSensorsController.cs

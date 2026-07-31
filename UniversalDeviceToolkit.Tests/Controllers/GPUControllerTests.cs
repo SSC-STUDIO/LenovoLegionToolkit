@@ -10,6 +10,7 @@ using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 using Moq;
+using UniversalDeviceToolkit.Tests.Infrastructure;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;
 
@@ -150,10 +151,16 @@ public class GPUControllerTests : UnitTestBase
 
     #region Extended Edge Case Tests
 
-    [Fact(Skip = "Requires NVIDIA GPU/NVAPI (Windows only)")]
-    [Trait("Requires", "NVAPI")]
-    public async Task StopAsync_WithWaitForFinish_ShouldComplete()
+    [Theory]
+    [MemberData(nameof(DeviceProfiles))]
+    [Trait("Category", "ParameterizedHardware")]
+    public async Task StopAsync_WithWaitForFinish_ShouldComplete(DeviceProfile profile)
     {
+        // Re-initialize with profile-aware mocks for parameterized coverage
+        _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Loose);
+        _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
+        _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object, new DefaultDelayProvider());
+
         await _controller.StartAsync(delay: 50, interval: 5000);
         _controller.IsStarted.Should().BeTrue();
 
@@ -163,18 +170,24 @@ public class GPUControllerTests : UnitTestBase
         _controller.IsStarted.Should().BeFalse();
     }
 
-    [Fact(Skip = "Requires NVIDIA GPU/NVAPI (Windows only)")]
-    [Trait("Requires", "NVAPI")]
-    public async Task RefreshNowAsync_WhenNotStarted_ShouldReturnUnknownAndNotCrash()
+    [Theory]
+    [MemberData(nameof(DeviceProfiles))]
+    [Trait("Category", "ParameterizedHardware")]
+    public async Task RefreshNowAsync_WhenNotStarted_ShouldReturnUnknownAndNotCrash(DeviceProfile profile)
     {
+        // Re-initialize with profile-aware mocks for parameterized coverage
+        _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Loose);
+        _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
+        _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object, new DefaultDelayProvider());
+
         GPUStatus? result = null;
         var act = async () => { result = await _controller.RefreshNowAsync(); };
 
-        // Note: NVAPI native libraries must be available for this test to pass.
-        // In environments without NVIDIA hardware/NVAPI, this may throw.
         await act.Should().NotThrowAsync();
         result.Should().NotBeNull();
     }
+
+    public static IEnumerable<object[]> DeviceProfiles => Infrastructure.DeviceProfiles.All();
 
     [Fact]
     public async Task RestartGPUAsync_WhenStateIsNotActiveOrInactive_ShouldNotCallHardwareManager()

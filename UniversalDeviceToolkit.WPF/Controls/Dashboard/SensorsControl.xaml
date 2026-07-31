@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:behaviors="clr-namespace:UniversalDeviceToolkit.WPF.Behaviors"
     xmlns:charts="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Charts"
+    xmlns:controls="clr-namespace:UniversalDeviceToolkit.WPF.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -123,7 +124,7 @@
         </Style>
         <Style x:Key="TrendPanelStyle" TargetType="Border">
             <Setter Property="Margin" Value="0,14,0,0" />
-            <Setter Property="Height" Value="76" />
+            <Setter Property="Height" Value="120" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
             <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
             <Setter Property="BorderThickness" Value="0" />
@@ -288,19 +289,19 @@
                             <ProgressBar x:Name="_cpuCoreClockBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_cpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_cpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
                             <ProgressBar x:Name="_cpuTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_cpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_cpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
                             <ProgressBar x:Name="_cpuFanSpeedBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_cpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_cpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
@@ -420,19 +421,19 @@
                             <ProgressBar x:Name="_batteryHealthBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_batteryHealthText" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_batteryHealthText" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
                             <ProgressBar x:Name="_batteryTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_batteryTempText" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_batteryTempText" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Rate}" Style="{StaticResource StatLabelStyle}" />
                             <ProgressBar x:Name="_batteryRateBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_batteryRateText" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_batteryRateText" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
@@ -465,7 +466,7 @@
                                     x:Name="_batteryCapGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="4"
+                                    RingThickness="10"
                                     RingBrush="{DynamicResource ChartBatteryBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_Capacity}" />
                                 <TextBlock x:Name="_batteryCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
@@ -475,7 +476,7 @@
                                     x:Name="_batteryFullCapGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="4"
+                                    RingThickness="10"
                                     RingBrush="{DynamicResource ChartUtilizationBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_FullCapacity}" />
                                 <TextBlock x:Name="_batteryFullCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
@@ -486,7 +487,7 @@
                                     x:Name="_batteryHealthGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="4"
+                                    RingThickness="10"
                                     Maximum="100"
                                     RingBrush="{DynamicResource StatusCriticalBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_Health}" />
@@ -563,19 +564,19 @@
                             <ProgressBar x:Name="_gpuCoreClockBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_gpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_gpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
                             <ProgressBar x:Name="_gpuTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_gpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_gpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
                             <ProgressBar x:Name="_gpuFanSpeedBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
                                 <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                             </ProgressBar>
-                            <Label x:Name="_gpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeTextBlock x:Name="_gpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 

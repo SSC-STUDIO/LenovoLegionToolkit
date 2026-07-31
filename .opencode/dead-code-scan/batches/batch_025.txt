@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\ResourcesCatalog\OnlineResourceCatalog.cs
+UniversalDeviceToolkit.Lib\ResourcesCatalog\OnlineResourceCatalogClient.cs
+UniversalDeviceToolkit.Lib\Serialization\GPUOverclockInfoJsonConverter.cs
+UniversalDeviceToolkit.Lib\Serialization\LegacyPowerPlanGuidJsonConverter.cs
+UniversalDeviceToolkit.Lib\Serialization\LltJson.cs
+UniversalDeviceToolkit.Lib\Services\BatteryDischargeRateMonitorService.cs
+UniversalDeviceToolkit.Lib\Services\IBatteryDischargeRateMonitorService.cs
+UniversalDeviceToolkit.Lib\Settings\AbstractSettings.cs
+UniversalDeviceToolkit.Lib\Settings\ApplicationSettings.cs
+UniversalDeviceToolkit.Lib\Settings\BalanceModeSettings.cs
+UniversalDeviceToolkit.Lib\Settings\BatteryHealthAlertSettings.cs
+UniversalDeviceToolkit.Lib\Settings\FanCurveSettings.cs
+UniversalDeviceToolkit.Lib\Settings\GodModeSettings.cs

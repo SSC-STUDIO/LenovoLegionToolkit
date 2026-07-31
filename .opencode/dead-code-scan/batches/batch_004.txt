@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.CrossPlatform\HardwareIdentity.cs
+UniversalDeviceToolkit.CrossPlatform\PluginDiscovery.cs
+UniversalDeviceToolkit.CrossPlatform\PowerProfile.cs
+UniversalDeviceToolkit.CrossPlatform\PowerStatus.cs
+UniversalDeviceToolkit.CrossPlatform\Program.cs
+UniversalDeviceToolkit.CrossPlatform\SystemTelemetry.cs
+UniversalDeviceToolkit.CrossPlatform\Properties\AssemblyInfo.cs
+UniversalDeviceToolkit.CrossPlatform.Tests\BatteryChargeLimitTests.cs
+UniversalDeviceToolkit.CrossPlatform.Tests\CpuGovernorTests.cs
+UniversalDeviceToolkit.CrossPlatform.Tests\CrossPlatformEdgeCaseTests.cs
+UniversalDeviceToolkit.CrossPlatform.Tests\CrossPlatformProjectTests.cs
+UniversalDeviceToolkit.CrossPlatform.Tests\DeviceSupportStatusTests.cs
+UniversalDeviceToolkit.CrossPlatform.Tests\DisplayBrightnessTests.cs

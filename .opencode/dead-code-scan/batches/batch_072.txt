@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\WPF\FlagsTests.cs
+UniversalDeviceToolkit.Tests\WPF\GodModeSettingsWindowTests.cs
+UniversalDeviceToolkit.Tests\WPF\IpcServerTests.cs
+UniversalDeviceToolkit.Tests\WPF\LanguageGateStartupGuardTests.cs
+UniversalDeviceToolkit.Tests\WPF\LanguagePackManagerTests.cs
+UniversalDeviceToolkit.Tests\WPF\LocalizationAndResourceQualityTests.cs
+UniversalDeviceToolkit.Tests\WPF\LocalizationHelperTests.cs
+UniversalDeviceToolkit.Tests\WPF\MainWindowTests.cs
+UniversalDeviceToolkit.Tests\WPF\NavigationPaneMetricsTests.cs
+UniversalDeviceToolkit.Tests\WPF\NetworkAccelerationUiGuardTests.cs
+UniversalDeviceToolkit.Tests\WPF\OptimizationToggleActionHelperTests.cs
+UniversalDeviceToolkit.Tests\WPF\PackageControlTests.cs
+UniversalDeviceToolkit.Tests\WPF\PluginExecutableResolverTests.cs

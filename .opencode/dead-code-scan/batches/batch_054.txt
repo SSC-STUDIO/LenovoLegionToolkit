@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\GodModeDefaultsTests.cs
+UniversalDeviceToolkit.Tests\GodModePresetTests.cs
+UniversalDeviceToolkit.Tests\GPUOverclockInfoEdgeCaseTests.cs
+UniversalDeviceToolkit.Tests\GPUOverclockInfoTests.cs
+UniversalDeviceToolkit.Tests\HardwareIdTests.cs
+UniversalDeviceToolkit.Tests\IpcAndPluginModelTests.cs
+UniversalDeviceToolkit.Tests\IpcModelAndExtensionTests.cs
+UniversalDeviceToolkit.Tests\LogTests.cs
+UniversalDeviceToolkit.Tests\MachineInformationTests.cs
+UniversalDeviceToolkit.Tests\MacroTests.cs
+UniversalDeviceToolkit.Tests\MainAppPluginUiSmokeArgumentParsingTests.cs
+UniversalDeviceToolkit.Tests\ManagementEventWatcherExtensionsSourceTests.cs
+UniversalDeviceToolkit.Tests\MessagingAndModelTests.cs

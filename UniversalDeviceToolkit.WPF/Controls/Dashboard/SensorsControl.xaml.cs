@@ -348,7 +348,7 @@ public partial class SensorsControl : IDisposable
         ApplySummaryGaugeSize(_skeletonBatteryGauge, isCompact);
         ApplySummaryGaugeSize(_skeletonGpuGauge, isCompact);
 
-        // Trend panel heights: 76 standard / 96 wide.
+        // Trend panel heights: 120 standard / 150 wide.
         ApplyTrendPanelHeight(_skeletonCpuTrendPanel, isWide);
         ApplyTrendPanelHeight(_skeletonBatteryTrendPanel, isWide);
         ApplyTrendPanelHeight(_skeletonGpuTrendPanel, isWide);
@@ -389,7 +389,7 @@ public partial class SensorsControl : IDisposable
         if (trendPanel is null)
             return;
 
-        trendPanel.Height = isWide ? 96 : 76;
+        trendPanel.Height = isWide ? 150 : 120;
     }
 
     private static void ApplyProgressBarMaxWidth(FrameworkElement? progressBar, bool isWide)

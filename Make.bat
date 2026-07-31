@@ -46,6 +46,14 @@ IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
+echo --- Building Avalonia application ---
+dotnet build UniversalDeviceToolkit.Avalonia\UniversalDeviceToolkit.Avalonia.csproj --configuration Release --verbosity minimal
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
+echo --- Building Platform.Windows ---
+dotnet build UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj --configuration Release --verbosity minimal
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
 REM Stage plugin runtime DLLs (SDK/Shared) from the sibling plugins repo before the payload assert.
 powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-PluginRuntimeAssets.ps1" -DestinationPath "%BUILD_DIR%" -Configuration Release
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
@@ -134,6 +142,16 @@ dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.Networ
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
+echo Building Avalonia application (Debug)...
+dotnet build UniversalDeviceToolkit.Avalonia\UniversalDeviceToolkit.Avalonia.csproj --configuration Debug --verbosity minimal
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
+echo.
+echo Building Platform.Windows (Debug)...
+dotnet build UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj --configuration Debug --verbosity minimal
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
+echo.
 IF %ERROR_COUNT% EQU 0 (
     echo Debug build completed successfully!
 ) ELSE (
@@ -168,6 +186,13 @@ for %%p in (
     UniversalDeviceToolkit.SpectrumTester
     UniversalDeviceToolkit.PerformanceTest
     UniversalDeviceToolkit.Tests
+    UniversalDeviceToolkit.Avalonia
+    UniversalDeviceToolkit.CrossPlatform
+    UniversalDeviceToolkit.Platform.Windows
+    UniversalDeviceToolkit.ViewModels
+    UniversalDeviceToolkit.Lib.Abstractions
+    UniversalDeviceToolkit.Lib.Shared
+    UniversalDeviceToolkit.Plugins.Abstractions
 ) do (
     if exist "%%p\bin" rmdir /s /q "%%p\bin"
     if exist "%%p\obj" rmdir /s /q "%%p\obj"

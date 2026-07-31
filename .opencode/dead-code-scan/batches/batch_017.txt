@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Lib\Features\Hybrid\Notify\IDGPUNotify.cs
+UniversalDeviceToolkit.Lib\Features\InstantBoot\InstantBootCapabilityFeature.cs
+UniversalDeviceToolkit.Lib\Features\InstantBoot\InstantBootFeature.cs
+UniversalDeviceToolkit.Lib\Features\InstantBoot\InstantBootFeatureFlagsFeature.cs
+UniversalDeviceToolkit.Lib\Features\Msi\MsiPowerModeFeature.cs
+UniversalDeviceToolkit.Lib\Features\OverDrive\OverDriveCapabilityFeature.cs
+UniversalDeviceToolkit.Lib\Features\OverDrive\OverDriveFeature.cs
+UniversalDeviceToolkit.Lib\Features\OverDrive\OverDriveGameZoneFeature.cs
+UniversalDeviceToolkit.Lib\Features\PanelLogo\PanelLogoBacklightFeature.cs
+UniversalDeviceToolkit.Lib\Features\PanelLogo\PanelLogoLenovoLightingBacklightFeature.cs
+UniversalDeviceToolkit.Lib\Features\PanelLogo\PanelLogoSpectrumBacklightFeature.cs
+UniversalDeviceToolkit.Lib\Features\Razer\RazerPowerModeFeature.cs
+UniversalDeviceToolkit.Lib\Features\WhiteKeyboardBacklight\WhiteKeyboardBacklightFeature.cs

@@ -1,22 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.Lib.Utils;
-using PubSub;
 
 namespace UniversalDeviceToolkit.Lib.Messaging;
 
-// TODO(#143): Replace PubSub with a maintained in-process messaging solution
-// (e.g. CommunityToolkit.Mvvm.Messaging or a hand-rolled dispatcher). The current
-// PubSub 4.0.2 dependency is unmaintained and surfaces in Dependabot/Renovate
-// alerts. This is acknowledged as a large refactor because PubSub is used as the
-// process-wide bus for many subsystems; see issue #143 for tracking.
 public static class MessagingCenter
 {
     public static void Publish<T>(T data) where T : IMessage
     {
         try
         {
-            Hub.Default.Publish(data);
+            Messenger.Instance.Publish(data);
         }
         catch (Exception ex)
         {
@@ -26,7 +22,7 @@ public static class MessagingCenter
 
     public static void Subscribe<T>(object subscriber, Action<T> handler) where T : IMessage
     {
-        Hub.Default.Subscribe(subscriber, (T msg) =>
+        Messenger.Instance.Subscribe<T>(subscriber, msg =>
         {
             try
             {
@@ -41,7 +37,7 @@ public static class MessagingCenter
 
     public static void Subscribe<T>(object subscriber, Action handler) where T : IMessage
     {
-        Hub.Default.Subscribe<T>(subscriber, _ =>
+        Messenger.Instance.Subscribe<T>(subscriber, _ =>
         {
             try
             {
@@ -54,7 +50,90 @@ public static class MessagingCenter
         });
     }
 
-    public static void Unsubscribe<T>(object subscriber) where T : IMessage => Hub.Default.Unsubscribe<T>(subscriber);
+    public static void Unsubscribe<T>(object subscriber) where T : IMessage
+        => Messenger.Instance.Unsubscribe<T>(subscriber);
 
-    public static void Unsubscribe(object subscriber) => Hub.Default.Unsubscribe(subscriber);
+    public static void Unsubscribe(object subscriber)
+        => Messenger.Instance.UnsubscribeAll(subscriber);
+}
+
+internal sealed class Messenger
+{
+    public static readonly Messenger Instance = new();
+
+    private readonly object _lock = new();
+    private readonly ConditionalWeakTable<object, Dictionary<Type, List<Delegate>>> _subs 
+        = new();
+
+    public void Publish<T>(T data)
+    {
+        List<Delegate> snapshot;
+        lock (_lock)
+        {
+            snapshot = CollectHandlers<T>();
+        }
+        foreach (var handler in snapshot)
+        {
+            ((Action<T>)handler)(data);
+        }
+    }
+
+    public void Subscribe<T>(object subscriber, Action<T> handler)
+    {
+        lock (_lock)
+        {
+            var typeKey = typeof(T);
+            if (!_subs.TryGetValue(subscriber, out var byType))
+            {
+                byType = new Dictionary<Type, List<Delegate>>();
+                _subs.Add(subscriber, byType);
+            }
+            if (!byType.TryGetValue(typeKey, out var list))
+            {
+                list = new List<Delegate>();
+                byType[typeKey] = list;
+            }
+            list.Add(handler);
+        }
+    }
+
+    public void Unsubscribe<T>(object subscriber)
+    {
+        lock (_lock)
+        {
+            if (_subs.TryGetValue(subscriber, out var byType))
+            {
+                byType.Remove(typeof(T));
+                if (byType.Count == 0)
+                {
+                    // CWT 无法主动删除 key，依赖 GC 自动回收
+                    byType.Clear();
+                }
+            }
+        }
+    }
+
+    public void UnsubscribeAll(object subscriber)
+    {
+        lock (_lock)
+        {
+            if (_subs.TryGetValue(subscriber, out var byType))
+            {
+                // CWT 无法主动删除 key，依赖 GC 自动回收
+                byType.Clear();
+            }
+        }
+    }
+
+    private List<Delegate> CollectHandlers<T>()
+    {
+        var typeKey = typeof(T);
+        var result = new List<Delegate>();
+        foreach (var kvp in _subs)
+        {
+            if (kvp.Value.TryGetValue(typeKey, out var list))
+                result.AddRange(list);
+        }
+        return result;
+    }
 }

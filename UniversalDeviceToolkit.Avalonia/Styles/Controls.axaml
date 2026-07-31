@@ -1,0 +1,12 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <StyleInclude Source="avares://udt/Styles/Controls/Badge.axaml" />
+    <StyleInclude Source="avares://udt/Styles/Controls/CardAction.axaml" />
+    <StyleInclude Source="avares://udt/Styles/Controls/CardControl.axaml" />
+    <StyleInclude Source="avares://udt/Styles/Controls/CardExpander.axaml" />
+    <StyleInclude Source="avares://udt/Styles/Controls/InfoBar.axaml" />
+    <StyleInclude Source="avares://udt/Styles/Controls/NotificationToast.axaml" />
+    <StyleInclude Source="avares://udt/Styles/Controls/DynamicScrollBar.axaml" />
+
+</Styles>

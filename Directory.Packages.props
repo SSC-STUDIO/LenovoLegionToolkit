@@ -41,9 +41,8 @@
     <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.275" />
     <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageVersion Include="NAudio.Wasapi" Version="2.3.0" />
-    <PackageVersion Include="PubSub" Version="4.0.2" />
     <PackageVersion Include="LibreHardwareMonitorLib" Version="0.9.6" />
-    <PackageVersion Include="NvAPIWrapper.Net" Version="0.8.1.101" />
+    
     <PackageVersion Include="Octokit" Version="14.0.0" />
     <PackageVersion Include="PresentMonFps-Modified" Version="2.0.7" />
     <PackageVersion Include="RAMSPDToolkit-NDD" Version="1.4.2" />
@@ -84,6 +83,13 @@
     <PackageVersion Include="System.Security.Permissions" Version="10.0.8" />
     <PackageVersion Include="System.Windows.Extensions" Version="10.0.8" />
     <PackageVersion Include="xunit.analyzers" Version="1.27.0" />
+  </ItemGroup>
+
+  <!-- ==================== Avalonia/UI Dependencies ==================== -->
+  <ItemGroup>
+    <PackageVersion Include="Avalonia" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Themes.Fluent" Version="11.3.6" />
   </ItemGroup>
 
   <!-- ==================== Tools/Other ==================== -->

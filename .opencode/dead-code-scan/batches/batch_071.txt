@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\Utils\ThreadSafeCounterTests.cs
+UniversalDeviceToolkit.Tests\Utils\ThrottleFirstDispatcherTests.cs
+UniversalDeviceToolkit.Tests\Utils\ThrottleLastDispatcherTests.cs
+UniversalDeviceToolkit.Tests\Utils\TokenManipulatorTests.cs
+UniversalDeviceToolkit.Tests\Utils\UpdateCheckerTests.cs
+UniversalDeviceToolkit.Tests\Utils\WarrantyCheckerTests.cs
+UniversalDeviceToolkit.Tests\WPF\AutomationPageTests.cs
+UniversalDeviceToolkit.Tests\WPF\ChartsControlTests.cs
+UniversalDeviceToolkit.Tests\WPF\ComboBoxExtensionsTests.cs
+UniversalDeviceToolkit.Tests\WPF\CrashReportStartupGuardTests.cs
+UniversalDeviceToolkit.Tests\WPF\DashboardPageTests.cs
+UniversalDeviceToolkit.Tests\WPF\DashboardSettingsTests.cs
+UniversalDeviceToolkit.Tests\WPF\DesignTokenGuardTests.cs

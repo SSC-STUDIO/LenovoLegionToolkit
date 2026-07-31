@@ -1,0 +1,13 @@
+﻿UniversalDeviceToolkit.Tests\Utils\NullSafeHandleTests.cs
+UniversalDeviceToolkit.Tests\Utils\PackageManifestScriptTests.cs
+UniversalDeviceToolkit.Tests\Utils\PathSecurityExpandedTests.cs
+UniversalDeviceToolkit.Tests\Utils\PathSecurityTests.cs
+UniversalDeviceToolkit.Tests\Utils\PresetUiValidationGuardTests.cs
+UniversalDeviceToolkit.Tests\Utils\ReflectionCacheTests.cs
+UniversalDeviceToolkit.Tests\Utils\RetryHelperTests.cs
+UniversalDeviceToolkit.Tests\Utils\ShippingPayloadGuardTests.cs
+UniversalDeviceToolkit.Tests\Utils\StartupHealthGuardTests.cs
+UniversalDeviceToolkit.Tests\Utils\StartupInitializationRunnerTests.cs
+UniversalDeviceToolkit.Tests\Utils\StructSafeHandleTests.cs
+UniversalDeviceToolkit.Tests\Utils\SunriseSunsetTests.cs
+UniversalDeviceToolkit.Tests\Utils\ThreadSafeBoolTests.cs

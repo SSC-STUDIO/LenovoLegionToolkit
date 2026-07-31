@@ -10361,5 +10361,33 @@ namespace UniversalDeviceToolkit.WPF.Resources {
             get { return ResourceManager.GetString("WindowsOptimizationPage_CleanupPartialSummary", resourceCulture); }
         }
 
+        public static string NaDiag_NatTitle { get { return ResourceManager.GetString("NaDiag_NatTitle", resourceCulture); } }
+        public static string NaDiag_NatType { get { return ResourceManager.GetString("NaDiag_NatType", resourceCulture); } }
+        public static string NaDiag_LocalIp { get { return ResourceManager.GetString("NaDiag_LocalIp", resourceCulture); } }
+        public static string NaDiag_PublicIp { get { return ResourceManager.GetString("NaDiag_PublicIp", resourceCulture); } }
+        public static string NaDiag_Internet { get { return ResourceManager.GetString("NaDiag_Internet", resourceCulture); } }
+        public static string NaDiag_DnsTitle { get { return ResourceManager.GetString("NaDiag_DnsTitle", resourceCulture); } }
+        public static string NaDiag_DnsDomain { get { return ResourceManager.GetString("NaDiag_DnsDomain", resourceCulture); } }
+        public static string NaDiag_CustomDns { get { return ResourceManager.GetString("NaDiag_CustomDns", resourceCulture); } }
+        public static string NaDiag_EnableDoh { get { return ResourceManager.GetString("NaDiag_EnableDoh", resourceCulture); } }
+        public static string NaDiag_DohUrl { get { return ResourceManager.GetString("NaDiag_DohUrl", resourceCulture); } }
+        public static string NaDiag_Latency { get { return ResourceManager.GetString("NaDiag_Latency", resourceCulture); } }
+        public static string NaDiag_LatencyFormat { get { return ResourceManager.GetString("NaDiag_LatencyFormat", resourceCulture); } }
+        public static string NaDiag_Failed { get { return ResourceManager.GetString("NaDiag_Failed", resourceCulture); } }
+        public static string NaDiag_Ipv6Title { get { return ResourceManager.GetString("NaDiag_Ipv6Title", resourceCulture); } }
+        public static string NaDiag_Ipv6Support { get { return ResourceManager.GetString("NaDiag_Ipv6Support", resourceCulture); } }
+        public static string NaDiag_Ipv6Address { get { return ResourceManager.GetString("NaDiag_Ipv6Address", resourceCulture); } }
+        public static string NaDiag_Supported { get { return ResourceManager.GetString("NaDiag_Supported", resourceCulture); } }
+        public static string NaDiag_NotSupported { get { return ResourceManager.GetString("NaDiag_NotSupported", resourceCulture); } }
+        public static string NaDiag_Detect { get { return ResourceManager.GetString("NaDiag_Detect", resourceCulture); } }
+        public static string NaDiag_Unknown { get { return ResourceManager.GetString("NaDiag_Unknown", resourceCulture); } }
+        public static string NaDiag_NatOpen { get { return ResourceManager.GetString("NaDiag_NatOpen", resourceCulture); } }
+        public static string NaDiag_NatRestricted { get { return ResourceManager.GetString("NaDiag_NatRestricted", resourceCulture); } }
+        public static string NaDiag_UdpBlocked { get { return ResourceManager.GetString("NaDiag_UdpBlocked", resourceCulture); } }
+        public static string Theme_Auto { get { return ResourceManager.GetString("Theme_Auto", resourceCulture); } }
+        public static string Theme_Light { get { return ResourceManager.GetString("Theme_Light", resourceCulture); } }
+        public static string Theme_Dark { get { return ResourceManager.GetString("Theme_Dark", resourceCulture); } }
+        public static string Theme_System { get { return ResourceManager.GetString("Theme_System", resourceCulture); } }
+
     }
 }
