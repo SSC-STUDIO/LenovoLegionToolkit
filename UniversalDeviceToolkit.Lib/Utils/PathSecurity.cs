@@ -83,6 +83,7 @@ public static class PathSecurity
     /// <summary>
     /// Validates a full path to ensure it doesn't escape the allowed base directory.
     /// This is the primary defense against path traversal attacks.
+    /// Also resolves symbolic links and junction points to prevent symlink-based traversal.
     /// </summary>
     /// <param name="path">The path to validate</param>
     /// <param name="basePath">The base directory that the path must be within</param>
@@ -114,6 +115,15 @@ public static class PathSecurity
                 fullPath.Contains(".." + Path.AltDirectorySeparatorChar))
                 return false;
 
+            // SECURITY: Resolve symbolic links / junction points to prevent symlink-based traversal.
+            // An attacker could create a symlink inside the allowed directory pointing outside it.
+            if (File.Exists(fullPath) || Directory.Exists(fullPath))
+            {
+                var resolvedPath = ResolveSymbolicLinks(fullPath);
+                if (resolvedPath != null && !resolvedPath.StartsWith(fullBasePath, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
+
             // If not allowing non-existent paths, verify the file/directory exists
             if (!allowNonExistent)
             {
@@ -123,9 +133,33 @@ public static class PathSecurity
 
             return true;
         }
-        catch (Exception ex) when (ex is ArgumentException || ex is PathTooLongException || ex is NotSupportedException)
+        catch (Exception ex) when (ex is ArgumentException || ex is PathTooLongException || ex is NotSupportedException || ex is IOException)
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to resolve the final target of a symbolic link or junction point.
+    /// Returns null if the path is not a reparse point.
+    /// </summary>
+    private static string? ResolveSymbolicLinks(string path)
+    {
+        try
+        {
+            var fileInfo = new FileInfo(path);
+            if (fileInfo.Exists && fileInfo.LinkTarget != null)
+                return Path.GetFullPath(fileInfo.LinkTarget);
+
+            var dirInfo = new DirectoryInfo(path);
+            if (dirInfo.Exists && dirInfo.LinkTarget != null)
+                return Path.GetFullPath(dirInfo.LinkTarget);
+
+            return null;
+        }
+        catch
+        {
+            return null;
         }
     }
 

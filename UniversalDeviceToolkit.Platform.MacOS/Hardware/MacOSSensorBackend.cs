@@ -18,12 +18,12 @@ public sealed class MacOSSensorBackend : ISensorBackend
     public IReadOnlyList<SensorReading> GetReadings()
     {
         var readings = new List<SensorReading>();
-        ReadCpuUsage(readings);
-        ReadMemoryUsage(readings);
+        ReadCpuUsageAsync(readings).GetAwaiter().GetResult();
+        ReadMemoryUsageAsync(readings).GetAwaiter().GetResult();
         return readings;
     }
 
-    private static void ReadCpuUsage(List<SensorReading> readings)
+    private static async Task ReadCpuUsageAsync(List<SensorReading> readings)
     {
         try
         {
@@ -31,14 +31,19 @@ public sealed class MacOSSensorBackend : ISensorBackend
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 CreateNoWindow = true
             };
 
             using var process = Process.Start(psi);
             if (process is null) return;
 
-            var output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
+            // Fix: Read asynchronously to avoid ReadToEnd + WaitForExit deadlock
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync();
+            var output = await outputTask;
+            await errorTask;
 
             // Parse output: "kern.cp_time: user nice system idle"
             var match = Regex.Match(output, @"kern\.cp_time:\s+(.+)", RegexOptions.IgnoreCase);
@@ -62,7 +67,7 @@ public sealed class MacOSSensorBackend : ISensorBackend
         }
     }
 
-    private static void ReadMemoryUsage(List<SensorReading> readings)
+    private static async Task ReadMemoryUsageAsync(List<SensorReading> readings)
     {
         try
         {
@@ -70,14 +75,19 @@ public sealed class MacOSSensorBackend : ISensorBackend
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 CreateNoWindow = true
             };
 
             using var process = Process.Start(psi);
             if (process is null) return;
 
-            var output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
+            // Fix: Read asynchronously to avoid ReadToEnd + WaitForExit deadlock
+            var outputTask = process.StandardOutput.ReadToEndAsync();
+            var errorTask = process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync();
+            var output = await outputTask;
+            await errorTask;
 
             var lines = output.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             long? freePages = null;

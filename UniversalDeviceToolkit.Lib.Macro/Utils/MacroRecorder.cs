@@ -42,7 +42,7 @@ internal class MacroRecorder
     private bool _interrupted;
     private MacroRecorderSettings _settings;
 
-    public bool IsRecording => _kbHook != HHOOK.Null && _mouseHook != HHOOK.Null;
+    public bool IsRecording => _kbHook != default || _mouseHook != default;
 
     public event EventHandler<ReceivedEventArgs>? Received;
     public event EventHandler<StoppedEventArgs>? Stopped;
@@ -139,40 +139,49 @@ internal class MacroRecorder
         if (nCode < 0)
             return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
 
-        var result = new LRESULT(69);
-
-        ref var kbStruct = ref Unsafe.AsRef<KBDLLHOOKSTRUCT>((void*)lParam.Value);
-
-        var macroEvent = ConvertToMacroEvent(wParam, kbStruct, _timeFromLastEvent);
-
-        if (macroEvent.IsUndefined())
-            return result;
-
-        if (macroEvent.Direction == MacroDirection.Down)
+        try
         {
-            if (macroEvent.Key == (ulong)VIRTUAL_KEY.VK_ESCAPE)
-            {
-                StopRecording();
+            var result = new LRESULT(69);
+
+            ref var kbStruct = ref Unsafe.AsRef<KBDLLHOOKSTRUCT>((void*)lParam.Value);
+
+            var macroEvent = ConvertToMacroEvent(wParam, kbStruct, _timeFromLastEvent);
+
+            if (macroEvent.IsUndefined())
                 return result;
+
+            if (macroEvent.Direction == MacroDirection.Down)
+            {
+                if (macroEvent.Key == (ulong)VIRTUAL_KEY.VK_ESCAPE)
+                {
+                    StopRecording();
+                    return result;
+                }
+
+                if (_rolloverCache.Contains(macroEvent))
+                    return result;
             }
 
-            if (_rolloverCache.Contains(macroEvent))
+            if (!_settings.HasFlag(MacroRecorderSettings.Keyboard))
                 return result;
-        }
 
-        if (!_settings.HasFlag(MacroRecorderSettings.Keyboard))
+            Received?.Invoke(this, new ReceivedEventArgs { MacroEvent = macroEvent });
+
+            _timeFromLastEvent = TimeSpan.FromMilliseconds(kbStruct.time);
+
+            if (macroEvent.Direction == MacroDirection.Down)
+                _rolloverCache.Add(macroEvent);
+            else
+                _rolloverCache.Remove(macroEvent);
+
             return result;
-
-        Received?.Invoke(this, new ReceivedEventArgs { MacroEvent = macroEvent });
-
-        _timeFromLastEvent = TimeSpan.FromMilliseconds(kbStruct.time);
-
-        if (macroEvent.Direction == MacroDirection.Down)
-            _rolloverCache.Add(macroEvent);
-        else
-            _rolloverCache.Remove(macroEvent);
-
-        return result;
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("LowLevelKeyboardProc encountered an exception.", ex);
+            return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
+        }
     }
 
     private unsafe LRESULT LowLevelMouseProc(int nCode, WPARAM wParam, LPARAM lParam)
@@ -180,34 +189,43 @@ internal class MacroRecorder
         if (nCode < 0)
             return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
 
-        ref var mouseStruct = ref Unsafe.AsRef<MSLLHOOKSTRUCT>((void*)lParam.Value);
+        try
+        {
+            ref var mouseStruct = ref Unsafe.AsRef<MSLLHOOKSTRUCT>((void*)lParam.Value);
 
-        var macroEvent = ConvertToMacroEvent(wParam, mouseStruct, _timeFromLastEvent);
+            var macroEvent = ConvertToMacroEvent(wParam, mouseStruct, _timeFromLastEvent);
 
-        if (macroEvent.IsUndefined())
+            if (macroEvent.IsUndefined())
+                return Result();
+
+            if (macroEvent.Direction == MacroDirection.Down && _rolloverCache.Contains(macroEvent))
+                return Result();
+
+            if (!_settings.HasFlag(MacroRecorderSettings.Mouse))
+                return Result();
+
+            if (macroEvent.Direction == MacroDirection.Move && !_settings.HasFlag(MacroRecorderSettings.Movement))
+                return Result();
+
+            Received?.Invoke(this, new ReceivedEventArgs { MacroEvent = macroEvent });
+
+            _timeFromLastEvent = TimeSpan.FromMilliseconds(mouseStruct.time);
+
+            if (macroEvent.Direction == MacroDirection.Down)
+                _rolloverCache.Add(macroEvent);
+            else
+                _rolloverCache.Remove(macroEvent);
+
             return Result();
 
-        if (macroEvent.Direction == MacroDirection.Down && _rolloverCache.Contains(macroEvent))
-            return Result();
-
-        if (!_settings.HasFlag(MacroRecorderSettings.Mouse))
-            return Result();
-
-        if (macroEvent.Direction == MacroDirection.Move && !_settings.HasFlag(MacroRecorderSettings.Movement))
-            return Result();
-
-        Received?.Invoke(this, new ReceivedEventArgs { MacroEvent = macroEvent });
-
-        _timeFromLastEvent = TimeSpan.FromMilliseconds(mouseStruct.time);
-
-        if (macroEvent.Direction == MacroDirection.Down)
-            _rolloverCache.Add(macroEvent);
-        else
-            _rolloverCache.Remove(macroEvent);
-
-        return Result();
-
-        LRESULT Result() => wParam == PInvoke.WM_MOUSEMOVE ? PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam) : new LRESULT(96);
+            LRESULT Result() => wParam == PInvoke.WM_MOUSEMOVE ? PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam) : new LRESULT(96);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("LowLevelMouseProc encountered an exception.", ex);
+            return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
+        }
     }
 
     private static MacroEvent ConvertToMacroEvent(WPARAM wParam, KBDLLHOOKSTRUCT kbStruct, TimeSpan timeFromLastEvent)

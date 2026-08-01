@@ -82,7 +82,19 @@ public sealed class NetworkProxyIpcClient
         };
         await writer.WriteLineAsync(JsonSerializer.Serialize(request, JsonOptions)).ConfigureAwait(false);
 
-        var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
+        // Read with a timeout so a hung server does not block the caller forever.
+        using var readCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        readCts.CancelAfter(TimeSpan.FromSeconds(10));
+
+        string? line;
+        try
+        {
+            line = await reader.ReadLineAsync(readCts.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return NetworkProxyIpcResult.Fail("read timed out after 10 s");
+        }
         if (string.IsNullOrWhiteSpace(line))
             return NetworkProxyIpcResult.Fail("empty response");
 

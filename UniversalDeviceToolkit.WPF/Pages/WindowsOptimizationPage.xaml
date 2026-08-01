@@ -23,9 +23,9 @@
         <conv:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <!-- Unified segmented navigation: one surface, lightweight selected state. -->
         <Style TargetType="RadioButton" x:Key="NavRadioButtonStyle">
-            <Setter Property="Margin" Value="1" />
+            <Setter Property="Margin" Value="1,0" />
             <Setter Property="Padding" Value="18,8,18,9" />
-            <Setter Property="MinHeight" Value="42" />
+            <Setter Property="MinHeight" Value="40" />
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
@@ -226,6 +226,8 @@
                     Grid.Row="0"
                     Grid.Column="0"
                     Padding="3"
+                    Height="48"
+                    MinWidth="48"
                     Background="{DynamicResource ControlFillColorTertiaryBrush}"
                     BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                     BorderThickness="1"
@@ -287,6 +289,8 @@
                             x:Name="_networkAccelerationSelectionBar"
                             Grid.Column="1"
                             Padding="3"
+                            Height="48"
+                            MinWidth="48"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Background="{DynamicResource ControlFillColorTertiaryBrush}"
@@ -370,6 +374,8 @@
                         <Border
                             Grid.Column="1"
                             Padding="3"
+                            Height="48"
+                            MinWidth="48"
                             HorizontalAlignment="Right"
                             Background="{DynamicResource ControlFillColorTertiaryBrush}"
                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"

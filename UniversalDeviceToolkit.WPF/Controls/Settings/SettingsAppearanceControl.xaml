@@ -117,6 +117,7 @@
                     <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Theme_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Theme_Description}" />
                 </custom:CardControl.Header>
                 <!-- Watt Toolkit-style theme mode cards: preview thumbnail + label + selected border. -->
+                <StackPanel>
                 <WrapPanel x:Name="_themeCardsPanel" Margin="0,0,0,8">
                     <!-- Light -->
                     <Button x:Name="_themeLightCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="Light">
@@ -150,22 +151,6 @@
                             <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Dark}" />
                         </StackPanel>
                     </Button>
-                    <!-- Auto -->
-                    <Button x:Name="_themeAutoCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="Auto">
-                        <StackPanel>
-                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource AccentFillColorDefaultBrush}" BorderThickness="2" Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                                <Grid Margin="6">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Border Grid.Row="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
-                                    <Border Grid.Row="1" Height="12" Background="{DynamicResource ControlFillColorTertiaryBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" />
-                                </Grid>
-                            </Border>
-                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Auto}" />
-                        </StackPanel>
-                    </Button>
                     <!-- System -->
                     <Button x:Name="_themeSystemCard" Margin="0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="System">
                         <StackPanel>
@@ -183,6 +168,23 @@
                         </StackPanel>
                     </Button>
                 </WrapPanel>
+
+                <!-- Theme style preset (merged from standalone card). -->
+                <Border Style="{StaticResource AppDividerBorderStyle}" />
+                <TextBlock
+                    Margin="0,0,0,4"
+                    FontSize="{DynamicResource FontSizeCaption}"
+                    FontWeight="SemiBold"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="{x:Static resources:Resource.SettingsPage_ThemeStyle_SubTitle}" />
+                <ComboBox
+                    x:Name="_themeStylePresetComboBox"
+                    MinWidth="160"
+                    Margin="0,0,0,8"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}"
+                    MaxDropDownHeight="Auto"
+                    SelectionChanged="ThemeStylePresetComboBox_SelectionChanged" />
+                </StackPanel>
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="TextFontSize24">
@@ -209,19 +211,6 @@
                     AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_UiScale_Title}"
                     MaxDropDownHeight="Auto"
                     SelectionChanged="UiScaleComboBox_SelectionChanged" />
-            </custom:CardControl>
-
-            <custom:CardControl Margin="0,0,0,8" Icon="PaintBrush24">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_ThemeStyle_Description}" />
-                </custom:CardControl.Header>
-                <ComboBox
-                    x:Name="_themeStylePresetComboBox"
-                    MinWidth="160"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}"
-                    MaxDropDownHeight="Auto"
-                    SelectionChanged="ThemeStylePresetComboBox_SelectionChanged" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8" Icon="Color24">

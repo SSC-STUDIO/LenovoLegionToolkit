@@ -34,20 +34,23 @@ internal sealed class ProxyTrafficTracker
     private long _totalUpload;
     private long _totalDownload;
     private long _totalConnections;
-    private long _windowUpload;
-    private long _windowDownload;
-    private DateTime _windowStartUtc = DateTime.UtcNow;
+
+    // Rate calculation uses cumulative totals — the previous snapshot's totals
+    // are stored so we can compute the delta. This avoids the race condition in
+    // the old window-counter design where Interlocked.Read + Interlocked.Exchange
+    // could lose bytes written between the two operations.
+    private long _prevUpload;
+    private long _prevDownload;
+    private DateTime _prevSnapshotUtc = DateTime.UtcNow;
 
     public void AddUpload(long bytes)
     {
         Interlocked.Add(ref _totalUpload, bytes);
-        Interlocked.Add(ref _windowUpload, bytes);
     }
 
     public void AddDownload(long bytes)
     {
         Interlocked.Add(ref _totalDownload, bytes);
-        Interlocked.Add(ref _windowDownload, bytes);
     }
 
     public void AddConnection()
@@ -80,20 +83,26 @@ internal sealed class ProxyTrafficTracker
         lock (_gate)
         {
             var now = DateTime.UtcNow;
-            var elapsed = Math.Max(0.001, (now - _windowStartUtc).TotalSeconds);
+            var elapsed = Math.Max(0.001, (now - _prevSnapshotUtc).TotalSeconds);
+
+            var curUpload = Interlocked.Read(ref _totalUpload);
+            var curDownload = Interlocked.Read(ref _totalDownload);
+
+            var uploadDelta = curUpload - _prevUpload;
+            var downloadDelta = curDownload - _prevDownload;
 
             var snapshot = new ProxyTrafficSnapshot(
-                Interlocked.Read(ref _totalUpload),
-                Interlocked.Read(ref _totalDownload),
-                Interlocked.Read(ref _windowUpload) / elapsed,
-                Interlocked.Read(ref _windowDownload) / elapsed,
+                curUpload,
+                curDownload,
+                uploadDelta / elapsed,
+                downloadDelta / elapsed,
                 activeSessions,
                 Interlocked.Read(ref _totalConnections),
                 _startedAtUtc);
 
-            Interlocked.Exchange(ref _windowUpload, 0);
-            Interlocked.Exchange(ref _windowDownload, 0);
-            _windowStartUtc = now;
+            _prevUpload = curUpload;
+            _prevDownload = curDownload;
+            _prevSnapshotUtc = now;
             return snapshot;
         }
     }

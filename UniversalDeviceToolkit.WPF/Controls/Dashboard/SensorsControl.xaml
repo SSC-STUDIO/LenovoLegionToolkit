@@ -466,7 +466,7 @@
                                     x:Name="_batteryCapGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="10"
+                                    RingThickness="4" ValueThickness="4"
                                     RingBrush="{DynamicResource ChartBatteryBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_Capacity}" />
                                 <TextBlock x:Name="_batteryCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
@@ -476,7 +476,7 @@
                                     x:Name="_batteryFullCapGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="10"
+                                    RingThickness="4" ValueThickness="4"
                                     RingBrush="{DynamicResource ChartUtilizationBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_FullCapacity}" />
                                 <TextBlock x:Name="_batteryFullCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Style="{StaticResource AppSmallBodyTextBlockStyle}" />
@@ -487,7 +487,7 @@
                                     x:Name="_batteryHealthGauge"
                                     Width="{StaticResource GaugeSizeSM}"
                                     Height="{StaticResource GaugeSizeSM}"
-                                    RingThickness="10"
+                                    RingThickness="4" ValueThickness="4"
                                     Maximum="100"
                                     RingBrush="{DynamicResource StatusCriticalBrush}"
                                     Caption="{x:Static resources:Resource.SensorsControl_Health}" />

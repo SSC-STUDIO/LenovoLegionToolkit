@@ -18,4 +18,35 @@ public readonly struct PackageInfo
     public string FileLocation { get; init; }
     public bool IsUpdate { get; init; }
     public string Index { get; init; }
+
+    /// <summary>
+    /// Validates that required fields are present and non-empty.
+    /// Call this after deserialization or construction to catch incomplete data.
+    /// </summary>
+    public bool IsValid(out string? validationError)
+    {
+        if (string.IsNullOrWhiteSpace(Id))
+        {
+            validationError = "PackageInfo.Id is required";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(FileName))
+        {
+            validationError = "PackageInfo.FileName is required";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(FileLocation))
+        {
+            validationError = "PackageInfo.FileLocation is required";
+            return false;
+        }
+        if (string.IsNullOrWhiteSpace(Version))
+        {
+            validationError = "PackageInfo.Version is required";
+            return false;
+        }
+
+        validationError = null;
+        return true;
+    }
 }

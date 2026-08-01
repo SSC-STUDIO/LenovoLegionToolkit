@@ -71,17 +71,6 @@
         </Style>
 
         <!-- ── Service list styles ── -->
-        <Style x:Key="NaServiceGroupStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
-            <Setter Property="Padding" Value="0,4" />
-        </Style>
-        <Style x:Key="NaServiceHeaderStyle" TargetType="Border">
-            <Setter Property="Padding" Value="4,6" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
         <Style x:Key="NaServiceNameStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="FontWeight" Value="Medium" />

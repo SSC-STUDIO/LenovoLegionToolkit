@@ -464,8 +464,13 @@ public class PluginSandbox : IPluginSandbox, IDisposable
             {
                 try
                 {
-                    // Update memory usage
-                    var currentMemory = GC.GetTotalMemory(false);
+                    // Use process-level private memory as a proxy for resource monitoring.
+                    // NOTE: GC.GetTotalMemory was removed because it only reports GC-managed heap,
+                    // missing native allocations, unmanaged buffers, and memory-mapped files.
+                    // Per-AssemblyLoadContext memory tracking is not available in .NET;
+                    // this is a best-effort process-level measurement.
+                    using var process = Process.GetCurrentProcess();
+                    var currentMemory = process.PrivateMemorySize64;
                     context.ResourceStats.MemoryUsageBytes = currentMemory;
 
                     if (currentMemory > context.ResourceStats.PeakMemoryUsageBytes)

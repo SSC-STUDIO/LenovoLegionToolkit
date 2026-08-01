@@ -700,9 +700,7 @@ public enum Theme
     [Display(ResourceType = typeof(Resource), Name = "Theme_Light")]
     Light,
     [Display(ResourceType = typeof(Resource), Name = "Theme_Dark")]
-    Dark,
-    [Display(ResourceType = typeof(Resource), Name = "Theme_Auto")]
-    Auto
+    Dark
 }
 
 public enum AccentColorSource

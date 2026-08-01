@@ -13,7 +13,8 @@
     <!-- Default template for the self-drawn radial gauge. -->
     <Style TargetType="{x:Type charts:RadialGaugeControl}">
         <Setter Property="RingBrush" Value="{DynamicResource ChartUtilizationBrush}" />
-        <Setter Property="RingThickness" Value="14" />
+        <Setter Property="RingThickness" Value="6" />
+        <Setter Property="ValueThickness" Value="6" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />

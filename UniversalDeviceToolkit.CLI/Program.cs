@@ -1,6 +1,7 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Parsing;
+using System.IO;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.CLI.Lib;
 
@@ -209,7 +210,12 @@ public class Program
             }
 
             var value = parseResult.GetValue(valueArgument);
-            await IpcClient.SetFeatureValueAsync(name!, value!).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(value))
+            {
+                Console.Error.WriteLine($"Error: A value is required for feature '{name}'.");
+                return;
+            }
+            await IpcClient.SetFeatureValueAsync(name!, value).ConfigureAwait(false);
         });
         cmd.Validators.Add(result =>
         {

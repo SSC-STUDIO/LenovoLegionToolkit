@@ -61,21 +61,28 @@ public class PluginPackageIntegrityTests
     }
 
     [Fact]
-    public void IsVerificationWaived_ShouldRespectEnvironmentVariable()
+    public void IsVerificationWaived_ShouldAlwaysReturnFalse_RegardlessOfEnvironmentVariable()
     {
-        var original = Environment.GetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE");
+        // SECURITY: Integrity verification must never be waivable via environment variables.
+        var originalUdt = Environment.GetEnvironmentVariable("UDT_PLUGIN_INTEGRITY_MODE");
+        var originalLlt = Environment.GetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE");
 
         try
         {
+            // Even with the deprecated env vars set to "skip", waiver must return false
+            Environment.SetEnvironmentVariable("UDT_PLUGIN_INTEGRITY_MODE", "skip");
             Environment.SetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE", "skip");
-            PluginPackageIntegrity.IsVerificationWaived().Should().BeTrue();
+            PluginPackageIntegrity.IsVerificationWaived().Should().BeFalse();
 
-            Environment.SetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE", "enforce");
+            // Without env vars, still false
+            Environment.SetEnvironmentVariable("UDT_PLUGIN_INTEGRITY_MODE", null);
+            Environment.SetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE", null);
             PluginPackageIntegrity.IsVerificationWaived().Should().BeFalse();
         }
         finally
         {
-            Environment.SetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE", original);
+            Environment.SetEnvironmentVariable("UDT_PLUGIN_INTEGRITY_MODE", originalUdt);
+            Environment.SetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE", originalLlt);
         }
     }
 }

@@ -381,9 +381,6 @@
   <data name="Theme_System" xml:space="preserve">
     <value>System</value>
   </data>
-  <data name="Theme_Auto" xml:space="preserve">
-    <value>Auto</value>
-  </data>
   <data name="WindowBackdropStyle_Windows" xml:space="preserve">
     <value>Windows</value>
   </data>

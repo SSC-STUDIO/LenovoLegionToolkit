@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
@@ -18,9 +19,25 @@ internal static class PluginPackageIntegrity
         return ToHex(hash);
     }
 
-    public static bool IsVerificationWaived() =>
-        string.Equals(Environment.GetEnvironmentVariable("UDT_PLUGIN_INTEGRITY_MODE"), "skip", StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(Environment.GetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE"), "skip", StringComparison.OrdinalIgnoreCase);
+    /// <summary>
+    /// Integrity verification can never be waived at runtime.
+    /// Previously checked UDT_PLUGIN_INTEGRITY_MODE / LLT_PLUGIN_INTEGRITY_MODE environment variables,
+    /// which was a security vulnerability (any user could bypass hash validation).
+    /// Now always returns false — verification is always enforced.
+    /// </summary>
+    public static bool IsVerificationWaived()
+    {
+        // Log a warning if someone attempts to use the deprecated env-var bypass
+        var deprecatedVar = Environment.GetEnvironmentVariable("UDT_PLUGIN_INTEGRITY_MODE")
+                         ?? Environment.GetEnvironmentVariable("LLT_PLUGIN_INTEGRITY_MODE");
+        if (!string.IsNullOrEmpty(deprecatedVar))
+        {
+            Log.Instance.Warning(
+                "SECURITY: UDT_PLUGIN_INTEGRITY_MODE / LLT_PLUGIN_INTEGRITY_MODE environment variable is set but ignored. " +
+                "Integrity verification can no longer be bypassed via environment variables.");
+        }
+        return false;
+    }
 
     public static bool TryVerifyExpectedHash(
         string? expectedHash,

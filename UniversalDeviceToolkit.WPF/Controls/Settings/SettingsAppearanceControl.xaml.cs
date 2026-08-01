@@ -246,7 +246,6 @@ public partial class SettingsAppearanceControl
         var current = _settings.Store.Theme;
         UpdateCardBorder(_themeLightCard, current == Theme.Light);
         UpdateCardBorder(_themeDarkCard, current == Theme.Dark);
-        UpdateCardBorder(_themeAutoCard, current == Theme.Auto);
         UpdateCardBorder(_themeSystemCard, current == Theme.System);
     }
 

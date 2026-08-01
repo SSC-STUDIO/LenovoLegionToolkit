@@ -189,8 +189,7 @@ public partial class AutomationPage
             return;
 
         _enableAutomaticPipelinesToggle.IsChecked = _automationProcessor.IsEnabled;
-        _automaticPipelinesStackPanel.Children.Clear();
-        _manualPipelinesStackPanel.Children.Clear();
+        ClearPipelines();
 
         var initializedTasks = new List<Task>();
 
@@ -448,6 +447,8 @@ public partial class AutomationPage
 
     private void DeletePipeline(UIElement control, Panel stackPanel)
     {
+        if (control is AutomationPipelineControl pipelineControl)
+            UnsubscribePipelineEvents(pipelineControl);
         stackPanel.Children.Remove(control);
 
         _noAutomaticActionsText.Visibility = _automaticPipelinesStackPanel.Children.Count < 1
@@ -462,9 +463,27 @@ public partial class AutomationPage
 
     private void AutomationPage_Unloaded(object? sender, RoutedEventArgs e)
     {
+        ClearPipelines();
         var cancellationTokenSource = Interlocked.Exchange(ref _refreshCancellationTokenSource, null);
         cancellationTokenSource?.Cancel();
         cancellationTokenSource?.Dispose();
+    }
+
+    private void ClearPipelines()
+    {
+        foreach (var child in _automaticPipelinesStackPanel.Children.OfType<AutomationPipelineControl>())
+            UnsubscribePipelineEvents(child);
+        foreach (var child in _manualPipelinesStackPanel.Children.OfType<AutomationPipelineControl>())
+            UnsubscribePipelineEvents(child);
+        _automaticPipelinesStackPanel.Children.Clear();
+        _manualPipelinesStackPanel.Children.Clear();
+    }
+
+    private void UnsubscribePipelineEvents(AutomationPipelineControl control)
+    {
+        control.MouseRightButtonUp -= PipelineControl_MouseRightButtonUp;
+        control.OnChanged -= PipelineControl_OnChanged;
+        control.OnDelete -= PipelineControl_OnDelete;
     }
 }
 }

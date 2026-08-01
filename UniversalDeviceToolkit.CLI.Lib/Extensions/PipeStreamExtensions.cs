@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using System.Text.Json;
@@ -35,11 +36,21 @@ public static class PipeStreamExtensions
         var buffer = new byte[1024];
         var builder = new StringBuilder();
 
-        do
+        try
         {
-            var bytesRead = await stream.ReadAsync(buffer, token).ConfigureAwait(false);
-            builder.Append(Encoding.GetString(buffer, 0, bytesRead));
-        } while (!stream.IsMessageComplete);
+            do
+            {
+                var bytesRead = await stream.ReadAsync(buffer, token).ConfigureAwait(false);
+                if (bytesRead == 0)
+                    throw new IOException("Pipe stream was closed unexpectedly.");
+
+                builder.Append(Encoding.GetString(buffer, 0, bytesRead));
+            } while (!stream.IsMessageComplete);
+        }
+        catch (IOException) when (!stream.IsConnected)
+        {
+            throw new IOException("Pipe connection was broken while reading.");
+        }
 
         return JsonSerializer.Deserialize<T>(builder.ToString(), PipeJsonOptions);
     }

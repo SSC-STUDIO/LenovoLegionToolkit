@@ -143,6 +143,19 @@ public class RadialGaugeControl : Control
         set => SetValue(RingThicknessProperty, value);
     }
 
+    /// <summary>Stroke thickness for the colored value arc (blue). Defaults to 1.6× track.</summary>
+    public static readonly DependencyProperty ValueThicknessProperty = DependencyProperty.Register(
+        nameof(ValueThickness), typeof(double), typeof(RadialGaugeControl),
+        new FrameworkPropertyMetadata(0.0, OnVisualChanged)); // 0 = auto (RingThickness × 1.6)
+
+    public double ValueThickness
+    {
+        get => (double)GetValue(ValueThicknessProperty);
+        set => SetValue(ValueThicknessProperty, value);
+    }
+
+    private double EffectiveValueThickness => ValueThickness > 0 ? ValueThickness : RingThickness * 1.6;
+
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
@@ -174,7 +187,7 @@ public class RadialGaugeControl : Control
             gauge._cachedGlowBrush = null;
             gauge._cachedTipBrush = null;
         }
-        if (e.Property == RingThicknessProperty)
+        if (e.Property == RingThicknessProperty || e.Property == ValueThicknessProperty)
             gauge._lastAppliedThickness = double.NaN;
         gauge.RedrawAll();
     }
@@ -255,7 +268,8 @@ public class RadialGaugeControl : Control
     private (Point center, double radius) GetGeometry()
     {
         var size = Math.Min(ActualWidth, ActualHeight);
-        var radius = Math.Max(0, (size - RingThickness) / 2.0 - 1);
+        var maxStroke = Math.Max(RingThickness, EffectiveValueThickness);
+        var radius = Math.Max(0, (size - maxStroke) / 2.0 - 1);
         var center = new Point(ActualWidth / 2.0, ActualHeight / 2.0);
         return (center, radius);
     }
@@ -313,12 +327,14 @@ public class RadialGaugeControl : Control
         }
 
         var sweep = SweepAngle * Math.Clamp(_renderedValue, 0.0, 1.0);
-        var glowThickness = RingThickness + 5.0;
+        var valueThickness = EffectiveValueThickness;
+        var glowThickness = valueThickness + 5.0;
 
-        // Only update stroke properties when thickness changes
-        if (Math.Abs(_lastAppliedThickness - RingThickness) > double.Epsilon)
+        // Only update stroke properties when thickness changes.
+        // NaN (set by OnVisualChanged) must force an update — NaN comparisons are always false.
+        if (double.IsNaN(_lastAppliedThickness) || Math.Abs(_lastAppliedThickness - valueThickness) > double.Epsilon)
         {
-            _valuePath.StrokeThickness = RingThickness;
+            _valuePath.StrokeThickness = valueThickness;
             _valuePath.StrokeStartLineCap = PenLineCap.Round;
             _valuePath.StrokeEndLineCap = PenLineCap.Round;
 
@@ -328,7 +344,7 @@ public class RadialGaugeControl : Control
                 _glowPath.StrokeStartLineCap = PenLineCap.Round;
                 _glowPath.StrokeEndLineCap = PenLineCap.Round;
             }
-            _lastAppliedThickness = RingThickness;
+            _lastAppliedThickness = valueThickness;
         }
 
         // Update brushes only when RingBrush changes (cached)
@@ -359,13 +375,13 @@ public class RadialGaugeControl : Control
             else
             {
                 var tipCenter = PointOnCircle(center, radius, StartAngle + sweep);
-                var tipDiameter = Math.Max(5.0, RingThickness + 3.0);
+                var tipDiameter = Math.Max(5.0, valueThickness + 3.0);
 
                 _tip.Width = tipDiameter;
                 _tip.Height = tipDiameter;
                 _tip.Fill = Brushes.White;
                 _tip.Stroke = ExtractRingColorBrush(255);
-                _tip.StrokeThickness = Math.Max(1.5, RingThickness * 0.35);
+                _tip.StrokeThickness = Math.Max(1.5, valueThickness * 0.35);
                 _tip.Margin = new Thickness(
                     tipCenter.X - tipDiameter / 2.0,
                     tipCenter.Y - tipDiameter / 2.0,

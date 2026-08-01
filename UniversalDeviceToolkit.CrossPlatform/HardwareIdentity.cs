@@ -239,11 +239,23 @@ internal sealed class ProcessCommandRunner : ICommandResultRunner
             if (!process.WaitForExit(3000))
             {
                 process.Kill(entireProcessTree: true);
+
+                // After Kill the ReadToEndAsync tasks should complete, but guard
+                // against a hung pipe with a secondary timeout to avoid deadlocking
+                // the caller on GetAwaiter().GetResult().
+                if (!Task.WhenAll(outputTask, errorTask).Wait(2000))
+                    return new CommandResult(-1, string.Empty, "Process timed out and output could not be read.");
+
                 return new CommandResult(-1, string.Empty, "Process timed out.");
             }
 
-            var output = outputTask.GetAwaiter().GetResult();
-            var error = errorTask.GetAwaiter().GetResult();
+            // Process exited normally — wait for output with a generous timeout
+            // to avoid blocking forever on a stuck pipe.
+            if (!Task.WhenAll(outputTask, errorTask).Wait(5000))
+                return new CommandResult(-1, string.Empty, "Process exited but output could not be read.");
+
+            var output = outputTask.Result;
+            var error = errorTask.Result;
             return new CommandResult(process.ExitCode, output, error);
         }
         catch (Exception ex)

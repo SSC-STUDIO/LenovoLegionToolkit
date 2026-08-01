@@ -4109,5 +4109,5 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
   <data name="Theme_Light" xml:space="preserve"><value>Light</value></data>
   <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
-  <data name="Theme_Auto" xml:space="preserve"><value>Auto</value></data>
+  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
 </root>

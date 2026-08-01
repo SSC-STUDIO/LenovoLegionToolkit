@@ -15,6 +15,7 @@ using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
+using CustomControls = UniversalDeviceToolkit.WPF.Controls.Custom;
 
 namespace UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 
@@ -349,7 +350,7 @@ public partial class NetworkAccelerationControl : UserControl
             _serviceListPanel.Items.Add(CreateServiceGroupRow(group));
     }
 
-    private Border CreateServiceGroupRow(NetworkDomainGroup group)
+    private CustomControls.CardExpander CreateServiceGroupRow(NetworkDomainGroup group)
     {
         var id = group.Id;
         var isExpanded = _expandedGroupIds.Contains(id);
@@ -396,14 +397,12 @@ public partial class NetworkAccelerationControl : UserControl
             }
         };
 
-        // Group name
+        // Group name + favorite star share the middle column.
         var nameText = new TextBlock
         {
             Text = group.DisplayName,
             Style = (Style)FindResource("NaServiceNameStyle")
         };
-
-        // Favorite star
         var favStar = new TextBlock
         {
             Text = "★",
@@ -413,72 +412,43 @@ public partial class NetworkAccelerationControl : UserControl
             Visibility = group.IsFavorite ? Visibility.Visible : Visibility.Collapsed,
             Foreground = (Brush)FindResource("PaletteOrangeBrush")
         };
+        var nameStack = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+        nameStack.Children.Add(nameText);
+        nameStack.Children.Add(favStar);
 
-        // Expand/collapse arrow
-        var hasSubs = group.SubItems is { Count: > 0 };
-        var arrowText = new TextBlock
-        {
-            Text = isExpanded ? "▾" : "▸",
-            FontSize = 14,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Right,
-            Foreground = (Brush)FindResource("TextFillColorSecondaryBrush"),
-            Visibility = hasSubs ? Visibility.Visible : Visibility.Collapsed
-        };
-
-        // Header row
+        // Header row: [checkbox][brand icon][name+star]. CardExpander provides the chevron.
         var headerGrid = new Grid();
         headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
         Grid.SetColumn(groupCheckBox, 0);
         Grid.SetColumn(brandIcon, 1);
-        Grid.SetColumn(nameText, 2);
-        Grid.SetColumn(favStar, 3);
-        Grid.SetColumn(arrowText, 4);
+        Grid.SetColumn(nameStack, 2);
         headerGrid.Children.Add(groupCheckBox);
         headerGrid.Children.Add(brandIcon);
-        headerGrid.Children.Add(nameText);
-        headerGrid.Children.Add(favStar);
-        headerGrid.Children.Add(arrowText);
+        headerGrid.Children.Add(nameStack);
 
-        var headerBorder = new Border
-        {
-            Style = (Style)FindResource("NaServiceHeaderStyle"),
-            Child = headerGrid
-        };
-        if (hasSubs)
-        {
-            headerBorder.MouseLeftButtonUp += (_, _) =>
-            {
-                if (!_expandedGroupIds.Add(id))
-                    _expandedGroupIds.Remove(id);
-                BuildServiceList();
-            };
-        }
-
-        // Sub-items panel
-        var subPanel = new StackPanel { Visibility = isExpanded ? Visibility.Visible : Visibility.Collapsed };
-        if (isExpanded && group.SubItems is not null)
+        // Sub-items content: always populated; CardExpander controls show/hide.
+        var subPanel = new StackPanel { Margin = new Thickness(12, 8, 0, 0) };
+        if (group.SubItems is not null)
         {
             foreach (var sub in group.SubItems)
                 subPanel.Children.Add(CreateSubItemRow(sub));
         }
 
-        var outerStack = new StackPanel();
-        outerStack.Children.Add(headerBorder);
-        outerStack.Children.Add(subPanel);
-
-        var result = new Border
+        var expander = new CustomControls.CardExpander
         {
-            Style = (Style)FindResource("NaServiceGroupStyle"),
-            Child = outerStack
+            Header = headerGrid,
+            Content = subPanel,
+            IsExpanded = isExpanded,
+            Margin = new Thickness(0, 0, 0, 8)
         };
-        AutomationProperties.SetAutomationId(result, $"NetworkAccelerationDomain_{id}");
-        return result;
+        expander.Expanded += (_, _) => _expandedGroupIds.Add(id);
+        expander.Collapsed += (_, _) => _expandedGroupIds.Remove(id);
+
+        AutomationProperties.SetAutomationId(expander, $"NetworkAccelerationDomain_{id}");
+        return expander;
     }
 
     private Grid CreateSubItemRow(NetworkDomainSubItem sub)

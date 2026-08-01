@@ -1016,35 +1016,17 @@ public class PluginManager : IPluginManager
 
                     foreach (var dllFile in dllFiles)
                     {
-                        try
+                        // SECURITY: Use filename-only matching to identify plugins during deletion.
+                        // Assembly.LoadFrom was removed because it executes static constructors
+                        // and loads arbitrary code into the current AppDomain — a security risk
+                        // when the goal is only to locate files for deletion.
+                        var fileName = Path.GetFileNameWithoutExtension(dllFile);
+                        if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
+                            PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
+                                .Any(name => fileName.Equals(name, StringComparison.OrdinalIgnoreCase)))
                         {
-                            // Try to load the assembly and check if it contains our plugin
-                            var assembly = Assembly.LoadFrom(dllFile);
-                            var pluginTypes = assembly.GetTypes()
-                                .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-
-                            foreach (var pluginType in pluginTypes)
-                            {
-                                if (Activator.CreateInstance(pluginType) is IPlugin testPlugin &&
-                                    testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    foundFiles.Add(dllFile);
-                                    pluginDirectoryToDelete.Add(scanDir);
-                                    break;
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            // If we can't load it, try matching by filename pattern
-                            var fileName = Path.GetFileNameWithoutExtension(dllFile);
-                            if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
-                                PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
-                                    .Any(name => fileName.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                            {
-                                foundFiles.Add(dllFile);
-                                pluginDirectoryToDelete.Add(scanDir);
-                            }
+                            foundFiles.Add(dllFile);
+                            pluginDirectoryToDelete.Add(scanDir);
                         }
                     }
                 }
@@ -1061,31 +1043,13 @@ public class PluginManager : IPluginManager
 
             foreach (var dllFile in rootDllFiles)
             {
-                try
+                // SECURITY: Use filename-only matching (see above for rationale).
+                var fileName = Path.GetFileNameWithoutExtension(dllFile);
+                if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
+                    PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
+                        .Any(name => fileName.Equals(name, StringComparison.OrdinalIgnoreCase)))
                 {
-                    var assembly = Assembly.LoadFrom(dllFile);
-                    var pluginTypes = assembly.GetTypes()
-                        .Where(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
-
-                    foreach (var pluginType in pluginTypes)
-                    {
-                        if (Activator.CreateInstance(pluginType) is IPlugin testPlugin &&
-                            testPlugin.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
-                        {
-                            foundFiles.Add(dllFile);
-                            break;
-                        }
-                    }
-                }
-                catch
-                {
-                    var fileName = Path.GetFileNameWithoutExtension(dllFile);
-                    if (fileName.EndsWith($".{pluginId}", StringComparison.OrdinalIgnoreCase) ||
-                        PluginAssemblyNaming.EnumeratePrefixedPluginNames(pluginId)
-                            .Any(name => fileName.Equals(name, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        foundFiles.Add(dllFile);
-                    }
+                    foundFiles.Add(dllFile);
                 }
             }
 
@@ -1431,13 +1395,13 @@ public class PluginManager : IPluginManager
                 return false;
 
             if (!Version.TryParse(minimumHostVersion, out var minVersion))
-                return true; // If we can't parse, allow it (backward compatibility)
+                return false; // Reject unparseable version strings (secure default)
 
             return currentVersion >= minVersion;
         }
         catch
         {
-            return true; // Default to allowing if check fails
+            return false; // Reject on any check failure (secure default)
         }
     }
 

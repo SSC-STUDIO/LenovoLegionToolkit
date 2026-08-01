@@ -65,6 +65,7 @@ public static class PathSecurity
 
     /// <summary>
     /// Validates a full path to ensure it doesn't escape the allowed base directory.
+    /// Also resolves symbolic links and junction points to prevent symlink-based path traversal.
     /// </summary>
     public static bool IsPathWithinAllowedDirectory(string? path, string? basePath, bool allowNonExistent = true)
     {
@@ -76,6 +77,7 @@ public static class PathSecurity
             var fullPath = Path.GetFullPath(path);
             var fullBasePath = Path.GetFullPath(basePath);
 
+            // Ensure base path ends with separator for proper prefix checking
             if (!fullBasePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) &&
                 !fullBasePath.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
             {
@@ -89,6 +91,15 @@ public static class PathSecurity
                 fullPath.Contains(".." + Path.AltDirectorySeparatorChar))
                 return false;
 
+            // SECURITY: Resolve symbolic links / junction points to prevent symlink-based traversal.
+            // An attacker could create a symlink inside the allowed directory pointing outside it.
+            if (!allowNonExistent && (File.Exists(fullPath) || Directory.Exists(fullPath)))
+            {
+                var resolvedPath = ResolveSymbolicLinks(fullPath);
+                if (resolvedPath != null && !resolvedPath.StartsWith(fullBasePath, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
+
             if (!allowNonExistent)
             {
                 if (!File.Exists(fullPath) && !Directory.Exists(fullPath))
@@ -97,9 +108,35 @@ public static class PathSecurity
 
             return true;
         }
-        catch (Exception ex) when (ex is ArgumentException or PathTooLongException or NotSupportedException)
+        catch (Exception ex) when (ex is ArgumentException or PathTooLongException or NotSupportedException or IOException)
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to resolve the final target of a symbolic link or junction point.
+    /// Returns null if the path is not a reparse point.
+    /// </summary>
+    private static string? ResolveSymbolicLinks(string path)
+    {
+        try
+        {
+            // .NET 6+: FileSystemInfo.LinkTarget resolves symlinks
+            var fileInfo = new FileInfo(path);
+            if (fileInfo.Exists && fileInfo.LinkTarget != null)
+                return Path.GetFullPath(fileInfo.LinkTarget);
+
+            var dirInfo = new DirectoryInfo(path);
+            if (dirInfo.Exists && dirInfo.LinkTarget != null)
+                return Path.GetFullPath(dirInfo.LinkTarget);
+
+            return null;
+        }
+        catch
+        {
+            // If we cannot resolve, return null (caller handles this gracefully)
+            return null;
         }
     }
 }

@@ -4169,9 +4169,6 @@ Fn 将会暂时解除锁定。</value>
   <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve">
     <value>无法停止 Lenovo Hotkeys: {0}</value>
   </data>
-  <data name="Theme_Auto" xml:space="preserve">
-    <value>自动</value>
-  </data>
   <data name="Theme_Light" xml:space="preserve">
     <value>亮色</value>
   </data>
@@ -4180,5 +4177,8 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="Theme_System" xml:space="preserve">
     <value>跟随系统</value>
+  </data>
+  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve">
+    <value>主题风格</value>
   </data>
 </root>

@@ -5,7 +5,12 @@ using System.Threading.Tasks;
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 
-public class MaximumRetriesReachedException : Exception;
+public class MaximumRetriesReachedException : Exception
+{
+    public MaximumRetriesReachedException() { }
+    public MaximumRetriesReachedException(string message) : base(message) { }
+    public MaximumRetriesReachedException(string message, Exception innerException) : base(message, innerException) { }
+}
 
 public static class RetryHelper
 {
@@ -42,7 +47,7 @@ public static class RetryHelper
                 retries++;
 
                 if (retries >= maximumRetries)
-                    throw new MaximumRetriesReachedException();
+                    throw new MaximumRetriesReachedException($"Maximum retries ({maximumRetries}) reached. [tag={tag}]", ex);
 
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Retrying {retries}/{maximumRetries}... [tag={tag}]");

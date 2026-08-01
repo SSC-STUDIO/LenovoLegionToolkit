@@ -36,6 +36,10 @@ public abstract class AbstractRefreshingControl : UserControl
     {
         try
         {
+            // Re-attach IsVisibleChanged in case it was removed by a prior Unloaded event
+            IsVisibleChanged -= RefreshingControl_IsVisibleChanged;
+            IsVisibleChanged += RefreshingControl_IsVisibleChanged;
+
             if (!_hasFinishedLoading)
             {
                 _hasFinishedLoading = true;

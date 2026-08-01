@@ -2495,13 +2495,13 @@ public class SensorsGroupController : IDisposable
         {
             lock (_hardwareLock)
             {
-                _computer?.Close(); _hardware.Clear();
-                _computer?.Open(); _computer?.Accept(new UpdateVisitor()); _computer?.Reset();
                 if (_computer == null)
                 {
                     return;
                 }
-
+            
+                _computer.Close(); _hardware.Clear();
+                _computer.Open(); _computer.Accept(new UpdateVisitor()); _computer.Reset();
                 _hardware.AddRange(EnumerateHardwareTree(_computer.Hardware)); RefreshSensorCache();
             }
         }
