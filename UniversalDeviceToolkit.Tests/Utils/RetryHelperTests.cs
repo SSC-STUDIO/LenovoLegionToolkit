@@ -309,4 +309,68 @@ public class RetryHelperTests
     }
 
     #endregion
+
+    [Fact]
+    public async Task RetryAsync_SuccessOnFirstTry_Returns()
+    {
+        var callCount = 0;
+        await RetryHelper.RetryAsync(async () =>
+        {
+            callCount++;
+            await Task.CompletedTask;
+        });
+        callCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task RetryAsync_SuccessAfterRetry_Returns()
+    {
+        var callCount = 0;
+        await RetryHelper.RetryAsync(async () =>
+        {
+            callCount++;
+            if (callCount < 3)
+                throw new InvalidOperationException("not yet");
+            await Task.CompletedTask;
+        }, maximumRetries: 3);
+        callCount.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task RetryAsync_ExceedsRetries_ThrowsMaximumRetries()
+    {
+        await Assert.ThrowsAsync<MaximumRetriesReachedException>(async () =>
+        {
+            await RetryHelper.RetryAsync(async () =>
+            {
+                throw new InvalidOperationException("always fail");
+            }, maximumRetries: 2);
+        });
+    }
+
+    [Fact]
+    public async Task RetryAsync_OperationCanceled_ThrowsImmediately()
+    {
+        await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+        {
+            await RetryHelper.RetryAsync(async () =>
+            {
+                throw new OperationCanceledException();
+            }, maximumRetries: 5);
+        });
+    }
+
+    [Fact]
+    public async Task RetryAsync_MatchingExceptionFilter_RespectsFilter()
+    {
+        var callCount = 0;
+        await RetryHelper.RetryAsync(async () =>
+        {
+            callCount++;
+            if (callCount < 2)
+                throw new ArgumentException("filtered");
+            await Task.CompletedTask;
+        }, maximumRetries: 3, matchingException: ex => ex is ArgumentException);
+        callCount.Should().Be(2);
+    }
 }

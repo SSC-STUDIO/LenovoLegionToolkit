@@ -17,9 +17,8 @@ public class ThreadSafeCounterTests
         // Arrange & Act
         var counter = new ThreadSafeCounter();
 
-        // Act & Assert - Decrement should return true when counter is 0
-        var result = counter.Decrement();
-        result.Should().BeTrue(); // Counter was 0, now stays at 0
+        // Assert
+        counter.Value.Should().Be(0);
     }
 
     #endregion
@@ -34,10 +33,9 @@ public class ThreadSafeCounterTests
 
         // Act
         counter.Increment();
-        var result = counter.Decrement();
 
-        // Assert - Counter was 1, after decrement it's 0, so Decrement returns false
-        result.Should().BeFalse();
+        // Assert
+        counter.Value.Should().Be(1);
     }
 
     [Fact]
@@ -51,14 +49,8 @@ public class ThreadSafeCounterTests
         counter.Increment();
         counter.Increment();
 
-        var result1 = counter.Decrement();
-        var result2 = counter.Decrement();
-        var result3 = counter.Decrement();
-
-        // Assert - Counter was 3, each decrement reduces it
-        result1.Should().BeFalse(); // Counter: 3 -> 2
-        result2.Should().BeFalse(); // Counter: 2 -> 1
-        result3.Should().BeFalse(); // Counter: 1 -> 0
+        // Assert
+        counter.Value.Should().Be(3);
     }
 
     [Fact]
@@ -72,13 +64,14 @@ public class ThreadSafeCounterTests
         for (int i = 0; i < increments; i++)
             counter.Increment();
 
-        // Decrement all
-        var results = new bool[increments];
-        for (int i = 0; i < increments; i++)
-            results[i] = counter.Decrement();
+        // Assert
+        counter.Value.Should().Be(increments);
 
-        // Assert - All decrements should return false except when counter reaches 0
-        results[increments - 1].Should().BeFalse(); // Last decrement: 1 -> 0
+        // Decrement all
+        for (int i = 0; i < increments; i++)
+            counter.Decrement();
+
+        counter.Value.Should().Be(0);
     }
 
     #endregion
@@ -92,10 +85,10 @@ public class ThreadSafeCounterTests
         var counter = new ThreadSafeCounter();
 
         // Act
-        var result = counter.Decrement();
+        counter.Decrement();
 
         // Assert
-        result.Should().BeTrue(); // Counter was 0, stays at 0
+        counter.Value.Should().Be(0);
     }
 
     [Fact]
@@ -105,14 +98,12 @@ public class ThreadSafeCounterTests
         var counter = new ThreadSafeCounter();
 
         // Act
-        var result1 = counter.Decrement();
-        var result2 = counter.Decrement();
-        var result3 = counter.Decrement();
+        counter.Decrement();
+        counter.Decrement();
+        counter.Decrement();
 
-        // Assert - All should return true since counter stays at 0
-        result1.Should().BeTrue();
-        result2.Should().BeTrue();
-        result3.Should().BeTrue();
+        // Assert
+        counter.Value.Should().Be(0);
     }
 
     [Fact]
@@ -123,19 +114,15 @@ public class ThreadSafeCounterTests
         counter.Increment();
         counter.Increment();
 
-        // Act
-        var result = counter.Decrement();
+        // Act & Assert
+        counter.Decrement();
+        counter.Value.Should().Be(1);
 
-        // Assert - Counter: 2 -> 1, should return false
-        result.Should().BeFalse();
+        counter.Decrement();
+        counter.Value.Should().Be(0);
 
-        // Decrement again
-        result = counter.Decrement();
-        result.Should().BeFalse(); // Counter: 1 -> 0
-
-        // Decrement again
-        result = counter.Decrement();
-        result.Should().BeTrue(); // Counter was already 0, stays at 0
+        counter.Decrement();
+        counter.Value.Should().Be(0); // Clamped at 0
     }
 
     #endregion
@@ -170,12 +157,8 @@ public class ThreadSafeCounterTests
         // Act
         await Task.WhenAll(tasks);
 
-        // Assert - Final counter should be close to expected value
-        // After 1000 increments and 1000 decrements, counter should be 0
-        // But due to timing, it could be anywhere between 0 and 1000
-        // Just verify it doesn't throw exceptions
-        _ = counter.Decrement();
-        // No exception means thread safety worked
+        // Assert - After 1000 increments and 1000 decrements, counter should be 0
+        counter.Value.Should().Be(0);
     }
 
     [Fact]
@@ -198,18 +181,14 @@ public class ThreadSafeCounterTests
         await Task.WhenAll(tasks);
 
         // Assert - Should have incremented 1000 times
+        counter.Value.Should().Be(1000);
+
         // Decrement 1000 times to verify
         for (int i = 0; i < 1000; i++)
-        {
-            var result = counter.Decrement();
-            if (i < 999)
-                result.Should().BeFalse();
-            else
-                result.Should().BeFalse(); // Last: 1 -> 0
-        }
+            counter.Decrement();
 
         // Counter should be 0 now
-        counter.Decrement().Should().BeTrue();
+        counter.Value.Should().Be(0);
     }
 
     #endregion
@@ -226,14 +205,11 @@ public class ThreadSafeCounterTests
         for (int i = 0; i < 100; i++)
         {
             counter.Increment();
-            var result = counter.Decrement();
-
-            // Assert - Counter: 1 -> 0, so Decrement returns false
-            result.Should().BeFalse();
+            counter.Decrement();
         }
 
-        // Counter should be 0
-        counter.Decrement().Should().BeTrue();
+        // Assert
+        counter.Value.Should().Be(0);
     }
 
     [Fact]
@@ -245,17 +221,79 @@ public class ThreadSafeCounterTests
         counter.Increment();
 
         // Act - Decrement more times than we incremented
-        var result1 = counter.Decrement(); // 2 -> 1
-        var result2 = counter.Decrement(); // 1 -> 0
-        var result3 = counter.Decrement(); // 0 -> 0 (stays at 0)
-        var result4 = counter.Decrement(); // 0 -> 0
+        counter.Decrement(); // 2 -> 1
+        counter.Decrement(); // 1 -> 0
+        counter.Decrement(); // 0 -> 0 (stays at 0)
+        counter.Decrement(); // 0 -> 0
 
         // Assert
-        result1.Should().BeFalse();
-        result2.Should().BeFalse();
-        result3.Should().BeTrue(); // Counter was 0
-        result4.Should().BeTrue(); // Counter stays at 0
+        counter.Value.Should().Be(0);
     }
 
     #endregion
+
+    #region Reset Tests
+
+    [Fact]
+    public void Reset_ShouldSetCounterToZero()
+    {
+        // Arrange
+        var counter = new ThreadSafeCounter();
+        counter.Increment();
+        counter.Increment();
+        counter.Increment();
+
+        // Act
+        counter.Reset();
+
+        // Assert
+        counter.Value.Should().Be(0);
+    }
+
+    #endregion
+
+    [Fact]
+    public void Decrement_FromZero_StaysAtZero()
+    {
+        var counter = new ThreadSafeCounter();
+        counter.Decrement();
+        counter.Value.Should().Be(0);
+    }
+
+    [Fact]
+    public void IncrementThenDecrement_ReturnsToZero()
+    {
+        var counter = new ThreadSafeCounter();
+        counter.Increment();
+        counter.Decrement();
+        counter.Value.Should().Be(0);
+    }
+
+    [Fact]
+    public void DoubleDecrement_FromZero_DoesNotGoNegative()
+    {
+        var counter = new ThreadSafeCounter();
+        counter.Decrement();
+        counter.Decrement();
+        counter.Value.Should().Be(0);
+    }
+
+    [Fact]
+    public void ConcurrentIncrementDecrement_NoException()
+    {
+        var counter = new ThreadSafeCounter();
+        var exceptions = new System.Collections.Generic.List<Exception>();
+
+        Parallel.For(0, 100, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i =>
+        {
+            try
+            {
+                if (i % 2 == 0) counter.Increment();
+                else counter.Decrement();
+            }
+            catch (Exception ex) { lock (exceptions) { exceptions.Add(ex); } }
+        });
+
+        exceptions.Should().BeEmpty();
+    }
 }

@@ -64,6 +64,21 @@ public class SpectrumKeyboardSettingsStoreTests
         };
         store.KeyboardLayout.Should().Be(layout);
     }
+
+    [Fact]
+    public void Defaults_KeyboardLayout_ShouldBeNull()
+    {
+        var store = new SpectrumKeyboardSettings.SpectrumKeyboardSettingsStore();
+        store.KeyboardLayout.Should().BeNull();
+    }
+
+    [Fact]
+    public void Property_ShouldBeSettable()
+    {
+        var store = new SpectrumKeyboardSettings.SpectrumKeyboardSettingsStore();
+        store.KeyboardLayout = KeyboardLayout.Ansi;
+        store.KeyboardLayout.Should().Be(KeyboardLayout.Ansi);
+    }
 }
 
 

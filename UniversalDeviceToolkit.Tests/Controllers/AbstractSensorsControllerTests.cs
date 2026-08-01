@@ -10,7 +10,7 @@ using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.Controllers;
 
 public class AbstractSensorsControllerTests
 {

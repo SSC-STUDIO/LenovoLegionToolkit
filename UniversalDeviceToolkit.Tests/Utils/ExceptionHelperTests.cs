@@ -3,7 +3,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.Utils;
 
 [Trait("Category", TestCategories.Unit)]
 public class ExceptionHelperTests

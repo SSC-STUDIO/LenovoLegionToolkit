@@ -235,4 +235,22 @@ public class BalanceModeSettingsTests : IDisposable
     }
 
     #endregion
+
+    [Fact]
+    public void Store_DefaultValues_ShouldBeCorrect()
+    {
+        var settings = new BalanceModeSettings();
+
+        settings.Store.AIModeEnabled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Store_CanBeModified()
+    {
+        var settings = new BalanceModeSettings();
+
+        settings.Store.AIModeEnabled = true;
+
+        settings.Store.AIModeEnabled.Should().BeTrue();
+    }
 }

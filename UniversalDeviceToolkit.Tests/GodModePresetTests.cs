@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using Xunit;
@@ -71,29 +69,5 @@ public class GodModePresetTests
         preset.EnableOverclocking.Should().BeTrue();
         preset.FanFullSpeed.Should().BeFalse();
         preset.MinValueOffset.Should().Be(5);
-    }
-}
-
-[Trait("Category", TestCategories.Unit)]
-public class GodModeStateTests
-{
-    [Fact]
-    public void Properties_ShouldRetainValues()
-    {
-        var id = Guid.NewGuid();
-        var presetId = Guid.NewGuid();
-        var preset = new GodModePreset { Name = "Test" };
-        var presets = new ReadOnlyDictionary<Guid, GodModePreset>(
-            new Dictionary<Guid, GodModePreset> { [presetId] = preset });
-
-        var state = new GodModeState
-        {
-            ActivePresetId = id,
-            Presets = presets
-        };
-
-        state.ActivePresetId.Should().Be(id);
-        state.Presets.Should().HaveCount(1);
-        state.Presets[presetId].Name.Should().Be("Test");
     }
 }

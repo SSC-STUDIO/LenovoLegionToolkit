@@ -159,4 +159,42 @@ public class ThreadSafeBoolTests
     }
 
     #endregion
+
+    [Fact]
+    public void Default_Value_IsFalse()
+    {
+        var tsb = new ThreadSafeBool();
+        tsb.Value.Should().BeFalse();
+    }
+
+    [Fact]
+    public void SetTrue_ValueBecomesTrue()
+    {
+        var tsb = new ThreadSafeBool();
+        tsb.Value = true;
+        tsb.Value.Should().BeTrue();
+    }
+
+    [Fact]
+    public void SetFalse_AfterTrue_RevertsToFalse()
+    {
+        var tsb = new ThreadSafeBool { Value = true };
+        tsb.Value = false;
+        tsb.Value.Should().BeFalse();
+    }
+
+    [Fact]
+    public void ConcurrentToggle_NoException()
+    {
+        var tsb = new ThreadSafeBool();
+        var exceptions = new System.Collections.Generic.List<Exception>();
+
+        Parallel.For(0, 100, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i =>
+        {
+            try { tsb.Value = i % 2 == 0; }
+            catch (Exception ex) { lock (exceptions) { exceptions.Add(ex); } }
+        });
+
+        exceptions.Should().BeEmpty();
+    }
 }
