@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Macro;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Macro.Utils;
@@ -12,7 +13,7 @@ using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace UniversalDeviceToolkit.Lib.Macro;
 
-public class MacroController : IDisposable
+public class MacroController : IMacroController, IDisposable
 {
     public class RecorderReceivedEventArgs : EventArgs
     {

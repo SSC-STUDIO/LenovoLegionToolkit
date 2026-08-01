@@ -1,13 +1,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using UniversalDeviceToolkit.Lib.Macro;
+using UniversalDeviceToolkit.Abstractions.Macro;
 
 namespace UniversalDeviceToolkit.Lib.Automation.Steps;
 
 public class MacroAutomationStep(MacroAutomationStepState state) : IAutomationStep<MacroAutomationStepState>
 {
-    private readonly MacroController _controller = IoCContainer.Resolve<MacroController>();
+    private readonly IMacroController _controller = IoCContainer.Resolve<IMacroController>();
 
     public MacroAutomationStepState State { get; set; } = state;
 

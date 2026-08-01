@@ -1,4 +1,5 @@
 using Autofac;
+using UniversalDeviceToolkit.Abstractions.Macro;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Macro.Utils;
 
@@ -9,6 +10,6 @@ public class IoCModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         builder.Register<MacroSettings>();
-        builder.Register<MacroController>();
+        builder.Register<MacroController>().AsSelf().As<IMacroController>();
     }
 }
