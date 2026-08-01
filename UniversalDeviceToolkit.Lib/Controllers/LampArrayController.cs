@@ -17,6 +17,7 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Utils.LampEffects;
 using NeoSmart.AsyncLock;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Controllers;
 

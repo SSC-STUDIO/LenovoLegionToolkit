@@ -1,146 +1,28 @@
-﻿using System;
-using System.IO;
-using System.Security;
+﻿using System.IO;
+using SharedFolders = UniversalDeviceToolkit.Shared.Utils.Folders;
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 
+// Thin ABI-compatible wrapper over UniversalDeviceToolkit.Shared.Utils.Folders
+// (single source of truth). Behavior on Windows is identical to the legacy
+// implementation: same AppData root (%LOCALAPPDATA%\UniversalDeviceToolkit),
+// same one-shot legacy migration, same XDG handling only on non-Windows
+// platforms that Lib never targets.
 public static class Folders
 {
-    public static string AppDataOverrideEnvironmentVariable => string.Concat("UDT", "_APPDATA", "_OVERRIDE");
-    private const string LegacyMigrationMarkerFileName = ".legacy-appdata-migrated";
+    public static string AppDataOverrideEnvironmentVariable => SharedFolders.AppDataOverrideEnvironmentVariable;
 
-    public static string Program => AppDomain.CurrentDomain.SetupInformation.ApplicationBase ?? string.Empty;
-    public static string LegacyAppData => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        AppIdentity.LegacyCompactName);
+    public static string Program => SharedFolders.Program;
 
-    public static string AppData
-    {
-        get
-        {
-#if UDT_TEST_HOOKS
-            var overridePath = Environment.GetEnvironmentVariable(AppDataOverrideEnvironmentVariable);
-            if (!string.IsNullOrWhiteSpace(overridePath))
-            {
-                var fullOverridePath = Path.GetFullPath(overridePath);
-                Directory.CreateDirectory(fullOverridePath);
-                return fullOverridePath;
-            }
-#endif
+    public static string LegacyAppData => SharedFolders.LegacyAppData;
 
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var folderPath = Path.Combine(appData, AppIdentity.CompactName);
-            var legacyFolderPath = Path.Combine(appData, AppIdentity.LegacyCompactName);
+    public static string AppData => SharedFolders.AppData;
 
-            Directory.CreateDirectory(folderPath);
+    public static string GetAppDataSubdirectory(string subdirectory) => SharedFolders.GetAppDataSubdirectory(subdirectory);
 
-            // One-shot migration only. Re-copying on every getter resurrected deleted
-            // settings files from LenovoLegionToolkit whenever the legacy folder remained.
-            var markerPath = Path.Combine(folderPath, LegacyMigrationMarkerFileName);
-            if (Directory.Exists(legacyFolderPath) && !File.Exists(markerPath))
-            {
-                TryCopyMissingDirectoryEntries(legacyFolderPath, folderPath);
-                TryWriteMigrationMarker(markerPath);
-            }
+    public static string Temp => SharedFolders.Temp;
 
-            return folderPath;
-        }
-    }
-
-    public static string GetAppDataSubdirectory(string subdirectory)
-    {
-        var targetDirectory = Path.Combine(AppData, subdirectory);
-        Directory.CreateDirectory(targetDirectory);
-
-        var markerPath = Path.Combine(targetDirectory, LegacyMigrationMarkerFileName);
-        if (!File.Exists(markerPath))
-        {
-            MigrateLegacyAppDataSubdirectory(subdirectory, targetDirectory);
-            TryWriteMigrationMarker(markerPath);
-        }
-
-        return targetDirectory;
-    }
-
-    private static void TryWriteMigrationMarker(string markerPath)
-    {
-        try
-        {
-            File.WriteAllText(markerPath, DateTime.UtcNow.ToString("O"));
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException)
-        {
-            Log.Instance.Warning($"Failed to write legacy AppData migration marker \"{markerPath}\": {ex.Message}", ex);
-        }
-    }
-
-    public static string Temp
-    {
-        get
-        {
-            var appData = Path.GetTempPath();
-            var folderPath = Path.Combine(appData, AppIdentity.CompactName);
-            Directory.CreateDirectory(folderPath);
-            return folderPath;
-        }
-    }
-
-    private static void MigrateLegacyAppDataSubdirectory(string subdirectory, string targetDirectory)
-    {
-        var legacyRoots = new[]
-        {
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentity.LegacyCompactName),
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppIdentity.LegacyCompactName),
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppIdentity.CompactName),
-        };
-
-        foreach (var legacyRoot in legacyRoots)
-        {
-            var legacySubdirectory = Path.Combine(legacyRoot, subdirectory);
-            if (Directory.Exists(legacySubdirectory))
-                TryCopyMissingDirectoryEntries(legacySubdirectory, targetDirectory);
-        }
-    }
-
-    internal static void TryCopyMissingDirectoryEntries(string sourceDirectory, string destinationDirectory)
-    {
-        try
-        {
-            Directory.CreateDirectory(destinationDirectory);
-
-            foreach (var directory in Directory.EnumerateDirectories(sourceDirectory, "*", SearchOption.AllDirectories))
-            {
-                var relativePath = Path.GetRelativePath(sourceDirectory, directory);
-                Directory.CreateDirectory(Path.Combine(destinationDirectory, relativePath));
-            }
-
-            foreach (var file in Directory.EnumerateFiles(sourceDirectory, "*", SearchOption.AllDirectories))
-            {
-                var relativePath = Path.GetRelativePath(sourceDirectory, file);
-                var destinationPath = Path.Combine(destinationDirectory, relativePath);
-                if (File.Exists(destinationPath))
-                    continue;
-
-                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
-                File.Copy(file, destinationPath, false);
-            }
-        }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or SecurityException or DirectoryNotFoundException)
-        {
-            Log.Instance.Warning(
-                $"Failed to copy missing directory entries from \"{sourceDirectory}\" to \"{destinationDirectory}\": {ex.Message}",
-                ex);
-
-            try
-            {
-                Directory.CreateDirectory(destinationDirectory);
-            }
-            catch (Exception createEx) when (createEx is IOException or UnauthorizedAccessException or SecurityException or DirectoryNotFoundException)
-            {
-                Log.Instance.Warning(
-                    $"Failed to ensure destination directory \"{destinationDirectory}\": {createEx.Message}",
-                    createEx);
-            }
-        }
-    }
+    // NOTE: internal Folders.TryCopyMissingDirectoryEntries no longer exists in
+    // Lib — the implementation lives in the Shared assembly. No Lib callers used
+    // it outside this file (verified by audit).
 }

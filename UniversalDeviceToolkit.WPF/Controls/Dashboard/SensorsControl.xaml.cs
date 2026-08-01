@@ -18,6 +18,7 @@ using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Windows.Dashboard;
 using Wpf.Ui.Controls;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
 {

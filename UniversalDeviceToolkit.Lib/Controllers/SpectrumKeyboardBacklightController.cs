@@ -16,6 +16,7 @@ using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
 using NeoSmart.AsyncLock;
 using Windows.Win32;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Controllers;
 

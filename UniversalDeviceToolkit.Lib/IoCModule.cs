@@ -36,6 +36,7 @@ using UniversalDeviceToolkit.Lib.System.EC;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.System.Razer;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib;
 

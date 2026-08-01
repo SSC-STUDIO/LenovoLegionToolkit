@@ -6,6 +6,7 @@ using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Integrations;
 

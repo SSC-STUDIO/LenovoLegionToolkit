@@ -38,6 +38,10 @@
 		<PackageReference Include="ZenStates-Core" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Shared\UniversalDeviceToolkit.Lib.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup>
 	  <Compile Update="Resources\Resource.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>

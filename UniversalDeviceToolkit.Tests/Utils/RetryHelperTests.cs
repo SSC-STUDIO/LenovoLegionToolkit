@@ -5,6 +5,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 

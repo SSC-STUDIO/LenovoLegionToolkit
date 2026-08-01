@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 

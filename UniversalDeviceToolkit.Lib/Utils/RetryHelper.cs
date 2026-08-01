@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 

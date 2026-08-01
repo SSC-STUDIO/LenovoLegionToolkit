@@ -17,6 +17,7 @@ using Windows.Win32.Foundation;
 using Windows.Win32.System.Power;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 using Windows.Win32.UI.WindowsAndMessaging;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Listeners;
 

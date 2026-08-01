@@ -9,6 +9,7 @@ using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.Utils;
 using Moq;
 using Xunit;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;
 

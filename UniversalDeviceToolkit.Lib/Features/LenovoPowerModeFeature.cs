@@ -10,6 +10,7 @@ using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Resources;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Features;
 

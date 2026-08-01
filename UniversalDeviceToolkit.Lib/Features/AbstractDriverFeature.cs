@@ -6,6 +6,7 @@ using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Resources;
 using UniversalDeviceToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Features;
 

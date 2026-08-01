@@ -8,6 +8,7 @@ using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Devices.DeviceAndDriverInstallation;
 using Windows.Win32.Foundation;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 

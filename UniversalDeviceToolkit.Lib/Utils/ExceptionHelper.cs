@@ -7,6 +7,14 @@ using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 
+// NOTE (intentional divergence, do not "deduplicate"):
+// UniversalDeviceToolkit.Shared.Utils.ExceptionHelper carries cross-platform
+// English-language factories (used by the portable Lib.Shared code that cannot
+// depend on this assembly's Resource tables). This Lib implementation is the
+// authoritative Windows version with fully localized messages from
+// UniversalDeviceToolkit.Lib.Resources.Resource. Both classes share only
+// InvalidSettingsFilename / SettingsPathEscapesAllowedDir, whose message text
+// deliberately differs (localized vs English). Keep them in sync by signature.
 public static class ExceptionHelper
 {
     public static InvalidOperationException InvalidState(string? details = null) =>

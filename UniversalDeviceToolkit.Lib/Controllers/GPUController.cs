@@ -9,6 +9,7 @@ using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Controllers;
 

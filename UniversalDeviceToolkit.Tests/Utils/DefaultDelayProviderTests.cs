@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 

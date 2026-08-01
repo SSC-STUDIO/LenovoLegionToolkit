@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
 using PresentMonFps;
+using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
 {
