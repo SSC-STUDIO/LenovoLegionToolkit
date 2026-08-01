@@ -2,8 +2,6 @@
 	<PropertyGroup>
         <TargetFramework>$(UDTTargetFramework)</TargetFramework>
 		<RootNamespace>UniversalDeviceToolkit.WPF</RootNamespace>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<Platforms>x64</Platforms>
 		<OutputType>WinExe</OutputType>
 		<!-- Canonical brand icons live in repo-root Assets/ (single source of truth). -->
 		<ApplicationIcon>..\Assets\Icon.ico</ApplicationIcon>

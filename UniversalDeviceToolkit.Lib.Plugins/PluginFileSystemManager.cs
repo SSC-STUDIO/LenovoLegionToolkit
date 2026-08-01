@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,7 +67,7 @@ public class PluginFileSystemManager : IPluginFileSystemManager
         "vi", "zh-hans", "zh-hant", "tools"
     };
 
-    private readonly Dictionary<string, DateTime> _pluginFileCache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, DateTime> _pluginFileCache = new(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Get the plugins directory path
@@ -256,7 +257,7 @@ public class PluginFileSystemManager : IPluginFileSystemManager
                     File.Delete(filePath);
                     return true;
                 }
-                return true;
+                return false;
             }
             catch (IOException)
             {
@@ -288,7 +289,7 @@ public class PluginFileSystemManager : IPluginFileSystemManager
                     Directory.Delete(directoryPath, true);
                     return true;
                 }
-                return true;
+                return false;
             }
             catch (IOException)
             {

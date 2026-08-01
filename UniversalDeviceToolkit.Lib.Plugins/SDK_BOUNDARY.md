@@ -6,10 +6,18 @@ allowed to depend on at compile time. Everything else in
 host versions without notice.
 
 The split mirrors the assembly configuration in
-`UniversalDeviceToolkit.Lib.Plugins.csproj`: the SDK files are intentionally
-removed from the host build (`<Compile Remove="..." />`) and shipped
-separately as `UniversalDeviceToolkit.Plugins.SDK.dll` /
-`UniversalDeviceToolkit.Plugins.Shared.dll`. Plugins only see the SDK surface.
+`UniversalDeviceToolkit.Lib.Plugins.csproj`: the SDK source files were removed
+from this repository entirely (the host build no longer compiles them) and
+ship as pre-built binaries (`UniversalDeviceToolkit.Plugins.SDK.dll` /
+`UniversalDeviceToolkit.Plugins.Shared.dll`) produced by the external
+`UniversalDeviceToolkit-Plugins` repository, copied into the app output by
+`UniversalDeviceToolkit.WPF.csproj`. Plugins only see the SDK surface.
+
+In addition, `UniversalDeviceToolkit.Lib\Plugins\LegacyPluginContracts.cs`
+carries an in-Lib legacy mirror of the same contracts (same namespace,
+different assembly) so older plugins that reference the Lib assembly remain
+ABI-compatible. Both surfaces are frozen — see the header comments in those
+two files.
 
 ## Public SDK (safe for plugins to reference)
 
@@ -140,9 +148,10 @@ plugin-author channels.
 
 ## How the boundary is enforced
 
-- The host csproj uses `<Compile Remove="..." />` to exclude SDK files from
-  its own build, ensuring the SDK surface is consumed only through the
-  separately-shipped `Plugins.SDK` / `Plugins.Shared` assemblies.
+- The host does not compile the SDK sources itself: the SDK surface is
+  consumed exclusively through the pre-built `Plugins.SDK` /
+  `Plugins.Shared` assemblies produced by the external plugins repository
+  and copied into the app output by the host's csproj.
 - `[assembly: InternalsVisibleTo("UniversalDeviceToolkit.Tests")]` in
   `AssemblyInfo.cs` grants the test project access to internal members for
   white-box testing. Plugins are never granted this access.

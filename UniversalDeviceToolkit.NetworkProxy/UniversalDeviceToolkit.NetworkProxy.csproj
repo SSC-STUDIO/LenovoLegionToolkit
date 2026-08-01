@@ -4,8 +4,6 @@
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.NetworkProxy</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.NetworkProxy</AssemblyName>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Copyright>$(ProjectCopyright)</Copyright>

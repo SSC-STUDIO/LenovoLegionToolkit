@@ -2,8 +2,6 @@
 	<PropertyGroup>
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.Lib.Macro</RootNamespace>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<Platforms>x64</Platforms>
 		<Nullable>enable</Nullable>
 		<Copyright>$(ProjectCopyright)</Copyright>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>

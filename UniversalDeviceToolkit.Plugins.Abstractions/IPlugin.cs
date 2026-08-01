@@ -1,3 +1,25 @@
+// ============================================================================
+// FROZEN EXTERNAL PLUGIN ABI — DO NOT MODIFY SIGNATURES
+// ============================================================================
+// This project is NOT part of the host solution build graph. It is the
+// compile-time ABI contract for the external plugin repository
+// (UniversalDeviceToolkit-Plugins), which references
+// UniversalDeviceToolkit.Plugins.Abstractions.dll via HintPath.
+//
+// It intentionally shares the namespace (UniversalDeviceToolkit.Lib.Plugins)
+// with the legacy in-Lib contract (UniversalDeviceToolkit.Lib\Plugins\
+// LegacyPluginContracts.cs) while living in a different assembly and a
+// different TFM (net10.0, portable). This is a deliberate DUAL-ABI design.
+//
+// RULES:
+//   1. Never remove, rename, or re-sign a member declared in this project.
+//   2. New members may only be ADDED, and only if the matching type in
+//      UniversalDeviceToolkit.Lib\Plugins\LegacyPluginContracts.cs is extended
+//      identically.
+//   3. Keep the namespace and type names in lock-step with the legacy
+//      in-Lib contract. The external plugin repo must keep compiling without
+//      any changes.
+// ============================================================================
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
 /// <summary>

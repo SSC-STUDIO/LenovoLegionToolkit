@@ -14,9 +14,6 @@
     <RootNamespace>UniversalDeviceToolkit.Installer</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.Installer</AssemblyName>
     <UseWPF>true</UseWPF>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <Platforms>x64</Platforms>
-    <PlatformTarget>x64</PlatformTarget>
     <SelfContained>false</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <ApplicationIcon>..\..\Assets\Icon.ico</ApplicationIcon>

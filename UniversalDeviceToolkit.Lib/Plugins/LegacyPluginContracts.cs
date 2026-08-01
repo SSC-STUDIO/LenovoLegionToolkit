@@ -3,8 +3,28 @@ using UniversalDeviceToolkit.Lib.Optimization;
 
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
-// Plugin contracts live in UniversalDeviceToolkit.Lib so older plugins that still
-// reference this assembly remain ABI-compatible with the current host.
+// ============================================================================
+// FROZEN DUAL-ABI CONTRACT — DO NOT MODIFY SIGNATURES
+// ============================================================================
+// This file is the LEGACY plugin ABI carried inside UniversalDeviceToolkit.Lib.
+// It mirrors (same namespace, intentionally different assembly) the external
+// contract in UniversalDeviceToolkit.Plugins.Abstractions
+// (net10.0, assembly UniversalDeviceToolkit.Plugins.Abstractions), which the
+// external plugin repository (UniversalDeviceToolkit-Plugins) compiles against
+// via HintPath.
+//
+// Older plugins referencing this assembly must remain binary-compatible with
+// the current host; the external plugin repo must keep compiling without
+// changes. Any signature change (member removal, parameter/return-type change,
+// enum value reorder) breaks one of the two ABIs.
+//
+// RULES:
+//   1. Never remove, rename, or re-sign a member declared in this file.
+//   2. New members may only be ADDED, and only if the matching type in
+//      UniversalDeviceToolkit.Plugins.Abstractions is extended identically.
+//   3. Keep the namespace and type names in lock-step with
+//      UniversalDeviceToolkit.Plugins.Abstractions.
+// ============================================================================
 public interface IPlugin
 {
     string Id { get; }

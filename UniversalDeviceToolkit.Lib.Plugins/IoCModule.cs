@@ -18,6 +18,16 @@ public class IoCModule : Module
         builder.Register(_ =>
             {
                 var mode = global::System.Environment.GetEnvironmentVariable(SignatureModeEnvironmentVariable);
+
+#if !DEBUG
+                // In release builds, never allow signature verification to be disabled.
+                // Force production settings if someone tries to set "disable" outside debug.
+                if (string.Equals(mode, "disable", global::System.StringComparison.OrdinalIgnoreCase))
+                {
+                    mode = null;
+                }
+#endif
+
                 return new PluginSignatureValidator(
                     PluginSignatureSettings.TryCreateFromEnvironmentValue(mode, out var settings)
                         ? settings

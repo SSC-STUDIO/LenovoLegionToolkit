@@ -7,27 +7,12 @@
     <AssemblyName>UniversalDeviceToolkit.Lib.Plugins</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <!-- Match Lib/WPF win-x64 graph (avoids MSB3270 MSIL vs AMD64). -->
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <Platforms>x64</Platforms>
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="IAppStartupPlugin.cs" />
-    <Compile Remove="IOptimizationCategoryProvider.cs" />
-    <Compile Remove="IPlugin.cs" />
-    <Compile Remove="IPluginConfiguration.cs" />
-    <Compile Remove="IPluginHostContext.cs" />
-    <Compile Remove="IPluginPage.cs" />
-    <Compile Remove="PluginBase.cs" />
-    <Compile Remove="PluginConfiguration.cs" />
-    <Compile Remove="PluginHostContext.cs" />
-    <Compile Remove="PluginHostMode.cs" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
   </ItemGroup>

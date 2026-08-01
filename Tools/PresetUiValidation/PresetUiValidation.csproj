@@ -8,9 +8,6 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>PresetUiValidation</RootNamespace>
     <EnableUdtTestHooks>true</EnableUdtTestHooks>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <Platforms>x64</Platforms>
-    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
