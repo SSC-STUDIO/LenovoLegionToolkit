@@ -9,6 +9,12 @@ using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
+    // TODO(Phase 4d): full portable extraction into UniversalDeviceToolkit.ViewModels
+    // is blocked by the plugin ABI types (IPlugin, PluginManifest, PluginStatus,
+    // UniversalDeviceToolkit.Lib.Plugins namespace) which are frozen dual-ABI
+    // contracts — see SDK_BOUNDARY.md. SolidColorBrush/IconGeometry presentation
+    // is also WPF-only. Keep this VM in the WPF project until the plugin SDK
+    // surface is relocated to Lib.Abstractions (same-namespace relocation).
     public class PluginViewModel : INotifyPropertyChanged
     {
         private string _name = string.Empty;

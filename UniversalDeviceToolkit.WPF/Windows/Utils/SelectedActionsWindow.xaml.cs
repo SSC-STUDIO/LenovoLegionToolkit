@@ -1,33 +1,24 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Windows.Input;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Utils
 {
+    // TODO(Phase 4b): full portable extraction into UniversalDeviceToolkit.ViewModels
+    // is blocked by the WPF-coupled item type SelectedActionViewModel (it touches
+    // PackageControl internals). SelectedActionsViewModel stays in the WPF project
+    // as the plan's downgrade path until the item model is decoupled.
     public partial class SelectedActionsWindow : BaseWindow
     {
-        private readonly ObservableCollection<SelectedActionViewModel> _selectedActions;
-
-        public ObservableCollection<SelectedActionViewModel> SelectedActions => _selectedActions;
-        public string EmptyText { get; }
+        private readonly SelectedActionsViewModel _viewModel;
 
         public SelectedActionsWindow(ObservableCollection<SelectedActionViewModel> selectedActions, string emptyText)
         {
             InitializeComponent();
 
-            _selectedActions = selectedActions;
-            EmptyText = emptyText;
-
-            DataContext = this;
-
-            _selectedActions.CollectionChanged += SelectedActions_CollectionChanged;
-            foreach (var action in _selectedActions)
-                action.PropertyChanged += Action_PropertyChanged;
-
-            UpdateEmptyState();
+            _viewModel = new SelectedActionsViewModel(selectedActions, emptyText);
+            DataContext = _viewModel;
 
             // Disable mouse wheel zoom
             PreviewMouseWheel += OnPreviewMouseWheel;
@@ -42,36 +33,6 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
             }
         }
 
-        private void UpdateEmptyState()
-        {
-            var hasItems = _selectedActions.Count > 0;
-            _actionsList.Visibility = hasItems ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-            _emptyTextBlock.Visibility = hasItems ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
-        }
-
-        private void SelectedActions_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems is not null)
-            {
-                foreach (SelectedActionViewModel action in e.OldItems)
-                    action.PropertyChanged -= Action_PropertyChanged;
-            }
-
-            if (e.NewItems is not null)
-            {
-                foreach (SelectedActionViewModel action in e.NewItems)
-                    action.PropertyChanged += Action_PropertyChanged;
-            }
-
-            UpdateEmptyState();
-        }
-
-        private void Action_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(SelectedActionViewModel.IsSelected))
-                UpdateEmptyState();
-        }
-
         private void CloseButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Close();
@@ -80,12 +41,9 @@ namespace UniversalDeviceToolkit.WPF.Windows.Utils
         protected override void OnClosed(EventArgs e)
         {
             PreviewMouseWheel -= OnPreviewMouseWheel;
+            _viewModel.Dispose();
 
             base.OnClosed(e);
-
-            _selectedActions.CollectionChanged -= SelectedActions_CollectionChanged;
-            foreach (var action in _selectedActions)
-                action.PropertyChanged -= Action_PropertyChanged;
         }
     }
 }
