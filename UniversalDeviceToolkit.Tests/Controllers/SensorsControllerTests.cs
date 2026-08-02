@@ -605,6 +605,7 @@ public class GenericSensorsControllerTests : UnitTestBase
         var builder = new ContainerBuilder();
         builder.RegisterModule<UniversalDeviceToolkit.Lib.IoCModule>();
         builder.RegisterModule<TestIoCModule>();
+        builder.RegisterType<UniversalDeviceToolkit.Lib.Settings.ApplicationSettings>().AsSelf();
 
         using var container = builder.Build();
 
