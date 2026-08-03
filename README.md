@@ -464,7 +464,12 @@ If "Wait for exit" is checked, UDT will capture the output from standard output 
 
 ### CLI
 
-It is possible to control some features of UDT directly from the command line. The Windows CLI executable is `udt-cli.exe` and can be found in the install directory.
+UDT ships two command-line surfaces with different responsibilities:
+
+- `udt-cli.exe` is the Windows IPC remote control client. It requires the WPF app to be running in the background and the CLI option to be enabled.
+- `udt` is the independent `UniversalDeviceToolkit.CrossPlatform` diagnostics CLI. It runs without the WPF app and is the Windows/macOS/Linux path for safe platform discovery and diagnostics.
+
+The Windows IPC CLI executable is `udt-cli.exe` and can be found in the install directory.
 
 For CLI to work properly, UDT needs to run in the background and CLI option needs to be enabled in UDT settings. You can also chose to add `udt-cli.exe` to your PATH variable for easier access.
 
@@ -718,7 +723,7 @@ Check the model number. Example model numbers are `16ACH6H` or `16IAX7`. The las
 
 Some, less frequently needed, features or options can be enabled by using additional arguments. These arguments can either be passed as parameters or added to `args.txt` file.
 
-* `--trace` - enables logging to `%LOCALAPPDATA%\UniversalDeviceToolkit\log`
+* `--trace` - enables logging to `%LOCALAPPDATA%\UniversalDeviceToolkit\logs`
 * `--minimized` - starts UDT minimized to tray
 * `--disable-tray-tooltip` - disables tray tooltip that is shown when you hover the cursors over tray icon
 * `--allow-all-power-modes-on-battery` - allows using all Power Modes without AC adapter _(No support is provided when this argument is used)_
@@ -742,7 +747,7 @@ Arguments not listed above are no longer needed or available.
 
 ## How to collect logs?
 
-In all troubleshooting situations, logs provide important information. **Always** attach logs to your issues. Critical error logs are saved automatically and saved under `"%LOCALAPPDATA%\UniversalDeviceToolkit\log"`.
+In all troubleshooting situations, logs provide important information. **Always** attach logs to your issues. Critical error logs are saved automatically and saved under `"%LOCALAPPDATA%\UniversalDeviceToolkit\logs"`.
 
 To collect logs:
 
@@ -751,7 +756,7 @@ To collect logs:
 3. UDT will start and in the title bar you should see: `[LOGGING ENABLED]`
 4. Reproduce the issue you have (i.e. try to use the option that causes issues)
 5. Close UDT (also make sure it's gone from tray area)
-6. Again, in `Run` (Win+R) type `"%LOCALAPPDATA%\UniversalDeviceToolkit\log"`
+6. Again, in `Run` (Win+R) type `"%LOCALAPPDATA%\UniversalDeviceToolkit\logs"`
 7. You should see at least one file. Theses are the logs you should attach to the issue.
 
 ## Contribution

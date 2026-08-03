@@ -24,7 +24,7 @@ Each language entry:
 ## Service API (`LanguagePackManager`)
 
 - `QueryCatalogAsync` — list available packs
-- `InstallAsync` / `RepairAsync` / `UpdateAsync` — download → verify SHA256 → stage → validate satellite assemblies → atomic replace culture directories
+- `InstallAsync` — download → verify SHA256 → stage → validate satellite assemblies → atomic replace culture directories; reinstalling through this method is the repair/update path
 - `Uninstall` / `QueueUninstall` / `ProcessPendingUninstall` — remove culture dirs (pending uninstall survives restart when the culture is active)
 - Progress via `IProgress<float>`; cancellation via `CancellationToken`
 - Structured failures: `LanguagePackException` + `LanguagePackFailureKind`

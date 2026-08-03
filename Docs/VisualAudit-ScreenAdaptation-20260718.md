@@ -2,9 +2,9 @@
 
 **日期：** 2026-07-18
 **仓库：** UniversalDeviceToolkit（宿主 WPF 应用）
-**基线：** `master` @ `1b66f8ca`（`fix(ui): theme-aware settings nav selection chrome`）
+**基线：** `master` @ `1b66f8ca`（历史审计快照；后续变更见维护计划）
 **方法：** 静态代码审计（XAML / C# 全量检索 + 关键文件通读），未运行动态 UI（WPF 需 Windows 环境）。
-**范围：** `UniversalDeviceToolkit.WPF/`（109 个 XAML 文件）。`UniversalDeviceToolkit.Lib/` 无任何 UI；`UniversalDeviceToolkit.CrossPlatform/` 为纯控制台项目。
+**范围：** `UniversalDeviceToolkit.WPF/`（109 个 XAML 文件）。`UniversalDeviceToolkit.Lib/` 无任何 UI；`UniversalDeviceToolkit.CrossPlatform/` 当时为纯控制台项目，现已增加 Avalonia GUI 宿主，不能把本报告的旧描述当作当前拓扑。
 **配套文档：** 《视觉设计建议：屏幕适配与视觉效果》（`VisualDesignRecommendations-ScreenAdaptation.md`）
 
 > 本报告只陈述事实与风险，所有结论附 `文件:行号` 证据；改进方案见配套建议文档。

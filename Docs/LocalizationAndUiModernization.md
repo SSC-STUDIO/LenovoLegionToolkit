@@ -1,7 +1,7 @@
 # Multi-language quality & global UI modernization
 
-**Status:** In progress (2026-07-12)  
-**Does not replace:** uncommitted startup-lag fixes; leave plugin `ai/`, `build_out.txt`, `build_vivetool.log` untouched.
+**Status:** Maintenance baseline (2026-08-03)
+**Scope:** localization runtime, resource quality, and WPF UI modernization contracts. Current validation is recorded in `Docs/MAINTENANCE_AND_UPGRADE_PLAN.md`.
 
 ## Localization
 
