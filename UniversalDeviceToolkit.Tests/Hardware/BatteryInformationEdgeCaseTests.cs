@@ -3,7 +3,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using Xunit;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.Hardware;
 
 [Trait("Category", TestCategories.Unit)]
 public class BatteryInformationEdgeCaseTests

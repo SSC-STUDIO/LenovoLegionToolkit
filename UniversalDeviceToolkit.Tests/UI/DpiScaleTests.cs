@@ -2,7 +2,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using Xunit;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.UI;
 
 [Trait("Category", TestCategories.Unit)]
 public class DpiScaleTests

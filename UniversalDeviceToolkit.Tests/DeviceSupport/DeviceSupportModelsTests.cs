@@ -3,7 +3,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
 using Xunit;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.DeviceSupport;
 
 [Trait("Category", TestCategories.Unit)]
 public class DeviceSupportModelsTests

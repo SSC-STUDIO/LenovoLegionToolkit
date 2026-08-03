@@ -2,7 +2,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using Xunit;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.Models;
 
 [Trait("Category", TestCategories.Unit)]
 public class RGBColorTests
