@@ -35,6 +35,9 @@ public partial class SettingsAppearanceControl
     private readonly List<System.Windows.Controls.Button> _accentSwatchButtons = [];
     private ColorPickerControl? _customAccentColorPicker;
 
+    private const double AccentSwatchButtonSize = 40;
+    private const double AccentSwatchDotSize = 36;
+
     public SettingsAppearanceControl()
     {
         InitializeComponent();
@@ -326,10 +329,10 @@ public partial class SettingsAppearanceControl
         _accentSwatchButtons.Clear();
         _customAccentColorPicker = null;
 
-        // Use the actual Windows accent instead of the old rainbow placeholder.
+        // The system source is represented by the same multicolor mark used by the reference UI.
         var systemColor = GetSystemAccentColor();
         _accentColorSwatchesPanel.Children.Add(CreateAccentSwatch(
-            new SolidColorBrush(systemColor.ToColor()),
+            CreateSystemAccentBrush(),
             SystemAccentSwatchTag,
             LibResource.AccentColorSource_System));
 
@@ -345,8 +348,8 @@ public partial class SettingsAppearanceControl
             : systemColor.ToColor();
         var customPicker = new ColorPickerControl
         {
-            Margin = new Thickness(0, 0, 8, 8),
-            ButtonSize = 48,
+            Margin = new Thickness(0, 0, 2, 8),
+            ButtonSize = AccentSwatchButtonSize,
             ButtonContent = new SymbolIcon
             {
                 Symbol = SymbolRegular.Eyedropper24,
@@ -368,9 +371,9 @@ public partial class SettingsAppearanceControl
     {
         var dot = new Border
         {
-            Width = 46,
-            Height = 46,
-            CornerRadius = new CornerRadius(23),
+            Width = AccentSwatchDotSize,
+            Height = AccentSwatchDotSize,
+            CornerRadius = new CornerRadius(AccentSwatchDotSize / 2),
             Background = fill,
             BorderBrush = GetSwatchStrokeBrush(),
             BorderThickness = new Thickness(1),
@@ -378,9 +381,9 @@ public partial class SettingsAppearanceControl
 
         var button = new System.Windows.Controls.Button
         {
-            Width = 52,
-            Height = 52,
-            Margin = new Thickness(0, 0, 4, 8),
+            Width = AccentSwatchButtonSize,
+            Height = AccentSwatchButtonSize,
+            Margin = new Thickness(0, 0, 2, 8),
             Padding = new Thickness(0),
             Background = System.Windows.Media.Brushes.Transparent,
             BorderThickness = new Thickness(0),
@@ -394,6 +397,20 @@ public partial class SettingsAppearanceControl
         _accentSwatchButtons.Add(button);
         return button;
     }
+
+    private static Brush CreateSystemAccentBrush() => new LinearGradientBrush
+    {
+        StartPoint = new Point(0, 0),
+        EndPoint = new Point(1, 1),
+        GradientStops =
+        {
+            new GradientStop(Color.FromRgb(0xF1, 0x3B, 0x50), 0.0),
+            new GradientStop(Color.FromRgb(0x74, 0x2A, 0xC4), 0.28),
+            new GradientStop(Color.FromRgb(0x1A, 0x98, 0xF2), 0.52),
+            new GradientStop(Color.FromRgb(0x06, 0xD3, 0xA5), 0.76),
+            new GradientStop(Color.FromRgb(0xFF, 0xD6, 0x2E), 1.0),
+        },
+    };
 
     private void AccentColorSwatch_Click(object sender, RoutedEventArgs e)
     {
@@ -473,9 +490,6 @@ public partial class SettingsAppearanceControl
         {
             if (button.Content is not Border dot)
                 continue;
-
-            if (button.Tag is string systemSwatchTag && systemSwatchTag == SystemAccentSwatchTag)
-                dot.Background = new SolidColorBrush(GetSystemAccentColor().ToColor());
 
             var selected = button.Tag is string systemTag && systemTag == SystemAccentSwatchTag
                 ? isSystem

@@ -362,7 +362,10 @@
                     FontWeight="Medium"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Text="{x:Static resources:Resource.SettingsPage_AccentColorPresets_Title}" />
-                <WrapPanel x:Name="_accentColorSwatchesPanel" Margin="0,0,0,8" />
+                <StackPanel
+                    x:Name="_accentColorSwatchesPanel"
+                    Margin="0,0,0,8"
+                    Orientation="Horizontal" />
                 </StackPanel>
             </custom:CardControl>
 
