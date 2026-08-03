@@ -1,4 +1,3 @@
-using System.Globalization;
 using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -29,9 +28,7 @@ public partial class SettingsPageViewModel : ObservableObject
     {
         _platformServices = platformServices;
 
-        // Use a pass-through localizer that returns fallback strings (no .resx dependency in Avalonia prototype).
-        var localizer = new FallbackStringLocalizer();
-        _navModel = new SettingsNavigationViewModel(localizer);
+        _navModel = new SettingsNavigationViewModel(Localization.AvaloniaLocalization.StringLocalizer);
 
         _ = InitializeAsync();
     }
@@ -86,21 +83,15 @@ public partial class SettingsPageViewModel : ObservableObject
                 },
                 new TextBlock
                 {
-                    Text = $"Settings for \"{item.Title}\" will be implemented here.",
+                    Text = string.Format(
+                        Localization.AvaloniaLocalization.GetString(
+                            "Settings_Placeholder",
+                            "Settings for \"{0}\" will be implemented here."),
+                        item.Title),
                     Opacity = 0.7,
                     TextWrapping = TextWrapping.Wrap,
                 }
             }
         };
     }
-}
-
-/// <summary>
-/// Minimal IStringLocalizer that always returns the fallback value.
-/// Suitable for the Avalonia prototype before full resource integration.
-/// </summary>
-internal sealed class FallbackStringLocalizer : IStringLocalizer
-{
-    public string GetString(string key, string fallback = "") => fallback;
-    public CultureInfo CurrentCulture { get; set; } = CultureInfo.CurrentUICulture;
 }

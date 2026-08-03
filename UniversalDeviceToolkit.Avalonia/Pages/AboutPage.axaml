@@ -1,129 +1,84 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="UniversalDeviceToolkit.Avalonia.Pages.AboutPage"
-             xmlns:vm="using:UniversalDeviceToolkit.Avalonia.Pages">
-    
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:vm="using:UniversalDeviceToolkit.Avalonia.Pages"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.AboutPage">
     <UserControl.DataContext>
         <vm:AboutPageViewModel />
     </UserControl.DataContext>
-    
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="16" Margin="24">
-            <!-- Application Title -->
-            <TextBlock Text="Universal Device Toolkit"
-                       FontSize="28"
-                       FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
-            <!-- Version Information -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16" Margin="24">
+            <TextBlock Text="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}"
+                       FontSize="28" FontWeight="Medium"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
             <Grid ColumnSpacing="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0"
-                           Text="Version"
+                           Text="{local:Loc Key=About_Version, Fallback=Version}"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                <TextBlock Grid.Column="1"
-                           Text="{Binding VersionText}"
+                <TextBlock Grid.Column="1" Text="{Binding VersionText}"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
             </Grid>
-
-            <!-- Build Information (conditionally visible) -->
             <TextBlock Text="{Binding BuildText}"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        IsVisible="{Binding BuildText, Converter={StaticResource IsNotNullOrEmpty}}"
                        Margin="0,0,0,16"/>
-
-            <!-- Copyright -->
             <TextBlock Text="{Binding CopyrightText}"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        TextWrapping="Wrap"/>
-
-            <!-- Translation Credit (conditionally visible) -->
-            <TextBlock Text="Translation credits for non-English locales."
+            <TextBlock Text="{local:Loc Key=About_TranslationCredit, Fallback=Translation credits for non-English locales.}"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       TextWrapping="Wrap"
-                       Margin="0,8,0,0"
+                       TextWrapping="Wrap" Margin="0,8,0,0"
                        IsVisible="{Binding ShowTranslationCredit}"/>
-
-            <!-- Links Section -->
-            <TextBlock Text="Links"
-                       FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="Medium"
+            <TextBlock Text="{local:Loc Key=About_Links, Fallback=Links}"
+                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,24,0,8"/>
-
-            <!-- Project Website Link -->
-            <Button Content="🔗 Project Website on GitHub"
-                    Command="{Binding OpenProjectWebsiteCommand}"
-                    Padding="8,8"
-                    MinWidth="200"
+            <Button Content="{local:Loc Key=About_ProjectWebsite, Fallback=Project Website on GitHub}"
+                    Command="{Binding OpenProjectWebsiteCommand}" Padding="8,8" MinWidth="200"
                     CornerRadius="{StaticResource CornerRadiusCard}"
                     Background="{DynamicResource AccentBackgroundBrush}"
                     Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
-
-            <!-- Latest Release Link -->
-            <Button Content="🚀 Latest Release on GitHub"
-                    Command="{Binding OpenLatestReleaseCommand}"
-                    Padding="8,8"
-                    Margin="0,8,0,0"
+            <Button Content="{local:Loc Key=About_LatestRelease, Fallback=Latest Release on GitHub}"
+                    Command="{Binding OpenLatestReleaseCommand}" Padding="8,8" Margin="0,8,0,0"
                     CornerRadius="{StaticResource CornerRadiusCard}"
                     Background="{DynamicResource AccentBackgroundBrush}"
                     Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
-
-            <!-- Third-party Libraries Section -->
-            <TextBlock Text="Third-party Libraries"
-                       FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="Medium"
+            <TextBlock Text="{local:Loc Key=About_ThirdPartyLibraries, Fallback=Third-party Libraries}"
+                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,24,0,8"/>
-
-            <!-- Libraries List (Using wrap panels) -->
-            <WrapPanel>
-                <ItemsControl ItemsSource="{Binding Libraries}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <HyperlinkButton Content="{Binding Name}"
-                                             Command="{Binding DataContext.OpenLibraryLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                             CommandParameter="{Binding Url}"
-                                             Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                             CornerRadius="{StaticResource CornerRadiusCompact}"
-                                             Padding="12,6"
-                                             Margin="0,4"/>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </WrapPanel>
-
-            <!-- Application Folders Section -->
-            <TextBlock Text="Application Folders"
-                       FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="Medium"
+            <ItemsControl ItemsSource="{Binding Libraries}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <HyperlinkButton Content="{Binding Name}"
+                                         Command="{Binding DataContext.OpenLibraryLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         CommandParameter="{Binding Url}"
+                                         Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                         CornerRadius="{StaticResource CornerRadiusCompact}"
+                                         Padding="12,6" Margin="0,4"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="{local:Loc Key=About_ApplicationFolders, Fallback=Application Folders}"
+                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,24,0,8"/>
-
-            <!-- App Data Folder Button -->
-            <Button Content="📁 AppData Folder"
-                    Command="{Binding OpenAppDataFolderCommand}"
-                    Padding="8,8"
+            <Button Content="{local:Loc Key=About_AppDataFolder, Fallback=AppData Folder}"
+                    Command="{Binding OpenAppDataFolderCommand}" Padding="8,8"
                     CornerRadius="{StaticResource CornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"/>
-
-            <!-- Temp Folder Button -->
-            <Button Content="📂 Temp Folder"
-                    Command="{Binding OpenTempFolderCommand}"
-                    Padding="8,8"
-                    Margin="0,8,0,0"
+            <Button Content="{local:Loc Key=About_TempFolder, Fallback=Temp Folder}"
+                    Command="{Binding OpenTempFolderCommand}" Padding="8,8" Margin="0,8,0,0"
                     CornerRadius="{StaticResource CornerRadiusCard}"
                     Background="{DynamicResource ControlFillColorDefaultBrush}"/>
-
         </StackPanel>
     </ScrollViewer>
 </UserControl>

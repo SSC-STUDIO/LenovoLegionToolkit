@@ -15,4 +15,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
+  </ItemGroup>
 </Project>

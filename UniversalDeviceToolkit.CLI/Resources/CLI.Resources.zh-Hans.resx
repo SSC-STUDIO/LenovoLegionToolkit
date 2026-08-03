@@ -48,6 +48,10 @@
 Universal Device Toolkit 必须在后台运行，并且必须在设置中开启 CLI 选项才能使用此工具。</value>
   </data>
 
+  <data name="CLI_Option_Language_Description" xml:space="preserve">
+    <value>临时选择显示语言。</value>
+  </data>
+
   <data name="CLI_Command_Status_Description" xml:space="preserve">
     <value>显示正在运行的应用状态以及启动相关的开关</value>
   </data>

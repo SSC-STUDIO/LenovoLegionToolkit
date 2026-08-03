@@ -1,9 +1,14 @@
 using System.Runtime.InteropServices;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Resources;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
-var command = args.FirstOrDefault() ?? "status";
-var commandArguments = args.Skip(1).ToArray();
+var languageArguments = LanguageArguments.Parse(args);
+LocalizationRuntime.Initialize(languageArguments.OverrideCulture, persist: false);
+var command = languageArguments.Remaining.FirstOrDefault() ?? "status";
+var commandArguments = languageArguments.Remaining.Skip(1).ToArray();
 
 return command.ToLowerInvariant() switch
 {
@@ -23,27 +28,33 @@ return command.ToLowerInvariant() switch
     _ => PrintUnknownCommand(command)
 };
 
+static string T(string key, string fallback, params object[] args)
+{
+    var value = CrossPlatformStrings.Get(key, fallback);
+    return args.Length == 0 ? value : string.Format(LocalizationRuntime.CurrentCulture, value, args);
+}
+
 static int PrintStatus()
 {
     var status = CrossPlatformStatus.Create();
 
-    Console.WriteLine($"{status.ProductName} cross-platform diagnostics");
-    Console.WriteLine($"Version: {status.Version}");
-    Console.WriteLine($"OS: {status.OsDescription}");
-    Console.WriteLine($"Architecture: {status.Architecture}");
-    Console.WriteLine($"Machine: {status.MachineName}");
-    Console.WriteLine($"Runtime: {status.DotNetRuntime}");
-    Console.WriteLine($"Hardware: {FormatHardwareSummary(status.Hardware)}");
-    Console.WriteLine($"Telemetry: {FormatTelemetrySummary(status.Telemetry)}");
-    Console.WriteLine($"Power: {FormatPowerSummary(status.Power)}");
+    Console.WriteLine($"{status.ProductName} {T("Help_Title", "cross-platform diagnostics")}");
+    Console.WriteLine($"{T("Label_Version", "Version")}: {status.Version}");
+    Console.WriteLine($"{T("Label_OS", "OS")}: {status.OsDescription}");
+    Console.WriteLine($"{T("Label_Architecture", "Architecture")}: {status.Architecture}");
+    Console.WriteLine($"{T("Label_Machine", "Machine")}: {status.MachineName}");
+    Console.WriteLine($"{T("Label_Runtime", "Runtime")}: {status.DotNetRuntime}");
+    Console.WriteLine($"{T("Label_Hardware", "Hardware")}: {FormatHardwareSummary(status.Hardware)}");
+    Console.WriteLine($"{T("Label_Telemetry", "Telemetry")}: {FormatTelemetrySummary(status.Telemetry)}");
+    Console.WriteLine($"{T("Label_Power", "Power")}: {FormatPowerSummary(status.Power)}");
     Console.WriteLine($"Power profile: {FormatPowerProfileSummary(status.PowerProfile)}");
     Console.WriteLine($"CPU governor: {FormatCpuGovernorSummary(status.CpuGovernor)}");
     Console.WriteLine($"Battery charge limit: {FormatBatteryChargeLimitSummary(status.BatteryChargeLimit)}");
     Console.WriteLine($"Display brightness: {FormatDisplayBrightnessSummary(status.DisplayBrightness)}");
     Console.WriteLine($"Plugins: {FormatPluginSummary(status.Plugins)}");
-    Console.WriteLine($"Controls: {FormatControlSummary(status.Controls)}");
+    Console.WriteLine($"{T("Label_Controls", "Controls")}: {FormatControlSummary(status.Controls)}");
     Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
-    Console.WriteLine($"Support level: {status.SupportLevel}");
+    Console.WriteLine($"{T("Label_SupportLevel", "Support level")}: {status.SupportLevel}");
     Console.WriteLine();
 
     foreach (var capability in status.Capabilities)
@@ -68,7 +79,7 @@ static int PrintHardware()
 {
     var hardware = CrossPlatformStatus.Create().Hardware;
 
-    Console.WriteLine("Hardware identity");
+    Console.WriteLine(T("Hardware_Title", "Hardware identity"));
     Console.WriteLine($"Vendor: {ValueOrUnknown(hardware.Vendor)}");
     Console.WriteLine($"Model: {ValueOrUnknown(hardware.Model)}");
     Console.WriteLine($"Product: {ValueOrUnknown(hardware.ProductName)}");
@@ -296,22 +307,23 @@ static int PrintDoctor()
 
 static int PrintHelp()
 {
-    Console.WriteLine("Universal Device Toolkit cross-platform diagnostics");
+    Console.WriteLine(T("Help_Title", "Universal Device Toolkit cross-platform diagnostics"));
     Console.WriteLine();
     Console.WriteLine("Usage:");
-    Console.WriteLine("  udt status    Print human-readable platform support status.");
-    Console.WriteLine("  udt json      Print platform support status as JSON.");
-    Console.WriteLine("  udt hardware  Print basic hardware identity for device-pack matching.");
-    Console.WriteLine("  udt telemetry Print safe read-only CPU, memory, and temperature telemetry.");
-    Console.WriteLine("  udt power     Print safe read-only battery and external power status.");
-    Console.WriteLine("  udt profile   Print platform power profile, or set it with a profile argument.");
-    Console.WriteLine("  udt plugins   Inspect plugin manifests without loading Windows/WPF assemblies.");
-    Console.WriteLine("  udt controls  Print writable and hidden cross-platform hardware controls.");
-    Console.WriteLine("  udt set <id> <value>  Set a writable cross-platform control.");
-    Console.WriteLine("  udt elevate <command> [arguments]  Restart a write command through Windows UAC when needed.");
-    Console.WriteLine("  udt support   Print safe basic-mode device support matching.");
-    Console.WriteLine("  udt doctor    Print aggregated cross-platform readiness checks.");
-    Console.WriteLine("  udt help      Show this help.");
+    Console.WriteLine($"  udt status    {T("Help_Status", "Print human-readable platform support status.")}");
+    Console.WriteLine($"  udt json      {T("Help_Json", "Print platform support status as JSON.")}");
+    Console.WriteLine($"  udt hardware  {T("Help_Hardware", "Print basic hardware identity for device-pack matching.")}");
+    Console.WriteLine($"  udt telemetry {T("Help_Telemetry", "Print safe read-only CPU, memory, and temperature telemetry.")}");
+    Console.WriteLine($"  udt power     {T("Help_Power", "Print safe read-only battery and external power status.")}");
+    Console.WriteLine($"  udt profile   {T("Help_Profile", "Print platform power profile, or set it with a profile argument.")}");
+    Console.WriteLine($"  udt plugins   {T("Help_Plugins", "Inspect plugin manifests without loading Windows/WPF assemblies.")}");
+    Console.WriteLine($"  udt controls  {T("Help_Controls", "Print writable and hidden cross-platform hardware controls.")}");
+    Console.WriteLine($"  udt set <id> <value>  {T("Help_Set", "Set a writable cross-platform control.")}");
+    Console.WriteLine($"  udt elevate <command> [arguments]  {T("Help_Elevate", "Restart a write command through Windows UAC when needed.")}");
+    Console.WriteLine($"  udt support   {T("Help_Support", "Print safe basic-mode device support matching.")}");
+    Console.WriteLine($"  udt doctor    {T("Help_Doctor", "Print aggregated cross-platform readiness checks.")}");
+    Console.WriteLine($"  udt help      {T("Help_Help", "Show this help.")}");
+    Console.WriteLine("  udt --language <culture>  Select a language for this invocation.");
     Console.WriteLine();
     Console.WriteLine("Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion.");
     return 0;
@@ -435,7 +447,8 @@ static string FormatEnergy(double? nowWh, double? fullWh, double? designWh)
 
 static int PrintUnknownCommand(string command)
 {
-    Console.Error.WriteLine($"Unknown command '{command}'. Run 'udt help'.");
+    Console.Error.WriteLine(string.Format(
+        T("Error_UnknownCommand", "Unknown command '{0}'. Run 'udt help'."), command));
     return 2;
 }
 
@@ -559,3 +572,45 @@ internal sealed record CrossPlatformStatus(
 }
 
 internal sealed record CapabilityStatus(string Name, bool Available, string Detail);
+
+internal sealed record LanguageArguments(CultureInfo? OverrideCulture, IReadOnlyList<string> Remaining)
+{
+    public static LanguageArguments Parse(IReadOnlyList<string> args)
+    {
+        var remaining = new List<string>();
+        CultureInfo? culture = null;
+
+        for (var index = 0; index < args.Count; index++)
+        {
+            var argument = args[index];
+            if (argument.StartsWith("--language=", StringComparison.OrdinalIgnoreCase))
+            {
+                culture = LocalizationCatalog.NormalizeCulture(argument["--language=".Length..]);
+                continue;
+            }
+
+            if (argument.Equals("--language", StringComparison.OrdinalIgnoreCase)
+                && index + 1 < args.Count)
+            {
+                culture = LocalizationCatalog.NormalizeCulture(args[++index]);
+                continue;
+            }
+
+            remaining.Add(argument);
+        }
+
+        return new LanguageArguments(culture, remaining);
+    }
+}
+
+internal static class CrossPlatformStrings
+{
+    private static readonly ResourceManagerStringLocalizer Localizer = new(
+        new ResourceManager(
+            "UniversalDeviceToolkit.CrossPlatform.Resources.Resource",
+            typeof(CrossPlatformStrings).Assembly));
+
+    static CrossPlatformStrings() => Localizer.CurrentCulture = LocalizationRuntime.CurrentCulture;
+
+    public static string Get(string key, string fallback) => Localizer.GetString(key, fallback);
+}

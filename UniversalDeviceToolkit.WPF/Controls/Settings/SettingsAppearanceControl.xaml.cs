@@ -1,19 +1,22 @@
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
 using UniversalDeviceToolkit.Lib;
-using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
+using Wpf.Ui.Controls;
+using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings
 {
@@ -29,6 +32,8 @@ public partial class SettingsAppearanceControl
     private bool _isRefreshing;
     private bool _isLanguagePackOperationInProgress;
     private CultureInfo? _currentLanguage;
+    private readonly List<System.Windows.Controls.Button> _accentSwatchButtons = [];
+    private ColorPickerControl? _customAccentColorPicker;
 
     public SettingsAppearanceControl()
     {
@@ -70,7 +75,6 @@ public partial class SettingsAppearanceControl
         _fontComboBox.SetItems(Enum.GetValues<AppFontStyle>(), _settings.Store.AppFontStyle, GetFontStyleDisplayName);
         _uiScaleComboBox.SetItems(UiScaleSteps, GetCurrentUiScaleStep(), GetUiScaleDisplayName);
 
-        _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
         _applyAccentColorToSystemCheckBox.IsChecked = _settings.Store.ApplyAccentColorToSystem;
         _applyAccentColorToThemeCheckBox.IsChecked = _settings.Store.ApplyAccentColorToTheme;
         InitializeAccentColorSwatches();
@@ -313,71 +317,81 @@ public partial class SettingsAppearanceControl
     private static object GetUiScaleDisplayName((AppTextSize TextSize, AppScale Scale) step) =>
         step.Scale == AppScale.Standard ? $"{(int)step.Scale}% ({Resource.SettingsPage_Font_Default})" : $"{(int)step.Scale}%";
 
-    private void AccentColorSourceComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (_isRefreshing)
-            return;
-
-        if (!_accentColorSourceComboBox.TryGetSelectedItem(out AccentColorSource state))
-            return;
-
-        _settings.Store.AccentColorSource = state;
-        _settings.Store.ThemeStylePreset = ThemeStylePreset.Default;
-        _settings.SynchronizeStore();
-        _themeManager.Apply();
-    }
-
-    // Sentinel Tag for the rainbow "follow system" swatch (all other swatches carry an RGBColor Tag).
+    // Sentinel Tag for the "follow system" swatch (all other preset swatches carry an RGBColor Tag).
     private const string SystemAccentSwatchTag = "System";
 
     private void InitializeAccentColorSwatches()
     {
         _accentColorSwatchesPanel.Children.Clear();
+        _accentSwatchButtons.Clear();
+        _customAccentColorPicker = null;
 
-        // Rainbow/system dot first: clicking it follows the Windows accent color.
-        var systemBrush = new LinearGradientBrush
-        {
-            StartPoint = new Point(0, 0),
-            EndPoint = new Point(1, 1),
-            GradientStops =
-            {
-                new GradientStop(Color.FromRgb(0xE8, 0x11, 0x23), 0.0),
-                new GradientStop(Color.FromRgb(0xF7, 0x63, 0x0C), 0.2),
-                new GradientStop(Color.FromRgb(0xFF, 0xB9, 0x00), 0.4),
-                new GradientStop(Color.FromRgb(0x10, 0x7C, 0x10), 0.6),
-                new GradientStop(Color.FromRgb(0x00, 0x78, 0xD4), 0.8),
-                new GradientStop(Color.FromRgb(0xB1, 0x46, 0xC2), 1.0),
-            }
-        };
-        _accentColorSwatchesPanel.Children.Add(CreateAccentSwatch(systemBrush, SystemAccentSwatchTag));
+        // Use the actual Windows accent instead of the old rainbow placeholder.
+        var systemColor = GetSystemAccentColor();
+        _accentColorSwatchesPanel.Children.Add(CreateAccentSwatch(
+            new SolidColorBrush(systemColor.ToColor()),
+            SystemAccentSwatchTag,
+            LibResource.AccentColorSource_System));
 
         foreach (var (color, _) in AccentColorPresets.Swatches)
-            _accentColorSwatchesPanel.Children.Add(CreateAccentSwatch(new SolidColorBrush(color.ToColor()), color));
+            _accentColorSwatchesPanel.Children.Add(CreateAccentSwatch(
+                new SolidColorBrush(color.ToColor()),
+                color,
+                Resource.SettingsPage_AccentColor_Title));
+
+        var customColor = _settings.Store.AccentColorSource == AccentColorSource.Custom &&
+                          _settings.Store.AccentColor is RGBColor storedCustomColor
+            ? storedCustomColor.ToColor()
+            : systemColor.ToColor();
+        var customPicker = new ColorPickerControl
+        {
+            Margin = new Thickness(0, 0, 8, 8),
+            ButtonSize = 48,
+            ButtonContent = new SymbolIcon
+            {
+                Symbol = SymbolRegular.Eyedropper24,
+                FontSize = 21,
+                Foreground = Brushes.White,
+            },
+            ButtonToolTip = LibResource.AccentColorSource_Custom,
+            SelectedColor = customColor,
+        };
+        customPicker.SetValue(AutomationProperties.NameProperty, LibResource.AccentColorSource_Custom);
+        customPicker.ColorChangedDelayed += CustomAccentColorPicker_ColorChangedDelayed;
+        _customAccentColorPicker = customPicker;
+        _accentColorSwatchesPanel.Children.Add(customPicker);
+
+        UpdateAccentColorSwatchSelection();
     }
 
-    private System.Windows.Controls.Button CreateAccentSwatch(Brush fill, object tag)
+    private System.Windows.Controls.Button CreateAccentSwatch(Brush fill, object tag, string toolTip)
     {
         var dot = new Border
         {
-            Width = 32,
-            Height = 32,
-            CornerRadius = new CornerRadius(16),
+            Width = 46,
+            Height = 46,
+            CornerRadius = new CornerRadius(23),
             Background = fill,
+            BorderBrush = GetSwatchStrokeBrush(),
+            BorderThickness = new Thickness(1),
         };
 
         var button = new System.Windows.Controls.Button
         {
-            Width = 36,
-            Height = 36,
-            Margin = new Thickness(0, 0, 8, 8),
+            Width = 52,
+            Height = 52,
+            Margin = new Thickness(0, 0, 4, 8),
             Padding = new Thickness(0),
             Background = System.Windows.Media.Brushes.Transparent,
             BorderThickness = new Thickness(0),
             Cursor = System.Windows.Input.Cursors.Hand,
             Content = dot,
             Tag = tag,
+            ToolTip = toolTip,
         };
+        button.SetValue(AutomationProperties.NameProperty, toolTip);
         button.Click += AccentColorSwatch_Click;
+        _accentSwatchButtons.Add(button);
         return button;
     }
 
@@ -408,11 +422,86 @@ public partial class SettingsAppearanceControl
         if (tag is RGBColor selectedColor)
             ApplyAccentColorToSystemIfEnabled(selectedColor);
         _themeManager.Apply();
+        UpdateAccentColorSwatchSelection();
+    }
 
-        // Keep the advanced source combo in sync without re-entering its SelectionChanged handler.
-        _isRefreshing = true;
-        _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
-        _isRefreshing = false;
+    private void CustomAccentColorPicker_ColorChangedDelayed(object? sender, EventArgs e)
+    {
+        if (_isRefreshing || _customAccentColorPicker is null)
+            return;
+
+        var selectedColor = _customAccentColorPicker.SelectedColor.ToRGBColor();
+        _settings.Store.AccentColorSource = AccentColorSource.Custom;
+        _settings.Store.AccentColor = selectedColor;
+        _settings.Store.ThemeStylePreset = ThemeStylePreset.Default;
+        _settings.SynchronizeStore();
+        ApplyAccentColorToSystemIfEnabled(selectedColor);
+        _themeManager.Apply();
+        UpdateAccentColorSwatchSelection();
+    }
+
+    private RGBColor GetSystemAccentColor()
+    {
+        try
+        {
+            return SystemTheme.GetAccentColor();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Couldn't read the Windows accent color; using the default blue swatch.", ex);
+
+            return AccentColorPresets.Swatches[0].Color;
+        }
+    }
+
+    private Brush GetAccentSelectionBrush() =>
+        Application.Current?.TryFindResource("SystemAccentColorPrimaryBrush") as Brush
+        ?? Brushes.DodgerBlue;
+
+    private Brush GetSwatchStrokeBrush() =>
+        Application.Current?.TryFindResource("ControlStrokeColorDefaultBrush") as Brush
+        ?? new SolidColorBrush(Color.FromArgb(90, 90, 90, 90));
+
+    private void UpdateAccentColorSwatchSelection()
+    {
+        var isSystem = _settings.Store.AccentColorSource == AccentColorSource.System;
+        var selectedColor = _settings.Store.AccentColor;
+        var selectionBrush = GetAccentSelectionBrush();
+
+        foreach (var button in _accentSwatchButtons)
+        {
+            if (button.Content is not Border dot)
+                continue;
+
+            if (button.Tag is string systemSwatchTag && systemSwatchTag == SystemAccentSwatchTag)
+                dot.Background = new SolidColorBrush(GetSystemAccentColor().ToColor());
+
+            var selected = button.Tag is string systemTag && systemTag == SystemAccentSwatchTag
+                ? isSystem
+                : !isSystem && button.Tag is RGBColor preset && selectedColor is RGBColor custom && preset == custom;
+
+            dot.BorderBrush = selected ? selectionBrush : GetSwatchStrokeBrush();
+            dot.BorderThickness = selected ? new Thickness(3) : new Thickness(1);
+        }
+
+        if (_customAccentColorPicker is not null)
+        {
+            var customSelected = _settings.Store.AccentColorSource == AccentColorSource.Custom &&
+                                 selectedColor is RGBColor custom &&
+                                 !AccentColorPresets.Swatches.Any(s => s.Color == custom);
+            _customAccentColorPicker.ButtonBorderBrush = customSelected ? selectionBrush : GetSwatchStrokeBrush();
+            _customAccentColorPicker.ButtonBorderThickness = customSelected ? new Thickness(3) : new Thickness(1);
+            _customAccentColorPicker.ButtonEffect = customSelected
+                ? new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color = Color.FromArgb(120, 0, 120, 255),
+                    BlurRadius = 12,
+                    ShadowDepth = 0,
+                    Opacity = 0.8,
+                }
+                : null;
+        }
     }
 
     private void ApplyAccentColorToThemeCheckBox_Checked(object sender, RoutedEventArgs e) => OnApplyAccentColorToThemeChanged();

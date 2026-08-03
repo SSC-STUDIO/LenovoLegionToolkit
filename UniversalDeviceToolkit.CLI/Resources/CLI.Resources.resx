@@ -48,6 +48,10 @@
 Universal Device Toolkit must be running in the background and CLI setting must be turned on for this utility to work.</value>
   </data>
 
+  <data name="CLI_Option_Language_Description" xml:space="preserve">
+    <value>Temporarily select the display language.</value>
+  </data>
+
   <data name="CLI_Command_Status_Description" xml:space="preserve">
     <value>Show running app status and startup-related switches</value>
   </data>

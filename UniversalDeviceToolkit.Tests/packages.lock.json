@@ -898,7 +898,8 @@
         "type": "Project",
         "dependencies": {
           "System.CommandLine": "[2.0.10, )",
-          "UniversalDeviceToolkit.CLI.Lib": "[5.0.1, )"
+          "UniversalDeviceToolkit.CLI.Lib": "[5.0.1, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
         }
       },
       "udt-gui": {

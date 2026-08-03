@@ -26,6 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
     <Resource Include="..\..\Assets\Icon.ico">
       <Link>Icon.ico</Link>
     </Resource>

@@ -1,16 +1,20 @@
 using System.Globalization;
 using System.Resources;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.CLI;
 
 public static class Strings
 {
-    private static readonly ResourceManager _manager = new(
+    private static readonly ResourceManagerStringLocalizer _localizer = new(
+        new ResourceManager(
         "UniversalDeviceToolkit.CLI.Resources.CLI.Resources",
-        typeof(Strings).Assembly);
+        typeof(Strings).Assembly));
+
+    public static void ApplyCulture(CultureInfo culture) => _localizer.CurrentCulture = culture;
 
     public static string Get(string key, string fallback) =>
-        _manager.GetString(key, CultureInfo.CurrentUICulture) ?? fallback;
+        _localizer.GetString(key, fallback);
 
     public static string Get(string key, string fallback, params object[] args)
     {

@@ -9,6 +9,7 @@ namespace UniversalDeviceToolkit.Avalonia;
 public partial class MainWindow : Window
 {
     private readonly IPlatformServices _platformServices;
+    private string _activePage = "Dashboard";
 
     public MainWindow(IPlatformServices platformServices)
     {
@@ -64,20 +65,41 @@ public partial class MainWindow : Window
 
     private void ShowDashboardPage()
     {
+        _activePage = "Dashboard";
         MainContent.Content = new DashboardPage(_platformServices);
         SetActiveButton(DashboardButton);
     }
 
     private void ShowAboutPage()
     {
+        _activePage = "About";
         MainContent.Content = new AboutPage();
         SetActiveButton(AboutButton);
     }
 
     public void ShowSettingsPage()
     {
+        _activePage = "Settings";
         MainContent.Content = new SettingsPage(_platformServices);
         SetActiveButton(SettingsButton);
+    }
+
+    public void RefreshForCulture()
+    {
+        Title = Localization.AvaloniaLocalization.GetString("Window_Title", "Universal Device Toolkit");
+
+        switch (_activePage)
+        {
+            case "About":
+                ShowAboutPage();
+                break;
+            case "Settings":
+                ShowSettingsPage();
+                break;
+            default:
+                ShowDashboardPage();
+                break;
+        }
     }
 
     private void SetActiveButton(Button activeButton)

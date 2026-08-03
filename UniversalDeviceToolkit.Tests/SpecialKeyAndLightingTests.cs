@@ -10,7 +10,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests;
 
 [Trait("Category", TestCategories.Unit)]
-public sealed class PhaseCSpecialKeyAndLightingTests
+public sealed class SpecialKeyAndLightingTests
 {
     [Fact]
     public void SpecialKeyDiscovery_Catalog_CoversEnumMembersUsedInListener()

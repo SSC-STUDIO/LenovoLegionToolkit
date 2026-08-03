@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsPage">
 
     <Grid ColumnDefinitions="280,Auto,*">
@@ -9,7 +10,7 @@
                 Padding="12,16">
             <DockPanel>
                 <TextBlock DockPanel.Dock="Top"
-                           Text="Settings"
+                           Text="{local:Loc Key=Settings_Title, Fallback=Settings}"
                            FontSize="{StaticResource FontSizeDisplaySection}"
                            FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"

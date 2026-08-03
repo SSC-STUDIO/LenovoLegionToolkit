@@ -3,6 +3,8 @@ using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.IO;
 using System.Threading.Tasks;
+using System.Globalization;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.CLI.Lib;
 
 namespace UniversalDeviceToolkit.CLI;
@@ -13,6 +15,8 @@ public class Program
     {
         try
         {
+            var culture = LocalizationRuntime.Initialize(ReadLanguageOverride(args), persist: false);
+            Strings.ApplyCulture(culture);
             return await BuildCommandLine()
                 .Parse(args)
                 .InvokeAsync(new InvocationConfiguration
@@ -34,6 +38,10 @@ public class Program
             "Utility that controls Universal Device Toolkit from command line.\n\n" +
             "Universal Device Toolkit must be running in the background and CLI setting must be " +
             "turned on for this utility to work."));
+        root.Options.Add(new Option<string?>("--language")
+        {
+            Description = Strings.Get("CLI_Option_Language_Description", "Temporarily select the display language.")
+        });
 
         root.Add(BuildQuickActionsCommand());
         root.Add(BuildFeatureCommand());
@@ -44,6 +52,22 @@ public class Program
         root.Add(BuildStatusCommand());
 
         return root;
+    }
+
+    private static string? ReadLanguageOverride(IReadOnlyList<string> args)
+    {
+        for (var index = 0; index < args.Count; index++)
+        {
+            var argument = args[index];
+            if (argument.StartsWith("--language=", StringComparison.OrdinalIgnoreCase))
+                return argument["--language=".Length..];
+
+            if (argument.Equals("--language", StringComparison.OrdinalIgnoreCase)
+                && index + 1 < args.Count)
+                return args[index + 1];
+        }
+
+        return null;
     }
 
     private static Command BuildStatusCommand()

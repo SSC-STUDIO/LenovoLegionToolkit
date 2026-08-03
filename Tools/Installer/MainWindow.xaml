@@ -84,6 +84,7 @@
                     <TextBlock x:Name="LanguageText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
                     <Border Style="{StaticResource CardBorderStyle}">
                         <ComboBox x:Name="LanguageCombo" FontSize="13"
+                                  SelectionChanged="LanguageCombo_SelectionChanged"
                                   Style="{StaticResource ThemedComboBoxStyle}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Microsoft.Win32;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.Installer;
 
@@ -23,7 +24,7 @@ internal static class FirstRunState
     {
         Directory.CreateDirectory(InstallerConstants.AppDataDir);
         // Match the app byte-for-byte: it writes CultureInfo.Name ("zh-Hans", "pt-BR").
-        var normalized = new CultureInfo(cultureName).Name;
+        var normalized = LocalizationCatalog.NormalizeCulture(cultureName).Name;
         File.WriteAllText(LanguagePath, normalized);
         InstallerLog.Info($"Saved first-run language '{normalized}'.");
     }
@@ -46,34 +47,12 @@ internal sealed record AppLanguage(string Culture, string NativeName);
 
 internal static class AppLanguages
 {
-    public static readonly AppLanguage[] All =
-    [
-        new("en", "English"),
-        new("ar", "العربية"),
-        new("bg", "български"),
-        new("cs", "čeština"),
-        new("de", "Deutsch"),
-        new("el", "Ελληνικά"),
-        new("es", "español"),
-        new("fr", "français"),
-        new("hu", "magyar"),
-        new("it", "italiano"),
-        new("ja", "日本語"),
-        new("lv", "latviešu"),
-        new("nl-NL", "Nederlands"),
-        new("pl", "polski"),
-        new("pt", "português"),
-        new("pt-BR", "português do Brasil"),
-        new("ro", "română"),
-        new("ru", "русский"),
-        new("sk", "slovenčina"),
-        new("tr", "Türkçe"),
-        new("uk", "українська"),
-        new("vi", "Tiếng Việt"),
-        new("zh-Hans", "简体中文"),
-        new("zh-Hant", "繁體中文"),
-        new("uz-Latn-UZ", "Uzbek (Latin)"),
-    ];
+    public static AppLanguage[] All =>
+        LocalizationCatalog.SupportedCultures
+            .Select(culture => new AppLanguage(
+                culture.Name,
+                LocalizationCatalog.GetDisplayName(culture)))
+            .ToArray();
 
     /// <summary>Cultures whose satellite assemblies ship inside the payload zip.</summary>
     public static bool IsBundled(string cultureName) =>
@@ -81,23 +60,12 @@ internal static class AppLanguages
         cultureName.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase) ||
         cultureName.Equals("zh-Hant", StringComparison.OrdinalIgnoreCase);
 
-    /// <summary>Same preference rules as the app's GetPreferredStartupLanguage.</summary>
+    /// <summary>Same preference rules as the app's shared localization runtime.</summary>
     public static AppLanguage GetPreferred()
     {
-        var systemCulture = CultureInfo.CurrentUICulture;
-
-        if (systemCulture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase))
-        {
-            var traditional = new[] { "TW", "HK", "MO" }.Any(r =>
-                systemCulture.Name.Contains(r, StringComparison.OrdinalIgnoreCase));
-            return All.First(l => l.Culture == (traditional ? "zh-Hant" : "zh-Hans"));
-        }
-
-        return All.FirstOrDefault(l => l.Culture.Equals(systemCulture.Name, StringComparison.OrdinalIgnoreCase))
-               ?? All.FirstOrDefault(l => l.Culture.Equals(systemCulture.Parent.Name, StringComparison.OrdinalIgnoreCase))
-               ?? All.FirstOrDefault(l => l.Culture.StartsWith(systemCulture.TwoLetterISOLanguageName + "-", StringComparison.OrdinalIgnoreCase)
-                                          || l.Culture.Equals(systemCulture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase))
-               ?? All[0];
+        var normalized = LocalizationCatalog.NormalizeCulture(CultureInfo.CurrentUICulture);
+        return All.First(language =>
+            language.Culture.Equals(normalized.Name, StringComparison.OrdinalIgnoreCase));
     }
 }
 
@@ -155,7 +123,7 @@ internal static class DevicePackMatcher
     }
 
     /// <summary>
-    /// Related packs first, then hardware, then a capped list of basics — mirrors the
+    /// Related packs first, then hardware, then a capped list of basics 鈥?mirrors the
     /// app's BuildSelectablePacks so the combo stays usable. Generic pack always last.
     /// </summary>
     public static DevicePackInfo[] BuildSelectable(DetectedMachine machine)

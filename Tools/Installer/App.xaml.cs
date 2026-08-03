@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.Installer;
 
@@ -77,6 +78,10 @@ public partial class App : Application
         InstallerLog.Enable();
         ApplySystemTheme();
         var args = InstallerArguments.Parse(e.Args);
+        var culture = args.LanguageCulture is null
+            ? LocalizationRuntime.Initialize()
+            : LocalizationRuntime.Initialize(LocalizationCatalog.NormalizeCulture(args.LanguageCulture), persist: false);
+        Strings.ApplyCulture(culture);
 
         if (args.Silent)
         {

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Help_Title"><value>Universal Device Toolkit 跨平台诊断工具</value></data>
+  <data name="Help_Status"><value>显示可读的平台支持状态。</value></data>
+  <data name="Help_Json"><value>以 JSON 格式显示平台支持状态。</value></data>
+  <data name="Help_Hardware"><value>显示检测到的硬件信息。</value></data>
+  <data name="Help_Telemetry"><value>显示操作系统遥测信息。</value></data>
+  <data name="Help_Power"><value>显示只读的电池和外接电源状态。</value></data>
+  <data name="Help_Profile"><value>读取或设置平台电源配置。</value></data>
+  <data name="Help_Plugins"><value>检查已发现的跨平台插件。</value></data>
+  <data name="Help_Controls"><value>显示跨平台控制能力。</value></data>
+  <data name="Help_Doctor"><value>显示汇总诊断报告。</value></data>
+  <data name="Help_Set"><value>执行受支持的写入控制。</value></data>
+  <data name="Help_Elevate"><value>需要时通过 Windows UAC 重新执行写入命令。</value></data>
+  <data name="Help_Help"><value>显示此帮助。</value></data>
+  <data name="Error_UnknownCommand"><value>未知命令“{0}”。请运行“udt help”。</value></data>
+  <data name="Label_Version"><value>版本</value></data>
+  <data name="Label_OS"><value>操作系统</value></data>
+  <data name="Label_Architecture"><value>架构</value></data>
+  <data name="Label_Machine"><value>计算机</value></data>
+  <data name="Label_Runtime"><value>运行时</value></data>
+  <data name="Label_Hardware"><value>硬件</value></data>
+  <data name="Label_Telemetry"><value>遥测</value></data>
+  <data name="Label_Power"><value>电源</value></data>
+  <data name="Label_Controls"><value>控制</value></data>
+  <data name="Label_SupportLevel"><value>支持级别</value></data>
+</root>

@@ -95,7 +95,10 @@
         }
       },
       "udt": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+        }
       },
       "universaldevicetoolkit.lib.abstractions": {
         "type": "Project"

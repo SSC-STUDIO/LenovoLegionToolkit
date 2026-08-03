@@ -4,6 +4,8 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
+using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Platform.Linux;
 using UniversalDeviceToolkit.Platform.MacOS;
@@ -22,6 +24,9 @@ public partial class App : Application
 
     public App()
     {
+        var culture = LocalizationRuntime.Initialize();
+        AvaloniaLocalization.ApplyCulture(culture);
+        LocalizationRuntime.CultureChanged += OnCultureChanged;
         PlatformServices = CreatePlatformServices();
         ShowCommand = new RelayCommand(ShowMainWindow);
         SettingsCommand = new RelayCommand(OpenSettings);
@@ -69,8 +74,8 @@ public partial class App : Application
         {
             Items =
             {
-                new NativeMenuItem("Show") { Command = ShowCommand },
-                new NativeMenuItem("Settings") { Command = SettingsCommand },
+                new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Show", "Show")) { Command = ShowCommand },
+                new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Settings", "Settings")) { Command = SettingsCommand },
                 new NativeMenuItemSeparator(),
                 new NativeMenuItem("Exit") { Command = ExitCommand },
             }
@@ -78,7 +83,7 @@ public partial class App : Application
 
         _trayIcon = new TrayIcon
         {
-            ToolTipText = "Universal Device Toolkit",
+            ToolTipText = AvaloniaLocalization.GetString("Window_Title", "Universal Device Toolkit"),
             Menu = menu,
         };
 
@@ -91,6 +96,18 @@ public partial class App : Application
         catch
         {
             // Icon resource not found; tray icon will display without a custom icon
+        }
+    }
+
+    private void OnCultureChanged(object? sender, CultureChangedEventArgs e)
+    {
+        AvaloniaLocalization.ApplyCulture(e.Culture);
+
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+            && desktop.MainWindow is MainWindow mainWindow)
+        {
+            mainWindow.RefreshForCulture();
+            SetupTrayIcon();
         }
     }
 

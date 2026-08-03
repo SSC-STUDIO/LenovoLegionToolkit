@@ -11,7 +11,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests;
 
 [Trait("Category", TestCategories.Unit)]
-public sealed class PhaseBAutomationSafeStartTests
+public sealed class AutomationSafeStartTests
 {
     [Fact]
     public void BatteryPercentageTrigger_DurationAndCooldown_AreClampedNonNegative()

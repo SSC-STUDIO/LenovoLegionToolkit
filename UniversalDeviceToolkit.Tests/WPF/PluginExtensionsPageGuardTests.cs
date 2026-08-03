@@ -213,7 +213,23 @@ public sealed class PluginExtensionsPageGuardTests
         {
             var path = Path.Combine(candidateRoot, expectedRelativePath);
             if (File.Exists(path))
-                return File.ReadAllText(path);
+            {
+                var source = File.ReadAllText(path);
+                if (expectedRelativePath.Equals(
+                        Path.Combine("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs"),
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    var metadataPath = Path.Combine(
+                        candidateRoot,
+                        "UniversalDeviceToolkit.WPF",
+                        "Pages",
+                        "PluginExtensionsPage.Metadata.cs");
+                    if (File.Exists(metadataPath))
+                        source += Environment.NewLine + File.ReadAllText(metadataPath);
+                }
+
+                return source;
+            }
         }
 
         throw new DirectoryNotFoundException($"Could not locate repository file '{expectedRelativePath}'.");

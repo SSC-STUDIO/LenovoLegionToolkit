@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
+using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Shared.Settings;
 using RoutedEventArgs = global::Avalonia.Interactivity.RoutedEventArgs;
 
@@ -58,6 +60,14 @@ public partial class SettingsAppearanceView : UserControl
         {
             RestorePreferences();
 
+            var languages = LocalizationCatalog.SupportedCultures
+                .Select(culture => new LanguageOption(culture, LocalizationCatalog.GetDisplayName(culture)))
+                .OrderBy(option => option.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+                .ToArray();
+            LanguageComboBox.ItemsSource = languages;
+            LanguageComboBox.SelectedItem = languages.FirstOrDefault(option =>
+                option.Culture.Name.Equals(LocalizationRuntime.CurrentCulture.Name, StringComparison.OrdinalIgnoreCase));
+
             ApplyAccentColorToThemeCheckBox.IsChecked = _applyAccentColorToTheme;
             AccentSwatches.ItemsSource = BuildSwatches();
             UpdateThemeCardSelection(GetCurrentThemeTag());
@@ -66,6 +76,14 @@ public partial class SettingsAppearanceView : UserControl
         {
             _isRefreshing = false;
         }
+    }
+
+    private async void LanguageComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing || LanguageComboBox.SelectedItem is not LanguageOption option)
+            return;
+
+        await LocalizationRuntime.SetCultureAsync(option.Culture, persist: true);
     }
 
     // Restores persisted theme/accent preferences into the live application and local UI state.
@@ -314,6 +332,11 @@ public partial class SettingsAppearanceView : UserControl
         (byte)(c.R * (1 - factor)),
         (byte)(c.G * (1 - factor)),
         (byte)(c.B * (1 - factor)));
+}
+
+internal sealed record LanguageOption(System.Globalization.CultureInfo Culture, string DisplayName)
+{
+    public override string ToString() => DisplayName;
 }
 
 /// <summary>

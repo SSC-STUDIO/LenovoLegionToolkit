@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Help_Title"><value>Universal Device Toolkit cross-platform diagnostics</value></data>
+  <data name="Help_Status"><value>Print human-readable platform support status.</value></data>
+  <data name="Help_Json"><value>Print platform support status as JSON.</value></data>
+  <data name="Help_Hardware"><value>Print detected hardware identity.</value></data>
+  <data name="Help_Telemetry"><value>Print operating system telemetry.</value></data>
+  <data name="Help_Power"><value>Print safe read-only battery and external power status.</value></data>
+  <data name="Help_Profile"><value>Read or set the platform power profile.</value></data>
+  <data name="Help_Plugins"><value>Inspect discovered cross-platform plugins.</value></data>
+  <data name="Help_Controls"><value>Print cross-platform control capabilities.</value></data>
+  <data name="Help_Doctor"><value>Print a consolidated diagnostic report.</value></data>
+  <data name="Help_Set"><value>Run a supported write control.</value></data>
+  <data name="Help_Elevate"><value>Restart a write command through Windows UAC when needed.</value></data>
+  <data name="Help_Help"><value>Show this help.</value></data>
+  <data name="Error_UnknownCommand"><value>Unknown command '{0}'. Run 'udt help'.</value></data>
+  <data name="Label_Version"><value>Version</value></data>
+  <data name="Label_OS"><value>OS</value></data>
+  <data name="Label_Architecture"><value>Architecture</value></data>
+  <data name="Label_Machine"><value>Machine</value></data>
+  <data name="Label_Runtime"><value>Runtime</value></data>
+  <data name="Label_Hardware"><value>Hardware</value></data>
+  <data name="Label_Telemetry"><value>Telemetry</value></data>
+  <data name="Label_Power"><value>Power</value></data>
+  <data name="Label_Controls"><value>Controls</value></data>
+  <data name="Label_SupportLevel"><value>Support level</value></data>
+</root>

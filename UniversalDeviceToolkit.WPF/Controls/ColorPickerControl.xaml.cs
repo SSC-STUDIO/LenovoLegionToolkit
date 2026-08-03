@@ -28,6 +28,50 @@ public partial class ColorPickerControl
         set => _colorPicker.SelectedColor = value;
     }
 
+    /// <summary>Content rendered on the circular color button (for example, an eyedropper icon).</summary>
+    public object? ButtonContent
+    {
+        get => _button.Content;
+        set => _button.Content = value;
+    }
+
+    /// <summary>Tooltip shown for the color button.</summary>
+    public object? ButtonToolTip
+    {
+        get => _button.ToolTip;
+        set => _button.ToolTip = value;
+    }
+
+    /// <summary>Gets or sets the diameter of the circular color button.</summary>
+    public double ButtonSize
+    {
+        get => _button.Width;
+        set
+        {
+            _button.Width = value;
+            _button.Height = value;
+            _popup.HorizontalOffset = (value - _popup.Width) / 2;
+        }
+    }
+
+    public System.Windows.Media.Brush? ButtonBorderBrush
+    {
+        get => _button.BorderBrush;
+        set => _button.BorderBrush = value;
+    }
+
+    public Thickness ButtonBorderThickness
+    {
+        get => _button.BorderThickness;
+        set => _button.BorderThickness = value;
+    }
+
+    public System.Windows.Media.Effects.Effect? ButtonEffect
+    {
+        get => _button.Effect;
+        set => _button.Effect = value;
+    }
+
     public event EventHandler? ColorChangedContinuous;
     public event EventHandler? ColorChangedDelayed;
 

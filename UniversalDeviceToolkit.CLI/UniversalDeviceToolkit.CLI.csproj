@@ -12,7 +12,8 @@
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DebugType>portable</DebugType>
     </PropertyGroup>
-    <ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
       <PackageReference Include="System.CommandLine" />
     </ItemGroup>
     <ItemGroup>

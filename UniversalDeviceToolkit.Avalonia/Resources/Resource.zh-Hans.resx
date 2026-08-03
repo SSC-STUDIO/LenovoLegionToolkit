@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Window_Title"><value>Universal Device Toolkit</value></data>
+  <data name="Nav_Show"><value>显示</value></data>
+  <data name="Navigation"><value>导航</value></data>
+  <data name="Nav_Dashboard"><value>仪表盘</value></data>
+  <data name="Nav_About"><value>关于</value></data>
+  <data name="Nav_Settings"><value>设置</value></data>
+  <data name="About_Version"><value>版本</value></data>
+  <data name="About_TranslationCredit"><value>感谢所有非英语语言的翻译贡献者。</value></data>
+  <data name="About_Links"><value>相关链接</value></data>
+  <data name="About_ProjectWebsite"><value>GitHub 项目主页</value></data>
+  <data name="About_LatestRelease"><value>GitHub 最新版本</value></data>
+  <data name="About_ThirdPartyLibraries"><value>第三方库</value></data>
+  <data name="About_ApplicationFolders"><value>应用文件夹</value></data>
+  <data name="About_AppDataFolder"><value>应用数据文件夹</value></data>
+  <data name="About_TempFolder"><value>临时文件夹</value></data>
+  <data name="Dashboard_Title"><value>仪表盘</value></data>
+  <data name="Dashboard_FeatureGroups"><value>功能组</value></data>
+  <data name="Dashboard_Sensors"><value>传感器</value></data>
+  <data name="Settings_Title"><value>设置</value></data>
+  <data name="Settings_Appearance"><value>外观</value></data>
+  <data name="Settings_Application"><value>应用行为</value></data>
+  <data name="Settings_Display"><value>显示</value></data>
+  <data name="Settings_Placeholder"><value>“{0}”设置将在此处实现。</value></data>
+  <data name="Appearance_Title"><value>外观</value></data>
+  <data name="Appearance_Description"><value>自定义应用的外观和使用体验。</value></data>
+  <data name="Appearance_ThemeMode"><value>全局界面颜色模式</value></data>
+  <data name="Appearance_Light"><value>亮色</value></data>
+  <data name="Appearance_Dark"><value>暗色</value></data>
+  <data name="Appearance_System"><value>跟随系统</value></data>
+  <data name="Appearance_ApplyAccent"><value>调整全局界面颜色时修改系统颜色</value></data>
+  <data name="Appearance_Accent"><value>全局界面强调色</value></data>
+  <data name="Appearance_Language"><value>语言</value></data>
+  <data name="Appearance_LanguageDescription"><value>选择应用显示语言。</value></data>
+  <data name="Application_Title"><value>应用行为</value></data>
+  <data name="Application_Description"><value>配置应用启动和使用过程中的行为。</value></data>
+  <data name="Application_LaunchStartup"><value>开机启动</value></data>
+  <data name="Application_LaunchStartupDescription"><value>Windows 启动时自动启动应用。</value></data>
+  <data name="Application_MinimizeTray"><value>最小化到系统托盘</value></data>
+  <data name="Application_MinimizeTrayDescription"><value>关闭窗口时继续在系统托盘中运行。</value></data>
+  <data name="Application_AutoRefresh"><value>自动刷新硬件数据</value></data>
+  <data name="Application_AutoRefreshDescription"><value>定期读取硬件传感器的最新数据。</value></data>
+  <data name="Display_Title"><value>显示</value></data>
+  <data name="Display_Description"><value>调整设备的显示相关设置。</value></data>
+  <data name="Display_RefreshRate"><value>刷新率</value></data>
+  <data name="Display_RefreshRateDescription"><value>选择显示刷新率，需要硬件支持。</value></data>
+  <data name="Display_Overdrive"><value>响应加速</value></data>
+  <data name="Display_OverdriveDescription"><value>启用显示响应加速以缩短像素响应时间。</value></data>
+</root>

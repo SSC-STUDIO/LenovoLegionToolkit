@@ -1,13 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsAppearanceView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
-        <TextBlock Text="Appearance"
+        <TextBlock Text="{local:Loc Key=Appearance_Title, Fallback=Appearance}"
                    FontSize="{StaticResource FontSizeDisplaySection}"
                    FontWeight="Medium"
                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
-        <TextBlock Text="Customize the look and feel of the application."
+        <TextBlock Text="{local:Loc Key=Appearance_Description, Fallback=Customize the look and feel of the application.}"
                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                    TextWrapping="Wrap"
                    Margin="0,0,0,8"/>
@@ -20,7 +20,7 @@
                 Padding="14,12">
             <StackPanel Spacing="10">
                 <!-- 1. Global interface color mode -->
-                <TextBlock Text="全局界面颜色模式"
+                <TextBlock Text="{local:Loc Key=Appearance_ThemeMode, Fallback=Global interface color mode}"
                            FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
@@ -75,7 +75,7 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Text="亮色" FontWeight="Medium" HorizontalAlignment="Center"/>
+                            <TextBlock Text="娴滎喛澹? FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button x:Name="ThemeDarkCard" Tag="Dark" Click="ThemeCard_Click"
@@ -126,7 +126,7 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Text="暗色" FontWeight="Medium" HorizontalAlignment="Center"/>
+                            <TextBlock Text="閺嗘澹? FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button x:Name="ThemeSystemCard" Tag="System" Click="ThemeCard_Click"
@@ -185,7 +185,7 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Text="跟随系统" FontWeight="Medium" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{local:Loc Key=Appearance_System, Fallback=Follow system}" FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -193,7 +193,7 @@
                 <!-- 3. Apply accent color to the whole theme -->
                 <CheckBox x:Name="ApplyAccentColorToThemeCheckBox"
                           FontWeight="Medium"
-                          Content="调整全局界面颜色时修改系统颜色"
+                          Content="{local:Loc Key=Appearance_ApplyAccent, Fallback=Change system color when changing the global interface color}"
                           IsCheckedChanged="ApplyAccentColorToThemeCheckBox_IsCheckedChanged"/>
 
                 <!-- 4. Separator -->
@@ -201,7 +201,7 @@
                         Background="{DynamicResource CardStrokeColorDefaultBrush}"/>
 
                 <!-- 5. Global interface accent color -->
-                <TextBlock Text="全局界面强调色"
+                <TextBlock Text="{local:Loc Key=Appearance_Accent, Fallback=Global interface accent color}"
                            FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
@@ -238,19 +238,15 @@
                 CornerRadius="{StaticResource CornerRadiusCard}"
                 Padding="16">
             <StackPanel Spacing="8">
-                <TextBlock Text="Language"
+                <TextBlock Text="{local:Loc Key=Appearance_Language, Fallback=Language}"
                            FontSize="{StaticResource FontSizeSubsection}"
                            FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                <TextBlock Text="Select the display language for the application."
+                <TextBlock Text="{local:Loc Key=Appearance_LanguageDescription, Fallback=Select the display language for the application.}"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                            FontSize="{StaticResource FontSizeSmallCaption}"/>
-                <ComboBox SelectedIndex="0" MinWidth="160" HorizontalAlignment="Left"
-                          Margin="0,8,0,0">
-                    <ComboBoxItem Content="English"/>
-                    <ComboBoxItem Content="中文（简体）"/>
-                    <ComboBoxItem Content="日本語"/>
-                </ComboBox>
+                <ComboBox x:Name="LanguageComboBox" MinWidth="220" HorizontalAlignment="Left"
+                          Margin="0,8,0,0" SelectionChanged="LanguageComboBox_SelectionChanged"/>
             </StackPanel>
         </Border>
     </StackPanel>

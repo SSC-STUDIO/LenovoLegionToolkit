@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
                  x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
@@ -7,13 +8,13 @@
         <StackPanel Spacing="24" Margin="24">
 
             <!-- Page Title -->
-            <TextBlock Text="Dashboard"
+            <TextBlock Text="{local:Loc Key=Dashboard_Title, Fallback=Dashboard}"
                        FontSize="{StaticResource FontSizePageTitle}"
                        FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
             <!-- Feature Groups -->
-            <TextBlock Text="Feature Groups"
+            <TextBlock Text="{local:Loc Key=Dashboard_FeatureGroups, Fallback=Feature Groups}"
                        FontSize="{StaticResource FontSizeSubsection}"
                        FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -43,7 +44,7 @@
             </ItemsControl>
 
             <!-- Sensors Panel -->
-            <TextBlock Text="Sensors"
+            <TextBlock Text="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
                        FontSize="{StaticResource FontSizeSubsection}"
                        FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"

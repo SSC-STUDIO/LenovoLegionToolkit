@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.Installer;
 
@@ -32,6 +33,7 @@ public partial class MainWindow : Window
     private bool _lastOperationFailed;
     private bool _languagePageInitialized;
     private bool _devicePageInitialized;
+    private bool _updatingLanguage;
 
     public MainWindow(InstallerArguments args)
     {
@@ -107,13 +109,55 @@ public partial class MainWindow : Window
             LanguageTitle.Text = Strings.Get("LanguageTitle");
             LanguageText.Text = Strings.Get("LanguageText");
             LanguageCombo.ItemsSource = AppLanguages.All;
-            LanguageCombo.SelectedItem = AppLanguages.GetPreferred();
+            LanguageCombo.SelectedItem = AppLanguages.All.FirstOrDefault(language =>
+                language.Culture.Equals(LocalizationRuntime.CurrentCulture.Name, StringComparison.OrdinalIgnoreCase))
+                ?? AppLanguages.GetPreferred();
         }
 
+        LanguageTitle.Text = Strings.Get("LanguageTitle");
+        LanguageText.Text = Strings.Get("LanguageText");
         NextButton.Content = Strings.Get("Next");
         BackButton.Visibility = Visibility.Visible;
         CancelButton.Visibility = Visibility.Visible;
         NextButton.Visibility = Visibility.Visible;
+    }
+
+    private async void LanguageCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_updatingLanguage || LanguageCombo.SelectedItem is not AppLanguage language)
+            return;
+
+        try
+        {
+            _updatingLanguage = true;
+            var culture = await LocalizationRuntime.SetCultureAsync(language.Culture, persist: false);
+            Strings.ApplyCulture(culture);
+            LocalizeStaticText();
+
+            switch (_currentPage)
+            {
+                case WizardPage.Welcome:
+                    ShowWelcome();
+                    break;
+                case WizardPage.Language:
+                    ShowLanguage();
+                    break;
+                case WizardPage.Device:
+                    _devicePageInitialized = false;
+                    ShowDevice();
+                    break;
+                case WizardPage.Location:
+                    ShowLocation();
+                    break;
+                case WizardPage.UninstallConfirm:
+                    ShowUninstallConfirm();
+                    break;
+            }
+        }
+        finally
+        {
+            _updatingLanguage = false;
+        }
     }
 
     private void ShowDevice()

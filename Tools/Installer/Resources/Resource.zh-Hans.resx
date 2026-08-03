@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="WindowTitle"><value>Universal Device Toolkit 安装程序</value></data>
+  <data name="WelcomeTitle"><value>欢迎使用 Universal Device Toolkit 安装程序</value></data>
+  <data name="WelcomeText"><value>将在你的计算机上安装 Universal Device Toolkit {0}。
+
+点击“下一步”继续。</value></data>
+  <data name="UpgradeDetected"><value>检测到已有安装，将执行升级。</value></data>
+  <data name="RuntimeMissing"><value>未找到 Microsoft .NET Desktop Runtime {0} 或更高版本。</value></data>
+  <data name="InstallRuntime"><value>自动安装运行时</value></data>
+  <data name="RuntimeInstalling"><value>正在下载并安装 .NET Desktop Runtime...</value></data>
+  <data name="RuntimeFailed"><value>运行时安装失败。请手动安装后点击“重试”。</value></data>
+  <data name="LocationTitle"><value>选择安装位置</value></data>
+  <data name="LocationText"><value>安装程序将把 Universal Device Toolkit 安装到以下文件夹。</value></data>
+  <data name="LanguageTitle"><value>选择语言</value></data>
+  <data name="LanguageText"><value>应用将使用此语言，之后可以在设置中更改。</value></data>
+  <data name="DeviceTitle"><value>选择设备</value></data>
+  <data name="DeviceDetected"><value>检测到：{0}</value></data>
+  <data name="DeviceText"><value>这将决定应用启用哪些功能，之后可以在设置中更改。</value></data>
+  <data name="DeviceHardwareNote"><value>将为此设备启用硬件控制。</value></data>
+  <data name="DeviceBasicNote"><value>基础模式：仅启用插件和系统优化，不包含硬件控制。</value></data>
+  <data name="DeviceAskLater"><value>首次运行时再询问</value></data>
+  <data name="StatusLanguagePack"><value>正在下载语言包...</value></data>
+  <data name="Browse"><value>浏览...</value></data>
+  <data name="DesktopShortcut"><value>创建桌面快捷方式</value></data>
+  <data name="ProgressTitle"><value>正在安装</value></data>
+  <data name="UninstallProgressTitle"><value>正在卸载</value></data>
+  <data name="StatusCheckingRuntime"><value>正在检查 .NET Desktop Runtime...</value></data>
+  <data name="StatusRemovingOld"><value>正在移除旧版本...</value></data>
+  <data name="StatusDownloading"><value>正在下载组件... {0:0}%</value></data>
+  <data name="StatusDownloadMirror"><value>正在尝试镜像 {0}/{1}...</value></data>
+  <data name="StatusVerifying"><value>正在验证下载内容...</value></data>
+  <data name="StatusExtracting"><value>正在解压文件...</value></data>
+  <data name="StatusShortcuts"><value>正在创建快捷方式...</value></data>
+  <data name="StatusFinishing"><value>正在完成安装...</value></data>
+  <data name="StatusUnregisterShell"><value>正在释放 Shell 集成...</value></data>
+  <data name="StatusRemovingTasks"><value>正在删除计划任务...</value></data>
+  <data name="StatusRemovingFiles"><value>正在删除文件...</value></data>
+  <data name="StatusRemovingData"><value>正在删除应用数据...</value></data>
+  <data name="DoneTitle"><value>安装完成</value></data>
+  <data name="DoneText"><value>Universal Device Toolkit {0} 已安装完成。</value></data>
+  <data name="LaunchApp"><value>启动 Universal Device Toolkit</value></data>
+  <data name="ErrorTitle"><value>安装失败</value></data>
+  <data name="UninstallConfirmTitle"><value>卸载 Universal Device Toolkit</value></data>
+  <data name="UninstallConfirmText"><value>将从以下位置移除 Universal Device Toolkit：
+{0}</value></data>
+  <data name="DeleteData"><value>同时删除设置和应用数据</value></data>
+  <data name="UninstallDoneTitle"><value>卸载完成</value></data>
+  <data name="UninstallDoneText"><value>Universal Device Toolkit 已被移除。</value></data>
+  <data name="Next"><value>下一步 &gt;</value></data>
+  <data name="Back"><value>&lt; 上一步</value></data>
+  <data name="Cancel"><value>取消</value></data>
+  <data name="Install"><value>安装</value></data>
+  <data name="Uninstall"><value>卸载</value></data>
+  <data name="Finish"><value>完成</value></data>
+  <data name="Retry"><value>重试</value></data>
+  <data name="Exit"><value>退出</value></data>
+  <data name="CancelConfirm"><value>确定要取消安装吗？</value></data>
+</root>

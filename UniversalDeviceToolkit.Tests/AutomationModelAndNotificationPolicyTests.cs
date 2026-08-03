@@ -10,7 +10,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests;
 
 [Trait("Category", TestCategories.Unit)]
-public sealed class Phase1UpstreamCapabilityTests
+public sealed class AutomationModelAndNotificationPolicyTests
 {
     [Fact]
     public void BatteryPercentageTrigger_SerializesRoundTrip()

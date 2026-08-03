@@ -2,7 +2,7 @@ namespace UniversalDeviceToolkit.Lib;
 
 /// <summary>
 /// Predefined accent color swatches shared by the WPF and Avalonia UI layers.
-/// The "rainbow/system" dot is handled separately by the UI layer (clicking it sets
+/// The system-accent dot is handled separately by the UI layer (clicking it sets
 /// <see cref="AccentColorSource.System"/>) and is intentionally not part of this array.
 /// </summary>
 public static class AccentColorPresets

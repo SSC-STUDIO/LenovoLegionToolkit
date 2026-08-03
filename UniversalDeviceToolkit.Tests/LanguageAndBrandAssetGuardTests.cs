@@ -8,11 +8,10 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests;
 
 /// <summary>
-/// Phase A: language-gate ordering / Online footprint invariants.
-/// Phase D: brand icon path audit across package, site, tray assets.
+/// Language-gate ordering, online footprint, and brand asset invariants.
 /// </summary>
 [Trait("Category", TestCategories.Unit)]
-public sealed class PhaseALanguageAndBrandTests
+public sealed class LanguageAndBrandAssetGuardTests
 {
     [Fact]
     public void StartupOrchestrator_LanguageGate_RunsBeforeMainWindowCreate()

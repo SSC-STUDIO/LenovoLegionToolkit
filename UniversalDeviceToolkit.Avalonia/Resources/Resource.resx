@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Window_Title"><value>Universal Device Toolkit</value></data>
+  <data name="Nav_Show"><value>Show</value></data>
+  <data name="Navigation"><value>Navigation</value></data>
+  <data name="Nav_Dashboard"><value>Dashboard</value></data>
+  <data name="Nav_About"><value>About</value></data>
+  <data name="Nav_Settings"><value>Settings</value></data>
+  <data name="About_Version"><value>Version</value></data>
+  <data name="About_TranslationCredit"><value>Translation credits for non-English locales.</value></data>
+  <data name="About_Links"><value>Links</value></data>
+  <data name="About_ProjectWebsite"><value>Project Website on GitHub</value></data>
+  <data name="About_LatestRelease"><value>Latest Release on GitHub</value></data>
+  <data name="About_ThirdPartyLibraries"><value>Third-party Libraries</value></data>
+  <data name="About_ApplicationFolders"><value>Application Folders</value></data>
+  <data name="About_AppDataFolder"><value>AppData Folder</value></data>
+  <data name="About_TempFolder"><value>Temp Folder</value></data>
+  <data name="Dashboard_Title"><value>Dashboard</value></data>
+  <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
+  <data name="Dashboard_Sensors"><value>Sensors</value></data>
+  <data name="Settings_Title"><value>Settings</value></data>
+  <data name="Settings_Appearance"><value>Appearance</value></data>
+  <data name="Settings_Application"><value>Application</value></data>
+  <data name="Settings_Display"><value>Display</value></data>
+  <data name="Settings_Placeholder"><value>Settings for &quot;{0}&quot; will be implemented here.</value></data>
+  <data name="Appearance_Title"><value>Appearance</value></data>
+  <data name="Appearance_Description"><value>Customize the look and feel of the application.</value></data>
+  <data name="Appearance_ThemeMode"><value>Global interface color mode</value></data>
+  <data name="Appearance_Light"><value>Light</value></data>
+  <data name="Appearance_Dark"><value>Dark</value></data>
+  <data name="Appearance_System"><value>Follow system</value></data>
+  <data name="Appearance_ApplyAccent"><value>Change system color when changing the global interface color</value></data>
+  <data name="Appearance_Accent"><value>Global interface accent color</value></data>
+  <data name="Appearance_Language"><value>Language</value></data>
+  <data name="Appearance_LanguageDescription"><value>Select the display language for the application.</value></data>
+  <data name="Application_Title"><value>Application Behavior</value></data>
+  <data name="Application_Description"><value>Configure how the application behaves on startup and during use.</value></data>
+  <data name="Application_LaunchStartup"><value>Launch at Startup</value></data>
+  <data name="Application_LaunchStartupDescription"><value>Automatically start the application when Windows starts.</value></data>
+  <data name="Application_MinimizeTray"><value>Minimize to System Tray</value></data>
+  <data name="Application_MinimizeTrayDescription"><value>Keep the application running in the system tray when closed.</value></data>
+  <data name="Application_AutoRefresh"><value>Auto-refresh Hardware Data</value></data>
+  <data name="Application_AutoRefreshDescription"><value>Periodically poll hardware sensors for updated readings.</value></data>
+  <data name="Display_Title"><value>Display</value></data>
+  <data name="Display_Description"><value>Adjust display-related settings for your device.</value></data>
+  <data name="Display_RefreshRate"><value>Refresh Rate</value></data>
+  <data name="Display_RefreshRateDescription"><value>Select the display refresh rate (requires supported hardware).</value></data>
+  <data name="Display_Overdrive"><value>Overdrive</value></data>
+  <data name="Display_OverdriveDescription"><value>Enable display overdrive for faster pixel response times.</value></data>
+</root>

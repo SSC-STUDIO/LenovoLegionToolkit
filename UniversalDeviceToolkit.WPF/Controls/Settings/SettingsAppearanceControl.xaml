@@ -354,7 +354,7 @@
                     Checked="ApplyAccentColorToThemeCheckBox_Checked"
                     Unchecked="ApplyAccentColorToThemeCheckBox_Unchecked" />
 
-                <!-- Global interface accent color presets and source selection. -->
+                <!-- Global interface accent color presets, system color and custom picker. -->
                 <Border Style="{StaticResource AppDividerBorderStyle}" Margin="0,6,0,6" />
                 <TextBlock
                     Margin="0,0,0,6"
@@ -363,12 +363,6 @@
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                     Text="{x:Static resources:Resource.SettingsPage_AccentColorPresets_Title}" />
                 <WrapPanel x:Name="_accentColorSwatchesPanel" Margin="0,0,0,8" />
-                <ComboBox
-                    x:Name="_accentColorSourceComboBox"
-                    MinWidth="160"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_AccentColor_Title}"
-                    MaxDropDownHeight="Auto"
-                    SelectionChanged="AccentColorSourceComboBox_SelectionChanged" />
                 </StackPanel>
             </custom:CardControl>
 
