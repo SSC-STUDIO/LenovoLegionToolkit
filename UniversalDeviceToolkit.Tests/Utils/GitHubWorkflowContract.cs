@@ -454,6 +454,30 @@ internal sealed class WorkflowStepContract
     public string? Condition { get; set; }
     public Dictionary<string, string> With { get; } = new(StringComparer.OrdinalIgnoreCase);
 
+    public string? OptionValue(string option)
+    {
+        if (string.IsNullOrWhiteSpace(Run) || string.IsNullOrWhiteSpace(option))
+            return null;
+
+        var marker = option.Trim() + " ";
+        var start = Run.IndexOf(marker, StringComparison.Ordinal);
+        if (start < 0)
+            return null;
+
+        var value = Run[(start + marker.Length)..].TrimStart();
+        if (value.Length == 0)
+            return string.Empty;
+
+        if (value[0] == '"')
+        {
+            var endQuote = value.IndexOf('"', 1);
+            return endQuote < 0 ? value[1..] : value[1..endQuote];
+        }
+
+        var end = value.IndexOfAny([' ', '\r', '\n', '`']);
+        return end < 0 ? value : value[..end];
+    }
+
     public string WithValue(string key) =>
         With.TryGetValue(key, out var value)
             ? value

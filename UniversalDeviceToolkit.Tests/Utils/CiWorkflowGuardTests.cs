@@ -16,8 +16,8 @@ public sealed class CiWorkflowGuardTests
         var workflow = ReadWorkflow("Ci-tests.yml");
         var step = workflow.Job("build-test-and-smoke").Step("Test (Security + Guard - fail fast)");
 
-        step.Run.Should().Contain("Category=Security|Category=Guard");
-        step.Run.Should().Contain("UniversalDeviceToolkit.Tests.SecurityGuard.trx");
+        step.OptionValue("--filter").Should().Be("Category=Security|Category=Guard");
+        step.OptionValue("--logger").Should().Be("trx;LogFileName=UniversalDeviceToolkit.Tests.SecurityGuard.trx");
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public sealed class CiWorkflowGuardTests
         var step = ReadWorkflow("Ci-tests.yml").Job("build-test-and-smoke").Step("Test (Fast unit tests)");
 
         step.Run.Should().Contain("UniversalDeviceToolkit.Fast.Tests/UniversalDeviceToolkit.Fast.Tests.csproj");
-        step.Run.Should().Contain("UniversalDeviceToolkit.Fast.Tests.trx");
+        step.OptionValue("--logger").Should().Be("trx;LogFileName=UniversalDeviceToolkit.Fast.Tests.trx");
     }
 
     [Fact]
@@ -34,8 +34,8 @@ public sealed class CiWorkflowGuardTests
     {
         var step = ReadWorkflow("Ci-tests.yml").Job("build-test-and-smoke").Step("Test (Windows stateful suite)");
 
-        step.Run.Should().Contain("Category!=Security&Category!=Guard");
-        step.Run.Should().Contain("UniversalDeviceToolkit.Tests.Stateful.trx");
+        step.OptionValue("--filter").Should().Be("Category!=Security&Category!=Guard");
+        step.OptionValue("--logger").Should().Be("trx;LogFileName=UniversalDeviceToolkit.Tests.Stateful.trx");
     }
 
     [Fact]
