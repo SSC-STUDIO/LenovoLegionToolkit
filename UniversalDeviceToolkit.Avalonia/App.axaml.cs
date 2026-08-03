@@ -80,7 +80,7 @@ public partial class App : Application
                 new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Show", "Show")) { Command = ShowCommand },
                 new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Settings", "Settings")) { Command = SettingsCommand },
                 new NativeMenuItemSeparator(),
-                new NativeMenuItem("Exit") { Command = ExitCommand },
+                new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Exit", "Exit")) { Command = ExitCommand },
             }
         };
 

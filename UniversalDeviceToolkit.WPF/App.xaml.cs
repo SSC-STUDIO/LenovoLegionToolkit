@@ -113,6 +113,13 @@ public partial class App
     {
         try
         {
+            var elevatedWorkerExitCode = await ElevatedOptimizationWorker.TryRunAsync(e.Args);
+            if (elevatedWorkerExitCode.HasValue)
+            {
+                Shutdown(elevatedWorkerExitCode.Value);
+                return;
+            }
+
             var orchestrator = new StartupOrchestrator(this, e);
             _orchestrator = orchestrator;
             var exitCode = await orchestrator.RunAsync();

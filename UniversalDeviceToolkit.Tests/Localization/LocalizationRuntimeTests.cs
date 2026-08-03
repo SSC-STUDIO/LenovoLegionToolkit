@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Globalization;
 using System.Resources;
+using System.Xml;
 using FluentAssertions;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.CLI;
+using UniversalDeviceToolkit.Tests.Infrastructure;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Localization;
@@ -102,7 +104,10 @@ public sealed class LocalizationRuntimeTests : IDisposable
         localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell is registered");
 
         localizer.CurrentCulture = new CultureInfo("zh-Hans");
-        localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell 已注册");
+        localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell \u5DF2\u6CE8\u518C");
+
+        localizer.CurrentCulture = new CultureInfo("de");
+        localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell is registered");
     }
 
     [Fact]
@@ -123,6 +128,25 @@ public sealed class LocalizationRuntimeTests : IDisposable
 
         foreach (var key in neutralValues.Keys)
             ExtractFormatIndexes(simplifiedValues[key]).Should().BeEquivalentTo(ExtractFormatIndexes(neutralValues[key]));
+    }
+
+    [Theory]
+    [InlineData("UniversalDeviceToolkit.Avalonia/Resources/Resource.resx", "UniversalDeviceToolkit.Avalonia/Resources/Resource.zh-Hans.resx")]
+    [InlineData("UniversalDeviceToolkit.CrossPlatform/Resources/Resource.resx", "UniversalDeviceToolkit.CrossPlatform/Resources/Resource.zh-Hans.resx")]
+    [InlineData("Tools/Installer/Resources/Resource.resx", "Tools/Installer/Resources/Resource.zh-Hans.resx")]
+    public void HostResourceFiles_HaveMatchingKeysAndPlaceholders(string neutralRelativePath, string chineseRelativePath)
+    {
+        var root = RepositoryPaths.FindRoot();
+        var neutral = ReadResxValues(Path.Combine(root, neutralRelativePath));
+        var chinese = ReadResxValues(Path.Combine(root, chineseRelativePath));
+
+        chinese.Keys.Should().BeEquivalentTo(neutral.Keys);
+        foreach (var key in neutral.Keys)
+        {
+            neutral[key].Should().NotBeNullOrWhiteSpace($"neutral key '{key}' must have a value");
+            chinese[key].Should().NotBeNullOrWhiteSpace($"zh-Hans key '{key}' must have a value");
+            ExtractFormatIndexes(chinese[key]).Should().BeEquivalentTo(ExtractFormatIndexes(neutral[key]));
+        }
     }
 
     public void Dispose()
@@ -148,6 +172,18 @@ public sealed class LocalizationRuntimeTests : IDisposable
         set.Cast<DictionaryEntry>()
             .Where(entry => entry.Key is string && entry.Value is not null)
             .ToDictionary(entry => (string)entry.Key, entry => entry.Value!.ToString()!);
+
+    private static Dictionary<string, string> ReadResxValues(string path)
+    {
+        var document = new XmlDocument();
+        document.Load(path);
+        return document.SelectNodes("/root/data")!
+            .Cast<XmlElement>()
+            .ToDictionary(
+                element => element.GetAttribute("name"),
+                element => element.SelectSingleNode("value")?.InnerText ?? string.Empty,
+                StringComparer.Ordinal);
+    }
 
     private static int[] ExtractFormatIndexes(string value)
     {

@@ -324,9 +324,9 @@ static int PrintHelp()
     Console.WriteLine($"  udt support   {T("Help_Support", "Print safe basic-mode device support matching.")}");
     Console.WriteLine($"  udt doctor    {T("Help_Doctor", "Print aggregated cross-platform readiness checks.")}");
     Console.WriteLine($"  udt help      {T("Help_Help", "Show this help.")}");
-    Console.WriteLine("  udt --language <culture>  Select a language for this invocation.");
+    Console.WriteLine($"  udt --language <culture>  {T("Help_Language", "Select a language for this invocation.")}");
     Console.WriteLine();
-    Console.WriteLine("Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion.");
+    Console.WriteLine(T("Help_WindowsNote", "Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion."));
     return 0;
 }
 

@@ -4,21 +4,21 @@
                           "culture":  "de",
                           "url":  "http://127.0.0.1:18765/de.zip",
                           "displayName":  "German",
-                          "sha256":  "50ff556177fb9e89ce8c901b27d5d6e7b5d43501b97a9e2b5b44d810653c61a3",
-                          "size":  44824
+                          "sha256":  "c533eb6d2321e2f2bbbb7927a6e4f958727ad09e7bdd96fba397574b7fea6213",
+                          "size":  46671
                       }
                   ],
     "productName":  "Universal Device Toolkit",
-    "generatedAt":  "2026-07-22T09:30:00.3711877Z",
-    "appVersion":  "5.0.0",
+    "generatedAt":  "2026-08-03T13:02:29.2002522Z",
+    "appVersion":  "5.0.1",
     "schemaVersion":  1,
     "downloads":  {
                       "online":  {
                                      "portable":  {
                                                       "url":  "http://127.0.0.1:18765/de.zip",
-                                                      "name":  "UniversalDeviceToolkit_v5.0.0_Online_win-x64.zip",
-                                                      "sha256":  "50ff556177fb9e89ce8c901b27d5d6e7b5d43501b97a9e2b5b44d810653c61a3",
-                                                      "size":  44824
+                                                      "name":  "UniversalDeviceToolkit_v5.0.1_Online_win-x64.zip",
+                                                      "sha256":  "c533eb6d2321e2f2bbbb7927a6e4f958727ad09e7bdd96fba397574b7fea6213",
+                                                      "size":  46671
                                                   }
                                  }
                   }

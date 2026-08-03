@@ -10,6 +10,7 @@
   <data name="Nav_Dashboard"><value>Dashboard</value></data>
   <data name="Nav_About"><value>About</value></data>
   <data name="Nav_Settings"><value>Settings</value></data>
+  <data name="Nav_Exit"><value>Exit</value></data>
   <data name="About_Version"><value>Version</value></data>
   <data name="About_TranslationCredit"><value>Translation credits for non-English locales.</value></data>
   <data name="About_Links"><value>Links</value></data>

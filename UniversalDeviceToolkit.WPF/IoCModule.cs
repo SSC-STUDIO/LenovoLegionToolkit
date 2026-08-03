@@ -28,6 +28,8 @@ public class IoCModule : Module
         builder.Register<HardwareSensorSettings>().SingleInstance();
 
         builder.Register<IpcServer>().SingleInstance();
+        builder.Register<WindowsOptimizationElevationClient>()
+            .As<IWindowsOptimizationExecutor>();
 
         builder.Register<UniversalDeviceToolkit.ViewModels.KeyboardBacklightViewModel>();
         builder.Register<WindowsOptimizationViewModel>();

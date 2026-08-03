@@ -24,6 +24,7 @@ namespace UniversalDeviceToolkit.WPF.ViewModels;
 public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
 {
     private readonly WindowsOptimizationService _windowsOptimizationService;
+    private readonly IWindowsOptimizationExecutor _optimizationExecutor;
     private readonly WindowsCleanupService _cleanupService;
     private readonly ApplicationSettings _applicationSettings;
     private static CultureInfo ActiveCulture => Resource.Culture ?? CultureInfo.CurrentUICulture;
@@ -54,8 +55,26 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         ApplicationSettings applicationSettings,
         PackageDownloaderSettings packageDownloaderSettings,
         PackageDownloaderFactory packageDownloaderFactory)
+        : this(
+            windowsOptimizationService,
+            cleanupService,
+            applicationSettings,
+            packageDownloaderSettings,
+            packageDownloaderFactory,
+            new WindowsOptimizationElevationClient(windowsOptimizationService))
+    {
+    }
+
+    internal WindowsOptimizationViewModel(
+        WindowsOptimizationService windowsOptimizationService,
+        WindowsCleanupService cleanupService,
+        ApplicationSettings applicationSettings,
+        PackageDownloaderSettings packageDownloaderSettings,
+        PackageDownloaderFactory packageDownloaderFactory,
+        IWindowsOptimizationExecutor optimizationExecutor)
     {
         _windowsOptimizationService = windowsOptimizationService;
+        _optimizationExecutor = optimizationExecutor;
         _cleanupService = cleanupService;
         _applicationSettings = applicationSettings;
         // Package downloader deps are owned by WindowsOptimizationPage; keep params for Autofac shape.
@@ -828,11 +847,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         IsBusy = true;
         try
         {
-            foreach (var action in pendingActions)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await ApplyPendingOptimizationActionAsync(action, cancellationToken);
-            }
+            var operations = BuildOptimizationOperations(pendingActions);
+            await _optimizationExecutor.ExecuteAsync(operations, cancellationToken);
 
             await ScanOptimizationStatesAsync(cancellationToken);
             await ShowOptimizationSnackbarAsync(
@@ -890,63 +906,36 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
-    private async Task ApplyPendingOptimizationActionAsync(
-        OptimizationActionViewModel action,
-        CancellationToken cancellationToken)
+    internal static IReadOnlyList<WindowsOptimizationOperation> BuildOptimizationOperations(
+        IEnumerable<OptimizationActionViewModel> pendingActions)
     {
-        var desiredState = action.IsSelected;
-        var togglePair = OptimizationToggleActionHelper.FindTogglePair(
-            action,
-            action.Category?.Actions ?? []);
-
-        if (togglePair is not null)
+        var operations = new List<WindowsOptimizationOperation>();
+        foreach (var action in pendingActions)
         {
-            var targetActionKey = OptimizationToggleActionHelper.ResolveTargetActionKey(action.Key, desiredState);
-            await _windowsOptimizationService.ApplyActionAsync(targetActionKey, cancellationToken);
+            var desiredState = action.IsSelected;
+            var togglePair = OptimizationToggleActionHelper.FindTogglePair(
+                action,
+                action.Category?.Actions ?? []);
 
-            var featureEnabled = await _windowsOptimizationService.TryGetActionAppliedAsync(
-                togglePair.Value.Enable.Key,
-                cancellationToken);
-            if (!featureEnabled.HasValue || featureEnabled.Value != desiredState)
-                throw new InvalidOperationException(
-                    T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified."));
-
-            await ApplyTogglePairPresentationOnUiAsync(
-                togglePair.Value.Enable,
-                togglePair.Value.Disable,
-                featureEnabled);
-            return;
+            if (togglePair is not null)
+            {
+                operations.Add(new WindowsOptimizationOperation(
+                    OptimizationToggleActionHelper.ResolveTargetActionKey(action.Key, desiredState),
+                    Apply: true,
+                    togglePair.Value.Enable.Key,
+                    desiredState));
+            }
+            else
+            {
+                operations.Add(new WindowsOptimizationOperation(
+                    action.Key,
+                    Apply: desiredState,
+                    action.Key,
+                    desiredState));
+            }
         }
 
-        if (desiredState)
-            await _windowsOptimizationService.ApplyActionAsync(action.Key, cancellationToken);
-        else
-            await _windowsOptimizationService.RevertActionAsync(action.Key, cancellationToken);
-
-        var isApplied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, cancellationToken);
-        if (!isApplied.HasValue || isApplied.Value != desiredState)
-            throw new InvalidOperationException(
-                T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified."));
-
-        await SetOptimizationActionStateOnUiAsync(action, isApplied.Value);
-    }
-
-    private Task SetOptimizationActionStateOnUiAsync(OptimizationActionViewModel actionVm, bool isApplied)
-    {
-        return RunOnUiAsync(() =>
-        {
-            _isRefreshingStates = true;
-            try
-            {
-                actionVm.IsApplied = isApplied;
-                actionVm.IsSelected = isApplied;
-                UpdateSelectedActions();
-            }
-            finally
-            {
-                _isRefreshingStates = false;
-            }
-        });
+        return operations;
     }
 
     private Task ShowOptimizationSnackbarAsync(string message, SnackbarType type)

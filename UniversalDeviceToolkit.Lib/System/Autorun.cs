@@ -54,7 +54,8 @@ public static class Autorun
             return;
         }
 
-        if (currentTask.Definition.Data == fileVersion)
+        if (currentTask.Definition.Data == fileVersion &&
+            currentTask.Definition.Principal.RunLevel == TaskRunLevel.LUA)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Autorun settings seems to be fine.");
@@ -88,7 +89,7 @@ public static class Autorun
         var td = ts.NewTask();
         td.Data = fileVersion;
         td.Principal.UserId = currentUser;
-        td.Principal.RunLevel = TaskRunLevel.Highest;
+        td.Principal.RunLevel = TaskRunLevel.LUA;
         td.Triggers.Add(new LogonTrigger { UserId = currentUser, Delay = new TimeSpan(0, 0, delayed ? 30 : 0) });
         td.Actions.Add($"\"{filename}\"", "--minimized");
         td.Settings.DisallowStartIfOnBatteries = false;

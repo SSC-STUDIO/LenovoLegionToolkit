@@ -30,8 +30,17 @@ public class PluginErrorMessageTests : TemporaryFileTestBase
 
     public override void Dispose()
     {
-        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _originalAppDataOverride);
-        base.Dispose();
+        try
+        {
+            // Release the async file sink while the temporary AppData directory
+            // is still active; otherwise cleanup races the open log file.
+            Log.ResetForTests();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _originalAppDataOverride);
+            base.Dispose();
+        }
     }
 
     [Theory]

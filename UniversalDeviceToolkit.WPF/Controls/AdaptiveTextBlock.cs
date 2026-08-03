@@ -24,6 +24,7 @@ namespace UniversalDeviceToolkit.WPF.Controls;
 public class AdaptiveTextBlock : TextBlock
 {
     private const double DefaultMinFontSize = 10.0;
+    private const double DefaultFontSize = 12.0;
     private const double DefaultScaleStep = 0.5;
     private const double DefaultLineHeightFactor = 1.35;
 
@@ -114,7 +115,7 @@ public class AdaptiveTextBlock : TextBlock
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        _baseFontSize = FontSize;
+        _baseFontSize = NormalizeFontSize(FontSize);
         Adapt();
     }
 
@@ -135,13 +136,21 @@ public class AdaptiveTextBlock : TextBlock
     private static void OnAdaptTriggerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is AdaptiveTextBlock block)
+        {
+            if (!block._isAdapting && e.Property == FontSizeProperty && IsValidFontSize(block.FontSize))
+                block._baseFontSize = block.FontSize;
+
             block.Adapt();
+        }
     }
 
     private void Adapt()
     {
         if (!IsLoaded || _isAdapting)
             return;
+
+        if (!IsValidFontSize(_baseFontSize))
+            _baseFontSize = NormalizeFontSize(FontSize);
 
         var text = Text;
         if (string.IsNullOrEmpty(text))
@@ -223,6 +232,8 @@ public class AdaptiveTextBlock : TextBlock
 
     private double MeasureHeight(double fontSize, double maxWidth)
     {
+        fontSize = NormalizeFontSize(fontSize);
+
         var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
         var pixelsPerDip = GetPixelsPerDip();
         var foreground = Foreground ?? Brushes.Black;
@@ -242,6 +253,12 @@ public class AdaptiveTextBlock : TextBlock
 
         return formatted.Height;
     }
+
+    private static bool IsValidFontSize(double fontSize) =>
+        !double.IsNaN(fontSize) && !double.IsInfinity(fontSize) && fontSize > 0;
+
+    private static double NormalizeFontSize(double fontSize) =>
+        IsValidFontSize(fontSize) ? fontSize : DefaultFontSize;
 
     private bool ShouldWrap() =>
         TextWrapping == TextWrapping.Wrap || TextWrapping == TextWrapping.WrapWithOverflow;

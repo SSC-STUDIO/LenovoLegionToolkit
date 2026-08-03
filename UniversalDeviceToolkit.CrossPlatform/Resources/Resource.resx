@@ -17,6 +17,8 @@
   <data name="Help_Set"><value>Run a supported write control.</value></data>
   <data name="Help_Elevate"><value>Restart a write command through Windows UAC when needed.</value></data>
   <data name="Help_Help"><value>Show this help.</value></data>
+  <data name="Help_Language"><value>Select a language for this invocation.</value></data>
+  <data name="Help_WindowsNote"><value>Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion.</value></data>
   <data name="Help_Support"><value>Print safe basic-mode device support matching.</value></data>
   <data name="Error_UnknownCommand"><value>Unknown command '{0}'. Run 'udt help'.</value></data>
   <data name="Label_Version"><value>Version</value></data>
