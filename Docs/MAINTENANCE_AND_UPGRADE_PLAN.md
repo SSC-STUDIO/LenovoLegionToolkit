@@ -1,6 +1,6 @@
 # UniversalDeviceToolkit 全方位评估与升级维护计划
 
-> 版本：2026-08-03 ｜ 适用范围：UniversalDeviceToolkit 全代码库（master @ 804fd8a7 + 工作树 WIP）
+> 版本：2026-08-03 ｜ 适用范围：UniversalDeviceToolkit 全代码库（master @ b2434d1b + 当前工作树增量）
 > 目的：为后续升级、维护、重构提供决策依据与分阶段执行计划（含验收标准）
 > 方法：九维度静态调研（架构/代码质量/测试/构建/安全/功能/历史/性能UX/文档）+ 构建验证 + 定向测试
 
@@ -143,10 +143,10 @@
 ### P1（近期，一个月）
 | # | 风险 | 位置 | 修复要点 |
 |---|---|---|---|
-| R5 | Lib/Shared 四组双实现漂移 | Lib MessagingCenter/AbstractSettings/LltJson/ExceptionHelper | 按 Folders 模式 wrapper 化 |
-| R6 | WPF 本地 VM 与新 ViewModels 项目重复 | KeyboardBacklightViewModel/MacroViewModel | 删本地副本统一引用 |
-| R7 | 巨型文件 3 个 >1900 行 | PluginExtensionsPage.xaml.cs / PluginRepositoryService.cs / SensorsControl.xaml.cs | partial/子 VM 拆分 |
-| R8 | 测试全串行（CI 30-90 分钟） | xunit.runner.json / TestBase.cs culture pin | 集合级并行 + CultureScope 隔离 |
+| R5 | Lib/Shared 四组双实现漂移 | 已改为 Shared 实现 + Lib 兼容 facade | 保持 wrapper，不再新增独立实现 |
+| R6 | WPF 本地 VM 与新 ViewModels 项目重复 | 本地副本已删除，页面统一解析 `UniversalDeviceToolkit.ViewModels` | 增加迁移 Guard，防止副本回流 |
+| R7 | 巨型文件 3 个 >1900 行 | `PluginRepositoryService`、`SensorsControl`、`PluginExtensionsPage` 已部分 partial 化 | 继续拆分安装生命周期和 UI 状态职责 |
+| R8 | 测试全串行（CI 30-90 分钟） | 已启用程序集/集合并行，状态集合隔离 | 保持并行基线，关注新增全局状态测试 |
 | R9 | 插件信任链旁路 | PluginSignatureValidator.cs:118-159 | trusted store 完整性校验或移除免签通道 |
 | R10 | IPC 认证不区分提权态 | WPF\CLI\IpcServer.cs | 校验对端提权令牌 |
 | R11 | Installer 运行时下载无哈希 | InstallerEngine.cs:95-105 | 固化 SHA256 校验 |
@@ -158,15 +158,15 @@
 | R13 | 集中重复属性 | Nullable/ImplicitUsings 默认值已集中到 Directory.Build.props；4 个 framework-import 项目保留显式 disable |
 | R14 | 包版本积压 | Directory.Packages.props 一批升级 |
 | R15 | Guard 测试字符串断言脆弱 | CiWorkflowGuardTests 等 18 个 |
-| R16 | 死岛治理 | Platform.Linux/MacOS、PerformanceTest、TestCategories.Coverage |
+| R16 | 死岛治理 | Linux/MacOS 已接入 Avalonia/CrossPlatform；PerformanceTest 已接 CI；Coverage 分类已无生产引用 | 收尾孤立工具项目清单 |
 | R17 | 供应链补洞 | 资源目录 host 白名单、语言包/设备包下载哈希 |
-| R18 | 残留文件入库 | .opencode 99 文件、DotSettings、body/resp.json |
+| R18 | 残留文件入库 | `.opencode`、DotSettings、body/resp.json 已清理并加忽略规则 | 后续只防止重新入库 |
 | R19 | 命名空间/目录错位 4 处 + 根目录 77 文件 | Tests 目录 |
 
 ### P3（随手清理）
 | # | 项 |
 |---|---|
-| R20 | 37 处 ConfigureAwait(true) 机械清理 |
+| R20 | 37 处 ConfigureAwait(true) 机械清理 | 已从源码移除 |
 | R21 | 7 处硬编码异常消息归入 Resource |
 | R22 | 文档纠偏 3 处 + README 路径不一致 |
 | R23 | sln 外 4 工具项目收纳、InnoDependencies 空目录、陈旧分支清理 |
@@ -236,12 +236,17 @@
 
 ## 5. 执行核对记录（第一轮 Check）
 
-> 由外部执行者完成的部分改动已核对，结论：**整改清单（§2）基本未落地，工作树 309 文件改动属 6 个功能 WIP 变更集**（详见 §1.7）。
+> 本节保留第一轮复核背景；后续执行记录以 §7 及其后的日期分节为准。
 
 | 项 | 状态 | 证据 |
 |---|---|---|
 | xUnit1026 假矩阵测试 | ✅ 已修（真修复） | 9 警告归零；Theory 参数经反射进入被测路径 |
-| 其余 R1-R23 | ❌ 未执行 | 复核见 §2 各位置原文未变 |
+| R1/R2/R9/R10/R11/R12/R13/R14/R17 | ✅ 已完成 | §7 执行记录、对应 Guard、locked restore 与 Release 构建验证 |
+| R3/R8 | ✅ 已完成 | 测试迁移验收与集合级并行记录；主测试 4568 总数、4538 通过、17 个明确环境 Skip |
+| R5/R6 | ✅ 已完成 | Lib 侧为 Shared 兼容 facade；WPF 重复 ViewModel 已移除 |
+| R7 | 🟡 进行中 | `PluginRepositoryService`、`SensorsControl`、`PluginExtensionsPage` 已 partial 化，仍有安装生命周期和主 UI 状态块待拆 |
+| R4/R15/R19/R21/R22/R23 | 🟡 部分完成 | 权限模型、Guard 去文案化、测试归位、异常资源化、文档和工具收纳仍需逐项验收 |
+| WSL Linux / macOS / FlaUI nightly | ⚠️ 环境待验证 | Windows 无 WSL distribution；macOS 和桌面 UI 必须由对应 CI runner 执行 |
 
 ### 5.1 后续功能修复：系统优化界面事务交互
 
@@ -298,7 +303,7 @@
 | R13 项目默认值集中 | 已完成 | `Directory.Build.props` 提供 Nullable/ImplicitUsings 默认值；CLI.Lib、Lib、Lib.Macro、WPF 的显式 `ImplicitUsings=disable` 经过 Guard 固化；方案 Release 构建 0 警告/0 错误 |
 | 测试日志资源释放 | 已完成 | `Log.ResetForTests()` 在 AppData 临时目录清理前释放异步 sink；插件仓库优化筛选 156/156 通过 |
 
-本轮仍未完成的工作包括 R4 权限模型、R5-R7 迁移收尾、R14-R16/R18-R23 治理项，以及真实桌面 FlaUI nightly。R8 并行化已在本地完成并验证；R2 的签名动作不会在缺少凭据时伪造成功，当前本地仅验证 workflow 契约和验签脚本。
+当前仍未完成的工作包括 R4 权限模型收尾、R7 深层职责拆分、R15/R19/R21/R22/R23 治理项，以及真实桌面 FlaUI nightly。R5/R6/R8/R14/R16/R17/R18/R20 已在后续记录中完成；R2 的签名动作不会在缺少凭据时伪造成功，当前本地仍只验证 workflow 契约和验签脚本。
 ## 8. 2026-08-03 系统优化反向动作加固
 
 - 注册表优化动作保留跨 `GetCategories()` 调用的原始值快照；历史上没有快照的已应用动作回退为删除优化值，恢复 Windows 默认/继承行为。
@@ -342,7 +347,7 @@
 - 将 `PluginRepositoryService` 的插件更新查询移至 `PluginRepositoryService.Updates.cs`，保留原有缓存、下载和安装流程。
 - 更新源码 Guard，使其读取主文件与 partial 文件的组合，避免结构化拆分被脆弱的单文件文本断言误报。
 - 验证：WPF hook 独立输出构建 0 警告/0 错误；插件仓库、SensorsControl、系统优化和单实例相关定向测试 219/219 通过。
-- `PluginExtensionsPage` 以及两个巨型文件的更深层职责拆分仍未完成，不能视为 R7 全部完成。
+- `PluginExtensionsPage` 已新增批量导入、交互、能力解析三个 partial；`PluginRepositoryService` 和 `SensorsControl` 也已 partial 化，但安装生命周期、主列表状态和传感器刷新主流程仍待进一步拆分，不能视为 R7 全部完成。
 
 ## 14. 2026-08-03 跨平台验证入口
 
@@ -360,3 +365,11 @@
 - `SensorsControl` 的展示格式化、温度/吞吐量/功耗转换和硬件名称归一化移至 `SensorsControl.Formatting.cs`；CPU 功耗格式化改用调用内局部列表，避免共享静态临时集合造成并行串扰。
 - 验证：WPF hook 独立输出构建 `0` 警告、`0` 错误；`SensorsControlTests` `64/64` 通过；跨平台测试 `141/141` 通过。
 - 尚未完成：WSL 真实 Linux 执行、macOS runner 实测、`PluginExtensionsPage`/`PluginRepositoryService` 的完整职责拆分、提权模型重构和真实 FlaUI nightly。
+
+## 16. 2026-08-03 后续执行：插件页拆分与提权边界
+
+- `PluginExtensionsPage` 的批量导入/本地 ZIP 安装、列表交互/上下文菜单、插件 UI 能力解析分别移至 `PluginExtensionsPage.BulkImport.cs`、`PluginExtensionsPage.Interactions.cs` 和 `PluginExtensionsPage.Capabilities.cs`；主文件由约 2251 行降至约 1984 行，行为通过插件页面相关测试验证。
+- `WindowsOptimizationElevationClient` 将 `runas` worker 的创建纳入统一异常与清理范围；UAC 错误码 1223 现在转换为明确的取消语义，worker 进程在成功、失败、取消三种路径均执行清理。
+- Windows 验证：WPF Release 构建 0 警告/0 错误；插件仓库、插件 ViewModel、页面 Guard、可执行文件解析、图标解析定向测试 91/91；提权协议测试 7/7。
+- WSL 验证前置：`wsl.exe` 存在，但当前系统没有已安装 distribution，`Scripts/Test-CrossPlatformInWsl.ps1` 只能按设计报告前置失败；不执行自动安装。Linux 真实运行需用户安装 distribution 后重跑，macOS 仍由 CI runner 验证。
+- 仍需：插件安装生命周期和页面主状态块的更深拆分；安装目录 ACL/按需提权完整审计；CI 上 macOS、WSL Linux 和 FlaUI nightly 的真实结果；R15/R19/R21/R22/R23 收尾。

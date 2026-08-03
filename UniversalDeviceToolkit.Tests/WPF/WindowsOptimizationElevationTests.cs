@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
@@ -13,6 +14,15 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 [Trait("Category", TestCategories.Security)]
 public sealed class WindowsOptimizationElevationTests
 {
+    [Theory]
+    [InlineData(1223, true)]
+    [InlineData(5, false)]
+    public void Worker_ShouldRecognizeUacCancellation(int nativeErrorCode, bool expected)
+    {
+        ElevatedOptimizationWorker.IsUacCancellation(new Win32Exception(nativeErrorCode))
+            .Should().Be(expected);
+    }
+
     [Fact]
     public void WorkerArguments_ShouldAcceptOnlyGeneratedPipeAndTokenValues()
     {

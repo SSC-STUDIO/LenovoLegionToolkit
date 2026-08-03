@@ -66,12 +66,13 @@ internal sealed class WindowsOptimizationElevationClient : IWindowsOptimizationE
         var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
 
         await using var server = CreatePipeServer(pipeName);
-        using var worker = StartWorker(pipeName, token);
+        Process? worker = null;
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         timeout.CancelAfter(TimeSpan.FromMinutes(2));
 
         try
         {
+            worker = StartWorker(pipeName, token);
             await server.WaitForConnectionAsync(timeout.Token).ConfigureAwait(false);
             server.ReadMode = PipeTransmissionMode.Message;
 
@@ -94,20 +95,27 @@ internal sealed class WindowsOptimizationElevationClient : IWindowsOptimizationE
             if (worker.ExitCode != 0)
                 throw new InvalidOperationException($"The elevated optimization worker exited with code {worker.ExitCode}.");
         }
-        catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
+        catch (Win32Exception ex) when (ElevatedOptimizationWorker.IsUacCancellation(ex))
         {
             throw new OperationCanceledException("UAC elevation was cancelled by the user.", ex, cancellationToken);
         }
         finally
         {
-            try
+            if (worker is not null)
             {
-                if (!worker.HasExited)
-                    worker.Kill(true);
-            }
-            catch (InvalidOperationException)
-            {
-                // The worker exited between the check and cleanup.
+                try
+                {
+                    if (!worker.HasExited)
+                        worker.Kill(true);
+                }
+                catch (InvalidOperationException)
+                {
+                    // The worker exited between the check and cleanup.
+                }
+                finally
+                {
+                    worker.Dispose();
+                }
             }
         }
     }
@@ -228,6 +236,9 @@ internal static class ElevatedOptimizationWorker
 
     private const int WorkerConnectTimeoutMilliseconds = 30_000;
     private const int MaximumOperationCount = 128;
+
+    internal static bool IsUacCancellation(Win32Exception exception) =>
+        exception.NativeErrorCode == 1223;
 
     internal static async Task<int?> TryRunAsync(IReadOnlyList<string> arguments)
     {
