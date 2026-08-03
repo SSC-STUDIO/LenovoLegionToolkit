@@ -1,6 +1,7 @@
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Tests.Infrastructure;
 using UniversalDeviceToolkit.WPF.Pages;
 using Xunit;
 

@@ -2,7 +2,7 @@ using System;
 using UniversalDeviceToolkit.Lib.Plugins;
 using Moq;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.Infrastructure;
 
 /// <summary>
 /// Factory for creating common mocks used in tests

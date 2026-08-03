@@ -119,11 +119,21 @@ foreach ($file in $satellites) {
 }
 
 # Languages list cultures that must have a satellite (shipped UI languages).
-# Canonical BCP 47 form (CONTRIBUTING.md); keep in sync with LocalizationHelper.Languages.
-$requiredCultures = @(
-    'ar','bg','cs','de','el','en','es','fr','hu','it','ja','lv','nl-NL','pl','pt','pt-BR',
-    'ro','ru','sk','tr','uk','uz-Latn-UZ','vi','zh-Hans','zh-Hant'
-)
+# Read the shared catalog so the coverage gate cannot silently drift from the
+# language picker or the release pack builder.
+$catalogPath = Join-Path $repo 'UniversalDeviceToolkit.Lib.Abstractions\Localization\LocalizationCatalog.cs'
+if (-not (Test-Path -LiteralPath $catalogPath)) {
+    throw "Shared localization catalog not found: $catalogPath"
+}
+$catalogText = Get-Content -LiteralPath $catalogPath -Raw
+$catalogBlock = [regex]::Match(
+    $catalogText,
+    'SupportedCultures\s*\{\s*get;\s*\}\s*=\s*\[(?<values>[\s\S]*?)\];')
+$requiredCultures = @([regex]::Matches($catalogBlock.Groups['values'].Value, 'new\("([^"]+)"\)') |
+    ForEach-Object { $_.Groups[1].Value })
+if ($requiredCultures.Count -eq 0) {
+    throw "Could not read supported cultures from $catalogPath"
+}
 foreach ($c in $requiredCultures) {
     $path = Join-Path $resDir "Resource.$c.resx"
     if (-not (Test-Path -LiteralPath $path)) {

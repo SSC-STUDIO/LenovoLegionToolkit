@@ -1,4 +1,5 @@
 <UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsAppearanceView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
@@ -75,7 +76,7 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Text="娴滎喛澹? FontWeight="Medium" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{local:Loc Key=Appearance_Light, Fallback=Light}" FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button x:Name="ThemeDarkCard" Tag="Dark" Click="ThemeCard_Click"
@@ -126,7 +127,7 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Text="閺嗘澹? FontWeight="Medium" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{local:Loc Key=Appearance_Dark, Fallback=Dark}" FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button>
                     <Button x:Name="ThemeSystemCard" Tag="System" Click="ThemeCard_Click"

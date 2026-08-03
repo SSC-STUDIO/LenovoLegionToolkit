@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.CLI.Features;
 
@@ -21,7 +22,7 @@ public class FeatureRegistration<T>(string name, Func<T, string>? toStringConver
         var feature = _feature();
 
         if (!await feature.IsSupportedAsync().ConfigureAwait(false))
-            throw new InvalidOperationException("Feature is not supported");
+            throw new InvalidOperationException(Resource.FeatureRegistration_NotSupported);
 
         var states = await feature.GetAllStatesAsync().ConfigureAwait(false);
         return states.Select(s => toStringConverter?.Invoke(s) ?? s.ToString()?.ToLowerInvariant()).OfType<string>();
@@ -32,7 +33,7 @@ public class FeatureRegistration<T>(string name, Func<T, string>? toStringConver
         var feature = _feature();
 
         if (!await feature.IsSupportedAsync().ConfigureAwait(false))
-            throw new InvalidOperationException("Feature is not supported");
+            throw new InvalidOperationException(Resource.FeatureRegistration_NotSupported);
 
         var state = await feature.GetStateAsync().ConfigureAwait(false);
 
@@ -44,7 +45,7 @@ public class FeatureRegistration<T>(string name, Func<T, string>? toStringConver
         }
         else
         {
-            result = state.ToString()?.ToLowerInvariant() ?? throw new InvalidOperationException("Null return value");
+            result = state.ToString()?.ToLowerInvariant() ?? throw new InvalidOperationException(Resource.FeatureRegistration_NullReturnValue);
         }
 
         return result;
@@ -55,7 +56,7 @@ public class FeatureRegistration<T>(string name, Func<T, string>? toStringConver
         var feature = _feature();
 
         if (!await feature.IsSupportedAsync().ConfigureAwait(false))
-            throw new InvalidOperationException("Feature is not supported");
+            throw new InvalidOperationException(Resource.FeatureRegistration_NotSupported);
 
         var states = await feature.GetAllStatesAsync().ConfigureAwait(false);
 
@@ -69,11 +70,11 @@ public class FeatureRegistration<T>(string name, Func<T, string>? toStringConver
         {
             state = Enum.TryParse<T>(value, true, out var s)
                 ? s
-                : throw new InvalidOperationException("State is not supported");
+                : throw new InvalidOperationException(Resource.FeatureRegistration_StateNotSupported);
         }
 
         if (!states.Contains(state))
-            throw new InvalidOperationException("State is not supported");
+            throw new InvalidOperationException(Resource.FeatureRegistration_StateNotSupported);
 
         await feature.SetStateAsync(state).ConfigureAwait(false);
     }

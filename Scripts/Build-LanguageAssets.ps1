@@ -35,6 +35,25 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+function Get-SharedSupportedCultures {
+    $catalogPath = Join-Path $PSScriptRoot '..\UniversalDeviceToolkit.Lib.Abstractions\Localization\LocalizationCatalog.cs'
+    if (-not (Test-Path -LiteralPath $catalogPath)) {
+        throw "Shared localization catalog not found: $catalogPath"
+    }
+
+    $catalogText = Get-Content -LiteralPath $catalogPath -Raw
+    $catalogBlock = [regex]::Match(
+        $catalogText,
+        'SupportedCultures\s*\{\s*get;\s*\}\s*=\s*\[(?<values>[\s\S]*?)\];')
+    $cultures = @([regex]::Matches($catalogBlock.Groups['values'].Value, 'new\("([^"]+)"\)') |
+        ForEach-Object { $_.Groups[1].Value })
+    if ($cultures.Count -eq 0) {
+        throw "Could not read supported cultures from $catalogPath"
+    }
+
+    return $cultures
+}
+
 function Get-MajorVersion {
     param(
         [Parameter(Mandatory = $true)][string]$Value,
@@ -208,10 +227,9 @@ function Write-HashFile {
 }
 
 function Get-LanguagePackDefinitions {
-    # Culture names use the BCP 47 canonical form (CONTRIBUTING.md). Keep in sync
-    # with LocalizationHelper.Languages; the pack is skipped with a warning when no
-    # satellite directory was produced for the culture.
-    @(
+    # Culture names use the BCP 47 canonical form from LocalizationCatalog. The
+    # pack is skipped with a warning when no satellite directory was produced.
+    $definitions = @(
         @{ Culture = 'ar'; Directories = @('ar') },
         @{ Culture = 'bg'; Directories = @('bg') },
         @{ Culture = 'cs'; Directories = @('cs') },
@@ -237,6 +255,14 @@ function Get-LanguagePackDefinitions {
         @{ Culture = 'zh-Hant'; Directories = @('zh-Hant') },
         @{ Culture = 'uz-Latn-UZ'; Directories = @('uz-Latn-UZ') }
     )
+
+    $expectedCultures = @(Get-SharedSupportedCultures | Where-Object { $_ -ne 'en' })
+    $actualCultures = @($definitions | ForEach-Object { [string]$_.Culture })
+    if (($expectedCultures -join '|') -ne ($actualCultures -join '|')) {
+        throw "Language pack definitions do not match LocalizationCatalog. Expected '$($expectedCultures -join ', ')', got '$($actualCultures -join ', ')'."
+    }
+
+    return $definitions
 }
 
 function Get-ListValue {

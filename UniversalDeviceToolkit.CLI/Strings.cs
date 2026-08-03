@@ -13,8 +13,13 @@ public static class Strings
 
     public static void ApplyCulture(CultureInfo culture) => _localizer.CurrentCulture = culture;
 
-    public static string Get(string key, string fallback) =>
-        _localizer.GetString(key, fallback);
+    public static string Get(string key, string fallback)
+    {
+        // Tests and embedders may change CurrentUICulture directly. Keep this
+        // host localizer aligned without requiring an explicit ApplyCulture call.
+        _localizer.CurrentCulture = CultureInfo.CurrentUICulture;
+        return _localizer.GetString(key, fallback);
+    }
 
     public static string Get(string key, string fallback, params object[] args)
     {

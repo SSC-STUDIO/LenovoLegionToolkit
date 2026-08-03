@@ -1,0 +1,175 @@
+using System.Collections;
+using System.Globalization;
+using System.Resources;
+using FluentAssertions;
+using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.CLI;
+using Xunit;
+
+namespace UniversalDeviceToolkit.Tests.Localization;
+
+[Collection(TestCollections.Localization)]
+[Trait("Category", TestCategories.Unit)]
+public sealed class LocalizationRuntimeTests : IDisposable
+{
+    private readonly string _appDataDirectory;
+    private readonly string? _previousAppDataOverride;
+    private readonly CultureInfo _previousCulture;
+    private readonly CultureInfo _previousUiCulture;
+    private readonly CultureInfo? _previousDefaultCulture;
+    private readonly CultureInfo? _previousDefaultUiCulture;
+
+    public LocalizationRuntimeTests()
+    {
+        _appDataDirectory = Path.Combine(Path.GetTempPath(), $"udt-localization-test-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(_appDataDirectory);
+        _previousAppDataOverride = Environment.GetEnvironmentVariable("UDT_APPDATA_OVERRIDE");
+        Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", _appDataDirectory);
+        _previousCulture = CultureInfo.CurrentCulture;
+        _previousUiCulture = CultureInfo.CurrentUICulture;
+        _previousDefaultCulture = CultureInfo.DefaultThreadCurrentCulture;
+        _previousDefaultUiCulture = CultureInfo.DefaultThreadCurrentUICulture;
+    }
+
+    [Fact]
+    public void SupportedCultures_AreUniqueAndUseCanonicalNames()
+    {
+        var cultures = LocalizationCatalog.SupportedCultures;
+
+        cultures.Should().HaveCount(25);
+        cultures.Select(culture => culture.Name)
+            .Should().OnlyHaveUniqueItems();
+        cultures.Should().Contain(culture => culture.Name == "zh-Hans");
+        cultures.Should().Contain(culture => culture.Name == "zh-Hant");
+        cultures.Should().Contain(culture => culture.Name == "uz-Latn-UZ");
+    }
+
+    [Theory]
+    [InlineData("zh-CN", "zh-Hans")]
+    [InlineData("zh-TW", "zh-Hant")]
+    [InlineData("de-DE", "de")]
+    [InlineData("pt-PT", "pt")]
+    [InlineData("not-a-real-culture", "en")]
+    public void NormalizeCulture_UsesExactThenParentAndEnglishFallback(string input, string expected)
+    {
+        LocalizationCatalog.NormalizeCulture(input).Name.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("de", false)]
+    [InlineData("zh-Hans", true)]
+    [InlineData("zh-Hant", true)]
+    public void FallbackChain_OnlyUsesChineseForChineseRequests(string cultureName, bool allowChinese)
+    {
+        var chain = LocalizationCatalog.GetFallbackChain(new CultureInfo(cultureName)).ToArray();
+
+        chain.Should().Contain(culture => culture.Name == "en");
+        if (allowChinese)
+            chain.Should().Contain(culture => culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase));
+        else
+            chain.Should().NotContain(culture => culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Initialize_WithoutOverride_ReadsPersistedCulture()
+    {
+        File.WriteAllText(LocalizationRuntime.LanguageFilePath, "fr-FR");
+
+        var culture = LocalizationRuntime.Initialize(preferredCultureName: null, persist: false);
+
+        culture.Name.Should().Be("fr");
+        LocalizationRuntime.CurrentCulture.Name.Should().Be("fr");
+        CultureInfo.CurrentUICulture.Name.Should().Be("fr");
+    }
+
+    [Fact]
+    public async Task SetCulture_PersistsCanonicalCultureName()
+    {
+        await LocalizationRuntime.SetCultureAsync("pt-br", persist: true);
+
+        File.ReadAllText(LocalizationRuntime.LanguageFilePath).Should().Be("pt-BR");
+        LocalizationRuntime.CurrentCulture.Name.Should().Be("pt-BR");
+    }
+
+    [Fact]
+    public void ResourceManagerLocalizer_ResolvesEnglishAndChineseResources()
+    {
+        var localizer = new ResourceManagerStringLocalizer(new ResourceManager(
+            "UniversalDeviceToolkit.CLI.Resources.CLI.Resources",
+            typeof(Strings).Assembly));
+
+        localizer.CurrentCulture = new CultureInfo("en-US");
+        localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell is registered");
+
+        localizer.CurrentCulture = new CultureInfo("zh-Hans");
+        localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell 已注册");
+    }
+
+    [Fact]
+    public void CliResourceSets_HaveMatchingKeysAndPlaceholders()
+    {
+        var manager = new ResourceManager(
+            "UniversalDeviceToolkit.CLI.Resources.CLI.Resources",
+            typeof(Strings).Assembly);
+        using var neutral = manager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
+        using var simplified = manager.GetResourceSet(new CultureInfo("zh-Hans"), true, false);
+
+        neutral.Should().NotBeNull();
+        simplified.Should().NotBeNull();
+
+        var neutralValues = ReadValues(neutral!);
+        var simplifiedValues = ReadValues(simplified!);
+        simplifiedValues.Keys.Should().BeEquivalentTo(neutralValues.Keys);
+
+        foreach (var key in neutralValues.Keys)
+            ExtractFormatIndexes(simplifiedValues[key]).Should().BeEquivalentTo(ExtractFormatIndexes(neutralValues[key]));
+    }
+
+    public void Dispose()
+    {
+        CultureInfo.CurrentCulture = _previousCulture;
+        CultureInfo.CurrentUICulture = _previousUiCulture;
+        CultureInfo.DefaultThreadCurrentCulture = _previousDefaultCulture;
+        CultureInfo.DefaultThreadCurrentUICulture = _previousDefaultUiCulture;
+        Environment.SetEnvironmentVariable("UDT_APPDATA_OVERRIDE", _previousAppDataOverride);
+
+        try
+        {
+            if (Directory.Exists(_appDataDirectory))
+                Directory.Delete(_appDataDirectory, recursive: true);
+        }
+        catch
+        {
+            // Test cleanup must not hide the assertion that already ran.
+        }
+    }
+
+    private static Dictionary<string, string> ReadValues(ResourceSet set) =>
+        set.Cast<DictionaryEntry>()
+            .Where(entry => entry.Key is string && entry.Value is not null)
+            .ToDictionary(entry => (string)entry.Key, entry => entry.Value!.ToString()!);
+
+    private static int[] ExtractFormatIndexes(string value)
+    {
+        var indexes = new List<int>();
+        for (var index = 0; index < value.Length - 1; index++)
+        {
+            if (value[index] != '{' || !char.IsDigit(value[index + 1]))
+                continue;
+
+            var end = index + 1;
+            while (end < value.Length && char.IsDigit(value[end]))
+                end++;
+
+            if (end < value.Length && value[end] == '}'
+                && int.TryParse(value[(index + 1)..end], out var argumentIndex))
+            {
+                indexes.Add(argumentIndex);
+            }
+
+            index = end;
+        }
+
+        return indexes.OrderBy(index => index).ToArray();
+    }
+}

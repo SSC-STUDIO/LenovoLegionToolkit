@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Extensions;
+using UniversalDeviceToolkit.WPF.Resources;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Automation;
 
@@ -42,7 +43,7 @@ public abstract class AbstractComboBoxAutomationStepCardControl<T>(IAutomationSt
     {
         var obj = Activator.CreateInstance(AutomationStep.GetType(), _state);
         if (obj is not IAutomationStep<T> step)
-            throw new InvalidOperationException("Couldn't create automation step");
+            throw new InvalidOperationException(Resource.AutomationStep_CreationFailed);
         return step;
     }
 
@@ -50,7 +51,7 @@ public abstract class AbstractComboBoxAutomationStepCardControl<T>(IAutomationSt
     {
         IDisplayName dn => dn.DisplayName,
         Enum e => e.GetDisplayName(),
-        _ => value.ToString() ?? throw new InvalidOperationException("Unsupported type")
+        _ => value.ToString() ?? throw new InvalidOperationException(Resource.ComboBox_UnsupportedType)
     };
 
     protected override async Task RefreshAsync()

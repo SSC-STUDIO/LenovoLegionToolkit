@@ -1,6 +1,6 @@
 using UniversalDeviceToolkit.Lib;
 
-namespace UniversalDeviceToolkit.Tests;
+namespace UniversalDeviceToolkit.Tests.Infrastructure;
 
 public static class MachineInformationTestData
 {

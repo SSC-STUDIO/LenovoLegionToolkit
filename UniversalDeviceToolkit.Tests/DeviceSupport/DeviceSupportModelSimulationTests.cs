@@ -1,6 +1,7 @@
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
+using UniversalDeviceToolkit.Tests.Infrastructure;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.DeviceSupport;

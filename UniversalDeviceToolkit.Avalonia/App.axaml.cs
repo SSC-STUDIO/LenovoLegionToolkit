@@ -70,6 +70,9 @@ public partial class App : Application
 
     private void SetupTrayIcon()
     {
+        _trayIcon?.Dispose();
+        _trayIcon = null;
+
         var menu = new NativeMenu
         {
             Items =

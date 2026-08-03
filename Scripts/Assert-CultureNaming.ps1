@@ -36,10 +36,22 @@ function Resolve-RepoRoot {
 }
 
 # Canonical BCP 47 set — single source of truth, mirrors LocalizationHelper.Languages.
-$canonicalCultures = @(
-    'ar','bg','cs','de','el','en','es','fr','hu','it','ja','lv','nl-NL','pl','pt','pt-BR',
-    'ro','ru','sk','tr','uk','uz-Latn-UZ','vi','zh-Hans','zh-Hant'
-)
+# Read the canonical list from the shared runtime catalog so every host and
+# every release script validates the same cultures.
+$catalogPath = Join-Path (Resolve-RepoRoot) 'UniversalDeviceToolkit.Lib.Abstractions\Localization\LocalizationCatalog.cs'
+if (-not (Test-Path -LiteralPath $catalogPath)) {
+    throw "Shared localization catalog not found: $catalogPath"
+}
+
+$catalogText = Get-Content -LiteralPath $catalogPath -Raw
+$catalogBlock = [regex]::Match(
+    $catalogText,
+    'SupportedCultures\s*\{\s*get;\s*\}\s*=\s*\[(?<values>[\s\S]*?)\];')
+$canonicalCultures = @([regex]::Matches($catalogBlock.Groups['values'].Value, 'new\("([^"]+)"\)') |
+    ForEach-Object { $_.Groups[1].Value })
+if ($canonicalCultures.Count -eq 0) {
+    throw "Could not read supported cultures from $catalogPath"
+}
 
 $canonicalSet = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
 foreach ($c in $canonicalCultures) { [void]$canonicalSet.Add($c) }
@@ -135,17 +147,14 @@ foreach ($catalogPath in $catalogFiles) {
     }
 }
 
-# 6. LocalizationHelper.Languages (C# source)
-$helperPath = Join-Path $repo 'UniversalDeviceToolkit.WPF\Utils\LocalizationHelper.cs'
-if (Test-Path -LiteralPath $helperPath) {
-    $helper = Get-Content -LiteralPath $helperPath -Raw
-    foreach ($m in [regex]::Matches($helper, 'new\("([a-zA-Z0-9@-]+)"\)')) {
-        $c = $m.Groups[1].Value
-        if ($canonicalSet.Contains($c) -or $c -in @('zh-Hans', 'zh-Hant', 'uz-Latn-UZ', 'nl-NL', 'pt-BR')) {
-            continue
-        }
-        Assert-Canonical $c 'LocalizationHelper.Languages' ''
-    }
+# 6. Shared LocalizationCatalog (C# source)
+$catalogNames = @([regex]::Matches($catalogBlock.Groups['values'].Value, 'new\("([a-zA-Z0-9@-]+)"\)') |
+    ForEach-Object { $_.Groups[1].Value })
+if (((@($catalogNames | Sort-Object -Unique) -join '|') -ne (@($canonicalCultures | Sort-Object -Unique) -join '|'))) {
+    $failures.Add('Shared LocalizationCatalog culture list could not be read consistently')
+}
+foreach ($c in $catalogNames) {
+    Assert-Canonical $c 'LocalizationCatalog.SupportedCultures' ''
 }
 
 # 7. Installer AppLanguages (FirstRunState.cs)

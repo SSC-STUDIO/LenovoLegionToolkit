@@ -22,10 +22,27 @@ public static class LocalizationRuntime
         }
     }
 
-    public static string LanguageFilePath => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "UniversalDeviceToolkit",
-        "lang");
+    public static string LanguageFilePath => Path.Combine(GetAppDataDirectory(), "lang");
+
+    private static string GetAppDataDirectory()
+    {
+        var overridePath = Environment.GetEnvironmentVariable("UDT_APPDATA_OVERRIDE");
+        if (!string.IsNullOrWhiteSpace(overridePath))
+            return Path.GetFullPath(overridePath);
+
+        if (OperatingSystem.IsWindows())
+        {
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "UniversalDeviceToolkit");
+        }
+
+        var xdg = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
+        var configHome = !string.IsNullOrWhiteSpace(xdg)
+            ? xdg
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config");
+        return Path.Combine(configHome, "UniversalDeviceToolkit");
+    }
 
     public static CultureInfo Initialize(CultureInfo? preferred = null, bool persist = false)
     {
@@ -48,17 +65,26 @@ public static class LocalizationRuntime
     }
 
     public static CultureInfo Initialize(string? preferredCultureName, bool persist = false) =>
-        Initialize(LocalizationCatalog.NormalizeCulture(preferredCultureName), persist);
+        Initialize(
+            string.IsNullOrWhiteSpace(preferredCultureName)
+                ? null
+                : LocalizationCatalog.NormalizeCulture(preferredCultureName),
+            persist);
 
     public static Task<CultureInfo> SetCultureAsync(CultureInfo culture, bool persist = true)
     {
+        ArgumentNullException.ThrowIfNull(culture);
         var normalized = LocalizationCatalog.NormalizeCulture(culture);
         Apply(normalized, persist);
         return Task.FromResult(normalized);
     }
 
     public static Task<CultureInfo> SetCultureAsync(string? cultureName, bool persist = true) =>
-        SetCultureAsync(LocalizationCatalog.NormalizeCulture(cultureName), persist);
+        SetCultureAsync(
+            string.IsNullOrWhiteSpace(cultureName)
+                ? LocalizationCatalog.NormalizeCulture(CultureInfo.CurrentUICulture)
+                : LocalizationCatalog.NormalizeCulture(cultureName),
+            persist);
 
     private static void Apply(CultureInfo culture, bool persist)
     {

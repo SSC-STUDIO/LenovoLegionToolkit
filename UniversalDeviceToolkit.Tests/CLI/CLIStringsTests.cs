@@ -69,7 +69,7 @@ public class CLIStringsTests
         WithCulture("zh-Hans", () =>
         {
             var value = Strings.Get("CLI_Shell_RegisteredYes", "Shell is registered");
-            value.Should().Be("Shell 已注册");
+            value.Should().Be("Shell \u5DF2\u6CE8\u518C");
         });
     }
 

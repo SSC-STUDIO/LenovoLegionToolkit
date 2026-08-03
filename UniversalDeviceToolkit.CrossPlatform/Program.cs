@@ -38,7 +38,8 @@ static int PrintStatus()
 {
     var status = CrossPlatformStatus.Create();
 
-    Console.WriteLine($"{status.ProductName} {T("Help_Title", "cross-platform diagnostics")}");
+    Console.WriteLine($"{status.ProductName}");
+    Console.WriteLine(T("Help_Title", "Cross-platform diagnostics"));
     Console.WriteLine($"{T("Label_Version", "Version")}: {status.Version}");
     Console.WriteLine($"{T("Label_OS", "OS")}: {status.OsDescription}");
     Console.WriteLine($"{T("Label_Architecture", "Architecture")}: {status.Architecture}");
@@ -307,7 +308,7 @@ static int PrintDoctor()
 
 static int PrintHelp()
 {
-    Console.WriteLine(T("Help_Title", "Universal Device Toolkit cross-platform diagnostics"));
+    Console.WriteLine(T("Help_Title", "Cross-platform diagnostics"));
     Console.WriteLine();
     Console.WriteLine("Usage:");
     Console.WriteLine($"  udt status    {T("Help_Status", "Print human-readable platform support status.")}");

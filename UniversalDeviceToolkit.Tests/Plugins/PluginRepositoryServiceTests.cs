@@ -11,6 +11,8 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Tests.Infrastructure;
+using TestMockFactory = UniversalDeviceToolkit.Tests.Infrastructure.MockFactory;
 using Moq;
 using Xunit;
 
@@ -352,7 +354,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         var manifest = CreateInstallManifest(pluginId, packagePath);
         manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
         manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
-        var plugin = MockFactory.CreateMockPlugin(id: pluginId);
+        var plugin = TestMockFactory.CreateMockPlugin(id: pluginId);
 
         _pluginManager
             .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
@@ -409,7 +411,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         var manifest = CreateInstallManifest(pluginId, packagePath);
         manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
         manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
-        var plugin = MockFactory.CreateMockPlugin(id: pluginId);
+        var plugin = TestMockFactory.CreateMockPlugin(id: pluginId);
 
         _pluginManager
             .Setup(manager => manager.ScanAndLoadPluginsAsync(It.IsAny<bool>()))
@@ -438,7 +440,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         var manifest = CreateInstallManifest(pluginId, packagePath);
         manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
         manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
-        var plugin = MockFactory.CreateMockPlugin(id: pluginId);
+        var plugin = TestMockFactory.CreateMockPlugin(id: pluginId);
         var sequence = new MockSequence();
 
         _pluginManager.InSequence(sequence)

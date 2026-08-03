@@ -14,6 +14,7 @@ using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Windows.Utils;
@@ -26,7 +27,7 @@ public static class LocalizationHelper
 {
     private static string LanguagePath => Path.Combine(Folders.AppData, "lang");
 
-    private static readonly CultureInfo DefaultLanguage = new("en");
+    private static readonly CultureInfo DefaultLanguage = LocalizationCatalog.DefaultCulture;
     private static readonly object _eventLock = new();
     private static EventHandler? _pluginResourceCulturesChanged;
 
@@ -48,33 +49,7 @@ public static class LocalizationHelper
         }
     }
 
-    public static readonly CultureInfo[] Languages = [
-        DefaultLanguage,
-        new("ar"),
-        new("bg"),
-        new("cs"),
-        new("de"),
-        new("el"),
-        new("es"),
-        new("fr"),
-        new("hu"),
-        new("it"),
-        new("ja"),
-        new("lv"),
-        new("nl-NL"),
-        new("pl"),
-        new("pt"),
-        new("pt-BR"),
-        new("ro"),
-        new("ru"),
-        new("sk"),
-        new("tr"),
-        new("uk"),
-        new("vi"),
-        new("zh-Hans"),
-        new("zh-Hant"),
-        new("uz-Latn-UZ"),
-    ];
+    public static readonly CultureInfo[] Languages = LocalizationCatalog.SupportedCultures.ToArray();
 
     public static FlowDirection Direction => Resource.Culture?.TextInfo.IsRightToLeft ?? false
         ? FlowDirection.RightToLeft
@@ -96,12 +71,7 @@ public static class LocalizationHelper
 
     public static string LanguageDisplayName(CultureInfo culture)
     {
-        var name = culture.NativeName.Transform(culture, To.TitleCase);
-
-        if (culture.IetfLanguageTag.Equals("uz-Latn-UZ", StringComparison.OrdinalIgnoreCase))
-        {
-            name = "Uzbek (Latin)";
-        }
+        var name = LocalizationCatalog.GetDisplayName(culture);
 
         return ForceLeftToRight(name);
     }
@@ -591,38 +561,14 @@ public static class LocalizationHelper
         }
     }
 
-    private static CultureInfo[] EnumerateCultureFallbackChain(CultureInfo cultureInfo)
-    {
-        var fallbackChain = new List<CultureInfo>();
-        var requestedIsChinese = IsChineseCulture(cultureInfo);
-        var current = cultureInfo;
-
-        while (current != CultureInfo.InvariantCulture)
-        {
-            if (!requestedIsChinese && IsChineseCulture(current))
-            {
-                current = current.Parent;
-                continue;
-            }
-
-            if (!fallbackChain.Any(existing => existing.Name.Equals(current.Name, StringComparison.OrdinalIgnoreCase)))
-                fallbackChain.Add(current);
-
-            current = current.Parent;
-        }
-
-        if (!fallbackChain.Any(existing => existing.Name.Equals(DefaultLanguage.Name, StringComparison.OrdinalIgnoreCase)))
-            fallbackChain.Add(DefaultLanguage);
-
-        return fallbackChain.ToArray();
-    }
+    private static CultureInfo[] EnumerateCultureFallbackChain(CultureInfo cultureInfo) =>
+        LocalizationCatalog.GetFallbackChain(cultureInfo).ToArray();
 
     internal static bool IsChineseCulture(CultureInfo cultureInfo)
     {
         if (cultureInfo is null || cultureInfo == CultureInfo.InvariantCulture)
             return false;
 
-        var name = cultureInfo.Name;
-        return name.StartsWith("zh", StringComparison.OrdinalIgnoreCase);
+        return LocalizationCatalog.IsChinese(cultureInfo);
     }
 }

@@ -1,297 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-
-  <data name="CLI_Header_RootCommandDescription" xml:space="preserve">
-    <value>从命令行控制 Universal Device Toolkit 的实用工具。
-
-Universal Device Toolkit 必须在后台运行，并且必须在设置中开启 CLI 选项才能使用此工具。</value>
-  </data>
-
-  <data name="CLI_Option_Language_Description" xml:space="preserve">
-    <value>临时选择显示语言。</value>
-  </data>
-
-  <data name="CLI_Command_Status_Description" xml:space="preserve">
-    <value>显示正在运行的应用状态以及启动相关的开关</value>
-  </data>
-
-  <data name="CLI_Command_QuickAction_Description" xml:space="preserve">
-    <value>运行快捷操作</value>
-  </data>
-  <data name="CLI_Argument_QaName_Description" xml:space="preserve">
-    <value>快捷操作的名称</value>
-  </data>
-  <data name="CLI_Option_QaList_Description" xml:space="preserve">
-    <value>列出可用的快捷操作</value>
-  </data>
-  <data name="CLI_Error_QaNameOrList_Required" xml:space="preserve">
-    <value>必须指定 {0} 或 --list</value>
-  </data>
-
-  <data name="CLI_Command_Feature_Description" xml:space="preserve">
-    <value>控制功能</value>
-  </data>
-  <data name="CLI_Command_GetFeature_Description" xml:space="preserve">
-    <value>获取功能的值</value>
-  </data>
-  <data name="CLI_Command_SetFeature_Description" xml:space="preserve">
-    <value>设置功能的值</value>
-  </data>
-  <data name="CLI_Option_FeatureList_Description" xml:space="preserve">
-    <value>列出可用的功能</value>
-  </data>
-  <data name="CLI_Argument_FeatureName_Description" xml:space="preserve">
-    <value>功能的名称</value>
-  </data>
-  <data name="CLI_Argument_FeatureValue_Description" xml:space="preserve">
-    <value>功能的值</value>
-  </data>
-  <data name="CLI_Option_FeatureValueList_Description" xml:space="preserve">
-    <value>列出可用的功能值</value>
-  </data>
-  <data name="CLI_Error_FeatureSubcommandOrList_Required" xml:space="preserve">
-    <value>必须指定 {0}、{1} 或 --list</value>
-  </data>
-  <data name="CLI_Error_FeatureNameOrList_Required" xml:space="preserve">
-    <value>必须指定 {0} 或 --list</value>
-  </data>
-
-  <data name="CLI_Command_Spectrum_Description" xml:space="preserve">
-    <value>控制 Spectrum 背光</value>
-  </data>
-  <data name="CLI_Command_SpectrumProfile_Description" xml:space="preserve">
-    <value>控制 Spectrum 背光配置文件</value>
-  </data>
-  <data name="CLI_Command_SpectrumBrightness_Description" xml:space="preserve">
-    <value>控制 Spectrum 背光亮度</value>
-  </data>
-  <data name="CLI_Command_GetSpectrumProfile_Description" xml:space="preserve">
-    <value>获取当前的 Spectrum 配置文件</value>
-  </data>
-  <data name="CLI_Command_SetSpectrumProfile_Description" xml:space="preserve">
-    <value>设置当前的 Spectrum 配置文件</value>
-  </data>
-  <data name="CLI_Command_GetSpectrumBrightness_Description" xml:space="preserve">
-    <value>获取当前的 Spectrum 亮度</value>
-  </data>
-  <data name="CLI_Command_SetSpectrumBrightness_Description" xml:space="preserve">
-    <value>设置当前的 Spectrum 亮度</value>
-  </data>
-  <data name="CLI_Argument_SpectrumProfile_Description" xml:space="preserve">
-    <value>要设置的配置文件</value>
-  </data>
-  <data name="CLI_Argument_SpectrumBrightness_Description" xml:space="preserve">
-    <value>要设置的亮度</value>
-  </data>
-
-  <data name="CLI_Command_RGB_Description" xml:space="preserve">
-    <value>控制 RGB 背光预设</value>
-  </data>
-  <data name="CLI_Command_GetRGB_Description" xml:space="preserve">
-    <value>获取当前的 RGB 预设</value>
-  </data>
-  <data name="CLI_Command_SetRGB_Description" xml:space="preserve">
-    <value>设置当前的 RGB 预设</value>
-  </data>
-  <data name="CLI_Argument_RGBPreset_Description" xml:space="preserve">
-    <value>要设置的预设</value>
-  </data>
-
-  <data name="CLI_Command_Shell_Description" xml:space="preserve">
-    <value>管理 Shell 上下文菜单扩展 (Nilesoft Shell)</value>
-  </data>
-  <data name="CLI_Option_ShellStatus_Description" xml:space="preserve">
-    <value>查看当前的注册状态</value>
-  </data>
-  <data name="CLI_Option_ShellInstall_Description" xml:space="preserve">
-    <value>安装 Nilesoft Shell</value>
-  </data>
-  <data name="CLI_Option_ShellUninstall_Description" xml:space="preserve">
-    <value>卸载 Nilesoft Shell</value>
-  </data>
-  <data name="CLI_Option_ShellInstallStatus_Description" xml:space="preserve">
-    <value>查看当前的安装状态</value>
-  </data>
-  <data name="CLI_Shell_RegisteredYes" xml:space="preserve">
-    <value>Shell 已注册</value>
-  </data>
-  <data name="CLI_Shell_RegisteredNo" xml:space="preserve">
-    <value>Shell 未注册</value>
-  </data>
-  <data name="CLI_Shell_InstalledYes" xml:space="preserve">
-    <value>Shell 已安装</value>
-  </data>
-  <data name="CLI_Shell_InstalledNo" xml:space="preserve">
-    <value>Shell 未安装</value>
-  </data>
-  <data name="CLI_Shell_InstallInitiated" xml:space="preserve">
-    <value>Shell 安装已启动</value>
-  </data>
-  <data name="CLI_Shell_UninstallInitiated" xml:space="preserve">
-    <value>Shell 卸载已启动</value>
-  </data>
-  <data name="CLI_Shell_NoAction_Hint" xml:space="preserve">
-    <value>请指定一个操作：</value>
-  </data>
-  <data name="CLI_Shell_NoAction_Status" xml:space="preserve">
-    <value>  --status (-s):查看当前的注册状态</value>
-  </data>
-  <data name="CLI_Shell_NoAction_Install" xml:space="preserve">
-    <value>  --install (-i):安装 Nilesoft Shell</value>
-  </data>
-  <data name="CLI_Shell_NoAction_Uninstall" xml:space="preserve">
-    <value>  --uninstall (-x):卸载 Nilesoft Shell</value>
-  </data>
-  <data name="CLI_Shell_NoAction_InstallStatus" xml:space="preserve">
-    <value>  --install-status (-is):查看当前的安装状态</value>
-  </data>
-  <data name="CLI_Error_ShellOnlyOneAction" xml:space="preserve">
-    <value>一次只能指定一个操作</value>
-  </data>
-  <data name="CLI_Error_ShellAtLeastOneAction" xml:space="preserve">
-    <value>至少需要指定一个操作选项</value>
-  </data>
-
-  <data name="CLI_Command_Network_Description" xml:space="preserve">
-    <value>管理网络加速</value>
-  </data>
-  <data name="CLI_Option_NetworkStatus_Description" xml:space="preserve">
-    <value>显示网络加速状态</value>
-  </data>
-  <data name="CLI_Option_NetworkStart_Description" xml:space="preserve">
-    <value>明确启动网络加速</value>
-  </data>
-  <data name="CLI_Option_NetworkStop_Description" xml:space="preserve">
-    <value>停止网络加速并恢复状态</value>
-  </data>
-  <data name="CLI_Option_NetworkDiagnostics_Description" xml:space="preserve">
-    <value>运行网络诊断且不改变系统状态</value>
-  </data>
-  <data name="CLI_Error_NetworkOnlyOneAction" xml:space="preserve">
-    <value>一次只能指定一个网络操作</value>
-  </data>
-  <data name="CLI_Error_NetworkAtLeastOneAction" xml:space="preserve">
-    <value>至少需要指定一个网络操作选项</value>
-  </data>
-
-  <data name="CLI_IpcError_ConnectFailed" xml:space="preserve">
-    <value>连接失败。请确认 Universal Device Toolkit 正在后台运行，并且已在设置中启用 CLI。</value>
-  </data>
-  <data name="CLI_IpcError_MissingReturnMessage" xml:space="preserve">
-    <value>缺少返回消息</value>
-  </data>
-  <data name="CLI_IpcError_AuthChallengeFailed" xml:space="preserve">
-    <value>接收身份验证质询失败</value>
-  </data>
-  <data name="CLI_IpcError_UnknownFailure" xml:space="preserve">
-    <value>未知错误</value>
-  </data>
-
-  <data name="CLI_Loading_ListFeatures" xml:space="preserve">
-    <value>正在加载功能</value>
-  </data>
-  <data name="CLI_Loading_ListFeatureValues" xml:space="preserve">
-    <value>正在加载值</value>
-  </data>
-  <data name="CLI_Loading_ListQuickActions" xml:space="preserve">
-    <value>正在加载快捷操作</value>
-  </data>
-  <data name="CLI_Loading_GetFeatureValue" xml:space="preserve">
-    <value>正在读取功能</value>
-  </data>
-  <data name="CLI_Loading_SetFeatureValue" xml:space="preserve">
-    <value>正在应用功能</value>
-  </data>
-  <data name="CLI_Loading_GetSpectrumProfile" xml:space="preserve">
-    <value>正在读取 Spectrum 配置文件</value>
-  </data>
-  <data name="CLI_Loading_SetSpectrumProfile" xml:space="preserve">
-    <value>正在应用 Spectrum 配置文件</value>
-  </data>
-  <data name="CLI_Loading_GetSpectrumBrightness" xml:space="preserve">
-    <value>正在读取 Spectrum 亮度</value>
-  </data>
-  <data name="CLI_Loading_SetSpectrumBrightness" xml:space="preserve">
-    <value>正在应用 Spectrum 亮度</value>
-  </data>
-  <data name="CLI_Loading_GetRGBPreset" xml:space="preserve">
-    <value>正在读取 RGB 预设</value>
-  </data>
-  <data name="CLI_Loading_SetRGBPreset" xml:space="preserve">
-    <value>正在应用 RGB 预设</value>
-  </data>
-  <data name="CLI_Loading_QuickAction" xml:space="preserve">
-    <value>正在运行快捷操作</value>
-  </data>
-  <data name="CLI_Loading_IsShellRegistered" xml:space="preserve">
-    <value>正在检查 Shell 注册状态</value>
-  </data>
-  <data name="CLI_Loading_IsShellInstalled" xml:space="preserve">
-    <value>正在检查 Shell 安装状态</value>
-  </data>
-  <data name="CLI_Loading_InstallShell" xml:space="preserve">
-    <value>正在启动 Shell 安装</value>
-  </data>
-  <data name="CLI_Loading_UninstallShell" xml:space="preserve">
-    <value>正在启动 Shell 卸载</value>
-  </data>
-  <data name="CLI_Loading_GetAppStatus" xml:space="preserve">
-    <value>正在检查应用状态</value>
-  </data>
-  <data name="CLI_Loading_GetNetworkAccelerationStatus" xml:space="preserve">
-    <value>正在检查网络加速</value>
-  </data>
-  <data name="CLI_Loading_StartNetworkAcceleration" xml:space="preserve">
-    <value>正在启动网络加速</value>
-  </data>
-  <data name="CLI_Loading_StopNetworkAcceleration" xml:space="preserve">
-    <value>正在停止网络加速</value>
-  </data>
-  <data name="CLI_Loading_RunNetworkDiagnostics" xml:space="preserve">
-    <value>正在运行网络诊断</value>
-  </data>
-  <data name="CLI_Loading_Default" xml:space="preserve">
-    <value>正在等待 Universal Device Toolkit</value>
-  </data>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="CLI_Header_RootCommandDescription" xml:space="preserve"><value>&#x4ECE;&#x547D;&#x4EE4;&#x884C;&#x63A7;&#x5236; Universal Device Toolkit &#x7684;&#x5B9E;&#x7528;&#x5DE5;&#x5177;&#x3002;&#xA;&#xA;Universal Device Toolkit &#x5FC5;&#x987B;&#x5728;&#x540E;&#x53F0;&#x8FD0;&#x884C;&#xFF0C;&#x5E76;&#x4E14;&#x5FC5;&#x987B;&#x5728;&#x8BBE;&#x7F6E;&#x4E2D;&#x5F00;&#x542F; CLI &#x9009;&#x9879;&#x624D;&#x80FD;&#x4F7F;&#x7528;&#x6B64;&#x5DE5;&#x5177;&#x3002;</value></data>
+  <data name="CLI_Command_Status_Description" xml:space="preserve"><value>&#x663E;&#x793A;&#x6B63;&#x5728;&#x8FD0;&#x884C;&#x7684;&#x5E94;&#x7528;&#x72B6;&#x6001;&#x4EE5;&#x53CA;&#x542F;&#x52A8;&#x76F8;&#x5173;&#x7684;&#x5F00;&#x5173;</value></data>
+  <data name="CLI_Command_QuickAction_Description" xml:space="preserve"><value>&#x8FD0;&#x884C;&#x5FEB;&#x6377;&#x64CD;&#x4F5C;</value></data>
+  <data name="CLI_Argument_QaName_Description" xml:space="preserve"><value>&#x5FEB;&#x6377;&#x64CD;&#x4F5C;&#x7684;&#x540D;&#x79F0;</value></data>
+  <data name="CLI_Option_QaList_Description" xml:space="preserve"><value>&#x5217;&#x51FA;&#x53EF;&#x7528;&#x7684;&#x5FEB;&#x6377;&#x64CD;&#x4F5C;</value></data>
+  <data name="CLI_Error_QaNameOrList_Required" xml:space="preserve"><value>&#x5FC5;&#x987B;&#x6307;&#x5B9A; {0} &#x6216; --list</value></data>
+  <data name="CLI_Command_Feature_Description" xml:space="preserve"><value>&#x63A7;&#x5236;&#x529F;&#x80FD;</value></data>
+  <data name="CLI_Command_GetFeature_Description" xml:space="preserve"><value>&#x83B7;&#x53D6;&#x529F;&#x80FD;&#x7684;&#x503C;</value></data>
+  <data name="CLI_Command_SetFeature_Description" xml:space="preserve"><value>&#x8BBE;&#x7F6E;&#x529F;&#x80FD;&#x7684;&#x503C;</value></data>
+  <data name="CLI_Option_FeatureList_Description" xml:space="preserve"><value>&#x5217;&#x51FA;&#x53EF;&#x7528;&#x7684;&#x529F;&#x80FD;</value></data>
+  <data name="CLI_Argument_FeatureName_Description" xml:space="preserve"><value>&#x529F;&#x80FD;&#x7684;&#x540D;&#x79F0;</value></data>
+  <data name="CLI_Argument_FeatureValue_Description" xml:space="preserve"><value>&#x529F;&#x80FD;&#x7684;&#x503C;</value></data>
+  <data name="CLI_Option_FeatureValueList_Description" xml:space="preserve"><value>&#x5217;&#x51FA;&#x53EF;&#x7528;&#x7684;&#x529F;&#x80FD;&#x503C;</value></data>
+  <data name="CLI_Error_FeatureSubcommandOrList_Required" xml:space="preserve"><value>&#x5FC5;&#x987B;&#x6307;&#x5B9A; {0}&#x3001;{1} &#x6216; --list</value></data>
+  <data name="CLI_Error_FeatureNameOrList_Required" xml:space="preserve"><value>&#x5FC5;&#x987B;&#x6307;&#x5B9A; {0} &#x6216; --list</value></data>
+  <data name="CLI_Command_Spectrum_Description" xml:space="preserve"><value>&#x63A7;&#x5236; Spectrum &#x80CC;&#x5149;</value></data>
+  <data name="CLI_Command_SpectrumProfile_Description" xml:space="preserve"><value>&#x63A7;&#x5236; Spectrum &#x80CC;&#x5149;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</value></data>
+  <data name="CLI_Command_SpectrumBrightness_Description" xml:space="preserve"><value>&#x63A7;&#x5236; Spectrum &#x80CC;&#x5149;&#x4EAE;&#x5EA6;</value></data>
+  <data name="CLI_Command_GetSpectrumProfile_Description" xml:space="preserve"><value>&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x7684; Spectrum &#x914D;&#x7F6E;&#x6587;&#x4EF6;</value></data>
+  <data name="CLI_Command_SetSpectrumProfile_Description" xml:space="preserve"><value>&#x8BBE;&#x7F6E;&#x5F53;&#x524D;&#x7684; Spectrum &#x914D;&#x7F6E;&#x6587;&#x4EF6;</value></data>
+  <data name="CLI_Command_GetSpectrumBrightness_Description" xml:space="preserve"><value>&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x7684; Spectrum &#x4EAE;&#x5EA6;</value></data>
+  <data name="CLI_Command_SetSpectrumBrightness_Description" xml:space="preserve"><value>&#x8BBE;&#x7F6E;&#x5F53;&#x524D;&#x7684; Spectrum &#x4EAE;&#x5EA6;</value></data>
+  <data name="CLI_Argument_SpectrumProfile_Description" xml:space="preserve"><value>&#x8981;&#x8BBE;&#x7F6E;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</value></data>
+  <data name="CLI_Argument_SpectrumBrightness_Description" xml:space="preserve"><value>&#x8981;&#x8BBE;&#x7F6E;&#x7684;&#x4EAE;&#x5EA6;</value></data>
+  <data name="CLI_Command_RGB_Description" xml:space="preserve"><value>&#x63A7;&#x5236; RGB &#x80CC;&#x5149;&#x9884;&#x8BBE;</value></data>
+  <data name="CLI_Command_GetRGB_Description" xml:space="preserve"><value>&#x83B7;&#x53D6;&#x5F53;&#x524D;&#x7684; RGB &#x9884;&#x8BBE;</value></data>
+  <data name="CLI_Command_SetRGB_Description" xml:space="preserve"><value>&#x8BBE;&#x7F6E;&#x5F53;&#x524D;&#x7684; RGB &#x9884;&#x8BBE;</value></data>
+  <data name="CLI_Argument_RGBPreset_Description" xml:space="preserve"><value>&#x8981;&#x8BBE;&#x7F6E;&#x7684;&#x9884;&#x8BBE;</value></data>
+  <data name="CLI_Command_Shell_Description" xml:space="preserve"><value>&#x7BA1;&#x7406; Shell &#x4E0A;&#x4E0B;&#x6587;&#x83DC;&#x5355;&#x6269;&#x5C55; (Nilesoft Shell)</value></data>
+  <data name="CLI_Option_ShellStatus_Description" xml:space="preserve"><value>&#x67E5;&#x770B;&#x5F53;&#x524D;&#x7684;&#x6CE8;&#x518C;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Option_ShellInstall_Description" xml:space="preserve"><value>&#x5B89;&#x88C5; Nilesoft Shell</value></data>
+  <data name="CLI_Option_ShellUninstall_Description" xml:space="preserve"><value>&#x5378;&#x8F7D; Nilesoft Shell</value></data>
+  <data name="CLI_Option_ShellInstallStatus_Description" xml:space="preserve"><value>&#x67E5;&#x770B;&#x5F53;&#x524D;&#x7684;&#x5B89;&#x88C5;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Shell_RegisteredYes" xml:space="preserve"><value>Shell &#x5DF2;&#x6CE8;&#x518C;</value></data>
+  <data name="CLI_Shell_RegisteredNo" xml:space="preserve"><value>Shell &#x672A;&#x6CE8;&#x518C;</value></data>
+  <data name="CLI_Shell_InstalledYes" xml:space="preserve"><value>Shell &#x5DF2;&#x5B89;&#x88C5;</value></data>
+  <data name="CLI_Shell_InstalledNo" xml:space="preserve"><value>Shell &#x672A;&#x5B89;&#x88C5;</value></data>
+  <data name="CLI_Shell_InstallInitiated" xml:space="preserve"><value>Shell &#x5B89;&#x88C5;&#x5DF2;&#x542F;&#x52A8;</value></data>
+  <data name="CLI_Shell_UninstallInitiated" xml:space="preserve"><value>Shell &#x5378;&#x8F7D;&#x5DF2;&#x542F;&#x52A8;</value></data>
+  <data name="CLI_Shell_NoAction_Hint" xml:space="preserve"><value>&#x8BF7;&#x6307;&#x5B9A;&#x4E00;&#x4E2A;&#x64CD;&#x4F5C;&#xFF1A;</value></data>
+  <data name="CLI_Shell_NoAction_Status" xml:space="preserve"><value>  --status (-s):&#x67E5;&#x770B;&#x5F53;&#x524D;&#x7684;&#x6CE8;&#x518C;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Shell_NoAction_Install" xml:space="preserve"><value>  --install (-i):&#x5B89;&#x88C5; Nilesoft Shell</value></data>
+  <data name="CLI_Shell_NoAction_Uninstall" xml:space="preserve"><value>  --uninstall (-x):&#x5378;&#x8F7D; Nilesoft Shell</value></data>
+  <data name="CLI_Shell_NoAction_InstallStatus" xml:space="preserve"><value>  --install-status (-is):&#x67E5;&#x770B;&#x5F53;&#x524D;&#x7684;&#x5B89;&#x88C5;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Error_ShellOnlyOneAction" xml:space="preserve"><value>&#x4E00;&#x6B21;&#x53EA;&#x80FD;&#x6307;&#x5B9A;&#x4E00;&#x4E2A;&#x64CD;&#x4F5C;</value></data>
+  <data name="CLI_Error_ShellAtLeastOneAction" xml:space="preserve"><value>&#x81F3;&#x5C11;&#x9700;&#x8981;&#x6307;&#x5B9A;&#x4E00;&#x4E2A;&#x64CD;&#x4F5C;&#x9009;&#x9879;</value></data>
+  <data name="CLI_Command_Network_Description" xml:space="preserve"><value>&#x7BA1;&#x7406;&#x7F51;&#x7EDC;&#x52A0;&#x901F;</value></data>
+  <data name="CLI_Option_NetworkStatus_Description" xml:space="preserve"><value>&#x663E;&#x793A;&#x7F51;&#x7EDC;&#x52A0;&#x901F;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Option_NetworkStart_Description" xml:space="preserve"><value>&#x660E;&#x786E;&#x542F;&#x52A8;&#x7F51;&#x7EDC;&#x52A0;&#x901F;</value></data>
+  <data name="CLI_Option_NetworkStop_Description" xml:space="preserve"><value>&#x505C;&#x6B62;&#x7F51;&#x7EDC;&#x52A0;&#x901F;&#x5E76;&#x6062;&#x590D;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Option_NetworkDiagnostics_Description" xml:space="preserve"><value>&#x8FD0;&#x884C;&#x7F51;&#x7EDC;&#x8BCA;&#x65AD;&#x4E14;&#x4E0D;&#x6539;&#x53D8;&#x7CFB;&#x7EDF;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Error_NetworkOnlyOneAction" xml:space="preserve"><value>&#x4E00;&#x6B21;&#x53EA;&#x80FD;&#x6307;&#x5B9A;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x64CD;&#x4F5C;</value></data>
+  <data name="CLI_Error_NetworkAtLeastOneAction" xml:space="preserve"><value>&#x81F3;&#x5C11;&#x9700;&#x8981;&#x6307;&#x5B9A;&#x4E00;&#x4E2A;&#x7F51;&#x7EDC;&#x64CD;&#x4F5C;&#x9009;&#x9879;</value></data>
+  <data name="CLI_IpcError_ConnectFailed" xml:space="preserve"><value>&#x8FDE;&#x63A5;&#x5931;&#x8D25;&#x3002;&#x8BF7;&#x786E;&#x8BA4; Universal Device Toolkit &#x6B63;&#x5728;&#x540E;&#x53F0;&#x8FD0;&#x884C;&#xFF0C;&#x5E76;&#x4E14;&#x5DF2;&#x5728;&#x8BBE;&#x7F6E;&#x4E2D;&#x542F;&#x7528; CLI&#x3002;</value></data>
+  <data name="CLI_IpcError_MissingReturnMessage" xml:space="preserve"><value>&#x7F3A;&#x5C11;&#x8FD4;&#x56DE;&#x6D88;&#x606F;</value></data>
+  <data name="CLI_IpcError_AuthChallengeFailed" xml:space="preserve"><value>&#x63A5;&#x6536;&#x8EAB;&#x4EFD;&#x9A8C;&#x8BC1;&#x8D28;&#x8BE2;&#x5931;&#x8D25;</value></data>
+  <data name="CLI_IpcError_UnknownFailure" xml:space="preserve"><value>&#x672A;&#x77E5;&#x9519;&#x8BEF;</value></data>
+  <data name="CLI_Loading_ListFeatures" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x529F;&#x80FD;</value></data>
+  <data name="CLI_Loading_ListFeatureValues" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x503C;</value></data>
+  <data name="CLI_Loading_ListQuickActions" xml:space="preserve"><value>&#x6B63;&#x5728;&#x52A0;&#x8F7D;&#x5FEB;&#x6377;&#x64CD;&#x4F5C;</value></data>
+  <data name="CLI_Loading_GetFeatureValue" xml:space="preserve"><value>&#x6B63;&#x5728;&#x8BFB;&#x53D6;&#x529F;&#x80FD;</value></data>
+  <data name="CLI_Loading_SetFeatureValue" xml:space="preserve"><value>&#x6B63;&#x5728;&#x5E94;&#x7528;&#x529F;&#x80FD;</value></data>
+  <data name="CLI_Loading_GetSpectrumProfile" xml:space="preserve"><value>&#x6B63;&#x5728;&#x8BFB;&#x53D6; Spectrum &#x914D;&#x7F6E;&#x6587;&#x4EF6;</value></data>
+  <data name="CLI_Loading_SetSpectrumProfile" xml:space="preserve"><value>&#x6B63;&#x5728;&#x5E94;&#x7528; Spectrum &#x914D;&#x7F6E;&#x6587;&#x4EF6;</value></data>
+  <data name="CLI_Loading_GetSpectrumBrightness" xml:space="preserve"><value>&#x6B63;&#x5728;&#x8BFB;&#x53D6; Spectrum &#x4EAE;&#x5EA6;</value></data>
+  <data name="CLI_Loading_SetSpectrumBrightness" xml:space="preserve"><value>&#x6B63;&#x5728;&#x5E94;&#x7528; Spectrum &#x4EAE;&#x5EA6;</value></data>
+  <data name="CLI_Loading_GetRGBPreset" xml:space="preserve"><value>&#x6B63;&#x5728;&#x8BFB;&#x53D6; RGB &#x9884;&#x8BBE;</value></data>
+  <data name="CLI_Loading_SetRGBPreset" xml:space="preserve"><value>&#x6B63;&#x5728;&#x5E94;&#x7528; RGB &#x9884;&#x8BBE;</value></data>
+  <data name="CLI_Loading_QuickAction" xml:space="preserve"><value>&#x6B63;&#x5728;&#x8FD0;&#x884C;&#x5FEB;&#x6377;&#x64CD;&#x4F5C;</value></data>
+  <data name="CLI_Loading_IsShellRegistered" xml:space="preserve"><value>&#x6B63;&#x5728;&#x68C0;&#x67E5; Shell &#x6CE8;&#x518C;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Loading_IsShellInstalled" xml:space="preserve"><value>&#x6B63;&#x5728;&#x68C0;&#x67E5; Shell &#x5B89;&#x88C5;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Loading_InstallShell" xml:space="preserve"><value>&#x6B63;&#x5728;&#x542F;&#x52A8; Shell &#x5B89;&#x88C5;</value></data>
+  <data name="CLI_Loading_UninstallShell" xml:space="preserve"><value>&#x6B63;&#x5728;&#x542F;&#x52A8; Shell &#x5378;&#x8F7D;</value></data>
+  <data name="CLI_Loading_GetAppStatus" xml:space="preserve"><value>&#x6B63;&#x5728;&#x68C0;&#x67E5;&#x5E94;&#x7528;&#x72B6;&#x6001;</value></data>
+  <data name="CLI_Loading_GetNetworkAccelerationStatus" xml:space="preserve"><value>&#x6B63;&#x5728;&#x68C0;&#x67E5;&#x7F51;&#x7EDC;&#x52A0;&#x901F;</value></data>
+  <data name="CLI_Loading_StartNetworkAcceleration" xml:space="preserve"><value>&#x6B63;&#x5728;&#x542F;&#x52A8;&#x7F51;&#x7EDC;&#x52A0;&#x901F;</value></data>
+  <data name="CLI_Loading_StopNetworkAcceleration" xml:space="preserve"><value>&#x6B63;&#x5728;&#x505C;&#x6B62;&#x7F51;&#x7EDC;&#x52A0;&#x901F;</value></data>
+  <data name="CLI_Loading_RunNetworkDiagnostics" xml:space="preserve"><value>&#x6B63;&#x5728;&#x8FD0;&#x884C;&#x7F51;&#x7EDC;&#x8BCA;&#x65AD;</value></data>
+  <data name="CLI_Loading_Default" xml:space="preserve"><value>&#x6B63;&#x5728;&#x7B49;&#x5F85; Universal Device Toolkit</value></data>
+  <data name="CLI_Option_Language_Description" xml:space="preserve"><value>&#x4E34;&#x65F6;&#x9009;&#x62E9;&#x663E;&#x793A;&#x8BED;&#x8A00;&#x3002;</value></data>
 </root>

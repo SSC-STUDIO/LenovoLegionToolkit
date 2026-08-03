@@ -2624,5 +2624,29 @@ namespace UniversalDeviceToolkit.Lib.Resources {
                 return ResourceManager.GetString("WinKeyState_On", resourceCulture);
             }
         }
+
+        public static string SettingsBackup_MissingManifest {
+            get {
+                return ResourceManager.GetString("SettingsBackup_MissingManifest", resourceCulture);
+            }
+        }
+
+        public static string SettingsBackup_InvalidManifest {
+            get {
+                return ResourceManager.GetString("SettingsBackup_InvalidManifest", resourceCulture);
+            }
+        }
+
+        public static string SettingsBackup_NewerFormat {
+            get {
+                return ResourceManager.GetString("SettingsBackup_NewerFormat", resourceCulture);
+            }
+        }
+
+        public static string SettingsBackup_UnsafeEntry {
+            get {
+                return ResourceManager.GetString("SettingsBackup_UnsafeEntry", resourceCulture);
+            }
+        }
     }
 }

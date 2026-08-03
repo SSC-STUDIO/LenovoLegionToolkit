@@ -4502,4 +4502,18 @@ Ondersteunde formaten zijn: {1}.</value>
   <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
   <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
   <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
-</root>
+  <data name="ComboBox_UnsupportedType" xml:space="preserve">
+    <value>Unsupported type.</value>
+  </data>
+  <data name="AutomationStep_CreationFailed" xml:space="preserve">
+    <value>Could not create automation step.</value>
+  </data>
+  <data name="FeatureRegistration_NotSupported" xml:space="preserve">
+    <value>Feature is not supported.</value>
+  </data>
+  <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
+    <value>Feature returned no value.</value>
+  </data>
+  <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
+    <value>State is not supported.</value>
+  </data></root>

@@ -1030,4 +1030,16 @@
   <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
     <value>已停止 ({0})</value>
   </data>
+  <data name="SettingsBackup_MissingManifest" xml:space="preserve">
+    <value>缺少 UDT 设置备份清单。</value>
+  </data>
+  <data name="SettingsBackup_InvalidManifest" xml:space="preserve">
+    <value>UDT 设置备份清单无效。</value>
+  </data>
+  <data name="SettingsBackup_NewerFormat" xml:space="preserve">
+    <value>备份格式 {0} 高于当前支持的格式 {1}。</value>
+  </data>
+  <data name="SettingsBackup_UnsafeEntry" xml:space="preserve">
+    <value>设置条目不安全：{0}</value>
+  </data>
 </root>

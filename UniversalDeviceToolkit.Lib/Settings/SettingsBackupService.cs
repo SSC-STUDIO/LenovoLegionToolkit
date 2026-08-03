@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
+using UniversalDeviceToolkit.Lib.Resources;
 using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Settings;
@@ -36,12 +37,17 @@ public sealed class SettingsBackupService
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(sourceFile);
         using var archive = ZipFile.OpenRead(sourceFile);
-        var manifestEntry = archive.GetEntry(ManifestName) ?? throw new InvalidDataException("Missing UDT settings backup manifest.");
+        var manifestEntry = archive.GetEntry(ManifestName)
+            ?? throw new InvalidDataException(Resource.SettingsBackup_MissingManifest);
         Manifest manifest;
         using (var reader = new StreamReader(manifestEntry.Open()))
-            manifest = JsonSerializer.Deserialize<Manifest>(reader.ReadToEnd()) ?? throw new InvalidDataException("Invalid UDT settings backup manifest.");
+            manifest = JsonSerializer.Deserialize<Manifest>(reader.ReadToEnd())
+                ?? throw new InvalidDataException(Resource.SettingsBackup_InvalidManifest);
         if (manifest.FormatVersion > CurrentFormatVersion)
-            throw new NotSupportedException($"Backup format {manifest.FormatVersion} is newer than supported format {CurrentFormatVersion}.");
+            throw new NotSupportedException(string.Format(
+                Resource.SettingsBackup_NewerFormat,
+                manifest.FormatVersion,
+                CurrentFormatVersion));
 
         var settingsEntries = archive.Entries
             .Where(entry => entry.FullName.StartsWith("settings/", StringComparison.Ordinal)
@@ -50,7 +56,9 @@ public sealed class SettingsBackupService
         foreach (var entry in settingsEntries)
         {
             if (!PathSecurity.IsValidFileName(entry.Name))
-                throw new InvalidDataException($"Unsafe settings entry: {entry.FullName}");
+                throw new InvalidDataException(string.Format(
+                    Resource.SettingsBackup_UnsafeEntry,
+                    entry.FullName));
         }
 
         var backupsDir = Path.Combine(Folders.AppData, "Backups");

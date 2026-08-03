@@ -9,6 +9,7 @@ using UniversalDeviceToolkit.Lib.Messaging;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Extensions;
+using UniversalDeviceToolkit.WPF.Resources;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Controls;
@@ -103,7 +104,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
     {
         IDisplayName dn => dn.DisplayName,
         Enum e => e.GetDisplayName(),
-        _ => value.ToString() ?? throw new InvalidOperationException("Unsupported type")
+        _ => value.ToString() ?? throw new InvalidOperationException(Resource.ComboBox_UnsupportedType)
     };
 
     protected override async Task OnRefreshAsync()

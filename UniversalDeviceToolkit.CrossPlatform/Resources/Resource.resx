@@ -4,7 +4,7 @@
   <resheader name="version"><value>2.0</value></resheader>
   <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
   <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
-  <data name="Help_Title"><value>Universal Device Toolkit cross-platform diagnostics</value></data>
+  <data name="Help_Title"><value>Cross-platform diagnostics</value></data>
   <data name="Help_Status"><value>Print human-readable platform support status.</value></data>
   <data name="Help_Json"><value>Print platform support status as JSON.</value></data>
   <data name="Help_Hardware"><value>Print detected hardware identity.</value></data>
@@ -17,6 +17,7 @@
   <data name="Help_Set"><value>Run a supported write control.</value></data>
   <data name="Help_Elevate"><value>Restart a write command through Windows UAC when needed.</value></data>
   <data name="Help_Help"><value>Show this help.</value></data>
+  <data name="Help_Support"><value>Print safe basic-mode device support matching.</value></data>
   <data name="Error_UnknownCommand"><value>Unknown command '{0}'. Run 'udt help'.</value></data>
   <data name="Label_Version"><value>Version</value></data>
   <data name="Label_OS"><value>OS</value></data>
@@ -28,4 +29,5 @@
   <data name="Label_Power"><value>Power</value></data>
   <data name="Label_Controls"><value>Controls</value></data>
   <data name="Label_SupportLevel"><value>Support level</value></data>
+  <data name="Hardware_Title"><value>Hardware identity</value></data>
 </root>

@@ -7,7 +7,7 @@
         <IsUdtShippingApp>true</IsUdtShippingApp>
         <AssemblyName>udt-cli</AssemblyName>
         <NeutralLanguage>en</NeutralLanguage>
-        <SatelliteResourceLanguages>en;zh-Hans</SatelliteResourceLanguages>
+        <SatelliteResourceLanguages>$(UdtSatelliteResourceLanguages)</SatelliteResourceLanguages>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
         <DebugType>portable</DebugType>

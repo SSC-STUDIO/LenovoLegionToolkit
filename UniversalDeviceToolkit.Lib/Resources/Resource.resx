@@ -1083,4 +1083,16 @@
   <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
     <value>Stopped ({0})</value>
   </data>
+  <data name="SettingsBackup_MissingManifest" xml:space="preserve">
+    <value>Missing UDT settings backup manifest.</value>
+  </data>
+  <data name="SettingsBackup_InvalidManifest" xml:space="preserve">
+    <value>Invalid UDT settings backup manifest.</value>
+  </data>
+  <data name="SettingsBackup_NewerFormat" xml:space="preserve">
+    <value>Backup format {0} is newer than supported format {1}.</value>
+  </data>
+  <data name="SettingsBackup_UnsafeEntry" xml:space="preserve">
+    <value>Unsafe settings entry: {0}</value>
+  </data>
 </root>

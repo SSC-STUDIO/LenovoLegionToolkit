@@ -10404,5 +10404,11 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string SettingsPage_WindowBackdrop_Acrylic { get { return ResourceManager.GetString("SettingsPage_WindowBackdrop_Acrylic", resourceCulture); } }
         public static string SettingsPage_WindowBackdrop_Off { get { return ResourceManager.GetString("SettingsPage_WindowBackdrop_Off", resourceCulture); } }
 
+        public static string ComboBox_UnsupportedType { get { return ResourceManager.GetString("ComboBox_UnsupportedType", resourceCulture); } }
+        public static string AutomationStep_CreationFailed { get { return ResourceManager.GetString("AutomationStep_CreationFailed", resourceCulture); } }
+        public static string FeatureRegistration_NotSupported { get { return ResourceManager.GetString("FeatureRegistration_NotSupported", resourceCulture); } }
+        public static string FeatureRegistration_NullReturnValue { get { return ResourceManager.GetString("FeatureRegistration_NullReturnValue", resourceCulture); } }
+        public static string FeatureRegistration_StateNotSupported { get { return ResourceManager.GetString("FeatureRegistration_StateNotSupported", resourceCulture); } }
+
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Tests.Infrastructure;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;

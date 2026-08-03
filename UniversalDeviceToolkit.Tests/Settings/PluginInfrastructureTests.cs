@@ -6,6 +6,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Tests.Infrastructure;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Settings;

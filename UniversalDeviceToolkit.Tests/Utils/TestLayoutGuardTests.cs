@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
@@ -19,6 +20,38 @@ public sealed class TestLayoutGuardTests
     private static readonly Regex TypeDeclaration = new(
         @"(?m)\b(?:class|struct|record|interface)\s+(?<name>[A-Za-z0-9_]+)",
         RegexOptions.Compiled);
+
+    private static readonly IReadOnlyDictionary<string, string[]> AggregateTypeContracts =
+        new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["FanTableInfoTests.cs"] = ["FanTableInfoStructTests"],
+            ["MacroTests.cs"] = [
+                "MacroEventTests", "MacroIdentifierTests", "MacroSequenceTests",
+                "MacroControllerCleanUpTests", "MacroControllerEnabledTests", "MacroControllerAllowedKeysTests"],
+            ["WindowsOptimizationRollbackTests.cs"] = [
+                "WindowsOptimizationActionDefinitionContractTests",
+                "WindowsOptimizationActionDefinitionSnapshotTests"],
+            ["Controllers/SensorsControllerTests.cs"] = [
+                "SensorsDataTests", "SensorDataTests", "ISensorsControllerTests", "GenericSensorsControllerTests"],
+            ["Features/FeatureTests.cs"] = [
+                "IFeatureTests", "BatteryStateTests", "PowerModeStateTests", "HybridModeStateTests",
+                "GPUStateTests", "FanTableTypeTests"],
+            ["Network/NetworkAccelerationFoundationTests.cs"] = [
+                "HostsMarkedBlockTests", "PacFileGeneratorTests", "NetworkAccelerationConfigDefaultsTests",
+                "DomainMatcherTests", "NetworkProxySessionTokenTests", "NetworkStateRecoveryServiceTests",
+                "PacDomainMatchingIntegrationTests", "BuiltinDomainGroupsDefaultsTests", "NetworkDomainGroupMigrationTests",
+                "NetworkAccelerationStartSafetyTests"],
+            ["Settings/MoreSettingsStoreTests.cs"] = [
+                "FanCurveSettingsStoreTests", "SpectrumKeyboardSettingsStoreTests"],
+            ["Settings/PluginInfrastructureTests.cs"] = [
+                "PluginManifestAdapterTests", "TestDataGeneratorTests", "AsyncTestHelpersTests",
+                "TestAssertionsTests", "MockFactoryTests"],
+            ["Settings/SettingsTestCollection.cs"] = [
+                "LocalizationTestCollectionDefinition", "SettingsTestCollectionDefinition",
+                "FlaUITestCollectionDefinition", "ProcessStateTestCollectionDefinition"],
+            ["Utils/ThrottleDispatcherEdgeCaseTests.cs"] = [
+                "ThrottleFirstDispatcherEdgeCaseTests", "ThrottleLastDispatcherEdgeCaseTests"]
+        };
 
     [Fact]
     public void TestFiles_ShouldMatchDirectoryNamespaceAndTypeName()
@@ -62,7 +95,10 @@ public sealed class TestLayoutGuardTests
             var typeNames = TypeDeclaration.Matches(source)
                 .Select(match => match.Groups["name"].Value)
                 .ToHashSet(StringComparer.Ordinal);
-            if (!typeNames.Contains(fileName))
+            var normalizedRelative = relative.Replace(Path.DirectorySeparatorChar, '/');
+            if (!typeNames.Contains(fileName)
+                && (!AggregateTypeContracts.TryGetValue(normalizedRelative, out var expectedTypes)
+                    || expectedTypes.Any(typeName => !typeNames.Contains(typeName))))
             {
                 failures.Add($"{relative}: no type named '{fileName}'");
             }

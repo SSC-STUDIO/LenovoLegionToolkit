@@ -4225,4 +4225,19 @@ Fn 将会暂时解除锁定。</value>
   <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve">
     <value>关闭</value>
   </data>
+  <data name="ComboBox_UnsupportedType" xml:space="preserve">
+    <value>不支持的类型。</value>
+  </data>
+  <data name="AutomationStep_CreationFailed" xml:space="preserve">
+    <value>无法创建自动化步骤。</value>
+  </data>
+  <data name="FeatureRegistration_NotSupported" xml:space="preserve">
+    <value>不支持此功能。</value>
+  </data>
+  <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
+    <value>功能未返回值。</value>
+  </data>
+  <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
+    <value>不支持此状态。</value>
+  </data>
 </root>
