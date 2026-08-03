@@ -65,10 +65,21 @@
             <wpfui:DynamicScrollViewer x:Name="_groupsScrollViewer">
                 <StackPanel>
                     <custom:CardControl Margin="0,0,16,16">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.EditDashboardWindow_Sensors}" />
-                        </custom:CardControl.Header>
-                        <wpfui:ToggleSwitch x:Name="_sensorsSwitch" AutomationProperties.Name="{x:Static resources:Resource.EditDashboardWindow_Sensors}" />
+                        <Grid MinHeight="44">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <controls:CardHeaderControl
+                                Grid.Column="0"
+                                Margin="0,0,16,0"
+                                Title="{x:Static resources:Resource.EditDashboardWindow_Sensors}" />
+                            <wpfui:ToggleSwitch
+                                x:Name="_sensorsSwitch"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="{x:Static resources:Resource.EditDashboardWindow_Sensors}" />
+                        </Grid>
                     </custom:CardControl>
                     <StackPanel x:Name="_groupsStackPanel" Margin="0,0,16,0" />
                 </StackPanel>
@@ -120,4 +131,3 @@
 
     </Grid>
 </local:BaseWindow>
-

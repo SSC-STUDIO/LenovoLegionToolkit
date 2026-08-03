@@ -273,7 +273,7 @@ internal static class NVAPI
     {
         try
         {
-            return NvApiInterop.GetClientPowerInMilliwatts(gpu);
+            return NvApiInterop.GetClientPowerInWatts(gpu);
         }
         catch
         {

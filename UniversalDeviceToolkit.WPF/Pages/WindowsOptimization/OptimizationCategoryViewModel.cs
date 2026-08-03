@@ -50,8 +50,13 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
 
         _actionPropertyChangedHandler = (_, args) =>
         {
-            if (args.PropertyName == nameof(OptimizationActionViewModel.IsSelected))
+            if (args.PropertyName == nameof(OptimizationActionViewModel.IsSelected)
+                || args.PropertyName == nameof(OptimizationActionViewModel.IsEnabled)
+                || args.PropertyName == nameof(OptimizationActionViewModel.IsVisible)
+                || args.PropertyName == nameof(OptimizationActionViewModel.CanEdit))
+            {
                 RaiseSelectionChanged();
+            }
         };
 
         foreach (var action in Actions)
@@ -110,7 +115,7 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            var enabledActions = Actions.Where(action => action.IsEnabled && action.IsVisible).ToList();
+            var enabledActions = Actions.Where(action => action.IsEnabled && action.IsVisible && action.CanEdit).ToList();
             if (enabledActions.Count == 0)
                 return false;
 
@@ -128,7 +133,7 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
             if (!value.HasValue)
                 return;
 
-            foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible))
+            foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible && action.CanEdit))
                 action.IsSelected = value.Value;
 
             OnPropertyChanged(nameof(HeaderCheckState));
@@ -147,15 +152,15 @@ public class OptimizationCategoryViewModel : INotifyPropertyChanged, IDisposable
 
     public void SelectRecommended()
     {
-        foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible))
-            action.IsSelected = action.Recommended;
+        foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible && action.CanEdit))
+            action.IsSelected = OptimizationToggleActionHelper.GetRecommendedSelectedState(action, Actions);
 
         RaiseSelectionChanged();
     }
 
     public void ClearSelection()
     {
-        foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible))
+        foreach (var action in Actions.Where(action => action.IsEnabled && action.IsVisible && action.CanEdit))
             action.IsSelected = false;
 
         RaiseSelectionChanged();

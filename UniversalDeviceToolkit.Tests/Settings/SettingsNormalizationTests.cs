@@ -57,6 +57,24 @@ public class SettingsNormalizationTests
     }
 
     [Fact]
+    public void ApplicationSettings_Normalize_ShouldMigratePluginExtensionsToVisible()
+    {
+        var store = new ApplicationSettings.ApplicationSettingsStore
+        {
+            NavigationItemsVisibility = new Dictionary<string, bool>
+            {
+                ["pluginExtensions"] = false
+            },
+            PluginExtensionsOptInMigrationDone = false
+        };
+
+        var normalized = Normalize<ApplicationSettings.ApplicationSettingsStore>(typeof(ApplicationSettings), store);
+
+        normalized.NavigationItemsVisibility["pluginExtensions"].Should().BeTrue();
+        normalized.PluginExtensionsOptInMigrationDone.Should().BeTrue();
+    }
+
+    [Fact]
     public void PackageDownloaderSettings_Normalize_ShouldRepairNullHiddenPackages()
     {
         var store = new PackageDownloaderSettings.PackageDownloaderSettingsStore

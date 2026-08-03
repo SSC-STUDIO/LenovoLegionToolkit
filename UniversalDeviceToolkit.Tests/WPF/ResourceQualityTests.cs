@@ -51,8 +51,8 @@ public sealed class ResourceQualityTests
     {
         "en",
         "zh",
-        "zh-hans",
-        "zh-hant",
+        "zh-Hans",
+        "zh-Hant",
         "ja",
         "ko"
     };

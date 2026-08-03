@@ -90,11 +90,12 @@ $backendLog = Join-Path $runDir 'backend-performance.txt'
 if (-not $SkipBackend) {
     Write-Host ">>> Backend PerformanceTest" -ForegroundColor Yellow
     $backendOut = Join-Path $runDir 'backend'
+    $backendReport = Join-Path $runDir 'backend-performance-report.txt'
     New-Item -ItemType Directory -Force -Path $backendOut | Out-Null
     Push-Location $backendOut
     try {
         dotnet run --project (Join-Path $RepoRoot 'UniversalDeviceToolkit.PerformanceTest\UniversalDeviceToolkit.PerformanceTest.csproj') `
-            -c $Configuration --no-build 2>&1 | Tee-Object -FilePath $backendLog
+            -c $Configuration --no-build -- --output $backendReport 2>&1 | Tee-Object -FilePath $backendLog
     } finally {
         Pop-Location
     }

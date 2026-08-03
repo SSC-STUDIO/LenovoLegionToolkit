@@ -143,7 +143,7 @@ public class PluginLoaderTests : IDisposable
 
         // Assert
         folders.Should().NotBeNull();
-        folders.Should().Contain("ar", "de", "es", "fr", "ja", "zh-hans", "zh-hant");
+        folders.Should().Contain("ar", "de", "es", "fr", "ja", "zh-Hans", "zh-Hant");
         folders.Should().Contain("tools");
     }
 

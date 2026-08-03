@@ -136,6 +136,7 @@ public class MacroSequenceTests
     }
 }
 
+[Collection(TestCollections.Settings)]
 public class MacroControllerCleanUpTests
 {
     private static (MacroSettings settings, Mock<IMainThreadDispatcher> dispatcher) CreateSettings()
@@ -299,6 +300,7 @@ public class MacroControllerCleanUpTests
     }
 }
 
+[Collection(TestCollections.Settings)]
 public class MacroControllerEnabledTests
 {
     [Fact]

@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Serialization;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
 using Xunit;
@@ -114,6 +116,15 @@ public class ApplicationSettingsStoreDefaultsTests
     }
 
     [Fact]
+    public void PluginExtensionsNavigation_ShouldDefaultToVisible()
+    {
+        var store = new ApplicationSettings.ApplicationSettingsStore();
+
+        store.NavigationItemsVisibility.Should().ContainKey("pluginExtensions");
+        store.NavigationItemsVisibility["pluginExtensions"].Should().BeTrue();
+    }
+
+    [Fact]
     public void ExcludedRefreshRates_ShouldDefaultToEmptyList()
     {
         var store = new ApplicationSettings.ApplicationSettingsStore();
@@ -197,5 +208,30 @@ public class ApplicationSettingsStoreDefaultsTests
         Action act = () => settings.SynchronizeStore();
 
         act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void Deserialize_LegacyJson_MissingApplyAccentColorToTheme_ShouldDefaultToTrue()
+    {
+        // Arrange: JSON from an older version that does not contain ApplyAccentColorToTheme
+        const string legacyJson = """
+                                  {
+                                    "Theme": "Dark",
+                                    "MinimizeToTray": true,
+                                    "AccentColorSource": "System",
+                                    "NotificationDuration": "Normal"
+                                  }
+                                  """;
+
+        var options = LltJson.CreateSettingsOptions();
+        options.Converters.Add(new LegacyPowerPlanGuidJsonConverter());
+
+        // Act
+        var store = JsonSerializer.Deserialize<ApplicationSettings.ApplicationSettingsStore>(legacyJson, options);
+
+        // Assert
+        store.Should().NotBeNull();
+        store!.ApplyAccentColorToTheme.Should().BeTrue("old configs missing this field must default to true for backward compatibility");
+        store.ApplyAccentColorToSystem.Should().BeTrue("old configs missing the system-color field must default to true for backward compatibility");
     }
 }

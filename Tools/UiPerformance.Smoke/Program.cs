@@ -1209,7 +1209,7 @@ internal static class Program
         File.WriteAllText(settingsPath, root.ToJsonString(JsonOptions));
         File.WriteAllText(Path.Combine(appDataDirectory, "integrations.json"),
             new JsonObject { ["CLI"] = true }.ToJsonString(JsonOptions));
-        File.WriteAllText(Path.Combine(appDataDirectory, "lang"), "zh-hans");
+        File.WriteAllText(Path.Combine(appDataDirectory, "lang"), "zh-Hans");
         File.WriteAllLines(Path.Combine(appDataDirectory, "device-setup"),
         [
             "devicePackId=",

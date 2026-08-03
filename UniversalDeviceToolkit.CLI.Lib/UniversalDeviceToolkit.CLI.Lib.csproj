@@ -3,7 +3,6 @@
         <TargetFramework>$(UDTTargetFramework)</TargetFramework>
         <RootNamespace>UniversalDeviceToolkit.CLI.Lib</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
-        <Nullable>enable</Nullable>
 	    <Copyright>$(ProjectCopyright)</Copyright>
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>

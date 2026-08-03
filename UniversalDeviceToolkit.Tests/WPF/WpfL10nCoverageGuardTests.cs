@@ -30,8 +30,8 @@ public sealed class WpfL10nCoverageGuardTests
     private static readonly string[] RequiredCultures =
     [
         "ar", "bg", "cs", "de", "el", "en", "es", "fr", "hu", "it", "ja", "lv",
-        "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
-        "vi", "zh-hans", "zh-hant",
+        "nl-NL", "pl", "pt", "pt-BR", "ro", "ru", "sk", "tr", "uk", "uz-Latn-UZ",
+        "vi", "zh-Hans", "zh-Hant",
     ];
 
     // Loanwords kept identical on purpose in many locales (not a missing translation).

@@ -30,12 +30,14 @@ public static class BuiltinDomainGroups
             ],
             SubItems =
             [
-                new() { Id = "steam-store",    DisplayName = "Steam Store",    Domain = "store.steampowered.com" },
-                new() { Id = "steam-community", DisplayName = "Steam Community", Domain = "steamcommunity.com" },
-                new() { Id = "steam-images",   DisplayName = "Steam Images",   Domain = "steamcdn-a.akamaihd.net" },
-                new() { Id = "steam-static",   DisplayName = "Steam Static",   Domain = "community.steamstatic.com" },
-                new() { Id = "steam-update",   DisplayName = "Steam Update",   Domain = "media.steampowered.com", Enabled = false },
-                new() { Id = "steam-cdn-fix",  DisplayName = "Steam CDN Fix",  Domain = "*.st.dl.eccdnx.com", Enabled = false, IsBeta = true },
+                new() { Id = "steam-images",      DisplayName = "Steam 图片",              Domain = "steamcdn-a.akamaihd.net" },
+                new() { Id = "steam-static",      DisplayName = "Steam 静态资源",          Domain = "community.steamstatic.com" },
+                new() { Id = "steam-update",      DisplayName = "Steam 更新",              Domain = "media.steampowered.com" },
+                new() { Id = "steam-community",   DisplayName = "Steam 社区",              Domain = "steamcommunity.com" },
+                new() { Id = "steam-store",       DisplayName = "Steam 商店",              Domain = "store.steampowered.com" },
+                new() { Id = "steam-discussion",  DisplayName = "Steam 讨论/留言 修复项",  Domain = "配合 Steam 讨论/留言 (IPv4) 使用", IsBeta = true },
+                new() { Id = "steam-video-cover", DisplayName = "Steam 社区视频封面加载",  Domain = "img.youtube.com", IsBeta = true },
+                new() { Id = "steam-cdn-fix",     DisplayName = "Steam 白山云CDN 修复",    Domain = "*.st.dl.eccdnx.com", Enabled = false },
             ]
         },
         new NetworkDomainGroup
@@ -57,11 +59,20 @@ public static class BuiltinDomainGroups
             ],
             SubItems =
             [
-                new() { Id = "github-main",    DisplayName = "GitHub Main",    Domain = "github.com" },
-                new() { Id = "github-api",     DisplayName = "GitHub API",     Domain = "api.github.com" },
-                new() { Id = "github-assets",  DisplayName = "GitHub Assets",  Domain = "githubassets.com" },
-                new() { Id = "github-pages",   DisplayName = "GitHub Pages",   Domain = "github.io" },
-                new() { Id = "github-packages", DisplayName = "GitHub Packages", Domain = "npm.pkg.github.com" },
+                new() { Id = "github-huggingface",  DisplayName = "huggingface.co",          Domain = "huggingface.co", IsBeta = true },
+                new() { Id = "github-dev",          DisplayName = "Github Dev",              Domain = "github.dev" },
+                new() { Id = "github-api",          DisplayName = "Github Api",              Domain = "api.github.com" },
+                new() { Id = "github-assets",       DisplayName = "Github Assets",           Domain = "github.githubassets.com" },
+                new() { Id = "github-education",    DisplayName = "Github Education",        Domain = "education.github.com" },
+                new() { Id = "github-resources",    DisplayName = "Github Resources",        Domain = "resources.github.com" },
+                new() { Id = "github-uploads",      DisplayName = "Github Uploads",          Domain = "uploads.github.com" },
+                new() { Id = "github-archive",      DisplayName = "Github Archivprogram",    Domain = "archiveprogram.github.com" },
+                new() { Id = "github-usercontent",  DisplayName = "Github UserContent",      Domain = "githubusercontent.com" },
+                new() { Id = "github-website",      DisplayName = "Github 网站 (Git Push)",  Domain = "github.com" },
+                new() { Id = "github-app",          DisplayName = "Github App",              Domain = "githubapp.com" },
+                new() { Id = "github-dockerhub",    DisplayName = "Docker Hub",              Domain = "hub.docker.com" },
+                new() { Id = "github-greasyfork",   DisplayName = "greasyfork",              Domain = "greasyfork.org", IsBeta = true },
+                new() { Id = "github-io",           DisplayName = "Github.io",               Domain = "github.io" },
             ]
         },
         new NetworkDomainGroup
@@ -96,12 +107,28 @@ public static class BuiltinDomainGroups
             Domains =
             [
                 "translate.googleapis.com",
-                "open.spotify.com"
+                "open.spotify.com",
+                "fonts.gstatic.com",
+                "gravatar.com",
+                "themes.googleusercontent.com",
+                "ajax.googleapis.com",
+                "fonts.googleapis.com",
+                "maxcdn.bootstrapcdn.com",
+                "cdn.jsdelivr.net",
+                "cdnjs.cloudflare.com",
+                "unpkg.com"
             ],
             SubItems =
             [
-                new() { Id = "google-translate", DisplayName = "Google Translate", Domain = "translate.googleapis.com", Enabled = false },
-                new() { Id = "spotify",          DisplayName = "Spotify",          Domain = "open.spotify.com", Enabled = false },
+                new() { Id = "cdn-fonts-gstatic",  DisplayName = "fonts.gstatic.com",            Domain = "fonts.gstatic.com", Enabled = false },
+                new() { Id = "cdn-gravatar",       DisplayName = "Gravatar 头像",                Domain = "gravatar.com", Enabled = false },
+                new() { Id = "cdn-themes-google",  DisplayName = "themes.googleusercontent.com", Domain = "themes.googleusercontent.com", Enabled = false },
+                new() { Id = "cdn-ajax-google",    DisplayName = "ajax.googleapis.com",          Domain = "ajax.googleapis.com", Enabled = false },
+                new() { Id = "cdn-fonts-google",   DisplayName = "fonts.googleapis.com",         Domain = "fonts.googleapis.com", Enabled = false },
+                new() { Id = "cdn-bootstrap",      DisplayName = "BootStrap CDN",                Domain = "maxcdn.bootstrapcdn.com/bootstrap", Enabled = false },
+                new() { Id = "cdn-jsdelivr", DisplayName = "jsDelivr CDN",  Domain = "cdn.jsdelivr.net",     Enabled = false },
+                new() { Id = "cdn-cdnjs",    DisplayName = "CDNJS",         Domain = "cdnjs.cloudflare.com", Enabled = false },
+                new() { Id = "cdn-unpkg",    DisplayName = "UNPKG",         Domain = "unpkg.com",            Enabled = false },
             ]
         },
         new NetworkDomainGroup
@@ -122,15 +149,6 @@ public static class BuiltinDomainGroups
                 new() { Id = "roblox-main", DisplayName = "Roblox Main", Domain = "www.roblox.com", Enabled = false },
                 new() { Id = "roblox-cdn",  DisplayName = "Roblox CDN",  Domain = "thumbnails.roblox.com", Enabled = false },
             ]
-        },
-        new NetworkDomainGroup
-        {
-            Id = "custom",
-            DisplayName = "Custom",
-            Description = "User-defined domains",
-            IconKey = "CustomLogo",
-            Enabled = false,
-            Domains = []
         }
     ];
 }

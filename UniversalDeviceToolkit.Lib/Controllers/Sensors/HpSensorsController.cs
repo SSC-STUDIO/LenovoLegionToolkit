@@ -67,7 +67,7 @@ public class HpSensorsController(GPUController gpuController, IHpWmiBios bios) :
                 Log.Instance.Trace("HP WMI fan read failed; using fallback.", ex);
         }
 
-        return fallback.GetAwaiter().GetResult();
+        return AwaitWithTimeout(fallback);
     }
 
     private static async Task<bool> IsHpMachineAsync()

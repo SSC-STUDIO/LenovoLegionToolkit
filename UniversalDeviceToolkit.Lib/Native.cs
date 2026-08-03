@@ -541,6 +541,11 @@ public struct BootLogoInfo
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct BootLogoChecksum
 {
+    /// <summary>
+    /// Memory layout padding fields required for P/Invoke struct marshalling.
+    /// These fields are never read directly but must be present to maintain
+    /// correct struct size and alignment for native interop.
+    /// </summary>
     private readonly int Unused1;
     public uint Crc;
     private readonly int Unused2;

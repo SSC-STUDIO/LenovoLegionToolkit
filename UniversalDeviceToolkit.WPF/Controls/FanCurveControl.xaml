@@ -4,17 +4,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
-    FlowDirection="LeftToRight">
+    FlowDirection="LeftToRight"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True">
     <UserControl.Resources>
         <Style x:Key="FanCurveSliderStyle" TargetType="Slider">
-            <Setter Property="Width" Value="22" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Width" Value="24" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Slider">
                         <Grid Background="Transparent">
-                            <!-- Max at top so the curve rises with temperature (matches 100%…20% labels). -->
                             <primitives:Track
                                 x:Name="PART_Track"
                                 Margin="0,10"
@@ -59,11 +61,11 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Margin="0,8,0,8">
 
+    <Grid Margin="0,8,0,8" MinHeight="244">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" MinWidth="320" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -71,108 +73,100 @@
         </Grid.RowDefinitions>
 
         <Grid
+            x:Name="_yAxisLabelsGrid"
             Grid.Row="0"
             Grid.Column="0"
-            Margin="0,0,8,0">
+            MinWidth="58"
+            Margin="0,0,12,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <!-- Y-axis = fan speed % (not temperature). Top was wrongly bound to TemperatureMax. -->
-            <Label
+            <TextBlock
                 Grid.Row="0"
                 HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                Content="{x:Static resources:Resource.FanCurveControl_FanSpeedMax}"
+                VerticalAlignment="Top"
+                Text="{x:Static resources:Resource.FanCurveControl_FanSpeedMax}"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Label
+            <TextBlock
+                Grid.Row="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Text="80%"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock
                 Grid.Row="2"
                 HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                Content="80%"
+                VerticalAlignment="Center"
+                Text="60%"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Label
+            <TextBlock
+                Grid.Row="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Text="40%"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock
                 Grid.Row="4"
                 HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                Content="60%"
+                VerticalAlignment="Center"
+                Text="20%"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Label
-                Grid.Row="6"
+            <TextBlock
+                Grid.Row="5"
                 HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                Content="40%"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Label
-                Grid.Row="8"
-                HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                Content="20%"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Label
-                Grid.Row="10"
-                HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                Content="{x:Static resources:Resource.FanCurveControl_FanSpeed}"
+                VerticalAlignment="Bottom"
+                Text="{x:Static resources:Resource.FanCurveControl_FanSpeed}"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
         </Grid>
 
         <Border
+            x:Name="_plotArea"
             Grid.Row="0"
             Grid.Column="1"
-            BorderBrush="{DynamicResource TextFillColorDisabledBrush}"
-            BorderThickness="1,0,0,1" />
+            MinHeight="230"
+            Background="{DynamicResource ChartSurfaceBrush}"
+            BorderBrush="{DynamicResource ChartSurfaceBorderBrush}"
+            BorderThickness="1"
+            ClipToBounds="True"
+            CornerRadius="{StaticResource CornerRadiusCompact}">
+            <Grid
+                x:Name="_plotContent"
+                Margin="14,12,14,14"
+                ClipToBounds="True">
+                <Canvas
+                    x:Name="_gridCanvas"
+                    IsHitTestVisible="False"
+                    SnapsToDevicePixels="True" />
+                <Canvas
+                    x:Name="_graphCanvas"
+                    IsHitTestVisible="False"
+                    SnapsToDevicePixels="True" />
+                <Grid
+                    x:Name="_slidersGrid"
+                    Background="Transparent"
+                    ClipToBounds="False" />
+            </Grid>
+        </Border>
 
-        <Canvas
-            x:Name="_canvas"
-            Grid.Row="0"
-            Grid.Column="1" />
-
-        <Grid
-            x:Name="_slidersGrid"
-            Grid.Row="0"
-            Grid.Column="1"
-            Height="200">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-        </Grid>
-
-        <Grid
+        <TextBlock
             Grid.Row="1"
             Grid.Column="1"
-            Margin="0,8,0,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Label
-                Grid.Row="1"
-                HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                Content="{x:Static resources:Resource.FanCurveControl_TemperatureMax}"
-                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-        </Grid>
-
+            Margin="0,8,2,0"
+            HorizontalAlignment="Right"
+            Text="{x:Static resources:Resource.FanCurveControl_TemperatureMax}"
+            Visibility="Collapsed"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Canvas
+            x:Name="_xAxisLabelsCanvas"
+            Grid.Row="1"
+            Grid.Column="1"
+            Height="28"
+            Margin="14,8,14,0"
+            IsHitTestVisible="False" />
     </Grid>
 </UserControl>

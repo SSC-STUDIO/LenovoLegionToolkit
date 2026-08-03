@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -557,8 +557,7 @@
     <value>風扇曲線</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>警告！
-風扇處於長時間滿轉速的情況下將會減少其壽命。
+    <value>風扇處於長時間滿轉速的情況下將會減少其壽命。
 【請謹慎使用此選項！】</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
@@ -3977,10 +3976,10 @@
     <value>已選取 0 個項目</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
-    <value>收藏所選</value>
+    <value>推薦目標</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
-    <value>收藏或取消收藏所選網域組（收藏項排在前面）</value>
+    <value>選擇推薦的網路加速目標</value>
   </data>
   <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
     <value>請先在下方選擇要操作的網域組。</value>
@@ -3989,13 +3988,13 @@
     <value>加速後端元件缺失，無法啟動。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
-    <value>單擊選擇網域組 · 雙擊啟用/關閉 · 底部列可收藏或啟動所選組。</value>
+    <value>單擊設定目標組。使用星號查看推薦目標，使用播放按鈕啟動。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
-    <value>啟動所選</value>
+    <value>啟動或停止加速</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
-    <value>啟用所選網域組並啟動網絡加速</value>
+    <value>啟動或停止加速，不改變目標選擇</value>
   </data>
   <data name="NetworkAccelerationPage_State_Connected" xml:space="preserve">
     <value>已連線</value>
@@ -4115,4 +4114,19 @@
   <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
   <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+<data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>全局介面強調色</value></data>
+<data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>調整全局介面色彩時修改系統色彩</value></data>
+<data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>調整全局介面色彩時同時修改主題風格</value></data>
+<data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>視窗背景效果</value></data>
+<data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>選擇應用程式視窗使用的 Windows 背景效果。</value></data>
+<data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>雲母</value></data>
+<data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>壓克力</value></data>
+<data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>關閉</value></data>
+<data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>全局介面色彩模式</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
 </root>

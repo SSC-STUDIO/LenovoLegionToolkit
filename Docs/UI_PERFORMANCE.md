@@ -7,7 +7,7 @@ This document describes how to measure **every main shell surface** of Universal
 From an interactive Windows desktop session (elevated recommended if the app requires admin):
 
 ```powershell
-cd D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit
+cd C:\path\to\UniversalDeviceToolkit
 
 # Full suite: build + backend benches + all UI surfaces
 .\Scripts\Run-UiPerformanceSuite.ps1 -Configuration Release -Iterations 2
@@ -123,12 +123,24 @@ Not a timer, but exercises the same navigation graph and catches visual jank fro
 ### 7. FlaUI automated tests
 
 ```powershell
-.\run_flaui_tests_admin.ps1
-# or
-dotnet test UniversalDeviceToolkit.Tests --filter "FullyQualifiedName~FlaUI" -c Debug
+dotnet test UniversalDeviceToolkit.UiAutomation.Tests/UniversalDeviceToolkit.UiAutomation.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --filter "FullyQualifiedName~FlaUI"
 ```
 
 See [FlaUI_Testing.md](./FlaUI_Testing.md).
+
+### 8. Windows-hosted Linux verification through WSL
+
+When a Windows developer needs to validate the real Linux TFM and host probes,
+run this from the repository root after installing a WSL distribution with the
+.NET 10 SDK:
+
+```powershell
+.\Scripts\Test-CrossPlatformInWsl.ps1 -Distro Ubuntu -Configuration Release
+```
+
+The script runs locked restore, builds the Linux platform assembly and portable
+test project, runs the cross-platform tests, and smoke-tests the diagnostics CLI
+inside WSL. It fails when WSL or the requested distribution is unavailable.
 
 ## Interpreting results
 

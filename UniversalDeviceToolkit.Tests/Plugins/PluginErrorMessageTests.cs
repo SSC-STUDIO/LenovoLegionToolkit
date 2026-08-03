@@ -17,6 +17,7 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class PluginErrorMessageTests : TemporaryFileTestBase
 {
     private readonly string? _originalAppDataOverride;

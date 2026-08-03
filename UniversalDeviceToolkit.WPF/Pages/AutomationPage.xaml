@@ -158,15 +158,24 @@
                     <StackPanel>
 
                         <custom:CardControl Margin="0,0,0,24">
-                            <custom:CardControl.Header>
-                                <controls:CardHeaderControl Title="{x:Static resources:Resource.AutomationPage_ActionsEnabled_Title}" Subtitle="{x:Static resources:Resource.AutomationPage_ActionsEnable_Message}" />
-                            </custom:CardControl.Header>
-                            <wpfui:ToggleSwitch
-                                x:Name="_enableAutomaticPipelinesToggle"
-                                Margin="0,0,0,8"
-                                AutomationProperties.AutomationId="AutomationEnableAutomaticPipelinesToggle"
-                                AutomationProperties.Name="{x:Static resources:Resource.AutomationPage_ActionsEnabled_Title}"
-                                Click="EnableAutomaticPipelinesToggle_Click" />
+                            <Grid MinHeight="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <controls:CardHeaderControl
+                                    Grid.Column="0"
+                                    Margin="0,0,16,0"
+                                    Title="{x:Static resources:Resource.AutomationPage_ActionsEnabled_Title}"
+                                    Subtitle="{x:Static resources:Resource.AutomationPage_ActionsEnable_Message}" />
+                                <wpfui:ToggleSwitch
+                                    x:Name="_enableAutomaticPipelinesToggle"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    AutomationProperties.AutomationId="AutomationEnableAutomaticPipelinesToggle"
+                                    AutomationProperties.Name="{x:Static resources:Resource.AutomationPage_ActionsEnabled_Title}"
+                                    Click="EnableAutomaticPipelinesToggle_Click" />
+                            </Grid>
                         </custom:CardControl>
 
                         <custom:EmptyState

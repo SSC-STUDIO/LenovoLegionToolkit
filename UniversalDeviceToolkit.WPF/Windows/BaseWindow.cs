@@ -32,6 +32,7 @@ public class BaseWindow : FluentWindow
 
         Loaded += BaseWindow_Loaded;
         Closed += BaseWindow_Closed;
+        Deactivated += BaseWindow_Deactivated;
         DpiChanged += BaseWindow_DpiChanged;
         AppScaleManager.ScaleChanged += AppScaleManager_ScaleChanged;
     }
@@ -67,6 +68,7 @@ public class BaseWindow : FluentWindow
         }
 
         var hwndSource = PresentationSource.FromVisual(this) as HwndSource;
+        RenderingCompatibilityHelper.ApplyBackdrop(this, WindowBackdropType, settings);
         RenderingCompatibilityHelper.ApplyWindowRenderingCompatibility(this, hwndSource, settings);
 
         // Maximize to monitor work area (not full screen) so MyDockFinder Dock/Finder
@@ -86,6 +88,7 @@ public class BaseWindow : FluentWindow
         var settings = IoCContainer.Resolve<ApplicationSettings>();
         var backdropType = RenderingCompatibilityHelper.GetPreferredBackgroundType(settings);
         WindowBackdropType = backdropType;
+        RenderingCompatibilityHelper.ApplyBackdrop(this, backdropType, settings);
         RenderingCompatibilityHelper.ApplyOpaqueWindowFallback(this, settings);
         RenderingCompatibilityHelper.ApplyWindowRenderingCompatibility(this, PresentationSource.FromVisual(this) as HwndSource, settings);
     }
@@ -96,6 +99,7 @@ public class BaseWindow : FluentWindow
         if (!_suppressFluentWindowCallbacks && !RenderingCompatibilityHelper.ShouldForceSoftwareRendering(settings))
             base.OnBackdropTypeChanged(oldValue, newValue);
 
+        RenderingCompatibilityHelper.ApplyBackdrop(this, newValue, settings);
         RenderingCompatibilityHelper.ApplyOpaqueWindowFallback(this, settings);
         RenderingCompatibilityHelper.ApplyWindowRenderingCompatibility(this, PresentationSource.FromVisual(this) as HwndSource, settings);
     }
@@ -115,8 +119,16 @@ public class BaseWindow : FluentWindow
     {
         Loaded -= BaseWindow_Loaded;
         Closed -= BaseWindow_Closed;
+        Deactivated -= BaseWindow_Deactivated;
         DpiChanged -= BaseWindow_DpiChanged;
         AppScaleManager.ScaleChanged -= AppScaleManager_ScaleChanged;
+    }
+
+    private void BaseWindow_Deactivated(object? sender, System.EventArgs e)
+    {
+        // Alt+Tab during a drag can skip WM_EXITSIZEMOVE. Do not leave a cached
+        // client surface or a temporarily disabled backdrop behind after focus changes.
+        WindowResizeStabilityHelper.RestoreIfNeeded(this);
     }
 
     private void AppScaleManager_ScaleChanged(object? sender, System.EventArgs e)

@@ -42,7 +42,7 @@ jobs:
         run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-restore -v:minimal
 
       - name: Run cross-platform test suite
-        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Debug --no-build --verbosity normal --logger "trx;LogFileName=linux-test-results.trx"
+        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Debug --no-build --verbosity normal --logger "trx;LogFileName=linux-test-results.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
       - name: Smoke diagnostics CLI (Release)
         shell: bash
@@ -81,4 +81,14 @@ jobs:
         with:
           name: test-results-linux
           path: '**/linux-test-results.trx'
+          if-no-files-found: warn
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: coverage-linux
+          path: |
+            **/*coverage.cobertura.xml
+            **/*coverage.opencover.xml
           if-no-files-found: warn

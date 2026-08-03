@@ -184,6 +184,14 @@ public static partial class WMI
                 }
             });
 
+        public static Task<(bool Success, int Value)> TryIsSupportGpuOCAsync() => TryCallAsync(
+            "ROOT\\WMI",
+            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+            "IsSupportGpuOC",
+            [],
+            pdc => Convert.ToInt32(pdc["Data"].Value),
+            fallback: 0);
+
         public static Task<int> IsSupportGpuOCAsync() => CallAsync("ROOT\\WMI",
             $"SELECT * FROM LENOVO_GAMEZONE_DATA",
             "IsSupportGpuOC",

@@ -37,7 +37,7 @@
                                 x:Name="TitleText"
                                 HorizontalAlignment="Center"
                                 FontSize="{DynamicResource FontSizeSubsection}"
-                                FontWeight="SemiBold"
+                                FontWeight="Medium"
                                 Text="{TemplateBinding Title}"
                                 TextAlignment="Center"
                                 TextWrapping="Wrap">

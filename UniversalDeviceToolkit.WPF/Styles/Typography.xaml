@@ -53,21 +53,21 @@
     <Style x:Key="AppDisplaySectionTitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeDisplaySection}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
 
     <Style x:Key="AppSectionTitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeSection}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
 
     <Style x:Key="AppSubsectionTitleTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeSubsection}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
     </Style>
 
@@ -89,7 +89,7 @@
     <Style x:Key="AppHeroBadgeTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
     </Style>
 
     <Style x:Key="AppBodyTextBlockStyle" TargetType="TextBlock">
@@ -127,7 +127,7 @@
     <!-- Compact in-card section heading (smaller than AppSubsectionTitleTextBlockStyle). -->
     <Style x:Key="AppSectionLabelTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         <Setter Property="Margin" Value="0,0,0,2" />
     </Style>
@@ -135,7 +135,7 @@
     <!-- Label inside AppStatusPillBorderStyle. -->
     <Style x:Key="AppStatusPillTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="LineHeight" Value="16" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="TextWrapping" Value="NoWrap" />
@@ -146,7 +146,7 @@
     <!-- Metric tile readout value (pairs with AppMetricTileBorderStyle). -->
     <Style x:Key="AppMetricValueTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{DynamicResource FontSizePageDescription}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         <Setter Property="VerticalAlignment" Value="Bottom" />
     </Style>

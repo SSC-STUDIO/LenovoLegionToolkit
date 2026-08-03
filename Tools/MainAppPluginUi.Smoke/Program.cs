@@ -686,13 +686,26 @@ internal static class Program
             return "en";
 
         var normalized = rawValue.Trim().ToLowerInvariant().Replace('_', '-');
-        return normalized switch
+        var canonical = normalized switch
         {
             "en" or "en-us" or "english" => "en",
-            "zh" or "zh-cn" or "zh-hans" or "zh-chs" or "chinese" => "zh-hans",
-            "zh-hant" or "zh-tw" or "zh-hk" or "zh-cht" => "zh-hant",
-            _ => normalized
+            "zh" or "zh-cn" or "zh-hans" or "zh-chs" or "chinese" => "zh-Hans",
+            "zh-hant" or "zh-tw" or "zh-hk" or "zh-cht" => "zh-Hant",
+            _ => ToCanonicalCultureName(normalized)
         };
+        return canonical;
+    }
+
+    private static string ToCanonicalCultureName(string name)
+    {
+        try
+        {
+            return new CultureInfo(name).Name;
+        }
+        catch
+        {
+            return name;
+        }
     }
 
     private static ScenarioPreset? ResolveScenarioPreset(SmokeScenario scenario)
@@ -811,7 +824,7 @@ MainAppPluginUi.Smoke
 Usage:
 MainAppPluginUi.Smoke.dll [--repo-root <path>] [--app-dir <installed-or-published-app-dir>] [--plugin <id[,id]>] [--plugin-source <pluginId=online|local[,pluginId=...]>]
                             [--scenario shell-local|combo-local|driver-download|system-optimization|dashboard|power-mode] [--theme system|light|dark]
-                            [--lang en|zh-hans|zh-hant|<culture>]
+                            [--lang en|zh-Hans|zh-Hant|<culture>]
                             [--screenshots off|failures|always] [--screenshot-dir <path>] [--keep-artifacts]
                             [--watch] [--step-delay-ms <ms>] [--success-hold-ms <ms>] [--failure-hold-ms <ms>]
                             [--disable-animations] [--animation-speed-ms <ms>]
@@ -825,7 +838,7 @@ Options:
   --plugin-source        Per-plugin install source. Use '*' as wildcard, for example '*=online' or 'shell-integration=online,custom-mouse=local'. Default source is online for every smoke-supported plugin. Local sources require matching plugin build directories or the smoke fails fast.
   --scenario             Predefined smoke preset. 'shell-local' and 'combo-local' keep their historical plugin filters but now default to online install flow; 'driver-download' captures the Driver Download page without plugin install work; 'system-optimization' validates all System Optimization tabs without applying destructive actions; 'dashboard' validates sensor card expand/collapse; 'power-mode' validates the performance-mode entry without changing hardware mode unless --power-mode-hardware-verify is set.
   --theme                Override app theme for the smoke sandbox. One of: system, light, dark.
-  --lang                 UI language written to the smoke sandbox lang file. Default: en. Use zh-hans for Simplified Chinese README captures.
+  --lang                 UI language written to the smoke sandbox lang file. Default: en. Use zh-Hans for Simplified Chinese README captures.
   --screenshots          Screenshot policy: 'off', 'failures', or 'always'. Default: 'failures'.
   --screenshot-dir       Output directory for screenshot artifacts. Defaults to a temp folder per smoke run.
   --keep-artifacts       Keep the smoke sandbox and local package bundle after a successful run.

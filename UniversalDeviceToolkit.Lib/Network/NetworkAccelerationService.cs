@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Resources;
@@ -60,6 +61,141 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
             return IsRunning
                 ? string.Format(Resource.NetworkAcceleration_Status_Running, Config.Mode, Config.ListenPort)
                 : string.Format(Resource.NetworkAcceleration_Status_Stopped, Config.Mode);
+        }
+    }
+
+    public async Task<NetworkProxyTrafficSnapshot?> GetTrafficSnapshotAsync(
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsRunning || !_launcher.IsWorkerAlive)
+            return null;
+
+        try
+        {
+            var result = await _launcher.CreateClient()
+                .StatusAsync(cancellationToken)
+                .ConfigureAwait(false);
+            if (!result.Success || result.Data is null)
+                return null;
+
+            return new NetworkProxyTrafficSnapshot
+            {
+                BytesUploaded = ReadInt64(result.Data, "bytesUploaded"),
+                BytesDownloaded = ReadInt64(result.Data, "bytesDownloaded"),
+                ActiveConnections = (int)Math.Clamp(ReadInt64(result.Data, "activeConnections"), 0, int.MaxValue),
+                TotalConnections = Math.Max(0, ReadInt64(result.Data, "totalConnections")),
+                HealthStatus = ReadString(result.Data, "health", "unknown")
+            };
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.TraceOnce(
+                "network-accel-traffic-status",
+                "Network acceleration traffic status is temporarily unavailable.",
+                ex);
+            return null;
+        }
+
+        static long ReadInt64(IReadOnlyDictionary<string, string> data, string key)
+            => data.TryGetValue(key, out var raw) &&
+               long.TryParse(raw, global::System.Globalization.NumberStyles.Integer,
+                    global::System.Globalization.CultureInfo.InvariantCulture, out var value)
+                ? value
+                 : 0;
+
+        static string ReadString(IReadOnlyDictionary<string, string> data, string key, string fallback)
+            => data.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value)
+                ? value
+                : fallback;
+    }
+
+    public async Task<NetworkProxyRuntimeSnapshot?> GetRuntimeSnapshotAsync(
+        CancellationToken cancellationToken = default)
+    {
+        if (!IsRunning || !_launcher.IsWorkerAlive)
+            return null;
+
+        try
+        {
+            var client = _launcher.CreateClient();
+            var status = await client.StatusAsync(cancellationToken).ConfigureAwait(false);
+            if (!status.Success || status.Data is null)
+                return null;
+
+            var traffic = new NetworkProxyTrafficSnapshot
+            {
+                BytesUploaded = ReadInt64(status.Data, "bytesUploaded"),
+                BytesDownloaded = ReadInt64(status.Data, "bytesDownloaded"),
+                ActiveConnections = (int)Math.Clamp(ReadInt64(status.Data, "activeConnections"), 0, int.MaxValue),
+                TotalConnections = Math.Max(0, ReadInt64(status.Data, "totalConnections")),
+                HealthStatus = ReadString(status.Data, "health", "unknown")
+            };
+
+            var connections = await ReadSnapshotsAsync<NetworkProxyConnectionSnapshot>(
+                () => client.ConnectionsAsync(cancellationToken), cancellationToken).ConfigureAwait(false);
+            var destinations = await ReadSnapshotsAsync<NetworkProxyDestinationSnapshot>(
+                () => client.DestinationsAsync(cancellationToken), cancellationToken).ConfigureAwait(false);
+
+            return new NetworkProxyRuntimeSnapshot
+            {
+                Traffic = traffic,
+                HealthStatus = traffic.HealthStatus,
+                Connections = connections,
+                Destinations = destinations
+            };
+        }
+        catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+        {
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.TraceOnce(
+                "network-accel-runtime-status",
+                "Network acceleration runtime details are temporarily unavailable.",
+                ex);
+            return null;
+        }
+
+        static long ReadInt64(IReadOnlyDictionary<string, string> data, string key)
+            => data.TryGetValue(key, out var raw) &&
+               long.TryParse(raw, global::System.Globalization.NumberStyles.Integer,
+                    global::System.Globalization.CultureInfo.InvariantCulture, out var value)
+                ? value
+                : 0;
+
+        static string ReadString(IReadOnlyDictionary<string, string> data, string key, string fallback)
+            => data.TryGetValue(key, out var value) && !string.IsNullOrWhiteSpace(value)
+                ? value
+                : fallback;
+
+        static async Task<IReadOnlyList<T>> ReadSnapshotsAsync<T>(
+            Func<Task<NetworkProxyIpcResult>> request,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await request().ConfigureAwait(false);
+                if (!result.Success || result.Data is null ||
+                    !result.Data.TryGetValue("items", out var itemsJson) ||
+                    string.IsNullOrWhiteSpace(itemsJson))
+                {
+                    return Array.Empty<T>();
+                }
+
+                return JsonSerializer.Deserialize<IReadOnlyList<T>>(itemsJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? Array.Empty<T>();
+            }
+            catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+            {
+                return Array.Empty<T>();
+            }
+            catch
+            {
+                return Array.Empty<T>();
+            }
         }
     }
 
@@ -275,10 +411,16 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
     }
 
     private List<string> CollectEnabledDomains()
+        => CollectEnabledDomains(Config.DomainGroups);
+
+    internal static List<string> CollectEnabledDomains(IEnumerable<NetworkDomainGroup>? groups)
     {
-        return (Config.DomainGroups ?? [])
-            .Where(g => g.Enabled)
-            .SelectMany(g => g.Domains ?? [])
+        return (groups ?? [])
+            .Where(g => g is not null && g.Enabled)
+            .SelectMany(g => (g.Domains ?? [])
+                .Concat((g.SubItems ?? [])
+                    .Where(s => s is not null && s.Enabled)
+                    .Select(s => s.Domain)))
             .Where(d => !string.IsNullOrWhiteSpace(d))
             .Select(d => d.Trim().ToLowerInvariant())
             .Distinct(StringComparer.Ordinal)
@@ -353,12 +495,107 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
     private void EnsureBuiltinDomainGroups()
     {
         Config.DomainGroups ??= [];
-        if (Config.DomainGroups.Count > 0)
+        if (Config.DomainGroups.Count == 0)
+        {
+            Config.DomainGroups = BuiltinDomainGroups.CreateDefaults();
+            try { _settings.SynchronizeStore(); }
+            catch { /* non-fatal */ }
             return;
+        }
 
-        Config.DomainGroups = BuiltinDomainGroups.CreateDefaults();
-        try { _settings.SynchronizeStore(); }
-        catch { /* non-fatal */ }
+        // Older configs: drop the removed "custom" group and backfill new public-cdn entries.
+        if (MigrateDomainGroups(Config.DomainGroups))
+        {
+            try { _settings.SynchronizeStore(); }
+            catch { /* non-fatal */ }
+        }
+    }
+
+    /// <summary>
+    /// Migrates persisted domain groups from older config versions.
+    /// Removes the retired "custom" group and merges every built-in group's metadata,
+    /// domains, and sub-items without touching the user's Enabled choices. Returns true when
+    /// anything changed.
+    /// </summary>
+    internal static bool MigrateDomainGroups(List<NetworkDomainGroup> groups)
+    {
+        var changed = groups.RemoveAll(g => string.Equals(g?.Id, "custom", StringComparison.OrdinalIgnoreCase)) > 0;
+
+        foreach (var defaultGroup in BuiltinDomainGroups.CreateDefaults())
+        {
+            var existing = groups.FirstOrDefault(g => string.Equals(g?.Id, defaultGroup.Id, StringComparison.OrdinalIgnoreCase));
+            if (existing is null)
+            {
+                groups.Add(defaultGroup);
+                changed = true;
+                continue;
+            }
+
+            existing.Domains ??= [];
+            existing.SubItems ??= [];
+
+            if (string.IsNullOrWhiteSpace(existing.DisplayName))
+            {
+                existing.DisplayName = defaultGroup.DisplayName;
+                changed = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(existing.IconKey) && !string.IsNullOrWhiteSpace(defaultGroup.IconKey))
+            {
+                existing.IconKey = defaultGroup.IconKey;
+                changed = true;
+            }
+
+            if (string.IsNullOrWhiteSpace(existing.Description) && !string.IsNullOrWhiteSpace(defaultGroup.Description))
+            {
+                existing.Description = defaultGroup.Description;
+                changed = true;
+            }
+
+            foreach (var domain in defaultGroup.Domains ?? [])
+            {
+                if (!existing.Domains.Any(d => string.Equals(d, domain, StringComparison.OrdinalIgnoreCase)))
+                {
+                    existing.Domains.Add(domain);
+                    changed = true;
+                }
+            }
+
+            foreach (var defaultSubItem in defaultGroup.SubItems ?? [])
+            {
+                var existingSubItem = existing.SubItems.FirstOrDefault(s =>
+                    string.Equals(s?.Id, defaultSubItem.Id, StringComparison.OrdinalIgnoreCase));
+                if (existingSubItem is null)
+                {
+                    existing.SubItems.Add(CloneSubItem(defaultSubItem));
+                    changed = true;
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(existingSubItem.DisplayName))
+                {
+                    existingSubItem.DisplayName = defaultSubItem.DisplayName;
+                    changed = true;
+                }
+
+                if (string.IsNullOrWhiteSpace(existingSubItem.Domain))
+                {
+                    existingSubItem.Domain = defaultSubItem.Domain;
+                    changed = true;
+                }
+            }
+        }
+
+        return changed;
+
+        static NetworkDomainSubItem CloneSubItem(NetworkDomainSubItem source) => new()
+        {
+            Id = source.Id,
+            DisplayName = source.DisplayName,
+            Domain = source.Domain,
+            Enabled = source.Enabled,
+            IsBeta = source.IsBeta
+        };
     }
 
     public async ValueTask DisposeAsync() => await StopAsync().ConfigureAwait(false);

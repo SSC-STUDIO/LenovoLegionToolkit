@@ -181,6 +181,8 @@ public class IpcServer(
                         throw new IpcException("Unauthorized");
                     }
 
+                    EnsurePeerElevation(pipe, IsCurrentProcessElevated());
+
                     var res = await HandleRequest(req).ConfigureAwait(false);
                     await pipe.WriteObjectAsync(res, token).ConfigureAwait(false);
                 }
@@ -239,6 +241,34 @@ public class IpcServer(
 
         return security;
     }
+
+    private static void EnsurePeerElevation(NamedPipeServerStream pipe, bool serverElevated)
+    {
+        if (!serverElevated)
+            return;
+
+        var peerElevated = false;
+        pipe.RunAsClient(() =>
+        {
+            using var identity = WindowsIdentity.GetCurrent();
+            peerElevated = IsAdministratorToken(identity);
+        });
+
+        if (!IsPeerElevationAllowed(serverElevated, peerElevated))
+            throw new IpcException("Unauthorized");
+    }
+
+    private static bool IsCurrentProcessElevated()
+    {
+        using var identity = WindowsIdentity.GetCurrent();
+        return IsAdministratorToken(identity);
+    }
+
+    private static bool IsAdministratorToken(WindowsIdentity identity) =>
+        new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
+
+    private static bool IsPeerElevationAllowed(bool serverElevated, bool peerElevated) =>
+        !serverElevated || peerElevated;
 
     /// <summary>
     /// Dual listen names: legacy DEFAULT (primary) + preferred UDT, both isolation-suffixed the same way.

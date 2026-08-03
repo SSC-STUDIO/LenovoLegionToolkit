@@ -28,6 +28,8 @@ public static class PipeStreamExtensions
         await stream.WriteAsync(bytes, token).ConfigureAwait(false);
     }
 
+    private const int MaxBufferSize = 16 * 1024 * 1024; // 16 MB
+
     public static async Task<T?> ReadObjectAsync<T>(this PipeStream stream, CancellationToken token = default)
     {
         if (stream.ReadMode != PipeTransmissionMode.Message)
@@ -35,6 +37,7 @@ public static class PipeStreamExtensions
 
         var buffer = new byte[1024];
         var builder = new StringBuilder();
+        var totalBytesRead = 0;
 
         try
         {
@@ -43,6 +46,10 @@ public static class PipeStreamExtensions
                 var bytesRead = await stream.ReadAsync(buffer, token).ConfigureAwait(false);
                 if (bytesRead == 0)
                     throw new IOException("Pipe stream was closed unexpectedly.");
+
+                totalBytesRead += bytesRead;
+                if (totalBytesRead > MaxBufferSize)
+                    throw new IOException($"Pipe message exceeded maximum buffer size of {MaxBufferSize} bytes.");
 
                 builder.Append(Encoding.GetString(buffer, 0, bytesRead));
             } while (!stream.IsMessageComplete);

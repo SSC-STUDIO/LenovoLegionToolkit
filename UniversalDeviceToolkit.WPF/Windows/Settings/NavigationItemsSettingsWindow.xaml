@@ -60,85 +60,127 @@
                     x:Name="_keyboardCard"
                     Margin="0,0,0,8"
                     Visibility="Collapsed">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}" 
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}"
                             Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_keyboardToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="keyboard" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_keyboardToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="keyboard" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}" 
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}"
                             Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_automationToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="automation" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_automationToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="automation" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}" 
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}"
                             Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_macroToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="macro" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_macroToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="macro" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}" 
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
                             Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_windowsOptimizationToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="windowsOptimization" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_windowsOptimizationToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="windowsOptimization" />
+                    </Grid>
                 </custom:CardControl>
 
 
 
                 <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}" 
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}"
                             Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_pluginExtensionsToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="pluginExtensions" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_pluginExtensionsToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="pluginExtensions" />
+                    </Grid>
                 </custom:CardControl>
 
 
 
                 <custom:CardControl Margin="0,0,0,24">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl 
-                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_About}" 
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_About}"
                             Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_aboutToggle"
-                        Margin="0,0,0,8"
-                        Click="NavigationItemToggle_Click"
-                        Tag="about" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_aboutToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="about" />
+                    </Grid>
                 </custom:CardControl>
             </StackPanel>
         </wpfui:DynamicScrollViewer>

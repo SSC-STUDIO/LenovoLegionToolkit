@@ -72,6 +72,17 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
 
         IsVisibleChanged += DiscreteGPUControl_IsVisibleChanged;
         Unloaded += DiscreteGPUControl_Unloaded;
+        Loaded += DiscreteGPUControl_Loaded;
+    }
+
+    private void DiscreteGPUControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        _gpuController.Refreshed -= GpuController_Refreshed;
+        _gpuController.Refreshed += GpuController_Refreshed;
+        _nativeWindowsMessageListener.Changed -= NativeWindowsMessageListener_Changed;
+        _nativeWindowsMessageListener.Changed += NativeWindowsMessageListener_Changed;
+        IsVisibleChanged -= DiscreteGPUControl_IsVisibleChanged;
+        IsVisibleChanged += DiscreteGPUControl_IsVisibleChanged;
     }
 
     private void DiscreteGPUControl_Unloaded(object sender, RoutedEventArgs e)
@@ -137,7 +148,7 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
         var tooltipStringBuilder = new StringBuilder(Resource.DiscreteGPUControl_PerformanceState);
         tooltipStringBuilder.AppendLine().Append("  \u2192 ").Append(e.PerformanceState ?? Resource.DiscreteGPUControl_PerformanceState_Unknown);
 
-        if (e.State is GPUState.Unknown or GPUState.NvidiaGpuNotFound)
+        if (e.State is GPUState.NvidiaGpuNotFound)
         {
             IsGpuActive = false;
             IsGpuInactive = false;
@@ -146,6 +157,21 @@ public partial class DiscreteGPUControl : AbstractRefreshingControl
             _gpuInfoButton.ToolTip = null;
             _gpuInfoButton.IsEnabled = false;
             Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        // Unknown is a normal transient state while NVAPI is starting. Keep
+        // the card in the graphics section until the first real state arrives.
+        Visibility = Visibility.Visible;
+
+        if (e.State is GPUState.Unknown)
+        {
+            IsGpuActive = false;
+            IsGpuInactive = false;
+            IsGpuPoweredOff = false;
+            _discreteGPUStatusDescription.Text = "-";
+            _gpuInfoButton.ToolTip = null;
+            _gpuInfoButton.IsEnabled = false;
             return;
         }
 

@@ -30,6 +30,15 @@ public class DashboardSettings() : AbstractSettings<DashboardSettings.DashboardS
 
         normalized.Groups = NormalizeGroups(normalized.Groups);
 
+        // Older saved layouts can contain only the groups that were visible at
+        // the time they were saved. Keep the built-in graphics section present
+        // so a transient capability probe cannot make it disappear forever.
+        if (!normalized.Groups.Any(group => group.Type == DashboardGroupType.Graphics))
+        {
+            var graphicsGroup = DashboardGroup.DefaultGroups.First(group => group.Type == DashboardGroupType.Graphics);
+            normalized.Groups = [.. normalized.Groups, graphicsGroup];
+        }
+
         // Ensure all groups have non-null items
         normalized.Groups = normalized.Groups
             .Select(group => new DashboardGroup(

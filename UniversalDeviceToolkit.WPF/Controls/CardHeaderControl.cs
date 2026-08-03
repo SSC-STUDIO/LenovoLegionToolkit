@@ -6,6 +6,12 @@ using System.Windows.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Controls;
 
+public enum CardHeaderWarningSeverity
+{
+    Warning,
+    Critical,
+}
+
 public class CardHeaderControl : UserControl
 {
     private readonly TextBlock _titleTextBlock = new()
@@ -15,19 +21,29 @@ public class CardHeaderControl : UserControl
         TextTrimming = TextTrimming.CharacterEllipsis,
     };
 
-    private readonly TextBlock _subtitleTextBlock = new()
+    private readonly AdaptiveTextBlock _subtitleTextBlock = new()
     {
         Margin = new(0, 4, 0, 0),
         TextWrapping = TextWrapping.Wrap,
         TextTrimming = TextTrimming.CharacterEllipsis,
         MaxHeight = 60, // Limit subtitle to about 3 lines to prevent card bloat
+        MaxLines = 3,
+        MinFontSize = 11,
+        AutoToolTip = true,
     };
 
     private readonly TextBlock _warningTextBlock = new()
     {
-        Margin = new(0, 4, 0, 0),
         TextWrapping = TextWrapping.Wrap,
         TextTrimming = TextTrimming.CharacterEllipsis,
+    };
+
+    private readonly Border _warningSurface = new()
+    {
+        Margin = new(0, 4, 0, 0),
+        Padding = new(8, 4, 8, 4),
+        CornerRadius = new(6),
+        Child = null,
     };
 
     private readonly StackPanel _stackPanel = new();
@@ -69,6 +85,13 @@ public class CardHeaderControl : UserControl
             typeof(CardHeaderControl),
             new PropertyMetadata(string.Empty, OnWarningChanged));
 
+    public static readonly DependencyProperty WarningSeverityProperty =
+        DependencyProperty.Register(
+            nameof(WarningSeverity),
+            typeof(CardHeaderWarningSeverity),
+            typeof(CardHeaderControl),
+            new PropertyMetadata(CardHeaderWarningSeverity.Warning, OnWarningSeverityChanged));
+
     public static readonly DependencyProperty SubtitleToolTipProperty =
         DependencyProperty.Register(
             nameof(SubtitleToolTip),
@@ -104,6 +127,12 @@ public class CardHeaderControl : UserControl
     {
         get => (string)GetValue(WarningProperty);
         set => SetValue(WarningProperty, value);
+    }
+
+    public CardHeaderWarningSeverity WarningSeverity
+    {
+        get => (CardHeaderWarningSeverity)GetValue(WarningSeverityProperty);
+        set => SetValue(WarningSeverityProperty, value);
     }
 
     public string? SubtitleToolTip
@@ -151,7 +180,8 @@ public class CardHeaderControl : UserControl
         Grid.SetRow(_stackPanel, 1);
 
         _stackPanel.Children.Add(_subtitleTextBlock);
-        _stackPanel.Children.Add(_warningTextBlock);
+        _warningSurface.Child = _warningTextBlock;
+        _stackPanel.Children.Add(_warningSurface);
 
         _grid.Children.Add(_titleTextBlock);
         _grid.Children.Add(_stackPanel);
@@ -172,7 +202,8 @@ public class CardHeaderControl : UserControl
             Grid.SetRowSpan(_titleTextBlock, 1);
 
         _subtitleTextBlock.Visibility = string.IsNullOrWhiteSpace(Subtitle) ? Visibility.Collapsed : Visibility.Visible;
-        _warningTextBlock.Visibility = string.IsNullOrWhiteSpace(Warning) ? Visibility.Collapsed : Visibility.Visible;
+        _warningSurface.Visibility = string.IsNullOrWhiteSpace(Warning) ? Visibility.Collapsed : Visibility.Visible;
+        UpdateWarningStyle();
     }
 
     private void UpdateTextStyle()
@@ -181,13 +212,37 @@ public class CardHeaderControl : UserControl
         {
             _titleTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorPrimaryBrush");
             _subtitleTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorSecondaryBrush");
-            _warningTextBlock.SetResourceReference(ForegroundProperty, "StatusWarningBrush");
+            UpdateWarningStyle();
         }
         else
         {
             _titleTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorDisabledBrush");
             _subtitleTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorDisabledBrush");
             _warningTextBlock.SetResourceReference(ForegroundProperty, "TextFillColorDisabledBrush");
+            _warningSurface.Background = null;
+            _warningSurface.BorderBrush = null;
+            _warningSurface.BorderThickness = new(0);
+        }
+    }
+
+    private void UpdateWarningStyle()
+    {
+        if (!IsEnabled)
+            return;
+
+        if (WarningSeverity == CardHeaderWarningSeverity.Critical)
+        {
+            _warningTextBlock.SetResourceReference(ForegroundProperty, "StatusCriticalTextBrush");
+            _warningSurface.SetResourceReference(BackgroundProperty, "StatusCriticalBackgroundBrush");
+            _warningSurface.SetResourceReference(BorderBrushProperty, "StatusCriticalBrush");
+            _warningSurface.BorderThickness = new(1);
+        }
+        else
+        {
+            _warningTextBlock.SetResourceReference(ForegroundProperty, "StatusWarningBrush");
+            _warningSurface.SetResourceReference(BackgroundProperty, "StatusWarningBackgroundBrush");
+            _warningSurface.SetResourceReference(BorderBrushProperty, "StatusWarningBrush");
+            _warningSurface.BorderThickness = new(1);
         }
     }
 
@@ -221,15 +276,32 @@ public class CardHeaderControl : UserControl
         control.RefreshLayout();
     }
 
+    private static void OnWarningSeverityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is CardHeaderControl control)
+            control.UpdateWarningStyle();
+    }
+
     private static void OnSubtitleToolTipChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         if (d is not CardHeaderControl control)
             return;
 
-        // _subtitleTextBlock is initialized as a field, so it's never null
         var value = e.NewValue as string;
-        control._subtitleTextBlock.ToolTip = value;
-        ToolTipService.SetIsEnabled(control._subtitleTextBlock, value is not null);
+        if (value is not null)
+        {
+            // An explicit tooltip overrides the adaptive auto-tooltip.
+            control._subtitleTextBlock.AutoToolTip = false;
+            control._subtitleTextBlock.ToolTip = value;
+            ToolTipService.SetIsEnabled(control._subtitleTextBlock, true);
+        }
+        else
+        {
+            // Let the adaptive control decide whether the full text needs a tooltip.
+            control._subtitleTextBlock.AutoToolTip = true;
+            control._subtitleTextBlock.ToolTip = null;
+        }
+
         control.RefreshLayout();
     }
 

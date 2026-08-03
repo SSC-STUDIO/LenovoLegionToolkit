@@ -97,7 +97,7 @@ public sealed class StartupDeviceSetupCoordinator
             window.Show();
             window.Activate();
             _ = window.Focus();
-            var result = await window.ShouldContinue.ConfigureAwait(true);
+            var result = await window.ShouldContinue;
 
             if (!result.Confirmed)
                 return;
@@ -107,13 +107,13 @@ public sealed class StartupDeviceSetupCoordinator
             // window stays open (retry on next launch) and nothing is persisted.
             if (!result.IsBasicMode &&
                 !string.IsNullOrWhiteSpace(result.DevicePackId) &&
-                !await IsBuiltInPackAsync(result.DevicePackId).ConfigureAwait(true) &&
+                !await IsBuiltInPackAsync(result.DevicePackId) &&
                 !_devicePackManager.IsInstalled(result.DevicePackId))
             {
                 result.Window?.SetInstalling(T("DeviceSetupWindow_DownloadingPack", "Downloading the device support pack…"));
                 try
                 {
-                    await _devicePackManager.InstallAsync(result.DevicePackId).ConfigureAwait(true);
+                    await _devicePackManager.InstallAsync(result.DevicePackId);
                     LoadInstalledCatalog();
                 }
                 catch (Exception ex)

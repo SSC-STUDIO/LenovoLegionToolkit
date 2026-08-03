@@ -3,7 +3,6 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>$(UDTTargetFramework)</TargetFramework>
         <RootNamespace>UniversalDeviceToolkit.CLI</RootNamespace>
-        <Nullable>enable</Nullable>
         <Copyright>$(ProjectCopyright)</Copyright>
         <IsUdtShippingApp>true</IsUdtShippingApp>
         <AssemblyName>udt-cli</AssemblyName>

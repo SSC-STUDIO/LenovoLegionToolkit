@@ -189,7 +189,7 @@ public class GPUController : IDisposable
             if (_state is not GPUState.Active and not GPUState.Inactive)
                 return;
 
-            if (string.IsNullOrEmpty(_gpuInstanceId))
+            if (string.IsNullOrWhiteSpace(_gpuInstanceId))
                 return;
 
             await _hardwareManager.RestartGPUAsync(_gpuInstanceId).ConfigureAwait(false);

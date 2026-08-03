@@ -592,7 +592,7 @@ UDT 提供了功能全面的插件扩展页面，具有以下特点：
 
 #### 为什么我的杀毒软件报告安装程序含有病毒/木马/恶意软件？
 
-UDT 使用了许多底层的 Windows API，杀毒软件可能会识别这些 API 的调用为可疑的，从而造成误报。UDT 本身是开源的，任何感觉此软件有问题的人可以很简单的审查此软件源代码。同时所有安装包都是直接在 Github 上使用 Github Actions 构建的，所以你也不需要担心安装包含有恶意内容。此问题可以通过对程序签名来解决，但此项目只是我业余时间来制作的开源项目，我无法负担每年花几百美元买一个证书。
+UDT 使用了许多底层的 Windows API，杀毒软件可能会识别这些 API 的调用为可疑的，从而造成误报。UDT 本身是开源的，任何感觉此软件有问题的人都可以审查源代码。正式发布的程序和安装包由 GitHub Actions 构建，通过 Azure Trusted Signing 签名，并在发布前验证。未签名的本地构建不应被视为官方发布物。
 
 简而言之，如果你从这个项目的网站上下载了安装程序，不需要担心杀毒软件的报毒，这只是一个误报。同时如果你有能力帮助解决杀毒软件的误报问题，欢迎联系我。
 
@@ -754,13 +754,15 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 
 UDT 的本地化通过 Crowdin 管理，仓库配置文件为 `crowdin.yml`。
 
-- 源文件：4 个模块下的中立资源 `Resource.resx`
+- 源文件：6 个模块下的中立资源 `Resource.resx`
   - `UniversalDeviceToolkit.WPF/Resources`
   - `UniversalDeviceToolkit.Lib/Resources`
   - `UniversalDeviceToolkit.Lib.Automation/Resources`
   - `UniversalDeviceToolkit.Lib.Macro/Resources`
-- 目标文件：与源文件同目录的 `Resource.<locale>.resx`
-- 语言映射：在 `crowdin.yml` 内定义（例如 `zh-CN -> zh-hans`、`zh-TW -> zh-hant`、`pt-BR -> pt-br`）。
+  - `UniversalDeviceToolkit.Lib.Plugins/Resources`
+  - `UniversalDeviceToolkit.CLI/Resources`（`CLI.Resources.resx`）
+- 目标文件：与源文件同目录的 `Resource.<locale>.resx`（CLI 为 `CLI.Resources.<locale>.resx`）。文化名使用 BCP 47 规范形式（`zh-Hans`、`zh-Hant`、`pt-BR`、`nl-NL`、`uz-Latn-UZ`），由 `Scripts/Assert-CultureNaming.ps1` 在 CI 强制校验。
+- 语言映射：在 `crowdin.yml` 内定义（例如 `zh-CN -> zh-Hans`、`zh-TW -> zh-Hant`、`pt-BR -> pt-BR`）。
 
 常用命令：
 

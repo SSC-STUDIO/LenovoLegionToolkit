@@ -269,7 +269,7 @@ private string _currentSearchText = string.Empty;
     {
         try
         {
-            await Task.Delay(delay).ConfigureAwait(true);
+            await Task.Delay(delay);
         }
         catch
         {
@@ -453,7 +453,7 @@ private string _currentSearchText = string.Empty;
 
             // 15s timeout — never leave the page blank waiting on the store forever.
             var fetchTask = _pluginRepositoryService.FetchAvailablePluginsAsync(forceRefresh);
-            var completed = await Task.WhenAny(fetchTask, Task.Delay(OnlineFetchTimeout, token)).ConfigureAwait(true);
+            var completed = await Task.WhenAny(fetchTask, Task.Delay(OnlineFetchTimeout, token));
             if (version != _pageLoadVersion || token.IsCancellationRequested)
             {
                 // Observe abandoned fetch so faults are not unobserved.
@@ -475,7 +475,7 @@ private string _currentSearchText = string.Empty;
             }
             else
             {
-                _onlinePlugins = await fetchTask.ConfigureAwait(true);
+                _onlinePlugins = await fetchTask;
                 if (version != _pageLoadVersion)
                     return;
 
@@ -489,7 +489,7 @@ private string _currentSearchText = string.Empty;
                 try
                 {
                     var installedManifests = BuildInstalledPluginManifestsForUpdateCheck();
-                    var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests).ConfigureAwait(true);
+                    var updates = await _pluginRepositoryService.CheckForUpdatesAsync(installedManifests);
                     if (version != _pageLoadVersion)
                         return;
                     _availableUpdates = updates;
@@ -622,7 +622,7 @@ private string _currentSearchText = string.Empty;
         {
             // Retry keeps installed list visible; skeleton only if nothing to show.
             var showFullSkeleton = _pluginViewModels.Count == 0;
-            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton).ConfigureAwait(true);
+            await FetchOnlinePluginsAsync(forceRefresh: true, showFullSkeleton);
         }
         finally
         {
@@ -913,7 +913,7 @@ private string _currentSearchText = string.Empty;
             if (_hasStartedInitialFetch)
             {
                 // Re-entry: rebuild under skeleton, honor MinSkeletonVisible, then soft reveal.
-                await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
+                await RebuildPluginListWithoutBlockingAsync();
                 SyncPluginInstallUi();
                 SetLoadingState(false);
 
@@ -926,7 +926,7 @@ private string _currentSearchText = string.Empty;
             _hasStartedInitialFetch = true;
 
             // Prepare local/installed list under the skeleton (no network yet).
-            await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
+            await RebuildPluginListWithoutBlockingAsync();
             SyncPluginInstallUi();
             var hasLocalContent = _pluginViewModels.Count > 0;
 
@@ -935,12 +935,12 @@ private string _currentSearchText = string.Empty;
             if (hasLocalContent)
             {
                 SetLoadingState(false); // respects MinSkeletonVisible
-                await FetchOnlinePluginsAsync(showFullSkeleton: false).ConfigureAwait(true);
+                await FetchOnlinePluginsAsync(showFullSkeleton: false);
             }
             else
             {
                 // No rows yet — keep skeleton for the whole store fetch (also min-hold).
-                await FetchOnlinePluginsAsync(showFullSkeleton: true).ConfigureAwait(true);
+                await FetchOnlinePluginsAsync(showFullSkeleton: true);
             }
         }
         catch (Exception ex)
@@ -949,7 +949,7 @@ private string _currentSearchText = string.Empty;
             _onlineMetadataLoadFailed = true;
             _onlineMetadataLoadCompleted = true;
             SetLoadingState(false);
-            await RebuildPluginListWithoutBlockingAsync().ConfigureAwait(true);
+            await RebuildPluginListWithoutBlockingAsync();
             UpdateBulkActionButtonsVisibility();
         }
     }

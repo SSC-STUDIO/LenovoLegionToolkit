@@ -10,7 +10,7 @@
     <Style Selector="Border.badge > TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
     </Style>
 
     <!-- Badge appearance variants -->

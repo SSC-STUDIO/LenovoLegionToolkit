@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.PackageDownloader;
 using UniversalDeviceToolkit.Lib.Plugins;
@@ -22,6 +23,7 @@ using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 
 using Wpf.Ui.Controls;
 using CardExpander = UniversalDeviceToolkit.WPF.Controls.Custom.CardExpander;
+using WpfMenuItem = System.Windows.Controls.MenuItem;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
@@ -39,11 +41,14 @@ public partial class WindowsOptimizationPage : Page
     private readonly PackageDownloaderFactory _packageDownloaderFactory = IoCContainer.Resolve<PackageDownloaderFactory>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private CancellationTokenSource? _pluginRefreshCancellationTokenSource;
+    private CancellationTokenSource? _optimizationStateScanCancellationTokenSource;
+    private int _optimizationStateScanVersion;
     private int _pluginRefreshVersion;
     private bool _hasCompletedInitialCategoriesLoad;
     
     private SelectedActionsWindow? _selectedActionsWindow;
     private ActionDetailsWindow? _actionDetailsWindow;
+    private ContextMenu? _networkAccelerationRecommendationsMenu;
 
     public WindowsOptimizationPage()
     {
@@ -80,21 +85,31 @@ public partial class WindowsOptimizationPage : Page
         AttachNetworkAccelerationSelectionChrome();
         TryApplyPendingPluginFocusRequest();
 
+        var scanVersion = Interlocked.Increment(ref _optimizationStateScanVersion);
+        var scanCancellation = BeginOptimizationStateScan();
         if (!_hasCompletedInitialCategoriesLoad)
-            _ = RunInitialCategoriesLoadAsync();
+            _ = RunInitialCategoriesLoadAsync(scanVersion, scanCancellation);
+        else
+            _ = RunBackgroundCategoriesRefreshAsync(scanVersion, scanCancellation);
     }
 
     /// <summary>
-    /// First load only: InitializeCore starts a fire-and-forget optimization state scan that
-    /// resolves every action's real system state. Keep the categories skeleton up until this
-    /// instance's scan drains (queued behind the in-flight one), then crossfade to the list.
-    /// Later navigations keep the already-populated list live during re-scans.
+    /// First load only: resolve every action's real system state before hiding
+    /// the categories skeleton. Later navigations keep the populated list live
+    /// while the state is refreshed in the background.
     /// </summary>
-    private async Task RunInitialCategoriesLoadAsync()
+    private async Task RunInitialCategoriesLoadAsync(
+        int scanVersion,
+        CancellationTokenSource scanCancellation)
     {
         try
         {
-            await ViewModel.ScanOptimizationStatesAsync();
+            await ViewModel.ScanOptimizationStatesAsync(scanCancellation.Token);
+        }
+        catch (OperationCanceledException) when (scanCancellation.Token.IsCancellationRequested)
+        {
+            // Navigation can unload the cached page while the probes are running.
+            // The next load starts a fresh scan against the current machine state.
         }
         catch (Exception ex)
         {
@@ -103,9 +118,56 @@ public partial class WindowsOptimizationPage : Page
         }
         finally
         {
-            _hasCompletedInitialCategoriesLoad = true;
-            _categoriesLoader.IsLoading = false;
+            if (scanVersion == Volatile.Read(ref _optimizationStateScanVersion))
+            {
+                _hasCompletedInitialCategoriesLoad = true;
+                _categoriesLoader.IsLoading = false;
+            }
+
+            EndOptimizationStateScan(scanCancellation);
         }
+    }
+
+    private async Task RunBackgroundCategoriesRefreshAsync(
+        int scanVersion,
+        CancellationTokenSource scanCancellation)
+    {
+        try
+        {
+            await ViewModel.ScanOptimizationStatesAsync(scanCancellation.Token);
+        }
+        catch (OperationCanceledException) when (scanCancellation.Token.IsCancellationRequested)
+        {
+            // Expected when the page is unloaded or a newer refresh supersedes this one.
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Background optimization state refresh failed.", ex);
+        }
+        finally
+        {
+            if (scanVersion == Volatile.Read(ref _optimizationStateScanVersion))
+                EndOptimizationStateScan(scanCancellation);
+        }
+    }
+
+    private CancellationTokenSource BeginOptimizationStateScan()
+    {
+        var cancellation = new CancellationTokenSource();
+        var previous = Interlocked.Exchange(ref _optimizationStateScanCancellationTokenSource, cancellation);
+        previous?.Cancel();
+        return cancellation;
+    }
+
+    private void EndOptimizationStateScan(CancellationTokenSource scanCancellation)
+    {
+        var current = Interlocked.CompareExchange(
+            ref _optimizationStateScanCancellationTokenSource,
+            null,
+            scanCancellation);
+        _ = current;
+        scanCancellation.Dispose();
     }
 
     /// <summary>
@@ -114,12 +176,113 @@ public partial class WindowsOptimizationPage : Page
     /// </summary>
     private void AttachNetworkAccelerationSelectionChrome()
     {
-        // Selection bar removed in Watt Toolkit redesign — no-op.
+        _networkAccelerationControl.ToolbarStateChanged -= NetworkAccelerationControl_ToolbarStateChanged;
+        _networkAccelerationControl.ToolbarStateChanged += NetworkAccelerationControl_ToolbarStateChanged;
+        UpdateNetworkAccelerationSelectionChrome();
     }
 
     private void NetworkAccelerationSelectionCountButton_Click(object sender, RoutedEventArgs e)
     {
-        // Selection bar removed in Watt Toolkit redesign — no-op.
+        _networkAccelerationControl.FocusTargetList();
+    }
+
+    private void NetworkAccelerationControl_ToolbarStateChanged(object? sender, EventArgs e) =>
+        UpdateNetworkAccelerationSelectionChrome();
+
+    private void UpdateNetworkAccelerationSelectionChrome()
+    {
+        var selectedCount = _networkAccelerationControl.SelectedTargetCount;
+        _networkAccelerationSelectionCount.Text = selectedCount == 0
+            ? Resource.NetworkAccelerationPage_SelectionCountZero
+            : string.Format(
+                CultureInfo.CurrentCulture,
+                Resource.NetworkAccelerationPage_SelectionCountFormat,
+                selectedCount);
+
+        var recommendedGroups = _networkAccelerationControl.GetRecommendedTargetGroups();
+        _networkAccelerationSelectionFavoriteButton.IsEnabled = recommendedGroups.Count > 0;
+
+        var isRunning = _networkAccelerationControl.IsAccelerationRunning;
+        var actionLabel = isRunning
+            ? Resource.NetworkAccelerationPage_Stop
+            : Resource.NetworkAccelerationPage_Start;
+        _networkAccelerationSelectionStartButton.Icon = new SymbolIcon
+        {
+            Symbol = isRunning ? SymbolRegular.Stop24 : SymbolRegular.Play24
+        };
+        _networkAccelerationSelectionStartButton.IsEnabled =
+            isRunning || _networkAccelerationControl.CanStartAcceleration;
+        AutomationProperties.SetName(_networkAccelerationSelectionStartButton, actionLabel);
+        _networkAccelerationSelectionStartButton.ToolTip =
+            _networkAccelerationSelectionStartButton.IsEnabled
+                ? actionLabel
+                : _networkAccelerationControl.StartAvailabilityReason;
+    }
+
+    private void NetworkAccelerationSelectionFavoriteButton_Click(object sender, RoutedEventArgs e)
+    {
+        var menu = new ContextMenu
+        {
+            Padding = new Thickness(4)
+        };
+
+        foreach (var group in _networkAccelerationControl.GetRecommendedTargetGroups())
+        {
+            var item = new WpfMenuItem
+            {
+                Header = group.DisplayName,
+                IsCheckable = true,
+                IsChecked = _networkAccelerationControl.IsTargetGroupSelected(group.Id),
+                StaysOpenOnClick = true,
+                Tag = group.Id,
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Star24 }
+            };
+            item.Click += RecommendedTargetMenuItem_Click;
+            menu.Items.Add(item);
+        }
+
+        if (menu.Items.Count == 0)
+        {
+            menu.Items.Add(new WpfMenuItem
+            {
+                Header = Resource.NetworkAccelerationPage_DomainGroupsEmptyTitle,
+                IsEnabled = false
+            });
+        }
+
+        menu.PlacementTarget = _networkAccelerationSelectionFavoriteButton;
+        if (_networkAccelerationRecommendationsMenu is not null)
+            _networkAccelerationRecommendationsMenu.IsOpen = false;
+        _networkAccelerationRecommendationsMenu = menu;
+        menu.Closed += (_, _) =>
+        {
+            if (ReferenceEquals(_networkAccelerationRecommendationsMenu, menu))
+                _networkAccelerationRecommendationsMenu = null;
+        };
+        menu.IsOpen = true;
+    }
+
+    private async void RecommendedTargetMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is not WpfMenuItem { Tag: string groupId } item)
+            return;
+
+        item.IsEnabled = false;
+        try
+        {
+            await _networkAccelerationControl.SetRecommendedTargetEnabledAsync(groupId, item.IsChecked);
+        }
+        finally
+        {
+            item.IsEnabled = true;
+            UpdateNetworkAccelerationSelectionChrome();
+        }
+    }
+
+    private async void NetworkAccelerationSelectionStartButton_Click(object sender, RoutedEventArgs e)
+    {
+        await _networkAccelerationControl.ToggleAccelerationFromToolbarAsync();
+        UpdateNetworkAccelerationSelectionChrome();
     }
 
     private void SyncNavButtonToCurrentMode()
@@ -145,10 +308,20 @@ public partial class WindowsOptimizationPage : Page
     private void WindowsOptimizationPage_Unloaded(object sender, RoutedEventArgs e)
     {
         _pluginManager.PluginStateChanged -= PluginManager_PluginStateChanged;
+        _networkAccelerationControl.ToolbarStateChanged -= NetworkAccelerationControl_ToolbarStateChanged;
+        if (_networkAccelerationRecommendationsMenu is not null)
+            _networkAccelerationRecommendationsMenu.IsOpen = false;
+        _networkAccelerationRecommendationsMenu = null;
 
         var cancellationTokenSource = Interlocked.Exchange(ref _pluginRefreshCancellationTokenSource, null);
         cancellationTokenSource?.Cancel();
         cancellationTokenSource?.Dispose();
+
+        Interlocked.Increment(ref _optimizationStateScanVersion);
+        var optimizationScanCancellation = Interlocked.Exchange(
+            ref _optimizationStateScanCancellationTokenSource,
+            null);
+        optimizationScanCancellation?.Cancel();
 
         // Close windows
         _actionDetailsWindow?.Close();
@@ -226,6 +399,7 @@ public partial class WindowsOptimizationPage : Page
                     return;
 
                 ViewModel.Initialize();
+                await ViewModel.ScanOptimizationStatesAsync(cancellationToken);
 
                 if (e.IsInstalled)
                     RequestPluginCategoryFocus(e.PluginId);
@@ -381,6 +555,26 @@ public partial class WindowsOptimizationPage : Page
                 Log.Instance.Trace((FormattableString)$"Failed to open action details window.", ex);
         }
     }
+
+    private async void ApplyOptimizationButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await ViewModel.ApplyOptimizationChangesAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            // The view model reports cancellation and restores its busy state.
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to apply Windows optimization changes from the page.", ex);
+        }
+    }
+
+    private void CancelOptimizationButton_Click(object sender, RoutedEventArgs e) =>
+        ViewModel.CancelOptimizationChanges();
 
     private void SelectRecommendedButton_Click(object sender, RoutedEventArgs e)
     {

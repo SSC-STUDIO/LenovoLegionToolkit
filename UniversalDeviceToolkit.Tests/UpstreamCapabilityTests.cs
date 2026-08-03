@@ -11,6 +11,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
 
+[Collection(TestCollections.ProcessState)]
 public sealed class UpstreamCapabilityTests : IDisposable
 {
     private readonly string _temp = Path.Combine(Path.GetTempPath(), $"udt-upstream-{Guid.NewGuid():N}");

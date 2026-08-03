@@ -13,7 +13,7 @@
             <!-- Application Title -->
             <TextBlock Text="Universal Device Toolkit"
                        FontSize="28"
-                       FontWeight="Bold"
+                       FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
             <!-- Version Information -->
@@ -51,7 +51,7 @@
             <!-- Links Section -->
             <TextBlock Text="Links"
                        FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="SemiBold"
+                       FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,24,0,8"/>
 
@@ -76,7 +76,7 @@
             <!-- Third-party Libraries Section -->
             <TextBlock Text="Third-party Libraries"
                        FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="SemiBold"
+                       FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,24,0,8"/>
 
@@ -105,7 +105,7 @@
             <!-- Application Folders Section -->
             <TextBlock Text="Application Folders"
                        FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="SemiBold"
+                       FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,24,0,8"/>
 

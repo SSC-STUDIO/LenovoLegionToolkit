@@ -100,7 +100,7 @@
                     <TextBlock x:Name="DeviceText" Style="{StaticResource PageTextStyle}" Margin="0,10,0,0"/>
                     <Border Style="{StaticResource CardBorderStyle}">
                         <StackPanel>
-                            <TextBlock x:Name="DeviceDetectedText" FontSize="13" FontWeight="SemiBold"
+                            <TextBlock x:Name="DeviceDetectedText" FontSize="13" FontWeight="Medium"
                                        Foreground="{DynamicResource TextPrimaryBrush}"/>
                             <ComboBox x:Name="DeviceCombo" Margin="0,12,0,0" FontSize="13"
                                       Style="{StaticResource ThemedComboBoxStyle}"

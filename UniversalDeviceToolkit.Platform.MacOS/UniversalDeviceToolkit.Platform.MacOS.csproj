@@ -4,8 +4,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <DisableUdtForceX64>true</DisableUdtForceX64>
     <RootNamespace>UniversalDeviceToolkit.Platform.MacOS</RootNamespace>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x64</Platforms>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>

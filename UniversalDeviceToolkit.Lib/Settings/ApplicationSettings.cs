@@ -42,6 +42,16 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public ThemeStylePreset ThemeStylePreset { get; set; } = ThemeStylePreset.Default;
         public RGBColor? AccentColor { get; set; }
         public AccentColorSource AccentColorSource { get; set; }
+
+        /// <summary>When enabled, user-selected accent colors are also written to Windows.</summary>
+        public bool ApplyAccentColorToSystem { get; set; } = true;
+
+        /// <summary>
+        /// 控制是否将选定的强调色应用到整体主题风格。
+        /// 为 true 时强调色影响整个应用视觉风格；为 false 时强调色值仍被持久化保存，但界面改用系统/默认强调色。
+        /// 默认 true，与 MinimizeToTray 等字段同一模式；System.Text.Json 反序列化时对旧配置缺失的字段保留此初始化器默认值。
+        /// </summary>
+        public bool ApplyAccentColorToTheme { get; set; } = true;
         public WindowBackdropStyle WindowBackdropStyle { get; set; } = WindowBackdropStyle.Windows;
         public AppFontStyle AppFontStyle { get; set; } = AppFontStyle.Default;
         public AppTextSize AppTextSize { get; set; } = AppTextSize.Standard;
@@ -92,15 +102,14 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
             { "automation", true },
             { "macro", true },
             { "windowsOptimization", true },
-            // Off by default — enable under Settings → Navigation items.
-            { "pluginExtensions", false },
+            { "pluginExtensions", true },
 
             { "about", true }
         };
 
         /// <summary>
-        /// One-time migration: older builds defaulted pluginExtensions to true and persisted it.
-        /// When false, Normalize forces the opt-in default (hidden) once.
+        /// One-time migration marker for the former opt-in plugin extensions default.
+        /// Kept for settings compatibility so older settings can be migrated to visible once.
         /// </summary>
         public bool PluginExtensionsOptInMigrationDone { get; set; }
     }
@@ -146,8 +155,8 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         store.InstalledExtensions ??= [];
         store.PendingDeletionExtensions ??= [];
         store.NavigationItemsVisibility ??= new ApplicationSettingsStore().NavigationItemsVisibility;
-        // Fill any missing nav keys with defaults (pluginExtensions is false) without
-        // overwriting values the user already persisted (except one-time opt-in migration below).
+        // Fill any missing nav keys with defaults without overwriting values the user already
+        // persisted (except the one-time migration from the former hidden default below).
         var defaults = new ApplicationSettingsStore().NavigationItemsVisibility;
         foreach (var pair in defaults)
         {
@@ -155,11 +164,11 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
                 store.NavigationItemsVisibility[pair.Key] = pair.Value;
         }
 
-        // Older builds defaulted pluginExtensions=true and wrote it to settings.json, so the
-        // "default off + permanent notice" policy never appeared. Force once to hidden.
+        // Older builds used a hidden-by-default plugin extensions entry. Migrate that legacy
+        // default once so the page is visible after upgrading, then let the user control it.
         if (!store.PluginExtensionsOptInMigrationDone)
         {
-            store.NavigationItemsVisibility["pluginExtensions"] = false;
+            store.NavigationItemsVisibility["pluginExtensions"] = true;
             store.PluginExtensionsOptInMigrationDone = true;
         }
 

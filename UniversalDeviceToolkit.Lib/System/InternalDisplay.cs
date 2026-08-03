@@ -88,20 +88,26 @@ public static class InternalDisplay
 
         var exDpDisplay = exDpDisplays[0];
         var exDpPathDisplayTarget = exDpDisplay.ToPathDisplayTarget();
+        if (exDpPathDisplayTarget is null)
+            return null;
         var exDpPortDisplayEdid = exDpPathDisplayTarget.EDIDManufactureId;
 
         var sameDeviceIsOnAnotherAdapter = DisplayAdapter.GetDisplayAdapters()
             .Where(da => da.DevicePath != exDpDisplay.Adapter.DevicePath)
             .SelectMany(da => da.GetDisplayDevices())
             .Select(dd => dd.ToPathDisplayTarget())
-            .Any(pdt => pdt.EDIDManufactureId == exDpPortDisplayEdid && pdt.GetVideoOutputTechnology().IsInternalOutput());
+            .Where(pdt => pdt is not null)
+            .Any(pdt => pdt!.EDIDManufactureId == exDpPortDisplayEdid && pdt.GetVideoOutputTechnology().IsInternalOutput());
 
         return sameDeviceIsOnAnotherAdapter ? exDpDisplay : null;
     }
 
     private static DISPLAYCONFIG_VIDEO_OUTPUT_TECHNOLOGY GetVideoOutputTechnology(this DisplayDevice displayDevice)
     {
-        return GetVideoOutputTechnology(displayDevice.ToPathDisplayTarget());
+        var pathDisplayTarget = displayDevice.ToPathDisplayTarget();
+        if (pathDisplayTarget is null)
+            return DISPLAYCONFIG_VIDEO_OUTPUT_TECHNOLOGY.DISPLAYCONFIG_OUTPUT_TECHNOLOGY_OTHER;
+        return GetVideoOutputTechnology(pathDisplayTarget);
     }
 
     private static unsafe DISPLAYCONFIG_VIDEO_OUTPUT_TECHNOLOGY GetVideoOutputTechnology(this PathDisplayTarget pathDisplayTarget)

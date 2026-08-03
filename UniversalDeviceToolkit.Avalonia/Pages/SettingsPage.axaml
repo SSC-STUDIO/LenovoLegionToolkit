@@ -1,11 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:UniversalDeviceToolkit.Avalonia.Pages"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsPage">
-
-    <UserControl.DataContext>
-        <vm:SettingsPageViewModel />
-    </UserControl.DataContext>
 
     <Grid ColumnDefinitions="280,Auto,*">
         <!-- Left Navigation Bar -->
@@ -16,7 +11,7 @@
                 <TextBlock DockPanel.Dock="Top"
                            Text="Settings"
                            FontSize="{StaticResource FontSizeDisplaySection}"
-                           FontWeight="Bold"
+                           FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                            Margin="12,0,0,16"/>
 

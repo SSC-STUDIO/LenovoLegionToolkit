@@ -39,6 +39,7 @@ public class BreatheEffect : BaseLampEffect
     {
         var color = (Color)Parameters["Color"];
         var period = (double)Parameters["Period"];
+        if (period <= 0) period = 3.0;
         
         var t = time % period / period;
         var intensity = Math.Sin(t * Math.PI * 2) * 0.5 + 0.5;
@@ -71,6 +72,7 @@ public class WaveEffect : BaseLampEffect
         var color2 = (Color)Parameters["Color2"];
         var period = (double)Parameters["Period"];
         var direction = (WaveDirection)Parameters["Direction"];
+        if (period <= 0) period = 2.0;
 
         double position = direction switch
         {
@@ -113,6 +115,7 @@ public class RainbowEffect : BaseLampEffect
     {
         var period = (double)Parameters["Period"];
         var spatial = (bool)Parameters["Spatial"];
+        if (period <= 0) period = 5.0;
 
         double hue;
         if (spatial)

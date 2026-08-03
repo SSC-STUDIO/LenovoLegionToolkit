@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -498,15 +498,13 @@
     <value>Заключен клавиш Fn</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>ВНИМАНИЕ!
-Някои лаптопи може да поддържат по-ниски стойности от посочените, но внимавайте. Тази опция може да доведе до непредвидимо поведение, затова я оставете на 0 ако не сте сигурни какво правите.</value>
+    <value>Някои лаптопи може да поддържат по-ниски стойности от посочените, но внимавайте. Тази опция може да доведе до непредвидимо поведение, затова я оставете на 0 ако не сте сигурни какво правите.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
     <value>Минимален офсет</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>ВНИМАНИЕ!
-Някои лаптопи може да поддържат по-високи стойности от посочените, но внимавайте. Тази опция може да доведе до непредвидимо поведение, затова я оставете на 0 ако не сте сигурни какво правите.</value>
+    <value>Някои лаптопи може да поддържат по-високи стойности от посочените, но внимавайте. Тази опция може да доведе до непредвидимо поведение, затова я оставете на 0 ако не сте сигурни какво правите.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>Максимален офсет</value>
@@ -545,8 +543,7 @@
     <value>Крива на перката</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>ВНИМАНИЕ!
-Продължително използване на тази настройка ще доведе до износване на перката и намаляване на продължителността ѝ на живот.
+    <value>Продължително използване на тази настройка ще доведе до износване на перката и намаляване на продължителността ѝ на живот.
 Не, наистина, бъдете внимателни с тази настройка!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
@@ -4134,4 +4131,19 @@
   <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
   <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Глобален цветови режим на интерфейса</value></data>
+  <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Промяна на системния цвят при настройка на глобалния цвят на интерфейса</value></data>
+  <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Глобален акцентен цвят на интерфейса</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
 </root>

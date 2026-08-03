@@ -551,8 +551,7 @@ CPU/GPU 性能。
     <value>风扇曲线</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>警告！
-风扇处于长时间满转速的情况下将会减少其寿命。
+    <value>风扇处于长时间满转速的情况下将会减少其寿命。
 【请谨慎使用此选项！】</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
@@ -648,7 +647,7 @@ CPU/GPU 性能。
     <value>显示或隐藏系统优化导航项</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description" xml:space="preserve">
-    <value>显示或隐藏插件扩展导航项（默认关闭）</value>
+    <value>显示或隐藏插件扩展导航项</value>
   </data>
   <data name="NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description" xml:space="preserve">
     <value>显示或隐藏关于导航项</value>
@@ -2726,7 +2725,7 @@ Fn 将会暂时解除锁定。</value>
     <value>Lenovo Vantage 和 / 或 ImController 正在后台运行。</value>
   </data>
   <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
-    <value>插件扩展默认关闭。可在「设置 → 导航项」中开启。</value>
+    <value>插件扩展导航已隐藏。可在「设置 → 导航项」中开启。</value>
   </data>
   <data name="NotificationsSettingsWindow_NotificationOnAllScreens_Message" xml:space="preserve">
     <value>在所有连接到设备的显示器上显示提示弹窗。</value>
@@ -3840,7 +3839,7 @@ Fn 将会暂时解除锁定。</value>
     <value>尚未配置加速目标。内置默认组会在启动时自动添加。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
-    <value>单击选择域名组 · 双击启用/关闭 · 底部栏可收藏或启动所选组。</value>
+    <value>单击配置目标组。使用星标查看推荐目标，使用播放按钮启动。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionBar" xml:space="preserve">
     <value>域名组选择操作栏</value>
@@ -3852,10 +3851,10 @@ Fn 将会暂时解除锁定。</value>
     <value>{0} 个项目已选择</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
-    <value>收藏所选</value>
+    <value>推荐目标</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
-    <value>收藏或取消收藏所选域名组（收藏项排在前面）</value>
+    <value>选择推荐的网络加速目标</value>
   </data>
   <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
     <value>请先在下方选择要操作的域名组。</value>
@@ -3864,10 +3863,10 @@ Fn 将会暂时解除锁定。</value>
     <value>加速后端组件缺失，无法启动。</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
-    <value>启动所选</value>
+    <value>启动或停止加速</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
-    <value>启用所选域名组并启动网络加速</value>
+    <value>启动或停止加速，不改变目标选择</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsFootnote" xml:space="preserve">
     <value>仅使用内置静态名单，不下载远程规则。更改域名组后请重新启动加速。</value>
@@ -4157,6 +4156,24 @@ Fn 将会暂时解除锁定。</value>
   <data name="NaDiag_UdpBlocked" xml:space="preserve">
     <value>UDP 被阻断</value>
   </data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve">
+    <value>相关链接</value>
+  </data>
+  <data name="NaDiag_TestItems" xml:space="preserve">
+    <value>检测项目</value>
+  </data>
+  <data name="NaDiag_TestResults" xml:space="preserve">
+    <value>测试结果</value>
+  </data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve">
+    <value>解析地址:</value>
+  </data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve">
+    <value>已支持 IPv6 访问</value>
+  </data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve">
+    <value>{0} 关于 NAT 文档</value>
+  </data>
   <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve">
     <value>操作失败</value>
   </data>
@@ -4180,5 +4197,32 @@ Fn 将会暂时解除锁定。</value>
   </data>
   <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve">
     <value>主题风格</value>
+  </data>
+  <data name="SettingsPage_ThemeMode_Title" xml:space="preserve">
+    <value>全局界面颜色模式</value>
+  </data>
+  <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve">
+    <value>调整全局界面颜色时修改系统颜色</value>
+  </data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve">
+    <value>调整全局界面颜色时同时修改主题风格</value>
+  </data>
+  <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve">
+    <value>全局界面强调色</value>
+  </data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve">
+    <value>窗口背景效果</value>
+  </data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve">
+    <value>选择应用窗口使用的 Windows 背景效果。</value>
+  </data>
+  <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve">
+    <value>云母</value>
+  </data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve">
+    <value>亚克力</value>
+  </data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve">
+    <value>关闭</value>
   </data>
 </root>

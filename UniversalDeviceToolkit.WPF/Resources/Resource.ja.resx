@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -504,15 +504,13 @@
     <value>Fn ロック</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>警告！
-一部のデバイスは、表示されるよりも低い値を受け付ける場合がありますが、注意が必要です。このオプションにより、予測不能な動作が発生する可能性があります。これがなにかわからない場合は、0に設定してください。</value>
+    <value>一部のデバイスは、表示されるよりも低い値を受け付ける場合がありますが、注意が必要です。このオプションにより、予測不能な動作が発生する可能性があります。これがなにかわからない場合は、0に設定してください。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
     <value>最小オフセット</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>警告！
-一部のデバイスは、表示されるよりも高い値を受け付ける場合がありますが、注意が必要です。このオプションにより、予測不能な動作が発生する可能性があります。これがなにかわからない場合は、0に設定してください。</value>
+    <value>一部のデバイスは、表示されるよりも高い値を受け付ける場合がありますが、注意が必要です。このオプションにより、予測不能な動作が発生する可能性があります。これがなにかわからない場合は、0に設定してください。</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>最大オフセット</value>
@@ -551,8 +549,7 @@
     <value>ファンの速度</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>警告！
-このオプションを長時間使用すると、ファンが劣化して寿命が短くなります。
+    <value>このオプションを長時間使用すると、ファンが劣化して寿命が短くなります。
 このオプションを使用する際は 本当に 注意してください。</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
@@ -4109,4 +4106,19 @@
   <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
   <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>グローバルインターフェイスの配色モード</value></data>
+  <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>グローバルインターフェイスの色を調整するときにシステムの色を変更する</value></data>
+  <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>グローバルインターフェイスのアクセントカラー</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
 </root>

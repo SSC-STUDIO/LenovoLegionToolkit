@@ -7,6 +7,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
+[Collection(TestCollections.ProcessState)]
 public class LogTests
 {
     [Fact]

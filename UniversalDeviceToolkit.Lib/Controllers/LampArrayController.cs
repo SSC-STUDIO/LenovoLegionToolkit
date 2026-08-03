@@ -41,6 +41,7 @@ public class LampArrayController : IDisposable
     private bool _auroraActive;
     private bool _settingsHydrated;
 
+    private readonly object _effectStateLock = new();
     private double _brightness = 1.0;
     private double _speed = 1.0;
     private bool _smoothTransition = true;
@@ -77,20 +78,20 @@ public class LampArrayController : IDisposable
 
     public double Brightness
     {
-        get => _brightness;
-        set => _brightness = Math.Clamp(value, 0.0, 1.0);
+        get { lock (_effectStateLock) return _brightness; }
+        set { lock (_effectStateLock) _brightness = Math.Clamp(value, 0.0, 1.0); }
     }
 
     public double Speed
     {
-        get => _speed;
-        set => _speed = Math.Clamp(value, 0.1, 5.0);
+        get { lock (_effectStateLock) return _speed; }
+        set { lock (_effectStateLock) _speed = Math.Clamp(value, 0.1, 5.0); }
     }
 
     public bool SmoothTransition
     {
-        get => _smoothTransition;
-        set => _smoothTransition = value;
+        get { lock (_effectStateLock) return _smoothTransition; }
+        set { lock (_effectStateLock) _smoothTransition = value; }
     }
 
     public bool IsAvailable
@@ -199,7 +200,7 @@ public class LampArrayController : IDisposable
                 {
                     if (Log.Instance.IsTraceEnabled && !_renderLoopErrorLogged)
                     {
-                        Log.Instance.Trace($"Render loop error: {ex.Message}");
+                        Log.Instance.Trace($"Render loop error: {ex.Message}", ex);
                         _renderLoopErrorLogged = true;
                     }
                 }
@@ -210,12 +211,12 @@ public class LampArrayController : IDisposable
 
     private void StopRenderLoop()
     {
-        if (_renderCts is not null)
+        var cts = Interlocked.Exchange(ref _renderCts, null);
+        if (cts is not null)
         {
-            _renderCts.Cancel();
-            _renderCts.Dispose();
+            cts.Cancel();
+            cts.Dispose();
         }
-        _renderCts = null;
         StopScreenCapture();
     }
 
@@ -314,19 +315,19 @@ public class LampArrayController : IDisposable
             }
         catch (Exception ex)
         {
-            Log.Instance.Error($"Error adding LampArray device: {ex.Message}");
+            Log.Instance.Error("Error in screen capture loop", ex);
         }
         }, token);
     }
 
     private void StopScreenCapture()
     {
-        if (_screenCaptureCts is not null)
+        var cts = Interlocked.Exchange(ref _screenCaptureCts, null);
+        if (cts is not null)
         {
-            _screenCaptureCts.Cancel();
-            _screenCaptureCts.Dispose();
+            cts.Cancel();
+            cts.Dispose();
         }
-        _screenCaptureCts = null;
     }
 
     public void SetLayout(int width, int height, IEnumerable<(ushort Code, int X, int Y)> keys)
@@ -428,21 +429,33 @@ public class LampArrayController : IDisposable
     {
         if (!IsAvailable) return;
 
-        var currentTime = _stopwatch.Elapsed.TotalSeconds * _speed;
+        double currentTime, transitionStartTime, transitionDuration, brightness;
+        ILampEffect? currentEffect, targetEffect;
 
-        if (_targetEffect != null)
+        lock (_effectStateLock)
         {
-            var elapsed = _stopwatch.Elapsed.TotalSeconds - _transitionStartTime;
-            if (elapsed >= _transitionDuration)
+            currentTime = _stopwatch.Elapsed.TotalSeconds * _speed;
+            brightness = _brightness;
+
+            if (_targetEffect != null)
             {
-                _currentEffect = _targetEffect;
-                _targetEffect = null;
-                _currentEffect.Reset();
-                Log.Instance.Trace($"Transition complete to {_currentEffect.Name}.");
+                var elapsed = _stopwatch.Elapsed.TotalSeconds - _transitionStartTime;
+                if (elapsed >= _transitionDuration)
+                {
+                    _currentEffect = _targetEffect;
+                    _targetEffect = null;
+                    _currentEffect.Reset();
+                    Log.Instance.Trace($"Transition complete to {_currentEffect.Name}.");
+                }
             }
+
+            currentEffect = _currentEffect;
+            targetEffect = _targetEffect;
+            transitionStartTime = _transitionStartTime;
+            transitionDuration = _transitionDuration;
         }
 
-        if (_currentEffect == null && _effectOverrides.IsEmpty) return;
+        if (currentEffect == null && _effectOverrides.IsEmpty) return;
 
         lock (_lampArrays)
         {
@@ -463,7 +476,7 @@ public class LampArrayController : IDisposable
                     {
                         var lampInfo = device.GetLampInfo(i);
                         
-                        ILampEffect? effectToUse = _currentEffect;
+                        ILampEffect? effectToUse = currentEffect;
                         bool isOverridden = _effectOverrides.TryGetValue(i, out var overrideEffect);
                         if (isOverridden) effectToUse = overrideEffect;
 
@@ -475,15 +488,15 @@ public class LampArrayController : IDisposable
 
                         var color = effectToUse.GetColorForLamp(i, currentTime, lampInfo, lampCount);
 
-                        if (!isOverridden && _targetEffect != null)
+                        if (!isOverridden && targetEffect != null)
                         {
-                            var targetColor = _targetEffect.GetColorForLamp(i, currentTime, lampInfo, lampCount);
-                            var elapsed = _stopwatch.Elapsed.TotalSeconds - _transitionStartTime;
-                            var t = Math.Clamp(elapsed / _transitionDuration, 0, 1);
+                            var targetColor = targetEffect.GetColorForLamp(i, currentTime, lampInfo, lampCount);
+                            var elapsed = _stopwatch.Elapsed.TotalSeconds - transitionStartTime;
+                            var t = transitionDuration > 0 ? Math.Clamp(elapsed / transitionDuration, 0, 1) : 1;
                             color = LerpColor(color, targetColor, t);
                         }
 
-                        colors[i] = ApplyBrightness(color, _brightness);
+                        colors[i] = ApplyBrightness(color, brightness);
                         _lastFrameColors[i] = colors[i];
                     }
 
@@ -592,7 +605,7 @@ public class LampArrayController : IDisposable
         }
         catch (Exception ex)
         {
-            Log.Instance.Error($"Error adding LampArray device: {ex.Message}");
+            Log.Instance.Error("Error adding LampArray device", ex);
         }
     }
 
@@ -629,21 +642,27 @@ public class LampArrayController : IDisposable
     {
         var store = settings.Store;
 
-        _effectOverrides.Clear();
-        _lastFrameColors.Clear();
-        _currentEffect = null;
-        _targetEffect = null;
-        _transitionStartTime = 0;
-        _transitionDuration = 0;
+        lock (_effectStateLock)
+        {
+            _effectOverrides.Clear();
+            _lastFrameColors.Clear();
+            _currentEffect = null;
+            _targetEffect = null;
+            _transitionStartTime = 0;
+            _transitionDuration = 0;
+        }
         StopScreenCapture();
         _auroraActive = false;
 
-        _brightness = store.Brightness;
-        _speed = store.Speed;
-        _smoothTransition = store.SmoothTransition;
+        lock (_effectStateLock)
+        {
+            _brightness = store.Brightness;
+            _speed = store.Speed;
+            _smoothTransition = store.SmoothTransition;
 
-        if (store.DefaultEffect is { } defCfg)
-            _currentEffect = EffectFromConfig(defCfg);
+            if (store.DefaultEffect is { } defCfg)
+                _currentEffect = EffectFromConfig(defCfg);
+        }
 
         foreach (var kvp in store.PerLampEffects)
         {
@@ -662,10 +681,19 @@ public class LampArrayController : IDisposable
             return;
 
         var store = settings.Store;
-        store.Brightness = _brightness;
-        store.Speed = _speed;
-        store.SmoothTransition = _smoothTransition;
-        store.DefaultEffect = _currentEffect is null ? null : ConfigFromEffect(_currentEffect);
+        ILampEffect? currentEffect;
+        double brightness, speed;
+        lock (_effectStateLock)
+        {
+            currentEffect = _currentEffect;
+            brightness = _brightness;
+            speed = _speed;
+        }
+
+        store.Brightness = brightness;
+        store.Speed = speed;
+        store.SmoothTransition = SmoothTransition;
+        store.DefaultEffect = currentEffect is null ? null : ConfigFromEffect(currentEffect);
 
         store.PerLampEffects.Clear();
         foreach (var kvp in _effectOverrides)

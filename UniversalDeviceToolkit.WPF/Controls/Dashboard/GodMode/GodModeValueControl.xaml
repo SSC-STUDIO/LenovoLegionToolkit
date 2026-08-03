@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="UniversalDeviceToolkit.WPF.Controls.Dashboard.GodMode.GodModeValueControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,10 +9,6 @@
     d:DesignHeight="64"
     d:DesignWidth="900"
     mc:Ignorable="d">
-    <!--
-      Dense single-row card: label column is capped so the slider claims remaining width.
-      (Previous CardControl Header|Content split left a large empty gap between text and slider.)
-    -->
     <Border
         Background="{DynamicResource ControlFillColorDefaultBrush}"
         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
@@ -22,9 +18,13 @@
         SnapsToDevicePixels="True">
         <Grid>
             <Grid.ColumnDefinitions>
-                <!-- Cap labels so they cannot swallow half the card as empty star space. -->
-                <ColumnDefinition Width="*" MinWidth="140" MaxWidth="260" />
-                <ColumnDefinition Width="2.4*" MinWidth="100" />
+                <ColumnDefinition
+                    Width="*"
+                    MinWidth="140"
+                    MaxWidth="260" />
+                <ColumnDefinition
+                    Width="2.4*"
+                    MinWidth="100" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -67,7 +67,7 @@
                 VerticalAlignment="Center"
                 HorizontalAlignment="Right"
                 FlowDirection="LeftToRight"
-                FontWeight="SemiBold"
+                FontWeight="Medium"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
             <ComboBox

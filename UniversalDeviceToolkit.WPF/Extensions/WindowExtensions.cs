@@ -16,6 +16,7 @@ public static class WindowExtensions
     private const int WM_STYLECHANGING = 0x007D;
     private const int WM_WINDOWPOSCHANGING = 0x0046;
     private const int GWL_EXSTYLE = -20;
+    private const int WS_EX_APPWINDOW = 0x00040000;
     private const int WS_EX_TOOLWINDOW = 0x00000080;
     private const int WS_EX_NOACTIVATE = 0x08000000;
     private const int WS_EX_TRANSPARENT = 0x00000020;
@@ -128,15 +129,63 @@ public static class WindowExtensions
         SetExtendedStyle(hwnd, extendedStyle);
     }
 
+    /// <summary>
+    /// Keeps the native extended style in sync with <see cref="Window.ShowInTaskbar" />.
+    /// Third-party docks commonly enumerate WS_EX_APPWINDOW directly instead of honoring
+    /// WPF's property after a hidden window has been minimized to the tray.
+    /// </summary>
+    public static void SetTaskbarVisibility(this Window window, bool isVisible)
+    {
+        window.ShowInTaskbar = isVisible;
+
+        if (PresentationSource.FromVisual(window) is not HwndSource source)
+            return;
+
+        var extendedStyle = GetExtendedStyle(source.Handle);
+        if (isVisible)
+        {
+            extendedStyle |= WS_EX_APPWINDOW;
+            extendedStyle &= ~WS_EX_TOOLWINDOW;
+        }
+        else
+        {
+            extendedStyle &= ~WS_EX_APPWINDOW;
+            extendedStyle |= WS_EX_TOOLWINDOW;
+        }
+
+        SetExtendedStyle(source.Handle, extendedStyle);
+
+        try
+        {
+            PInvoke.SetWindowPos(
+                (HWND)source.Handle,
+                default,
+                0,
+                0,
+                0,
+                0,
+                SET_WINDOW_POS_FLAGS.SWP_NOMOVE |
+                SET_WINDOW_POS_FLAGS.SWP_NOSIZE |
+                SET_WINDOW_POS_FLAGS.SWP_NOZORDER |
+                SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE |
+                SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to refresh the native taskbar window style.", ex);
+        }
+    }
+
     public static void BringToForeground(this Window window)
     {
-        window.ShowInTaskbar = true;
+        window.SetTaskbarVisibility(true);
 
-        if (window.WindowState == WindowState.Minimized || window.Visibility == Visibility.Hidden)
-        {
-            window.Show();
+        if (window.WindowState == WindowState.Minimized)
             window.WindowState = WindowState.Normal;
-        }
+
+        if (window.Visibility == Visibility.Hidden)
+            window.Show();
 
         window.Activate();
         window.Topmost = true;

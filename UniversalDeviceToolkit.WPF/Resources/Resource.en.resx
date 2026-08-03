@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -537,15 +537,13 @@ WARNING: This action will not run correctly, if internal display is off.</value>
     <value>Fn Lock</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept lower values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>Some laptops may accept lower values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
     <value>Minimum offset</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>WARNING!
-Some laptops may accept higher values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
+    <value>Some laptops may accept higher values than they indicate, but be careful. This option may result in unpredictable behavior. If you are not sure what are you doing, leave this at 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>Maximum offset</value>
@@ -584,8 +582,7 @@ Some laptops may accept higher values than they indicate, but be careful. This o
     <value>Fan curve</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>WARNING!
-Prolonged usage of this option will degrade fans decreasing their longevity.
+    <value>Prolonged usage of this option will degrade fans decreasing their longevity.
 Seriously, be careful with this option!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
@@ -3702,7 +3699,7 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Open logs folder</value>
   </data>
   <data name="MainWindow_PluginExtensionsDisabledNotice" xml:space="preserve">
-    <value>Plugin Extensions is off by default. Enable it under Settings → Navigation items.</value>
+    <value>Plugin Extensions navigation is hidden. Enable it under Settings → Navigation items.</value>
   </data>
   <data name="NetworkAccelerationPage_AdvancedBody" xml:space="preserve">
     <value>Modes: System proxy (PAC) or Diagnostics only. Hosts rewrite is reserved/disabled until a local TLS origin exists (marked-block helpers kept). Worker listens on 127.0.0.1 / ::1 with named-pipe IPC.</value>
@@ -3891,10 +3888,10 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>0 items selected</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavorite" xml:space="preserve">
-    <value>Favorite selected</value>
+    <value>Recommended targets</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionFavoriteTooltip" xml:space="preserve">
-    <value>Pin or unpin selected domain groups (favorites sort first)</value>
+    <value>Choose recommended acceleration targets</value>
   </data>
   <data name="NetworkAccelerationPage_SelectGroupsFirst_Hint" xml:space="preserve">
     <value>Select one or more domain groups below first.</value>
@@ -3903,13 +3900,13 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>The acceleration backend component is missing, so start is unavailable.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionHint" xml:space="preserve">
-    <value>Click to select groups · double-click to enable/disable · use the bar to favorite or start selected.</value>
+    <value>Click a group to configure it. Use the star for recommended targets and play to start.</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStart" xml:space="preserve">
-    <value>Start selected</value>
+    <value>Start or stop acceleration</value>
   </data>
   <data name="NetworkAccelerationPage_SelectionStartTooltip" xml:space="preserve">
-    <value>Enable selected groups and start network acceleration</value>
+    <value>Start or stop acceleration without changing target selection</value>
   </data>
   <data name="NetworkAccelerationPage_Start" xml:space="preserve">
     <value>Start</value>
@@ -4110,4 +4107,19 @@ It won't affect other full screen windows, but you will not be able to click on 
   <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
   <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Global interface color mode</value></data>
+  <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Modify system color when adjusting the global interface color</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
+  <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Global interface accent color</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
 </root>

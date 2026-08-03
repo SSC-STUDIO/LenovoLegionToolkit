@@ -9,6 +9,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
 [Trait("Category", TestCategories.Plugin)]
+[Collection(TestCollections.ProcessState)]
 public class PluginConfigurationTests : TemporaryFileTestBase
 {
     private const string TestPluginId = "test-plugin-config";

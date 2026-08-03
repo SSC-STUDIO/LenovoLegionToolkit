@@ -173,7 +173,7 @@ public static class ResourceQualityAuditor
 
     private static string? InferCultureFromFileName(string fileName)
     {
-        // Resource.de.resx / Resource.zh-hans.resx / Resources.ja.resx
+        // Resource.de.resx / Resource.zh-Hans.resx / Resources.ja.resx
         var name = Path.GetFileNameWithoutExtension(fileName);
         var parts = name.Split('.');
         if (parts.Length < 2)

@@ -199,7 +199,7 @@ public partial class OsdSettingsWindow
             {
                 Text = group.Header,
                 Margin = new Thickness(0, isFirst ? 0 : 20, 0, 8),
-                FontWeight = FontWeights.SemiBold,
+                FontWeight = FontWeights.Medium,
                 FontSize = 14,
                 Foreground = (Brush)Application.Current.Resources["TextFillColorPrimaryBrush"]
             };

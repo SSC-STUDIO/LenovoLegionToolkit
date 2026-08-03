@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.Platform.Windows</RootNamespace>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 

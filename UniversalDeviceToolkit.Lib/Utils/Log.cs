@@ -22,8 +22,33 @@ public enum LogLevel
 
 public class Log : IDisposable
 {
-    private static readonly Lazy<Log> _instance = new(() => new Log(), LazyThreadSafetyMode.ExecutionAndPublication);
-    public static Log Instance => _instance.Value;
+    private static readonly object _instanceLock = new();
+    private static Lazy<Log> _instance = new(() => new Log(), LazyThreadSafetyMode.ExecutionAndPublication);
+    public static Log Instance
+    {
+        get
+        {
+            lock (_instanceLock)
+                return _instance.Value;
+        }
+    }
+
+    /// <summary>
+    /// Replaces the singleton for tests that temporarily redirect AppData.
+    /// The production application never changes its logger after startup.
+    /// </summary>
+    internal static void ResetForTests()
+    {
+        Lazy<Log> previous;
+        lock (_instanceLock)
+        {
+            previous = _instance;
+            _instance = new Lazy<Log>(() => new Log(), LazyThreadSafetyMode.ExecutionAndPublication);
+        }
+
+        if (previous.IsValueCreated)
+            previous.Value.Dispose();
+    }
 
     /// <summary>Keys already emitted by WarningOnce/TraceOnce for this process.</summary>
     private static readonly ConcurrentDictionary<string, byte> _onceKeys = new(StringComparer.Ordinal);

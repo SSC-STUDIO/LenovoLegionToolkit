@@ -36,8 +36,9 @@ public class ThermalModeListener(
 
     protected override async Task OnChangedAsync(ThermalModeState state)
     {
-        if (!_suppressCounter.Decrement())
+        if (_suppressCounter.Value > 0)
         {
+            _suppressCounter.Decrement();
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Suppressed.");
             return;

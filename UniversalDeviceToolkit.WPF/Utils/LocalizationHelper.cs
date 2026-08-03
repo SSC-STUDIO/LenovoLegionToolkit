@@ -61,19 +61,19 @@ public static class LocalizationHelper
         new("it"),
         new("ja"),
         new("lv"),
-        new("nl-nl"),
+        new("nl-NL"),
         new("pl"),
         new("pt"),
-        new("pt-br"),
+        new("pt-BR"),
         new("ro"),
         new("ru"),
         new("sk"),
         new("tr"),
         new("uk"),
         new("vi"),
-        new("zh-hans"),
-        new("zh-hant"),
-        new("uz-latn-uz"),
+        new("zh-Hans"),
+        new("zh-Hant"),
+        new("uz-Latn-UZ"),
     ];
 
     public static FlowDirection Direction => Resource.Culture?.TextInfo.IsRightToLeft ?? false
@@ -98,9 +98,9 @@ public static class LocalizationHelper
     {
         var name = culture.NativeName.Transform(culture, To.TitleCase);
 
-        if (culture.IetfLanguageTag.Equals("uz-latn-uz", StringComparison.OrdinalIgnoreCase))
+        if (culture.IetfLanguageTag.Equals("uz-Latn-UZ", StringComparison.OrdinalIgnoreCase))
         {
-            name = "Karakalpak";
+            name = "Uzbek (Latin)";
         }
 
         return ForceLeftToRight(name);
@@ -215,7 +215,7 @@ public static class LocalizationHelper
                 var traditionalChineseRegions = new[] { "TW", "HK", "MO" };
                 var isTraditionalChinese = traditionalChineseRegions.Any(region =>
                     systemCulture.Name.Contains(region, StringComparison.OrdinalIgnoreCase));
-                var chineseCulture = isTraditionalChinese ? new CultureInfo("zh-hant") : new CultureInfo("zh-hans");
+                var chineseCulture = isTraditionalChinese ? new CultureInfo("zh-Hant") : new CultureInfo("zh-Hans");
                 if (Languages.Contains(chineseCulture))
                     return chineseCulture;
             }
@@ -356,7 +356,7 @@ public static class LocalizationHelper
                               || cultureInfo.Name.Contains("HK", StringComparison.OrdinalIgnoreCase)
                               || cultureInfo.Name.Contains("MO", StringComparison.OrdinalIgnoreCase);
             return Languages.FirstOrDefault(l =>
-                l.Name.Equals(traditional ? "zh-hant" : "zh-hans", StringComparison.OrdinalIgnoreCase));
+                l.Name.Equals(traditional ? "zh-Hant" : "zh-Hans", StringComparison.OrdinalIgnoreCase));
         }
 
         var parentMatch = Languages.FirstOrDefault(language =>

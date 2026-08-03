@@ -59,7 +59,8 @@ internal sealed class ConsoleLoadingAnimation : IDisposable
 
         while (!_cts.IsCancellationRequested)
         {
-            WriteFrame(Frames[frameIndex++ % Frames.Length]);
+            WriteFrame(Frames[frameIndex % Frames.Length]);
+            frameIndex = (frameIndex + 1) % Frames.Length;
             await Task.Delay(IntervalMilliseconds, _cts.Token).ConfigureAwait(false);
         }
     }

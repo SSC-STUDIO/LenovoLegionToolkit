@@ -11,6 +11,9 @@
     -->
     <Style BasedOn="{StaticResource DefaultUiCardActionStyle}" TargetType="{x:Type custom:CardAction}">
         <Setter Property="Margin" Value="0,0,0,12" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />

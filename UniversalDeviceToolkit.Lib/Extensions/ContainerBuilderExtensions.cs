@@ -12,4 +12,14 @@ public static class ContainerBuilderExtensions
             registration = registration.AsImplementedInterfaces();
         return registration.SingleInstance();
     }
+
+    public static IRegistrationBuilder<T, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterTransient<T>(
+        this ContainerBuilder builder, bool selfOnly = false) where T : notnull
+    {
+        var registration = builder.RegisterType<T>().AsSelf();
+        if (!selfOnly)
+            registration = registration.AsImplementedInterfaces();
+        // No SingleInstance() — each Resolve creates a new instance
+        return registration;
+    }
 }

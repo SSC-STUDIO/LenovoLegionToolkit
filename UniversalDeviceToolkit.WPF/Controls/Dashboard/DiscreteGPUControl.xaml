@@ -10,60 +10,72 @@
     <controls:AbstractRefreshingControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </controls:AbstractRefreshingControl.Resources>
-    <custom:CardControl Margin="0,0,0,8" Icon="DeveloperBoard24">
+    <custom:CardControl Margin="0,0,0,8">
         <custom:CardControl.Header>
-            <controls:CardHeaderControl Title="{x:Static resources:Resource.DiscreteGPUControl_Title}" Subtitle="{x:Static resources:Resource.DiscreteGPUControl_Message}" />
-        </custom:CardControl.Header>
-        <StackPanel
-            x:Name="_content"
-            Orientation="Vertical">
-            <Grid HorizontalAlignment="Right">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
+            <controls:CardHeaderControl
+                Title="{x:Static resources:Resource.DiscreteGPUControl_Title}"
+                Subtitle="{x:Static resources:Resource.DiscreteGPUControl_Message}">
+                <controls:CardHeaderControl.Accessory>
+                    <Grid Margin="16,0,0,0" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-                <Ellipse
-                    x:Name="_discreteGPUStatusActiveIndicator"
-                    Grid.Column="0"
-                    Width="12"
-                    Height="12"
-                    Fill="{DynamicResource StatusSuccessBrush}"
-                    Visibility="{Binding IsGpuActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
-                <Ellipse
-                    x:Name="_discreteGPUStatusInactiveIndicator"
-                    Grid.Column="0"
-                    Width="12"
-                    Height="12"
-                    Fill="{DynamicResource StatusWarningBrush}"
-                    Visibility="{Binding IsGpuInactive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
-                <Ellipse
-                    x:Name="_discreteGPUStatusPoweredOffIndicator"
-                    Grid.Column="0"
-                    Width="12"
-                    Height="12"
-                    Fill="{DynamicResource TextFillColorTertiaryBrush}"
-                    Visibility="{Binding IsGpuPoweredOff, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
-                <TextBlock
-                    x:Name="_discreteGPUStatusDescription"
-                    Grid.Column="1"
-                    Margin="8,0,0,0"
-                    VerticalAlignment="Center"
-                    AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                    AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
-                    Focusable="True"
-                    FontWeight="Medium"
-                    Text="-" />
-                <wpfui:Button
-                    x:Name="_gpuInfoButton"
-                    Grid.Column="2"
-                    Margin="8,0,0,0"
-                    AutomationProperties.HelpText="{x:Static resources:Resource.Information}"
-                    AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
-                    ToolTipService.InitialShowDelay="200"
-                    ToolTipService.BetweenShowDelay="200"
-                    ToolTipService.ShowDuration="15000">
+                        <StackPanel
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                            <Ellipse
+                                x:Name="_discreteGPUStatusActiveIndicator"
+                                Width="12"
+                                Height="12"
+                                Margin="0,0,8,0"
+                                Fill="{DynamicResource StatusSuccessBrush}"
+                                Visibility="{Binding IsGpuActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
+                            <Ellipse
+                                x:Name="_discreteGPUStatusInactiveIndicator"
+                                Width="12"
+                                Height="12"
+                                Margin="0,0,8,0"
+                                Fill="{DynamicResource StatusWarningBrush}"
+                                Visibility="{Binding IsGpuInactive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
+                            <Ellipse
+                                x:Name="_discreteGPUStatusPoweredOffIndicator"
+                                Width="12"
+                                Height="12"
+                                Margin="0,0,8,0"
+                                Fill="{DynamicResource TextFillColorTertiaryBrush}"
+                                Visibility="{Binding IsGpuPoweredOff, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
+                            <TextBlock
+                                x:Name="_discreteGPUStatusDescription"
+                                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
+                                AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
+                                Focusable="True"
+                                FontWeight="Medium"
+                                Text="-"
+                                VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <wpfui:Button
+                            x:Name="_gpuInfoButton"
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Width="40"
+                            Height="36"
+                            Margin="12,0,0,0"
+                            Padding="0"
+                            AutomationProperties.HelpText="{x:Static resources:Resource.Information}"
+                            AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
+                            ToolTipService.InitialShowDelay="200"
+                            ToolTipService.BetweenShowDelay="200"
+                            ToolTipService.ShowDuration="15000">
                     <wpfui:Button.Resources>
                         <!-- Crisp, theme-aware tooltip card: ClearType + display formatting + layout
                              rounding — plain ToolTip text renders blurry at 150% DPI. -->
@@ -102,55 +114,62 @@
                             </Setter>
                         </Style>
                     </wpfui:Button.Resources>
-                    <wpfui:SymbolIcon Symbol="QuestionCircle24" FontSize="{StaticResource IconSizeCardGlyph}" />
-                </wpfui:Button>
-            </Grid>
-            <wpfui:Button
-                x:Name="_deactivateGPUButton"
-                MinWidth="150"
-                Margin="0,8,0,0"
-                Appearance="Primary"
-                AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}"
-                Click="DeactivateGPUButton_Click"
-                IsEnabled="{Binding CanDeactivateGpu, Mode=OneWay, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}"
-                ToolTipService.InitialShowDelay="0"
-                ToolTipService.ShowOnDisabled="True">
-                <wpfui:Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            x:Name="_deactivateGPUButtonText"
-                            Grid.Column="1"
-                            Margin="8,0,8,2"
-                            FontWeight="Medium"
-                            Text="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}" />
-                        <wpfui:SymbolIcon
-                            x:Name="_deactivateGPUButtonIcon"
-                            Grid.Column="0"
-                            FontWeight="Medium"
-                            Symbol="ChevronDown24" />
+                            <wpfui:SymbolIcon Symbol="QuestionCircle24" FontSize="{StaticResource IconSizeCardGlyph}" />
+                        </wpfui:Button>
+
+                        <wpfui:Button
+                            x:Name="_deactivateGPUButton"
+                            Grid.ColumnSpan="2"
+                            Grid.Row="1"
+                            MinWidth="150"
+                            Height="36"
+                            Margin="0,8,0,0"
+                            Padding="12,6"
+                            Appearance="Primary"
+                            AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}"
+                            Click="DeactivateGPUButton_Click"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{Binding CanDeactivateGpu, Mode=OneWay, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}"
+                            ToolTipService.InitialShowDelay="0"
+                            ToolTipService.ShowOnDisabled="True">
+                            <wpfui:Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <wpfui:SymbolIcon
+                                        x:Name="_deactivateGPUButtonIcon"
+                                        Margin="0,0,8,0"
+                                        FontWeight="Medium"
+                                        Symbol="Sleep24" />
+                                    <TextBlock
+                                        x:Name="_deactivateGPUButtonText"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Medium"
+                                        Text="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}" />
+                                    <wpfui:SymbolIcon
+                                        Margin="8,0,0,0"
+                                        FontWeight="Medium"
+                                        Symbol="ChevronDown24" />
+                                </StackPanel>
+                            </wpfui:Button.Content>
+                            <wpfui:Button.ContextMenu>
+                                <ContextMenu MinWidth="150">
+                                    <ContextMenu.Items>
+                                        <wpfui:MenuItem
+                                            x:Name="_killAppsMenuItem"
+                                            AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_KillApps}"
+                                            Click="KillAppsMenuItem_Click"
+                                            Header="{x:Static resources:Resource.DiscreteGPUControl_KillApps}" />
+                                        <wpfui:MenuItem
+                                            x:Name="_restartGPUMenuItem"
+                                            AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}"
+                                            Click="RestartGPUMenuItem_Click"
+                                            Header="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}" />
+                                    </ContextMenu.Items>
+                                </ContextMenu>
+                            </wpfui:Button.ContextMenu>
+                        </wpfui:Button>
                     </Grid>
-                </wpfui:Button.Content>
-                <wpfui:Button.ContextMenu>
-                    <ContextMenu MinWidth="150">
-                        <ContextMenu.Items>
-                            <wpfui:MenuItem
-                                x:Name="_killAppsMenuItem"
-                                AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_KillApps}"
-                                Click="KillAppsMenuItem_Click"
-                                Header="{x:Static resources:Resource.DiscreteGPUControl_KillApps}" />
-                            <wpfui:MenuItem
-                                x:Name="_restartGPUMenuItem"
-                                AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}"
-                                Click="RestartGPUMenuItem_Click"
-                                Header="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}" />
-                        </ContextMenu.Items>
-                    </ContextMenu>
-                </wpfui:Button.ContextMenu>
-            </wpfui:Button>
-        </StackPanel>
+                </controls:CardHeaderControl.Accessory>
+            </controls:CardHeaderControl>
+        </custom:CardControl.Header>
     </custom:CardControl>
 </controls:AbstractRefreshingControl>

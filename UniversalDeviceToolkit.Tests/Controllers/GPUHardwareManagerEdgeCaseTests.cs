@@ -32,9 +32,28 @@ public class GPUHardwareManagerEdgeCaseTests : DeviceTestBase
         _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object, new DefaultDelayProvider());
     }
 
-    [Theory]
-    [MemberData(nameof(DeviceProfiles))]
-    public async Task RestartGPUAsync_WithNullInstanceId_ShouldNotThrow(DeviceProfile profile)
+    [Fact]
+    public async Task RestartGPUAsync_WithNullInstanceId_ShouldNotThrow()
+    {
+        InitController(); // Re-initialize per profile
+        
+        var act = async () => await _controller.RestartGPUAsync();
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task RestartGPUAsync_WithEmptyInstanceId_ShouldNotThrow()
+    {
+        InitController(); // Re-initialize per profile
+        
+        var act = async () => await _controller.RestartGPUAsync();
+
+        await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task RestartGPUAsync_WithWhitespaceInstanceId_ShouldNotThrow()
     {
         InitController(); // Re-initialize per profile
         
@@ -44,33 +63,16 @@ public class GPUHardwareManagerEdgeCaseTests : DeviceTestBase
     }
 
     [Theory]
-    [MemberData(nameof(DeviceProfiles))]
-    public async Task RestartGPUAsync_WithEmptyInstanceId_ShouldNotThrow(DeviceProfile profile)
-    {
-        InitController(); // Re-initialize per profile
-        
-        var act = async () => await _controller.RestartGPUAsync();
-
-        await act.Should().NotThrowAsync();
-    }
-
-    [Theory]
-    [MemberData(nameof(DeviceProfiles))]
-    public async Task RestartGPUAsync_WithWhitespaceInstanceId_ShouldNotThrow(DeviceProfile profile)
-    {
-        InitController(); // Re-initialize per profile
-        
-        var act = async () => await _controller.RestartGPUAsync();
-
-        await act.Should().NotThrowAsync();
-    }
-
-    [Theory]
-    [InlineData("", null!)] // Empty string + no device profile
-    [InlineData("   ", null!)] // Whitespace-only + no device profile
-    public async Task RestartGPUAsync_WithInvalidInstanceId_ShouldNotThrow(string instanceId, DeviceProfile? profile)
+    [InlineData("")] // Empty string + no device profile
+    [InlineData("   ")] // Whitespace-only + no device profile
+    public async Task RestartGPUAsync_WithInvalidInstanceId_ShouldNotThrow(string instanceId)
     {
         InitController(); // Re-initialize per instance
+
+        var stateField = typeof(GPUController).GetField("_state", BindingFlags.NonPublic | BindingFlags.Instance);
+        var gpuInstanceIdField = typeof(GPUController).GetField("_gpuInstanceId", BindingFlags.NonPublic | BindingFlags.Instance);
+        stateField!.SetValue(_controller, Lib.GPUState.Active);
+        gpuInstanceIdField!.SetValue(_controller, instanceId);
         
         var act = async () => await _controller.RestartGPUAsync();
 
@@ -81,9 +83,8 @@ public class GPUHardwareManagerEdgeCaseTests : DeviceTestBase
             Times.Never);
     }
 
-    [Theory]
-    [MemberData(nameof(DeviceProfiles))]
-    public async Task RestartGPUAsync_WithMinimalInstanceId_ShouldNotThrow(DeviceProfile profile)
+    [Fact]
+    public async Task RestartGPUAsync_WithMinimalInstanceId_ShouldNotThrow()
     {
         InitController(); // Re-initialize per profile
         
@@ -93,9 +94,9 @@ public class GPUHardwareManagerEdgeCaseTests : DeviceTestBase
     }
 
     [Theory]
-    [InlineData("TEST&ID_123&REV_A1", null!)] // Special chars instance ID + no device profile (for parameterization coverage)
-    [InlineData("PCI\\VEN_10DE&DEV_1F95&SUBSYS_17AA38A9&REV_A1\\4&2B6F1C0&0&00E6", null!)] // Complex PCI ID + no device profile
-    public async Task RestartGPUAsync_WithSpecialCharsInstanceId_ShouldDelegateToHardwareManager(string instanceId, DeviceProfile? profile)
+    [InlineData("TEST&ID_123&REV_A1")]
+    [InlineData("PCI\\VEN_10DE&DEV_1F95&SUBSYS_17AA38A9&REV_A1\\4&2B6F1C0&0&00E6")]
+    public async Task RestartGPUAsync_WithSpecialCharsInstanceId_ShouldDelegateToHardwareManager(string instanceId)
     {
         // Set up the controller with mocked dependencies
         InitController();

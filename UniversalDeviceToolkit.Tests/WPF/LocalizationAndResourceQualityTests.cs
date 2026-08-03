@@ -29,7 +29,7 @@ public class LocalizationAndResourceQualityTests
     [Fact]
     public void CultureFallbackChain_ChineseMayIncludeChineseParents()
     {
-        var culture = new CultureInfo("zh-hans");
+        var culture = new CultureInfo("zh-Hans");
         var chain = LocalizationHelper.EnumerateCultureFallbackChainPublic(culture).ToArray();
         chain.Should().Contain(c => c.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase));
         chain.Should().Contain(c => c.Name.Equals("en", StringComparison.OrdinalIgnoreCase));

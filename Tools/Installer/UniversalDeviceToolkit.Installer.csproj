@@ -9,8 +9,6 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <TargetPlatformVersion>7.0</TargetPlatformVersion>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <RootNamespace>UniversalDeviceToolkit.Installer</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.Installer</AssemblyName>
     <UseWPF>true</UseWPF>

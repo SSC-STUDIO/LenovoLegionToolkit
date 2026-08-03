@@ -64,15 +64,42 @@ internal static class OptimizationToggleActionHelper
     }
 
     public static void ApplyTogglePairPresentation(
-        bool featureEnabled,
+        bool? featureEnabled,
         OptimizationActionViewModel enable,
         OptimizationActionViewModel disable)
     {
-        enable.IsVisible = !featureEnabled;
-        disable.IsVisible = featureEnabled;
+        if (!featureEnabled.HasValue)
+        {
+            // Do not present an unknown feature as disabled. Keep one stable
+            // row visible so a plugin with no state probe cannot create two
+            // contradictory checkboxes.
+            enable.IsVisible = true;
+            disable.IsVisible = false;
+            enable.IsEnabled = false;
+            disable.IsEnabled = false;
+            enable.CanEdit = false;
+            disable.CanEdit = false;
+            enable.IsSelected = false;
+            disable.IsSelected = false;
+            enable.IsApplied = null;
+            disable.IsApplied = null;
+            return;
+        }
+
+        enable.IsVisible = !featureEnabled.Value;
+        disable.IsVisible = featureEnabled.Value;
+        enable.IsEnabled = true;
+        disable.IsEnabled = true;
+        enable.CanEdit = true;
+        disable.CanEdit = true;
 
         enable.IsSelected = false;
-        disable.IsSelected = featureEnabled;
+        disable.IsSelected = featureEnabled.Value;
+
+        // The visible row represents the current feature state. The hidden
+        // counterpart is never a pending change until it becomes visible.
+        enable.IsApplied = false;
+        disable.IsApplied = featureEnabled;
     }
 
     public static (OptimizationActionViewModel Enable, OptimizationActionViewModel Disable)? FindTogglePair(
@@ -83,9 +110,31 @@ internal static class OptimizationToggleActionHelper
         if (baseKey is null)
             return null;
 
-        var pairs = FindTogglePairs(actions);
-        return pairs.FirstOrDefault(pair =>
-            string.Equals(pair.Enable.Key, action.Key, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(pair.Disable.Key, action.Key, StringComparison.OrdinalIgnoreCase));
+        foreach (var pair in FindTogglePairs(actions))
+        {
+            if (string.Equals(pair.Enable.Key, action.Key, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(pair.Disable.Key, action.Key, StringComparison.OrdinalIgnoreCase))
+            {
+                return pair;
+            }
+        }
+
+        return null;
+    }
+
+    public static bool GetRecommendedSelectedState(
+        OptimizationActionViewModel action,
+        IEnumerable<OptimizationActionViewModel> actions)
+    {
+        var pair = FindTogglePair(action, actions);
+        if (pair is null)
+            return action.Recommended;
+
+        // A pair describes one feature state. Prefer the side explicitly marked
+        // recommended instead of reading the recommendation from the visible row.
+        if (pair.Value.Enable.Recommended != pair.Value.Disable.Recommended)
+            return pair.Value.Enable.Recommended;
+
+        return action.Recommended;
     }
 }

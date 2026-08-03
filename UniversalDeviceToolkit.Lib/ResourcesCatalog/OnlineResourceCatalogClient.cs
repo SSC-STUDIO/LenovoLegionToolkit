@@ -16,6 +16,15 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
     public const string CatalogUrlEnvironmentVariable = "UDT_RESOURCE_CATALOG_URL";
     private const string JsdelivrCatalogUrl = "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/resources/stable/catalog.json";
     private const string RawCatalogUrl = "https://raw.githubusercontent.com/SSC-STUDIO/UniversalDeviceToolkit/master/resources/stable/catalog.json";
+    private static readonly HashSet<string> AllowedCatalogHosts = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "ssc-studio.github.io",
+        "cdn.jsdelivr.net",
+        "github.com",
+        "raw.githubusercontent.com",
+        "gh-proxy.com",
+        "ghfast.top"
+    };
     private static readonly TimeSpan CatalogAttemptTimeout = TimeSpan.FromSeconds(20);
     private static readonly JsonSerializerOptions JsonOptions = LltJson.CreateCompactOptions();
 
@@ -25,7 +34,8 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
         if (!string.IsNullOrWhiteSpace(catalogUrl))
         {
             if (!Uri.TryCreate(catalogUrl, UriKind.Absolute, out var uri) ||
-                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                uri.Scheme != Uri.UriSchemeHttps ||
+                !IsAllowedCatalogHost(uri.Host))
             {
                 catalogUrl = null;
             }
@@ -42,6 +52,16 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
         yield return JsdelivrCatalogUrl;
         foreach (var rawCandidate in GitHubDownloadMirrors.WithMirrorFallbacks(RawCatalogUrl))
             yield return rawCandidate;
+    }
+
+    private static bool IsAllowedCatalogHost(string host)
+    {
+#if UDT_TEST_HOOKS
+        // Offline tests use a fake HTTPS host with TestHttpClientFactory.
+        if (host.Equals("example.test", StringComparison.OrdinalIgnoreCase))
+            return true;
+#endif
+        return AllowedCatalogHosts.Contains(host);
     }
 
     public async Task<OnlineResourceCatalog> GetCatalogAsync(CancellationToken token = default)

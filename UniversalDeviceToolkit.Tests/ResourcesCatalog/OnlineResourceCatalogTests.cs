@@ -37,10 +37,10 @@ public sealed class OnlineResourceCatalogTests
                               },
                               "languages": [
                                 {
-                                  "culture": "zh-hans",
+                                  "culture": "zh-Hans",
                                   "parent": "zh",
                                   "displayName": "Chinese (Simplified)",
-                                  "url": "https://example.com/resources/3.8.0/languages/zh-hans.zip",
+                                  "url": "https://example.com/resources/3.8.0/languages/zh-Hans.zip",
                                   "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                                   "size": 1024,
                                   "resourceVersion": "1.0.0",
@@ -79,7 +79,7 @@ public sealed class OnlineResourceCatalogTests
         catalog.Downloads.Cli!.CrossPlatform!.Name.Should().Be("UniversalDeviceToolkit_v3.8.0_CLI_cross-platform.zip");
         catalog.Downloads.Cli.CrossPlatform.Sha256.Should().HaveLength(64);
         catalog.Languages.Should().ContainSingle(language =>
-            language.Culture == "zh-hans" &&
+            language.Culture == "zh-Hans" &&
             language.Parent == "zh" &&
             language.ResourceVersion == "1.0.0" &&
             language.MinAppVersion == "3.8.0" &&

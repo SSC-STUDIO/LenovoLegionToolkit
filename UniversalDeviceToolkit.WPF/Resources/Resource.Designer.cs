@@ -10384,10 +10384,25 @@ namespace UniversalDeviceToolkit.WPF.Resources {
         public static string NaDiag_NatOpen { get { return ResourceManager.GetString("NaDiag_NatOpen", resourceCulture); } }
         public static string NaDiag_NatRestricted { get { return ResourceManager.GetString("NaDiag_NatRestricted", resourceCulture); } }
         public static string NaDiag_UdpBlocked { get { return ResourceManager.GetString("NaDiag_UdpBlocked", resourceCulture); } }
+        public static string NaDiag_RelatedLinks { get { return ResourceManager.GetString("NaDiag_RelatedLinks", resourceCulture); } }
+        public static string NaDiag_TestItems { get { return ResourceManager.GetString("NaDiag_TestItems", resourceCulture); } }
+        public static string NaDiag_TestResults { get { return ResourceManager.GetString("NaDiag_TestResults", resourceCulture); } }
+        public static string NaDiag_ResolvedAddress { get { return ResourceManager.GetString("NaDiag_ResolvedAddress", resourceCulture); } }
+        public static string NaDiag_Ipv6SupportedFull { get { return ResourceManager.GetString("NaDiag_Ipv6SupportedFull", resourceCulture); } }
+        public static string NaDiag_NatDocLinkFormat { get { return ResourceManager.GetString("NaDiag_NatDocLinkFormat", resourceCulture); } }
         public static string Theme_Light { get { return ResourceManager.GetString("Theme_Light", resourceCulture); } }
         public static string Theme_Dark { get { return ResourceManager.GetString("Theme_Dark", resourceCulture); } }
         public static string Theme_System { get { return ResourceManager.GetString("Theme_System", resourceCulture); } }
         public static string SettingsPage_ThemeStyle_SubTitle { get { return ResourceManager.GetString("SettingsPage_ThemeStyle_SubTitle", resourceCulture); } }
+        public static string SettingsPage_ThemeMode_Title { get { return ResourceManager.GetString("SettingsPage_ThemeMode_Title", resourceCulture); } }
+        public static string SettingsPage_ApplyAccentColorToTheme_Title { get { return ResourceManager.GetString("SettingsPage_ApplyAccentColorToTheme_Title", resourceCulture); } }
+        public static string SettingsPage_ApplyAccentColorToThemeStyle_Title { get { return ResourceManager.GetString("SettingsPage_ApplyAccentColorToThemeStyle_Title", resourceCulture); } }
+        public static string SettingsPage_AccentColorPresets_Title { get { return ResourceManager.GetString("SettingsPage_AccentColorPresets_Title", resourceCulture); } }
+        public static string SettingsPage_WindowBackdrop_Title { get { return ResourceManager.GetString("SettingsPage_WindowBackdrop_Title", resourceCulture); } }
+        public static string SettingsPage_WindowBackdrop_Message { get { return ResourceManager.GetString("SettingsPage_WindowBackdrop_Message", resourceCulture); } }
+        public static string SettingsPage_WindowBackdrop_Mica { get { return ResourceManager.GetString("SettingsPage_WindowBackdrop_Mica", resourceCulture); } }
+        public static string SettingsPage_WindowBackdrop_Acrylic { get { return ResourceManager.GetString("SettingsPage_WindowBackdrop_Acrylic", resourceCulture); } }
+        public static string SettingsPage_WindowBackdrop_Off { get { return ResourceManager.GetString("SettingsPage_WindowBackdrop_Off", resourceCulture); } }
 
     }
 }

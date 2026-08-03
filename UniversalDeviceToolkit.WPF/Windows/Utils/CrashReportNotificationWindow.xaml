@@ -70,7 +70,7 @@
                         <TextBlock
                             x:Name="_mainMessageTextBlock"
                             FontSize="{DynamicResource FontSizePageDescription}"
-                            FontWeight="SemiBold"
+                            FontWeight="Medium"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             Text="{x:Static resources:Resource.CrashReportNotification_Message}"
                             TextWrapping="Wrap" />
@@ -108,7 +108,7 @@
                         Background="{DynamicResource ControlFillColorSecondaryBrush}">
                         <TextBlock
                             FontSize="{DynamicResource FontSizeSmallCaption}"
-                            FontWeight="SemiBold"
+                            FontWeight="Medium"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             Text="{x:Static resources:Resource.CrashReportNotification_DetailsHeading}" />
                     </Border>

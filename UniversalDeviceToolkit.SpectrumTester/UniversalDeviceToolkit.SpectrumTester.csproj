@@ -6,8 +6,6 @@
 	<RootNamespace>UniversalDeviceToolkit.SpectrumTester</RootNamespace>
 	<OutputType>Exe</OutputType>
 	<AssemblyName>SpectrumTester</AssemblyName>
-	<ImplicitUsings>enable</ImplicitUsings>
-	<Nullable>enable</Nullable>
 	<SelfContained>false</SelfContained>
 	<PublishSingleFile>false</PublishSingleFile>
 	<PublishReadyToRun>false</PublishReadyToRun>

@@ -63,7 +63,7 @@ public sealed class PhaseALanguageAndBrandTests
             "Assets/Logo.png",
             "Assets/Icon.ico",
             "Assets/Logo.png",
-            "Assets/og-preview.png",
+            "Assets/Screenshot_main.png",
             "Assets/Brand/udt-symbol.svg",
             "Assets/Brand/udt-symbol-dark.svg",
             "Assets/Brand/udt-symbol-light.svg",
@@ -79,9 +79,9 @@ public sealed class PhaseALanguageAndBrandTests
             File.Exists(full).Should().BeTrue($"missing brand asset: {relative}");
         }
 
-        // Site OG must reference og-preview.png (same Trace brand).
+        // Site OG uses the canonical product screenshot.
         var site = File.ReadAllText(Path.Combine(root, "site", "index.html"));
-        site.Should().Contain("og-preview.png");
+        site.Should().Contain("Screenshot_main.png");
 
         // README uses Assets/Logo.png.
         var readme = File.ReadAllText(Path.Combine(root, "README.md"));
@@ -98,10 +98,10 @@ public sealed class PhaseALanguageAndBrandTests
     }
 
     [Fact]
-    public void BrandAssets_OgPreview_AndIconIco_HaveNonTrivialSize()
+    public void BrandAssets_Screenshot_AndIconIco_HaveNonTrivialSize()
     {
         var root = FindRoot();
-        new FileInfo(Path.Combine(root, "Assets", "og-preview.png")).Length.Should().BeGreaterThan(1024);
+        new FileInfo(Path.Combine(root, "Assets", "Screenshot_main.png")).Length.Should().BeGreaterThan(1024);
         new FileInfo(Path.Combine(root, "Assets", "Icon.ico")).Length.Should().BeGreaterThan(1024);
         new FileInfo(Path.Combine(root, "Assets", "Logo.png")).Length.Should().BeGreaterThan(1024);
     }

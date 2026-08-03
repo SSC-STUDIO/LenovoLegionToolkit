@@ -25,6 +25,10 @@ public sealed class LinuxSingleInstanceManager : ISingleInstanceManager
     {
         try
         {
+            // Dispose any previous stream before attempting to re-acquire
+            _lockStream?.Dispose();
+            _lockStream = null;
+
             _lockStream = new FileStream(
                 _lockFilePath,
                 FileMode.OpenOrCreate,

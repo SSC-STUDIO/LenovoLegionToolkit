@@ -12,36 +12,63 @@
     <wpfui:DynamicScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,16,12">
             <custom:CardControl Margin="0,0,0,8">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_HWiNFO_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_HWiNFO_Message}" />
-                </custom:CardControl.Header>
-                <wpfui:ToggleSwitch
-                    x:Name="_hwinfoIntegrationToggle"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_HWiNFO_Title}"
-                    Click="HWiNFOIntegrationToggle_Click" />
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_HWiNFO_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_HWiNFO_Message}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_hwinfoIntegrationToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_HWiNFO_Title}"
+                        Click="HWiNFOIntegrationToggle_Click" />
+                </Grid>
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CLI_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CLI_Message}" />
-                </custom:CardControl.Header>
-                <wpfui:ToggleSwitch
-                    x:Name="_cliInterfaceToggle"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_CLI_Title}"
-                    Click="CLIInterfaceToggle_Click" />
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_CLI_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_CLI_Message}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_cliInterfaceToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_CLI_Title}"
+                        Click="CLIInterfaceToggle_Click" />
+                </Grid>
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Message}" />
-                </custom:CardControl.Header>
-                <wpfui:ToggleSwitch
-                    x:Name="_cliPathToggle"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Title}"
-                    Click="CLIPathToggle_Click" />
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Message}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_cliPathToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Title}"
+                        Click="CLIPathToggle_Click" />
+                </Grid>
             </custom:CardControl>
         </StackPanel>
     </wpfui:DynamicScrollViewer>

@@ -11,7 +11,7 @@
     </Style>
     <Style Selector="Border.cardControl > Grid > StackPanel > TextBlock.cardTitle">
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
     </Style>
     <Style Selector="Border.cardControl > Grid > StackPanel > TextBlock.cardDescription">
         <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />

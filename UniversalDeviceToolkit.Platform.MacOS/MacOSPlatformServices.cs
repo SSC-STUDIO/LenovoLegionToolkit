@@ -8,6 +8,13 @@ namespace UniversalDeviceToolkit.Platform.MacOS;
 /// </summary>
 public sealed class MacOSPlatformServices : IPlatformServices
 {
+    private readonly IPlatformProbe _probe;
+
+    public MacOSPlatformServices(IPlatformProbe? probe = null)
+    {
+        _probe = probe ?? new PhysicalPlatformProbe();
+    }
+
     /// <inheritdoc />
     public string PlatformName => "macos";
 
@@ -21,14 +28,14 @@ public sealed class MacOSPlatformServices : IPlatformServices
     public bool SupportsKeyboardBacklight => false;
 
     /// <inheritdoc />
-    public bool SupportsBatteryManagement => true; // pmset API available
+    public bool SupportsBatteryManagement => _probe.FileExists("/usr/bin/pmset");
 
     /// <inheritdoc />
-    public bool SupportsDisplayControl => true; // System Preferences Display API
+    public bool SupportsDisplayControl => _probe.FileExists("/usr/bin/osascript");
 
     /// <inheritdoc />
-    public bool SupportsPowerProfile => true; // pmset command available
+    public bool SupportsPowerProfile => _probe.FileExists("/usr/bin/pmset");
 
     /// <inheritdoc />
-    public bool SupportsSystemTelemetry => true; // sysctl and IOKit APIs
+    public bool SupportsSystemTelemetry => _probe.FileExists("/usr/sbin/sysctl");
 }

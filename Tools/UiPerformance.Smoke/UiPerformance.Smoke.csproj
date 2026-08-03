@@ -4,8 +4,6 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <EnableUdtTestHooks>true</EnableUdtTestHooks>
     <RootNamespace>UiPerformance.Smoke</RootNamespace>

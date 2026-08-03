@@ -2,15 +2,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.RGB;
 using UniversalDeviceToolkit.WPF.Controls.KeyboardBacklight.Spectrum;
-using UniversalDeviceToolkit.WPF.ViewModels;
+using UniversalDeviceToolkit.ViewModels;
 
 namespace UniversalDeviceToolkit.WPF.Pages
 {
 public partial class KeyboardBacklightPage
 {
-    private readonly KeyboardBacklightViewModel _viewModel = new();
+    private readonly KeyboardBacklightViewModel _viewModel = IoCContainer.Resolve<KeyboardBacklightViewModel>();
     private bool _isInitializing;
     private CancellationTokenSource? _initializationCancellationTokenSource;
     private int _initializationVersion;
@@ -106,6 +107,10 @@ public partial class KeyboardBacklightPage
         }
     }
 
-    public static async Task<bool> IsSupportedAsync() => await KeyboardBacklightViewModel.IsSupportedAsync();
+    public static async Task<bool> IsSupportedAsync()
+    {
+        var viewModel = IoCContainer.Resolve<KeyboardBacklightViewModel>();
+        return await viewModel.IsSupportedAsync();
+    }
 }
 }

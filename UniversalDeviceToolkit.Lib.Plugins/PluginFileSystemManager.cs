@@ -63,8 +63,8 @@ public class PluginFileSystemManager : IPluginFileSystemManager
     private readonly HashSet<string> _cultureFolders = new(StringComparer.OrdinalIgnoreCase)
     {
         "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
-        "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
-        "vi", "zh-hans", "zh-hant", "tools"
+        "lv", "nl-NL", "pl", "pt", "pt-BR", "ro", "ru", "sk", "tr", "uk", "uz-Latn-UZ",
+        "vi", "zh-Hans", "zh-Hant", "tools"
     };
 
     private readonly ConcurrentDictionary<string, DateTime> _pluginFileCache = new(StringComparer.OrdinalIgnoreCase);
@@ -255,9 +255,8 @@ public class PluginFileSystemManager : IPluginFileSystemManager
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
-                    return true;
                 }
-                return false;
+                return true;
             }
             catch (IOException)
             {
@@ -287,9 +286,8 @@ public class PluginFileSystemManager : IPluginFileSystemManager
                 if (Directory.Exists(directoryPath))
                 {
                     Directory.Delete(directoryPath, true);
-                    return true;
                 }
-                return false;
+                return true;
             }
             catch (IOException)
             {

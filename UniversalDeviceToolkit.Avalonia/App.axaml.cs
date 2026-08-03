@@ -4,6 +4,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
+using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Platform.Linux;
+using UniversalDeviceToolkit.Platform.MacOS;
 
 namespace UniversalDeviceToolkit.Avalonia;
 
@@ -15,12 +18,30 @@ public partial class App : Application
 
     private TrayIcon? _trayIcon;
 
+    public static IPlatformServices PlatformServices { get; private set; } = new SamplePlatformServices();
+
     public App()
     {
+        PlatformServices = CreatePlatformServices();
         ShowCommand = new RelayCommand(ShowMainWindow);
         SettingsCommand = new RelayCommand(OpenSettings);
         ExitCommand = new RelayCommand(ExitApplication);
         DataContext = this;
+    }
+
+    private static IPlatformServices CreatePlatformServices()
+    {
+#if WINDOWS
+        return WindowsPlatformServices.Create();
+#else
+        if (OperatingSystem.IsLinux())
+            return new PlatformCapabilityServices(new LinuxPlatformServices());
+
+        if (OperatingSystem.IsMacOS())
+            return new PlatformCapabilityServices(new MacOSPlatformServices());
+
+        return new SamplePlatformServices();
+#endif
     }
 
     public override void Initialize()
@@ -32,7 +53,7 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow();
+            desktop.MainWindow = new MainWindow(PlatformServices);
             // Minimize to tray instead of closing
             desktop.MainWindow.Closing += OnMainWindowClosing;
 

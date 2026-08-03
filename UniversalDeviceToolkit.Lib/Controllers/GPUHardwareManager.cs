@@ -13,7 +13,7 @@ public class GPUHardwareManager : IGPUHardwareManager
 {
     public async Task RestartGPUAsync(string gpuInstanceId)
     {
-        if (string.IsNullOrEmpty(gpuInstanceId))
+        if (string.IsNullOrWhiteSpace(gpuInstanceId))
             return;
 
         if (Log.Instance.IsTraceEnabled)

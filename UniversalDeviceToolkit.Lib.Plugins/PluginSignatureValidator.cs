@@ -115,17 +115,6 @@ public class PluginSignatureValidator : IPluginSignatureValidator
             }
             catch (Exception ex)
             {
-                if (_settings.ValidationMode == PluginSignatureValidationMode.RequireSignature &&
-                    TrustedPluginPackageStore.IsTrustedFile(dllPath))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Plugin {dllPath} is not signed, but matches a trusted online package hash.");
-
-                    return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
-                        Resource.Plugin_Error_Signature_NotSigned_TrustedPackage)
-                    { IsAllowedByPolicy = true };
-                }
-
                 // File is not signed
                 if (_settings.ValidationMode == PluginSignatureValidationMode.AllowUnsigned)
                 {
@@ -145,19 +134,8 @@ public class PluginSignatureValidator : IPluginSignatureValidator
 
             if (!authenticodeOk)
             {
-                // Cert present but digest/trust failed — treat as invalid unless policy allows unsigned
-                // and package is hash-trusted (online store path).
-                if (_settings.ValidationMode == PluginSignatureValidationMode.RequireSignature &&
-                    TrustedPluginPackageStore.IsTrustedFile(dllPath))
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Plugin {dllPath} Authenticode verify failed (0x{trustStatus:X8}) but trusted package hash matches.");
-
-                    return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
-                        Resource.Plugin_Error_Signature_NotSigned_TrustedPackage)
-                    { IsAllowedByPolicy = true };
-                }
-
+                // A certificate with an invalid digest is still invalid. A package
+                // hash must never replace Authenticode validation in production.
                 if (_settings.ValidationMode == PluginSignatureValidationMode.AllowUnsigned)
                 {
                     return new PluginSignatureResult(PluginSignatureStatus.NotSigned,

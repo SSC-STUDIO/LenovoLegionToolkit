@@ -11,7 +11,7 @@ namespace UniversalDeviceToolkit.Installer;
 /// Writes the same first-run state files the app produces, so a user who
 /// answered the language/device questions during setup is not asked again on
 /// first launch. Formats mirror the app:
-///   %LocalAppData%\UniversalDeviceToolkit\lang          -> culture name, e.g. "zh-hans"
+///   %LocalAppData%\UniversalDeviceToolkit\lang          -> culture name, e.g. "zh-Hans"
 ///   %LocalAppData%\UniversalDeviceToolkit\device-setup  -> key=value lines
 /// </summary>
 internal static class FirstRunState
@@ -39,18 +39,6 @@ internal static class FirstRunState
         ]);
         InstallerLog.Info($"Saved device setup '{devicePackId}' (basicMode={isBasicMode}).");
     }
-
-    public static string? GetSavedLanguage()
-    {
-        try
-        {
-            return File.Exists(LanguagePath) ? File.ReadAllText(LanguagePath).Trim() : null;
-        }
-        catch
-        {
-            return null;
-        }
-    }
 }
 
 /// <summary>Languages the app offers, with native display names (same order as the app).</summary>
@@ -72,26 +60,26 @@ internal static class AppLanguages
         new("it", "italiano"),
         new("ja", "日本語"),
         new("lv", "latviešu"),
-        new("nl-nl", "Nederlands"),
+        new("nl-NL", "Nederlands"),
         new("pl", "polski"),
         new("pt", "português"),
-        new("pt-br", "português do Brasil"),
+        new("pt-BR", "português do Brasil"),
         new("ro", "română"),
         new("ru", "русский"),
         new("sk", "slovenčina"),
         new("tr", "Türkçe"),
         new("uk", "українська"),
         new("vi", "Tiếng Việt"),
-        new("zh-hans", "简体中文"),
-        new("zh-hant", "繁體中文"),
-        new("uz-latn-uz", "Karakalpak"),
+        new("zh-Hans", "简体中文"),
+        new("zh-Hant", "繁體中文"),
+        new("uz-Latn-UZ", "Uzbek (Latin)"),
     ];
 
     /// <summary>Cultures whose satellite assemblies ship inside the payload zip.</summary>
     public static bool IsBundled(string cultureName) =>
         cultureName.Equals("en", StringComparison.OrdinalIgnoreCase) ||
-        cultureName.Equals("zh-hans", StringComparison.OrdinalIgnoreCase) ||
-        cultureName.Equals("zh-hant", StringComparison.OrdinalIgnoreCase);
+        cultureName.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase) ||
+        cultureName.Equals("zh-Hant", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>Same preference rules as the app's GetPreferredStartupLanguage.</summary>
     public static AppLanguage GetPreferred()
@@ -102,7 +90,7 @@ internal static class AppLanguages
         {
             var traditional = new[] { "TW", "HK", "MO" }.Any(r =>
                 systemCulture.Name.Contains(r, StringComparison.OrdinalIgnoreCase));
-            return All.First(l => l.Culture == (traditional ? "zh-hant" : "zh-hans"));
+            return All.First(l => l.Culture == (traditional ? "zh-Hant" : "zh-Hans"));
         }
 
         return All.FirstOrDefault(l => l.Culture.Equals(systemCulture.Name, StringComparison.OrdinalIgnoreCase))

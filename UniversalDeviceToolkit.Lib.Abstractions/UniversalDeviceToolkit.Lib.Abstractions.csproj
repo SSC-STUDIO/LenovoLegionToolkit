@@ -3,8 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.Abstractions</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <!-- Portable net10.0: do not force win-x64 RID or PlatformTarget=x64 -->
     <RuntimeIdentifier></RuntimeIdentifier>
     <Platforms>AnyCPU;x64</Platforms>

@@ -34,6 +34,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
     private CancellationTokenSource? _driverFilterDebounceCancellationTokenSource;
     private bool _disposed;
     private bool _isRefreshingStates;
+    private bool _isOptimizationStateScanned;
 
     public CancellationTokenSource? DriverGetPackagesTokenSource
     {
@@ -140,6 +141,10 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(IsDriverDownloadMode));
         OnPropertyChanged(nameof(IsNetworkAccelerationMode));
         OnPropertyChanged(nameof(IsOptimizationMode));
+        OnPropertyChanged(nameof(HasPendingOptimizationChanges));
+        OnPropertyChanged(nameof(CanApplyOptimizationChanges));
+        OnPropertyChanged(nameof(CanCancelOptimizationChanges));
+        OnPropertyChanged(nameof(CanSelectRecommended));
         OnPropertyChanged(nameof(PageHeaderTitle));
         OnPropertyChanged(nameof(PageHeaderDescription));
     }
@@ -171,8 +176,42 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             if (_isBusy == value) return;
             _isBusy = value;
             OnPropertyChanged(nameof(IsBusy));
+            OnPropertyChanged(nameof(CanApplyOptimizationChanges));
+            OnPropertyChanged(nameof(CanCancelOptimizationChanges));
+            OnPropertyChanged(nameof(CanSelectRecommended));
+            UpdateOptimizationActionEditability();
         }
     }
+
+    public bool IsOptimizationStateScanned
+    {
+        get => _isOptimizationStateScanned;
+        private set
+        {
+            if (_isOptimizationStateScanned == value)
+                return;
+
+            _isOptimizationStateScanned = value;
+            OnPropertyChanged(nameof(IsOptimizationStateScanned));
+            OnPropertyChanged(nameof(CanApplyOptimizationChanges));
+            OnPropertyChanged(nameof(CanCancelOptimizationChanges));
+            OnPropertyChanged(nameof(CanSelectRecommended));
+            UpdateOptimizationActionEditability();
+        }
+    }
+
+    public bool HasPendingOptimizationChanges => OptimizationCategories
+        .SelectMany(category => category.Actions)
+        .Any(action => action.IsVisible && action.IsEnabled && action.IsDirty);
+
+    public bool CanApplyOptimizationChanges =>
+        IsOptimizationMode && IsOptimizationStateScanned && HasPendingOptimizationChanges && !IsBusy;
+
+    public bool CanCancelOptimizationChanges =>
+        IsOptimizationMode && IsOptimizationStateScanned && HasPendingOptimizationChanges && !IsBusy;
+
+    public bool CanSelectRecommended =>
+        CurrentMode != PageMode.Optimization || (IsOptimizationStateScanned && !IsBusy);
 
     private bool _isScanned;
     public bool IsScanned
@@ -349,6 +388,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
 
     private void InitializeCore()
     {
+        IsOptimizationStateScanned = false;
+
         // Restore last mode (ignore removed Beautification tab and invalid stored values)
         var lastMode = (PageMode)_applicationSettings.Store.LastWindowsOptimizationPageMode;
         if (!Enum.IsDefined(typeof(PageMode), lastMode))
@@ -381,7 +422,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
                 action,
                 ResolveOptimizationText(action.ResourceAnchorType, categoryResourceManager, action.TitleResourceKey),
                 ResolveOptimizationText(action.ResourceAnchorType, categoryResourceManager, action.DescriptionResourceKey),
-                T("WindowsOptimization_Action_Recommended_Tag", "Recommended"))).ToList();
+                T("WindowsOptimization_Action_Recommended_Tag", "Recommended"),
+                T("WindowsOptimizationPage_Optimization_StateUnknown", "The current state could not be detected."))).ToList();
 
             var isCleanup = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
 
@@ -397,12 +439,11 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
                 }
                 else
                 {
-                    // Optimization actions: restore selection from settings (but will be overridden by scan)
-                    // The scan will detect actual system state, but we restore user's previous selection intent
-                    if (_applicationSettings.Store.SelectedOptimizationActions != null)
-                    {
-                        actionVm.IsSelected = _applicationSettings.Store.SelectedOptimizationActions.Contains(actionVm.Key);
-                    }
+                    // Optimization selection is initialized from the machine-state
+                    // scan, never from stale saved intent.
+                    actionVm.IsSelected = false;
+                    actionVm.IsEnabled = false;
+                    actionVm.CanEdit = false;
                 }
 
                 actionVm.PropertyChanged += Action_PropertyChanged;
@@ -432,26 +473,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         // Must include IsNetworkAccelerationMode — otherwise restoring NA tab keeps optimization list visible.
         NotifyModePropertiesChanged();
         UpdateSelectedActions();
-
-        StartOptimizationStateScan();
-    }
-
-    private void StartOptimizationStateScan()
-    {
-        _ = ObserveOptimizationStateScanAsync();
-    }
-
-    private async Task ObserveOptimizationStateScanAsync()
-    {
-        try
-        {
-            await ScanOptimizationStatesAsync();
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Failed to scan Windows optimization states.", ex);
-        }
     }
 
     private static string ResolveOptimizationText(Type? resourceAnchorType, ResourceManager? categoryResourceManager, string key)
@@ -521,8 +542,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         }
         else
         {
-            // Ensure async operation is properly handled
-            _ = HandleOptimizationActionChangeAsync(actionVm);
+            // Optimization checkboxes edit pending intent only. The system is
+            // changed by ApplyOptimizationChangesAsync.
+            UpdateSelectedActions();
         }
     }
 
@@ -533,6 +555,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
 
     public void SelectRecommended()
     {
+        if (CurrentMode == PageMode.Optimization && !CanSelectRecommended)
+            return;
+
         _isRefreshingStates = true;
         try
         {
@@ -546,15 +571,15 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             _isRefreshingStates = false;
         }
 
-        // Save selection after refreshing states
         if (CurrentMode == PageMode.Cleanup)
             SaveCleanupSelection();
-        else
-            SaveOptimizationSelection();
     }
 
     public void ClearSelection()
     {
+        if (CurrentMode == PageMode.Optimization && !CanSelectRecommended)
+            return;
+
         _isRefreshingStates = true;
         try
         {
@@ -568,11 +593,8 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             _isRefreshingStates = false;
         }
 
-        // Save selection after refreshing states
         if (CurrentMode == PageMode.Cleanup)
             SaveCleanupSelection();
-        else
-            SaveOptimizationSelection();
     }
 
     private void UpdateSelectedActions()
@@ -615,6 +637,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(VisibleSelectedActions));
         OnPropertyChanged(nameof(HasSelectedActions));
         OnPropertyChanged(nameof(SelectedActionsSummary));
+        OnPropertyChanged(nameof(HasPendingOptimizationChanges));
+        OnPropertyChanged(nameof(CanApplyOptimizationChanges));
+        OnPropertyChanged(nameof(CanCancelOptimizationChanges));
 
         if (CurrentMode == PageMode.Cleanup)
         {
@@ -789,132 +814,53 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         _applicationSettings.SynchronizeStore();
     }
 
-    private async Task HandleOptimizationActionChangeAsync(OptimizationActionViewModel actionVm)
+    public async Task ApplyOptimizationChangesAsync(CancellationToken cancellationToken = default)
     {
-        if (actionVm is null)
+        if (!IsOptimizationMode || !IsOptimizationStateScanned || !HasPendingOptimizationChanges || IsBusy)
             return;
 
-        var desiredApplied = actionVm.IsSelected;
-        var isToggleAction = OptimizationToggleActionHelper.IsToggleAction(actionVm.Key);
-
-        if (IsBusy)
-        {
-            await SetOptimizationActionSelectedOnUiAsync(actionVm, !desiredApplied);
-            await ShowOptimizationSnackbarAsync(
-                T("WindowsOptimizationPage_Optimization_Busy_Wait", "Please wait for the current optimization to finish."),
-                SnackbarType.Warning);
+        var pendingActions = SnapshotOptimizationActions()
+            .Where(action => action.IsVisible && action.IsEnabled && action.IsDirty)
+            .ToList();
+        if (pendingActions.Count == 0)
             return;
-        }
 
         IsBusy = true;
         try
         {
-            if (isToggleAction)
+            foreach (var action in pendingActions)
             {
-                var targetActionKey = OptimizationToggleActionHelper.ResolveTargetActionKey(actionVm.Key, desiredApplied);
-                await _windowsOptimizationService.ApplyActionAsync(targetActionKey, CancellationToken.None);
-
-                var togglePair = OptimizationToggleActionHelper.FindTogglePair(actionVm, actionVm.Category?.Actions ?? []);
-                var featureEnabled = togglePair is null
-                    ? desiredApplied
-                    : await _windowsOptimizationService.IsActionAppliedAsync(togglePair.Value.Enable.Key, CancellationToken.None);
-
-                if (featureEnabled != desiredApplied)
-                {
-                    await ShowOptimizationSnackbarAsync(
-                        string.Format(
-                            T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
-                            actionVm.Title,
-                            T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
-                        SnackbarType.Error);
-                }
-                else
-                {
-                    await ShowOptimizationSnackbarAsync(
-                        desiredApplied
-                            ? string.Format(
-                                T("WindowsOptimizationPage_Optimization_Applied_Format", "{0} applied successfully."),
-                                actionVm.Title)
-                            : string.Format(
-                                T("WindowsOptimizationPage_Optimization_Reverted_Format", "{0} reverted successfully."),
-                                actionVm.Title),
-                        SnackbarType.Success);
-                }
-
-                if (togglePair is not null)
-                    await ApplyTogglePairPresentationOnUiAsync(togglePair.Value.Enable, togglePair.Value.Disable, featureEnabled);
-                else
-                    await SetOptimizationActionSelectedOnUiAsync(actionVm, desiredApplied);
-
-                await RunOnUiAsync(SaveOptimizationSelection);
+                cancellationToken.ThrowIfCancellationRequested();
+                await ApplyPendingOptimizationActionAsync(action, cancellationToken);
             }
-            else
-            {
-                if (desiredApplied)
-                    await _windowsOptimizationService.ApplyActionAsync(actionVm.Key, CancellationToken.None);
-                else
-                    await _windowsOptimizationService.RevertActionAsync(actionVm.Key, CancellationToken.None);
 
-                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
-
-                if (isApplied != desiredApplied)
-                {
-                    await ShowOptimizationSnackbarAsync(
-                        string.Format(
-                            T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
-                            actionVm.Title,
-                            T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified. Administrator privileges may be required.")),
-                        SnackbarType.Error);
-                }
-                else
-                {
-                    await ShowOptimizationSnackbarAsync(
-                        desiredApplied
-                            ? string.Format(
-                                T("WindowsOptimizationPage_Optimization_Applied_Format", "{0} applied successfully."),
-                                actionVm.Title)
-                            : string.Format(
-                                T("WindowsOptimizationPage_Optimization_Reverted_Format", "{0} reverted successfully."),
-                                actionVm.Title),
-                        SnackbarType.Success);
-                }
-
-                await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
-                await RunOnUiAsync(SaveOptimizationSelection);
-            }
+            await ScanOptimizationStatesAsync(cancellationToken);
+            await ShowOptimizationSnackbarAsync(
+                T("WindowsOptimizationPage_Optimization_AppliedAll", "Selected optimization changes were applied."),
+                SnackbarType.Success);
+        }
+        catch (OperationCanceledException)
+        {
+            // A command may have completed before cancellation was observed.
+            // Reconcile the UI with the machine instead of leaving a stale
+            // pending selection visible.
+            await ScanOptimizationStatesAsync(CancellationToken.None);
+            await ShowOptimizationSnackbarAsync(
+                T("WindowsOptimizationPage_Optimization_Cancelled", "Applying optimization changes was cancelled."),
+                SnackbarType.Warning);
+            throw;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to handle optimization action change for {actionVm.Key}", ex);
+                Log.Instance.Trace("Failed to apply pending Windows optimization changes.", ex);
 
+            await ScanOptimizationStatesAsync(CancellationToken.None);
             await ShowOptimizationSnackbarAsync(
                 string.Format(
-                    T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply {0}: {1}"),
-                    actionVm.Title,
+                    T("WindowsOptimizationPage_Optimization_Error_Format", "Failed to apply optimization changes: {0}"),
                     ex.Message),
                 SnackbarType.Error);
-
-            if (isToggleAction)
-            {
-                var togglePair = OptimizationToggleActionHelper.FindTogglePair(actionVm, actionVm.Category?.Actions ?? []);
-                if (togglePair is not null)
-                {
-                    var featureEnabled = await _windowsOptimizationService.IsActionAppliedAsync(togglePair.Value.Enable.Key, CancellationToken.None);
-                    await ApplyTogglePairPresentationOnUiAsync(togglePair.Value.Enable, togglePair.Value.Disable, featureEnabled);
-                }
-                else
-                {
-                    await SetOptimizationActionSelectedOnUiAsync(actionVm, !desiredApplied);
-                }
-            }
-            else
-            {
-                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(actionVm.Key, CancellationToken.None);
-                await SetOptimizationActionSelectedOnUiAsync(actionVm, isApplied);
-            }
-
-            await RunOnUiAsync(SaveOptimizationSelection);
         }
         finally
         {
@@ -922,14 +868,78 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
-    private Task SetOptimizationActionSelectedOnUiAsync(OptimizationActionViewModel actionVm, bool isSelected)
+    public void CancelOptimizationChanges()
+    {
+        if (IsBusy || !IsOptimizationMode || !IsOptimizationStateScanned)
+            return;
+
+        _isRefreshingStates = true;
+        try
+        {
+            foreach (var action in SnapshotOptimizationActions())
+            {
+                if (action.IsApplied.HasValue)
+                    action.IsSelected = action.IsApplied.Value;
+            }
+
+            UpdateSelectedActions();
+        }
+        finally
+        {
+            _isRefreshingStates = false;
+        }
+    }
+
+    private async Task ApplyPendingOptimizationActionAsync(
+        OptimizationActionViewModel action,
+        CancellationToken cancellationToken)
+    {
+        var desiredState = action.IsSelected;
+        var togglePair = OptimizationToggleActionHelper.FindTogglePair(
+            action,
+            action.Category?.Actions ?? []);
+
+        if (togglePair is not null)
+        {
+            var targetActionKey = OptimizationToggleActionHelper.ResolveTargetActionKey(action.Key, desiredState);
+            await _windowsOptimizationService.ApplyActionAsync(targetActionKey, cancellationToken);
+
+            var featureEnabled = await _windowsOptimizationService.TryGetActionAppliedAsync(
+                togglePair.Value.Enable.Key,
+                cancellationToken);
+            if (!featureEnabled.HasValue || featureEnabled.Value != desiredState)
+                throw new InvalidOperationException(
+                    T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified."));
+
+            await ApplyTogglePairPresentationOnUiAsync(
+                togglePair.Value.Enable,
+                togglePair.Value.Disable,
+                featureEnabled);
+            return;
+        }
+
+        if (desiredState)
+            await _windowsOptimizationService.ApplyActionAsync(action.Key, cancellationToken);
+        else
+            await _windowsOptimizationService.RevertActionAsync(action.Key, cancellationToken);
+
+        var isApplied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, cancellationToken);
+        if (!isApplied.HasValue || isApplied.Value != desiredState)
+            throw new InvalidOperationException(
+                T("WindowsOptimizationPage_Optimization_NotVerified", "The change could not be verified."));
+
+        await SetOptimizationActionStateOnUiAsync(action, isApplied.Value);
+    }
+
+    private Task SetOptimizationActionStateOnUiAsync(OptimizationActionViewModel actionVm, bool isApplied)
     {
         return RunOnUiAsync(() =>
         {
             _isRefreshingStates = true;
             try
             {
-                actionVm.IsSelected = isSelected;
+                actionVm.IsApplied = isApplied;
+                actionVm.IsSelected = isApplied;
                 UpdateSelectedActions();
             }
             finally
@@ -970,6 +980,9 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         {
             if (_disposed)
                 return;
+
+            await RunOnUiAsync(() => IsOptimizationStateScanned = false);
+
             var categories = await GetOptimizationCategorySnapshotAsync();
             var pairedActionKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -980,7 +993,7 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
                     pairedActionKeys.Add(enable.Key);
                     pairedActionKeys.Add(disable.Key);
 
-                    var featureEnabled = await _windowsOptimizationService.IsActionAppliedAsync(enable.Key, CancellationToken.None);
+                    var featureEnabled = await _windowsOptimizationService.TryGetActionAppliedAsync(enable.Key, cancellationToken);
                     await ApplyTogglePairPresentationOnUiAsync(enable, disable, featureEnabled);
                 }
             }
@@ -988,16 +1001,21 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             var actions = await GetOptimizationActionSnapshotAsync();
             foreach (var action in actions.Where(action => !pairedActionKeys.Contains(action.Key)))
             {
-                var isApplied = await _windowsOptimizationService.IsActionAppliedAsync(action.Key, CancellationToken.None);
+                var isApplied = await _windowsOptimizationService.TryGetActionAppliedAsync(action.Key, cancellationToken);
                 await RunOnUiAsync(() =>
                 {
                     action.IsVisible = true;
-                    action.IsSelected = isApplied;
+                    action.IsEnabled = isApplied.HasValue;
+                    action.CanEdit = isApplied.HasValue && IsOptimizationStateScanned && !IsBusy;
+                    action.IsApplied = isApplied;
+                    action.IsSelected = isApplied ?? false;
                 });
             }
 
             await RunOnUiAsync(() =>
             {
+                IsOptimizationStateScanned = true;
+                UpdateOptimizationActionEditability();
                 UpdateSelectedActions();
                 SaveOptimizationSelection();
             });
@@ -1005,18 +1023,28 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         finally
         {
             _isRefreshingStates = false;
-            _optimizationStateScanLock.Release();
+            try
+            {
+                if (!_disposed)
+                    _optimizationStateScanLock.Release();
+            }
+            catch (ObjectDisposedException)
+            {
+                // Semaphore was disposed concurrently — safe to ignore.
+            }
         }
     }
 
     private Task ApplyTogglePairPresentationOnUiAsync(
         OptimizationActionViewModel enable,
         OptimizationActionViewModel disable,
-        bool featureEnabled)
+        bool? featureEnabled)
     {
         return RunOnUiAsync(() =>
         {
             OptimizationToggleActionHelper.ApplyTogglePairPresentation(featureEnabled, enable, disable);
+            enable.CanEdit = featureEnabled.HasValue && IsOptimizationStateScanned && !IsBusy;
+            disable.CanEdit = featureEnabled.HasValue && IsOptimizationStateScanned && !IsBusy;
             enable.Category?.RaiseSelectionChanged();
             UpdateSelectedActions();
         });
@@ -1066,6 +1094,12 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             dispatcher.Invoke(action);
         else
             action();
+    }
+
+    private void UpdateOptimizationActionEditability()
+    {
+        foreach (var action in SnapshotOptimizationActions())
+            action.CanEdit = action.IsEnabled && IsOptimizationStateScanned && !IsBusy;
     }
 
     public void NotifyDriverSelectionChanged()
@@ -1134,4 +1168,3 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 }
-

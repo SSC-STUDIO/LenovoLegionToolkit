@@ -186,29 +186,32 @@ public class IpcModelAndExtensionTests
     #region ThreadSafeCounter Tests
 
     [Fact]
-    public void ThreadSafeCounter_Default_ShouldDecrementFromZero()
+    public void ThreadSafeCounter_Default_ShouldBeZero()
     {
         var counter = new ThreadSafeCounter();
-        counter.Decrement().Should().BeTrue();
+        counter.Decrement();
+        counter.Value.Should().Be(0);
     }
 
     [Fact]
-    public void ThreadSafeCounter_IncrementThenDecrement_ShouldReturnFalse()
+    public void ThreadSafeCounter_IncrementThenDecrement_ShouldReturnToZero()
     {
         var counter = new ThreadSafeCounter();
         counter.Increment();
-        counter.Decrement().Should().BeFalse();
+        counter.Decrement();
+        counter.Value.Should().Be(0);
     }
 
     [Fact]
-    public void ThreadSafeCounter_IncrementTwiceThenDecrementTwice_ShouldWork()
+    public void ThreadSafeCounter_IncrementTwiceThenDecrementThreeTimes_ShouldClampAtZero()
     {
         var counter = new ThreadSafeCounter();
         counter.Increment();
         counter.Increment();
-        counter.Decrement().Should().BeFalse();
-        counter.Decrement().Should().BeFalse();
-        counter.Decrement().Should().BeTrue();
+        counter.Decrement();
+        counter.Decrement();
+        counter.Decrement();
+        counter.Value.Should().Be(0);
     }
 
     #endregion

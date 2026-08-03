@@ -19,6 +19,7 @@ public sealed class WindowsOptimizationPageGuardTests
 
         var loadedHandler = source[loadedHandlerStart..focusMethodStart];
         loadedHandler.Should().Contain("ViewModel.Initialize();");
+        loadedHandler.Should().Contain("RunInitialCategoriesLoadAsync(scanVersion, scanCancellation);");
         loadedHandler.IndexOf("ViewModel.Initialize();", System.StringComparison.Ordinal)
             .Should()
             .BeLessThan(loadedHandler.IndexOf("TryApplyPendingPluginFocusRequest();", System.StringComparison.Ordinal));
@@ -90,20 +91,88 @@ public sealed class WindowsOptimizationPageGuardTests
                 break;
 
             (idIndex > headerOpen && idIndex < headerClose)
-                .Should()
-                .BeFalse($"{automationId} must not live inside CardControl.Header");
+            .Should()
+            .BeFalse($"{automationId} must not live inside CardControl.Header");
 
             searchFrom = headerClose + 1;
         }
     }
 
+    [Fact]
+    public void OptimizationToolbar_ShouldExposeSeparateApplyAndCancelActions()
+    {
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
+        var code = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml.cs");
+
+        xaml.Should().Contain("WindowsOptimizationApplyButton");
+        xaml.Should().Contain("WindowsOptimizationCancelButton");
+        xaml.Should().Contain("IsEnabled=\"{Binding CanApplyOptimizationChanges}\"");
+        xaml.Should().Contain("IsEnabled=\"{Binding CanCancelOptimizationChanges}\"");
+        xaml.Should().Contain("IsEnabled=\"{Binding CanSelectRecommended}\"");
+        xaml.Should().Contain("IsEnabled=\"{Binding CanEdit}\"");
+        code.Should().Contain("ApplyOptimizationButton_Click");
+        code.Should().Contain("CancelOptimizationButton_Click");
+        code.Should().Contain("_optimizationStateScanCancellationTokenSource");
+        code.Should().Contain("BeginOptimizationStateScan");
+        code.Should().Contain("EndOptimizationStateScan");
+    }
+
+    [Fact]
+    public void RecommendedButton_ShouldOnlyChangePendingSelection()
+    {
+        var code = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml.cs");
+        var handler = ExtractMethod(code, "private void SelectRecommendedButton_Click(");
+
+        handler.Should().Contain("ViewModel.SelectRecommended();");
+        handler.Should().NotContain("ApplyActionAsync");
+        handler.Should().NotContain("ApplyOptimizationChangesAsync");
+    }
+
+    private static string ExtractMethod(string source, string signature)
+    {
+        var start = source.IndexOf(signature, System.StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+
+        var braceStart = source.IndexOf('{', start);
+        braceStart.Should().BeGreaterThanOrEqualTo(0);
+
+        var depth = 0;
+        for (var i = braceStart; i < source.Length; i++)
+        {
+            if (source[i] == '{')
+                depth++;
+            else if (source[i] == '}')
+            {
+                depth--;
+                if (depth == 0)
+                    return source[start..(i + 1)];
+            }
+        }
+
+        throw new InvalidOperationException($"Could not extract method '{signature}'.");
+    }
+
     private static string ReadRepositoryFile(params string[] pathParts)
     {
-var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !Directory.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.WPF")))
-            directory = directory.Parent;
+        var roots = new[]
+        {
+            Environment.GetEnvironmentVariable("UDT_REPOSITORY_ROOT"),
+            Environment.CurrentDirectory,
+            AppContext.BaseDirectory
+        };
 
-        directory.Should().NotBeNull("the test must run from inside the repository tree");
-        return File.ReadAllText(Path.Combine([directory!.FullName, .. pathParts]));
+        foreach (var root in roots.Where(static root => !string.IsNullOrWhiteSpace(root)))
+        {
+            var directory = new DirectoryInfo(root!);
+            while (directory is not null)
+            {
+                if (Directory.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.WPF")))
+                    return File.ReadAllText(Path.Combine([directory.FullName, .. pathParts]));
+
+                directory = directory.Parent;
+            }
+        }
+
+        throw new DirectoryNotFoundException("Could not locate the repository root.");
     }
 }

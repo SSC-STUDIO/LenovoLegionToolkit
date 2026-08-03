@@ -14,7 +14,8 @@ namespace UniversalDeviceToolkit.Lib.Utils;
 
 public static class PawnIOHelper
 {
-    private static readonly ApplicationSettings ApplicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+    private static ApplicationSettings? _applicationSettings;
+    private static ApplicationSettings ApplicationSettings => _applicationSettings ??= IoCContainer.Resolve<ApplicationSettings>();
 
     private const string REG_KEY_PAWN_IO = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\PawnIO";
     private const string REG_VAL_INSTALL_LOC = "InstallLocation";

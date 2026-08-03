@@ -17,7 +17,7 @@ public class PluginSettings : AbstractSettings<PluginSettings.PluginSettingsStor
     public class PluginSettingsStore
     {
         /// <summary>
-        /// Dictionary mapping plugin ID to culture name (e.g., "zh-hans", "en")
+        /// Dictionary mapping plugin ID to culture name (e.g., "zh-Hans", "en")
         /// If a plugin doesn't have an entry, it uses the application's default language
         /// </summary>
         public Dictionary<string, string> PluginLanguages { get; set; } = new();

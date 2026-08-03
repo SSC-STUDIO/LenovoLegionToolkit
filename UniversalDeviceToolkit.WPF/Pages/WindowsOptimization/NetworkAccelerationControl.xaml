@@ -3,32 +3,17 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
+    xmlns:charts="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Charts"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
-    <!--
-      Network Acceleration — Watt Toolkit-inspired layout:
-        1. Status + action controls
-        2. Network diagnostics panel (NAT / DNS / IPv6)
-        3. Service selection list (collapsible groups with sub-items)
-        4. Metrics tiles
-        5. Advanced settings
-      AutomationIds preserved for smoke/UI tests.
-    -->
     <UserControl.Resources>
-        <!-- ── Shared compact button styles ── -->
-        <Style x:Key="NaPrimaryButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-            <Setter Property="MinWidth" Value="88" />
-            <Setter Property="MinHeight" Value="32" />
-            <Setter Property="Padding" Value="12,4" />
-            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
-        </Style>
         <Style x:Key="NaSecondaryButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-            <Setter Property="MinHeight" Value="30" />
-            <Setter Property="Padding" Value="10,4" />
-            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="Padding" Value="9,3" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
         </Style>
         <Style x:Key="NaModeComboStyle" TargetType="ComboBox" BasedOn="{StaticResource AppComboBoxStyle}">
             <Setter Property="MinWidth" Value="168" />
@@ -36,19 +21,9 @@
             <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-
-        <!-- ── Diagnostics panel styles ── -->
-        <Style x:Key="NaDiagSectionStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
-            <Setter Property="Padding" Value="14,10" />
-            <Setter Property="Margin" Value="0,0,0,8" />
-        </Style>
         <Style x:Key="NaDiagTitleStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
+            <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -56,7 +31,6 @@
             <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,6,0" />
         </Style>
         <Style x:Key="NaDiagValueStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
@@ -69,24 +43,41 @@
             <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-
-        <!-- ── Service list styles ── -->
+        <Style x:Key="NaDiagComboStyle" TargetType="ComboBox" BasedOn="{StaticResource AppComboBoxStyle}">
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="NaPanelExpanderStyle" TargetType="custom:CardExpander" BasedOn="{StaticResource DefaultUiCardExpanderStyle}">
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="MinHeight" Value="48" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style x:Key="NaServiceExpanderStyle" TargetType="custom:CardExpander" BasedOn="{StaticResource NaPanelExpanderStyle}">
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="MinHeight" Value="52" />
+            <Setter Property="Margin" Value="0,0,0,3" />
+        </Style>
         <Style x:Key="NaServiceNameStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="Margin" Value="6,0,0,0" />
         </Style>
         <Style x:Key="NaSubItemRowStyle" TargetType="Border">
-            <Setter Property="Padding" Value="36,4,4,4" />
+            <Setter Property="Padding" Value="28,2,4,2" />
             <Setter Property="Margin" Value="0" />
         </Style>
         <Style x:Key="NaSubItemNameStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="Margin" Value="6,0,0,0" />
         </Style>
         <Style x:Key="NaSubItemDomainStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
@@ -94,408 +85,353 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-            <Setter Property="MaxWidth" Value="240" />
+            <Setter Property="MaxWidth" Value="260" />
         </Style>
         <Style x:Key="NaBetaTagStyle" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Padding" Value="6,1" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="Padding" Value="5,1" />
             <Setter Property="Margin" Value="6,0,0,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-
-        <!-- ── Mode selection row ── -->
         <Style x:Key="NaModeRowStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="0,0,8,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         </Style>
-
-        <!-- ── Collapsible diagnostic panel container ── -->
-        <Style x:Key="NaCollapsiblePanelStyle" TargetType="Border" BasedOn="{StaticResource NaDiagSectionStyle}" />
-
-        <!-- ── Collapse/expand arrow button ── -->
-        <Style x:Key="NaCollapseArrowStyle" TargetType="Button">
-            <Setter Property="Margin" Value="4,0,0,0" />
-            <Setter Property="Padding" Value="4" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="FontSize" Value="14" />
+        <Style x:Key="NaTrafficLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-
-        <!-- ── Brand icon placeholder (text-based, no image assets required) ── -->
+        <Style x:Key="NaTrafficValueStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,2,0,0" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
         <Style x:Key="NaBrandIconStyle" TargetType="Border">
-            <Setter Property="Width" Value="28" />
-            <Setter Property="Height" Value="28" />
-            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6,0,8,0" />
         </Style>
     </UserControl.Resources>
 
     <Grid>
-    <wpfui:DynamicScrollViewer
-        AutomationProperties.AutomationId="NetworkAccelerationPageScrollViewer"
-        HorizontalScrollBarVisibility="Disabled"
-        VerticalScrollBarVisibility="Auto"
-        Margin="0">
-        <Border
-            Margin="0,0,8,16"
-            HorizontalAlignment="Stretch"
-            AutomationProperties.AutomationId="NetworkAccelerationControlCard">
-            <StackPanel>
-
-                <!--
-                  ═══════════════════════════════════════════════════════
-                  Section 1: Mode selection (compact single row)
-                  ═══════════════════════════════════════════════════════
-                -->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" MinWidth="160" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="0"
-                        Style="{StaticResource NaModeRowStyle}"
-                        Text="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}" />
-                    <ComboBox
-                        x:Name="_modeComboBox"
-                        Grid.Column="1"
-                        MaxWidth="360"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource NaModeComboStyle}"
-                        AutomationProperties.AutomationId="NetworkAccelerationModeSelector"
-                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}"
-                        SelectionChanged="ModeComboBox_SelectionChanged" />
-                </Grid>
-
-                <Border Style="{StaticResource AppDividerBorderStyle}" />
-
-                <!--
-                  ═══════════════════════════════════════════════════════
-                  Section 2: Network Diagnostics Panel
-                  ═══════════════════════════════════════════════════════
-                -->
-                <TextBlock
-                    Style="{StaticResource AppSectionLabelTextBlockStyle}"
-                    Text="{x:Static resources:Resource.NetworkAccelerationPage_DiagnosticsHeading}" />
-
-                <!-- ── NAT Detection (collapsible) ── -->
-                <Border Style="{StaticResource NaCollapsiblePanelStyle}" AutomationProperties.AutomationId="NetworkAccelerationNatSection">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_NatTitle}" />
-                            <ComboBox
-                                x:Name="_natStunCombo"
-                                Grid.Column="2"
-                                MinWidth="140"
-                                MinHeight="28"
-                                Margin="8,0,4,0"
-                                FontSize="{DynamicResource FontSizeCaption}"
-                                IsEditable="True"
-                                AutomationProperties.AutomationId="NetworkAccelerationNatStunCombo" />
-                            <wpfui:Button
-                                x:Name="_natDetectButton"
-                                Grid.Column="3"
-                                Style="{StaticResource NaSecondaryButtonStyle}"
-                                Appearance="Secondary"
-                                Click="NatDetectButton_Click"
-                                Content="{x:Static resources:Resource.NaDiag_Detect}"
-                                AutomationProperties.AutomationId="NetworkAccelerationNatDetectButton" />
-                            <Button
-                                x:Name="_natCollapseArrow"
-                                Grid.Column="4"
-                                Style="{StaticResource NaCollapseArrowStyle}"
-                                Click="NatCollapseArrow_Click"
-                                Content="▾" />
-                        </Grid>
-                        <WrapPanel x:Name="_natContentPanel" Margin="0,8,0,0">
-                            <StackPanel Orientation="Horizontal" Margin="0,0,16,4">
-                                <TextBlock Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_NatType}" />
-                                <TextBlock x:Name="_natTypeText" Style="{StaticResource NaDiagValueStyle}" Text="{x:Static resources:Resource.NaDiag_Unknown}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,16,4">
-                                <TextBlock Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_LocalIp}" />
-                                <TextBlock x:Name="_natLocalIpText" Style="{StaticResource NaDiagValueStyle}" Text="—" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,16,4">
-                                <TextBlock Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_PublicIp}" />
-                                <TextBlock x:Name="_natPublicIpText" Style="{StaticResource NaDiagValueStyle}" Text="—" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                                <TextBlock Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Internet}" />
-                                <TextBlock x:Name="_natInternetText" Style="{StaticResource NaDiagValueStyle}" Text="—" />
-                            </StackPanel>
-                        </WrapPanel>
-                    </StackPanel>
-                </Border>
-
-                <!-- ── DNS Detection (collapsible) ── -->
-                <Border Style="{StaticResource NaCollapsiblePanelStyle}" AutomationProperties.AutomationId="NetworkAccelerationDnsSection">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_DnsTitle}" />
-                            <wpfui:Button
-                                x:Name="_dnsDetectButton"
-                                Grid.Column="2"
-                                Style="{StaticResource NaSecondaryButtonStyle}"
-                                Appearance="Secondary"
-                                Click="DnsDetectButton_Click"
-                                Content="{x:Static resources:Resource.NaDiag_Detect}"
-                                AutomationProperties.AutomationId="NetworkAccelerationDnsDetectButton" />
-                            <Button
-                                x:Name="_dnsCollapseArrow"
-                                Grid.Column="3"
-                                Style="{StaticResource NaCollapseArrowStyle}"
-                                Click="DnsCollapseArrow_Click"
-                                Content="▾" />
-                        </Grid>
-                        <Grid x:Name="_dnsContentPanel" Margin="0,8,0,0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_DnsDomain}" Margin="0,0,8,6" />
-                            <TextBox x:Name="_dnsDomainInput" Grid.Row="0" Grid.Column="1" Style="{StaticResource NaDiagInputStyle}" Text="store.steampowered.com" Margin="0,0,0,6" />
-                            <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_CustomDns}" Margin="0,0,8,6" />
-                            <TextBox x:Name="_dnsServerInput" Grid.Row="1" Grid.Column="1" Style="{StaticResource NaDiagInputStyle}" Text="223.5.5.5" Margin="0,0,0,6" />
-                            <TextBlock Grid.Row="2" Grid.Column="0" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_EnableDoh}" Margin="0,0,8,6" />
-                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,6">
-                                <CheckBox x:Name="_dnsDohToggle" VerticalAlignment="Center" IsChecked="True" />
-                                <ComboBox
-                                    x:Name="_dnsDohUrlCombo"
-                                    MinWidth="200"
-                                    MinHeight="28"
-                                    Margin="8,0,0,0"
-                                    FontSize="{DynamicResource FontSizeCaption}"
-                                    IsEditable="True"
-                                    VerticalAlignment="Center" />
-                            </StackPanel>
-                            <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Latency}" Margin="0,0,8,0" />
-                            <TextBlock x:Name="_dnsLatencyText" Grid.Row="3" Grid.Column="1" Style="{StaticResource NaDiagValueStyle}" Text="—" />
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <!-- ── IPv6 Detection (collapsible) ── -->
-                <Border Style="{StaticResource NaCollapsiblePanelStyle}" AutomationProperties.AutomationId="NetworkAccelerationIpv6Section">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_Ipv6Title}" />
-                            <wpfui:Button
-                                x:Name="_ipv6DetectButton"
-                                Grid.Column="2"
-                                Style="{StaticResource NaSecondaryButtonStyle}"
-                                Appearance="Secondary"
-                                Click="Ipv6DetectButton_Click"
-                                Content="{x:Static resources:Resource.NaDiag_Detect}"
-                                AutomationProperties.AutomationId="NetworkAccelerationIpv6DetectButton" />
-                            <Button
-                                x:Name="_ipv6CollapseArrow"
-                                Grid.Column="3"
-                                Style="{StaticResource NaCollapseArrowStyle}"
-                                Click="Ipv6CollapseArrow_Click"
-                                Content="▾" />
-                        </Grid>
-                        <WrapPanel x:Name="_ipv6ContentPanel" Margin="0,8,0,0">
-                            <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
-                                <TextBlock Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Ipv6Support}" />
-                                <TextBlock x:Name="_ipv6SupportText" Style="{StaticResource NaDiagValueStyle}" Text="—" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Ipv6Address}" />
-                                <TextBlock x:Name="_ipv6AddressText" Style="{StaticResource NaDiagValueStyle}" Text="—" />
-                            </StackPanel>
-                        </WrapPanel>
-                    </StackPanel>
-                </Border>
-
-                <Border Style="{StaticResource AppDividerBorderStyle}" />
-
-                <!--
-                  ═══════════════════════════════════════════════════════
-                  Section 3: Service Selection List
-                  ═══════════════════════════════════════════════════════
-                -->
-                <TextBlock
-                    Style="{StaticResource AppSectionLabelTextBlockStyle}"
-                    Text="{x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading}" />
-                <TextBlock
-                    Margin="0,0,0,6"
-                    Style="{StaticResource AppMutedTextBlockStyle}"
-                    Text="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsHint}" />
-
-                <!-- Service list container — built in code-behind -->
-                <ItemsControl
-                    x:Name="_serviceListPanel"
-                    AutomationProperties.AutomationId="NetworkAccelerationDomainsCard" />
-
-                <!-- Empty state for when no groups exist -->
-                <custom:EmptyState
-                    x:Name="_domainGroupsEmptyState"
-                    Margin="0,8,0,8"
-                    Icon="Globe24"
-                    Title="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsEmptyTitle}"
-                    Description="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsEmptyDescription}"
-                    Visibility="Collapsed"
-                    AutomationProperties.AutomationId="NetworkAccelerationDomainGroupsEmptyState" />
-
-                <TextBlock
-                    Margin="0,4,0,0"
-                    Style="{StaticResource AppMutedTextBlockStyle}"
-                    Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionHint}" />
-
-                <Border Style="{StaticResource AppDividerBorderStyle}" />
-
-                <!--
-                  ═══════════════════════════════════════════════════════
-                  Section 4: Metrics Tiles
-                  ═══════════════════════════════════════════════════════
-                -->
-                <TextBlock
-                    x:Name="_metricsHeadingText"
-                    Style="{StaticResource AppSectionLabelTextBlockStyle}"
-                    Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricsHeading}" />
-                <WrapPanel Margin="0,4,0,0">
-                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationLatencyMetric">
+        <wpfui:DynamicScrollViewer
+            AutomationProperties.AutomationId="NetworkAccelerationPageScrollViewer"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+            <Border
+                Margin="0,0,8,16"
+                AutomationProperties.AutomationId="NetworkAccelerationControlCard">
+                <StackPanel>
+                    <Border
+                        Padding="12,8"
+                        Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        AutomationProperties.AutomationId="NetworkAccelerationRunStatusBar">
                         <StackPanel>
-                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency}" />
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock x:Name="_metricLatencyValue" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
-                                <TextBlock
-                                    x:Name="_metricLatencyUnit"
-                                    Style="{StaticResource AppMetricUnitTextBlockStyle}"
-                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Ms}" />
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse
+                                    x:Name="_runStateDot"
+                                    Width="10"
+                                    Height="10"
+                                    Margin="0,0,8,0"
+                                    VerticalAlignment="Center"
+                                    Fill="{DynamicResource TextFillColorTertiaryBrush}" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock x:Name="_runStateText" Style="{StaticResource NaDiagTitleStyle}" />
+                                    <TextBlock x:Name="_runHealthText" Style="{StaticResource NaTrafficLabelStyle}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Margin="18,0,14,0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_ModeLabel}" />
+                                    <ComboBox
+                                        x:Name="_modeComboBox"
+                                        Style="{StaticResource NaModeComboStyle}"
+                                        AutomationProperties.AutomationId="NetworkAccelerationModeSelector"
+                                        SelectionChanged="ModeComboBox_SelectionChanged" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="3" Margin="0,0,14,0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading}" />
+                                    <TextBlock x:Name="_selectedTargetsText" Style="{StaticResource NaTrafficValueStyle}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="4" Margin="0,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_PortLabel}" />
+                                    <TextBlock x:Name="_runPortText" Style="{StaticResource NaTrafficValueStyle}" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock
+                                x:Name="_runErrorText"
+                                Margin="0,6,0,0"
+                                MaxWidth="520"
+                                Foreground="{DynamicResource StatusCriticalBrush}"
+                                TextWrapping="Wrap"
+                                Visibility="Collapsed" />
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationUploadMetric">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Upload}" />
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock x:Name="_metricUploadValue" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
-                                <TextBlock Style="{StaticResource AppMetricUnitTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Rate}" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationDownloadMetric">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Download}" />
-                            <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
-                                <TextBlock x:Name="_metricDownloadValue" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
-                                <TextBlock Style="{StaticResource AppMetricUnitTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_MetricUnit_Rate}" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationConnectionsMetric">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Connections}" />
-                            <TextBlock x:Name="_metricConnectionsValue" Margin="0,4,0,0" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="—" MinWidth="22" />
-                        </StackPanel>
-                    </Border>
-                    <Border Style="{StaticResource AppMetricTileBorderStyle}" AutomationProperties.AutomationId="NetworkAccelerationRulesMetric">
-                        <StackPanel>
-                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Rules}" />
-                            <TextBlock x:Name="_metricRulesValue" Margin="0,4,0,0" Style="{StaticResource AppMetricValueTextBlockStyle}" Text="0" MinWidth="22" />
-                        </StackPanel>
-                    </Border>
-                </WrapPanel>
 
-                <Border Style="{StaticResource AppDividerBorderStyle}" />
-
-                <!--
-                  ═══════════════════════════════════════════════════════
-                  Section 5: Advanced Settings
-                  ═══════════════════════════════════════════════════════
-                -->
-                <Expander
-                    x:Name="_advancedExpander"
-                    IsExpanded="False"
-                    AutomationProperties.AutomationId="NetworkAccelerationAdvancedExpander">
-                    <Expander.Header>
-                        <TextBlock
-                            FontSize="{DynamicResource FontSizeSmallCaption}"
-                            FontWeight="SemiBold"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                            Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedHeading}" />
-                    </Expander.Header>
-                    <StackPanel Margin="0,8,0,0">
-                        <TextBlock
-                            Style="{StaticResource AppMutedTextBlockStyle}"
-                            Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedBody}" />
-                        <TextBlock
-                            x:Name="_modeText"
-                            Margin="0,8,0,0"
-                            FontSize="{DynamicResource FontSizeSmallCaption}"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <TextBlock
-                            x:Name="_portText"
-                            Margin="0,2,0,8"
-                            FontSize="{DynamicResource FontSizeSmallCaption}"
-                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <StackPanel x:Name="_trafficSection" Margin="0,12,0,0" Visibility="Collapsed">
+                        <TextBlock x:Name="_trafficHeadingText" Margin="0,0,0,6" Style="{StaticResource AppSectionLabelTextBlockStyle}" />
                         <Border
-                            Margin="0,2,0,0"
-                            Padding="10,8"
+                            Padding="12,10"
                             Background="{DynamicResource ControlFillColorSecondaryBrush}"
                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                             BorderThickness="1"
-                            CornerRadius="{StaticResource CornerRadiusControl}">
+                            CornerRadius="{StaticResource CornerRadiusCard}"
+                            AutomationProperties.AutomationId="NetworkAccelerationTrafficCard">
                             <StackPanel>
-                                <TextBlock
-                                    FontSize="{DynamicResource FontSizeSmallCaption}"
-                                    FontWeight="SemiBold"
-                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading}" />
-                                <TextBlock
-                                    Margin="0,4,0,8"
-                                    Style="{StaticResource AppMutedTextBlockStyle}"
-                                    Text="{x:Static resources:Resource.NetworkAccelerationPage_RestoreHint}" />
-                                <wpfui:Button
-                                    x:Name="_restoreButton"
-                                    HorizontalAlignment="Left"
-                                    Style="{StaticResource NaSecondaryButtonStyle}"
-                                    Appearance="Secondary"
-                                    AutomationProperties.AutomationId="NetworkAccelerationRestoreButton"
-                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}"
-                                    Click="RestoreButton_Click"
-                                    Content="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}" />
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Margin="0,0,10,0">
+                                        <TextBlock Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Upload}" />
+                                        <TextBlock x:Name="_trafficUploadValue" Style="{StaticResource NaTrafficValueStyle}" Text="-" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                        <TextBlock Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Download}" />
+                                        <TextBlock x:Name="_trafficDownloadValue" Style="{StaticResource NaTrafficValueStyle}" Text="-" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Margin="0,0,10,0">
+                                        <TextBlock Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Connections}" />
+                                        <TextBlock x:Name="_trafficConnectionsValue" Style="{StaticResource NaTrafficValueStyle}" Text="-" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="3" Margin="0,0,10,0">
+                                        <TextBlock x:Name="_trafficTotalLabel" Style="{StaticResource NaTrafficLabelStyle}" />
+                                        <TextBlock x:Name="_trafficTotalValue" Style="{StaticResource NaTrafficValueStyle}" Text="-" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="4">
+                                        <TextBlock x:Name="_runtimeHealthLabel" Style="{StaticResource NaTrafficLabelStyle}" />
+                                        <TextBlock x:Name="_runtimeHealthValue" Style="{StaticResource NaTrafficValueStyle}" Text="-" />
+                                    </StackPanel>
+                                </Grid>
+                                <Grid Height="156">
+                                    <charts:TrendChartControl
+                                        x:Name="_trafficChart"
+                                        Capacity="60"
+                                        GridlineBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                        BaselineBrush="{DynamicResource PaletteOrangeBrush}"
+                                        ScaleLabelBrush="{DynamicResource TextFillColorTertiaryBrush}"
+                                        PlotPadding="44,4,4,6"
+                                        SnapsToDevicePixels="True" />
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Margin="44,6,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource PaletteOrangeBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Margin="6,0,0,0" Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Upload}" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="8" Height="8" RadiusX="4" RadiusY="4" Fill="{DynamicResource PaletteLightBlueBrush}" VerticalAlignment="Center" />
+                                        <TextBlock Margin="6,0,0,0" Style="{StaticResource NaTrafficLabelStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_Metric_Download}" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock x:Name="_trafficStatusText" Margin="44,6,0,0" Style="{StaticResource AppMutedTextBlockStyle}" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
                         </Border>
+
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Margin="0,0,5,0" Padding="10,8" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="{StaticResource CornerRadiusSmall}">
+                                <StackPanel>
+                                    <TextBlock x:Name="_connectionsHeading" Style="{StaticResource NaDiagTitleStyle}" />
+                                    <TextBlock x:Name="_currentConnectionsText" Margin="0,3,0,6" Style="{StaticResource NaTrafficLabelStyle}" />
+                                    <ItemsControl x:Name="_connectionListPanel" AutomationProperties.AutomationId="NetworkAccelerationConnectionsList" />
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="1" Margin="5,0,0,0" Padding="10,8" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="{StaticResource CornerRadiusSmall}">
+                                <StackPanel>
+                                    <TextBlock x:Name="_destinationsHeading" Style="{StaticResource NaDiagTitleStyle}" />
+                                    <TextBlock x:Name="_destinationsSummaryText" Margin="0,3,0,6" Style="{StaticResource NaTrafficLabelStyle}" />
+                                    <ItemsControl x:Name="_destinationListPanel" AutomationProperties.AutomationId="NetworkAccelerationDestinationsList" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </StackPanel>
-                </Expander>
-            </StackPanel>
-        </Border>
-    </wpfui:DynamicScrollViewer>
+
+                    <Grid Margin="0,14,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource AppSectionLabelTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading}" />
+                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsHint}" />
+                        </StackPanel>
+                        <TextBox
+                            x:Name="_targetSearchBox"
+                            Grid.Column="1"
+                            Width="200"
+                            MinHeight="28"
+                            Padding="8,4"
+                            VerticalContentAlignment="Center"
+                            TextChanged="TargetSearchBox_TextChanged"
+                            AutomationProperties.AutomationId="NetworkAccelerationTargetSearchBox" />
+                    </Grid>
+                    <ItemsControl x:Name="_serviceListPanel" AutomationProperties.AutomationId="NetworkAccelerationDomainsCard" />
+                    <custom:EmptyState
+                        x:Name="_domainGroupsEmptyState"
+                        Margin="0,8,0,8"
+                        Icon="Globe24"
+                        Title="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsEmptyTitle}"
+                        Description="{x:Static resources:Resource.NetworkAccelerationPage_DomainGroupsEmptyDescription}"
+                        Visibility="Collapsed"
+                        AutomationProperties.AutomationId="NetworkAccelerationDomainGroupsEmptyState" />
+                    <TextBlock Margin="0,2,0,0" Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionHint}" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <wpfui:Button Grid.Column="0" Margin="0,0,6,0" MinHeight="76" Padding="12,10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Appearance="Secondary" Icon="Info24" Click="NatStatus_Click" AutomationProperties.AutomationId="NetworkAccelerationNatSection">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_NatTitle}" />
+                                <TextBlock x:Name="_natSummaryText" Style="{StaticResource NaTrafficLabelStyle}" />
+                            </StackPanel>
+                        </wpfui:Button>
+                        <wpfui:Button Grid.Column="1" Margin="3,0" MinHeight="76" Padding="12,10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Appearance="Secondary" Icon="Info24" Click="DnsStatus_Click" AutomationProperties.AutomationId="NetworkAccelerationDnsSection">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_DnsTitle}" />
+                                <TextBlock x:Name="_dnsSummaryText" Style="{StaticResource NaTrafficLabelStyle}" />
+                            </StackPanel>
+                        </wpfui:Button>
+                        <wpfui:Button Grid.Column="2" Margin="6,0,0,0" MinHeight="76" Padding="12,10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Appearance="Secondary" Icon="Info24" Click="Ipv6Status_Click" AutomationProperties.AutomationId="NetworkAccelerationIpv6Section">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_Ipv6Title}" />
+                                <TextBlock x:Name="_ipv6SummaryText" Style="{StaticResource NaTrafficLabelStyle}" />
+                            </StackPanel>
+                        </wpfui:Button>
+                    </Grid>
+
+                    <Expander
+                        x:Name="_advancedExpander"
+                        Margin="0,14,0,0"
+                        IsExpanded="False"
+                        AutomationProperties.AutomationId="NetworkAccelerationAdvancedExpander">
+                        <Expander.Header>
+                            <TextBlock FontSize="{DynamicResource FontSizeSmallCaption}" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedHeading}" />
+                        </Expander.Header>
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_AdvancedBody}" />
+                            <TextBlock x:Name="_modeText" Margin="0,8,0,0" FontSize="{DynamicResource FontSizeSmallCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <TextBlock x:Name="_portText" Margin="0,2,0,8" FontSize="{DynamicResource FontSizeSmallCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <Border Padding="10,8" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="{StaticResource CornerRadiusControl}">
+                                <StackPanel>
+                                    <TextBlock FontSize="{DynamicResource FontSizeSmallCaption}" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading}" />
+                                    <TextBlock Margin="0,4,0,8" Style="{StaticResource AppMutedTextBlockStyle}" Text="{x:Static resources:Resource.NetworkAccelerationPage_RestoreHint}" />
+                                    <wpfui:Button
+                                        x:Name="_restoreButton"
+                                        HorizontalAlignment="Left"
+                                        Style="{StaticResource NaSecondaryButtonStyle}"
+                                        Appearance="Secondary"
+                                        Icon="ArrowReset24"
+                                        AutomationProperties.AutomationId="NetworkAccelerationRestoreButton"
+                                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}"
+                                        Click="RestoreButton_Click"
+                                        Content="{x:Static resources:Resource.NetworkAccelerationPage_RestoreNetwork}" />
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </Border>
+        </wpfui:DynamicScrollViewer>
+
+        <Popup x:Name="_natDetailsPopup" Placement="Mouse" IsOpen="False" StaysOpen="False" AllowsTransparency="True">
+            <Border Width="360" Padding="14,12" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="{StaticResource CornerRadiusControl}">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_NatTitle}" />
+                        <wpfui:Button x:Name="_natDetectButton" Grid.Column="1" Style="{StaticResource NaSecondaryButtonStyle}" Appearance="Secondary" Icon="ArrowSync24" Click="NatDetectButton_Click" Content="{x:Static resources:Resource.NaDiag_Detect}" AutomationProperties.AutomationId="NetworkAccelerationNatDetectButton" />
+                    </Grid>
+                    <ComboBox x:Name="_natStunCombo" Margin="0,10,0,6" MinHeight="28" IsEditable="True" AutomationProperties.AutomationId="NetworkAccelerationNatStunCombo" />
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_NatType}" />
+                        <TextBlock x:Name="_natTypeText" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="{x:Static resources:Resource.NaDiag_Unknown}" />
+                        <TextBlock Grid.Row="1" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_LocalIp}" />
+                        <TextBlock x:Name="_natLocalIpText" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="-" />
+                        <TextBlock Grid.Row="2" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_PublicIp}" />
+                        <TextBlock x:Name="_natPublicIpText" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="-" />
+                        <TextBlock Grid.Row="3" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Internet}" />
+                        <TextBlock x:Name="_natInternetText" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="-" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+        <Popup x:Name="_dnsDetailsPopup" Placement="Mouse" IsOpen="False" StaysOpen="False" AllowsTransparency="True">
+            <Border Width="420" Padding="14,12" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="{StaticResource CornerRadiusControl}">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_DnsTitle}" />
+                        <wpfui:Button x:Name="_dnsDetectButton" Grid.Column="1" Style="{StaticResource NaSecondaryButtonStyle}" Appearance="Secondary" Icon="ArrowSync24" Click="DnsDetectButton_Click" Content="{x:Static resources:Resource.NaDiag_Detect}" AutomationProperties.AutomationId="NetworkAccelerationDnsDetectButton" />
+                    </Grid>
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_DnsDomain}" />
+                        <TextBox x:Name="_dnsDomainInput" Grid.Row="0" Grid.Column="1" Margin="8,0,0,5" Style="{StaticResource NaDiagInputStyle}" Text="store.steampowered.com" />
+                        <TextBlock Grid.Row="1" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_CustomDns}" />
+                        <ComboBox x:Name="_dnsServerCombo" Grid.Row="1" Grid.Column="1" Margin="8,0,0,5" Style="{StaticResource NaDiagComboStyle}" IsEditable="True" />
+                        <TextBlock Grid.Row="2" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_EnableDoh}" />
+                        <wpfui:ToggleSwitch x:Name="_dnsDohToggle" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" IsChecked="True" />
+                        <TextBlock Grid.Row="3" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_DohUrl}" />
+                        <ComboBox x:Name="_dnsDohUrlCombo" Grid.Row="3" Grid.Column="1" Margin="8,0,0,5" Style="{StaticResource NaDiagComboStyle}" IsEditable="True" />
+                        <TextBlock Grid.Row="4" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Latency}" />
+                        <TextBlock x:Name="_dnsLatencyText" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="-" />
+                        <TextBlock Grid.Row="5" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_ResolvedAddress}" />
+                        <TextBlock x:Name="_dnsResolvedText" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="-" TextTrimming="CharacterEllipsis" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+        <Popup x:Name="_ipv6DetailsPopup" Placement="Mouse" IsOpen="False" StaysOpen="False" AllowsTransparency="True">
+            <Border Width="360" Padding="14,12" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="{StaticResource CornerRadiusControl}">
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                        <TextBlock Style="{StaticResource NaDiagTitleStyle}" Text="{x:Static resources:Resource.NaDiag_Ipv6Title}" />
+                        <wpfui:Button x:Name="_ipv6DetectButton" Grid.Column="1" Style="{StaticResource NaSecondaryButtonStyle}" Appearance="Secondary" Icon="ArrowSync24" Click="Ipv6DetectButton_Click" Content="{x:Static resources:Resource.NaDiag_Detect}" AutomationProperties.AutomationId="NetworkAccelerationIpv6DetectButton" />
+                    </Grid>
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions><RowDefinition Height="Auto" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Ipv6Support}" />
+                        <TextBlock x:Name="_ipv6SupportText" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="-" />
+                        <TextBlock Grid.Row="1" Style="{StaticResource NaDiagLabelStyle}" Text="{x:Static resources:Resource.NaDiag_Ipv6Address}" />
+                        <TextBlock x:Name="_ipv6AddressText" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Style="{StaticResource NaDiagValueStyle}" Text="-" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Popup>
     </Grid>
 </UserControl>

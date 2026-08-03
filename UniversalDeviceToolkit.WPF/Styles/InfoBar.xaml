@@ -73,7 +73,7 @@
                                     <TextBlock
                                         HorizontalAlignment="Stretch"
                                         FontSize="{TemplateBinding FontSize}"
-                                        FontWeight="SemiBold"
+                                        FontWeight="Medium"
                                         Text="{TemplateBinding Title}"
                                         TextWrapping="Wrap" />
 

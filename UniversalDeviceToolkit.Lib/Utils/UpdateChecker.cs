@@ -80,7 +80,8 @@ public class UpdateChecker
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Checking...");
 
-                var adapter = new HttpClientAdapter(_httpClientFactory.CreateHandler);
+                using var handler = _httpClientFactory.CreateHandler();
+                var adapter = new HttpClientAdapter(() => handler);
                 var productInformation = new ProductHeaderValue($"{AppIdentity.CompactName}-UpdateChecker");
                 var connection = new Connection(productInformation, adapter);
                 var githubClient = new GitHubClient(connection);

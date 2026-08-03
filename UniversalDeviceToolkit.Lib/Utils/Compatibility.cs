@@ -110,6 +110,9 @@ public static partial class Compatibility
     ];
 
     private static Lazy<Task<MachineInformation>> _machineInformationLazy = new(GetMachineInformationInternalAsync, LazyThreadSafetyMode.ExecutionAndPublication);
+    // TOCTOU protection: reference assignment is atomic in .NET; the race is
+    // benign because the value is idempotent (always set to true). We use a
+    // local snapshot to ensure a consistent read of HasValue + Value.
     private static bool? _isCompatible;
 
     public static Task<bool> CheckBasicCompatibilityAsync() => WMI.LenovoGameZoneData.ExistsAsync();
@@ -127,8 +130,9 @@ public static partial class Compatibility
     {
         var mi = await GetMachineInformationAsync().ConfigureAwait(false);
 
-        if (_isCompatible.HasValue)
-            return (_isCompatible.Value, mi);
+        var cachedIsCompatible = _isCompatible;
+        if (cachedIsCompatible.HasValue)
+            return (cachedIsCompatible.Value, mi);
 
         var isSupportedLenovoDevice = IsSupportedLegionMachine(mi);
         if (isSupportedLenovoDevice && !await CheckBasicCompatibilityAsync().ConfigureAwait(false))
@@ -632,17 +636,18 @@ public static partial class Compatibility
     private static int GetMachineGeneration(string model)
     {
         var platformMatch = Regex.Match(model, @"(?<=[A-Z]{3})(?<gen>\d{1,2})", RegexOptions.IgnoreCase);
-        if (platformMatch.Success)
-            return int.Parse(platformMatch.Groups["gen"].Value);
+        if (platformMatch.Success && int.TryParse(platformMatch.Groups["gen"].Value, out var platformGen))
+            return platformGen;
 
         var generationMatch = Regex.Match(model, @"g(?<gen>\d+)", RegexOptions.IgnoreCase);
-        if (generationMatch.Success)
-            return int.Parse(generationMatch.Groups["gen"].Value);
+        if (generationMatch.Success && int.TryParse(generationMatch.Groups["gen"].Value, out var genValue))
+            return genValue;
 
         var matches = Regex.Matches(model, @"(?<!\d)\d{1,2}(?!\d)");
         foreach (Match match in matches)
         {
-            var value = int.Parse(match.Value);
+            if (!int.TryParse(match.Value, out var value))
+                continue;
             if (value >= 14 && value <= 18)
                 continue;
 

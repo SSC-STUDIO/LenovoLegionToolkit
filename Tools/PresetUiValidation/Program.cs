@@ -98,7 +98,7 @@ internal static class Program
     {
         WriteLine("Stage: ValidationStart");
         var controller = IoCContainer.Resolve<GodModeController>();
-        var originalState = await controller.GetStateAsync().ConfigureAwait(true);
+        var originalState = await controller.GetStateAsync();
         WriteLine("Stage: StateLoaded");
 
         var window = new GodModeSettingsWindow();
@@ -143,7 +143,7 @@ internal static class Program
             var createUiRefreshPassed = snapshotAfterCreate.Items.ContainsKey(createdPresetId)
                                         && string.Equals(snapshotAfterCreate.Items[createdPresetId], createdName, StringComparison.Ordinal)
                                         && snapshotAfterCreate.SelectedId == createdPresetId;
-            var persistedAfterCreate = await controller.GetStateAsync().ConfigureAwait(true);
+            var persistedAfterCreate = await controller.GetStateAsync();
             var persistedCreateActiveName = persistedAfterCreate.Presets[persistedAfterCreate.ActivePresetId].Name;
             var persistedCreateVerificationPassed = persistedAfterCreate.Presets.Count == originalCount + 1
                                                      && persistedAfterCreate.ActivePresetId == createdPresetId
@@ -174,7 +174,7 @@ internal static class Program
             var renameUiRefreshPassed = snapshotAfterRename.Items.ContainsKey(createdPresetId)
                                         && string.Equals(snapshotAfterRename.Items[createdPresetId], renamedName, StringComparison.Ordinal)
                                         && snapshotAfterRename.SelectedId == createdPresetId;
-            var persistedAfterRename = await controller.GetStateAsync().ConfigureAwait(true);
+            var persistedAfterRename = await controller.GetStateAsync();
             var persistedRenameActiveName = persistedAfterRename.Presets[persistedAfterRename.ActivePresetId].Name;
             var persistedRenameVerificationPassed = persistedAfterRename.Presets.Count == originalCount + 1
                                                      && persistedAfterRename.ActivePresetId == createdPresetId
@@ -201,7 +201,7 @@ internal static class Program
                                      && snapshotAfterDelete.Items.ContainsKey(snapshotAfterDelete.SelectedId.Value);
             var deleteUiRefreshPassed = snapshotAfterDelete.Items.Keys.OrderBy(id => id).SequenceEqual(originalIds.OrderBy(id => id));
 
-            var persistedState = await controller.GetStateAsync().ConfigureAwait(true);
+            var persistedState = await controller.GetStateAsync();
             var persistedNames = persistedState.Presets.Values.Select(p => p.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
             var expectedNames = originalNames.OrderBy(n => n, StringComparer.Ordinal).ToArray();
             var persistedDeleteVerificationPassed = !persistedState.Presets.ContainsKey(createdPresetId)
@@ -248,8 +248,8 @@ internal static class Program
         {
             try
             {
-                await controller.SetStateAsync(originalState).ConfigureAwait(true);
-                var restored = await controller.GetStateAsync().ConfigureAwait(true);
+                await controller.SetStateAsync(originalState);
+                var restored = await controller.GetStateAsync();
                 var restoredNames = restored.Presets.Values.Select(p => p.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
                 var expectedNames = originalState.Presets.Values.Select(p => p.Name).OrderBy(n => n, StringComparer.Ordinal).ToArray();
                 restoreVerificationPassed = restored.ActivePresetId == originalState.ActivePresetId
@@ -311,7 +311,7 @@ internal static class Program
     {
         return await WaitUntilAsync(
             () => Application.Current.Windows.OfType<TWindow>().FirstOrDefault(w => w.IsVisible),
-            value => value is not null).ConfigureAwait(true);
+            value => value is not null);
     }
 
     private static void SubmitInputDialog(InputDialogWindow dialog, string value)
@@ -380,7 +380,7 @@ internal static class Program
                 throw new TimeoutException("Timed out waiting for condition.");
 
             await Dispatcher.Yield(DispatcherPriority.Background);
-            await Task.Delay(pollMs).ConfigureAwait(true);
+            await Task.Delay(pollMs);
         }
     }
 
@@ -397,7 +397,7 @@ internal static class Program
                 throw new TimeoutException("Timed out waiting for value.");
 
             await Dispatcher.Yield(DispatcherPriority.Background);
-            await Task.Delay(pollMs).ConfigureAwait(true);
+            await Task.Delay(pollMs);
         }
     }
 

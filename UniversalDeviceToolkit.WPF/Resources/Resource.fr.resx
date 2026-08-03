@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -506,15 +506,13 @@ ATTENTION : Cette action ne fonctionnera pas si l'écran intégré est éteint.
     <value>Verrouillage de Fn</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>ATTENTION !
-Certaines machines peuvent accepter des valeurs plus faibles à celles indiquées, mais soyez prudents. Cette option peut engendrer un comportement imprévisible, si vous n'êtes pas sûr de ce que vous faites, laissez cette valeur à 0.</value>
+    <value>Certaines machines peuvent accepter des valeurs plus faibles à celles indiquées, mais soyez prudents. Cette option peut engendrer un comportement imprévisible, si vous n'êtes pas sûr de ce que vous faites, laissez cette valeur à 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
     <value>Réglage minimum</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>ATTENTION !
-Certaines machines peuvent accepter des valeurs plus élevées à celles indiquées, mais soyez prudents. Cette option peut engendrer un comportement imprévisible, si vous n'êtes pas sûr de ce que vous faites, laissez cette valeur à 0.</value>
+    <value>Certaines machines peuvent accepter des valeurs plus élevées à celles indiquées, mais soyez prudents. Cette option peut engendrer un comportement imprévisible, si vous n'êtes pas sûr de ce que vous faites, laissez cette valeur à 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>Réglage maximum</value>
@@ -553,8 +551,7 @@ Certaines machines peuvent accepter des valeurs plus élevées à celles indiqu�
     <value>Profil de ventilation</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>AVERTISSEMENT !
-L'utilisation prolongée de cette option dégradera les ventilateurs en diminuant leur longévité.
+    <value>L'utilisation prolongée de cette option dégradera les ventilateurs en diminuant leur longévité.
 Soyez très prudent avec cette option !</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
@@ -4110,4 +4107,19 @@ Nécessite un redémarrage.</value>
   <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
   <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Mode de couleur global de l'interface</value></data>
+  <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Modifier la couleur du système lors du réglage de la couleur globale de l'interface</value></data>
+  <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Couleur d'accentuation globale de l'interface</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
 </root>

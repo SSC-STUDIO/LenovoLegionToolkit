@@ -200,7 +200,7 @@
 
         <Style x:Key="PageTitleStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="22"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="MaxWidth" Value="560"/>

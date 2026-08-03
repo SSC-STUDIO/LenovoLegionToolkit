@@ -51,64 +51,105 @@
             <StackPanel Margin="0,0,16,0">
 
                 <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Title}" Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Message}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_dontShowNotificationsToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Title}"
-                        Click="DontShowNotificationsToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Title}"
+                            Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Message}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_dontShowNotificationsToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Title}"
+                            Click="DontShowNotificationsToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_successNotificationsCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
                             Title="{x:Static resources:Resource.NotificationsSettingsWindow_SuccessNotifications_Title}"
                             Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_SuccessNotifications_Message}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_successNotificationsToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.AutomationId="NotificationsSettings_SuccessToggle"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_SuccessNotifications_Title}"
-                        Click="SuccessNotificationsToggle_Click" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_successNotificationsToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.AutomationId="NotificationsSettings_SuccessToggle"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_SuccessNotifications_Title}"
+                            Click="SuccessNotificationsToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_notificationSoundCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
                         <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
                             Title="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationSound_Title}"
                             Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationSound_Message}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_notificationSoundToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.AutomationId="NotificationsSettings_SoundToggle"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationSound_Title}"
-                        Click="NotificationSoundToggle_Click" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_notificationSoundToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.AutomationId="NotificationsSettings_SoundToggle"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationSound_Title}"
+                            Click="NotificationSoundToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Title}" Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Message}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_notificationAlwaysOnTopToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Title}"
-                        Click="NotificationAlwaysOnTopToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Title}"
+                            Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Message}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_notificationAlwaysOnTopToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationAlwaysOnTop_Title}"
+                            Click="NotificationAlwaysOnTopToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
                 
                 <custom:CardControl Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationOnAllScreens_Title}" Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationOnAllScreens_Message}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_notificationOnAllScreensToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationOnAllScreens_Title}"
-                        Click="NotificationOnAllScreensToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationOnAllScreens_Title}"
+                            Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationOnAllScreens_Message}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_notificationOnAllScreensToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_NotificationOnAllScreens_Title}"
+                            Click="NotificationOnAllScreensToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_notificationPositionCard" Margin="0,0,0,8">
@@ -138,139 +179,234 @@
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_updateAvailableCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_Updates_Title}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_updateAvailableToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Updates_Title}"
-                        Click="UpdateAvailableToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_Updates_Title}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_updateAvailableToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Updates_Title}"
+                            Click="UpdateAvailableToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_automationCard" Margin="0,0,0,24">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_Automation}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_automationToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Automation}"
-                        Click="AutomationToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_Automation}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_automationToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Automation}"
+                            Click="AutomationToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_capsNumLockCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_CapsAndNumLock}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_capsNumLockToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_CapsAndNumLock}"
-                        Click="CapsNumLockToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_CapsAndNumLock}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_capsNumLockToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_CapsAndNumLock}"
+                            Click="CapsNumLockToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_fnLockCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_FnLock}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_fnLockToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_FnLock}"
-                        Click="FnLockToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_FnLock}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_fnLockToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_FnLock}"
+                            Click="FnLockToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_touchpadLockCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_TouchpadLock}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_touchpadLockToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_TouchpadLock}"
-                        Click="TouchpadLockToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_TouchpadLock}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_touchpadLockToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_TouchpadLock}"
+                            Click="TouchpadLockToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_smartKeyCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_SmartKey}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_smartKeyToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_SmartKey}"
-                        Click="SmartKeyToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_SmartKey}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_smartKeyToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_SmartKey}"
+                            Click="SmartKeyToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_keyboardBacklightCard" Margin="0,0,0,24">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_KeyboardBacklight}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_keyboardBacklightToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_KeyboardBacklight}"
-                        Click="KeyboardBacklightToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_KeyboardBacklight}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_keyboardBacklightToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_KeyboardBacklight}"
+                            Click="KeyboardBacklightToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_cameraLockCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_Camera}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_cameraLockToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Camera}"
-                        Click="CameraLockToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_Camera}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_cameraLockToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Camera}"
+                            Click="CameraLockToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_microphoneCard" Margin="0,0,0,24">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_Microphone}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_microphoneToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Microphone}"
-                        Click="MicrophoneToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_Microphone}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_microphoneToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_Microphone}"
+                            Click="MicrophoneToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_powerModeCard" Margin="0,0,0,8">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_PowerMode}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_powerModeToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_PowerMode}"
-                        Click="PowerModeToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_PowerMode}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_powerModeToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_PowerMode}"
+                            Click="PowerModeToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_refreshRateCard" Margin="0,0,0,24">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_RefreshRate}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_refreshRateToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_RefreshRate}"
-                        Click="RefreshRateToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_RefreshRate}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_refreshRateToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_RefreshRate}"
+                            Click="RefreshRateToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
 
                 <custom:CardControl x:Name="_acAdapterCard" Margin="0,0,0,24">
-                    <custom:CardControl.Header>
-                        <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_ACAdapter}" />
-                    </custom:CardControl.Header>
-                    <wpfui:ToggleSwitch
-                        x:Name="_acAdapterToggle"
-                        Margin="0,0,0,8"
-                        AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_ACAdapter}"
-                        Click="ACAdapterToggle_Click" />
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.NotificationsSettingsWindow_ACAdapter}" />
+                        <wpfui:ToggleSwitch
+                            x:Name="_acAdapterToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            AutomationProperties.Name="{x:Static resources:Resource.NotificationsSettingsWindow_ACAdapter}"
+                            Click="ACAdapterToggle_Click" />
+                    </Grid>
                 </custom:CardControl>
             </StackPanel>
         </wpfui:DynamicScrollViewer>
 
     </Grid>
 </local:BaseWindow>
-

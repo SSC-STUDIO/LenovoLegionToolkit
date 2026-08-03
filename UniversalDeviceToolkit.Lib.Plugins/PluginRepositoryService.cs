@@ -20,7 +20,7 @@ namespace UniversalDeviceToolkit.Lib.Plugins;
 /// <summary>
 /// Service for managing online plugin repository
 /// </summary>
-public class PluginRepositoryService : IDisposable
+public partial class PluginRepositoryService : IDisposable
 {
     private readonly HttpClient _httpClient;
     private readonly IPluginManager _pluginManager;
@@ -1956,36 +1956,6 @@ public class PluginRepositoryService : IDisposable
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to stage canonical plugin SDK runtime into {pluginDirectory}: {ex.Message}", ex);
         }
-    }
-
-    /// <summary>
-    /// Get the plugins directory path
-    /// </summary>
-    private string GetPluginsDirectory()
-    {
-        return PluginPaths.GetPluginsDirectory();
-    }
-
-    /// <summary>
-    /// Check for plugin updates
-    /// </summary>
-    public async Task<List<PluginManifest>> CheckForUpdatesAsync(List<PluginManifest> installedPlugins, bool forceRefresh = false)
-    {
-        var availablePlugins = await FetchAvailablePluginsAsync(forceRefresh).ConfigureAwait(false);
-        var updates = new List<PluginManifest>();
-
-        foreach (var installed in installedPlugins)
-        {
-            var available = availablePlugins.FirstOrDefault(p =>
-                string.Equals(p.Id, installed.Id, StringComparison.OrdinalIgnoreCase));
-            if (available == null)
-                continue;
-
-            if (PluginVersionParser.IsNewerThan(available.Version, installed.Version))
-                updates.Add(available);
-        }
-
-        return updates;
     }
 
     private void CacheAvailablePlugins(List<PluginManifest> plugins)

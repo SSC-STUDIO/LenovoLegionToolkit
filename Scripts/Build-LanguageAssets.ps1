@@ -208,11 +208,12 @@ function Write-HashFile {
 }
 
 function Get-LanguagePackDefinitions {
+    # Culture names use the BCP 47 canonical form (CONTRIBUTING.md). Keep in sync
+    # with LocalizationHelper.Languages; the pack is skipped with a warning when no
+    # satellite directory was produced for the culture.
     @(
         @{ Culture = 'ar'; Directories = @('ar') },
         @{ Culture = 'bg'; Directories = @('bg') },
-        @{ Culture = 'bs'; Directories = @('bs') },
-        @{ Culture = 'ca'; Directories = @('ca') },
         @{ Culture = 'cs'; Directories = @('cs') },
         @{ Culture = 'de'; Directories = @('de') },
         @{ Culture = 'el'; Directories = @('el') },
@@ -221,22 +222,20 @@ function Get-LanguagePackDefinitions {
         @{ Culture = 'hu'; Directories = @('hu') },
         @{ Culture = 'it'; Directories = @('it') },
         @{ Culture = 'ja'; Directories = @('ja') },
-        @{ Culture = 'ko'; Directories = @('ko') },
         @{ Culture = 'lv'; Directories = @('lv') },
-        @{ Culture = 'nl-nl'; Directories = @('nl', 'nl-nl', 'nl-NL') },
-        @{ Culture = 'no'; Directories = @('no') },
+        @{ Culture = 'nl-NL'; Directories = @('nl-NL') },
         @{ Culture = 'pl'; Directories = @('pl') },
         @{ Culture = 'pt'; Directories = @('pt') },
-        @{ Culture = 'pt-br'; Directories = @('pt-br', 'pt-BR') },
+        @{ Culture = 'pt-BR'; Directories = @('pt-BR') },
         @{ Culture = 'ro'; Directories = @('ro') },
         @{ Culture = 'ru'; Directories = @('ru') },
         @{ Culture = 'sk'; Directories = @('sk') },
         @{ Culture = 'tr'; Directories = @('tr') },
         @{ Culture = 'uk'; Directories = @('uk') },
         @{ Culture = 'vi'; Directories = @('vi') },
-        @{ Culture = 'zh-hans'; Directories = @('zh', 'zh-hans', 'zh-Hans') },
-        @{ Culture = 'zh-hant'; Directories = @('zh-hant', 'zh-Hant') },
-        @{ Culture = 'uz-latn-uz'; Directories = @('uz', 'uz-latn-uz', 'uz-Latn-UZ') }
+        @{ Culture = 'zh-Hans'; Directories = @('zh-Hans') },
+        @{ Culture = 'zh-Hant'; Directories = @('zh-Hant') },
+        @{ Culture = 'uz-Latn-UZ'; Directories = @('uz-Latn-UZ') }
     )
 }
 

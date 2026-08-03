@@ -16,6 +16,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Controllers;
 
 [Trait("Category", TestCategories.Controller)]
+[Collection(TestCollections.Settings)]
 public class GodModeControllerTests : UnitTestBase
 {
     private TestGodModeControllerV1 _controllerV1 = null!;

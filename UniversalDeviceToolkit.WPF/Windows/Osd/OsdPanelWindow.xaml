@@ -34,7 +34,7 @@
                     <Style x:Key="SensorLabelStyle" TargetType="TextBlock">
                         <Setter Property="Foreground" Value="GreenYellow" />
                         <Setter Property="FontSize" Value="13" />
-                        <Setter Property="FontWeight" Value="Black" />
+                        <Setter Property="FontWeight" Value="Medium" />
                         <Setter Property="FontFamily" Value="Segoe UI" />
                         <Setter Property="Effect">
                             <Setter.Value>
@@ -50,7 +50,7 @@
                     <Style x:Key="SensorValueStyle" TargetType="TextBlock">
                         <Setter Property="Foreground" Value="White" />
                         <Setter Property="FontSize" Value="15" />
-                        <Setter Property="FontWeight" Value="Black" />
+                        <Setter Property="FontWeight" Value="Medium" />
                         <Setter Property="FontFamily" Value="Segoe UI" />
                         <Setter Property="HorizontalAlignment" Value="Right" />
                         <Setter Property="Margin" Value="0,1" />
@@ -71,7 +71,7 @@
                         x:Name="_fpsHeader"
                         Margin="0,0,0,5"
                         FontSize="{DynamicResource FontSizeCaption}"
-                        FontWeight="Bold"
+                        FontWeight="Medium"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Fps}, StringFormat='— {0} —'}" />
 
@@ -134,7 +134,7 @@
                         x:Name="_cpuHeader"
                         Margin="0,0,0,5"
                         FontSize="{DynamicResource FontSizeCaption}"
-                        FontWeight="Bold"
+                        FontWeight="Medium"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Cpu}, StringFormat='— {0} —'}" />
 
@@ -258,7 +258,7 @@
                         x:Name="_gpuHeader"
                         Margin="0,0,0,5"
                         FontSize="{DynamicResource FontSizeCaption}"
-                        FontWeight="Bold"
+                        FontWeight="Medium"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Gpu}, StringFormat='— {0} —'}" />
 
@@ -382,7 +382,7 @@
                         x:Name="_memHeader"
                         Margin="0,0,0,5"
                         FontSize="{DynamicResource FontSizeCaption}"
-                        FontWeight="Bold"
+                        FontWeight="Medium"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.SensorsControl_Memory_Title}, StringFormat='— {0} —'}" />
 
@@ -426,7 +426,7 @@
                         x:Name="_pchHeader"
                         Margin="0,0,0,5"
                         FontSize="{DynamicResource FontSizeCaption}"
-                        FontWeight="Bold"
+                        FontWeight="Medium"
                         Style="{DynamicResource SensorLabelStyle}"
                         Text="{Binding Source={x:Static resources:Resource.Osd_Pch}, StringFormat='— {0} —'}" />
 

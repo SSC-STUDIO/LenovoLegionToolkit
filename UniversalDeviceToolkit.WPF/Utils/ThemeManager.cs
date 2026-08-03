@@ -30,6 +30,7 @@ public class ThemeManager
         "AppSurfaceBackgroundBrush",
         "AppSurfaceCardBrush",
         "AppNavigationBackgroundBrush",
+        "ChartTrackBrush",
         "ChartSurfaceBrush",
         "ChartSurfaceBorderBrush",
         "ChartGridlineBrush",
@@ -59,9 +60,10 @@ public class ThemeManager
     {
         ClearStylePresetBrushes();
         SetTheme();
-        SetColor();
-        ApplyStylePreset();
-        ApplySurfaceResources();
+        var accent = GetAccentColor();
+        SetColor(accent);
+        ApplyStylePreset(accent);
+        ApplySurfaceResources(accent);
         ApplyStatusTextBrushes();
         AppFontManager.ApplySaved(_settings);
         AppTextSizeManager.ApplySaved(_settings);
@@ -128,7 +130,7 @@ public class ThemeManager
         ApplicationThemeManager.Apply(theme, backgroundType, false);
 
         Application.Current.Resources["SnackbarShadowColor"] = isDark ? System.Windows.Media.Colors.Black : System.Windows.Media.Color.FromArgb(64, 0, 0, 0);
-        
+
         // Update all BaseWindow instances
         UpdateWindowBackdrops();
     }
@@ -148,11 +150,11 @@ public class ThemeManager
         }
     }
 
-    private void SetColor()
+    private void SetColor(RGBColor accent)
     {
-        var accentColor = GetAccentColor().ToColor();
-        
-        // Apply accent color with improved color contrast
+        var accentColor = accent.ToColor();
+
+        // The checkbox controls the full palette below, not the accent itself.
         ApplicationAccentColorManager.Apply(systemAccent: accentColor,
             primaryAccent: accentColor,
             secondaryAccent: accentColor,
@@ -165,11 +167,12 @@ public class ThemeManager
             Application.Current.Resources.Remove(key);
     }
 
-    private void ApplyStylePreset()
+    private void ApplyStylePreset(RGBColor accent)
     {
-        var palette = GetPresetPalette(_settings.Store.ThemeStylePreset, IsDarkMode());
-        if (palette is null)
+        if (!_settings.Store.ApplyAccentColorToTheme)
             return;
+
+        var palette = GetActivePalette(accent, IsDarkMode());
 
         SetBrush("ApplicationBackgroundBrush", palette.ApplicationBackground);
         SetBrush("ControlFillColorDefaultBrush", palette.ControlFillDefault);
@@ -183,30 +186,32 @@ public class ThemeManager
         Application.Current.Resources["SnackbarShadowColor"] = palette.SnackbarShadow;
     }
 
-    private void ApplySurfaceResources()
+    private void ApplySurfaceResources(RGBColor accent)
     {
         var isDark = IsDarkMode();
         var defaultSurface = isDark ? Color.FromRgb(32, 32, 32) : Color.FromRgb(246, 246, 246);
-        var palette = GetPresetPalette(_settings.Store.ThemeStylePreset, isDark);
+
 
         // Style presets (Official Cool / Midnight / Forest) must also retint cards, charts,
         // and notification glass — otherwise sensors + Hotkeys toast stay neutral grey on a
         // colored shell (user report: Official Cool mode adaptation).
-        if (palette is not null)
+        if (_settings.Store.ApplyAccentColorToTheme)
         {
-            ApplyPresetSurfaceResources(palette, isDark);
+            ApplyPaletteSurfaceResources(GetActivePalette(accent, isDark), isDark);
             return;
         }
 
-        // Navigation and content surface must share one background or the shell seam shows in light mode
-        // (WPF-UI ApplicationBackgroundBrush is pure white while the content surface uses #F6F6F6).
+        // The native backdrop belongs to window chrome. The page surface is opaque while
+        // the title bar and navigation inherit the shell-level material.
         var surfaceBackground = isDark
             ? (TryGetBrushColor("ApplicationBackgroundBrush") ?? defaultSurface)
             : defaultSurface;
 
-        SetBrush("AppSurfaceBackgroundBrush", surfaceBackground);
-        SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255));
-        SetBrush("AppNavigationBackgroundBrush", surfaceBackground);
+        var surfaceOpacities = RenderingCompatibilityHelper.GetBackdropSurfaceOpacities(_settings);
+        SetBrush("AppSurfaceBackgroundBrush", surfaceBackground, surfaceOpacities.Content);
+        SetBrush("AppSurfaceCardBrush", isDark ? Color.FromRgb(48, 48, 48) : Color.FromRgb(255, 255, 255), surfaceOpacities.Card);
+        SetBrush("AppNavigationBackgroundBrush", surfaceBackground, surfaceOpacities.Shell);
+        SetBrush("ChartTrackBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.14);
         // Chart surface fill + soft guides. Baseline is a warm accent under the filled band
         // (reference area chart), not a neutral grey stroke.
         SetBrush("ChartSurfaceBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(26, 26, 26), isDark ? 0.045 : 0.035);
@@ -221,12 +226,14 @@ public class ThemeManager
     /// Surface tokens for Official Cool / Midnight Neon / Forest Tech so dashboard sensors
     /// cards and in-app toasts match the tinted shell (not neutral Fluent grey).
     /// </summary>
-    private static void ApplyPresetSurfaceResources(ThemeStylePalette palette, bool isDark)
+    private void ApplyPaletteSurfaceResources(ThemeStylePalette palette, bool isDark)
     {
-        SetBrush("AppSurfaceBackgroundBrush", palette.ApplicationBackground);
+        var surfaceOpacities = RenderingCompatibilityHelper.GetBackdropSurfaceOpacities(_settings);
+        SetBrush("AppSurfaceBackgroundBrush", palette.ApplicationBackground, surfaceOpacities.Content);
         // Card one step above page bg (ControlFillDefault) — matches sensors / list surfaces.
-        SetBrush("AppSurfaceCardBrush", palette.ControlFillDefault);
-        SetBrush("AppNavigationBackgroundBrush", palette.ApplicationBackground);
+        SetBrush("AppSurfaceCardBrush", palette.ControlFillDefault, surfaceOpacities.Card);
+        SetBrush("AppNavigationBackgroundBrush", palette.ApplicationBackground, surfaceOpacities.Shell);
+        SetBrush("ChartTrackBrush", isDark ? Color.FromRgb(255, 255, 255) : Color.FromRgb(0, 0, 0), isDark ? 0.18 : 0.14);
 
         // Soft chart wells: light wash over the tinted card, not pure white-on-grey.
         var chartWash = isDark ? Color.FromRgb(255, 255, 255) : BlendToward(palette.ApplicationBackground, Colors.Black, 0.55);
@@ -267,6 +274,59 @@ public class ThemeManager
             brush.Freeze();
 
         return brush;
+    }
+
+    private ThemeStylePalette GetActivePalette(RGBColor accent, bool isDark)
+    {
+        // Keep old saved preset configurations visually stable until the user chooses a
+        // color again. New and actively edited configurations are always accent-derived.
+        if (_settings.Store.ThemeStylePreset != ThemeStylePreset.Default &&
+            _settings.Store.AccentColorSource == AccentColorSource.System &&
+            _settings.Store.AccentColor is null)
+        {
+            return GetPresetPalette(_settings.Store.ThemeStylePreset, isDark)
+                ?? CreateAccentPalette(accent, isDark);
+        }
+
+        return CreateAccentPalette(accent, isDark);
+    }
+
+    /// <summary>
+    /// Builds the complete visual palette from one accent color. Light and dark variants
+    /// keep the same hue family while using restrained tints for readable surfaces.
+    /// </summary>
+    internal static ThemeStylePalette CreateAccentPalette(RGBColor accent, bool isDark)
+    {
+        var accentColor = accent.ToColor();
+
+        if (isDark)
+        {
+            var shadow = BlendToward(Color.FromRgb(8, 10, 14), accentColor, 0.35);
+            return new ThemeStylePalette(
+                BlendToward(Color.FromRgb(18, 20, 24), accentColor, 0.10),
+                BlendToward(Color.FromRgb(27, 29, 34), accentColor, 0.14),
+                BlendToward(Color.FromRgb(35, 38, 45), accentColor, 0.18),
+                BlendToward(Color.FromRgb(44, 48, 57), accentColor, 0.22),
+                BlendToward(Color.FromRgb(72, 77, 88), accentColor, 0.45),
+                BlendToward(Color.FromRgb(94, 99, 112), accentColor, 0.38),
+                BlendToward(Color.FromRgb(80, 86, 98), accentColor, 0.50),
+                BlendToward(Color.FromRgb(89, 95, 108), accentColor, 0.44),
+                BlendToward(Color.FromRgb(185, 189, 197), accentColor, 0.18),
+                Color.FromArgb(160, shadow.R, shadow.G, shadow.B));
+        }
+
+        var lightShadow = BlendToward(Color.FromRgb(40, 45, 55), accentColor, 0.35);
+        return new ThemeStylePalette(
+            BlendToward(Color.FromRgb(248, 249, 251), accentColor, 0.06),
+            BlendToward(Color.FromRgb(240, 243, 247), accentColor, 0.10),
+            BlendToward(Color.FromRgb(232, 236, 242), accentColor, 0.14),
+            BlendToward(Color.FromRgb(222, 228, 236), accentColor, 0.18),
+            BlendToward(Color.FromRgb(165, 173, 185), accentColor, 0.38),
+            BlendToward(Color.FromRgb(133, 143, 159), accentColor, 0.42),
+            BlendToward(Color.FromRgb(150, 160, 177), accentColor, 0.35),
+            BlendToward(Color.FromRgb(126, 139, 158), accentColor, 0.42),
+            BlendToward(Color.FromRgb(75, 81, 92), accentColor, 0.18),
+            Color.FromArgb(72, lightShadow.R, lightShadow.G, lightShadow.B));
     }
 
     private static ThemeStylePalette? GetPresetPalette(ThemeStylePreset preset, bool isDark)
@@ -359,7 +419,7 @@ public class ThemeManager
         SetBrush("StatusCriticalTextBrush", criticalColor);
     }
 
-    private sealed record ThemeStylePalette(
+    internal sealed record ThemeStylePalette(
         Color ApplicationBackground,
         Color ControlFillDefault,
         Color ControlFillSecondary,

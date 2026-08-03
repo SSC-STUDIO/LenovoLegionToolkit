@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.ViewModels;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
@@ -14,6 +15,7 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 public partial class SettingsPageViewModel : ObservableObject
 {
     private readonly SettingsNavigationViewModel _navModel;
+    private readonly IPlatformServices _platformServices;
 
     public IReadOnlyList<NavigationItemViewModel> NavigationItems => _navModel.NavigationItems;
 
@@ -23,12 +25,21 @@ public partial class SettingsPageViewModel : ObservableObject
     [ObservableProperty]
     private object? _selectedContent;
 
-    public SettingsPageViewModel()
+    public SettingsPageViewModel(IPlatformServices platformServices)
     {
+        _platformServices = platformServices;
+
         // Use a pass-through localizer that returns fallback strings (no .resx dependency in Avalonia prototype).
         var localizer = new FallbackStringLocalizer();
         _navModel = new SettingsNavigationViewModel(localizer);
-        _navModel.InitializeNavigationCommand.Execute(false);
+
+        _ = InitializeAsync();
+    }
+
+    private async Task InitializeAsync()
+    {
+        var isSupportedLegionMachine = await _platformServices.IsSupportedLegionMachineAsync();
+        _navModel.InitializeNavigationCommand.Execute(isSupportedLegionMachine);
 
         if (_navModel.NavigationItems.Count > 0)
         {

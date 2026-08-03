@@ -37,10 +37,6 @@ public partial class ITSModeFeature : IFeature<ITSMode>
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
     internal static partial int GetDispatcherMode(ref CIntelligentCooling instance, ref int supportItsMode, ref ITSMode itsMode, int geekModeFlag);
 
-    [LibraryImport("PowerBattery.dll", EntryPoint = "?GetITSVersion@CIntelligentCooling@PowerBattery@@QEAAHXZ", SetLastError = true)]
-    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    internal static partial int GetITSVersion(ref CIntelligentCooling instance);
-
     [LibraryImport("PowerBattery.dll", EntryPoint = "?SetDispatcherMode@CIntelligentCooling@PowerBattery@@QEAAHAEAW4ITSMode@12@H@Z", SetLastError = true)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
     internal static partial int SetDispatcherMode(ref CIntelligentCooling instance, ref ITSMode itsMode, int var);
@@ -123,43 +119,6 @@ public partial class ITSModeFeature : IFeature<ITSMode>
 
     public void InvalidateResolution()
     {
-    }
-
-    public async Task ToggleItsMode(CancellationToken cancellationToken = default)
-    {
-        try
-        {
-            var currentState = await GetStateAsync(cancellationToken).ConfigureAwait(false);
-            var allStates = await GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
-            var availableStates = allStates.Where(state => state != ITSMode.None).ToArray();
-
-            if (availableStates.Length == 0)
-            {
-                return;
-            }
-
-            ITSMode nextState;
-
-            if (currentState == ITSMode.None)
-            {
-                nextState = LastItsMode != ITSMode.None && availableStates.Contains(LastItsMode)
-                    ? LastItsMode
-                    : availableStates[0];
-            }
-            else
-            {
-                var currentIndex = Array.IndexOf(availableStates, currentState);
-                nextState = availableStates[(currentIndex + 1) % availableStates.Length];
-            }
-
-            Log.Instance.Trace($"Toggling ITS mode: {currentState} -> {nextState}");
-
-            await SetStateAsync(nextState, cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace($"Failed to toggle ITS mode", ex);
-        }
     }
 
     private async Task<ITSMode> GetItsModeInternalAsync(CancellationToken cancellationToken)

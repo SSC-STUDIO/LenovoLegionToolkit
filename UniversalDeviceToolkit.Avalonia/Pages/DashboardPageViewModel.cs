@@ -1,5 +1,8 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -8,25 +11,31 @@ public partial class DashboardPageViewModel : ObservableObject
     public ObservableCollection<FeatureGroupItem> FeatureGroups { get; } = new();
     public ObservableCollection<SensorReadingItem> SensorReadings { get; } = new();
 
-    public DashboardPageViewModel()
-    {
-        // Sample feature groups (will be populated from platform services)
-        FeatureGroups.Add(new("Power Mode", "System power management", "Active"));
-        FeatureGroups.Add(new("Fan Control", "Fan speed management", "Ready"));
-        FeatureGroups.Add(new("Display", "Refresh rate control", "Available"));
-        FeatureGroups.Add(new("GPU", "GPU management", "N/A"));
-        FeatureGroups.Add(new("Battery", "Battery management", "Active"));
-        FeatureGroups.Add(new("Keyboard", "Backlight control", "Available"));
+    private readonly IPlatformServices _platformServices;
 
-        // Sample sensor readings
-        SensorReadings.Add(new("CPU Temperature", "65°C"));
-        SensorReadings.Add(new("GPU Temperature", "58°C"));
-        SensorReadings.Add(new("CPU Usage", "23%"));
-        SensorReadings.Add(new("Memory Usage", "8.2 GB / 16 GB"));
-        SensorReadings.Add(new("Fan Speed", "2400 RPM"));
-        SensorReadings.Add(new("Battery", "87%"));
+    public DashboardPageViewModel(IPlatformServices platformServices)
+    {
+        _platformServices = platformServices;
+    }
+
+    public async Task LoadAsync()
+    {
+        try
+        {
+            var featureGroups = await _platformServices.GetFeatureGroupsAsync();
+            var sensorReadings = await _platformServices.GetSensorReadingsAsync();
+
+            FeatureGroups.Clear();
+            foreach (var group in featureGroups)
+                FeatureGroups.Add(group);
+
+            SensorReadings.Clear();
+            foreach (var reading in sensorReadings)
+                SensorReadings.Add(reading);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Dashboard load failed: {ex.Message}");
+        }
     }
 }
-
-public record FeatureGroupItem(string Title, string Description, string Status);
-public record SensorReadingItem(string Name, string DisplayValue);

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+    <RootNamespace>UniversalDeviceToolkit.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <DisableUdtForceX64>false</DisableUdtForceX64>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Xunit.SkippableFact" />
+    <PackageReference Include="FlaUI.UIA3" />
+    <PackageReference Include="FlaUI.Core" />
+    <PackageReference Include="FluentAssertions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalDeviceToolkit.Tests.Infrastructure\UniversalDeviceToolkit.Tests.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

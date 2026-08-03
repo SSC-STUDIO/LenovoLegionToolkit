@@ -12,7 +12,7 @@ Each language entry:
 
 | Field | Purpose |
 |---|---|
-| `culture` | Culture name (e.g. `zh-hans`) |
+| `culture` | Culture name in BCP 47 canonical form (e.g. `zh-Hans`) |
 | `parent` | Optional parent culture for fallback lookup |
 | `size` | Package size in bytes |
 | `sha256` | Content hash |

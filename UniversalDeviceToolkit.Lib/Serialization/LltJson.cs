@@ -1,37 +1,13 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 namespace UniversalDeviceToolkit.Lib.Serialization;
 
+using global::System.Text.Json;
+
+/// <summary>Compatibility facade over the cross-platform JSON options.</summary>
 public static class LltJson
 {
-    /// <summary>
-    /// Matches legacy Newtonsoft settings for app settings files: indented, enums as strings, explicit nulls, bounded depth.
-    /// </summary>
-    public static JsonSerializerOptions CreateSettingsOptions()
-    {
-        var o = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            MaxDepth = 32,
-            PreferredObjectCreationHandling = JsonObjectCreationHandling.Replace,
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-        };
-        o.Converters.Add(new JsonStringEnumConverter());
-        return o;
-    }
+    public static JsonSerializerOptions CreateSettingsOptions() =>
+        UniversalDeviceToolkit.Shared.Serialization.LltJson.CreateSettingsOptions();
 
-    /// <summary>
-    /// Compact JSON for IPC / pipes (no indentation).
-    /// </summary>
-    public static JsonSerializerOptions CreateCompactOptions()
-    {
-        var o = new JsonSerializerOptions
-        {
-            WriteIndented = false,
-            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-        };
-        o.Converters.Add(new JsonStringEnumConverter());
-        return o;
-    }
+    public static JsonSerializerOptions CreateCompactOptions() =>
+        UniversalDeviceToolkit.Shared.Serialization.LltJson.CreateCompactOptions();
 }

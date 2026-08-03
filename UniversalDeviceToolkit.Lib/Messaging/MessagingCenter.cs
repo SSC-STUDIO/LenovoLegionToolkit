@@ -1,139 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UniversalDeviceToolkit.Lib.Messaging.Messages;
-using UniversalDeviceToolkit.Lib.Utils;
-
 namespace UniversalDeviceToolkit.Lib.Messaging;
 
+using global::System;
+
+/// <summary>Compatibility facade over the cross-platform messaging center.</summary>
 public static class MessagingCenter
 {
-    public static void Publish<T>(T data) where T : IMessage
-    {
-        try
-        {
-            Messenger.Instance.Publish(data);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"MessagingCenter.Publish<{typeof(T).Name}> failed: {ex.Message}", ex);
-        }
-    }
+    public static void Publish<T>(T data) where T : Messages.IMessage =>
+        UniversalDeviceToolkit.Shared.Messaging.MessagingCenter.Publish(data);
 
-    public static void Subscribe<T>(object subscriber, Action<T> handler) where T : IMessage
-    {
-        Messenger.Instance.Subscribe<T>(subscriber, msg =>
-        {
-            try
-            {
-                handler(msg);
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Warning($"MessagingCenter handler for {typeof(T).Name} failed: {ex.Message}", ex);
-            }
-        });
-    }
+    public static void Subscribe<T>(object subscriber, Action<T> handler) where T : Messages.IMessage =>
+        UniversalDeviceToolkit.Shared.Messaging.MessagingCenter.Subscribe(subscriber, handler);
 
-    public static void Subscribe<T>(object subscriber, Action handler) where T : IMessage
-    {
-        Messenger.Instance.Subscribe<T>(subscriber, _ =>
-        {
-            try
-            {
-                handler();
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Warning($"MessagingCenter handler for {typeof(T).Name} failed: {ex.Message}", ex);
-            }
-        });
-    }
+    public static void Subscribe<T>(object subscriber, Action handler) where T : Messages.IMessage =>
+        UniversalDeviceToolkit.Shared.Messaging.MessagingCenter.Subscribe<T>(subscriber, handler);
 
-    public static void Unsubscribe<T>(object subscriber) where T : IMessage
-        => Messenger.Instance.Unsubscribe<T>(subscriber);
+    public static void Unsubscribe<T>(object subscriber) where T : Messages.IMessage =>
+        UniversalDeviceToolkit.Shared.Messaging.MessagingCenter.Unsubscribe<T>(subscriber);
 
-    public static void Unsubscribe(object subscriber)
-        => Messenger.Instance.UnsubscribeAll(subscriber);
-}
-
-internal sealed class Messenger
-{
-    public static readonly Messenger Instance = new();
-
-    private readonly object _lock = new();
-    private readonly ConditionalWeakTable<object, Dictionary<Type, List<Delegate>>> _subs 
-        = new();
-
-    public void Publish<T>(T data)
-    {
-        List<Delegate> snapshot;
-        lock (_lock)
-        {
-            snapshot = CollectHandlers<T>();
-        }
-        foreach (var handler in snapshot)
-        {
-            ((Action<T>)handler)(data);
-        }
-    }
-
-    public void Subscribe<T>(object subscriber, Action<T> handler)
-    {
-        lock (_lock)
-        {
-            var typeKey = typeof(T);
-            if (!_subs.TryGetValue(subscriber, out var byType))
-            {
-                byType = new Dictionary<Type, List<Delegate>>();
-                _subs.Add(subscriber, byType);
-            }
-            if (!byType.TryGetValue(typeKey, out var list))
-            {
-                list = new List<Delegate>();
-                byType[typeKey] = list;
-            }
-            list.Add(handler);
-        }
-    }
-
-    public void Unsubscribe<T>(object subscriber)
-    {
-        lock (_lock)
-        {
-            if (_subs.TryGetValue(subscriber, out var byType))
-            {
-                byType.Remove(typeof(T));
-                if (byType.Count == 0)
-                {
-                    // CWT 无法主动删除 key，依赖 GC 自动回收
-                    byType.Clear();
-                }
-            }
-        }
-    }
-
-    public void UnsubscribeAll(object subscriber)
-    {
-        lock (_lock)
-        {
-            if (_subs.TryGetValue(subscriber, out var byType))
-            {
-                // CWT 无法主动删除 key，依赖 GC 自动回收
-                byType.Clear();
-            }
-        }
-    }
-
-    private List<Delegate> CollectHandlers<T>()
-    {
-        var typeKey = typeof(T);
-        var result = new List<Delegate>();
-        foreach (var kvp in _subs)
-        {
-            if (kvp.Value.TryGetValue(typeKey, out var list))
-                result.AddRange(list);
-        }
-        return result;
-    }
+    public static void Unsubscribe(object subscriber) =>
+        UniversalDeviceToolkit.Shared.Messaging.MessagingCenter.Unsubscribe(subscriber);
 }

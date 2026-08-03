@@ -13,6 +13,7 @@ namespace UniversalDeviceToolkit.Tests.Utils;
 /// Behavioral tests for startup orchestration. Source-string greps are intentionally
 /// minimal — prefer runtime assertions for non-overlap and safe-start skips.
 /// </summary>
+[Collection(TestCollections.ProcessState)]
 [Trait("Category", TestCategories.Unit)]
 public sealed class BackgroundInitOrchestrationTests
 {

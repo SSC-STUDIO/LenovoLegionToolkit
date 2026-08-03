@@ -6,8 +6,9 @@
 		<!-- Canonical brand icons live in repo-root Assets/ (single source of truth). -->
 		<ApplicationIcon>..\Assets\Icon.ico</ApplicationIcon>
 		<AssemblyName>Universal Device Toolkit</AssemblyName>
+		<!-- WPF and WinForms expose overlapping type names; keep imports explicit. -->
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Copyright>$(ProjectCopyright)</Copyright>
-		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<IsUdtShippingApp>true</IsUdtShippingApp>

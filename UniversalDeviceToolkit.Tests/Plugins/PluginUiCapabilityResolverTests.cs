@@ -9,6 +9,7 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class PluginUiCapabilityResolverTests : TemporaryFileTestBase
 {
     private readonly string? _originalAppDataOverride;
@@ -17,6 +18,7 @@ public class PluginUiCapabilityResolverTests : TemporaryFileTestBase
     {
         _originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, CreateTempDirectory());
+        PluginUiCapabilityResolver.InvalidateCache();
     }
 
     public override void Dispose()

@@ -334,6 +334,9 @@
   <data name="WindowBackdropStyle_macOS" xml:space="preserve">
     <value>macOS</value>
   </data>
+  <data name="WindowBackdropStyle_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
   <data name="TouchpadLockState_Off" xml:space="preserve">
     <value>Off</value>
     <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>

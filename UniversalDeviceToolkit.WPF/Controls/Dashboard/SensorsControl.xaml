@@ -9,6 +9,7 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     d:DesignHeight="450"
     d:DesignWidth="1200"
@@ -159,13 +160,30 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="8,1,0,0" />
         </Style>
-        <Style x:Key="SkeletonGaugeStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
-            <!-- Default = live RadialGaugeControl (GaugeSizeMD); compact path sets GaugeSizeSM in code. -->
+        <Style x:Key="SkeletonGaugeStyle" TargetType="Grid">
+            <!-- Enhanced skeleton gauge with realistic ring structure instead of simple circle -->
             <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
             <Setter Property="Height" Value="{StaticResource GaugeSizeMD}" />
-            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
             <Setter Property="Margin" Value="0,0,12,0" />
             <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonGaugeBackgroundRingStyle" TargetType="Ellipse">
+            <Setter Property="Stroke" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="StrokeThickness" Value="8" />
+            <Setter Property="Opacity" Value="0.3" />
+        </Style>
+        <Style x:Key="SkeletonGaugeProgressArcStyle" TargetType="Path">
+            <Setter Property="Stroke" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            <Setter Property="StrokeThickness" Value="8" />
+            <Setter Property="StrokeStartLineCap" Value="Round" />
+            <Setter Property="StrokeEndLineCap" Value="Round" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        </Style>
+        <Style x:Key="SkeletonGaugeCenterTextStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="CornerRadius" Value="4" />
         </Style>
         <Style x:Key="SkeletonLabelBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
             <!-- Fills the 24px metric row like StatLabelStyle text -->
@@ -277,7 +295,6 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -286,22 +303,13 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_cpuCoreClockBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_cpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_cpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_cpuTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_cpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_cpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_cpuFanSpeedBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_cpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_cpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
@@ -409,7 +417,6 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -418,22 +425,13 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Health}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryHealthBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_batteryHealthText" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_batteryHealthMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_batteryTempText" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_batteryTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Rate}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_batteryRateBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_batteryRateText" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_batteryRateMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
@@ -552,7 +550,6 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" MinWidth="72" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
@@ -561,22 +558,13 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_gpuCoreClockBar" Grid.Row="0" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_gpuCoreClockLabel" Grid.Row="0" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_gpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_gpuTemperatureBar" Grid.Row="1" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_gpuTemperatureLabel" Grid.Row="1" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_gpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <ProgressBar x:Name="_gpuFanSpeedBar" Grid.Row="2" Grid.Column="1" Style="{StaticResource MetricProgressBarStyle}">
-                                <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
-                            </ProgressBar>
-                            <controls:MarqueeTextBlock x:Name="_gpuFanSpeedLabel" Grid.Row="2" Grid.Column="2" Content="" Style="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_gpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
                         </Grid>
                     </Grid>
 
@@ -689,7 +677,22 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="_skeletonCpuGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}" />
+                        <Grid x:Name="_skeletonCpuGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}">
+                            <!-- Background ring (full circle track) -->
+                            <Ellipse Style="{StaticResource SkeletonGaugeBackgroundRingStyle}" />
+                            <!-- Progress arc (simulating 75% progress) -->
+                            <Path Style="{StaticResource SkeletonGaugeProgressArcStyle}">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="55,10">
+                                            <ArcSegment Point="10,55" Size="45,45" SweepDirection="Clockwise" IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <!-- Center percentage text skeleton -->
+                            <Border Style="{StaticResource SkeletonGaugeCenterTextStyle}" />
+                        </Grid>
                         <Grid Grid.Column="1" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -744,7 +747,22 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="_skeletonBatteryGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}" />
+                        <Grid x:Name="_skeletonBatteryGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}">
+                            <!-- Background ring (full circle track) -->
+                            <Ellipse Style="{StaticResource SkeletonGaugeBackgroundRingStyle}" />
+                            <!-- Progress arc (simulating 75% progress) -->
+                            <Path Style="{StaticResource SkeletonGaugeProgressArcStyle}">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="55,10">
+                                            <ArcSegment Point="10,55" Size="45,45" SweepDirection="Clockwise" IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <!-- Center percentage text skeleton -->
+                            <Border Style="{StaticResource SkeletonGaugeCenterTextStyle}" />
+                        </Grid>
                         <Grid Grid.Column="1" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -799,7 +817,22 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="_skeletonGpuGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}" />
+                        <Grid x:Name="_skeletonGpuGauge" Grid.Column="0" Style="{StaticResource SkeletonGaugeStyle}">
+                            <!-- Background ring (full circle track) -->
+                            <Ellipse Style="{StaticResource SkeletonGaugeBackgroundRingStyle}" />
+                            <!-- Progress arc (simulating 75% progress) -->
+                            <Path Style="{StaticResource SkeletonGaugeProgressArcStyle}">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="55,10">
+                                            <ArcSegment Point="10,55" Size="45,45" SweepDirection="Clockwise" IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <!-- Center percentage text skeleton -->
+                            <Border Style="{StaticResource SkeletonGaugeCenterTextStyle}" />
+                        </Grid>
                         <Grid Grid.Column="1" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

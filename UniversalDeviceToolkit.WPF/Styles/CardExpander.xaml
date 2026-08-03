@@ -7,6 +7,9 @@
 
     <Style BasedOn="{StaticResource DefaultUiCardExpanderStyle}" TargetType="{x:Type custom:CardExpander}">
         <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+        <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Margin" Value="0,0,0,12" />
     </Style>
 

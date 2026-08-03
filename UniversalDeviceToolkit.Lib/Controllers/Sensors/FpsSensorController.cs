@@ -40,7 +40,7 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
         private CancellationTokenSource? _cancellationTokenSource;
         private Process? _currentMonitoredProcess;
         private readonly Lock _lockObject = new Lock();
-        private bool _isRunning = false;
+        private volatile bool _isRunning = false;
         private bool _monitoringLoopErrorLogged;
         private CancellationTokenSource? _currentProcessTokenSource;
         private readonly IDelayProvider _delayProvider;
@@ -50,26 +50,6 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
         public FpsSensorController(IDelayProvider delayProvider)
         {
             _delayProvider = delayProvider;
-        }
-
-        public void InitializeBlacklist()
-        {
-            var systemProcesses = new[]
-            {
-                "explorer", "taskmgr", "ApplicationFrameHost", "System",
-                "svchost", "csrss", "wininit", "services", "lsass",
-                "winlogon", "smss", "spoolsv", "SearchIndexer", "SearchUI",
-                "RuntimeBroker", "dwm", "ctfmon", "audiodg", "fontdrvhost",
-                "taskhost", "conhost", "sihost", "StartMenuExperienceHost",
-                "ShellExperienceHost", "Lenovo Legion Toolkit",
-                "Universal Device Toolkit"
-            };
-
-            // Build and atomically assign a new list — no in-place mutation.
-            // Reference assignment on _blacklist is atomic in .NET, so any
-            // concurrent reader sees the complete list or the previous one.
-            _blacklist = new List<string>(systemProcesses
-                .Distinct(StringComparer.OrdinalIgnoreCase));
         }
 
         public Task StartMonitoringAsync()

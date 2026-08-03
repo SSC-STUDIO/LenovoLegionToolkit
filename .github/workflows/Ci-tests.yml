@@ -14,6 +14,7 @@ on:
 jobs:
   build-test-and-smoke:
     runs-on: windows-2022
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -42,33 +43,51 @@ jobs:
           MSBUILDDISABLENODEREUSE: 1
         run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore -m:1 --disable-build-servers
 
-      # Fail-fast layers: Security/Guard first, then Unit (excludes pure Coverage padding),
-      # then Smoke contract. Full suite + coverage still runs everything below.
+      - name: Verify Windows test prerequisites
+        shell: pwsh
+        run: ./Scripts/Test-WindowsTestEnvironment.ps1
+
+      # Run security/guard once, then the parallel fast layer and the remaining
+      # Windows stateful suite once. Dedicated UI runs on a desktop runner.
       - name: Assert WPF l10n coverage (fail fast)
         shell: pwsh
         run: ./Scripts/Assert-WpfL10nCoverage.ps1
 
-      - name: Test (Security + Guard — fail fast)
+      - name: Assert culture naming convention (fail fast)
+        shell: pwsh
+        run: ./Scripts/Assert-CultureNaming.ps1
+
+      - name: Test (Security + Guard - fail fast)
         run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Security|Category=Guard" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.SecurityGuard.trx"
 
-      - name: Test (Plugin category — fail fast)
-        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Plugin" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Plugin.trx"
+      - name: Test (Fast unit tests)
+        run: dotnet test UniversalDeviceToolkit.Fast.Tests/UniversalDeviceToolkit.Fast.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Fast.Tests.trx"
 
-      - name: Test (Unit category — fail fast)
-        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Unit&Category!=Coverage" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Unit.trx"
-
-      - name: Test (Main app plugin UI smoke contract — fail fast)
-        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Smoke" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Smoke.trx"
-
-      - name: Test stable paths (full suite + coverage)
-        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
+      - name: Test (Windows stateful suite)
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category!=Security&Category!=Guard" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Stateful.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
       - name: Upload code coverage
         uses: actions/upload-artifact@v7
         if: always()
         with:
           name: code-coverage
-          path: '**/coverage.cobertura.xml'
+          path: |
+            **/*coverage.cobertura.xml
+            **/*coverage.opencover.xml
+          if-no-files-found: warn
+
+      - name: Upload Windows test results and diagnostics
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: windows-test-results-${{ github.run_id }}
+          path: |
+            **/UniversalDeviceToolkit.Tests.SecurityGuard.trx
+            **/UniversalDeviceToolkit.Fast.Tests.trx
+            **/UniversalDeviceToolkit.Tests.Stateful.trx
+            **/TestResults/**/*.png
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.log
           if-no-files-found: warn
 
       - name: Check for vulnerable packages
@@ -159,7 +178,7 @@ jobs:
         continue-on-error: true
         with:
           name: Test results
-          path: '**/UniversalDeviceToolkit.Tests.trx'
+          path: '**/*.trx'
           reporter: dotnet-trx
 
       - name: Smoke CLI help and version
@@ -219,6 +238,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-2022 ]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -242,7 +262,7 @@ jobs:
         run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-restore
 
       - name: Test cross-platform diagnostics
-        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.CrossPlatform.Tests.trx"
+        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.CrossPlatform.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
       - name: Smoke diagnostics CLI
         shell: pwsh
@@ -345,3 +365,24 @@ jobs:
           name: Cross-platform test results (${{ matrix.os }})
           path: '**/UniversalDeviceToolkit.CrossPlatform.Tests.trx'
           reporter: dotnet-trx
+
+      - name: Upload cross-platform test results and diagnostics
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: cross-platform-test-results-${{ matrix.os }}-${{ github.run_id }}
+          path: |
+            **/UniversalDeviceToolkit.CrossPlatform.Tests.trx
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.log
+          if-no-files-found: warn
+
+      - name: Upload cross-platform coverage
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: code-coverage-${{ matrix.os }}
+          path: |
+            **/*coverage.cobertura.xml
+            **/*coverage.opencover.xml
+          if-no-files-found: warn

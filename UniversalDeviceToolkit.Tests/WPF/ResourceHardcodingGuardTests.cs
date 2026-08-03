@@ -294,7 +294,7 @@ public sealed class ResourceHardcodingGuardTests
 
     private static string? LoadChineseValue(string keyName)
     {
-        var resx = ResolveRepoPath("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh-hans.resx");
+        var resx = ResolveRepoPath("UniversalDeviceToolkit.WPF", "Resources", "Resource.zh-Hans.resx");
         return LoadSingleValue(resx, keyName);
     }
 

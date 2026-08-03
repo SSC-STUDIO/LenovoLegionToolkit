@@ -5,6 +5,7 @@ using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -49,6 +50,31 @@ public class ThemeAndNotificationEnumTests
         ((int)preset).Should().Be(expectedValue);
     }
 
+    [Fact]
+    public void AccentPalette_ShouldChangeWithSelectedAccentColor()
+    {
+        var red = ThemeManager.CreateAccentPalette(new RGBColor(220, 55, 65), isDark: false);
+        var teal = ThemeManager.CreateAccentPalette(new RGBColor(30, 180, 170), isDark: false);
+
+        red.ApplicationBackground.Should().NotBe(teal.ApplicationBackground);
+        red.ControlFillDefault.Should().NotBe(teal.ControlFillDefault);
+        red.ControlStrokeDefault.Should().NotBe(teal.ControlStrokeDefault);
+        red.TextSecondary.Should().NotBe(teal.TextSecondary);
+    }
+
+    [Fact]
+    public void AccentPalette_ShouldKeepDarkSurfaceLayersOrdered()
+    {
+        var palette = ThemeManager.CreateAccentPalette(new RGBColor(80, 140, 230), isDark: true);
+
+        Luminance(palette.ApplicationBackground).Should().BeLessThan(Luminance(palette.ControlFillDefault));
+        Luminance(palette.ControlFillDefault).Should().BeLessThan(Luminance(palette.ControlFillSecondary));
+        Luminance(palette.ControlFillSecondary).Should().BeLessThan(Luminance(palette.ControlFillTertiary));
+    }
+
+    private static double Luminance(System.Windows.Media.Color color) =>
+        0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B;
+
     #endregion
 
     #region AccentColorSource Enum Tests
@@ -68,6 +94,7 @@ public class ThemeAndNotificationEnumTests
     [Theory]
     [InlineData(WindowBackdropStyle.Windows, 0)]
     [InlineData(WindowBackdropStyle.macOS, 1)]
+    [InlineData(WindowBackdropStyle.Off, 2)]
     public void WindowBackdropStyle_ShouldHaveExpectedValues(WindowBackdropStyle style, int expectedValue)
     {
         ((int)style).Should().Be(expectedValue);

@@ -17,7 +17,7 @@
         <Style Selector="Button.navButton.active">
             <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
-            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontWeight" Value="Medium" />
         </Style>
     </Window.Styles>
     <DockPanel>

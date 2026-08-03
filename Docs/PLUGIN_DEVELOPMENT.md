@@ -372,7 +372,7 @@ make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 ```
 Resources/
 ├── Resource.resx           # 默认（英语）
-├── Resource.zh-hans.resx   # 简体中文
+├── Resource.zh-Hans.resx   # 简体中文
 ├── Resource.ja.resx        # 日语
 └── ...
 ```
@@ -390,7 +390,7 @@ Resources/
 ```
 
 ```xml
-<!-- Resource.zh-hans.resx -->
+<!-- Resource.zh-Hans.resx -->
 <data name="PluginName" xml:space="preserve">
   <value>我的插件</value>
 </data>

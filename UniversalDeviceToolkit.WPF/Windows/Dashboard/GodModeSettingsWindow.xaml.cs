@@ -10,6 +10,7 @@ using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Controls;
 using UniversalDeviceToolkit.WPF.Extensions;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -41,6 +42,8 @@ public partial class GodModeSettingsWindow
     public GodModeSettingsWindow(PowerModeState? initialDefaultsSourceMode = null)
     {
         InitializeComponent();
+        _maxValueOffsetNumberBox.ValueChanged += (_, _) => UpdateRiskWarnings();
+        _minValueOffsetNumberBox.ValueChanged += (_, _) => UpdateRiskWarnings();
         _initialDefaultsSourceMode = initialDefaultsSourceMode switch
         {
             PowerModeState.Performance => PowerModeState.Performance,
@@ -145,8 +148,8 @@ public partial class GodModeSettingsWindow
         GPUToCPUDynamicBoost = preset.GPUToCPUDynamicBoost?.WithValue(_gpuToCpuDynamicBoostControl.Value),
         FanTableInfo = preset.FanTableInfo is not null ? _fanCurveControl.GetFanTableInfo() : null,
         FanFullSpeed = preset.FanFullSpeed is not null ? _fanFullSpeedToggle.IsChecked : null,
-        MaxValueOffset = preset.MaxValueOffset is not null ? (int?)_maxValueOffsetNumberBox.Value : null,
-        MinValueOffset = preset.MinValueOffset is not null ? (int?)_minValueOffsetNumberBox.Value : null
+        MaxValueOffset = preset.MaxValueOffset is not null ? GetRequiredOffsetValue(_maxValueOffsetNumberBox, 0, 100) : null,
+        MinValueOffset = preset.MinValueOffset is not null ? GetRequiredOffsetValue(_minValueOffsetNumberBox, -100, 0) : null
     };
 
     private void FlushActivePresetToState()
@@ -295,6 +298,12 @@ public partial class GodModeSettingsWindow
             if (!_state.HasValue)
                 throw new InvalidOperationException("State is null");
 
+            if (!TryValidateOffsetInputs(out var invalidOffsetMessage))
+            {
+                await ShowSnackBarAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, invalidOffsetMessage);
+                return false;
+            }
+
             FlushActivePresetToState();
 
             if (await _powerModeFeature.GetStateAsync() != PowerModeState.GodMode)
@@ -362,6 +371,7 @@ public partial class GodModeSettingsWindow
         _gpuToCpuDynamicBoostControl.Set(preset.GPUToCPUDynamicBoost);
 
         var fanTableInfo = preset.FanTableInfo;
+        _fanCurveCardControl.Visibility = fanTableInfo.HasValue ? Visibility.Visible : Visibility.Collapsed;
         if (fanTableInfo.HasValue)
         {
             var minimum = await _godModeController.GetMinimumFanTableAsync();
@@ -373,6 +383,7 @@ public partial class GodModeSettingsWindow
         }
 
         var fanFullSpeed = preset.FanFullSpeed;
+        _fanFullSpeedCardControl.Visibility = fanFullSpeed.HasValue ? Visibility.Visible : Visibility.Collapsed;
         if (fanFullSpeed.HasValue)
         {
             _fanCurveCardControl.IsEnabled = !fanFullSpeed.Value;
@@ -386,15 +397,23 @@ public partial class GodModeSettingsWindow
 
         var maxValueOffset = preset.MaxValueOffset;
         if (maxValueOffset.HasValue)
-            _maxValueOffsetNumberBox.Value = maxValueOffset;
+        {
+            _maxValueOffsetCardControl.Visibility = Visibility.Visible;
+            SetOffsetValue(_maxValueOffsetNumberBox, maxValueOffset.Value, 0, 100);
+        }
         else
             _maxValueOffsetCardControl.Visibility = Visibility.Collapsed;
 
         var minValueOffset = preset.MinValueOffset;
         if (minValueOffset.HasValue)
-            _minValueOffsetNumberBox.Value = minValueOffset;
+        {
+            _minValueOffsetCardControl.Visibility = Visibility.Visible;
+            SetOffsetValue(_minValueOffsetNumberBox, minValueOffset.Value, -100, 0);
+        }
         else
             _minValueOffsetCardControl.Visibility = Visibility.Collapsed;
+
+        UpdateRiskWarnings();
 
         var cpuSectionVisible = new[]
         {
@@ -432,7 +451,6 @@ public partial class GodModeSettingsWindow
         _gpuSectionTitle.Visibility = gpuSectionVisible ? Visibility.Visible : Visibility.Collapsed;
         _fanSectionTitle.Visibility = fanSectionVisible ? Visibility.Visible : Visibility.Collapsed;
         _advancedSectionTitle.Visibility = advancedSectionVisible ? Visibility.Visible : Visibility.Collapsed;
-        _advancedSectionMessage.Visibility = advancedSectionVisible ? Visibility.Visible : Visibility.Collapsed;
 
         _cpuLongTermPowerLimitControl.ValueChanged += CpuLongTermPowerLimitSlider_ValueChanged;
         _cpuShortTermPowerLimitControl.ValueChanged += CpuShortTermPowerLimitSlider_ValueChanged;
@@ -496,10 +514,12 @@ public partial class GodModeSettingsWindow
                 _fanFullSpeedToggle.IsChecked = fanFullSpeed;
 
             if (_maxValueOffsetCardControl.Visibility == Visibility.Visible)
-                _maxValueOffsetNumberBox.Text = "0";
+                SetOffsetValue(_maxValueOffsetNumberBox, 0, 0, 100);
 
             if (_minValueOffsetCardControl.Visibility == Visibility.Visible)
-                _minValueOffsetNumberBox.Text = "0";
+                SetOffsetValue(_minValueOffsetNumberBox, 0, -100, 0);
+
+            UpdateRiskWarnings();
         }
         catch (Exception ex)
         {
@@ -797,7 +817,99 @@ public partial class GodModeSettingsWindow
     private void FanFullSpeedToggle_Click(object sender, RoutedEventArgs e)
     {
         _fanCurveCardControl.IsEnabled = !(_fanFullSpeedToggle.IsChecked ?? false);
+        UpdateRiskWarnings();
+    }
+
+    private static void SetOffsetValue(Wpf.Ui.Controls.NumberBox numberBox, int value, int minimum, int maximum)
+    {
+        var normalizedValue = Math.Clamp(value, minimum, maximum);
+        numberBox.Value = normalizedValue;
+        numberBox.Text = normalizedValue.ToString();
+    }
+
+    private static bool TryReadOffsetValue(Wpf.Ui.Controls.NumberBox numberBox, int minimum, int maximum, out int value)
+    {
+        return TryNormalizeOffsetValue(numberBox.Value, minimum, maximum, out value);
+    }
+
+    internal static bool TryNormalizeOffsetValue(double? rawValue, int minimum, int maximum, out int value)
+    {
+        value = 0;
+        if (rawValue is not { } numericValue
+            || !double.IsFinite(numericValue)
+            || numericValue < minimum
+            || numericValue > maximum
+            || numericValue != Math.Truncate(numericValue))
+            return false;
+
+        value = (int)numericValue;
+        return true;
+    }
+
+    private static int GetRequiredOffsetValue(Wpf.Ui.Controls.NumberBox numberBox, int minimum, int maximum) =>
+        TryReadOffsetValue(numberBox, minimum, maximum, out var value)
+            ? value
+            : throw new InvalidOperationException("The offset value is invalid.");
+
+    private bool TryValidateOffsetInputs(out string message)
+    {
+        if (_maxValueOffsetCardControl.Visibility == Visibility.Visible
+            && !TryReadOffsetValue(_maxValueOffsetNumberBox, 0, 100, out _))
+        {
+            message = T(
+                "GodModeSettingsWindow_Advanced_InvalidOffset_Message",
+                "Enter a whole number from 0 to 100 before saving.");
+            return false;
+        }
+
+        if (_minValueOffsetCardControl.Visibility == Visibility.Visible
+            && !TryReadOffsetValue(_minValueOffsetNumberBox, -100, 0, out _))
+        {
+            message = T(
+                "GodModeSettingsWindow_Advanced_InvalidOffset_Message",
+                "Enter a whole number from -100 to 0 before saving.");
+            return false;
+        }
+
+        message = string.Empty;
+        return true;
+    }
+
+    private void UpdateRiskWarnings()
+    {
+        var fanFullSpeedEnabled = _fanFullSpeedToggle.IsChecked == true;
+        _fanFullSpeedHeader.Warning = fanFullSpeedEnabled
+            ? RemoveWarningHeading(Resource.GodModeSettingsWindow_Fans_Max_Message)
+            : string.Empty;
+        _fanFullSpeedHeader.WarningSeverity = CardHeaderWarningSeverity.Warning;
+
+        var maxOffsetEnabled = TryReadOffsetValue(_maxValueOffsetNumberBox, 0, 100, out var maxValue) && maxValue != 0;
+        _maxValueOffsetHeader.Warning = maxOffsetEnabled
+            ? RemoveWarningHeading(Resource.GodModeSettingsWindow_Advanced_MaxOffset_Message)
+            : string.Empty;
+        _maxValueOffsetHeader.WarningSeverity = CardHeaderWarningSeverity.Critical;
+
+        var minOffsetEnabled = TryReadOffsetValue(_minValueOffsetNumberBox, -100, 0, out var minValue) && minValue != 0;
+        _minValueOffsetHeader.Warning = minOffsetEnabled
+            ? RemoveWarningHeading(Resource.GodModeSettingsWindow_Advanced_MinOffset_Message)
+            : string.Empty;
+        _minValueOffsetHeader.WarningSeverity = CardHeaderWarningSeverity.Critical;
+    }
+
+    internal static string RemoveWarningHeading(string? message)
+    {
+        if (string.IsNullOrWhiteSpace(message))
+            return string.Empty;
+
+        var lines = message.Replace("\r\n", "\n").Split('\n');
+        if (lines.Length > 1)
+        {
+            var heading = lines[0].Trim();
+            if (heading.Length <= 32 && (heading.Contains('!') || heading.Contains('！') || heading.EndsWith(':') || heading.EndsWith('：')))
+                return string.Join(Environment.NewLine, lines.Skip(1)).Trim();
+        }
+
+        return message.Trim();
     }
 }
 }
-

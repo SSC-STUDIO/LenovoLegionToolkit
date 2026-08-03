@@ -14,6 +14,8 @@ namespace UniversalDeviceToolkit.WPF.Utils;
 
 internal static class RenderingCompatibilityHelper
 {
+    internal readonly record struct BackdropSurfaceOpacities(double Shell, double Content, double Card);
+
     public static RenderMode GetPreferredRenderMode(ApplicationSettings? settings = null)
     {
         try
@@ -38,23 +40,93 @@ internal static class RenderingCompatibilityHelper
         if (ShouldDisableBackdrop(settings))
             return WindowBackdropType.None;
 
-        return settings?.Store.WindowBackdropStyle == WindowBackdropStyle.macOS
-            ? WindowBackdropType.Acrylic
-            : WindowBackdropType.Mica;
+        return settings?.Store.WindowBackdropStyle switch
+        {
+            WindowBackdropStyle.macOS => WindowBackdropType.Acrylic,
+            WindowBackdropStyle.Off => WindowBackdropType.None,
+            _ => WindowBackdropType.Mica
+        };
     }
 
     public static bool ShouldDisableBackdrop(ApplicationSettings? settings = null)
-        => ShouldForceSoftwareRendering(settings);
+        => ShouldForceSoftwareRendering(settings) || settings?.Store.WindowBackdropStyle == WindowBackdropStyle.Off;
+
+    public static bool IsBackdropActive(ApplicationSettings? settings = null)
+    {
+        if (ShouldDisableBackdrop(settings))
+            return false;
+
+        var backdropType = GetPreferredBackgroundType(settings);
+        return backdropType != WindowBackdropType.None && WindowBackdrop.IsSupported(backdropType);
+    }
+
+    public static BackdropSurfaceOpacities GetBackdropSurfaceOpacities(ApplicationSettings? settings = null)
+        => GetBackdropSurfaceOpacities(settings?.Store.WindowBackdropStyle ?? WindowBackdropStyle.Windows,
+            IsBackdropActive(settings));
+
+    internal static BackdropSurfaceOpacities GetBackdropSurfaceOpacities(WindowBackdropStyle style, bool isBackdropActive)
+    {
+        if (!isBackdropActive)
+            return new(1.0, 1.0, 1.0);
+
+        // The native material belongs to shell chrome only. The page surface stays opaque
+        // so content remains stable while switching applications or window states.
+        return style == WindowBackdropStyle.macOS
+            ? new(0.08, 1.0, 1.0)
+            : new(0.18, 1.0, 1.0);
+    }
+
+    public static void ApplyBackdrop(Window window, WindowBackdropType backdropType, ApplicationSettings? settings = null)
+    {
+        if (ShouldDisableBackdrop(settings) || backdropType == WindowBackdropType.None)
+        {
+            WindowBackdrop.RemoveBackdrop(window);
+            return;
+        }
+
+        try
+        {
+            if (!WindowBackdrop.IsSupported(backdropType))
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Window backdrop type {backdropType} is not supported on this platform.");
+
+                ApplyOpaqueWindowFallback(window, settings);
+                return;
+            }
+
+            // DWM renders the backdrop behind the WPF client surface. The
+            // WPF-UI helper must first make both the Window and its HwndSource
+            // transparent; setting only DWMWA_SYSTEMBACKDROP_TYPE is hidden by
+            // the default opaque window background.
+            WindowBackdrop.RemoveBackground(window);
+
+            if (!WindowBackdrop.ApplyBackdrop(window, backdropType) && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to apply window backdrop type {backdropType}.");
+
+            if (window.IsLoaded)
+                WindowBackdrop.RemoveTitlebarBackground(window);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to apply window backdrop type {backdropType}.", ex);
+        }
+    }
 
     public static void ApplyOpaqueWindowFallback(Window window, ApplicationSettings? settings = null)
     {
-        if (ShouldForceSoftwareRendering(settings))
+        if (ShouldDisableBackdrop(settings) ||
+            !WindowBackdrop.IsSupported(GetPreferredBackgroundType(settings)))
         {
             window.SetResourceReference(Window.BackgroundProperty, "ApplicationBackgroundBrush");
             return;
         }
 
-        window.ClearValue(Window.BackgroundProperty);
+        // Keep the client surface transparent while Mica/Acrylic is active.
+        // ClearValue can restore an opaque FluentWindow style background and
+        // make a successfully applied DWM backdrop appear to do nothing.
+        WindowBackdrop.RemoveBackground(window);
     }
 
     public static void ApplyWindowRenderingCompatibility(Window window, HwndSource? hwndSource, ApplicationSettings? settings = null)

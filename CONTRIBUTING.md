@@ -79,6 +79,36 @@ Do not report many problems or request many features withing one issue. Make one
 
 Translation contributions are done using [Crowdin](https://crowdin.com/project/llt), so please request access to the project there if you want to contribute.
 
+**10.1 Culture naming convention (cross-platform rule)**
+
+Culture names in UDT must be written in the **BCP 47 / RFC 5646 canonical form** — the exact form produced by `CultureInfo.Name` under .NET's ICU globalization on all platforms:
+
+| Subtag | Rule | Example |
+|---|---|---|
+| Language | lowercase | `en` `pt` `zh` `uz` |
+| Script | TitleCase | `Hans` `Hant` `Latn` |
+| Region | UPPERCASE | `BR` `NL` `PT` `UZ` |
+
+The canonical culture set is the single source of truth in `LocalizationHelper.Languages` (WPF):
+
+`ar bg cs de el en es fr hu it ja lv nl-NL pl pt pt-BR ro ru sk tr uk uz-Latn-UZ vi zh-Hans zh-Hant`
+
+A culture name must be spelled **byte-for-byte identically** in every one of these places:
+
+1. Resource file names — `Resource.zh-Hans.resx` (never `zh-hans`)
+2. Generated satellite directories — `zh-Hans/*.resources.dll`
+3. `LocalizationHelper.Languages` and the installer's `AppLanguages`
+4. The persisted `lang` file
+5. `catalog.json` `culture` fields and pack URLs
+6. `crowdin.yml` locale mappings
+7. Packaging / CI / smoke scripts, and culture lists in tests
+
+Inputs stay lenient: `ResolveSupportedLanguage` and `LanguagePackManager` accept legacy or external variants case-insensitively (e.g. an old `lang` file containing `zh-hans`), but everything UDT *writes* — the `lang` file, catalogs, pack assets, new resource files — must use the canonical form. Forbidden spellings: all-lowercase (`zh-hans`), mixed casing (`zh-Hans` vs `zh-hans`), underscores (`zh_hans`), and non-canonical regions (`zh-cn`).
+
+Why: satellite probing uses `culture.Name` with a case-sensitive directory lookup on Linux/macOS. Canonical file names are the only spellings that resolve there; on Windows they work too (case-insensitive file system).
+
+Enforced by `Scripts/Assert-CultureNaming.ps1` in CI.
+
 **11. Pull requests**
 
 Pull requests are welcome (of course). Unless you create a very simple and understandable PR, make an issue first and describe the problem you are solving. It doesn't make sense to spend time working on an idea that will be rejected, because it doesn't fit the project vision. Follow the code style and architecture of the project.

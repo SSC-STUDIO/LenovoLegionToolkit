@@ -106,6 +106,7 @@ public partial class AboutPageViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
     public void OpenProjectWebsite()
     {
         Process.Start(new ProcessStartInfo
@@ -115,6 +116,7 @@ public partial class AboutPageViewModel : ObservableObject
         });
     }
 
+    [RelayCommand]
     public void OpenLatestRelease()
     {
         Process.Start(new ProcessStartInfo
@@ -124,6 +126,7 @@ public partial class AboutPageViewModel : ObservableObject
         });
     }
 
+    [RelayCommand]
     public void OpenAppDataFolder()
     {
         try
@@ -144,6 +147,7 @@ public partial class AboutPageViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
     public void OpenTempFolder()
     {
         try

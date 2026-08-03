@@ -3,8 +3,6 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <RootNamespace>PresetUiValidation</RootNamespace>
     <EnableUdtTestHooks>true</EnableUdtTestHooks>

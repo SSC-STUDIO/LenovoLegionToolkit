@@ -137,20 +137,32 @@ internal static class NvApiInterop
     // Native struct layouts (must match NVAPI binary ABI exactly)
     // -----------------------------------------------------------------------
 
-    // NvDynamicPstateInfo: version 0x10000 + 8 utilization domains (NVAPI_MAX_GPU_UTILIZATIONS=8)
+    // NvDynamicPstateInfo: version 0x10000 + utilization[NVAPI_MAX_GPU_UTILIZATIONS=8].
+    // Each utilization entry is a (bIsPresent, percentage) PAIR — the percentage ([0-100]) is the
+    // busy time for that domain. The previous layout declared 8 consecutive percentage fields,
+    // which read each domain's bIsPresent flag (0/1) instead of its real utilization, and had the
+    // wrong struct size (40 bytes instead of 72), so NVAPI either erred or returned garbage.
     [StructLayout(LayoutKind.Sequential)]
     private struct NvDynamicPstateInfoNative
     {
         public uint Version;
         public uint Flags;
-        public uint GpuUtilization;     // domain 0: GPU
-        public uint FbUtilization;      // domain 1: FrameBuffer
-        public uint VidUtilization;     // domain 2: Video Engine
-        public uint BusUtilization;     // domain 3: Bus
-        public uint Reserved1;          // domain 4
-        public uint Reserved2;          // domain 5
-        public uint Reserved3;          // domain 6: VidEnc
-        public uint Reserved4;          // domain 7: Lea
+        public uint GpuPresent;         // domain 0: GPU — bIsPresent
+        public uint GpuUtilization;     // domain 0: GPU — percentage
+        public uint FbPresent;          // domain 1: FrameBuffer — bIsPresent
+        public uint FbUtilization;      // domain 1: FrameBuffer — percentage
+        public uint VidPresent;         // domain 2: Video Engine — bIsPresent
+        public uint VidUtilization;     // domain 2: Video Engine — percentage
+        public uint BusPresent;         // domain 3: Bus — bIsPresent
+        public uint BusUtilization;     // domain 3: Bus — percentage
+        public uint Reserved4Present;   // domain 4
+        public uint Reserved4;
+        public uint Reserved5Present;   // domain 5
+        public uint Reserved5;
+        public uint Reserved6Present;   // domain 6
+        public uint Reserved6;
+        public uint Reserved7Present;   // domain 7
+        public uint Reserved7;
     }
 
     // NvClockFrequencies: version 0x30000 + uint clockType + 32 clock entries
@@ -454,10 +466,10 @@ internal static class NvApiInterop
         {
             Version = native.Version,
             Flags = native.Flags,
-            GpuUtilization = native.GpuUtilization,
-            FbUtilization = native.FbUtilization,
-            VidUtilization = native.VidUtilization,
-            BusUtilization = native.BusUtilization,
+            GpuUtilization = native.GpuPresent != 0 ? native.GpuUtilization : 0,
+            FbUtilization = native.FbPresent != 0 ? native.FbUtilization : 0,
+            VidUtilization = native.VidPresent != 0 ? native.VidUtilization : 0,
+            BusUtilization = native.BusPresent != 0 ? native.BusUtilization : 0,
         };
     }
 
@@ -563,14 +575,14 @@ internal static class NvApiInterop
         }
     }
 
-    public static int GetClientPowerInMilliwatts(NvPhysicalGpuHandle gpu)
+    public static int GetClientPowerInWatts(NvPhysicalGpuHandle gpu)
     {
         var fn = GetFunction<ClientPowerPoliciesGetStatusDelegate>(Ids.GPU_ClientPowerPoliciesGetStatus);
         var native = new NvClientPowerPoliciesStatusNative
         {
             Version = NvApiVersion.Make<NvClientPowerPoliciesStatusNative>(1),
         };
-        CheckStatus(fn(gpu.Value, ref native), nameof(GetClientPowerInMilliwatts));
+        CheckStatus(fn(gpu.Value, ref native), nameof(GetClientPowerInWatts));
         return (int)(native.PowerInMilliwatts / 1000);
     }
 
@@ -622,7 +634,10 @@ internal static class NvApiInterop
 
         int offset = 0;
         // Skip pstate info entries (3 uints each: stateId + numClocks + flags)
-        offset += (int)native.NumPstates * 3;
+        var numPstates = (int)native.NumPstates;
+        if (numPstates < 0 || numPstates > 16)
+            numPstates = 0;
+        offset += numPstates * 3;
 
         // Read clock entries
         for (int i = 0; i < native.NumClocks && offset + 2 < 64; i++)

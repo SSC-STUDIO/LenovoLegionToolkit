@@ -147,7 +147,6 @@ public class AlienwarePowerModeFeatureTests
 
         // USTT write fails (return -1 only for 0xA3), legacy succeeds.
         wmi.SeedDescription(0x02 | (0x01 << 8) | (0x00 << 16) | (0x04 << 24));
-        var calls = 0;
         var wrapped = new LegacyFallbackWmi(wmi);
         var legacyFeature = new AlienwarePowerModeFeature(wrapped);
 

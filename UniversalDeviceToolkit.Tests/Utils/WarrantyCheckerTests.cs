@@ -15,6 +15,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Utils;
 
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.Settings)]
 public class WarrantyCheckerTests : IDisposable
 {
     private readonly ApplicationSettings _settings;

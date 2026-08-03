@@ -64,7 +64,7 @@ public class AlienwareSensorsController(GPUController gpuController, IAlienwareW
                 Log.Instance.Trace($"Alienware WMI read failed; using fallback. [resource=0x{resourceId:X2}]", ex);
         }
 
-        return fallback.GetAwaiter().GetResult();
+        return AwaitWithTimeout(fallback);
     }
 
     private static async Task<bool> IsDellMachineAsync()

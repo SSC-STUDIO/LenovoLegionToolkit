@@ -8,6 +8,7 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Security)]
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class PluginPackageIntegrityTests
 {
     [Fact]

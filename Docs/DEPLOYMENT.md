@@ -160,10 +160,10 @@ Copy-Item Build/readme-screenshots-en/*main-shell-home*.png Assets/Screenshot_ma
 
 # Simplified Chinese main shell (sandbox lang + WindowSize 1300×850)
 dotnet exec $smoke --repo-root . --app-dir $appDir --scenario dashboard --theme dark `
-  --lang zh-hans --screenshots always --screenshot-dir Build/readme-screenshots-zh --disable-animations
+  --lang zh-Hans --screenshots always --screenshot-dir Build/readme-screenshots-zh --disable-animations
 Copy-Item Build/readme-screenshots-zh/*main-shell-home*.png Assets/Screenshot_zh-hans.png -Force
 
-# Alternate: VisualRegression.Smoke --readme-screenshots --lang zh-hans
+# Alternate: VisualRegression.Smoke --readme-screenshots --lang zh-Hans
 # (expects bin/Release/.../win-x64; create a junction from bin/x64/Release if needed).
 ```
 
@@ -517,7 +517,7 @@ dotnet build --configuration Release
 
 ### Build Security
 
-- Signed assemblies (code signing certificate)
+- Release payloads and installers are signed by the Azure Trusted Signing step in `Release.yml`; the workflow verifies every executable and DLL with `Get-AuthenticodeSignature` before publishing. Local builds are not represented as signed releases.
 - NuGet package verification
 - Dependency vulnerability scanning (Dependabot)
 

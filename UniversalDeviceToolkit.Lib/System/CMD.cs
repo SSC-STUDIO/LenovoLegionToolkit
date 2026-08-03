@@ -367,43 +367,4 @@ public static class CMD
 
         return false;
     }
-
-    /// <summary>
-    /// Sanitizes input by removing or escaping dangerous characters.
-    /// </summary>
-    public static string SanitizeInput(string input)
-    {
-        if (string.IsNullOrEmpty(input))
-            return input;
-
-        var sanitized = input;
-        
-        foreach (var pattern in DangerousPatterns)
-        {
-            sanitized = sanitized.Replace(pattern, string.Empty, StringComparison.Ordinal);
-        }
-
-        return sanitized;
-    }
-
-    /// <summary>
-    /// Validates that a command is safe to execute.
-    /// This is a high-level validation that checks file and arguments together.
-    /// </summary>
-    public static bool IsSafeCommand(string file, string? arguments)
-    {
-        if (!IsValidFileName(file))
-            return false;
-
-        if (arguments != null && ContainsDangerousInput(arguments))
-            return false;
-
-        if (IsPowerShellExecutable(file) && arguments != null)
-        {
-            if (ContainsPowerShellDangerousPatterns(arguments))
-                return false;
-        }
-
-        return true;
-    }
 }

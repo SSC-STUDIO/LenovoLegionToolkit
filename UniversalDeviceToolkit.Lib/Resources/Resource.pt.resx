@@ -929,4 +929,5 @@
   <data name="NetworkAcceleration_Status_Stopped" xml:space="preserve">
     <value>Parado ({0})</value>
   </data>
+  <data name="WindowBackdropStyle_Off" xml:space="preserve"><value>Off</value></data>
 </root>

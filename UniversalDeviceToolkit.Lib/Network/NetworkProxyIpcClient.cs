@@ -35,6 +35,12 @@ public sealed class NetworkProxyIpcClient
     public Task<NetworkProxyIpcResult> StatusAsync(CancellationToken cancellationToken = default) =>
         SendAsync("status", payload: null, cancellationToken);
 
+    public Task<NetworkProxyIpcResult> ConnectionsAsync(CancellationToken cancellationToken = default) =>
+        SendAsync("connections", payload: null, cancellationToken);
+
+    public Task<NetworkProxyIpcResult> DestinationsAsync(CancellationToken cancellationToken = default) =>
+        SendAsync("destinations", payload: null, cancellationToken);
+
     public Task<NetworkProxyIpcResult> StartAsync(CancellationToken cancellationToken = default) =>
         SendAsync("start", payload: null, cancellationToken);
 

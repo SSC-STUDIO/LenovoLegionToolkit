@@ -14,6 +14,15 @@ public static partial class SystemTheme
     private const string DWM_REGISTRY_PATH = @"Software\Microsoft\Windows\DWM";
     private const string DWM_COLORIZATION_COLOR_REGISTRY_KEY = "ColorizationColor";
 
+    private const string ACCENT_REGISTRY_PATH = @"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent";
+    private const string ACCENT_COLOR_MENU_REGISTRY_KEY = "AccentColorMenu";
+    private const string PERSONALIZE_COLOR_PREVALENCE_REGISTRY_KEY = "ColorPrevalence";
+
+    private const uint HWND_BROADCAST = 0xFFFF;
+    private const uint WM_SETTINGCHANGE = 0x001A;
+    private const uint WM_THEMECHANGED = 0x0031;
+    private const uint SMTO_ABORTIFHUNG = 0x0002;
+
     public static bool IsDarkMode()
     {
         var registryValue = Registry.GetValue(REGISTRY_HIVE, PERSONALIZE_REGISTRY_PATH, APPS_USE_LIGHT_THEME_REGISTRY_KEY, -1);
@@ -56,6 +65,49 @@ public static partial class SystemTheme
         return new(r, g, b);
     }
 
+    /// <summary>
+    /// Writes the selected accent to the current user's Windows accent settings and notifies
+    /// the shell. This is intentionally an explicit operation; callers should not invoke it
+    /// during startup or while reacting to registry listeners.
+    /// </summary>
+    public static void SetAccentColor(RGBColor color)
+    {
+        var argb = unchecked((int)0xFF000000 |
+                             (color.R << 16) |
+                             (color.G << 8) |
+                             color.B);
+
+        Registry.SetValue(REGISTRY_HIVE, ACCENT_REGISTRY_PATH, ACCENT_COLOR_MENU_REGISTRY_KEY, argb,
+            valueKind: Microsoft.Win32.RegistryValueKind.DWord);
+        Registry.SetValue(REGISTRY_HIVE, DWM_REGISTRY_PATH, DWM_COLORIZATION_COLOR_REGISTRY_KEY, argb,
+            valueKind: Microsoft.Win32.RegistryValueKind.DWord);
+        Registry.SetValue(REGISTRY_HIVE, PERSONALIZE_REGISTRY_PATH, PERSONALIZE_COLOR_PREVALENCE_REGISTRY_KEY, 1,
+            valueKind: Microsoft.Win32.RegistryValueKind.DWord);
+
+        BroadcastSettingChange("ImmersiveColorSet");
+        BroadcastSettingChange(DWM_REGISTRY_PATH);
+        _ = SendMessageTimeout(
+            new IntPtr(unchecked((int)HWND_BROADCAST)),
+            WM_THEMECHANGED,
+            UIntPtr.Zero,
+            null,
+            SMTO_ABORTIFHUNG,
+            5000,
+            out _);
+    }
+
+    private static void BroadcastSettingChange(string settingName)
+    {
+        _ = SendMessageTimeout(
+            new IntPtr(unchecked((int)HWND_BROADCAST)),
+            WM_SETTINGCHANGE,
+            UIntPtr.Zero,
+            settingName,
+            SMTO_ABORTIFHUNG,
+            5000,
+            out _);
+    }
+
     internal static IDisposable GetDarkModeListener(Action callback)
     {
         return Registry.ObserveValue(REGISTRY_HIVE, PERSONALIZE_REGISTRY_PATH, APPS_USE_LIGHT_THEME_REGISTRY_KEY, callback);
@@ -78,6 +130,16 @@ public static partial class SystemTheme
 
     [LibraryImport("uxtheme.dll", EntryPoint = "#98A")]
     private static partial uint GetImmersiveUserColorSetPreference([MarshalAs(UnmanagedType.Bool)] bool forceCheckRegistry, [MarshalAs(UnmanagedType.Bool)] bool skipCheckOnFail);
+
+    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern IntPtr SendMessageTimeout(
+        IntPtr hWnd,
+        uint msg,
+        UIntPtr wParam,
+        string? lParam,
+        uint fuFlags,
+        uint uTimeout,
+        out UIntPtr lpdwResult);
 
     // ReSharper restore StringLiteralTypo
 

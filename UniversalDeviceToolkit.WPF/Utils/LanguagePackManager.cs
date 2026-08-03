@@ -63,12 +63,6 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         }
     }
 
-    public Task RepairAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default) =>
-        InstallAsync(cultureInfo, progress, token);
-
-    public Task UpdateAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default) =>
-        InstallAsync(cultureInfo, progress, token);
-
     public async Task InstallAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default)
     {
         if (IsEnglish(cultureInfo))
@@ -245,11 +239,8 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         }
     }
 
-    public static string GetLanguagePackAssetName(string version, CultureInfo cultureInfo) =>
-        $"{AssetPrefix}_v{version}_lang_{NormalizeAssetCultureName(cultureInfo)}.zip";
-
     public static string NormalizeAssetCultureName(CultureInfo cultureInfo) =>
-        cultureInfo.Name.ToLowerInvariant();
+        cultureInfo.Name;
 
     private static string GetCurrentVersion()
     {

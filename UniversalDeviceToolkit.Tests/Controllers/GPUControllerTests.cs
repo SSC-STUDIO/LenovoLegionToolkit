@@ -151,12 +151,10 @@ public class GPUControllerTests : UnitTestBase
 
     #region Extended Edge Case Tests
 
-    [Theory]
-    [MemberData(nameof(DeviceProfiles))]
-    [Trait("Category", "ParameterizedHardware")]
-    public async Task StopAsync_WithWaitForFinish_ShouldComplete(DeviceProfile profile)
+    [Fact]
+    public async Task StopAsync_WithWaitForFinish_ShouldComplete()
     {
-        // Re-initialize with profile-aware mocks for parameterized coverage
+        // Re-initialize to ensure the test owns the controller lifecycle.
         _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Loose);
         _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
         _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object, new DefaultDelayProvider());
@@ -170,12 +168,10 @@ public class GPUControllerTests : UnitTestBase
         _controller.IsStarted.Should().BeFalse();
     }
 
-    [Theory]
-    [MemberData(nameof(DeviceProfiles))]
-    [Trait("Category", "ParameterizedHardware")]
-    public async Task RefreshNowAsync_WhenNotStarted_ShouldReturnUnknownAndNotCrash(DeviceProfile profile)
+    [Fact]
+    public async Task RefreshNowAsync_WhenNotStarted_ShouldReturnUnknownAndNotCrash()
     {
-        // Re-initialize with profile-aware mocks for parameterized coverage
+        // Re-initialize to ensure the test owns the controller lifecycle.
         _processManagerMock = new Mock<IGPUProcessManager>(MockBehavior.Loose);
         _hardwareManagerMock = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
         _controller = new GPUController(_processManagerMock.Object, _hardwareManagerMock.Object, new DefaultDelayProvider());
@@ -186,8 +182,6 @@ public class GPUControllerTests : UnitTestBase
         await act.Should().NotThrowAsync();
         result.Should().NotBeNull();
     }
-
-    public static IEnumerable<object[]> DeviceProfiles => Infrastructure.DeviceProfiles.All();
 
     [Fact]
     public async Task RestartGPUAsync_WhenStateIsNotActiveOrInactive_ShouldNotCallHardwareManager()

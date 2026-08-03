@@ -4,7 +4,7 @@
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
         <TextBlock Text="Appearance"
                    FontSize="{StaticResource FontSizeDisplaySection}"
-                   FontWeight="SemiBold"
+                   FontWeight="Medium"
                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
         <TextBlock Text="Customize the look and feel of the application."
@@ -12,26 +12,222 @@
                    TextWrapping="Wrap"
                    Margin="0,0,0,8"/>
 
-        <!-- Theme Selection -->
+        <!-- Unified theme & accent configuration (mirrors the WPF Appearance area) -->
         <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 CornerRadius="{StaticResource CornerRadiusCard}"
-                Padding="16">
-            <StackPanel Spacing="8">
-                <TextBlock Text="Theme"
-                           FontSize="{StaticResource FontSizeSubsection}"
-                           FontWeight="SemiBold"
+                Padding="14,12">
+            <StackPanel Spacing="10">
+                <!-- 1. Global interface color mode -->
+                <TextBlock Text="全局界面颜色模式"
+                           FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                <TextBlock Text="Choose between light and dark appearance."
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           FontSize="{StaticResource FontSizeSmallCaption}"/>
-                <ComboBox x:Name="ThemeComboBox" MinWidth="160" HorizontalAlignment="Left"
-                          Margin="0,8,0,0" SelectionChanged="ThemeComboBox_SelectionChanged">
-                    <ComboBoxItem Content="System Default" Tag="Default" />
-                    <ComboBoxItem Content="Light" Tag="Light" />
-                    <ComboBoxItem Content="Dark" Tag="Dark" />
-                </ComboBox>
+
+                <!-- 2. Three mode preview cards: 120x84 macOS window previews
+                     (title bar + traffic lights / content / dock), selected = accent border. -->
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button x:Name="ThemeLightCard" Tag="Light" Click="ThemeCard_Click"
+                            Padding="0" Background="Transparent" BorderThickness="0">
+                        <StackPanel Spacing="6">
+                            <Border x:Name="ThemeLightPreview" Width="120" Height="84" CornerRadius="6"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                    Background="#FFF6F6F6">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="16"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="14"/>
+                                    </Grid.RowDefinitions>
+                                    <!-- Title bar with macOS traffic lights -->
+                                    <Border Grid.Row="0" Background="#FFE8E8E8">
+                                        <StackPanel Margin="5,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="3">
+                                            <Ellipse Width="6" Height="6" Fill="#FFFF5F57"/>
+                                            <Ellipse Width="6" Height="6" Fill="#FFFEBC2E"/>
+                                            <Ellipse Width="6" Height="6" Fill="#FF28C840"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Content area: sidebar + search bar + content lines -->
+                                    <Grid Grid.Row="1" Background="#FFFFFFFF" Margin="7,6,7,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="16"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,2,0,0" VerticalAlignment="Top" Spacing="4">
+                                            <Border Height="5" Width="10" Background="#FFECECEC" CornerRadius="2" HorizontalAlignment="Left"/>
+                                            <Border Height="5" Width="10" Background="#FFF1F1F1" CornerRadius="2" HorizontalAlignment="Left"/>
+                                            <Border Height="5" Width="10" Background="#FFF1F1F1" CornerRadius="2" HorizontalAlignment="Left"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Spacing="4">
+                                            <Border Height="9" Background="#FFF0F0F0" CornerRadius="3"/>
+                                            <Border Height="4" Background="#FFEDEDED" CornerRadius="2" Margin="0,0,18,0"/>
+                                            <Border Height="4" Background="#FFF2F2F2" CornerRadius="2" Margin="0,0,30,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <!-- Dock -->
+                                    <Border Grid.Row="2" Background="#FFE0E0E0">
+                                        <StackPanel Margin="6,2,0,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="4">
+                                            <Border Width="10" Height="10" Background="#FFC9C9C9" CornerRadius="2.5"/>
+                                            <Border Width="10" Height="10" Background="#FFC9C9C9" CornerRadius="2.5"/>
+                                            <Border Width="10" Height="10" Background="#FFC9C9C9" CornerRadius="2.5"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <TextBlock Text="亮色" FontWeight="Medium" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ThemeDarkCard" Tag="Dark" Click="ThemeCard_Click"
+                            Padding="0" Background="Transparent" BorderThickness="0">
+                        <StackPanel Spacing="6">
+                            <Border x:Name="ThemeDarkPreview" Width="120" Height="84" CornerRadius="6"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                    Background="#FF202020">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="16"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="14"/>
+                                    </Grid.RowDefinitions>
+                                    <!-- Title bar with macOS traffic lights -->
+                                    <Border Grid.Row="0" Background="#FF2C2C2C">
+                                        <StackPanel Margin="5,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="3">
+                                            <Ellipse Width="6" Height="6" Fill="#FFFF5F57"/>
+                                            <Ellipse Width="6" Height="6" Fill="#FFFEBC2E"/>
+                                            <Ellipse Width="6" Height="6" Fill="#FF28C840"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Content area: sidebar + search bar + content lines -->
+                                    <Grid Grid.Row="1" Background="#FF262626" Margin="7,6,7,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="16"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,2,0,0" VerticalAlignment="Top" Spacing="4">
+                                            <Border Height="5" Width="10" Background="#FF333333" CornerRadius="2" HorizontalAlignment="Left"/>
+                                            <Border Height="5" Width="10" Background="#FF383838" CornerRadius="2" HorizontalAlignment="Left"/>
+                                            <Border Height="5" Width="10" Background="#FF383838" CornerRadius="2" HorizontalAlignment="Left"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Spacing="4">
+                                            <Border Height="9" Background="#FF333333" CornerRadius="3"/>
+                                            <Border Height="4" Background="#FF2F2F2F" CornerRadius="2" Margin="0,0,18,0"/>
+                                            <Border Height="4" Background="#FF3A3A3A" CornerRadius="2" Margin="0,0,30,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <!-- Dock -->
+                                    <Border Grid.Row="2" Background="#FF343434">
+                                        <StackPanel Margin="6,2,0,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="4">
+                                            <Border Width="10" Height="10" Background="#FF4A4A4A" CornerRadius="2.5"/>
+                                            <Border Width="10" Height="10" Background="#FF4A4A4A" CornerRadius="2.5"/>
+                                            <Border Width="10" Height="10" Background="#FF4A4A4A" CornerRadius="2.5"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <TextBlock Text="暗色" FontWeight="Medium" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ThemeSystemCard" Tag="System" Click="ThemeCard_Click"
+                            Padding="0" Background="Transparent" BorderThickness="0">
+                        <StackPanel Spacing="6">
+                            <Border x:Name="ThemeSystemPreview" Width="120" Height="84" CornerRadius="6"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                                <Border.Background>
+                                    <!-- Split light/dark preview: left half light, right half dark. -->
+                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                        <GradientStop Offset="0" Color="#FFF6F6F6"/>
+                                        <GradientStop Offset="0.5" Color="#FFF6F6F6"/>
+                                        <GradientStop Offset="0.5" Color="#FF202020"/>
+                                        <GradientStop Offset="1" Color="#FF202020"/>
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="16"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="14"/>
+                                    </Grid.RowDefinitions>
+                                    <!-- Title bar with macOS traffic lights (neutral overlay on the split) -->
+                                    <Border Grid.Row="0" Background="#40000000">
+                                        <StackPanel Margin="5,0,0,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="3">
+                                            <Ellipse Width="6" Height="6" Fill="#FFFF5F57"/>
+                                            <Ellipse Width="6" Height="6" Fill="#FFFEBC2E"/>
+                                            <Ellipse Width="6" Height="6" Fill="#FF28C840"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Content area: sidebar + search bar + content lines (neutral overlay on the split) -->
+                                    <Grid Grid.Row="1" Margin="7,6,7,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="16"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,2,0,0" VerticalAlignment="Top" Spacing="4">
+                                            <Border Height="5" Width="10" Background="#2A000000" CornerRadius="2" HorizontalAlignment="Left"/>
+                                            <Border Height="5" Width="10" Background="#22000000" CornerRadius="2" HorizontalAlignment="Left"/>
+                                            <Border Height="5" Width="10" Background="#22000000" CornerRadius="2" HorizontalAlignment="Left"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top" Spacing="4">
+                                            <Border Height="9" Background="#2A000000" CornerRadius="3"/>
+                                            <Border Height="4" Background="#22000000" CornerRadius="2" Margin="0,0,18,0"/>
+                                            <Border Height="4" Background="#1E000000" CornerRadius="2" Margin="0,0,30,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <!-- Dock -->
+                                    <Border Grid.Row="2" Background="#40000000">
+                                        <StackPanel Margin="6,2,0,0" VerticalAlignment="Center" Orientation="Horizontal" Spacing="4">
+                                            <Border Width="10" Height="10" Background="#55000000" CornerRadius="2.5"/>
+                                            <Border Width="10" Height="10" Background="#55000000" CornerRadius="2.5"/>
+                                            <Border Width="10" Height="10" Background="#55000000" CornerRadius="2.5"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <TextBlock Text="跟随系统" FontWeight="Medium" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <!-- 3. Apply accent color to the whole theme -->
+                <CheckBox x:Name="ApplyAccentColorToThemeCheckBox"
+                          FontWeight="Medium"
+                          Content="调整全局界面颜色时修改系统颜色"
+                          IsCheckedChanged="ApplyAccentColorToThemeCheckBox_IsCheckedChanged"/>
+
+                <!-- 4. Separator -->
+                <Border Height="1" Margin="0,4"
+                        Background="{DynamicResource CardStrokeColorDefaultBrush}"/>
+
+                <!-- 5. Global interface accent color -->
+                <TextBlock Text="全局界面强调色"
+                           FontWeight="Medium"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+
+                <!-- 6. Accent color swatches -->
+                <ItemsControl x:Name="AccentSwatches">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <!-- BorderBrush/BorderThickness bind to the precomputed selection visuals
+                                 (selected = 2.5px accent border), so the current accent stays highlighted. -->
+                            <Button Width="36" Height="36" Margin="0,0,8,8"
+                                    Padding="2" CornerRadius="18"
+                                    Background="Transparent"
+                                    BorderBrush="{Binding SelectionBorderBrush}"
+                                    BorderThickness="{Binding SelectionBorderThickness}"
+                                    Tag="{Binding}"
+                                    Click="AccentColorSwatch_Click">
+                                <Border Width="32" Height="32" CornerRadius="16" Background="{Binding Brush}"/>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </StackPanel>
         </Border>
 
@@ -44,7 +240,7 @@
             <StackPanel Spacing="8">
                 <TextBlock Text="Language"
                            FontSize="{StaticResource FontSizeSubsection}"
-                           FontWeight="SemiBold"
+                           FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                 <TextBlock Text="Select the display language for the application."
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"

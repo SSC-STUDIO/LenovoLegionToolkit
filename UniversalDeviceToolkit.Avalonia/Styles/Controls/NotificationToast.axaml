@@ -14,7 +14,7 @@
 
     <!-- Toast title and message -->
     <Style Selector="Border.notificationToast > StackPanel > TextBlock.toastTitle">
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
     </Style>
     <Style Selector="Border.notificationToast > StackPanel > TextBlock.toastMessage">

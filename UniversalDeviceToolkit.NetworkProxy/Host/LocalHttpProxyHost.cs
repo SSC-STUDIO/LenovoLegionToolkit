@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
@@ -14,7 +15,7 @@ namespace UniversalDeviceToolkit.NetworkProxy.Host;
 /// CONNECT/HTTP to hosts outside the domain allowlist return 403.
 /// Empty allowlist denies all destinations (fail closed until rules are pushed).
 /// </summary>
-public sealed class LocalHttpProxyHost : INetworkProxyHost
+public sealed class LocalHttpProxyHost : INetworkProxyHost, INetworkProxyTrafficSource
 {
     private const int HeaderBufferSize = 64 * 1024;
     private static readonly byte[] HeaderDelimiter = "\r\n\r\n"u8.ToArray();
@@ -35,6 +36,15 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
     private Task? _acceptLoopV6;
     private int _listenPort;
     private int _activeSessions;
+    private long _bytesUploaded;
+    private long _bytesDownloaded;
+    private long _totalConnections;
+    private long _nextConnectionId;
+    private readonly ConcurrentDictionary<long, ConnectionTelemetry> _activeConnectionTelemetry = new();
+    private readonly ConcurrentQueue<ConnectionTelemetry> _recentConnectionTelemetry = new();
+    private readonly ConcurrentDictionary<string, DestinationTelemetry> _destinationTelemetry = new(StringComparer.Ordinal);
+    private readonly ConcurrentDictionary<Task, byte> _sessionTasks = new();
+    private const int RecentConnectionLimit = 80;
     // Empty = deny all until SetDomainAllowlist receives rules (fail closed).
     private string[] _domainAllowlist = [];
 
@@ -44,6 +54,36 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
     }
 
     public bool IsRunning { get; private set; }
+
+    public long BytesUploaded => Interlocked.Read(ref _bytesUploaded);
+
+    public long BytesDownloaded => Interlocked.Read(ref _bytesDownloaded);
+
+    public int ActiveConnections => Math.Max(0, Volatile.Read(ref _activeSessions));
+
+    public long TotalConnections => Interlocked.Read(ref _totalConnections);
+
+    public IReadOnlyList<NetworkProxyConnectionSnapshot> GetConnectionSnapshots(int maxItems = 40)
+    {
+        var limit = Math.Clamp(maxItems, 1, RecentConnectionLimit);
+        return _activeConnectionTelemetry.Values
+            .Concat(_recentConnectionTelemetry)
+            .GroupBy(connection => connection.Id)
+            .Select(group => group.First().ToSnapshot())
+            .OrderByDescending(connection => connection.StartedAtUtc)
+            .Take(limit)
+            .ToArray();
+    }
+
+    public IReadOnlyList<NetworkProxyDestinationSnapshot> GetDestinationSnapshots(int maxItems = 40)
+    {
+        var limit = Math.Clamp(maxItems, 1, 200);
+        return _destinationTelemetry.Values
+            .Select(destination => destination.ToSnapshot())
+            .OrderByDescending(destination => destination.LastUpdatedAtUtc)
+            .Take(limit)
+            .ToArray();
+    }
 
     public int ListenPort
     {
@@ -179,6 +219,23 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
             }
         }
 
+        var sessions = _sessionTasks.Keys.ToArray();
+        if (sessions.Length > 0)
+        {
+            try
+            {
+                await Task.WhenAll(sessions).WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            }
+            catch (TimeoutException)
+            {
+                Debug.WriteLine("NetworkProxy: timed out waiting for client sessions to stop.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"NetworkProxy: client session stop: {ex.GetType().Name}");
+            }
+        }
+
         cts?.Dispose();
     }
 
@@ -190,7 +247,13 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
             try
             {
                 client = await listener.AcceptTcpClientAsync(cancellationToken).ConfigureAwait(false);
-                _ = HandleClientAsync(client, cancellationToken);
+                var session = HandleClientAsync(client, cancellationToken);
+                _sessionTasks[session] = 0;
+                _ = session.ContinueWith(
+                    completed => _sessionTasks.TryRemove(completed, out _),
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Default);
                 client = null;
             }
             catch (OperationCanceledException)
@@ -216,13 +279,16 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
     private async Task HandleClientAsync(TcpClient client, CancellationToken cancellationToken)
     {
         Interlocked.Increment(ref _activeSessions);
+        Interlocked.Increment(ref _totalConnections);
+        var telemetry = new ConnectionTelemetry(Interlocked.Increment(ref _nextConnectionId));
+        _activeConnectionTelemetry[telemetry.Id] = telemetry;
         try
         {
             using (client)
             {
                 client.NoDelay = true;
                 await using var clientStream = client.GetStream();
-                await ProcessSessionAsync(clientStream, cancellationToken).ConfigureAwait(false);
+                await ProcessSessionAsync(clientStream, telemetry, cancellationToken).ConfigureAwait(false);
             }
         }
         catch (OperationCanceledException)
@@ -231,19 +297,23 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         }
         catch (IOException ex)
         {
+            telemetry.Fail(ex.Message);
             Debug.WriteLine($"NetworkProxy: session IO: {ex.GetType().Name}: {ex.Message}");
         }
         catch (SocketException ex)
         {
+            telemetry.Fail(ex.Message);
             Debug.WriteLine($"NetworkProxy: session socket: {ex.SocketErrorCode}");
         }
         catch (Exception ex)
         {
             // Per-connection failures must not tear down the host.
+            telemetry.Fail(ex.Message);
             Debug.WriteLine($"NetworkProxy: session error: {ex.GetType().Name}: {ex.Message}");
         }
         finally
         {
+            CompleteTelemetry(telemetry, cancellationToken.IsCancellationRequested ? "stopped" : "completed");
             Interlocked.Decrement(ref _activeSessions);
         }
     }
@@ -257,7 +327,10 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         return DomainMatcher.IsAllowed(host, allowlist);
     }
 
-    private async Task ProcessSessionAsync(NetworkStream clientStream, CancellationToken cancellationToken)
+    private async Task ProcessSessionAsync(
+        NetworkStream clientStream,
+        ConnectionTelemetry telemetry,
+        CancellationToken cancellationToken)
     {
         var buffer = ArrayPool<byte>.Shared.Rent(HeaderBufferSize);
         try
@@ -269,13 +342,14 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
 
             if (!TryParseRequest(buffer.AsSpan(0, headerLength), out var method, out var target, out var hostHeader))
             {
+                telemetry.Fail("Invalid proxy request");
                 await clientStream.WriteAsync(BadRequest, cancellationToken).ConfigureAwait(false);
                 return;
             }
 
             if (string.Equals(method, "CONNECT", StringComparison.OrdinalIgnoreCase))
             {
-                await HandleConnectAsync(clientStream, target, cancellationToken).ConfigureAwait(false);
+                await HandleConnectAsync(clientStream, target, telemetry, cancellationToken).ConfigureAwait(false);
                 return;
             }
 
@@ -283,7 +357,7 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
                 ? buffer.AsMemory(headerLength, totalRead - headerLength)
                 : ReadOnlyMemory<byte>.Empty;
 
-            await HandleHttpAsync(clientStream, buffer.AsMemory(0, headerLength), prelude, method, target, hostHeader, cancellationToken)
+            await HandleHttpAsync(clientStream, buffer.AsMemory(0, headerLength), prelude, method, target, hostHeader, telemetry, cancellationToken)
                 .ConfigureAwait(false);
         }
         finally
@@ -292,41 +366,63 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         }
     }
 
-    private async Task HandleConnectAsync(NetworkStream clientStream, string target, CancellationToken cancellationToken)
+    private async Task HandleConnectAsync(
+        NetworkStream clientStream,
+        string target,
+        ConnectionTelemetry telemetry,
+        CancellationToken cancellationToken)
     {
         if (!TrySplitHostPort(target, defaultPort: 443, out var host, out var port))
         {
+            telemetry.Fail("Invalid CONNECT target");
             await clientStream.WriteAsync(BadRequest, cancellationToken).ConfigureAwait(false);
             return;
         }
 
+        telemetry.BindDestination(host, port, "CONNECT", GetOrCreateDestination(host, port));
+
         if (!IsHostAllowed(host))
         {
+            telemetry.SetState("blocked", "Blocked by domain allowlist");
             Debug.WriteLine($"NetworkProxy: CONNECT denied host '{host}' (allowlist)");
             await clientStream.WriteAsync(Forbidden, cancellationToken).ConfigureAwait(false);
             return;
         }
 
         using var remote = new TcpClient();
+        var connectTimer = Stopwatch.StartNew();
         try
         {
             using var connectCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             connectCts.CancelAfter(TimeSpan.FromSeconds(15));
             await remote.ConnectAsync(host, port, connectCts.Token).ConfigureAwait(false);
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
         }
         catch (OperationCanceledException)
         {
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
+            telemetry.SetState(
+                cancellationToken.IsCancellationRequested ? "stopped" : "failed",
+                "Remote connection canceled");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
         }
         catch (SocketException ex)
         {
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
+            telemetry.Fail(ex.Message);
             Debug.WriteLine($"NetworkProxy: CONNECT {host}:{port} socket {ex.SocketErrorCode}");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
         }
         catch (IOException ex)
         {
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
+            telemetry.Fail(ex.Message);
             Debug.WriteLine($"NetworkProxy: CONNECT {host}:{port} IO {ex.Message}");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
@@ -335,7 +431,7 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         remote.NoDelay = true;
         await clientStream.WriteAsync(ConnectOk, cancellationToken).ConfigureAwait(false);
         await using var remoteStream = remote.GetStream();
-        await RelayBidirectionalAsync(clientStream, remoteStream, cancellationToken).ConfigureAwait(false);
+        await RelayBidirectionalAsync(clientStream, remoteStream, telemetry, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task HandleHttpAsync(
@@ -345,41 +441,60 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         string method,
         string target,
         string? hostHeader,
+        ConnectionTelemetry telemetry,
         CancellationToken cancellationToken)
     {
         if (!TryResolveOrigin(target, hostHeader, out var host, out var port, out var originForm))
         {
+            telemetry.Fail("Invalid HTTP target");
             await clientStream.WriteAsync(BadRequest, cancellationToken).ConfigureAwait(false);
             return;
         }
 
+        telemetry.BindDestination(host, port, "HTTP", GetOrCreateDestination(host, port));
+
         if (!IsHostAllowed(host))
         {
+            telemetry.SetState("blocked", "Blocked by domain allowlist");
             Debug.WriteLine($"NetworkProxy: HTTP denied host '{host}' (allowlist)");
             await clientStream.WriteAsync(Forbidden, cancellationToken).ConfigureAwait(false);
             return;
         }
 
         using var remote = new TcpClient();
+        var connectTimer = Stopwatch.StartNew();
         try
         {
             using var connectCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             connectCts.CancelAfter(TimeSpan.FromSeconds(15));
             await remote.ConnectAsync(host, port, connectCts.Token).ConfigureAwait(false);
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
         }
         catch (OperationCanceledException)
         {
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
+            telemetry.SetState(
+                cancellationToken.IsCancellationRequested ? "stopped" : "failed",
+                "Remote connection canceled");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
         }
         catch (SocketException ex)
         {
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
+            telemetry.Fail(ex.Message);
             Debug.WriteLine($"NetworkProxy: HTTP {host}:{port} socket {ex.SocketErrorCode}");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
         }
         catch (IOException ex)
         {
+            connectTimer.Stop();
+            telemetry.SetConnectLatency(connectTimer.ElapsedMilliseconds);
+            telemetry.Fail(ex.Message);
             Debug.WriteLine($"NetworkProxy: HTTP {host}:{port} IO {ex.Message}");
             await clientStream.WriteAsync(BadGateway, cancellationToken).ConfigureAwait(false);
             return;
@@ -390,10 +505,14 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
 
         var rewritten = RewriteRequestLine(headerBytes.Span, method, originForm);
         await remoteStream.WriteAsync(rewritten, cancellationToken).ConfigureAwait(false);
+        AddUploaded(telemetry, rewritten.Length);
         if (!bodyPrelude.IsEmpty)
+        {
             await remoteStream.WriteAsync(bodyPrelude, cancellationToken).ConfigureAwait(false);
+            AddUploaded(telemetry, bodyPrelude.Length);
+        }
 
-        await RelayBidirectionalAsync(clientStream, remoteStream, cancellationToken).ConfigureAwait(false);
+        await RelayBidirectionalAsync(clientStream, remoteStream, telemetry, cancellationToken).ConfigureAwait(false);
     }
 
     private static async Task<(int HeaderLength, int TotalRead)> ReadHeadersAsync(
@@ -535,14 +654,15 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         return Encoding.ASCII.GetBytes(rewritten);
     }
 
-    private static async Task RelayBidirectionalAsync(
+    private async Task RelayBidirectionalAsync(
         NetworkStream left,
         NetworkStream right,
+        ConnectionTelemetry telemetry,
         CancellationToken cancellationToken)
     {
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        var forward = CopyAsync(left, right, linked.Token);
-        var backward = CopyAsync(right, left, linked.Token);
+        var forward = CopyAsync(left, right, linked.Token, bytes => AddUploaded(telemetry, bytes));
+        var backward = CopyAsync(right, left, linked.Token, bytes => AddDownloaded(telemetry, bytes));
         var completed = await Task.WhenAny(forward, backward).ConfigureAwait(false);
         linked.Cancel();
         try { await Task.WhenAll(forward, backward).ConfigureAwait(false); }
@@ -552,7 +672,11 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
         _ = completed;
     }
 
-    private static async Task CopyAsync(NetworkStream source, NetworkStream destination, CancellationToken cancellationToken)
+    private static async Task CopyAsync(
+        NetworkStream source,
+        NetworkStream destination,
+        CancellationToken cancellationToken,
+        Action<int> onBytesForwarded)
     {
         var buffer = ArrayPool<byte>.Shared.Rent(16 * 1024);
         try
@@ -563,11 +687,275 @@ public sealed class LocalHttpProxyHost : INetworkProxyHost
                 if (read <= 0)
                     break;
                 await destination.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
+                onBytesForwarded(read);
             }
         }
         finally
         {
             ArrayPool<byte>.Shared.Return(buffer);
+        }
+    }
+
+    private DestinationTelemetry GetOrCreateDestination(string host, int port)
+    {
+        var normalizedHost = NormalizeDestinationHost(host);
+        var key = $"{normalizedHost}|{port}";
+        return _destinationTelemetry.GetOrAdd(
+            key,
+            _ => new DestinationTelemetry(normalizedHost, port));
+    }
+
+    private void AddUploaded(ConnectionTelemetry telemetry, int bytes)
+    {
+        Interlocked.Add(ref _bytesUploaded, bytes);
+        telemetry.AddUploaded(bytes);
+    }
+
+    private void AddDownloaded(ConnectionTelemetry telemetry, int bytes)
+    {
+        Interlocked.Add(ref _bytesDownloaded, bytes);
+        telemetry.AddDownloaded(bytes);
+    }
+
+    private void CompleteTelemetry(ConnectionTelemetry telemetry, string fallbackState)
+    {
+        if (!telemetry.TryComplete(fallbackState, out var destination, out var state))
+            return;
+
+        _activeConnectionTelemetry.TryRemove(telemetry.Id, out _);
+        destination?.Complete(state);
+        _recentConnectionTelemetry.Enqueue(telemetry);
+        while (_recentConnectionTelemetry.Count > RecentConnectionLimit &&
+               _recentConnectionTelemetry.TryDequeue(out _))
+        {
+        }
+    }
+
+    private static string NormalizeDestinationHost(string host) =>
+        host.Trim().TrimEnd('.').ToLowerInvariant();
+
+    private sealed class ConnectionTelemetry
+    {
+        private readonly object _gate = new();
+        private string _host = string.Empty;
+        private int _port;
+        private string _protocol = "Unknown";
+        private DateTime? _completedAtUtc;
+        private long _bytesUploaded;
+        private long _bytesDownloaded;
+        private long? _connectLatencyMs;
+        private string _state = "active";
+        private string? _error;
+        private DestinationTelemetry? _destination;
+        private bool _destinationBound;
+
+        public ConnectionTelemetry(long id)
+        {
+            Id = id;
+            StartedAtUtc = DateTime.UtcNow;
+        }
+
+        public long Id { get; }
+
+        public DateTime StartedAtUtc { get; }
+
+        public void BindDestination(
+            string host,
+            int port,
+            string protocol,
+            DestinationTelemetry destination)
+        {
+            lock (_gate)
+            {
+                if (_destinationBound)
+                    return;
+
+                _host = NormalizeDestinationHost(host);
+                _port = port;
+                _protocol = protocol;
+                _destination = destination;
+                _destinationBound = true;
+            }
+
+            destination.Begin();
+        }
+
+        public void SetConnectLatency(long latencyMs)
+        {
+            lock (_gate)
+                _connectLatencyMs = Math.Max(0, latencyMs);
+            _destination?.SetConnectLatency(latencyMs);
+        }
+
+        public void AddUploaded(int bytes)
+        {
+            if (bytes <= 0)
+                return;
+
+            lock (_gate)
+                _bytesUploaded += bytes;
+            _destination?.AddUploaded(bytes);
+        }
+
+        public void AddDownloaded(int bytes)
+        {
+            if (bytes <= 0)
+                return;
+
+            lock (_gate)
+                _bytesDownloaded += bytes;
+            _destination?.AddDownloaded(bytes);
+        }
+
+        public void Fail(string error)
+        {
+            SetState("failed", error);
+        }
+
+        public void SetState(string state, string? error = null)
+        {
+            lock (_gate)
+            {
+                if (_completedAtUtc is not null)
+                    return;
+
+                _state = string.IsNullOrWhiteSpace(state) ? "unknown" : state;
+                if (!string.IsNullOrWhiteSpace(error))
+                    _error = error.Length > 240 ? error[..240] : error;
+            }
+        }
+
+        public bool TryComplete(
+            string fallbackState,
+            out DestinationTelemetry? destination,
+            out string state)
+        {
+            lock (_gate)
+            {
+                if (_completedAtUtc is not null)
+                {
+                    destination = null;
+                    state = _state;
+                    return false;
+                }
+
+                if (_state == "active")
+                    _state = fallbackState;
+                _completedAtUtc = DateTime.UtcNow;
+                destination = _destination;
+                state = _state;
+                return true;
+            }
+        }
+
+        public NetworkProxyConnectionSnapshot ToSnapshot()
+        {
+            lock (_gate)
+            {
+                return new NetworkProxyConnectionSnapshot
+                {
+                    Id = Id,
+                    Host = _host,
+                    Port = _port,
+                    Protocol = _protocol,
+                    StartedAtUtc = StartedAtUtc,
+                    CompletedAtUtc = _completedAtUtc,
+                    BytesUploaded = _bytesUploaded,
+                    BytesDownloaded = _bytesDownloaded,
+                    ConnectLatencyMs = _connectLatencyMs,
+                    State = _state,
+                    Error = _error
+                };
+            }
+        }
+    }
+
+    private sealed class DestinationTelemetry
+    {
+        private readonly object _gate = new();
+        private int _activeConnections;
+        private long _totalConnections;
+        private long _bytesUploaded;
+        private long _bytesDownloaded;
+        private long? _lastConnectLatencyMs;
+        private string _lastState = "active";
+        private DateTime _lastUpdatedAtUtc = DateTime.UtcNow;
+
+        public DestinationTelemetry(string host, int port)
+        {
+            Host = host;
+            Port = port;
+        }
+
+        public string Host { get; }
+
+        public int Port { get; }
+
+        public void Begin()
+        {
+            lock (_gate)
+            {
+                _activeConnections++;
+                _totalConnections++;
+                _lastState = "active";
+                _lastUpdatedAtUtc = DateTime.UtcNow;
+            }
+        }
+
+        public void SetConnectLatency(long latencyMs)
+        {
+            lock (_gate)
+            {
+                _lastConnectLatencyMs = Math.Max(0, latencyMs);
+                _lastUpdatedAtUtc = DateTime.UtcNow;
+            }
+        }
+
+        public void AddUploaded(int bytes)
+        {
+            lock (_gate)
+            {
+                _bytesUploaded += bytes;
+                _lastUpdatedAtUtc = DateTime.UtcNow;
+            }
+        }
+
+        public void AddDownloaded(int bytes)
+        {
+            lock (_gate)
+            {
+                _bytesDownloaded += bytes;
+                _lastUpdatedAtUtc = DateTime.UtcNow;
+            }
+        }
+
+        public void Complete(string state)
+        {
+            lock (_gate)
+            {
+                _activeConnections = Math.Max(0, _activeConnections - 1);
+                _lastState = state;
+                _lastUpdatedAtUtc = DateTime.UtcNow;
+            }
+        }
+
+        public NetworkProxyDestinationSnapshot ToSnapshot()
+        {
+            lock (_gate)
+            {
+                return new NetworkProxyDestinationSnapshot
+                {
+                    Host = Host,
+                    Port = Port,
+                    ActiveConnections = _activeConnections,
+                    TotalConnections = _totalConnections,
+                    BytesUploaded = _bytesUploaded,
+                    BytesDownloaded = _bytesDownloaded,
+                    LastConnectLatencyMs = _lastConnectLatencyMs,
+                    LastState = _lastState,
+                    LastUpdatedAtUtc = _lastUpdatedAtUtc
+                };
+            }
         }
     }
 

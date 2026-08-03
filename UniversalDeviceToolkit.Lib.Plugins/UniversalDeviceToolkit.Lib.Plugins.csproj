@@ -5,8 +5,6 @@
          Dual-load still accepts LenovoLegionToolkit.Plugins.* filename prefixes for one release. -->
     <RootNamespace>UniversalDeviceToolkit.Lib.Plugins</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.Lib.Plugins</AssemblyName>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" />

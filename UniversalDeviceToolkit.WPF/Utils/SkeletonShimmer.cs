@@ -12,13 +12,6 @@ namespace UniversalDeviceToolkit.WPF.Utils;
 /// </summary>
 public static class SkeletonShimmer
 {
-    // Classic 4.x teal-slate overlay; composited over the resolved theme bone fill at runtime.
-    private static readonly Color DefaultShimmerStart = Color.FromArgb(0x26, 0x88, 0x91, 0xA0);
-    private static readonly Color DefaultShimmerPeak = Color.FromArgb(0x4A, 0x88, 0x91, 0xA0);
-    // Light cards need a brighter peak than the bone fill; cool-white keeps the 4.x teal-slate sweep readable.
-    private static readonly Color DefaultShimmerStartLight = Color.FromArgb(0x38, 0x88, 0xA8, 0xC0);
-    private static readonly Color DefaultShimmerPeakLight = Color.FromArgb(0x90, 0xF0, 0xF6, 0xFC);
-
     public static readonly DependencyProperty IsEnabledProperty =
         DependencyProperty.RegisterAttached(
             "IsEnabled",
@@ -142,30 +135,43 @@ public static class SkeletonShimmer
 
     internal static (Color Start, Color Peak) ResolveShimmerOverlayColors(FrameworkElement element)
     {
+        var baseColor = element is Border border
+            ? ResolveBaseColor(border)
+            : Color.FromRgb(0x80, 0x80, 0x80);
+        return ResolveShimmerOverlayColors(baseColor);
+    }
+
+    internal static (Color Start, Color Peak) ResolveShimmerOverlayColors(Color baseColor)
+    {
+        // Skeleton surfaces can be translucent and are not always tied to the app theme.
+        // Contrast against the resolved surface instead of assuming Light means pale and
+        // Dark means dark; this keeps custom accent and high-contrast surfaces readable too.
         var isLight = ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light;
-        var startKey = isLight ? "SkeletonShimmerStartColorLight" : "SkeletonShimmerStartColor";
-        var peakKey = isLight ? "SkeletonShimmerPeakColorLight" : "SkeletonShimmerPeakColor";
+        var luminance = (0.2126 * baseColor.R + 0.7152 * baseColor.G + 0.0722 * baseColor.B) / 255.0;
 
-        try
-        {
-            if (element.TryFindResource(startKey) is Color start && element.TryFindResource(peakKey) is Color peak)
-                return (start, peak);
-        }
-        catch (InvalidOperationException)
-        {
-        }
+        // Use theme-aware threshold: light theme needs lower threshold for better contrast
+        var useDarkOverlay = isLight ? luminance >= 0.50 : luminance >= 0.58;
 
-        return isLight
-            ? (DefaultShimmerStartLight, DefaultShimmerPeakLight)
-            : (DefaultShimmerStart, DefaultShimmerPeak);
+        if (useDarkOverlay)
+        {
+            // Dark overlay (for light backgrounds) - enhanced contrast in light mode
+            var edgeAlpha = isLight ? (byte)0x28 : (byte)0x1C;
+            var peakAlpha = isLight ? (byte)0x58 : (byte)0x46;
+            return (Color.FromArgb(edgeAlpha, 0x00, 0x00, 0x00),
+                    Color.FromArgb(peakAlpha, 0x00, 0x00, 0x00));
+        }
+        else
+        {
+            // Light overlay (for dark backgrounds)
+            return (Color.FromArgb(0x1C, 0xFF, 0xFF, 0xFF),
+                    Color.FromArgb(0x46, 0xFF, 0xFF, 0xFF));
+        }
     }
 
     internal static LinearGradientBrush CreateShimmerBrush(Color baseColor)
     {
-        var isLight = ApplicationThemeManager.GetAppTheme() == ApplicationTheme.Light;
-        return isLight
-            ? CreateShimmerBrush(baseColor, DefaultShimmerStartLight, DefaultShimmerPeakLight)
-            : CreateShimmerBrush(baseColor, DefaultShimmerStart, DefaultShimmerPeak);
+        var (start, peak) = ResolveShimmerOverlayColors(baseColor);
+        return CreateShimmerBrush(baseColor, start, peak);
     }
 
     internal static LinearGradientBrush CreateShimmerBrush(Color baseColor, Color shimmerStart, Color shimmerPeak)

@@ -27,16 +27,40 @@ public class NetworkAccelerationUiGuardTests
         xaml.Should().Contain("NetworkAccelerationIpv6DetectButton");
         xaml.Should().Contain("NetworkAccelerationAdvancedExpander");
         xaml.Should().Contain("NetworkAccelerationModeSelector");
-        xaml.Should().Contain("NetworkAccelerationLatencyMetric");
-        xaml.Should().Contain("NetworkAccelerationUploadMetric");
-        xaml.Should().Contain("NetworkAccelerationDownloadMetric");
-        xaml.Should().Contain("NetworkAccelerationConnectionsMetric");
-        xaml.Should().Contain("NetworkAccelerationRulesMetric");
+        xaml.Should().NotContain("NetworkAccelerationLatencyMetric");
+        xaml.Should().NotContain("NetworkAccelerationUploadMetric");
+        xaml.Should().NotContain("NetworkAccelerationDownloadMetric");
+        xaml.Should().NotContain("NetworkAccelerationConnectionsMetric");
         xaml.Should().Contain("NetworkAccelerationRestoreButton");
         // Status pill and primary action button removed in Watt Toolkit redesign.
         xaml.Should().NotContain("NetworkAccelerationPrimaryActionButton");
         xaml.Should().NotContain("NetworkAccelerationStatusIndicator");
         xaml.Should().NotContain("NetworkAccelerationStatusPill");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Xaml_UsesExplicitRuntimeDashboard()
+    {
+        var xaml = File.ReadAllText(FindControlXaml());
+
+        xaml.Should().Contain("NetworkAccelerationRunStatusBar");
+        xaml.Should().NotContain("NetworkAccelerationRunButton");
+        xaml.Should().Contain("x:Name=\"_trafficSection\" Margin=\"0,12,0,0\" Visibility=\"Collapsed\"");
+        xaml.Should().Contain("NetworkAccelerationConnectionsList");
+        xaml.Should().Contain("NetworkAccelerationDestinationsList");
+        xaml.Should().Contain("NetworkAccelerationTargetSearchBox");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Code_DoesNotStartFromSelectionChanges()
+    {
+        var code = File.ReadAllText(FindControlCode());
+
+        code.Should().NotContain("AutoToggleAccelerationAsync");
+        code.Should().Contain("ToggleAccelerationFromToolbarAsync");
+        code.Should().Contain("GetRuntimeSnapshotAsync");
+        code.Should().Contain("StartRuntimePolling");
+        code.Should().Contain("ClearRuntimeLists");
     }
 
     [Fact]
@@ -103,8 +127,8 @@ public class NetworkAccelerationUiGuardTests
     {
         var xaml = File.ReadAllText(FindControlXaml());
         // Status/metrics/sections come from resources. Page title is chrome-only (not a plugin).
-        xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency");
-        xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_MetricsHeading");
+        xaml.Should().NotContain("x:Static resources:Resource.NetworkAccelerationPage_Metric_Latency");
+        xaml.Should().NotContain("x:Static resources:Resource.NetworkAccelerationPage_MetricsHeading");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_TargetsHeading");
         xaml.Should().Contain("x:Static resources:Resource.NetworkAccelerationPage_DangerZoneHeading");
         xaml.Should().NotContain("Text=\"Overview\"");
@@ -148,13 +172,16 @@ public class NetworkAccelerationUiGuardTests
     public void NetworkAccelerationControl_Xaml_PrimaryActionAndModeSelectorShareGridNotWrapPanel()
     {
         var xaml = File.ReadAllText(FindControlXaml());
-        // Start button + mode combo removed in Watt Toolkit redesign (auto start/stop via service list).
-        // Mode selector lives in a Grid column next to the mode label.
-        // Mode label + combo share a Grid row (compact single-row layout).
+        // The mode selector remains grouped with its label in the status-bar Grid;
+        // the primary action lives in the page toolbar.
         var modeIdx = xaml.IndexOf("NetworkAccelerationModeSelector", StringComparison.Ordinal);
         modeIdx.Should().BeGreaterThan(0);
-        var slice = xaml.Substring(Math.Max(0, modeIdx - 400), Math.Min(500, xaml.Length - Math.Max(0, modeIdx - 400)));
-        slice.Should().Contain("Grid.Column=\"1\"");
+        var modeContainerStart = xaml.LastIndexOf("<StackPanel", modeIdx, StringComparison.Ordinal);
+        modeContainerStart.Should().BeGreaterThan(0);
+        var modeContainer = xaml.Substring(modeContainerStart, modeIdx - modeContainerStart);
+        modeContainer.Should().Contain("Grid.Column=\"2\"");
+        modeContainer.Should().NotContain("<WrapPanel");
+        xaml.Should().NotContain("AutomationProperties.AutomationId=\"NetworkAccelerationRunButton\"");
     }
 
     [Fact]
@@ -201,6 +228,41 @@ public class NetworkAccelerationUiGuardTests
         code.Should().Contain("BuildServiceList");
         code.Should().Contain("CreateServiceGroupRow");
         code.Should().Contain("CreateSubItemRow");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Xaml_DiagnosticPanelsCollapsedByDefault()
+    {
+        var xaml = File.ReadAllText(FindControlXaml());
+        // Diagnostics are opened on demand in dedicated Popup surfaces.
+        Regex.Matches(xaml, "<Popup x:Name=\"_(nat|dns|ipv6)DetailsPopup\"").Count.Should().Be(3);
+        Regex.Matches(xaml, "IsOpen=\"False\"").Count.Should().Be(3);
+        Regex.Matches(xaml, "StaysOpen=\"False\"").Count.Should().Be(3);
+        xaml.Should().NotContain("<custom:CardExpander");
+        xaml.Should().NotContain("CollapseArrow");
+        xaml.Should().NotContain("_natContentPanel");
+        xaml.Should().NotContain("_dnsContentPanel");
+        xaml.Should().NotContain("_ipv6ContentPanel");
+        // Collapsing the surfaces must not remove diagnostics AutomationIds.
+        xaml.Should().Contain("NetworkAccelerationNatSection");
+        xaml.Should().Contain("NetworkAccelerationDnsSection");
+        xaml.Should().Contain("NetworkAccelerationIpv6Section");
+        xaml.Should().Contain("NetworkAccelerationNatDetectButton");
+        xaml.Should().Contain("NetworkAccelerationDnsDetectButton");
+        xaml.Should().Contain("NetworkAccelerationIpv6DetectButton");
+    }
+
+    [Fact]
+    public void NetworkAccelerationControl_Code_WiresDiagnosticStatusButtonsToPopups()
+    {
+        var code = File.ReadAllText(FindControlCode());
+        code.Should().Contain("NatStatus_Click");
+        code.Should().Contain("DnsStatus_Click");
+        code.Should().Contain("Ipv6Status_Click");
+        code.Should().Contain("ShowDiagnosticPopup");
+        code.Should().Contain("CloseDiagnosticPopups");
+        code.Should().Contain("ToggleAccelerationFromToolbarAsync");
+        code.Should().Contain("TargetSearchBox_TextChanged");
     }
 
     private static string FindControlCode()

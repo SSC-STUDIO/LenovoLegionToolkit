@@ -91,7 +91,15 @@ jobs:
       run: dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
 
     - name: Test solution
-      run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Tests.trx" --collect:"XPlat Code Coverage"
+      run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
+
+    - name: Upload release test coverage
+      uses: actions/upload-artifact@v7
+      if: always()
+      with:
+        name: release-test-coverage-${{ github.run_id }}
+        path: '**/*coverage.cobertura.xml'
+        if-no-files-found: warn
 
     - name: Publish release payload
       shell: pwsh
@@ -122,7 +130,7 @@ jobs:
           }
         }
 
-        ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT -AllowedCultures 'en;zh-hans;zh-hant'
+        ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT -AllowedCultures 'en;zh-Hans;zh-Hant'
         ./Scripts/Build-PluginRuntimeAssets.ps1 `
           -PluginsRepositoryRoot "$env:GITHUB_WORKSPACE/UniversalDeviceToolkit-Plugins" `
           -HostSourceDir $env:BUILD_OUTPUT `
@@ -130,6 +138,23 @@ jobs:
           -Configuration Release
         if ($LASTEXITCODE -ne 0) { throw "Plugin runtime staging failed." }
         ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
+
+    - name: Sign release payload
+      uses: azure/trusted-signing-action@v0.5
+      with:
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+        signing-account-name: ${{ secrets.AZURE_TRUSTED_SIGNING_ACCOUNT }}
+        certificate-profile-name: ${{ secrets.AZURE_TRUSTED_SIGNING_PROFILE }}
+        files-folder: ${{ env.BUILD_OUTPUT }}
+        files-folder-filter: exe,dll
+        files-folder-recurse: true
+
+    - name: Verify release payload signatures
+      shell: pwsh
+      run: ./Scripts/Assert-AuthenticodeSignatures.ps1 -Path $env:BUILD_OUTPUT
 
     - name: Smoke CLI help and version
       shell: pwsh
@@ -181,6 +206,23 @@ jobs:
           -Version $env:VERSION `
           -ReleaseOutput $env:RELEASE_OUTPUT `
           -InstallerOutput $env:INSTALLER_OUTPUT
+
+    - name: Sign installers
+      uses: azure/trusted-signing-action@v0.5
+      with:
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+        signing-account-name: ${{ secrets.AZURE_TRUSTED_SIGNING_ACCOUNT }}
+        certificate-profile-name: ${{ secrets.AZURE_TRUSTED_SIGNING_PROFILE }}
+        files-folder: ${{ env.INSTALLER_OUTPUT }}
+        files-folder-filter: exe
+        files-folder-recurse: true
+
+    - name: Verify installer signatures
+      shell: pwsh
+      run: ./Scripts/Assert-AuthenticodeSignatures.ps1 -Path $env:INSTALLER_OUTPUT
 
     - name: Publish cross-platform CLI asset
       if: ${{ env.ENABLE_CROSS_PLATFORM_CLI == 'true' }}

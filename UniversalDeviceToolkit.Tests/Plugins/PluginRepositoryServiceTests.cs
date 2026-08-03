@@ -18,6 +18,7 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class PluginRepositoryServiceTests : TemporaryFileTestBase
 {
     private readonly Mock<IPluginManager> _pluginManager = new();
@@ -48,6 +49,9 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
     public override void Dispose()
     {
+        // PluginRepositoryService logs to the process singleton. Release its async
+        // file sink while the temporary AppData directory is still in scope.
+        Log.ResetForTests();
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _originalAppDataOverride);
         base.Dispose();
     }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -505,15 +505,13 @@ CẢNH BÁO: Hành động có thể chạy không đúng nếu màn hình lapto
     <value>Khóa phím Fn</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Message" xml:space="preserve">
-    <value>CẢNH BÁO!
-Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên bạn hãy cẩn thận. Chức năng này có thể khiến laptop hoạt động không ổn định. Nếu bạn không biết bạn đang làm gì, hãy giữ nguyên giá trị này tại 0.</value>
+    <value>Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên bạn hãy cẩn thận. Chức năng này có thể khiến laptop hoạt động không ổn định. Nếu bạn không biết bạn đang làm gì, hãy giữ nguyên giá trị này tại 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MinOffset_Title" xml:space="preserve">
     <value>Độ dịch chuyển tối thiểu</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Message" xml:space="preserve">
-    <value>CẢNH BÁO!
-Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên bạn hãy cẩn thận. Chức năng này có thể khiến laptop hoạt động không ổn định. Nếu bạn không biết bạn đang làm gì, hãy giữ nguyên giá trị này tại 0.</value>
+    <value>Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên bạn hãy cẩn thận. Chức năng này có thể khiến laptop hoạt động không ổn định. Nếu bạn không biết bạn đang làm gì, hãy giữ nguyên giá trị này tại 0.</value>
   </data>
   <data name="GodModeSettingsWindow_Advanced_MaxOffset_Title" xml:space="preserve">
     <value>Độ dịch chuyển tối đa</value>
@@ -552,8 +550,7 @@ Một số laptop có thể nhận giá trị thấp hơn mức cho phép, nên 
     <value>Cài đặt tốc độ quạt</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Message" xml:space="preserve">
-    <value>CẢNH BÁO!
-Cho quạt chạy 100% tốc độ trong thời gian dài có khả năng cao gây hư hỏng vòng bi quạt và ảnh hưởng tuổi thọ quạt.
+    <value>Cho quạt chạy 100% tốc độ trong thời gian dài có khả năng cao gây hư hỏng vòng bi quạt và ảnh hưởng tuổi thọ quạt.
 THẬT CẨN THẬN KHI SỬ DỤNG LỰA CHỌN NÀY!!! KHÔNG NÊN SỬ DỤNG TÍNH NĂNG NÀY KHI CHƠI GAME!!</value>
   </data>
   <data name="GodModeSettingsWindow_Fans_Max_Title" xml:space="preserve">
@@ -4110,4 +4107,19 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
   <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
   <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Chế độ màu giao diện toàn cục</value></data>
+  <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Thay đổi màu hệ thống khi điều chỉnh màu giao diện toàn cục</value></data>
+  <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Màu nhấn giao diện toàn cục</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
 </root>

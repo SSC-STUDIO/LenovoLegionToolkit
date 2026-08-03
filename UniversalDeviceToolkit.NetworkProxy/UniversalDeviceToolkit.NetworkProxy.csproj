@@ -4,8 +4,6 @@
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.NetworkProxy</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.NetworkProxy</AssemblyName>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Copyright>$(ProjectCopyright)</Copyright>
     <IsUdtShippingApp>true</IsUdtShippingApp>
     <NeutralLanguage>en</NeutralLanguage>

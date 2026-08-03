@@ -117,7 +117,16 @@ public class GPUOverclockController : IDisposable
 
         try
         {
-            isSupported = await WMI.LenovoGameZoneData.IsSupportGpuOCAsync().ConfigureAwait(false) > 0;
+            var (supportProbeSucceeded, supportValue) = await WMI.LenovoGameZoneData.TryIsSupportGpuOCAsync().ConfigureAwait(false);
+
+            // Some Legion firmware exposes the GameZone method but fails the
+            // System.Management invocation while NVAPI still supports OC.
+            // Treat an unavailable probe as inconclusive; only an explicit
+            // zero from a successful probe disables the control.
+            isSupported = !supportProbeSucceeded || supportValue > 0;
+
+            if (!supportProbeSucceeded && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("GPU OC WMI support probe was unavailable; keeping the NVAPI capability result.");
 
             if (!isSupported)
             {
@@ -171,7 +180,9 @@ public class GPUOverclockController : IDisposable
         if (!store.Profiles.TryGetValue(profileId, out var profile))
             profileId = store.ActiveProfileId;
 
-        profile = store.Profiles[profileId];
+        if (!store.Profiles.TryGetValue(profileId, out profile))
+            return;
+
         store.Profiles[profileId] = new()
         {
             Name = profile.Name,
@@ -236,7 +247,8 @@ public class GPUOverclockController : IDisposable
     {
         EnsureProfiles();
 
-        var profile = _settings.Store.Profiles[profileId];
+        if (!_settings.Store.Profiles.TryGetValue(profileId, out var profile))
+            return;
         _settings.Store.ActiveProfileId = profileId;
         _settings.Store.Info = profile.Info;
         _settings.SynchronizeStore();

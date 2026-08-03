@@ -96,6 +96,12 @@ public class WindowsOptimizationService
 
     private readonly WindowsCleanupService _cleanupService;
     private readonly WindowsOptimizationCategoryProvider _categoryProvider;
+    private readonly object _rollbackStateLock = new();
+    private readonly Dictionary<string, IReadOnlyList<RegistryOriginalValue>> _registryOriginalValues = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, IReadOnlyList<ServiceOriginalValue>> _serviceOriginalValues = new(StringComparer.OrdinalIgnoreCase);
+
+    private sealed record RegistryOriginalValue(RegistryValueDefinition Tweak, bool Existed, object? Value);
+    private sealed record ServiceOriginalValue(string ServiceName, int StartValue);
 
     public WindowsOptimizationService(WindowsCleanupService cleanupService)
     {
@@ -294,35 +300,18 @@ public class WindowsOptimizationService
         IReadOnlyList<RegistryValueDefinition> tweaks,
         bool recommended = true)
     {
-        var originals = new List<(RegistryValueDefinition tweak, object? originalValue)>();
-
         return new(
             key,
             titleResourceKey,
             descriptionResourceKey,
             async ct =>
             {
-                originals.Clear();
-                foreach (var tweak in tweaks)
-                {
-                    var original = ToolkitRegistry.GetValue<object?>(tweak.Hive, tweak.SubKey, tweak.ValueName, null);
-                    originals.Add((tweak, original));
-                }
+                CaptureRegistryOriginalValuesIfNeeded(key, tweaks);
                 await ApplyRegistryTweaksAsync(ct, tweaks).ConfigureAwait(false);
             },
             recommended,
             ct => Task.FromResult(WindowsOptimizationHelper.AreRegistryTweaksApplied(tweaks)),
-            RollbackAsync: ct =>
-            {
-                foreach (var (tweak, originalValue) in originals)
-                {
-                    if (originalValue is not null)
-                    {
-                        ToolkitRegistry.SetValue(tweak.Hive, tweak.SubKey, tweak.ValueName, originalValue, true, tweak.Kind);
-                    }
-                }
-                return Task.CompletedTask;
-            });
+            RollbackAsync: ct => RevertRegistryActionAsync(key, tweaks, ct));
     }
 
     internal WindowsOptimizationActionDefinition CreateServiceAction(
@@ -332,40 +321,18 @@ public class WindowsOptimizationService
         IReadOnlyList<string> services,
         bool recommended = true)
     {
-        var originals = new List<(string serviceName, int originalStart)>();
-
         return new(
             key,
             titleResourceKey,
             descriptionResourceKey,
             async ct =>
             {
-                originals.Clear();
-                foreach (var service in services.Distinct(StringComparer.OrdinalIgnoreCase))
-                {
-                    var start = ToolkitRegistry.GetValue<int>(
-                        "HKEY_LOCAL_MACHINE",
-                        $@"SYSTEM\CurrentControlSet\Services\{service}", "Start", -1);
-                    originals.Add((service, start));
-                }
+                CaptureServiceOriginalValuesIfNeeded(key, services);
                 await DisableServicesAsync(ct, services).ConfigureAwait(false);
             },
             recommended,
             ct => Task.FromResult(WindowsOptimizationHelper.AreServicesDisabled(services)),
-            RollbackAsync: ct =>
-            {
-                foreach (var (serviceName, originalStart) in originals)
-                {
-                    if (originalStart >= 0)
-                    {
-                        ToolkitRegistry.SetValue(
-                            "HKEY_LOCAL_MACHINE",
-                            $@"SYSTEM\CurrentControlSet\Services\{serviceName}",
-                            "Start", originalStart, true, RegistryValueKind.DWord);
-                    }
-                }
-                return Task.CompletedTask;
-            });
+            RollbackAsync: ct => RevertServiceActionAsync(key, services, ct));
     }
 
     /// <summary>
@@ -378,7 +345,8 @@ public class WindowsOptimizationService
         string descriptionResourceKey,
         IReadOnlyList<string> commands,
         bool recommended = true,
-        Func<CancellationToken, Task<bool>>? isAppliedAsync = null)
+        Func<CancellationToken, Task<bool>>? isAppliedAsync = null,
+        Func<CancellationToken, Task>? rollbackAsync = null)
     {
         // Validate all commands at creation time
         foreach (var command in commands)
@@ -394,7 +362,107 @@ public class WindowsOptimizationService
             ct => ExecuteCommandsSequentiallyAsync(ct, commands.ToArray()),
             recommended,
             isAppliedAsync,
-            RollbackAsync: static ct => Task.CompletedTask);
+            RollbackAsync: rollbackAsync ?? (static ct => Task.CompletedTask));
+    }
+
+    private void CaptureRegistryOriginalValuesIfNeeded(string actionKey, IReadOnlyList<RegistryValueDefinition> tweaks)
+    {
+        lock (_rollbackStateLock)
+        {
+            if (_registryOriginalValues.ContainsKey(actionKey) || WindowsOptimizationHelper.AreRegistryTweaksApplied(tweaks))
+                return;
+
+            _registryOriginalValues[actionKey] = tweaks
+                .Select(tweak => new RegistryOriginalValue(
+                    tweak,
+                    ToolkitRegistry.ValueExists(tweak.Hive, tweak.SubKey, tweak.ValueName),
+                    ToolkitRegistry.GetValue<object?>(tweak.Hive, tweak.SubKey, tweak.ValueName, null)))
+                .ToArray();
+        }
+    }
+
+    private Task RevertRegistryActionAsync(
+        string actionKey,
+        IReadOnlyList<RegistryValueDefinition> tweaks,
+        CancellationToken cancellationToken)
+    {
+        IReadOnlyList<RegistryOriginalValue>? originals;
+        lock (_rollbackStateLock)
+            _registryOriginalValues.TryGetValue(actionKey, out originals);
+
+        foreach (var tweak in tweaks)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var original = originals?.FirstOrDefault(value => value.Tweak.Equals(tweak));
+            if (original is not null && original.Existed)
+            {
+                ToolkitRegistry.SetValue(tweak.Hive, tweak.SubKey, tweak.ValueName, original.Value!, true, tweak.Kind);
+            }
+            else
+            {
+                // A previous application may predate the snapshot store. Removing the
+                // optimization value restores Windows' inherited/default behavior.
+                ToolkitRegistry.DeleteValue(tweak.Hive, tweak.SubKey, tweak.ValueName, true);
+            }
+        }
+
+        lock (_rollbackStateLock)
+            _registryOriginalValues.Remove(actionKey);
+
+        return Task.CompletedTask;
+    }
+
+    private void CaptureServiceOriginalValuesIfNeeded(string actionKey, IReadOnlyList<string> services)
+    {
+        lock (_rollbackStateLock)
+        {
+            if (_serviceOriginalValues.ContainsKey(actionKey) || WindowsOptimizationHelper.AreServicesDisabled(services))
+                return;
+
+            _serviceOriginalValues[actionKey] = services
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(service => new ServiceOriginalValue(
+                    service,
+                    ToolkitRegistry.GetValue<int>(
+                        "HKEY_LOCAL_MACHINE",
+                        $@"SYSTEM\CurrentControlSet\Services\{service}", "Start", -1)))
+                .ToArray();
+        }
+    }
+
+    private Task RevertServiceActionAsync(
+        string actionKey,
+        IReadOnlyList<string> services,
+        CancellationToken cancellationToken)
+    {
+        IReadOnlyList<ServiceOriginalValue>? originals;
+        lock (_rollbackStateLock)
+            _serviceOriginalValues.TryGetValue(actionKey, out originals);
+
+        foreach (var service in services.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var original = originals?.FirstOrDefault(value =>
+                string.Equals(value.ServiceName, service, StringComparison.OrdinalIgnoreCase));
+            var startValue = original?.StartValue ?? 3;
+            if (startValue < 0 && !ToolkitRegistry.ValueExists(
+                    "HKEY_LOCAL_MACHINE",
+                    $@"SYSTEM\CurrentControlSet\Services\{service}",
+                    "Start"))
+            {
+                continue;
+            }
+
+            ToolkitRegistry.SetValue(
+                "HKEY_LOCAL_MACHINE",
+                $@"SYSTEM\CurrentControlSet\Services\{service}",
+                "Start", startValue, true, RegistryValueKind.DWord);
+        }
+
+        lock (_rollbackStateLock)
+            _serviceOriginalValues.Remove(actionKey);
+
+        return Task.CompletedTask;
     }
 
     private Task ApplyRegistryTweaksAsync(CancellationToken cancellationToken, IEnumerable<RegistryValueDefinition> tweaks)
@@ -591,10 +659,15 @@ public class WindowsOptimizationService
 
         if (isShellBuiltIn)
         {
+            // Defense-in-depth: strip shell metacharacters that could enable command injection
+            // even after upstream validation. The originalCommand has already passed IsValidCommand
+            // and ContainsDangerousPatterns, but we sanitize again at the shell boundary.
+            var sanitizedCommand = CommandInjectionValidator.SanitizeShellCommand(originalCommand);
+
             return new ProcessStartInfo
             {
                 FileName = "cmd.exe",
-                Arguments = $"/d /c {originalCommand}",
+                Arguments = $"/d /c \"{sanitizedCommand}\"",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
@@ -808,7 +881,10 @@ public class WindowsOptimizationService
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace("Failed to evaluate active power plan.", ex);
-            return false;
+            // Let TryGetActionAppliedAsync convert probe failures to an unknown
+            // state. Returning false here would present an inaccessible machine
+            // as a confidently unchecked optimization.
+            throw;
         }
     }
 
@@ -854,17 +930,23 @@ public class WindowsOptimizationService
         return WindowsOptimizationHelper.AreRegistryTweaksApplied(WindowsOptimizationDefinitions.StartMenuDisableTweaks);
     }
 
-    internal Task RevertStartMenuDisableAsync(CancellationToken cancellationToken)
+    internal async Task RevertStartMenuDisableAsync(CancellationToken cancellationToken)
     {
         foreach (var tweak in WindowsOptimizationDefinitions.StartMenuDisableTweaks)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var revert = new RegistryValueDefinition(tweak.Hive, tweak.SubKey, tweak.ValueName, 0, tweak.Kind);
-            WindowsOptimizationHelper.ApplyRegistryTweak(revert);
+            ToolkitRegistry.DeleteValue(tweak.Hive, tweak.SubKey, tweak.ValueName, true);
         }
 
-        return Task.CompletedTask;
+        NotifyExplorerSettingsChanged();
+        await ExplorerRestartHelper.RestartAsync().ConfigureAwait(false);
     }
+
+    internal Task RevertPowerPlanAsync(CancellationToken cancellationToken) =>
+        ExecuteCommandsSequentiallyAsync(
+            cancellationToken,
+            "powercfg -setactive SCHEME_BALANCED",
+            "powercfg -h on");
 
     private static unsafe void NotifyExplorerSettingsChanged()
     {
@@ -1026,5 +1108,32 @@ public static class CommandInjectionValidator
         }
 
         return sanitized;
+    }
+
+    // Shell metacharacters that are dangerous when passed to cmd.exe /c
+    private static readonly char[] ShellMetaChars = ['&', '|', ';', '>', '<', '^', '%', '`'];
+
+    /// <summary>
+    /// Sanitizes a command string for safe use with cmd.exe /c by stripping shell metacharacters
+    /// and escaping embedded double quotes. This is a defense-in-depth layer applied at the
+    /// shell boundary in addition to upstream validation.
+    /// </summary>
+    public static string SanitizeShellCommand(string command)
+    {
+        if (string.IsNullOrEmpty(command))
+            return command;
+
+        // Remove shell metacharacters that could enable injection
+        var chars = new char[command.Length];
+        var idx = 0;
+        foreach (var c in command)
+        {
+            if (Array.IndexOf(ShellMetaChars, c) >= 0)
+                continue;
+            chars[idx++] = c;
+        }
+
+        // Escape embedded double quotes to prevent breaking out of the /c "..." wrapper
+        return new string(chars, 0, idx).Replace("\"", "\\\"");
     }
 }

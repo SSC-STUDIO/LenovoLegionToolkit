@@ -135,6 +135,9 @@ public class ThreadSafeCounterTests
         // Arrange
         var counter = new ThreadSafeCounter();
         var iterations = 1000;
+        for (var i = 0; i < iterations; i++)
+            counter.Increment();
+
         var tasks = new[]
         {
             Task.Run(() =>
@@ -157,8 +160,8 @@ public class ThreadSafeCounterTests
         // Act
         await Task.WhenAll(tasks);
 
-        // Assert - After 1000 increments and 1000 decrements, counter should be 0
-        counter.Value.Should().Be(0);
+        // Assert - The initial balance prevents zero-clamp discards while operations race.
+        counter.Value.Should().Be(iterations);
     }
 
     [Fact]

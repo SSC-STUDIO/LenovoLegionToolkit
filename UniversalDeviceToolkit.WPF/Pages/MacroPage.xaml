@@ -27,15 +27,24 @@
             Text="{x:Static resources:Resource.MacroPage_Subtitle}" />
 
         <custom:CardControl Margin="0,0,0,32">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.MacroPage_Enable_Title}" Subtitle="{x:Static resources:Resource.MacroPage_Enable_Subtitle}" />
-            </custom:CardControl.Header>
-            <wpfui:ToggleSwitch
-                x:Name="_enableMacroToggle"
-                Margin="0,0,0,8"
-                AutomationProperties.AutomationId="MacroEnableToggle"
-                AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Enable_Title}"
-                Click="EnableMacroToggle_Click" />
+            <Grid MinHeight="44">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <controls:CardHeaderControl
+                    Grid.Column="0"
+                    Margin="0,0,16,0"
+                    Title="{x:Static resources:Resource.MacroPage_Enable_Title}"
+                    Subtitle="{x:Static resources:Resource.MacroPage_Enable_Subtitle}" />
+                <wpfui:ToggleSwitch
+                    x:Name="_enableMacroToggle"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    AutomationProperties.AutomationId="MacroEnableToggle"
+                    AutomationProperties.Name="{x:Static resources:Resource.MacroPage_Enable_Title}"
+                    Click="EnableMacroToggle_Click" />
+            </Grid>
         </custom:CardControl>
 
         <Grid VerticalAlignment="Stretch">
@@ -71,7 +80,7 @@
                     Click="NumberPadButton_Click"
                     Content="7"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x67" />
                 <wpfui:Button
                     Grid.Row="0"
@@ -83,7 +92,7 @@
                     Click="NumberPadButton_Click"
                     Content="8"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x68" />
                 <wpfui:Button
                     Grid.Row="0"
@@ -95,7 +104,7 @@
                     Click="NumberPadButton_Click"
                     Content="9"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x69" />
 
                 <wpfui:Button
@@ -108,7 +117,7 @@
                     Click="NumberPadButton_Click"
                     Content="4"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x64" />
                 <wpfui:Button
                     Grid.Row="1"
@@ -120,7 +129,7 @@
                     Click="NumberPadButton_Click"
                     Content="5"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x65" />
                 <wpfui:Button
                     Grid.Row="1"
@@ -132,7 +141,7 @@
                     Click="NumberPadButton_Click"
                     Content="6"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x66" />
 
                 <wpfui:Button
@@ -145,7 +154,7 @@
                     Click="NumberPadButton_Click"
                     Content="1"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x61" />
                 <wpfui:Button
                     Grid.Row="2"
@@ -157,7 +166,7 @@
                     Click="NumberPadButton_Click"
                     Content="2"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x62" />
                 <wpfui:Button
                     Grid.Row="2"
@@ -169,7 +178,7 @@
                     Click="NumberPadButton_Click"
                     Content="3"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x63" />
 
                 <wpfui:Button
@@ -182,7 +191,7 @@
                     Click="NumberPadButton_Click"
                     Content="0"
                     FontSize="{DynamicResource FontSizeGaugeValue}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Tag="0x60" />
 
             </Grid>
@@ -196,5 +205,4 @@
         </StackPanel>
     </wpfui:DynamicScrollViewer>
 </Page>
-
 

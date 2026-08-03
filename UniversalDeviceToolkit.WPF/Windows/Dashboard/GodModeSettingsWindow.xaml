@@ -53,10 +53,12 @@
         <controls:LoadableControl
             x:Name="_loader"
             Grid.Row="1"
-            Margin="14,0,0,0"
+            Margin="14,0,14,0"
             IndicatorVerticalAlignment="Center">
-            <wpfui:DynamicScrollViewer>
-                <StackPanel Margin="0,0,14,8">
+            <wpfui:DynamicScrollViewer
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0,0,0,8">
 
                     <custom:InfoBar
                         x:Name="_vantageRunningWarningInfoBar"
@@ -251,6 +253,8 @@
                                 <controls:FanCurveControl
                                     x:Name="_fanCurveControl"
                                     MaxWidth="700"
+                                    MinWidth="0"
+                                    HorizontalAlignment="Stretch"
                                     Margin="0,10,0,0" />
                                 <wpfui:Button
                                     MinWidth="100"
@@ -266,15 +270,27 @@
                         </custom:CardControl.Header>
                     </custom:CardControl>
 
-                    <custom:CardControl x:Name="_fanFullSpeedCardControl" Margin="0,0,0,4">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Max_Title}" Subtitle="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Max_Message}" />
-                        </custom:CardControl.Header>
-                        <wpfui:ToggleSwitch
-                            x:Name="_fanFullSpeedToggle"
-                            Margin="0,0,0,4"
-                            AutomationProperties.Name="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Max_Title}"
-                            Click="FanFullSpeedToggle_Click" />
+                    <custom:CardControl
+                        x:Name="_fanFullSpeedCardControl"
+                        Margin="0,0,0,4"
+                        HorizontalContentAlignment="Stretch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <controls:CardHeaderControl
+                                x:Name="_fanFullSpeedHeader"
+                                VerticalAlignment="Center"
+                                Title="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Max_Title}" />
+                            <wpfui:ToggleSwitch
+                                x:Name="_fanFullSpeedToggle"
+                                Grid.Column="1"
+                                Margin="16,0,0,0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Max_Title}"
+                                Click="FanFullSpeedToggle_Click" />
+                        </Grid>
                     </custom:CardControl>
 
                     <TextBlock
@@ -284,44 +300,70 @@
                         Style="{StaticResource AppSectionTitleTextBlockStyle}"
                         Text="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_Title}" />
 
-                    <TextBlock
-                        x:Name="_advancedSectionMessage"
-                        Margin="0,0,0,8"
-                        Focusable="True"
-                        FontSize="{DynamicResource FontSizeSmallCaption}"
-                        LineHeight="18"
-                        TextWrapping="Wrap"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        Text="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_Message}" />
-
-                    <custom:CardControl x:Name="_maxValueOffsetCardControl" Margin="0,0,0,4">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MaxOffset_Title}" Subtitle="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MaxOffset_Message}" />
-                        </custom:CardControl.Header>
-                        <wpfui:NumberBox
-                            x:Name="_maxValueOffsetNumberBox"
-                            Width="100"
-                            Margin="12,0,0,0"
-                            AutomationProperties.Name="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MaxOffset_Title}"
-                            ClearButtonEnabled="False"
-                            MaxDecimalPlaces="0"
-                            Maximum="100"
-                            Minimum="0" />
+                    <custom:CardControl
+                        x:Name="_maxValueOffsetCardControl"
+                        Margin="0,0,0,4"
+                        HorizontalContentAlignment="Stretch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <controls:CardHeaderControl
+                                x:Name="_maxValueOffsetHeader"
+                                VerticalAlignment="Center"
+                                Title="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MaxOffset_Title}" />
+                            <wpfui:NumberBox
+                                x:Name="_maxValueOffsetNumberBox"
+                                Grid.Column="1"
+                                Width="112"
+                                Margin="16,0,0,0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MaxOffset_Title}"
+                                AutomationProperties.HelpText="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MaxOffset_Message}"
+                                ClearButtonEnabled="False"
+                                LargeChange="10"
+                                MaxDecimalPlaces="0"
+                                Maximum="100"
+                                Minimum="0"
+                                SmallChange="1"
+                                SpinButtonPlacementMode="Compact"
+                                Text="0"
+                                Value="0" />
+                        </Grid>
                     </custom:CardControl>
 
-                    <custom:CardControl x:Name="_minValueOffsetCardControl" Margin="0,0,0,4">
-                        <custom:CardControl.Header>
-                            <controls:CardHeaderControl Title="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MinOffset_Title}" Subtitle="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MinOffset_Message}" />
-                        </custom:CardControl.Header>
-                        <wpfui:NumberBox
-                            x:Name="_minValueOffsetNumberBox"
-                            Width="100"
-                            Margin="12,0,0,0"
-                            AutomationProperties.Name="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MinOffset_Title}"
-                            ClearButtonEnabled="False"
-                            MaxDecimalPlaces="0"
-                            Maximum="0"
-                            Minimum="-100" />
+                    <custom:CardControl
+                        x:Name="_minValueOffsetCardControl"
+                        Margin="0,0,0,4"
+                        HorizontalContentAlignment="Stretch">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <controls:CardHeaderControl
+                                x:Name="_minValueOffsetHeader"
+                                VerticalAlignment="Center"
+                                Title="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MinOffset_Title}" />
+                            <wpfui:NumberBox
+                                x:Name="_minValueOffsetNumberBox"
+                                Grid.Column="1"
+                                Width="112"
+                                Margin="16,0,0,0"
+                                VerticalAlignment="Center"
+                                AutomationProperties.Name="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MinOffset_Title}"
+                                AutomationProperties.HelpText="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MinOffset_Message}"
+                                ClearButtonEnabled="False"
+                                LargeChange="10"
+                                MaxDecimalPlaces="0"
+                                Maximum="0"
+                                Minimum="-100"
+                                SmallChange="1"
+                                SpinButtonPlacementMode="Compact"
+                                Text="0"
+                                Value="0" />
+                        </Grid>
                     </custom:CardControl>
 
                 </StackPanel>

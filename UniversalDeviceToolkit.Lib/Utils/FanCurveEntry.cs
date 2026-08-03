@@ -231,8 +231,11 @@ public class FanCurveEntry : INotifyPropertyChanged
         {
             if (temp >= sortedNodes[i].Temperature && temp <= sortedNodes[i + 1].Temperature)
             {
-                float ratio = (temp - sortedNodes[i].Temperature) /
-                             (sortedNodes[i + 1].Temperature - sortedNodes[i].Temperature);
+                var tempDiff = sortedNodes[i + 1].Temperature - sortedNodes[i].Temperature;
+                if (tempDiff == 0)
+                    return sortedNodes[i].TargetPercent;
+
+                float ratio = (temp - sortedNodes[i].Temperature) / tempDiff;
 
                 return sortedNodes[i].TargetPercent +
                        ratio * (sortedNodes[i + 1].TargetPercent - sortedNodes[i].TargetPercent);

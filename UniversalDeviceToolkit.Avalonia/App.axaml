@@ -1,16 +1,18 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="using:UniversalDeviceToolkit.Avalonia.Converters"
              x:Class="UniversalDeviceToolkit.Avalonia.App"
              RequestedThemeVariant="Default">
     <Application.Styles>
         <FluentTheme />
-        <StyleInclude Source="avares://udt/Styles/Controls.axaml" />
+        <StyleInclude Source="avares://udt-gui/Styles/Controls.axaml" />
     </Application.Styles>
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://udt/Styles/DesignTokens.axaml" />
+                <ResourceInclude Source="avares://udt-gui/Styles/DesignTokens.axaml" />
             </ResourceDictionary.MergedDictionaries>
+            <converters:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmpty" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

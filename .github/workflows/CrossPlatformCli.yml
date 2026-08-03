@@ -25,6 +25,7 @@ jobs:
   cross-platform-cli:
     name: ${{ matrix.os }} diagnostics CLI
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -52,7 +53,7 @@ jobs:
         run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-restore
 
       - name: Test cross-platform diagnostics
-        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.CrossPlatform.Tests.trx"
+        run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.CrossPlatform.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
       - name: Smoke diagnostics CLI
         shell: pwsh
@@ -188,3 +189,24 @@ jobs:
           name: Cross-platform test results (${{ matrix.os }})
           path: '**/UniversalDeviceToolkit.CrossPlatform.Tests.trx'
           reporter: dotnet-trx
+
+      - name: Upload test results and diagnostics
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: cross-platform-test-results-${{ matrix.os }}-${{ github.run_id }}
+          path: |
+            **/UniversalDeviceToolkit.CrossPlatform.Tests.trx
+            **/TestResults/**/*.dmp
+            **/TestResults/**/*.log
+          if-no-files-found: warn
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: cross-platform-coverage-${{ matrix.os }}
+          path: |
+            **/*coverage.cobertura.xml
+            **/*coverage.opencover.xml
+          if-no-files-found: warn

@@ -22,9 +22,13 @@
     -->
     <CornerRadius x:Key="CornerRadiusNone">0</CornerRadius>
     <CornerRadius x:Key="CornerRadiusProgressBar">2</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusMicro">3</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusSwatch">2.5</CornerRadius>
     <!-- Compact-scale micro chrome (badges, chips). Prefer Compact over Small in new XAML. -->
     <CornerRadius x:Key="CornerRadiusSmall">8</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCompact">8</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCompactTop">8,8,0,0</CornerRadius>
+    <CornerRadius x:Key="CornerRadiusCompactBottom">0,0,8,8</CornerRadius>
     <CornerRadius x:Key="CornerRadiusControl">12</CornerRadius>
     <CornerRadius x:Key="CornerRadiusCard">18</CornerRadius>
     <CornerRadius x:Key="CornerRadiusSurface">20</CornerRadius>

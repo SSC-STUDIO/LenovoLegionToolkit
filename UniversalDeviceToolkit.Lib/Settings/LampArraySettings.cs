@@ -36,14 +36,6 @@ public class LampArraySettings : AbstractSettings<LampArraySettings.LampArraySet
     public override async Task<LampArraySettingsStore?> LoadStoreAsync() =>
         Normalize(await base.LoadStoreAsync().ConfigureAwait(false));
 
-    public void ExportToFile(string path)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(path);
-
-        var json = JsonSerializer.Serialize(Store, JsonSerializerOptions);
-        File.WriteAllText(path, json);
-    }
-
     public void ImportFromFile(string path)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(path);

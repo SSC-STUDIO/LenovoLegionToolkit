@@ -17,7 +17,7 @@ internal sealed class InstallOptions
     public bool CreateDesktopShortcut { get; init; }
     public bool LaunchAfterInstall { get; init; }
 
-    /// <summary>Culture to pre-seed as the app language (e.g. "zh-hans"); null = let the app ask.</summary>
+    /// <summary>Culture to pre-seed as the app language (e.g. "zh-Hans"); null = let the app ask.</summary>
     public string? LanguageCulture { get; init; }
 
     /// <summary>Device pack to pre-seed; null = let the app ask on first run.</summary>
@@ -94,14 +94,33 @@ internal static class InstallerEngine
 
     public static async Task InstallDesktopRuntimeAsync(IProgress<EngineProgress> progress, CancellationToken ct)
     {
-        var installerPath = Path.Combine(Path.GetTempPath(), "windowsdesktop-runtime-win-x64.exe");
-        await Downloader.DownloadFileAsync(InstallerConstants.DotNetRuntimeInstallerUrl, installerPath, ct)
-            .ConfigureAwait(false);
+        var installerPath = Path.Combine(Path.GetTempPath(), $"udt-windowsdesktop-runtime-{Guid.NewGuid():N}.exe");
+        try
+        {
+            await Downloader.DownloadFileAsync(
+                    InstallerConstants.DotNetRuntimeInstallerUrl,
+                    installerPath,
+                    ct,
+                    InstallerConstants.DotNetRuntimeInstallerSha512)
+                .ConfigureAwait(false);
 
-        var exitCode = await RunProcessAsync(installerPath, InstallerConstants.DotNetRuntimeInstallerArgs, hidden: false, ct)
-            .ConfigureAwait(false);
-        if (exitCode is not 0 and not 3010) // 3010 = success, reboot required
-            throw new InvalidOperationException($"Runtime installer exited with code {exitCode}.");
+            var exitCode = await RunProcessAsync(installerPath, InstallerConstants.DotNetRuntimeInstallerArgs, hidden: false, ct)
+                .ConfigureAwait(false);
+            if (exitCode is not 0 and not 3010) // 3010 = success, reboot required
+                throw new InvalidOperationException($"Runtime installer exited with code {exitCode}.");
+        }
+        finally
+        {
+            try
+            {
+                if (File.Exists(installerPath))
+                    File.Delete(installerPath);
+            }
+            catch (Exception ex)
+            {
+                InstallerLog.Error($"Failed to remove temporary runtime installer '{installerPath}'.", ex);
+            }
+        }
     }
 
     private static string? FindDotNetHost()
@@ -451,7 +470,9 @@ internal static class InstallerEngine
         {
             // We cannot delete our own exe; delete everything else and schedule
             // the directory removal right after this process exits.
-            DeleteDirectoryContentsExcept(installDir, Environment.ProcessPath);
+            var currentProcessPath = Environment.ProcessPath
+                ?? throw new InvalidOperationException("Cannot locate the running installer executable.");
+            DeleteDirectoryContentsExcept(installDir, currentProcessPath);
             ScheduleDirectoryDeletion(installDir);
         }
         else

@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using UniversalDeviceToolkit.Lib.Utils;
 
@@ -10,6 +11,9 @@ public static class IoCContainer
     private static IContainer? _container;
 
     public static void Initialize(params Module[] modules)
+        => Initialize(null, modules);
+
+    public static void Initialize(Action<ContainerBuilder>? preBuild, params Module[] modules)
     {
         lock (Lock)
         {
@@ -20,6 +24,8 @@ public static class IoCContainer
 
             foreach (var module in modules)
                 cb.RegisterModule(module);
+
+            preBuild?.Invoke(cb);
 
             _container = cb.Build();
         }
@@ -32,6 +38,15 @@ public static class IoCContainer
             if (_container is null)
                 throw ExceptionHelper.IoCMustBeInitialized(nameof(T));
             return _container.Resolve<T>();
+        }
+    }
+
+    public static void Dispose()
+    {
+        lock (Lock)
+        {
+            _container?.Dispose();
+            _container = null;
         }
     }
 

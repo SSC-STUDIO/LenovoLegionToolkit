@@ -49,6 +49,7 @@ release-assets/
 #wwwroot/
 .vscode/
 .trae/
+.opencode/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/
@@ -104,6 +105,8 @@ StyleCopReport.xml
 *.tmp_proj
 *_wpftmp.csproj
 *.log
+body.json
+resp.json
 *.tlog
 *.vspscc
 *.vssscc

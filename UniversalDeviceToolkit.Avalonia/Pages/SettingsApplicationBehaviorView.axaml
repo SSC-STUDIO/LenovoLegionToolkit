@@ -4,7 +4,7 @@
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
         <TextBlock Text="Application Behavior"
                    FontSize="{StaticResource FontSizeDisplaySection}"
-                   FontWeight="SemiBold"
+                   FontWeight="Medium"
                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
         <TextBlock Text="Configure how the application behaves on startup and during use."
@@ -22,7 +22,7 @@
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
                     <TextBlock Text="Launch at Startup"
                                FontSize="{StaticResource FontSizeBody}"
-                               FontWeight="SemiBold"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                     <TextBlock Text="Automatically start the application when Windows starts."
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -43,7 +43,7 @@
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
                     <TextBlock Text="Minimize to System Tray"
                                FontSize="{StaticResource FontSizeBody}"
-                               FontWeight="SemiBold"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                     <TextBlock Text="Keep the application running in the system tray when closed."
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -64,7 +64,7 @@
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
                     <TextBlock Text="Auto-refresh Hardware Data"
                                FontSize="{StaticResource FontSizeBody}"
-                               FontWeight="SemiBold"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                     <TextBlock Text="Periodically poll hardware sensors for updated readings."
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"

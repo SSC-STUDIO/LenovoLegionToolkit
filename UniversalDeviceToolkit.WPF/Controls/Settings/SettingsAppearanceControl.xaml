@@ -9,6 +9,67 @@
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
+    <UserControl.Resources>
+        <!-- Keep the whole clickable preview clipped to the same radius as its surface. -->
+        <Style x:Key="ThemePreviewButtonStyle" TargetType="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+            <Setter Property="FocusVisualStyle" Value="{DynamicResource DefaultControlFocusVisualStyle}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="ThemeButtonSurface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            ClipToBounds="True"
+                            CornerRadius="{StaticResource CornerRadiusSmall}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                RecognizesAccessKey="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ThemeButtonSurface" Property="Opacity" Value="0.94" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ThemeButtonSurface" Property="Opacity" Value="0.82" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ThemeButtonSurface" Property="Opacity" Value="0.55" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ThemePreviewSurfaceStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <!-- WPF does not propagate a Border's radius to its child backgrounds. These
+             styles round the title and dock that touch the outer edge of each preview. -->
+        <Style x:Key="ThemePreviewTitleBarStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCompactTop}" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+
+        <Style x:Key="ThemePreviewDockStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCompactBottom}" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+        </Style>
+    </UserControl.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,16,12">
             <custom:CardControl
@@ -114,76 +175,200 @@
 
             <custom:CardControl Margin="0,0,0,8" Icon="DarkTheme24">
                 <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Theme_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Theme_Description}" />
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_ThemeMode_Title}" />
                 </custom:CardControl.Header>
-                <!-- Watt Toolkit-style theme mode cards: preview thumbnail + label + selected border. -->
+                <!-- Watt Toolkit-style theme mode cards: larger (120x84) macOS window previews
+                     with title bar + traffic lights, content area and dock, + selected border. -->
                 <StackPanel>
-                <WrapPanel x:Name="_themeCardsPanel" Margin="0,0,0,8">
+                <WrapPanel x:Name="_themeCardsPanel" Margin="0,0,0,10">
                     <!-- Light -->
-                    <Button x:Name="_themeLightCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="Light">
+                    <Button x:Name="_themeLightCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Style="{StaticResource ThemePreviewButtonStyle}" Tag="Light">
                         <StackPanel>
-                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Background="#F6F6F6">
-                                <Grid Margin="6">
+                            <Border Width="120" Height="84" Style="{StaticResource ThemePreviewSurfaceStyle}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" Background="#F6F6F6">
+                                <Grid>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="16" />
                                         <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="14" />
                                     </Grid.RowDefinitions>
-                                    <Border Grid.Row="0" Background="#FFFFFF" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
-                                    <Border Grid.Row="1" Height="12" Background="#E0E0E0" CornerRadius="{StaticResource CornerRadiusSmall}" />
+                                    <!-- Title bar with macOS traffic lights -->
+                                    <Border Grid.Row="0" Style="{StaticResource ThemePreviewTitleBarStyle}" Background="#E8E8E8">
+                                        <StackPanel Margin="5,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                            <Ellipse Width="6" Height="6" Fill="#FF5F57" Margin="0,0,3,0" />
+                                            <Ellipse Width="6" Height="6" Fill="#FEBC2E" Margin="0,0,3,0" />
+                                            <Ellipse Width="6" Height="6" Fill="#28C840" />
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Content area: sidebar + search bar + content lines -->
+                                    <Grid Grid.Row="1" Background="#FFFFFF" Margin="7,6,7,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="16" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,2,0,0" VerticalAlignment="Top">
+                    <Border Height="5" Width="10" Background="#ECECEC" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" Margin="0,0,0,4" />
+                                            <Border Height="5" Width="10" Background="#F1F1F1" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" Margin="0,0,0,4" />
+                                            <Border Height="5" Width="10" Background="#F1F1F1" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top">
+                                            <Border Height="9" Background="#F0F0F0" CornerRadius="{StaticResource CornerRadiusMicro}" Margin="0,0,0,5" />
+                                            <Border Height="4" Background="#EDEDED" CornerRadius="{StaticResource CornerRadiusProgressBar}" Margin="0,0,18,4" />
+                                            <Border Height="4" Background="#F2F2F2" CornerRadius="{StaticResource CornerRadiusProgressBar}" Margin="0,0,30,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <!-- Dock -->
+                                    <Border Grid.Row="2" Style="{StaticResource ThemePreviewDockStyle}" Background="#E0E0E0">
+                                        <StackPanel Margin="6,2,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                            <Border Width="10" Height="10" Background="#C9C9C9" CornerRadius="{StaticResource CornerRadiusSwatch}" Margin="0,0,4,0" />
+                                            <Border Width="10" Height="10" Background="#C9C9C9" CornerRadius="{StaticResource CornerRadiusSwatch}" Margin="0,0,4,0" />
+                                            <Border Width="10" Height="10" Background="#C9C9C9" CornerRadius="{StaticResource CornerRadiusSwatch}" />
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Light}" />
+                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Light}" />
                         </StackPanel>
                     </Button>
                     <!-- Dark -->
-                    <Button x:Name="_themeDarkCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="Dark">
+                    <Button x:Name="_themeDarkCard" Margin="0,0,12,0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Style="{StaticResource ThemePreviewButtonStyle}" Tag="Dark">
                         <StackPanel>
-                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Background="#202020">
-                                <Grid Margin="6">
+                            <Border Width="120" Height="84" Style="{StaticResource ThemePreviewSurfaceStyle}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" Background="#202020">
+                                <Grid>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="16" />
                                         <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="14" />
                                     </Grid.RowDefinitions>
-                                    <Border Grid.Row="0" Background="#2D2D2D" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
-                                    <Border Grid.Row="1" Height="12" Background="#404040" CornerRadius="{StaticResource CornerRadiusSmall}" />
+                                    <!-- Title bar with macOS traffic lights -->
+                                    <Border Grid.Row="0" Style="{StaticResource ThemePreviewTitleBarStyle}" Background="#2C2C2C">
+                                        <StackPanel Margin="5,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                            <Ellipse Width="6" Height="6" Fill="#FF5F57" Margin="0,0,3,0" />
+                                            <Ellipse Width="6" Height="6" Fill="#FEBC2E" Margin="0,0,3,0" />
+                                            <Ellipse Width="6" Height="6" Fill="#28C840" />
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Content area: sidebar + search bar + content lines -->
+                                    <Grid Grid.Row="1" Background="#262626" Margin="7,6,7,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="16" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,2,0,0" VerticalAlignment="Top">
+                                            <Border Height="5" Width="10" Background="#333333" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" Margin="0,0,0,4" />
+                                            <Border Height="5" Width="10" Background="#383838" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" Margin="0,0,0,4" />
+                                            <Border Height="5" Width="10" Background="#383838" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top">
+                                            <Border Height="9" Background="#333333" CornerRadius="{StaticResource CornerRadiusMicro}" Margin="0,0,0,5" />
+                                            <Border Height="4" Background="#2F2F2F" CornerRadius="{StaticResource CornerRadiusProgressBar}" Margin="0,0,18,4" />
+                                            <Border Height="4" Background="#3A3A3A" CornerRadius="{StaticResource CornerRadiusProgressBar}" Margin="0,0,30,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <!-- Dock -->
+                                    <Border Grid.Row="2" Style="{StaticResource ThemePreviewDockStyle}" Background="#343434">
+                                        <StackPanel Margin="6,2,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                            <Border Width="10" Height="10" Background="#4A4A4A" CornerRadius="{StaticResource CornerRadiusSwatch}" Margin="0,0,4,0" />
+                                            <Border Width="10" Height="10" Background="#4A4A4A" CornerRadius="{StaticResource CornerRadiusSwatch}" Margin="0,0,4,0" />
+                                            <Border Width="10" Height="10" Background="#4A4A4A" CornerRadius="{StaticResource CornerRadiusSwatch}" />
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Dark}" />
+                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_Dark}" />
                         </StackPanel>
                     </Button>
                     <!-- System -->
-                    <Button x:Name="_themeSystemCard" Margin="0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Tag="System">
+                    <Button x:Name="_themeSystemCard" Margin="0" Padding="0" Background="Transparent" BorderThickness="0" Cursor="Hand" Click="ThemeCard_Click" Style="{StaticResource ThemePreviewButtonStyle}" Tag="System">
                         <StackPanel>
-                            <Border Width="96" Height="72" CornerRadius="{StaticResource CornerRadiusSmall}" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" BorderThickness="1" Background="{DynamicResource ControlFillColorSecondaryBrush}">
-                                <Grid Margin="6">
+                            <Border Width="120" Height="84" Style="{StaticResource ThemePreviewSurfaceStyle}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                                <Border.Background>
+                                    <!-- Split light/dark preview: left half light, right half dark. -->
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                        <GradientStop Offset="0" Color="#F6F6F6" />
+                                        <GradientStop Offset="0.5" Color="#F6F6F6" />
+                                        <GradientStop Offset="0.5" Color="#202020" />
+                                        <GradientStop Offset="1" Color="#202020" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                                <Grid>
                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="16" />
                                         <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="14" />
                                     </Grid.RowDefinitions>
-                                    <Border Grid.Row="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" Margin="0,0,0,4" />
-                                    <Border Grid.Row="1" Height="12" Background="{DynamicResource ControlFillColorTertiaryBrush}" CornerRadius="{StaticResource CornerRadiusSmall}" />
+                                    <!-- Title bar with macOS traffic lights (neutral overlay on the split) -->
+                                    <Border Grid.Row="0" Style="{StaticResource ThemePreviewTitleBarStyle}" Background="#40000000">
+                                        <StackPanel Margin="5,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                            <Ellipse Width="6" Height="6" Fill="#FF5F57" Margin="0,0,3,0" />
+                                            <Ellipse Width="6" Height="6" Fill="#FEBC2E" Margin="0,0,3,0" />
+                                            <Ellipse Width="6" Height="6" Fill="#28C840" />
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Content area: sidebar + search bar + content lines (neutral overlay on the split) -->
+                                    <Grid Grid.Row="1" Margin="7,6,7,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="16" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0" Margin="0,2,0,0" VerticalAlignment="Top">
+                                            <Border Height="5" Width="10" Background="#2A000000" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" Margin="0,0,0,4" />
+                                            <Border Height="5" Width="10" Background="#22000000" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" Margin="0,0,0,4" />
+                                            <Border Height="5" Width="10" Background="#22000000" CornerRadius="{StaticResource CornerRadiusProgressBar}" HorizontalAlignment="Left" />
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Top">
+                                            <Border Height="9" Background="#2A000000" CornerRadius="{StaticResource CornerRadiusMicro}" Margin="0,0,0,5" />
+                                            <Border Height="4" Background="#22000000" CornerRadius="{StaticResource CornerRadiusProgressBar}" Margin="0,0,18,4" />
+                                            <Border Height="4" Background="#1E000000" CornerRadius="{StaticResource CornerRadiusProgressBar}" Margin="0,0,30,0" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <!-- Dock -->
+                                    <Border Grid.Row="2" Style="{StaticResource ThemePreviewDockStyle}" Background="#40000000">
+                                        <StackPanel Margin="6,2,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                            <Border Width="10" Height="10" Background="#55000000" CornerRadius="{StaticResource CornerRadiusSwatch}" Margin="0,0,4,0" />
+                                            <Border Width="10" Height="10" Background="#55000000" CornerRadius="{StaticResource CornerRadiusSwatch}" Margin="0,0,4,0" />
+                                            <Border Width="10" Height="10" Background="#55000000" CornerRadius="{StaticResource CornerRadiusSwatch}" />
+                                        </StackPanel>
+                                    </Border>
                                 </Grid>
                             </Border>
-                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_System}" />
+                            <TextBlock Margin="0,6,0,0" HorizontalAlignment="Center" FontSize="{DynamicResource FontSizeCaption}" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Text="{x:Static resources:Resource.Theme_System}" />
                         </StackPanel>
                     </Button>
                 </WrapPanel>
 
-                <!-- Theme style preset (merged from standalone card). -->
-                <Border Style="{StaticResource AppDividerBorderStyle}" />
+                <!-- Apply the selected accent to Windows. -->
+                <CheckBox
+                    x:Name="_applyAccentColorToSystemCheckBox"
+                    Margin="0,0,0,6"
+                    FontWeight="Medium"
+                    Content="{x:Static resources:Resource.SettingsPage_ApplyAccentColorToTheme_Title}"
+                    Checked="ApplyAccentColorToSystemCheckBox_Checked"
+                    Unchecked="ApplyAccentColorToSystemCheckBox_Unchecked" />
+
+                <!-- Apply the selected app theme style. -->
+                <CheckBox
+                    x:Name="_applyAccentColorToThemeCheckBox"
+                    Margin="0,0,0,6"
+                    FontWeight="Medium"
+                    Content="{x:Static resources:Resource.SettingsPage_ApplyAccentColorToThemeStyle_Title}"
+                    Checked="ApplyAccentColorToThemeCheckBox_Checked"
+                    Unchecked="ApplyAccentColorToThemeCheckBox_Unchecked" />
+
+                <!-- Global interface accent color presets and source selection. -->
+                <Border Style="{StaticResource AppDividerBorderStyle}" Margin="0,6,0,6" />
                 <TextBlock
-                    Margin="0,0,0,4"
+                    Margin="0,0,0,6"
                     FontSize="{DynamicResource FontSizeCaption}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                    Text="{x:Static resources:Resource.SettingsPage_ThemeStyle_SubTitle}" />
+                    Text="{x:Static resources:Resource.SettingsPage_AccentColorPresets_Title}" />
+                <WrapPanel x:Name="_accentColorSwatchesPanel" Margin="0,0,0,8" />
                 <ComboBox
-                    x:Name="_themeStylePresetComboBox"
+                    x:Name="_accentColorSourceComboBox"
                     MinWidth="160"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_ThemeStyle_Title}"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_AccentColor_Title}"
                     MaxDropDownHeight="Auto"
-                    SelectionChanged="ThemeStylePresetComboBox_SelectionChanged" />
+                    SelectionChanged="AccentColorSourceComboBox_SelectionChanged" />
                 </StackPanel>
             </custom:CardControl>
 
@@ -213,21 +398,6 @@
                     SelectionChanged="UiScaleComboBox_SelectionChanged" />
             </custom:CardControl>
 
-            <custom:CardControl Margin="0,0,0,8" Icon="Color24">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_AccentColor_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_AccentColor_Description}" />
-                </custom:CardControl.Header>
-                <StackPanel Orientation="Horizontal">
-                    <controls:ColorPickerControl x:Name="_accentColorPicker" ColorChangedDelayed="AccentColorPicker_Changed" />
-                    <ComboBox
-                        x:Name="_accentColorSourceComboBox"
-                        MinWidth="160"
-                        Margin="8,0,0,0"
-                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_AccentColor_Title}"
-                        MaxDropDownHeight="Auto"
-                        SelectionChanged="AccentColorSourceComboBox_SelectionChanged" />
-                </StackPanel>
-            </custom:CardControl>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

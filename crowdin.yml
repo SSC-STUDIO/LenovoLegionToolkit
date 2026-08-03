@@ -1,5 +1,8 @@
 ﻿# Crowdin configuration for UDT resource localization.
 # Keep this file in sync with all neutral resource modules.
+#
+# Culture names follow the BCP 47 canonical form (CONTRIBUTING.md):
+# zh-CN -> zh-Hans, zh-TW -> zh-Hant, pt-BR -> pt-BR, pt-PT -> pt, nl -> nl-NL, uz -> uz-Latn-UZ.
 
 base_path: .
 preserve_hierarchy: true
@@ -9,54 +12,82 @@ files:
     translation: /UniversalDeviceToolkit.WPF/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
-        nl: nl-nl
-        nl-NL: nl-nl
-        pt-BR: pt-br
+        nl: nl-NL
+        nl-NL: nl-NL
+        pt-BR: pt-BR
         pt-PT: pt
-        zh-CN: zh-hans
-        zh-TW: zh-hant
-        uz: uz-latn-uz
-        uz-UZ: uz-latn-uz
-        uz@Latn: uz-latn-uz
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        uz: uz-Latn-UZ
+        uz-UZ: uz-Latn-UZ
+        uz@Latn: uz-Latn-UZ
 
   - source: /UniversalDeviceToolkit.Lib/Resources/Resource.resx
     translation: /UniversalDeviceToolkit.Lib/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
-        nl: nl-nl
-        nl-NL: nl-nl
-        pt-BR: pt-br
+        nl: nl-NL
+        nl-NL: nl-NL
+        pt-BR: pt-BR
         pt-PT: pt
-        zh-CN: zh-hans
-        zh-TW: zh-hant
-        uz: uz-latn-uz
-        uz-UZ: uz-latn-uz
-        uz@Latn: uz-latn-uz
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        uz: uz-Latn-UZ
+        uz-UZ: uz-Latn-UZ
+        uz@Latn: uz-Latn-UZ
 
   - source: /UniversalDeviceToolkit.Lib.Automation/Resources/Resource.resx
     translation: /UniversalDeviceToolkit.Lib.Automation/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
-        nl: nl-nl
-        nl-NL: nl-nl
-        pt-BR: pt-br
+        nl: nl-NL
+        nl-NL: nl-NL
+        pt-BR: pt-BR
         pt-PT: pt
-        zh-CN: zh-hans
-        zh-TW: zh-hant
-        uz: uz-latn-uz
-        uz-UZ: uz-latn-uz
-        uz@Latn: uz-latn-uz
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        uz: uz-Latn-UZ
+        uz-UZ: uz-Latn-UZ
+        uz@Latn: uz-Latn-UZ
 
   - source: /UniversalDeviceToolkit.Lib.Macro/Resources/Resource.resx
     translation: /UniversalDeviceToolkit.Lib.Macro/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
-        nl: nl-nl
-        nl-NL: nl-nl
-        pt-BR: pt-br
+        nl: nl-NL
+        nl-NL: nl-NL
+        pt-BR: pt-BR
         pt-PT: pt
-        zh-CN: zh-hans
-        zh-TW: zh-hant
-        uz: uz-latn-uz
-        uz-UZ: uz-latn-uz
-        uz@Latn: uz-latn-uz
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        uz: uz-Latn-UZ
+        uz-UZ: uz-Latn-UZ
+        uz@Latn: uz-Latn-UZ
+
+  - source: /UniversalDeviceToolkit.Lib.Plugins/Resources/Resource.resx
+    translation: /UniversalDeviceToolkit.Lib.Plugins/Resources/Resource.%locale%.resx
+    languages_mapping:
+      locale:
+        nl: nl-NL
+        nl-NL: nl-NL
+        pt-BR: pt-BR
+        pt-PT: pt
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        uz: uz-Latn-UZ
+        uz-UZ: uz-Latn-UZ
+        uz@Latn: uz-Latn-UZ
+
+  - source: /UniversalDeviceToolkit.CLI/Resources/CLI.Resources.resx
+    translation: /UniversalDeviceToolkit.CLI/Resources/CLI.Resources.%locale%.resx
+    languages_mapping:
+      locale:
+        nl: nl-NL
+        nl-NL: nl-NL
+        pt-BR: pt-BR
+        pt-PT: pt
+        zh-CN: zh-Hans
+        zh-TW: zh-Hant
+        uz: uz-Latn-UZ
+        uz-UZ: uz-Latn-UZ
+        uz@Latn: uz-Latn-UZ

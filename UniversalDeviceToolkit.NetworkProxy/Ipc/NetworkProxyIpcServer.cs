@@ -14,6 +14,8 @@ namespace UniversalDeviceToolkit.NetworkProxy.Ipc;
 /// </summary>
 public sealed class NetworkProxyIpcServer : IAsyncDisposable
 {
+    private static readonly Encoding Utf8NoBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -86,12 +88,23 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
         while (!cancellationToken.IsCancellationRequested)
         {
             await using var pipe = CreatePipeServerStream();
+            using var cancellationRegistration = cancellationToken.Register(
+                static state => ((PipeStream)state!).Dispose(),
+                pipe);
             try
             {
                 await pipe.WaitForConnectionAsync(cancellationToken).ConfigureAwait(false);
                 await HandleClientAsync(pipe, cancellationToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+            catch (ObjectDisposedException) when (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+            catch (IOException) when (cancellationToken.IsCancellationRequested)
             {
                 break;
             }
@@ -108,8 +121,8 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
 
     private async Task HandleClientAsync(PipeStream pipe, CancellationToken cancellationToken)
     {
-        using var reader = new StreamReader(pipe, Encoding.UTF8, detectEncodingFromByteOrderMarks: false, bufferSize: 4096, leaveOpen: true);
-        await using var writer = new StreamWriter(pipe, Encoding.UTF8, bufferSize: 4096, leaveOpen: true) { AutoFlush = true };
+        using var reader = new StreamReader(pipe, Utf8NoBom, detectEncodingFromByteOrderMarks: false, bufferSize: 4096, leaveOpen: true);
+        await using var writer = new StreamWriter(pipe, Utf8NoBom, bufferSize: 4096, leaveOpen: true) { AutoFlush = true };
 
         var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(line))
@@ -141,21 +154,50 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
             return;
         }
 
-        var response = await DispatchAsync(request, cancellationToken).ConfigureAwait(false);
-        await WriteResponseAsync(writer, response).ConfigureAwait(false);
+        var response = await DispatchAsync(request, pipe, cancellationToken).ConfigureAwait(false);
+        if (response is not null)
+            await WriteResponseAsync(writer, response).ConfigureAwait(false);
     }
 
-    private async Task<NetworkProxyIpcResponse> DispatchAsync(NetworkProxyIpcRequest request, CancellationToken cancellationToken)
+    private async Task<NetworkProxyIpcResponse?> DispatchAsync(NetworkProxyIpcRequest request, PipeStream pipe, CancellationToken cancellationToken)
     {
         switch (request.Operation?.Trim().ToLowerInvariant())
         {
             case "status":
+                var traffic = _host as INetworkProxyTrafficSource;
                 return NetworkProxyIpcResponse.Ok(_host.StatusSummary, new Dictionary<string, string>
                 {
                     ["running"] = _host.IsRunning ? "true" : "false",
+                    ["health"] = _host.IsRunning ? "healthy" : "stopped",
                     ["port"] = _host.ListenPort.ToString(System.Globalization.CultureInfo.InvariantCulture),
-                    ["bind"] = "127.0.0.1/::1"
+                    ["bind"] = "127.0.0.1/::1",
+                    ["bytesUploaded"] = (traffic?.BytesUploaded ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    ["bytesDownloaded"] = (traffic?.BytesDownloaded ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    ["activeConnections"] = (traffic?.ActiveConnections ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture),
+                    ["totalConnections"] = (traffic?.TotalConnections ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture)
                 });
+
+            case "connections":
+                {
+                    var trafficSource = _host as INetworkProxyTrafficSource;
+                    var items = trafficSource?.GetConnectionSnapshots(80)
+                        ?? Array.Empty<NetworkProxyConnectionSnapshot>();
+                    return NetworkProxyIpcResponse.Ok("connections", new Dictionary<string, string>
+                    {
+                        ["items"] = JsonSerializer.Serialize(items, JsonOptions)
+                    });
+                }
+
+            case "destinations":
+                {
+                    var trafficSource = _host as INetworkProxyTrafficSource;
+                    var items = trafficSource?.GetDestinationSnapshots(80)
+                        ?? Array.Empty<NetworkProxyDestinationSnapshot>();
+                    return NetworkProxyIpcResponse.Ok("destinations", new Dictionary<string, string>
+                    {
+                        ["items"] = JsonSerializer.Serialize(items, JsonOptions)
+                    });
+                }
 
             case "start":
                 await _host.StartAsync(cancellationToken).ConfigureAwait(false);
@@ -189,12 +231,20 @@ public sealed class NetworkProxyIpcServer : IAsyncDisposable
                 });
 
             case "shutdown":
-                _ = Task.Run(async () =>
                 {
-                    await Task.Delay(50, CancellationToken.None).ConfigureAwait(false);
-                    Environment.Exit(0);
-                });
-                return NetworkProxyIpcResponse.Ok("shutting down");
+                    // Write and flush the response before scheduling process exit,
+                    // so the client is guaranteed to receive the reply.
+                    var shutdownWriter = new StreamWriter(pipe, Utf8NoBom, bufferSize: 4096, leaveOpen: true) { AutoFlush = true };
+                    await WriteResponseAsync(shutdownWriter, NetworkProxyIpcResponse.Ok("shutting down")).ConfigureAwait(false);
+                    await shutdownWriter.FlushAsync(cancellationToken).ConfigureAwait(false);
+                    await pipe.FlushAsync(cancellationToken).ConfigureAwait(false);
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(100, CancellationToken.None).ConfigureAwait(false);
+                        Environment.Exit(0);
+                    });
+                    return null;
+                }
 
             default:
                 return NetworkProxyIpcResponse.Fail($"unknown operation: {request.Operation}");

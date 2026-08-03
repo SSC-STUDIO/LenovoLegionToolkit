@@ -2,13 +2,17 @@ using global::Avalonia;
 using global::Avalonia.Controls;
 using global::Avalonia.Interactivity;
 using UniversalDeviceToolkit.Avalonia.Pages;
+using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia;
 
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    private readonly IPlatformServices _platformServices;
+
+    public MainWindow(IPlatformServices platformServices)
     {
+        _platformServices = platformServices;
         InitializeComponent();
         Loaded += OnLoaded;
         
@@ -60,7 +64,7 @@ public partial class MainWindow : Window
 
     private void ShowDashboardPage()
     {
-        MainContent.Content = new DashboardPage();
+        MainContent.Content = new DashboardPage(_platformServices);
         SetActiveButton(DashboardButton);
     }
 
@@ -72,7 +76,7 @@ public partial class MainWindow : Window
 
     public void ShowSettingsPage()
     {
-        MainContent.Content = new SettingsPage();
+        MainContent.Content = new SettingsPage(_platformServices);
         SetActiveButton(SettingsButton);
     }
 

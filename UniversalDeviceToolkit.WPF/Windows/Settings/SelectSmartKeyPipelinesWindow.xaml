@@ -56,13 +56,22 @@
             </Grid.RowDefinitions>
 
             <custom:CardControl Grid.Row="0" Margin="0,0,0,24">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SelectSmartKeyPipelinesWindow_ShowThisApp}" />
-                </custom:CardControl.Header>
-                <wpfui:ToggleSwitch
-                    x:Name="_showThisAppToggle"
-                    AutomationProperties.Name="{x:Static resources:Resource.SelectSmartKeyPipelinesWindow_ShowThisApp}"
-                    Click="ShowThisAppToggle_Click" />
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SelectSmartKeyPipelinesWindow_ShowThisApp}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_showThisAppToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SelectSmartKeyPipelinesWindow_ShowThisApp}"
+                        Click="ShowThisAppToggle_Click" />
+                </Grid>
             </custom:CardControl>
 
             <TextBlock
@@ -120,4 +129,3 @@
         </Grid>
     </Grid>
 </local:BaseWindow>
-

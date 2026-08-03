@@ -79,7 +79,7 @@
             Height="38"
             CanMaximize="True"
             ShowMaximize="True"
-            Background="{DynamicResource AppNavigationBackgroundBrush}"
+            Background="Transparent"
             Title="">
             <wpfui:TitleBar.CenterContent>
                 <TextBlock
@@ -90,7 +90,7 @@
                     FlowDirection="LeftToRight"
                     Focusable="False"
                     FontSize="{DynamicResource FontSizeTitleBarDeviceInfo}"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     IsHitTestVisible="False"
                     Style="{StaticResource AppCaptionTextBlockStyle}"
                     Text="{x:Static utils:AppDisplayName.Value}"
@@ -150,7 +150,7 @@
             x:Name="_contentGrid"
             Grid.Row="1"
             Margin="12,0,0,0"
-            Background="{DynamicResource AppNavigationBackgroundBrush}">
+            Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <!-- Hit-test only; the continuous chrome edge is the content surface left border. -->
@@ -220,7 +220,7 @@
                         Icon="Apps24"
                         PageTag="pluginExtensions"
                         PageType="{x:Type pages:PluginExtensionsPage}"
-                        Visibility="Collapsed"
+                        Visibility="Visible"
                         ToolTip="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}" />
 
                     <custom:NavigationItem

@@ -290,7 +290,7 @@ public partial class DeviceInformationWindow
     private async void WarrantyLinkCardAction_OnClick(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
-        await OpenWarrantySupportLinkAsync().ConfigureAwait(true);
+        await OpenWarrantySupportLinkAsync();
     }
 
     private async Task OpenWarrantySupportLinkAsync()
@@ -361,4 +361,3 @@ public partial class DeviceInformationWindow
     }
 }
 }
-

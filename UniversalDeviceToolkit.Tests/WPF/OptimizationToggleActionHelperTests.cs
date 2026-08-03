@@ -45,6 +45,47 @@ public sealed class OptimizationToggleActionHelperTests
     }
 
     [Fact]
+    public void FindTogglePair_ReturnsNullForAnUnpairedAction()
+    {
+        var enable = CreateAction("custom.feature.enable", recommended: true);
+        var disable = CreateAction("custom.feature.disable", recommended: false);
+        var unrelated = CreateAction("custom.other", recommended: true);
+
+        OptimizationToggleActionHelper.FindTogglePair(unrelated, [enable, disable, unrelated])
+            .Should()
+            .BeNull();
+    }
+
+    [Fact]
+    public void GetRecommendedSelectedState_UsesEnableSideRecommendationForVisibleDisableRow()
+    {
+        var enable = CreateAction("custom.feature.enable", recommended: true);
+        var disable = CreateAction("custom.feature.disable", recommended: false);
+
+        OptimizationToggleActionHelper.GetRecommendedSelectedState(disable, [enable, disable])
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact]
+    public void CategorySelectRecommended_PreservesRecommendedFeatureStateForDisableRow()
+    {
+        var enable = CreateAction("custom.feature.enable", recommended: true);
+        var disable = CreateAction("custom.feature.disable", recommended: false);
+        OptimizationToggleActionHelper.ApplyTogglePairPresentation(true, enable, disable);
+        using var category = new OptimizationCategoryViewModel(
+            "custom",
+            "Custom",
+            "Custom",
+            "{0} / {1}",
+            [enable, disable]);
+
+        category.SelectRecommended();
+
+        disable.IsSelected.Should().BeTrue();
+    }
+
+    [Fact]
     public void ApplyTogglePairPresentation_ShowsEnableWhenDisabled()
     {
         var enable = CreateAction("custom.mouse.cursor.auto-theme.enable", recommended: true);
@@ -56,8 +97,15 @@ public sealed class OptimizationToggleActionHelperTests
         disable.IsVisible.Should().BeFalse();
         enable.IsSelected.Should().BeFalse();
         disable.IsSelected.Should().BeFalse();
+        enable.IsApplied.Should().BeFalse();
+        disable.IsApplied.Should().BeFalse();
+        enable.CanEdit.Should().BeTrue();
+        enable.IsDirty.Should().BeFalse();
         enable.HasRecommendedTag.Should().BeTrue();
         disable.HasRecommendedTag.Should().BeFalse();
+
+        enable.IsSelected = true;
+        enable.IsDirty.Should().BeTrue();
     }
 
     [Fact]
@@ -72,8 +120,56 @@ public sealed class OptimizationToggleActionHelperTests
         disable.IsVisible.Should().BeTrue();
         enable.IsSelected.Should().BeFalse();
         disable.IsSelected.Should().BeTrue();
+        enable.IsApplied.Should().BeFalse();
+        disable.IsApplied.Should().BeTrue();
+        disable.CanEdit.Should().BeTrue();
+        disable.IsDirty.Should().BeFalse();
         enable.HasRecommendedTag.Should().BeTrue();
         disable.HasRecommendedTag.Should().BeFalse();
+
+        disable.IsSelected = false;
+        disable.IsDirty.Should().BeTrue();
+    }
+
+    [Fact]
+    public void ApplyTogglePairPresentation_DoesNotTreatUnknownAsDisabled()
+    {
+        var enable = CreateAction("custom.mouse.cursor.auto-theme.enable", recommended: true);
+        var disable = CreateAction("custom.mouse.cursor.auto-theme.disable", recommended: false);
+
+        OptimizationToggleActionHelper.ApplyTogglePairPresentation(null, enable, disable);
+
+        enable.IsVisible.Should().BeTrue();
+        disable.IsVisible.Should().BeFalse();
+        enable.IsEnabled.Should().BeFalse();
+        disable.IsEnabled.Should().BeFalse();
+        enable.IsApplied.Should().BeNull();
+        disable.IsApplied.Should().BeNull();
+        enable.CanEdit.Should().BeFalse();
+        disable.CanEdit.Should().BeFalse();
+        enable.CheckState.Should().BeNull();
+        disable.CheckState.Should().BeNull();
+    }
+
+    [Fact]
+    public void CategorySelectionChanged_RefreshesWhenActionAvailabilityChanges()
+    {
+        var action = CreateAction("custom.feature", recommended: true);
+        using var category = new OptimizationCategoryViewModel(
+            "custom",
+            "Custom",
+            "Custom",
+            "{0} / {1}",
+            [action]);
+        var notifications = 0;
+        category.SelectionChanged += (_, _) => notifications++;
+
+        action.IsEnabled = false;
+        action.IsVisible = false;
+
+        notifications.Should().Be(2);
+        category.VisibleActionCount.Should().Be(0);
+        category.SelectionSummary.Should().Be("0 / 0");
     }
 
     private static OptimizationActionViewModel CreateAction(string key, bool recommended)

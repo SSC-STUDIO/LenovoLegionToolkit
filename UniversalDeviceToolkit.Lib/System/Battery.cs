@@ -12,7 +12,8 @@ namespace UniversalDeviceToolkit.Lib.System;
 
 public static class Battery
 {
-    private static readonly ApplicationSettings Settings = IoCContainer.Resolve<ApplicationSettings>();
+    private static ApplicationSettings? _settings;
+    private static ApplicationSettings Settings => _settings ??= IoCContainer.Resolve<ApplicationSettings>();
     private static readonly object _batteryDataLock = new();
     private static int _minDischargeRate = int.MaxValue;
     private static int _maxDischargeRate = 0;

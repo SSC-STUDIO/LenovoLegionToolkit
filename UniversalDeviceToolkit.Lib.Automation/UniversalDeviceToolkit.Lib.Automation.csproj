@@ -2,7 +2,6 @@
 	<PropertyGroup>
 		<TargetFramework>$(UDTTargetFramework)</TargetFramework>
 		<RootNamespace>UniversalDeviceToolkit.Lib.Automation</RootNamespace>
-		<Nullable>enable</Nullable>
 		<Copyright>$(ProjectCopyright)</Copyright>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>

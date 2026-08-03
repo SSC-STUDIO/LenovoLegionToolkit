@@ -11,7 +11,7 @@ internal sealed class DownloadProgress
 }
 
 /// <summary>
-/// Downloads the payload with mirror fallbacks and optional SHA-256 verification.
+/// Downloads installer resources with optional SHA-256 or SHA-512 verification.
 /// </summary>
 internal static class Downloader
 {
@@ -62,15 +62,35 @@ internal static class Downloader
         throw new InvalidOperationException($"All payload mirrors failed. Last error: {lastError?.Message}", lastError);
     }
 
-    public static async Task<string> DownloadFileAsync(string url, string destinationPath, CancellationToken ct)
+    public static async Task<string> DownloadFileAsync(
+        string url,
+        string destinationPath,
+        CancellationToken ct,
+        string? expectedSha512 = null)
     {
-        using var client = CreateClient();
-        using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
-        using var source = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
-        using var target = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
-        await source.CopyToAsync(target, ct).ConfigureAwait(false);
-        return destinationPath;
+        try
+        {
+            using var client = CreateClient();
+            using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            using var source = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
+            using var target = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            await source.CopyToAsync(target, ct).ConfigureAwait(false);
+
+            if (!string.IsNullOrWhiteSpace(expectedSha512))
+            {
+                var actual = await ComputeSha512Async(destinationPath, ct).ConfigureAwait(false);
+                if (!actual.Equals(expectedSha512, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException($"SHA-512 mismatch: expected {expectedSha512}, got {actual}.");
+            }
+
+            return destinationPath;
+        }
+        catch
+        {
+            TryDelete(destinationPath);
+            throw;
+        }
     }
 
     private static readonly TimeSpan ConnectTimeout = TimeSpan.FromSeconds(30);
@@ -94,9 +114,9 @@ internal static class Downloader
             response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, connectCts.Token)
                 .ConfigureAwait(false);
         }
-        catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+        catch (OperationCanceledException ex) when (!ct.IsCancellationRequested)
         {
-            throw new TimeoutException($"Connecting to '{url}' timed out after {ConnectTimeout.TotalSeconds:0} s.");
+            throw new TimeoutException($"Connecting to '{url}' timed out after {ConnectTimeout.TotalSeconds:0} s.", ex);
         }
 
         using (response)
@@ -121,9 +141,9 @@ internal static class Downloader
                 {
                     read = await source.ReadAsync(buffer, stallCts.Token).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+                catch (OperationCanceledException ex) when (!ct.IsCancellationRequested)
                 {
-                    throw new TimeoutException($"Download from '{url}' stalled for {StallTimeout.TotalSeconds:0} s at {received} bytes.");
+                    throw new TimeoutException($"Download from '{url}' stalled for {StallTimeout.TotalSeconds:0} s at {received} bytes.", ex);
                 }
 
                 if (read <= 0)
@@ -169,6 +189,13 @@ internal static class Downloader
     {
         using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         var hash = await SHA256.HashDataAsync(stream, ct).ConfigureAwait(false);
+        return Convert.ToHexString(hash);
+    }
+
+    private static async Task<string> ComputeSha512Async(string path, CancellationToken ct)
+    {
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        var hash = await SHA512.HashDataAsync(stream, ct).ConfigureAwait(false);
         return Convert.ToHexString(hash);
     }
 

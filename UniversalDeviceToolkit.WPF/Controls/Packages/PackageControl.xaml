@@ -81,7 +81,7 @@
                         x:Name="_titleTextBlock"
                         Grid.Column="0"
                         FontSize="{DynamicResource FontSizeCaption}"
-                        FontWeight="SemiBold"
+                        FontWeight="Medium"
                         MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
                         TextTrimming="CharacterEllipsis" />
 

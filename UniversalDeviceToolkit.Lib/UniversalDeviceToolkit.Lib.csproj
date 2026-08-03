@@ -5,7 +5,9 @@
 		     Legacy LenovoLegionToolkit.* names remain only as BrandCompatibility / dual-load string surfaces. -->
 		<RootNamespace>UniversalDeviceToolkit.Lib</RootNamespace>
 		<AssemblyName>UniversalDeviceToolkit.Lib</AssemblyName>
-		<Nullable>enable</Nullable>
+		<!-- This project uses explicit framework imports; enabling SDK global usings introduces
+		     ambiguous System.Windows.Forms/System.Timers and System.Drawing/Windows.UI types. -->
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Copyright>$(ProjectCopyright)</Copyright>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>

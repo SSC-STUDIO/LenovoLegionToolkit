@@ -11,8 +11,18 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Security)]
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class PluginSignatureValidatorTests : TemporaryFileTestBase
 {
+    [Fact]
+    public void ProductionSignaturePolicy_ShouldNotUseTrustedPackageStoreAsSignatureBypass()
+    {
+        var source = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Lib.Plugins", "PluginSignatureValidator.cs");
+
+        source.Should().NotContain("TrustedPluginPackageStore.IsTrustedFile");
+    }
+
     #region Constructor Tests
 
     [Fact]
@@ -125,7 +135,7 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task ValidateAsync_WithTrustedOnlinePackageHash_ShouldAllowUnsignedFile()
+    public async Task ValidateAsync_WithTrustedOnlinePackageHash_ShouldStillRejectUnsignedFile()
     {
         // Arrange
         var originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
@@ -146,8 +156,8 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
 
             // Assert
             result.Status.Should().Be(PluginSignatureStatus.NotSigned);
-            result.IsAllowedByPolicy.Should().BeTrue();
-            result.IsValid.Should().BeTrue();
+            result.IsAllowedByPolicy.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
         }
         finally
         {
@@ -156,7 +166,7 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task ValidateAsync_WhenTrustedPackageMovesDirectory_ShouldAllowSameUnsignedFileHash()
+    public async Task ValidateAsync_WhenTrustedPackageMovesDirectory_ShouldStillRejectUnsignedFile()
     {
         // Arrange
         var originalAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
@@ -180,8 +190,8 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
 
             // Assert
             result.Status.Should().Be(PluginSignatureStatus.NotSigned);
-            result.IsAllowedByPolicy.Should().BeTrue();
-            result.IsValid.Should().BeTrue();
+            result.IsAllowedByPolicy.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
             TrustedPluginPackageStore.IsTrustedFile(movedPluginPath).Should().BeTrue();
         }
         finally

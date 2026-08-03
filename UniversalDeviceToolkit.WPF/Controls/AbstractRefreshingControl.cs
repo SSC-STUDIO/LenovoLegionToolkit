@@ -28,7 +28,9 @@ public abstract class AbstractRefreshingControl : UserControl
 
     private void AbstractRefreshingControl_Unloaded(object sender, RoutedEventArgs e)
     {
-        Loaded -= RefreshingControl_Loaded;
+        // Note: Do NOT unsubscribe Loaded here — it must remain subscribed
+        // so that it fires again when the control is re-added to the visual tree.
+        // The Loaded handler uses -= / += idempotent re-attachment to prevent duplicates.
         IsVisibleChanged -= RefreshingControl_IsVisibleChanged;
     }
 

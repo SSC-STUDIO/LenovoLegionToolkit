@@ -8,6 +8,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
+[Collection(TestCollections.ProcessState)]
 [Trait("Category", TestCategories.Unit)]
 public class HardwareStateRecoveryServiceTests : IDisposable
 {

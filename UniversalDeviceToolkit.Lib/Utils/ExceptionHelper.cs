@@ -7,14 +7,10 @@ using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 
-// NOTE (intentional divergence, do not "deduplicate"):
-// UniversalDeviceToolkit.Shared.Utils.ExceptionHelper carries cross-platform
-// English-language factories (used by the portable Lib.Shared code that cannot
-// depend on this assembly's Resource tables). This Lib implementation is the
-// authoritative Windows version with fully localized messages from
-// UniversalDeviceToolkit.Lib.Resources.Resource. Both classes share only
-// InvalidSettingsFilename / SettingsPathEscapesAllowedDir, whose message text
-// deliberately differs (localized vs English). Keep them in sync by signature.
+// Windows-specific factories remain here because they use localized Windows
+// resource strings. The shared settings factories are forwarded below so their
+// validation behavior has one implementation.
+using SharedExceptionHelper = UniversalDeviceToolkit.Shared.Utils.ExceptionHelper;
 public static class ExceptionHelper
 {
     public static InvalidOperationException InvalidState(string? details = null) =>
@@ -246,10 +242,10 @@ public static class ExceptionHelper
         new(Resource.Exception_NoSupportedControllerFound);
 
     public static ArgumentException InvalidSettingsFilename(string filename, string paramName) =>
-        new(string.Format(Resource.Exception_InvalidSettingsFilename, filename), paramName);
+        SharedExceptionHelper.InvalidSettingsFilename(filename, paramName);
 
     public static InvalidOperationException SettingsPathEscapesAllowedDir(string settingsStorePath) =>
-        new(string.Format(Resource.Exception_SettingsPathEscapesAllowedDir, settingsStorePath));
+        SharedExceptionHelper.SettingsPathEscapesAllowedDir(settingsStorePath);
 
     public static SoftwareDisablerException FailedToRegisterTask(string taskName, string taskPath, string typeName, Exception inner) =>
         new(string.Format(Resource.Exception_FailedToRegisterTask, taskName, taskPath, typeName), inner);

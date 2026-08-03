@@ -545,6 +545,8 @@ public partial class App
             StopMacroControllerSafely();
             StopSingleInstanceThreadSafely();
 
+            IoCContainer.Dispose();
+
             await ForceExitAsync((uint)e.ApplicationExitCode);
         }
         catch (Exception ex)

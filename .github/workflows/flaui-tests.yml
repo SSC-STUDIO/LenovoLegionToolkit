@@ -47,8 +47,8 @@ jobs:
           dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore
           if ($LASTEXITCODE -ne 0) { throw "WPF build failed." }
 
-          dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
-          if ($LASTEXITCODE -ne 0) { throw "Test project build failed." }
+          dotnet build UniversalDeviceToolkit.UiAutomation.Tests/UniversalDeviceToolkit.UiAutomation.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
+          if ($LASTEXITCODE -ne 0) { throw "UI automation test project build failed." }
 
       - name: Stop existing app instances
         shell: pwsh
@@ -56,10 +56,31 @@ jobs:
           Get-Process -Name 'Universal Device Toolkit' -ErrorAction SilentlyContinue | Stop-Process -Force
           Start-Sleep -Seconds 2
 
+      - name: Verify interactive desktop preconditions
+        shell: pwsh
+        run: |
+          if ($env:SESSIONNAME -eq 'Services') {
+            throw 'FlaUI requires an interactive desktop session; SESSIONNAME=Services.'
+          }
+          if (-not [Environment]::UserInteractive) {
+            throw 'FlaUI requires an interactive desktop session.'
+          }
+
+          $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+          $principal = [Security.Principal.WindowsPrincipal]::new($identity)
+          if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+            throw 'FlaUI requires an elevated Administrator desktop session.'
+          }
+
+          $exe = Join-Path $PWD 'UniversalDeviceToolkit.WPF\bin\x64\Release\net10.0-windows10.0.26100.0\win-x64\Universal Device Toolkit.exe'
+          if (-not (Test-Path $exe)) {
+            throw "Built UDT executable not found at $exe"
+          }
+
       - name: Run FlaUI tests
         shell: pwsh
         run: |
-          dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj `
+          dotnet test UniversalDeviceToolkit.UiAutomation.Tests/UniversalDeviceToolkit.UiAutomation.Tests.csproj `
             --framework net10.0-windows10.0.26100.0 `
             --configuration Release `
             --no-build `

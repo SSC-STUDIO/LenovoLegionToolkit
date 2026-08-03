@@ -9,6 +9,7 @@ namespace UniversalDeviceToolkit.Tests.Plugins;
 
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class PluginPathsTests : TemporaryFileTestBase
 {
     private readonly string? _previousAppDataOverride;

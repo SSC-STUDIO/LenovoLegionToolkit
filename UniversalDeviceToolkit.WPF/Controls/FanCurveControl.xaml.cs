@@ -18,19 +18,18 @@ public partial class FanCurveControl : UserControl
 {
     private const string CelsiusUnit = "\u00B0C";
     private const string RpmUnit = "RPM";
-
-    /// <summary>Matches Track Margin="0,10" in FanCurveSliderStyle — usable thumb travel area.</summary>
-    private const double TrackVerticalMargin = 10;
+    private const double MinimumColumnWidth = 24;
+    private const int ValueTickCount = 5;
 
     private readonly List<Slider> _sliders = [];
+    private readonly List<TextBlock> _temperatureLabels = [];
     private readonly InfoTooltip _customToolTip = new();
     private readonly DebounceDispatcher _debouncer = new();
-    private Path? _cachedLinePath;
-    private Polygon? _cachedFillPolygon;
-    private Brush? _cachedLineBrush;
+    private DispatcherOperation? _pendingDrawOperation;
 
     private FanTableData[]? _tableData;
     private FanTable? _minimumFanTable;
+    private int _layoutGeneration;
 
     public FanCurveControl()
     {
@@ -38,8 +37,11 @@ public partial class FanCurveControl : UserControl
 
         MouseLeave += FanCurveControl_MouseLeave;
         Unloaded += FanCurveControl_Unloaded;
-        SizeChanged += (_, _) => DrawGraph();
-        _slidersGrid.SizeChanged += (_, _) => DrawGraph();
+        SizeChanged += (_, _) => QueueDrawGraph();
+        _plotContent.SizeChanged += (_, _) => QueueDrawGraph();
+        _slidersGrid.SizeChanged += (_, _) => QueueDrawGraph();
+        _xAxisLabelsCanvas.SizeChanged += (_, _) => QueueDrawGraph();
+        Loaded += (_, _) => QueueDrawGraph();
     }
 
     private void FanCurveControl_MouseLeave(object sender, MouseEventArgs e)
@@ -49,6 +51,10 @@ public partial class FanCurveControl : UserControl
 
     private void FanCurveControl_Unloaded(object sender, RoutedEventArgs e)
     {
+        _layoutGeneration++;
+        _pendingDrawOperation?.Abort();
+        _pendingDrawOperation = null;
+        _customToolTip.IsOpen = false;
         MouseLeave -= FanCurveControl_MouseLeave;
         foreach (var slider in _sliders)
         {
@@ -57,15 +63,12 @@ public partial class FanCurveControl : UserControl
         }
     }
 
-    protected override Size ArrangeOverride(Size arrangeBounds)
-    {
-        var size = base.ArrangeOverride(arrangeBounds);
-        DrawGraph();
-        return size;
-    }
-
     public void SetFanTableInfo(FanTableInfo fanTableInfo, FanTable minimumFanTable)
     {
+        _layoutGeneration++;
+        _pendingDrawOperation?.Abort();
+        _pendingDrawOperation = null;
+
         foreach (var slider in _sliders)
         {
             slider.MouseMove -= Slider_MouseMove;
@@ -74,14 +77,20 @@ public partial class FanCurveControl : UserControl
 
         _sliders.Clear();
         _slidersGrid.Children.Clear();
-        InvalidateGraphCache();
+        _slidersGrid.ColumnDefinitions.Clear();
+        ClearGraphLayers();
 
         var tableValues = fanTableInfo.Table.GetTable();
-
         for (var i = 0; i < tableValues.Length; i++)
         {
+            _slidersGrid.ColumnDefinitions.Add(new ColumnDefinition
+            {
+                Width = new GridLength(1, GridUnitType.Star),
+                MinWidth = MinimumColumnWidth,
+            });
+
             var slider = GenerateSlider(i, 0, 10);
-            // Suppress ValueChanged side-effects while seeding firmware table.
+            // Suppress ValueChanged side-effects while seeding the firmware table.
             slider.ValueChanged -= Slider_OnValueChanged;
             slider.Value = tableValues[i];
             slider.ValueChanged += Slider_OnValueChanged;
@@ -91,14 +100,10 @@ public partial class FanCurveControl : UserControl
 
         _tableData = fanTableInfo.Data;
         _minimumFanTable = minimumFanTable;
+        UpdateTemperatureAxisLabels();
 
-        // Layout → render → draw from values (not fragile thumb visuals).
-        Dispatcher.InvokeAsync(() =>
-        {
-            UpdateLayout();
-            DrawGraph();
-        }, DispatcherPriority.Loaded);
-        Dispatcher.InvokeAsync(DrawGraph, DispatcherPriority.Render);
+        // Dynamic columns and slider templates must be arranged before the graph is drawn.
+        QueueDrawGraph();
     }
 
     public FanTableInfo? GetFanTableInfo()
@@ -126,9 +131,8 @@ public partial class FanCurveControl : UserControl
         slider.MouseMove += Slider_MouseMove;
         slider.ValueChanged += Slider_OnValueChanged;
 
-        // Align with original LLT: column 0 is left gutter, points use 1..N.
-        Grid.SetColumn(slider, index + 1);
-
+        // Each point owns one dynamic star-sized column. There is no artificial gutter column.
+        Grid.SetColumn(slider, index);
         return slider;
     }
 
@@ -146,21 +150,21 @@ public partial class FanCurveControl : UserControl
             return;
         }
 
-        // Slider value is 0..10 step index; FanSpeeds table is 0-based RPM ladder → value-1.
         _customToolTip.Update(_tableData, (int)slider.Tag, (int)slider.Value - 1);
-
         _customToolTip.Placement = PlacementMode.Custom;
         _customToolTip.PlacementTarget = track.Thumb;
         _customToolTip.CustomPopupPlacementCallback = ToolTipCustomPopupPlacementCallback;
-
         _customToolTip.HorizontalOffset += -0.1;
         _customToolTip.HorizontalOffset += +0.1;
-
         _customToolTip.IsOpen = true;
     }
 
     private void Slider_OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
+        // The graph is a direct representation of the controls, so it must redraw with every
+        // value change instead of waiting for the debounced firmware validation below.
+        QueueDrawGraph();
+
         _debouncer.Throttle(100, () =>
         {
             if (_sliders.Count < 10)
@@ -171,8 +175,7 @@ public partial class FanCurveControl : UserControl
 
             if (currentSlider is { IsKeyboardFocusWithin: false, IsMouseCaptureWithin: false })
             {
-                // Still redraw — programmatic/min clamps need the line to follow.
-                DrawGraph();
+                QueueDrawGraph();
                 return;
             }
 
@@ -189,7 +192,7 @@ public partial class FanCurveControl : UserControl
             }
 
             VerifyValues(currentSlider);
-            DrawGraph();
+            QueueDrawGraph();
         });
     }
 
@@ -209,7 +212,7 @@ public partial class FanCurveControl : UserControl
 
         var currentValue = currentSlider.Value;
 
-        // Fan table must be non-decreasing with temperature (left → right).
+        // Fan speed must be non-decreasing as temperature increases from left to right.
         for (var i = 0; i < currentIndex; i++)
         {
             if (_sliders[i].Value > currentValue)
@@ -223,134 +226,291 @@ public partial class FanCurveControl : UserControl
         }
     }
 
-    private void InvalidateGraphCache()
+    private void QueueDrawGraph()
     {
-        _cachedLinePath = null;
-        _cachedFillPolygon = null;
-        _cachedLineBrush = null;
-        _canvas.Children.Clear();
+        if (!IsLoaded)
+            return;
+
+        var generation = ++_layoutGeneration;
+        _pendingDrawOperation?.Abort();
+        _pendingDrawOperation = Dispatcher.InvokeAsync(() => DrawGraph(generation), DispatcherPriority.Render);
     }
 
-    private void DrawGraph()
+    private void ClearGraphLayers()
     {
-        if (_sliders.Count < 2)
+        _gridCanvas.Children.Clear();
+        _graphCanvas.Children.Clear();
+    }
+
+    private void DrawGraph(int generation)
+    {
+        if (generation != _layoutGeneration || !IsLoaded)
             return;
+
+        UpdateLayout();
+
+        if (generation != _layoutGeneration)
+            return;
+
+        if (_sliders.Count < 2 || _plotContent.ActualWidth < 2 || _plotContent.ActualHeight < 2)
+        {
+            ClearGraphLayers();
+            return;
+        }
+
+        if (!TryGetValueRangeY(out var valueRange) || !TryGetValueBackedGraphPoints(valueRange, out var points))
+        {
+            // A render pass can happen before one of the dynamic Slider templates has
+            // produced its Track/Thumb. Leave the layers empty until the next layout pass;
+            // do not mix rendered points with estimated fallback points.
+            ClearGraphLayers();
+            _pendingDrawOperation = Dispatcher.InvokeAsync(() => DrawGraph(generation), DispatcherPriority.ContextIdle);
+            return;
+        }
 
         var lineBrush = ResolveLineBrush();
         var fillBrush = ResolveFillBrush(lineBrush);
 
-        // Compute points from values (old LLT approach) — thumb visuals lag layout and
-        // produced a decorative/wrong curve with orphaned points.
-        var points = _sliders
-            .Select(GetGraphPointFromValue)
-            .ToArray();
-
-        if (points.Length < 2)
-            return;
-
-        // Need at least some real width after layout.
-        if (points.All(p => p.X <= 0) || _slidersGrid.ActualHeight < 8)
-            return;
-
-        if (!ReferenceEquals(_cachedLineBrush, lineBrush))
+        _gridCanvas.Children.Clear();
+        _gridCanvas.Children.Add(new Path
         {
-            _cachedLineBrush = lineBrush;
-            InvalidateGraphCache();
-        }
+            Data = CreateGridGeometry(_plotContent.ActualWidth, valueRange.Top, valueRange.Bottom),
+            Stroke = ResolveGridBrush(),
+            StrokeThickness = 0.75,
+            Opacity = 0.7,
+            IsHitTestVisible = false,
+        });
 
-        if (_cachedLinePath is null || _cachedFillPolygon is null)
+        var linePath = new Path
         {
-            _canvas.Children.Clear();
-
-            _cachedFillPolygon = new Polygon { IsHitTestVisible = false };
-            _canvas.Children.Add(_cachedFillPolygon);
-
-            _cachedLinePath = new Path
-            {
-                StrokeThickness = 1.4,
-                StrokeStartLineCap = PenLineCap.Round,
-                StrokeEndLineCap = PenLineCap.Round,
-                StrokeLineJoin = PenLineJoin.Round,
-                IsHitTestVisible = false,
-            };
-            _canvas.Children.Add(_cachedLinePath);
-        }
-
-        _cachedLinePath.Stroke = lineBrush;
-
-        var pathSegmentCollection = new PathSegmentCollection();
-        foreach (var point in points.Skip(1))
-            pathSegmentCollection.Add(new LineSegment { Point = point, IsStroked = true });
-
-        _cachedLinePath.Data = new PathGeometry
-        {
-            Figures =
-            [
-                new PathFigure
-                {
-                    StartPoint = points[0],
-                    Segments = pathSegmentCollection,
-                    IsClosed = false,
-                    IsFilled = false,
-                }
-            ]
+            Data = new PathGeometry { Figures = new PathFigureCollection { CreatePolylineFigure(points) } },
+            Stroke = lineBrush,
+            StrokeThickness = 2.25,
+            StrokeStartLineCap = PenLineCap.Round,
+            StrokeEndLineCap = PenLineCap.Round,
+            StrokeLineJoin = PenLineJoin.Round,
+            IsHitTestVisible = false,
         };
 
-        var canvasHeight = _canvas.ActualHeight > 1 ? _canvas.ActualHeight : _slidersGrid.ActualHeight;
-        var baselineY = Math.Max(0, canvasHeight - 1);
-        var pointCollection = new PointCollection { new(points[0].X, baselineY) };
-        foreach (var point in points)
-            pointCollection.Add(point);
-        pointCollection.Add(new(points[^1].X, baselineY));
+        var fillPath = new Path
+        {
+            Data = new PathGeometry { Figures = new PathFigureCollection { CreateAreaFigure(points, valueRange.Bottom) } },
+            Fill = fillBrush,
+            IsHitTestVisible = false,
+        };
 
-        _cachedFillPolygon.Fill = fillBrush;
-        _cachedFillPolygon.Points = pointCollection;
+        _graphCanvas.Children.Clear();
+        _graphCanvas.Children.Add(fillPath);
+        _graphCanvas.Children.Add(linePath);
+        PositionTemperatureAxisLabels(points);
     }
 
-    /// <summary>
-    /// Map slider value → canvas point. High value = top of chart (100% fan), low = bottom.
-    /// Matches original UniversalDeviceToolkit FanCurveControl geometry.
-    /// </summary>
-    private Point GetGraphPointFromValue(Slider slider)
+    private bool TryGetValueBackedGraphPoints((double Top, double Bottom) valueRange, out Point[] points)
     {
-        var height = slider.ActualHeight > 1 ? slider.ActualHeight : _slidersGrid.ActualHeight;
-        var width = slider.ActualWidth > 1 ? slider.ActualWidth : (_slidersGrid.ActualWidth / Math.Max(1, _sliders.Count));
+        points = new Point[_sliders.Count];
+        for (var i = 0; i < _sliders.Count; i++)
+        {
+            var slider = _sliders[i];
+            if (slider.Template.FindName("PART_Track", slider) is not Track track
+                || track.Thumb is not FrameworkElement thumb
+                || track.ActualWidth <= 0
+                || track.ActualHeight <= 0
+                || thumb.ActualWidth <= 0
+                || thumb.ActualHeight <= 0)
+                return false;
 
-        var range = Math.Max(1e-6, slider.Maximum - slider.Minimum);
-        var ratio = (slider.Value - slider.Minimum) / range; // 0..1
+            try
+            {
+                var x = thumb.TranslatePoint(new Point(thumb.ActualWidth / 2, thumb.ActualHeight / 2), _graphCanvas).X;
+                var y = GetValueY(slider.Value, slider.Minimum, slider.Maximum, valueRange.Top, valueRange.Bottom);
+                if (!IsFinite(x) || !IsFinite(y))
+                    return false;
 
-        // Track has vertical margin; map onto usable band so points sit on the thumb travel path.
-        var usable = Math.Max(1, height - 2 * TrackVerticalMargin);
-        var yInSlider = TrackVerticalMargin + usable * (1.0 - ratio);
-        var xInSlider = width * 0.5;
+                points[i] = new Point(x, y);
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
+            }
+        }
 
-        return slider.TranslatePoint(new Point(xInSlider, yInSlider), _canvas);
+        return true;
     }
+
+    private bool TryGetValueRangeY(out (double Top, double Bottom) valueRange)
+    {
+        valueRange = default;
+        if (_sliders.Count > 0
+            && _sliders[0].Template.FindName("PART_Track", _sliders[0]) is Track track
+            && track.Thumb is FrameworkElement thumb
+            && thumb.ActualHeight > 0
+            && track.ActualHeight > 0)
+        {
+            try
+            {
+                var trackTop = track.TranslatePoint(new Point(0, 0), _gridCanvas).Y;
+                var trackBottom = track.TranslatePoint(new Point(0, track.ActualHeight), _gridCanvas).Y;
+                var radius = thumb.ActualHeight / 2;
+                var top = trackTop + radius;
+                var bottom = trackBottom - radius;
+                if (IsFinite(top) && IsFinite(bottom) && bottom > top)
+                {
+                    valueRange = (top, bottom);
+                    return true;
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // Wait for the next render pass while WPF is arranging the template.
+            }
+        }
+
+        return false;
+    }
+
+    private static PathGeometry CreateGridGeometry(double width, double top, double bottom)
+    {
+        var geometry = new PathGeometry();
+        for (var i = 0; i <= ValueTickCount; i++)
+        {
+            var y = top + (bottom - top) * i / ValueTickCount;
+            var figure = new PathFigure
+            {
+                StartPoint = new Point(0, y),
+                IsClosed = false,
+                IsFilled = false,
+            };
+            figure.Segments.Add(new LineSegment(new Point(width, y), true));
+            geometry.Figures.Add(figure);
+        }
+
+        return geometry;
+    }
+
+    internal static PathFigure CreatePolylineFigure(IReadOnlyList<Point> points)
+    {
+        var figure = new PathFigure { StartPoint = points[0], IsFilled = false, IsClosed = false };
+        foreach (var segment in CreatePolylineSegments(points))
+            figure.Segments.Add(segment);
+        return figure;
+    }
+
+    internal static PathFigure CreateAreaFigure(IReadOnlyList<Point> points, double baselineY)
+    {
+        var figure = new PathFigure
+        {
+            StartPoint = new Point(points[0].X, baselineY),
+            IsFilled = true,
+            IsClosed = true,
+        };
+
+        foreach (var point in points)
+            figure.Segments.Add(new LineSegment(point, true));
+        figure.Segments.Add(new LineSegment(new Point(points[^1].X, baselineY), true));
+        return figure;
+    }
+
+    internal static PathSegmentCollection CreatePolylineSegments(IReadOnlyList<Point> points)
+    {
+        var segments = new PathSegmentCollection();
+        for (var i = 0; i < points.Count - 1; i++)
+            segments.Add(new LineSegment(points[i + 1], true));
+
+        return segments;
+    }
+
+    private void UpdateTemperatureAxisLabels()
+    {
+        _xAxisLabelsCanvas.Children.Clear();
+        _temperatureLabels.Clear();
+
+        var temperatures = _tableData?
+            .Where(data => data.Temps.Length >= _sliders.Count)
+            .Select(data => data.Temps)
+            .FirstOrDefault();
+
+        if (_sliders.Count == 0)
+            return;
+
+        for (var index = 0; index < _sliders.Count; index++)
+        {
+            ushort? temperature = temperatures is { Length: > 0 } && index < temperatures.Length
+                ? temperatures[index]
+                : null;
+            var label = new TextBlock
+            {
+                Text = temperature is null or >= 127 ? "-" : $"{temperature}{CelsiusUnit}",
+                FontSize = 11,
+                TextAlignment = TextAlignment.Center,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                Foreground = (Brush)FindResource("TextFillColorSecondaryBrush"),
+                ToolTip = temperature is null or >= 127 ? null : $"{temperature}{CelsiusUnit}",
+            };
+            _temperatureLabels.Add(label);
+            _xAxisLabelsCanvas.Children.Add(label);
+        }
+    }
+
+    private void PositionTemperatureAxisLabels(IReadOnlyList<Point> points)
+    {
+        if (points.Count != _temperatureLabels.Count || points.Count == 0 || _xAxisLabelsCanvas.ActualWidth <= 0)
+            return;
+
+        var labelWidth = Math.Clamp(_xAxisLabelsCanvas.ActualWidth / points.Count, 32, 56);
+        var maximumLeft = Math.Max(0, _xAxisLabelsCanvas.ActualWidth - labelWidth);
+        for (var index = 0; index < points.Count; index++)
+        {
+            var label = _temperatureLabels[index];
+            label.Width = labelWidth;
+            var x = _graphCanvas.TranslatePoint(points[index], _xAxisLabelsCanvas).X;
+            Canvas.SetLeft(label, Math.Clamp(x - labelWidth / 2, 0, maximumLeft));
+        }
+    }
+
+    internal static double GetValueY(double value, double minimum, double maximum, double top, double bottom)
+    {
+        if (maximum <= minimum || bottom <= top)
+            return bottom;
+
+        var ratio = Math.Clamp((value - minimum) / (maximum - minimum), 0, 1);
+        return bottom - ratio * (bottom - top);
+    }
+
+    private static bool IsFinite(double value) => !double.IsNaN(value) && !double.IsInfinity(value);
 
     private static Brush ResolveLineBrush()
     {
-        if (Application.Current?.Resources["ChartUtilizationBrush"] is SolidColorBrush chart)
+        if (Application.Current?.Resources["ChartUtilizationBrush"] is Brush chart)
             return chart;
-        if (Application.Current?.Resources["AccentFillColorDefaultBrush"] is SolidColorBrush accent)
+        if (Application.Current?.Resources["AccentFillColorDefaultBrush"] is Brush accent)
             return accent;
-        if (Application.Current?.Resources["SystemAccentColorPrimaryBrush"] is SolidColorBrush system)
+        if (Application.Current?.Resources["SystemAccentColorPrimaryBrush"] is Brush system)
             return system;
-        return new SolidColorBrush(Color.FromRgb(0x00, 0x78, 0xD4));
+        return new SolidColorBrush(Color.FromRgb(0x4F, 0x9D, 0xF7));
+    }
+
+    private static Brush ResolveGridBrush()
+    {
+        if (Application.Current?.Resources["ChartGridlineBrush"] is Brush grid)
+            return grid;
+        if (Application.Current?.Resources["TextFillColorDisabledBrush"] is Brush disabled)
+            return disabled;
+        return new SolidColorBrush(Color.FromArgb(48, 128, 128, 128));
     }
 
     private static Brush ResolveFillBrush(Brush lineBrush)
     {
         var color = lineBrush is SolidColorBrush solid
             ? solid.Color
-            : Color.FromRgb(0x00, 0x78, 0xD4);
+            : Color.FromRgb(0x4F, 0x9D, 0xF7);
 
         var fill = new LinearGradientBrush
         {
             StartPoint = new Point(0, 0),
             EndPoint = new Point(0, 1),
         };
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(110, color.R, color.G, color.B), 0.0));
-        fill.GradientStops.Add(new GradientStop(Color.FromArgb(24, color.R, color.G, color.B), 1.0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(110, color.R, color.G, color.B), 0));
+        fill.GradientStops.Add(new GradientStop(Color.FromArgb(24, color.R, color.G, color.B), 1));
         fill.Freeze();
         return fill;
     }
@@ -418,7 +578,6 @@ public partial class FanCurveControl : UserControl
             _grid.Children.Add(_cpuSensorValue);
             _grid.Children.Add(_gpuValue);
             _grid.Children.Add(_gpu2Value);
-
             Content = _grid;
         }
 
@@ -438,7 +597,6 @@ public partial class FanCurveControl : UserControl
                 .FirstOrDefault();
 
             var visibility = text is null ? Visibility.Collapsed : Visibility.Visible;
-
             valueTextBlock.Text = text ?? "-";
             valueTextBlock.Visibility = visibility;
             descriptionTextBlock.Visibility = visibility;
@@ -449,7 +607,6 @@ public partial class FanCurveControl : UserControl
             try
             {
                 var temp = tableData.Temps[index];
-
                 if (temp >= 127)
                     return "-";
 

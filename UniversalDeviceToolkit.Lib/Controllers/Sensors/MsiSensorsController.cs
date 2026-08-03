@@ -61,7 +61,7 @@ public class MsiSensorsController(GPUController gpuController, IEcChannel ec) : 
                 Log.Instance.Trace($"MSI EC temp read failed; using fallback. [address=0x{address:X2}]", ex);
         }
 
-        return fallback.GetAwaiter().GetResult();
+        return AwaitWithTimeout(fallback);
     }
 
     private int ReadRpm(byte counterHighAddress, Task<int> fallback)
@@ -82,7 +82,7 @@ public class MsiSensorsController(GPUController gpuController, IEcChannel ec) : 
                 Log.Instance.Trace($"MSI EC fan read failed; using fallback. [address=0x{counterHighAddress:X2}]", ex);
         }
 
-        return fallback.GetAwaiter().GetResult();
+        return AwaitWithTimeout(fallback);
     }
 
     private static async Task<bool> IsMsiMachineAsync()

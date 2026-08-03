@@ -69,7 +69,7 @@ public class AcerSensorsController(GPUController gpuController, IAcerWmi wmi) : 
                 Log.Instance.Trace($"Acer WMI sensor read failed; using fallback. [sensor=0x{sensorId:X2}]", ex);
         }
 
-        return fallback.GetAwaiter().GetResult();
+        return AwaitWithTimeout(fallback);
     }
 
     private static async Task<bool> IsAcerMachineAsync()

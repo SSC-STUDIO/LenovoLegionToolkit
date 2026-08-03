@@ -2,7 +2,7 @@
 	<PropertyGroup>
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.Lib.Macro</RootNamespace>
-		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
 		<Copyright>$(ProjectCopyright)</Copyright>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>

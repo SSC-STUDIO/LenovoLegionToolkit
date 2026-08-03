@@ -3,8 +3,6 @@
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.Lib.Plugins</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.Plugins.Abstractions</AssemblyName>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <DisableUdtForceX64>true</DisableUdtForceX64>
   </PropertyGroup>
 </Project>

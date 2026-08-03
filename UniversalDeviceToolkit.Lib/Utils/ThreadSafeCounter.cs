@@ -1,28 +1,27 @@
-﻿using System;
+﻿using System.Threading;
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 
 public class ThreadSafeCounter
 {
-    private readonly object _lock = new();
+    private int _value;
 
-    private int _counter;
+    public int Value => Volatile.Read(ref _value);
 
-    public bool Decrement()
+    public void Increment() => Interlocked.Increment(ref _value);
+
+    public void Decrement()
     {
-        lock (_lock)
+        while (true)
         {
-            var value = _counter < 1;
-            _counter = Math.Max(0, _counter - 1);
-            return value;
+            var current = Volatile.Read(ref _value);
+            if (current <= 0)
+                return;
+
+            if (Interlocked.CompareExchange(ref _value, current - 1, current) == current)
+                return;
         }
     }
 
-    public void Increment()
-    {
-        lock (_lock)
-        {
-            _counter++;
-        }
-    }
+    public void Reset() => Interlocked.Exchange(ref _value, 0);
 }

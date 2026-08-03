@@ -9,6 +9,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
+[Collection(TestCollections.ProcessState)]
 [Trait("Category", TestCategories.Unit)]
 [Trait("Category", TestCategories.Guard)]
 public class StartupHealthGuardTests : IDisposable

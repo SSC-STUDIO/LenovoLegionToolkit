@@ -12,15 +12,24 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="0,0,16,12">
             <custom:CardControl x:Name="_godModeFnQSwitchableCard" AutomationProperties.AutomationId="GodModeFnQSwitchableCard" Margin="0,0,0,8">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Title}" Subtitle="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Message}" />
-                </custom:CardControl.Header>
-                <wpfui:ToggleSwitch
-                    x:Name="_godModeFnQSwitchableToggle"
-                    AutomationProperties.AutomationId="GodModeFnQSwitchableToggle"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Title}"
-                    Click="GodModeFnQSwitchableToggle_Click" />
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Title}"
+                        Subtitle="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Message}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_godModeFnQSwitchableToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="GodModeFnQSwitchableToggle"
+                        AutomationProperties.Name="{x:Static resources:Resource.Settings_GodModeFnQSwitchable_Title}"
+                        Click="GodModeFnQSwitchableToggle_Click" />
+                </Grid>
             </custom:CardControl>
 
             <custom:CardControl x:Name="_powerModeMappingCard" AutomationProperties.AutomationId="PowerModeMappingCard" Margin="0,0,0,8">
@@ -63,24 +72,36 @@
                 Margin="0,0,0,8"
                 Click="WindowsPowerPlansControlPanel_Click">
                 <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_WindowsPowerPlansControlPanel_Title}" />
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_WindowsPowerPlansControlPanel_Title}">
+                        <controls:CardHeaderControl.Accessory>
+                            <wpfui:SymbolIcon
+                                Margin="4,0,0,0"
+                                FontSize="{StaticResource IconSizeCardGlyph}"
+                                Symbol="Open24" />
+                        </controls:CardHeaderControl.Accessory>
+                    </controls:CardHeaderControl>
                 </custom:CardControl.Header>
-                <wpfui:SymbolIcon
-                    Margin="4,0,0,0"
-                    FontSize="{StaticResource IconSizeCardGlyph}"
-                    Symbol="Open24" />
             </custom:CardControl>
 
             <custom:CardControl Margin="0,0,0,8">
-                <custom:CardControl.Header>
-                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Message}" />
-                </custom:CardControl.Header>
-                <wpfui:ToggleSwitch
-                    x:Name="_onBatterySinceResetToggle"
-                    AutomationProperties.AutomationId="OnBatterySinceResetToggle"
-                    Margin="0,0,0,8"
-                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Title}"
-                    Click="OnBatterySinceResetToggle_Click" />
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Message}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_onBatterySinceResetToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.AutomationId="OnBatterySinceResetToggle"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_OnBatterySinceReset_Title}"
+                        Click="OnBatterySinceResetToggle_Click" />
+                </Grid>
             </custom:CardControl>
         </StackPanel>
     </ScrollViewer>

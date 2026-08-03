@@ -50,7 +50,7 @@ public class AsusSensorsController(GPUController gpuController, IAsusAtkDriver a
             // G-Helper: values above 120 (×100 RPM) are invalid; a zero read on an
             // unsupported (negative) raw value is invalid too.
             if (fan > 120 || (fan == 0 && raw < 0))
-                return fallback.GetAwaiter().GetResult();
+                return AwaitWithTimeout(fallback);
 
             return fan * 100;
         }
@@ -58,7 +58,7 @@ public class AsusSensorsController(GPUController gpuController, IAsusAtkDriver a
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"ATK fan read failed; using fallback. [endpoint=0x{endpoint:X8}]", ex);
-            return fallback.GetAwaiter().GetResult();
+            return AwaitWithTimeout(fallback);
         }
     }
 

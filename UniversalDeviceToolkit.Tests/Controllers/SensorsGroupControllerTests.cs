@@ -27,7 +27,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuTemperatureSensorName_ShouldPreferPackageSensors()
     {
-        var result = SensorsGroupController.SelectCpuTemperatureSensorName(
+        var result = SensorSelector.SelectCpuTemperatureSensorName(
         [
             "Core #1",
             "CPU Package",
@@ -40,7 +40,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuTemperatureSensorName_WhenPackageMissing_ShouldPreferCoreMax()
     {
-        var result = SensorsGroupController.SelectCpuTemperatureSensorName(
+        var result = SensorSelector.SelectCpuTemperatureSensorName(
         [
             "Core #1",
             "Core Max",
@@ -53,7 +53,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuTemperatureSensorName_ShouldPreferTctlTdieBeforeGenericCpuSensors()
     {
-        var result = SensorsGroupController.SelectCpuTemperatureSensorName(
+        var result = SensorSelector.SelectCpuTemperatureSensorName(
         [
             "CPU",
             "Tctl/Tdie",
@@ -66,7 +66,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuTemperatureSensorName_ShouldRecognizeProcessorPackageTemperatureAliases()
     {
-        var result = SensorsGroupController.SelectCpuTemperatureSensorName(
+        var result = SensorSelector.SelectCpuTemperatureSensorName(
         [
             "Core #0",
             "Processor Package Temperature"
@@ -78,17 +78,17 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuTemperatureSensorName_ShouldRecognizeCpuZAndHwInfoDieAliases()
     {
-        var dieResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        var dieResult = SensorSelector.SelectCpuTemperatureSensorName(
         [
             "Core #0",
             "CPU Die"
         ]);
-        var ccdResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        var ccdResult = SensorSelector.SelectCpuTemperatureSensorName(
         [
             "Core #0",
             "CPU CCD1"
         ]);
-        var junctionResult = SensorsGroupController.SelectCpuTemperatureSensorName(
+        var junctionResult = SensorSelector.SelectCpuTemperatureSensorName(
         [
             "Core #0",
             "Tjunction"
@@ -102,7 +102,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuVoltageSensorName_ShouldPreferCoreVoltageAliases()
     {
-        var result = SensorsGroupController.SelectCpuVoltageSensorName(
+        var result = SensorSelector.SelectCpuVoltageSensorName(
         [
             "System Agent Voltage",
             "CPU Core Voltage",
@@ -115,7 +115,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuVoltageSensorName_ShouldPreferVidBeforeGenericAgentOrCacheVoltage()
     {
-        var result = SensorsGroupController.SelectCpuVoltageSensorName(
+        var result = SensorSelector.SelectCpuVoltageSensorName(
         [
             "Cache Voltage",
             "IA VID",
@@ -128,12 +128,12 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuVoltageSensorName_ShouldRecognizeCpuZAndAmdVoltageAliases()
     {
-        var cpuZResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var cpuZResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "CPU VID",
             "System Agent Voltage"
         ]);
-        var amdResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var amdResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "SVI2 TFN",
             "Cache Voltage"
@@ -146,17 +146,17 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuVoltageSensorName_ShouldRecognizeVddAndVccCoreAliases()
     {
-        var vddResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var vddResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "System Agent Voltage",
             "CPU VDD"
         ]);
-        var vddcrResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var vddcrResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "Cache Voltage",
             "VDDCR CPU"
         ]);
-        var vccResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var vccResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "SA Voltage",
             "VCC Core"
@@ -170,17 +170,17 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuVoltageSensorName_ShouldRecognizeInputAndEffectiveVidAliases()
     {
-        var inputResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var inputResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "SA Voltage",
             "VCCIN"
         ]);
-        var vidResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var vidResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "System Agent Voltage",
             "CPU Core VID Effective"
         ]);
-        var iaResult = SensorsGroupController.SelectCpuVoltageSensorName(
+        var iaResult = SensorSelector.SelectCpuVoltageSensorName(
         [
             "Cache Voltage",
             "IA Voltage"
@@ -209,23 +209,23 @@ public class SensorsGroupControllerTests
             "Efficiency Core 11"
         ];
 
-        pCoreNames.Should().OnlyContain(name => SensorsGroupController.IsLikelyCpuPCoreClockSensorName(name));
-        eCoreNames.Should().OnlyContain(name => SensorsGroupController.IsLikelyCpuECoreClockSensorName(name));
+        pCoreNames.Should().OnlyContain(name => SensorSelector.IsLikelyCpuPCoreClockSensorName(name));
+        eCoreNames.Should().OnlyContain(name => SensorSelector.IsLikelyCpuECoreClockSensorName(name));
     }
 
     [Fact]
     public void IsLikelyCpuHybridCoreClockSensorName_ShouldIgnoreAverageAndEffectiveClocks()
     {
-        SensorsGroupController.IsLikelyCpuPCoreClockSensorName("P-Core Average").Should().BeFalse();
-        SensorsGroupController.IsLikelyCpuPCoreClockSensorName("P-Core Effective Clock").Should().BeFalse();
-        SensorsGroupController.IsLikelyCpuECoreClockSensorName("E-Core Average").Should().BeFalse();
-        SensorsGroupController.IsLikelyCpuECoreClockSensorName("E-Core Effective Clock").Should().BeFalse();
+        SensorSelector.IsLikelyCpuPCoreClockSensorName("P-Core Average").Should().BeFalse();
+        SensorSelector.IsLikelyCpuPCoreClockSensorName("P-Core Effective Clock").Should().BeFalse();
+        SensorSelector.IsLikelyCpuECoreClockSensorName("E-Core Average").Should().BeFalse();
+        SensorSelector.IsLikelyCpuECoreClockSensorName("E-Core Effective Clock").Should().BeFalse();
     }
 
     [Fact]
     public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdPptAlias()
     {
-        var result = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        var result = SensorSelector.SelectCpuPackagePowerSensorName(
         [
             "GPU Package",
             "CPU Core",
@@ -238,7 +238,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuPackagePowerSensorName_ShouldRecognizeProcessorPackagePowerAliases()
     {
-        var result = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        var result = SensorSelector.SelectCpuPackagePowerSensorName(
         [
             "IA Cores",
             "Processor Package Power",
@@ -251,19 +251,19 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdApuPowerAliases()
     {
-        var stapmResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        var stapmResult = SensorSelector.SelectCpuPackagePowerSensorName(
         [
             "CPU Core",
             "CPU SoC",
             "APU STAPM"
         ]);
-        var coreSocResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        var coreSocResult = SensorSelector.SelectCpuPackagePowerSensorName(
         [
             "CPU Core",
             "CPU SoC",
             "Core+SoC Power"
         ]);
-        var socketResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        var socketResult = SensorSelector.SelectCpuPackagePowerSensorName(
         [
             "CPU Core",
             "CPU Socket Power"
@@ -277,13 +277,13 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuPackagePowerSensorName_ShouldRecognizeAmdMobileSpptAliases()
     {
-        var apuResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        var apuResult = SensorSelector.SelectCpuPackagePowerSensorName(
         [
             "CPU Core Power (SVI3 TFN)",
             "CPU SoC Power (SVI3 TFN)",
             "APU sPPT"
         ]);
-        var cpuResult = SensorsGroupController.SelectCpuPackagePowerSensorName(
+        var cpuResult = SensorSelector.SelectCpuPackagePowerSensorName(
         [
             "CPU Core",
             "CPU sPPT"
@@ -296,7 +296,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuUsageSensorName_ShouldPreferCpuTotalBeforeCoreMaxOrThreadLoads()
     {
-        var result = SensorsGroupController.SelectCpuUsageSensorName(
+        var result = SensorSelector.SelectCpuUsageSensorName(
         [
             "CPU Core Max",
             "CPU Core #1 Thread #1",
@@ -309,7 +309,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectCpuUsageSensorName_ShouldPreferCpuUsageAliasOverPerCoreEntries()
     {
-        var result = SensorsGroupController.SelectCpuUsageSensorName(
+        var result = SensorSelector.SelectCpuUsageSensorName(
         [
             "CPU Usage",
             "CPU Core #9"
@@ -321,7 +321,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramTemperatureSensorName_ShouldPreferMemorySpecificTemperatureNames()
     {
-        var result = SensorsGroupController.SelectGpuVramTemperatureSensorName(
+        var result = SensorSelector.SelectGpuVramTemperatureSensorName(
         [
             "GPU Hot Spot",
             "GPU Memory Junction",
@@ -334,7 +334,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramTemperatureSensorName_ShouldRecognizeVramTemperatureAliases()
     {
-        var result = SensorsGroupController.SelectGpuVramTemperatureSensorName(
+        var result = SensorSelector.SelectGpuVramTemperatureSensorName(
         [
             "Core Temperature",
             "VRAM Temperature"
@@ -346,7 +346,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramTemperatureSensorName_ShouldRecognizeJunctionAliases()
     {
-        var result = SensorsGroupController.SelectGpuVramTemperatureSensorName(
+        var result = SensorSelector.SelectGpuVramTemperatureSensorName(
         [
             "GPU Temperature",
             "VRAM Junction"
@@ -358,7 +358,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuHotSpotTemperatureSensorName_ShouldRecognizeGpuHotSpotAliases()
     {
-        var result = SensorsGroupController.SelectGpuHotSpotTemperatureSensorName(
+        var result = SensorSelector.SelectGpuHotSpotTemperatureSensorName(
         [
             "GPU Temperature",
             "GPU Hot Spot",
@@ -371,7 +371,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramUsedSensorName_ShouldRecognizeDedicatedMemoryAliases()
     {
-        var result = SensorsGroupController.SelectGpuVramUsedSensorName(
+        var result = SensorSelector.SelectGpuVramUsedSensorName(
         [
             "Board Power Draw",
             "Dedicated Memory Used"
@@ -383,7 +383,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramUsedSensorName_ShouldPreferGpuMemoryUsedBeforeD3DDedicatedMemoryUsed()
     {
-        var result = SensorsGroupController.SelectGpuVramUsedSensorName(
+        var result = SensorSelector.SelectGpuVramUsedSensorName(
         [
             "D3D Dedicated Memory Used",
             "GPU Memory Used"
@@ -395,7 +395,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramTotalSensorName_ShouldRecognizeVramTotalAliases()
     {
-        var result = SensorsGroupController.SelectGpuVramTotalSensorName(
+        var result = SensorSelector.SelectGpuVramTotalSensorName(
         [
             "GPU Clock",
             "VRAM Total"
@@ -407,7 +407,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramUsedSensorName_ShouldRecognizeSharedMemoryAliases()
     {
-        var result = SensorsGroupController.SelectGpuVramUsedSensorName(
+        var result = SensorSelector.SelectGpuVramUsedSensorName(
         [
             "D3D Shared Memory Used",
             "GPU Clock"
@@ -419,7 +419,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramTotalSensorName_ShouldRecognizeSharedMemoryTotalAliases()
     {
-        var result = SensorsGroupController.SelectGpuVramTotalSensorName(
+        var result = SensorSelector.SelectGpuVramTotalSensorName(
         [
             "D3D Shared Memory Total",
             "GPU Core"
@@ -431,7 +431,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVramFreeSensorName_ShouldRecognizeGpuMemoryFreeAliases()
     {
-        var result = SensorsGroupController.SelectGpuVramFreeSensorName(
+        var result = SensorSelector.SelectGpuVramFreeSensorName(
         [
             "GPU Core",
             "GPU Memory Free"
@@ -443,7 +443,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPcieRxThroughputSensorName_ShouldRecognizeGpuPcieRxAlias()
     {
-        var result = SensorsGroupController.SelectGpuPcieRxThroughputSensorName(
+        var result = SensorSelector.SelectGpuPcieRxThroughputSensorName(
         [
             "GPU Memory",
             "GPU PCIe Rx"
@@ -455,7 +455,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPcieRxThroughputSensorName_ShouldRecognizePcieReadAliases()
     {
-        var result = SensorsGroupController.SelectGpuPcieRxThroughputSensorName(
+        var result = SensorSelector.SelectGpuPcieRxThroughputSensorName(
         [
             "GPU Memory",
             "PCIe Read"
@@ -467,7 +467,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPcieTxThroughputSensorName_ShouldRecognizeGpuPcieTxAlias()
     {
-        var result = SensorsGroupController.SelectGpuPcieTxThroughputSensorName(
+        var result = SensorSelector.SelectGpuPcieTxThroughputSensorName(
         [
             "GPU Core",
             "GPU PCIe Tx"
@@ -479,7 +479,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPcieTxThroughputSensorName_ShouldRecognizePcieWriteAliases()
     {
-        var result = SensorsGroupController.SelectGpuPcieTxThroughputSensorName(
+        var result = SensorSelector.SelectGpuPcieTxThroughputSensorName(
         [
             "GPU Core",
             "PCIe Write"
@@ -491,7 +491,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuUsageSensorName_ShouldPreferD3D3DBeforeGenericGpuCoreLoad()
     {
-        var result = SensorsGroupController.SelectGpuUsageSensorName(
+        var result = SensorSelector.SelectGpuUsageSensorName(
         [
             "GPU Core",
             "D3D 3D"
@@ -503,7 +503,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuUsageSensorName_ShouldRecognizeGpuUtilizationAliases()
     {
-        var result = SensorsGroupController.SelectGpuUsageSensorName(
+        var result = SensorSelector.SelectGpuUsageSensorName(
         [
             "GPU Utilization",
             "GPU Memory Controller"
@@ -515,7 +515,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuUsageSensorName_ShouldFallbackToUnnamedD3DLoadPrefix()
     {
-        var result = SensorsGroupController.SelectGpuUsageSensorName(
+        var result = SensorSelector.SelectGpuUsageSensorName(
         [
             "GPU Memory Controller",
             "D3D "
@@ -527,7 +527,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPowerSensorName_ShouldPreferGpuPackageBeforeGenericPowerNames()
     {
-        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        var result = SensorSelector.SelectGpuPowerSensorName(
         [
             "Board Power Draw",
             "GPU Package"
@@ -539,7 +539,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPowerSensorName_ShouldRecognizeGpuPowerAlias()
     {
-        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        var result = SensorSelector.SelectGpuPowerSensorName(
         [
             "Power",
             "GPU Power"
@@ -551,7 +551,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPowerSensorName_ShouldRecognizeBoardAndChipPowerAliases()
     {
-        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        var result = SensorSelector.SelectGpuPowerSensorName(
         [
             "Power",
             "GPU Chip Power",
@@ -564,7 +564,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPowerSensorName_ShouldRecognizeAsicAndTotalGraphicsPowerAliases()
     {
-        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        var result = SensorSelector.SelectGpuPowerSensorName(
         [
             "Power",
             "GPU ASIC Power",
@@ -577,7 +577,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPowerSensorName_ShouldRecognizeBoardPowerAlias()
     {
-        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        var result = SensorSelector.SelectGpuPowerSensorName(
         [
             "Power",
             "Board Power"
@@ -589,7 +589,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPowerSensorName_ShouldRecognizeAmdPowerDrawAliases()
     {
-        var result = SensorsGroupController.SelectGpuPowerSensorName(
+        var result = SensorSelector.SelectGpuPowerSensorName(
         [
             "Power",
             "GPU PPT",
@@ -602,12 +602,12 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuPowerSensorName_ShouldPreferSpecificPowerConsumptionBeforeGenericPower()
     {
-        var consumptionResult = SensorsGroupController.SelectGpuPowerSensorName(
+        var consumptionResult = SensorSelector.SelectGpuPowerSensorName(
         [
             "Power",
             "GPU Power Consumption"
         ]);
-        var coreResult = SensorsGroupController.SelectGpuPowerSensorName(
+        var coreResult = SensorSelector.SelectGpuPowerSensorName(
         [
             "Power",
             "GPU Core Power"
@@ -644,7 +644,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuTemperatureSensorName_ShouldPreferGpuCoreTemperatureAliases()
     {
-        var result = SensorsGroupController.SelectGpuTemperatureSensorName(
+        var result = SensorSelector.SelectGpuTemperatureSensorName(
         [
             "Temperature",
             "GPU Core"
@@ -656,7 +656,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuCoreClockSensorName_ShouldPreferGpuCoreClockAliases()
     {
-        var result = SensorsGroupController.SelectGpuCoreClockSensorName(
+        var result = SensorSelector.SelectGpuCoreClockSensorName(
         [
             "Clock",
             "GPU Core"
@@ -668,7 +668,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuCoreClockSensorName_ShouldRecognizeGraphicsAndShaderClockAliases()
     {
-        var result = SensorsGroupController.SelectGpuCoreClockSensorName(
+        var result = SensorSelector.SelectGpuCoreClockSensorName(
         [
             "Clock",
             "Shader Clock",
@@ -681,7 +681,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuMemoryClockSensorName_ShouldPreferGpuMemoryClockAliases()
     {
-        var result = SensorsGroupController.SelectGpuMemoryClockSensorName(
+        var result = SensorSelector.SelectGpuMemoryClockSensorName(
         [
             "Clock",
             "GPU Memory"
@@ -693,7 +693,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuMemoryClockSensorName_ShouldRecognizeFramebufferClockAliases()
     {
-        var result = SensorsGroupController.SelectGpuMemoryClockSensorName(
+        var result = SensorSelector.SelectGpuMemoryClockSensorName(
         [
             "Clock",
             "FB Clock"
@@ -705,7 +705,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVoltageSensorName_ShouldPreferGpuCoreVoltage()
     {
-        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        var result = SensorSelector.SelectGpuVoltageSensorName(
         [
             "Voltage",
             "GPU Core Voltage"
@@ -717,7 +717,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVoltageSensorName_ShouldRecognizeGpuCoreAlias()
     {
-        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        var result = SensorSelector.SelectGpuVoltageSensorName(
         [
             "Voltage",
             "GPU Core"
@@ -729,7 +729,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVoltageSensorName_ShouldRecognizeVddcAlias()
     {
-        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        var result = SensorSelector.SelectGpuVoltageSensorName(
         [
             "Voltage",
             "VDDC"
@@ -741,7 +741,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVoltageSensorName_ShouldPreferGpuVddcAliases()
     {
-        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        var result = SensorSelector.SelectGpuVoltageSensorName(
         [
             "Voltage",
             "NVVDD",
@@ -754,7 +754,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectGpuVoltageSensorName_ShouldRecognizeGpuVddAlias()
     {
-        var result = SensorsGroupController.SelectGpuVoltageSensorName(
+        var result = SensorSelector.SelectGpuVoltageSensorName(
         [
             "Voltage",
             "GPU VDD"
@@ -766,7 +766,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMemoryUsedSensorName_ShouldRecognizeUsedMemoryAlias()
     {
-        var result = SensorsGroupController.SelectMemoryUsedSensorName(
+        var result = SensorSelector.SelectMemoryUsedSensorName(
         [
             "Used Memory",
             "GPU Memory Used"
@@ -778,7 +778,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMemoryAvailableSensorName_ShouldRecognizeFreeMemoryAlias()
     {
-        var result = SensorsGroupController.SelectMemoryAvailableSensorName(
+        var result = SensorSelector.SelectMemoryAvailableSensorName(
         [
             "GPU Memory Free",
             "Free Memory"
@@ -790,7 +790,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMemoryAvailableSensorName_ShouldRecognizeMemoryFreeAlias()
     {
-        var result = SensorsGroupController.SelectMemoryAvailableSensorName(
+        var result = SensorSelector.SelectMemoryAvailableSensorName(
         [
             "GPU Memory Free",
             "Memory Free"
@@ -802,7 +802,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMemoryLoadSensorName_ShouldPreferSystemMemoryLoadOverGpuMemoryLoad()
     {
-        var result = SensorsGroupController.SelectMemoryLoadSensorName(
+        var result = SensorSelector.SelectMemoryLoadSensorName(
         [
             "GPU Memory",
             "Memory"
@@ -826,13 +826,13 @@ public class SensorsGroupControllerTests
             "DDR Module Temperature"
         ];
 
-        names.Should().OnlyContain(name => SensorsGroupController.IsLikelyMemoryTemperatureSensorName(name));
+        names.Should().OnlyContain(name => SensorSelector.IsLikelyMemoryTemperatureSensorName(name));
     }
 
     [Fact]
     public void SelectStorageTemperatureSensorName_ShouldPreferCompositeTemperature()
     {
-        var result = SensorsGroupController.SelectStorageTemperatureSensorName(
+        var result = SensorSelector.SelectStorageTemperatureSensorName(
         [
             "Temperature",
             "Composite"
@@ -844,7 +844,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectStorageTemperatureSensorName_ShouldRecognizeDriveTemperatureAlias()
     {
-        var result = SensorsGroupController.SelectStorageTemperatureSensorName(
+        var result = SensorSelector.SelectStorageTemperatureSensorName(
         [
             "Drive Temperature",
             "Temperature"
@@ -856,12 +856,12 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectStorageTemperatureSensorName_ShouldRecognizeNvmeAndControllerAliases()
     {
-        var nvmeResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        var nvmeResult = SensorSelector.SelectStorageTemperatureSensorName(
         [
             "Temperature",
             "NVMe Composite"
         ]);
-        var controllerResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        var controllerResult = SensorSelector.SelectStorageTemperatureSensorName(
         [
             "Temperature",
             "Controller Temperature"
@@ -874,17 +874,17 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectStorageTemperatureSensorName_ShouldRecognizeDriveCompositeAndControllerAliases()
     {
-        var compositeResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        var compositeResult = SensorSelector.SelectStorageTemperatureSensorName(
         [
             "Temperature",
             "Drive Composite Temperature"
         ]);
-        var asicResult = SensorsGroupController.SelectStorageTemperatureSensorName(
+        var asicResult = SensorSelector.SelectStorageTemperatureSensorName(
         [
             "Temperature",
             "ASIC Controller Temperature"
         ]);
-        var temperature1Result = SensorsGroupController.SelectStorageTemperatureSensorName(
+        var temperature1Result = SensorSelector.SelectStorageTemperatureSensorName(
         [
             "Temperature",
             "Temperature 1"
@@ -898,14 +898,14 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldPreferPchAndChipsetAliases()
     {
-        var pchResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var pchResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "DIMM Temperature",
             "CPU Package",
             "GPU Core",
             "PCH Temperature"
         ]);
-        var chipsetResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var chipsetResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "Memory",
             "Chipset"
@@ -918,12 +918,12 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldRecognizeBoardControllerAliases()
     {
-        var vrmResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var vrmResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "Memory",
             "VRM"
         ]);
-        var tmpinResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var tmpinResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "AUXTIN0",
             "CPU Package"
@@ -936,12 +936,12 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldRecognizeSuperIoAndExternalSensorAliases()
     {
-        var superIoResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var superIoResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "CPU Package",
             "Super I/O"
         ]);
-        var tSensorResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var tSensorResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "GPU Core",
             "T_Sensor"
@@ -954,17 +954,17 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldRecognizeEmbeddedControllerAndGenericBoardAliases()
     {
-        var ecResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var ecResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "CPU Package",
             "EC Temp"
         ]);
-        var temp1Result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var temp1Result = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "GPU Core",
             "Temperature #1"
         ]);
-        var systemResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var systemResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "DIMM Temperature",
             "System Temperature"
@@ -978,17 +978,17 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldRecognizeAcpiThermalZoneAliases()
     {
-        var acpiResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var acpiResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "CPU Package",
             "ACPI Thermal Zone"
         ]);
-        var zoneResult = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var zoneResult = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "GPU Core",
             "TZ00"
         ]);
-        var temp2Result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var temp2Result = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "DIMM Temperature",
             "Temperature #2"
@@ -1002,7 +1002,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMotherboardTemperatureSensorName_ShouldIgnoreMemoryCpuAndGpuSensors()
     {
-        var result = SensorsGroupController.SelectMotherboardTemperatureSensorName(
+        var result = SensorSelector.SelectMotherboardTemperatureSensorName(
         [
             "DIMM",
             "CPU Package",
@@ -1021,7 +1021,7 @@ public class SensorsGroupControllerTests
             Enum.Parse<HardwareType>("SuperIO"),
             sensor.Object);
 
-        var result = SensorsGroupController.IsBoardTemperatureHardware(superIo.Object);
+        var result = SensorSelector.IsBoardTemperatureHardware(superIo.Object);
 
         result.Should().BeTrue();
     }
@@ -1033,14 +1033,14 @@ public class SensorsGroupControllerTests
         var cpu = CreateHardwareWithSensors("Intel Core", HardwareType.Cpu, sensor.Object);
         var storage = CreateHardwareWithSensors("NVMe SSD", HardwareType.Storage, sensor.Object);
 
-        SensorsGroupController.IsBoardTemperatureHardware(cpu.Object).Should().BeFalse();
-        SensorsGroupController.IsBoardTemperatureHardware(storage.Object).Should().BeFalse();
+        SensorSelector.IsBoardTemperatureHardware(cpu.Object).Should().BeFalse();
+        SensorSelector.IsBoardTemperatureHardware(storage.Object).Should().BeFalse();
     }
 
     [Fact]
     public void SelectMemoryHardwareName_ShouldPreferTotalMemory()
     {
-        var result = SensorsGroupController.SelectMemoryHardwareName(
+        var result = SensorSelector.SelectMemoryHardwareName(
         [
             "Physical Memory",
             "Total Memory"
@@ -1052,7 +1052,7 @@ public class SensorsGroupControllerTests
     [Fact]
     public void SelectMemoryHardwareName_ShouldFallbackToMemoryNamedHardware()
     {
-        var result = SensorsGroupController.SelectMemoryHardwareName(
+        var result = SensorSelector.SelectMemoryHardwareName(
         [
             "Memory Device",
             "Physical"
@@ -1084,25 +1084,25 @@ public class SensorsGroupControllerTests
     [Fact]
     public void IsLikelyCpuComponentPowerSensorName_ShouldRecognizeCpuComponentPowerAliases()
     {
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Cores").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Core").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("IA Cores").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("VDDCR CPU Power").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Memory").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("DRAM").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Platform").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU Graphics").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Cores").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GT Power").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("SoC Power").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("VDDCR SoC Power").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("System Agent").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("PCH").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("Uncore Power").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("EDC").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("TDC").Should().BeTrue();
-        SensorsGroupController.IsLikelyCpuComponentPowerSensorName("GPU Package").Should().BeFalse();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("CPU Cores").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("CPU Core").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("IA Cores").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("VDDCR CPU Power").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("CPU Memory").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("DRAM").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("CPU Platform").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("CPU Graphics").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("GT Cores").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("GT Power").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("CPU SoC").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("SoC Power").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("VDDCR SoC Power").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("System Agent").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("PCH").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("Uncore Power").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("EDC").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("TDC").Should().BeTrue();
+        SensorSelector.IsLikelyCpuComponentPowerSensorName("GPU Package").Should().BeFalse();
     }
 
     [Fact]

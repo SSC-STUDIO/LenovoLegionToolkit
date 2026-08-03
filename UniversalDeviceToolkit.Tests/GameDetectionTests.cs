@@ -214,9 +214,16 @@ public class GameDetectionTests
         var type = GetEffectiveGameModeDetectorType();
         var instance = Activator.CreateInstance(type, nonPublic: true)!;
         var startMethod = type.GetMethod("StartAsync")!;
+        var stopMethod = type.GetMethod("StopAsync")!;
 
-        // Act
-        await (Task)startMethod.Invoke(instance, null)!;
+        try
+        {
+            await (Task)startMethod.Invoke(instance, null)!;
+        }
+        finally
+        {
+            await (Task)stopMethod.Invoke(instance, null)!;
+        }
     }
 
     #endregion

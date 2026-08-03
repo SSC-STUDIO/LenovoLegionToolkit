@@ -8,7 +8,6 @@ on:
       - '.github/workflows/pages.yml'
       - 'Assets/Logo.png'
       - 'Assets/Screenshot_main.png'
-      - 'Assets/og-preview.png'
   workflow_dispatch:
 
 permissions:
@@ -33,7 +32,6 @@ jobs:
         run: |
           Copy-Item Assets\Logo.png site\
           Copy-Item Assets\Screenshot_main.png site\
-          Copy-Item Assets\og-preview.png site\
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

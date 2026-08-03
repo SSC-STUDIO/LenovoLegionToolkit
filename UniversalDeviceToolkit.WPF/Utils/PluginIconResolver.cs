@@ -120,7 +120,7 @@ internal static class PluginIconResolver
         {
             Text = monogram,
             FontSize = fontSize,
-            FontWeight = FontWeights.SemiBold,
+            FontWeight = FontWeights.Medium,
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center
         };

@@ -29,10 +29,25 @@
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="0" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            MaxWidth="220"
+                            Text="{Binding}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -53,7 +68,7 @@
                                     x:Name="ContentPresenter"
                                     Grid.Row="0"
                                     Margin="{TemplateBinding Padding}"
-                                    HorizontalAlignment="Center"
+                                    HorizontalAlignment="Stretch"
                                     VerticalAlignment="Center"
                                     RecognizesAccessKey="True"
                                     Content="{TemplateBinding Content}"
@@ -109,7 +124,7 @@
         <Style TargetType="Border" x:Key="CardContainerStyle">
             <Setter Property="Padding" Value="{StaticResource SpacingMD}" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Margin" Value="0,0,16,16" />
@@ -147,7 +162,7 @@
         <Style x:Key="DriverSourcePanelStyle" TargetType="Border">
             <Setter Property="Padding" Value="14,12" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
@@ -164,7 +179,7 @@
         <Style x:Key="DriverToolbarPanelStyle" TargetType="Border">
             <Setter Property="Padding" Value="12" />
             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
@@ -222,18 +237,19 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                <Border
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Padding="3"
-                    Height="48"
-                    MinWidth="48"
-                    Background="{DynamicResource ControlFillColorTertiaryBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Margin="0,0,20,0">
+                    <Border
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Padding="3"
+                        Height="48"
+                        MinWidth="48"
+                        Background="{DynamicResource AppSurfaceCardBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Margin="0,0,20,0">
                     <StackPanel
+                        HorizontalAlignment="Left"
                         Orientation="Horizontal"
                         VerticalAlignment="Center">
                         <RadioButton
@@ -293,7 +309,7 @@
                             MinWidth="48"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
-                            Background="{DynamicResource ControlFillColorTertiaryBrush}"
+                            Background="{DynamicResource AppSurfaceCardBrush}"
                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                             BorderThickness="1"
                             CornerRadius="{StaticResource CornerRadiusCard}"
@@ -350,6 +366,7 @@
                                     Margin="0,0,4,0"
                                     Appearance="Secondary"
                                     IsEnabled="False"
+                                    Click="NetworkAccelerationSelectionFavoriteButton_Click"
                                     ToolTipService.ShowOnDisabled="True"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
@@ -362,11 +379,12 @@
                                     Margin="0"
                                     Appearance="Secondary"
                                     IsEnabled="False"
+                                    Click="NetworkAccelerationSelectionStartButton_Click"
+                                    Icon="Play24"
                                     ToolTipService.ShowOnDisabled="True"
                                     AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
                                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
                                     ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
-                                    <wpfui:SymbolIcon Symbol="Play24" />
                                 </wpfui:Button>
                             </StackPanel>
                         </Border>
@@ -377,7 +395,7 @@
                             Height="48"
                             MinWidth="48"
                             HorizontalAlignment="Right"
-                            Background="{DynamicResource ControlFillColorTertiaryBrush}"
+                            Background="{DynamicResource AppSurfaceCardBrush}"
                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                             BorderThickness="1"
                             CornerRadius="{StaticResource CornerRadiusCard}">
@@ -423,8 +441,53 @@
                                 Appearance="Secondary"
                                 ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
                                 AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
+                                IsEnabled="{Binding CanSelectRecommended}"
                                 Click="SelectRecommendedButton_Click">
                                 <wpfui:SymbolIcon Symbol="Star24" />
+                            </wpfui:Button>
+                            <wpfui:Button
+                                x:Name="_applyOptimizationButton"
+                                AutomationProperties.AutomationId="WindowsOptimizationApplyButton"
+                                Margin="0,0,4,0"
+                                Appearance="Primary"
+                                Content="{x:Static resources:Resource.Apply}"
+                                AutomationProperties.Name="{x:Static resources:Resource.Apply}"
+                                IsEnabled="{Binding CanApplyOptimizationChanges}"
+                                Click="ApplyOptimizationButton_Click">
+                                <wpfui:Button.Style>
+                                    <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                                        <Setter Property="MinHeight" Value="40" />
+                                        <Setter Property="Padding" Value="12,7" />
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsOptimizationMode}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </wpfui:Button.Style>
+                            </wpfui:Button>
+                            <wpfui:Button
+                                x:Name="_cancelOptimizationButton"
+                                AutomationProperties.AutomationId="WindowsOptimizationCancelButton"
+                                Margin="0,0,4,0"
+                                Appearance="Secondary"
+                                Content="{x:Static resources:Resource.Cancel}"
+                                AutomationProperties.Name="{x:Static resources:Resource.Cancel}"
+                                IsEnabled="{Binding CanCancelOptimizationChanges}"
+                                Click="CancelOptimizationButton_Click">
+                                <wpfui:Button.Style>
+                                    <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                                        <Setter Property="MinHeight" Value="40" />
+                                        <Setter Property="Padding" Value="12,7" />
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsOptimizationMode}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </wpfui:Button.Style>
                             </wpfui:Button>
                             <wpfui:Button
                                 x:Name="_clearButton"
@@ -659,8 +722,12 @@
                                                     <CheckBox
                                                         Grid.Column="0"
                                                         AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationAction_{0}}"
+                                                        AutomationProperties.HelpText="{Binding StateStatusText}"
+                                                        ToolTip="{Binding StateStatusText}"
                                                         VerticalAlignment="Center"
-                                                        IsChecked="{Binding IsSelected, Mode=TwoWay}" />
+                                                        IsEnabled="{Binding CanEdit}"
+                                                        IsThreeState="{Binding AllowsIndeterminate}"
+                                                        IsChecked="{Binding CheckState, Mode=TwoWay}" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Margin="8,0,0,0"
@@ -707,7 +774,7 @@
                                 Grid.Row="0"
                                 Margin="0,0,0,10"
                                 Padding="12,10"
-                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                Background="{DynamicResource AppSurfaceCardBrush}"
                                 BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                 BorderThickness="1"
                                 CornerRadius="{StaticResource CornerRadiusCard}"
@@ -1133,7 +1200,7 @@
                                             x:Name="_driverEmptyStateBorder"
                                             AutomationProperties.AutomationId="WindowsOptimizationDriverEmptyState"
                                             Margin="0,4,0,12"
-                                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                            Background="{DynamicResource AppSurfaceCardBrush}"
                                             BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                             BorderThickness="1"
                                             CornerRadius="{StaticResource CornerRadiusCard}"
@@ -1262,7 +1329,7 @@
                                             <Style TargetType="ListViewItem">
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                                 <Setter Property="Margin" Value="0,0,0,8" />
-                                                <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
                                                 <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                                 <Setter Property="Template">
                                                     <Setter.Value>
@@ -1275,11 +1342,11 @@
                                                 </Setter>
                                                 <Style.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                        <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
                                                         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                                     </Trigger>
                                                     <Trigger Property="IsSelected" Value="True">
-                                                        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                                        <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
                                                         <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                                     </Trigger>
                                                 </Style.Triggers>
@@ -1374,7 +1441,7 @@
                                 <TextBlock
                                     x:Name="_estimatedCleanupText"
                                     Margin="0,0,0,4"
-                                    FontWeight="SemiBold"
+                                    FontWeight="Medium"
                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                     Text="{Binding EstimatedCleanupSizeText}"
                                     TextWrapping="Wrap">
@@ -1596,7 +1663,7 @@
                                                     <Border
                                                 Margin="0,0,0,8"
                                                 Padding="12"
-                                                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                                Background="{DynamicResource AppSurfaceCardBrush}"
                                                 CornerRadius="{StaticResource CornerRadiusControl}">
                                                         <StackPanel>
                                                             <TextBlock

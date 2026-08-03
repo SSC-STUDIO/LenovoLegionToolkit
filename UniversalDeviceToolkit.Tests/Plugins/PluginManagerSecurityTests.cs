@@ -79,8 +79,8 @@ public class PluginManagerSecurityTests : TemporaryFileTestBase
             .Returns(new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
                 "ar", "bg", "bs", "ca", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "ko",
-                "lv", "nl-nl", "pl", "pt", "pt-br", "ro", "ru", "sk", "tr", "uk", "uz-latn-uz",
-                "vi", "zh-hans", "zh-hant", "tools"
+                "lv", "nl-NL", "pl", "pt", "pt-BR", "ro", "ru", "sk", "tr", "uk", "uz-Latn-UZ",
+                "vi", "zh-Hans", "zh-Hant", "tools"
             });
 
         return new PluginManager(

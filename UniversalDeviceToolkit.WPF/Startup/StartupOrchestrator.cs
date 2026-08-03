@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Autofac;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Controllers.Sensors;
@@ -554,6 +555,13 @@ namespace UniversalDeviceToolkit.WPF.Startup
             RenderOptions.ProcessRenderMode = RenderingCompatibilityHelper.GetPreferredRenderMode(_settings);
 
             IoCContainer.Initialize(
+                cb =>
+                {
+                    // Reuse the pre-created _settings instance to avoid double-instantiation.
+                    var settings = _settings ?? new ApplicationSettings();
+                    _settings = settings;
+                    cb.RegisterInstance(settings).As<ApplicationSettings>().AsSelf().SingleInstance();
+                },
                 new UniversalDeviceToolkit.Lib.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Automation.IoCModule(),

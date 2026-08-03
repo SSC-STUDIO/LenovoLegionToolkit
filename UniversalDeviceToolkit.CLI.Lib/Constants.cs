@@ -74,16 +74,6 @@ public static class Constants
             GetPipeName(isolationPath, DEFAULT_PIPE_NAME)
         ];
 
-    public static string[] GetServerPipeNamesFromEnvironment()
-    {
-#if UDT_TEST_HOOKS
-        var overridePath = Environment.GetEnvironmentVariable(APPDATA_OVERRIDE_ENVIRONMENT_VARIABLE);
-        return GetServerPipeNames(overridePath);
-#else
-        return GetServerPipeNames();
-#endif
-    }
-
     public static string[] GetClientPipeNamesFromEnvironment()
     {
 #if UDT_TEST_HOOKS

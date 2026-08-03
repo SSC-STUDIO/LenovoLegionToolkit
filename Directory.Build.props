@@ -27,10 +27,13 @@
     <DefineConstants Condition="'$(EnableUdtTestHooks)' == 'true'">$(DefineConstants);UDT_TEST_HOOKS</DefineConstants>
 
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>
+    <ImplicitUsings Condition="'$(ImplicitUsings)' == ''">enable</ImplicitUsings>
 
     <!-- Keep only languages shipped via LocalizationHelper / language packs.
-         Orphan Crowdin .resx cultures still live in source but are not compiled into satellites. -->
-    <UdtSatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</UdtSatelliteResourceLanguages>
+         Orphan Crowdin .resx cultures still live in source but are not compiled into satellites.
+         Culture names must use the BCP 47 canonical form (see CONTRIBUTING.md / Assert-CultureNaming.ps1). -->
+    <UdtSatelliteResourceLanguages>ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-NL;pl;pt;pt-BR;ro;ru;sk;tr;uk;uz-Latn-UZ;vi;zh-Hans;zh-Hant</UdtSatelliteResourceLanguages>
     <!-- Test projects keep all Crowdin satellites for pack/UI coverage. -->
     <SatelliteResourceLanguages Condition="'$(SatelliteResourceLanguages)' == '' and '$(IsTestProject)' != 'true'">$(UdtSatelliteResourceLanguages)</SatelliteResourceLanguages>
   </PropertyGroup>

@@ -59,7 +59,7 @@ public class GigabyteSensorsController(GPUController gpuController, IGigabyteWmi
                 Log.Instance.Trace($"Gigabyte WMI read failed; using fallback. [method={methodName}]", ex);
         }
 
-        return fallback.GetAwaiter().GetResult();
+        return AwaitWithTimeout(fallback);
     }
 
     private static async Task<bool> IsGigabyteMachineAsync()

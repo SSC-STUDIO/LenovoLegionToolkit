@@ -15,10 +15,15 @@ Strings live in
 `UniversalDeviceToolkit.WPF.Resources.Resource`.
 
 Simplified Chinese translations live in
-[`Resource.zh-hans.resx`](../UniversalDeviceToolkit.WPF/Resources/Resource.zh-hans.resx)
+[`Resource.zh-Hans.resx`](../UniversalDeviceToolkit.WPF/Resources/Resource.zh-Hans.resx)
 (used by zh-Hans and zh-CN). Other locales are pulled from the
 Crowdin pipeline; **never** edit them by hand — they will be
 overwritten by the next sync.
+
+> **Culture naming rule**: resource files and every written artifact use
+> the BCP 47 canonical form (`zh-Hans`, `zh-Hant`, `pt-BR`, `nl-NL`,
+> `uz-Latn-UZ` — never `zh-hans` or `pt-br`). See
+> [CONTRIBUTING.md](../CONTRIBUTING.md) and `Scripts/Assert-CultureNaming.ps1`.
 
 ## Adding a new string
 
@@ -37,7 +42,7 @@ overwritten by the next sync.
    `TimeAutomationPipelineTriggerTabItemContent_HHMMHint`).
 
 3. Add the key/value to `Resource.resx` (English first) **and** to
-   `Resource.zh-hans.resx` (Simplified Chinese). Use one `<data>`
+   `Resource.zh-Hans.resx` (Simplified Chinese). Use one `<data>`
    element per key. Make sure the key is unique and stable — never
    rename an existing key, even when its meaning drifts; instead add a
    new key and remove the old one after a release cycle.
@@ -138,3 +143,22 @@ When reviewing a PR that touches XAML or `.cs` UI code:
 - [ ] Both English and Simplified-Chinese translations exist for new
       keys, even when the translation is the same as the English value.
 - [ ] `ResourceHardcodingGuardTests` pass locally.
+
+## Layout budget
+
+Tightly constrained UI areas (for example `CardHeaderControl` subtitles)
+use `AdaptiveTextBlock` to scale the font down when a translation is
+longer than the design baseline. That is a safety net, not an invitation
+to add verbose text.
+
+- Keep `CardHeaderControl` subtitles concise.
+- Run the budget guard before submitting:
+
+  ```pwsh
+  .\Scripts\Assert-L10nLayoutBudget.ps1
+  ```
+
+The script scans WPF XAML for subtitle keys and compares each
+satellite translation against the fixed-height budget. It exits 0 when
+the layout is expected to keep the text readable, and exits 1 when a
+translation will be clipped or rendered too small.

@@ -1,7 +1,7 @@
 # FlaUI Automated Verification Pipeline
 
 ## Overview
-FlaUI + WinRT OCR automated UI tests for UDT. These tests run on Windows with a desktop session and administrator privileges.
+FlaUI native UI Automation tests for UDT. These tests run on Windows with a desktop session and administrator privileges.
 
 ## Prerequisites
 1. Windows 10/11 with desktop session (not SSH/headless)
@@ -14,14 +14,14 @@ FlaUI + WinRT OCR automated UI tests for UDT. These tests run on Windows with a 
 ### Option 1: Auto-elevate and run (Recommended)
 ```powershell
 # Right-click PowerShell → Run as Administrator, then:
-cd "D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit"
-.\run_flaui_tests_admin.ps1
+cd "C:\path\to\UniversalDeviceToolkit"
+dotnet test UniversalDeviceToolkit.UiAutomation.Tests/UniversalDeviceToolkit.UiAutomation.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --filter "FullyQualifiedName~FlaUI"
 ```
 
 ### Option 2: Manual run (if already admin)
 ```powershell
-cd "D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit"
-dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --filter "FullyQualifiedName~FlaUI" -c Debug -v n
+cd "C:\path\to\UniversalDeviceToolkit"
+dotnet test UniversalDeviceToolkit.UiAutomation.Tests/UniversalDeviceToolkit.UiAutomation.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --filter "FullyQualifiedName~FlaUI" -v n
 ```
 
 ## Test Categories
@@ -34,16 +34,16 @@ See `.github/workflows/flaui-tests.yml` for GitHub Actions setup.
 
 ## Troubleshooting
 
-### "FlaUI tests are skipped in CI environments"
-- Run in a Windows session with desktop (not GitHub Actions hosted runners)
-- For local headless servers: use PSRemoting with `-Interactive` switch
+### "FlaUI desktop preflight failed"
+- Run on the self-hosted Windows desktop runner used by `.github/workflows/flaui-tests.yml`
+- Verify the session is interactive, elevated, and has the Release WPF executable
 
 ### "UDT application requires administrator privileges"
 - Re-run PowerShell as Administrator
 - Or: right-click PowerShell → "Run as administrator"
 
 ### "SingleInstanceGuard: Only one instance allowed"
-- Run `run_flaui_tests_admin.ps1` (kills existing instances automatically)
+- Stop any existing `Universal Device Toolkit` process, then rerun the Release UI test command as Administrator
 - Or manually: `Stop-Process -Name "Universal Device Toolkit" -Force`
 
 ### Tests time out waiting for main window
@@ -53,8 +53,8 @@ See `.github/workflows/flaui-tests.yml` for GitHub Actions setup.
 
 ## Writing New FlaUI Tests
 
-1. Create a new class in `UniversalDeviceToolkit.Tests/FlaUI/`
-2. Inherit from `FlaUiTestBase`
+1. Create a new class in `UniversalDeviceToolkit.UiAutomation.Tests/FlaUI/`
+2. Inherit from `FlaUiTestBase` (xUnit initializes and disposes the app automatically)
 3. Add `[Collection("FlaUI Tests")]` attribute
 4. Add `[Trait("Category", "UI.<YourCategory>")]` for filtering
 5. Use `MainWindow`, `Automation`, `WaitForElement()`, `ExtractTextFromWindowAsync()` helpers
@@ -62,11 +62,10 @@ See `.github/workflows/flaui-tests.yml` for GitHub Actions setup.
 Example:
 ```csharp
 [Fact]
-public async Task MyNewTest()
+public void MyNewTest()
 {
-    await InitializeAsync();
-    var button = WaitForElement("MyButtonAutomationId");
+    var button = MainWindow.FindFirstDescendant(cf => cf.ByAutomationId("MyButtonAutomationId"));
+    Assert.NotNull(button);
     button.Click();
-    await AssertWindowContainsTextAsync("Expected Text");
 }
 ```

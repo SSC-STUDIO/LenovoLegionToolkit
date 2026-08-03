@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -150,6 +151,20 @@ public class WindowsOptimizationActionDefinitionContractTests
 
 public class WindowsOptimizationActionDefinitionSnapshotTests
 {
+    [Fact]
+    public void BuiltInOptimizationActions_AllExposeRollbackBehavior()
+    {
+        var service = new WindowsOptimizationService(new WindowsCleanupService(new TestApplicationSettings()));
+
+        var optimizationActions = service.GetCategories()
+            .Where(category => !category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(category => category.Actions)
+            .ToList();
+
+        optimizationActions.Should().NotBeEmpty();
+        optimizationActions.Should().OnlyContain(action => action.RollbackAsync != null);
+    }
+
     [Fact]
     public void CreateRegistryAction_PreservesOriginalValue_BeforeApplying()
     {

@@ -1,11 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage"
-             xmlns:vm="using:UniversalDeviceToolkit.Avalonia.Pages">
-
-    <UserControl.DataContext>
-        <vm:DashboardPageViewModel />
-    </UserControl.DataContext>
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
@@ -14,13 +9,13 @@
             <!-- Page Title -->
             <TextBlock Text="Dashboard"
                        FontSize="{StaticResource FontSizePageTitle}"
-                       FontWeight="Bold"
+                       FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
             <!-- Feature Groups -->
             <TextBlock Text="Feature Groups"
                        FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="SemiBold"
+                       FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
             <ItemsControl ItemsSource="{Binding FeatureGroups}">
@@ -50,7 +45,7 @@
             <!-- Sensors Panel -->
             <TextBlock Text="Sensors"
                        FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="SemiBold"
+                       FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,8,0,0" />
 
@@ -66,7 +61,7 @@
                                                VerticalAlignment="Center" />
                                     <TextBlock Grid.Column="1"
                                                Text="{Binding DisplayValue}"
-                                               FontWeight="SemiBold"
+                                               FontWeight="Medium"
                                                FontSize="{StaticResource FontSizeGaugeValue}"
                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                VerticalAlignment="Center" />

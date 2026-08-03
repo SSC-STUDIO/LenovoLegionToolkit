@@ -31,10 +31,10 @@ public class RazerSensorsController(GPUController gpuController, IRazerHidContro
     }
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(controller.GetFanRpm(RazerPacket.ZoneCpu) ?? base.GetCpuCurrentFanSpeedAsync().GetAwaiter().GetResult());
+        Task.FromResult(controller.GetFanRpm(RazerPacket.ZoneCpu) ?? AwaitWithTimeout(base.GetCpuCurrentFanSpeedAsync()));
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(controller.GetFanRpm(RazerPacket.ZoneGpu) ?? base.GetGpuCurrentFanSpeedAsync().GetAwaiter().GetResult());
+        Task.FromResult(controller.GetFanRpm(RazerPacket.ZoneGpu) ?? AwaitWithTimeout(base.GetGpuCurrentFanSpeedAsync()));
 
     private static async Task<bool> IsRazerMachineAsync()
     {

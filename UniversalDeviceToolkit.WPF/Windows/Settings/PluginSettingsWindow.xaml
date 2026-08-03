@@ -1,4 +1,4 @@
-﻿<local:BaseWindow
+<local:BaseWindow
     x:Class="UniversalDeviceToolkit.WPF.Windows.Settings.PluginSettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -59,7 +59,7 @@
                     <TextBlock
                         x:Name="_pluginNameTextBlock"
                         FontSize="{DynamicResource FontSizeCaption}"
-                        FontWeight="SemiBold"
+                        FontWeight="Medium"
                         Text="{x:Static resources:Resource.PluginSettingsWindow_PluginName}"
                         TextTrimming="CharacterEllipsis"
                         Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -74,7 +74,7 @@
                             <TextBlock
                                 x:Name="_pluginVersionTextBlock"
                                 FontSize="{DynamicResource FontSizeDenseCaption}"
-                                FontWeight="SemiBold"
+                                FontWeight="Medium"
                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                 Text="v1.0.0" />
                         </Border>
@@ -145,7 +145,7 @@
                         <TextBlock
                             x:Name="_emptyStateTitleTextBlock"
                             FontSize="{DynamicResource FontSizeSmallBody}"
-                            FontWeight="SemiBold"
+                            FontWeight="Medium"
                             Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                         <TextBlock

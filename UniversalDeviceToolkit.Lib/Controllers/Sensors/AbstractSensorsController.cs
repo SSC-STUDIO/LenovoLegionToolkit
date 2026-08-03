@@ -71,6 +71,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
     private bool _sensorReadFailureLogged;
     private DateTime _lastCacheUpdateTime = DateTime.MinValue;
     private const int CACHE_EXPIRATION_MS = 180;
+    private const int DefaultMaxFanSpeedRpm = 5500;
     // Fan WMI + LHM must finish inside this window; overruns return stale cache and freeze gauges/charts.
     private const int SENSOR_READ_TIMEOUT_SECONDS = 3;
     protected virtual int SensorReadTimeoutSeconds => SENSOR_READ_TIMEOUT_SECONDS;
@@ -330,9 +331,9 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
         cancellationToken.ThrowIfCancellationRequested();
 
         if (cpuMaxFanSpeed <= 0 && cpuCurrentFanSpeed > 0)
-            cpuMaxFanSpeed = Math.Max(cpuCurrentFanSpeed, 5500);
+            cpuMaxFanSpeed = Math.Max(cpuCurrentFanSpeed, DefaultMaxFanSpeedRpm);
         if (gpuMaxFanSpeed <= 0 && gpuCurrentFanSpeed > 0)
-            gpuMaxFanSpeed = Math.Max(gpuCurrentFanSpeed, 5500);
+            gpuMaxFanSpeed = Math.Max(gpuCurrentFanSpeed, DefaultMaxFanSpeedRpm);
 
         if (gpuMaxCoreClock < 0 && gpuCoreClock >= 0)
             gpuMaxCoreClock = gpuCoreClock;
@@ -877,5 +878,20 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                 ex);
             return fallback;
         }
+    }
+
+    /// <summary>
+    /// Synchronously awaits a fallback task with a timeout to prevent indefinite blocking.
+    /// Used by vendor-specific sensor controllers when a hardware read fails and a
+    /// software fallback is needed.
+    /// </summary>
+    protected static int AwaitWithTimeout(Task<int> fallback, int timeoutSeconds = 30)
+    {
+        if (!fallback.Wait(TimeSpan.FromSeconds(timeoutSeconds)))
+        {
+            Log.Instance.Warning($"Sensor fallback task timed out after {timeoutSeconds}s.");
+            return -1;
+        }
+        return fallback.Result;
     }
 }

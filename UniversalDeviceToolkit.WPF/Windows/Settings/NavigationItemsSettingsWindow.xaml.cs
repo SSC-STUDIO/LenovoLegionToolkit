@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.WPF.ViewModels;
+using UniversalDeviceToolkit.ViewModels;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Settings
 {
@@ -27,7 +28,8 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
             // Initialize the toggle states of all navigation items
             var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
 
-            var keyboardSupported = await KeyboardBacklightViewModel.IsSupportedAsync();
+            var keyboardViewModel = IoCContainer.Resolve<KeyboardBacklightViewModel>();
+            var keyboardSupported = await keyboardViewModel.IsSupportedAsync();
             _keyboardCard.Visibility = keyboardSupported ? Visibility.Visible : Visibility.Collapsed;
             _keyboardToggle.IsChecked = keyboardSupported && GetNavigationItemVisibility("keyboard", visibilitySettings);
             _automationToggle.IsChecked = GetNavigationItemVisibility("automation", visibilitySettings);
@@ -56,8 +58,8 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
         if (visibilitySettings.TryGetValue(pageTag, out var visibility))
             return visibility;
 
-        // Plugin Extensions is opt-in; other items default on.
-        return pageTag != "pluginExtensions";
+        // Optional navigation entries default to visible when no setting is persisted.
+        return true;
     }
 
     private void NavigationItemToggle_Click(object sender, RoutedEventArgs e)
@@ -80,4 +82,3 @@ public partial class NavigationItemsSettingsWindow : BaseWindow
     }
 }
 }
-

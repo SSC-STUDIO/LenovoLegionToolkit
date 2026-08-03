@@ -10,7 +10,7 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public sealed class WindowsOptimizationViewModelGuardTests
 {
     [Fact]
-    public void Initialize_ShouldObserveStartupOptimizationScan()
+    public void Initialize_ShouldLeaveStateScanningToThePageCoordinator()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "ViewModels", "WindowsOptimizationViewModel.cs");
         var initialize = ExtractMethod(source, "public void Initialize()");
@@ -18,12 +18,8 @@ public sealed class WindowsOptimizationViewModelGuardTests
 
         initialize.Should().Contain("RunOnDispatcher(InitializeCore);");
         initialize.Should().NotContain("_ = ScanOptimizationStatesAsync();");
-        initializeCore.Should().Contain("StartOptimizationStateScan();");
-
-        var observer = ExtractMethod(source, "private async Task ObserveOptimizationStateScanAsync()");
-        observer.Should().Contain("await ScanOptimizationStatesAsync();");
-        observer.Should().Contain("catch (Exception ex)");
-        observer.Should().Contain("Log.Instance.Trace(\"Failed to scan Windows optimization states.\", ex);");
+        initializeCore.Should().NotContain("StartOptimizationStateScan();");
+        initializeCore.Should().NotContain("ObserveOptimizationStateScanAsync");
     }
 
     [Fact]
@@ -46,6 +42,32 @@ public sealed class WindowsOptimizationViewModelGuardTests
         snapshotBuilder.Should().Contain(".ToList()");
         snapshotBuilder.Should().Contain(".SelectMany(category => category.Actions.ToList())");
         snapshotBuilder.Should().Contain(".ToList();");
+    }
+
+    [Fact]
+    public void ScanOptimizationStatesAsync_ShouldRecordMachineStateAndUnlockApply()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "ViewModels", "WindowsOptimizationViewModel.cs");
+        var scanMethod = ExtractMethod(source, "public async Task ScanOptimizationStatesAsync(");
+
+        scanMethod.Should().Contain("TryGetActionAppliedAsync");
+        scanMethod.Should().Contain("action.IsApplied = isApplied;");
+        scanMethod.Should().Contain("action.IsSelected = isApplied ?? false;");
+        scanMethod.Should().Contain("action.IsEnabled = isApplied.HasValue;");
+        scanMethod.Should().Contain("IsOptimizationStateScanned = true;");
+        scanMethod.Should().NotContain("IsActionAppliedAsync(action.Key");
+        source.Should().NotContain("HandleOptimizationActionChangeAsync");
+    }
+
+    [Fact]
+    public void ApplyAndCancel_ShouldOnlyOperateInOptimizationMode()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "ViewModels", "WindowsOptimizationViewModel.cs");
+        var applyMethod = ExtractMethod(source, "public async Task ApplyOptimizationChangesAsync(");
+        var cancelMethod = ExtractMethod(source, "public void CancelOptimizationChanges()");
+
+        applyMethod.Should().Contain("!IsOptimizationMode");
+        cancelMethod.Should().Contain("!IsOptimizationMode");
     }
 
     private static string ExtractMethod(string source, string signature)

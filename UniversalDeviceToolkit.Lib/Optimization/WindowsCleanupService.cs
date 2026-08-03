@@ -309,6 +309,7 @@ public class WindowsCleanupService
                     continue;
 
                 var directoryPath = Environment.ExpandEnvironmentVariables(rule.DirectoryPath.Trim());
+                ValidateCleanupPath(directoryPath);
 
                 if (!Directory.Exists(directoryPath))
                     continue;
@@ -451,6 +452,25 @@ public class WindowsCleanupService
         }, cancellationToken).ConfigureAwait(false);
     }
 
+    private static void ValidateCleanupPath(string expandedPath)
+    {
+        var allowedPrefixes = new[]
+        {
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Temp",
+            Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\Temp",
+            Path.GetTempPath().TrimEnd('\\'),
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\Microsoft\Windows\INetCache",
+            Environment.GetFolderPath(Environment.SpecialFolder.InternetCache),
+        };
+
+        var normalizedPath = Path.GetFullPath(expandedPath);
+        if (!allowedPrefixes.Any(prefix => normalizedPath.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)))
+        {
+            throw new UnauthorizedAccessException(
+                $"Cleanup path '{expandedPath}' is not within allowed directories.");
+        }
+    }
+
     private static string NormalizeExtension(string extension)
     {
         if (string.IsNullOrWhiteSpace(extension))
@@ -473,6 +493,7 @@ public class WindowsCleanupService
                 continue;
 
             var directoryPath = Environment.ExpandEnvironmentVariables(rule.DirectoryPath.Trim());
+            ValidateCleanupPath(directoryPath);
             if (Directory.Exists(directoryPath))
             {
                 var extensions = (rule.Extensions ?? [])

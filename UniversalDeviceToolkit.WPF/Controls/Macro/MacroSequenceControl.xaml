@@ -26,32 +26,56 @@
                 AutomationProperties.Name="{x:Static resources:Resource.MacroSequenceControl_Repeat_Title}"
                 SelectionChanged="RepeatComboBox_SelectionChanged" />
         </custom:CardControl>
-        <custom:CardControl
-            x:Name="_ignoreDelaysCard"
-            Margin="0,0,0,8"
-            Icon="Clock24">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.MacroSequenceControl_IgnoreDelays_Title}" />
-            </custom:CardControl.Header>
-            <wpfui:ToggleSwitch
-                x:Name="_ignoreDelaysToggle"
-                Margin="0,0,0,8"
-                AutomationProperties.Name="{x:Static resources:Resource.MacroSequenceControl_IgnoreDelays_Title}"
-                Click="IgnoreDelaysToggle_Click" />
-        </custom:CardControl>
-        <custom:CardControl
-            x:Name="_interruptOnOtherKeyCard"
-            Margin="0,0,0,16"
-            Icon="ArrowStepInRight24">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.MacroSequenceControl_InterruptOnOtherKey_Title}" />
-            </custom:CardControl.Header>
-            <wpfui:ToggleSwitch
-                x:Name="_interruptOnOtherKeyToggle"
-                Margin="0,0,0,8"
-                AutomationProperties.Name="{x:Static resources:Resource.MacroSequenceControl_IgnoreDelays_Title}"
-                Click="InterruptOnOtherKeyToggle_Click" />
-        </custom:CardControl>
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <custom:CardControl
+                x:Name="_ignoreDelaysCard"
+                Grid.Column="0"
+                Margin="0,0,8,0"
+                Icon="Clock24">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.MacroSequenceControl_IgnoreDelays_Title}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_ignoreDelaysToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.MacroSequenceControl_IgnoreDelays_Title}"
+                        Click="IgnoreDelaysToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+            <custom:CardControl
+                x:Name="_interruptOnOtherKeyCard"
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                Icon="ArrowStepInRight24">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.MacroSequenceControl_InterruptOnOtherKey_Title}" />
+                    <wpfui:ToggleSwitch
+                        x:Name="_interruptOnOtherKeyToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.MacroSequenceControl_InterruptOnOtherKey_Title}"
+                        Click="InterruptOnOtherKeyToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+        </Grid>
         <custom:CardControl Margin="0,0,0,16" Icon="Settings24">
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.MacroSequenceControl_RecordingOptions}" />

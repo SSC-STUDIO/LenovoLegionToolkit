@@ -4,6 +4,7 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
+using UniversalDeviceToolkit.Lib.System;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests;
@@ -30,10 +31,12 @@ public sealed class Phase1UpstreamCapabilityTests
         copy.Should().NotBeSameAs(trigger);
     }
 
-    [Fact]
+    [SkippableFact]
     public async Task BatteryPercentageTrigger_NoData_ReturnsFalseSafely()
     {
         // DeepCopy path does not throw; IsMatchingState must tolerate missing battery by returning false.
+        Skip.If(Battery.IsBatteryMonitoringSupported(), "battery monitoring is available on this machine; the no-data path cannot be exercised");
+
         var trigger = new BatteryPercentageAutomationPipelineTrigger(
             BatteryPercentageComparison.AboveOrEqual,
             50,

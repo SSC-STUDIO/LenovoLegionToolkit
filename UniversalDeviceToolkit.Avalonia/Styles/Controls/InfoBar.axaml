@@ -34,7 +34,7 @@
 
     <!-- InfoBar text styling -->
     <Style Selector="Border.infoBar > StackPanel > TextBlock.infoBarTitle">
-        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeBody}" />
     </Style>
     <Style Selector="Border.infoBar > StackPanel > TextBlock.infoBarMessage">

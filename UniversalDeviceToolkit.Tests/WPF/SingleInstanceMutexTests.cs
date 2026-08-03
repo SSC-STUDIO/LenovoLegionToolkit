@@ -7,6 +7,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;
 
+[Collection(TestCollections.ProcessState)]
 [Trait("Category", TestCategories.Unit)]
 public sealed class SingleInstanceMutexTests
 {

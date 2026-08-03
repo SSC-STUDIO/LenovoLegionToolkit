@@ -628,7 +628,7 @@ If you want to remove them instead, make sure that you uninstall all 3, otherwis
 
 #### Why is my antivirus reporting that the installer contains a virus/trojan/malware?
 
-UDT makes use of many low-level Windows APIs that can be falsely flagged by antiviruses as suspicious, resulting in a false-positive. UDT is open source and can easily be audited by anyone who has any doubts as to what this software does. All installers are built directly on GitHub with GitHub Actions, so that there is no doubt what they contain. This problem could be solved by signing all code, but I can't afford spending hundreds of dollars per year for an Extended Validation certificate.
+UDT makes use of many low-level Windows APIs that can be falsely flagged by antiviruses as suspicious, resulting in a false-positive. UDT is open source and can easily be audited by anyone who has any doubts as to what this software does. Release payloads and installers are built on GitHub with GitHub Actions, signed through Azure Trusted Signing, and verified before publication. Unsigned local builds should not be treated as official release artifacts.
 
 If you downloaded the installer from this projects website, you shouldn't worry - the warning is a false-positive. That said, if you can help with resolving this issue, let's get in touch.
 
@@ -787,13 +787,15 @@ The more info you add, the better the app will get over time. If anything seems 
 
 UDT localization is managed through Crowdin with a repository-level config at `crowdin.yml`.
 
-- Source files: neutral `Resource.resx` in four modules:
+- Source files: neutral `Resource.resx` in six modules:
   - `UniversalDeviceToolkit.WPF/Resources`
   - `UniversalDeviceToolkit.Lib/Resources`
   - `UniversalDeviceToolkit.Lib.Automation/Resources`
   - `UniversalDeviceToolkit.Lib.Macro/Resources`
-- Target files: `Resource.<locale>.resx` beside each source file.
-- Locale mapping is defined in `crowdin.yml` (for example `zh-CN -> zh-hans`, `zh-TW -> zh-hant`, `pt-BR -> pt-br`).
+  - `UniversalDeviceToolkit.Lib.Plugins/Resources`
+  - `UniversalDeviceToolkit.CLI/Resources` (`CLI.Resources.resx`)
+- Target files: `Resource.<locale>.resx` (or `CLI.Resources.<locale>.resx` for CLI) beside each source file. Culture names use the BCP 47 canonical form (`zh-Hans`, `zh-Hant`, `pt-BR`, `nl-NL`, `uz-Latn-UZ`) — enforced by `Scripts/Assert-CultureNaming.ps1`.
+- Locale mapping is defined in `crowdin.yml` (for example `zh-CN -> zh-Hans`, `zh-TW -> zh-Hant`, `pt-BR -> pt-BR`).
 
 Typical CLI commands:
 

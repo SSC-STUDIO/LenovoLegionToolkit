@@ -3,9 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>$(UDTTargetFramework)</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
-    <Nullable>enable</Nullable>
     <RootNamespace>LanguagePackUi.Smoke</RootNamespace>
     <UseWPF>true</UseWPF>
     <EnableUdtTestHooks>true</EnableUdtTestHooks>

@@ -21,7 +21,7 @@ public static class SnackbarHelper
             return;
 
         // Design-time / early boot fallback — single snackbar path.
-        await ShowLegacySnackbarAsync(title, message, type).ConfigureAwait(true);
+        await ShowLegacySnackbarAsync(title, message, type);
     }
 
     public static void Show(string title, string? message = null, SnackbarType type = SnackbarType.Success)
@@ -115,6 +115,6 @@ public static class SnackbarHelper
         }).Task;
 
         await Application.Current.Dispatcher.InvokeAsync(() => snackBar.ShowAsync()).Task.Unwrap();
-        await Task.Delay(timeout + TimeSpan.FromMilliseconds(300)).ConfigureAwait(true);
+        await Task.Delay(timeout + TimeSpan.FromMilliseconds(300));
     }
 }

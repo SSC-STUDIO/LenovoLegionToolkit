@@ -33,7 +33,7 @@ public sealed class UpstreamCapabilityMatrixGuardTests
                      "Assets/Logo.png",
                      "Assets/Icon.ico",
                      "Assets/Logo.png",
-                     "Assets/og-preview.png"
+                     "Assets/Screenshot_main.png"
                  })
             File.Exists(Path.Combine(root, path.Replace('/', Path.DirectorySeparatorChar))).Should().BeTrue(path);
     }
@@ -50,7 +50,7 @@ public sealed class UpstreamCapabilityMatrixGuardTests
         engine.Should().Contain("InstallerConstants.MainExeName");
 
         var site = File.ReadAllText(Path.Combine(root, "site", "index.html"));
-        site.Should().Contain("og-preview.png");
+        site.Should().Contain("Screenshot_main.png");
 
         var readme = File.ReadAllText(Path.Combine(root, "README.md"));
         readme.Should().Contain("Assets/Logo.png");

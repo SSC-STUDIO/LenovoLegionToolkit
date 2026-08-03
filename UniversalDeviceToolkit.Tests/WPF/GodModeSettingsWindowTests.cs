@@ -278,6 +278,68 @@ public class GodModeSettingsWindowTests
         createMethod.Should().NotContain("Guid.Empty");
     }
 
+    [Theory]
+    [InlineData(0d, 0, 100, true)]
+    [InlineData(100d, 0, 100, true)]
+    [InlineData(-100d, -100, 0, true)]
+    [InlineData(0d, -100, 0, true)]
+    [InlineData(null, 0, 100, false)]
+    [InlineData(double.NaN, 0, 100, false)]
+    [InlineData(100.5, 0, 100, false)]
+    [InlineData(-1d, 0, 100, false)]
+    [InlineData(1d, -100, 0, false)]
+    public void OffsetValueValidation_ShouldAcceptOnlyWholeNumbersWithinDisplayedRange(double? rawValue, int minimum, int maximum, bool expected)
+    {
+        var isValid = GodModeSettingsWindow.TryNormalizeOffsetValue(rawValue, minimum, maximum, out _);
+
+        isValid.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("WARNING!\nLeave this at 0.", "Leave this at 0.")]
+    [InlineData("警告！\n请谨慎使用。", "请谨慎使用。")]
+    [InlineData("保守使用此设置。", "保守使用此设置。")]
+    public void WarningHeading_ShouldBeSeparatedFromWarningDetails(string message, string expected)
+    {
+        GodModeSettingsWindow.RemoveWarningHeading(message).Should().Be(expected);
+    }
+
+    [Fact]
+    public void GodModeOffsetControls_ShouldKeepTheVisibleTextInSyncWithValue()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "GodModeSettingsWindow.xaml.cs");
+        var defaultsMethod = ExtractMethod(source, "private async Task SetDefaultsAsync(GodModeDefaults defaults)");
+        var stateMethod = ExtractMethod(source, "private async Task SetStateAsync(GodModeState state)");
+        var setOffsetValueMethod = ExtractMethod(source, "private static void SetOffsetValue");
+
+        defaultsMethod.Should().Contain("SetOffsetValue(_maxValueOffsetNumberBox");
+        defaultsMethod.Should().Contain("SetOffsetValue(_minValueOffsetNumberBox");
+        stateMethod.Should().Contain("SetOffsetValue(_maxValueOffsetNumberBox");
+        stateMethod.Should().Contain("SetOffsetValue(_minValueOffsetNumberBox");
+        setOffsetValueMethod.Should().Contain("numberBox.Value = normalizedValue;");
+        setOffsetValueMethod.Should().Contain("numberBox.Text = normalizedValue.ToString();");
+    }
+
+    [Fact]
+    public void GodModeWarnings_ShouldUseWarningChannelInsteadOfSubtitle()
+    {
+        var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "GodModeSettingsWindow.xaml");
+        var code = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "GodModeSettingsWindow.xaml.cs");
+
+        source.Should().Contain("x:Name=\"_fanFullSpeedHeader\"");
+        source.Should().Contain("x:Name=\"_maxValueOffsetHeader\"");
+        source.Should().Contain("x:Name=\"_minValueOffsetHeader\"");
+        code.Should().Contain("_fanFullSpeedHeader.Warning");
+        code.Should().Contain("_maxValueOffsetHeader.Warning");
+        code.Should().Contain("_minValueOffsetHeader.Warning");
+        code.Should().Contain("fanFullSpeedEnabled");
+        code.Should().Contain("maxOffsetEnabled");
+        code.Should().Contain("minOffsetEnabled");
+        source.Should().NotContain("Subtitle=\"{x:Static resources:Resource.GodModeSettingsWindow_Fans_Max_Message}\"");
+        source.Should().NotContain("Subtitle=\"{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MaxOffset_Message}\"");
+        source.Should().NotContain("Subtitle=\"{x:Static resources:Resource.GodModeSettingsWindow_Advanced_MinOffset_Message}\"");
+    }
+
     private static GodModeState CreateState(Guid activePresetId, Dictionary<Guid, GodModePreset> presets) => new()
     {
         ActivePresetId = activePresetId,

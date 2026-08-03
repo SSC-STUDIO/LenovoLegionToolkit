@@ -1,0 +1,362 @@
+# UniversalDeviceToolkit 全方位评估与升级维护计划
+
+> 版本：2026-08-03 ｜ 适用范围：UniversalDeviceToolkit 全代码库（master @ 804fd8a7 + 工作树 WIP）
+> 目的：为后续升级、维护、重构提供决策依据与分阶段执行计划（含验收标准）
+> 方法：九维度静态调研（架构/代码质量/测试/构建/安全/功能/历史/性能UX/文档）+ 构建验证 + 定向测试
+
+---
+
+## 0. 代码库画像
+
+| 指标 | 数值 |
+|---|---|
+| 解决方案 | UniversalDeviceToolkit.sln（35 个 csproj 中 28 个入 sln） |
+| 代码规模 | 1250 个 .cs / 188K 行 C#；108 个 XAML |
+| 主要项目 | Lib 45.5K 行、WPF 52.2K 行、Lib.Plugins 10.4K 行、Lib.Automation 4.0K 行、Tests 48K 行 |
+| Git | 6380 提交（有效唯一内容约 3800，2022-2025 历史含约 50% 孪生重复）；6 个版本标签（v4.0.0~v5.0.1） |
+| 身份 | fork 自 Lenovo Legion Toolkit；2025-11 由 crs102597 接管；2026-05 rebrand 为 UniversalDeviceToolkit；当前版本 5.0.1 |
+| TFM | Windows 图统一 `net10.0-windows10.0.26100.0` + 强制 win-x64；可移植图 `net10.0` |
+| 依赖管理 | Central Package Management（52 包）+ 30 个 packages.lock.json 全跟踪 + CI `--locked-mode` |
+| 测试 | Tests ~4500 + CrossPlatform 137 + Fast.Tests 7 + UiAutomation.Tests 14；串行执行 |
+
+---
+
+## 1. 九维度调研结论摘要
+
+### 1.1 架构与依赖（评级 ★★★★★）
+
+- 依赖是严格 DAG：UI 壳（WPF/Avalonia/CLI）→ Lib 层 → Shared/Abstractions/ViewModels/Platform 底层，**无反向引用、无循环、无裸程序集引用**。
+- 已知问题：
+  - WPF 引用 `CLI.Lib`（实际承载 IPC 协议，命名与职责不符，形成"UI 依赖 CLI 组件"的语义反转）— 中
+  - sln 层 WPF 声明依赖 CLI 项目，csproj 层只依赖 CLI.Lib — 不一致 — 中
+  - `PresetUiValidation` 直接引用整个 WPF 程序集 — 中
+  - Tests 引用 `Tools\MainAppPluginUi.Smoke`（测试依赖临时 smoke 工具）— 中
+  - WPF 显式引用 Lib.Shared 但 0 个文件使用其命名空间（纯冗余）— 低
+- 迁移中间态（高风险双实现）：
+  - Lib 侧 `MessagingCenter`/`AbstractSettings`/`LltJson`/`ExceptionHelper` 仍是完整独立实现，Shared 侧有对应版本 — **高**
+  - WPF 本地 `KeyboardBacklightViewModel`/`MacroViewModel` 与新 ViewModels 项目重复（82/95 行相同）— **高**
+  - CLI（udt-cli，IPC 遥控）与 CrossPlatform（udt，独立便携 CLI）功能域重叠 — 中
+  - `AssemblyName=udt` 被 CrossPlatform 与 Avalonia 同时使用，同目录发布互相覆盖 — 中
+  - Platform.Linux/MacOS 零消费者（编译级死岛，0.95 置信度）— 中
+- 孤立项目：PerformanceTest（不在 sln、无 CI）、HardwareValidation、SensorInventoryDump、4 个 sln 外 Tools。
+
+### 1.2 代码质量（评级 ★★★★☆）
+
+- 构建：Release 0 错误；生产代码 0 警告；仅 Tests 残留 1 个警告（CS8604 InstallerEngine.cs:454，非 Tests）。
+- 可空性：全项目 `Nullable=enable`，生产代码 0 处 `#nullable disable`，无 CS86xx 残留 — **最强维度之一**。
+- TODO/FIXME：全库仅 8 处，无 HACK/XXX — 低。
+- 空 catch：4 处（WPF `NetworkAccelerationControl.xaml.cs:377,464` 静默吞保存失败 — 中；Lib Log.cs 2 处合理）。
+- 硬编码异常消息：7 处（SettingsBackupService.cs:39-53 ×4、AbstractComboBox* ×2、FeatureRegistration.cs ×1）与全库 Resource 模式不一致 — 中。
+- 巨型文件 22 个 >800 行：前 3 名 PluginExtensionsPage.xaml.cs 2827、PluginRepositoryService.cs 2179、SensorsControl.xaml.cs 1980 — **高**。
+- async void 138 处全部为事件处理器，合法 — 低。
+- File/Stream 30/30 全部 using；IDisposable 43 类；sync-over-async 24 处均在 Dispose/Stop 场景（有 ConfigureAwait(false) 防护）— 低。
+- 冗余 `ConfigureAwait(true)` 37 处（WPF 迁移期残留，纯噪音）— 低。
+- XML 注释覆盖 8%~42%（核心文件），无强制机制 — 中。
+
+### 1.3 测试与 CI（评级 ★★★★☆）
+
+- 测试命名 97.9% 遵循 `Subject_Action_Should_Expected`；[Trait] 分层（Unit/Plugin/Controller/Guard/Security...）支撑 CI fail-fast。
+- 测试钩子设计优秀：`EnableUdtTestHooks` 传播 + `UDT_TEST_HOOKS` 常量 + 发布守卫（`RejectShippingAppPublishWithTestHooks`）— 最佳实践。
+- 主要问题：
+  - **全串行瓶颈**：xunit.runner.json `maxParallelThreads:1`，根因是 `UnitTestBase` 全局 pin culture/Resource.Culture（TestBase.cs:46-93）；已有 CultureScope 等隔离工具未采用。CI 状态套件预计 30-90 分钟 — **高**
+  - **测试重构三项目未提交**：Fast.Tests / Tests.Infrastructure / UiAutomation.Tests 全部未跟踪，CI workflow 已切到新项目 → 推 CI 即挂 — **高（紧急）**
+  - 跳过测试：16 静态 Skip（ExplorerRestart 9 + TokenManipulator 7，安全敏感路径零回归）+ 25 动态 Skip（含"环境决定测试有效性"反模式）
+  - 命名空间/目录 4 处错位（含 PluginInfrastructureTests.cs 三重错位）
+  - 根目录 77 个测试文件未归位；"Phase 系列"临时命名
+  - Guard 测试 17+ 个文件用字符串断言 workflow 内容（脆弱，文案改动即崩）
+  - `TestCategories.Coverage` 死代码（全库零使用）
+- CI：15 个 workflow；`Ci-tests.yml` 已改三层（Security+Guard → Fast → Stateful）且新增 timeout-minutes 与 Test-WindowsTestEnvironment 预检（工作树版）；Release.yml 测试未传 coverlet.runsettings（与 CI 阈值不一致）；无 timeout 风险已修；runner 镜像不统一（windows-2022 vs latest、macos-14 vs latest）。
+- 覆盖率门：50% 行覆盖（coverlet.runsettings），对 3-OS CrossPlatform 复用 Windows Include 列表（语义不可控）。
+
+### 1.4 构建与依赖（评级 ★★★★★）
+
+- 最佳实践齐全：CPM + lock 文件 + `--locked-mode` CI + 版本门禁（tag 必须匹配 props 版本）+ dependabot + 集中 props/targets。
+- 待改进：
+  - `Nullable`/`ImplicitUsings` 默认值已集中到 `Directory.Build.props`；CLI.Lib、Lib、Lib.Macro 和 WPF 保留有意的 `ImplicitUsings=disable` 例外 — 已完成
+  - 5 个可移植项目手写 `Platforms`/`PlatformTarget`/`Prefer32Bit` 三件套与集中逻辑重复 — 低
+  - 包版本积压：8 个小版本（Autofac 9.3.2、Serilog 4.4.0、Test.Sdk 18.8.1、coverlet 10.0.1、System.CommandLine 2.0.10、System.Management/ServiceController 10.0.10、Xunit.SkippableFact 1.5.61、ZenStates 1.0.3）；2 个大版本需评估（NAudio.Wasapi 2.3→22、Avalonia 11.3→12.1）；SDK BuildTools 不要升 — 中
+  - `InstallOpt-out`：Installer.csproj `RestorePackagesWithLockFile=false`（有注释说明）— 低
+- 输出嵌套 `bin\x64\Release\<tfm>\win-x64` 是标准 SDK 路径模板产物（Platforms=x64 + RID 叠加），非问题。
+- 安装器：自研 WPF 安装器（Inno 已退役），Full/Online 双版本 + 内嵌 payload zip + SHA256 校验 + winget/scoop 清单校验 — 成熟。
+
+### 1.5 安全与平台集成（评级 ★★★☆☆ — 三个结构性弱点）
+
+| 级别 | 问题 | 位置 |
+|---|---|---|
+| **P0** | FanCurveManager 遗留 `Assembly.LoadFrom` 无校验加载（旧目录 *.dll，提权上下文任意代码执行） | `Lib\Utils\FanCurveManager.cs:129-188` |
+| **P0** | 发布物零 Authenticode 签名（WDAC VerifiedAndReputable 0x800711C7 全盘拦截 + SmartScreen）；README 自述无力承担 EV 证书 | 全仓无签名配置；`README.md:631` |
+| **P0** | `requireAdministrator` 全功能提权 + 安装目录用户可写 + 登录任务 RunLevel=Highest | `App.manifest:9`、`Autorun.cs:91` |
+| 中 | TrustedPluginPackageStore 命中时免签放行旁路（同用户可"自签"） | `PluginSignatureValidator.cs:118-159` |
+| 中 | IPC 挑战应答只证"同一用户"，不区分提权态，同用户非提升进程可驱动特权操作 | `WPF\CLI\IpcServer.cs:159-241` |
+| 中 | InstallerEngine 下载 .NET 运行时安装器无哈希校验后静默执行 | `InstallerEngine.cs:95-105` |
+| 中低 | `UDT_RESOURCE_CATALOG_URL` 覆盖仅验 scheme 无 host 白名单；语言包/设备包下载无哈希（目录有 SHA256 兜底） | `OnlineResourceCatalogClient.cs:24-39` |
+| 低 | HttpClientFactory `allowAllCerts` 参数被静默忽略（语义困惑，实际安全） | `HttpClientFactory.cs:51` |
+
+防护良好的部分：插件主链路（WinVerifyTrust + ALC 隔离 + 依赖链签名）、ZIP 解压 zip-slip 防护（3 处）、`CMD.cs` 命令注入防护、`PathSecurity`（符号链接解析）、凭据零持久化、日志无敏感数据。
+
+### 1.6 功能模块全景
+
+- **硬件控制器**（Lib\Controllers）：God Mode（Lenovo WMI）、GPU 超频/重启（nvapi+SetupAPI）、RGB/Spectrum 键盘（WMI/HID/Aurora）、传感器双轨（新 LHM `SensorsGroupController` + 旧 WMI `SensorsController`）、8 个品牌厂商控制器、LampArray 氛围灯（HID）、AI 模式、AMD 超频。
+- **Features 抽象层**：60+ 能力功能（AbstractCapabilityFeature 等 6 基类 + 电池/混合显卡/电源模式/白键盘灯等）。
+- **设备支持**：`LenovoDeviceSupportProvider` 内置 128 设备包、19+ 品牌；`DevicePackManager` 在线安装（SHA256 校验）。
+- **自动化**：33 触发器 + 46 步骤 + 多态 JSON 序列化（automation.json）。
+- **宏**：低层键盘钩子录制/回放（小键盘 0-9）。
+- **插件系统**：签名验证 + ALC + 依赖拓扑排序 + 热重载 + 在线商店（6 候选 URL）+ 商店缓存 HMAC。
+- **包下载**：PCSupport/Vantage 下载器 + 12 条更新检测规则。
+- **网络加速**：PAC 代理 + 隔离 worker 进程（CONNECT 隧道无 MITM）+ 快照恢复 + 域名白名单。
+- **系统**：WMI 26 partial / EC（PawnIO）/ 驱动封装 / NVAPI / HID / 注册表。
+- **跨进程**：CLI↔WPF 命名管道（22 操作 + DPAPI 挑战应答）；NetworkProxy worker IPC（环境变量令牌）；单实例互斥。
+
+### 1.7 Git 历史与 WIP
+
+- 演进：2021-10 上游 LLT 创建 → 2022-09 LaptopPerformanceToolkit fork 合入 → 2022-10 中文翻译分支 → 2025-11 crs102597 接管 → 2026-05 rebrand（95d99651 批量改名）→ 2026-07-14 Phase 3 ABI 硬切换（v5.0.0）→ 2026-07-23 v5.0.1。
+- 版本节奏：2026 年 1273 提交（接管后爆发）；3.4.1→5.0.1 密集迭代。
+- **工作树 WIP（未提交，309 文件 ±1.2 万行）可拆 6 个逻辑变更集**：
+  1. **测试体系重构**（最完整，接近可提交）：Tests.Infrastructure + Fast.Tests + UiAutomation.Tests 三项目 + FlaUI 迁出 + CI 全链路切换
+  2. **传感器子系统解耦**：SensorsGroupController 2036→158 行 + 5 个新类（HardwareDiscoveryService/SensorPreferenceCatalog/SensorSelector/SensorSnapshotStore）
+  3. **Avalonia 跨平台扩展**：多 TFM + IPlatformServices + 主题偏好持久化
+  4. **语言包 BCP47 规范化**：22+26 resx 重写 + props/catalog/crowdin 同步 + 3 个 Assert 脚本护航
+  5. **网络代理重构 + 安全加固**：LocalHttpProxyHost 遥测 + PluginDiscovery 目录校验
+  6. **生命周期与 ABI 清理**：IoCContainer.Dispose + Lib.Plugins 11 契约文件删除（双 ABI 承接）+ WPF 死代码删除
+- 残留：`body.json`/`resp.json`（LLM API 调试垃圾）、`.opencode/dead-code-scan/` 99 文件已误提交入库、3 个 `LenovoLegionToolkit.*.DotSettings` 已跟踪、`feature/ui-optimization` 陈旧分支（0 独有提交）、master 领先 origin 6 个未推送提交。
+
+### 1.8 性能 / UX / 可访问性 / 本地化
+
+- **性能**：三种刷新模式（SensorsControl 1s 轮询 + SensorsGroupController 生产者/订阅者 + OSD TheRing 精确节流）；180ms 快照缓存合并并发调用；3s 硬超时；FPS 1s 采样；GPU 状态自适应刷新（2s/10s）；启动无 Splash，语言门先于首窗；safe-start 健康守卫（连续 3 次失败）；日志滚动 10×50MB；`UiPerformance.Smoke`（评级 ≤400/≤900/≤1800ms）+ PerformanceTest 微基准。
+- **UX**：WPF-UI 4.3 基础 + 自定义 ThemeManager（4 色板预设 + 10 token 推导 + 20 画笔动态覆盖）+ Mica/Acrylic 材质 + 动画 token 体系 + 109 XAML 屏幕适配审计（R1-R12）+ AdaptiveTextBlock 防长翻译溢出。
+- **可访问性**：AutomationId/AutomationProperties 100+ 处、AccessKey 体系（为自动化测试服务）；高对比度仅 2 处（shimmer 停用）；无屏读测试 — 薄弱区。
+- **本地化**：25 语言 × 6 程序集（WPF 1370 键）；LocalizationHelper（culture pin en + 父文化回退链 + 非中文永不落中文 + RTL/LRM 处理）；语言包在线安装（SHA256 + 原子替换 + 回退便携包）；7 个守卫测试强制。
+- **文档**：22 篇 Docs + 8 篇根 md；3 处过时（LanguagePacks.md 声称 RepairAsync/UpdateAsync 不存在、LocalizationAndUiModernization.md 状态滞后、VisualAudit 称 CrossPlatform 纯控制台但已有 Avalonia）；README 日志路径单复数不一致。
+
+---
+
+## 2. 风险清单（按优先级）
+
+### P0（立即，本周）
+| # | 风险 | 位置 | 修复要点 |
+|---|---|---|---|
+| R1 | FanCurveManager 无校验 Assembly.LoadFrom | Lib\Utils\FanCurveManager.cs:165 | 删除遗留路径或接入 IPluginSignatureValidator |
+| R2 | 发布物零代码签名（WDAC/SmartScreen 双拦截） | 全仓 | 接入 Azure Trusted Signing（开源免费额度） |
+| R3 | 测试重构 WIP 未提交（CI 必挂） | Fast.Tests/Infrastructure/UiAutomation + workflows | 6 变更集拆分提交（见 §4 M1） |
+| R4 | requireAdministrator 全功能提权 + 目录用户可写 | App.manifest:9 / Autorun.cs:91 | asInvoker + 按需提权（中期） |
+
+### P1（近期，一个月）
+| # | 风险 | 位置 | 修复要点 |
+|---|---|---|---|
+| R5 | Lib/Shared 四组双实现漂移 | Lib MessagingCenter/AbstractSettings/LltJson/ExceptionHelper | 按 Folders 模式 wrapper 化 |
+| R6 | WPF 本地 VM 与新 ViewModels 项目重复 | KeyboardBacklightViewModel/MacroViewModel | 删本地副本统一引用 |
+| R7 | 巨型文件 3 个 >1900 行 | PluginExtensionsPage.xaml.cs / PluginRepositoryService.cs / SensorsControl.xaml.cs | partial/子 VM 拆分 |
+| R8 | 测试全串行（CI 30-90 分钟） | xunit.runner.json / TestBase.cs culture pin | 集合级并行 + CultureScope 隔离 |
+| R9 | 插件信任链旁路 | PluginSignatureValidator.cs:118-159 | trusted store 完整性校验或移除免签通道 |
+| R10 | IPC 认证不区分提权态 | WPF\CLI\IpcServer.cs | 校验对端提权令牌 |
+| R11 | Installer 运行时下载无哈希 | InstallerEngine.cs:95-105 | 固化 SHA256 校验 |
+| R12 | `udt` AssemblyName 冲突 | CrossPlatform/Avalonia csproj | 唯一化（udt / udt-gui） |
+
+### P2（季度内）
+| # | 风险 | 位置 |
+|---|---|---|
+| R13 | 集中重复属性 | Nullable/ImplicitUsings 默认值已集中到 Directory.Build.props；4 个 framework-import 项目保留显式 disable |
+| R14 | 包版本积压 | Directory.Packages.props 一批升级 |
+| R15 | Guard 测试字符串断言脆弱 | CiWorkflowGuardTests 等 18 个 |
+| R16 | 死岛治理 | Platform.Linux/MacOS、PerformanceTest、TestCategories.Coverage |
+| R17 | 供应链补洞 | 资源目录 host 白名单、语言包/设备包下载哈希 |
+| R18 | 残留文件入库 | .opencode 99 文件、DotSettings、body/resp.json |
+| R19 | 命名空间/目录错位 4 处 + 根目录 77 文件 | Tests 目录 |
+
+### P3（随手清理）
+| # | 项 |
+|---|---|
+| R20 | 37 处 ConfigureAwait(true) 机械清理 |
+| R21 | 7 处硬编码异常消息归入 Resource |
+| R22 | 文档纠偏 3 处 + README 路径不一致 |
+| R23 | sln 外 4 工具项目收纳、InnoDependencies 空目录、陈旧分支清理 |
+
+---
+
+## 3. 最佳实践对照（已达标 vs 建议引入）
+
+### 已达标（保持）
+- CPM + lock 文件 + --locked-mode；版本单一来源 + tag 门禁；发布禁止测试钩子。
+- 可空性全面开启且无逃逸区；生产零警告。
+- 集中化本地化 + 守卫测试体系 + Crowdin 流程。
+- 插件加载纵深防御（签名→ALC→依赖链→沙箱）。
+- 原子设置写入（temp+move）、zip-slip 防护、命令注入防护。
+- 崩溃三连处理 + 崩溃报告 + 30 天清理。
+- 测试钩子环境变量驱动 + 发布安全阀。
+
+### 建议引入
+1. `TreatWarningsAsErrors` 试点（CI `-warnaserror`，从 1 个警告清零起步）。
+2. 架构守卫测试（禁止底层引用 UI 壳；禁止无校验 Assembly.LoadFrom；目录↔命名空间↔文件名三一致）。
+3. 集合级测试并行 + culture 按集合隔离（预计 CI 30-90 分钟 → 5-15 分钟）。
+4. `GenerateDocumentationFile` 试点核心 Lib 项目（CS1591 显形）。
+5. 代码签名（Azure Trusted Signing）作为发布硬门禁。
+6. 提交规范：大 WIP 按逻辑变更集拆分提交（当前 6 变更集待拆）。
+
+---
+
+## 4. 分阶段执行计划（含验收标准）
+
+### M1 — 收尾与止血（本周）
+1. **提交 6 个 WIP 变更集**（每集一个提交，与 WIP 隔离策略一致）：
+   - 测试体系重构（Tests.Infrastructure + Fast.Tests + UiAutomation.Tests + sln + 5 workflows + Guard 测试适配）
+   - 传感器解耦（SensorsGroupController 拆分 + 5 新类 + 厂商控制器联动 + 6 新测试）
+   - Avalonia 扩展（多 TFM + IPlatformServices + 主题偏好）
+   - 语言包 BCP47 规范化（resx/props/catalog/crowdin/脚本）
+   - 网络代理重构 + PluginDiscovery 安全加固
+   - 生命周期/ABI 清理（IoCContainer.Dispose + 契约删除 + 死代码）
+   - 顺带删除 body.json/resp.json；git rm .opencode 与 3 个 DotSettings
+   - **验收**：每个变更集构建 0 错误；测试重构集后全量 4538 测试通过；push 后 CI 绿
+2. **R1 封堵 FanCurveManager**：删除遗留 LoadFrom 路径（功能已由现代插件系统覆盖）或接入签名验证；CI 加"禁止未校验 Assembly.LoadFrom"守卫测试。
+3. **R2 签名调研**：验证 Azure Trusted Signing 免费额度资格；产出 Release.yml 签名步骤设计（含 signtool 命令与证书获取）。
+4. **验收**：构建 0 错误；全量测试绿；`git grep "Assembly.LoadFrom"` 仅剩带校验路径。
+
+### M2 — 质量与安全（下月）
+1. **R4 权限模型**：App.manifest 降为 asInvoker + 按需提权（复用 runas 短进程模式）；Autorun 任务降权；安装目录改受保护位置或加 ACL。
+2. **R9/R11 安全补洞**：trusted store 完整性、Installer 运行时 SHA256；IPC 提权校验已在本轮完成。
+3. **R5/R6 双实现收尾**：Lib 四类 wrapper 化 + WPF 双 VM 删除（连带 R7 的 ViewModels 迁移）。
+4. **R7 巨型文件**：先拆 PluginRepositoryService（纯逻辑，风险最低）与 SensorsControl（已有 VM 拆分先例）。
+5. **R8 测试并行化**：xunit.runner.json 开集合并行 + UnitTestBase culture pin 改按集合隔离 + 逐个修复破坏并行的测试 + Ci-tests.yml 主 job timeout-minutes。
+6. **验收**：全量测试并行下绿且 <20 分钟；警告归零；CI 无 timeout。
+
+### M3 — 治理与现代化（下季度）
+1. **R14**：包版本一批升级 + 两个大版本（NAudio/Avalonia）评估矩阵。
+2. **R15**：Guard 测试改 YAML 结构断言或脚本常量单一事实源。
+3. **R16**：Platform.Linux/MacOS 接入 Avalonia 路线或归档；PerformanceTest 接 CI 基准或删除；TestCategories.Coverage 删除。
+4. **R19**：Tests 根目录 77 文件归位 + 4 处命名空间错位修复 + "Phase 系列"改名 + 三一致守卫测试。
+5. **R17/R12/R18/R22**：供应链补洞、udt 改名、残留清理、文档纠偏。
+6. **验收**：`dotnet build -warnaserror` 全绿；测试目录三一致校验通过；无孤立项目。
+
+### M4 — 长期演进（半年）
+1. **WPF 巨型 code-behind 系统性拆解**（PluginExtensionsPage 2827 行等）→ CommunityToolkit + ViewModels 项目统一。
+2. **CLI 双线合并**：IPC 遥控（udt-cli）与独立便携（udt）公共命令逻辑合并；Avalonia 里程碑明确（与 WPF 退出计划）。
+3. **可访问性**：高对比度主题资源、焦点环、屏读测试（可接入 FlaUI 管线）。
+4. **文档体系**：dead-code 报告归档、Docs 状态标注刷新、README 品牌一致性。
+
+---
+
+## 5. 执行核对记录（第一轮 Check）
+
+> 由外部执行者完成的部分改动已核对，结论：**整改清单（§2）基本未落地，工作树 309 文件改动属 6 个功能 WIP 变更集**（详见 §1.7）。
+
+| 项 | 状态 | 证据 |
+|---|---|---|
+| xUnit1026 假矩阵测试 | ✅ 已修（真修复） | 9 警告归零；Theory 参数经反射进入被测路径 |
+| 其余 R1-R23 | ❌ 未执行 | 复核见 §2 各位置原文未变 |
+
+### 5.1 后续功能修复：系统优化界面事务交互
+
+该项是本计划之外、但与测试体系和 WPF 运行时覆盖直接相关的功能缺陷修复，不代表 R1-R23 中任何安全项已经完成。
+
+| 项 | 状态 | 证据 |
+|---|---|---|
+| 推荐项不再勾选即执行 | ✅ 已实现 | `WindowsOptimizationViewModel.Action_PropertyChanged` 仅更新待应用选择；系统变更集中在 `ApplyOptimizationChangesAsync` |
+| 应用/取消分离 | ✅ 已实现 | `WindowsOptimizationPage.xaml` 暴露 `WindowsOptimizationApplyButton` / `WindowsOptimizationCancelButton` |
+| 启动时读取机器真实状态 | ✅ 已实现 | 扫描结果写入 `OptimizationActionViewModel.IsApplied`，同时初始化 `IsSelected` |
+| 已应用项取消勾选后执行反向动作 | ✅ 已实现 | `OptimizationToggleActionHelper` 根据 enable/disable 成对动作解析目标；取消操作恢复 `IsApplied` 基线 |
+| 回归验证 | ✅ 已通过 | WPF 构建 0 警告/0 错误；优化相关定向测试 109/109 通过、0 Skip |
+
+本项的测试范围是定向行为测试和 Guard 测试，不能替代完整 WPF、跨平台和 UI 自动化矩阵。后续应在测试基础设施迁移完成后，将该交互纳入独立 UI smoke 场景，验证 AutomationId、初始状态、推荐选择、应用和取消的完整流程。
+
+---
+
+## 6. 关键证据路径速查
+
+| 主题 | 位置 |
+|---|---|
+| 分层依赖 | 各 csproj ProjectReference；WPF csproj:54,56 |
+| DI 装配 | Lib\IoCModule.cs、WPF\IoCModule.cs、Startup\StartupOrchestrator.cs |
+| 插件加载 | Lib.Plugins\PluginManager.cs、PluginLoader.cs、PluginSignatureValidator.cs |
+| 传感器 | Lib\Controllers\Sensors\AbstractSensorsController.cs、SensorsGroupController.cs |
+| 自动化 | Lib.Automation\AutomationProcessor.cs、Pipeline\ |
+| 宏 | Lib.Macro\MacroController.cs、Utils\MacroRecorder.cs |
+| 网络加速 | Lib\Network\NetworkAccelerationService.cs、NetworkProxy\ |
+| 主题 | WPF\Utils\ThemeManager.cs、RenderingCompatibilityHelper.cs |
+| 本地化 | WPF\Utils\LocalizationHelper.cs、LanguagePackManager.cs |
+| 构建集中 | Directory.Build.props/targets、Directory.Packages.props |
+| CI | .github\workflows\Ci-tests.yml、Release.yml、flaui-tests.yml |
+| 崩溃处理 | WPF\App.xaml.cs:832-997、Utils\CrashReportHelper.cs |
+| 测试基建 | UniversalDeviceToolkit.Tests.Infrastructure\TestBase.cs |
+
+---
+
+## 7. 2026-08-03 执行记录
+
+本轮已落地并验证以下事项：
+
+| 项目 | 状态 | 验证结果 |
+|---|---|---|
+| R1 FanCurve DLL 加载 | 已完成 | `WinVerifyTrust` 校验在 `Assembly.LoadFrom` 前执行，并有安全 Guard |
+| R2 发布签名 | 已接入门禁 | Release workflow 对 payload/installer 调用 Azure Trusted Signing，并用 `Get-AuthenticodeSignature` 验签；仍需配置仓库 secrets 后才能执行真实签名 |
+| R9 插件签名旁路 | 已完成 | trusted package 命中不再绕过生产 Authenticode 校验 |
+| R11 Installer runtime 下载 | 已完成 | .NET Desktop Runtime 固定官方 SHA-512，校验失败不执行并清理临时文件 |
+| R12 AssemblyName 冲突 | 已完成 | CrossPlatform 保持 `udt`，Avalonia 改为 `udt-gui`，XAML URI 已同步 |
+| R17 catalog host 校验 | 已完成 | `UDT_RESOURCE_CATALOG_URL` 限制 HTTPS 官方域名/镜像；mock host 仅在 `UDT_TEST_HOOKS` 下可用 |
+| 测试迁移验收 | 已完成 | locked restore 通过；solution 串行构建 35 项目 0 警告/0 错误；主测试并行 4551/4568 通过、17 个明确环境 Skip；Fast 13/13、CrossPlatform 137/137 |
+| 系统优化交互回归 | 已完成 | 定向回归 156/156；推荐只改待应用状态，应用/取消分离，启动状态扫描和反向动作均有覆盖 |
+| R10 IPC 对端提权态 | 已完成 | 提升服务端通过 `RunAsClient` 校验对端管理员令牌；非提升同用户进程被拒绝 |
+| 资源/Guard 漂移 | 已完成 | Sensors skeleton、Pages screenshot 资产引用、God Mode 数字默认值 Guard 已修复 |
+| R13 项目默认值集中 | 已完成 | `Directory.Build.props` 提供 Nullable/ImplicitUsings 默认值；CLI.Lib、Lib、Lib.Macro、WPF 的显式 `ImplicitUsings=disable` 经过 Guard 固化；方案 Release 构建 0 警告/0 错误 |
+| 测试日志资源释放 | 已完成 | `Log.ResetForTests()` 在 AppData 临时目录清理前释放异步 sink；插件仓库优化筛选 156/156 通过 |
+
+本轮仍未完成的工作包括 R4 权限模型、R5-R7 迁移收尾、R14-R16/R18-R23 治理项，以及真实桌面 FlaUI nightly。R8 并行化已在本地完成并验证；R2 的签名动作不会在缺少凭据时伪造成功，当前本地仅验证 workflow 契约和验签脚本。
+## 8. 2026-08-03 系统优化反向动作加固
+
+- 注册表优化动作保留跨 `GetCategories()` 调用的原始值快照；历史上没有快照的已应用动作回退为删除优化值，恢复 Windows 默认/继承行为。
+- 服务优化动作恢复应用前的 `Start` 值；缺少快照时恢复为非禁用的手动启动状态，避免取消勾选只改变界面而不改变系统。
+- 电源计划新增从高性能计划回退到平衡计划并恢复休眠的动作；开始菜单策略恢复时删除策略值、刷新设置并重启 Explorer。
+- 修复 toggle 成对动作在没有匹配 pair 时被误判，以及当前显示 disable 行时“推荐”状态反向的问题。
+- 验证：主测试 TRX `SystemOptimization.Final.trx` 为 4555 总数、4538 执行、4538 通过、0 失败；系统优化定向测试 109/109 通过；WPF Release 构建 0 警告、0 错误。
+
+## 9. 2026-08-03 系统优化事务状态一致性
+
+- 分类汇总现在同时监听动作的可用性和可见性变化，启动扫描后项目数量与勾选状态同步刷新。
+- 新增 `CanEdit` 状态：状态未知、扫描中和应用中禁止修改复选框；推荐按钮在未完成扫描或应用中不可操作。
+- 首次进入页面由页面协调器只发起一次状态扫描；后续导航和插件刷新使用后台扫描，避免重复扫描造成状态闪烁。
+- 应用取消或取消令牌触发后重新读取机器状态，避免部分动作已经执行时界面保留过期的待应用状态。
+- 验证：系统优化筛选测试 156/156 通过；WPF Release 构建 0 警告、0 错误；新增分类状态通知和编辑锁 Guard 已纳入测试。
+
+## 10. 2026-08-03 IPC 对端提权态门禁
+
+- 保留现有 DPAPI 当前用户挑战和受保护管道 ACL；认证成功后、业务分发前增加对端令牌检查。
+- 当服务端处于提升态时，通过 `NamedPipeServerStream.RunAsClient` 检查客户端管理员令牌；同用户但未提升的进程返回 Unauthorized，不再直接驱动提升进程执行特权操作。
+- 服务端未提升时不改变现有同用户 CLI IPC 行为，避免无必要地扩大协议变更范围。
+- 新增四态契约测试覆盖服务端/对端提升组合；IPC 测试 12/12 通过，WPF Release 构建 0 警告、0 错误。
+
+## 11. 2026-08-03 测试集合级并行化
+
+- 主测试程序集启用程序集和测试集合并行；`UnitTestBase` 与 `CultureScope` 不再修改进程级默认 Culture。
+- 进程环境、AppData、插件缓存和单实例对象测试归入主测试程序集可发现的 `Process State Tests` 集合；Localization、Settings 和 FlaUI 保持独立串行集合。
+- `SettingsCleanupHelper` 的所有使用者（包括 GodMode、Sunrise/Sunset 和 Warranty 测试）归入 Settings 集合，避免共享 AppData 和硬件兼容性静态状态互相污染。
+- 修复迁移后集合定义仍位于 Infrastructure 程序集、xUnit 实际无法发现的问题；定义现位于主测试程序集，Infrastructure 只提供共享常量。
+- 验证：Fast 13/13；系统优化筛选 94/94；主测试并行 4551 通过、17 个明确环境 Skip、0 失败，总计 4568，耗时约 71 秒。单实例 hook 测试 25/25 通过。
+- 构建测试时必须让生产引用带 `EnableUdtTestHooks=true`；本地验证使用独立 `bin\hooked` 输出，避免正在运行的桌面程序锁定默认 WPF 输出。
+
+## 12. 2026-08-03 残留产物清理
+
+- 移除 `.opencode/dead-code-scan` 下 99 个已入库的死代码扫描产物、3 个历史 LenovoLegionToolkit DotSettings 和 WPF 临时 csproj。
+- 移除根目录 API 调试残留 `body.json` / `resp.json`，并加入忽略规则，避免后续重新入库。
+
+## 13. 2026-08-03 SensorsControl partial 拆分
+
+- 将传感器区段可见性、排序、骨架布局和设置变更响应移至 `SensorsControl.Layout.cs`，原有字段、事件和运行时行为保持不变。
+- 将 `PluginRepositoryService` 的插件更新查询移至 `PluginRepositoryService.Updates.cs`，保留原有缓存、下载和安装流程。
+- 更新源码 Guard，使其读取主文件与 partial 文件的组合，避免结构化拆分被脆弱的单文件文本断言误报。
+- 验证：WPF hook 独立输出构建 0 警告/0 错误；插件仓库、SensorsControl、系统优化和单实例相关定向测试 219/219 通过。
+- `PluginExtensionsPage` 以及两个巨型文件的更深层职责拆分仍未完成，不能视为 R7 全部完成。
+
+## 14. 2026-08-03 跨平台验证入口
+
+- 新增 `IPlatformProbe` 和 Windows 可注入 fake，实现 Linux/macOS 平台能力解析逻辑在 Windows 上的确定性契约测试。
+- Avalonia 现在引用 Linux/macOS 平台能力程序集，并将 GUI 输出名固定为 `udt-gui`，避免与 CLI/diagnostics 输出覆盖。
+- 新增 `Scripts/Test-CrossPlatformInWsl.ps1`：从 Windows 工作区映射到 WSL，执行 Linux TFM restore、build、test 以及 CLI smoke；脚本不会自动安装发行版。
+- Linux/macOS 真实运行时仍由对应 CI 矩阵负责；WSL 只能验证 Linux，不能替代 macOS runner。
+- Windows 验证：跨平台测试 `141/141`，Avalonia Release 构建 `0` 警告、`0` 错误。当前机器未安装 WSL distribution，因此真实 WSL 执行被明确前置检查阻止，未伪造通过。
+
+## 15. 2026-08-03 维护项与格式化职责收尾
+
+- CPM 小版本已更新并通过 `dotnet restore UniversalDeviceToolkit.sln --locked-mode`：Autofac、Serilog、Test SDK、coverlet、Xunit.SkippableFact、System.Management/ServiceController、ProtectedData/Logging.Abstractions 和 System.CommandLine。
+- PerformanceTest 不在 solution restore 图中，已单独更新其 lock 文件并通过独立 `--locked-mode` restore；Release 构建和 `--output` benchmark smoke 均成功，报告可生成到指定路径。
+- `ConfigureAwait(true)` 已从源码移除；它不会改变 UI 同步上下文，只增加噪声和维护成本。
+- `SensorsControl` 的展示格式化、温度/吞吐量/功耗转换和硬件名称归一化移至 `SensorsControl.Formatting.cs`；CPU 功耗格式化改用调用内局部列表，避免共享静态临时集合造成并行串扰。
+- 验证：WPF hook 独立输出构建 `0` 警告、`0` 错误；`SensorsControlTests` `64/64` 通过；跨平台测试 `141/141` 通过。
+- 尚未完成：WSL 真实 Linux 执行、macOS runner 实测、`PluginExtensionsPage`/`PluginRepositoryService` 的完整职责拆分、提权模型重构和真实 FlaUI nightly。

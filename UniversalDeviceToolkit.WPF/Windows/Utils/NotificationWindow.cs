@@ -68,7 +68,7 @@ public class NotificationWindow : FluentWindow, INotificationWindow
     private readonly Label _textBlock = new()
     {
         FontSize = 15,
-        FontWeight = FontWeights.SemiBold,
+        FontWeight = FontWeights.Medium,
         VerticalContentAlignment = VerticalAlignment.Center,
     };
 
@@ -158,7 +158,7 @@ public class NotificationWindow : FluentWindow, INotificationWindow
 
         base.Close();
 
-        var ms = new MemoryStream();
+        using var ms = new MemoryStream();
         var encoder = new BmpBitmapEncoder();
         encoder.Frames.Add(BitmapFrame.Create(rtb));
         encoder.Save(ms);
@@ -173,8 +173,8 @@ public class NotificationWindow : FluentWindow, INotificationWindow
         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-        var borderPath = GetRoundedRectanglePath(new(0, 0, newWidth, newHeight), 18);
-        var penPath = GetRoundedRectanglePath(new(1, 1, newWidth - 3, newHeight - 3), 18);
+        using var borderPath = GetRoundedRectanglePath(new(0, 0, newWidth, newHeight), 18);
+        using var penPath = GetRoundedRectanglePath(new(1, 1, newWidth - 3, newHeight - 3), 18);
 
         graphics.SetClip(borderPath);
         graphics.DrawImage(bitmap, 0, 0, newWidth, newHeight);

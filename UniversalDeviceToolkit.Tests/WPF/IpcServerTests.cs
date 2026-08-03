@@ -114,6 +114,24 @@ public class IpcServerTests
         method!.Should().NotBeNull();
     }
 
+    [Theory]
+    [InlineData(false, false, true)]
+    [InlineData(false, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(true, true, true)]
+    public void PeerElevation_ShouldBeRequiredOnlyWhenServerIsElevated(
+        bool serverElevated,
+        bool peerElevated,
+        bool expectedAllowed)
+    {
+        var method = typeof(IpcServer).GetMethod("IsPeerElevationAllowed", BindingFlags.NonPublic | BindingFlags.Static);
+        method.Should().NotBeNull();
+
+        var result = method!.Invoke(null, [serverElevated, peerElevated]);
+
+        result.Should().Be(expectedAllowed);
+    }
+
     [Fact]
     public async Task ListFeaturesAsync_WhenCacheExists_ShouldReturnCachedFeatureList()
     {

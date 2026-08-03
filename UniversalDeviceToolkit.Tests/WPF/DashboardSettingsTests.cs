@@ -84,6 +84,30 @@ public class DashboardSettingsTests
     }
 
     [Fact]
+    public void Normalize_WhenSavedLayoutOmitsGraphicsGroup_ShouldRestoreGraphicsGroup()
+    {
+        var store = new DashboardSettings.DashboardSettingsStore
+        {
+            SchemaVersion = 4,
+            ShowSensors = true,
+            Groups =
+            [
+                new DashboardGroup(DashboardGroupType.Power, null, DashboardItem.PowerMode, DashboardItem.ItsMode),
+                new DashboardGroup(DashboardGroupType.Display, null, DashboardItem.Resolution)
+            ]
+        };
+
+        var normalized = Normalize(store);
+
+        normalized.Groups.Should().ContainSingle(group => group.Type == DashboardGroupType.Graphics);
+        normalized.Groups!.Single(group => group.Type == DashboardGroupType.Graphics).Items.Should().Contain([
+            DashboardItem.HybridMode,
+            DashboardItem.DiscreteGpu,
+            DashboardItem.OverclockDiscreteGpu
+        ]);
+    }
+
+    [Fact]
     public void Normalize_WhenGroupItemsAreNull_ShouldRepairDashboard()
     {
         var store = new DashboardSettings.DashboardSettingsStore

@@ -43,7 +43,7 @@ public class Program
         Console.WriteLine($"Total measured time: {results.Sum(r => r.Value.TotalTimeMs):F2} ms");
         Console.WriteLine("========================================");
 
-        await SaveResultsToFile(results);
+        await SaveResultsToFile(results, GetOutputPath(args));
     }
 
     private static async Task<PerformanceMetric> TestLogPerformance()
@@ -316,11 +316,27 @@ public class Program
         Log.Instance.Info($"Simulated init {name} finished in {delayMs}ms");
     }
 
-    private static async Task SaveResultsToFile(Dictionary<string, PerformanceMetric> results)
+    private static string? GetOutputPath(string[] args)
+    {
+        for (var index = 0; index < args.Length; index++)
+        {
+            if (!string.Equals(args[index], "--output", StringComparison.OrdinalIgnoreCase))
+                continue;
+
+            if (index + 1 >= args.Length || string.IsNullOrWhiteSpace(args[index + 1]))
+                throw new ArgumentException("--output requires a file path.", nameof(args));
+
+            return Path.GetFullPath(args[index + 1]);
+        }
+
+        return null;
+    }
+
+    private static async Task SaveResultsToFile(Dictionary<string, PerformanceMetric> results, string? requestedPath)
     {
         try
         {
-            var outputPath = Path.Combine(
+            var outputPath = requestedPath ?? Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 $"PerformanceBenchmark_{DateTime.UtcNow:yyyyMMdd_HHmmss}.txt");
 
@@ -351,6 +367,7 @@ public class Program
             lines.Add("4. Production hardware init should stay serial for WMI/EC safety;");
             lines.Add("   only independent services may use limited parallelism.");
 
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
             await File.WriteAllLinesAsync(outputPath, lines).ConfigureAwait(false);
             Console.WriteLine($"\nDetailed report saved to: {outputPath}");
         }

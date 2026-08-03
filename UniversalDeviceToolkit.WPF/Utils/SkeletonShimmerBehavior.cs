@@ -24,6 +24,7 @@ internal static class SkeletonShimmerBehavior
     private static readonly ConditionalWeakTable<Border, ElementState> States = new();
     private static readonly List<WeakReference<Border>> ActiveBorders = [];
     private static bool _themeEventsAttached;
+    private static bool _themeRefreshQueued;
 
     internal static void Attach(Border border)
     {
@@ -102,7 +103,7 @@ internal static class SkeletonShimmerBehavior
 
         CaptureBackground(border, state);
         var baseColor = SkeletonShimmer.ResolveBaseColor(border);
-        var (shimmerStart, shimmerPeak) = SkeletonShimmer.ResolveShimmerOverlayColors(border);
+        var (shimmerStart, shimmerPeak) = SkeletonShimmer.ResolveShimmerOverlayColors(baseColor);
         var brush = SkeletonShimmer.CreateShimmerBrush(baseColor, shimmerStart, shimmerPeak);
         border.Background = brush;
         border.Opacity = 1;
@@ -256,11 +257,33 @@ internal static class SkeletonShimmerBehavior
     private static void RefreshActiveBorders()
     {
         var applicationDispatcher = Application.Current?.Dispatcher;
-        if (applicationDispatcher is not null && !applicationDispatcher.CheckAccess())
+        if (applicationDispatcher is null || applicationDispatcher.HasShutdownStarted || applicationDispatcher.HasShutdownFinished)
+            return;
+
+        if (!applicationDispatcher.CheckAccess())
         {
-            _ = applicationDispatcher.BeginInvoke(RefreshActiveBorders, DispatcherPriority.Render);
+            _ = applicationDispatcher.BeginInvoke(RefreshActiveBorders, DispatcherPriority.ContextIdle);
             return;
         }
+
+        // WPF theme notifications can arrive before DynamicResource values have settled.
+        // Coalesce them and rebuild after the resource dictionaries have been refreshed.
+        if (_themeRefreshQueued)
+            return;
+
+        _themeRefreshQueued = true;
+        _ = applicationDispatcher.BeginInvoke(new Action(() =>
+        {
+            _themeRefreshQueued = false;
+            RefreshActiveBordersCore();
+        }), DispatcherPriority.ContextIdle);
+    }
+
+    private static void RefreshActiveBordersCore()
+    {
+        var applicationDispatcher = Application.Current?.Dispatcher;
+        if (applicationDispatcher is null || applicationDispatcher.HasShutdownStarted || applicationDispatcher.HasShutdownFinished)
+            return;
 
         for (var index = ActiveBorders.Count - 1; index >= 0; index--)
         {

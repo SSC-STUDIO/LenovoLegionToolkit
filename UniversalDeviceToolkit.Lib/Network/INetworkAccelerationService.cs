@@ -13,6 +13,12 @@ public interface INetworkAccelerationService
 
     string StatusText { get; }
 
+    /// <summary>Returns the latest counters from the running proxy worker.</summary>
+    Task<NetworkProxyTrafficSnapshot?> GetTrafficSnapshotAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Returns traffic, connection, and destination details for the current run.</summary>
+    Task<NetworkProxyRuntimeSnapshot?> GetRuntimeSnapshotAsync(CancellationToken cancellationToken = default);
+
     Task ReloadConfigAsync(CancellationToken cancellationToken = default);
 
     Task SaveConfigAsync(CancellationToken cancellationToken = default);

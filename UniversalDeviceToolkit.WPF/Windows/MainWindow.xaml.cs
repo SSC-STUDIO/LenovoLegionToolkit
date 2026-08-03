@@ -132,9 +132,10 @@ public partial class MainWindow
         switch (action)
         {
             case MainWindowVisibilityAction.Show:
-                Show();
+                this.SetTaskbarVisibility(true);
                 if (WindowState == WindowState.Minimized)
                     WindowState = WindowState.Normal;
+                Show();
                 Activate();
                 break;
             case MainWindowVisibilityAction.Hide:
@@ -468,14 +469,16 @@ public partial class MainWindow
         _trayHelper = null;
     }
 
-    private CacheMode? _savedContentCacheMode;
-    private bool _stateTransitionCacheApplied;
-    private UIElement? _stateCachedContent;
+    private int _stateTransitionGeneration;
 
     private void MainWindow_StateChanged(object? sender, EventArgs e)
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Window state changed to {WindowState}");
+
+        // A state change can interrupt the native move/resize loop before Windows sends
+        // WM_EXITSIZEMOVE. Release a possible cached client surface first.
+        WindowResizeStabilityHelper.RestoreIfNeeded(this);
 
         switch (WindowState)
         {
@@ -485,92 +488,59 @@ public partial class MainWindow
                 break;
             case WindowState.Normal:
                 SetEfficiencyMode(false);
-                BringToForeground();
-                BeginStateTransitionSmooth();
+                QueueContentRefreshAfterStateTransition();
                 break;
             case WindowState.Maximized:
                 SetEfficiencyMode(false);
-                BeginStateTransitionSmooth();
+                QueueContentRefreshAfterStateTransition();
                 break;
         }
     }
 
     /// <summary>
-    /// Snapshot content as bitmap so the native maximize/restore animation scales a frozen
-    /// frame (like edge-drag), then restore + fade in once the animation completes.
-    /// Prevents the jarring mid-animation layout reflow that causes visual "snap".
+    /// Schedules one clean WPF layout pass after a native maximize or restore completes.
     /// </summary>
-    private void BeginStateTransitionSmooth()
+    private void QueueContentRefreshAfterStateTransition()
     {
         if (!IsLoaded)
             return;
 
         try
         {
-            // 1) Freeze content as bitmap so DWM scales it smoothly during native animation.
-            if (Content is UIElement content)
-            {
-                _stateCachedContent = content;
-                _savedContentCacheMode = content.CacheMode;
-                content.CacheMode = new BitmapCache
-                {
-                    EnableClearType = false,
-                    RenderAtScale = 1.0,
-                    SnapsToDevicePixels = true,
-                };
-                _stateTransitionCacheApplied = true;
-                RenderOptions.SetBitmapScalingMode(content, BitmapScalingMode.LowQuality);
-            }
-
-            // 2) Defer layout refresh + restore until native animation finishes.
+            // A generation counter ensures that only the latest state transition refreshes the UI.
+            var generation = ++_stateTransitionGeneration;
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                RestoreStateTransitionSmooth();
-                if (IsLoaded)
-                    _navigationStore.RefreshWidthForHostWindow();
-            }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+                if (generation != _stateTransitionGeneration || !IsLoaded || WindowState == WindowState.Minimized)
+                    return;
+
+                RefreshContentAfterStateTransition();
+                _navigationStore.RefreshWidthForHostWindow();
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("State transition smooth begin failed.", ex);
-            RestoreStateTransitionSmooth();
+                Log.Instance.Trace("State-transition content refresh could not be queued.", ex);
+            RefreshContentAfterStateTransition();
         }
     }
 
-    private void RestoreStateTransitionSmooth()
+    private void RefreshContentAfterStateTransition()
     {
         try
         {
-            if (_stateTransitionCacheApplied && _stateCachedContent is not null)
+            if (Content is UIElement content)
             {
-                if (_savedContentCacheMode is null)
-                    _stateCachedContent.ClearValue(UIElement.CacheModeProperty);
-                else
-                    _stateCachedContent.CacheMode = _savedContentCacheMode;
-
-                RenderOptions.SetBitmapScalingMode(_stateCachedContent, BitmapScalingMode.Unspecified);
-
-                // Soft fade-in so the restored frame doesn't pop in.
-                if (_stateCachedContent is FrameworkElement fe)
-                {
-                    var fade = new DoubleAnimation(0.0, 1.0, TimeSpan.FromMilliseconds(120))
-                    {
-                        EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut },
-                        FillBehavior = FillBehavior.Stop,
-                    };
-                    fade.Completed += (_, _) => fe.BeginAnimation(UIElement.OpacityProperty, null);
-                    fe.BeginAnimation(UIElement.OpacityProperty, fade);
-                }
+                // Do not let a retained transition animation keep the client tree invisible.
+                content.BeginAnimation(UIElement.OpacityProperty, null);
+                content.Opacity = 1.0;
+                content.InvalidateVisual();
+                content.InvalidateMeasure();
+                content.InvalidateArrange();
             }
         }
         catch { /* non-fatal */ }
-        finally
-        {
-            _savedContentCacheMode = null;
-            _stateTransitionCacheApplied = false;
-            _stateCachedContent = null;
-        }
     }
 
     private void MainWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -980,8 +950,8 @@ public partial class MainWindow
             return;
 
         SetEfficiencyMode(true);
+        this.SetTaskbarVisibility(false);
         Hide();
-        ShowInTaskbar = true;
     }
 
     public void UpdateNavigationVisibility()
@@ -993,7 +963,7 @@ public partial class MainWindow
         // to ensure it has the latest visibility settings
         UpdatePluginExtensionsNavigationVisibility();
 
-        // Persist one-time pluginExtensions opt-in migration (default off + notice).
+        // Persist the one-time migration from the former hidden plugin extensions default.
         if (!_pluginExtensionsSettingsPersisted)
         {
             _pluginExtensionsSettingsPersisted = true;
@@ -1043,13 +1013,13 @@ public partial class MainWindow
         if (visibilitySettings.TryGetValue(pageTag, out var visibility))
             return visibility;
 
-        // Plugin Extensions is opt-in (default off); everything else defaults on.
-        return pageTag != "pluginExtensions";
+        // All optional navigation entries, including Plugin Extensions, default to visible.
+        return true;
     }
 
     private void UpdatePluginExtensionsNavigationVisibility()
     {
-        // Controlled by navigation items visibility settings; default is hidden (opt-in).
+        // Controlled by navigation items visibility settings; default is visible.
         var visibilitySettings = _applicationSettings.Store.NavigationItemsVisibility;
         var shouldShow = GetNavigationItemVisibility("pluginExtensions", visibilitySettings);
         

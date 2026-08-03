@@ -36,6 +36,7 @@ using UniversalDeviceToolkit.Lib.System.EC;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.System.Razer;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib;
@@ -72,7 +73,8 @@ public class IoCModule : Module
         builder.Register<LegionZoneDisabler>();
         builder.Register<VantageDisabler>();
 
-        builder.Register<ApplicationSettings>();
+        // ApplicationSettings is registered via pre-build action in StartupOrchestrator
+        // to reuse the pre-created instance and avoid double-instantiation.
         builder.Register<OsdSettings>();
         builder.Register<BalanceModeSettings>();
         builder.Register<GodModeSettings>();
@@ -170,6 +172,9 @@ public class IoCModule : Module
         builder.Register<GPUOverclockController>();
         builder.Register<LampArrayController>();
         builder.Register<RGBKeyboardBacklightController>();
+        builder.Register<KeyboardBacklightDetectionService>()
+            .As<IKeyboardBacklightDetectionService>()
+            .SingleInstance();
         builder.Register<SensorsController>();
         builder.Register<SensorsControllerV1>(true);
         builder.Register<SensorsControllerV2>(true);

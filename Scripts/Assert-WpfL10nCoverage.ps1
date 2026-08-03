@@ -118,10 +118,11 @@ foreach ($file in $satellites) {
     }
 }
 
-# Languages list cultures that must have a satellite (shipped UI languages)
+# Languages list cultures that must have a satellite (shipped UI languages).
+# Canonical BCP 47 form (CONTRIBUTING.md); keep in sync with LocalizationHelper.Languages.
 $requiredCultures = @(
-    'ar','bg','cs','de','el','es','fr','hu','it','ja','lv','nl-nl','pl','pt','pt-br',
-    'ro','ru','sk','tr','uk','vi','zh-hans','zh-hant','uz-latn-uz','en'
+    'ar','bg','cs','de','el','en','es','fr','hu','it','ja','lv','nl-NL','pl','pt','pt-BR',
+    'ro','ru','sk','tr','uk','uz-Latn-UZ','vi','zh-Hans','zh-Hant'
 )
 foreach ($c in $requiredCultures) {
     $path = Join-Path $resDir "Resource.$c.resx"

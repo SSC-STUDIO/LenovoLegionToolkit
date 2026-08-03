@@ -19,15 +19,6 @@ public static class SystemProxyApplicator
 
     public static string PacFilePath => Path.Combine(PacDirectory, "udt-network-acceleration.pac");
 
-    public static SystemProxySnapshot CreateLoopbackProxy(int port) =>
-        new()
-        {
-            Enabled = true,
-            Server = $"127.0.0.1:{port}",
-            Override = "localhost;127.*;10.*;192.168.*;<local>",
-            AutoConfigUrl = string.Empty
-        };
-
     public static SystemProxySnapshot CreatePacProxy(int port, string[]? proxiedDomains = null)
     {
         Directory.CreateDirectory(PacDirectory);

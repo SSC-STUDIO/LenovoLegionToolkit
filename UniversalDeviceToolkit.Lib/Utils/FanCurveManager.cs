@@ -135,11 +135,18 @@ public class FanCurveManager : IDisposable
                 return;
             }
 
-            var dlls = Directory.GetFiles(pluginDir, "*.dll");
+            var dlls = Directory.GetFiles(pluginDir, "*.dll", SearchOption.TopDirectoryOnly);
             Log.Instance.Trace($"Found {dlls.Length} DLL(s) in plugin directory.");
 
             foreach (var dll in dlls)
             {
+                if (!FanCurveAssemblySignatureVerifier.TryVerifyFile(dll, out var trustStatus))
+                {
+                    Log.Instance.Warning(
+                        $"Skipping unsigned or invalid fan-curve extension: {dll} (WinVerifyTrust=0x{trustStatus:X8})");
+                    continue;
+                }
+
                 if (TryLoadPlugin(dll))
                 {
                     Log.Instance.Trace($"Successfully loaded extension from {dll}");
@@ -160,6 +167,13 @@ public class FanCurveManager : IDisposable
 
         try
         {
+            if (!FanCurveAssemblySignatureVerifier.TryVerifyFile(path, out var trustStatus))
+            {
+                Log.Instance.Warning(
+                    $"Refusing to load unsigned or invalid fan-curve extension: {path} (WinVerifyTrust=0x{trustStatus:X8})");
+                return false;
+            }
+
             AppDomain.CurrentDomain.AssemblyResolve += resolver;
             Log.Instance.Trace($"Attempting to load: {path}");
             var assembly = Assembly.LoadFrom(path);

@@ -97,7 +97,8 @@ public class WindowsOptimizationCategoryProvider
                     "WindowsOptimization_Action_PerformancePowerPlan_Title",
                     "WindowsOptimization_Action_PerformancePowerPlan_Description",
                     WindowsOptimizationDefinitions.PowerPlanCommands,
-                    isAppliedAsync: _service.IsHighPerformancePowerPlanActiveAsync)
+                    isAppliedAsync: _service.IsHighPerformancePowerPlanActiveAsync,
+                    rollbackAsync: _service.RevertPowerPlanAsync)
             ]);
 
     private WindowsOptimizationCategoryDefinition CreateServicesCategory() =>

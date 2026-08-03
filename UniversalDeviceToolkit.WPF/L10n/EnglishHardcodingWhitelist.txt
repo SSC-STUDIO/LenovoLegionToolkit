@@ -108,6 +108,13 @@
 [PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: —
 [PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: 0
 
+# -----------------------------------------------------------
+# [PLACEHOLDER] Numeric defaults for God Mode offset controls.
+# NumberBox.Text is replaced by the bound Value at runtime.
+# -----------------------------------------------------------
+[PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Windows/Dashboard/GodModeSettingsWindow.xaml :: 0
+[PLACEHOLDER] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: -
+
 # ---------------------------------------------------------------------------
 # [PLACEHOLDER]  PluginSettingsWindow.xaml designer-only defaults; the
 # code-behind always sets Text from plugin metadata before the window is
@@ -158,8 +165,8 @@
 [TECH_DEFAULT] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: store.steampowered.com
 [TECH_DEFAULT] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: 223.5.5.5
 [GLYPH] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: ▾
+[GLYPH] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: ▸
 
 # ---------------------------------------------------------------------------
 # End of whitelist.
 # ---------------------------------------------------------------------------
-

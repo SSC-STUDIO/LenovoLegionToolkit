@@ -168,7 +168,11 @@ internal sealed class PluginDiscoveryReader(
 
         var envRoot = Environment.GetEnvironmentVariable("UDT_PLUGINS_DIR");
         if (!string.IsNullOrWhiteSpace(envRoot))
-            roots.Add(envRoot);
+        {
+            var normalizedEnvRoot = Path.GetFullPath(envRoot);
+            if (IsSafePluginDirectory(normalizedEnvRoot))
+                roots.Add(normalizedEnvRoot);
+        }
 
         roots.Add(Path.Combine(AppContext.BaseDirectory, "plugins"));
         roots.Add(Path.Combine(AppContext.BaseDirectory, "Build", "plugins"));
@@ -180,6 +184,65 @@ internal sealed class PluginDiscoveryReader(
             roots.Add(Path.Combine(appData, "UniversalDeviceToolkit", "plugins"));
 
         return roots.Select(path => Path.GetFullPath(path)).ToArray();
+    }
+
+    /// <summary>
+    /// Validates that a plugin directory path is within a safe location.
+    /// Rejects system directories and paths outside known application directories.
+    /// </summary>
+    private static bool IsSafePluginDirectory(string fullPath)
+    {
+        // Blocked system directories (case-insensitive on Windows)
+        var blockedPrefixes = new[]
+        {
+            Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.System)),       // C:\Windows\System32
+            Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.Windows)),       // C:\Windows
+            Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles)), // C:\Program Files
+            Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFiles)), // C:\Program Files (Common)
+        };
+
+        // Allowed base directories
+        var allowedPrefixes = new List<string>
+        {
+            Path.GetFullPath(AppContext.BaseDirectory),
+            Path.Combine(AppContext.BaseDirectory, ".."),
+        };
+
+        var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        if (!string.IsNullOrWhiteSpace(appData))
+            allowedPrefixes.Add(Path.GetFullPath(Path.Combine(appData, "UniversalDeviceToolkit")));
+
+        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        if (!string.IsNullOrWhiteSpace(localAppData))
+            allowedPrefixes.Add(Path.GetFullPath(Path.Combine(localAppData, "UniversalDeviceToolkit")));
+
+        // Reject paths under blocked system directories
+        foreach (var blocked in blockedPrefixes)
+        {
+            var blockedWithSep = blocked.EndsWith(Path.DirectorySeparatorChar)
+                ? blocked
+                : blocked + Path.DirectorySeparatorChar;
+            if (fullPath.StartsWith(blockedWithSep, StringComparison.OrdinalIgnoreCase) ||
+                fullPath.Equals(blocked, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+        }
+
+        // Must be under one of the allowed prefixes
+        foreach (var allowed in allowedPrefixes)
+        {
+            var allowedWithSep = allowed.EndsWith(Path.DirectorySeparatorChar)
+                ? allowed
+                : allowed + Path.DirectorySeparatorChar;
+            if (fullPath.StartsWith(allowedWithSep, StringComparison.OrdinalIgnoreCase) ||
+                fullPath.Equals(allowed, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static string CombinePath(string directory, string fileName) =>

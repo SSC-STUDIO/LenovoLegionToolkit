@@ -4,7 +4,7 @@
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
         <TextBlock Text="Display"
                    FontSize="{StaticResource FontSizeDisplaySection}"
-                   FontWeight="SemiBold"
+                   FontWeight="Medium"
                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
         <TextBlock Text="Adjust display-related settings for your device."
@@ -21,7 +21,7 @@
             <StackPanel Spacing="8">
                 <TextBlock Text="Refresh Rate"
                            FontSize="{StaticResource FontSizeSubsection}"
-                           FontWeight="SemiBold"
+                           FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                 <TextBlock Text="Select the display refresh rate (requires supported hardware)."
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -46,7 +46,7 @@
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
                     <TextBlock Text="Overdrive"
                                FontSize="{StaticResource FontSizeBody}"
-                               FontWeight="SemiBold"
+                               FontWeight="Medium"
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                     <TextBlock Text="Enable display overdrive for faster pixel response times."
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"

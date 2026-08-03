@@ -4,6 +4,7 @@ using UniversalDeviceToolkit.Lib.Resources;
 
 namespace UniversalDeviceToolkit.Lib;
 
+/// <summary>Represents the Always-On USB charging state.</summary>
 public enum AlwaysOnUSBState
 {
     [Display(ResourceType = typeof(Resource), Name = "AlwaysOnUSBState_Off")]
@@ -14,6 +15,7 @@ public enum AlwaysOnUSBState
     OnAlways
 }
 
+/// <summary>Represents the autorun/startup behavior setting.</summary>
 public enum AutorunState
 {
     [Display(ResourceType = typeof(Resource), Name = "AutorunState_Enabled")]
@@ -24,6 +26,7 @@ public enum AutorunState
     Disabled
 }
 
+/// <summary>Represents the battery night-charge setting.</summary>
 public enum BatteryNightChargeState
 {
     [Display(ResourceType = typeof(Resource), Name = "BatteryNightChargeState_On")]
@@ -32,6 +35,7 @@ public enum BatteryNightChargeState
     Off
 }
 
+/// <summary>Represents the battery charging mode (Conservation, Normal, Rapid Charge).</summary>
 public enum BatteryState
 {
     [Display(ResourceType = typeof(Resource), Name = "BatteryState_Conservation")]
@@ -42,6 +46,7 @@ public enum BatteryState
     RapidCharge
 }
 
+/// <summary>Identifies hardware capability feature IDs used by the embedded controller.</summary>
 public enum CapabilityID
 {
     IGPUMode = 0x00010000,
@@ -81,6 +86,7 @@ public enum CapabilityID
     GpuCurrentTemperature = 0x05050000
 }
 
+/// <summary>Identifies CPU overclocking parameters.</summary>
 public enum CPUOverclockingID
 {
     PrecisionBoostOverdriveScaler = 0x414D4401,
@@ -88,12 +94,14 @@ public enum CPUOverclockingID
     AllCoreCurveOptimizer = 0x414D4403,
 }
 
+/// <summary>Represents CPU profile modes for different workload types.</summary>
 public enum CpuProfileMode
 {
     Productivity,
     X3DGaming
 }
 
+/// <summary>Represents keyboard shortcut driver key flags.</summary>
 [Flags]
 public enum DriverKey
 {
@@ -103,12 +111,14 @@ public enum DriverKey
     FnSpace = 4096,
 }
 
+/// <summary>Represents the fan control mode (Auto or Manual).</summary>
 public enum FanState
 {
     Auto,
     Manual,
 }
 
+/// <summary>Identifies the physical fan type (CPU, GPU, or System).</summary>
 public enum FanType
 {
     [Display(ResourceType = typeof(Resource), Name = "CustomFanCurveControl_Fan_CPU")]
@@ -119,6 +129,7 @@ public enum FanType
     System = 2,
 }
 
+/// <summary>Identifies fan table types for thermal management.</summary>
 public enum FanTableType
 {
     Unknown,
@@ -129,6 +140,7 @@ public enum FanTableType
     PCH,
 }
 
+/// <summary>Represents the Flip-to-Start (open lid to power on) state.</summary>
 public enum FlipToStartState
 {
     [Display(ResourceType = typeof(Resource), Name = "FlipToStartState_Off")]
@@ -137,6 +149,7 @@ public enum FlipToStartState
     On
 }
 
+/// <summary>Represents the Fn key lock state.</summary>
 public enum FnLockState
 {
     [Display(ResourceType = typeof(Resource), Name = "FnLockState_Off")]
@@ -145,6 +158,7 @@ public enum FnLockState
     On
 }
 
+/// <summary>Represents the discrete GPU state.</summary>
 public enum GPUState
 {
     Unknown,
@@ -155,12 +169,14 @@ public enum GPUState
     PoweredOff
 }
 
+/// <summary>Represents the G-Sync display technology state.</summary>
 public enum GSyncState
 {
     Off,
     On
 }
 
+/// <summary>Represents the HDR (High Dynamic Range) display state.</summary>
 public enum HDRState
 {
     [Display(ResourceType = typeof(Resource), Name = "HDRState_Off")]
@@ -169,6 +185,7 @@ public enum HDRState
     On
 }
 
+/// <summary>Represents the hybrid GPU mode (iGPU + dGPU switching).</summary>
 public enum HybridModeState
 {
     [Display(ResourceType = typeof(Resource), Name = "HybridModeState_On")]
@@ -181,6 +198,7 @@ public enum HybridModeState
     Off
 }
 
+/// <summary>Represents the integrated GPU operating mode.</summary>
 public enum IGPUModeState
 {
     Default,
@@ -188,6 +206,7 @@ public enum IGPUModeState
     Auto
 }
 
+/// <summary>Represents the Intelligent Thermal Solution (ITS) operating mode.</summary>
 public enum ITSMode
 {
     None,
@@ -201,6 +220,7 @@ public enum ITSMode
     MmcGeek
 }
 
+/// <summary>Represents the instant-boot power source configuration.</summary>
 public enum InstantBootState
 {
     [Display(ResourceType = typeof(Resource), Name = "InstantBootState_Off")]
@@ -213,6 +233,7 @@ public enum InstantBootState
     AcAdapterAndUsbPowerDelivery
 }
 
+/// <summary>Represents physical keyboard layout types.</summary>
 public enum KeyboardLayout
 {
     Ansi,
@@ -221,6 +242,7 @@ public enum KeyboardLayout
     Keyboard24Zone,
 }
 
+/// <summary>Identifies well-known Windows shell folders.</summary>
 public enum KnownFolder
 {
     Contacts,
@@ -231,6 +253,7 @@ public enum KnownFolder
     SavedSearches
 }
 
+/// <summary>Represents lamp/RGB lighting effect types.</summary>
 public enum LampEffectType
 {
     Static,
@@ -247,12 +270,14 @@ public enum LampEffectType
     AuroraSync,
 }
 
+/// <summary>Identifies which lighting zone changed (Panel or Ports).</summary>
 public enum LightingChangeState
 {
     Panel = 0,
     Ports = 1,
 }
 
+/// <summary>Identifies the product series of the Lenovo/Legion device.</summary>
 public enum LegionSeries
 {
     Legion_5 = 0,
@@ -272,6 +297,7 @@ public enum LegionSeries
     Unknown = 255
 }
 
+/// <summary>Represents the initialization state of the Libre Hardware Monitor library.</summary>
 public enum LibreHardwareMonitorInitialState
 {
     Fail = 0,
@@ -280,6 +306,7 @@ public enum LibreHardwareMonitorInitialState
     PawnIONotInstalled = 3
 }
 
+/// <summary>Represents the microphone mute state.</summary>
 public enum MicrophoneState
 {
     [Display(ResourceType = typeof(Resource), Name = "MicrophoneState_Off")]
@@ -288,6 +315,7 @@ public enum MicrophoneState
     On
 }
 
+/// <summary>Represents keyboard modifier keys (Shift, Ctrl, Alt) as flags.</summary>
 [Flags]
 public enum ModifierKey
 {
@@ -300,6 +328,7 @@ public enum ModifierKey
     Alt = 4
 }
 
+/// <summary>Identifies native Windows system messages for device and display events.</summary>
 public enum NativeWindowsMessage
 {
     LidOpened,
@@ -316,6 +345,7 @@ public enum NativeWindowsMessage
     BatterySaverEnabled
 }
 
+/// <summary>Represents the duration for on-screen notifications.</summary>
 public enum NotificationDuration
 {
     [Display(ResourceType = typeof(Resource), Name = "NotificationDuration_Short")]
@@ -326,6 +356,7 @@ public enum NotificationDuration
     Long
 }
 
+/// <summary>Identifies the type of system notification to display.</summary>
 public enum NotificationType
 {
     ACAdapterConnected,
@@ -370,6 +401,7 @@ public enum NotificationType
     ITSModeGeek
 }
 
+/// <summary>Represents the priority level of a notification.</summary>
 public enum NotificationPriority
 {
     Low,
@@ -377,6 +409,7 @@ public enum NotificationPriority
     High
 }
 
+/// <summary>Represents the on-screen position for notifications.</summary>
 public enum NotificationPosition
 {
     [Display(ResourceType = typeof(Resource), Name = "NotificationPosition_BottomRight")]
@@ -399,6 +432,7 @@ public enum NotificationPosition
     Center
 }
 
+/// <summary>Represents the single-level white keyboard backlight state.</summary>
 public enum OneLevelWhiteKeyboardBacklightState
 {
     [Display(ResourceType = typeof(Resource), Name = "OneLevelWhiteKeyboardBacklightState_Off")]
@@ -407,6 +441,7 @@ public enum OneLevelWhiteKeyboardBacklightState
     On
 }
 
+/// <summary>Identifies the Windows operating system version.</summary>
 public enum OS
 {
     [Display(Name = "Windows 11")]
@@ -419,6 +454,7 @@ public enum OS
     Windows7
 }
 
+/// <summary>Represents the AMD OverDrive feature state.</summary>
 public enum OverDriveState
 {
     [Display(ResourceType = typeof(Resource), Name = "OverdriveState_Off")]
@@ -427,6 +463,7 @@ public enum OverDriveState
     On
 }
 
+/// <summary>Represents the panel logo backlight state.</summary>
 public enum PanelLogoBacklightState
 {
     [Display(ResourceType = typeof(Resource), Name = "PanelLogoBacklightState_Off")]
@@ -435,12 +472,14 @@ public enum PanelLogoBacklightState
     On
 }
 
+/// <summary>Represents the PawnIO driver installation state.</summary>
 public enum PawnIOState
 {
     NotInstalled,
     Installed,
 }
 
+/// <summary>Represents the USB port backlight state.</summary>
 public enum PortsBacklightState
 {
     [Display(ResourceType = typeof(Resource), Name = "PortsBacklightState_Off")]
@@ -449,6 +488,7 @@ public enum PortsBacklightState
     On
 }
 
+/// <summary>Represents the AC power adapter connection status.</summary>
 public enum PowerAdapterStatus
 {
     Connected,
@@ -456,6 +496,7 @@ public enum PowerAdapterStatus
     Disconnected
 }
 
+/// <summary>Represents how the application maps to Windows power mode/plan settings.</summary>
 public enum PowerModeMappingMode
 {
     [Display(ResourceType = typeof(Resource), Name = "PowerModeMappingMode_Disabled")]
@@ -466,6 +507,7 @@ public enum PowerModeMappingMode
     WindowsPowerPlan,
 }
 
+/// <summary>Represents the device power mode (Quiet, Balance, Performance, Extreme, GodMode).</summary>
 public enum PowerModeState
 {
     [Display(ResourceType = typeof(Resource), Name = "PowerModeState_Quiet")]
@@ -480,6 +522,7 @@ public enum PowerModeState
     GodMode = 254
 }
 
+/// <summary>Represents system power state events (suspend, resume, status change).</summary>
 public enum PowerStateEvent
 {
     Unknown = -1,
@@ -488,12 +531,14 @@ public enum PowerStateEvent
     Resume,
 }
 
+/// <summary>Indicates whether a process started or stopped.</summary>
 public enum ProcessEventInfoType
 {
     Started,
     Stopped
 }
 
+/// <summary>Represents the type of system reboot required.</summary>
 public enum RebootType
 {
     NotRequired = 0,
@@ -503,11 +548,13 @@ public enum RebootType
     Delayed = 5
 }
 
+/// <summary>Placeholder enum for RGB keyboard backlight change tracking.</summary>
 public enum RGBKeyboardBacklightChanged
 {
     None
 };
 
+/// <summary>Represents the RGB keyboard backlight brightness level.</summary>
 public enum RGBKeyboardBacklightBrightness
 {
     [Display(ResourceType = typeof(Resource), Name = "RGBKeyboardBacklightBrightness_Low")]
@@ -516,6 +563,7 @@ public enum RGBKeyboardBacklightBrightness
     High
 }
 
+/// <summary>Represents the RGB keyboard backlight effect type.</summary>
 public enum RGBKeyboardBacklightEffect
 {
     [Display(ResourceType = typeof(Resource), Name = "RGBKeyboardBacklightEffect_Static")]
@@ -530,6 +578,7 @@ public enum RGBKeyboardBacklightEffect
     WaveLTR
 }
 
+/// <summary>Represents the RGB keyboard backlight color preset index.</summary>
 public enum RGBKeyboardBacklightPreset
 {
     [Display(ResourceType = typeof(Resource), Name = "RGBKeyboardBacklightPreset_Off")]
@@ -544,6 +593,7 @@ public enum RGBKeyboardBacklightPreset
     Four = 3
 }
 
+/// <summary>Represents the RGB keyboard backlight animation speed.</summary>
 public enum RGBKeyboardBacklightSpeed
 {
     [Display(ResourceType = typeof(Resource), Name = "RGBKeyboardBacklightSpeed_Slowest")]
@@ -556,6 +606,7 @@ public enum RGBKeyboardBacklightSpeed
     Fastest
 }
 
+/// <summary>Represents the speaker mute/unmute state.</summary>
 public enum SpeakerState
 {
     [Display(ResourceType = typeof(Resource), Name = "SpeakerState_Mute")]
@@ -564,16 +615,7 @@ public enum SpeakerState
     Unmute
 }
 
-public enum FanMaxSpeedState
-{
-    [Display(ResourceType = typeof(Resource), Name = "FanMaxSpeedState_Off")]
-    Off,
-    [Display(ResourceType = typeof(Resource), Name = "FanMaxSpeedState_On")]
-    On,
-    [Display(ResourceType = typeof(Resource), Name = "FanMaxSpeedState_Toggle")]
-    Toggle,
-}
-
+/// <summary>Represents the software/service availability status.</summary>
 public enum SoftwareStatus
 {
     Enabled,
@@ -581,6 +623,7 @@ public enum SoftwareStatus
     NotFound
 }
 
+/// <summary>Identifies special function key codes sent by the embedded controller.</summary>
 public enum SpecialKey
 {
     FnF9 = 1,
@@ -610,6 +653,7 @@ public enum SpecialKey
     WhiteBacklight2 = 66
 }
 
+/// <summary>Represents the Spectrum RGB keyboard backlight brightness level.</summary>
 public enum SpectrumKeyboardBacklightBrightness
 {
     [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightBrightness_Off")]
@@ -622,6 +666,7 @@ public enum SpectrumKeyboardBacklightBrightness
     High
 }
 
+/// <summary>Represents the Spectrum keyboard backlight rotational direction.</summary>
 public enum SpectrumKeyboardBacklightClockwiseDirection
 {
     None,
@@ -631,6 +676,7 @@ public enum SpectrumKeyboardBacklightClockwiseDirection
     CounterClockwise
 }
 
+/// <summary>Represents the Spectrum keyboard backlight animation direction.</summary>
 public enum SpectrumKeyboardBacklightDirection
 {
     None,
@@ -644,6 +690,7 @@ public enum SpectrumKeyboardBacklightDirection
     RightToLeft
 }
 
+/// <summary>Represents the Spectrum keyboard backlight effect type.</summary>
 public enum SpectrumKeyboardBacklightEffectType
 {
     [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightEffectType_Always")]
@@ -674,6 +721,7 @@ public enum SpectrumKeyboardBacklightEffectType
     AuroraSync
 }
 
+/// <summary>Represents the Spectrum keyboard backlight animation speed.</summary>
 public enum SpectrumKeyboardBacklightSpeed
 {
     None,
@@ -685,6 +733,7 @@ public enum SpectrumKeyboardBacklightSpeed
     Speed3
 }
 
+/// <summary>Represents the Spectrum RGB lighting zone layout.</summary>
 public enum SpectrumLayout
 {
     KeyboardOnly,
@@ -693,6 +742,7 @@ public enum SpectrumLayout
     FullAlternative
 }
 
+/// <summary>Represents the application color theme (System, Light, Dark).</summary>
 public enum Theme
 {
     [Display(ResourceType = typeof(Resource), Name = "Theme_System")]
@@ -703,6 +753,7 @@ public enum Theme
     Dark
 }
 
+/// <summary>Represents the source for the UI accent color.</summary>
 public enum AccentColorSource
 {
     [Display(ResourceType = typeof(Resource), Name = "AccentColorSource_System")]
@@ -711,6 +762,7 @@ public enum AccentColorSource
     Custom
 }
 
+/// <summary>Represents predefined theme style presets.</summary>
 public enum ThemeStylePreset
 {
     [Display(ResourceType = typeof(Resource), Name = "ThemeStylePreset_Default")]
@@ -723,14 +775,18 @@ public enum ThemeStylePreset
     Forest
 }
 
+/// <summary>Represents the window backdrop (title bar) visual style.</summary>
 public enum WindowBackdropStyle
 {
     [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_Windows")]
     Windows,
     [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_macOS")]
-    macOS
+    macOS,
+    [Display(ResourceType = typeof(Resource), Name = "WindowBackdropStyle_Off")]
+    Off
 }
 
+/// <summary>Represents the application font family style.</summary>
 // No Display attributes: option labels are font names (proper nouns) resolved
 // WPF-side, like TemperatureUnit.
 public enum AppFontStyle
@@ -745,6 +801,7 @@ public enum AppFontStyle
     KaiTi
 }
 
+/// <summary>Represents the application text size preset (Compact to ExtraLarge).</summary>
 // No Display attributes: option labels are percentages (with a localized "Default"
 // marker on Standard) resolved WPF-side, like AppFontStyle. The numeric scale
 // mapping (90/100/110/125%) lives in the WPF layer.
@@ -756,6 +813,7 @@ public enum AppTextSize
     ExtraLarge
 }
 
+/// <summary>Represents the application UI scale percentage.</summary>
 public enum AppScale
 {
     Compact = 80,
@@ -765,12 +823,14 @@ public enum AppScale
     ExtraLarge = 125
 }
 
+/// <summary>Represents the temperature display unit (Celsius or Fahrenheit).</summary>
 public enum TemperatureUnit
 {
     C,
     F
 }
 
+/// <summary>Represents the thermal mode state reported by the embedded controller.</summary>
 public enum ThermalModeState
 {
     Unknown,
@@ -781,6 +841,7 @@ public enum ThermalModeState
     GodMode = 255
 }
 
+/// <summary>Represents the touchpad lock (disable) state.</summary>
 public enum TouchpadLockState
 {
     [Display(ResourceType = typeof(Resource), Name = "TouchpadLockState_Off")]
@@ -789,6 +850,7 @@ public enum TouchpadLockState
     On
 }
 
+/// <summary>Represents the automatic update check frequency.</summary>
 public enum UpdateCheckFrequency
 {
     [Display(ResourceType = typeof(Resource), Name = "UpdateCheckFrequency_PerHour")]
@@ -805,6 +867,7 @@ public enum UpdateCheckFrequency
     PerMonth
 }
 
+/// <summary>Represents the result status of an update check operation.</summary>
 public enum UpdateCheckStatus
 {
     Success,
@@ -812,6 +875,7 @@ public enum UpdateCheckStatus
     Error
 }
 
+/// <summary>Represents the white keyboard backlight brightness level (multi-level).</summary>
 public enum WhiteKeyboardBacklightState
 {
     [Display(ResourceType = typeof(Resource), Name = "WhiteKeyboardBacklightState_Off")]
@@ -822,6 +886,7 @@ public enum WhiteKeyboardBacklightState
     High
 }
 
+/// <summary>Represents the Windows OS power mode setting.</summary>
 public enum WindowsPowerMode
 {
     [Display(Name = "Best power efficiency")]
@@ -832,6 +897,7 @@ public enum WindowsPowerMode
     BestPerformance
 }
 
+/// <summary>Identifies on-screen display (OSD) hardware sensor metrics.</summary>
 public enum OsdItem
 {
     [Display(ResourceType = typeof(Resource), Name = "OsdItem_Fps")]
@@ -882,6 +948,7 @@ public enum OsdItem
     PchFan,
 }
 
+/// <summary>Represents the on-screen display visibility state.</summary>
 public enum OsdState
 {
     [Display(ResourceType = typeof(Resource), Name = "OsdState_Hidden")]
@@ -892,6 +959,7 @@ public enum OsdState
     Toggle,
 }
 
+/// <summary>Represents the hardware sensors monitoring state.</summary>
 public enum HardwareSensorsState
 {
     [Display(ResourceType = typeof(Resource), Name = "HardwareSensorsState_Off")]
@@ -900,6 +968,7 @@ public enum HardwareSensorsState
     On
 }
 
+/// <summary>Represents the Windows key lock state.</summary>
 public enum WinKeyState
 {
     [Display(ResourceType = typeof(Resource), Name = "WinKeyState_Off")]
@@ -908,6 +977,7 @@ public enum WinKeyState
     On
 }
 
+/// <summary>Placeholder enum for Windows key change tracking.</summary>
 public enum WinKeyChanged
 {
     None

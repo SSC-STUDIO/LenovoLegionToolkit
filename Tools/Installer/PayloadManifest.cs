@@ -9,7 +9,6 @@ namespace UniversalDeviceToolkit.Installer;
 internal static class PayloadManifest
 {
     public const string Version = "5.0.1";
-    public const string AssetName = "UniversalDeviceToolkit_v5.0.1_Online_win-x64.zip";
     public const string Sha256 = "724A5E171240184760996EA3D2BBF7F3372B9C294B173AC82EA3C249BB18F8F1";
 
     public static readonly string[] Urls =

@@ -1,6 +1,15 @@
-// Collection definition lives in Infrastructure/TestCollections.cs (TestCollections.Settings).
-// This file is kept so existing using/docs links remain stable.
+using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Settings;
 
-// Intentionally empty — see UniversalDeviceToolkit.Tests.TestCollections.
+[CollectionDefinition(TestCollections.Localization, DisableParallelization = true)]
+public sealed class LocalizationTestCollectionDefinition;
+
+[CollectionDefinition(TestCollections.Settings, DisableParallelization = true)]
+public sealed class SettingsTestCollectionDefinition;
+
+[CollectionDefinition(TestCollections.FlaUI, DisableParallelization = true)]
+public sealed class FlaUITestCollectionDefinition;
+
+[CollectionDefinition(TestCollections.ProcessState, DisableParallelization = true)]
+public sealed class ProcessStateTestCollectionDefinition;

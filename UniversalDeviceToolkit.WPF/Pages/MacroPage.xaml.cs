@@ -4,7 +4,7 @@ using System.Windows;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Macro;
-using UniversalDeviceToolkit.WPF.ViewModels;
+using UniversalDeviceToolkit.ViewModels;
 using Wpf.Ui.Controls;
 
 namespace UniversalDeviceToolkit.WPF.Pages

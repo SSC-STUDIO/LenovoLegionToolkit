@@ -210,6 +210,28 @@ public static class Registry
         }
     }
 
+    public static void DeleteValue(string hive, string subKey, string valueName, bool fixPermissions = false)
+    {
+        try
+        {
+            using var baseKey = GetBaseKey(hive);
+            using var key = baseKey.OpenSubKey(subKey, writable: true);
+            key?.DeleteValue(valueName, throwOnMissingValue: false);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            if (!fixPermissions || !WithElevatedPermissions(hive, subKey, () =>
+                {
+                    using var baseKey = GetBaseKey(hive);
+                    using var key = baseKey.OpenSubKey(subKey, writable: true);
+                    key?.DeleteValue(valueName, throwOnMissingValue: false);
+                }))
+            {
+                throw;
+            }
+        }
+    }
+
     /// <summary>
     /// Take ownership + grant FullControl, write the value, then restore DACL/owner.
     /// </summary>

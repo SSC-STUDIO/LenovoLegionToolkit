@@ -13,6 +13,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Utils;
 
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.Settings)]
 public class SunriseSunsetTests : IDisposable
 {
     private readonly SunriseSunsetSettings _settings;
