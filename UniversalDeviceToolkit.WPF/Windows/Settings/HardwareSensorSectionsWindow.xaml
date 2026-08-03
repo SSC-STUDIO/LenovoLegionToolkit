@@ -13,6 +13,52 @@
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
     ResizeMode="NoResize"
     WindowStartupLocation="CenterOwner">
+    <local:BaseWindow.Resources>
+        <Style x:Key="SensorSectionListItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border
+                            x:Name="ItemBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource CornerRadiusControl}"
+                            Padding="12,8"
+                            SnapsToDevicePixels="True"
+                            UseLayoutRounding="True">
+                            <ContentPresenter
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                <Setter TargetName="ItemBorder" Property="BorderThickness" Value="1" />
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="False" />
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </local:BaseWindow.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -30,13 +76,13 @@
             <StackPanel>
                 <TextBlock
                     Margin="0,0,0,12"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Text="{x:Static resources:Resource.SensorSections_Visible_Title}" />
                 <StackPanel x:Name="_visibilityPanel" />
 
                 <TextBlock
                     Margin="0,16,0,8"
-                    FontWeight="SemiBold"
+                    FontWeight="Medium"
                     Text="{x:Static resources:Resource.SensorSections_Order_Title}" />
                 <StackPanel x:Name="_orderHost" />
                 <StackPanel Margin="0,8,0,0" Orientation="Horizontal">

@@ -11,6 +11,7 @@
     MinWidth="900"
     MinHeight="520"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    Closed="SensorDetailsWindow_Closed"
     Loaded="SensorDetailsWindow_Loaded"
     ShowInTaskbar="False"
     WindowStartupLocation="CenterOwner">

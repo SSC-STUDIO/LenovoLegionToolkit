@@ -92,6 +92,7 @@ public partial class SensorsControl : IDisposable
     public SensorsControl()
     {
         InitializeComponent();
+        _hardwareSensorSettings.SectionsChanged += HardwareSensorSettings_SectionsChanged;
         CacheTextBlockReferences();
         ApplySensorSectionConfiguration();
         InitializeContextMenu();
@@ -123,68 +124,6 @@ public partial class SensorsControl : IDisposable
         }
     }
 
-    private void ApplySensorSectionConfiguration()
-    {
-        var store = _hardwareSensorSettings.Store;
-        var visible = new HashSet<string>(store.VisibleSections ?? [], StringComparer.OrdinalIgnoreCase);
-        var sectionMap = new Dictionary<string, FrameworkElement>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["CPU"] = _cpuSection,
-            ["Battery"] = _batterySectionColumn,
-            ["GPU"] = _gpuSection
-        };
-        var skeletonSectionMap = new Dictionary<string, FrameworkElement>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["CPU"] = _skeletonCpuSection,
-            ["Battery"] = _skeletonBatterySection,
-            ["GPU"] = _skeletonGpuSection
-        };
-
-        foreach (var (name, element) in sectionMap)
-        {
-            element.Visibility = visible.Contains(name) ? Visibility.Visible : Visibility.Collapsed;
-            skeletonSectionMap[name].Visibility = element.Visibility;
-        }
-
-        var order = (store.SectionOrder is { Length: > 0 } ? store.SectionOrder : ["CPU", "Battery", "GPU"])
-            .Where(name => sectionMap.ContainsKey(name))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToList();
-
-        var orderedVisible = new List<UIElement>();
-        foreach (var name in order)
-        {
-            if (sectionMap.TryGetValue(name, out var element) && element.Visibility == Visibility.Visible)
-                orderedVisible.Add(element);
-        }
-
-        foreach (var (name, element) in sectionMap)
-        {
-            if (element.Visibility == Visibility.Visible && !orderedVisible.Contains(element))
-                orderedVisible.Add(element);
-        }
-
-        _sensorsGrid.Children.Clear();
-        foreach (var child in orderedVisible)
-            _sensorsGrid.Children.Add(child);
-
-        _skeletonGrid.Children.Clear();
-        foreach (var name in order)
-        {
-            if (skeletonSectionMap.TryGetValue(name, out var element) && element.Visibility == Visibility.Visible)
-                _skeletonGrid.Children.Add(element);
-        }
-        foreach (var (name, element) in skeletonSectionMap)
-        {
-            if (element.Visibility == Visibility.Visible && !_skeletonGrid.Children.Contains(element))
-                _skeletonGrid.Children.Add(element);
-        }
-
-        var columnCount = Math.Max(1, orderedVisible.Count);
-        _sensorsGrid.Columns = columnCount;
-        _skeletonGrid.Columns = columnCount;
-    }
-
     private void SensorsControl_Unloaded(object sender, RoutedEventArgs e)
     {
         // Cached navigation unloads without destroying the control — pause polling only.
@@ -202,13 +141,15 @@ public partial class SensorsControl : IDisposable
         SizeChanged -= SensorsControl_SizeChanged;
         Loaded -= SensorsControl_Loaded;
         Unloaded -= SensorsControl_Unloaded;
+        _hardwareSensorSettings.SectionsChanged -= HardwareSensorSettings_SectionsChanged;
     }
 
     internal enum SensorSummaryLayoutMode
     {
-        Compact,
-        Standard,
-        Wide
+        Compact,      // < 900px
+        Standard,     // 900px - 1499px
+        Wide,         // 1500px - 1999px
+        UltraWide     // ≥ 2000px (full-screen optimized)
     }
 
     private const string TrendUtilizationKey = "util";
@@ -246,7 +187,15 @@ public partial class SensorsControl : IDisposable
 
         // During live edge-resize content is BitmapCached — skip thrashy gauge reflow.
         if (Window.GetWindow(this) is { } host && WindowResizeStabilityHelper.IsLiveResizing(host))
+        {
+            // Enable BitmapCache for smoother rendering during live resize
+            if (CacheMode is not System.Windows.Media.BitmapCache)
+                CacheMode = new System.Windows.Media.BitmapCache { RenderAtScale = 1.0 };
             return;
+        }
+
+        // Clear cache after resize completes for sharp rendering
+        CacheMode = null;
 
         // Ignore transient zero/near-zero measures that would falsely enter Compact.
         if (e.NewSize.Width <= 1)
@@ -267,25 +216,32 @@ public partial class SensorsControl : IDisposable
         if (width <= 1)
             return SensorSummaryLayoutMode.Standard;
 
-        if (width >= 1500)
+        if (width >= LayoutBreakpoints.SensorsUltraWide)
+            return SensorSummaryLayoutMode.UltraWide;
+
+        if (width >= LayoutBreakpoints.SensorsWide)
             return SensorSummaryLayoutMode.Wide;
 
-        if (width >= 900)
+        if (width >= LayoutBreakpoints.SensorsStandard)
             return SensorSummaryLayoutMode.Standard;
 
         return SensorSummaryLayoutMode.Compact;
     }
 
-    internal static bool CanShowSensorDetailsForWidth(double width) =>
-        GetSensorSummaryLayoutMode(width) == SensorSummaryLayoutMode.Wide;
+    internal static bool CanShowSensorDetailsForWidth(double width)
+    {
+        var mode = GetSensorSummaryLayoutMode(width);
+        return mode == SensorSummaryLayoutMode.Wide || mode == SensorSummaryLayoutMode.UltraWide;
+    }
 
     private void ApplySensorSummaryLayout(double width, bool force = false)
     {
         var mode = GetSensorSummaryLayoutMode(width);
         var isCompact = mode == SensorSummaryLayoutMode.Compact;
         var isWide = mode == SensorSummaryLayoutMode.Wide;
+        var isUltraWide = mode == SensorSummaryLayoutMode.UltraWide;
 
-        ApplySkeletonSummaryLayout(isCompact, isWide);
+        ApplySkeletonSummaryLayout(isCompact, isWide, isUltraWide);
 
         if (!force && mode == _sensorSummaryLayoutMode)
             return;
@@ -307,29 +263,29 @@ public partial class SensorsControl : IDisposable
         SetVisibility("_batteryTrendPanel", true);
         SetVisibility("_gpuTrendPanel", true);
 
-        ApplySummaryGaugeSize(_cpuGauge, isCompact);
-        ApplySummaryGaugeSize(_batteryGauge, isCompact);
-        ApplySummaryGaugeSize(_gpuGauge, isCompact);
+        ApplySummaryGaugeSize(_cpuGauge, isCompact, isUltraWide);
+        ApplySummaryGaugeSize(_batteryGauge, isCompact, isUltraWide);
+        ApplySummaryGaugeSize(_gpuGauge, isCompact, isUltraWide);
 
-        ApplyTrendPanelHeight(_cpuTrendPanel, isWide);
-        ApplyTrendPanelHeight(_batteryTrendPanel, isWide);
-        ApplyTrendPanelHeight(_gpuTrendPanel, isWide);
+        ApplyTrendPanelHeight(_cpuTrendPanel, isWide, isUltraWide);
+        ApplyTrendPanelHeight(_batteryTrendPanel, isWide, isUltraWide);
+        ApplyTrendPanelHeight(_gpuTrendPanel, isWide, isUltraWide);
 
-        ApplyProgressBarMaxWidth(_cpuCoreClockBar, isWide);
-        ApplyProgressBarMaxWidth(_cpuTemperatureBar, isWide);
-        ApplyProgressBarMaxWidth(_cpuFanSpeedBar, isWide);
-        ApplyProgressBarMaxWidth(_batteryHealthBar, isWide);
-        ApplyProgressBarMaxWidth(_batteryTemperatureBar, isWide);
-        ApplyProgressBarMaxWidth(_batteryRateBar, isWide);
-        ApplyProgressBarMaxWidth(_gpuCoreClockBar, isWide);
-        ApplyProgressBarMaxWidth(_gpuTemperatureBar, isWide);
-        ApplyProgressBarMaxWidth(_gpuFanSpeedBar, isWide);
+        ApplyProgressBarMaxWidth(_cpuCoreClockMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_cpuTemperatureMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_cpuFanSpeedMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_batteryHealthMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_batteryTemperatureMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_batteryRateMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_gpuCoreClockMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_gpuTemperatureMetric, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_gpuFanSpeedMetric, isWide, isUltraWide);
 
         if (!CanShowSensorDetails)
             CollapseDetailPanels();
     }
 
-    private void ApplySkeletonSummaryLayout(bool isCompact, bool isWide)
+    private void ApplySkeletonSummaryLayout(bool isCompact, bool isWide, bool isUltraWide)
     {
         // Match live subtitle visibility (hidden only in compact).
         SetVisibility("_skeletonCpuSubtitle", !isCompact);
@@ -344,26 +300,26 @@ public partial class SensorsControl : IDisposable
         SetVisibility("_skeletonBatteryTrendPanel", true);
         SetVisibility("_skeletonGpuTrendPanel", true);
 
-        // Gauge sizes: GaugeSizeSM (88) compact / GaugeSizeMD (110) standard+wide.
-        ApplySummaryGaugeSize(_skeletonCpuGauge, isCompact);
-        ApplySummaryGaugeSize(_skeletonBatteryGauge, isCompact);
-        ApplySummaryGaugeSize(_skeletonGpuGauge, isCompact);
+        // Gauge sizes: GaugeSizeSM (88) compact / GaugeSizeMD (110) standard+wide / 130 ultra-wide.
+        ApplySummaryGaugeSize(_skeletonCpuGauge, isCompact, isUltraWide);
+        ApplySummaryGaugeSize(_skeletonBatteryGauge, isCompact, isUltraWide);
+        ApplySummaryGaugeSize(_skeletonGpuGauge, isCompact, isUltraWide);
 
-        // Trend panel heights: 120 standard / 150 wide.
-        ApplyTrendPanelHeight(_skeletonCpuTrendPanel, isWide);
-        ApplyTrendPanelHeight(_skeletonBatteryTrendPanel, isWide);
-        ApplyTrendPanelHeight(_skeletonGpuTrendPanel, isWide);
+        // Trend panel heights: 120 standard / 150 wide / 180 ultra-wide.
+        ApplyTrendPanelHeight(_skeletonCpuTrendPanel, isWide, isUltraWide);
+        ApplyTrendPanelHeight(_skeletonBatteryTrendPanel, isWide, isUltraWide);
+        ApplyTrendPanelHeight(_skeletonGpuTrendPanel, isWide, isUltraWide);
 
-        // Metric bars MaxWidth: 260 standard / 320 wide (same as live ProgressBars).
-        ApplyProgressBarMaxWidth(_skeletonCpuBar0, isWide);
-        ApplyProgressBarMaxWidth(_skeletonCpuBar1, isWide);
-        ApplyProgressBarMaxWidth(_skeletonCpuBar2, isWide);
-        ApplyProgressBarMaxWidth(_skeletonBatteryBar0, isWide);
-        ApplyProgressBarMaxWidth(_skeletonBatteryBar1, isWide);
-        ApplyProgressBarMaxWidth(_skeletonBatteryBar2, isWide);
-        ApplyProgressBarMaxWidth(_skeletonGpuBar0, isWide);
-        ApplyProgressBarMaxWidth(_skeletonGpuBar1, isWide);
-        ApplyProgressBarMaxWidth(_skeletonGpuBar2, isWide);
+        // Metric bars MaxWidth: 260 standard / 320 wide / 400 ultra-wide (same as live ProgressBars).
+        ApplyProgressBarMaxWidth(_skeletonCpuBar0, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonCpuBar1, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonCpuBar2, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonBatteryBar0, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonBatteryBar1, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonBatteryBar2, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonGpuBar0, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonGpuBar1, isWide, isUltraWide);
+        ApplyProgressBarMaxWidth(_skeletonGpuBar2, isWide, isUltraWide);
     }
 
     private void SetLiveSensorContentVisible(bool visible)
@@ -372,36 +328,41 @@ public partial class SensorsControl : IDisposable
             _sensorsCard.Opacity = visible ? 1 : 0;
     }
 
-    private static void ApplySummaryGaugeSize(FrameworkElement? gauge, bool isCompact)
+    private static void ApplySummaryGaugeSize(FrameworkElement? gauge, bool isCompact, bool isUltraWide = false)
     {
         if (gauge is null)
             return;
 
-        // Keep in sync with DesignTokens: GaugeSizeSM=88, GaugeSizeMD=110.
-        var size = isCompact ? 88 : 110;
+        var size = LayoutBreakpoints.GetGaugeSize(isCompact, isUltraWide);
         gauge.Width = size;
         gauge.Height = size;
         gauge.MinWidth = size;
         gauge.MinHeight = size;
     }
 
-    private static void ApplyTrendPanelHeight(FrameworkElement? trendPanel, bool isWide)
+    private static void ApplyTrendPanelHeight(FrameworkElement? trendPanel, bool isWide, bool isUltraWide = false)
     {
         if (trendPanel is null)
             return;
 
-        trendPanel.Height = isWide ? 150 : 120;
+        trendPanel.Height = LayoutBreakpoints.GetTrendHeight(isWide, isUltraWide);
     }
 
-    private static void ApplyProgressBarMaxWidth(FrameworkElement? progressBar, bool isWide)
+    private static void ApplyProgressBarMaxWidth(FrameworkElement? progressBar, bool isWide, bool isUltraWide = false)
     {
         if (progressBar is null)
             return;
 
-        progressBar.MaxWidth = isWide ? 320 : 260;
+        var maxWidth = LayoutBreakpoints.GetProgressBarMaxWidth(isWide, isUltraWide);
+        if (progressBar is MarqueeMetricBar metric)
+            metric.BarMaxWidth = maxWidth;
+        else
+            progressBar.MaxWidth = maxWidth;
     }
 
-    private bool CanShowSensorDetails => _forceShowSensorDetails || _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Wide;
+    private bool CanShowSensorDetails => _forceShowSensorDetails ||
+        _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Wide ||
+        _sensorSummaryLayoutMode == SensorSummaryLayoutMode.UltraWide;
 
     public Task FirstSensorDataReadyTask
     {
@@ -575,8 +536,8 @@ public partial class SensorsControl : IDisposable
             }
 
             // Always operate on locals after clearing fields — never touch _cts/_batteryCts after await.
-            await StopSensorRefreshAsync().ConfigureAwait(true);
-            await StopBatteryRefreshAsync().ConfigureAwait(true);
+            await StopSensorRefreshAsync();
+            await StopBatteryRefreshAsync();
         }
         catch (Exception ex)
         {
@@ -636,7 +597,7 @@ public partial class SensorsControl : IDisposable
 
         try
         {
-            await task.ConfigureAwait(true);
+            await task;
         }
         catch (OperationCanceledException)
         {
@@ -676,8 +637,8 @@ public partial class SensorsControl : IDisposable
             _refreshTask = null;
         }
 
-        await SafeCancelAndDisposeAsync(cts).ConfigureAwait(true);
-        await SafeAwaitRefreshTaskAsync(task).ConfigureAwait(true);
+        await SafeCancelAndDisposeAsync(cts);
+        await SafeAwaitRefreshTaskAsync(task);
     }
 
     private void StopBatteryRefresh()
@@ -705,8 +666,8 @@ public partial class SensorsControl : IDisposable
             _batteryRefreshTask = null;
         }
 
-        await SafeCancelAndDisposeAsync(cts).ConfigureAwait(true);
-        await SafeAwaitRefreshTaskAsync(task).ConfigureAwait(true);
+        await SafeCancelAndDisposeAsync(cts);
+        await SafeAwaitRefreshTaskAsync(task);
     }
 
     private void RefreshBattery()
@@ -794,25 +755,22 @@ public partial class SensorsControl : IDisposable
         // Implement logic to update details UI (ProgressBar/Text)
         // This relies on the UI elements being present in the XAML
         // I will implement this assuming the UI structure I will create
-        UpdateDetailText("_batteryHealthText", $"{info.BatteryHealth:0.00}%");
-        if (FindNameCached("_batteryHealthBar") is System.Windows.Controls.Primitives.RangeBase healthBar)
-            healthBar.Value = info.BatteryHealth;
+        if (FindNameCached("_batteryHealthMetric") is MarqueeMetricBar healthMetric)
+            UpdateValue(healthMetric, 100, info.BatteryHealth, $"{info.BatteryHealth:0.00}%");
 
         UpdateBatteryHealthGauge(info.BatteryHealth);
 
-        if (FindNameCached("_batteryTemperatureBar") is System.Windows.Controls.Primitives.RangeBase tempBar &&
-            FindNameCached("_batteryTempText") is ContentControl tempLabel)
+        if (FindNameCached("_batteryTemperatureMetric") is MarqueeMetricBar tempMetric)
         {
             var temperature = info.BatteryTemperatureC ?? -1;
-            UpdateValue(tempBar, tempLabel, 60, temperature, GetTemperatureText(info.BatteryTemperatureC));
+            UpdateValue(tempMetric, 60, temperature, GetTemperatureText(info.BatteryTemperatureC));
         }
 
-        if (FindNameCached("_batteryRateBar") is System.Windows.Controls.Primitives.RangeBase rateBar &&
-            FindNameCached("_batteryRateText") is ContentControl rateLabel)
+        if (FindNameCached("_batteryRateMetric") is MarqueeMetricBar rateMetric)
         {
             var rateW = Math.Abs(info.DischargeRate / 1000.0);
             // Assuming 100W is max reasonable charge/discharge rate for bar scaling
-            UpdateValue(rateBar, rateLabel, 100, rateW, $"{info.DischargeRate / 1000.0:+0.00;-0.00;0.00} W");
+            UpdateValue(rateMetric, 100, rateW, $"{info.DischargeRate / 1000.0:+0.00;-0.00;0.00} W");
         }
 
         UpdateModelNameText("_batteryModelName", info.ModelName ?? T("SensorsControl_UnknownBattery", "Unknown battery"));
@@ -1087,11 +1045,11 @@ public partial class SensorsControl : IDisposable
         if (!_hasRenderedSensorData && shouldCompleteInitialLoad)
             CompleteInitialSensorDataLoad();
 
-        UpdateValue(_cpuCoreClockBar, _cpuCoreClockLabel, data.CPU.MaxCoreClock, data.CPU.CoreClock,
+        UpdateValue(_cpuCoreClockMetric, data.CPU.MaxCoreClock, data.CPU.CoreClock,
             string.Concat((data.CPU.CoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit), string.Concat((data.CPU.MaxCoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit));
-        UpdateValue(_cpuTemperatureBar, _cpuTemperatureLabel, data.CPU.MaxTemperature, data.CPU.Temperature,
+        UpdateValue(_cpuTemperatureMetric, data.CPU.MaxTemperature, data.CPU.Temperature,
             GetTemperatureText(data.CPU.Temperature), GetTemperatureText(data.CPU.MaxTemperature));
-        UpdateValue(_cpuFanSpeedBar, _cpuFanSpeedLabel, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
+        UpdateValue(_cpuFanSpeedMetric, data.CPU.MaxFanSpeed, data.CPU.FanSpeed,
             string.Concat(data.CPU.FanSpeed.ToString("0.0"), " ", RpmUnit), string.Concat(data.CPU.MaxFanSpeed.ToString("0.0"), " ", RpmUnit));
 
         // When detail panels are open, CPU wattage is owned by the LHM extended path
@@ -1124,7 +1082,7 @@ public partial class SensorsControl : IDisposable
         }
 
         // GPU Core Clock (Main view)
-        UpdateValue(_gpuCoreClockBar, _gpuCoreClockLabel, data.GPU.MaxCoreClock, data.GPU.CoreClock,
+        UpdateValue(_gpuCoreClockMetric, data.GPU.MaxCoreClock, data.GPU.CoreClock,
             string.Concat((data.GPU.CoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit), string.Concat((data.GPU.MaxCoreClock / 1000.0).ToString("0.0"), " ", GigahertzUnit));
 
         // GPU Memory Clock (Details view)
@@ -1143,9 +1101,9 @@ public partial class SensorsControl : IDisposable
             }
         }
 
-        UpdateValue(_gpuTemperatureBar, _gpuTemperatureLabel, data.GPU.MaxTemperature, data.GPU.Temperature,
+        UpdateValue(_gpuTemperatureMetric, data.GPU.MaxTemperature, data.GPU.Temperature,
             GetTemperatureText(data.GPU.Temperature), GetTemperatureText(data.GPU.MaxTemperature));
-        UpdateValue(_gpuFanSpeedBar, _gpuFanSpeedLabel, data.GPU.MaxFanSpeed, data.GPU.FanSpeed,
+        UpdateValue(_gpuFanSpeedMetric, data.GPU.MaxFanSpeed, data.GPU.FanSpeed,
             string.Concat(data.GPU.FanSpeed.ToString("0.0"), " ", RpmUnit), string.Concat(data.GPU.MaxFanSpeed.ToString("0.0"), " ", RpmUnit));
 
         if (_gpuWattageText is not null)
@@ -1559,42 +1517,48 @@ public partial class SensorsControl : IDisposable
         return FormatTemperature(temperature.Value, _applicationSettings.Store.TemperatureUnit);
     }
 
-    private static void UpdateValue(RangeBase bar, ContentControl label, double max, double value, string text, string? toolTipText = null)
+    /// <summary>
+    /// Combined bar+value metric: forwards range and text to a <see cref="MarqueeMetricBar"/>.
+    /// </summary>
+    private static void UpdateValue(MarqueeMetricBar metric, double max, double value, string text, string? toolTipText = null)
     {
         if (value < 0)
         {
-            bar.Minimum = 0;
-            bar.Maximum = 1;
-            bar.Value = 0;
-            label.Content = "-";
-            label.ToolTip = null;
-            label.Tag = 0;
+            metric.Minimum = 0;
+            metric.Maximum = 1;
+            metric.Value = 0;
+            metric.Text = "-";
+            metric.ToolTip = null;
             return;
         }
 
         if (max < 0)
             max = Math.Max(value, 1);
 
-        bar.Minimum = 0;
-        bar.Maximum = max;
-        bar.Value = value;
-        label.Content = text;
-        label.ToolTip = toolTipText is null ? null : string.Format(Resource.SensorsControl_Maximum, toolTipText);
-        label.Tag = value;
+        metric.Minimum = 0;
+        metric.Maximum = max;
+        metric.Value = value;
+        metric.Text = text;
+        metric.ToolTip = toolTipText is null ? null : string.Format(Resource.SensorsControl_Maximum, toolTipText);
     }
 
     private void SetSensorSectionsVisible(bool visible)
     {
-        SetVisibility("_cpuSection", visible);
-        SetVisibility("_gpuSection", visible);
-
-        if (!visible)
+        if (visible)
         {
+            // Sensor availability changes must not override the user's section selection.
+            ApplySensorSectionConfiguration();
+        }
+        else
+        {
+            SetVisibility("_cpuSection", false);
+            SetVisibility("_batterySectionColumn", false);
+            SetVisibility("_gpuSection", false);
+            SetVisibility("_skeletonCpuSection", false);
+            SetVisibility("_skeletonBatterySection", false);
+            SetVisibility("_skeletonGpuSection", false);
             CollapseDetailPanels();
         }
-
-        if (FindNameCached("_batterySectionColumn") is FrameworkElement batterySection)
-            batterySection.Visibility = Visibility.Visible;
 
         Visibility = Visibility.Visible;
     }
@@ -1779,9 +1743,9 @@ public partial class SensorsControl : IDisposable
                 UpdateDetailText("_cpuMemoryTemperature", GetTemperatureText(memoryTemperature > 0 ? memoryTemperature : null));
                 UpdateDetailText("_cpuSsdTemperature", FormatTemperaturePair(ssdTemperatures, _applicationSettings.Store.TemperatureUnit));
                 // Ranges: keep min/max from the primary SensorsData path; only seed when empty.
-                UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureLabel?.Content as string ?? _cpuTemperatureLabel?.Content?.ToString(), _cpuTempRange.Text));
+                UpdateDetailText("_cpuTempRange", FormatTemperatureRangeText(_cpuTemperatureMetric?.Text, _cpuTempRange.Text));
                 UpdateDetailText("_cpuVoltageRange", FormatFallbackRangeText(_cpuVoltage.Text, _cpuVoltageRange.Text));
-                UpdateDetailText("_gpuTempRange", FormatTemperatureRangeText(_gpuTemperatureLabel?.Content as string ?? _gpuTemperatureLabel?.Content?.ToString(), _gpuTempRange.Text));
+                UpdateDetailText("_gpuTempRange", FormatTemperatureRangeText(_gpuTemperatureMetric?.Text, _gpuTempRange.Text));
                 UpdateDetailText("_gpuVoltageRange", FormatFallbackRangeText(_gpuVoltage.Text, _gpuVoltageRange.Text));
             });
         }
@@ -1792,187 +1756,5 @@ public partial class SensorsControl : IDisposable
         }
     }
 
-    internal static string GetGpuMemoryUsageTitle(bool isIntegratedGpu) =>
-        isIntegratedGpu
-            ? T("SensorsControl_SharedMemoryUsage_Title", "Shared Memory Usage")
-            : T("SensorsControl_VramUsage_Title", "VRAM Usage");
-
-    internal static string FormatUsageInGigabytes(float usedGb, float totalGb, float percentage = -1f)
-    {
-        if (usedGb < 0)
-        {
-            return percentage >= 0
-                ? $"{percentage:0}%"
-                : "-";
-        }
-
-        if (totalGb <= 0)
-        {
-            return percentage >= 0
-                ? $"{usedGb:0.0} GB ({percentage:0}%)"
-                : $"{usedGb:0.0} GB";
-        }
-
-        if (percentage < 0)
-            percentage = totalGb > 0 ? (usedGb / totalGb) * 100f : -1f;
-
-        return percentage >= 0
-            ? $"{usedGb:0.0} / {totalGb:0.0} GB ({percentage:0}%)"
-            : $"{usedGb:0.0} / {totalGb:0.0} GB";
-    }
-
-    internal static string FormatTemperaturePair((float first, float second) temperatures, TemperatureUnit temperatureUnit)
-    {
-        var first = temperatures.first >= 0 ? FormatTemperature(temperatures.first, temperatureUnit) : null;
-        var second = temperatures.second >= 0 ? FormatTemperature(temperatures.second, temperatureUnit) : null;
-
-        return (first, second) switch
-        {
-            ({ } a, { } b) => $"{a} / {b}",
-            ({ } a, null) => a,
-            (null, { } b) => b,
-            _ => "-"
-        };
-    }
-
-    internal static string FormatThroughputPair(float rxBytesPerSecond, float txBytesPerSecond)
-    {
-        var rx = FormatThroughput(rxBytesPerSecond);
-        var tx = FormatThroughput(txBytesPerSecond);
-
-        // Prefer a line break so long "Rx … / Tx …" strings wrap cleanly inside the
-        // detail column instead of overflowing into the temperature column.
-        return (rx, tx) switch
-        {
-            ({ } a, { } b) => $"Rx {a}\nTx {b}",
-            ({ } a, null) => $"Rx {a}",
-            (null, { } b) => $"Tx {b}",
-            _ => "-"
-        };
-    }
-
-    private static readonly System.Collections.Generic.List<string> _cpuPowerParts = new(4);
-
-    internal static string FormatCpuPowerBreakdown(float totalWatts, (float cores, float memory, float platform) components)
-    {
-        _cpuPowerParts.Clear();
-        var coresLabel = T("SensorsControl_CpuCoresPower_Label", "Cores");
-        var memoryLabel = T("SensorsControl_CpuMemoryPower_Label", "Memory");
-        var platformLabel = T("SensorsControl_CpuPlatformPower_Label", "Platform");
-
-        if (totalWatts >= 0)
-            _cpuPowerParts.Add($"{totalWatts} W");
-
-        if (components.cores > 0)
-            _cpuPowerParts.Add($"{coresLabel} {components.cores:0.#} W");
-
-        if (components.memory > 0)
-            _cpuPowerParts.Add($"{memoryLabel} {components.memory:0.#} W");
-
-        if (components.platform > 0)
-            _cpuPowerParts.Add($"{platformLabel} {components.platform:0.#} W");
-
-        return _cpuPowerParts.Count > 0 ? string.Join(" | ", _cpuPowerParts) : NotAvailableText();
-    }
-
-    internal static string FormatVoltage(float voltage) =>
-        voltage > 0 ? $"{voltage:0.000} V" : NotAvailableText();
-
-    internal static string FormatPower(float wattage) =>
-        wattage >= 0 ? $"{wattage:0.#} W" : NotAvailableText();
-
-    internal static string FormatPowerKeepingPrevious(float wattage, string? previousText) =>
-        wattage >= 0
-            ? FormatPower(wattage)
-            : !string.IsNullOrWhiteSpace(previousText) && previousText != NotAvailableText()
-                ? previousText
-                : NotAvailableText();
-
-    internal static string FormatNullableTemperature(double? temperature, TemperatureUnit temperatureUnit) =>
-        temperature is { } value ? FormatTemperature(value, temperatureUnit) : NotAvailableText();
-
-    internal static string FormatFrequency(float frequencyMHz) =>
-        frequencyMHz > 0 ? $"{frequencyMHz / 1000.0:0.0} {GigahertzUnit}" : NotAvailableText();
-
-    internal static string FormatFallbackRangeText(string? primaryValue, string? existingRangeText)
-    {
-        if (!string.IsNullOrWhiteSpace(existingRangeText) && existingRangeText != NotAvailableText())
-            return existingRangeText;
-
-        return !string.IsNullOrWhiteSpace(primaryValue) && primaryValue != NotAvailableText()
-            ? primaryValue
-            : NotAvailableText();
-    }
-
-    internal static string FormatTemperatureRangeText(string? primaryTemperatureText, string? existingRangeText) =>
-        FormatFallbackRangeText(primaryTemperatureText, existingRangeText);
-
-    internal static bool IsUsefulDetailValue(string? text)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-            return false;
-
-        var trimmed = text.Trim();
-        return !string.Equals(trimmed, "-", StringComparison.Ordinal)
-            && !string.Equals(trimmed, NotAvailableText(), StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string? FormatThroughput(float bytesPerSecond)
-    {
-        if (bytesPerSecond < 0)
-            return null;
-
-        const float kb = 1024f;
-        const float mb = kb * 1024f;
-        const float gb = mb * 1024f;
-
-        return bytesPerSecond switch
-        {
-            >= gb => $"{bytesPerSecond / gb:0.00} GB/s",
-            >= mb => $"{bytesPerSecond / mb:0.00} MB/s",
-            >= kb => $"{bytesPerSecond / kb:0.00} KB/s",
-            _ => $"{bytesPerSecond:0} B/s"
-        };
-    }
-
-    internal static string FormatTemperature(double temperature, TemperatureUnit temperatureUnit)
-    {
-        if (temperatureUnit == TemperatureUnit.F)
-        {
-            temperature *= 9.0 / 5.0;
-            temperature += 32;
-            return $"{temperature:0} {FahrenheitUnit}";
-        }
-
-        return $"{temperature:0} {CelsiusUnit}";
-    }
-
-    internal static string? NormalizeModelName(string? modelName)
-    {
-        if (string.IsNullOrWhiteSpace(modelName))
-            return null;
-
-        return modelName.Trim();
-    }
-
-    internal static string NormalizeHardwareNameOrFallback(string? hardwareName, string fallback)
-    {
-        var normalized = NormalizeModelName(hardwareName);
-        return normalized is null || string.Equals(normalized, "UNKNOWN", StringComparison.OrdinalIgnoreCase)
-            ? fallback
-            : normalized;
-    }
-
-    private void UpdateModelNameText(string elementName, string? modelName)
-    {
-        if (FindNameCached(elementName) is not TextBlock textBlock)
-            return;
-
-        var normalizedModelName = NormalizeModelName(modelName);
-        textBlock.Text = normalizedModelName ?? string.Empty;
-        textBlock.Visibility = normalizedModelName is null || _sensorSummaryLayoutMode == SensorSummaryLayoutMode.Compact
-            ? Visibility.Collapsed
-            : Visibility.Visible;
-    }
 }
 }

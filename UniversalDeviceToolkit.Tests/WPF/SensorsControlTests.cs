@@ -289,7 +289,7 @@ public class SensorsControlTests
         xaml.Should().Contain("x:Name=\"_skeletonGpuBar0\"");
 
         // Resize path keeps skeleton in sync with live layout modes.
-        code.Should().Contain("ApplyProgressBarMaxWidth(_skeletonCpuBar0, isWide)");
+        code.Should().Contain("ApplyProgressBarMaxWidth(_skeletonCpuBar0, isWide, isUltraWide)");
         code.Should().Contain("ApplySensorSummaryLayout(width, force: true)");
     }
 
@@ -313,9 +313,9 @@ public class SensorsControlTests
         batterySummary.Should().NotContain("_batteryPercentageBar").And.NotContain("_batteryPercentageLabel");
         gpuSummary.Should().NotContain("_gpuUtilizationBar").And.NotContain("_gpuUtilizationLabel");
 
-        CountOccurrences(cpuSummary, "<ProgressBar ").Should().Be(3);
-        CountOccurrences(batterySummary, "<ProgressBar ").Should().Be(3);
-        CountOccurrences(gpuSummary, "<ProgressBar ").Should().Be(3);
+        CountOccurrences(cpuSummary, "<controls:MarqueeMetricBar ").Should().Be(3);
+        CountOccurrences(batterySummary, "<controls:MarqueeMetricBar ").Should().Be(3);
+        CountOccurrences(gpuSummary, "<controls:MarqueeMetricBar ").Should().Be(3);
     }
 
     [Fact]
@@ -379,6 +379,31 @@ public class SensorsControlTests
         loadedMethod.Should().Contain("RefreshBattery();");
 
         disposeMethod.Should().Contain("IsVisibleChanged -=");
+    }
+
+    [Fact]
+    public void SensorsControlCode_ShouldApplySavedSensorSectionConfigurationImmediately()
+    {
+        var source = ReadSensorsControlCode();
+        var changedMethod = ExtractMethod(source, "private void HardwareSensorSettings_SectionsChanged");
+
+        source.Should().Contain("_hardwareSensorSettings.SectionsChanged += HardwareSensorSettings_SectionsChanged;");
+        source.Should().Contain("_hardwareSensorSettings.SectionsChanged -= HardwareSensorSettings_SectionsChanged;");
+        changedMethod.Should().Contain("ApplySensorSectionConfiguration();");
+        changedMethod.Should().Contain("ApplySensorSummaryLayout");
+        changedMethod.Should().Contain("Dispatcher.InvokeAsync");
+        source.Should().NotContain("SetVisibility(\"_cpuSection\", visible);");
+        source.Should().NotContain("SetVisibility(\"_gpuSection\", visible);");
+        source.Should().NotContain("batterySection.Visibility = Visibility.Visible;");
+    }
+
+    [Fact]
+    public void HardwareSensorSectionsSave_ShouldNotifyExistingDashboardControls()
+    {
+        var source = ReadHardwareSensorSectionsWindowCode();
+
+        source.Should().Contain("_settings.SynchronizeStore();");
+        source.Should().Contain("_settings.NotifySectionsChanged();");
     }
 
     [Fact]
@@ -791,13 +816,23 @@ public class SensorsControlTests
     private static string ReadSensorsControlCode()
     {
         var root = RepositoryPaths.FindRoot();
-        return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard", "SensorsControl.xaml.cs"));
+        var directory = Path.Combine(root, "UniversalDeviceToolkit.WPF", "Controls", "Dashboard");
+        return string.Join(
+            Environment.NewLine,
+            File.ReadAllText(Path.Combine(directory, "SensorsControl.xaml.cs")),
+            File.ReadAllText(Path.Combine(directory, "SensorsControl.Layout.cs")));
     }
 
     private static string ReadSensorDetailsWindowXaml()
     {
         var root = RepositoryPaths.FindRoot();
         return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Windows", "Dashboard", "SensorDetailsWindow.xaml"));
+    }
+
+    private static string ReadHardwareSensorSectionsWindowCode()
+    {
+        var root = RepositoryPaths.FindRoot();
+        return File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.WPF", "Windows", "Settings", "HardwareSensorSectionsWindow.xaml.cs"));
     }
 
 }

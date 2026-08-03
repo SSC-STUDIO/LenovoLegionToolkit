@@ -23,6 +23,8 @@ public partial class SensorDetailsWindow
         _sensors.RestartTrendCharts();
     }
 
+    private void SensorDetailsWindow_Closed(object? sender, EventArgs e) => _sensors.Dispose();
+
     protected override void OnSourceInitialized(EventArgs e)
     {
         base.OnSourceInitialized(e);

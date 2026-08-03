@@ -4,6 +4,8 @@ namespace UniversalDeviceToolkit.WPF.Settings;
 
 public class HardwareSensorSettings() : AbstractSettings<HardwareSensorSettings.HardwareSensorSettingsStore>("hardware_sensors.json")
 {
+    public event System.EventHandler? SectionsChanged;
+
     public class HardwareSensorSettingsStore
     {
         public bool SelectedGpuIsIgpu { get; set; }
@@ -14,4 +16,6 @@ public class HardwareSensorSettings() : AbstractSettings<HardwareSensorSettings.
     }
 
     protected override HardwareSensorSettingsStore Default => new();
+
+    public void NotifySectionsChanged() => SectionsChanged?.Invoke(this, System.EventArgs.Empty);
 }

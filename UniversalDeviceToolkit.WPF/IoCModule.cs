@@ -25,10 +25,11 @@ public class IoCModule : Module
         builder.Register<NotificationsManager>().AutoActivate();
 
         builder.Register<DashboardSettings>().SingleInstance();
-        builder.Register<HardwareSensorSettings>();
+        builder.Register<HardwareSensorSettings>().SingleInstance();
 
         builder.Register<IpcServer>().SingleInstance();
 
+        builder.Register<UniversalDeviceToolkit.ViewModels.KeyboardBacklightViewModel>();
         builder.Register<WindowsOptimizationViewModel>();
     }
 }

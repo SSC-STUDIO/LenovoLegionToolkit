@@ -18,6 +18,7 @@ public partial class HardwareSensorSectionsWindow
     public HardwareSensorSectionsWindow()
     {
         InitializeComponent();
+        _orderList.ItemContainerStyle = (Style)FindResource("SensorSectionListItemStyle");
 
         var store = _settings.Store;
         var order = (store.SectionOrder is { Length: > 0 } ? store.SectionOrder : AllSections)
@@ -82,6 +83,7 @@ public partial class HardwareSensorSectionsWindow
 
         _settings.Store.SectionOrder = _orderList.Items.Cast<object>().Select(item => item.ToString()!).ToArray();
         _settings.SynchronizeStore();
+        _settings.NotifySectionsChanged();
         Close();
     }
 
