@@ -370,7 +370,8 @@
 
 - `PluginExtensionsPage` 的批量导入/本地 ZIP 安装、列表交互/上下文菜单、插件 UI 能力解析分别移至 `PluginExtensionsPage.BulkImport.cs`、`PluginExtensionsPage.Interactions.cs` 和 `PluginExtensionsPage.Capabilities.cs`；主文件由约 2251 行降至约 1984 行，行为通过插件页面相关测试验证。
 - `WindowsOptimizationElevationClient` 将 `runas` worker 的创建纳入统一异常与清理范围；UAC 错误码 1223 现在转换为明确的取消语义，worker 进程在成功、失败、取消三种路径均执行清理。
-- Windows 验证：WPF Release 构建 0 警告/0 错误；插件仓库、插件 ViewModel、页面 Guard、可执行文件解析、图标解析定向测试 91/91；提权协议测试 7/7。
+- 清理页也通过同一 worker 执行选中的内置 `cleanup.*` action；worker 拒绝插件清理 action 和混合/空操作组，避免 `asInvoker` 下权限不足被误报为完整成功。
+- Windows 验证：WPF Release 构建 0 警告/0 错误；插件仓库、插件 ViewModel、页面 Guard、可执行文件解析、图标解析定向测试 91/91；提权协议测试 8/8。
 - WSL 验证前置：`wsl.exe` 存在，但当前系统没有已安装 distribution，`Scripts/Test-CrossPlatformInWsl.ps1` 只能按设计报告前置失败；不执行自动安装。Linux 真实运行需用户安装 distribution 后重跑，macOS 仍由 CI runner 验证。
 - 仍需：插件安装生命周期和页面主状态块的更深拆分；安装目录 ACL/按需提权完整审计；CI 上 macOS、WSL Linux 和 FlaUI nightly 的真实结果；R15/R19/R21 收尾。
 
@@ -379,4 +380,5 @@
 - `Docs/LanguagePacks.md` 已按 `LanguagePackManager` 实际 API 纠正为 `QueryCatalogAsync`、`InstallAsync`、`Uninstall`，并说明重新安装是修复/更新路径。
 - `Docs/LocalizationAndUiModernization.md`、视觉审计报告和 README 已更新当前状态、Avalonia/CrossPlatform 拓扑、双 CLI 职责以及实际 `logs` 目录。
 - 新增 `ViewModelMigrationGuardTests`，锁定 WPF 页面使用共享 `UniversalDeviceToolkit.ViewModels`，防止 `KeyboardBacklightViewModel`/`MacroViewModel` 双实现回流。
+- `GitHubWorkflowContract` 新增命令选项解析，CI Guard 对 `--filter`/`--logger` 断言改为参数级契约；相关 Guard 测试 18/18 通过，降低 YAML 换行和引号变化造成的误报。
 - 已验证 `feature/ui-optimization` 无相对 `master` 的独有提交并删除本地陈旧分支；未触碰其他工作树改动。

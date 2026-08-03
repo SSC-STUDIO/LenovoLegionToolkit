@@ -20,6 +20,7 @@ using UniversalDeviceToolkit.WPF.Windows.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
+using UniversalDeviceToolkit.WPF.Utils;
 
 using Wpf.Ui.Controls;
 using CardExpander = UniversalDeviceToolkit.WPF.Controls.Custom.CardExpander;
@@ -36,6 +37,7 @@ public partial class WindowsOptimizationPage : Page
     public WindowsOptimizationViewModel ViewModel => _viewModel;
 
     private readonly WindowsOptimizationService _windowsOptimizationService = IoCContainer.Resolve<WindowsOptimizationService>();
+    private readonly IWindowsOptimizationExecutor _optimizationExecutor = IoCContainer.Resolve<IWindowsOptimizationExecutor>();
     private readonly IPluginManager _pluginManager = IoCContainer.Resolve<IPluginManager>();
     private readonly PackageDownloaderSettings _packageDownloaderSettings = IoCContainer.Resolve<PackageDownloaderSettings>();
     private readonly PackageDownloaderFactory _packageDownloaderFactory = IoCContainer.Resolve<PackageDownloaderFactory>();

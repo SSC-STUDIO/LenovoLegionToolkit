@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.ViewModels;
@@ -21,6 +23,19 @@ public sealed class WindowsOptimizationElevationTests
     {
         ElevatedOptimizationWorker.IsUacCancellation(new Win32Exception(nativeErrorCode))
             .Should().Be(expected);
+    }
+
+    [Fact]
+    public async Task CleanupWorker_ShouldRejectNonCleanupActions()
+    {
+        var service = new WindowsOptimizationService(new WindowsCleanupService(new ApplicationSettings()));
+
+        var act = () => ElevatedOptimizationWorker.ExecuteCleanupOperationsAsync(
+            service,
+            ["performance.memory"],
+            CancellationToken.None);
+
+        await act.Should().ThrowAsync<InvalidOperationException>();
     }
 
     [Fact]

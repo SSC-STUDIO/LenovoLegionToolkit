@@ -29,6 +29,10 @@ internal interface IWindowsOptimizationExecutor
     Task ExecuteAsync(
         IReadOnlyList<WindowsOptimizationOperation> operations,
         CancellationToken cancellationToken);
+
+    Task ExecuteCleanupAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -58,8 +62,48 @@ internal sealed class WindowsOptimizationElevationClient : IWindowsOptimizationE
             : ExecuteViaWorkerAsync(operations, cancellationToken);
     }
 
+    public Task ExecuteCleanupAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(actionKeys);
+
+        if (actionKeys.Count == 0)
+            return Task.CompletedTask;
+
+        return ElevatedOptimizationWorker.IsCurrentProcessElevated()
+            ? ElevatedOptimizationWorker.ExecuteCleanupOperationsAsync(_localService, actionKeys, cancellationToken)
+            : ExecuteViaWorkerAsync(actionKeys, cancellationToken);
+    }
+
     private static async Task ExecuteViaWorkerAsync(
         IReadOnlyList<WindowsOptimizationOperation> operations,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(operations);
+        await ExecuteViaWorkerAsync(
+            new WindowsOptimizationElevationRequest
+            {
+                Operations = operations.ToList()
+            },
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task ExecuteViaWorkerAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(actionKeys);
+        await ExecuteViaWorkerAsync(
+            new WindowsOptimizationElevationRequest
+            {
+                CleanupActionKeys = actionKeys.ToList()
+            },
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task ExecuteViaWorkerAsync(
+        WindowsOptimizationElevationRequest request,
         CancellationToken cancellationToken)
     {
         var pipeName = $"udt-optimization-{Guid.NewGuid():N}";
@@ -76,11 +120,7 @@ internal sealed class WindowsOptimizationElevationClient : IWindowsOptimizationE
             await server.WaitForConnectionAsync(timeout.Token).ConfigureAwait(false);
             server.ReadMode = PipeTransmissionMode.Message;
 
-            var request = new WindowsOptimizationElevationRequest
-            {
-                Token = token,
-                Operations = operations.ToList()
-            };
+            request.Token = token;
             await server.WriteObjectAsync(request, timeout.Token).ConfigureAwait(false);
 
             var response = await server.ReadObjectAsync<WindowsOptimizationElevationResponse>(timeout.Token)
@@ -220,6 +260,7 @@ internal sealed class WindowsOptimizationElevationRequest
 {
     public string Token { get; set; } = string.Empty;
     public List<WindowsOptimizationOperation> Operations { get; set; } = [];
+    public List<string> CleanupActionKeys { get; set; } = [];
 }
 
 internal sealed class WindowsOptimizationElevationResponse
@@ -273,13 +314,26 @@ internal static class ElevatedOptimizationWorker
                 if (request is null || !string.Equals(request.Token, token, StringComparison.Ordinal))
                     throw new UnauthorizedAccessException("The optimization request token is invalid.");
 
-                if (request.Operations is null || request.Operations.Count == 0 || request.Operations.Count > MaximumOperationCount)
-                    throw new InvalidOperationException("The optimization request contains an invalid operation count.");
+                var hasOperations = request.Operations is { Count: > 0 };
+                var hasCleanupOperations = request.CleanupActionKeys is { Count: > 0 };
+                if (hasOperations == hasCleanupOperations)
+                    throw new InvalidOperationException("The optimization request must contain exactly one operation group.");
+
+                if ((hasOperations ? request.Operations.Count : request.CleanupActionKeys.Count) > MaximumOperationCount)
+                    throw new InvalidOperationException("The optimization request contains too many operations.");
 
                 var settings = new ApplicationSettings();
                 var service = new WindowsOptimizationService(new WindowsCleanupService(settings));
-                await ExecuteOperationsAsync(service, request.Operations, timeout.Token, requireBuiltInActions: true)
-                    .ConfigureAwait(false);
+                if (hasCleanupOperations)
+                {
+                    await ExecuteCleanupOperationsAsync(service, request.CleanupActionKeys, timeout.Token)
+                        .ConfigureAwait(false);
+                }
+                else
+                {
+                    await ExecuteOperationsAsync(service, request.Operations, timeout.Token, requireBuiltInActions: true)
+                        .ConfigureAwait(false);
+                }
 
                 response = new WindowsOptimizationElevationResponse { Success = true };
             }
@@ -393,5 +447,26 @@ internal static class ElevatedOptimizationWorker
                     $"The optimization action '{operation.VerificationActionKey}' could not be verified.");
             }
         }
+    }
+
+    internal static Task ExecuteCleanupOperationsAsync(
+        WindowsOptimizationService service,
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        var allowedCleanupActions = service.GetCategories()
+            .Where(category => category.PluginId is null)
+            .Where(category => category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(category => category.Actions)
+            .Select(action => action.Key)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var actionKey in actionKeys)
+        {
+            if (string.IsNullOrWhiteSpace(actionKey) || !allowedCleanupActions.Contains(actionKey))
+                throw new InvalidOperationException("The cleanup request contains an unsupported action key.");
+        }
+
+        return service.ExecuteActionsAsync(actionKeys, cancellationToken);
     }
 }

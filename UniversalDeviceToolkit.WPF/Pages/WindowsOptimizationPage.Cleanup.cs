@@ -87,7 +87,7 @@ public partial class WindowsOptimizationPage
 
                 try
                 {
-                    await _windowsOptimizationService.ExecuteActionsAsync([action.Key], CancellationToken.None);
+                    await _optimizationExecutor.ExecuteCleanupAsync([action.Key], CancellationToken.None);
                     successCount++;
                 }
                 catch (Exception ex)
@@ -251,4 +251,3 @@ public partial class WindowsOptimizationPage
             : $"{value:0.##} {units[unit]}";
     }
 }
-
