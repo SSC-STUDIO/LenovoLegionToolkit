@@ -153,6 +153,16 @@ internal static partial class Program
             CapturePage(currentDirectory, mainWindow, "main-window-ready");
             CaptureNavigationSidebarStates(currentDirectory, mainWindow);
 
+            // Sidebar animations can leave the UIA provider with a stale hit-test
+            // target after the second toggle. Re-select Dashboard and wait for its
+            // content before naming subsequent captures or exercising interactions.
+            NavigateAndWait(mainWindow, new PageTarget(
+                "dashboard",
+                ["_dashboardItem"],
+                ["Dashboard"],
+                root => root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase)
+                        || FindVisibleTextContains(root, "Power Mode")));
+
             if (options.NavigationSidebarOnly)
             {
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
@@ -744,12 +754,15 @@ internal static partial class Program
             CapturePage(currentDirectory, mainWindow, "nav-sidebar-expanded");
         else
             CapturePage(currentDirectory, mainWindow, "nav-sidebar-compact");
+        LogShellState("nav-sidebar-expanded");
 
         var toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
         ActivateElement(toggle);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
+        LogShellState("nav-sidebar-transition-start");
         Thread.Sleep(450);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-mid", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
+        LogShellState("nav-sidebar-transition-mid");
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
@@ -760,6 +773,7 @@ internal static partial class Program
             CapturePage(currentDirectory, mainWindow, "nav-sidebar-expanded-after-toggle");
         else
             CapturePage(currentDirectory, mainWindow, "nav-sidebar-compact-after-toggle");
+        LogShellState("nav-sidebar-after-toggle");
 
         if (Math.Abs(afterToggleWidth - initialWidth) < 80)
             throw new InvalidOperationException(
@@ -768,12 +782,14 @@ internal static partial class Program
         toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
         ActivateElement(toggle);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
+        LogShellState("nav-sidebar-restore-transition-start");
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
         var restoredWidth = WaitForNavigationPaneWidthChange(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (restored): {restoredWidth:F1}px");
         CapturePage(currentDirectory, mainWindow, "nav-sidebar-toggle-restored");
+        LogShellState("nav-sidebar-toggle-restored");
 
         if (Math.Abs(restoredWidth - initialWidth) > 12)
             throw new InvalidOperationException(
@@ -1192,6 +1208,11 @@ internal static partial class Program
         }
         catch (ElementNotAvailableException)
         {
+            return null;
+        }
+        catch (COMException)
+        {
+            // A WPF UIA window can briefly disappear while an overlay is recreated.
             return null;
         }
     }
@@ -1680,6 +1701,13 @@ internal static partial class Program
         {
             return null;
         }
+        catch (COMException)
+        {
+            // UIA providers can briefly lose access to a WPF element while a
+            // navigation animation recreates its visual tree. Treat that node
+            // like ElementNotAvailable and let the stable snapshot retry.
+            return null;
+        }
     }
 
     private static IEnumerable<AutomationElement> EnumerateDescendants(AutomationElement root, int maxCount)
@@ -2091,7 +2119,7 @@ internal static partial class Program
                                && !string.IsNullOrWhiteSpace(element.Current.Name)
                                && element.Current.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase);
                     }
-                    catch (ElementNotAvailableException)
+                    catch (Exception ex) when (ex is ElementNotAvailableException or COMException)
                     {
                         return false;
                     }
@@ -2987,6 +3015,38 @@ internal static partial class Program
                 continue;
 
             Console.WriteLine($"  {snapshot.Type} id='{snapshot.AutomationId}' name='{snapshot.Name}' class='{snapshot.ClassName}' offscreen={snapshot.IsOffscreen}");
+        }
+    }
+
+    private static void LogShellState(string label)
+    {
+        try
+        {
+            var root = ResolveLiveWindowByProcessId(_processId);
+            var selected = EnumerateDescendants(root, 800)
+                .Where(element =>
+                {
+                    try
+                    {
+                        return element.Current.ControlType == ControlType.DataItem
+                               && element.TryGetCurrentPattern(SelectionItemPattern.Pattern, out var pattern)
+                               && ((SelectionItemPattern)pattern).Current.IsSelected;
+                    }
+                    catch (ElementNotAvailableException)
+                    {
+                        return false;
+                    }
+                })
+                .Select(GetElementName)
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+
+            Console.WriteLine($"[visual-smoke] Shell state '{label}': title='{root.Current.Name}', selected=[{string.Join(", ", selected)}]");
+        }
+        catch (Exception ex) when (ex is ElementNotAvailableException or COMException or InvalidOperationException or TimeoutException)
+        {
+            Console.WriteLine($"[visual-smoke] Shell state '{label}' unavailable: {ex.Message}");
         }
     }
 
