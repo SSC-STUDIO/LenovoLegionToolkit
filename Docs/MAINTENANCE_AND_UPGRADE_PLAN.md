@@ -442,3 +442,11 @@
 - 更新 `PluginExtensionsPageGuardTests` 的组合源码读取，避免 partial 化后结构契约失效。
 - 验证：WPF Release 构建 `0` 警告、`0` 错误；插件页面 Guard 与 ViewModel 定向测试 `29/29` 通过、`0` Skip。
 - R7 仍未完全结束：`PluginRepositoryService` 的安装生命周期和页面其他主状态职责还需继续评估，完整 FlaUI nightly、macOS runner、安装目录权限审计和按需提权模型重构仍未完成。
+
+## 27. 2026-08-04 PluginExtensionsPage 状态协调职责拆分
+
+- `712798bc` 将 `PluginExtensionsPage` 的插件列表汇总、已安装状态快照、更新判定和单项 UI 状态刷新移至 `PluginExtensionsPage.State.cs`；筛选和 ViewModel 列表构造仍留在主文件，保持显示流程边界清晰。
+- 状态 partial 保持现有在线清单合并、已安装清单回退、更新版本判定、能力刷新和失败回退行为；未修改生产公共 API。
+- `PluginExtensionsPageGuardTests` 的组合源码读取已纳入 `Lifecycle.cs` 和 `State.cs`，避免 partial 化后 Guard 只读主文件造成漏检。
+- 验证：WPF Release 当前项目构建 `0` 警告、`0` 错误；插件页面 Guard 与 ViewModel 定向测试 `29/29` 通过、`0` Skip。
+- R7 仍需评估 `PluginRepositoryService` 安装生命周期和页面筛选/列表构造是否值得继续拆分；完整 FlaUI nightly、macOS runner、安装目录权限审计和按需提权模型重构仍未完成。
