@@ -942,6 +942,12 @@
       "universaldevicetoolkit.cli.lib": {
         "type": "Project"
       },
+      "universaldevicetoolkit.installer": {
+        "type": "Project",
+        "dependencies": {
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+        }
+      },
       "universaldevicetoolkit.lib": {
         "type": "Project",
         "dependencies": {
