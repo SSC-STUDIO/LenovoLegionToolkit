@@ -3,7 +3,10 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Resources;
+using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Platform.MacOS;
+using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.Core.WindowsDeviceAdapterCore;
 
 var languageArguments = LanguageArguments.Parse(args);
 LocalizationRuntime.Initialize(languageArguments.OverrideCulture, persist: false);
@@ -544,14 +547,17 @@ internal sealed record CrossPlatformStatus(
         var isMacOS = System.OperatingSystem.IsMacOS();
         var isLinux = System.OperatingSystem.IsLinux();
         var supportLevel = isWindows
-            ? "Windows desktop app and full hardware-control stack are available."
+            ? "Windows generic device diagnostics are available; verified vendor hardware controls remain conditional."
             : isMacOS || isLinux
                 ? "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform."
                 : "Unsupported OS; diagnostics may be incomplete.";
 
-        var hardware = new HardwareIdentityReader(
-            new PhysicalFileSystem(),
-            new ProcessCommandRunner()).Read();
+        var deviceSnapshot = CrossPlatformDeviceAdapterFactory.ReadSnapshot(isWindows, isMacOS);
+        var hardware = deviceSnapshot is null
+            ? new HardwareIdentityReader(
+                new PhysicalFileSystem(),
+                new ProcessCommandRunner()).Read()
+            : CrossPlatformDeviceAdapterFactory.ToHardwareIdentity(deviceSnapshot.Identity);
         var telemetry = new SystemTelemetryReader(
             new PhysicalFileSystem(),
             new ProcessCommandRunner()).Read();
@@ -568,7 +574,9 @@ internal sealed record CrossPlatformStatus(
             new PhysicalFileSystem()).Read();
         var plugins = new PluginDiscoveryReader(
             new PhysicalFileSystem()).Read();
-        var deviceSupport = new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows);
+        var deviceSupport = deviceSnapshot is null
+            ? new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows)
+            : DeviceSupportStatus.From(deviceSnapshot.Support);
         var controls = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, batteryChargeLimit, displayBrightness, plugins, deviceSupport).Read();
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
@@ -598,8 +606,8 @@ internal sealed record CrossPlatformStatus(
     [
         Capability("CrossPlatformCli", "Cross-platform CLI", true, "This net10.0 entry point runs without WindowsDesktop, WPF, WMI, registry, or Win32 APIs."),
         Capability("MachineDiagnostics", "Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
-        Capability("HardwareIdentity", "Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
-        Capability("ReadOnlyTelemetry", "Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, frequency, and safe temperature/fan telemetry where available."),
+        Capability("HardwareIdentity", "Hardware identity", true, "Reads Windows WMI, Linux DMI, or macOS system profiler identity when available; avoids privileged hardware writes."),
+        Capability("ReadOnlyTelemetry", "Read-only telemetry", true, "Reads Windows WMI, Linux procfs/sysfs, or macOS sysctl CPU and memory telemetry where available."),
         Capability("PowerDiagnostics", "Power diagnostics", true, "Reads Linux power_supply or macOS pmset battery and external power status without changing hardware state."),
         Capability("PlatformPowerProfiles", "Platform power profiles", isMacOS || isLinux,
             isLinux
@@ -654,6 +662,42 @@ internal sealed record CrossPlatformStatus(
 
     private static string GetVersion() =>
         typeof(CrossPlatformStatus).Assembly.GetName().Version?.ToString() ?? "unknown";
+}
+
+internal static class CrossPlatformDeviceAdapterFactory
+{
+    public static DeviceSnapshot? ReadSnapshot(bool isWindows, bool isMacOS)
+    {
+        IDeviceAdapter? adapter = null;
+        if (isWindows)
+        {
+            if (!OperatingSystem.IsWindows())
+                return null;
+
+            adapter = new WindowsDeviceAdapter();
+        }
+        else if (isMacOS)
+        {
+            adapter = new MacOSDeviceAdapter();
+        }
+
+        try
+        {
+            return adapter?.ReadSnapshotAsync().GetAwaiter().GetResult();
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public static HardwareIdentity ToHardwareIdentity(DeviceIdentity identity) =>
+        new(
+            identity.Vendor,
+            identity.Model,
+            identity.ProductName,
+            identity.SerialNumber,
+            identity.Source);
 }
 
 internal sealed record CapabilityStatus(

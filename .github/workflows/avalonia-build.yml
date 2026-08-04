@@ -9,8 +9,10 @@ on:
       - 'UniversalDeviceToolkit.Lib.Shared/**'
       - 'UniversalDeviceToolkit.ViewModels/**'
       - 'UniversalDeviceToolkit.Platform.Windows/**'
+      - 'UniversalDeviceToolkit.Platform.Windows.Core/**'
       - 'UniversalDeviceToolkit.Platform.Linux/**'
       - 'UniversalDeviceToolkit.Platform.MacOS/**'
+      - 'resources/device-packs.json'
       - '.github/workflows/avalonia-build.yml'
   pull_request:
     branches: [master]
@@ -20,8 +22,10 @@ on:
       - 'UniversalDeviceToolkit.Lib.Shared/**'
       - 'UniversalDeviceToolkit.ViewModels/**'
       - 'UniversalDeviceToolkit.Platform.Windows/**'
+      - 'UniversalDeviceToolkit.Platform.Windows.Core/**'
       - 'UniversalDeviceToolkit.Platform.Linux/**'
       - 'UniversalDeviceToolkit.Platform.MacOS/**'
+      - 'resources/device-packs.json'
       - '.github/workflows/avalonia-build.yml'
   workflow_dispatch:
 
@@ -41,6 +45,9 @@ jobs:
           - os: macos-14
             runtime: osx-arm64
             artifact: udt-avalonia-osx-arm64
+          - os: macos-13
+            runtime: osx-x64
+            artifact: udt-avalonia-osx-x64
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30

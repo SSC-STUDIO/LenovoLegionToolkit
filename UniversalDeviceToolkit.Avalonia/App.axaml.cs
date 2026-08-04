@@ -5,10 +5,14 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Platform.Linux;
 using UniversalDeviceToolkit.Platform.MacOS;
+#if WINDOWS
+using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.WindowsDeviceAdapter;
+#endif
 
 namespace UniversalDeviceToolkit.Avalonia;
 
@@ -37,15 +41,15 @@ public partial class App : Application
     private static IPlatformServices CreatePlatformServices()
     {
 #if WINDOWS
-        return WindowsPlatformServices.Create();
+        return new DeviceAdapterPlatformServices(new WindowsDeviceAdapter());
 #else
         if (OperatingSystem.IsLinux())
             return new PlatformCapabilityServices(new LinuxPlatformServices());
 
         if (OperatingSystem.IsMacOS())
-            return new PlatformCapabilityServices(new MacOSPlatformServices());
+            return new DeviceAdapterPlatformServices(new MacOSDeviceAdapter());
 
-        return new SamplePlatformServices();
+        return new UnavailablePlatformServices();
 #endif
     }
 

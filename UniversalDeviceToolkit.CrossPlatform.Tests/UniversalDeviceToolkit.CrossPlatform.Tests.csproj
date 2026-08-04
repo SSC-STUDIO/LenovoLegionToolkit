@@ -29,5 +29,6 @@
     <ProjectReference Include="..\UniversalDeviceToolkit.CrossPlatform\UniversalDeviceToolkit.CrossPlatform.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Platform.Linux\UniversalDeviceToolkit.Platform.Linux.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Platform.MacOS\UniversalDeviceToolkit.Platform.MacOS.csproj" />
+    <ProjectReference Include="..\UniversalDeviceToolkit.Avalonia\UniversalDeviceToolkit.Avalonia.csproj" />
   </ItemGroup>
 </Project>

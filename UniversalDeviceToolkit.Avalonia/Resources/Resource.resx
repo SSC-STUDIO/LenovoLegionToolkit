@@ -34,6 +34,7 @@
   <data name="Dashboard_Feature_Keyboard"><value>Keyboard</value></data>
   <data name="Dashboard_Feature_PowerProfile"><value>Power Profile</value></data>
   <data name="Dashboard_Feature_SystemTelemetry"><value>System Telemetry</value></data>
+  <data name="Dashboard_Feature_DevicePack"><value>Device support</value></data>
   <data name="Dashboard_Description_PowerManagement"><value>System power management</value></data>
   <data name="Dashboard_Description_FanManagement"><value>Fan speed management</value></data>
   <data name="Dashboard_Description_RefreshRate"><value>Refresh rate control</value></data>
@@ -51,6 +52,7 @@
   <data name="Dashboard_Status_Monitoring"><value>Monitoring</value></data>
   <data name="Dashboard_Status_Spectrum"><value>Spectrum</value></data>
   <data name="Dashboard_Status_PerKey"><value>Per-key</value></data>
+  <data name="Dashboard_Status_ReadOnly"><value>Read-only</value></data>
   <data name="Dashboard_Sensor_CpuTemperature"><value>CPU Temperature</value></data>
   <data name="Dashboard_Sensor_GpuTemperature"><value>GPU Temperature</value></data>
   <data name="Dashboard_Sensor_CpuUsage"><value>CPU Usage</value></data>

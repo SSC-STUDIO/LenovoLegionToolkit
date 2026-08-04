@@ -15,7 +15,8 @@ public sealed class CrossPlatformProjectTests
 
         project.Descendants("TargetFramework").Single().Value.Should().Be("net10.0");
         var projectText = project.ToString();
-        projectText.Contains("windows", StringComparison.OrdinalIgnoreCase).Should().BeFalse();
+        projectText.Contains("windows10", StringComparison.OrdinalIgnoreCase).Should().BeFalse();
+        projectText.Should().Contain("UniversalDeviceToolkit.Platform.Windows.Core");
         projectText.Contains("UseWPF", StringComparison.OrdinalIgnoreCase).Should().BeFalse();
         projectText.Contains("RuntimeIdentifier", StringComparison.OrdinalIgnoreCase).Should().BeFalse();
     }

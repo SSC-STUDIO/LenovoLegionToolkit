@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
 /// <summary>
-/// Cross-platform facade over platform capability services.
-/// The Windows TFM branch reads real Lenovo/Windows telemetry through
-/// UniversalDeviceToolkit.Lib; the portable branch returns sample data so
-/// linux-x64 / osx-arm64 builds stay functional.
+/// Cross-platform facade used by the Avalonia dashboard.
+/// Platform adapters report only capabilities that were actually detected.
 /// </summary>
 public interface IPlatformServices
 {

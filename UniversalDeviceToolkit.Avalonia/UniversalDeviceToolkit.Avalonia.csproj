@@ -6,7 +6,7 @@
     <DisableUdtForceX64>true</DisableUdtForceX64>
     <RootNamespace>UniversalDeviceToolkit.Avalonia</RootNamespace>
     <AssemblyName>udt-gui</AssemblyName>
-    <RuntimeIdentifiers>win-x64;linux-x64;osx-arm64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
     <!-- AVLN3001: pages/window take constructor-injected services, so their .axaml
          resources are not reachable via the runtime URI loader (they are created
          from code with explicit args). That is intentional; suppress the noise. -->
@@ -43,6 +43,10 @@
   <ItemGroup>
     <!-- Use the root-level icon as the tray icon resource -->
     <AvaloniaResource Include="..\Assets\Icon.ico" Link="Assets\udt-icon.ico" />
+    <None Include="..\resources\device-packs.json"
+          Link="resources\device-packs.json"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

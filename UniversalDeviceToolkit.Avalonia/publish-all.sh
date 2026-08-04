@@ -18,6 +18,12 @@ dotnet publish "$SCRIPT_DIR/UniversalDeviceToolkit.Avalonia.csproj" \
     -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true \
     -o "$PUBLISH_DIR/linux-x64"
 
+# macOS Intel
+echo "--- macOS x64 ---"
+dotnet publish "$SCRIPT_DIR/UniversalDeviceToolkit.Avalonia.csproj" \
+    -c Release -r osx-x64 --self-contained true -p:PublishSingleFile=true \
+    -o "$PUBLISH_DIR/osx-x64"
+
 # macOS ARM64
 echo "--- macOS ARM64 ---"
 dotnet publish "$SCRIPT_DIR/UniversalDeviceToolkit.Avalonia.csproj" \

@@ -34,6 +34,7 @@
   <data name="Dashboard_Feature_Keyboard"><value>&#x952E;&#x76D8;</value></data>
   <data name="Dashboard_Feature_PowerProfile"><value>&#x7535;&#x6E90;&#x914D;&#x7F6E;</value></data>
   <data name="Dashboard_Feature_SystemTelemetry"><value>&#x7CFB;&#x7EDF;&#x9065;&#x6D4B;</value></data>
+  <data name="Dashboard_Feature_DevicePack"><value>&#x8BBE;&#x5907;&#x652F;&#x6301;</value></data>
   <data name="Dashboard_Description_PowerManagement"><value>&#x7CFB;&#x7EDF;&#x7535;&#x6E90;&#x7BA1;&#x7406;</value></data>
   <data name="Dashboard_Description_FanManagement"><value>&#x98CE;&#x6247;&#x8F6C;&#x901F;&#x7BA1;&#x7406;</value></data>
   <data name="Dashboard_Description_RefreshRate"><value>&#x5237;&#x65B0;&#x7387;&#x63A7;&#x5236;</value></data>
@@ -51,6 +52,7 @@
   <data name="Dashboard_Status_Monitoring"><value>&#x76D1;&#x6D4B;&#x4E2D;</value></data>
   <data name="Dashboard_Status_Spectrum"><value>&#x5149;&#x8C31;</value></data>
   <data name="Dashboard_Status_PerKey"><value>&#x5355;&#x952E;</value></data>
+  <data name="Dashboard_Status_ReadOnly"><value>&#x53EA;&#x8BFB;</value></data>
   <data name="Dashboard_Sensor_CpuTemperature"><value>CPU &#x6E29;&#x5EA6;</value></data>
   <data name="Dashboard_Sensor_GpuTemperature"><value>GPU &#x6E29;&#x5EA6;</value></data>
   <data name="Dashboard_Sensor_CpuUsage"><value>CPU &#x5360;&#x7528;&#x7387;</value></data>

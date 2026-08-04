@@ -99,6 +99,13 @@
       "universaldevicetoolkit.platform.windows": {
         "type": "Project",
         "dependencies": {
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )",
+          "UniversalDeviceToolkit.Platform.Windows.Core": "[5.0.1, )"
+        }
+      },
+      "universaldevicetoolkit.platform.windows.core": {
+        "type": "Project",
+        "dependencies": {
           "System.Management": "[10.0.10, )",
           "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
         }
