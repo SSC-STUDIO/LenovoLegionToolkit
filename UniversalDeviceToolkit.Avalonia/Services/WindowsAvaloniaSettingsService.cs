@@ -22,6 +22,67 @@ namespace UniversalDeviceToolkit.Avalonia.Services;
 
 internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 {
+    private static readonly IReadOnlyDictionary<string, (string TitleKey, string DescriptionKey)> SettingText =
+        new Dictionary<string, (string TitleKey, string DescriptionKey)>(StringComparer.Ordinal)
+        {
+            ["Autorun"] = ("SettingsPage_Autorun_Title", "SettingsPage_Autorun_Message"),
+            ["MinimizeToTray"] = ("SettingsPage_MinimizeToTray_Title", "SettingsPage_MinimizeToTray_Message"),
+            ["MinimizeOnClose"] = ("SettingsPage_MinimizeOnClose_Title", "SettingsPage_MinimizeOnClose_Message"),
+            ["DisableUnsupportedHardwareWarning"] = ("SettingsPage_DisableCompatibilityWarning_Title", "SettingsPage_DisableCompatibilityWarning_Message"),
+            ["VantageDisabled"] = ("SettingsPage_DisableVantage_Title", "SettingsPage_DisableVantage_Message"),
+            ["LegionZoneDisabled"] = ("SettingsPage_DisableLegionZone_Title", "SettingsPage_DisableLegionZone_Message"),
+            ["FnKeysDisabled"] = ("SettingsPage_DisableLenovoHotkeys_Title", "SettingsPage_DisableLenovoHotkeys_Message"),
+            ["EnableHardwareSensors"] = ("SettingsPage_HardwareSensors_Title", "SettingsPage_HardwareSensors_Message"),
+            ["ShowOsd"] = ("SettingsPage_Osd_Title", "SettingsPage_Osd_Message"),
+            ["ExportSettings"] = ("SettingsPage_SettingsBackup_Title", "SettingsPage_SettingsBackup_Message"),
+            ["ImportSettings"] = ("SettingsPage_SettingsBackup_Title", "SettingsPage_SettingsBackup_Message"),
+            ["Theme"] = ("SettingsPage_Theme_Title", "SettingsPage_Theme_Description"),
+            ["ThemeStylePreset"] = ("SettingsPage_ThemeStyle_Title", "SettingsPage_ThemeStyle_Description"),
+            ["AccentColorSource"] = ("SettingsPage_AccentColor_Title", "SettingsPage_AccentColor_Description"),
+            ["ApplyAccentColorToSystem"] = ("SettingsPage_ApplyAccentColorToTheme_Title", "SettingsPage_ApplyAccentColorToTheme_Title"),
+            ["ApplyAccentColorToTheme"] = ("SettingsPage_ApplyAccentColorToThemeStyle_Title", "SettingsPage_ApplyAccentColorToThemeStyle_Title"),
+            ["TemperatureUnit"] = ("SettingsPage_Temperature_Title", "SettingsPage_Temperature_Message"),
+            ["AppFontStyle"] = ("SettingsPage_Font_Title", "SettingsPage_Font_Description"),
+            ["UiScale"] = ("SettingsPage_UiScale_Title", "SettingsPage_UiScale_Description"),
+            ["SmartFnLockFlags"] = ("SettingsPage_SmartFnLock_Title", "SettingsPage_SmartFnLock_Message"),
+            ["SmartKeySinglePressActions"] = ("SettingsPage_SmartKeySinglePressAction_Title", "SettingsPage_SmartKeySinglePressAction_Message"),
+            ["SmartKeyDoublePressActions"] = ("SettingsPage_SmartKeyDoublePressAction_Title", "SettingsPage_SmartKeyDoublePressAction_Message"),
+            ["RefreshRate"] = ("SettingsPage_RefreshRate_Title", "SettingsPage_RefreshRate_Message"),
+            ["ExcludedRefreshRates"] = ("SettingsPage_ExcludeRefreshRates_Title", "SettingsPage_ExcludeRefreshRates_Message"),
+            ["SynchronizeBrightness"] = ("SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title", "SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message"),
+            ["ForceSoftwareRendering"] = ("SettingsPage_ForceSoftwareRendering_Title", "SettingsPage_ForceSoftwareRendering_Message"),
+            ["WindowBackdrop"] = ("SettingsPage_WindowBackdrop_Title", "SettingsPage_WindowBackdrop_Message"),
+            ["DontShowNotifications"] = ("SettingsPage_Notifications_Title", "SettingsPage_Notifications_Message"),
+            ["NavigationPaneExpanded"] = ("SettingsPage_NavigationItems_Title", "SettingsPage_NavigationItems_Message"),
+            ["BootLogo"] = ("SettingsPage_BootLogo_Title", "SettingsPage_BootLogo_Message"),
+            ["BootLogoReset"] = ("SettingsPage_BootLogo_Title", "SettingsPage_BootLogo_Message"),
+            ["UpdateFrequency"] = ("SettingsPage_UpdateCheckFrequency_Title", "SettingsPage_UpdateCheckFrequency_Title"),
+            ["IncludePrereleaseUpdates"] = ("SettingsPage_IncludePrereleaseUpdates_Title", "SettingsPage_IncludePrereleaseUpdates_Message"),
+            ["RepositoryOwner"] = ("SettingsPage_UpdateRepository_Title", "SettingsPage_UpdateRepository_Message"),
+            ["RepositoryName"] = ("SettingsPage_UpdateRepository_Title", "SettingsPage_UpdateRepository_Message"),
+            ["GodModeFnQSwitchable"] = ("Settings_GodModeFnQSwitchable_Title", "Settings_GodModeFnQSwitchable_Message"),
+            ["PowerModeMapping"] = ("SettingsPage_PowerModeMapping_Title", "SettingsPage_PowerModeMapping_Message"),
+            ["OpenPowerModes"] = ("SettingsPage_WindowsPowerModes_Title", "SettingsPage_WindowsPowerModes_Message"),
+            ["OpenPowerPlans"] = ("SettingsPage_WindowsPowerPlans_Title", "SettingsPage_WindowsPowerPlans_Message"),
+            ["OpenPowerPlansControlPanel"] = ("SettingsPage_WindowsPowerPlansControlPanel_Title", "SettingsPage_WindowsPowerPlansControlPanel_Title"),
+            ["ResetBatteryOnReboot"] = ("SettingsPage_OnBatterySinceReset_Title", "SettingsPage_OnBatterySinceReset_Message"),
+            ["HWiNFO"] = ("SettingsPage_HWiNFO_Title", "SettingsPage_HWiNFO_Message"),
+            ["CLI"] = ("SettingsPage_CLI_Title", "SettingsPage_CLI_Message"),
+            ["CLIPath"] = ("SettingsPage_CLIAddToPath_Title", "SettingsPage_CLIAddToPath_Message"),
+        };
+
+    private static readonly IReadOnlyDictionary<string, (string TitleKey, string DescriptionKey)> PageText =
+        new Dictionary<string, (string TitleKey, string DescriptionKey)>(StringComparer.Ordinal)
+        {
+            ["Appearance"] = ("SettingsPage_Navigation_Appearance", "SettingsPage_Theme_Description"),
+            ["Application"] = ("SettingsPage_Navigation_Application", "SettingsPage_SettingsBackup_Message"),
+            ["SmartKeys"] = ("SettingsPage_Navigation_SmartKeys", "SettingsPage_SmartFnLock_Message"),
+            ["Display"] = ("SettingsPage_Navigation_Display", "SettingsPage_WindowBackdrop_Message"),
+            ["Update"] = ("SettingsPage_Update_Title", "SettingsPage_UpdateRepository_Message"),
+            ["Power"] = ("SettingsPage_Power_Title", "SettingsPage_PowerModeMapping_Message"),
+            ["Integrations"] = ("SettingsPage_Integrations_Title", "SettingsPage_CLI_Message"),
+        };
+
     internal static ApplicationSettings SharedApplicationSettings { get; } = new();
 
     private readonly ApplicationSettings _applicationSettings = SharedApplicationSettings;
@@ -34,8 +95,9 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private readonly HardwareSensorsFeature? _hardwareSensorsFeature =
         IoCContainer.TryResolve<HardwareSensorsFeature>();
 
-    public async Task<AvaloniaSettingsPageData> GetPageAsync(string pageKey) =>
-        pageKey switch
+    public async Task<AvaloniaSettingsPageData> GetPageAsync(string pageKey)
+    {
+        var page = pageKey switch
         {
             "Appearance" => BuildAppearancePage(),
             "Application" => await BuildApplicationPageAsync().ConfigureAwait(false),
@@ -46,6 +108,58 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             "Integrations" => BuildIntegrationsPage(),
             _ => new AvaloniaSettingsPageData(pageKey, pageKey, string.Empty, [], false, "Unknown settings page."),
         };
+
+        return LocalizePage(page);
+    }
+
+    private static AvaloniaSettingsPageData LocalizePage(AvaloniaSettingsPageData page)
+    {
+        var title = page.Title;
+        var description = page.Description;
+        if (PageText.TryGetValue(page.PageKey, out var pageText))
+        {
+            title = Get(pageText.TitleKey, title);
+            description = Get(pageText.DescriptionKey, description);
+        }
+
+        var options = page.Options
+            .Select(option =>
+            {
+                if (!SettingText.TryGetValue(option.Key, out var text))
+                {
+                    if (!option.Key.StartsWith("NavigationItemVisibility:", StringComparison.Ordinal))
+                        return option;
+
+                    var navigationDescription = Get(
+                        "SettingsPage_NavigationItems_Message",
+                        "Configure which navigation items are displayed in the sidebar");
+                    return option with
+                    {
+                        Description = string.Format(navigationDescription, option.Title),
+                    };
+                }
+
+                var localizedTitle = Get(text.TitleKey, option.Title);
+                var localizedDescription = Get(text.DescriptionKey, option.Description);
+                var actionText = option.Key switch
+                {
+                    "ExportSettings" => Get("Export", option.ActionText ?? "Export"),
+                    "ImportSettings" => Get("Import", option.ActionText ?? "Import"),
+                    _ => option.ActionText,
+                };
+                return option with
+                {
+                    Title = localizedTitle,
+                    Description = localizedDescription,
+                    ActionText = actionText,
+                };
+            })
+            .ToArray();
+
+        return page with { Title = title, Description = description, Options = options };
+    }
+
+    private static string Get(string key, string fallback) => AvaloniaLocalization.GetString(key, fallback);
 
     public async Task SetToggleAsync(string pageKey, string optionKey, bool value)
     {
