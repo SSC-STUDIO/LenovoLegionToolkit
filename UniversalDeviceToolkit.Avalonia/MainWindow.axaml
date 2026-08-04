@@ -58,6 +58,81 @@
                                                      MinWidth="0" />
                     </Grid>
                 </Button>
+                <Button x:Name="KeyboardButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaKeyboardButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=MainWindow_NavigationItem_Keyboard, Fallback=Keyboard}"
+                        Classes="navButton"
+                        Tag="Keyboard24"
+                        Click="KeyboardButton_Click"
+                        Margin="0,4,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=MainWindow_NavigationItem_Keyboard, Fallback=Keyboard}"
+                                                     OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
+                    </Grid>
+                </Button>
+                <Button x:Name="ActionsButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaActionsButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=MainWindow_NavigationItem_Actions, Fallback=Actions}"
+                        Classes="navButton"
+                        Tag="Rocket24"
+                        Click="ActionsButton_Click"
+                        Margin="0,4,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=MainWindow_NavigationItem_Actions, Fallback=Actions}"
+                                                     OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
+                    </Grid>
+                </Button>
+                <Button x:Name="MacroButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaMacroButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=MainWindow_NavigationItem_Macro, Fallback=Macro}"
+                        Classes="navButton"
+                        Tag="ReceiptPlay24"
+                        Click="MacroButton_Click"
+                        Margin="0,4,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=MainWindow_NavigationItem_Macro, Fallback=Macro}"
+                                                     OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
+                    </Grid>
+                </Button>
+                <Button x:Name="WindowsOptimizationButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaWindowsOptimizationButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=MainWindow_NavigationItem_WindowsOptimization, Fallback=System optimization}"
+                        Classes="navButton"
+                        Tag="Gauge24"
+                        Click="WindowsOptimizationButton_Click"
+                        Margin="0,4,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=MainWindow_NavigationItem_WindowsOptimization, Fallback=System optimization}"
+                                                     OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
+                    </Grid>
+                </Button>
+                <Button x:Name="PluginExtensionsButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaPluginExtensionsButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=MainWindow_NavigationItem_PluginExtensions, Fallback=Plugin Extensions}"
+                        Classes="navButton"
+                        Tag="Apps24"
+                        Click="PluginExtensionsButton_Click"
+                        Margin="0,4,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=MainWindow_NavigationItem_PluginExtensions, Fallback=Plugin Extensions}"
+                                                     OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
+                    </Grid>
+                </Button>
                 <Button x:Name="AboutButton"
                         automation:AutomationProperties.AutomationId="AvaloniaAboutButton"
                         automation:AutomationProperties.Name="{local:Loc Key=Nav_About, Fallback=About}"

@@ -1,0 +1,104 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.HostCapabilityView"
+             automation:AutomationProperties.AutomationId="AvaloniaHostCapabilityView">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="18"
+                    Margin="32"
+                    MaxWidth="760"
+                    HorizontalAlignment="Left">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                <Border Width="48"
+                        Height="48"
+                        CornerRadius="{StaticResource CornerRadiusControl}"
+                        Background="{DynamicResource StatusNeutralBackgroundBrush}"
+                        VerticalAlignment="Top">
+                    <controls:NavigationIcon x:Name="CapabilityIcon"
+                                             FontSize="{StaticResource IconSizeLG}"
+                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </Border>
+                <StackPanel Grid.Column="1" Spacing="4">
+                    <controls:LocalizedTextBlock x:Name="TitleBlock"
+                                                 FontSize="{StaticResource FontSizeDisplaySection}"
+                                                 FontWeight="Medium"
+                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2"
+                                                 automation:AutomationProperties.AutomationId="HostCapabilityTitle" />
+                    <controls:LocalizedTextBlock x:Name="DescriptionBlock"
+                                                 FontSize="{StaticResource FontSizePageDescription}"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="3"
+                                                 automation:AutomationProperties.AutomationId="HostCapabilityDescription" />
+                </StackPanel>
+            </Grid>
+
+            <Border Background="{DynamicResource StatusInfoBackgroundBrush}"
+                    BorderBrush="{DynamicResource StatusInfoBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="18">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                    <Border Width="38"
+                            Height="38"
+                            CornerRadius="{StaticResource CornerRadiusRound}"
+                            Background="{DynamicResource StatusInfoBrush}"
+                            VerticalAlignment="Top">
+                        <TextBlock Text="i"
+                                   FontSize="{StaticResource FontSizeSection}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="6">
+                        <controls:LocalizedTextBlock x:Name="StatusTitleBlock"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium"
+                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2"
+                                                     automation:AutomationProperties.AutomationId="HostCapabilityStatusTitle" />
+                        <controls:LocalizedTextBlock x:Name="StatusMessageBlock"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="4"
+                                                     automation:AutomationProperties.AutomationId="HostCapabilityStatusMessage" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="18">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <StackPanel Spacing="4">
+                        <controls:LocalizedTextBlock Text="{Binding CapabilityLabel}"
+                                                     FontSize="{StaticResource FontSizeBody}"
+                                                     FontWeight="Medium"
+                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock Text="{Binding CapabilityReason}"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="4" />
+                    </StackPanel>
+                    <Button Grid.Column="1"
+                            IsEnabled="False"
+                            Content="{Binding UnavailableLabel}"
+                            MinWidth="{StaticResource ButtonMinWidthStandard}"
+                            automation:AutomationProperties.AutomationId="HostCapabilityUnavailableButton"
+                            automation:AutomationProperties.Name="{Binding UnavailableLabel}"
+                            VerticalAlignment="Top" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

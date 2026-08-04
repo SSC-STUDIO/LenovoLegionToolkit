@@ -438,6 +438,46 @@ internal static partial class Program
         CaptureWindowLifecycleStates(currentDirectory, mainWindow);
         CaptureResizeSequence(currentDirectory, mainWindow);
 
+        // The Avalonia shell exposes the WPF navigation routes even when their
+        // platform adapter is unavailable. Visit each one to prove it renders a
+        // capability result rather than leaving the content surface blank.
+        foreach (var capabilityTarget in new[]
+                 {
+                     new PageTarget(
+                         "keyboard",
+                         ["AvaloniaKeyboardButton"],
+                         ["Keyboard"],
+                         root => FindVisibleClassContains(root, "HostCapabilityView")
+                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                     new PageTarget(
+                         "actions",
+                         ["AvaloniaActionsButton"],
+                         ["Actions"],
+                         root => FindVisibleClassContains(root, "HostCapabilityView")
+                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                     new PageTarget(
+                         "macro",
+                         ["AvaloniaMacroButton"],
+                         ["Macro"],
+                         root => FindVisibleClassContains(root, "HostCapabilityView")
+                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                     new PageTarget(
+                         "windows-optimization",
+                         ["AvaloniaWindowsOptimizationButton"],
+                         ["System optimization"],
+                         root => FindVisibleClassContains(root, "HostCapabilityView")
+                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                     new PageTarget(
+                         "plugin-extensions",
+                         ["AvaloniaPluginExtensionsButton"],
+                         ["Plugin Extensions"],
+                         root => FindVisibleClassContains(root, "HostCapabilityView")
+                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                 })
+        {
+            NavigateAndCapture(currentDirectory, mainWindow, capabilityTarget);
+        }
+
         NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
             "about",
             ["AvaloniaAboutButton"],
