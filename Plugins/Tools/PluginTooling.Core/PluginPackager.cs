@@ -4,6 +4,18 @@ namespace PluginTooling.Core;
 
 public sealed class PluginPackager
 {
+    private static readonly HashSet<string> HostRuntimeFileStems = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Universal Device Toolkit",
+        "UniversalDeviceToolkit.WPF",
+        "UniversalDeviceToolkit.Lib",
+        "UniversalDeviceToolkit.Lib.Plugins",
+        "UniversalDeviceToolkit.Lib.Macro",
+        "UniversalDeviceToolkit.Lib.Automation",
+        "UniversalDeviceToolkit.CLI.Lib",
+        "UniversalDeviceToolkit.Plugins.Abstractions",
+    };
+
     private readonly PluginRepository _repository = new();
     private readonly ProcessRunner _processRunner = new();
 
@@ -51,7 +63,7 @@ public sealed class PluginPackager
             File.Delete(zipPath);
         }
 
-        ZipFile.CreateFromDirectory(plugin.OutputDirectory, zipPath, CompressionLevel.Optimal, includeBaseDirectory: false);
+        CreatePackageArchive(plugin, zipPath);
         var fileSize = new FileInfo(zipPath).Length;
 
         log?.Invoke($"Created {zipPath}");
@@ -69,4 +81,46 @@ public sealed class PluginPackager
             }
         }
     }
+
+    private static void CreatePackageArchive(PluginContext plugin, string zipPath)
+    {
+        var sourceRoot = Path.GetFullPath(plugin.OutputDirectory);
+        var targetPath = Path.GetFullPath(zipPath);
+        var sourceFiles = Directory
+            .EnumerateFiles(sourceRoot, "*", SearchOption.AllDirectories)
+            .Where(path => !string.Equals(Path.GetFullPath(path), targetPath, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !IsHostRuntimeFile(path))
+            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var includedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        using (var archive = ZipFile.Open(zipPath, ZipArchiveMode.Create))
+        {
+            foreach (var sourceFile in sourceFiles)
+            {
+                var relativePath = NormalizePackagePath(Path.GetRelativePath(sourceRoot, sourceFile));
+                archive.CreateEntryFromFile(sourceFile, relativePath, CompressionLevel.Optimal);
+                includedFiles.Add(relativePath);
+            }
+        }
+
+        var missingRequiredFiles = (plugin.UnifiedManifest.Package.RequiredFiles ?? [])
+            .Select(NormalizePackagePath)
+            .Where(requiredFile => !includedFiles.Contains(requiredFile))
+            .ToArray();
+        if (missingRequiredFiles.Length != 0)
+        {
+            throw new InvalidDataException(
+                $"Package archive is missing required files after host-runtime filtering: {string.Join(", ", missingRequiredFiles)}");
+        }
+    }
+
+    private static bool IsHostRuntimeFile(string path)
+    {
+        var fileStem = Path.GetFileNameWithoutExtension(path);
+        return fileStem is not null && HostRuntimeFileStems.Contains(fileStem);
+    }
+
+    private static string NormalizePackagePath(string path) =>
+        path.Replace(Path.DirectorySeparatorChar, '/').Replace(Path.AltDirectorySeparatorChar, '/');
 }
