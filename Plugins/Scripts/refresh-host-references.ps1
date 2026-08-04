@@ -11,6 +11,7 @@ $targetDir = Join-Path $repoRoot "Dependencies\\Host"
 $requiredFiles = @(
     "UniversalDeviceToolkit.Lib.dll",
     "UniversalDeviceToolkit.Lib.Plugins.dll",
+    "UniversalDeviceToolkit.Plugins.Abstractions.dll",
     "Universal Device Toolkit.dll",
     "Serilog.dll",
     "Serilog.Sinks.Async.dll",
@@ -35,6 +36,10 @@ New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
 foreach ($file in $requiredFiles) {
     $sourceFile = Join-Path $resolvedSource $file
     if (-not (Test-Path $sourceFile)) {
+        if ($file -eq "UniversalDeviceToolkit.Plugins.Abstractions.dll") {
+            Write-Warning "Optional host file '$file' not found in source. Skipping."
+            continue
+        }
         throw "Missing required file: $sourceFile"
     }
 

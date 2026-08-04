@@ -8,8 +8,6 @@ using System.Windows.Controls;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.SDK;
-using PluginHostMode = UniversalDeviceToolkit.Plugins.SDK.PluginHostMode;
-using PluginHostContext = UniversalDeviceToolkit.Plugins.SDK.PluginHostContext;
 using Microsoft.Win32;
 using PluginTooling.Core;
 
@@ -52,7 +50,7 @@ public partial class MainWindow : Window
             () => this,
             TryOpenPluginSettings);
 
-        PluginHostContext.Current = _hostContext;
+        PluginHostContextRuntime.Current = _hostContext;
         UniversalDeviceToolkit.Plugins.Shared.WpfFallbackHelper.ComponentInitializationFailed += (controlType, error) =>
             Dispatcher.BeginInvoke(() =>
                 AppendLog($"[fallback] {controlType.Name} fell back to code-built UI: {error.GetType().Name}: {error.Message}"));
@@ -380,7 +378,7 @@ public partial class MainWindow : Window
         };
         _themeService.SaveState(_uiState);
         UnloadCurrentSession();
-        PluginHostContext.Reset();
+        PluginHostContextRuntime.Reset();
         base.OnClosed(e);
     }
 
@@ -502,7 +500,7 @@ public partial class MainWindow : Window
             UnloadCurrentSession();
 
             ConfigurePluginConfigurationRoot();
-            PluginHostContext.Current = _hostContext;
+            PluginHostContextRuntime.Current = _hostContext;
 
             var session = await sessionFactory().ConfigureAwait(true);
             _currentSession = session;

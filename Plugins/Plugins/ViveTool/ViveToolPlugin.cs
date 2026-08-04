@@ -40,7 +40,7 @@ public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
     }
 }
 
-public class ViveToolPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
+public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 {
     public string PageTitle => Resource.ViveTool_PageTitle;
     public string? PageIcon => "Code24";
@@ -51,7 +51,7 @@ public class ViveToolPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
     }
 }
 
-public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
+public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 {
     public string PageTitle => Resource.ViveTool_BinaryPathTitle;
     public string? PageIcon => "Settings24";

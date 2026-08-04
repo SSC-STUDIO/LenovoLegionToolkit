@@ -26,17 +26,23 @@
       <HintPath>$(HostLibPath)</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
+      <HintPath>$(HostAbstractionsPath)</HintPath>
+      <Private>false</Private>
+    </Reference>
   </ItemGroup>
 
   <!-- Exclude all unwanted files from output -->
   <ItemGroup>
     <None Remove="**\*.resources.dll" />
     <None Remove="UniversalDeviceToolkit.Lib.dll" />
+    <None Remove="UniversalDeviceToolkit.Plugins.Abstractions.dll" />
   </ItemGroup>
 
   <Target Name="CleanUnwantedFiles" AfterTargets="Build">
     <RemoveDir Directories="$(OutputPath)\ar;$(OutputPath)\bg;$(OutputPath)\bs;$(OutputPath)\ca;$(OutputPath)\cs;$(OutputPath)\de;$(OutputPath)\el;$(OutputPath)\es;$(OutputPath)\fr;$(OutputPath)\hu;$(OutputPath)\it;$(OutputPath)\ja;$(OutputPath)\ko;$(OutputPath)\lv;$(OutputPath)\nl-nl;$(OutputPath)\pl;$(OutputPath)\pt;$(OutputPath)\pt-br;$(OutputPath)\ro;$(OutputPath)\ru;$(OutputPath)\sk;$(OutputPath)\tr;$(OutputPath)\uk;$(OutputPath)\uz-latn-uz;$(OutputPath)\vi;$(OutputPath)\zh-hans;$(OutputPath)\zh-hant" />
     <Delete Files="$(OutputPath)\UniversalDeviceToolkit.Lib.dll" />
+    <Delete Files="$(OutputPath)\UniversalDeviceToolkit.Plugins.Abstractions.dll" />
   </Target>
 
 </Project>

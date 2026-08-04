@@ -373,4 +373,4 @@
   <data name="SyncManagedConfigButton" xml:space="preserve">
     <value>同步托管配置</value>
   </data>
-</root>
+<data name="OpenFileButton" xml:space="preserve"><value>Open File</value></data><data name="OpenFolderButton" xml:space="preserve"><value>Open Folder</value></data></root>

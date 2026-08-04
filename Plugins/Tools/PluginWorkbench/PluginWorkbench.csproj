@@ -26,6 +26,10 @@
       <HintPath>$(HostLibPluginsPath)</HintPath>
       <Private>true</Private>
     </Reference>
+    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
+      <HintPath>$(HostAbstractionsPath)</HintPath>
+      <Private>true</Private>
+    </Reference>
     <Reference Include="Universal Device Toolkit">
       <HintPath>$(HostWpfPath)</HintPath>
       <Private>true</Private>

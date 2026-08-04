@@ -1,6 +1,6 @@
 using System;
 using System.Windows;
-using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Lib.Plugins;
 
 namespace PluginWorkbench;
 
@@ -33,7 +33,7 @@ internal sealed class PluginWorkbenchHostContext : IPluginHostContext
         return _openPluginSettings(pluginId);
     }
 
-    public bool ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
+    public bool? ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
     {
         ArgumentNullException.ThrowIfNull(dialogOrContent);
 

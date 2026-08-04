@@ -269,7 +269,7 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
 
     public void OpenStyleSettingsWindow()
     {
-        SDK.PluginHostContext.Current.ShowDialog(
+        SDK.PluginHostContextRuntime.Current.ShowDialog(
             new ShellIntegrationStyleSettingsWindow(this),
             ShellIntegrationText.SettingsPageTitle);
     }
@@ -723,7 +723,7 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
     }
 }
 
-public class ShellIntegrationSettingsPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
+public class ShellIntegrationSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 {
     private readonly ShellIntegrationPlugin _plugin;
 

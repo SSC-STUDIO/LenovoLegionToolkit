@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.ShellIntegration;
 using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
@@ -79,12 +80,12 @@ public class ShellIntegrationPluginTests
 
         try
         {
-            PluginHostContext.Current = hostContext;
+            PluginHostContextRuntime.Current = hostContext;
             RunSta(plugin.OpenStyleSettingsWindow);
         }
         finally
         {
-            PluginHostContext.Reset();
+            PluginHostContextRuntime.Reset();
         }
     }
 
@@ -96,7 +97,7 @@ public class ShellIntegrationPluginTests
 
         try
         {
-            PluginHostContext.Current = hostContext;
+            PluginHostContextRuntime.Current = hostContext;
 
             RunSta(plugin.OpenStyleSettingsWindow);
 
@@ -104,7 +105,7 @@ public class ShellIntegrationPluginTests
         }
         finally
         {
-            PluginHostContext.Reset();
+            PluginHostContextRuntime.Reset();
         }
     }
 
@@ -180,7 +181,7 @@ public class ShellIntegrationPluginTests
 
         public bool OpenPluginSettings(string pluginId) => false;
 
-        public bool ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
+        public bool? ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
         {
             ShowDialogCalled = dialogOrContent is not null;
             return ShowDialogCalled;

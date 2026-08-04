@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.SDK;
 using UniversalDeviceToolkit.Plugins.Shared;
 using Microsoft.Win32;
@@ -972,7 +973,7 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
     private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 }
 
-public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Plugins.SDK.IPluginPage
+public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 {
     private readonly CustomMousePlugin _plugin;
 

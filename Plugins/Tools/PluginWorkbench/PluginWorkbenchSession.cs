@@ -63,7 +63,7 @@ internal sealed class PluginWorkbenchSession : IDisposable
     public UniversalDeviceToolkit.Lib.Plugins.IPluginPage? SettingsPage { get; }
     public WindowsOptimizationCategoryDefinition? OptimizationCategory { get; }
 
-    public static async Task<PluginWorkbenchSession> LoadFromBuildOutputAsync(string buildDirectory, UniversalDeviceToolkit.Plugins.SDK.PluginHostMode mode)
+    public static async Task<PluginWorkbenchSession> LoadFromBuildOutputAsync(string buildDirectory, PluginHostMode mode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(buildDirectory);
 
@@ -73,7 +73,7 @@ internal sealed class PluginWorkbenchSession : IDisposable
         return session;
     }
 
-    public static async Task<PluginWorkbenchSession> LoadFromArchiveAsync(string archivePath, UniversalDeviceToolkit.Plugins.SDK.PluginHostMode mode)
+    public static async Task<PluginWorkbenchSession> LoadFromArchiveAsync(string archivePath, PluginHostMode mode)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(archivePath);
 
@@ -199,11 +199,11 @@ internal sealed class PluginWorkbenchSession : IDisposable
         return File.Exists(assemblyPath) ? Assembly.LoadFrom(assemblyPath) : null;
     }
 
-    private void Start(UniversalDeviceToolkit.Plugins.SDK.PluginHostMode mode)
+    private void Start(PluginHostMode mode)
     {
         EnsureInstalledState();
 
-        if (mode != UniversalDeviceToolkit.Plugins.SDK.PluginHostMode.RealRuntime)
+        if (mode != PluginHostMode.RealRuntime)
         {
             return;
         }

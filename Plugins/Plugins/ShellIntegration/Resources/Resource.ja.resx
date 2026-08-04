@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version='1.0' encoding='utf-8'?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:schema id="root">
@@ -532,4 +531,4 @@
   <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
     <value>Nilesoft Shell</value>
   </data>
-</root>
+<data name="OpenFileButton" xml:space="preserve"><value>Open File</value></data><data name="OpenFolderButton" xml:space="preserve"><value>Open Folder</value></data></root>

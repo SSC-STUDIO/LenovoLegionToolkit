@@ -838,7 +838,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     {
         try
         {
-            if (!SDK.PluginHostContext.Current.OpenPluginSettings(PluginConstants.ViveTool))
+            if (!SDK.PluginHostContextRuntime.Current.OpenPluginSettings(PluginConstants.ViveTool))
             {
                 return;
             }

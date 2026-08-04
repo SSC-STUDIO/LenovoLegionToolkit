@@ -45,6 +45,10 @@
       <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
       <Private>true</Private>
     </Reference>
+    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
+      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Plugins.Abstractions.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
   </ItemGroup>
 
   <Target Name="CleanupPluginOutput" />

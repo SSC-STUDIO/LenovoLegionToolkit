@@ -42,7 +42,8 @@ function Resolve-SiblingSourceDir {
         $serilogCandidate = Join-Path $candidate "Serilog.dll"
         $serilogAsyncCandidate = Join-Path $candidate "Serilog.Sinks.Async.dll"
         $serilogFileCandidate = Join-Path $candidate "Serilog.Sinks.File.dll"
-        if ((Test-Path $libCandidate) -and (Test-Path $libPluginsCandidate) -and (Test-Path $wpfCandidate) -and (Test-Path $serilogCandidate) -and (Test-Path $serilogAsyncCandidate) -and (Test-Path $serilogFileCandidate)) {
+        $abstractionsCandidate = Join-Path $candidate "UniversalDeviceToolkit.Plugins.Abstractions.dll"
+        if ((Test-Path $libCandidate) -and (Test-Path $libPluginsCandidate) -and (Test-Path $wpfCandidate) -and (Test-Path $serilogCandidate) -and (Test-Path $serilogAsyncCandidate) -and (Test-Path $serilogFileCandidate) -and (Test-Path $abstractionsCandidate)) {
             return $candidate
         }
     }
@@ -105,6 +106,14 @@ function Copy-FromReleaseZip {
 
             Copy-Item -Path $candidate.FullName -Destination (Join-Path $targetDir $file) -Force
             Write-Host "Updated $file from release archive"
+        }
+
+        $abstractionsArchiveCandidate = Get-ChildItem -Path $extractDir -Filter "UniversalDeviceToolkit.Plugins.Abstractions.dll" -File -Recurse | Select-Object -First 1
+        if ($null -ne $abstractionsArchiveCandidate) {
+            Copy-Item -Path $abstractionsArchiveCandidate.FullName -Destination (Join-Path $targetDir "UniversalDeviceToolkit.Plugins.Abstractions.dll") -Force
+            Write-Host "Updated UniversalDeviceToolkit.Plugins.Abstractions.dll from release archive"
+        } else {
+            Write-Warning "UniversalDeviceToolkit.Plugins.Abstractions.dll was not found in downloaded archive. Skipping."
         }
     }
     finally {

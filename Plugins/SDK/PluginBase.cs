@@ -1,7 +1,5 @@
-using System;
 using System.Net.Http;
 using System.Threading;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.Shared;
 
 namespace UniversalDeviceToolkit.Plugins.SDK;

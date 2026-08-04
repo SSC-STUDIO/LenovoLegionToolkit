@@ -1,277 +1,576 @@
-<?xml version="1.0" encoding="utf-8"?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="ViveTool_PageTitle" xml:space="preserve">
-    <value>ViVeTool</value>
-  </data>
-  <data name="ViveTool_PageDescription" xml:space="preserve">
-    <value>Manage Windows feature flags using ViVeTool. Enable or disable experimental Windows features.</value>
-  </data>
-  <data name="ViveTool_WarningTitle" xml:space="preserve">
-    <value>Warning</value>
-  </data>
-  <data name="ViveTool_WarningMessage" xml:space="preserve">
-    <value>Modifying Windows feature flags can affect system stability. Use with caution. Some changes may require a system restart to take effect.</value>
-  </data>
-  <data name="ViveTool_ViveToolStatus" xml:space="preserve">
-    <value>ViVeTool Status</value>
-  </data>
-  <data name="ViveTool_ViveToolFound" xml:space="preserve">
-    <value>ViVeTool found at: {0}</value>
-  </data>
-  <data name="ViveTool_ViveToolNotFound" xml:space="preserve">
-    <value>ViVeTool not found. Please download or configure a trusted ViVeTool runtime.</value>
-  </data>
-  <data name="ViveTool_ViveToolError" xml:space="preserve">
-    <value>Error checking ViVeTool status</value>
-  </data>
-  <data name="ViveTool_DownloadProgress" xml:space="preserve">
-    <value>Downloading: {0} / {1} ({2}%)</value>
-  </data>
-  <data name="ViveTool_DownloadComplete" xml:space="preserve">
-    <value>Download Complete</value>
-  </data>
-  <data name="ViveTool_DownloadCompleteMessage" xml:space="preserve">
-    <value>ViVeTool has been downloaded to {0}</value>
-  </data>
-  <data name="ViveTool_DownloadFailed" xml:space="preserve">
-    <value>Download Failed</value>
-  </data>
-  <data name="ViveTool_Refresh" xml:space="preserve">
-    <value>Опресни</value>
-  </data>
-  <data name="ViveTool_SearchFeatures" xml:space="preserve">
-    <value>Search Features</value>
-  </data>
-  <data name="ViveTool_SearchPlaceholder" xml:space="preserve">
-    <value>Enter feature ID or name to search...</value>
-  </data>
-  <data name="ViveTool_Search" xml:space="preserve">
-    <value>Search</value>
-  </data>
-  <data name="ViveTool_FeatureFlags" xml:space="preserve">
-    <value>Feature Flags</value>
-  </data>
-  <data name="ViveTool_RefreshList" xml:space="preserve">
-    <value>Refresh List</value>
-  </data>
-  <data name="ViveTool_Loading" xml:space="preserve">
-    <value>Loading...</value>
-  </data>
-  <data name="ViveTool_FeatureId" xml:space="preserve">
-    <value>ID</value>
-  </data>
-  <data name="ViveTool_FeatureName" xml:space="preserve">
-    <value>Име</value>
-  </data>
-  <data name="ViveTool_Status" xml:space="preserve">
-    <value>Състояние</value>
-  </data>
-  <data name="ViveTool_Actions" xml:space="preserve">
-    <value>Действия</value>
-  </data>
-  <data name="ViveTool_Enable" xml:space="preserve">
-    <value>Активирай</value>
-  </data>
-  <data name="ViveTool_Disable" xml:space="preserve">
-    <value>Disable</value>
-  </data>
-  <data name="ViveTool_NoFeaturesFound" xml:space="preserve">
-    <value>No features found</value>
-  </data>
-  <data name="ViveTool_FeatureEnabled" xml:space="preserve">
-    <value>Feature Enabled</value>
-  </data>
-  <data name="ViveTool_FeatureEnabledMessage" xml:space="preserve">
-    <value>Feature {0} has been enabled successfully</value>
-  </data>
-  <data name="ViveTool_FeatureDisabled" xml:space="preserve">
-    <value>Feature Disabled</value>
-  </data>
-  <data name="ViveTool_FeatureDisabledMessage" xml:space="preserve">
-    <value>Feature {0} has been disabled successfully</value>
-  </data>
-  <data name="ViveTool_Error" xml:space="preserve">
-    <value>Грешка</value>
-  </data>
-  <data name="ViveTool_EnableFeatureFailed" xml:space="preserve">
-    <value>Failed to enable feature {0}. Please check administrator permissions.</value>
-  </data>
-  <data name="ViveTool_DisableFeatureFailed" xml:space="preserve">
-    <value>Failed to disable feature {0}. Please check administrator permissions.</value>
-  </data>
-  <data name="ViveTool_Import" xml:space="preserve">
-    <value>Импортиране</value>
-  </data>
-  <data name="ViveTool_ImportFromFile" xml:space="preserve">
-    <value>Import from File</value>
-  </data>
-  <data name="ViveTool_ImportFileDialogFilter" xml:space="preserve">
-    <value>All Files (*.*)|*.*|JSON Files (*.json)|*.json|Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv</value>
-  </data>
-  <data name="ViveTool_ImportFromUrl" xml:space="preserve">
-    <value>Import from URL</value>
-  </data>
-  <data name="ViveTool_ImportDescription" xml:space="preserve">
-    <value>Import feature flags from a file or URL. Supported formats: JSON, CSV, or plain text (one ID per line).</value>
-  </data>
-  <data name="ViveTool_ImportUrlDescription" xml:space="preserve">
-    <value>Enter the URL to import feature flags from:</value>
-  </data>
-  <data name="ViveTool_ImportSuccess" xml:space="preserve">
-    <value>Import Successful</value>
-  </data>
-  <data name="ViveTool_ImportSuccessMessage" xml:space="preserve">
-    <value>Successfully imported {0} feature flag(s)</value>
-  </data>
-  <data name="ViveTool_ImportFailed" xml:space="preserve">
-    <value>Failed to import features: {0}</value>
-  </data>
-  <data name="ViveTool_InvalidUrl" xml:space="preserve">
-    <value>Invalid URL. Please enter a valid URL.</value>
-  </data>
-  <data name="ViveTool_Cancel" xml:space="preserve">
-    <value>Отказ</value>
-  </data>
-  <data name="ViveTool_Browse" xml:space="preserve">
-    <value>Browse</value>
-  </data>
-  <data name="ViveTool_SelectViveTool" xml:space="preserve">
-    <value>Select vivetool.exe</value>
-  </data>
-  <data name="ViveTool_ExecutableDialogFilter" xml:space="preserve">
-    <value>Executable Files (*.exe)|*.exe|All Files (*.*)|*.*</value>
-  </data>
-  <data name="ViveTool_InvalidViveToolFile" xml:space="preserve">
-    <value>Please select vivetool.exe file</value>
-  </data>
-  <data name="ViveTool_PathSet" xml:space="preserve">
-    <value>Path Set</value>
-  </data>
-  <data name="ViveTool_PathSetMessage" xml:space="preserve">
-    <value>ViVeTool path has been set to: {0}</value>
-  </data>
-  <data name="ViveTool_SetPathFailed" xml:space="preserve">
-    <value>Failed to set ViVeTool path: {0}</value>
-  </data>
-  <data name="ViveTool_Download" xml:space="preserve">
-    <value>Сваляне</value>
-  </data>
-  <data name="ViveTool_PathPlaceholder" xml:space="preserve">
-    <value>ViVeTool.exe Path</value>
-  </data>
-  <data name="ViveTool_PathDescription" xml:space="preserve">
-    <value>The plugin ships with a bundled ViVeTool runtime by default. You can still choose a custom ViVeTool.exe path; if custom path is empty, only the bundled or verified built-in runtime will be used.</value>
-  </data>
-  <data name="ViveTool_BrowseError" xml:space="preserve">
-    <value>Error browsing files: {0}</value>
-  </data>
-  <data name="ViveTool_Downloading" xml:space="preserve">
-    <value>Downloading ViVeTool...</value>
-  </data>
-  <data name="ViveTool_StatusEnabled" xml:space="preserve">
-    <value>Активиран</value>
-  </data>
-  <data name="ViveTool_StatusDisabled" xml:space="preserve">
-    <value>Деактивиран</value>
-  </data>
-  <data name="ViveTool_StatusDefault" xml:space="preserve">
-    <value>По подразбиране</value>
-  </data>
-  <data name="ViveTool_StatusUnknown" xml:space="preserve">
-    <value>Неизвестен</value>
-  </data>
-  <data name="ViveTool_MissingToolMessage" xml:space="preserve">
-    <value>ViVeTool not found. Please configure it in the settings.</value>
-  </data>
-  <data name="ViveTool_GoToSettings" xml:space="preserve">
-    <value>Go to Settings</value>
-  </data>
-  <data name="ViveTool_ImportConfig" xml:space="preserve">
-    <value>Import Config</value>
-  </data>
-  <data name="ViveTool_ImportConfigTitle" xml:space="preserve">
-    <value>Import Configuration</value>
-  </data>
-  <data name="ViveTool_ImportConfigDialogFilter" xml:space="preserve">
-    <value>JSON Files (*.json)|*.json|CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*</value>
-  </data>
-  <data name="ViveTool_ImportConfigDescription" xml:space="preserve">
-    <value>Import ViVeTool configuration from a local file. This will load feature flags and their settings.</value>
-  </data>
-  <data name="ViveTool_ConfigImportSuccess" xml:space="preserve">
-    <value>Configuration Imported</value>
-  </data>
-  <data name="ViveTool_ConfigImportSuccessMessage" xml:space="preserve">
-    <value>Successfully imported {0} feature configurations from {1}</value>
-  </data>
-  <data name="ViveTool_ConfigImportFailed" xml:space="preserve">
-    <value>Import Failed</value>
-  </data>
-  <data name="ViveTool_ConfigImportFailedMessage" xml:space="preserve">
-    <value>Failed to import configuration: {0}</value>
-  </data>
-  <data name="ViveTool_GitHub" xml:space="preserve">
-    <value>GitHub</value>
-  </data>
-  <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
-    <value>ViVeTool Binary Path</value>
-  </data>
-</root>
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:schema id="root">
+
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+
+    <xs:element name="root" ns1:IsDataSet="true">
+
+      <xs:complexType>
+
+        <xs:choice maxOccurs="unbounded">
+
+          <xs:element name="metadata">
+
+            <xs:complexType>
+
+              <xs:sequence>
+
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+
+              </xs:sequence>
+
+              <xs:attribute name="name" use="required" type="xsd:string" />
+
+              <xs:attribute name="type" type="xsd:string" />
+
+              <xs:attribute name="mimetype" type="xsd:string" />
+
+              <xs:attribute ref="xml:space" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+          <xs:element name="assembly">
+
+            <xs:complexType>
+
+              <xs:attribute name="alias" type="xsd:string" />
+
+              <xs:attribute name="name" type="xsd:string" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+          <xs:element name="data">
+
+            <xs:complexType>
+
+              <xs:sequence>
+
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+
+              </xs:sequence>
+
+              <xs:attribute name="name" use="required" type="xsd:string" />
+
+              <xs:attribute name="type" type="xsd:string" />
+
+              <xs:attribute name="mimetype" type="xsd:string" />
+
+              <xs:attribute ref="xml:space" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+          <xs:element name="resheader">
+
+            <xs:complexType>
+
+              <xs:sequence>
+
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+
+              </xs:sequence>
+
+              <xs:attribute name="name" use="required" type="xsd:string" />
+
+            </xs:complexType>
+
+          </xs:element>
+
+        </xs:choice>
+
+      </xs:complexType>
+
+    </xs:element>
+
+  </xs:schema>
+
+  <resheader name="resmimetype">
+
+    <value>text/microsoft-resx</value>
+
+  </resheader>
+
+  <resheader name="version">
+
+    <value>2.0</value>
+
+  </resheader>
+
+  <resheader name="reader">
+
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+
+  </resheader>
+
+  <resheader name="writer">
+
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+
+  </resheader>
+
+  <data name="ViveTool_PageTitle" xml:space="preserve">
+
+    <value>ViVeTool</value>
+
+  </data>
+
+  <data name="ViveTool_PageDescription" xml:space="preserve">
+
+    <value>Manage Windows feature flags using ViVeTool. Enable or disable experimental Windows features.</value>
+
+  </data>
+
+  <data name="ViveTool_WarningTitle" xml:space="preserve">
+
+    <value>Warning</value>
+
+  </data>
+
+  <data name="ViveTool_WarningMessage" xml:space="preserve">
+
+    <value>Modifying Windows feature flags can affect system stability. Use with caution. Some changes may require a system restart to take effect.</value>
+
+  </data>
+
+  <data name="ViveTool_ViveToolStatus" xml:space="preserve">
+
+    <value>ViVeTool Status</value>
+
+  </data>
+
+  <data name="ViveTool_ViveToolFound" xml:space="preserve">
+
+    <value>ViVeTool found at: {0}</value>
+
+  </data>
+
+  <data name="ViveTool_ViveToolNotFound" xml:space="preserve">
+
+    <value>ViVeTool not found. Please download or configure a trusted ViVeTool runtime.</value>
+
+  </data>
+
+  <data name="ViveTool_ViveToolError" xml:space="preserve">
+
+    <value>Error checking ViVeTool status</value>
+
+  </data>
+
+  <data name="ViveTool_DownloadProgress" xml:space="preserve">
+
+    <value>Downloading: {0} / {1} ({2}%)</value>
+
+  </data>
+
+  <data name="ViveTool_DownloadComplete" xml:space="preserve">
+
+    <value>Download Complete</value>
+
+  </data>
+
+  <data name="ViveTool_DownloadCompleteMessage" xml:space="preserve">
+
+    <value>ViVeTool has been downloaded to {0}</value>
+
+  </data>
+
+  <data name="ViveTool_DownloadFailed" xml:space="preserve">
+
+    <value>Download Failed</value>
+
+  </data>
+
+  <data name="ViveTool_Refresh" xml:space="preserve">
+
+    <value>Опресни</value>
+
+  </data>
+
+  <data name="ViveTool_SearchFeatures" xml:space="preserve">
+
+    <value>Search Features</value>
+
+  </data>
+
+  <data name="ViveTool_SearchPlaceholder" xml:space="preserve">
+
+    <value>Enter feature ID or name to search...</value>
+
+  </data>
+
+  <data name="ViveTool_Search" xml:space="preserve">
+
+    <value>Search</value>
+
+  </data>
+
+  <data name="ViveTool_FeatureFlags" xml:space="preserve">
+
+    <value>Feature Flags</value>
+
+  </data>
+
+  <data name="ViveTool_RefreshList" xml:space="preserve">
+
+    <value>Refresh List</value>
+
+  </data>
+
+  <data name="ViveTool_Loading" xml:space="preserve">
+
+    <value>Loading...</value>
+
+  </data>
+
+  <data name="ViveTool_FeatureId" xml:space="preserve">
+
+    <value>ID</value>
+
+  </data>
+
+  <data name="ViveTool_FeatureName" xml:space="preserve">
+
+    <value>Име</value>
+
+  </data>
+
+  <data name="ViveTool_Status" xml:space="preserve">
+
+    <value>Състояние</value>
+
+  </data>
+
+  <data name="ViveTool_Actions" xml:space="preserve">
+
+    <value>Действия</value>
+
+  </data>
+
+  <data name="ViveTool_Enable" xml:space="preserve">
+
+    <value>Активирай</value>
+
+  </data>
+
+  <data name="ViveTool_Disable" xml:space="preserve">
+
+    <value>Disable</value>
+
+  </data>
+
+  <data name="ViveTool_NoFeaturesFound" xml:space="preserve">
+
+    <value>No features found</value>
+
+  </data>
+
+  <data name="ViveTool_FeatureEnabled" xml:space="preserve">
+
+    <value>Feature Enabled</value>
+
+  </data>
+
+  <data name="ViveTool_FeatureEnabledMessage" xml:space="preserve">
+
+    <value>Feature {0} has been enabled successfully</value>
+
+  </data>
+
+  <data name="ViveTool_FeatureDisabled" xml:space="preserve">
+
+    <value>Feature Disabled</value>
+
+  </data>
+
+  <data name="ViveTool_FeatureDisabledMessage" xml:space="preserve">
+
+    <value>Feature {0} has been disabled successfully</value>
+
+  </data>
+
+  <data name="ViveTool_Error" xml:space="preserve">
+
+    <value>Грешка</value>
+
+  </data>
+
+  <data name="ViveTool_EnableFeatureFailed" xml:space="preserve">
+
+    <value>Failed to enable feature {0}. Please check administrator permissions.</value>
+
+  </data>
+
+  <data name="ViveTool_DisableFeatureFailed" xml:space="preserve">
+
+    <value>Failed to disable feature {0}. Please check administrator permissions.</value>
+
+  </data>
+
+  <data name="ViveTool_Import" xml:space="preserve">
+
+    <value>Импортиране</value>
+
+  </data>
+
+  <data name="ViveTool_ImportFromFile" xml:space="preserve">
+
+    <value>Import from File</value>
+
+  </data>
+
+  <data name="ViveTool_ImportFileDialogFilter" xml:space="preserve">
+
+    <value>All Files (*.*)|*.*|JSON Files (*.json)|*.json|Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv</value>
+
+  </data>
+
+  <data name="ViveTool_ImportFromUrl" xml:space="preserve">
+
+    <value>Import from URL</value>
+
+  </data>
+
+  <data name="ViveTool_ImportDescription" xml:space="preserve">
+
+    <value>Import feature flags from a file or URL. Supported formats: JSON, CSV, or plain text (one ID per line).</value>
+
+  </data>
+
+  <data name="ViveTool_ImportUrlDescription" xml:space="preserve">
+
+    <value>Enter the URL to import feature flags from:</value>
+
+  </data>
+
+  <data name="ViveTool_ImportSuccess" xml:space="preserve">
+
+    <value>Import Successful</value>
+
+  </data>
+
+  <data name="ViveTool_ImportSuccessMessage" xml:space="preserve">
+
+    <value>Successfully imported {0} feature flag(s)</value>
+
+  </data>
+
+  <data name="ViveTool_ImportFailed" xml:space="preserve">
+
+    <value>Failed to import features: {0}</value>
+
+  </data>
+
+  <data name="ViveTool_InvalidUrl" xml:space="preserve">
+
+    <value>Invalid URL. Please enter a valid URL.</value>
+
+  </data>
+
+  <data name="ViveTool_Cancel" xml:space="preserve">
+
+    <value>Отказ</value>
+
+  </data>
+
+  <data name="ViveTool_Browse" xml:space="preserve">
+
+    <value>Browse</value>
+
+  </data>
+
+  <data name="ViveTool_SelectViveTool" xml:space="preserve">
+
+    <value>Select vivetool.exe</value>
+
+  </data>
+
+  <data name="ViveTool_ExecutableDialogFilter" xml:space="preserve">
+
+    <value>Executable Files (*.exe)|*.exe|All Files (*.*)|*.*</value>
+
+  </data>
+
+  <data name="ViveTool_InvalidViveToolFile" xml:space="preserve">
+
+    <value>Please select vivetool.exe file</value>
+
+  </data>
+
+  <data name="ViveTool_PathSet" xml:space="preserve">
+
+    <value>Path Set</value>
+
+  </data>
+
+  <data name="ViveTool_PathSetMessage" xml:space="preserve">
+
+    <value>ViVeTool path has been set to: {0}</value>
+
+  </data>
+
+  <data name="ViveTool_SetPathFailed" xml:space="preserve">
+
+    <value>Failed to set ViVeTool path: {0}</value>
+
+  </data>
+
+  <data name="ViveTool_Download" xml:space="preserve">
+
+    <value>Сваляне</value>
+
+  </data>
+
+  <data name="ViveTool_PathPlaceholder" xml:space="preserve">
+
+    <value>ViVeTool.exe Path</value>
+
+  </data>
+
+  <data name="ViveTool_PathDescription" xml:space="preserve">
+
+    <value>The plugin ships with a bundled ViVeTool runtime by default. You can still choose a custom ViVeTool.exe path; if custom path is empty, only the bundled or verified built-in runtime will be used.</value>
+
+  </data>
+
+  <data name="ViveTool_BrowseError" xml:space="preserve">
+
+    <value>Error browsing files: {0}</value>
+
+  </data>
+
+  <data name="ViveTool_Downloading" xml:space="preserve">
+
+    <value>Downloading ViVeTool...</value>
+
+  </data>
+
+  <data name="ViveTool_StatusEnabled" xml:space="preserve">
+
+    <value>Активиран</value>
+
+  </data>
+
+  <data name="ViveTool_StatusDisabled" xml:space="preserve">
+
+    <value>Деактивиран</value>
+
+  </data>
+
+  <data name="ViveTool_StatusDefault" xml:space="preserve">
+
+    <value>По подразбиране</value>
+
+  </data>
+
+  <data name="ViveTool_StatusUnknown" xml:space="preserve">
+
+    <value>Неизвестен</value>
+
+  </data>
+
+  <data name="ViveTool_MissingToolMessage" xml:space="preserve">
+
+    <value>ViVeTool not found. Please configure it in the settings.</value>
+
+  </data>
+
+  <data name="ViveTool_GoToSettings" xml:space="preserve">
+
+    <value>Go to Settings</value>
+
+  </data>
+
+  <data name="ViveTool_ImportConfig" xml:space="preserve">
+
+    <value>Import Config</value>
+
+  </data>
+
+  <data name="ViveTool_ImportConfigTitle" xml:space="preserve">
+
+    <value>Import Configuration</value>
+
+  </data>
+
+  <data name="ViveTool_ImportConfigDialogFilter" xml:space="preserve">
+
+    <value>JSON Files (*.json)|*.json|CSV Files (*.csv)|*.csv|Text Files (*.txt)|*.txt|All Files (*.*)|*.*</value>
+
+  </data>
+
+  <data name="ViveTool_ImportConfigDescription" xml:space="preserve">
+
+    <value>Import ViVeTool configuration from a local file. This will load feature flags and their settings.</value>
+
+  </data>
+
+  <data name="ViveTool_ConfigImportSuccess" xml:space="preserve">
+
+    <value>Configuration Imported</value>
+
+  </data>
+
+  <data name="ViveTool_ConfigImportSuccessMessage" xml:space="preserve">
+
+    <value>Successfully imported {0} feature configurations from {1}</value>
+
+  </data>
+
+  <data name="ViveTool_ConfigImportFailed" xml:space="preserve">
+
+    <value>Import Failed</value>
+
+  </data>
+
+  <data name="ViveTool_ConfigImportFailedMessage" xml:space="preserve">
+
+    <value>Failed to import configuration: {0}</value>
+
+  </data>
+
+  <data name="ViveTool_GitHub" xml:space="preserve">
+
+    <value>GitHub</value>
+
+  </data>
+
+  <data name="ViveTool_BinaryPathTitle" xml:space="preserve">
+
+    <value>ViVeTool Binary Path</value>
+
+  </data>
+
+<data name="ViveTool_ExportSuccessMessage" xml:space="preserve">
+    <value>Successfully exported {0} feature flag(s) to {1}</value>
+  </data>
+  <data name="ViveTool_Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ViveTool_ExportFailedWithMessage" xml:space="preserve">
+    <value>Failed to export feature list: {0}</value>
+  </data>
+  <data name="ViveTool_ExportFileDialogFilter" xml:space="preserve">
+    <value>JSON Files (*.json)|*.json|All Files (*.*)|*.*</value>
+  </data>
+  <data name="ViveTool_StatusFilterAll" xml:space="preserve">
+    <value>All Statuses</value>
+  </data>
+<data name="ViveTool_ExportFailed" xml:space="preserve">
+    <value>Failed to export feature list.</value>
+  </data>
+  <data name="ViveTool_ExportSuccess" xml:space="preserve">
+    <value>Export Successful</value>
+  </data>
+  <data name="ViveTool_ExportNoFeatures" xml:space="preserve">
+    <value>No features available to export.</value>
+  </data>
+  </root>

@@ -1,4 +1,4 @@
-using UniversalDeviceToolkit.Plugins.SDK;
+using UniversalDeviceToolkit.Lib.Plugins;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Plugins.TestCommon;

@@ -23,6 +23,8 @@
     <HostLibPath Condition="!Exists('$(HostLibPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.dll</HostLibPath>
     <HostLibPluginsPath Condition="'$(HostLibPluginsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
     <HostLibPluginsPath Condition="!Exists('$(HostLibPluginsPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.Plugins.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
+    <HostAbstractionsPath Condition="'$(HostAbstractionsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
+    <HostAbstractionsPath Condition="!Exists('$(HostAbstractionsPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Plugins.Abstractions.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
     <HostWpfPath Condition="'$(HostWpfPath)' == ''">$(HostDependenciesDir)Universal Device Toolkit.dll</HostWpfPath>
     <HostWpfPath Condition="!Exists('$(HostWpfPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll</HostWpfPath>
     <EnsureHostDependenciesScript>$(MSBuildThisFileDirectory)Scripts\ensure-host-dependencies.ps1</EnsureHostDependenciesScript>
@@ -99,6 +101,10 @@
       <HintPath>$(HostLibPluginsPath)</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
+      <HintPath>$(HostAbstractionsPath)</HintPath>
+      <Private>false</Private>
+    </Reference>
  </ItemGroup>
 
 
@@ -129,6 +135,7 @@
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.WPF.*" />
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.*" />
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.Macro.*" />
+      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Plugins.Abstractions.*" />
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.Automation.*" />
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.CLI.Lib.*" />
     </ItemGroup>
