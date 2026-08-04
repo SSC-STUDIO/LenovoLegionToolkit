@@ -7,6 +7,53 @@ namespace UniversalDeviceToolkit.CrossPlatform.Tests;
 
 public sealed class MacOSDeviceAdapterTests
 {
+    [Theory]
+    [InlineData("MacBookPro15,1", "x86_64", "MacBook Pro", "Processor Name", "6-Core Intel Core i7")]
+    [InlineData("iMac19,1", "x86_64", "iMac", "Processor Name", "6-Core Intel Core i5")]
+    [InlineData("Macmini9,1", "arm64", "Mac mini", "Chip", "Apple M1")]
+    public async Task ReadSnapshot_ShouldRecognizeIntelAndAppleSiliconMacFamilies(
+        string modelIdentifier,
+        string architecture,
+        string modelName,
+        string processorLabel,
+        string processorValue)
+    {
+        var runner = new FakeCommandRunner(new Dictionary<string, PlatformCommandResult>
+        {
+            ["sysctl -n hw.model"] = Success(modelIdentifier),
+            ["uname -m"] = Success(architecture),
+            ["system_profiler SPHardwareDataType"] = Success($"""
+                Hardware:
+
+                    Hardware Overview:
+
+                      Model Name: {modelName}
+                      {processorLabel}: {processorValue}
+                      Serial Number (system): {modelIdentifier}-SERIAL
+                """),
+        });
+        var packs = new[]
+        {
+            new DevicePackDefinition
+            {
+                Id = "apple-basic",
+                DisplayName = "Apple Basic",
+                Vendor = "Apple Inc.",
+                ModelKeywords = [modelName],
+            },
+        };
+
+        var snapshot = await new MacOSDeviceAdapter(runner, packs).ReadSnapshotAsync();
+
+        Assert.Equal("macos", snapshot.Identity.Platform);
+        Assert.Equal(architecture, snapshot.Identity.Architecture);
+        Assert.Equal(modelName, snapshot.Identity.ProductName);
+        Assert.Contains(modelIdentifier, snapshot.Identity.Model, StringComparison.Ordinal);
+        Assert.Equal("apple-basic", snapshot.Support.DevicePackId);
+        Assert.Equal($"{modelIdentifier}-SERIAL", snapshot.Identity.SerialNumber);
+        Assert.DoesNotContain(snapshot.Capabilities, capability => capability.CanWrite);
+    }
+
     [Fact]
     public async Task ReadSnapshot_ShouldExposeAppleIdentityTelemetryAndReadOnlyCapabilities()
     {

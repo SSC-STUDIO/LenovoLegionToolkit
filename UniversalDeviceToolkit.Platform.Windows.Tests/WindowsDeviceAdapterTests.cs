@@ -6,6 +6,33 @@ namespace UniversalDeviceToolkit.Platform.Windows.Tests;
 
 public sealed class WindowsDeviceAdapterTests
 {
+    [Theory]
+    [InlineData("LENOVO", "Legion Pro 7 16IRX9", "lenovo-legion-pro-7")]
+    [InlineData("ASUSTeK COMPUTER INC.", "ROG Zephyrus G14", "asus-basic")]
+    [InlineData("Dell Inc.", "Alienware m18 R2", "dell-basic")]
+    [InlineData("Hewlett-Packard Company", "OMEN Max 16", "hp-basic")]
+    [InlineData("Micro-Star International Co., Ltd.", "MSI Raider 18", "msi-basic")]
+    [InlineData("Default string", "System Product Name", "universal-desktop-basic")]
+    [InlineData("Acme Corporation", "Unrecognized Office PC", "generic-pc-basic")]
+    public async Task ReadSnapshot_ShouldUseSharedCatalogForCommonWindowsMachines(
+        string vendor,
+        string model,
+        string expectedPackId)
+    {
+        var reader = new FakeWmiReader(new Dictionary<string, IReadOnlyList<IReadOnlyDictionary<string, string?>>>
+        {
+            ["Win32_ComputerSystem"] = [Row(("Manufacturer", vendor), ("Model", model))],
+            ["Win32_BIOS"] = [Row(("SMBIOSBIOSVersion", "TEST-BIOS"))],
+            ["Win32_Processor"] = [Row(("NumberOfLogicalProcessors", "8"))],
+        });
+
+        var snapshot = await new WindowsDeviceAdapter(reader, DevicePackCatalogLoader.Load()).ReadSnapshotAsync();
+
+        Assert.Equal(expectedPackId, snapshot.Support.DevicePackId);
+        Assert.False(snapshot.Support.IsHardwareControlAvailable);
+        Assert.DoesNotContain(snapshot.Capabilities, capability => capability.CanWrite);
+    }
+
     [Fact]
     public async Task ReadSnapshot_ShouldMatchGenericWindowsMachineAndKeepWritesHidden()
     {
