@@ -76,6 +76,12 @@ jobs:
       - name: Publish portable diagnostics CLI (${{ matrix.runtime }} runner)
         shell: pwsh
         run: |
+          $expectedArchitecture = if ('${{ matrix.runtime }}' -like '*arm64') { 'Arm64' } else { 'X64' }
+          $actualArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString()
+          if ($actualArchitecture -ne $expectedArchitecture) {
+            throw "Runner architecture '$actualArchitecture' does not match '${{ matrix.runtime }}'."
+          }
+
           $project = 'UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj'
           $publishPath = Join-Path $PWD 'publish'
           dotnet publish $project --configuration Release --self-contained false --no-restore --output $publishPath
