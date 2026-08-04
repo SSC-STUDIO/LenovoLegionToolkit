@@ -2020,6 +2020,7 @@ internal static partial class Program
                || IsVisible(FindByAutomationId(root, "PluginCard_vive-tool"))
                || IsVisible(FindByAutomationId(root, "PluginNoPluginsMessage"))
                || IsVisible(FindByAutomationId(root, "PluginNoResultsMessage"))
+               || IsVisible(FindByAutomationId(root, "PluginStoreOfflineBanner"))
                || FindVisibleTextContains(root, "Found 4 plugins")
                || FindVisibleTextContains(root, "Available to install");
     }

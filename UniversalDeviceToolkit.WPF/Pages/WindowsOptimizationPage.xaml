@@ -855,6 +855,7 @@
                                                 Grid.Column="1"
                                                 Margin="6,0,0,0"
                                                 AutomationProperties.AutomationId="WindowsOptimizationDriverBrowseButton"
+                                                AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
                                                 Click="DriverDownloadToButton_Click"
                                                 Style="{StaticResource DriverIconButtonStyle}"
                                                 ToolTip="{x:Static resources:Resource.PackagesPage_DownloadTo}">
