@@ -1432,6 +1432,7 @@ internal static partial class Program
 
             if (snapshot is null || snapshot.IsOffscreen || IsFrameworkTemplatePart(snapshot)
                 || !interactiveTypes.Contains(snapshot.Type)
+                || string.Equals(snapshot.Name, "Close notification", StringComparison.Ordinal)
                 || snapshot.X is null || snapshot.Y is null || snapshot.Width is null || snapshot.Height is null)
                 continue;
 
