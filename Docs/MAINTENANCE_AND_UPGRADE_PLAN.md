@@ -485,3 +485,9 @@
 - 验证：`UniversalDeviceToolkit.Lib.Plugins` Release 构建 `0` 警告、`0` 错误；测试项目在 `BuildProjectReferences=false` 的隔离模式下构建 `0` 警告、`0` 错误；`PluginRepositoryServiceTests` `38/38` 通过、`0` Skip。
 - 普通测试项目构建仍受外部 `.NET Host (2444)` 锁定 WPF 输出影响，曾产生 `69` 个锁重试警告和 `12` 个复制错误；这不是本次插件代码编译错误，后续需要在无 VS 构建锁的环境完成全图验证。
 - R7 仍未完成：`PluginRepositoryService` 的安装事务内部（解压/备份/回滚）和 `PluginExtensionsPage` 主状态块仍可继续按职责拆分；完整 FlaUI nightly、macOS runner、安装目录 ACL 审计和按需提权端到端验证仍待专用环境。
+
+## 33. 2026-08-04 安装目录 ACL 真实写入审计
+
+- `20a19205` 为 `InstallerInstallPathPolicyRuntimeTests` 增加专用管理员令牌测试：在 Program Files 下创建临时安装树，调用实际构建的 `PrepareForInstall`，检查根目录、嵌套目录和文件均关闭 ACL 继承，`BUILTIN\\Users` 仅具备读执行权限且不具备写入/删除/改权限能力。
+- Windows 本机管理员环境验证：ACL 审计 `3/3` 通过、`0` Skip；测试在 `finally` 删除唯一创建的 `UniversalDeviceToolkit-AclAudit-*` 临时目录，当前 Program Files 未残留审计目录。
+- 非管理员 runner 会因明确的“需要提升管理员令牌”前置条件跳过该专用测试；普通路径策略测试仍保持无环境依赖。R4 的完整安装、卸载、UAC worker 和权限模型端到端验证仍未完成。
