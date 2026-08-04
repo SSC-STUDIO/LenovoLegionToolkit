@@ -820,7 +820,8 @@ public class SensorsControlTests
         return string.Join(
             Environment.NewLine,
             File.ReadAllText(Path.Combine(directory, "SensorsControl.xaml.cs")),
-            File.ReadAllText(Path.Combine(directory, "SensorsControl.Layout.cs")));
+            File.ReadAllText(Path.Combine(directory, "SensorsControl.Layout.cs")),
+            File.ReadAllText(Path.Combine(directory, "SensorsControl.Lifecycle.cs")));
     }
 
     private static string ReadSensorDetailsWindowXaml()
