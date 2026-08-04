@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
@@ -16,10 +17,16 @@ namespace UniversalDeviceToolkit.WPF.Utils;
 public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClient)
 {
     private const string AssetPrefix = AppIdentity.CompactName;
-    private static readonly string PendingUninstallPath = Path.Combine(
+    private static string PendingUninstallPath => Path.Combine(
         Folders.AppData,
         "pending_language_uninstall.txt");
+    private static string UserLanguagePackDirectory => Path.Combine(
+        Folders.AppData,
+        "language-packs");
     private static readonly CultureInfo EnglishCulture = new("en");
+
+    static LanguagePackManager() =>
+        AssemblyLoadContext.Default.Resolving += ResolveUserLanguageSatelliteAssembly;
 
     public bool IsEnglish(CultureInfo cultureInfo) =>
         cultureInfo.Name.Equals(EnglishCulture.Name, StringComparison.OrdinalIgnoreCase);
@@ -30,7 +37,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             return true;
 
         return GetResourceDirectoryNames(cultureInfo)
-            .Select(directoryName => Path.Combine(ApplicationDirectory, directoryName))
+            .SelectMany(GetInstalledLanguageDirectoryCandidates)
             .Any(HasAppResourceAssembly);
     }
 
@@ -661,28 +668,69 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         }
     }
 
-    private static string ApplicationDirectory
+    private static string ApplicationDirectory => UserLanguagePackDirectory;
+
+    private static string ProgramApplicationDirectory =>
+        string.IsNullOrWhiteSpace(Folders.Program) ? AppContext.BaseDirectory : Folders.Program;
+
+    private static IEnumerable<string> GetInstalledLanguageDirectoryCandidates(string directoryName)
     {
-        get
+        yield return Path.Combine(ApplicationDirectory, directoryName);
+
+        var programDirectory = Path.Combine(ProgramApplicationDirectory, directoryName);
+        if (!string.Equals(
+                programDirectory,
+                Path.Combine(ApplicationDirectory, directoryName),
+                StringComparison.OrdinalIgnoreCase))
         {
-            var program = Folders.Program;
-            if (!string.IsNullOrWhiteSpace(program))
-            {
-                var normalized = program.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                if (Directory.Exists(normalized))
-                    return normalized;
-            }
-
-            var processPath = Environment.ProcessPath;
-            if (!string.IsNullOrWhiteSpace(processPath))
-            {
-                var directory = Path.GetDirectoryName(processPath);
-                if (!string.IsNullOrWhiteSpace(directory) && Directory.Exists(directory))
-                    return directory;
-            }
-
-            return AppContext.BaseDirectory;
+            yield return programDirectory;
         }
+    }
+
+    private static Assembly? ResolveUserLanguageSatelliteAssembly(
+        AssemblyLoadContext context,
+        AssemblyName assemblyName)
+    {
+        if (string.IsNullOrWhiteSpace(assemblyName.CultureName) ||
+            string.IsNullOrWhiteSpace(assemblyName.Name) ||
+            !assemblyName.Name.Equals(Path.GetFileName(assemblyName.Name), StringComparison.Ordinal))
+        {
+            return null;
+        }
+
+        CultureInfo culture;
+        try
+        {
+            culture = CultureInfo.GetCultureInfo(assemblyName.CultureName);
+        }
+        catch (CultureNotFoundException)
+        {
+            return null;
+        }
+
+        var assemblyFileName = assemblyName.Name.EndsWith(".resources", StringComparison.OrdinalIgnoreCase)
+            ? $"{assemblyName.Name}.dll"
+            : $"{assemblyName.Name}.resources.dll";
+
+        foreach (var directoryName in GetResourceDirectoryNames(culture))
+        {
+            var candidate = Path.Combine(ApplicationDirectory, directoryName, assemblyFileName);
+            if (!File.Exists(candidate))
+                continue;
+
+            try
+            {
+                return context.LoadFromAssemblyPath(Path.GetFullPath(candidate));
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or BadImageFormatException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to load user language satellite assembly '{candidate}'.", ex);
+                return null;
+            }
+        }
+
+        return null;
     }
 
     private static readonly string[] AppResourceAssemblyFileNames = CreateAppResourceAssemblyFileNames();

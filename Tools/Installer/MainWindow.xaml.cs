@@ -204,7 +204,11 @@ public partial class MainWindow : Window
     private void ShowLocation()
     {
         SwitchTo(WizardPage.Location);
-        InstallDirBox.Text = _args.InstallDir ?? DetectExistingInstallDir() ?? InstallerConstants.DefaultInstallDir;
+        var existingInstallDir = DetectExistingInstallDir();
+        InstallDirBox.Text = _args.InstallDir
+            ?? (existingInstallDir is not null && InstallerInstallPathPolicy.IsUnderProgramFiles(existingInstallDir)
+                ? existingInstallDir
+                : InstallerConstants.DefaultInstallDir);
         DesktopShortcutCheck.IsChecked = _args.DesktopShortcut;
         NextButton.Content = Strings.Get("Install");
         BackButton.Visibility = Visibility.Visible;

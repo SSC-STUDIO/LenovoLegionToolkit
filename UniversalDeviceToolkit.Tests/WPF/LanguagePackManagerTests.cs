@@ -26,11 +26,17 @@ namespace UniversalDeviceToolkit.Tests.WPF;
 public sealed class LanguagePackManagerTests : IDisposable
 {
     private readonly string? _previousCatalogUrl;
+    private readonly string? _previousAppDataOverride;
+    private readonly string _testAppDataDirectory = Path.Combine(
+        Path.GetTempPath(),
+        $"UDT-language-pack-tests-{Guid.NewGuid():N}");
 
     public LanguagePackManagerTests()
     {
         _previousCatalogUrl = Environment.GetEnvironmentVariable(OnlineResourceCatalogClient.CatalogUrlEnvironmentVariable);
+        _previousAppDataOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
         Environment.SetEnvironmentVariable(OnlineResourceCatalogClient.CatalogUrlEnvironmentVariable, "https://example.test/resources/stable/catalog.json");
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _testAppDataDirectory);
     }
 
     [Fact]
@@ -50,7 +56,7 @@ public sealed class LanguagePackManagerTests : IDisposable
             [$"{AppIdentity.RepositoryUrl}/releases/download/v{version}/{fullZipName}"] = fullZip
         };
         var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(responses)));
-        var installRoot = AppContext.BaseDirectory;
+        var installRoot = GetLanguagePackRoot();
         var ffDirectory = Path.Combine(installRoot, "ff");
         var ffLatnDirectory = Path.Combine(installRoot, "ff-Latn");
         var ffLatnSnDirectory = Path.Combine(installRoot, "ff-Latn-SN");
@@ -86,7 +92,7 @@ public sealed class LanguagePackManagerTests : IDisposable
     {
         var culture = new CultureInfo(cultureName);
         var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(new Dictionary<string, byte[]>())));
-        var installRoot = AppContext.BaseDirectory;
+        var installRoot = GetLanguagePackRoot();
         var createdDirectories = new List<string>();
 
         try
@@ -154,7 +160,7 @@ public sealed class LanguagePackManagerTests : IDisposable
         };
 
         var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(responses)));
-        var deDirectory = Path.Combine(AppContext.BaseDirectory, "de");
+        var deDirectory = Path.Combine(GetLanguagePackRoot(), "de");
 
         try
         {
@@ -174,11 +180,13 @@ public sealed class LanguagePackManagerTests : IDisposable
     {
         var culture = new CultureInfo("ff-latn-sn");
         var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(new Dictionary<string, byte[]>())));
-        var directory = Path.Combine(AppContext.BaseDirectory, "ff-Latn-SN");
+        var directory = Path.Combine(GetLanguagePackRoot(), "ff-Latn-SN");
+        var legacyDirectory = Path.Combine(AppContext.BaseDirectory, "ff-Latn-SN");
 
         try
         {
             TryDeleteDirectory(directory);
+            TryDeleteDirectory(legacyDirectory);
             Directory.CreateDirectory(directory);
             File.WriteAllBytes(Path.Combine(directory, "Humanizer.resources.dll"), [0x00]);
 
@@ -187,6 +195,7 @@ public sealed class LanguagePackManagerTests : IDisposable
         finally
         {
             TryDeleteDirectory(directory);
+            TryDeleteDirectory(legacyDirectory);
         }
     }
 
@@ -207,7 +216,7 @@ public sealed class LanguagePackManagerTests : IDisposable
             [$"{AppIdentity.RepositoryUrl}/releases/download/v{version}/{fullZipName}"] = fullZip
         };
         var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(responses)));
-        var installRoot = AppContext.BaseDirectory;
+        var installRoot = GetLanguagePackRoot();
         var ffDirectory = Path.Combine(installRoot, "ff");
         var ffLatnDirectory = Path.Combine(installRoot, "ff-Latn");
         var ffLatnSnDirectory = Path.Combine(installRoot, "ff-Latn-SN");
@@ -232,8 +241,14 @@ public sealed class LanguagePackManagerTests : IDisposable
         }
     }
 
-    public void Dispose() =>
+    public void Dispose()
+    {
         Environment.SetEnvironmentVariable(OnlineResourceCatalogClient.CatalogUrlEnvironmentVariable, _previousCatalogUrl);
+        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);
+        TryDeleteDirectory(_testAppDataDirectory);
+    }
+
+    private static string GetLanguagePackRoot() => Path.Combine(Folders.AppData, "language-packs");
 
     private static byte[] CreateLanguageZip(params (string Path, string Content)[] entries)
     {

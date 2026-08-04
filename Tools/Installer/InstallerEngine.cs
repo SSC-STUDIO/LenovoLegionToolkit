@@ -191,6 +191,7 @@ internal static class InstallerEngine
         CancellationToken ct)
     {
         var installDir = Path.GetFullPath(options.InstallDir);
+        InstallerInstallPathPolicy.Validate(installDir);
         InstallerLog.Info($"Install started -> '{installDir}' (embedded payload: {HasEmbeddedPayload}).");
 
         progress.Report(new EngineProgress { Status = Strings.Get("StatusCheckingRuntime") });

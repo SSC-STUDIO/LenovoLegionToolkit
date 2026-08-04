@@ -38,8 +38,8 @@ internal static class InstallerConstants
     public const string DotNetRuntimeInstallerArgs = "/install /repair /passive /norestart";
 
     public static string DefaultInstallDir => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "Programs", AppNameCompact);
+        Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+        AppNameCompact);
 
     public static string AppDataDir => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppNameCompact);
