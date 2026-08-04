@@ -428,3 +428,9 @@
 - WSL Linux 已完成真实执行：Ubuntu `26.04`、.NET `10.0.110`；Linux TFM 构建和跨平台测试构建均为 `0` 警告、`0` 错误，跨平台测试 `153/153` 通过、`0` Skip；`status`、`hardware`、`json` 三个 CLI smoke 均通过。
 - Android 支持面已在 `d4025280` 中移除，并由 `AndroidSupportGuardTests` 固化；移动/Android companion app 已明确为不支持范围。
 - 仍需：`PluginRepositoryService` 安装生命周期和 `PluginExtensionsPage` 主状态块的更深拆分；macOS runner、完整 FlaUI nightly、安装目录权限完整审计和按需提权模型重构仍未完成。
+
+## 25. 2026-08-04 locked restore 与方案构建验收
+
+- 初次 Windows `dotnet restore UniversalDeviceToolkit.sln --locked-mode` 暴露 `Tests`、`WPF` 和 `PresetUiValidation` 的 `Platform.Windows.Core` 项目引用未进入锁文件；`1e10e7d6` 更新三份锁文件并补入方案内缺失的 `LanguagePackInstallProgressSmoke/packages.lock.json`。
+- 修复后方案 `--locked-mode` restore 通过全部 34 个项目；随后使用 `-m:1 -nr:false -p:UseSharedCompilation=false` 串行 Release 构建通过 35 个项目，`0` 警告、`0` 错误。
+- 首次并行方案构建的两个错误均为遗留 MSBuild node reuse 对 `obj` 文件的占用，清理明确的 `dotnet ... MSBuild.dll /nodeReuse:true` 节点后串行构建通过；不属于源码或锁文件回归。
