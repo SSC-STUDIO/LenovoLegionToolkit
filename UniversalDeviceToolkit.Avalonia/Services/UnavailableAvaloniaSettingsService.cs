@@ -33,6 +33,9 @@ internal sealed class UnavailableAvaloniaSettingsService : IAvaloniaSettingsServ
     public Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values) =>
         Task.FromException(new PlatformNotSupportedException("Settings are unavailable on this host."));
 
+    public Task SetBootLogoAsync(string filePath) =>
+        Task.FromException(new PlatformNotSupportedException("Boot logo controls are unavailable on this host."));
+
     public Task SetTextAsync(string pageKey, string optionKey, string? value) =>
         Task.FromException(new PlatformNotSupportedException("Settings are unavailable on this host."));
 

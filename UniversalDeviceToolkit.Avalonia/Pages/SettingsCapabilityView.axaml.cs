@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Interactivity;
+using Avalonia.Platform.Storage;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
@@ -291,6 +292,28 @@ public partial class SettingsCapabilityView : UserControl
         {
             if (_isApplying)
                 return;
+
+            if (_pageKey == "Display" && option.Key == "BootLogo")
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel is null)
+                    return;
+
+                var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                {
+                    AllowMultiple = false,
+                    Title = option.Title,
+                });
+                var filePath = files.FirstOrDefault()?.Path.LocalPath;
+                if (string.IsNullOrWhiteSpace(filePath))
+                    return;
+
+                await PersistAsync(
+                    () => _settingsService.SetBootLogoAsync(filePath),
+                    button);
+                return;
+            }
+
             await PersistAsync(
                 () => _settingsService.InvokeActionAsync(_pageKey, option.Key),
                 button);

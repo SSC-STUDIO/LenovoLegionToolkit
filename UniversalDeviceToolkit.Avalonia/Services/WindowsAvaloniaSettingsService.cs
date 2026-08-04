@@ -336,6 +336,17 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         _applicationSettings.SynchronizeStore();
     }
 
+    public async Task SetBootLogoAsync(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException("A boot logo image is required.", nameof(filePath));
+
+        if (!await BootLogo.IsSupportedAsync().ConfigureAwait(false))
+            throw new PlatformNotSupportedException("Boot logo controls are not available on this device.");
+
+        await BootLogo.EnableAsync(filePath).ConfigureAwait(false);
+    }
+
     public Task SetTextAsync(string pageKey, string optionKey, string? value)
     {
         if (pageKey != "Update" || (optionKey != "RepositoryOwner" && optionKey != "RepositoryName"))
@@ -352,6 +363,15 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     public async Task InvokeActionAsync(string pageKey, string optionKey)
     {
+        if (pageKey == "Display" && optionKey == "BootLogoReset")
+        {
+            if (!await BootLogo.IsSupportedAsync().ConfigureAwait(false))
+                throw new PlatformNotSupportedException("Boot logo controls are not available on this device.");
+
+            await BootLogo.DisableAsync().ConfigureAwait(false);
+            return;
+        }
+
         if (pageKey == "Power")
         {
             switch (optionKey)
@@ -547,6 +567,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         var store = _applicationSettings.Store;
         var refreshRates = await GetRefreshRatesAsync().ConfigureAwait(false);
         var currentRefreshRate = await GetCurrentRefreshRateAsync().ConfigureAwait(false);
+        var bootLogoSupported = await BootLogo.IsSupportedAsync().ConfigureAwait(false);
 
         var navigationOptions = store.NavigationItemsVisibility
             .OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase)
@@ -599,6 +620,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 new("NotificationAutomation", "Automation notifications", "Show automation notifications.", AvaloniaSettingEditor.Toggle, true, store.Notifications.AutomationNotification),
                 new("NavigationPaneExpanded", "Expanded navigation", "Keep the main navigation pane expanded.", AvaloniaSettingEditor.Toggle, true, store.NavigationPaneExpanded),
                 new("Overdrive", "Display overdrive", "Enable panel overdrive on supported hardware.", AvaloniaSettingEditor.Toggle, false, Warning: "Display overdrive requires the Lenovo display adapter."),
+                new("BootLogo", "Custom boot logo", "Choose and install a custom UEFI boot logo image.", AvaloniaSettingEditor.Action, bootLogoSupported, ActionText: "Choose image", Warning: bootLogoSupported ? null : "Boot logo controls are not available on this device."),
+                new("BootLogoReset", "Restore default boot logo", "Remove the custom UEFI boot logo and restore the firmware default.", AvaloniaSettingEditor.Action, bootLogoSupported, ActionText: "Restore", Warning: bootLogoSupported ? null : "Boot logo controls are not available on this device."),
                 ..navigationOptions,
             ],
             true);

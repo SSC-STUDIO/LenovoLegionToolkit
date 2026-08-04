@@ -45,6 +45,7 @@ public interface IAvaloniaSettingsService
     Task SetToggleAsync(string pageKey, string optionKey, bool value);
     Task SetSelectionAsync(string pageKey, string optionKey, string value);
     Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values);
+    Task SetBootLogoAsync(string filePath);
     Task SetTextAsync(string pageKey, string optionKey, string? value);
     Task InvokeActionAsync(string pageKey, string optionKey);
 }
