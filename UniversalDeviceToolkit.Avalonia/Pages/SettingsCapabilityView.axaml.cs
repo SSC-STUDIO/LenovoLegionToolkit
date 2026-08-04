@@ -149,6 +149,10 @@ public partial class SettingsCapabilityView : UserControl
                 toggle.IsChecked = option.BoolValue;
                 _isApplying = false;
             }
+            else if (TopLevel.GetTopLevel(this) is MainWindow mainWindow)
+            {
+                mainWindow.ApplyNavigationVisibility();
+            }
         };
         return toggle;
     }

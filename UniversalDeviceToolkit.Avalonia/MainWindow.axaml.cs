@@ -22,6 +22,7 @@ public partial class MainWindow : Window
     {
         _platformServices = platformServices;
         InitializeComponent();
+        ApplyNavigationVisibility();
         ApplyTextDirection(LocalizationRuntime.CurrentCulture);
         Loaded += OnLoaded;
         
@@ -60,6 +61,7 @@ public partial class MainWindow : Window
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
+        ApplyNavigationVisibility();
         // Show DashboardPage by default on startup
         ShowDashboardPage();
     }
@@ -172,7 +174,43 @@ public partial class MainWindow : Window
         ApplyTextDirection(LocalizationRuntime.CurrentCulture);
         Title = Localization.AvaloniaLocalization.GetString("Window_Title", "Universal Device Toolkit");
 
+        ApplyNavigationVisibility();
         Navigate(_activePage);
+    }
+
+    /// <summary>
+    /// Applies the persisted optional-navigation settings to the shell. This is
+    /// kept on the window so settings changes take effect without restarting.
+    /// </summary>
+    public void ApplyNavigationVisibility()
+    {
+#if WINDOWS
+        var settings = Services.WindowsAvaloniaSettingsService.SharedApplicationSettings
+            .Store.NavigationItemsVisibility;
+#else
+        IReadOnlyDictionary<string, bool>? settings = null;
+#endif
+
+        SetNavigationVisibility(KeyboardButton, MainNavigation.Keyboard, settings);
+        SetNavigationVisibility(ActionsButton, MainNavigation.Actions, settings);
+        SetNavigationVisibility(MacroButton, MainNavigation.Macro, settings);
+        SetNavigationVisibility(WindowsOptimizationButton, MainNavigation.WindowsOptimization, settings);
+        SetNavigationVisibility(PluginExtensionsButton, MainNavigation.PluginExtensions, settings);
+        SetNavigationVisibility(AboutButton, MainNavigation.About, settings);
+
+        if (!NavigationVisibilityPolicy.IsVisible(_activePage, settings)
+            && !string.Equals(_activePage, MainNavigation.Dashboard, StringComparison.OrdinalIgnoreCase))
+        {
+            ShowDashboardPage();
+        }
+    }
+
+    private static void SetNavigationVisibility(
+        Button button,
+        string route,
+        IReadOnlyDictionary<string, bool>? settings)
+    {
+        button.IsVisible = NavigationVisibilityPolicy.IsVisible(route, settings);
     }
 
     private void ApplyTextDirection(System.Globalization.CultureInfo culture)

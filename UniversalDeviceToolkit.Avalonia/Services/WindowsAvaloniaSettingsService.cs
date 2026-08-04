@@ -13,6 +13,7 @@ using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
+using UniversalDeviceToolkit.Avalonia.Localization;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -598,15 +599,14 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         var currentRefreshRate = await GetCurrentRefreshRateAsync().ConfigureAwait(false);
         var bootLogoSupported = await BootLogo.IsSupportedAsync().ConfigureAwait(false);
 
-        var navigationOptions = store.NavigationItemsVisibility
-            .OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase)
-            .Select(pair => new AvaloniaSettingOption(
-                $"NavigationItemVisibility:{pair.Key}",
-                FormatNavigationTitle(pair.Key),
-                $"Show the {FormatNavigationTitle(pair.Key)} entry in the main navigation.",
+        var navigationOptions = NavigationVisibilityPolicy.Entries
+            .Select(entry => new AvaloniaSettingOption(
+                $"NavigationItemVisibility:{entry.Key}",
+                AvaloniaLocalization.GetString(entry.TitleKey, entry.TitleFallback),
+                $"Show the {AvaloniaLocalization.GetString(entry.TitleKey, entry.TitleFallback)} entry in the main navigation.",
                 AvaloniaSettingEditor.Toggle,
                 true,
-                pair.Value))
+                NavigationVisibilityPolicy.IsVisible(entry.Route, store.NavigationItemsVisibility)))
             .ToArray();
 
         return new AvaloniaSettingsPageData(
@@ -946,23 +946,6 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         "Windows power mode" or nameof(PowerModeMappingMode.WindowsPowerMode) => PowerModeMappingMode.WindowsPowerMode,
         _ => throw new ArgumentException($"Unknown power mode mapping '{value}'.", nameof(value)),
     };
-
-    private static string FormatNavigationTitle(string key)
-    {
-        if (string.IsNullOrWhiteSpace(key))
-            return key;
-
-        var builder = new System.Text.StringBuilder(key.Length + 8);
-        builder.Append(char.ToUpperInvariant(key[0]));
-        for (var i = 1; i < key.Length; i++)
-        {
-            if (char.IsUpper(key[i]))
-                builder.Append(' ');
-            builder.Append(key[i]);
-        }
-
-        return builder.ToString();
-    }
 
     private static T ParseEnum<T>(string value, string optionKey) where T : struct, Enum =>
         Enum.TryParse<T>(value, ignoreCase: true, out var parsed)
