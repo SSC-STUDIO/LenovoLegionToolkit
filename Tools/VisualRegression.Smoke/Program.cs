@@ -433,6 +433,8 @@ internal static partial class Program
         AutomationElement mainWindow)
     {
         CapturePage(currentDirectory, mainWindow, "dashboard");
+        CaptureWindowLifecycleStates(currentDirectory, mainWindow);
+        CaptureResizeSequence(currentDirectory, mainWindow);
 
         NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
             "about",
@@ -1109,6 +1111,7 @@ internal static partial class Program
             recorder is null ? null : videoFileName,
             ocrFileName,
             DateTimeOffset.Now));
+        WriteCaptureStateResult(currentDirectory, _captures[^1]);
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
     }
 
@@ -1246,7 +1249,7 @@ internal static partial class Program
         if (!_assertDarkThemeSurface)
             return;
 
-        if (!label.Equals("dashboard", StringComparison.OrdinalIgnoreCase) &&
+        if (!label.StartsWith("dashboard", StringComparison.OrdinalIgnoreCase) &&
             !label.Equals("main-window-ready", StringComparison.OrdinalIgnoreCase))
         {
             return;
@@ -1346,6 +1349,10 @@ internal static partial class Program
             collection = root.FindAll(TreeScope.Descendants, Condition.TrueCondition);
         }
         catch (ElementNotAvailableException)
+        {
+            yield break;
+        }
+        catch (COMException)
         {
             yield break;
         }
@@ -2095,6 +2102,22 @@ internal static partial class Program
         Directory.CreateDirectory(appDataDirectory);
         File.WriteAllText(settingsPath, root.ToJsonString(_jsonOptions));
 
+        // Avalonia persists its portable theme preference separately from the WPF settings file.
+        // Seed the same requested variant so cross-host visual checks exercise the intended theme.
+        var avaloniaThemePath = Path.Combine(appDataDirectory, "avalonia-theme.json");
+        File.WriteAllText(
+            avaloniaThemePath,
+            new JsonObject
+            {
+                ["Theme"] = theme.Equals("Light", StringComparison.OrdinalIgnoreCase)
+                    ? "Light"
+                    : theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
+                        ? "Dark"
+                        : "System",
+                ["ApplyAccentColorToTheme"] = true,
+                ["UseSystemAccent"] = true
+            }.ToJsonString(_jsonOptions));
+
         var integrationsPath = Path.Combine(appDataDirectory, "integrations.json");
         File.WriteAllText(integrationsPath, new JsonObject { ["CLI"] = true }.ToJsonString(_jsonOptions));
 
@@ -2331,6 +2354,7 @@ internal static partial class Program
     private static void WriteManifest(string currentDirectory, string outputRoot, string appDataDirectory)
     {
         ValidateCaptureArtifacts(currentDirectory);
+        MaterializeCanonicalArtifacts(currentDirectory, outputRoot);
 
         var indexPath = Path.Combine(currentDirectory, "index.md");
         var lines = new List<string>
@@ -2351,8 +2375,113 @@ internal static partial class Program
 
         var htmlPath = Path.Combine(currentDirectory, "storyboard.html");
         File.WriteAllText(htmlPath, BuildStoryboardHtml());
+        var canonicalIndexPath = Path.Combine(outputRoot, "index.md");
+        var canonicalStoryboardPath = Path.Combine(outputRoot, "storyboard.html");
+        if (!string.Equals(Path.GetFullPath(indexPath), Path.GetFullPath(canonicalIndexPath), StringComparison.OrdinalIgnoreCase))
+            File.Copy(indexPath, canonicalIndexPath, overwrite: true);
+        if (!string.Equals(Path.GetFullPath(htmlPath), Path.GetFullPath(canonicalStoryboardPath), StringComparison.OrdinalIgnoreCase))
+            File.Copy(htmlPath, canonicalStoryboardPath, overwrite: true);
         Console.WriteLine($"[visual-smoke] Index: {indexPath}");
         Console.WriteLine($"[visual-smoke] Storyboard: {htmlPath}");
+    }
+
+    private static void WriteCaptureStateResult(string currentDirectory, CaptureRecord capture)
+    {
+        var stateDirectory = Path.Combine(
+            currentDirectory,
+            Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar)) ?? string.Empty);
+        Directory.CreateDirectory(stateDirectory);
+
+        var result = new
+        {
+            status = "passed",
+            capture.Label,
+            capture.Sequence,
+            screenshot = Path.GetFileName(capture.FileName),
+            video = capture.VideoFileName is null ? null : Path.GetFileName(capture.VideoFileName),
+            automation = Path.GetFileName(capture.SnapshotFileName),
+            ocr = Path.GetFileName(capture.OcrFileName),
+            capturedAt = capture.CapturedAt
+        };
+        File.WriteAllText(
+            Path.Combine(stateDirectory, "result.json"),
+            JsonSerializer.Serialize(result, _jsonOptions));
+    }
+
+    private static void MaterializeCanonicalArtifacts(string currentDirectory, string outputRoot)
+    {
+        var sourceRoot = Path.GetFullPath(currentDirectory);
+        var destinationRoot = Path.GetFullPath(outputRoot);
+        Directory.CreateDirectory(destinationRoot);
+
+        foreach (var capture in _captures)
+        {
+            var sourceDirectory = Path.Combine(
+                sourceRoot,
+                Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar)) ?? string.Empty);
+            var destinationDirectory = Path.Combine(
+                destinationRoot,
+                Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar)) ?? string.Empty);
+            Directory.CreateDirectory(destinationDirectory);
+
+            CopyArtifact(sourceRoot, destinationRoot, capture.FileName);
+            CopyArtifact(sourceRoot, destinationRoot, capture.SnapshotFileName);
+            CopyArtifact(sourceRoot, destinationRoot, capture.OcrFileName);
+
+            var stateResult = Path.Combine(sourceDirectory, "result.json");
+            if (File.Exists(stateResult))
+                File.Copy(stateResult, Path.Combine(destinationDirectory, "result.json"), overwrite: true);
+
+            var screenshotPath = Path.Combine(sourceRoot, capture.FileName.Replace('/', Path.DirectorySeparatorChar));
+            if (File.Exists(screenshotPath))
+                File.Copy(screenshotPath, Path.Combine(destinationDirectory, "keyframe.png"), overwrite: true);
+
+            var automationPath = Path.Combine(sourceRoot, capture.SnapshotFileName.Replace('/', Path.DirectorySeparatorChar));
+            if (File.Exists(automationPath))
+                File.Copy(automationPath, Path.Combine(destinationDirectory, "automation.json"), overwrite: true);
+
+            var ocrPath = Path.Combine(sourceRoot, capture.OcrFileName.Replace('/', Path.DirectorySeparatorChar));
+            if (File.Exists(ocrPath))
+                File.Copy(ocrPath, Path.Combine(destinationDirectory, "ocr.json"), overwrite: true);
+
+            if (capture.VideoFileName is { } videoFileName)
+            {
+                var videoPath = Path.Combine(sourceRoot, videoFileName.Replace('/', Path.DirectorySeparatorChar));
+                if (File.Exists(videoPath))
+                    File.Copy(videoPath, Path.Combine(destinationDirectory, "page.mp4"), overwrite: true);
+            }
+        }
+
+        var canonicalManifest = new
+        {
+            schema = "udt.ui-audit.v1",
+            generatedAt = DateTimeOffset.Now,
+            captures = _captures.Select(capture => new
+            {
+                capture.Label,
+                capture.Sequence,
+                page = Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar))?.Split(Path.DirectorySeparatorChar)[0],
+                state = Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar))?.Split(Path.DirectorySeparatorChar).Skip(1).FirstOrDefault(),
+                screenshot = capture.FileName,
+                video = capture.VideoFileName,
+                automation = capture.SnapshotFileName,
+                ocr = capture.OcrFileName
+            }).ToArray()
+        };
+        File.WriteAllText(
+            Path.Combine(destinationRoot, "manifest.json"),
+            JsonSerializer.Serialize(canonicalManifest, _jsonOptions));
+    }
+
+    private static void CopyArtifact(string sourceRoot, string destinationRoot, string relativePath)
+    {
+        var sourcePath = Path.Combine(sourceRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        var destinationPath = Path.Combine(destinationRoot, relativePath.Replace('/', Path.DirectorySeparatorChar));
+        if (!File.Exists(sourcePath))
+            return;
+
+        Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+        File.Copy(sourcePath, destinationPath, overwrite: true);
     }
 
     private static string BuildStoryboardHtml()
@@ -2459,6 +2588,12 @@ internal static partial class Program
                 if (!File.Exists(videoPath) || new FileInfo(videoPath).Length == 0)
                     throw new InvalidOperationException($"Missing video artifact for '{capture.Label}': {videoPath}");
             }
+
+            var stateDirectory = Path.Combine(
+                currentDirectory,
+                Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar)) ?? string.Empty);
+            if (!File.Exists(Path.Combine(stateDirectory, "result.json")))
+                throw new InvalidOperationException($"Missing state result artifact for '{capture.Label}'.");
         }
     }
 
