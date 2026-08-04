@@ -1,7 +1,6 @@
 using System.Text.Json;
 using FluentAssertions;
 using UniversalDeviceToolkit.Shared.Settings;
-using UniversalDeviceToolkit.Shared.Utils;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Avalonia;
@@ -33,24 +32,21 @@ public sealed class DashboardPreferencesTests
     [Fact]
     public void DashboardPreferences_ImportsSensorVisibilityFromWpfStore()
     {
-        var previousOverride = Environment.GetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable);
         var tempRoot = Path.Combine(Path.GetTempPath(), "udt-dashboard-preferences-" + Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(tempRoot);
 
         try
         {
-            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, tempRoot);
             File.WriteAllText(
                 Path.Combine(tempRoot, "dashboard.json"),
                 JsonSerializer.Serialize(new { ShowSensors = false, SensorsRefreshIntervalSeconds = 1 }));
 
-            var preferences = new AvaloniaDashboardPreferences();
+            var preferences = new AvaloniaDashboardPreferences(tempRoot);
 
             preferences.Store.ShowSensors.Should().BeFalse();
         }
         finally
         {
-            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, previousOverride);
             try { Directory.Delete(tempRoot, recursive: true); } catch { }
         }
     }

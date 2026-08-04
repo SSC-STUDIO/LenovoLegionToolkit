@@ -25,9 +25,16 @@ public sealed class AvaloniaDashboardPreferenceStore
 /// </summary>
 public sealed class AvaloniaDashboardPreferences : AbstractSettings<AvaloniaDashboardPreferenceStore>
 {
-    public AvaloniaDashboardPreferences() : base("avalonia-dashboard.json")
+    private readonly string? _dataRoot;
+
+    public AvaloniaDashboardPreferences(string? dataRoot = null) : base("avalonia-dashboard.json")
     {
+        _dataRoot = string.IsNullOrWhiteSpace(dataRoot) ? null : Path.GetFullPath(dataRoot);
     }
+
+    protected override string SettingsFilePath => _dataRoot is null
+        ? base.SettingsFilePath
+        : Path.Combine(_dataRoot, "avalonia-dashboard.json");
 
     public override AvaloniaDashboardPreferenceStore? LoadStore()
     {
@@ -41,9 +48,9 @@ public sealed class AvaloniaDashboardPreferences : AbstractSettings<AvaloniaDash
         return store ?? ImportWpfStore();
     }
 
-    private static AvaloniaDashboardPreferenceStore? ImportWpfStore()
+    private AvaloniaDashboardPreferenceStore? ImportWpfStore()
     {
-        var path = Path.Combine(Folders.AppData, "dashboard.json");
+        var path = Path.Combine(_dataRoot ?? Folders.AppData, "dashboard.json");
         if (!File.Exists(path))
             return null;
 
