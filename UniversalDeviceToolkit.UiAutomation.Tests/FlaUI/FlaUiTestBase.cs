@@ -32,9 +32,11 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
         protected Window? MainWindow { get; private set; }
 
         private string _appPath = string.Empty;
+        private readonly bool _discoverExecutable;
 
         protected FlaUiTestBase()
         {
+            _discoverExecutable = true;
             var solutionDir = FindSolutionDirectory();
             _appPath = Path.Combine(
                 solutionDir,
@@ -45,6 +47,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
 
         protected FlaUiTestBase(string appPath)
         {
+            _discoverExecutable = false;
             _appPath = appPath;
         }
 
@@ -98,7 +101,8 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
                     "FlaUI requires an interactive desktop session. Run the desktop preflight before starting UI tests.");
             }
 
-            _appPath = LocateAppExecutable(_appPath);
+            if (_discoverExecutable)
+                _appPath = LocateAppExecutable(_appPath);
 
             if (!File.Exists(_appPath))
             {
