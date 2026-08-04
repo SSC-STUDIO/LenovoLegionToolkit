@@ -347,6 +347,49 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithMismatchedZipHash_ShouldCleanTemporaryArtifacts()
+    {
+        const string pluginId = "zip-cleanup-fail";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = new string('c', 64);
+
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+        var tempDirectory = GetPrivateField<string>(service, "_tempDownloadDirectory");
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeFalse();
+        File.Exists(Path.Combine(tempDirectory, $"{pluginId}.zip")).Should().BeFalse();
+        Directory.Exists(Path.Combine(tempDirectory, pluginId)).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_WithInvalidPluginId_ShouldRejectBeforeDownloading()
+    {
+        var requestCount = 0;
+        var manifest = new PluginManifest
+        {
+            Id = "../escape-plugin",
+            Name = "Invalid plugin",
+            Version = "1.0.0",
+            MinimumHostVersion = "1.0.0",
+            DownloadUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/escape.zip"
+        };
+
+        using var service = CreateService(_ =>
+        {
+            requestCount++;
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        });
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeFalse();
+        requestCount.Should().Be(0);
+    }
+
+    [Fact]
     public async Task DownloadAndInstallPluginAsync_WithMatchingIntegrityHashes_ShouldKeepPluginInstalled()
     {
         const string pluginId = "integrity-pass";
@@ -588,7 +631,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         _pluginManager.Verify(manager => manager.UninstallPlugin(pluginId), Times.Never);
     }
 
-   private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
+    private PluginRepositoryService CreateService(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
    {
        var httpClient = new HttpClient(new StubHttpMessageHandler(responseFactory));
        var httpClientFactory = new StubHttpClientFactory(httpClient);
@@ -597,7 +640,14 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         // bypasses the production-mode security gate in PluginRepositoryService which otherwise
         // blocks file:// downloads in Release builds (CI runs --configuration Release).
         return new PluginRepositoryService(_pluginManager.Object, httpClientFactory, forceAllowFileUrls: true);
-   }
+    }
+
+    private static T GetPrivateField<T>(PluginRepositoryService service, string fieldName)
+    {
+        var field = typeof(PluginRepositoryService).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+        field.Should().NotBeNull();
+        return (T)field!.GetValue(service)!;
+    }
 
     private static async Task<string> ComputePackageDllHashAsync(string packagePath, string pluginId)
     {

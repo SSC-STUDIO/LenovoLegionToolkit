@@ -27,6 +27,7 @@ public partial class PluginRepositoryService : IDisposable
     private readonly string _pluginsDirectory;
     private readonly string _tempDownloadDirectory;
     private readonly string _storeCachePath;
+    private readonly SemaphoreSlim _installationGate = new(1, 1);
     private static readonly JsonSerializerOptions ManifestJsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -686,6 +687,7 @@ public partial class PluginRepositoryService : IDisposable
             {
                 try
                 {
+                    _installationGate.Dispose();
                     _httpClient?.Dispose();
                 }
                 catch (Exception ex)
