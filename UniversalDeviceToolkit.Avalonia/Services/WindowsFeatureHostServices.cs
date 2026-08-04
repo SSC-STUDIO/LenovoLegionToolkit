@@ -2,6 +2,7 @@
 
 using System.Globalization;
 using System.Reflection;
+using System.IO;
 using Avalonia.Controls;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Abstractions.Localization;
@@ -11,11 +12,15 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Macro;
+using UniversalDeviceToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.PackageDownloader;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -33,8 +38,18 @@ internal sealed class WindowsFeatureHostServices
     private readonly AutomationProcessor _automation;
     private readonly IPluginManager _plugins;
     private readonly WindowsOptimizationService? _optimization;
+    private readonly INetworkAccelerationService? _networkAcceleration;
+    private readonly INetworkDiagnosticsService? _networkDiagnostics;
+    private readonly PackageDownloaderFactory? _packageDownloaderFactory;
+    private readonly PackageDownloaderSettings? _packageDownloaderSettings;
+    private IPackageDownloader? _driverDownloader;
+    private List<Package> _driverPackages = [];
+    private readonly object _driverLock = new();
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private readonly object _macroRecordingLock = new();
+    private readonly HashSet<string> _selectedCleanupActions;
+    private readonly ApplicationSettings? _applicationSettings;
+    private long _estimatedCleanupSize;
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
     private bool _automationInitialized;
@@ -47,7 +62,11 @@ internal sealed class WindowsFeatureHostServices
         IMacroController macro,
         AutomationProcessor automation,
         IPluginManager plugins,
-        WindowsOptimizationService? optimization)
+        WindowsOptimizationService? optimization,
+        INetworkAccelerationService? networkAcceleration,
+        INetworkDiagnosticsService? networkDiagnostics,
+        PackageDownloaderFactory? packageDownloaderFactory,
+        PackageDownloaderSettings? packageDownloaderSettings)
     {
         _keyboard = keyboard;
         _spectrum = spectrum;
@@ -56,6 +75,14 @@ internal sealed class WindowsFeatureHostServices
         _automation = automation;
         _plugins = plugins;
         _optimization = optimization;
+        _networkAcceleration = networkAcceleration;
+        _networkDiagnostics = networkDiagnostics;
+        _packageDownloaderFactory = packageDownloaderFactory;
+        _packageDownloaderSettings = packageDownloaderSettings;
+        _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
+        _selectedCleanupActions = new HashSet<string>(
+            _applicationSettings?.Store.SelectedCleanupActions ?? [],
+            StringComparer.OrdinalIgnoreCase);
 
         if (_macro is MacroController macroController)
         {
@@ -75,7 +102,11 @@ internal sealed class WindowsFeatureHostServices
                 IoCContainer.Resolve<IMacroController>(),
                 IoCContainer.Resolve<AutomationProcessor>(),
                 IoCContainer.Resolve<IPluginManager>(),
-                IoCContainer.TryResolve<WindowsOptimizationService>());
+                IoCContainer.TryResolve<WindowsOptimizationService>(),
+                IoCContainer.TryResolve<INetworkAccelerationService>(),
+                IoCContainer.TryResolve<INetworkDiagnosticsService>(),
+                IoCContainer.TryResolve<PackageDownloaderFactory>(),
+                IoCContainer.TryResolve<PackageDownloaderSettings>());
         }
         catch
         {
@@ -109,6 +140,216 @@ internal sealed class WindowsFeatureHostServices
             // never surface a host-service exception from an async UI event.
             return false;
         }
+    }
+
+    public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync()
+    {
+        if (_networkAcceleration is null)
+        {
+            return Task.FromResult(new NetworkAccelerationState(
+                false,
+                false,
+                false,
+                false,
+                "Off",
+                "The network acceleration service is not initialized in this host.",
+                0,
+                Array.Empty<NetworkAccelerationGroupState>()));
+        }
+
+        var config = _networkAcceleration.Config;
+        var groups = (config.DomainGroups ?? [])
+            .Select(group => new NetworkAccelerationGroupState(
+                group.Id,
+                group.DisplayName,
+                group.Description ?? string.Empty,
+                group.Enabled,
+                group.IsFavorite,
+                (group.Domains?.Count ?? 0) + (group.SubItems?.Count ?? 0)))
+            .ToArray();
+        return Task.FromResult(new NetworkAccelerationState(
+            true,
+            _networkAcceleration.IsBackendReady,
+            config.AccelerationEnabled,
+            _networkAcceleration.IsRunning,
+            config.Mode.ToString(),
+            _networkAcceleration.StatusText,
+            config.ListenPort,
+            groups));
+    }
+
+    public async Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled)
+    {
+        if (_networkAcceleration is null)
+            return false;
+
+        _networkAcceleration.Config.AccelerationEnabled = enabled;
+        if (!enabled)
+            await _networkAcceleration.StopAsync().ConfigureAwait(false);
+        await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> SetNetworkAccelerationModeAsync(string mode)
+    {
+        if (_networkAcceleration is null
+            || !Enum.TryParse<NetworkAccelerationMode>(mode, true, out var parsed))
+            return false;
+
+        _networkAcceleration.Config.Mode = parsed;
+        await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled)
+    {
+        if (_networkAcceleration is null || string.IsNullOrWhiteSpace(groupId))
+            return false;
+
+        var group = _networkAcceleration.Config.DomainGroups?
+            .FirstOrDefault(candidate => candidate.Id.Equals(groupId, StringComparison.OrdinalIgnoreCase));
+        if (group is null)
+            return false;
+
+        group.Enabled = enabled;
+        await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> ToggleNetworkAccelerationAsync()
+    {
+        if (_networkAcceleration is null)
+            return false;
+
+        if (_networkAcceleration.IsRunning)
+        {
+            await _networkAcceleration.StopAsync().ConfigureAwait(false);
+            return true;
+        }
+
+        return await _networkAcceleration.StartAsync().ConfigureAwait(false);
+    }
+
+    public async Task<string> RunNetworkDiagnosticsAsync()
+    {
+        if (_networkDiagnostics is null)
+            return "Network diagnostics are not initialized in this host.";
+
+        var report = await _networkDiagnostics.RunQuickCheckAsync().ConfigureAwait(false);
+        return report.Summary;
+    }
+
+    public Task<DriverDownloadState> GetDriverDownloadStateAsync()
+    {
+        lock (_driverLock)
+        {
+            return Task.FromResult(BuildDriverDownloadState(
+                isScanning: false,
+                machineType: string.Empty,
+                os: string.Empty,
+                source: string.Empty));
+        }
+    }
+
+    public async Task<DriverDownloadState> SearchDriverPackagesAsync(
+        string source,
+        string machineType,
+        string os,
+        bool onlyUpdates)
+    {
+        if (_packageDownloaderFactory is null)
+        {
+            return new DriverDownloadState(
+                false,
+                false,
+                machineType,
+                os,
+                source,
+                [],
+                "The driver download service is not initialized in this host.");
+        }
+
+        if (!Enum.TryParse<PackageDownloaderFactory.Type>(source, true, out var sourceType)
+            || !Enum.TryParse<OS>(os, true, out var operatingSystem))
+        {
+            return new DriverDownloadState(false, false, machineType, os, source, [], "Select a valid driver source and operating system.");
+        }
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(machineType))
+            {
+                var machine = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                machineType = machine.MachineType;
+            }
+
+            var downloader = _packageDownloaderFactory.GetInstance(sourceType);
+            var packages = await downloader.GetPackagesAsync(machineType, operatingSystem).ConfigureAwait(false);
+            var hidden = _packageDownloaderSettings?.Store.HiddenPackages ?? [];
+            var filtered = packages
+                .Where(package => !hidden.Contains(package.Id)
+                    && (!onlyUpdates || package.IsUpdate))
+                .ToList();
+            lock (_driverLock)
+            {
+                _driverDownloader = downloader;
+                _driverPackages = filtered;
+            }
+
+            return BuildDriverDownloadState(false, machineType, os, source);
+        }
+        catch (Exception ex)
+        {
+            return new DriverDownloadState(true, false, machineType, os, source, [], ex.Message);
+        }
+    }
+
+    public async Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder)
+    {
+        if (string.IsNullOrWhiteSpace(packageId)
+            || string.IsNullOrWhiteSpace(destinationFolder)
+            || !Directory.Exists(destinationFolder))
+            return false;
+
+        IPackageDownloader? downloader;
+        Package package;
+        lock (_driverLock)
+        {
+            downloader = _driverDownloader;
+            package = _driverPackages.FirstOrDefault(candidate => candidate.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (downloader is null || string.IsNullOrWhiteSpace(package.Id))
+            return false;
+
+        await downloader.DownloadPackageFileAsync(package, destinationFolder).ConfigureAwait(false);
+        return true;
+    }
+
+    private DriverDownloadState BuildDriverDownloadState(
+        bool isScanning,
+        string machineType,
+        string os,
+        string source)
+    {
+        var packages = _driverPackages
+            .Select(package => new DriverPackageItem(
+                package.Id,
+                package.Title,
+                package.Description,
+                package.Version,
+                package.Category,
+                package.FileSize,
+                package.IsUpdate,
+                package.Title.Contains("recommended", StringComparison.OrdinalIgnoreCase)))
+            .ToArray();
+        return new DriverDownloadState(
+            _packageDownloaderFactory is not null,
+            isScanning,
+            machineType,
+            os,
+            source,
+            packages);
     }
 
     public async Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync()
@@ -186,6 +427,65 @@ internal sealed class WindowsFeatureHostServices
 
     private static string? NormalizePipelineName(string? name) =>
         string.IsNullOrWhiteSpace(name) ? null : name.Trim();
+
+    public Task<MacroWorkspaceState> GetMacroWorkspaceAsync()
+    {
+        if (_macro is not MacroController controller)
+            return Task.FromResult(new MacroWorkspaceState(_macro.IsEnabled, false, Array.Empty<MacroSlotState>()));
+
+        var sequences = controller.GetSequences();
+        var slots = MacroKeys.Select(key =>
+        {
+            var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
+            sequences.TryGetValue(identifier, out var sequence);
+            return new MacroSlotState(
+                key,
+                sequence.Events?.Length ?? 0,
+                Math.Clamp(sequence.RepeatCount, 1, 10),
+                sequence.IgnoreDelays,
+                sequence.InterruptOnOtherKey);
+        }).ToArray();
+
+        return Task.FromResult(new MacroWorkspaceState(controller.IsEnabled, controller.IsRecording, slots));
+    }
+
+    public Task<bool> SetMacroEnabledAsync(bool enabled)
+    {
+        try
+        {
+            _macro.SetEnabled(enabled);
+            return Task.FromResult(true);
+        }
+        catch
+        {
+            return Task.FromResult(false);
+        }
+    }
+
+    public Task<bool> SetMacroSequenceOptionsAsync(
+        ulong key,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey)
+    {
+        if (_macro is not MacroController controller
+            || !MacroKeys.Contains(key)
+            || !MacroController.AllowedRepeatCounts.Contains(repeatCount))
+            return Task.FromResult(false);
+
+        var sequences = controller.GetSequences();
+        var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
+        sequences.TryGetValue(identifier, out var existing);
+        sequences[identifier] = new MacroSequence
+        {
+            RepeatCount = repeatCount,
+            IgnoreDelays = ignoreDelays,
+            InterruptOnOtherKey = interruptOnOtherKey,
+            Events = existing.Events ?? [],
+        };
+        controller.SetSequences(sequences);
+        return Task.FromResult(true);
+    }
 
     private async Task<bool> SetActionCoreAsync(string routeKey, string actionKey, bool isSelected)
     {
@@ -272,6 +572,62 @@ internal sealed class WindowsFeatureHostServices
 
                 return _plugins.UninstallPlugin(uninstallId);
             case "WindowsOptimization" when _optimization is not null:
+                if (FeatureActionContract.IsCleanupAction(actionKey))
+                {
+                    if (isSelected)
+                        _selectedCleanupActions.Add(actionKey);
+                    else
+                        _selectedCleanupActions.Remove(actionKey);
+
+                    PersistCleanupSelection();
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.OptimizationApplyRecommendedActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    var recommended = _optimization.GetCategories()
+                        .Where(category => !FeatureActionContract.IsCleanupAction(category.Key))
+                        .SelectMany(category => category.Actions)
+                        .Where(action => action.Recommended)
+                        .Select(action => action.Key)
+                        .ToArray();
+                    await ExecuteRecommendedOptimizationAsync(recommended, CancellationToken.None).ConfigureAwait(false);
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.CleanupScanActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_selectedCleanupActions.Count == 0)
+                        return false;
+
+                    _estimatedCleanupSize = await _optimization.EstimateCleanupSizeAsync(
+                        _selectedCleanupActions,
+                        CancellationToken.None).ConfigureAwait(false);
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.CleanupClearActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    _selectedCleanupActions.Clear();
+                    _estimatedCleanupSize = 0;
+                    PersistCleanupSelection();
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.CleanupRunActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_selectedCleanupActions.Count == 0)
+                        return false;
+
+                    await ExecuteCleanupAsync(
+                        _selectedCleanupActions.ToArray(),
+                        CancellationToken.None).ConfigureAwait(false);
+                    _selectedCleanupActions.Clear();
+                    _estimatedCleanupSize = 0;
+                    PersistCleanupSelection();
+                    return true;
+                }
+
                 var action = _optimization.GetCategories()
                     .SelectMany(category => category.Actions)
                     .FirstOrDefault(candidate => candidate.Key.Equals(actionKey, StringComparison.OrdinalIgnoreCase));
@@ -280,18 +636,58 @@ internal sealed class WindowsFeatureHostServices
 
                 if (isSelected)
                 {
-                    await _optimization.ApplyActionAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                    await ExecuteOptimizationActionAsync(action.Key, apply: true, CancellationToken.None).ConfigureAwait(false);
                     return true;
                 }
 
                 if (action.RollbackAsync is null)
                     return false;
 
-                await _optimization.RevertActionAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                await ExecuteOptimizationActionAsync(action.Key, apply: false, CancellationToken.None).ConfigureAwait(false);
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void PersistCleanupSelection()
+    {
+        if (_applicationSettings is null)
+            return;
+
+        _applicationSettings.Store.SelectedCleanupActions = _selectedCleanupActions.ToList();
+        _applicationSettings.SynchronizeStore();
+    }
+
+    private Task ExecuteRecommendedOptimizationAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        return WindowsOptimizationElevationBridge.IsAvailable
+            ? WindowsOptimizationElevationBridge.ExecuteRecommendedAsync(actionKeys, cancellationToken)
+            : _optimization!.ExecuteActionsAsync(actionKeys, cancellationToken);
+    }
+
+    private Task ExecuteCleanupAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        return WindowsOptimizationElevationBridge.IsAvailable
+            ? WindowsOptimizationElevationBridge.ExecuteCleanupAsync(actionKeys, cancellationToken)
+            : _optimization!.ExecuteActionsAsync(actionKeys, cancellationToken);
+    }
+
+    private Task ExecuteOptimizationActionAsync(
+        string actionKey,
+        bool apply,
+        CancellationToken cancellationToken)
+    {
+        if (WindowsOptimizationElevationBridge.IsAvailable)
+            return WindowsOptimizationElevationBridge.ExecuteActionAsync(actionKey, apply, cancellationToken);
+
+        return apply
+            ? _optimization!.ApplyActionAsync(actionKey, cancellationToken)
+            : _optimization!.RevertActionAsync(actionKey, cancellationToken);
     }
 
     private async Task<FeaturePageState> GetKeyboardStateAsync()
@@ -1026,13 +1422,52 @@ internal sealed class WindowsFeatureHostServices
                 []);
         }
 
-        var actions = new List<FeatureActionItem>();
+        var actions = new List<FeatureActionItem>
+        {
+            new FeatureActionItem(
+                FeatureActionContract.OptimizationApplyRecommendedActionKey,
+                "Apply recommended optimizations",
+                "Apply all recommended non-cleanup Windows optimization actions as one batch.",
+                "Apply",
+                true,
+                false,
+                false,
+                "Batch operations"),
+            new FeatureActionItem(
+                FeatureActionContract.CleanupScanActionKey,
+                "Estimate selected cleanup",
+                "Estimate the space that the selected cleanup actions can reclaim.",
+                _selectedCleanupActions.Count == 0 ? "Select items" : "Scan",
+                _selectedCleanupActions.Count > 0,
+                false,
+                false,
+                "Cleanup"),
+            new FeatureActionItem(
+                FeatureActionContract.CleanupRunActionKey,
+                "Run selected cleanup",
+                "Execute the selected cleanup actions and clear their saved selection.",
+                "Run",
+                _selectedCleanupActions.Count > 0,
+                false,
+                false,
+                "Cleanup"),
+            new FeatureActionItem(
+                FeatureActionContract.CleanupClearActionKey,
+                "Clear cleanup selection",
+                "Remove all selected cleanup actions without running them.",
+                "Clear",
+                _selectedCleanupActions.Count > 0,
+                false,
+                false,
+                "Cleanup"),
+        };
         foreach (var category in _optimization.GetCategories())
         {
             foreach (var action in category.Actions)
             {
+                var isCleanup = FeatureActionContract.IsCleanupAction(action.Key);
                 var applied = false;
-                if (action.IsAppliedAsync is not null)
+                if (!isCleanup && action.IsAppliedAsync is not null)
                 {
                     try
                     {
@@ -1048,10 +1483,12 @@ internal sealed class WindowsFeatureHostServices
                     action.Key,
                     ResolveResource(action.TitleResourceKey),
                     ResolveResource(action.DescriptionResourceKey),
-                    applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
+                    isCleanup
+                        ? (_selectedCleanupActions.Contains(action.Key) ? "Selected" : "Select")
+                        : applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
                     true,
-                    applied,
-                    FeatureActionContract.IsToggleAction(action.RollbackAsync is not null),
+                    isCleanup ? _selectedCleanupActions.Contains(action.Key) : applied,
+                    isCleanup || FeatureActionContract.IsToggleAction(action.RollbackAsync is not null),
                     ResolveResource(category.TitleResourceKey)));
             }
         }
@@ -1061,9 +1498,29 @@ internal sealed class WindowsFeatureHostServices
             "System optimization",
             "Review Windows optimization actions and their current state.",
             "Available",
-            $"{actions.Count} Windows optimization action(s) loaded from the shared service.",
+            $"{actions.Count} Windows optimization action(s) loaded from the shared service. "
+            + (_estimatedCleanupSize > 0
+                ? $"Estimated cleanup: {FormatBytes(_estimatedCleanupSize)}."
+                : string.Empty),
             true,
             actions);
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        if (bytes <= 0)
+            return "0 B";
+
+        var units = new[] { "B", "KB", "MB", "GB", "TB" };
+        var value = (double)bytes;
+        var index = 0;
+        while (value >= 1024 && index < units.Length - 1)
+        {
+            value /= 1024;
+            index++;
+        }
+
+        return $"{value:0.##} {units[index]}";
     }
 
     private static string ResolveResource(string key) =>

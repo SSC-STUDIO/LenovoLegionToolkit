@@ -120,7 +120,8 @@ public partial class App : Application
                 new UniversalDeviceToolkit.Lib.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
-                new UniversalDeviceToolkit.Lib.Macro.IoCModule());
+                new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
+                new UniversalDeviceToolkit.WPF.IoCModule());
         }
         catch
         {

@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.DriverDownloadPage">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16"
+                    Margin="32,24,32,32"
+                    MaxWidth="900"
+                    HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <controls:LocalizedTextBlock Text="{local:Loc Key=WindowsOptimizationPage_Tab_DriverDownload, Fallback=Driver downloads}"
+                                             FontSize="{StaticResource FontSizeDisplaySection}"
+                                             FontWeight="Medium"
+                                             OverflowMode="Wrap"
+                                             MaxLines="2"
+                                             automation:AutomationProperties.AutomationId="AvaloniaDriverDownloadTitle" />
+                <controls:LocalizedTextBlock Text="{local:Loc Key=WindowsOptimizationPage_DriverEmpty_NotScanned_Message, Fallback=Choose a source and scan to list compatible driver downloads.}"
+                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                             OverflowMode="Wrap"
+                                             MaxLines="3" />
+            </StackPanel>
+
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <Grid ColumnDefinitions="*,*,*,Auto" ColumnSpacing="10">
+                    <ComboBox x:Name="SourceComboBox"
+                              ItemsSource="{Binding Sources}"
+                              SelectedIndex="0"
+                              automation:AutomationProperties.AutomationId="AvaloniaDriverSource" />
+                    <TextBox x:Name="MachineTypeTextBox"
+                             Grid.Column="1"
+                             Watermark="Machine type"
+                             automation:AutomationProperties.AutomationId="AvaloniaDriverMachineType" />
+                    <ComboBox x:Name="OsComboBox"
+                              Grid.Column="2"
+                              automation:AutomationProperties.AutomationId="AvaloniaDriverOperatingSystem" />
+                    <Button Grid.Column="3"
+                            Content="{local:Loc Key=WindowsOptimizationPage_Scan_Button, Fallback=Scan}"
+                            Click="ScanButton_Click"
+                            automation:AutomationProperties.AutomationId="AvaloniaDriverScan" />
+                </Grid>
+            </Border>
+            <CheckBox x:Name="OnlyUpdatesCheckBox"
+                      Content="{local:Loc Key=PackagesPage_OnlyShowUpdates, Fallback=Only show updates}"
+                      automation:AutomationProperties.AutomationId="AvaloniaDriverOnlyUpdates" />
+            <controls:LocalizedTextBlock x:Name="StateText"
+                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                         OverflowMode="Wrap"
+                                         MaxLines="3" />
+            <StackPanel x:Name="PackagesPanel"
+                        Spacing="8"
+                        automation:AutomationProperties.AutomationId="AvaloniaDriverPackages" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -129,6 +129,17 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         Task.FromResult(false);
 
+    public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
+        Task.FromResult(new MacroWorkspaceState(false, false, Array.Empty<MacroSlotState>()));
+
+    public Task<bool> SetMacroEnabledAsync(bool enabled) => Task.FromResult(false);
+
+    public Task<bool> SetMacroSequenceOptionsAsync(
+        ulong key,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey) => Task.FromResult(false);
+
     public Task<PluginPageState> GetPluginPageStateAsync(string pluginId) =>
         Task.FromResult(new PluginPageState(
             pluginId,
@@ -153,6 +164,39 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update) =>
         Task.FromResult(false);
+
+    public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync() =>
+        Task.FromResult(new NetworkAccelerationState(
+            false,
+            false,
+            false,
+            false,
+            "Off",
+            DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host."),
+            0,
+            Array.Empty<NetworkAccelerationGroupState>()));
+
+    public Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled) => Task.FromResult(false);
+    public Task<bool> SetNetworkAccelerationModeAsync(string mode) => Task.FromResult(false);
+    public Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled) => Task.FromResult(false);
+    public Task<bool> ToggleNetworkAccelerationAsync() => Task.FromResult(false);
+    public Task<string> RunNetworkDiagnosticsAsync() =>
+        Task.FromResult(DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host."));
+
+    public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
+        Task.FromResult(new DriverDownloadState(
+            false,
+            false,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            Array.Empty<DriverPackageItem>(),
+            DashboardLocalization.Get("DriverDownload_AdapterUnavailable", "Driver downloads require the Windows host.")));
+
+    public Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates) =>
+        GetDriverDownloadStateAsync();
+
+    public Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder) => Task.FromResult(false);
 
     private static IReadOnlyList<FeatureActionItem> BuildActions(
         string key,

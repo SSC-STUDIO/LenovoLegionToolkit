@@ -17,11 +17,23 @@ public interface IPlatformServices
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
+    Task<MacroWorkspaceState> GetMacroWorkspaceAsync();
+    Task<bool> SetMacroEnabledAsync(bool enabled);
+    Task<bool> SetMacroSequenceOptionsAsync(ulong key, int repeatCount, bool ignoreDelays, bool interruptOnOtherKey);
     Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
     Task<bool> SetAutomationEnabledAsync(bool enabled);
     Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines);
     Task<KeyboardLightingState?> GetKeyboardLightingStateAsync();
     Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update);
+    Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync();
+    Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled);
+    Task<bool> SetNetworkAccelerationModeAsync(string mode);
+    Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled);
+    Task<bool> ToggleNetworkAccelerationAsync();
+    Task<string> RunNetworkDiagnosticsAsync();
+    Task<DriverDownloadState> GetDriverDownloadStateAsync();
+    Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates);
+    Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);
 }
 
 public sealed record FeatureGroupItem(string Title, string Description, string Status);
@@ -74,6 +86,18 @@ public sealed record PluginPageState(
 public sealed record AutomationWorkspaceState(
     bool IsEnabled,
     IReadOnlyList<AutomationPipelineItem> Pipelines);
+
+public sealed record MacroWorkspaceState(
+    bool IsEnabled,
+    bool IsRecording,
+    IReadOnlyList<MacroSlotState> Slots);
+
+public sealed record MacroSlotState(
+    ulong Key,
+    int EventCount,
+    int RepeatCount,
+    bool IgnoreDelays,
+    bool InterruptOnOtherKey);
 
 public sealed record AutomationPipelineItem(
     Guid Id,
@@ -130,6 +154,44 @@ public sealed record KeyboardLightingUpdate(
     string? RgbBrightness = null,
     IReadOnlyList<KeyboardColorState>? RgbZones = null,
     IReadOnlyList<KeyboardSpectrumEffectState>? SpectrumEffects = null);
+
+public sealed record NetworkAccelerationGroupState(
+    string Id,
+    string DisplayName,
+    string Description,
+    bool IsEnabled,
+    bool IsFavorite,
+    int DomainCount);
+
+public sealed record NetworkAccelerationState(
+    bool IsAvailable,
+    bool IsBackendReady,
+    bool IsEnabled,
+    bool IsRunning,
+    string Mode,
+    string Status,
+    int ListenPort,
+    IReadOnlyList<NetworkAccelerationGroupState> Groups,
+    string? Diagnostics = null);
+
+public sealed record DriverPackageItem(
+    string Id,
+    string Title,
+    string Description,
+    string Version,
+    string Category,
+    string FileSize,
+    bool IsUpdate,
+    bool IsRecommended);
+
+public sealed record DriverDownloadState(
+    bool IsAvailable,
+    bool IsScanning,
+    string MachineType,
+    string Os,
+    string Source,
+    IReadOnlyList<DriverPackageItem> Packages,
+    string? Error = null);
 /// <summary>
 /// Read-only sensor data prepared for the dashboard. Value and Unit are kept
 /// separately so the UI can render a stable metric row and an optional gauge

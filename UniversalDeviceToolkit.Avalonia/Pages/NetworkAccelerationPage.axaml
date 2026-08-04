@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.NetworkAccelerationPage">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16"
+                    Margin="32,24,32,32"
+                    MaxWidth="900"
+                    HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Title, Fallback=Network acceleration}"
+                                             FontSize="{StaticResource FontSizeDisplaySection}"
+                                             FontWeight="Medium"
+                                             OverflowMode="Wrap"
+                                             MaxLines="2"
+                                             automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationTitle" />
+                <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Subtitle, Fallback=Route selected domains through the local network worker.}"
+                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                             OverflowMode="Wrap"
+                                             MaxLines="3"
+                                             automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDescription" />
+            </StackPanel>
+
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <StackPanel Spacing="3">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_EnableLabel, Fallback=Enable network acceleration}"
+                                                         FontWeight="Medium"
+                                                         OverflowMode="Wrap"
+                                                         MaxLines="2" />
+                            <controls:LocalizedTextBlock x:Name="StatusText"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         OverflowMode="Wrap"
+                                                         MaxLines="3" />
+                        </StackPanel>
+                        <CheckBox x:Name="EnabledCheckBox"
+                                  Grid.Column="1"
+                                  VerticalAlignment="Center"
+                                  automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationEnabled"
+                                  automation:AutomationProperties.Name="{local:Loc Key=NetworkAccelerationPage_EnableLabel, Fallback=Enable network acceleration}" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_ModeLabel, Fallback=Mode}"
+                                                     VerticalAlignment="Center"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                        <ComboBox x:Name="ModeComboBox"
+                                  Grid.Column="1"
+                                  MinWidth="190"
+                                  automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationMode"
+                                  automation:AutomationProperties.Name="{local:Loc Key=NetworkAccelerationPage_ModeLabel, Fallback=Mode}" />
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="StartStopButton"
+                                Content="Start"
+                                Click="StartStopButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationStartStop" />
+                        <Button Content="{local:Loc Key=NetworkAccelerationPage_RunDiagnostics, Fallback=Run diagnostics}"
+                                Click="DiagnosticsButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDiagnostics" />
+                    </StackPanel>
+                    <controls:LocalizedTextBlock x:Name="DiagnosticsText"
+                                                 IsVisible="False"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="4" />
+                </StackPanel>
+            </Border>
+
+            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_DomainGroupsLabel, Fallback=Domain groups}"
+                                         FontSize="{StaticResource FontSizeSubsection}"
+                                         FontWeight="Medium"
+                                         OverflowMode="Wrap"
+                                         MaxLines="2" />
+            <StackPanel x:Name="GroupsPanel"
+                        Spacing="8"
+                        automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationGroups" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

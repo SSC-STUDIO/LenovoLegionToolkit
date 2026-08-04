@@ -61,6 +61,25 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)
             : _featureHost.SetActionAsync(routeKey, actionKey, isSelected);
 
+    public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
+        _featureHost is null
+            ? _inner.GetMacroWorkspaceAsync()
+            : _featureHost.GetMacroWorkspaceAsync();
+
+    public Task<bool> SetMacroEnabledAsync(bool enabled) =>
+        _featureHost is null
+            ? _inner.SetMacroEnabledAsync(enabled)
+            : _featureHost.SetMacroEnabledAsync(enabled);
+
+    public Task<bool> SetMacroSequenceOptionsAsync(
+        ulong key,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey) =>
+        _featureHost is null
+            ? _inner.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey)
+            : _featureHost.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey);
+
     public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
         _featureHost is null
             ? _inner.GetAutomationWorkspaceAsync()
@@ -85,6 +104,51 @@ public sealed class WindowsPlatformServices : IPlatformServices
         _featureHost is null
             ? _inner.SetKeyboardLightingAsync(update)
             : _featureHost.SetKeyboardLightingAsync(update);
+
+    public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync() =>
+        _featureHost is null
+            ? _inner.GetNetworkAccelerationStateAsync()
+            : _featureHost.GetNetworkAccelerationStateAsync();
+
+    public Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled) =>
+        _featureHost is null
+            ? _inner.SetNetworkAccelerationEnabledAsync(enabled)
+            : _featureHost.SetNetworkAccelerationEnabledAsync(enabled);
+
+    public Task<bool> SetNetworkAccelerationModeAsync(string mode) =>
+        _featureHost is null
+            ? _inner.SetNetworkAccelerationModeAsync(mode)
+            : _featureHost.SetNetworkAccelerationModeAsync(mode);
+
+    public Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled) =>
+        _featureHost is null
+            ? _inner.SetNetworkAccelerationGroupEnabledAsync(groupId, enabled)
+            : _featureHost.SetNetworkAccelerationGroupEnabledAsync(groupId, enabled);
+
+    public Task<bool> ToggleNetworkAccelerationAsync() =>
+        _featureHost is null
+            ? _inner.ToggleNetworkAccelerationAsync()
+            : _featureHost.ToggleNetworkAccelerationAsync();
+
+    public Task<string> RunNetworkDiagnosticsAsync() =>
+        _featureHost is null
+            ? _inner.RunNetworkDiagnosticsAsync()
+            : _featureHost.RunNetworkDiagnosticsAsync();
+
+    public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
+        _featureHost is null
+            ? _inner.GetDriverDownloadStateAsync()
+            : _featureHost.GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates) =>
+        _featureHost is null
+            ? _inner.SearchDriverPackagesAsync(source, machineType, os, onlyUpdates)
+            : _featureHost.SearchDriverPackagesAsync(source, machineType, os, onlyUpdates);
+
+    public Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder) =>
+        _featureHost is null
+            ? _inner.DownloadDriverPackageAsync(packageId, destinationFolder)
+            : _featureHost.DownloadDriverPackageAsync(packageId, destinationFolder);
 
     private async Task<IReadOnlyList<SensorReadingItem>> AppendHardwareSensorReadingsAsync(
         IReadOnlyList<SensorReadingItem> existing)

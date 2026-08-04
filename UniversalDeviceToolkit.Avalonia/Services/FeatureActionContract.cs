@@ -11,6 +11,10 @@ public static class FeatureActionContract
 {
     public const string MacroRecordPrefix = "macro-record:";
     public const string MacroPlayPrefix = "macro-key:";
+    public const string OptimizationApplyRecommendedActionKey = "optimization-apply-recommended";
+    public const string CleanupScanActionKey = "cleanup-scan";
+    public const string CleanupRunActionKey = "cleanup-run";
+    public const string CleanupClearActionKey = "cleanup-clear";
 
     private static readonly ulong[] MacroKeys =
         [0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69];
@@ -26,6 +30,9 @@ public static class FeatureActionContract
     /// revert it. One-way actions must remain command buttons in every client.
     /// </summary>
     public static bool IsToggleAction(bool hasRollback) => hasRollback;
+
+    public static bool IsCleanupAction(string actionKey) =>
+        actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
 
     private static bool TryParseMacroKey(string actionKey, string prefix, out ulong key)
     {
