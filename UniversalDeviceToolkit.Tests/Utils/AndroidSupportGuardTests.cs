@@ -54,6 +54,16 @@ public sealed class AndroidSupportGuardTests
         project.IndexOf("android", StringComparison.OrdinalIgnoreCase).Should().Be(-1);
     }
 
+    [Fact]
+    public void PlatformDocumentation_ShouldDeclareAndroidUnsupported()
+    {
+        var architecture = RepositoryPaths.ReadFile("Docs", "ARCHITECTURE.md");
+
+        architecture.Should().Contain(
+            "Mobile and Android companion apps are out of scope and are not supported.");
+        architecture.Should().NotContain("Mobile companion app (future consideration)");
+    }
+
     private static bool IsBuildDefinition(string path)
     {
         var parts = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);

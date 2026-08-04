@@ -38,7 +38,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 宣发文案（口语版）：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
-本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户可直接升级；设置、插件与包管理器标识在更名期间保持兼容。
+本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户可直接升级；设置、插件与包管理器标识在更名期间保持兼容。Android 和移动端伴侣应用不在项目范围内，也不受支持。
 
 本软件不运行后台服务，内存与 CPU 占用低，不收集用户信息，仅适用于 Windows。
 
