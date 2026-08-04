@@ -12,13 +12,24 @@ public sealed class ReleaseSigningGuardTests
     public void ReleaseWorkflow_ShouldSignAndVerifyPayloadAndInstallers()
     {
         var root = RepositoryPaths.FindRoot();
-        var workflow = File.ReadAllText(Path.Combine(root, ".github", "workflows", "Release.yml"));
+        var workflow = GitHubWorkflowContract.Parse(
+            File.ReadAllText(Path.Combine(root, ".github", "workflows", "Release.yml")));
         var script = File.ReadAllText(Path.Combine(root, "Scripts", "Assert-AuthenticodeSignatures.ps1"));
 
-        workflow.Should().Contain("azure/trusted-signing-action@");
-        workflow.Should().Contain("Sign release payload");
-        workflow.Should().Contain("Sign installers");
-        workflow.Should().Contain("Assert-AuthenticodeSignatures.ps1");
+        var job = workflow.Job("build");
+        var payloadSigning = job.Step("Sign release payload");
+        var payloadVerification = job.Step("Verify release payload signatures");
+        var installerSigning = job.Step("Sign installers");
+        var installerVerification = job.Step("Verify installer signatures");
+
+        payloadSigning.Uses.Should().Be("azure/trusted-signing-action@v0.5");
+        installerSigning.Uses.Should().Be("azure/trusted-signing-action@v0.5");
+        payloadSigning.WithValue("files-folder").Should().Be("${{ env.BUILD_OUTPUT }}");
+        payloadSigning.WithValue("files-folder-filter").Should().Be("exe,dll");
+        installerSigning.WithValue("files-folder").Should().Be("${{ env.INSTALLER_OUTPUT }}");
+        installerSigning.WithValue("files-folder-filter").Should().Be("exe");
+        payloadVerification.Run.Should().Contain("Assert-AuthenticodeSignatures.ps1");
+        installerVerification.Run.Should().Contain("Assert-AuthenticodeSignatures.ps1");
         script.Should().Contain("Get-AuthenticodeSignature");
         script.Should().Contain("Status -ne 'Valid'");
     }

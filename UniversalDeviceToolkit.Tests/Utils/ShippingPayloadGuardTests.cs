@@ -93,7 +93,8 @@ public sealed class ShippingPayloadGuardTests
     [Fact]
     public void ReleaseWorkflow_ShouldValidateAllShippingPayloads()
     {
-        var workflow = ReadRepositoryFile(".github", "workflows", "Release.yml");
+        var workflow = GitHubWorkflowContract.Parse(
+            ReadRepositoryFile(".github", "workflows", "Release.yml"));
         var releaseNotesScript = ReadRepositoryFile("Scripts", "New-ReleaseNotes.ps1");
         var languageAssetsScript = ReadRepositoryFile("Scripts", "Build-LanguageAssets.ps1");
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
@@ -101,33 +102,44 @@ public sealed class ShippingPayloadGuardTests
         var installerAssetsScript = ReadRepositoryFile("Scripts", "Build-InstallerAssets.ps1");
         var mainAppSmokeWorkflow = ReadRepositoryFile(".github", "workflows", "MainAppPluginUi.Smoke.yml");
 
-        workflow.Should().Contain("SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel");
-        workflow.Should().Contain("$includeCrossPlatformCli = $majorVersionNumber -ge 5");
-        workflow.Should().Contain("ENABLE_CROSS_PLATFORM_CLI=$($includeCrossPlatformCli.ToString().ToLowerInvariant())");
-        workflow.Should().Contain("./Scripts/Build-PluginRuntimeAssets.ps1");
-        workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
-        workflow.Should().Contain("./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT");
-        workflow.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
-        workflow.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
-        workflow.Should().Contain("if: ${{ env.ENABLE_CROSS_PLATFORM_CLI == 'true' }}");
-        workflow.Should().Contain("-AssetVersion $env:VERSION");
-        workflow.Should().Contain("$env:CLI_CROSS_PLATFORM_ASSET");
-        workflow.Should().Contain("./Packaging/Prepare-PackageManifests.ps1");
-        workflow.Should().Contain("-HashManifestPath \"$env:RELEASE_OUTPUT\\$env:HASH_ASSET\"");
-        workflow.Should().Contain("./Scripts/Build-InstallerAssets.ps1");
-        workflow.Should().NotContain("iscc");
-        workflow.Should().NotContain("MakeInstaller.iss");
-        workflow.Should().Contain("$finalizeArgs = @{");
+        var releaseJob = workflow.Job("build");
+        var versionStep = releaseJob.Step("Resolve release version");
+        var publishStep = releaseJob.Step("Publish release payload");
+        var prepareStep = releaseJob.Step("Prepare release and Pages resources");
+        var crossPlatformStep = releaseJob.Step("Publish cross-platform CLI asset");
+        var installerStep = releaseJob.Step("Build installers");
+        var finalizeStep = releaseJob.Step("Finalize release assets");
+        var packageManifestStep = releaseJob.Step("Validate package manifests");
+        var releaseNotesStep = releaseJob.Step("Generate release notes");
+
+        versionStep.Run.Should().Contain("SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel");
+        versionStep.Run.Should().Contain("$includeCrossPlatformCli = $majorVersionNumber -ge 5");
+        versionStep.Run.Should().Contain("ENABLE_CROSS_PLATFORM_CLI=$($includeCrossPlatformCli.ToString().ToLowerInvariant())");
+        publishStep.Run.Should().Contain("./Scripts/Build-PluginRuntimeAssets.ps1");
+        publishStep.Run.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
+        publishStep.Run.Should().Contain("./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT");
+        prepareStep.Run.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
+        crossPlatformStep.Run.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
+        crossPlatformStep.Condition.Should().Be("${{ env.ENABLE_CROSS_PLATFORM_CLI == 'true' }}");
+        crossPlatformStep.Run.Should().Contain("-AssetVersion $env:VERSION");
+        packageManifestStep.Run.Should().Contain("./Packaging/Prepare-PackageManifests.ps1");
+        packageManifestStep.Run.Should().Contain("-HashManifestPath \"$env:RELEASE_OUTPUT\\$env:HASH_ASSET\"");
+        installerStep.Run.Should().Contain("./Scripts/Build-InstallerAssets.ps1");
+        installerStep.Run.Should().NotContain("iscc");
+        installerStep.Run.Should().NotContain("MakeInstaller.iss");
+        finalizeStep.Run.Should().Contain("$finalizeArgs = @{");
+        releaseNotesStep.Run.Should().Contain("$env:CLI_CROSS_PLATFORM_ASSET");
 
         installerAssetsScript.Should().Contain("Tools\\Installer\\UniversalDeviceToolkit.Installer.csproj");
         installerAssetsScript.Should().Contain("-p:PayloadZipPath=$fullZipPath");
         installerAssetsScript.Should().Contain("UniversalDeviceToolkitSetup-Full.exe");
         installerAssetsScript.Should().Contain("UniversalDeviceToolkitSetup-Online.exe");
         installerAssetsScript.Should().Contain("Expected installer output was not created");
-        workflow.Should().Contain("FinalizeOnly = $true");
-        workflow.Should().Contain("Repository = '${{ github.repository }}'");
-        workflow.Should().Contain("$finalizeArgs['IncludeCrossPlatformCli'] = $true");
-        workflow.Should().NotContain("/p:EnableUdtTestHooks=true");
+        finalizeStep.Run.Should().Contain("FinalizeOnly = $true");
+        finalizeStep.Run.Should().Contain("Repository = '${{ github.repository }}'");
+        finalizeStep.Run.Should().Contain("$finalizeArgs['IncludeCrossPlatformCli'] = $true");
+        releaseJob.Steps.Select(step => step.Run ?? string.Empty)
+            .Should().NotContain(run => run.Contains("/p:EnableUdtTestHooks=true", StringComparison.Ordinal));
 
         releaseNotesScript.Should().Contain("Get-CompatibilityLines");
         releaseNotesScript.Should().Contain("if ($hasCrossPlatformCli)");

@@ -237,6 +237,11 @@ internal sealed class GitHubWorkflowContract
     private static IReadOnlyList<WorkflowStepContract> ParseSteps(SourceLine[] lines, ref int index)
     {
         var result = new List<WorkflowStepContract>();
+        var stepIndent = FindFirstContentIndent(lines, index);
+        if (stepIndent < 0)
+            return result;
+
+        var stepPropertyIndent = stepIndent + 2;
         while (index < lines.Length)
         {
             if (lines[index].IsIgnorable)
@@ -245,14 +250,11 @@ internal sealed class GitHubWorkflowContract
                 continue;
             }
 
-            if (lines[index].Indent <= 4)
+            if (lines[index].Indent < stepIndent)
                 break;
 
-            if (lines[index].Indent != 6 || !lines[index].Content.StartsWith("-", StringComparison.Ordinal))
-            {
-                index++;
-                continue;
-            }
+            if (lines[index].Indent != stepIndent || !lines[index].Content.StartsWith("-", StringComparison.Ordinal))
+                break;
 
             var step = new WorkflowStepContract();
             var firstProperty = lines[index].Content[1..].Trim();
@@ -269,10 +271,10 @@ internal sealed class GitHubWorkflowContract
                     continue;
                 }
 
-                if (lines[index].Indent <= 6)
+                if (lines[index].Indent <= stepIndent)
                     break;
 
-                if (lines[index].Indent == 8)
+                if (lines[index].Indent == stepPropertyIndent)
                 {
                     var property = ReadKeyValue(lines[index]);
                     ApplyStepProperty(step, lines[index], property.Key + ":" + property.Value, lines, ref index);
@@ -286,6 +288,19 @@ internal sealed class GitHubWorkflowContract
         }
 
         return result;
+    }
+
+    private static int FindFirstContentIndent(SourceLine[] lines, int index)
+    {
+        while (index < lines.Length)
+        {
+            if (!lines[index].IsIgnorable)
+                return lines[index].Indent;
+
+            index++;
+        }
+
+        return -1;
     }
 
     private static void ApplyStepProperty(
@@ -323,7 +338,7 @@ internal sealed class GitHubWorkflowContract
                 break;
             case "with":
                 index++;
-                ParseStepWith(step, lines, ref index);
+                ParseStepWith(step, lines, ref index, line.Indent);
                 break;
             default:
                 index++;
@@ -331,7 +346,11 @@ internal sealed class GitHubWorkflowContract
         }
     }
 
-    private static void ParseStepWith(WorkflowStepContract step, SourceLine[] lines, ref int index)
+    private static void ParseStepWith(
+        WorkflowStepContract step,
+        SourceLine[] lines,
+        ref int index,
+        int parentIndent)
     {
         while (index < lines.Length)
         {
@@ -341,10 +360,10 @@ internal sealed class GitHubWorkflowContract
                 continue;
             }
 
-            if (lines[index].Indent <= 8)
+            if (lines[index].Indent <= parentIndent)
                 break;
 
-            if (lines[index].Indent != 10)
+            if (lines[index].Indent != parentIndent + 2)
             {
                 index++;
                 continue;
