@@ -52,4 +52,23 @@ public sealed class AvaloniaMigrationContractTests
         service.IsEnglish(english).Should().BeTrue();
         service.IsInstalled(english).Should().BeTrue();
     }
+
+    [Theory]
+    [InlineData("macro-record:60", 0x60UL)]
+    [InlineData("MACRO-RECORD:69", 0x69UL)]
+    public void MacroRecordActionKeys_TargetOnlySupportedKeyboardSlots(string actionKey, ulong expectedKey)
+    {
+        FeatureActionContract.TryParseMacroRecordKey(actionKey, out var key).Should().BeTrue();
+        key.Should().Be(expectedKey);
+    }
+
+    [Theory]
+    [InlineData("macro-record:00")]
+    [InlineData("macro-record:6A")]
+    [InlineData("macro-record:not-a-key")]
+    [InlineData("macro-key:60")]
+    public void MacroRecordActionKeys_RejectInvalidOrWrongActionPrefixes(string actionKey)
+    {
+        FeatureActionContract.TryParseMacroRecordKey(actionKey, out _).Should().BeFalse();
+    }
 }

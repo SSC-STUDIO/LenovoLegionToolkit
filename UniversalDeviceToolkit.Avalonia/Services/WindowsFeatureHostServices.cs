@@ -31,6 +31,9 @@ internal sealed class WindowsFeatureHostServices
     private readonly IPluginManager _plugins;
     private readonly WindowsOptimizationService? _optimization;
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
+    private readonly object _macroRecordingLock = new();
+    private ulong? _macroRecordingKey;
+    private List<MacroEvent>? _macroRecordingEvents;
     private bool _automationInitialized;
     private static readonly ulong[] MacroKeys = [0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69];
 
@@ -50,6 +53,12 @@ internal sealed class WindowsFeatureHostServices
         _automation = automation;
         _plugins = plugins;
         _optimization = optimization;
+
+        if (_macro is MacroController macroController)
+        {
+            macroController.RecorderReceived += MacroController_RecorderReceived;
+            macroController.RecorderStopped += MacroController_RecorderStopped;
+        }
     }
 
     public static WindowsFeatureHostServices? TryCreate()
@@ -106,22 +115,18 @@ internal sealed class WindowsFeatureHostServices
                 _macro.SetEnabled(isSelected);
                 return true;
             case "Macro" when actionKey == "macro-record" && _macro is MacroController recordingController:
-                if (recordingController.IsRecording)
-                    return false;
-
-                recordingController.StartRecording(MacroRecorderSettings.Keyboard);
-                return true;
+                return StartMacroRecording(recordingController, 0x60);
+            case "Macro" when FeatureActionContract.TryParseMacroRecordKey(actionKey, out var recordingKey)
+                                 && _macro is MacroController recordingController:
+                return StartMacroRecording(recordingController, recordingKey);
             case "Macro" when actionKey == "macro-stop-recording" && _macro is MacroController stoppingController:
                 if (!stoppingController.IsRecording)
                     return false;
 
                 stoppingController.StopRecording();
                 return true;
-            case "Macro" when actionKey.StartsWith("macro-key:", StringComparison.OrdinalIgnoreCase)
+            case "Macro" when FeatureActionContract.TryParseMacroPlayKey(actionKey, out var macroKey)
                                  && _macro is MacroController playbackController:
-                if (!ulong.TryParse(actionKey["macro-key:".Length..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var macroKey))
-                    return false;
-
                 return playbackController.TryPlaySequence(macroKey);
             case "Actions" when actionKey == "automation-enabled":
                 await EnsureAutomationInitializedAsync().ConfigureAwait(false);
@@ -432,6 +437,62 @@ internal sealed class WindowsFeatureHostServices
         await controller.SetBrightnessAsync(Math.Clamp(current + delta, 0, 9)).ConfigureAwait(false);
     }
 
+    private bool StartMacroRecording(MacroController controller, ulong key)
+    {
+        if (controller.IsRecording)
+            return false;
+
+        lock (_macroRecordingLock)
+        {
+            _macroRecordingKey = key;
+            _macroRecordingEvents = [];
+        }
+
+        controller.StartRecording(MacroRecorderSettings.Keyboard);
+        return true;
+    }
+
+    private void MacroController_RecorderReceived(object? sender, MacroController.RecorderReceivedEventArgs e)
+    {
+        lock (_macroRecordingLock)
+        {
+            if (_macroRecordingKey is not null)
+                _macroRecordingEvents?.Add(e.MacroEvent);
+        }
+    }
+
+    private void MacroController_RecorderStopped(object? sender, MacroController.RecorderStoppedEventArgs e)
+    {
+        ulong? key;
+        List<MacroEvent>? events;
+        lock (_macroRecordingLock)
+        {
+            key = _macroRecordingKey;
+            events = _macroRecordingEvents;
+            _macroRecordingKey = null;
+            _macroRecordingEvents = null;
+        }
+
+        if (e.Interrupted || key is not { } macroKey || events is null)
+            return;
+
+        var controller = _macro as MacroController;
+        if (controller is null)
+            return;
+
+        var sequences = controller.GetSequences();
+        var identifier = new MacroIdentifier(MacroSource.Keyboard, macroKey);
+        sequences.TryGetValue(identifier, out var existing);
+        sequences[identifier] = new MacroSequence
+        {
+            RepeatCount = Math.Max(1, existing.RepeatCount),
+            IgnoreDelays = existing.IgnoreDelays,
+            InterruptOnOtherKey = existing.InterruptOnOtherKey,
+            Events = [.. events],
+        };
+        controller.SetSequences(sequences);
+    }
+
     private FeaturePageState GetMacroState()
     {
         var controller = _macro as MacroController;
@@ -494,6 +555,14 @@ internal sealed class WindowsFeatureHostServices
                     description,
                     eventCount == 0 ? "Empty" : "Play",
                     eventCount > 0,
+                    false,
+                    false));
+                actions.Add(new FeatureActionItem(
+                    $"macro-record:{key:X}",
+                    $"Record Numpad {digit}",
+                    $"Capture keyboard input into Numpad {digit}. Stop recording to save the sequence.",
+                    controller.IsRecording ? "Recording" : "Record",
+                    !controller.IsRecording,
                     false,
                     false));
             }
@@ -693,7 +762,7 @@ internal sealed class WindowsFeatureHostServices
                     applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
                     true,
                     applied,
-                    true));
+                    action.RollbackAsync is not null));
             }
         }
 
