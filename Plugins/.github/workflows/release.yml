@@ -1,4 +1,4 @@
-name: Publish Plugin Catalog
+name: Publish Official Plugin Catalog
 
 on:
   workflow_dispatch:
@@ -8,6 +8,10 @@ on:
         required: true
         default: 'custom-mouse,shell-integration,vive-tool'
 
+concurrency:
+  group: plugin-catalog-release
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -16,6 +20,8 @@ jobs:
     runs-on: windows-latest
     env:
       CATALOG_RELEASE_TAG: plugin-catalog
+      CATALOG_RELEASE_TITLE: 'Official Plugin Catalog (managed)'
+      CATALOG_RELEASE_NOTES: 'Rolling release containing the current official plugin catalog and packages.'
       CATALOG_RELEASE_URL: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog
 
     steps:
@@ -29,85 +35,267 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Prepare generated directories
+      - name: Prepare isolated release staging
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Path .\Plugins\.build\catalog, .\Plugins\.build\release-assets -Force | Out-Null
-          gh release download $env:CATALOG_RELEASE_TAG `
-            --repo "${{ github.repository }}" `
-            --pattern plugin-catalog.json `
-            --dir .\Plugins\.build\catalog `
-            --clobber
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host 'No existing plugin catalog release found; generating a new catalog.'
+          Set-StrictMode -Version Latest
+          $stageRoot = Join-Path $env:RUNNER_TEMP "udt-plugin-catalog-$env:GITHUB_RUN_ID"
+          $seedRoot = Join-Path $stageRoot 'catalog-seed'
+          $assetRoot = Join-Path $stageRoot 'assets'
+          $catalogRoot = Join-Path $stageRoot 'catalog'
+          $catalogPath = Join-Path $catalogRoot 'plugin-catalog.json'
+          $workingCatalog = Join-Path $env:GITHUB_WORKSPACE 'Plugins\.build\catalog\plugin-catalog.json'
+
+          New-Item -ItemType Directory -Path $seedRoot, $assetRoot, $catalogRoot, (Split-Path $workingCatalog) -Force | Out-Null
+
+          $releaseView = gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --json assets,isDraft,isPrerelease 2>&1
+          $releaseExitCode = $LASTEXITCODE
+          $releaseOutput = $releaseView -join [Environment]::NewLine
+          if ($releaseExitCode -eq 0) {
+            $release = $releaseOutput | ConvertFrom-Json
+            if ($release.isDraft -or $release.isPrerelease) {
+              throw "The rolling plugin catalog release must not be a draft or prerelease."
+            }
+
+            $catalogAsset = @($release.assets | Where-Object { $_.name -eq 'plugin-catalog.json' })
+            if ($catalogAsset.Count -eq 1) {
+              gh release download $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --pattern plugin-catalog.json --dir $seedRoot --clobber
+              if ($LASTEXITCODE -ne 0) {
+                throw 'The existing plugin catalog asset could not be downloaded.'
+              }
+            }
+            else {
+              Write-Host 'No existing plugin-catalog.json asset found; a new catalog will be generated.'
+            }
           }
+          elseif ($releaseOutput -notmatch '(?i)(not found|404)') {
+            throw "Unable to inspect the rolling plugin catalog release: $releaseOutput"
+          }
+
+          if (Test-Path (Join-Path $seedRoot 'plugin-catalog.json')) {
+            Copy-Item (Join-Path $seedRoot 'plugin-catalog.json') $workingCatalog -Force
+          }
+          elseif (Test-Path $workingCatalog) {
+            Remove-Item $workingCatalog -Force
+          }
+
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_STAGE_ROOT=$stageRoot"
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_ASSET_ROOT=$assetRoot"
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_OUTPUT_PATH=$catalogPath"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate official plugins
         shell: pwsh
         run: |
-          .\Plugins\Scripts\Invoke-PluginTooling.ps1 `
-            validate `
-            --repository-root .\Plugins `
-            --plugin-ids "${{ github.event.inputs.plugin_ids }}" `
-            --profile official-release
+          .\Plugins\Scripts\Invoke-PluginTooling.ps1 validate --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --profile official-release
 
       - name: Build and package selected plugins
         shell: pwsh
         run: |
-          $pluginIds = "${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          Set-StrictMode -Version Latest
+          $pluginIds = @("${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+          if ($pluginIds.Count -eq 0) {
+            throw 'At least one plugin id is required.'
+          }
+
           foreach ($pluginId in $pluginIds) {
             .\Plugins\Scripts\Invoke-PluginTooling.ps1 build --repository-root .\Plugins --plugin $pluginId
-            .\Plugins\Scripts\Invoke-PluginTooling.ps1 package --repository-root .\Plugins --plugin $pluginId --output-dir .\Plugins\.build\release-assets
+            if ($LASTEXITCODE -ne 0) {
+              throw "Build failed for plugin '$pluginId'."
+            }
+
+            .\Plugins\Scripts\Invoke-PluginTooling.ps1 package --repository-root .\Plugins --plugin $pluginId --output-dir $env:CATALOG_ASSET_ROOT
+            if ($LASTEXITCODE -ne 0) {
+              throw "Packaging failed for plugin '$pluginId'."
+            }
           }
 
-      - name: Generate plugin catalog
+      - name: Generate staged plugin catalog
         shell: pwsh
         run: |
-          .\Plugins\Scripts\Invoke-PluginTooling.ps1 `
-            generate-store `
-            --repository-root .\Plugins `
-            --plugin-ids "${{ github.event.inputs.plugin_ids }}" `
-            --asset-root .\Plugins\.build\release-assets `
-            --output .\Plugins\.build\catalog\plugin-catalog.json `
-            --release-repository-url $env:CATALOG_RELEASE_URL `
-            --merge-existing `
-            --require-assets
+          .\Plugins\Scripts\Invoke-PluginTooling.ps1 generate-store --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --asset-root $env:CATALOG_ASSET_ROOT --output $env:CATALOG_OUTPUT_PATH --release-repository-url $env:CATALOG_RELEASE_URL --merge-existing --require-assets
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Plugin catalog generation failed.'
+          }
 
-      - name: Ensure rolling catalog release exists
+      - name: Validate staged release contents
         shell: pwsh
         run: |
+          Set-StrictMode -Version Latest
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+          $pluginIds = @("${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+          $catalog = Get-Content -LiteralPath $env:CATALOG_OUTPUT_PATH -Raw | ConvertFrom-Json
+          $catalogPlugins = @($catalog.plugins)
+          $forbiddenHostFiles = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+          @(
+            'Universal Device Toolkit.dll',
+            'UniversalDeviceToolkit.Lib.dll',
+            'UniversalDeviceToolkit.Lib.Plugins.dll',
+            'UniversalDeviceToolkit.Plugins.Abstractions.dll'
+          ) | ForEach-Object { [void]$forbiddenHostFiles.Add($_) }
+
+          foreach ($pluginId in $pluginIds) {
+            $assets = @(Get-ChildItem -LiteralPath $env:CATALOG_ASSET_ROOT -Filter "$pluginId-v*.zip" -File)
+            if ($assets.Count -ne 1) {
+              throw "Expected exactly one staged ZIP for '$pluginId', found $($assets.Count)."
+            }
+
+            $asset = $assets[0]
+            $entries = @($catalogPlugins | Where-Object { $_.id -eq $pluginId })
+            if ($entries.Count -ne 1) {
+              throw "The staged catalog must contain exactly one entry for '$pluginId'."
+            }
+
+            $entry = $entries[0]
+            if ([int64]$entry.fileSize -ne $asset.Length) {
+              throw "Catalog fileSize does not match the staged ZIP for '$pluginId'."
+            }
+
+            $actualZipHash = (Get-FileHash -LiteralPath $asset.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($entry.zipHash -ne $actualZipHash) {
+              throw "Catalog zipHash does not match the staged ZIP for '$pluginId'."
+            }
+            if ([string]$entry.fileHash -notmatch '^[a-f0-9]{64}$') {
+              throw "Catalog fileHash is missing or malformed for '$pluginId'."
+            }
+
+            $archive = [System.IO.Compression.ZipFile]::OpenRead($asset.FullName)
+            try {
+              if ($archive.Entries.Count -eq 0) {
+                throw "The staged ZIP for '$pluginId' is empty."
+              }
+
+              $forbiddenEntries = @($archive.Entries | Where-Object {
+                $forbiddenHostFiles.Contains([System.IO.Path]::GetFileName($_.FullName))
+              })
+              if ($forbiddenEntries.Count -ne 0) {
+                throw "The staged ZIP for '$pluginId' contains host binaries: $($forbiddenEntries.FullName -join ', ')"
+              }
+            }
+            finally {
+              $archive.Dispose()
+            }
+          }
+
+      - name: Ensure managed rolling release
+        shell: pwsh
+        run: |
+          Set-StrictMode -Version Latest
           gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $env:CATALOG_RELEASE_TAG `
-              --repo "${{ github.repository }}" `
-              --title 'Universal Device Toolkit Plugins' `
-              --notes 'Rolling release containing the current official plugin catalog and packages.' `
-              --latest=false
+            gh release create $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --title "$env:CATALOG_RELEASE_TITLE" --notes "$env:CATALOG_RELEASE_NOTES" --latest=false
           }
+          else {
+            gh release edit $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --title "$env:CATALOG_RELEASE_TITLE" --notes "$env:CATALOG_RELEASE_NOTES" --latest=false
+          }
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Unable to create or update the managed rolling plugin catalog release.'
+          }
+
+          $release = gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --json name,assets,isDraft,isPrerelease | ConvertFrom-Json
+          if ($release.isDraft -or $release.isPrerelease) {
+            throw 'The managed rolling plugin catalog release must not be a draft or prerelease.'
+          }
+          $release | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $env:CATALOG_STAGE_ROOT 'release-before.json') -Encoding utf8
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Replace selected package assets
+      - name: Upload new package assets
         shell: pwsh
         run: |
-          $pluginIds = "${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
-          $release = gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --json assets | ConvertFrom-Json
+          Set-StrictMode -Version Latest
+          $pluginIds = @("${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+          $newAssetNames = @{}
           foreach ($pluginId in $pluginIds) {
-            $newAsset = Get-ChildItem .\Plugins\.build\release-assets "$pluginId-v*.zip" | Select-Object -First 1
-            if (-not $newAsset) { throw "Package asset for '$pluginId' was not generated." }
+            $assets = @(Get-ChildItem -LiteralPath $env:CATALOG_ASSET_ROOT -Filter "$pluginId-v*.zip" -File)
+            if ($assets.Count -ne 1) {
+              throw "Expected exactly one staged ZIP for '$pluginId'."
+            }
+            $newAssetNames[$pluginId] = $assets[0].Name
+            gh release upload $env:CATALOG_RELEASE_TAG $assets[0].FullName --repo "${{ github.repository }}" --clobber
+            if ($LASTEXITCODE -ne 0) {
+              throw "Unable to upload the new package asset for '$pluginId'."
+            }
+          }
+          $newAssetNames | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $env:CATALOG_STAGE_ROOT 'new-assets.json') -Encoding utf8
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            foreach ($oldAsset in $release.assets | Where-Object { $_.name -like "$pluginId-v*.zip" -and $_.name -ne $newAsset.Name }) {
-              gh release delete-asset $env:CATALOG_RELEASE_TAG $oldAsset.name --repo "${{ github.repository }}" --yes
+      - name: Publish catalog asset last and prune stale packages
+        shell: pwsh
+        run: |
+          Set-StrictMode -Version Latest
+          $before = Get-Content -LiteralPath (Join-Path $env:CATALOG_STAGE_ROOT 'release-before.json') -Raw | ConvertFrom-Json
+          $newAssetNames = Get-Content -LiteralPath (Join-Path $env:CATALOG_STAGE_ROOT 'new-assets.json') -Raw | ConvertFrom-Json
+          $pluginIds = @("${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+
+          $previousCatalog = Join-Path $env:CATALOG_STAGE_ROOT 'catalog-seed\plugin-catalog.json'
+          $beforeAssetNames = @($before.assets | ForEach-Object { $_.name })
+          try {
+            gh release upload $env:CATALOG_RELEASE_TAG $env:CATALOG_OUTPUT_PATH --repo "${{ github.repository }}" --clobber
+            if ($LASTEXITCODE -ne 0) {
+              throw 'Unable to publish the staged plugin catalog.'
+            }
+          }
+          catch {
+            $catalogError = $_
+            if (Test-Path $previousCatalog) {
+              gh release upload $env:CATALOG_RELEASE_TAG $previousCatalog --repo "${{ github.repository }}" --clobber
+              if ($LASTEXITCODE -ne 0) {
+                Write-Warning 'The previous plugin catalog could not be restored automatically.'
+              }
+            }
+            else {
+              Write-Warning 'No previous plugin catalog was available for rollback.'
             }
 
-            gh release upload $env:CATALOG_RELEASE_TAG $newAsset.FullName --repo "${{ github.repository }}" --clobber
+            foreach ($pluginId in $pluginIds) {
+              $newAssetName = [string]$newAssetNames.$pluginId
+              if ($beforeAssetNames -notcontains $newAssetName) {
+                gh release delete-asset $env:CATALOG_RELEASE_TAG $newAssetName --repo "${{ github.repository }}" --yes
+                if ($LASTEXITCODE -ne 0) {
+                  Write-Warning "The new package asset $newAssetName could not be removed during rollback."
+                }
+              }
+            }
+            throw $catalogError
           }
 
-          gh release upload $env:CATALOG_RELEASE_TAG `
-            .\Plugins\.build\catalog\plugin-catalog.json `
-            --repo "${{ github.repository }}" `
-            --clobber
+          foreach ($pluginId in $pluginIds) {
+            $newAssetName = [string]$newAssetNames.$pluginId
+            $staleAssets = @($before.assets | Where-Object {
+              $_.name -like "$pluginId-v*.zip" -and $_.name -ne $newAssetName
+            })
+            foreach ($staleAsset in $staleAssets) {
+              gh release delete-asset $env:CATALOG_RELEASE_TAG $staleAsset.name --repo "${{ github.repository }}" --yes
+              if ($LASTEXITCODE -ne 0) {
+                throw "Unable to remove stale package asset '$($staleAsset.name)'."
+              }
+            }
+          }
+          $finalRelease = gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --json name,assets,isDraft,isPrerelease | ConvertFrom-Json
+          if ($finalRelease.name -ne $env:CATALOG_RELEASE_TITLE -or $finalRelease.isDraft -or $finalRelease.isPrerelease) {
+            throw 'The final rolling plugin catalog release metadata is invalid.'
+          }
+          if (@($finalRelease.assets | Where-Object { $_.name -eq 'plugin-catalog.json' }).Count -ne 1) {
+            throw 'The final rolling plugin catalog release is missing plugin-catalog.json.'
+          }
+
+          foreach ($pluginId in $pluginIds) {
+            $newAssetName = [string]$newAssetNames.$pluginId
+            $matchingAssets = @($finalRelease.assets | Where-Object { $_.name -eq $newAssetName })
+            if ($matchingAssets.Count -ne 1) {
+              throw "The final rolling plugin catalog release is missing '$newAssetName'."
+            }
+
+            $staleAssets = @($finalRelease.assets | Where-Object {
+              $_.name -like "$pluginId-v*.zip" -and $_.name -ne $newAssetName
+            })
+            if ($staleAssets.Count -ne 0) {
+              throw "Stale package assets remain for '$pluginId': $($staleAssets.name -join ', ')"
+            }
+          }
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
