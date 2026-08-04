@@ -89,15 +89,7 @@
                             AutomationProperties.AutomationId="{Binding AutomationId}"
                             AutomationProperties.Name="{Binding AccessibilityName}">
                         <Grid>
-                            <!-- Severity accent pill on the left edge. -->
-                            <Border
-                                Width="4"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Stretch"
-                                Margin="8,12"
-                                CornerRadius="{StaticResource CornerRadiusProgressBar}"
-                                Background="{Binding IconBrush}" />
-                            <Grid Margin="22,10,12,10">
+                            <Grid Margin="12,10,12,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
