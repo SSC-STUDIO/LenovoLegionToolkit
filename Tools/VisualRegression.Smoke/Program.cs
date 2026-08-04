@@ -417,46 +417,58 @@ internal static partial class Program
 
     private static void CaptureAvaloniaSettingsItems(string currentDirectory, AutomationElement mainWindow)
     {
-        var live = ResolveLiveWindow(mainWindow);
-        var navigation = FindByAutomationId(live, "AvaloniaSettingsNavigationList") ?? live;
-        var items = navigation.FindAll(
-                TreeScope.Descendants,
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
-            .Cast<AutomationElement>()
-            .Where(IsVisible)
-            .ToArray();
-
-        for (var index = 0; index < items.Length; index++)
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        for (var pass = 0; pass < 32; pass++)
         {
-            live = ResolveLiveWindow(mainWindow);
-            navigation = FindByAutomationId(live, "AvaloniaSettingsNavigationList") ?? live;
-            items = navigation.FindAll(
+            var live = ResolveLiveWindow(mainWindow);
+            var navigation = FindByAutomationId(live, "AvaloniaSettingsNavigationList") ?? live;
+            var items = navigation.FindAll(
                     TreeScope.Descendants,
                     new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
                 .Cast<AutomationElement>()
-                .Where(IsVisible)
                 .ToArray();
-            if (index >= items.Length)
+
+            var descriptor = items
+                .Select(item => new NavigationItemDescriptor(
+                    GetStableNavigationItemKey(item),
+                    GetAutomationLabel(item)))
+                .FirstOrDefault(item => !visited.Contains(item.Key));
+            if (descriptor is null)
                 break;
 
-            var item = items[index];
+            var item = FindNavigationItem(navigation, descriptor);
+            if (item is null)
+                break;
+
+            TryScrollIntoView(item);
+            item = FindNavigationItem(navigation, descriptor);
+            if (item is null || !IsVisible(item))
+            {
+                visited.Add(descriptor.Key);
+                continue;
+            }
+
+            visited.Add(descriptor.Key);
             ActivateElement(item);
             WaitForAnimationsToComplete();
-            var itemLabel = SanitizeFileNameSegment(GetAutomationLabel(item));
+            var itemLabel = SanitizeFileNameSegment(descriptor.Label);
             var label = string.IsNullOrWhiteSpace(itemLabel)
-                ? $"settings-item-{index + 1}"
-                : $"settings-{index + 1}-{itemLabel}";
+                ? $"settings-item-{visited.Count}"
+                : $"settings-{visited.Count}-{itemLabel}";
             CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
             CaptureFirstComboState(currentDirectory, mainWindow, label);
             CaptureFirstSafeToggleState(currentDirectory, mainWindow, label);
         }
+
+        if (visited.Count == 0)
+            throw new TimeoutException("Avalonia settings navigation did not expose any items.");
     }
 
     private static void CaptureWpfSettingsStates(string currentDirectory, AutomationElement mainWindow)
     {
         var live = ResolveLiveWindow(mainWindow);
         var navigation = WaitForAutomationId(live, "SettingsNavigationList", TimeSpan.FromSeconds(15));
-        var items = WaitUntil(
+        var hasItems = WaitUntil(
             () => navigation.FindAll(
                     TreeScope.Descendants,
                     new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
@@ -465,31 +477,41 @@ internal static partial class Program
             TimeSpan.FromSeconds(15),
             TimeSpan.FromMilliseconds(250));
 
-        if (!items)
+        if (!hasItems)
             throw new TimeoutException("Settings navigation did not expose any visible items.");
 
-        var count = navigation.FindAll(
-                TreeScope.Descendants,
-                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
-            .Cast<AutomationElement>()
-            .Count(IsVisible);
-
-        for (var index = 0; index < count; index++)
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        for (var pass = 0; pass < 32; pass++)
         {
             live = ResolveLiveWindow(mainWindow);
             navigation = FindByAutomationId(live, "SettingsNavigationList") ?? navigation;
-            var visibleItems = navigation.FindAll(
+            var navItems = navigation.FindAll(
                     TreeScope.Descendants,
                     new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
                 .Cast<AutomationElement>()
-                .Where(IsVisible)
                 .ToArray();
-            if (index >= visibleItems.Length)
+
+            var descriptor = navItems
+                .Select(item => new NavigationItemDescriptor(
+                    GetStableNavigationItemKey(item),
+                    GetAutomationLabel(item)))
+                .FirstOrDefault(item => !visited.Contains(item.Key));
+            if (descriptor is null)
                 break;
 
-            var item = visibleItems[index];
-            var itemName = GetElementName(item);
-            var automationId = item.Current.AutomationId;
+            var item = FindNavigationItem(navigation, descriptor);
+            if (item is null)
+                break;
+
+            TryScrollIntoView(item);
+            item = FindNavigationItem(navigation, descriptor);
+            if (item is null || !IsVisible(item))
+            {
+                visited.Add(descriptor.Key);
+                continue;
+            }
+
+            visited.Add(descriptor.Key);
             ActivateElement(item);
             WaitUntil(
                 () => IsVisible(FindByAutomationId(ResolveLiveWindow(mainWindow), "SettingsContentControl")),
@@ -497,12 +519,52 @@ internal static partial class Program
                 TimeSpan.FromMilliseconds(200));
             WaitForAnimationsToComplete();
 
-            var label = $"settings-{index + 1}-{SanitizeFileNameSegment(
-                string.IsNullOrWhiteSpace(automationId) ? itemName : automationId)}";
+            var label = $"settings-{visited.Count}-{SanitizeFileNameSegment(descriptor.Label)}";
             CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
             CaptureFirstComboState(currentDirectory, mainWindow, label);
             CaptureFirstSafeToggleState(currentDirectory, mainWindow, label);
         }
+
+        if (visited.Count == 0)
+            throw new TimeoutException("WPF settings navigation did not expose any items.");
+    }
+
+    private static string GetStableNavigationItemKey(AutomationElement item)
+    {
+        var automationId = item.Current.AutomationId;
+        return string.IsNullOrWhiteSpace(automationId)
+            ? $"name:{GetAutomationLabel(item)}"
+            : $"id:{automationId}";
+    }
+
+    private static AutomationElement? FindNavigationItem(
+        AutomationElement navigation,
+        NavigationItemDescriptor descriptor)
+    {
+        var items = navigation.FindAll(
+                TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+            .Cast<AutomationElement>();
+
+        return items.FirstOrDefault(item => string.Equals(
+            GetStableNavigationItemKey(item), descriptor.Key, StringComparison.Ordinal));
+    }
+
+    private static void TryScrollIntoView(AutomationElement element)
+    {
+        try
+        {
+            if (element.TryGetCurrentPattern(ScrollItemPattern.Pattern, out var pattern))
+                ((ScrollItemPattern)pattern).ScrollIntoView();
+        }
+        catch (ElementNotAvailableException)
+        {
+        }
+        catch (InvalidOperationException)
+        {
+        }
+
+        Thread.Sleep(150);
     }
 
     private static void CaptureFirstComboState(string currentDirectory, AutomationElement mainWindow, string label)
@@ -2296,6 +2358,8 @@ internal static partial class Program
     private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
     private sealed record PageTarget(string Label, string[] AutomationIds, string[] Names, Func<AutomationElement, bool> Ready);
+
+    private sealed record NavigationItemDescriptor(string Key, string Label);
 
     private sealed record CaptureRecord(
         int Sequence,
