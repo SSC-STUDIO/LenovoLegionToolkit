@@ -17,7 +17,7 @@ public sealed class StoreJsonGenerator
             : _repository.ResolveTargetPluginIds(repository, request.PluginIds);
 
         var assetRoot = request.AssetRoot is null
-            ? Path.Combine(repository.RootPath, "Build", "release-assets")
+            ? Path.Combine(repository.RootPath, ".build", "release-assets")
             : Path.GetFullPath(request.AssetRoot);
 
         var releaseDate = request.ReleaseDate ?? DateTimeOffset.UtcNow;
@@ -63,8 +63,7 @@ public sealed class StoreJsonGenerator
             }
 
             var storeMetadata = plugin.UnifiedManifest.Store;
-            var tagName = $"{plugin.Manifest.Id}-v{plugin.Manifest.Version}";
-            var assetName = $"{tagName}.zip";
+            var assetName = $"{plugin.Manifest.Id}-v{plugin.Manifest.Version}.zip";
             var assetPath = Path.Combine(assetRoot, assetName);
             var assetExists = File.Exists(assetPath);
             if (request.RequireAssets && !assetExists)
@@ -81,8 +80,8 @@ public sealed class StoreJsonGenerator
                 Version = plugin.Manifest.Version,
                 MinLltVersion = plugin.Manifest.MinLltVersion,
                 IsSystemPlugin = plugin.Manifest.IsSystemPlugin,
-                DownloadUrl = $"{request.ReleaseRepositoryUrl}/download/{tagName}/{assetName}",
-                Changelog = $"{request.ReleaseRepositoryUrl}/tag/{tagName}",
+                DownloadUrl = $"{request.ReleaseRepositoryUrl.TrimEnd('/')}/{assetName}",
+                Changelog = $"{plugin.Manifest.Repository.TrimEnd('/')}/blob/master/Plugins/Official/{plugin.FolderName}/CHANGELOG.md",
                 FileSize = assetExists ? new FileInfo(assetPath).Length : 0,
                 ReleaseDate = releaseDate.ToString("O"),
                 RepositoryUrl = storeMetadata.RepositoryUrl ?? plugin.Manifest.Repository,
@@ -161,7 +160,7 @@ public sealed class StoreJsonGenerator
 
         var repository = _repository.Load(request.RepositoryRoot);
         var outputPath = request.OutputPath is null
-            ? Path.Combine(repository.RootPath, "store.json")
+            ? Path.Combine(repository.RootPath, ".build", "catalog", "plugin-catalog.json")
             : Path.GetFullPath(request.OutputPath);
 
         var store = Generate(request);
@@ -175,7 +174,7 @@ public sealed class StoreJsonGenerator
 
         var repository = _repository.Load(request.RepositoryRoot);
         var storePath = request.OutputPath is null
-            ? Path.Combine(repository.RootPath, "store.json")
+            ? Path.Combine(repository.RootPath, ".build", "catalog", "plugin-catalog.json")
             : Path.GetFullPath(request.OutputPath);
 
         if (!File.Exists(storePath))

@@ -1,4 +1,4 @@
-﻿# Knowledge Base — Lessons Learned & Rules (经验知识与规则累积)
+# Knowledge Base — Lessons Learned & Rules (经验知识与规则累积)
 
 This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Plugins project. Every time an AI agent or human developer solves a complex bug, discovers a Windows OS quirk, or optimizes an architecture, they MUST append a structured entry here.
 
@@ -6,7 +6,7 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 
 | Item | Value |
 |------|--------|
-| Host app | Universal Device Toolkit **v5.0.0** (`Dependencies/Host/host-release.json`) |
+| Host app | Universal Device Toolkit **v5.0.0** (`Plugins/HostBaseline/host-release.json`) |
 | Official store plugins | `custom-mouse` 1.0.17 · `vive-tool` 1.2.3 · `shell-integration` 1.0.13 |
 | Tooling entry | `udt-plugin.cmd` (`llt-plugin.cmd` alias) |
 | Min host field | `plugin.manifest.json` → `minHostVersion` = **5.0.0**; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
@@ -167,7 +167,7 @@ When evaluating UI via FlaUI + WinRT OCR:
 
 ### Store Metadata Strict Mode
 - `store-entry.json` MUST byte-match the `store` block of the sibling `plugin.manifest.json` (promote/generate-sync keeps them in lockstep).
-- NEVER regenerate the root `store.json` wholesale via `generate-store` when some plugins lack a published release ZIP: it zeroes `fileSize`/`hash` for those plugins (silent regression). Merge the `store-entry.json` of a new plugin incrementally instead.
+- NEVER regenerate the generated `Plugins/.build/catalog/plugin-catalog.json` wholesale via `generate-store` when some plugins lack a published release ZIP: it zeroes `fileSize`/`hash` for those plugins (silent regression). Merge the `store-entry.json` of a new plugin incrementally instead.
 - Release assets are the single source for `fileSize`/`hash`; only present `release-assets/<id>-v<ver>.zip` entries may carry nonzero sizes.
 
 ### Release Automation
@@ -213,7 +213,7 @@ When evaluating UI via FlaUI + WinRT OCR:
 - **Symptom / Pitfall**: `BatteryHealthService.QueryFirst` enumerated `ManagementObjectSearcher.Get()` synchronously. The outer `GetBatteryHealthReportAsync` wrapped the body in `Task.Run` + `cts.CancelAfter(WmiTimeoutMs=3000)` and `QueryFirst` checked `cancellationToken.ThrowIfCancellationRequested()` per row, but `ManagementObjectSearcher.Get()` is a blocking native COM enumeration that does NOT poll the CancellationToken. The per-row guard only runs AFTER a row is returned, so a hung ACPI/WMI provider pinned the thread-pool task (and the await of the caller) indefinitely past the 3,000ms contract.
 - **Root Cause**: `cts.CancelAfter` is purely decorative for a hung native COM call once the delegate is already running; it cannot interrupt the blocking enumeration. The existing rule "ALL WMI queries MUST use async wrappers with 2,500ms-3,000ms timeouts" was satisfied nominally but NOT enforced as a HARD deadline - cancellation is cooperative, native COM does not cooperate.
 - **Enforced Rule**: For WMI queries behind a cancellation budget, do NOT rely on `CancelAfter` alone. Race the blocking `ManagementObjectSearcher.Get()` enumeration off-thread (`Task.Run`) against a hard deadline and ABANDON the task if it does not complete: `Task.Wait(TimeSpan.FromMilliseconds(timeoutMs), cts.Token)` returning false -> `cts.Cancel()` + throw `TimeoutException`. This matches the host-side `ManagementObjectSearcherExtensions.GetAsync` (`Task.WhenAny(task, Task.Delay(timeoutMs))` + abandon). When the enumeration faults inside the bounded task, `Task.Wait` throws `AggregateException` -> unwrap (`ae.InnerExceptions.Count == 1 ? ae.InnerExceptions[0] : ae`) to rethrow the original `ManagementException` / `COMException` / `OperationCanceledException` so the typed catch blocks of the caller still match. Mirror this abandon pattern in any plugin WMI site that currently relies on `CancelAfter` for a hung-provider deadline.
-- **Evidence**: PLG-004 remediated in working tree; `dotnet build UniversalDeviceToolkit-Plugins.sln -c Release` => 0 warnings / 0 errors; `dotnet test Plugins\BatteryHealth.Tests --no-build` => 16/16 pass. Per-query hard timeout `WmiQueryTimeoutMs = 2500` added (outer `WmiTimeoutMs = 3000` retained as the total budget ceiling).
+- **Evidence**: PLG-004 remediated in working tree; `dotnet build UniversalDeviceToolkit.Plugins.sln -c Release` => 0 warnings / 0 errors; `dotnet test Plugins\BatteryHealth.Tests --no-build` => 16/16 pass. Per-query hard timeout `WmiQueryTimeoutMs = 2500` added (outer `WmiTimeoutMs = 3000` retained as the total budget ceiling).
 
 ---
 

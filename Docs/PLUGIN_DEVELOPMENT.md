@@ -4,7 +4,7 @@
 
 > **官方插件开发在独立仓库中进行**
 >
-> 贡献者应克隆并工作在 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)，而非在本主仓库内创建插件项目。作者工作流请参阅该仓库的 [Docs/PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md) 与 [Docs/PLUGIN_DEVELOPMENT.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_DEVELOPMENT.md)。
+> 贡献者应克隆并工作在 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)，而非在本主仓库内创建插件项目。作者工作流请参阅该仓库的 [Docs/PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/PLUGIN_QUICKSTART.md) 与 [Docs/PLUGIN_DEVELOPMENT.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/PLUGIN_DEVELOPMENT.md)。
 >
 > **本文档**聚焦于宿主侧接口契约、插件生命周期、以及插件 UI 应与主程序对齐的视觉规范；供理解宿主如何加载插件，也供在插件仓库中实现页面时对照宿主期望。
 
@@ -44,7 +44,7 @@ Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
 
 ## 快速开始
 
-以下步骤在 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 仓库中执行。不要在本主仓库添加 `ProjectReference` 到 `UniversalDeviceToolkit.Lib`；插件通过 `UniversalDeviceToolkit.Plugins.SDK.dll` 引用宿主契约。
+以下步骤在 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 仓库中执行。不要在本主仓库添加 `ProjectReference` 到 `UniversalDeviceToolkit.Lib`；插件通过 `UniversalDeviceToolkit.Plugins.SDK.dll` 引用宿主契约。
 
 > **宿主 ABI（Phase 3 硬切换后）**：核心程序集与命名空间为 `UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins`。新插件程序集应使用 `UniversalDeviceToolkit.Plugins.*`；宿主过渡期仍接受旧前缀 `LenovoLegionToolkit.Plugins.*`。完整清单与遗留兼容面见 [NamespaceMigration.md](./NamespaceMigration.md)。
 
@@ -60,7 +60,7 @@ Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
   --name "My Plugin"
 ```
 
-这会生成 `Plugins/MyPlugin/`、测试项目、`plugin.manifest.json`、兼容输出的 `plugin.json` 与资源文件。完整作者流程见插件仓库 [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md)。
+这会生成 `Plugins/Official/MyPlugin/`、测试项目、`plugin.manifest.json`、兼容输出的 `plugin.json` 与资源文件。完整作者流程见插件仓库 [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/PLUGIN_QUICKSTART.md)。
 
 ### 2. 创建插件类
 
@@ -304,7 +304,7 @@ public class MyPluginSettingsPage : IPluginPage
 
 ### 插件 UI 视觉规范
 
-官方插件应合并 `[Plugins/Shared/PluginUiResources.xaml](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Plugins/Shared/PluginUiResources.xaml)`（由 `UniversalDeviceToolkit.Plugins.Shared` 提供），以保持与 Universal Device Toolkit 主程序一致的卡片布局、间距与 WPF-UI 按钮外观：
+官方插件应合并 `[Plugins/Shared/PluginUiResources.xaml](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Plugins/Shared/PluginUiResources.xaml)`（由 `UniversalDeviceToolkit.Plugins.Shared` 提供），以保持与 Universal Device Toolkit 主程序一致的卡片布局、间距与 WPF-UI 按钮外观：
 
 ```xml
 <UserControl.Resources>
@@ -344,7 +344,7 @@ public class MyPluginSettingsPage : IPluginPage
 make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 ```
 
-截图输出：`artifacts/workbench-visual/<plugin-id>-<theme>/`（`preview` / `settings` / `real-runtime`）。详见 [UniversalDeviceToolkit-Plugins — BUILD_SMOKE.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/BUILD_SMOKE.md#visual-smoke-pluginworkbench)。
+截图输出：`artifacts/workbench-visual/<plugin-id>-<theme>/`（`preview` / `settings` / `real-runtime`）。详见 [Plugins/Official — BUILD_SMOKE.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/BUILD_SMOKE.md#visual-smoke-pluginworkbench)。
 
 ---
 
@@ -542,7 +542,7 @@ public class MyPlugin : PluginBase { }
 
 ## 示例插件
 
-完整实现见 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 的 `Plugins/` 目录：
+完整实现见 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 的 `Plugins/` 目录：
 
 
 | 插件 ID                    | 页面模型             | 说明                                                 |
@@ -576,7 +576,7 @@ make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 
 调试宿主加载行为时，可将打包输出手动复制到主程序 `plugins` 目录：
 
-- 开发环境：`Build/plugins/`
+- 开发环境：`Plugins/.build/plugins/`
 - 安装环境：`%LOCALAPPDATA%/UniversalDeviceToolkit/plugins/`
 
 优先使用 `.\llt-plugin.cmd package --plugin my-plugin --build-first` 生成 ZIP，再解压或复制到上述目录。
@@ -598,7 +598,7 @@ make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 
 ### 提交到插件仓库
 
-1. Fork [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)
+1. Fork [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)
 2. 使用 `llt-plugin.cmd init` 在 `Plugins/` 下创建插件，或扩展现有插件
 3. 通过 `validate` 与 `workbench-smoke` 后提交 Pull Request
 
@@ -606,9 +606,9 @@ make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
 
 ## 相关文档
 
-- [UniversalDeviceToolkit-Plugins — PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md) - 插件作者快速开始
-- [UniversalDeviceToolkit-Plugins — PLUGIN_DEVELOPMENT.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_DEVELOPMENT.md) - 插件仓库完整开发指南
-- [UniversalDeviceToolkit-Plugins — BUILD_SMOKE.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/BUILD_SMOKE.md) - 构建与视觉冒烟
+- [Plugins/Official — PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/PLUGIN_QUICKSTART.md) - 插件作者快速开始
+- [Plugins/Official — PLUGIN_DEVELOPMENT.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/PLUGIN_DEVELOPMENT.md) - 插件仓库完整开发指南
+- [Plugins/Official — BUILD_SMOKE.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/BUILD_SMOKE.md) - 构建与视觉冒烟
 - [ARCHITECTURE.md](ARCHITECTURE.md) - 宿主系统架构
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - 主程序贡献指南
 - [AGENTS.md](../AGENTS.md) - 开发者指南

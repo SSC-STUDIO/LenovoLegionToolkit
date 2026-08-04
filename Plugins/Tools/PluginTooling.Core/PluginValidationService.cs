@@ -329,7 +329,9 @@ public sealed class PluginValidationService
         ValidateEqual(attributeVersion ?? string.Empty, plugin.Manifest.Version, "[Plugin] attribute version does not match plugin.manifest.json version. Run sync-version.", state);
 
         var outputPath = ReadProperty(document, "OutputPath");
-        var expectedOutputPath = $@"..\..\Build\plugins\{plugin.ExpectedAssemblyName}\";
+        var relativeOutputPath = Path.GetRelativePath(plugin.DirectoryPath, plugin.OutputDirectory)
+            .Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+        var expectedOutputPath = $"{relativeOutputPath}{Path.DirectorySeparatorChar}";
         if (!string.Equals(outputPath, expectedOutputPath, StringComparison.OrdinalIgnoreCase))
         {
             state.Fail($"OutputPath should be '{expectedOutputPath}'.");

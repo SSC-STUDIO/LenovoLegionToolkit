@@ -37,7 +37,7 @@ public sealed class PluginPackager
         EnsurePackageRequiredFiles(plugin);
 
         var outputDirectory = request.OutputDirectory is null
-            ? Path.Combine(repository.RootPath, "Build", "release-assets")
+            ? Path.Combine(repository.RootPath, ".build", "release-assets")
             : Path.GetFullPath(request.OutputDirectory);
 
         Directory.CreateDirectory(outputDirectory);

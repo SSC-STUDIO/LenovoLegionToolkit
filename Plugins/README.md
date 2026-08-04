@@ -8,19 +8,19 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/latest">
-    <img src="https://img.shields.io/github/v/release/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&logo=github&logoColor=white&color=brightgreen&label=Latest+Release&labelColor=222" alt="Latest Release" />
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog">
+    <img src="https://img.shields.io/badge/Plugin%20Catalog-rolling-2ea44f?style=for-the-badge&logo=github&logoColor=white&labelColor=222" alt="Plugin Catalog" />
   </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/stargazers">
-    <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&color=yellow&logo=github&labelColor=222" alt="Stars" />
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers">
+    <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=for-the-badge&color=yellow&logo=github&labelColor=222" alt="Stars" />
   </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit-Plugins?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=blue&labelColor=222" alt="License: MIT" />
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/LICENSE">
+    <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=blue&labelColor=222" alt="License: MIT" />
   </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/actions">
-    <img src="https://img.shields.io/github/actions/workflow/status/SSC-STUDIO/UniversalDeviceToolkit-Plugins/release.yml?style=for-the-badge&logo=github&logoColor=white&label=CI&labelColor=222" alt="CI" />
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/plugins-release.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/SSC-STUDIO/UniversalDeviceToolkit/plugins-release.yml?style=for-the-badge&logo=github&logoColor=white&label=CI&labelColor=222" alt="Plugin CI" />
   </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions">
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/discussions">
     <img src="https://img.shields.io/badge/Discussions-Welcome!-blue?style=for-the-badge&logo=github&logoColor=white&labelColor=222" alt="Discussions" />
   </a>
 </p>
@@ -32,7 +32,7 @@
 </p>
 
 <p align="center">
-  <a href="README.zh-CN.md">中文说明</a>
+  <a href="README_zh-hans.md">中文说明</a>
 </p>
 
 ---
@@ -41,11 +41,11 @@
 
 | Status | Plugin | Version | Description | Install ID |
 |--------|--------|---------|-------------|------------|
-| Active | **Cursor & Pointer** | v1.0.17 | Theme-aware cursor styles, Windows pointer speed, button swapping, safe cursor backup/restore | `custom-mouse` |
-| Active | **ViVeTool** | v1.2.3 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
-| Active | **Nilesoft Shell Manager** | v1.0.13 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
+| Active | **Cursor & Pointer** | v1.0.18 | Theme-aware cursor styles, Windows pointer speed, button swapping, safe cursor backup/restore | `custom-mouse` |
+| Active | **ViVeTool** | v1.2.4 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
+| Active | **Nilesoft Shell Manager** | v1.0.14 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
 
-> Catalog versions match `Plugins/*/plugin.manifest.json` (source of truth). Active store listings live in generated root [`store.json`](./store.json).
+> Catalog versions match `Plugins/Official/*/plugin.manifest.json` (source of truth). The generated catalog is `Plugins/.build/catalog/plugin-catalog.json` and is published in the rolling `plugin-catalog` release.
 
 ---
 
@@ -129,7 +129,7 @@ Canonical CLI entry: **`udt-plugin.cmd`**
 | `package` | Installable ZIP |
 | `bump-version` / `sync-version` | SemVer source of truth → project files |
 | `promote` | Official store metadata in `plugin.manifest.json` |
-| `generate-store` | Regenerate root `store.json` from manifests + assets |
+| `generate-store` | Regenerate generated `Plugins/.build/catalog/plugin-catalog.json` from manifests + assets |
 
 > Mental model (VS Code extension-like): `plugin.manifest.json` ≈ `package.json`, `dev` ≈ `npm run dev`, `package` ≈ `vsce package`.
 
@@ -140,7 +140,7 @@ Canonical CLI entry: **`udt-plugin.cmd`**
 Preview without the full host:
 
 ```powershell
-dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
+dotnet run --project .\Plugins\Tooling\PluginWorkbench\PluginWorkbench.csproj -- `
   --repository-root . `
   --plugin-id custom-mouse `
   --theme dark `
@@ -157,21 +157,24 @@ dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
 ## Repository Structure
 
 ```
-UniversalDeviceToolkit-Plugins/
-├── Plugins/                 # Official plugin projects + tests
-│   ├── Shared/              # Shared helpers (settings, process, HTTP, …)
-│   ├── CustomMouse/
-│   ├── ShellIntegration/
-│   └── ViveTool/
-├── SDK/                     # Plugin SDK surfaces
-├── Dependencies/Host/       # Vendored host refs (see host-release.json → v5.0.0)
-├── Tools/                   # PluginWorkbench + PluginTooling.CLI
-├── Scripts/                 # Host bootstrap, governance, helpers
-├── Docs/                    # Authoring & architecture (see Docs/README.md)
-├── store.json               # Generated store catalog (release output)
-├── udt-plugin.cmd           # Canonical tooling entry
-├── llt-plugin.cmd           # Compatibility alias
-└── Make.bat                 # Convenience wrappers
+UniversalDeviceToolkit/
++- Plugins/
+|  +- Official/             # Official plugin projects and tests
+|  |  +- CustomMouse/
+|  |  +- ShellIntegration/
+|  |  +- ViveTool/
+|  +- SDK/Runtime/          # Plugin SDK runtime surface
+|  +- Shared/               # Shared plugin helpers
+|  +- Shared.Tests/          # Shared helper tests
+|  +- Testing/               # Tooling and performance tests
+|  +- Tooling/               # CLI, PluginWorkbench, and smoke tools
+|  +- HostBaseline/          # Host release manifest; DLL cache is .host/
+|  +- .build/                # Ignored build, package, and catalog output
+|  +- udt-plugin.cmd         # Canonical tooling entry
+|  +- llt-plugin.cmd          # Compatibility alias
+|  `- Make.bat                # Convenience wrappers
++- Docs/Plugins/             # Authoring and architecture docs
+`- .github/workflows/plugins-* # Monorepo plugin CI and release workflows
 ```
 
 ---
@@ -180,12 +183,12 @@ UniversalDeviceToolkit-Plugins/
 
 | Layer | Source of truth | Current baseline |
 |-------|-----------------|------------------|
-| Host app | sibling `UniversalDeviceToolkit` / `Dependencies/Host/host-release.json` | **5.0.0** |
-| Each plugin SemVer | `Plugins/<Name>/plugin.manifest.json` → `version` | see catalog |
+| Host app | `Plugins/HostBaseline/host-release.json` | **5.0.0** |
+| Each plugin SemVer | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | see catalog |
 | Min host | `minHostVersion` in manifest; runtime `plugin.json` still exposes ABI field `MinLltVersion` | **5.0.0** |
-| Store catalog | Generated `store.json` | release output only |
+| Store catalog | Generated `Plugins/.build/catalog/plugin-catalog.json` | release output only |
 
-Do not hand-edit root `store.json` for routine authoring. Prefer:
+Do not hand-edit generated `Plugins/.build/catalog/plugin-catalog.json` for routine authoring. Prefer:
 
 ```powershell
 .\udt-plugin.cmd bump-version --plugin custom-mouse --part patch
@@ -203,7 +206,7 @@ Do not hand-edit root `store.json` for routine authoring. Prefer:
 4. `validate` + tests green
 5. Open a PR
 
-Read [CONTRIBUTING.md](./CONTRIBUTING.md) and [Docs/PLUGIN_DEVELOPMENT.md](./Docs/PLUGIN_DEVELOPMENT.md).
+Read [CONTRIBUTING.md](../CONTRIBUTING.md) and [Docs/Plugins/PLUGIN_DEVELOPMENT.md](../Docs/Plugins/PLUGIN_DEVELOPMENT.md).
 
 ---
 
@@ -224,8 +227,8 @@ Read [CONTRIBUTING.md](./CONTRIBUTING.md) and [Docs/PLUGIN_DEVELOPMENT.md](./Doc
 
 ## Community & Support
 
-- **Issues**: [GitHub Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions)
+- **Issues**: [GitHub Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/discussions)
 - **Host app**: [Universal Device Toolkit](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)
 
 ---

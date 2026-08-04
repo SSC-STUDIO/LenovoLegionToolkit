@@ -14,23 +14,23 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NeoSmart.AsyncLock" Version="3.2.1" />
+    <PackageReference Include="NeoSmart.AsyncLock" />
   </ItemGroup>
 
   <ItemGroup>

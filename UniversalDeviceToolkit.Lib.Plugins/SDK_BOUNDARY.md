@@ -10,7 +10,7 @@ The split mirrors the assembly configuration in
 from this repository entirely (the host build no longer compiles them) and
 ship as pre-built binaries (`UniversalDeviceToolkit.Plugins.SDK.dll` /
 `UniversalDeviceToolkit.Plugins.Shared.dll`) produced by the external
-`UniversalDeviceToolkit-Plugins` repository, copied into the app output by
+`Plugins/SDK/Runtime` and `Plugins/Shared`, copied into the app output by
 `UniversalDeviceToolkit.WPF.csproj`. Plugins only see the SDK surface.
 
 In addition, `UniversalDeviceToolkit.Lib\Plugins\LegacyPluginContracts.cs`

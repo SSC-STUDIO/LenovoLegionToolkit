@@ -184,20 +184,19 @@ jobs:
           }
 
           $sourceCandidates = @(
-            (Join-Path $PWD 'Build\plugins'),
-            (Join-Path $PWD '..\UniversalDeviceToolkit-Plugins\Build\plugins'),
-            (Join-Path $PWD '..\LenovoLegionToolkit-Plugins\Build\plugins')
+            (Join-Path $PWD 'Plugins\.build\plugins')
           )
           $sourceRoot = $sourceCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
           if (-not $sourceRoot) {
-            throw "Local smoke was requested for [$($requestedLocalPlugins -join ', ')], but no local plugin package source root exists. Provision Build/plugins before running local scenarios."
+            throw "Local smoke was requested for [$($requestedLocalPlugins -join ', ')], but no local plugin package source root exists. Build the requested projects into Plugins/.build/plugins before running local scenarios."
           }
 
           $missingDirectories = New-Object System.Collections.Generic.List[string]
           foreach ($pluginId in $requestedLocalPlugins) {
             $directoryCandidates = @(
               (Join-Path $sourceRoot $pluginId),
-              (Join-Path $sourceRoot (ConvertTo-PluginDirectoryName $pluginId))
+              (Join-Path $sourceRoot (ConvertTo-PluginDirectoryName $pluginId)),
+              (Join-Path $sourceRoot "UniversalDeviceToolkit.Plugins.$(ConvertTo-PluginDirectoryName $pluginId)")
             ) | Select-Object -Unique
 
             if (-not ($directoryCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1)) {

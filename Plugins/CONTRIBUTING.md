@@ -5,7 +5,7 @@ Thank you for helping improve the official plugin ecosystem for
 
 ## Ways to contribute
 
-- Report bugs or request features via [GitHub Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues)
+- Report bugs or request features via [GitHub Issues](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues)
 - Improve documentation or translations
 - Fix bugs / add features in existing plugins
 - Author a new plugin (contributor path or official store path)
@@ -17,25 +17,24 @@ Thank you for helping improve the official plugin ecosystem for
 - Git
 - Visual Studio 2022 (17.8+) or VS Code / another IDE with C# support
 
-Optional sibling checkout for host source:
+The plugin projects are part of the main repository; no sibling checkout is required:
 
 ```text
-/root/src/UniversalDeviceToolkit          # host
-/root/src/UniversalDeviceToolkit-Plugins  # this repo
+/root/src/UniversalDeviceToolkit          # host and plugins
 ```
 
-If host DLLs are missing, tooling bootstraps from `Dependencies/Host/host-release.json`
+If host DLLs are missing, tooling bootstraps from `Plugins/HostBaseline/host-release.json`
 (currently **host v5.0.0**).
 
 ## Development setup
 
 ```powershell
-git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins.git
-cd UniversalDeviceToolkit-Plugins
+git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git
+cd UniversalDeviceToolkit
 
-.\udt-plugin.cmd doctor
+.\Plugins\udt-plugin.cmd doctor
 dotnet restore
-dotnet build UniversalDeviceToolkit-Plugins.sln -c Release
+dotnet build Plugins\UniversalDeviceToolkit.Plugins.sln -c Release
 ```
 
 `udt-plugin.cmd` is the canonical entry. `llt-plugin.cmd` is a compatibility alias.
@@ -77,10 +76,10 @@ Requirements:
 
 | Layer | Source of truth |
 |-------|-----------------|
-| Plugin SemVer | `Plugins/<Name>/plugin.manifest.json` → `version` |
+| Plugin SemVer | `Plugins/Official/<Name>/plugin.manifest.json` → `version` |
 | Minimum host | `minHostVersion` (must match host baseline **5.0.0+** for current ABI) |
 | Runtime host field | `plugin.json` → `MinLltVersion` (legacy JSON property name; value is the UDT host version) |
-| Root store catalog | Generated `store.json` — not hand-edited for routine work |
+| Plugin catalog | Generated `Plugins/.build/catalog/plugin-catalog.json` — not hand-edited for routine work |
 
 ```powershell
 .\udt-plugin.cmd bump-version --plugin <id> --part patch|minor|major
@@ -90,7 +89,7 @@ Requirements:
 
 ## Coding standards
 
-- Follow [Docs/CODING_STANDARDS.md](./Docs/CODING_STANDARDS.md)
+- Follow [Docs/Plugins/CODING_STANDARDS.md](../Docs/Plugins/CODING_STANDARDS.md)
 - Prefer `PluginBase` and documented SDK interfaces
 - UI: `DynamicResource` colors, `.resx` strings, `WpfFallbackHelper` fallback UI
 - `TreatWarningsAsErrors` is enabled — keep zero warnings
@@ -115,19 +114,19 @@ Checklist:
 - [ ] Relevant tests pass (`.\udt-plugin.cmd test` or `dotnet test`)
 - [ ] Light + Dark checked in PluginWorkbench when UI changes
 - [ ] `plugin.manifest.json` / `CHANGELOG.md` updated when needed
-- [ ] No hand-edited root `store.json` unless you regenerated it intentionally
+- [ ] No hand-edited generated `Plugins/.build/catalog/plugin-catalog.json` unless you regenerated it intentionally
 - [ ] PR describes **what** and **why**
 
 Default branch: **`master`**.
 
 ## Documentation map
 
-See [Docs/README.md](./Docs/README.md) for the current vs historical document list.
+See [Docs/Plugins/README.md](../Docs/Plugins/README.md) for the plugin document list.
 
 ## Community
 
-- Issues: https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues
-- Discussions: https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/discussions
+- Issues: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues
+- Discussions: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/discussions
 - Host app: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 
 Thank you for contributing.

@@ -4,16 +4,16 @@ This document is for AI agents and automation running against the plugin reposit
 
 ## Start
 
-1. Read root `README.md`, `Docs/README.md`, and `KNOWLEDGE_BASE.md` for durable rules.
+1. Read root `README.md`, `Docs/Plugins/README.md`, and `Plugins/KNOWLEDGE_BASE.md` for durable rules.
 2. Check `git status --short --branch` (default branch: `master`).
 3. Preserve unrelated dirty changes. Do not revert user work.
-4. Use the repository tooling shim for plugin commands. It publishes the CLI once under `Build/tooling` and reuses the executable:
+4. Use the repository tooling shim for plugin commands. It publishes the CLI once under `Plugins/.build/tooling` and reuses the executable:
 
 ```bat
 udt-plugin.cmd doctor
 ```
 
-`llt-plugin.cmd` is a compatibility alias. Host baseline is **v5.0.0** (`Dependencies/Host/host-release.json`).
+`llt-plugin.cmd` is a compatibility alias. Host baseline is **v5.0.0** (`Plugins/HostBaseline/host-release.json`).
 
 ## Agent Evidence Paths
 
@@ -47,15 +47,15 @@ Run full candidate validation when the repository is ready for a slower check:
 
 ## Version Management
 
-- Plugin SemVer source of truth: `Plugins/<Name>/plugin.manifest.json` → `version`
+- Plugin SemVer source of truth: `Plugins/Official/<Name>/plugin.manifest.json` → `version`
 - Bump: `./udt-plugin.cmd bump-version --plugin <id> --part patch`
 - Propagate without bumping: `./udt-plugin.cmd sync-version --plugin <id>`
 - Drift check: `./udt-plugin.cmd sync-version --plugin-ids <ids> --check`
-- Do not hand-edit `.csproj`, `plugin.json`, `[Plugin]` attribute, or `store.json` version fields for routine releases
+- Do not hand-edit `.csproj`, `plugin.json`, `[Plugin]` attribute, or generated catalog version fields for routine releases
 
 ## Store Generation
 
-Root `store.json` should be reproducible from `plugin.manifest.json` store metadata, release assets, and a fixed release date. `store-entry.json` is compatibility output only.
+Generated `Plugins/.build/catalog/plugin-catalog.json` should be reproducible from `plugin.manifest.json` store metadata, release assets, and a fixed release date. `store-entry.json` is compatibility output only.
 
 Check without writing:
 
@@ -80,12 +80,12 @@ When updating only a selected release set, preserve the other published entries 
 ./udt-plugin.cmd \
   generate-store \
   --plugin-ids custom-mouse,shell-integration \
-  --asset-root Build/release-assets \
+  --asset-root Plugins/.build/release-assets \
   --merge-existing \
   --require-assets
 ```
 
-Do not hand-edit root `store.json` for normal plugin authoring.
+Do not hand-edit generated `Plugins/.build/catalog/plugin-catalog.json` for normal plugin authoring.
 
 ## Workbench Smoke
 

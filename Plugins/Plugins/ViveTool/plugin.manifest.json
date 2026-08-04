@@ -6,8 +6,8 @@
   "minHostVersion": "5.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
-  "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
-  "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
+  "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
+  "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues",
   "contributes": {
     "featurePage": {
       "class": "UniversalDeviceToolkit.Plugins.ViveTool.ViveToolPage",
@@ -73,7 +73,7 @@
       "zh-Hans",
       "zh-Hant"
     ],
-    "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
+    "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit"
   },
   "lifecycle": "Active",
   "localizedNames": {},

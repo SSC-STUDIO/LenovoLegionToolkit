@@ -13,12 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
-    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+    <PackageReference Include="BenchmarkDotNet" />
   </ItemGroup>
 
 </Project>

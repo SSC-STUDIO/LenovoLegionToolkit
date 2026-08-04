@@ -79,6 +79,6 @@
 
   <!-- Bottom bar -->
   <rect x="0" y="590" width="1280" height="50" fill="black" opacity="0.3" />
-  <text x="80" y="622" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#b0b0b0">github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins</text>
+  <text x="80" y="622" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#b0b0b0">github.com/SSC-STUDIO/UniversalDeviceToolkit</text>
   <text x="1200" y="622" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#00B4FC" text-anchor="end">MIT License</text>
 </svg>

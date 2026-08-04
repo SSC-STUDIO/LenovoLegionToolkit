@@ -5,6 +5,6 @@
   "MinLltVersion": "5.0.0",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": false,
-  "Repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
-  "Issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues"
+  "Repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
+  "Issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues"
 }

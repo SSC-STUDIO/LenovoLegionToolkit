@@ -52,7 +52,7 @@ public sealed class PluginScaffolder
         unifiedManifest.Store.Tags = request.Official ? ["new-plugin", "official-candidate"] : [];
         unifiedManifest.Store.Dependencies = [];
         unifiedManifest.Store.SupportedLanguages = ["en", "zh-Hans"];
-        unifiedManifest.Store.RepositoryUrl = request.Official ? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins" : null;
+        unifiedManifest.Store.RepositoryUrl = request.Official ? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit" : null;
 
         File.WriteAllText(pluginProjectPath, PluginRepository.NormalizeLineEndings(BuildProjectFile(request)));
         File.WriteAllText(testProjectPath, PluginRepository.NormalizeLineEndings(BuildTestProjectFile(request, namespaceSegment)));
@@ -165,14 +165,14 @@ public sealed class PluginScaffolder
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
@@ -240,11 +240,11 @@ public sealed class PluginScaffolder
 
   <ItemGroup>
     <ProjectReference Include="..\{{request.FolderName}}\UniversalDeviceToolkit.Plugins.{{request.FolderName}}.csproj" />
-    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
-    <Compile Include="..\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
-    <Compile Include="..\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <Compile Include="..\..\Testing\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
+    <Compile Include="..\..\Testing\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="UniversalDeviceToolkit.Lib">
-      <HintPath>..\..\Dependencies\Host\UniversalDeviceToolkit.Lib.dll</HintPath>
+      <HintPath>$(HostLibPath)</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

@@ -186,7 +186,11 @@ public sealed record PluginContext(
     string? StoreEntryPath,
     OfficialStoreEntry? StoreEntry)
 {
-    public string OutputDirectory => Path.Combine(RepositoryRoot, "Build", "plugins", $"UniversalDeviceToolkit.Plugins.{FolderName}");
+    public string OutputDirectory => Path.Combine(
+        RepositoryRoot,
+        File.Exists(Path.Combine(RepositoryRoot, "UniversalDeviceToolkit.Plugins.sln")) ? ".build" : "Build",
+        "plugins",
+        $"UniversalDeviceToolkit.Plugins.{FolderName}");
     public string ExpectedAssemblyName => $"UniversalDeviceToolkit.Plugins.{FolderName}";
     public string ExpectedAssemblyPath => Path.Combine(OutputDirectory, $"{ExpectedAssemblyName}.dll");
 }
@@ -568,7 +572,7 @@ public sealed class StoreGenerationRequest
 {
     public string RepositoryRoot { get; init; } = string.Empty;
     public string? OutputPath { get; init; }
-    public string ReleaseRepositoryUrl { get; init; } = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases";
+    public string ReleaseRepositoryUrl { get; init; } = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog";
     public string? AssetRoot { get; init; }
     public IReadOnlyList<string> PluginIds { get; init; } = Array.Empty<string>();
     public DateTimeOffset? ReleaseDate { get; init; }

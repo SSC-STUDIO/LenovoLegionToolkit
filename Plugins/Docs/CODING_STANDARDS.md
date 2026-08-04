@@ -593,7 +593,7 @@ public class BadExample
 ### 编译检查
 
 ```bash
-dotnet build UniversalDeviceToolkit-Plugins.sln
+dotnet build UniversalDeviceToolkit.Plugins.sln
 ```
 
 ### 测试验证
@@ -605,8 +605,8 @@ dotnet test --collect:"XPlat Code Coverage"
 ### 完成检查
 
 ```bash
-dotnet build .\UniversalDeviceToolkit-Plugins.sln -c Release
-dotnet test .\UniversalDeviceToolkit-Plugins.sln -c Release
+dotnet build .\UniversalDeviceToolkit.Plugins.sln -c Release
+dotnet test .\UniversalDeviceToolkit.Plugins.sln -c Release
 ```
 
 ### 代码分析

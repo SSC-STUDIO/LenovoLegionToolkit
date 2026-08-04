@@ -1,7 +1,7 @@
 # 视觉设计建议：屏幕适配与视觉效果
 
 **日期：** 2026-07-18
-**仓库：** UniversalDeviceToolkit-Plugins（官方插件生态）
+**仓库：** UniversalDeviceToolkit（官方插件生态）
 **依据：** 《视觉设计审计报告：屏幕适配与视觉效果》（`VISUAL_AUDIT_20260718.md`，下称"审计报告"，风险编号 P1–P12 与之对应）
 **性质：** 建议性文档，不含代码改动；每条建议给出问题证据、具体方案、涉及文件与验收标准。
 
@@ -86,8 +86,8 @@
 ### A2（P1）HostedPluginContentWindow 与 CompletionUiTool 布局修复 —— 对应 P4、P10
 
 **建议：**
-- `Tools/PluginWorkbench/HostedPluginContentWindow.xaml:38`：裸 ContentControl 外包 `ScrollViewer`（Vertical Auto）——托管任意插件页时溢出可滚动，一行改动。
-- `Tools/PluginCompletionUiTool/MainWindow.xaml:113/:120`：两处 `Margin="180,0,0,0"` / `"300,0,0,0"` 偏移定位的 CheckBox 改为 Grid 列布局（Auto/* 列），消除长文本错位。
+- `Plugins/Tooling/PluginWorkbench/HostedPluginContentWindow.xaml:38`：裸 ContentControl 外包 `ScrollViewer`（Vertical Auto）——托管任意插件页时溢出可滚动，一行改动。
+- `Plugins/Tooling/PluginCompletionUiTool/MainWindow.xaml:113/:120`：两处 `Margin="180,0,0,0"` / `"300,0,0,0"` 偏移定位的 CheckBox 改为 Grid 列布局（Auto/* 列），消除长文本错位。
 
 **验收：** 托管 ViveTool 页缩小窗口至 640×420 内容可滚动到达；CompletionUiTool 在德语长度文本模拟下不错位。
 

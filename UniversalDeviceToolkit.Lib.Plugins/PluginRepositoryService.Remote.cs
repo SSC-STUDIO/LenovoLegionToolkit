@@ -110,7 +110,11 @@ public partial class PluginRepositoryService
                     await using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
                     using var document = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
 
-                    foreach (var release in document.RootElement.EnumerateArray())
+                    IEnumerable<JsonElement> releases = document.RootElement.ValueKind == JsonValueKind.Array
+                        ? document.RootElement.EnumerateArray()
+                        : new[] { document.RootElement };
+
+                    foreach (var release in releases)
                     {
                         if (release.TryGetProperty("draft", out var draftElement) && draftElement.GetBoolean())
                             continue;
@@ -234,11 +238,8 @@ public partial class PluginRepositoryService
 
     private static bool IsOfficialPluginRepository(string owner, string repository)
     {
-        if (!owner.Equals("SSC-STUDIO", StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        return repository.Equals("UniversalDeviceToolkit-Plugins", StringComparison.OrdinalIgnoreCase) ||
-               repository.Equals("LenovoLegionToolkit-Plugins", StringComparison.OrdinalIgnoreCase);
+        return owner.Equals("SSC-STUDIO", StringComparison.OrdinalIgnoreCase) &&
+               repository.Equals("UniversalDeviceToolkit", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsMatchingPublishedPluginAsset(string assetName, string pluginId)
@@ -246,8 +247,14 @@ public partial class PluginRepositoryService
         if (string.IsNullOrWhiteSpace(assetName) || !assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
             return false;
 
-        return assetName.Equals($"{pluginId}.zip", StringComparison.OrdinalIgnoreCase) ||
-               assetName.StartsWith($"{pluginId}-", StringComparison.OrdinalIgnoreCase);
+        var prefix = $"{pluginId}-v";
+        if (!assetName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var versionPart = assetName[prefix.Length..^4];
+        return versionPart.Length > 0 &&
+               !versionPart.Contains('/') &&
+               !versionPart.Contains('\\');
     }
 
     private static string? ExtractPublishedAssetVersion(string assetName, string tagName, string pluginId)

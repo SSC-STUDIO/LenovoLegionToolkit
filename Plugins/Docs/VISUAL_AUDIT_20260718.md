@@ -1,10 +1,10 @@
 # 视觉设计审计报告：屏幕适配与视觉效果
 
 **日期：** 2026-07-18
-**仓库：** UniversalDeviceToolkit-Plugins（官方插件生态）
+**仓库：** UniversalDeviceToolkit（官方插件生态）
 **基线：** `master` @ `4d07092`（`refactor(ui): align plugin chrome with shared design tokens`），宿主基线 UDT v5.0.0
 **方法：** 静态代码审计（仓库内全部 10 个 XAML 文件通读 + C# fallback UI 全量检索），未运行动态 UI。
-**范围：** `Plugins/`（CustomMouse、ShellIntegration、ViveTool、Shared）、`Tools/`（PluginWorkbench、PluginCompletionUiTool）、`Templates/`、`SDK/`。
+**范围：** `Plugins/Official/`（CustomMouse、ShellIntegration、ViveTool、Shared）、`Plugins/Tooling/`（PluginWorkbench、PluginCompletionUiTool）、`Plugins/Templates/`、`Plugins/SDK/Runtime/`。
 **配套文档：** 《视觉设计建议：屏幕适配与视觉效果》（`VISUAL_DESIGN_RECOMMENDATIONS.md`）
 
 > 本报告只陈述事实与风险，所有结论附 `文件:行号` 证据；改进方案见配套建议文档。
@@ -66,7 +66,7 @@
 
 **死代码：** `PluginSurfaceBorderStyle`、`PluginMetricCardStyle`、`PluginMetricLabelTextStyle`、`PluginMetricValueTextStyle`、`PluginEmptyStatePanelStyle` 全仓库零引用（5/9）。
 
-**第三套来源：** `Tools/PluginWorkbench` 通过代码加载宿主的 `Styles/DesignTokens.xaml`（`PluginWorkbenchThemeService.cs:23`），与插件 Shared 字典是两套来源，值若漂移互不可见。
+**第三套来源：** `Plugins/Tooling/PluginWorkbench` 通过代码加载宿主的 `Styles/DesignTokens.xaml`（`PluginWorkbenchThemeService.cs:23`），与插件 Shared 字典是两套来源，值若漂移互不可见。
 
 ---
 
@@ -83,15 +83,15 @@
 | 窗口 | 尺寸 | ResizeMode / SizeToContent | 滚动 |
 |---|---|---|---|
 | `Plugins/ShellIntegration/ShellIntegrationStyleSettingsWindow.cs:21-24` | 880×720，Min 640×520 | 默认 CanResize | ✅ 代码创建 ScrollViewer（:77-81） |
-| `Tools/PluginWorkbench/MainWindow.xaml:7-10` | 1540×940，Min 1180×760 | 默认 | 局部 |
-| `Tools/PluginWorkbench/HostedPluginContentWindow.xaml:5-8` | 1160×760，Min 640×420 | 默认 | ❌ **内容区无 ScrollViewer**，裸 ContentControl（:38）——托管插件内容溢出即裁切 |
-| `Tools/PluginCompletionUiTool/MainWindow.xaml:9-12` | 1280×860，Min 1000×700 | 默认 | ❌ 无整体滚动；日志 TextBox 自带滚动（:208-209），日志区固定行高 220（:19） |
+| `Plugins/Tooling/PluginWorkbench/MainWindow.xaml:7-10` | 1540×940，Min 1180×760 | 默认 | 局部 |
+| `Plugins/Tooling/PluginWorkbench/HostedPluginContentWindow.xaml:5-8` | 1160×760，Min 640×420 | 默认 | ❌ **内容区无 ScrollViewer**，裸 ContentControl（:38）——托管插件内容溢出即裁切 |
+| `Plugins/Tooling/PluginCompletionUiTool/MainWindow.xaml:9-12` | 1280×860，Min 1000×700 | 默认 | ❌ 无整体滚动；日志 TextBox 自带滚动（:208-209），日志区固定行高 220（:19） |
 
 **风险：** PluginWorkbench MinWidth 1180、PluginCompletionUiTool MinWidth 1000，在 1366×768@125%（逻辑 1092）设备上均被系统裁切——与宿主 R1 同构。
 
 ### 3.3 页面（UserControl）布局健壮性
 
-仓库内插件 XAML 共 5 个（10 个 XAML 文件含 Tools/Templates 中实际为 5 插件 + 4 Tools + Shared 2）：
+仓库内插件 XAML 共 5 个（10 个 XAML 文件含 Tooling/Templates 中实际为 5 插件 + 4 Tools + Shared 2）：
 
 | 文件 | 根元素 | ScrollViewer | 固定尺寸要点 |
 |---|---|---|---|

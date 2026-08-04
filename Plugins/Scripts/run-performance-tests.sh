@@ -3,7 +3,7 @@
 
 set -e
 
-PROJECT_DIR="D:\EliuaK_Csy\Working-Paper\My-Program\UniversalDeviceToolkit-Plugins"
+PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 TEST_PROJECT="$PROJECT_DIR\Tests\PerformanceTests"
 
 echo "=== Building PerformanceTests ==="

@@ -34,7 +34,7 @@ public partial class PluginRepositoryService : IDisposable
         WriteIndented = true
     };
 
-    private const string StoreCacheAppSeed = "UDT_PluginStoreCache_v1";
+    private const string StoreCacheAppSeed = "UDT_PluginStoreCache_v2";
     private static readonly byte[] StoreCacheHmacKey;
 
     static PluginRepositoryService()
@@ -50,22 +50,15 @@ public partial class PluginRepositoryService : IDisposable
         "Plugin.json"
     ];
 
-    // The plugin store is currently published from master.
-    // Keep the source list explicit so the app does not waste time hitting the missing main/store.json endpoint first,
-    // and include a CDN mirror because raw.githubusercontent.com can intermittently reset connections on Windows.
+    // The catalog and plugin packages are published together in one rolling release
+    // so the main repository's Releases page stays readable.
     private static readonly string[] PluginStoreUrls =
     {
-        "https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit-Plugins@master/store.json",
-        "https://raw.githubusercontent.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/master/store.json",
-        "https://raw.githubusercontent.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/refs/heads/master/store.json",
-        "https://cdn.jsdelivr.net/gh/SSC-STUDIO/LenovoLegionToolkit-Plugins@master/store.json",
-        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json",
-        "https://raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/refs/heads/master/store.json"
+        "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/plugin-catalog.json"
     };
     private static readonly string[] PluginReleasesApiUrls =
     {
-        "https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases?per_page=50",
-        "https://api.github.com/repos/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases?per_page=50"
+        "https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/tags/plugin-catalog"
     };
     private const int RemoteRequestRetryCount = 3;
     private const int RemoteDownloadRetryCount = 3;
@@ -229,37 +222,11 @@ public partial class PluginRepositoryService : IDisposable
     {
         var candidates = new List<string>();
 
-        if (!string.IsNullOrWhiteSpace(manifest.DownloadUrl))
+        if (!string.IsNullOrWhiteSpace(manifest.DownloadUrl) &&
+            (manifest.DownloadUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase) ||
+             ShouldTrustDownloadedPluginPackage(manifest.DownloadUrl, manifest.Id)))
         {
             candidates.Add(manifest.DownloadUrl);
-
-            if (Uri.TryCreate(manifest.DownloadUrl, UriKind.Absolute, out var manifestUri) &&
-                manifestUri.Host.Contains("github.com", StringComparison.OrdinalIgnoreCase))
-            {
-                var basePart = manifest.DownloadUrl;
-
-                if (basePart.Contains("/releases/latest/download/", StringComparison.OrdinalIgnoreCase))
-                {
-                    basePart = manifest.DownloadUrl.Substring(0, manifest.DownloadUrl.IndexOf("/releases/latest/download/", StringComparison.OrdinalIgnoreCase));
-                }
-                else if (basePart.Contains("/releases/download/", StringComparison.OrdinalIgnoreCase))
-                {
-                    basePart = manifest.DownloadUrl.Substring(0, manifest.DownloadUrl.IndexOf("/releases/download/", StringComparison.OrdinalIgnoreCase));
-                }
-                else
-                {
-                    basePart = $"{manifestUri.Scheme}://{manifestUri.Host}{string.Join("", manifestUri.Segments.Take(3)).TrimEnd('/')}";
-                }
-
-                var versionedAssetName = $"{manifest.Id}-v{manifest.Version}.zip";
-                var plainAssetName = $"{manifest.Id}.zip";
-                var versionedTag = $"{manifest.Id}-v{manifest.Version}";
-
-                candidates.Add($"{basePart}/releases/latest/download/{versionedAssetName}");
-                candidates.Add($"{basePart}/releases/latest/download/{plainAssetName}");
-                candidates.Add($"{basePart}/releases/download/{versionedTag}/{versionedAssetName}");
-                candidates.Add($"{basePart}/releases/download/{versionedTag}/{plainAssetName}");
-            }
         }
 
         // Always include generated fallback URL as the last remote candidate.
@@ -530,8 +497,8 @@ public partial class PluginRepositoryService : IDisposable
             return uri.AbsoluteUri;
         }
         
-        // Fall back to the renamed official plugin repository.
-        return $"https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/{manifest.Id}-v{manifest.Version}/{manifest.Id}-v{manifest.Version}.zip";
+        // Official plugin packages are assets of the main repository's rolling catalog release.
+        return $"https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/{manifest.Id}-v{manifest.Version}.zip";
     }
 
     private void TryWriteStoreCache(string storeJson)

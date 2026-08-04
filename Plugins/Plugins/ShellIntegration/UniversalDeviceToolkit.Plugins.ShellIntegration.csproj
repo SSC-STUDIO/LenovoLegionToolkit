@@ -13,19 +13,19 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +37,7 @@
   <!-- Shell binary source paths: local repo (priority) and cached download (fallback) -->
   <PropertyGroup>
     <ShellLocalBinPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', '..', 'Shell', 'src', 'bin'))</ShellLocalBinPath>
-    <ShellCachedBinPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', 'Dependencies', 'Shell'))</ShellCachedBinPath>
+    <ShellCachedBinPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'Bundled', 'Shell'))</ShellCachedBinPath>
     <FetchShellScript>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', 'Scripts', 'fetch-shell-binaries.ps1'))</FetchShellScript>
     <_ShellLocalExists Condition="Exists('$(ShellLocalBinPath)\shell.exe')">true</_ShellLocalExists>
     <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
@@ -60,7 +60,7 @@
     </None>
   </ItemGroup>
 
-  <!-- Priority 2: Cached download from Dependencies/Shell/ -->
+  <!-- Priority 2: Cached download from this plugin's Bundled/Shell/ directory. -->
   <ItemGroup Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' == 'true'">
     <None Include="$(ShellCachedBinPath)\shell.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

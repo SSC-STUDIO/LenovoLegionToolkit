@@ -1,4 +1,4 @@
-﻿# Changelog / 更新日志
+# Changelog / 更新日志
 
 All notable changes to this project will be documented in this file.
 
@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Documentation polish / 文档打磨**: Rewrote root `README.md` / `README.zh-CN.md` / `CONTRIBUTING.md` to match current catalog (custom-mouse **1.0.17**, vive-tool **1.2.3**, shell-integration **1.0.13**), migrated plugins delisted from store, host **v5.0.0**, and zero mojibake.
 - **Tooling entry / 工具入口**: Added canonical `udt-plugin.cmd`; `llt-plugin.cmd` retained as compatibility alias. Updated Make.bat branding and author docs.
-- **minHostVersion / 最低宿主**: Synced active + migrated plugins to **5.0.0** across `plugin.manifest.json`, runtime `plugin.json` (`MinLltVersion` ABI field), `[Plugin] MinimumHostVersion`, and root `store.json`.
+- **minHostVersion / 最低宿主**: Synced active + migrated plugins to **5.0.0** across `plugin.manifest.json`, runtime `plugin.json` (`MinLltVersion` ABI field), `[Plugin] MinimumHostVersion`, and generated `Plugins/.build/catalog/plugin-catalog.json`.
 - **Docs index / 文档索引**: Added `Docs/README.md`; marked sprint/promo/handover docs as historical.
 - **SDK changelog / SDK 变更日志**: Documented v5.0.0 ABI cutover and compatibility matrix.
 
@@ -134,11 +134,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **PluginWorkbenchHostContext.cs / PluginWorkbenchSession.cs**: Verified no ambiguity (only import SDK namespace / fully-qualify PluginHostMode as SDK)
 
 ### Verification / 验证
-- dotnet build UniversalDeviceToolkit-Plugins.sln -c Release → 0 warnings / 0 errors (11.0s)
+- dotnet build UniversalDeviceToolkit.Plugins.sln -c Release → 0 warnings / 0 errors (11.0s)
 - dotnet test → **409/409 PASS** (BatteryHealth 16, CustomMouse 54, ShellIntegration 114, NetworkAcceleration 39, ViveTool 186)
 - PluginWorkbench.Smoke → **10/10 PASS** (5 plugins × {Dark, Light} themes)
 - Visual captures saved to rtifacts\workbench-visual\{plugin}-{theme}\{preview,settings,real-runtime}.png
 
 ### M-010 Constraint Honored / M-010 约束遵守
-- **NOT renamed** (per M-010 ABI gate): UniversalDeviceToolkit.Plugins.* namespaces, UniversalDeviceToolkit-Plugins.sln filename, *.csproj filenames, plugin assembly names, plugin.manifest.json class field, DLL names, store.json minLLTVersion JSON property name
+- **NOT renamed** (per M-010 ABI gate): UniversalDeviceToolkit.Plugins.* namespaces, UniversalDeviceToolkit.Plugins.sln filename, *.csproj filenames, plugin assembly names, plugin.manifest.json class field, DLL names, store.json minLLTVersion JSON property name
 - **Renamed** (user-visible/build references only): WPF AssemblyName Lenovo Legion Toolkit → Universal Device Toolkit, host-release.json package/URL, cross-csproj <Reference> names

@@ -204,7 +204,7 @@ UDT 可以做到：
 
 ### 插件扩展
 
-UDT 的官方插件维护在独立的 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 仓库中。该仓库包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
+UDT 的官方插件维护在本仓库的 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 仓库中。该仓库包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
 
 插件扩展页面提供了现代化、用户友好的插件管理界面：
 
@@ -464,11 +464,11 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件可在插件扩展页面中安装、更新、配置和卸载。
 
-官方插件在独立仓库 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 维护，通过在线目录分发到插件扩展页面。
+官方插件在独立仓库 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 维护，通过在线目录分发到插件扩展页面。
 
 ### 核心特性
 
-- **动态加载**：插件从宿主 `plugins` 目录在运行时加载（开发构建为 `Build/plugins`，安装后为 `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`）
+- **动态加载**：插件从宿主 `plugins` 目录在运行时加载（开发构建为 `Plugins/.build/plugins`，安装后为 `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`）
 - **在线插件仓库**：从在线仓库浏览和安装插件
 - **依赖管理**：自动安装和检查插件依赖
 - **UI 集成**：插件可以提供自定义 UI 页面和设置
@@ -485,7 +485,7 @@ UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件�
 
 ### 可用插件
 
-官方插件发布自 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins)。在线目录当前包括：
+官方插件发布自 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)。在线目录当前包括：
 
 - **Custom Mouse（自定义鼠标）**：光标主题、指针设置与 Windows 优化动作
 - **Network Acceleration（网络加速）**：已内置到主程序「系统优化 → 网络与加速」；v5.0.0 起插件已移除
@@ -515,7 +515,7 @@ UDT 提供了功能全面的插件扩展页面，具有以下特点：
    - 点击"安装"自动下载并安装
 
 2. **手动安装**（进阶）：
-   - 从 [UniversalDeviceToolkit-Plugins Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases) 下载插件 ZIP，或在插件仓库使用 `llt-plugin.cmd package` 本地打包
+   - 从 [主仓库 plugin-catalog Release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) 下载插件 ZIP，或在使用 `Plugins\\udt-plugin.cmd package` 本地打包
    - 解压到宿主 `plugins` 目录（每个插件单独子文件夹）：
      - 已安装 UDT：`%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`
      - 本地开发构建：`Build\plugins\`
@@ -523,7 +523,7 @@ UDT 提供了功能全面的插件扩展页面，具有以下特点：
 
 ### 插件开发
 
-请在独立仓库 [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) 中开发插件，从 [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md) 开始。宿主侧契约与 UI 规范见 [Docs/PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md)。
+请在独立仓库 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 中开发插件，从 [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/PLUGIN_QUICKSTART.md) 开始。宿主侧契约与 UI 规范见 [Docs/PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md)。
 
 ## 贡献者
 

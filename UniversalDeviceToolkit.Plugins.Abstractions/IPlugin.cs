@@ -3,7 +3,7 @@
 // ============================================================================
 // This project is NOT part of the host solution build graph. It is the
 // compile-time ABI contract for the external plugin repository
-// (UniversalDeviceToolkit-Plugins), which references
+// (Plugins/Official), which references
 // UniversalDeviceToolkit.Plugins.Abstractions.dll via HintPath.
 //
 // It intentionally shares the namespace (UniversalDeviceToolkit.Lib.Plugins)

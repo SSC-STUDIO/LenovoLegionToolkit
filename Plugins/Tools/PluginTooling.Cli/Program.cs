@@ -369,7 +369,7 @@ static async Task<int> ProgramMainAsync(string[] args)
         {
             RepositoryRoot = repositoryRoot,
             OutputPath = OptionalValue(argv, "--output"),
-            ReleaseRepositoryUrl = OptionalValue(argv, "--release-repository-url") ?? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases",
+            ReleaseRepositoryUrl = OptionalValue(argv, "--release-repository-url") ?? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog",
             AssetRoot = OptionalValue(argv, "--asset-root"),
             PluginIds = pluginIds,
             ReleaseDate = ParseReleaseDate(OptionalValue(argv, "--release-date")),

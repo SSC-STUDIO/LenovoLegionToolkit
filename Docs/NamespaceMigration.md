@@ -30,7 +30,7 @@ Values below are explicit `RootNamespace` / `AssemblyName` when set. If `Assembl
 | `UniversalDeviceToolkit.Lib` | `UniversalDeviceToolkit.Lib` | `UniversalDeviceToolkit.Lib` | Core library; plugin and host type identity |
 | `UniversalDeviceToolkit.Lib.Plugins` | `UniversalDeviceToolkit.Lib.Plugins` | `UniversalDeviceToolkit.Lib.Plugins` | Host plugin surface loaded with core Lib |
 
-C# types under these projects live in `UniversalDeviceToolkit.Lib*` namespaces (renamed from `LenovoLegionToolkit.Lib*`). Official plugins (separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repo) should target `UniversalDeviceToolkit.Plugins.*` / SDK Shared against these identities.
+C# types under these projects live in `UniversalDeviceToolkit.Lib*` namespaces (renamed from `LenovoLegionToolkit.Lib*`). Official plugins under `Plugins/Official/` should target `UniversalDeviceToolkit.Plugins.*` / SDK Shared against these identities.
 
 ### Other projects
 

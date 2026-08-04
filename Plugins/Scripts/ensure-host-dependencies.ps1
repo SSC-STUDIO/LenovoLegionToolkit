@@ -7,8 +7,14 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$targetDir = Join-Path $repoRoot "Dependencies\Host"
-$manifestPath = Join-Path $targetDir "host-release.json"
+$manifestPath = Join-Path $repoRoot "HostBaseline\host-release.json"
+$manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+$hostVersion = [string]$manifest.hostVersion
+if ([string]::IsNullOrWhiteSpace($hostVersion)) {
+    throw "hostVersion is missing from host-release.json."
+}
+
+$targetDir = Join-Path $repoRoot (Join-Path ".host" $hostVersion)
 $refreshScript = Join-Path $PSScriptRoot "refresh-host-references.ps1"
 
 $requiredFiles = @(
@@ -32,7 +38,7 @@ function Test-HostDependenciesComplete {
 
 function Resolve-SiblingSourceDir {
     $candidates = @(
-        (Join-Path $repoRoot "..\UniversalDeviceToolkit\Build")
+        (Join-Path $repoRoot "..\Build")
     )
 
     foreach ($candidate in $candidates) {
@@ -57,15 +63,10 @@ function Copy-FromSourceDir {
         [string]$ResolvedSourceDir
     )
 
-    & $refreshScript -SourceDir $ResolvedSourceDir
+    & $refreshScript -SourceDir $ResolvedSourceDir -TargetDir $targetDir
 }
 
 function Copy-FromReleaseZip {
-    if (-not (Test-Path $manifestPath)) {
-        throw "Host dependency manifest not found: $manifestPath"
-    }
-
-    $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
     $downloadUrl = [string]$manifest.downloadUrl
     if ([string]::IsNullOrWhiteSpace($downloadUrl)) {
         $hostVersion = [string]$manifest.hostVersion

@@ -434,7 +434,7 @@ public partial class MainWindow : Window
             return;
         }
 
-        foreach (var pluginDirectory in Directory.EnumerateDirectories(Path.Combine(repositoryRoot, "Plugins"))
+        foreach (var pluginDirectory in Directory.EnumerateDirectories(Path.Combine(repositoryRoot, "Official"))
                      .OrderBy(path => path, StringComparer.OrdinalIgnoreCase))
         {
             var folderName = Path.GetFileName(pluginDirectory);
@@ -757,13 +757,13 @@ public partial class MainWindow : Window
 
     private static string? ResolveBuildDirectory(string repositoryRoot, string folderName, string pluginId)
     {
-        var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"UniversalDeviceToolkit.Plugins.{folderName}");
+        var canonical = Path.Combine(repositoryRoot, ".build", "plugins", $"UniversalDeviceToolkit.Plugins.{folderName}");
         if (Directory.Exists(canonical))
         {
             return canonical;
         }
 
-        var buildRoot = Path.Combine(repositoryRoot, "Build", "plugins");
+        var buildRoot = Path.Combine(repositoryRoot, ".build", "plugins");
         if (!Directory.Exists(buildRoot))
         {
             return null;
@@ -810,8 +810,8 @@ public partial class MainWindow : Window
             var current = new DirectoryInfo(candidate);
             for (var i = 0; i < 8 && current is not null; i++)
             {
-                if (File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit-Plugins.sln")) &&
-                    Directory.Exists(Path.Combine(current.FullName, "Plugins")))
+                if (File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit.Plugins.sln")) &&
+                    Directory.Exists(Path.Combine(current.FullName, "Official")))
                 {
                     return current.FullName;
                 }

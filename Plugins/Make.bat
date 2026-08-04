@@ -10,7 +10,7 @@ REM ============================================================
 
 SET SCRIPT_DIR=%~dp0
 SET REPO_ROOT=%SCRIPT_DIR:~0,-1%
-SET SOLUTION=%REPO_ROOT%\UniversalDeviceToolkit-Plugins.sln
+SET SOLUTION=%REPO_ROOT%\UniversalDeviceToolkit.Plugins.sln
 SET TOOLING_SCRIPT=%REPO_ROOT%\Scripts\Invoke-PluginTooling.ps1
 
 IF "%1"=="-h" GOTO HELP
@@ -42,7 +42,7 @@ IF /I "%1"=="debug" GOTO BUILD_DEBUG
 
 ECHO Error: Legacy per-plugin build entry points have been removed.
 ECHO Use dotnet build on the specific project directly, e.g.
-ECHO   dotnet build Plugins\CustomMouse\UniversalDeviceToolkit.Plugins.CustomMouse.csproj -c Release
+ECHO   dotnet build Official\CustomMouse\UniversalDeviceToolkit.Plugins.CustomMouse.csproj -c Release
 EXIT /B 1
 
 :BUILD
@@ -79,7 +79,7 @@ CALL :RUN_TOOLING init %*
 EXIT /B %ERRORLEVEL%
 
 :UI
-dotnet run --project "%REPO_ROOT%\Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj"
+dotnet run --project "%REPO_ROOT%\Tooling\PluginCompletionUiTool\PluginCompletionUiTool.csproj"
 EXIT /B %ERRORLEVEL%
 
 :WORKBENCH_BOOTSTRAP
@@ -90,7 +90,7 @@ EXIT /B %ERRORLEVEL%
 :WORKBENCH
 CALL :WORKBENCH_BOOTSTRAP
 IF ERRORLEVEL 1 EXIT /B 1
-dotnet run --project "%REPO_ROOT%\Tools\PluginWorkbench\PluginWorkbench.csproj" -- --repository-root "%REPO_ROOT%"
+dotnet run --project "%REPO_ROOT%\Tooling\PluginWorkbench\PluginWorkbench.csproj" -- --repository-root "%REPO_ROOT%"
 EXIT /B %ERRORLEVEL%
 
 :PREVIEW
@@ -112,23 +112,23 @@ EXIT /B %ERRORLEVEL%
 SHIFT
 dotnet build "%SOLUTION%" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
-dotnet build "%REPO_ROOT%\Tools\PluginWorkbench\PluginWorkbench.csproj" -c Release
+dotnet build "%REPO_ROOT%\Tooling\PluginWorkbench\PluginWorkbench.csproj" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
-dotnet build "%REPO_ROOT%\Tools\PluginWorkbench.Smoke\PluginWorkbench.Smoke.csproj" -c Release
+dotnet build "%REPO_ROOT%\Tooling\PluginWorkbench.Smoke\PluginWorkbench.Smoke.csproj" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
-"%REPO_ROOT%\Tools\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe" --repository-root "%REPO_ROOT%" %*
+"%REPO_ROOT%\Tooling\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe" --repository-root "%REPO_ROOT%" %*
 EXIT /B %ERRORLEVEL%
 
 :SMOKE
-dotnet build "%REPO_ROOT%\Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj" -c Release
+dotnet build "%REPO_ROOT%\Tooling\PluginCompletionUiTool\PluginCompletionUiTool.csproj" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
-dotnet build "%REPO_ROOT%\Tools\PluginCompletionUiTool.Smoke\PluginCompletionUiTool.Smoke.csproj" -c Release
+dotnet build "%REPO_ROOT%\Tooling\PluginCompletionUiTool.Smoke\PluginCompletionUiTool.Smoke.csproj" -c Release
 IF ERRORLEVEL 1 EXIT /B 1
-"%REPO_ROOT%\Tools\PluginCompletionUiTool.Smoke\bin\Release\PluginCompletionUiTool.Smoke.exe" "%REPO_ROOT%"
+"%REPO_ROOT%\Tooling\PluginCompletionUiTool.Smoke\bin\Release\PluginCompletionUiTool.Smoke.exe" "%REPO_ROOT%"
 EXIT /B %ERRORLEVEL%
 
 :ZIP_INFO
-ECHO Packaging is now validated via the native completion checker and produced from Build\plugins outputs.
+ECHO Packaging is now validated via the native completion checker and produced from .build\plugins outputs.
 ECHO Use the documented release workflow instead of Make.bat zip.
 EXIT /B 1
 
@@ -173,15 +173,15 @@ ECHO   udt-plugin.cmd dev --plugin my-plugin --theme system
 ECHO   udt-plugin.cmd validate --profile contributor --plugin my-plugin
 ECHO   udt-plugin.cmd preview --plugin my-plugin --theme system
 ECHO   udt-plugin.cmd package --plugin my-plugin --build-first
-ECHO   dotnet build UniversalDeviceToolkit-Plugins.sln -c Release
-ECHO   dotnet build Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release
-ECHO   dotnet run --project Tools\PluginCompletionUiTool\PluginCompletionUiTool.csproj
+ECHO   dotnet build UniversalDeviceToolkit.Plugins.sln -c Release
+ECHO   dotnet build Tooling\PluginCompletionUiTool\PluginCompletionUiTool.csproj -c Release
+ECHO   dotnet run --project Tooling\PluginCompletionUiTool\PluginCompletionUiTool.csproj
 ECHO   powershell -NoProfile -ExecutionPolicy Bypass -File Scripts\ensure-host-dependencies.ps1
-ECHO   dotnet run --project Tools\PluginWorkbench\PluginWorkbench.csproj
-ECHO   dotnet build Tools\PluginWorkbench.Smoke\PluginWorkbench.Smoke.csproj -c Release
-ECHO   Tools\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe --repository-root . --plugin-id custom-mouse --theme Dark
-ECHO   dotnet build Tools\PluginCompletionUiTool.Smoke\PluginCompletionUiTool.Smoke.csproj -c Release
-ECHO   Tools\PluginCompletionUiTool.Smoke\bin\Release\PluginCompletionUiTool.Smoke.exe .
+ECHO   dotnet run --project Tooling\PluginWorkbench\PluginWorkbench.csproj
+ECHO   dotnet build Tooling\PluginWorkbench.Smoke\PluginWorkbench.Smoke.csproj -c Release
+ECHO   Tooling\PluginWorkbench.Smoke\bin\Release\PluginWorkbench.Smoke.exe --repository-root . --plugin-id custom-mouse --theme Dark
+ECHO   dotnet build Tooling\PluginCompletionUiTool.Smoke\PluginCompletionUiTool.Smoke.csproj -c Release
+ECHO   Tooling\PluginCompletionUiTool.Smoke\bin\Release\PluginCompletionUiTool.Smoke.exe .
 ECHO.
 ECHO Compatibility commands:
 ECHO   make.bat              - dotnet build solution (Release)
@@ -196,7 +196,7 @@ ECHO   make.bat workbench-bootstrap - ensure standalone host dependencies
 ECHO   make.bat workbench    - launch PluginWorkbench
 ECHO   make.bat preview      - open PluginWorkbench for a specific plugin
 ECHO   make.bat dev          - build then open PluginWorkbench for a plugin
-ECHO   make.bat package      - create a release ZIP from Build\plugins output
+ECHO   make.bat package      - create a release ZIP from .build\plugins output
 ECHO   make.bat pack         - compatibility alias for package
 ECHO   make.bat migrate      - generate plugin.manifest.json and compatibility manifests
 ECHO   make.bat promote      - sync official store metadata compatibility files
@@ -205,7 +205,7 @@ ECHO   make.bat smoke        - run UI smoke flow
 ECHO   make.bat clean        - dotnet clean solution
 ECHO.
 ECHO Notes:
-ECHO   - udt-plugin.cmd publishes and reuses a stable CLI executable under Build\tooling.
+ECHO   - udt-plugin.cmd publishes and reuses a stable CLI executable under .build\tooling.
 ECHO   - plugin.manifest.json is the authoring source of truth; plugin.json is emitted for host compatibility.
 ECHO   - store.json should be treated as generated release output; official metadata lives in plugin.manifest.json store metadata.
 ECHO   - PluginWorkbench loads plugin build outputs or local ZIPs without needing the main repo checkout.

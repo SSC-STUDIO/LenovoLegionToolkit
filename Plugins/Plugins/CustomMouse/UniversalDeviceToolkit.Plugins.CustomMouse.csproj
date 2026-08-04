@@ -13,19 +13,19 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.CustomMouse\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.CustomMouse\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <OutputPath>..\..\Build\plugins\UniversalDeviceToolkit.Plugins.CustomMouse\</OutputPath>
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.CustomMouse\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

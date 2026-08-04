@@ -497,11 +497,11 @@ CLI does not need to be ran as Administrator.
 
 UDT supports a comprehensive plugin system that allows extending the functionality of the application. Plugins can be installed, updated, and uninstalled dynamically with full UI support.
 
-Official plugins for UDT are maintained in the separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repository. That repository contains plugin source code, manifests, release metadata, and integration-specific assets that are distributed through the Plugin Extensions page.
+Official plugins for UDT live in this repository under [`Plugins/Official`](Plugins/Official). Their source, manifests, release metadata, and integration-specific assets are kept with the host so one pull request can update the complete product.
 
 ### Core Features
 
-- **Dynamic Loading**: Plugins load at runtime from the host `plugins` directory (development: `Build/plugins`; installed: `%LOCALAPPDATA%/UniversalDeviceToolkit/plugins/`)
+- **Dynamic Loading**: Plugins load at runtime from the host `plugins` directory (development packages: `Plugins/.build/plugins`; installed: `%LOCALAPPDATA%/UniversalDeviceToolkit/plugins/`)
 - **Online Plugin Repository**: Browse and install plugins from an online repository
 - **Dependency Management**: Automatic installation and checking of plugin dependencies
 - **UI Integration**: Plugins can provide custom UI pages and settings
@@ -518,7 +518,7 @@ Official plugins for UDT are maintained in the separate [UniversalDeviceToolkit-
 
 ### Available Plugins
 
-Official plugins are published from [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins). The online catalog currently includes:
+Official plugins are published as ZIP assets of the main repository's rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog). The online catalog currently includes:
 
 - **Custom Mouse**: Cursor themes, pointer settings, and Windows optimization actions
 - **Network Acceleration**: Built into **System Optimization → Network & acceleration** (plugin removed in v5.0.0)
@@ -548,15 +548,15 @@ Plugins can be installed in two ways:
    - Click "Install" to download and install automatically
 
 2. **Manual Installation** (advanced):
-   - Download the plugin release ZIP from [UniversalDeviceToolkit-Plugins releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases) or build one with `llt-plugin.cmd package` in the plugin repository
+   - Download the plugin release ZIP from the main repository's [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog), or build one with `Plugins\udt-plugin.cmd package`
    - Extract the ZIP into the host plugins directory (each plugin in its own subfolder):
      - Installed UDT: `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`
-     - Local dev build: `Build\plugins\`
+     - Local dev build: `Plugins\.build\plugins\`
    - Restart UDT, or use the Plugin Extensions page to refresh installed plugins
 
 ### Plugin Development
 
-Develop plugins in the separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repository. Start with its [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/blob/master/Docs/PLUGIN_QUICKSTART.md). Host-side contracts and UI standards are documented in [Docs/PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md).
+Develop plugins in this repository under [`Plugins/Official`](Plugins/Official). Start with [`Docs/Plugins/PLUGIN_QUICKSTART.md`](Docs/Plugins/PLUGIN_QUICKSTART.md). Host-side contracts and UI standards are documented in [`Docs/PLUGIN_DEVELOPMENT.md`](Docs/PLUGIN_DEVELOPMENT.md).
 
 
 

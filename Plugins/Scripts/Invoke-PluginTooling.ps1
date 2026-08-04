@@ -9,8 +9,8 @@ $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot ".."))
 $configuration = if ($env:LLT_PLUGIN_TOOLING_CONFIGURATION) { $env:LLT_PLUGIN_TOOLING_CONFIGURATION } else { "Release" }
 $dotnet = if ($env:DOTNET_HOST_PATH) { $env:DOTNET_HOST_PATH } else { "dotnet" }
 
-$projectPath = Join-Path $repoRoot "Tools\PluginTooling.Cli\PluginTooling.Cli.csproj"
-$publishRoot = Join-Path $repoRoot "Build\tooling"
+$projectPath = Join-Path $repoRoot "Tooling\PluginTooling.Cli\PluginTooling.Cli.csproj"
+$publishRoot = Join-Path $repoRoot ".build\tooling"
 $publishDir = Join-Path $publishRoot "PluginTooling.Cli"
 $stampPath = Join-Path $publishDir ".publish-stamp"
 $exePath = Join-Path $publishDir "PluginTooling.Cli.exe"
@@ -21,14 +21,14 @@ function Get-InputLastWriteUtc {
     $inputs = @(
         (Join-Path $repoRoot "Directory.Build.props"),
         (Join-Path $repoRoot "Directory.Build.targets"),
-        (Join-Path $repoRoot "Tools\PluginTooling.Cli\PluginTooling.Cli.csproj"),
-        (Join-Path $repoRoot "Tools\PluginTooling.Core\PluginTooling.Core.csproj"),
-        (Join-Path $repoRoot "SDK\UniversalDeviceToolkit.Plugins.SDK.csproj")
+        (Join-Path $repoRoot "Tooling\PluginTooling.Cli\PluginTooling.Cli.csproj"),
+        (Join-Path $repoRoot "Tooling\PluginTooling.Core\PluginTooling.Core.csproj"),
+        (Join-Path $repoRoot "SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj")
     )
 
-    $inputs += Get-ChildItem -Path (Join-Path $repoRoot "Tools\PluginTooling.Cli") -Filter "*.cs" -File -Recurse | ForEach-Object { $_.FullName }
-    $inputs += Get-ChildItem -Path (Join-Path $repoRoot "Tools\PluginTooling.Core") -Filter "*.cs" -File -Recurse | ForEach-Object { $_.FullName }
-    $inputs += Get-ChildItem -Path (Join-Path $repoRoot "SDK") -Filter "*.cs" -File -Recurse | ForEach-Object { $_.FullName }
+    $inputs += Get-ChildItem -Path (Join-Path $repoRoot "Tooling\PluginTooling.Cli") -Filter "*.cs" -File -Recurse | ForEach-Object { $_.FullName }
+    $inputs += Get-ChildItem -Path (Join-Path $repoRoot "Tooling\PluginTooling.Core") -Filter "*.cs" -File -Recurse | ForEach-Object { $_.FullName }
+    $inputs += Get-ChildItem -Path (Join-Path $repoRoot "SDK\Runtime") -Filter "*.cs" -File -Recurse | ForEach-Object { $_.FullName }
 
     $latest = [DateTime]::MinValue
     foreach ($inputPath in $inputs) {

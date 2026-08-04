@@ -17,7 +17,7 @@ If host references are missing:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-dependencies.ps1
 ```
 
-This uses `Dependencies/Host/host-release.json` (currently `5.0.0`).
+This uses `Plugins/HostBaseline/host-release.json` (currently `5.0.0`).
 
 ## 2. Scaffold
 
@@ -38,8 +38,8 @@ Templates:
 
 Generates:
 
-- `Plugins/MyPlugin/`
-- `Plugins/MyPlugin.Tests/`
+- `Plugins/Official/MyPlugin/`
+- `Plugins/Official/MyPlugin.Tests/`
 - `plugin.manifest.json` (authoring source of truth)
 - `plugin.json` (host runtime compatibility output)
 - plugin `CHANGELOG.md`
@@ -84,7 +84,7 @@ PluginWorkbench supports System / Light / Dark, host-style shells, and Preview v
 .\udt-plugin.cmd validate --plugin my-plugin --profile official-candidate
 ```
 
-## 8. Do not start from root `store.json`
+## 8. Do not start from generated `Plugins/.build/catalog/plugin-catalog.json`
 
 Author flow:
 
@@ -93,4 +93,4 @@ Author flow:
 3. Preview / test / validate
 4. Package
 
-Root `store.json` is **release output** for active marketplace plugins only.
+Generated `Plugins/.build/catalog/plugin-catalog.json` is **release output** for active marketplace plugins only.

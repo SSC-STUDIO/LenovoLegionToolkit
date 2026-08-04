@@ -8,9 +8,9 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
 /// <summary>
-/// Smoke: when the sibling plugins repo (and release assets) are present on disk,
-/// verify store.json integrity digests match the packaged ZIPs and main DLLs.
-/// Skips cleanly when assets are not available (e.g. core-only CI checkout).
+/// Smoke: when the local monorepo catalog and release assets are present, verify
+/// catalog integrity digests match the packaged ZIPs and main DLLs.
+/// Skips cleanly when generated assets are not available.
 /// </summary>
 [Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Smoke)]
@@ -28,9 +28,12 @@ public class OfficialPluginPackageSmokeTests
             return;
         }
 
-        var storePath = Path.Combine(pluginsRoot, "store.json");
-        var assetsRoot = Path.Combine(pluginsRoot, "Build", "release-assets");
-        File.Exists(storePath).Should().BeTrue("plugins repo should contain store.json");
+        var storePath = Path.Combine(pluginsRoot, "Plugins", ".build", "catalog", "plugin-catalog.json");
+        var assetsRoot = Path.Combine(pluginsRoot, "Plugins", ".build", "release-assets");
+        if (!File.Exists(storePath))
+        {
+            return;
+        }
 
         if (!Directory.Exists(assetsRoot))
         {
@@ -132,16 +135,8 @@ public class OfficialPluginPackageSmokeTests
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir is not null)
         {
-            var sibling = Path.Combine(dir.FullName, "UniversalDeviceToolkit-Plugins");
-            if (File.Exists(Path.Combine(sibling, "store.json")) &&
-                File.Exists(Path.Combine(sibling, "UniversalDeviceToolkit-Plugins.sln")))
-            {
-                return sibling;
-            }
-
-            // Already inside plugins repo
-            if (File.Exists(Path.Combine(dir.FullName, "store.json")) &&
-                File.Exists(Path.Combine(dir.FullName, "UniversalDeviceToolkit-Plugins.sln")))
+            if (File.Exists(Path.Combine(dir.FullName, "UniversalDeviceToolkit.sln")) &&
+                Directory.Exists(Path.Combine(dir.FullName, "Plugins", "Official")))
             {
                 return dir.FullName;
             }

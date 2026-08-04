@@ -1,7 +1,7 @@
 {
   "hostVersion": "5.0.0",
   "hostTag": "v5.0.0",
-  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v5.0.0/UniversalDeviceToolkit_v5.0.0_win-x64.zip",
+  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v5.0.0/UniversalDeviceToolkit_v5.0.0_Full_win-x64.zip",
   "artifacts": {
     "package": "UniversalDeviceToolkit_v5.0.0_win-x64.zip",
     "lib": "UniversalDeviceToolkit.Lib.dll",

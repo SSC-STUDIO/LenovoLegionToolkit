@@ -1,12 +1,17 @@
 param(
     [string]$SourceDir = "",
-    [switch]$UseSiblingRepoBuild
+    [switch]$UseSiblingRepoBuild,
+    [string]$TargetDir = ""
 )
 
 $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$targetDir = Join-Path $repoRoot "Dependencies\\Host"
+$targetDir = if ([string]::IsNullOrWhiteSpace($TargetDir)) {
+    Join-Path $repoRoot ".host\manual"
+} else {
+    $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetDir)
+}
 
 $requiredFiles = @(
     "UniversalDeviceToolkit.Lib.dll",
@@ -19,7 +24,7 @@ $requiredFiles = @(
 )
 
 if ([string]::IsNullOrWhiteSpace($SourceDir) -and $UseSiblingRepoBuild) {
-    $SourceDir = Join-Path $repoRoot "..\\UniversalDeviceToolkit\\Build"
+    $SourceDir = Join-Path $repoRoot "..\Build"
 }
 
 if ([string]::IsNullOrWhiteSpace($SourceDir)) {

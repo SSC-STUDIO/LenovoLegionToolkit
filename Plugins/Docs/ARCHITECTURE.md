@@ -12,44 +12,28 @@ Universal Device Toolkit Plugins 是通用设备工具包的官方插件系统�
 ## 项目结构
 
 ```
-UniversalDeviceToolkit-Plugins/
-├── SDK/                          # 插件SDK接口层
-│   ├── PluginBase.cs             # 插件基类（提供生命周期方法）
-│   ├── PluginAttribute.cs         # 插件元数据特性
-│   └── IPluginPage.cs            # 插件页面接口
-├── Plugins/                      # 插件目录
-│   ├── Shared/                   # 共享工具库 (Priority 0)
-│   │   ├── HttpClientManager.cs   # 单例HttpClient管理
-│   │   ├── WpfFallbackHelper.cs  # WPF回退UI辅助类
-│   │   ├── ProcessRunner.cs       # 安全进程执行器
-│   │   ├── SettingsManager.cs    # 统一设置持久化管理
-│   │   └── Constants.cs           # 魔法数字集中定义
-│   ├── Shared.Tests/             # 共享库测试
-│   ├── CustomMouse/              # 光标与指针插件
-│   ├── CustomMouse.Tests/
-│   ├── ShellIntegration/         # Nilesoft Shell 管理插件
-│   ├── ShellIntegration.Tests/
-│   ├── ViveTool/                 # ViVeTool 功能标志插件
-│   │   ├── Bundled/             # ViVeTool 运行时依赖
-│   │   └── Services/            # 拆分后的服务层
-│   └── ViveTool.Tests/
-├── Dependencies/                # 外部依赖
-│   └── Host/                    # 宿主应用引用与基线清单
-│       └── host-release.json    # 独立开发使用的主程序 release 基线
-├── Build/                       # 构建输出
-└── Tools/                       # 工具项目
-    ├── PluginTooling.Core/      # 共享作者工具核心
-    ├── PluginTooling.Cli/       # 标准作者命令入口
-    ├── PluginCompletionUiTool/  # 维护者校验 UI
-    ├── PluginWorkbench/         # 宿主级预览工作台
-    └── PluginWorkbench.Smoke/   # 工作台 UI 冒烟验证
+UniversalDeviceToolkit/
++- Plugins/Official/         # Official plugin projects and tests
+|  +- CustomMouse/
+|  +- ShellIntegration/
+|  `- ViveTool/
++- Plugins/SDK/Runtime/       # Plugin SDK runtime surface
++- Plugins/Shared/            # Shared plugin helpers
++- Plugins/Shared.Tests/       # Shared helper tests
++- Plugins/Testing/            # Tooling and performance tests
++- Plugins/Tooling/            # CLI, PluginWorkbench, and smoke tools
++- Plugins/HostBaseline/       # Host release manifest; DLL cache is .host/
++- Plugins/Templates/          # Authoring archetypes
++- Plugins/.build/             # Ignored build, package, and catalog output
++- Docs/Plugins/                # Plugin documentation
+`- .github/workflows/plugins-* # Monorepo plugin CI and release workflows
 ```
 
 ## 架构原则
 
 ### 1. 独立构建模式
 - 插件项目不引用主应用源码
-- 使用 `Dependencies/Host` 中的预编译引用
+- 使用 `Plugins/HostBaseline` 中的预编译引用
 - 通过 `Scripts/ensure-host-dependencies.ps1` 刷新宿主引用
 - 若本机没有 sibling `UniversalDeviceToolkit` 构建输出，则回退到 `host-release.json` 声明的主程序 release ZIP
 
@@ -66,14 +50,14 @@ UniversalDeviceToolkit-Plugins/
 - `plugin.manifest.json`: 作者编辑的统一清单，包含运行时身份、贡献点、打包规则和官方商店元数据
 - `plugin.json`: 为当前宿主加载保留的运行时兼容输出
 - `store-entry.json`: 为旧发布脚本保留的官方元数据兼容输出
-- 根 `store.json`: 发布输出，不再作为新插件作者的日常编辑入口
+- 生成的 `Plugins/.build/catalog/plugin-catalog.json`: 发布输出，不再作为新插件作者的日常编辑入口
 
 ### 2.1 独立宿主模式
-- `PluginWorkbench` 直接加载 `Build/plugins/...` 输出或本地 ZIP 包
+- `PluginWorkbench` 直接加载 `Plugins/.build/plugins/...` 输出或本地 ZIP 包
 - 默认 `Preview` 模式只承载 UI，不执行系统变更
 - 切换到 `Real Runtime` 后才运行插件启动钩子和优化动作
 - 支持 `System / Light / Dark`，并桥接主程序的宿主样式资源
-- 插件配置隔离在 `Build/PluginWorkbenchState/<Mode>/...`
+- 插件配置隔离在 `Plugins/.build/PluginWorkbenchState/<Mode>/...`
 - `PluginWorkbench.Smoke` 使用 Windows UI Automation 验证主题切换、宿主壳和 `Preview -> Real Runtime` 交互
 
 ### 3. 共享工具库 (Shared)
@@ -194,7 +178,7 @@ Load → Start → [Runtime Loop] → Stop → Unload
 - `*.csproj`: 文件版本
 - `plugin.manifest.json`: 插件版本、贡献点、包名与商店元数据
 - `plugin.json`: 兼容运行时清单
-- `store.json`: 发布元数据
+- `Plugins/.build/catalog/plugin-catalog.json`: 发布元数据
 
 ### 发布流程
 1. 更新所有版本文件

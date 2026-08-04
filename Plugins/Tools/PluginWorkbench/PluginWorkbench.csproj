@@ -16,8 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PluginTooling.Core\PluginTooling.Core.csproj" />
-    <ProjectReference Include="..\..\SDK\UniversalDeviceToolkit.Plugins.SDK.csproj" />
-    <ProjectReference Include="..\..\Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
    <Reference Include="UniversalDeviceToolkit.Lib">
      <HintPath>$(HostLibPath)</HintPath>
      <Private>true</Private>
@@ -26,15 +26,11 @@
       <HintPath>$(HostLibPluginsPath)</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
-      <HintPath>$(HostAbstractionsPath)</HintPath>
-      <Private>true</Private>
-    </Reference>
     <Reference Include="Universal Device Toolkit">
       <HintPath>$(HostWpfPath)</HintPath>
       <Private>true</Private>
     </Reference>
-   <PackageReference Include="WPF-UI" Version="4.3.0" />
+   <PackageReference Include="WPF-UI" />
   </ItemGroup>
 
   <ItemGroup>

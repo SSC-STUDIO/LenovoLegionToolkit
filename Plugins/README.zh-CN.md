@@ -25,11 +25,11 @@
 
 | 状态 | 插件 | 版本 | 说明 | 安装 ID |
 |------|------|------|------|---------|
-| 上架 | **光标与指针** | v1.0.17 | 主题感知光标、指针速度、主按键交换、安全备份/还原 | `custom-mouse` |
-| 上架 | **ViVeTool** | v1.2.3 | 可视化浏览/开关 Windows 隐藏功能标志 | `vive-tool` |
-| 上架 | **Nilesoft Shell 管理器** | v1.0.13 | 管理 Nilesoft Shell 注册与 UDT 配置（需单独安装 Shell） | `shell-integration` |
+| 上架 | **光标与指针** | v1.0.18 | 主题感知光标、指针速度、主按键交换、安全备份/还原 | `custom-mouse` |
+| 上架 | **ViVeTool** | v1.2.4 | 可视化浏览/开关 Windows 隐藏功能标志 | `vive-tool` |
+| 上架 | **Nilesoft Shell 管理器** | v1.0.14 | 管理 Nilesoft Shell 注册与 UDT 配置（需单独安装 Shell） | `shell-integration` |
 
-> 版本以各插件 `plugin.manifest.json` 为准；上架清单见根目录 [`store.json`](./store.json)（发布生成物）。
+> 版本以各插件 `plugin.manifest.json` 为准；上架清单见根目录 [`Plugins/.build/catalog/plugin-catalog.json`](./.build/catalog/plugin-catalog.json)（发布生成物）。
 
 ---
 
@@ -92,24 +92,28 @@ Shared + 官方插件有完整单元测试，GitHub Actions 覆盖构建/校验/
 | `dev` | 构建 + Workbench 预览 |
 | `test` / `validate` / `package` | 测试、门禁、打 ZIP |
 | `bump-version` / `sync-version` | 版本真相源同步 |
-| `promote` / `generate-store` | 官方商店元数据 / 生成 `store.json` |
+| `promote` / `generate-store` | 官方商店元数据 / 生成 `Plugins/.build/catalog/plugin-catalog.json` |
 
 ---
 
 ## 仓库结构
 
 ```
-UniversalDeviceToolkit-Plugins/
-├── Plugins/                 # 官方插件与测试
-├── SDK/                     # 插件 SDK
-├── Dependencies/Host/       # 宿主引用（host-release.json → v5.0.0）
-├── Tools/                   # PluginWorkbench + CLI
-├── Scripts/                 # 引导与门禁脚本
-├── Docs/                    # 文档索引见 Docs/README.md
-├── store.json               # 商店目录（发布输出）
-├── udt-plugin.cmd           # 标准工具入口
-├── llt-plugin.cmd           # 兼容别名
-└── Make.bat
+UniversalDeviceToolkit/
++- Plugins/Official/         # Official plugin projects and tests
+|  +- CustomMouse/
+|  +- ShellIntegration/
+|  `- ViveTool/
++- Plugins/SDK/Runtime/       # Plugin SDK runtime surface
++- Plugins/Shared/            # Shared plugin helpers
++- Plugins/Shared.Tests/       # Shared helper tests
++- Plugins/Testing/            # Tooling and performance tests
++- Plugins/Tooling/            # CLI, PluginWorkbench, and smoke tools
++- Plugins/HostBaseline/       # Host release manifest; DLL cache is .host/
++- Plugins/Templates/          # Authoring archetypes
++- Plugins/.build/             # Ignored build, package, and catalog output
++- Docs/Plugins/                # Plugin documentation
+`- .github/workflows/plugins-* # Monorepo plugin CI and release workflows
 ```
 
 ---
@@ -121,7 +125,7 @@ UniversalDeviceToolkit-Plugins/
 | 宿主 | `host-release.json` / 主仓 | **5.0.0** |
 | 插件 SemVer | `plugin.manifest.json` → `version` | 见上表 |
 | 最低宿主 | `minHostVersion`；运行时 `plugin.json` 的 `MinLltVersion` 为宿主 ABI 字段名 | **5.0.0** |
-| 商店目录 | 生成的 `store.json` | 勿手改作为日常入口 |
+| 商店目录 | 生成的 `Plugins/.build/catalog/plugin-catalog.json` | 勿手改作为日常入口 |
 
 ---
 
@@ -133,17 +137,17 @@ UniversalDeviceToolkit-Plugins/
 4. `validate` + 测试通过  
 5. 提 PR  
 
-详见 [CONTRIBUTING.md](./CONTRIBUTING.md) 与 [Docs/PLUGIN_DEVELOPMENT.md](./Docs/PLUGIN_DEVELOPMENT.md)。
+详见 [CONTRIBUTING.md](../CONTRIBUTING.md) 与 [Docs/PLUGIN_DEVELOPMENT.md](../Docs/Plugins/PLUGIN_DEVELOPMENT.md)。
 
 ---
 
 ## 文档
 
-- [文档索引](./Docs/README.md)
-- [快速开始](./Docs/PLUGIN_QUICKSTART.md)
-- [开发指南](./Docs/PLUGIN_DEVELOPMENT.md)
-- [架构](./Docs/ARCHITECTURE.md)
-- [SDK 变更](./Docs/SDK_CHANGELOG.md)
+- [文档索引](../Docs/Plugins/README.md)
+- [快速开始](../Docs/Plugins/PLUGIN_QUICKSTART.md)
+- [开发指南](../Docs/Plugins/PLUGIN_DEVELOPMENT.md)
+- [架构](../Docs/Plugins/ARCHITECTURE.md)
+- [SDK 变更](../Docs/Plugins/SDK_CHANGELOG.md)
 - [更新日志](./CHANGELOG.md)
 
 ---
@@ -155,7 +159,7 @@ UniversalDeviceToolkit-Plugins/
 
 ## 许可证
 
-MIT，见 [LICENSE](./LICENSE)。
+MIT，见 [LICENSE](../LICENSE)。
 
 ---
 

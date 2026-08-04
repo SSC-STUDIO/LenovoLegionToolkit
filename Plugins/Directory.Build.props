@@ -18,15 +18,20 @@
 
 
   <PropertyGroup>
-    <HostDependenciesDir>$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
+    <!-- Host binaries are generated from the main repository or downloaded into the
+         ignored versioned cache. No host DLLs are tracked in the monorepo. -->
+    <HostBaselineManifest>$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
+    <HostBaselineVersion Condition="'$(HostBaselineVersion)' == ''">5.0.0</HostBaselineVersion>
+    <HostDependenciesDir Condition="'$(HostDependenciesDir)' == ''">$(MSBuildThisFileDirectory).host\$(HostBaselineVersion)\</HostDependenciesDir>
+    <HostSourceDir Condition="'$(HostSourceDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\Build\UniversalDeviceToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\Build\</HostSourceDir>
+    <HostLibPath Condition="'$(HostLibPath)' == '' and Exists('$(HostSourceDir)UniversalDeviceToolkit.Lib.dll')">$(HostSourceDir)UniversalDeviceToolkit.Lib.dll</HostLibPath>
     <HostLibPath Condition="'$(HostLibPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Lib.dll</HostLibPath>
-    <HostLibPath Condition="!Exists('$(HostLibPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.dll</HostLibPath>
+    <HostLibPluginsPath Condition="'$(HostLibPluginsPath)' == '' and Exists('$(HostSourceDir)UniversalDeviceToolkit.Lib.Plugins.dll')">$(HostSourceDir)UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
     <HostLibPluginsPath Condition="'$(HostLibPluginsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
-    <HostLibPluginsPath Condition="!Exists('$(HostLibPluginsPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.Plugins.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
+    <HostAbstractionsPath Condition="'$(HostAbstractionsPath)' == '' and Exists('$(HostSourceDir)UniversalDeviceToolkit.Plugins.Abstractions.dll')">$(HostSourceDir)UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
     <HostAbstractionsPath Condition="'$(HostAbstractionsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
-    <HostAbstractionsPath Condition="!Exists('$(HostAbstractionsPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Plugins.Abstractions.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
+    <HostWpfPath Condition="'$(HostWpfPath)' == '' and Exists('$(HostSourceDir)Universal Device Toolkit.dll')">$(HostSourceDir)Universal Device Toolkit.dll</HostWpfPath>
     <HostWpfPath Condition="'$(HostWpfPath)' == ''">$(HostDependenciesDir)Universal Device Toolkit.dll</HostWpfPath>
-    <HostWpfPath Condition="!Exists('$(HostWpfPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll</HostWpfPath>
     <EnsureHostDependenciesScript>$(MSBuildThisFileDirectory)Scripts\ensure-host-dependencies.ps1</EnsureHostDependenciesScript>
     <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' == 'Windows_NT'">powershell</PowerShellExecutable>
     <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' != 'Windows_NT'">pwsh</PowerShellExecutable>
@@ -87,8 +92,8 @@
 
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
-    <PackageReference Update="Microsoft.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Update="Microsoft.Extensions.Logging" />
   </ItemGroup>
 
 
@@ -101,15 +106,11 @@
       <HintPath>$(HostLibPluginsPath)</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
-      <HintPath>$(HostAbstractionsPath)</HintPath>
-      <Private>false</Private>
-    </Reference>
  </ItemGroup>
 
 
   <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <PackageReference Include="WPF-UI" Version="4.3.0" />
+    <PackageReference Include="WPF-UI" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
@@ -120,8 +121,8 @@
 
   <Target Name="EnsureHostDependencies"
           BeforeTargets="ResolveReferences"
-          Condition="'$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostDependenciesDir)UniversalDeviceToolkit.Lib.dll') OR !Exists('$(HostDependenciesDir)UniversalDeviceToolkit.Lib.Plugins.dll') OR !Exists('$(HostDependenciesDir)Universal Device Toolkit.dll') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
-    <Message Importance="high" Text="Host dependencies are missing from Dependencies\Host. Bootstrapping required host binaries..." />
+          Condition="'$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostLibPath)') OR !Exists('$(HostLibPluginsPath)') OR !Exists('$(HostWpfPath)') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
+    <Message Importance="high" Text="Host dependencies are missing from the main build or Plugins\.host cache. Bootstrapping required host binaries..." />
     <Exec Command="&quot;$(PowerShellExecutable)&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(EnsureHostDependenciesScript)&quot;"
           WorkingDirectory="$(MSBuildThisFileDirectory)" />
   </Target>
@@ -145,7 +146,7 @@
 
   <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
     <PropertyGroup>
-      <SDKDllSource>$(MSBuildThisFileDirectory)Build\SDK\UniversalDeviceToolkit.Plugins.SDK.dll</SDKDllSource>
+      <SDKDllSource>$(MSBuildThisFileDirectory).build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll</SDKDllSource>
     </PropertyGroup>
     <Copy SourceFiles="$(SDKDllSource)" DestinationFolder="$(OutputPath)" Condition="Exists('$(SDKDllSource)')" ContinueOnError="true" />
   </Target>

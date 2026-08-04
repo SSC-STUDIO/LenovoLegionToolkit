@@ -15,19 +15,17 @@
 
   <!-- SDK is only needed during compilation, not as a standalone output -->
   <PropertyGroup>
-    <OutputPath>..\Build\SDK\</OutputPath>
+    <OutputPath>..\..\.build\sdk\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <Compile Include="..\PluginBase.cs" Link="PluginBase.cs" />
+    <Compile Include="..\PluginAttribute.cs" Link="PluginAttribute.cs" />
+    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
     <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
-      <Private>false</Private>
-    </Reference>
-    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
-      <HintPath>$(HostAbstractionsPath)</HintPath>
       <Private>false</Private>
     </Reference>
   </ItemGroup>
@@ -46,4 +44,3 @@
   </Target>
 
 </Project>
-

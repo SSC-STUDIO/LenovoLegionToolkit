@@ -304,15 +304,14 @@ internal static class Program
 
     private static bool IsRepositoryRoot(string repositoryRoot)
     {
-        return File.Exists(Path.Combine(repositoryRoot, "UniversalDeviceToolkit-Plugins.sln")) &&
-               File.Exists(Path.Combine(repositoryRoot, "store.json")) &&
-               Directory.Exists(Path.Combine(repositoryRoot, "Plugins")) &&
-               Directory.Exists(Path.Combine(repositoryRoot, @"Tools\PluginWorkbench"));
+        return File.Exists(Path.Combine(repositoryRoot, "UniversalDeviceToolkit.Plugins.sln")) &&
+               Directory.Exists(Path.Combine(repositoryRoot, "Official")) &&
+               Directory.Exists(Path.Combine(repositoryRoot, @"Tooling\PluginWorkbench"));
     }
 
     private static PluginDescriptor ResolvePlugin(string repositoryRoot, string pluginId)
     {
-        var pluginDirectories = Directory.EnumerateDirectories(Path.Combine(repositoryRoot, "Plugins"));
+        var pluginDirectories = Directory.EnumerateDirectories(Path.Combine(repositoryRoot, "Official"));
         foreach (var pluginDirectory in pluginDirectories)
         {
             var folderName = Path.GetFileName(pluginDirectory);
@@ -348,13 +347,13 @@ internal static class Program
 
     private static string ResolvePluginBuildDirectory(string repositoryRoot, string folderName, string pluginId)
     {
-        var canonical = Path.Combine(repositoryRoot, "Build", "plugins", $"UniversalDeviceToolkit.Plugins.{folderName}");
+        var canonical = Path.Combine(repositoryRoot, ".build", "plugins", $"UniversalDeviceToolkit.Plugins.{folderName}");
         if (Directory.Exists(canonical))
         {
             return canonical;
         }
 
-        var buildRoot = Path.Combine(repositoryRoot, "Build", "plugins");
+        var buildRoot = Path.Combine(repositoryRoot, ".build", "plugins");
         if (Directory.Exists(buildRoot))
         {
             foreach (var directory in Directory.EnumerateDirectories(buildRoot))
@@ -393,8 +392,8 @@ internal static class Program
     {
         var candidateRoots = new[]
         {
-            Path.Combine(repositoryRoot, @"Tools\PluginWorkbench\bin\Release"),
-            Path.Combine(repositoryRoot, @"Tools\PluginWorkbench\bin\Debug")
+            Path.Combine(repositoryRoot, @"Tooling\PluginWorkbench\bin\Release"),
+            Path.Combine(repositoryRoot, @"Tooling\PluginWorkbench\bin\Debug")
         };
 
         foreach (var candidateRoot in candidateRoots)

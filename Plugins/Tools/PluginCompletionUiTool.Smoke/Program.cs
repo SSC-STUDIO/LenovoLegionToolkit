@@ -124,8 +124,8 @@ internal static class Program
     {
         var candidateRoots = new[]
         {
-            Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool\bin\Release"),
-            Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool\bin\Debug")
+            Path.Combine(repositoryRoot, @"Tooling\PluginCompletionUiTool\bin\Release"),
+            Path.Combine(repositoryRoot, @"Tooling\PluginCompletionUiTool\bin\Debug")
         };
 
         foreach (var candidateRoot in candidateRoots)
@@ -143,15 +143,9 @@ internal static class Program
 
     private static bool IsRepositoryRoot(string repositoryRoot)
     {
-        var storePath = Path.Combine(repositoryRoot, "store.json");
-        if (!File.Exists(storePath))
-        {
-            return false;
-        }
-
-        return File.Exists(Path.Combine(repositoryRoot, "UniversalDeviceToolkit-Plugins.sln")) &&
-               Directory.Exists(Path.Combine(repositoryRoot, "Plugins")) &&
-               Directory.Exists(Path.Combine(repositoryRoot, @"Tools\PluginCompletionUiTool"));
+        return File.Exists(Path.Combine(repositoryRoot, "UniversalDeviceToolkit.Plugins.sln")) &&
+               Directory.Exists(Path.Combine(repositoryRoot, "Official")) &&
+               Directory.Exists(Path.Combine(repositoryRoot, @"Tooling\PluginCompletionUiTool"));
     }
 
     private static (ProcessStartInfo startInfo, string appDirectory)? TryResolveUiAppStartInfo(string buildRoot)

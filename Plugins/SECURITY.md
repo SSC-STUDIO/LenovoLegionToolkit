@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-We take the security of **UniversalDeviceToolkit-Plugins** seriously. If you discover a security vulnerability, please report it responsibly.
+We take the security of the Universal Device Toolkit plugin surface seriously. If you discover a security vulnerability, please report it responsibly.
 
 ### 📧 How to Report
 
@@ -11,7 +11,7 @@ We take the security of **UniversalDeviceToolkit-Plugins** seriously. If you dis
 Instead, please report privately via one of these methods:
 
 1. **GitHub Security Advisories** (preferred):
-   - Go to the [Security Advisories page](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/security/advisories)
+   - Go to the [Security Advisories page](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/security/advisories)
    - Click "New draft security advisory"
    - Fill in the vulnerability details
 
@@ -40,9 +40,9 @@ Please include as much of the following as possible:
 
 This policy applies to:
 
-- All official plugins in the `Plugins/` directory
-- The plugin SDK in `SDK/`
-- The PluginWorkbench and PluginTooling tools in `Tools/`
+- All official plugins in the `Plugins/Official/` directory
+- The plugin SDK in the `Plugins/SDK/Runtime/` directory
+- The PluginWorkbench and PluginTooling tools in `Plugins/Tooling/`
 
 ### Recognition
 
@@ -50,4 +50,4 @@ Security researchers who report vulnerabilities responsibly will be:
 - Credited in the release notes (unless they prefer to remain anonymous)
 - Added to the [Security Hall of Fame](#) (coming soon)
 
-Thank you for helping keep UniversalDeviceToolkit-Plugins secure! 🔒
+Thank you for helping keep Universal Device Toolkit secure!

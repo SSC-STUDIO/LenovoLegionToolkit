@@ -19,6 +19,8 @@
           AfterTargets="Build"
           Condition="'$(IsPluginTestProject)' == 'True' OR '$(IsPluginToolProject)' == 'True'">
     <ItemGroup>
+      <HostDependencyFiles Include="$(HostSourceDir)*.dll"
+                           Condition="'$(HostSourceDir)' != '' and Exists('$(HostSourceDir)')" />
       <HostDependencyFiles Include="$(HostDependenciesDir)*.dll" />
     </ItemGroup>
     <!-- Test and tool hosts need transitive host dependencies (e.g. Serilog) next to their binaries. -->

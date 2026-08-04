@@ -12,7 +12,7 @@ public class GitHubDownloadMirrorsTests
     public void WithMirrorFallbacks_DirectUrlAlwaysFirst()
     {
         var candidates = GitHubDownloadMirrors.WithMirrorFallbacks(
-            "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.17/custom-mouse-v1.0.17.zip").ToArray();
+            "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.17.zip").ToArray();
 
         candidates[0].Should().StartWith("https://github.com/");
         candidates.Length.Should().BeGreaterThan(1);
@@ -21,7 +21,7 @@ public class GitHubDownloadMirrorsTests
     [Fact]
     public void WithMirrorFallbacks_GitHubReleaseUrl_HasMirrorVariants()
     {
-        const string url = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/v1/x.zip";
+        const string url = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/x.zip";
 
         var candidates = GitHubDownloadMirrors.WithMirrorFallbacks(url).ToArray();
 

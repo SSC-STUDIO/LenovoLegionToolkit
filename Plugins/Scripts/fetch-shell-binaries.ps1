@@ -30,7 +30,7 @@ $GitHubApiUrl = "https://api.github.com/repos/$GitHubRepo/releases/latest"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $RepoRoot = (Resolve-Path (Join-Path $ScriptDir '..')).Path
-$OutputDir = Join-Path (Join-Path $RepoRoot 'Dependencies') 'Shell'
+$OutputDir = Join-Path $RepoRoot 'Official\ShellIntegration\Bundled\Shell'
 $TempDir = Join-Path $OutputDir '.tmp'
 
 $RequiredFiles = @('shell.exe', 'shell.dll', 'shell.nss')
