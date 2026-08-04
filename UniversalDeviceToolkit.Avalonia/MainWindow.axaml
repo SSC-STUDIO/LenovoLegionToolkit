@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
         xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+        xmlns:automation="using:Avalonia.Automation"
         x:Class="UniversalDeviceToolkit.Avalonia.MainWindow"
         Title="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}"
         Width="1200" Height="800"
@@ -41,15 +42,21 @@
                            FontSize="14"
                            Margin="0,8,0,16"/>
                 <Button x:Name="DashboardButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaDashboardButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=Nav_Dashboard, Fallback=Dashboard}"
                         Classes="navButton"
                         Content="{local:Loc Key=Nav_Dashboard, Fallback=Dashboard}"
                         Click="DashboardButton_Click"/>
                 <Button x:Name="AboutButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaAboutButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=Nav_About, Fallback=About}"
                         Classes="navButton"
                         Content="{local:Loc Key=Nav_About, Fallback=About}"
                         Click="AboutButton_Click"
                         Margin="0,4,0,0"/>
                 <Button x:Name="SettingsButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaSettingsButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=Nav_Settings, Fallback=Settings}"
                         Classes="navButton"
                         Content="{local:Loc Key=Nav_Settings, Fallback=Settings}"
                         Click="SettingsButton_Click"
@@ -57,7 +64,8 @@
             </StackPanel>
         </Border>
         <Border Background="{DynamicResource AppSurfaceCardBrush}">
-            <ContentControl x:Name="MainContent"/>
+            <ContentControl x:Name="MainContent"
+                            automation:AutomationProperties.AutomationId="AvaloniaMainContent" />
         </Border>
     </DockPanel>
 </Window>

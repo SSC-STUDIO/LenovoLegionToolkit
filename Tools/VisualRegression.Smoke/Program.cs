@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Windows.Automation;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.CLI.Lib;
 
 namespace VisualRegression.Smoke;
@@ -25,7 +26,8 @@ internal static partial class Program
     private const int _windowHeight = 850;
     private const int _minWindowWidth = 1000;
     private const int _minWindowHeight = 650;
-    private static readonly string[] _mainAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
+    private static readonly string[] _wpfAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
+    private static readonly string[] _avaloniaAppBaseNames = ["udt-gui"];
 
     private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
     private static readonly List<CaptureRecord> _captures = new();
@@ -34,14 +36,34 @@ internal static partial class Program
     private static int _processId;
     private static bool _assertDarkThemeSurface;
     private static string _appDataDirectory = string.Empty;
+    private static bool _videoEnabled;
 
     public static int Main(string[] args)
+    {
+        try
+        {
+            var options = SmokeOptions.Parse(args);
+            return options.AllCultures
+                ? RunCultureBatch(args, options)
+                : RunSingle(args, options);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("[visual-smoke] Failed before launch:");
+            Console.Error.WriteLine(ex);
+            return 1;
+        }
+    }
+
+    private static int RunSingle(string[] args, SmokeOptions options)
     {
         Process? process = null;
 
         try
         {
-            var options = SmokeOptions.Parse(args);
+            _captures.Clear();
+            _captureSequence = 0;
+            _videoEnabled = options.Video;
             _assertDarkThemeSurface = options.Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
             var repoRoot = Path.GetFullPath(options.RepoRoot);
             var outputRoot = Path.GetFullPath(options.OutputDirectory);
@@ -57,15 +79,15 @@ internal static partial class Program
             Directory.CreateDirectory(appDataDirectory);
             Directory.CreateDirectory(pluginsDirectory);
 
-            PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme, options.ThemeStyle, options.Language);
+            PrepareSandboxSettings(repoRoot, appDataDirectory, options.Theme, options.ThemeStyle, options.Language, options.EnableAnimations);
             if (options.OsdOnly)
                 PrepareOsdSandboxSettings(appDataDirectory);
             SeedPluginStoreCache(repoRoot, appDataDirectory);
 
             _pipeName = Constants.GetPipeName(appDataDirectory);
 
-            var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration);
-            process = StartApp(runtimeDirectory, appDataDirectory);
+            var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration, options.Host);
+            process = StartApp(runtimeDirectory, appDataDirectory, options.Host);
             _processId = process.Id;
 
             Console.WriteLine($"[visual-smoke] Process: {_processId}");
@@ -77,8 +99,12 @@ internal static partial class Program
             TryWaitForInputIdle(process, 10_000);
             var mainWindow = WaitForMainShellWindow(process.Id, TimeSpan.FromSeconds(90));
             NormalizeWindow(mainWindow);
-            if (!WaitForIpcReady(TimeSpan.FromSeconds(30)))
+            if (options.Host.Equals("wpf", StringComparison.OrdinalIgnoreCase)
+                && !WaitForIpcReady(TimeSpan.FromSeconds(30)))
                 Console.WriteLine("[visual-smoke] IPC did not become ready; continuing with UI Automation-only capture.");
+
+            if (options.Host.Equals("avalonia", StringComparison.OrdinalIgnoreCase))
+                return RunAvaloniaFlow(args, options, currentDirectory, outputRoot, appDataDirectory, ref process, mainWindow);
 
             if (options.OsdOnly)
             {
@@ -292,6 +318,105 @@ internal static partial class Program
         {
             if (process is not null && !process.HasExited)
                 TryCloseProcess(process);
+        }
+    }
+
+    private static int RunCultureBatch(string[] args, SmokeOptions options)
+    {
+        var failures = new List<string>();
+        foreach (var culture in LocalizationCatalog.SupportedCultures)
+        {
+            var cultureOutput = Path.Combine(options.OutputDirectory, options.Host, culture.Name);
+            Console.WriteLine($"[visual-smoke] Starting {options.Host} culture {culture.Name} -> {cultureOutput}");
+
+            var result = RunSingle(
+                args,
+                options with
+                {
+                    AllCultures = false,
+                    Language = culture.Name,
+                    OutputDirectory = cultureOutput
+                });
+
+            if (result != 0)
+                failures.Add(culture.Name);
+        }
+
+        var batchResult = new
+        {
+            host = options.Host,
+            cultures = LocalizationCatalog.SupportedCultures.Select(culture => culture.Name).ToArray(),
+            failures,
+            succeeded = failures.Count == 0,
+            completedAt = DateTimeOffset.Now
+        };
+        Directory.CreateDirectory(options.OutputDirectory);
+        File.WriteAllText(
+            Path.Combine(options.OutputDirectory, $"{options.Host}-batch-result.json"),
+            JsonSerializer.Serialize(batchResult, _jsonOptions));
+
+        return failures.Count == 0 ? 0 : 1;
+    }
+
+    private static int RunAvaloniaFlow(
+        string[] args,
+        SmokeOptions options,
+        string currentDirectory,
+        string outputRoot,
+        string appDataDirectory,
+        ref Process? process,
+        AutomationElement mainWindow)
+    {
+        CapturePage(currentDirectory, mainWindow, "dashboard");
+
+        NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
+            "about",
+            ["AvaloniaAboutButton"],
+            ["About"],
+            root => IsVisible(FindByAutomationId(root, "AvaloniaMainContent"))
+                    && FindVisibleTextContains(root, "About")));
+
+        NavigateAndWait(mainWindow, new PageTarget(
+            "settings",
+            ["AvaloniaSettingsButton"],
+            ["Settings"],
+            root => IsVisible(FindByAutomationId(root, "AvaloniaMainContent"))
+                    && FindVisibleTextContains(root, "Settings")));
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "settings");
+        CaptureAvaloniaSettingsItems(currentDirectory, mainWindow);
+
+        WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+        WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+
+        if (options.KeepApp)
+        {
+            Console.WriteLine("[visual-smoke] Leaving Avalonia app running for inspection.");
+            process = null;
+            return 0;
+        }
+
+        if (process is not null)
+            TryCloseProcess(process);
+        process = null;
+        return 0;
+    }
+
+    private static void CaptureAvaloniaSettingsItems(string currentDirectory, AutomationElement mainWindow)
+    {
+        var live = ResolveLiveWindow(mainWindow);
+        var items = live.FindAll(
+                TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+            .Cast<AutomationElement>()
+            .Where(IsVisible)
+            .ToArray();
+
+        for (var index = 0; index < items.Length; index++)
+        {
+            var item = items[index];
+            ActivateElement(item);
+            WaitForAnimationsToComplete();
+            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), $"settings-item-{index + 1}");
         }
     }
 
@@ -523,7 +648,13 @@ internal static partial class Program
         var fileName = $"{++_captureSequence:000}-{SanitizeFileNameSegment(label)}.png";
         var outputPath = Path.Combine(currentDirectory, fileName);
 
+        using var recorder = _videoEnabled
+            ? WindowVideoRecorder.Start(windowHandle, Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".mp4")))
+            : null;
+
         CaptureWindowFromScreen(windowHandle, outputPath);
+        if (recorder is not null)
+            Thread.Sleep(350);
 
         using (var bitmap = new Bitmap(outputPath))
         {
@@ -540,7 +671,13 @@ internal static partial class Program
         var snapshot = BuildSnapshot(label, window);
         File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, _jsonOptions));
 
-        _captures.Add(new CaptureRecord(_captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
+        _captures.Add(new CaptureRecord(
+            _captures.Count + 1,
+            label,
+            fileName,
+            Path.GetFileName(snapshotPath),
+            recorder?.FileName is { } videoPath ? Path.GetFileName(videoPath) : null,
+            DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
     }
 
@@ -564,13 +701,19 @@ internal static partial class Program
     {
         mainWindow = ResolveLiveWindow(mainWindow);
         NormalizeWindow(mainWindow, width, height);
-        WaitForAnimationsToComplete();
 
         if (!TryGetNativeWindowHandle(mainWindow, out var windowHandle))
             throw new InvalidOperationException($"Window handle unavailable for '{label}'.");
 
-        var fileName = $"{++_captureSequence:000}-{SanitizeFileNameSegment(label)}.png";
+        var sequence = ++_captureSequence;
+        var fileStem = $"{sequence:000}-{SanitizeFileNameSegment(label)}";
+        var fileName = $"{fileStem}.png";
         var outputPath = Path.Combine(currentDirectory, fileName);
+        using var recorder = _videoEnabled
+            ? WindowVideoRecorder.Start(windowHandle, Path.Combine(currentDirectory, $"{fileStem}.mp4"))
+            : null;
+
+        WaitForAnimationsToComplete();
 
         CaptureWindowFromScreen(windowHandle, outputPath);
 
@@ -581,7 +724,13 @@ internal static partial class Program
         var snapshot = BuildSnapshot(label, mainWindow);
         File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, _jsonOptions));
 
-        _captures.Add(new CaptureRecord(_captures.Count + 1, label, fileName, Path.GetFileName(snapshotPath), DateTimeOffset.Now));
+        _captures.Add(new CaptureRecord(
+            _captures.Count + 1,
+            label,
+            fileName,
+            Path.GetFileName(snapshotPath),
+            recorder?.FileName is { } videoPath ? Path.GetFileName(videoPath) : null,
+            DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
     }
 
@@ -1285,12 +1434,15 @@ internal static partial class Program
         Thread.Sleep(900);
     }
 
-    private static Process StartApp(string runtimeDirectory, string appDataDirectory)
+    private static Process StartApp(string runtimeDirectory, string appDataDirectory, string host)
     {
-        var appBaseName = _mainAppBaseNames.FirstOrDefault(name =>
+        var appBaseNames = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
+            ? _avaloniaAppBaseNames
+            : _wpfAppBaseNames;
+        var appBaseName = appBaseNames.FirstOrDefault(name =>
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json")))
-            ?? _mainAppBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
+            ?? appBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
 
         if (string.IsNullOrWhiteSpace(appBaseName))
             throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
@@ -1330,7 +1482,7 @@ internal static partial class Program
         return Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start app process."); // NOTE: Returned process — caller is responsible for disposal
     }
 
-    private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme, string themeStyle, string language)
+    private static void PrepareSandboxSettings(string repoRoot, string appDataDirectory, string theme, string themeStyle, string language, bool enableAnimations)
     {
         var baselineAppData = Path.Combine(repoRoot, "Build", "wpf-navigation-smoke-2026-05-08", "sandbox", "appdata");
         CopyIfExists(Path.Combine(baselineAppData, "settings.json"), Path.Combine(appDataDirectory, "settings.json"));
@@ -1353,7 +1505,7 @@ internal static partial class Program
         root["DisableUnsupportedHardwareWarning"] = true;
         root["ForceSoftwareRendering"] = true;
         root["ExtensionsEnabled"] = false;
-        root["AnimationsEnabled"] = false;
+        root["AnimationsEnabled"] = enableAnimations;
         root["NavigationPaneExpanded"] = true;
 
         Directory.CreateDirectory(appDataDirectory);
@@ -1501,9 +1653,12 @@ internal static partial class Program
         File.SetLastWriteTimeUtc(destinationPath, DateTime.UtcNow);
     }
 
-    private static string ResolveRuntimeDirectory(string repoRoot, string configuration)
+    private static string ResolveRuntimeDirectory(string repoRoot, string configuration, string host)
     {
-        var binRoot = Path.Combine(repoRoot, "UniversalDeviceToolkit.WPF", "bin");
+        var projectDirectory = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
+            ? "UniversalDeviceToolkit.Avalonia"
+            : "UniversalDeviceToolkit.WPF";
+        var binRoot = Path.Combine(repoRoot, projectDirectory, "bin");
         var runtimeRoots = new[]
         {
             Path.Combine(binRoot, "x64", configuration),
@@ -1513,21 +1668,22 @@ internal static partial class Program
         var directCandidates = runtimeRoots.SelectMany(runtimeRoot => new[]
         {
             Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
+            Path.Combine(runtimeRoot, "net10.0", "win-x64"),
             Path.Combine(runtimeRoot, "net10.0-windows", "win-x64")
         });
 
         foreach (var candidate in directCandidates)
         {
-            if (Directory.Exists(candidate) && ContainsMainAppStartupEntry(candidate))
+            if (Directory.Exists(candidate) && ContainsMainAppStartupEntry(candidate, host))
                 return candidate;
         }
 
         var discovered = runtimeRoots
             .Where(Directory.Exists)
-            .SelectMany(runtimeRoot => Directory.EnumerateDirectories(runtimeRoot, "net10.0-windows*", SearchOption.TopDirectoryOnly))
+            .SelectMany(runtimeRoot => Directory.EnumerateDirectories(runtimeRoot, "net10.0*", SearchOption.TopDirectoryOnly))
             .Select(path => Path.Combine(path, "win-x64"))
             .Where(Directory.Exists)
-            .Where(ContainsMainAppStartupEntry)
+            .Where(path => ContainsMainAppStartupEntry(path, host))
             .OrderByDescending(Directory.GetLastWriteTimeUtc)
             .FirstOrDefault();
 
@@ -1537,9 +1693,12 @@ internal static partial class Program
         throw new DirectoryNotFoundException($"Runtime directory not found under: {string.Join(", ", runtimeRoots)}");
     }
 
-    private static bool ContainsMainAppStartupEntry(string runtimeDirectory)
+    private static bool ContainsMainAppStartupEntry(string runtimeDirectory, string host)
     {
-        return _mainAppBaseNames.Any(name =>
+        var appBaseNames = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
+            ? _avaloniaAppBaseNames
+            : _wpfAppBaseNames;
+        return appBaseNames.Any(name =>
             (File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
              File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json"))) ||
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
@@ -1585,6 +1744,8 @@ internal static partial class Program
 
     private static void WriteManifest(string currentDirectory, string outputRoot, string appDataDirectory)
     {
+        ValidateCaptureArtifacts(currentDirectory);
+
         var indexPath = Path.Combine(currentDirectory, "index.md");
         var lines = new List<string>
         {
@@ -1596,7 +1757,10 @@ internal static partial class Program
             "## Captures",
         };
 
-        lines.AddRange(_captures.Select(capture => $"- `{capture.FileName}`: {capture.Label} ({capture.CapturedAt:HH:mm:ss})"));
+        lines.AddRange(_captures.Select(capture =>
+            $"- `{capture.FileName}`: {capture.Label} ({capture.CapturedAt:HH:mm:ss})" +
+            (capture.VideoFileName is null ? string.Empty : $"; video `{capture.VideoFileName}`") +
+            $"; UIA `{capture.SnapshotFileName}`"));
         File.WriteAllLines(indexPath, lines);
 
         var htmlPath = Path.Combine(currentDirectory, "storyboard.html");
@@ -1613,6 +1777,7 @@ internal static partial class Program
             capture.Label,
             capture.FileName,
             capture.SnapshotFileName,
+            capture.VideoFileName,
             capturedAt = capture.CapturedAt.ToString("HH:mm:ss")
         }));
 
@@ -1629,7 +1794,8 @@ internal static partial class Program
     main { padding: 18px; overflow: auto; }
     button { display: block; width: 100%; margin: 0 0 8px; padding: 10px; border: 1px solid #303746; border-radius: 8px; background: #202634; color: #eef2ff; text-align: left; cursor: pointer; }
     button.active { border-color: #75b8ff; }
-    img { max-width: 100%; height: auto; border: 1px solid #303746; border-radius: 10px; background: #05070a; }
+    img, video { max-width: 100%; height: auto; border: 1px solid #303746; border-radius: 10px; background: #05070a; }
+    video { display: none; margin-top: 12px; }
     .muted { color: #a6b0c3; font-size: 13px; }
   </style>
 </head>
@@ -1637,13 +1803,14 @@ internal static partial class Program
   <div class="layout">
     <aside>
       <h1>Visual Regression Smoke</h1>
-      <p class="muted">Page-by-page WPF screenshots.</p>
+      <p class="muted">Page-by-page WPF/Avalonia screenshots, UIA snapshots and animation recordings.</p>
       <div id="list"></div>
     </aside>
     <main>
       <h2 id="title"></h2>
       <p id="meta" class="muted"></p>
       <img id="image" alt="" />
+      <video id="video" controls preload="metadata"></video>
     </main>
   </div>
   <script>
@@ -1652,11 +1819,19 @@ internal static partial class Program
     const title = document.getElementById('title');
     const meta = document.getElementById('meta');
     const image = document.getElementById('image');
+    const video = document.getElementById('video');
     function select(index) {
       const item = captures[index];
       title.textContent = `${item.Sequence}. ${item.Label}`;
-      meta.textContent = `${item.FileName} · ${item.capturedAt}`;
+      meta.textContent = `${item.FileName} | ${item.SnapshotFileName} | ${item.capturedAt}`;
       image.src = item.FileName;
+      if (item.VideoFileName) {
+        video.src = item.VideoFileName;
+        video.style.display = 'block';
+      } else {
+        video.removeAttribute('src');
+        video.style.display = 'none';
+      }
       [...list.querySelectorAll('button')].forEach((button, i) => button.classList.toggle('active', i === index));
     }
     captures.forEach((item, index) => {
@@ -1670,6 +1845,32 @@ internal static partial class Program
 </body>
 </html>
 """;
+    }
+
+    private static void ValidateCaptureArtifacts(string currentDirectory)
+    {
+        if (_captures.Count == 0)
+            throw new InvalidOperationException("Visual smoke produced no captures.");
+
+        foreach (var capture in _captures)
+        {
+            var imagePath = Path.Combine(currentDirectory, capture.FileName);
+            var snapshotPath = Path.Combine(currentDirectory, capture.SnapshotFileName);
+            if (!File.Exists(imagePath) || new FileInfo(imagePath).Length == 0)
+                throw new InvalidOperationException($"Missing screenshot artifact for '{capture.Label}': {imagePath}");
+            if (!File.Exists(snapshotPath) || new FileInfo(snapshotPath).Length == 0)
+                throw new InvalidOperationException($"Missing UI Automation snapshot for '{capture.Label}': {snapshotPath}");
+
+            if (_videoEnabled)
+            {
+                if (string.IsNullOrWhiteSpace(capture.VideoFileName))
+                    throw new InvalidOperationException($"Video artifact was not registered for '{capture.Label}'.");
+
+                var videoPath = Path.Combine(currentDirectory, capture.VideoFileName);
+                if (!File.Exists(videoPath) || new FileInfo(videoPath).Length == 0)
+                    throw new InvalidOperationException($"Missing video artifact for '{capture.Label}': {videoPath}");
+            }
+        }
     }
 
     private static void WriteResult(string outputRoot, string appDataDirectory, Process? process, int? exitCode, string? error)
@@ -1769,7 +1970,13 @@ internal static partial class Program
 
     private sealed record PageTarget(string Label, string[] AutomationIds, string[] Names, Func<AutomationElement, bool> Ready);
 
-    private sealed record CaptureRecord(int Sequence, string Label, string FileName, string SnapshotFileName, DateTimeOffset CapturedAt);
+    private sealed record CaptureRecord(
+        int Sequence,
+        string Label,
+        string FileName,
+        string SnapshotFileName,
+        string? VideoFileName,
+        DateTimeOffset CapturedAt);
 
     private sealed record RegionSample(double AverageLuminance);
 
@@ -1798,9 +2005,11 @@ internal static partial class Program
         string RepoRoot,
         string OutputDirectory,
         string Configuration,
+        string Host,
         string Theme,
         string ThemeStyle,
         string Language,
+        bool AllCultures,
         bool PluginOnly,
         bool OsdOnly,
         bool SettingsOnly,
@@ -1808,18 +2017,29 @@ internal static partial class Program
         bool KeepApp,
         bool ExpectKeyboardNavigation,
         bool NavigationSidebarOnly,
-        bool ReadmeScreenshots)
+        bool ReadmeScreenshots,
+        bool Video,
+        bool EnableAnimations)
     {
         public static SmokeOptions Parse(IReadOnlyList<string> args)
         {
             var repoRoot = ReadOption(args, "--repo-root") ?? Directory.GetCurrentDirectory();
             var configuration = ReadOption(args, "--configuration") ?? "Release";
-            var outputDirectory = ReadOption(args, "--output-dir")
+            var outputDirectory = ReadOption(args, "--output-dir", "--output-directory")
                                   ?? Path.Combine(repoRoot, "Build", "visual-regression-after-wpfui4");
+            var host = ReadOption(args, "--host") ?? "wpf";
+            if (!host.Equals("wpf", StringComparison.OrdinalIgnoreCase)
+                && !host.Equals("avalonia", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException($"Unsupported host '{host}'. Expected 'wpf' or 'avalonia'.");
+            }
+
             var theme = ReadOption(args, "--theme") ?? "Dark";
             var themeStyle = ReadOption(args, "--theme-style") ?? "Default";
             var language = ReadOption(args, "--lang") ?? "en";
+            LocalizationCatalog.NormalizeCulture(language);
             var switchTheme = ReadOption(args, "--switch-theme");
+            var allCultures = args.Contains("--all-cultures", StringComparer.OrdinalIgnoreCase);
             var pluginOnly = args.Contains("--plugin-only", StringComparer.OrdinalIgnoreCase);
             var osdOnly = args.Contains("--osd-only", StringComparer.OrdinalIgnoreCase);
             var settingsOnly = args.Contains("--settings-only", StringComparer.OrdinalIgnoreCase);
@@ -1827,19 +2047,24 @@ internal static partial class Program
             var readmeScreenshots = args.Contains("--readme-screenshots", StringComparer.OrdinalIgnoreCase);
             var keepApp = args.Contains("--keep-app", StringComparer.OrdinalIgnoreCase);
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, theme, themeStyle, language, pluginOnly, osdOnly, settingsOnly, switchTheme, keepApp, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots);
+            var video = args.Contains("--video", StringComparer.OrdinalIgnoreCase);
+            var enableAnimations = video || args.Contains("--animations", StringComparer.OrdinalIgnoreCase);
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, host, theme, themeStyle, language, allCultures, pluginOnly, osdOnly, settingsOnly, switchTheme, keepApp, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots, video, enableAnimations);
         }
 
-        private static string? ReadOption(IReadOnlyList<string> args, string name)
+        private static string? ReadOption(IReadOnlyList<string> args, params string[] names)
         {
             for (var i = 0; i < args.Count; i++)
             {
-                if (string.Equals(args[i], name, StringComparison.OrdinalIgnoreCase) && i + 1 < args.Count)
-                    return args[i + 1];
+                foreach (var name in names)
+                {
+                    if (string.Equals(args[i], name, StringComparison.OrdinalIgnoreCase) && i + 1 < args.Count)
+                        return args[i + 1];
 
-                var prefix = $"{name}=";
-                if (args[i].StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                    return args[i][prefix.Length..];
+                    var prefix = $"{name}=";
+                    if (args[i].StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                        return args[i][prefix.Length..];
+                }
             }
 
             return null;
