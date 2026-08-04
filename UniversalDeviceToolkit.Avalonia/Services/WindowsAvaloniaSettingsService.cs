@@ -1,9 +1,13 @@
 #if WINDOWS
 
+using System.Diagnostics;
 using System.Globalization;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
@@ -25,12 +29,12 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             "Display" => await BuildDisplayPageAsync().ConfigureAwait(false),
             "SmartKeys" => BuildSmartKeysPage(),
             "Update" => BuildUpdatePage(),
-            "Power" => BuildPowerPage(),
+            "Power" => await BuildPowerPageAsync().ConfigureAwait(false),
             "Integrations" => BuildIntegrationsPage(),
             _ => new AvaloniaSettingsPageData(pageKey, pageKey, string.Empty, [], false, "Unknown settings page."),
         };
 
-    public Task SetToggleAsync(string pageKey, string optionKey, bool value)
+    public async Task SetToggleAsync(string pageKey, string optionKey, bool value)
     {
         var store = _applicationSettings.Store;
         switch (pageKey, optionKey)
@@ -103,13 +107,22 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 store.ResetBatteryOnSinceTimerOnReboot = value;
                 _applicationSettings.SynchronizeStore();
                 break;
+            case ("Power", "GodModeFnQSwitchable"):
+                await SetGodModeFnQSwitchableAsync(value).ConfigureAwait(false);
+                break;
             case ("Integrations", "HWiNFO"):
                 _integrationsSettings.Store.HWiNFO = value;
                 _integrationsSettings.SynchronizeStore();
+                await (IoCContainer.TryResolve<HWiNFOIntegration>()
+                    ?? throw new PlatformNotSupportedException("HWiNFO integration is not initialized."))
+                    .StartStopIfNeededAsync().ConfigureAwait(false);
                 break;
             case ("Integrations", "CLI"):
                 _integrationsSettings.Store.CLI = value;
                 _integrationsSettings.SynchronizeStore();
+                break;
+            case ("Integrations", "CLIPath"):
+                SystemPath.SetCLI(value);
                 break;
             default:
                 if (pageKey == "Display"
@@ -130,7 +143,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 throw new KeyNotFoundException($"Unknown toggle {pageKey}/{optionKey}.");
         }
 
-        return Task.CompletedTask;
+        return;
     }
 
     public Task SetSelectionAsync(string pageKey, string optionKey, string value)
@@ -249,6 +262,22 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     public async Task InvokeActionAsync(string pageKey, string optionKey)
     {
+        if (pageKey == "Power")
+        {
+            switch (optionKey)
+            {
+                case "OpenPowerModes":
+                    OpenShellUri("ms-settings:powersleep");
+                    return;
+                case "OpenPowerPlans":
+                case "OpenPowerPlansControlPanel":
+                    OpenControlPanel("/name Microsoft.PowerOptions");
+                    return;
+                default:
+                    throw new KeyNotFoundException($"Unknown power action {optionKey}.");
+            }
+        }
+
         if (pageKey != "Update" || optionKey != "CheckForUpdates")
             throw new KeyNotFoundException($"Unknown action {pageKey}/{optionKey}.");
 
@@ -418,20 +447,71 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             true);
     }
 
-    private AvaloniaSettingsPageData BuildPowerPage()
+    private async Task<AvaloniaSettingsPageData> BuildPowerPageAsync()
     {
         var store = _applicationSettings.Store;
         var mapping = FormatPowerModeMapping(store.PowerModeMappingMode);
+        var powerModeFeature = IoCContainer.TryResolve<PowerModeFeature>();
+        var powerModeSupported = false;
+        try
+        {
+            powerModeSupported = powerModeFeature is not null && await powerModeFeature.IsSupportedAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            // Capability probing is best effort; unavailable hardware remains explicit in the UI.
+        }
+
+        var godModeSupported = false;
+        var godModeEnabled = false;
+        try
+        {
+            var machine = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            godModeSupported = machine.Features[CapabilityID.GodModeFnQSwitchable];
+            if (godModeSupported)
+                godModeEnabled = await WMI.LenovoOtherMethod.GetFeatureValueAsync(CapabilityID.GodModeFnQSwitchable).ConfigureAwait(false) == 1;
+        }
+        catch
+        {
+            // Keep the control hidden when WMI cannot provide a reliable state.
+        }
+
+        var availabilityWarning = powerModeSupported
+            ? null
+            : "Power mode controls are not available on this device.";
+
         return new AvaloniaSettingsPageData(
             "Power",
             "Power",
             "Configure power mode mapping and battery behavior.",
             [
-                new("PowerModeMapping", "Power mode mapping", "Choose how device power modes map to Windows.", AvaloniaSettingEditor.Selection, true,
-                    Values: Enum.GetValues<PowerModeMappingMode>().Select(FormatPowerModeMapping).ToArray(), SelectedValue: mapping),
+                new("GodModeFnQSwitchable", "GodMode Fn+Q switch", "Allow Fn+Q to switch into the GodMode power profile.", AvaloniaSettingEditor.Toggle, godModeSupported, godModeEnabled,
+                    Warning: godModeSupported ? null : "This capability is not exposed by the current device."),
+                new("PowerModeMapping", "Power mode mapping", "Choose how device power modes map to Windows.", AvaloniaSettingEditor.Selection, powerModeSupported,
+                    Values: Enum.GetValues<PowerModeMappingMode>().Select(FormatPowerModeMapping).ToArray(), SelectedValue: mapping, Warning: availabilityWarning),
                 new("ResetBatteryOnReboot", "Reset battery timer on reboot", "Reset the battery since timer after Windows restarts.", AvaloniaSettingEditor.Toggle, true, store.ResetBatteryOnSinceTimerOnReboot),
+                new("OpenPowerModes", "Windows power modes", "Open the Windows power mode controls.", AvaloniaSettingEditor.Action, powerModeSupported, ActionText: "Open", Warning: availabilityWarning),
+                new("OpenPowerPlans", "Windows power plans", "Open the classic Windows power plan controls.", AvaloniaSettingEditor.Action, powerModeSupported, ActionText: "Open", Warning: availabilityWarning),
+                new("OpenPowerPlansControlPanel", "Power options control panel", "Open the Windows Power Options control panel.", AvaloniaSettingEditor.Action, true, ActionText: "Open"),
             ],
             true);
+    }
+
+    private static async Task SetGodModeFnQSwitchableAsync(bool enabled)
+    {
+        await WMI.LenovoOtherMethod.SetFeatureValueAsync(
+            CapabilityID.GodModeFnQSwitchable,
+            enabled ? 1 : 0).ConfigureAwait(false);
+    }
+
+    private static void OpenShellUri(string uri)
+    {
+        using var _ = Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
+    }
+
+    private static void OpenControlPanel(string arguments)
+    {
+        using var _ = Process.Start(new ProcessStartInfo("control", arguments) { UseShellExecute = true });
     }
 
     private static async Task<string[]> GetRefreshRatesAsync()
@@ -634,6 +714,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             [
                 new("HWiNFO", "HWiNFO integration", "Expose hardware sensor data through HWiNFO when available.", AvaloniaSettingEditor.Toggle, true, store.HWiNFO),
                 new("CLI", "CLI interface", "Enable the local command-line interface.", AvaloniaSettingEditor.Toggle, true, store.CLI),
+                new("CLIPath", "Add CLI to PATH", "Add or remove the command-line tools from the current user's PATH.", AvaloniaSettingEditor.Toggle, true, SystemPath.HasCLI()),
             ],
             true);
     }
