@@ -23,6 +23,8 @@ internal sealed class WindowsFeatureHostServices
     private readonly IMacroController _macro;
     private readonly AutomationProcessor _automation;
     private readonly IPluginManager _plugins;
+    private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
+    private bool _automationInitialized;
 
     private WindowsFeatureHostServices(
         IKeyboardBacklightDetectionService keyboard,
@@ -87,6 +89,7 @@ internal sealed class WindowsFeatureHostServices
                 _macro.SetEnabled(isSelected);
                 return true;
             case "Actions" when actionKey == "automation-enabled":
+                await EnsureAutomationInitializedAsync().ConfigureAwait(false);
                 await _automation.SetEnabledAsync(isSelected).ConfigureAwait(false);
                 return true;
             case "PluginExtensions" when actionKey == "plugin-refresh":
@@ -137,6 +140,7 @@ internal sealed class WindowsFeatureHostServices
 
     private async Task<FeaturePageState> GetAutomationStateAsync()
     {
+        await EnsureAutomationInitializedAsync().ConfigureAwait(false);
         var pipelines = await _automation.GetPipelinesAsync().ConfigureAwait(false);
         return new FeaturePageState(
             "Actions",
@@ -163,6 +167,26 @@ internal sealed class WindowsFeatureHostServices
                     false,
                     false),
             ]);
+    }
+
+    private async Task EnsureAutomationInitializedAsync()
+    {
+        if (_automationInitialized)
+            return;
+
+        await _automationInitializationLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            if (!_automationInitialized)
+            {
+                await _automation.InitializeAsync().ConfigureAwait(false);
+                _automationInitialized = true;
+            }
+        }
+        finally
+        {
+            _automationInitializationLock.Release();
+        }
     }
 
     private FeaturePageState GetPluginState()
