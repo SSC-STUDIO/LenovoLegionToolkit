@@ -34,6 +34,11 @@ public partial class FeaturePageView : UserControl
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         Loaded -= OnLoaded;
+        await RefreshStateAsync();
+    }
+
+    private async Task RefreshStateAsync()
+    {
         try
         {
             _isApplying = true;
@@ -88,6 +93,8 @@ public partial class FeaturePageView : UserControl
                 var accepted = await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, item.Key, selected);
                 if (!accepted)
                     ToolTip.SetTip(toggle, item.Description + " " + item.Status);
+                else
+                    await RefreshStateAsync();
             };
             action = toggle;
         }
@@ -108,6 +115,8 @@ public partial class FeaturePageView : UserControl
                 var accepted = await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, item.Key, true);
                 if (!accepted)
                     ToolTip.SetTip(button, item.Description + " " + item.Status);
+                else
+                    await RefreshStateAsync();
             };
             action = button;
         }
