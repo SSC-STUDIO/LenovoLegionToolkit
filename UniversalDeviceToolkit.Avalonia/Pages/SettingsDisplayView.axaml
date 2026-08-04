@@ -33,7 +33,8 @@
                 <TextBlock Text="{local:Loc Key=Display_RefreshRateDescription, Fallback=Select the display refresh rate (requires supported hardware).}"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                            FontSize="{StaticResource FontSizeSmallCaption}"/>
-                <ComboBox automation:AutomationProperties.Name="{local:Loc Key=Display_RefreshRate, Fallback=Refresh rate}"
+                <controls:AccessibleComboBox Name="RefreshRate"
+                              AutomationName="{local:Loc Key=Display_RefreshRate, Fallback=Refresh rate}"
                           SelectedIndex="0" MinWidth="160" HorizontalAlignment="Left"
                           Margin="0,8,0,0">
                     <ComboBox.ItemTemplate>
@@ -48,7 +49,7 @@
                     <ComboBoxItem Content="120 Hz"/>
                     <ComboBoxItem Content="144 Hz"/>
                     <ComboBoxItem Content="165 Hz"/>
-                </ComboBox>
+                </controls:AccessibleComboBox>
             </StackPanel>
         </Border>
 

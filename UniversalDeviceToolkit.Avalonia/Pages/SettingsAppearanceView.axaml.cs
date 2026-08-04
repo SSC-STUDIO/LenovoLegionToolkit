@@ -208,6 +208,7 @@ public partial class SettingsAppearanceView : UserControl
             {
                 Brush = new SolidColorBrush(Color.FromRgb(r, g, b)),
                 Key = key,
+                DisplayName = $"{key} accent color",
                 R = r,
                 G = g,
                 B = b,
@@ -252,7 +253,13 @@ public partial class SettingsAppearanceView : UserControl
         brush.GradientStops.Add(new GradientStop(Color.FromRgb(177, 70, 194), 0.5));
         brush.GradientStops.Add(new GradientStop(Color.FromRgb(232, 17, 35), 1));
 
-        return new AccentSwatchItem { Brush = brush, Key = "System", IsSystem = true };
+        return new AccentSwatchItem
+        {
+            Brush = brush,
+            Key = "System",
+            DisplayName = AvaloniaLocalization.GetString("Appearance_System", "Follow system accent color"),
+            IsSystem = true,
+        };
     }
 
     private void UpdateThemeCardSelection(string tag)
@@ -347,6 +354,7 @@ public sealed class AccentSwatchItem
 {
     public required IBrush Brush { get; init; }
     public required string Key { get; init; }
+    public required string DisplayName { get; init; }
     public bool IsSystem { get; init; }
     public byte R { get; init; }
     public byte G { get; init; }

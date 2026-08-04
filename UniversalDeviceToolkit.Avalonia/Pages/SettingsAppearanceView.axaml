@@ -36,8 +36,8 @@
                 <!-- 2. Three mode preview cards: 120x84 macOS window previews
                      (title bar + traffic lights / content / dock), selected = accent border. -->
                 <StackPanel Orientation="Horizontal" Spacing="12">
-                    <Button x:Name="ThemeLightCard" Tag="Light" Click="ThemeCard_Click"
-                            automation:AutomationProperties.Name="{local:Loc Key=Appearance_Light, Fallback=Light}"
+                    <controls:AccessibleButton x:Name="ThemeLightCard" Tag="Light" Click="ThemeCard_Click"
+                            AutomationName="{local:Loc Key=Appearance_Light, Fallback=Light}"
                             Padding="0" Background="Transparent" BorderThickness="0">
                         <StackPanel Spacing="6">
                             <Border x:Name="ThemeLightPreview" Width="120" Height="84" CornerRadius="6"
@@ -87,9 +87,9 @@
                             </Border>
                             <TextBlock Text="{local:Loc Key=Appearance_Light, Fallback=Light}" FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
-                    </Button>
-                    <Button x:Name="ThemeDarkCard" Tag="Dark" Click="ThemeCard_Click"
-                            automation:AutomationProperties.Name="{local:Loc Key=Appearance_Dark, Fallback=Dark}"
+                    </controls:AccessibleButton>
+                    <controls:AccessibleButton x:Name="ThemeDarkCard" Tag="Dark" Click="ThemeCard_Click"
+                            AutomationName="{local:Loc Key=Appearance_Dark, Fallback=Dark}"
                             Padding="0" Background="Transparent" BorderThickness="0">
                         <StackPanel Spacing="6">
                             <Border x:Name="ThemeDarkPreview" Width="120" Height="84" CornerRadius="6"
@@ -139,9 +139,9 @@
                             </Border>
                             <TextBlock Text="{local:Loc Key=Appearance_Dark, Fallback=Dark}" FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
-                    </Button>
-                    <Button x:Name="ThemeSystemCard" Tag="System" Click="ThemeCard_Click"
-                            automation:AutomationProperties.Name="{local:Loc Key=Appearance_System, Fallback=Follow system}"
+                    </controls:AccessibleButton>
+                    <controls:AccessibleButton x:Name="ThemeSystemCard" Tag="System" Click="ThemeCard_Click"
+                            AutomationName="{local:Loc Key=Appearance_System, Fallback=Follow system}"
                             Padding="0" Background="Transparent" BorderThickness="0">
                         <StackPanel Spacing="6">
                             <Border x:Name="ThemeSystemPreview" Width="120" Height="84" CornerRadius="6"
@@ -199,7 +199,7 @@
                             </Border>
                             <TextBlock Text="{local:Loc Key=Appearance_System, Fallback=Follow system}" FontWeight="Medium" HorizontalAlignment="Center"/>
                         </StackPanel>
-                    </Button>
+                    </controls:AccessibleButton>
                 </StackPanel>
 
                 <!-- 3. Apply accent color to the whole theme -->
@@ -229,8 +229,8 @@
                         <DataTemplate>
                             <!-- BorderBrush/BorderThickness bind to the precomputed selection visuals
                                  (selected = 2.5px accent border), so the current accent stays highlighted. -->
-                            <Button Width="36" Height="36" Margin="0,0,8,8"
-                                    automation:AutomationProperties.Name="{local:Loc Key=Appearance_Accent, Fallback=Accent color}"
+                            <controls:AccessibleButton Width="36" Height="36" Margin="0,0,8,8"
+                                    AutomationName="{Binding DisplayName}"
                                     Padding="2" CornerRadius="18"
                                     Background="Transparent"
                                     BorderBrush="{Binding SelectionBorderBrush}"
@@ -238,7 +238,7 @@
                                     Tag="{Binding}"
                                     Click="AccentColorSwatch_Click">
                                 <Border Width="32" Height="32" CornerRadius="16" Background="{Binding Brush}"/>
-                            </Button>
+                            </controls:AccessibleButton>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -259,8 +259,8 @@
                 <TextBlock Text="{local:Loc Key=Appearance_LanguageDescription, Fallback=Select the display language for the application.}"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                            FontSize="{StaticResource FontSizeSmallCaption}"/>
-                <ComboBox x:Name="LanguageComboBox"
-                          automation:AutomationProperties.Name="{local:Loc Key=Appearance_Language, Fallback=Language}"
+                <controls:AccessibleComboBox x:Name="LanguageComboBox" Name="Language"
+                          AutomationName="{local:Loc Key=Appearance_Language, Fallback=Language}"
                           MinWidth="220" HorizontalAlignment="Left"
                           Margin="0,8,0,0" SelectionChanged="LanguageComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
@@ -271,7 +271,7 @@
                                                          MinWidth="0" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
-                </ComboBox>
+                </controls:AccessibleComboBox>
             </StackPanel>
         </Border>
     </StackPanel>

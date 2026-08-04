@@ -59,6 +59,8 @@
                             <Setter Property="Margin" Value="0,0,0,2"/>
                             <Setter Property="Cursor" Value="Hand"/>
                             <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}"/>
+                            <Setter Property="automation:AutomationProperties.Name" Value="{Binding Title}"/>
+                            <Setter Property="automation:AutomationProperties.AutomationId" Value="{Binding Key}"/>
                         </Style>
                     </ListBox.Styles>
                 </ListBox>
