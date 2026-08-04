@@ -61,6 +61,8 @@ public sealed class InstallerArguments
                         result.InstallDir = dir2;
                     else if (OptionValue(arg, "--lang", args, ref i) is { } lang)
                         result.LanguageCulture = lang;
+                    else if (OptionValue(arg, "--language", args, ref i) is { } language)
+                        result.LanguageCulture = language;
                     else if (OptionValue(arg, "--device-pack", args, ref i) is { } pack)
                         result.DevicePackId = pack;
                     break;

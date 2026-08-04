@@ -4,6 +4,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.Installer;
 
@@ -30,6 +31,8 @@ internal static class LanguagePackInstaller
         string version,
         CancellationToken ct)
     {
+        cultureName = LocalizationCatalog.NormalizeCulture(cultureName).Name;
+
         try
         {
             var resource = await FindLanguageResourceAsync(cultureName, version, ct).ConfigureAwait(false);
@@ -89,7 +92,10 @@ internal static class LanguagePackInstaller
                     foreach (var language in languages.EnumerateArray())
                     {
                         var culture = language.TryGetProperty("culture", out var c) ? c.GetString() : null;
-                        if (!string.Equals(culture, cultureName, StringComparison.OrdinalIgnoreCase))
+                        if (string.IsNullOrWhiteSpace(culture)
+                            || !LocalizationCatalog.NormalizeCulture(culture).Name.Equals(
+                                cultureName,
+                                StringComparison.OrdinalIgnoreCase))
                             continue;
 
                         var url = language.TryGetProperty("url", out var u) ? u.GetString() : null;
@@ -131,18 +137,24 @@ internal static class LanguagePackInstaller
 
     private static void ExtractLanguageZip(string zipPath, string installDir)
     {
+        var destinationRoot = EnsureTrailingDirectorySeparator(Path.GetFullPath(installDir));
         using var archive = ZipFile.OpenRead(zipPath);
         foreach (var entry in archive.Entries)
         {
             if (string.IsNullOrEmpty(entry.Name))
                 continue;
 
-            var destinationPath = Path.GetFullPath(Path.Combine(installDir, entry.FullName));
-            if (!destinationPath.StartsWith(installDir, StringComparison.OrdinalIgnoreCase))
+            var destinationPath = Path.GetFullPath(Path.Combine(destinationRoot, entry.FullName));
+            if (!destinationPath.StartsWith(destinationRoot, StringComparison.OrdinalIgnoreCase))
                 continue; // zip-slip guard
 
             Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
             entry.ExtractToFile(destinationPath, overwrite: true);
         }
     }
+
+    private static string EnsureTrailingDirectorySeparator(string path) =>
+        path.EndsWith(Path.DirectorySeparatorChar) || path.EndsWith(Path.AltDirectorySeparatorChar)
+            ? path
+            : path + Path.DirectorySeparatorChar;
 }

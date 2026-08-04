@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using Microsoft.Win32;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.Installer;
 
@@ -289,13 +290,14 @@ internal static class InstallerEngine
         {
             if (!string.IsNullOrWhiteSpace(options.LanguageCulture))
             {
-                FirstRunState.SaveLanguage(options.LanguageCulture);
+                var normalizedCulture = LocalizationCatalog.NormalizeCulture(options.LanguageCulture).Name;
+                FirstRunState.SaveLanguage(normalizedCulture);
 
-                if (!AppLanguages.IsBundled(options.LanguageCulture))
+                if (!AppLanguages.IsBundled(normalizedCulture))
                 {
                     progress.Report(new EngineProgress { Percent = 97, Status = Strings.Get("StatusLanguagePack") });
                     await LanguagePackInstaller.TryInstallAsync(
-                            options.LanguageCulture, installDir, PayloadManifest.Version, ct)
+                            normalizedCulture, installDir, PayloadManifest.Version, ct)
                         .ConfigureAwait(false);
                 }
             }

@@ -55,10 +55,13 @@ internal static class AppLanguages
             .ToArray();
 
     /// <summary>Cultures whose satellite assemblies ship inside the payload zip.</summary>
-    public static bool IsBundled(string cultureName) =>
-        cultureName.Equals("en", StringComparison.OrdinalIgnoreCase) ||
-        cultureName.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase) ||
-        cultureName.Equals("zh-Hant", StringComparison.OrdinalIgnoreCase);
+    public static bool IsBundled(string cultureName)
+    {
+        var normalized = LocalizationCatalog.NormalizeCulture(cultureName).Name;
+        return normalized.Equals("en", StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals("zh-Hant", StringComparison.OrdinalIgnoreCase);
+    }
 
     /// <summary>Same preference rules as the app's shared localization runtime.</summary>
     public static AppLanguage GetPreferred()

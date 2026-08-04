@@ -20,6 +20,20 @@ public class InstallerLanguageOwnershipTests
     }
 
     [Fact]
+    public void Installer_ShouldNormalizeLanguageBeforePreseedingOrDownloading()
+    {
+        var engine = ReadRepositoryFile("Tools", "Installer", "InstallerEngine.cs");
+        var installer = ReadRepositoryFile("Tools", "Installer", "LanguagePackInstaller.cs");
+        var arguments = ReadRepositoryFile("Tools", "Installer", "App.xaml.cs");
+
+        engine.Should().Contain("LocalizationCatalog.NormalizeCulture(options.LanguageCulture).Name");
+        installer.Should().Contain("cultureName = LocalizationCatalog.NormalizeCulture(cultureName).Name");
+        installer.Should().Contain("NormalizeCulture(culture).Name");
+        installer.Should().Contain("EnsureTrailingDirectorySeparator");
+        arguments.Should().Contain("OptionValue(arg, \"--language\"");
+    }
+
+    [Fact]
     public void Installer_ShouldKeepUninstallCoverageForSeededState()
     {
         // The seeded files live in %LocalAppData%\UniversalDeviceToolkit; the
