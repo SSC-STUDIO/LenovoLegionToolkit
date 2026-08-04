@@ -487,6 +487,7 @@
                                 Padding="6"
                                 HorizontalAlignment="Center"
                                 AutomationProperties.AutomationId="NavigationPaneToggle"
+                                AutomationProperties.Name="Toggle navigation pane"
                                 Appearance="Transparent"
                                 Background="Transparent"
                                 BorderThickness="0"

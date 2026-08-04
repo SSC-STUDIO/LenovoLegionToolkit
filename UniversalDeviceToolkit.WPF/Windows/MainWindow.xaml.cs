@@ -299,9 +299,32 @@ public partial class MainWindow
         // Re-apply sidebar labels from the active UI culture. x:Static can freeze
         // the wrong satellite (e.g. Chinese OS default) if culture was applied late.
         RefreshNavigationLabels();
+        RefreshTitleBarAutomationNames();
 
         _ = UpdateHardwareDependentNavigationAsync();
         _ = InitializeTrayAsync();
+    }
+
+    private void RefreshTitleBarAutomationNames()
+    {
+        foreach (var button in _mainTitleBar.GetVisibleChildrenOfType<TitleBarButton>())
+        {
+            var (automationId, name) = button.ButtonType switch
+            {
+                TitleBarButtonType.Minimize => ("TitleBarMinimizeButton", "Minimize"),
+                TitleBarButtonType.Maximize => ("TitleBarMaximizeButton", "Maximize"),
+                TitleBarButtonType.Restore => ("TitleBarRestoreButton", "Restore"),
+                TitleBarButtonType.Close => ("TitleBarCloseButton", "Close"),
+                TitleBarButtonType.Help => ("TitleBarHelpButton", "Help"),
+                _ => (null, null),
+            };
+
+            if (automationId is null || name is null)
+                continue;
+
+            button.SetValue(AutomationProperties.AutomationIdProperty, automationId);
+            button.SetValue(AutomationProperties.NameProperty, name);
+        }
     }
 
     /// <summary>
@@ -475,6 +498,8 @@ public partial class MainWindow
     {
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Window state changed to {WindowState}");
+
+        RefreshTitleBarAutomationNames();
 
         // A state change can interrupt the native move/resize loop before Windows sends
         // WM_EXITSIZEMOVE. Release a possible cached client surface first.
