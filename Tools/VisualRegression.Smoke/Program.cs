@@ -160,7 +160,8 @@ internal static partial class Program
                     "settings",
                     ["SettingsNavItem"],
                     ["Settings"],
-                    root => FindVisibleClassContains(root, "SettingsPage")
+                    root => IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
+                            || FindVisibleClassContains(root, "SettingsPage")
                             || FindVisibleTextContains(root, "Settings")));
                 SelectComboBoxItemByNames(WaitForNamedComboBox(ResolveLiveWindow(mainWindow), "Theme", TimeSpan.FromSeconds(10)), switchTheme);
                 WaitForAnimationsToComplete();
@@ -214,7 +215,8 @@ internal static partial class Program
                     "settings",
                     ["SettingsNavItem"],
                     ["Settings"],
-                    root => FindVisibleClassContains(root, "SettingsPage")
+                    root => IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
+                            || FindVisibleClassContains(root, "SettingsPage")
                             || FindVisibleTextContains(root, "Settings")));
                 CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
@@ -277,7 +279,8 @@ internal static partial class Program
                 "settings",
                 ["SettingsNavItem"],
                 ["Settings"],
-                root => FindVisibleClassContains(root, "SettingsPage")
+                root => IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
+                        || FindVisibleClassContains(root, "SettingsPage")
                         || FindVisibleTextContains(root, "Settings")));
             CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
