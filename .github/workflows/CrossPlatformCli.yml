@@ -33,13 +33,21 @@ on:
 
 jobs:
   cross-platform-cli:
-    name: ${{ matrix.os }} diagnostics CLI
+    name: ${{ matrix.os }} (${{ matrix.runtime }}) diagnostics CLI
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2022, ubuntu-latest, macos-latest ]
+        include:
+          - os: windows-2022
+            runtime: win-x64
+          - os: ubuntu-latest
+            runtime: linux-x64
+          - os: macos-14
+            runtime: osx-arm64
+          - os: macos-13
+            runtime: osx-x64
 
     steps:
       - name: Checkout
@@ -64,6 +72,35 @@ jobs:
 
       - name: Test cross-platform diagnostics
         run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.CrossPlatform.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
+
+      - name: Publish portable diagnostics CLI (${{ matrix.runtime }} runner)
+        shell: pwsh
+        run: |
+          $project = 'UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj'
+          $publishPath = Join-Path $PWD 'publish'
+          dotnet publish $project --configuration Release --self-contained false --no-restore --output $publishPath
+          if ($LASTEXITCODE -ne 0) {
+            throw "Portable CLI publish failed on '${{ matrix.runtime }}'."
+          }
+
+          foreach ($fileName in @('udt.dll', 'udt.deps.json', 'udt.runtimeconfig.json', 'resources/device-packs.json')) {
+            if (-not (Test-Path -LiteralPath (Join-Path $publishPath $fileName))) {
+              throw "Published CLI is missing '$fileName'."
+            }
+          }
+
+          $publishedJson = dotnet (Join-Path $publishPath 'udt.dll') json | Out-String
+          if ($LASTEXITCODE -ne 0) {
+            throw "Published CLI json command failed on '${{ matrix.runtime }}'."
+          }
+
+          $payload = $publishedJson | ConvertFrom-Json
+          if ($payload.ProductName -ne 'Universal Device Toolkit') {
+            throw "Published CLI returned unexpected product name '$($payload.ProductName)'."
+          }
+          if (-not $payload.DeviceSupport) {
+            throw 'Published CLI returned no device support object.'
+          }
 
       - name: Smoke diagnostics CLI
         shell: pwsh
