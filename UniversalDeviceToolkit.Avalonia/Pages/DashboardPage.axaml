@@ -68,17 +68,31 @@
                         BorderThickness="1"
                         CornerRadius="{StaticResource CornerRadiusCard}"
                         Padding="16">
-                    <StackPanel Spacing="4">
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Power, Fallback=Power}"
-                                                     FontSize="{StaticResource FontSizeBody}"
-                                                     FontWeight="Medium"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                        <controls:LocalizedTextBlock Text="{Binding PowerStatus}"
-                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                    </StackPanel>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <StackPanel Spacing="4">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Power, Fallback=Power}"
+                                                         FontSize="{StaticResource FontSizeBody}"
+                                                         FontWeight="Medium"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <controls:LocalizedTextBlock Text="{Binding PowerStatus}"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="2" />
+                        </StackPanel>
+                        <Button Grid.Column="1"
+                                x:Name="PowerRefreshButton"
+                                Command="{Binding RefreshCommand}"
+                                automation:AutomationProperties.AutomationId="AvaloniaPowerRefreshButton"
+                                automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh}"
+                                ToolTip.Tip="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh}"
+                                Padding="8"
+                                MinWidth="36"
+                                VerticalAlignment="Center">
+                            <controls:NavigationIcon IconIdentifier="ArrowSync24"
+                                                     FontSize="{StaticResource IconSizeCompact}" />
+                        </Button>
+                    </Grid>
                 </Border>
                 <Border Grid.Column="1"
                         Background="{DynamicResource CardBackgroundBrush}"
@@ -152,7 +166,7 @@
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,8,0,0" />
 
-            <ItemsControl ItemsSource="{Binding SensorReadings}">
+            <ItemsControl ItemsSource="{Binding TelemetryCards}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" />
@@ -161,85 +175,109 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border Classes="cardControl"
-                                Width="280"
+                                Width="320"
                                 Margin="0,0,12,12"
                                 Background="{DynamicResource CardBackgroundBrush}"
                                 BorderBrush="{DynamicResource CardBorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="{StaticResource CornerRadiusCard}"
-                                Padding="16">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                    <controls:LocalizedTextBlock Text="{Binding Name}"
+                                Padding="16"
+                                automation:AutomationProperties.Name="{Binding Title}">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                    <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
+                                                             FontSize="{StaticResource IconSizeMD}"
+                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                             VerticalAlignment="Top" />
+                                    <controls:LocalizedTextBlock Grid.Column="1"
+                                                                 Text="{Binding Title}"
                                                                  FontSize="{StaticResource FontSizeBody}"
                                                                  FontWeight="Medium"
                                                                  OverflowMode="Ellipsis"
                                                                  MaxLines="1"
                                                                  MinWidth="0" />
-                                    <controls:LocalizedTextBlock Grid.Column="1"
-                                                                 Text="{Binding CategoryLabel}"
+                                    <controls:LocalizedTextBlock Grid.Column="2"
+                                                                 Text="{Binding StatusText}"
                                                                  FontSize="{StaticResource FontSizeSmallCaption}"
                                                                  Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                                  OverflowMode="Ellipsis"
                                                                  MaxLines="1"
-                                                                 MaxWidth="96" />
+                                                                 MaxWidth="92" />
                                 </Grid>
-                                <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                                    <Border Width="64"
-                                            Height="64"
+                                <controls:LocalizedTextBlock Grid.Row="1"
+                                                             Text="{Binding Description}"
+                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                             OverflowMode="Wrap"
+                                                             MaxLines="2" />
+                                <Grid Grid.Row="2" ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                    <Border Width="82"
+                                            Height="82"
                                             CornerRadius="{StaticResource CornerRadiusRound}"
                                             Background="{DynamicResource StatusInfoBackgroundBrush}"
                                             BorderBrush="{DynamicResource StatusInfoBrush}"
                                             BorderThickness="2"
                                             VerticalAlignment="Center">
-                                        <controls:LocalizedTextBlock Text="{Binding DisplayValue}"
+                                        <controls:LocalizedTextBlock Text="{Binding PrimaryValue}"
                                                                      HorizontalAlignment="Center"
                                                                      VerticalAlignment="Center"
                                                                      TextAlignment="Center"
-                                                                     MaxWidth="58"
+                                                                     MaxWidth="74"
                                                                      OverflowMode="Ellipsis"
                                                                      MaxLines="2"
                                                                      FontSize="{StaticResource FontSizeSmallCaption}"
                                                                      FontWeight="SemiBold"
                                                                      Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                     </Border>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                        <controls:LocalizedTextBlock Text="{Binding DisplayValue}"
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
+                                        <controls:LocalizedTextBlock Text="{Binding PrimaryValue}"
                                                                      FontSize="{StaticResource FontSizeGaugeValue}"
                                                                      FontWeight="SemiBold"
                                                                      OverflowMode="Ellipsis"
                                                                      MaxLines="1" />
-                                        <controls:LocalizedTextBlock Text="{Binding CategoryLabel}"
+                                        <controls:LocalizedTextBlock Text="{Binding StatusText}"
                                                                      FontSize="{StaticResource FontSizeSmallCaption}"
                                                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                                      OverflowMode="Ellipsis"
                                                                      MaxLines="1" />
                                     </StackPanel>
                                 </Grid>
-                                <ProgressBar Grid.Row="2"
-                                             IsVisible="{Binding HasProgress}"
-                                             Value="{Binding ProgressPercent}"
+                                <ProgressBar Grid.Row="3"
+                                             IsVisible="{Binding HasPrimaryProgress}"
+                                             Value="{Binding PrimaryProgressPercent}"
                                              Maximum="100"
                                              Height="6"
                                              CornerRadius="{StaticResource CornerRadiusProgressBar}"
                                              Foreground="{DynamicResource AccentBackgroundBrush}"
                                              Background="{DynamicResource ChartTrackBrush}" />
-                                <controls:TrendSparkline Grid.Row="3"
+                                <controls:TrendSparkline Grid.Row="4"
                                                          ItemsSource="{Binding History}"
                                                          Height="52"
                                                          Margin="0,2,0,0"
                                                          Stroke="{DynamicResource AccentBackgroundBrush}"
                                                          Fill="{DynamicResource ChartSurfaceBrush}" />
-                                <Border Grid.Row="4"
-                                        Background="{DynamicResource StatusNeutralBackgroundBrush}"
-                                        CornerRadius="{StaticResource CornerRadiusCompact}"
-                                        Padding="8,5">
-                                    <controls:LocalizedTextBlock Text="{Binding Name}"
-                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                 OverflowMode="Ellipsis"
-                                                                 MaxLines="1" />
-                                </Border>
+                                <ItemsControl Grid.Row="5"
+                                              IsVisible="{Binding IsAvailable}"
+                                              ItemsSource="{Binding Metrics}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                                                <controls:LocalizedTextBlock Text="{Binding Name}"
+                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                             OverflowMode="Ellipsis"
+                                                                             MaxLines="1" />
+                                                <controls:LocalizedTextBlock Grid.Column="1"
+                                                                             Text="{Binding DisplayValue}"
+                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                             FontWeight="Medium"
+                                                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                                             OverflowMode="Ellipsis"
+                                                                             MaxLines="1" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </Grid>
                         </Border>
                     </DataTemplate>

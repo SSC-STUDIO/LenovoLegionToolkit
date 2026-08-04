@@ -13,7 +13,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public async Task<IReadOnlyList<FeatureGroupItem>> GetFeatureGroupsAsync()
     {
-        var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
+        var snapshot = await ReadSnapshotAsync(forceRefresh: false).ConfigureAwait(false);
         var groups = new List<FeatureGroupItem>
         {
             new(
@@ -35,7 +35,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public async Task<IReadOnlyList<SensorReadingItem>> GetSensorReadingsAsync()
     {
-        var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
+        var snapshot = await ReadSnapshotAsync(forceRefresh: false).ConfigureAwait(false);
         if (snapshot.SensorReadings.Count == 0)
             return Array.Empty<SensorReadingItem>();
 

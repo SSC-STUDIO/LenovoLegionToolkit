@@ -9,6 +9,8 @@ public partial class DashboardPageViewModel : ObservableObject
 {
     public ObservableCollection<FeatureGroupItem> FeatureGroups { get; } = new();
     public ObservableCollection<DashboardSensorViewModel> SensorReadings { get; } = new();
+    public ObservableCollection<DashboardTelemetryCardViewModel> TelemetryCards { get; } =
+        new(DashboardTelemetryGroups.CreateDefaults());
 
     [ObservableProperty]
     private bool _isLoading;
@@ -119,6 +121,17 @@ public partial class DashboardPageViewModel : ObservableObject
         {
             if (!seen.Contains(SensorReadings[index].Name))
                 SensorReadings.RemoveAt(index);
+        }
+
+        var grouped = readings
+            .GroupBy(DashboardTelemetryGroups.Classify, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => (IReadOnlyList<SensorReadingItem>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var card in TelemetryCards)
+        {
+            card.Update(grouped.TryGetValue(card.Key, out var values)
+                ? values
+                : Array.Empty<SensorReadingItem>());
         }
     }
 }
