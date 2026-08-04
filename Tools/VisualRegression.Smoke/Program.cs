@@ -377,15 +377,16 @@ internal static partial class Program
             "about",
             ["AvaloniaAboutButton"],
             ["About"],
-            root => IsVisible(FindByAutomationId(root, "AvaloniaMainContent"))
-                    && FindVisibleTextContains(root, "About")));
+            root => FindVisibleTextContains(root, "Third-party Libraries")
+                    || FindVisibleTextContains(root, "Application Folders")));
 
         NavigateAndWait(mainWindow, new PageTarget(
             "settings",
             ["AvaloniaSettingsButton"],
             ["Settings"],
-            root => IsVisible(FindByAutomationId(root, "AvaloniaMainContent"))
-                    && FindVisibleTextContains(root, "Settings")));
+            root => FindVisibleTextContains(root, "Appearance")
+                    || FindVisibleTextContains(root, "Application Behavior")
+                    || FindVisibleTextContains(root, "Settings for")));
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "settings");
         CaptureAvaloniaSettingsItems(currentDirectory, mainWindow);
 
