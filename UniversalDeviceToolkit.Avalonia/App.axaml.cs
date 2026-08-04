@@ -13,8 +13,14 @@ using UniversalDeviceToolkit.Shared.Settings;
 using UniversalDeviceToolkit.Platform.Linux;
 using UniversalDeviceToolkit.Platform.MacOS;
 #if WINDOWS
+using Autofac;
 using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.WindowsDeviceAdapter;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Macro;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Utils;
 #endif
 
 namespace UniversalDeviceToolkit.Avalonia;
@@ -38,6 +44,10 @@ public partial class App : Application
         var culture = LocalizationRuntime.Initialize();
         AvaloniaLocalization.ApplyCulture(culture);
         LocalizationRuntime.CultureChanged += OnCultureChanged;
+#if WINDOWS
+        _applicationSettings = new ApplicationSettings();
+        InitializeWindowsServices(_applicationSettings);
+#endif
         PlatformServices = CreatePlatformServices();
         ShowCommand = new RelayCommand(ShowMainWindow);
         SettingsCommand = new RelayCommand(OpenSettings);
@@ -48,7 +58,7 @@ public partial class App : Application
     private static IPlatformServices CreatePlatformServices()
     {
 #if WINDOWS
-        return new DeviceAdapterPlatformServices(new WindowsDeviceAdapter());
+        return WindowsPlatformServices.Create();
 #else
         if (OperatingSystem.IsLinux())
             return new DeviceAdapterPlatformServices(new LinuxDeviceAdapter());
@@ -71,7 +81,7 @@ public partial class App : Application
         {
             ApplyPersistedTheme();
 #if WINDOWS
-            _applicationSettings = new ApplicationSettings();
+            _applicationSettings ??= new ApplicationSettings();
 #endif
             desktop.MainWindow = new MainWindow(PlatformServices);
             // Minimize to tray instead of closing
@@ -82,6 +92,35 @@ public partial class App : Application
         }
         base.OnFrameworkInitializationCompleted();
     }
+
+#if WINDOWS
+    private static void InitializeWindowsServices(ApplicationSettings settings)
+    {
+        try
+        {
+            if (IoCContainer.TryResolve<ApplicationSettings>() is not null)
+                return;
+
+            IoCContainer.Initialize(
+                builder =>
+                {
+                    builder.RegisterInstance(settings).As<ApplicationSettings>().SingleInstance();
+                    builder.RegisterType<AvaloniaMainThreadDispatcher>()
+                        .As<IMainThreadDispatcher>()
+                        .SingleInstance();
+                },
+                new UniversalDeviceToolkit.Lib.IoCModule(),
+                new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
+                new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
+                new UniversalDeviceToolkit.Lib.Macro.IoCModule());
+        }
+        catch
+        {
+            // A host embedding Avalonia may have already initialized the shared container.
+            // The feature bridge will fall back to adapter-only state when resolution fails.
+        }
+    }
+#endif
 
     private void ApplyPersistedTheme()
     {

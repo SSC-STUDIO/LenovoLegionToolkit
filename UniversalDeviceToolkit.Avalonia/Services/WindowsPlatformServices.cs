@@ -14,10 +14,12 @@ namespace UniversalDeviceToolkit.Avalonia.Services;
 public sealed class WindowsPlatformServices : IPlatformServices
 {
     private readonly DeviceAdapterPlatformServices _inner;
+    private readonly WindowsFeatureHostServices? _featureHost;
 
     private WindowsPlatformServices(IDeviceAdapter adapter)
     {
         _inner = new DeviceAdapterPlatformServices(adapter);
+        _featureHost = WindowsFeatureHostServices.TryCreate();
     }
 
     public static IPlatformServices Create() => new WindowsPlatformServices(new WindowsDeviceAdapter());
@@ -30,10 +32,15 @@ public sealed class WindowsPlatformServices : IPlatformServices
 
     public Task<bool> IsSupportedLegionMachineAsync() => _inner.IsSupportedLegionMachineAsync();
 
-    public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) => _inner.GetFeaturePageStateAsync(routeKey);
+    public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) =>
+        _featureHost is null
+            ? _inner.GetFeaturePageStateAsync(routeKey)
+            : _featureHost.GetStateAsync(routeKey);
 
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
-        _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected);
+        _featureHost is null
+            ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)
+            : _featureHost.SetActionAsync(routeKey, actionKey, isSelected);
 }
 
 #endif
