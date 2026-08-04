@@ -160,7 +160,8 @@ internal static partial class Program
                     "settings",
                     [],
                     ["Settings"],
-                    root => FindVisibleTextContains(root, "Settings") && FindVisibleTextContains(root, "Theme style")));
+                    root => FindVisibleClassContains(root, "SettingsPage")
+                            || FindVisibleTextContains(root, "Settings")));
                 SelectComboBoxItemByNames(WaitForNamedComboBox(ResolveLiveWindow(mainWindow), "Theme", TimeSpan.FromSeconds(10)), switchTheme);
                 WaitForAnimationsToComplete();
                 NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
@@ -213,7 +214,8 @@ internal static partial class Program
                     "settings",
                     [],
                     ["Settings"],
-                    root => FindVisibleTextContains(root, "Settings") && FindVisibleTextContains(root, "Theme style")));
+                    root => FindVisibleClassContains(root, "SettingsPage")
+                            || FindVisibleTextContains(root, "Settings")));
                 CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
@@ -275,14 +277,16 @@ internal static partial class Program
                 "settings",
                 [],
                 ["Settings"],
-                root => FindVisibleTextContains(root, "Settings")));
+                root => FindVisibleClassContains(root, "SettingsPage")
+                        || FindVisibleTextContains(root, "Settings")));
             CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
             NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
                 "about",
                 ["_aboutItem"],
                 ["About"],
-                root => FindVisibleTextContains(root, "Third-party libraries")
+                root => FindVisibleClassContains(root, "AboutPage")
+                        || FindVisibleTextContains(root, "Third-party libraries")
                         || FindVisibleTextContains(root, "Application Folders")));
             CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "about-min-window", _minWindowWidth, _minWindowHeight);
 
