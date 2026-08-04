@@ -377,14 +377,16 @@ internal static partial class Program
             "about",
             ["AvaloniaAboutButton"],
             ["About"],
-            root => FindVisibleTextContains(root, "Third-party Libraries")
+            root => FindVisibleClassContains(root, "AboutPage")
+                    || FindVisibleTextContains(root, "Third-party Libraries")
                     || FindVisibleTextContains(root, "Application Folders")));
 
         NavigateAndWait(mainWindow, new PageTarget(
             "settings",
             ["AvaloniaSettingsButton"],
             ["Settings"],
-            root => FindVisibleTextContains(root, "Appearance")
+            root => FindVisibleClassContains(root, "SettingsPage")
+                    || FindVisibleTextContains(root, "Appearance")
                     || FindVisibleTextContains(root, "Application Behavior")
                     || FindVisibleTextContains(root, "Settings for")));
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "settings");
@@ -1422,6 +1424,31 @@ internal static partial class Program
                         return !element.Current.IsOffscreen
                                && !string.IsNullOrWhiteSpace(element.Current.Name)
                                && element.Current.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase);
+                    }
+                    catch (ElementNotAvailableException)
+                    {
+                        return false;
+                    }
+                });
+        }
+        catch (ElementNotAvailableException)
+        {
+            return false;
+        }
+    }
+
+    private static bool FindVisibleClassContains(AutomationElement root, string keyword)
+    {
+        try
+        {
+            return root.FindAll(TreeScope.Descendants, Condition.TrueCondition)
+                .Cast<AutomationElement>()
+                .Any(element =>
+                {
+                    try
+                    {
+                        return !element.Current.IsOffscreen
+                               && element.Current.ClassName.Contains(keyword, StringComparison.OrdinalIgnoreCase);
                     }
                     catch (ElementNotAvailableException)
                     {
