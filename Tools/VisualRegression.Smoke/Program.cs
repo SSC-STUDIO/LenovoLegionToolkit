@@ -845,7 +845,100 @@ internal static partial class Program
     private static void NavigateAndCapture(string currentDirectory, AutomationElement mainWindow, PageTarget target)
     {
         NavigateAndWait(mainWindow, target);
-        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), target.Label);
+        var liveWindow = ResolveLiveWindow(mainWindow);
+        CapturePage(currentDirectory, liveWindow, target.Label);
+        CaptureInteractiveStates(currentDirectory, liveWindow, target.Label);
+    }
+
+    private static void CaptureInteractiveStates(
+        string currentDirectory,
+        AutomationElement mainWindow,
+        string pageLabel)
+    {
+        var interactive = EnumerateDescendants(mainWindow, 800)
+            .Where(IsVisible)
+            .Where(element =>
+            {
+                try
+                {
+                    var type = element.Current.ControlType;
+                    return type == ControlType.Button
+                           || type == ControlType.CheckBox
+                           || type == ControlType.ComboBox
+                           || type == ControlType.RadioButton
+                           || type == ControlType.TabItem;
+                }
+                catch (ElementNotAvailableException)
+                {
+                    return false;
+                }
+            })
+            .FirstOrDefault(element => IsSafeToggle(element) || !IsDangerousAction(element));
+
+        if (interactive is null)
+            return;
+
+        try
+        {
+            var rectangle = interactive.Current.BoundingRectangle;
+            if (rectangle.Width > 1 && rectangle.Height > 1)
+            {
+                SetCursorPos(
+                    (int)Math.Round(rectangle.Left + rectangle.Width / 2),
+                    (int)Math.Round(rectangle.Top + rectangle.Height / 2));
+                Thread.Sleep(180);
+                CapturePage(
+                    currentDirectory,
+                    ResolveLiveWindow(mainWindow),
+                    $"{pageLabel}-hover",
+                    _activeWindowWidth,
+                    _activeWindowHeight,
+                    waitForAnimations: false);
+            }
+
+            try
+            {
+                interactive.SetFocus();
+                Thread.Sleep(180);
+                CapturePage(
+                    currentDirectory,
+                    ResolveLiveWindow(mainWindow),
+                    $"{pageLabel}-focus",
+                    _activeWindowWidth,
+                    _activeWindowHeight,
+                    waitForAnimations: false);
+            }
+            catch (ElementNotAvailableException)
+            {
+            }
+            catch (InvalidOperationException)
+            {
+            }
+        }
+        finally
+        {
+            SetCursorPos(_windowX, _windowY);
+        }
+    }
+
+    private static bool IsDangerousAction(AutomationElement element)
+    {
+        try
+        {
+            var id = element.Current.AutomationId ?? string.Empty;
+            var name = element.Current.Name ?? string.Empty;
+            return id.Contains("Apply", StringComparison.OrdinalIgnoreCase)
+                   || id.Contains("Delete", StringComparison.OrdinalIgnoreCase)
+                   || id.Contains("Remove", StringComparison.OrdinalIgnoreCase)
+                   || id.Contains("Force", StringComparison.OrdinalIgnoreCase)
+                   || name.Contains("Apply", StringComparison.OrdinalIgnoreCase)
+                   || name.Contains("Delete", StringComparison.OrdinalIgnoreCase)
+                   || name.Contains("Remove", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (ElementNotAvailableException)
+        {
+            return true;
+        }
     }
 
     private static void NavigateAndWait(AutomationElement mainWindow, PageTarget target)
@@ -1207,6 +1300,7 @@ internal static partial class Program
             "TabItem",
         };
 
+        var visibleInteractive = new List<(AutomationElement Element, ElementSnapshot Snapshot)>();
         foreach (var element in EnumerateDescendants(root, 600))
         {
             ElementSnapshot? snapshot;
@@ -1222,6 +1316,10 @@ internal static partial class Program
             if (snapshot is null || snapshot.IsOffscreen || !interactiveTypes.Contains(snapshot.Type)
                 || snapshot.X is null || snapshot.Y is null || snapshot.Width is null || snapshot.Height is null)
                 continue;
+
+            if (string.IsNullOrWhiteSpace(snapshot.Name))
+                throw new InvalidOperationException(
+                    $"Interactive UIA element '{snapshot.AutomationId ?? snapshot.Type}' has no Automation name on '{label}'.");
 
             if (snapshot.Width <= 1 || snapshot.Height <= 1)
                 throw new InvalidOperationException(
@@ -1241,7 +1339,50 @@ internal static partial class Program
                     $"'{snapshot.AutomationId ?? snapshot.Name}' reports bounds outside the root window " +
                     "(DPI/provider coordinate mismatch is possible)." );
             }
+
+            visibleInteractive.Add((element, snapshot));
         }
+
+        for (var leftIndex = 0; leftIndex < visibleInteractive.Count; leftIndex++)
+        {
+            var left = visibleInteractive[leftIndex].Snapshot;
+            for (var rightIndex = leftIndex + 1; rightIndex < visibleInteractive.Count; rightIndex++)
+            {
+                var right = visibleInteractive[rightIndex].Snapshot;
+                if (Contains(left, right) || Contains(right, left))
+                    continue;
+
+                var overlap = IntersectionArea(left, right);
+                var smallerArea = Math.Min(left.Width!.Value * left.Height!.Value, right.Width!.Value * right.Height!.Value);
+                if (smallerArea <= 0 || overlap / smallerArea < 0.35)
+                    continue;
+
+                throw new InvalidOperationException(
+                    $"Interactive UIA elements overlap on '{label}': " +
+                    $"'{left.AutomationId ?? left.Name}' and '{right.AutomationId ?? right.Name}'.");
+            }
+        }
+    }
+
+    private static bool Contains(ElementSnapshot outer, ElementSnapshot inner) =>
+        outer.X <= inner.X
+        && outer.Y <= inner.Y
+        && outer.X + outer.Width >= inner.X + inner.Width
+        && outer.Y + outer.Height >= inner.Y + inner.Height;
+
+    private static double IntersectionArea(ElementSnapshot left, ElementSnapshot right)
+    {
+        var leftX = left.X!.Value;
+        var leftY = left.Y!.Value;
+        var rightX = right.X!.Value;
+        var rightY = right.Y!.Value;
+        var leftRight = leftX + left.Width!.Value;
+        var leftBottom = leftY + left.Height!.Value;
+        var rightRight = rightX + right.Width!.Value;
+        var rightBottom = rightY + right.Height!.Value;
+        var x = Math.Max(0d, Math.Min(leftRight, rightRight) - Math.Max(leftX, rightX));
+        var y = Math.Max(0d, Math.Min(leftBottom, rightBottom) - Math.Max(leftY, rightY));
+        return x * y;
     }
 
     private static void AssertThemeSurface(string outputPath, string label)
