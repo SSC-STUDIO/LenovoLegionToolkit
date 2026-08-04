@@ -722,7 +722,7 @@
                                                     <CheckBox
                                                         Grid.Column="0"
                                                         AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationAction_{0}}"
-                                                        AutomationProperties.HelpText="{Binding StateStatusText}"
+                                                        AutomationProperties.HelpText="{Binding StateStatusText, TargetNullValue='', FallbackValue=''}"
                                                         ToolTip="{Binding StateStatusText}"
                                                         VerticalAlignment="Center"
                                                         IsEnabled="{Binding CanEdit}"
