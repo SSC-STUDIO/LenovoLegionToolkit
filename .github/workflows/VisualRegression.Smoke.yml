@@ -24,7 +24,12 @@ on:
 jobs:
   visual-regression-smoke:
     runs-on: windows-2022
-    timeout-minutes: 30
+    timeout-minutes: 120
+
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [wpf, avalonia]
 
     steps:
       - name: Checkout
@@ -47,6 +52,17 @@ jobs:
       - name: Build main app
         run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
 
+      - name: Build Avalonia app
+        run: dotnet build UniversalDeviceToolkit.Avalonia/UniversalDeviceToolkit.Avalonia.csproj --configuration Release --no-restore
+
+      - name: Install FFmpeg
+        shell: pwsh
+        run: |
+          if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
+            choco install ffmpeg -y --no-progress
+          }
+          ffmpeg -version | Select-Object -First 1
+
       - name: Restore visual regression smoke tool
         run: dotnet restore Tools/VisualRegression.Smoke/VisualRegression.Smoke.csproj --locked-mode
 
@@ -58,15 +74,21 @@ jobs:
         env:
           OSD_ONLY: ${{ inputs.osd_only || 'false' }}
           KEEP_APP: ${{ inputs.keep_app || 'false' }}
+          HOST: ${{ matrix.host }}
         run: |
           $arguments = @(
             '--repo-root', $PWD,
             '--output-directory', (Join-Path $env:RUNNER_TEMP "visual-regression-smoke-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"),
-            '--configuration', 'Release'
+            '--configuration', 'Release',
+            '--host', $env:HOST
           )
 
           if ($env:OSD_ONLY -eq 'true') {
             $arguments += '--osd-only'
+          } else {
+            $arguments += '--all-cultures'
+            $arguments += '--video'
+            $arguments += '--animations'
           }
           if ($env:KEEP_APP -eq 'true') {
             $arguments += '--keep-app'
