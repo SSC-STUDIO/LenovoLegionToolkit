@@ -113,11 +113,21 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 await SetGodModeFnQSwitchableAsync(value).ConfigureAwait(false);
                 break;
             case ("Integrations", "HWiNFO"):
+                var previousHwInfo = _integrationsSettings.Store.HWiNFO;
                 _integrationsSettings.Store.HWiNFO = value;
                 _integrationsSettings.SynchronizeStore();
-                await (IoCContainer.TryResolve<HWiNFOIntegration>()
-                    ?? throw new PlatformNotSupportedException("HWiNFO integration is not initialized."))
-                    .StartStopIfNeededAsync().ConfigureAwait(false);
+                try
+                {
+                    await (IoCContainer.TryResolve<HWiNFOIntegration>()
+                        ?? throw new PlatformNotSupportedException("HWiNFO integration is not initialized."))
+                        .StartStopIfNeededAsync().ConfigureAwait(false);
+                }
+                catch
+                {
+                    _integrationsSettings.Store.HWiNFO = previousHwInfo;
+                    _integrationsSettings.SynchronizeStore();
+                    throw;
+                }
                 break;
             case ("Integrations", "CLI"):
                 _integrationsSettings.Store.CLI = value;

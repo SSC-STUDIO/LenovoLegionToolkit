@@ -141,7 +141,12 @@ public partial class SettingsCapabilityView : UserControl
         {
             if (_isApplying || toggle.IsChecked is not bool value)
                 return;
-            await PersistAsync(() => _settingsService.SetToggleAsync(_pageKey, option.Key, value), toggle);
+            if (!await PersistAsync(() => _settingsService.SetToggleAsync(_pageKey, option.Key, value), toggle))
+            {
+                _isApplying = true;
+                toggle.IsChecked = option.BoolValue;
+                _isApplying = false;
+            }
         };
         return toggle;
     }
@@ -163,7 +168,12 @@ public partial class SettingsCapabilityView : UserControl
         {
             if (_isApplying || combo.SelectedItem is not string value)
                 return;
-            await PersistAsync(() => _settingsService.SetSelectionAsync(_pageKey, option.Key, value), combo);
+            if (!await PersistAsync(() => _settingsService.SetSelectionAsync(_pageKey, option.Key, value), combo))
+            {
+                _isApplying = true;
+                combo.SelectedItem = option.SelectedValue;
+                _isApplying = false;
+            }
         };
         return combo;
     }
@@ -184,7 +194,12 @@ public partial class SettingsCapabilityView : UserControl
         {
             if (_isApplying)
                 return;
-            await PersistAsync(() => _settingsService.SetTextAsync(_pageKey, option.Key, textBox.Text), textBox);
+            if (!await PersistAsync(() => _settingsService.SetTextAsync(_pageKey, option.Key, textBox.Text), textBox))
+            {
+                _isApplying = true;
+                textBox.Text = option.TextValue ?? string.Empty;
+                _isApplying = false;
+            }
         };
         return textBox;
     }
@@ -230,15 +245,17 @@ public partial class SettingsCapabilityView : UserControl
         },
     };
 
-    private async Task PersistAsync(Func<Task> action, Control control)
+    private async Task<bool> PersistAsync(Func<Task> action, Control control)
     {
         try
         {
             await action();
+            return true;
         }
         catch (Exception ex)
         {
             ToolTip.SetTip(control, ex.Message);
+            return false;
         }
     }
 
