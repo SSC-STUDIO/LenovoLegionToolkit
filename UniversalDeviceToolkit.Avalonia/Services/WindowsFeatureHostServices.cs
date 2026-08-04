@@ -119,6 +119,22 @@ internal sealed class WindowsFeatureHostServices
             case "PluginExtensions" when actionKey == "plugin-refresh":
                 await _plugins.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
                 return true;
+            case "PluginExtensions" when actionKey == "plugin-check-updates":
+                await _plugins.CheckForUpdatesAsync().ConfigureAwait(false);
+                return true;
+            case "PluginExtensions" when actionKey.StartsWith("plugin-install:", StringComparison.OrdinalIgnoreCase):
+                var installId = actionKey["plugin-install:".Length..];
+                if (string.IsNullOrWhiteSpace(installId))
+                    return false;
+
+                _plugins.InstallPlugin(installId);
+                return true;
+            case "PluginExtensions" when actionKey.StartsWith("plugin-uninstall:", StringComparison.OrdinalIgnoreCase):
+                var uninstallId = actionKey["plugin-uninstall:".Length..];
+                if (string.IsNullOrWhiteSpace(uninstallId) || !_plugins.IsInstalled(uninstallId))
+                    return false;
+
+                return _plugins.UninstallPlugin(uninstallId);
             case "WindowsOptimization" when _optimization is not null:
                 var action = _optimization.GetCategories()
                     .SelectMany(category => category.Actions)
@@ -315,22 +331,75 @@ internal sealed class WindowsFeatureHostServices
 
     private FeaturePageState GetPluginState()
     {
-        var installed = _plugins.GetInstalledPluginIds().ToArray();
-        return new FeaturePageState(
-            "PluginExtensions",
-            "Plugin Extensions",
-            "Discover and manage optional plugin extensions.",
-            "Available",
-            $"{installed.Length} installed plugin extension(s) loaded by the shared plugin manager.",
-            true,
-            [new FeatureActionItem(
+        var registered = _plugins.GetRegisteredPlugins().ToArray();
+        var installedIds = _plugins.GetInstalledPluginIds()
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        var pluginIds = registered.Select(plugin => plugin.Id)
+            .Concat(installedIds)
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        var actions = new List<FeatureActionItem>
+        {
+            new FeatureActionItem(
                 "plugin-refresh",
                 "Refresh plugin extensions",
                 "Scan the plugin directory and load installed extensions.",
                 "Refresh",
                 true,
                 false,
-                false)]);
+                false),
+            new FeatureActionItem(
+                "plugin-check-updates",
+                "Check for plugin updates",
+                "Ask the shared plugin manager for available updates.",
+                "Check",
+                true,
+                false,
+                false),
+        };
+
+        foreach (var pluginId in pluginIds)
+        {
+            var plugin = registered.FirstOrDefault(candidate =>
+                candidate.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase));
+            var metadata = _plugins.GetPluginMetadata(pluginId);
+            var name = metadata?.GetDisplayName(LocalizationRuntime.CurrentCulture)
+                ?? plugin?.Name
+                ?? pluginId;
+            var description = metadata?.GetDisplayDescription(LocalizationRuntime.CurrentCulture)
+                ?? plugin?.Description
+                ?? "No plugin description was provided by the host.";
+            var version = metadata?.Version;
+            var author = metadata?.Author;
+            var details = string.Join(" ", new[]
+            {
+                string.IsNullOrWhiteSpace(version) ? null : $"Version {version}.",
+                string.IsNullOrWhiteSpace(author) ? null : $"Author: {author}.",
+                description,
+            }.Where(part => !string.IsNullOrWhiteSpace(part)));
+            var installed = _plugins.IsInstalled(pluginId);
+            var systemPlugin = metadata?.IsSystemPlugin == true || plugin?.IsSystemPlugin == true;
+            actions.Add(new FeatureActionItem(
+                installed ? $"plugin-uninstall:{pluginId}" : $"plugin-install:{pluginId}",
+                name,
+                details,
+                installed ? (systemPlugin ? "System" : "Uninstall") : "Install",
+                installed ? !systemPlugin : true,
+                false,
+                false));
+        }
+
+        var installedCount = installedIds.Length;
+        return new FeaturePageState(
+            "PluginExtensions",
+            "Plugin Extensions",
+            "Discover and manage optional plugin extensions.",
+            "Available",
+            $"{installedCount} installed plugin extension(s) loaded by the shared plugin manager.",
+            true,
+            actions);
     }
 
     private async Task<FeaturePageState> GetOptimizationStateAsync()
