@@ -6,6 +6,7 @@ using UniversalDeviceToolkit.Abstractions.Macro;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
+using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -23,6 +24,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly IMacroController _macro;
     private readonly AutomationProcessor _automation;
     private readonly IPluginManager _plugins;
+    private readonly WindowsOptimizationService? _optimization;
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private bool _automationInitialized;
 
@@ -30,12 +32,14 @@ internal sealed class WindowsFeatureHostServices
         IKeyboardBacklightDetectionService keyboard,
         IMacroController macro,
         AutomationProcessor automation,
-        IPluginManager plugins)
+        IPluginManager plugins,
+        WindowsOptimizationService? optimization)
     {
         _keyboard = keyboard;
         _macro = macro;
         _automation = automation;
         _plugins = plugins;
+        _optimization = optimization;
     }
 
     public static WindowsFeatureHostServices? TryCreate()
@@ -46,7 +50,8 @@ internal sealed class WindowsFeatureHostServices
                 IoCContainer.Resolve<IKeyboardBacklightDetectionService>(),
                 IoCContainer.Resolve<IMacroController>(),
                 IoCContainer.Resolve<AutomationProcessor>(),
-                IoCContainer.Resolve<IPluginManager>());
+                IoCContainer.Resolve<IPluginManager>(),
+                IoCContainer.TryResolve<WindowsOptimizationService>());
         }
         catch
         {
@@ -62,21 +67,7 @@ internal sealed class WindowsFeatureHostServices
             "Macro" => GetMacroState(),
             "Actions" => await GetAutomationStateAsync(),
             "PluginExtensions" => GetPluginState(),
-            "WindowsOptimization" => new FeaturePageState(
-                routeKey,
-                "System optimization",
-                "Review Windows optimization actions and their current state.",
-                "Service connected",
-                "The Windows optimization service is available through the shared host container.",
-                true,
-                [new FeatureActionItem(
-                    "optimization-service",
-                    "Windows optimization service",
-                    "Open the optimization action list to review pending changes.",
-                    "Ready",
-                    true,
-                    false,
-                    false)]),
+            "WindowsOptimization" => await GetOptimizationStateAsync(),
             _ => throw new ArgumentOutOfRangeException(nameof(routeKey), routeKey, "Unknown feature route."),
         };
     }
@@ -94,6 +85,24 @@ internal sealed class WindowsFeatureHostServices
                 return true;
             case "PluginExtensions" when actionKey == "plugin-refresh":
                 await _plugins.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+                return true;
+            case "WindowsOptimization" when _optimization is not null:
+                var action = _optimization.GetCategories()
+                    .SelectMany(category => category.Actions)
+                    .FirstOrDefault(candidate => candidate.Key.Equals(actionKey, StringComparison.OrdinalIgnoreCase));
+                if (action is null)
+                    return false;
+
+                if (isSelected)
+                {
+                    await _optimization.ApplyActionAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                    return true;
+                }
+
+                if (action.RollbackAsync is null)
+                    return false;
+
+                await _optimization.RevertActionAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
                 return true;
             default:
                 return false;
@@ -207,6 +216,59 @@ internal sealed class WindowsFeatureHostServices
                 true,
                 false,
                 false)]);
+    }
+
+    private async Task<FeaturePageState> GetOptimizationStateAsync()
+    {
+        if (_optimization is null)
+        {
+            return new FeaturePageState(
+                "WindowsOptimization",
+                "System optimization",
+                "Review Windows optimization actions and their current state.",
+                "Unavailable on this device",
+                "The Windows optimization service could not be resolved by the host container.",
+                false,
+                []);
+        }
+
+        var actions = new List<FeatureActionItem>();
+        foreach (var category in _optimization.GetCategories())
+        {
+            foreach (var action in category.Actions)
+            {
+                var applied = false;
+                if (action.IsAppliedAsync is not null)
+                {
+                    try
+                    {
+                        applied = await action.IsAppliedAsync(CancellationToken.None).ConfigureAwait(false);
+                    }
+                    catch
+                    {
+                        // A failed probe keeps the action visible and safely unselected.
+                    }
+                }
+
+                actions.Add(new FeatureActionItem(
+                    action.Key,
+                    action.TitleResourceKey,
+                    action.DescriptionResourceKey,
+                    applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
+                    true,
+                    applied,
+                    true));
+            }
+        }
+
+        return new FeaturePageState(
+            "WindowsOptimization",
+            "System optimization",
+            "Review Windows optimization actions and their current state.",
+            "Available",
+            $"{actions.Count} Windows optimization action(s) loaded from the shared service.",
+            true,
+            actions);
     }
 }
 
