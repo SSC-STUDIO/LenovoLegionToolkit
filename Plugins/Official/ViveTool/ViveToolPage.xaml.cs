@@ -1265,7 +1265,7 @@ public partial class ViveToolPage : INotifyPropertyChanged
     }
 
     // V5 (Docs/VISUAL_DESIGN_RECOMMENDATIONS.md): the single sanctioned micro-animation in the
-    // plugin ecosystem — plugins otherwise add no shadows/animations (Docs/CODING_STANDARDS.md,
+    // plugin ecosystem — plugins otherwise add no shadows/animations (Docs/Plugins/CODING_STANDARDS.md,
     // 视觉词汇 section). 150ms + CubicEase Out matches the host AnimationTokens Fast/Medium feel;
     // plugins don't merge host animation tokens, so the duration is hardcoded here.
     // WPF has no built-in ReducedMotion API, so there is no system setting to honor here.

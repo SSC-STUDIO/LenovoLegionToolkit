@@ -34,7 +34,7 @@
 
 **问题：** 圆角/间距/字号/阴影/动画/DPI/空态/加载态全无成文规范，唯一规则在 `Plugins/Shared/DesignTokens.xaml:4-11` 注释里。
 
-**建议：** 在 `Docs/CODING_STANDARDS.md` 的"WPF UI 模式"节后新增"视觉词汇（Visual vocabulary）"一节，内容一次性写清：
+**建议：** 在 `Docs/Plugins/CODING_STANDARDS.md` 的"WPF UI 模式"节后新增"视觉词汇（Visual vocabulary）"一节，内容一次性写清：
 
 - **圆角刻度：** 0 / ProgressBar 3 / Compact 8 / Control 12 / Card 18 / Surface 20 / Round 999——只允许这 7 个值，XAML 与 C# fallback 同等约束；卡片容器用 Card(18)，按钮/输入用 Control(12)，小贴片用 Compact(8)。
 - **间距刻度：** 4/8/12/16/24，卡片内边距统一 `PluginCardPadding`（16,14）。

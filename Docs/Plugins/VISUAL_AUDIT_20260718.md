@@ -161,7 +161,7 @@
 
 ## 五、双 UI（XAML + C# fallback）漂移问题
 
-**背景：** `Docs/CODING_STANDARDS.md:260-281` 规定所有控件必须经 `WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi)` 做 XAML 加载失败回退——即**每个控件维护两套 UI**：XAML 一套、C# `BuildFallbackUi` 一套。
+**背景：** `Docs/Plugins/CODING_STANDARDS.md:260-281` 规定所有控件必须经 `WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi)` 做 XAML 加载失败回退——即**每个控件维护两套 UI**：XAML 一套、C# `BuildFallbackUi` 一套。
 
 **漂移证据（同一属性的两套值）：**
 
@@ -178,7 +178,7 @@
 
 ## 六、规范真空
 
-`Docs/CODING_STANDARDS.md`（中文）UI 相关仅两节：WPF UI 模式（fallback 要求）与本地化（resx 强制）。**没有关于圆角词汇表、间距刻度、字号刻度、阴影、动画、DPI/缩放、空态/加载态的任何成文规范**（Docs/ 全目录 grep radius/圆角/spacing/shadow/动画/DPI/缩放 零命中）。全仓库唯一写下词汇表规则的位置是 `Plugins/Shared/DesignTokens.xaml:4-11` 的头部注释——规范存在于注释而非文档，是 4/6/9/10/24 等词汇外值得以进入代码库的直接原因。
+`Docs/Plugins/CODING_STANDARDS.md`（中文）UI 相关仅两节：WPF UI 模式（fallback 要求）与本地化（resx 强制）。**没有关于圆角词汇表、间距刻度、字号刻度、阴影、动画、DPI/缩放、空态/加载态的任何成文规范**（Docs/ 全目录 grep radius/圆角/spacing/shadow/动画/DPI/缩放 零命中）。全仓库唯一写下词汇表规则的位置是 `Plugins/Shared/DesignTokens.xaml:4-11` 的头部注释——规范存在于注释而非文档，是 4/6/9/10/24 等词汇外值得以进入代码库的直接原因。
 
 ---
 

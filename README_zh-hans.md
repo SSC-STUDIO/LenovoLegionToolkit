@@ -464,7 +464,7 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件可在插件扩展页面中安装、更新、配置和卸载。
 
-官方插件在独立仓库 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 维护，通过在线目录分发到插件扩展页面。
+官方插件在本仓库的 [Plugins/Official](Plugins/Official) 维护，通过主仓库 rolling `plugin-catalog` Release 的 `store.json` 分发到插件扩展页面。
 
 ### 核心特性
 
@@ -523,7 +523,7 @@ UDT 提供了功能全面的插件扩展页面，具有以下特点：
 
 ### 插件开发
 
-请在独立仓库 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 中开发插件，从 [PLUGIN_QUICKSTART.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/PLUGIN_QUICKSTART.md) 开始。宿主侧契约与 UI 规范见 [Docs/PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md)。
+请在主仓库的 [Plugins/Official](Plugins/Official) 中开发插件，从 [PLUGIN_QUICKSTART.md](Docs/Plugins/PLUGIN_QUICKSTART.md) 开始。宿主侧契约与 UI 规范见 [Docs/Plugins/PLUGIN_DEVELOPMENT.md](Docs/Plugins/PLUGIN_DEVELOPMENT.md)。
 
 ## 贡献者
 
@@ -785,7 +785,8 @@ crowdin download --config crowdin.yml
 |------|------|
 | [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | 系统架构、组件与数据流 |
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | 构建、测试、部署与发布流程 |
-| [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | 插件开发与 SDK 指南 |
+| [PLUGIN_DEVELOPMENT.md](Docs/Plugins/PLUGIN_DEVELOPMENT.md) | 插件开发与 SDK 指南 |
+| [RELEASE_AND_MIGRATION.md](Docs/Plugins/RELEASE_AND_MIGRATION.md) | 插件发布、仓库迁移与旧客户端升级 |
 | [LanguagePacks.md](Docs/LanguagePacks.md) | 语言包目录协议与生命周期 |
 | [NetworkAcceleration.md](Docs/NetworkAcceleration.md) | 内置网络与加速模块 |
 | [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | 发布与社区宣发文案（中文） |

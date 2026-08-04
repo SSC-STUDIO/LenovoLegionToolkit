@@ -1,10 +1,13 @@
 # Plugin Consolidation Matrix
 
-Source of truth for store metadata remains the sibling repo
-`Plugins/.build/catalog/store.json` (published through the main repository's rolling `plugin-catalog` release).
-This main repo keeps planning stubs under `Packaging/plugins/`; the generated catalog and ZIPs remain ignored build output.
+Source of truth for store metadata is each official plugin's
+`Plugins/Official/<Plugin>/plugin.manifest.json`. The generated
+`Plugins/.build/catalog/store.json` is published through the main repository's rolling `plugin-catalog` release.
+Release and legacy-client operations are documented in
+[Docs/Plugins/RELEASE_AND_MIGRATION.md](Plugins/RELEASE_AND_MIGRATION.md).
+The generated catalog and ZIPs remain ignored build output.
 
-| Plugin id | Store status (sibling) | UDT plan | Notes |
+| Plugin id | Current store status | UDT plan | Notes |
 |---|---|---|---|
 | `network-acceleration` | **Removed** (v5.0.0) | **Built-in** Network & acceleration | Plugin source deleted; host auto-uninstalls local copies on startup. |
 | `battery-health` | **Offline** / Legacy | Merge thresholds into main Battery / Sensors | Plugin retained for settings migration until removalVersion. |

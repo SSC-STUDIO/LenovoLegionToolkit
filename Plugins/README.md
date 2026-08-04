@@ -214,13 +214,14 @@ Read [CONTRIBUTING.md](../CONTRIBUTING.md) and [Docs/Plugins/PLUGIN_DEVELOPMENT.
 
 | Doc | Description |
 |-----|-------------|
-| [Docs/README.md](./Docs/README.md) | Documentation index |
-| [Quick Start](./Docs/PLUGIN_QUICKSTART.md) | First plugin in minutes |
-| [Development Guide](./Docs/PLUGIN_DEVELOPMENT.md) | API, validation, release flow |
-| [Architecture](./Docs/ARCHITECTURE.md) | Layout and dependency map |
-| [SDK Changelog](./Docs/SDK_CHANGELOG.md) | SDK / host compatibility |
-| [Coding Standards](./Docs/CODING_STANDARDS.md) | Style and anti-patterns |
-| [AI Agent Workflow](./Docs/AI_AGENT_WORKFLOW.md) | Automation-friendly commands |
+| [Docs/Plugins/README.md](../Docs/Plugins/README.md) | Documentation index |
+| [Quick Start](../Docs/Plugins/PLUGIN_QUICKSTART.md) | First plugin in minutes |
+| [Development Guide](../Docs/Plugins/PLUGIN_DEVELOPMENT.md) | API, validation, release flow |
+| [Architecture](../Docs/Plugins/ARCHITECTURE.md) | Layout and dependency map |
+| [SDK Changelog](../Docs/Plugins/SDK_CHANGELOG.md) | SDK / host compatibility |
+| [Coding Standards](../Docs/Plugins/CODING_STANDARDS.md) | Style and anti-patterns |
+| [Release and migration](../Docs/Plugins/RELEASE_AND_MIGRATION.md) | Monorepo release and legacy-client transition |
+| [AI Agent Workflow](../Docs/Plugins/AI_AGENT_WORKFLOW.md) | Automation-friendly commands |
 | [Changelog](./CHANGELOG.md) | Project history |
 
 ---

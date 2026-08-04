@@ -556,7 +556,7 @@ Plugins can be installed in two ways:
 
 ### Plugin Development
 
-Develop plugins in this repository under [`Plugins/Official`](Plugins/Official). Start with [`Docs/Plugins/PLUGIN_QUICKSTART.md`](Docs/Plugins/PLUGIN_QUICKSTART.md). Host-side contracts and UI standards are documented in [`Docs/PLUGIN_DEVELOPMENT.md`](Docs/PLUGIN_DEVELOPMENT.md).
+Develop plugins in this repository under [`Plugins/Official`](Plugins/Official). Start with [`Docs/Plugins/PLUGIN_QUICKSTART.md`](Docs/Plugins/PLUGIN_QUICKSTART.md). Host-side contracts and UI standards are documented in [`Docs/Plugins/PLUGIN_DEVELOPMENT.md`](Docs/Plugins/PLUGIN_DEVELOPMENT.md).
 
 
 
@@ -823,7 +823,8 @@ Additional documentation is available in the `Docs/` directory:
 |----------|-------------|
 | [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | System architecture, components, and data flow |
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | Build, test, deployment, and release procedures |
-| [PLUGIN_DEVELOPMENT.md](Docs/PLUGIN_DEVELOPMENT.md) | Plugin SDK and implementation guide |
+| [PLUGIN_DEVELOPMENT.md](Docs/Plugins/PLUGIN_DEVELOPMENT.md) | Plugin SDK and implementation guide |
+| [RELEASE_AND_MIGRATION.md](Docs/Plugins/RELEASE_AND_MIGRATION.md) | Plugin release, repository migration, and legacy-client upgrade |
 | [LanguagePacks.md](Docs/LanguagePacks.md) | Online language pack catalog protocol and lifecycle |
 | [NetworkAcceleration.md](Docs/NetworkAcceleration.md) | Built-in network & acceleration module |
 | [PROMOTION_EN.md](Docs/PROMOTION_EN.md) | Release and social promotion copy (English) |

@@ -2,7 +2,7 @@
 
 This document records the **completed Phase 3 hard cutover** from Lenovo Legion Toolkit (LLT) binary/namespace ABI to **Universal Device Toolkit (UDT)**, plus the **remaining legacy compatibility surfaces** that intentionally still contain LLT / Lenovo tokens.
 
-Related: [ARCHITECTURE.md](./ARCHITECTURE.md), [PLUGIN_DEVELOPMENT.md](./PLUGIN_DEVELOPMENT.md), CHANGELOG brand/ABI cutover notes.
+Related: [Plugins/ARCHITECTURE.md](./Plugins/ARCHITECTURE.md), [Plugins/PLUGIN_DEVELOPMENT.md](./Plugins/PLUGIN_DEVELOPMENT.md), CHANGELOG brand/ABI cutover notes.
 
 ---
 
