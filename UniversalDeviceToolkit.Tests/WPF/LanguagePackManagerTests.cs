@@ -304,6 +304,56 @@ public sealed class LanguagePackManagerTests : IDisposable
         }
     }
 
+    [Fact]
+    public void QueueUninstall_MergesCulturesAndIgnoresPathTraversalEntries()
+    {
+        var manager = new LanguagePackManager(new OnlineResourceCatalogClient(
+            new TestHttpClientFactory(new Dictionary<string, byte[]>())));
+        var languageRoot = GetLanguagePackRoot();
+        var outsideDirectory = Path.Combine(Folders.AppData, "outside-language-sentinel");
+        var pendingPath = Path.Combine(Folders.AppData, "pending_language_uninstall.txt");
+        var deDirectory = Path.Combine(languageRoot, "de");
+        var frDirectory = Path.Combine(languageRoot, "fr");
+
+        try
+        {
+            TryDeleteDirectory(languageRoot);
+            TryDeleteDirectory(outsideDirectory);
+            Directory.CreateDirectory(deDirectory);
+            Directory.CreateDirectory(frDirectory);
+            Directory.CreateDirectory(outsideDirectory);
+            File.WriteAllText(Path.Combine(outsideDirectory, "keep.txt"), "keep");
+            Directory.CreateDirectory(Folders.AppData);
+            File.WriteAllLines(pendingPath, ["..\\outside-language-sentinel", "de"]);
+
+            manager.QueueUninstall(new CultureInfo("fr"));
+
+            File.ReadAllLines(pendingPath).Should().Contain("de");
+            File.ReadAllLines(pendingPath).Should().Contain("fr");
+
+            manager.ProcessPendingUninstall();
+
+            Directory.Exists(deDirectory).Should().BeFalse();
+            Directory.Exists(frDirectory).Should().BeFalse();
+            File.Exists(Path.Combine(outsideDirectory, "keep.txt")).Should().BeTrue();
+            File.Exists(pendingPath).Should().BeFalse();
+        }
+        finally
+        {
+            TryDeleteDirectory(languageRoot);
+            TryDeleteDirectory(outsideDirectory);
+            try
+            {
+                if (File.Exists(pendingPath))
+                    File.Delete(pendingPath);
+            }
+            catch
+            {
+                // best-effort test cleanup
+            }
+        }
+    }
+
     public void Dispose()
     {
         Environment.SetEnvironmentVariable(OnlineResourceCatalogClient.CatalogUrlEnvironmentVariable, _previousCatalogUrl);

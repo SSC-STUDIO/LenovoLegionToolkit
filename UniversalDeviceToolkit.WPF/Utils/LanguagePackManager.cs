@@ -221,8 +221,46 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         if (IsEnglish(cultureInfo))
             return;
 
+        var directoryNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        if (File.Exists(PendingUninstallPath))
+        {
+            try
+            {
+                foreach (var directoryName in File.ReadAllLines(PendingUninstallPath))
+                {
+                    if (IsSafeLanguageDirectoryName(directoryName))
+                        directoryNames.Add(directoryName.Trim());
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to read the pending language uninstall list; rebuilding it.", ex);
+            }
+        }
+
+        foreach (var directoryName in GetResourceDirectoryNames(cultureInfo))
+            directoryNames.Add(directoryName);
+
         Directory.CreateDirectory(Path.GetDirectoryName(PendingUninstallPath)!);
-        File.WriteAllLines(PendingUninstallPath, GetResourceDirectoryNames(cultureInfo));
+        var temporaryPath = PendingUninstallPath + $".{Guid.NewGuid():N}.tmp";
+        try
+        {
+            File.WriteAllLines(temporaryPath, directoryNames);
+            File.Move(temporaryPath, PendingUninstallPath, overwrite: true);
+        }
+        finally
+        {
+            try
+            {
+                if (File.Exists(temporaryPath))
+                    File.Delete(temporaryPath);
+            }
+            catch (IOException)
+            {
+                // The pending list is best effort; startup will retry the next time.
+            }
+        }
     }
 
     public void ProcessPendingUninstall()
@@ -234,6 +272,8 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         {
             var directoryNames = File.ReadAllLines(PendingUninstallPath)
                 .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Where(IsSafeLanguageDirectoryName)
+                .Select(name => name.Trim())
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToArray();
 
@@ -860,6 +900,20 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
             names.Add(normalizedCulture);
 
         return names.ToArray();
+    }
+
+    private static bool IsSafeLanguageDirectoryName(string? directoryName)
+    {
+        if (string.IsNullOrWhiteSpace(directoryName))
+            return false;
+
+        var name = directoryName.Trim();
+        if (name is "." or ".." || Path.IsPathRooted(name) || Path.GetFileName(name) != name)
+            return false;
+
+        var root = EnsureTrailingDirectorySeparator(Path.GetFullPath(ApplicationDirectory));
+        var candidate = Path.GetFullPath(Path.Combine(root, name));
+        return candidate.StartsWith(root, StringComparison.OrdinalIgnoreCase);
     }
 
     private static void TryDeleteDirectory(string directory)
