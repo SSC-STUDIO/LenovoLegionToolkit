@@ -15,12 +15,17 @@ public partial class FeaturePageView : UserControl
 {
     private readonly IPlatformServices _platformServices;
     private readonly FeaturePageDescriptor _descriptor;
+    private readonly Action<string>? _actionRequested;
     private bool _isApplying;
 
-    protected FeaturePageView(IPlatformServices platformServices, FeaturePageDescriptor descriptor)
+    protected FeaturePageView(
+        IPlatformServices platformServices,
+        FeaturePageDescriptor descriptor,
+        Action<string>? actionRequested = null)
     {
         _platformServices = platformServices;
         _descriptor = descriptor;
+        _actionRequested = actionRequested;
         InitializeComponent();
         PageTitle.Text = descriptor.Title;
         PageDescription.Text = descriptor.Description;
@@ -53,8 +58,18 @@ public partial class FeaturePageView : UserControl
             StatusCard.BorderBrush = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBrush" : "StatusInfoBrush");
 
             FeatureItems.Items.Clear();
+            string? lastCategory = null;
             foreach (var item in state.Actions)
+            {
+                if (!string.IsNullOrWhiteSpace(item.Category)
+                    && !string.Equals(lastCategory, item.Category, StringComparison.Ordinal))
+                {
+                    FeatureItems.Items.Add(CreateCategoryHeading(item.Category));
+                    lastCategory = item.Category;
+                }
+
                 FeatureItems.Items.Add(CreateFeatureCard(item));
+            }
 
             if (state.Actions.Count == 0)
                 FeatureItems.Items.Add(CreateEmptyState());
@@ -116,7 +131,10 @@ public partial class FeaturePageView : UserControl
                 if (!accepted)
                     ToolTip.SetTip(button, item.Description + " " + item.Status);
                 else
+                {
+                    _actionRequested?.Invoke(item.Key);
                     await RefreshStateAsync();
+                }
             };
             action = button;
         }
@@ -185,6 +203,17 @@ public partial class FeaturePageView : UserControl
         },
     };
 
+    private LocalizedTextBlock CreateCategoryHeading(string category) => new()
+    {
+        Text = category,
+        FontSize = GetResource<double>("FontSizeSubsection"),
+        FontWeight = FontWeight.Medium,
+        Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
+        Margin = new Thickness(0, 10, 0, 2),
+        OverflowMode = LocalizedOverflowMode.Wrap,
+        MaxLines = 2,
+    };
+
     private T GetResource<T>(object key)
     {
         if (this.TryFindResource(key, out var value) && value is T typedValue)
@@ -212,15 +241,7 @@ public partial class FeaturePageView : UserControl
 
 }
 
-public sealed class ActionsPage(IPlatformServices services) : FeaturePageView(services, new(
-    "Actions",
-    "Actions",
-    "Run configured automation pipelines and hardware workflows.",
-    "Rocket24",
-    "Hardware action execution is not exposed by this platform adapter.",
-    "Review available actions",
-    "Automation pipelines are loaded from the shared Windows automation service and can be run individually.",
-    "Rocket24"));
+public sealed class ActionsPage(IPlatformServices services) : AutomationPage(services);
 
 public sealed class MacroPage(IPlatformServices services) : FeaturePageView(services, new(
     "Macro",
@@ -242,12 +263,18 @@ public sealed class WindowsOptimizationPage(IPlatformServices services) : Featur
     "Apply or roll back supported Windows optimization actions from the shared optimization service.",
     "Gauge24"));
 
-public sealed class PluginExtensionsPage(IPlatformServices services) : FeaturePageView(services, new(
-    "PluginExtensions",
-    "Plugin Extensions",
-    "Discover and manage optional plugin extensions.",
-    "Apps24",
-    "Plugin discovery and installation require the plugin service adapter.",
-    "Review installed extensions",
-    "Manage installed and registered extensions through the shared plugin manager.",
-    "Apps24"));
+public sealed class PluginExtensionsPage : FeaturePageView
+{
+    public PluginExtensionsPage(IPlatformServices services, Action<string>? actionRequested = null)
+        : base(services, new(
+            "PluginExtensions",
+            "Plugin Extensions",
+            "Discover and manage optional plugin extensions.",
+            "Apps24",
+            "Plugin discovery and installation require the plugin service adapter.",
+            "Review installed extensions",
+            "Manage installed and registered extensions through the shared plugin manager.",
+            "Apps24"), actionRequested)
+    {
+    }
+}

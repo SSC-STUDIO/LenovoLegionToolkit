@@ -51,10 +51,30 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.GetFeaturePageStateAsync(routeKey)
             : _featureHost.GetStateAsync(routeKey);
 
+    public Task<PluginPageState> GetPluginPageStateAsync(string pluginId) =>
+        _featureHost is null
+            ? _inner.GetPluginPageStateAsync(pluginId)
+            : _featureHost.GetPluginPageStateAsync(pluginId);
+
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         _featureHost is null
             ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)
             : _featureHost.SetActionAsync(routeKey, actionKey, isSelected);
+
+    public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
+        _featureHost is null
+            ? _inner.GetAutomationWorkspaceAsync()
+            : _featureHost.GetAutomationWorkspaceAsync();
+
+    public Task<bool> SetAutomationEnabledAsync(bool enabled) =>
+        _featureHost is null
+            ? _inner.SetAutomationEnabledAsync(enabled)
+            : _featureHost.SetAutomationEnabledAsync(enabled);
+
+    public Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines) =>
+        _featureHost is null
+            ? _inner.SaveAutomationWorkspaceAsync(pipelines)
+            : _featureHost.SaveAutomationWorkspaceAsync(pipelines);
 
     public Task<KeyboardLightingState?> GetKeyboardLightingStateAsync() =>
         _featureHost is null

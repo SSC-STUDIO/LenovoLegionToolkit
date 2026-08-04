@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.AutomationPage"
+             automation:AutomationProperties.AutomationId="AvaloniaAutomationPage">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32,24,32,32"
+                    Spacing="18"
+                    MaxWidth="920"
+                    HorizontalAlignment="Left">
+            <StackPanel Spacing="4">
+                <controls:LocalizedTextBlock x:Name="PageTitle"
+                                             FontSize="{StaticResource FontSizeDisplaySection}"
+                                             FontWeight="Medium"
+                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                             OverflowMode="Wrap"
+                                             MaxLines="2"
+                                             automation:AutomationProperties.AutomationId="AutomationPageTitle" />
+                <controls:LocalizedTextBlock x:Name="PageDescription"
+                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                             OverflowMode="Wrap"
+                                             MaxLines="3"
+                                             automation:AutomationProperties.AutomationId="AutomationPageDescription" />
+            </StackPanel>
+
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <StackPanel Spacing="4">
+                        <controls:LocalizedTextBlock x:Name="EnabledTitle"
+                                                     FontWeight="Medium"
+                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock x:Name="EnabledDescription"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="3" />
+                    </StackPanel>
+                    <CheckBox x:Name="EnabledToggle"
+                              Grid.Column="1"
+                              VerticalAlignment="Center"
+                              MinWidth="48"
+                              automation:AutomationProperties.AutomationId="AutomationEnableAutomaticPipelinesToggle" />
+                </Grid>
+            </Border>
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="4">
+                    <controls:LocalizedTextBlock x:Name="PipelinesTitle"
+                                                 FontWeight="Medium"
+                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2" />
+                    <controls:LocalizedTextBlock x:Name="PipelinesDescription"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="3" />
+                </StackPanel>
+                <Button x:Name="AddButton"
+                        Grid.Column="1"
+                        MinWidth="132"
+                        VerticalAlignment="Center"
+                        automation:AutomationProperties.AutomationId="AutomationAddManualPipelineButton" />
+            </Grid>
+
+            <StackPanel x:Name="PipelineList" Spacing="8"
+                        automation:AutomationProperties.AutomationId="AutomationPipelineList" />
+            <controls:LocalizedTextBlock x:Name="EmptyText"
+                                         IsVisible="False"
+                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                         OverflowMode="Wrap"
+                                         MaxLines="3"
+                                         automation:AutomationProperties.AutomationId="AutomationPipelineEmptyState" />
+
+            <StackPanel x:Name="SaveRevertPanel"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="8"
+                        IsVisible="False">
+                <Button x:Name="SaveButton"
+                        MinWidth="108"
+                        automation:AutomationProperties.AutomationId="AutomationSaveButton" />
+                <Button x:Name="RevertButton"
+                        MinWidth="108"
+                        automation:AutomationProperties.AutomationId="AutomationRevertButton" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

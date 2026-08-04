@@ -56,6 +56,32 @@ public sealed class AvaloniaMigrationContractTests
             model.NavigationItems.Select(item => item.Key));
     }
 
+    [Theory]
+    [InlineData("fan-curve", "plugin:fan-curve")]
+    [InlineData("  RGB-Tools  ", "plugin:RGB-Tools")]
+    public void PluginRoutes_ShouldRoundTripIdsWithoutChangingRouteSemantics(
+        string pluginId,
+        string expectedRoute)
+    {
+        var route = MainNavigation.CreatePluginRoute(pluginId);
+
+        Assert.Equal(expectedRoute, route);
+        Assert.True(MainNavigation.IsKnown(route));
+        Assert.True(MainNavigation.TryGetPluginId(route, out var resolvedId));
+        Assert.Equal(pluginId.Trim(), resolvedId);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("plugin:")]
+    [InlineData("plugin:   ")]
+    public void PluginRoutes_ShouldRejectEmptyOrNonPluginRoutes(string? route)
+    {
+        Assert.False(MainNavigation.TryGetPluginId(route, out _));
+        Assert.False(MainNavigation.IsKnown(route));
+    }
+
     private sealed class TestLocalizer : IStringLocalizer
     {
         public string GetString(string key, string fallback = "") => fallback;
