@@ -45,7 +45,7 @@ public partial class App : Application
         AvaloniaLocalization.ApplyCulture(culture);
         LocalizationRuntime.CultureChanged += OnCultureChanged;
 #if WINDOWS
-        _applicationSettings = new ApplicationSettings();
+        _applicationSettings = WindowsAvaloniaSettingsService.SharedApplicationSettings;
         InitializeWindowsServices(_applicationSettings);
 #endif
         PlatformServices = CreatePlatformServices();
@@ -81,7 +81,7 @@ public partial class App : Application
         {
             ApplyPersistedTheme();
 #if WINDOWS
-            _applicationSettings ??= new ApplicationSettings();
+            _applicationSettings ??= WindowsAvaloniaSettingsService.SharedApplicationSettings;
 #endif
             desktop.MainWindow = new MainWindow(PlatformServices);
             // Minimize to tray instead of closing

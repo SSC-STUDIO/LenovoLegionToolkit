@@ -9,7 +9,9 @@ namespace UniversalDeviceToolkit.Avalonia.Services;
 
 internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 {
-    private readonly ApplicationSettings _applicationSettings = new();
+    internal static ApplicationSettings SharedApplicationSettings { get; } = new();
+
+    private readonly ApplicationSettings _applicationSettings = SharedApplicationSettings;
     private readonly OsdSettings _osdSettings = new();
     private readonly UpdateCheckSettings _updateSettings = new();
     private readonly IntegrationsSettings _integrationsSettings = new();
