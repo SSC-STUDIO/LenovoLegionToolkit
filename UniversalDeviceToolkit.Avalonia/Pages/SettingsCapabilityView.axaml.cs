@@ -99,6 +99,7 @@ public partial class SettingsCapabilityView : UserControl
         {
             AvaloniaSettingEditor.Toggle => CreateToggle(option),
             AvaloniaSettingEditor.Selection => CreateSelection(option),
+            AvaloniaSettingEditor.MultiSelection => CreateMultiSelection(option),
             AvaloniaSettingEditor.Text => CreateTextBox(option),
             AvaloniaSettingEditor.Action => CreateAction(option),
             _ => new TextBlock { Text = option.Title },
@@ -202,6 +203,76 @@ public partial class SettingsCapabilityView : UserControl
             }
         };
         return textBox;
+    }
+
+    private Control CreateMultiSelection(AvaloniaSettingOption option)
+    {
+        var selected = new HashSet<string>(option.SelectedValues ?? [], StringComparer.Ordinal);
+        if (selected.Count == 0 && !string.IsNullOrWhiteSpace(option.SelectedValue))
+            selected.Add(option.SelectedValue);
+
+        var checkBoxes = new List<CheckBox>();
+        var panel = new StackPanel
+        {
+            Spacing = 4,
+            MinWidth = 220,
+            MaxWidth = 360,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        foreach (var value in option.Values ?? [])
+        {
+            var checkBox = new CheckBox
+            {
+                Content = value,
+                IsChecked = selected.Contains(value),
+                IsEnabled = option.IsEnabled,
+                HorizontalContentAlignment = HorizontalAlignment.Left,
+            };
+            AutomationProperties.SetName(checkBox, value);
+            ToolTip.SetTip(checkBox, option.Description);
+            checkBox.IsCheckedChanged += async (_, _) =>
+            {
+                if (_isApplying || checkBox.IsChecked is not bool isChecked)
+                    return;
+
+                var previous = selected.ToArray();
+                if (isChecked && value.Equals(option.Values?.FirstOrDefault(), StringComparison.Ordinal))
+                {
+                    selected.Clear();
+                    selected.Add(value);
+                    _isApplying = true;
+                    foreach (var sibling in checkBoxes.Where(sibling => !ReferenceEquals(sibling, checkBox)))
+                        sibling.IsChecked = false;
+                    _isApplying = false;
+                }
+                else if (isChecked)
+                {
+                    selected.Remove(option.Values?.FirstOrDefault() ?? string.Empty);
+                    selected.Add(value);
+                }
+                else
+                    selected.Remove(value);
+
+                if (!await PersistAsync(
+                    () => _settingsService.SetMultiSelectionAsync(_pageKey, option.Key, selected.ToArray()),
+                    checkBox))
+                {
+                    selected.Clear();
+                    foreach (var previousValue in previous)
+                        selected.Add(previousValue);
+                    _isApplying = true;
+                    foreach (var sibling in checkBoxes)
+                        sibling.IsChecked = selected.Contains(sibling.Content?.ToString() ?? string.Empty);
+                    _isApplying = false;
+                }
+            };
+            checkBoxes.Add(checkBox);
+            panel.Children.Add(checkBox);
+        }
+
+        AutomationProperties.SetName(panel, option.Title);
+        ToolTip.SetTip(panel, option.Description);
+        return panel;
     }
 
     private Button CreateAction(AvaloniaSettingOption option)

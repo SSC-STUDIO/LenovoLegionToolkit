@@ -263,13 +263,6 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             return;
         }
 
-        if (pageKey == "SmartKeys"
-            && (optionKey == "SmartKeySinglePressAction" || optionKey == "SmartKeyDoublePressAction"))
-        {
-            await SetSmartKeyPipelineAsync(optionKey, value).ConfigureAwait(false);
-            return;
-        }
-
         if (pageKey == "Display" && optionKey == "RefreshRate")
         {
             if (!int.TryParse(value.Replace(" Hz", string.Empty, StringComparison.OrdinalIgnoreCase), out var frequency))
@@ -280,6 +273,38 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         }
 
         throw new KeyNotFoundException($"Unknown selection {pageKey}/{optionKey}.");
+    }
+
+    public async Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values)
+    {
+        if (pageKey != "SmartKeys"
+            || (optionKey != "SmartKeySinglePressActions" && optionKey != "SmartKeyDoublePressActions"))
+            throw new KeyNotFoundException($"Unknown multi-selection {pageKey}/{optionKey}.");
+
+        var options = await GetManualPipelineOptionsAsync().ConfigureAwait(false);
+        var thisAppName = options[0].Name;
+        if (values.Any(value => string.Equals(value, thisAppName, StringComparison.Ordinal)))
+            values = [];
+        var selected = values
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => options.FirstOrDefault(option => string.Equals(option.Name, value, StringComparison.Ordinal)))
+            .Where(option => option != default && option.Id != Guid.Empty)
+            .Select(option => option.Id)
+            .Distinct()
+            .ToList();
+        var isDoublePress = optionKey == "SmartKeyDoublePressActions";
+        var list = isDoublePress
+            ? _applicationSettings.Store.SmartKeyDoublePressActionList
+            : _applicationSettings.Store.SmartKeySinglePressActionList;
+
+        list.Clear();
+        list.AddRange(selected);
+        if (isDoublePress)
+            _applicationSettings.Store.SmartKeyDoublePressActionId = selected.Count > 0 ? selected[0] : null;
+        else
+            _applicationSettings.Store.SmartKeySinglePressActionId = selected.Count > 0 ? selected[0] : null;
+
+        _applicationSettings.SynchronizeStore();
     }
 
     public Task SetTextAsync(string pageKey, string optionKey, string? value)
@@ -329,8 +354,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private async Task<AvaloniaSettingsPageData> BuildSmartKeysPageAsync()
     {
         var pipelines = await GetManualPipelineOptionsAsync().ConfigureAwait(false);
-        var singleSelected = GetSelectedPipelineName(_applicationSettings.Store.SmartKeySinglePressActionId, pipelines);
-        var doubleSelected = GetSelectedPipelineName(_applicationSettings.Store.SmartKeyDoublePressActionId, pipelines);
+        var singleSelected = GetSelectedPipelineNames(_applicationSettings.Store.SmartKeySinglePressActionList, _applicationSettings.Store.SmartKeySinglePressActionId, pipelines);
+        var doubleSelected = GetSelectedPipelineNames(_applicationSettings.Store.SmartKeyDoublePressActionList, _applicationSettings.Store.SmartKeyDoublePressActionId, pipelines);
 
         return new AvaloniaSettingsPageData(
             "SmartKeys",
@@ -346,22 +371,22 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                     Values: GetSmartFnLockValues(_applicationSettings.Store.SmartFnLockFlags),
                     SelectedValue: FormatSmartFnLockFlags(_applicationSettings.Store.SmartFnLockFlags)),
                 new(
-                    "SmartKeySinglePressAction",
+                    "SmartKeySinglePressActions",
                     "Smart Key single-press action",
-                    "Choose the pipeline triggered by a single press of the Smart Key.",
-                    AvaloniaSettingEditor.Selection,
+                    "Choose the manual pipelines triggered by a single press of the Smart Key.",
+                    AvaloniaSettingEditor.MultiSelection,
                     pipelines.Count > 0,
                     Values: pipelines.Select(item => item.Name).ToArray(),
-                    SelectedValue: singleSelected,
+                    SelectedValues: singleSelected,
                     Warning: pipelines.Count == 0 ? "No manual automation pipelines are configured." : null),
                 new(
-                    "SmartKeyDoublePressAction",
+                    "SmartKeyDoublePressActions",
                     "Smart Key double-press action",
-                    "Choose the pipeline triggered by a double press of the Smart Key.",
-                    AvaloniaSettingEditor.Selection,
+                    "Choose the manual pipelines triggered by a double press of the Smart Key.",
+                    AvaloniaSettingEditor.MultiSelection,
                     pipelines.Count > 0,
                     Values: pipelines.Select(item => item.Name).ToArray(),
-                    SelectedValue: doubleSelected,
+                    SelectedValues: doubleSelected,
                     Warning: pipelines.Count == 0 ? "No manual automation pipelines are configured." : null),
             ],
             true);
@@ -386,34 +411,20 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         return options;
     }
 
-    private static string GetSelectedPipelineName(Guid? id, IReadOnlyList<(Guid Id, string Name)> options)
+    private static IReadOnlyList<string> GetSelectedPipelineNames(IReadOnlyList<Guid> ids, Guid? fallbackId, IReadOnlyList<(Guid Id, string Name)> options)
     {
-        if (id is not Guid selected || selected == Guid.Empty)
-            return options[0].Name;
+        var selected = ids
+            .Select(id => options.FirstOrDefault(option => option.Id == id).Name)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToList();
+        if (selected.Count == 0 && fallbackId is Guid id && id != Guid.Empty)
+        {
+            var name = options.FirstOrDefault(option => option.Id == id).Name;
+            if (!string.IsNullOrWhiteSpace(name))
+                selected.Add(name);
+        }
 
-        return options.FirstOrDefault(option => option.Id == selected).Name ?? options[0].Name;
-    }
-
-    private async Task SetSmartKeyPipelineAsync(string optionKey, string value)
-    {
-        var options = await GetManualPipelineOptionsAsync().ConfigureAwait(false);
-        var selected = options.FirstOrDefault(option => string.Equals(option.Name, value, StringComparison.Ordinal));
-        var id = selected.Id == Guid.Empty ? (Guid?)null : selected.Id;
-        var isDoublePress = optionKey == "SmartKeyDoublePressAction";
-        var list = isDoublePress
-            ? _applicationSettings.Store.SmartKeyDoublePressActionList
-            : _applicationSettings.Store.SmartKeySinglePressActionList;
-
-        list.Clear();
-        if (id is Guid pipelineId)
-            list.Add(pipelineId);
-
-        if (isDoublePress)
-            _applicationSettings.Store.SmartKeyDoublePressActionId = id;
-        else
-            _applicationSettings.Store.SmartKeySinglePressActionId = id;
-
-        _applicationSettings.SynchronizeStore();
+        return selected.Count == 0 ? [options[0].Name] : selected;
     }
 
     private AvaloniaSettingsPageData BuildAppearancePage()

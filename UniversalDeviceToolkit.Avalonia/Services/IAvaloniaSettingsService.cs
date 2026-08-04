@@ -7,6 +7,7 @@ public enum AvaloniaSettingEditor
 {
     Toggle,
     Selection,
+    MultiSelection,
     Text,
     Action,
 }
@@ -21,6 +22,7 @@ public sealed record AvaloniaSettingOption(
     string? TextValue = null,
     IReadOnlyList<string>? Values = null,
     string? SelectedValue = null,
+    IReadOnlyList<string>? SelectedValues = null,
     string? Warning = null,
     string? ActionText = null);
 
@@ -42,6 +44,7 @@ public interface IAvaloniaSettingsService
     Task<AvaloniaSettingsPageData> GetPageAsync(string pageKey);
     Task SetToggleAsync(string pageKey, string optionKey, bool value);
     Task SetSelectionAsync(string pageKey, string optionKey, string value);
+    Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values);
     Task SetTextAsync(string pageKey, string optionKey, string? value);
     Task InvokeActionAsync(string pageKey, string optionKey);
 }
