@@ -4,7 +4,7 @@
 
 ## 版本控制
 
-- SDK 能力随 **宿主** 发布基线演进；当前 vendored 宿主见 `Plugins/Dependencies/Host/host-release.json`。
+- SDK 能力随 **宿主** 发布基线演进；当前宿主基线见 `Plugins/HostBaseline/host-release.json`，二进制按需下载到 `.host/`。
 - 插件必须在 `plugin.manifest.json` 中声明 `minHostVersion`。
 - 运行时兼容文件 `plugin.json` 仍使用宿主 ABI 字段名 `MinLltVersion`（值 = UDT 最低宿主版本）。
 
@@ -89,7 +89,7 @@ Get-ChildItem -Path "Plugins\*\plugin.manifest.json" | ForEach-Object {
 }
 
 # 与 host-release 对照
-Get-Content Dependencies\Host\host-release.json
+Get-Content HostBaseline\host-release.json
 ```
 
 ---

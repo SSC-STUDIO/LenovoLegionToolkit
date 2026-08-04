@@ -178,7 +178,7 @@ internal sealed class PluginWorkbenchThemeService
 
         if (merged == 0)
         {
-            message = $"Run Bootstrap Host and confirm Dependencies/Host matches the main app baseline. Details: {string.Join("; ", failures)}";
+            message = $"Run Bootstrap Host and confirm .host matches the main app baseline. Details: {string.Join("; ", failures)}";
             return false;
         }
 

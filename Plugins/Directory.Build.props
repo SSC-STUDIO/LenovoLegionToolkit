@@ -20,13 +20,10 @@
 
 
   <PropertyGroup>
-    <!-- Prefer the canonical baseline/cache, but keep the imported vendored host as a
-         compatibility fallback until the final ABI baseline is published. -->
+    <!-- The tracked manifest selects the downloadable host baseline; binaries stay in the ignored cache. -->
     <HostBaselineManifest Condition="'$(HostBaselineManifest)' == '' and Exists('$(MSBuildThisFileDirectory)HostBaseline\host-release.json')">$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
-    <HostBaselineManifest Condition="'$(HostBaselineManifest)' == '' and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\host-release.json')">$(MSBuildThisFileDirectory)Dependencies\Host\host-release.json</HostBaselineManifest>
     <HostBaselineManifest Condition="'$(HostBaselineManifest)' == ''">$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
     <HostBaselineVersion Condition="'$(HostBaselineVersion)' == ''">5.0.0</HostBaselineVersion>
-    <HostDependenciesDir Condition="'$(HostDependenciesDir)' == '' and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\UniversalDeviceToolkit.Lib.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\UniversalDeviceToolkit.Lib.Plugins.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Universal Device Toolkit.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Serilog.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Serilog.Sinks.Async.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Serilog.Sinks.File.dll')">$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
     <HostDependenciesDir Condition="'$(HostDependenciesDir)' == ''">$(MSBuildThisFileDirectory).host\$(HostBaselineVersion)\</HostDependenciesDir>
     <HostSourceDir Condition="'$(HostSourceDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\Build\UniversalDeviceToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\Build\</HostSourceDir>
     <HostLibPath Condition="'$(HostLibPath)' == '' and Exists('$(HostSourceDir)UniversalDeviceToolkit.Lib.dll')">$(HostSourceDir)UniversalDeviceToolkit.Lib.dll</HostLibPath>

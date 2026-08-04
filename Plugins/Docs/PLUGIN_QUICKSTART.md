@@ -17,7 +17,7 @@ If host references are missing:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-dependencies.ps1
 ```
 
-This uses `Plugins/Dependencies/Host/host-release.json` (currently `5.0.0`).
+This uses `Plugins/HostBaseline/host-release.json` (currently `5.0.0`) and downloads the matching host binaries into the ignored `.host/` cache.
 
 ## 2. Scaffold
 

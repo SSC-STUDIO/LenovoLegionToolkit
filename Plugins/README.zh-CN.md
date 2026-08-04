@@ -109,7 +109,7 @@ UniversalDeviceToolkit/
 +- Plugins/Shared.Tests/       # Shared helper tests
 +- Plugins/Testing/            # Tooling and performance tests
 +- Plugins/Tooling/            # CLI, PluginWorkbench, and smoke tools
-+- Plugins/Dependencies/Host/  # Vendored host baseline; downloaded cache is .host/
++- Plugins/HostBaseline/       # 宿主版本清单；二进制下载到被忽略的 .host/
 +- Plugins/Templates/          # Authoring archetypes
 +- Plugins/.build/             # Ignored build, package, and catalog output
 +- Docs/Plugins/                # Plugin documentation

@@ -23,7 +23,7 @@ The plugin projects are part of the main repository; no sibling checkout is requ
 /root/src/UniversalDeviceToolkit          # host and plugins
 ```
 
-If host DLLs are missing, tooling bootstraps from `Plugins/Dependencies/Host/host-release.json`
+If host DLLs are missing, tooling bootstraps the ignored `Plugins/.host/<host-version>/` cache from `Plugins/HostBaseline/host-release.json`.
 (currently **host v5.0.0**).
 
 ## Development setup
@@ -93,7 +93,7 @@ Requirements:
 - Prefer `PluginBase` and documented SDK interfaces
 - UI: `DynamicResource` colors, `.resx` strings, `WpfFallbackHelper` fallback UI
 - `TreatWarningsAsErrors` is enabled — keep zero warnings
-- No source references into the sibling host repo; use vendored host assemblies
+- No source references into the sibling host repo; use the downloaded host cache selected by `HostBaseline/host-release.json`
 
 ### Commit messages
 

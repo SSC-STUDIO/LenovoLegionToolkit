@@ -13,5 +13,5 @@ Tracking notes for maintainers. Prefer GitHub Issues for public work.
 
 ## Engineering backlog (open)
 
-- When host ships a new minor, bump `Dependencies/Host/host-release.json` and re-vendor DLLs
+- When host ships a new minor, update `HostBaseline/host-release.json`; the build downloads the matching DLLs into ignored `.host/<version>/`.
 - Watch KNOWLEDGE_BASE / BUGS for ABI and migration rules before “cleanup renames”

@@ -9,10 +9,7 @@ $ErrorActionPreference = "Stop"
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $manifestPath = Join-Path $repoRoot "HostBaseline\host-release.json"
 if (-not (Test-Path -LiteralPath $manifestPath)) {
-    $manifestPath = Join-Path $repoRoot "Dependencies\Host\host-release.json"
-}
-if (-not (Test-Path -LiteralPath $manifestPath)) {
-    throw "Host baseline manifest was not found in HostBaseline or Dependencies\Host."
+    throw "Host baseline manifest was not found in HostBaseline."
 }
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 $hostVersion = [string]$manifest.hostVersion
@@ -54,8 +51,7 @@ function Resolve-SiblingSourceDir {
         $serilogCandidate = Join-Path $candidate "Serilog.dll"
         $serilogAsyncCandidate = Join-Path $candidate "Serilog.Sinks.Async.dll"
         $serilogFileCandidate = Join-Path $candidate "Serilog.Sinks.File.dll"
-        $abstractionsCandidate = Join-Path $candidate "UniversalDeviceToolkit.Plugins.Abstractions.dll"
-        if ((Test-Path $libCandidate) -and (Test-Path $libPluginsCandidate) -and (Test-Path $wpfCandidate) -and (Test-Path $serilogCandidate) -and (Test-Path $serilogAsyncCandidate) -and (Test-Path $serilogFileCandidate) -and (Test-Path $abstractionsCandidate)) {
+        if ((Test-Path $libCandidate) -and (Test-Path $libPluginsCandidate) -and (Test-Path $wpfCandidate) -and (Test-Path $serilogCandidate) -and (Test-Path $serilogAsyncCandidate) -and (Test-Path $serilogFileCandidate)) {
             return $candidate
         }
     }
