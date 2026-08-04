@@ -497,3 +497,10 @@
 - `faa2be10` 将 `EnsureInstalledManifest`、`TryReadInstalledManifest` 和清单序列化依赖移至 `PluginRepositoryService.Installation.Manifest.cs`；`Installation.cs` 现在只保留解压、校验、备份、复制、信任记录和回滚事务。
 - 验证：插件项目 Release 构建 `0` 警告、`0` 错误；所有 `DownloadAndInstallPluginAsync` 定向用例 `11/11` 通过、`0` Skip。
 - 完整 `PluginRepositoryServiceTests` 在正确 Hook 输出下已恢复为 `38/38`，`0` Skip；此前 `37/38` 的唯一失败来自复用未启用 `EnableUdtTestHooks` 的生产插件程序集。可复现方式是先以 `/p:EnableUdtTestHooks=true` 串行构建 `Lib.Plugins` 及其 Lib/Shared 依赖，再以 `BuildProjectReferences=false` 构建并运行测试程序集；该方式不复用 shipping 输出。
+
+## 35. 2026-08-04 PluginExtensionsPage 在线状态职责拆分
+
+- `9469f5d1` 将刷新按钮、在线仓库超时/取消编排、废弃 fetch 观察、离线 Banner 和 Retry 操作移至 `PluginExtensionsPage.Online.cs`；主页面继续保留本地交互、列表和导航状态，未修改生产公共 API。
+- `PluginExtensionsPageGuardTests` 已聚合 Online partial 并增加职责归位断言，防止在线状态方法回流主文件。
+- 验证：WPF `x64 Release` 构建 `0` 警告、`0` 错误；页面 Guard `11/11` 通过、`0` Skip。
+- R7 仍未完成：`PluginExtensionsPage` 的其余主状态/导航职责和 `PluginRepositoryService` 解压备份事务仍可继续审查；完整 FlaUI nightly、macOS runner 和 R4 按需提权端到端验证仍待专用环境。
