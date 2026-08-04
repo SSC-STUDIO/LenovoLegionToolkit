@@ -434,3 +434,11 @@
 - 初次 Windows `dotnet restore UniversalDeviceToolkit.sln --locked-mode` 暴露 `Tests`、`WPF` 和 `PresetUiValidation` 的 `Platform.Windows.Core` 项目引用未进入锁文件；`1e10e7d6` 更新三份锁文件并补入方案内缺失的 `LanguagePackInstallProgressSmoke/packages.lock.json`。
 - 修复后方案 `--locked-mode` restore 通过全部 34 个项目；随后使用 `-m:1 -nr:false -p:UseSharedCompilation=false` 串行 Release 构建通过 35 个项目，`0` 警告、`0` 错误。
 - 首次并行方案构建的两个错误均为遗留 MSBuild node reuse 对 `obj` 文件的占用，清理明确的 `dotnet ... MSBuild.dll /nodeReuse:true` 节点后串行构建通过；不属于源码或锁文件回归。
+
+## 26. 2026-08-04 PluginExtensionsPage 生命周期职责拆分
+
+- `22b075c2` 将 `PluginExtensionsPage` 的 Loaded/Unloaded、可见性切换、插件安装协调器订阅和安装进度 UI 同步移至 `PluginExtensionsPage.Lifecycle.cs`；页面主文件仅保留列表、数据和业务操作状态。
+- 生命周期专用字段随 partial 归位，保持页面重新进入时的状态扫描、在线刷新取消、骨架动画停止和事件解绑行为不变；未修改生产公共 API。
+- 更新 `PluginExtensionsPageGuardTests` 的组合源码读取，避免 partial 化后结构契约失效。
+- 验证：WPF Release 构建 `0` 警告、`0` 错误；插件页面 Guard 与 ViewModel 定向测试 `29/29` 通过、`0` Skip。
+- R7 仍未完全结束：`PluginRepositoryService` 的安装生命周期和页面其他主状态职责还需继续评估，完整 FlaUI nightly、macOS runner、安装目录权限审计和按需提权模型重构仍未完成。
