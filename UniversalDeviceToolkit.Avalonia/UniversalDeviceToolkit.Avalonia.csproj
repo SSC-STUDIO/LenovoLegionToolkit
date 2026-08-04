@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net10.0;net10.0-windows10.0.26100.0</TargetFrameworks>
     <DisableUdtForceX64>true</DisableUdtForceX64>
     <RootNamespace>UniversalDeviceToolkit.Avalonia</RootNamespace>
     <AssemblyName>udt-gui</AssemblyName>
@@ -11,6 +10,17 @@
          resources are not reachable via the runtime URI loader (they are created
          from code with explicit args). That is intentional; suppress the noise. -->
     <NoWarn>$(NoWarn);AVLN3001</NoWarn>
+  </PropertyGroup>
+
+  <!-- Keep Windows-only dependencies out of Linux/macOS restore and build graphs.
+       Windows retains both the portable and desktop Avalonia targets. -->
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <TargetFrameworks>net10.0;net10.0-windows10.0.26100.0</TargetFrameworks>
+    <NuGetLockFilePath>$(MSBuildProjectDirectory)\packages.lock.json</NuGetLockFilePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <TargetFramework>net10.0</TargetFramework>
+    <NuGetLockFilePath>$(MSBuildProjectDirectory)/packages.lock.unix.json</NuGetLockFilePath>
   </PropertyGroup>
 
   <!--
