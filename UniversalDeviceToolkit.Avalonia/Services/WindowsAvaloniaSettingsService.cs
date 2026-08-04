@@ -7,6 +7,8 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Integrations;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.System;
@@ -14,6 +16,7 @@ using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using MachineCompatibility = UniversalDeviceToolkit.Lib.Utils.Compatibility;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -22,11 +25,14 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     internal static ApplicationSettings SharedApplicationSettings { get; } = new();
 
     private readonly ApplicationSettings _applicationSettings = SharedApplicationSettings;
-    private readonly OsdSettings _osdSettings = new();
+    private readonly OsdSettings _osdSettings =
+        IoCContainer.TryResolve<OsdSettings>() ?? new OsdSettings();
     private readonly UpdateCheckSettings _updateSettings = new();
     private readonly SettingsBackupService _settingsBackupService = new();
     private readonly IntegrationsSettings _integrationsSettings =
         IoCContainer.TryResolve<IntegrationsSettings>() ?? new IntegrationsSettings();
+    private readonly HardwareSensorsFeature? _hardwareSensorsFeature =
+        IoCContainer.TryResolve<HardwareSensorsFeature>();
 
     public async Task<AvaloniaSettingsPageData> GetPageAsync(string pageKey) =>
         pageKey switch
@@ -59,16 +65,14 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 _applicationSettings.SynchronizeStore();
                 break;
             case ("Application", "EnableHardwareSensors"):
-                store.EnableHardwareSensors = value;
-                _applicationSettings.SynchronizeStore();
+                await SetHardwareSensorsAsync(value).ConfigureAwait(false);
                 break;
             case ("Application", "DisableUnsupportedHardwareWarning"):
                 store.DisableUnsupportedHardwareWarning = value;
                 _applicationSettings.SynchronizeStore();
                 break;
             case ("Application", "ShowOsd"):
-                _osdSettings.Store.ShowOsd = value;
-                _osdSettings.SynchronizeStore();
+                await SetOsdAsync(value).ConfigureAwait(false);
                 break;
             case ("Application", "VantageDisabled"):
                 await SetSoftwareDisabledAsync<VantageDisabler>(value).ConfigureAwait(false);
@@ -529,7 +533,14 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private async Task<AvaloniaSettingsPageData> BuildApplicationPageAsync()
     {
         var store = _applicationSettings.Store;
-        var (vantage, legionZone, fnKeys) = await GetSoftwareStatusesAsync().ConfigureAwait(false);
+        var softwareStatusTask = GetSoftwareStatusesAsync();
+        var compatibilityTask = GetCompatibilityAsync();
+        var hardwareSensorsSupportedTask = GetHardwareSensorsSupportedAsync();
+        await Task.WhenAll(softwareStatusTask, compatibilityTask, hardwareSensorsSupportedTask).ConfigureAwait(false);
+
+        var (vantage, legionZone, fnKeys) = await softwareStatusTask.ConfigureAwait(false);
+        var isCompatible = await compatibilityTask.ConfigureAwait(false);
+        var hardwareSensorsSupported = await hardwareSensorsSupportedTask.ConfigureAwait(false);
         return new AvaloniaSettingsPageData(
             "Application",
             "Application Behavior",
@@ -546,13 +557,75 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 new("FnKeysDisabled", "Disable Lenovo Fn keys service", "Stop the Lenovo hotkey service when Smart Keys are managed by this application.", AvaloniaSettingEditor.Toggle, fnKeys != SoftwareStatus.NotFound, fnKeys == SoftwareStatus.Disabled,
                     Warning: fnKeys == SoftwareStatus.NotFound ? "The Lenovo Fn keys service was not detected." : null),
                 new("AnimationsEnabled", "Enable animations", "Use page and control transition animations throughout the application.", AvaloniaSettingEditor.Toggle, true, store.AnimationsEnabled),
-                new("EnableHardwareSensors", "Enable hardware sensors", "Poll supported hardware sensors for dashboard readings.", AvaloniaSettingEditor.Toggle, true, store.EnableHardwareSensors),
-                new("DisableUnsupportedHardwareWarning", "Disable compatibility warning", "Hide the warning shown when hardware-specific features are unavailable.", AvaloniaSettingEditor.Toggle, true, store.DisableUnsupportedHardwareWarning),
-                new("ShowOsd", "Show on-screen display", "Show hardware status changes in the on-screen display.", AvaloniaSettingEditor.Toggle, true, _osdSettings.Store.ShowOsd),
+                new("EnableHardwareSensors", "Enable hardware sensors", "Poll supported hardware sensors for dashboard readings.", AvaloniaSettingEditor.Toggle,
+                    hardwareSensorsSupported,
+                    store.EnableHardwareSensors,
+                    Warning: hardwareSensorsSupported ? null : "Hardware sensors require the supported sensor backend."),
+                new("DisableUnsupportedHardwareWarning", "Disable compatibility warning", "Hide the warning shown when hardware-specific features are unavailable.", AvaloniaSettingEditor.Toggle, !isCompatible, store.DisableUnsupportedHardwareWarning,
+                    Warning: isCompatible ? "This device does not report a compatibility warning." : null),
+                new("ShowOsd", "Show on-screen display", "Show hardware status changes in the on-screen display.", AvaloniaSettingEditor.Toggle,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    _osdSettings.Store.ShowOsd,
+                    Warning: hardwareSensorsSupported && store.EnableHardwareSensors
+                        ? null
+                        : "Enable supported hardware sensors before enabling the on-screen display."),
                 new("ExportSettings", "Export settings backup", "Save application settings to a portable backup file.", AvaloniaSettingEditor.Action, true, ActionText: "Export"),
                 new("ImportSettings", "Import settings backup", "Restore application settings from a backup file. Current settings are backed up first.", AvaloniaSettingEditor.Action, true, ActionText: "Import"),
             ],
             true);
+    }
+
+    private async Task SetHardwareSensorsAsync(bool enabled)
+    {
+        if (_hardwareSensorsFeature is null)
+            throw new PlatformNotSupportedException("Hardware sensor controls are not initialized for this host.");
+
+        if (enabled && !await _hardwareSensorsFeature.IsSupportedAsync().ConfigureAwait(false))
+            throw new PlatformNotSupportedException("Hardware sensors require the supported sensor backend.");
+
+        await _hardwareSensorsFeature.SetStateAsync(
+            enabled ? HardwareSensorsState.On : HardwareSensorsState.Off).ConfigureAwait(false);
+    }
+
+    private async Task SetOsdAsync(bool enabled)
+    {
+        if (enabled && !_applicationSettings.Store.EnableHardwareSensors)
+            throw new InvalidOperationException("Hardware sensors must be enabled before the on-screen display.");
+
+        _osdSettings.Store.ShowOsd = enabled;
+        _osdSettings.SynchronizeStore();
+        MessagingCenter.Publish(new OsdChangedMessage(enabled ? OsdState.Show : OsdState.Hidden));
+    }
+
+    private static async Task<bool> GetHardwareSensorsSupportedAsync()
+    {
+        var feature = IoCContainer.TryResolve<HardwareSensorsFeature>();
+        if (feature is null)
+            return false;
+
+        try
+        {
+            return await feature.IsSupportedAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static async Task<bool> GetCompatibilityAsync()
+    {
+        try
+        {
+            var result = await MachineCompatibility.IsCompatibleAsync().ConfigureAwait(false);
+            return result.isCompatible;
+        }
+        catch
+        {
+            // Keep the setting available when a compatibility probe fails; the stored
+            // warning preference is still safe to edit and will be re-evaluated later.
+            return false;
+        }
     }
 
     public Task ExportSettingsAsync(string filePath)
