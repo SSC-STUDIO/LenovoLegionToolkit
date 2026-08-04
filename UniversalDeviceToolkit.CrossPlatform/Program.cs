@@ -541,7 +541,7 @@ internal sealed record CrossPlatformStatus(
     string SupportLevel,
     CapabilityStatus[] Capabilities)
 {
-    public static CrossPlatformStatus Create()
+    public static CrossPlatformStatus Create(IDeviceAdapter? adapter = null)
     {
         var isWindows = System.OperatingSystem.IsWindows();
         var isMacOS = System.OperatingSystem.IsMacOS();
@@ -552,7 +552,7 @@ internal sealed record CrossPlatformStatus(
                 ? "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform."
                 : "Unsupported OS; diagnostics may be incomplete.";
 
-        var deviceSnapshot = CrossPlatformDeviceAdapterFactory.ReadSnapshot(isWindows, isMacOS);
+        var deviceSnapshot = CrossPlatformDeviceAdapterFactory.ReadSnapshot(isWindows, isMacOS, adapter);
         var hardware = deviceSnapshot is null
             ? new HardwareIdentityReader(
                 new PhysicalFileSystem(),
@@ -666,17 +666,16 @@ internal sealed record CrossPlatformStatus(
 
 internal static class CrossPlatformDeviceAdapterFactory
 {
-    public static DeviceSnapshot? ReadSnapshot(bool isWindows, bool isMacOS)
+    public static DeviceSnapshot? ReadSnapshot(bool isWindows, bool isMacOS, IDeviceAdapter? adapter = null)
     {
-        IDeviceAdapter? adapter = null;
-        if (isWindows)
+        if (adapter is null && isWindows)
         {
             if (!OperatingSystem.IsWindows())
                 return null;
 
             adapter = new WindowsDeviceAdapter();
         }
-        else if (isMacOS)
+        else if (adapter is null && isMacOS)
         {
             adapter = new MacOSDeviceAdapter();
         }
