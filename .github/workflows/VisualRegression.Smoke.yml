@@ -54,7 +54,7 @@ jobs:
         run: dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
 
       - name: Build Avalonia app
-        run: dotnet build UniversalDeviceToolkit.Avalonia/UniversalDeviceToolkit.Avalonia.csproj --configuration Release --no-restore
+        run: dotnet build UniversalDeviceToolkit.Avalonia/UniversalDeviceToolkit.Avalonia.csproj --configuration Release --no-restore /p:EnableUdtTestHooks=true
 
       - name: Install FFmpeg
         shell: pwsh
