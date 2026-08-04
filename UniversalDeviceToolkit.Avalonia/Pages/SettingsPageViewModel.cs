@@ -14,7 +14,8 @@ public partial class SettingsPageViewModel : ObservableObject
     private readonly SettingsNavigationViewModel _navModel;
     private readonly IPlatformServices _platformServices;
 
-    public IReadOnlyList<NavigationItemViewModel> NavigationItems => _navModel.NavigationItems;
+    [ObservableProperty]
+    private IReadOnlyList<NavigationItemViewModel> _navigationItems = Array.Empty<NavigationItemViewModel>();
 
     [ObservableProperty]
     private int _selectedNavigationIndex;
@@ -35,8 +36,9 @@ public partial class SettingsPageViewModel : ObservableObject
     {
         var isSupportedLegionMachine = await _platformServices.IsSupportedLegionMachineAsync();
         _navModel.InitializeNavigationCommand.Execute(isSupportedLegionMachine);
+        NavigationItems = _navModel.NavigationItems;
 
-        if (_navModel.NavigationItems.Count > 0)
+        if (NavigationItems.Count > 0)
         {
             SelectedNavigationIndex = 0;
             UpdateContent(0);

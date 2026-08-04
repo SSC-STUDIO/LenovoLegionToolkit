@@ -448,41 +448,41 @@ internal static partial class Program
         CaptureWindowLifecycleStates(currentDirectory, mainWindow);
         CaptureResizeSequence(currentDirectory, mainWindow);
 
-        // The Avalonia shell exposes the WPF navigation routes even when their
-        // platform adapter is unavailable. Visit each one to prove it renders a
-        // capability result rather than leaving the content surface blank.
+        // The Avalonia shell exposes the WPF navigation routes through distinct
+        // feature pages. Visit each one to prove its page owns a stable content
+        // surface even when the platform adapter reports an unavailable feature.
         foreach (var capabilityTarget in new[]
                  {
                      new PageTarget(
                          "keyboard",
                          ["AvaloniaKeyboardButton"],
                          ["Keyboard"],
-                         root => FindVisibleClassContains(root, "HostCapabilityView")
-                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                         root => FindVisibleClassContains(root, "FeaturePageView")
+                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
                      new PageTarget(
                          "actions",
                          ["AvaloniaActionsButton"],
                          ["Actions"],
-                         root => FindVisibleClassContains(root, "HostCapabilityView")
-                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                         root => FindVisibleClassContains(root, "FeaturePageView")
+                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
                      new PageTarget(
                          "macro",
                          ["AvaloniaMacroButton"],
                          ["Macro"],
-                         root => FindVisibleClassContains(root, "HostCapabilityView")
-                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                         root => FindVisibleClassContains(root, "FeaturePageView")
+                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
                      new PageTarget(
                          "windows-optimization",
                          ["AvaloniaWindowsOptimizationButton"],
                          ["System optimization"],
-                         root => FindVisibleClassContains(root, "HostCapabilityView")
-                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                         root => FindVisibleClassContains(root, "FeaturePageView")
+                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
                      new PageTarget(
                          "plugin-extensions",
                          ["AvaloniaPluginExtensionsButton"],
                          ["Plugin Extensions"],
-                         root => FindVisibleClassContains(root, "HostCapabilityView")
-                                 || FindVisibleTextContains(root, "Unavailable in this Avalonia host")),
+                         root => FindVisibleClassContains(root, "FeaturePageView")
+                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
                  })
         {
             NavigateAndCapture(currentDirectory, mainWindow, capabilityTarget);
