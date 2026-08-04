@@ -139,6 +139,8 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public Task<bool> UpdatePluginAsync(string pluginId) => Task.FromResult(false);
 
+    public Task<bool> InstallPluginAsync(string pluginId) => Task.FromResult(false);
+
     public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync() =>
         Task.FromResult<IReadOnlyList<CustomCleanupRuleItem>>([]);
 

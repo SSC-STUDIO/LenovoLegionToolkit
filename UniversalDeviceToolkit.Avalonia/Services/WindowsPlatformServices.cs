@@ -86,6 +86,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.UpdatePluginAsync(pluginId)
             : _featureHost.UpdatePluginAsync(pluginId);
 
+    public Task<bool> InstallPluginAsync(string pluginId) =>
+        _featureHost is null
+            ? _inner.InstallPluginAsync(pluginId)
+            : _featureHost.InstallPluginAsync(pluginId);
+
     public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
         _featureHost is null
             ? _inner.GetMacroWorkspaceAsync()

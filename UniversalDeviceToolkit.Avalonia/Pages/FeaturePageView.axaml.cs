@@ -382,6 +382,8 @@ public partial class FeaturePageView : UserControl
         {
             var accepted = actionKey.StartsWith("plugin-update:", StringComparison.OrdinalIgnoreCase)
                 ? await _platformServices.UpdatePluginAsync(actionKey["plugin-update:".Length..])
+                : actionKey.StartsWith("plugin-install:", StringComparison.OrdinalIgnoreCase)
+                    ? await _platformServices.InstallPluginAsync(actionKey["plugin-install:".Length..])
                 : await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, actionKey, true);
             if (accepted)
             {

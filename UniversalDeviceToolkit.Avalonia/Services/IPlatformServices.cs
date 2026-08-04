@@ -17,6 +17,7 @@ public interface IPlatformServices
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<bool> ImportPluginAsync(string zipFilePath);
     Task<PluginCatalogState> GetPluginCatalogAsync(bool forceRefresh = false);
+    Task<bool> InstallPluginAsync(string pluginId);
     Task<bool> UpdatePluginAsync(string pluginId);
     Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync();
     Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules);

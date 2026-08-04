@@ -339,6 +339,30 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public async Task<bool> InstallPluginAsync(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        var repository = IoCContainer.TryResolve<PluginRepositoryService>();
+        if (repository is null)
+            return false;
+
+        try
+        {
+            var manifest = (await repository.FetchAvailablePluginsAsync().ConfigureAwait(false))
+                .FirstOrDefault(item => item.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase));
+            if (manifest is null)
+                return false;
+
+            return await repository.DownloadAndInstallPluginAsync(manifest).ConfigureAwait(false);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync()
     {
         if (_networkAcceleration is null)
