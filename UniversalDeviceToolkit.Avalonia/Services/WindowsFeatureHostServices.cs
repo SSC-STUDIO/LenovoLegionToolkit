@@ -85,6 +85,18 @@ internal sealed class WindowsFeatureHostServices
                 await EnsureAutomationInitializedAsync().ConfigureAwait(false);
                 await _automation.SetEnabledAsync(isSelected).ConfigureAwait(false);
                 return true;
+            case "Actions" when actionKey.StartsWith("automation-pipeline:", StringComparison.OrdinalIgnoreCase):
+                if (!Guid.TryParse(actionKey["automation-pipeline:".Length..], out var pipelineId))
+                    return false;
+
+                await EnsureAutomationInitializedAsync().ConfigureAwait(false);
+                var pipeline = (await _automation.GetPipelinesAsync().ConfigureAwait(false))
+                    .FirstOrDefault(candidate => candidate.Id == pipelineId);
+                if (pipeline is null)
+                    return false;
+
+                await _automation.RunNowAsync(pipeline).ConfigureAwait(false);
+                return true;
             case "PluginExtensions" when actionKey == "plugin-refresh":
                 await _plugins.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
                 return true;
@@ -153,6 +165,43 @@ internal sealed class WindowsFeatureHostServices
     {
         await EnsureAutomationInitializedAsync().ConfigureAwait(false);
         var pipelines = await _automation.GetPipelinesAsync().ConfigureAwait(false);
+        var actions = new List<FeatureActionItem>
+        {
+            new FeatureActionItem(
+                "automation-enabled",
+                "Automation service",
+                "Enable or disable automation event listeners.",
+                _automation.IsEnabled ? "Enabled" : "Disabled",
+                true,
+                _automation.IsEnabled,
+                true),
+            new FeatureActionItem(
+                "pipeline-count",
+                "Configured pipelines",
+                "Pipelines are loaded from the same automation store used by WPF.",
+                pipelines.Count.ToString(CultureInfo.InvariantCulture),
+                false,
+                false,
+                false),
+        };
+
+        foreach (var pipeline in pipelines)
+        {
+            var name = string.IsNullOrWhiteSpace(pipeline.Name)
+                ? $"Pipeline {pipeline.Id.ToString()[..8]}"
+                : pipeline.Name!;
+            var trigger = pipeline.Trigger?.DisplayName ?? "Manual quick action";
+            var stepCount = pipeline.Steps.Count;
+            actions.Add(new FeatureActionItem(
+                $"automation-pipeline:{pipeline.Id:D}",
+                name,
+                $"{trigger}. {stepCount} step(s). Run this pipeline using the shared automation processor.",
+                "Run",
+                true,
+                false,
+                false));
+        }
+
         return new FeaturePageState(
             "Actions",
             "Actions",
@@ -160,24 +209,7 @@ internal sealed class WindowsFeatureHostServices
             "Available",
             $"{pipelines.Count} automation pipeline(s) loaded from the shared settings store.",
             true,
-            [
-                new FeatureActionItem(
-                    "automation-enabled",
-                    "Automation service",
-                    "Enable or disable automation event listeners.",
-                    _automation.IsEnabled ? "Enabled" : "Disabled",
-                    true,
-                    _automation.IsEnabled,
-                    true),
-                new FeatureActionItem(
-                    "pipeline-count",
-                    "Configured pipelines",
-                    "Pipelines are loaded from the same automation store used by WPF.",
-                    pipelines.Count.ToString(CultureInfo.InvariantCulture),
-                    false,
-                    false,
-                    false),
-            ]);
+            actions);
     }
 
     private async Task EnsureAutomationInitializedAsync()
