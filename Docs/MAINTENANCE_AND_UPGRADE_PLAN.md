@@ -463,3 +463,10 @@
 - 运行时测试验证 Program Files 根目录不可直接安装、其子目录可接受、相邻目录和临时目录均拒绝；`Validate` 对受保护目录之外的路径抛出 `UnauthorizedAccessException`，不创建文件或修改 ACL。
 - 验证：Installer Release 构建 `0` 警告、`0` 错误；Installer 运行时边界与既有安全 Guard `4/4` 通过、`0` Skip。
 - R4 仍未完全结束：真实 ACL 写入/继承审计需要管理员专用安装环境，按需提权模型的完整端到端验证也仍需专用桌面环境；本地路径策略测试不替代这两项验收。
+
+## 30. 2026-08-04 FlaUI nightly Skip 门禁
+
+- 新增 `Scripts/Assert-FlaUiTestResults.ps1`，要求 FlaUI TRX 至少包含一个 `UnitTestResult`，并将 `Skipped`/`NotExecuted` 视为失败。
+- `flaui-tests.yml` 将 TRX 固定写入 `TestResults/FlaUI`，在上传 artifact 前执行结果门禁；桌面前置检查失败仍直接失败，不通过 Skip 伪造绿色。
+- `CiWorkflowGuardTests` 已锁定结果目录、门禁脚本、执行顺序和两类非执行结果。
+- Windows 验证：FlaUI workflow Guard `3/3` 通过；TRX 断言脚本已验证正常、缺失、空结果、`Skipped` 和 `NotExecuted` 五类结果；完整 nightly 仍需 self-hosted 交互桌面 runner。

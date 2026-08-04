@@ -234,6 +234,25 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
+    public void FlaUiNightlyWorkflow_ShouldFailOnMissingOrSkippedResults()
+    {
+        var workflow = ReadWorkflow("flaui-tests.yml");
+        var job = workflow.Job("flaui-tests");
+        var runStep = job.Step("Run FlaUI tests");
+        var resultStep = job.Step("Assert FlaUI test results");
+        var script = RepositoryPaths.ReadFile("Scripts", "Assert-FlaUiTestResults.ps1");
+
+        runStep.Run.Should().Contain("--results-directory TestResults/FlaUI");
+        resultStep.Run.Should().Contain("Assert-FlaUiTestResults.ps1");
+        resultStep.Run.Should().Contain("UniversalDeviceToolkit.FlaUI.Tests.trx");
+        job.Steps.IndexOf(resultStep).Should().BeGreaterThan(job.Steps.IndexOf(runStep));
+        script.Should().Contain("UnitTestResult");
+        script.Should().Contain("'Skipped'");
+        script.Should().Contain("'NotExecuted'");
+        script.Should().Contain("throw");
+    }
+
+    [Fact]
     public void FlaUiTestBase_ShouldResolveX64BuildOutputPaths()
     {
         var source = RepositoryPaths.ReadFile(

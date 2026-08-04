@@ -85,7 +85,12 @@ jobs:
             --configuration Release `
             --no-build `
             --filter "FullyQualifiedName~FlaUI" `
+            --results-directory TestResults/FlaUI `
             --logger "trx;LogFileName=UniversalDeviceToolkit.FlaUI.Tests.trx"
+
+      - name: Assert FlaUI test results
+        shell: pwsh
+        run: ./Scripts/Assert-FlaUiTestResults.ps1 -TrxPath (Join-Path $PWD 'TestResults\FlaUI\UniversalDeviceToolkit.FlaUI.Tests.trx')
 
       - name: Upload test results
         if: always()

@@ -32,6 +32,10 @@ dotnet test UniversalDeviceToolkit.UiAutomation.Tests/UniversalDeviceToolkit.UiA
 ## CI/CD Integration
 See `.github/workflows/flaui-tests.yml` for GitHub Actions setup.
 
+The nightly job writes the TRX to `TestResults/FlaUI` and fails when the file is
+missing or contains a `Skipped`/`NotExecuted` result. Desktop preflight failures
+also fail the job; they are not converted into passing skips.
+
 ## Troubleshooting
 
 ### "FlaUI desktop preflight failed"
