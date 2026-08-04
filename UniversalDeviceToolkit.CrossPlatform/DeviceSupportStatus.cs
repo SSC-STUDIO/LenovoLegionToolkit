@@ -1,5 +1,6 @@
-using System.Globalization;
-using System.Text;
+using System.Runtime.InteropServices;
+using System.Text.Json;
+using UniversalDeviceToolkit.Abstractions.Hardware;
 
 internal sealed record DeviceSupportStatus(
     string SupportLevel,
@@ -12,241 +13,87 @@ internal sealed record DeviceSupportStatus(
     public bool IsHardwareControlAvailable =>
         EnabledFeatures.Contains("lenovo-hardware-controls", StringComparer.OrdinalIgnoreCase) &&
         !HiddenFeatures.Contains("lenovo-hardware-controls", StringComparer.OrdinalIgnoreCase);
-}
 
-internal sealed record CrossPlatformDevicePack(
-    string Id,
-    string DisplayName,
-    string Vendor,
-    string[] VendorAliases,
-    string[] ModelKeywords,
-    string[] EnabledFeatures,
-    string[] HiddenFeatures);
+    public static DeviceSupportStatus From(DeviceSupportInfo support) =>
+        new(
+            support.SupportLevel,
+            support.DevicePackId,
+            support.DisplayName,
+            support.EnabledFeatures.ToArray(),
+            support.HiddenFeatures.ToArray(),
+            support.Reason);
+}
 
 internal sealed class CrossPlatformDeviceSupportEvaluator
 {
-    private static readonly string[] BasicEnabledFeatures =
-    [
-        "diagnostics",
-        "hardware-identity",
-        "read-only-telemetry",
-        "safe-basic-mode"
-    ];
+    private readonly IReadOnlyCollection<DevicePackDefinition> _packs;
 
-    private static readonly string[] BasicHiddenFeatures =
-    [
-        "lenovo-hardware-controls",
-        "power-modes",
-        "battery-conservation",
-        "keyboard-backlight",
-        "fan-curve",
-        "gpu-overclock",
-        "plugin-runtime"
-    ];
-
-    private static readonly CrossPlatformDevicePack[] DevicePacks =
-    [
-        BasicPack("apple-mac-basic", "Apple Mac Basic", "Apple Inc.", ["Apple"], ["MacBook", "MacBookPro", "MacBookAir", "Mac", "iMac", "Macmini", "MacStudio"]),
-        BasicPack("lenovo-legion-basic", "Lenovo Legion Basic", "LENOVO", ["Lenovo"], ["Legion", "LOQ", "Y7000", "Y9000", "R7000", "R9000"]),
-        BasicPack("lenovo-think-basic", "Lenovo Think Basic", "LENOVO", ["Lenovo"], ["ThinkPad", "ThinkBook", "ThinkCentre", "ThinkStation"]),
-        BasicPack("lenovo-chromebook-basic", "Lenovo Chromebook Basic", "LENOVO", ["Lenovo"], ["Chromebook", "Chromebook Plus", "Flex Chromebook", "IdeaPad Chromebook"]),
-        BasicPack("lenovo-ideapad-yoga-basic", "Lenovo IdeaPad/Yoga Basic", "LENOVO", ["Lenovo"], ["IdeaPad", "IdeaPad Gaming", "Yoga", "YOGA", "Lenovo Slim", "IdeaPad Slim", "Slim 7", "Slim 5"]),
-        BasicPack("lenovo-xiaoxin-basic", "Lenovo XiaoXin Basic", "LENOVO", ["Lenovo"], ["XiaoXin", "Xiaoxin", "小新"]),
-        BasicPack("asus-basic", "ASUS Basic", "ASUSTeK COMPUTER INC.", ["ASUS", "ASUSTeK COMPUTER INC", "ASUSTeK COMPUTER INCORPORATED"], ["ROG", "TUF", "Zephyrus", "Strix", "VivoBook", "Vivobook", "Zenbook", "ProArt", "ExpertBook", "Chromebook", "Chromebook Plus"]),
-        BasicPack("dell-basic", "Dell Basic", "Dell Inc.", ["Dell", "Dell Computer Corporation", "Alienware"], ["Alienware", "Area-51m", "XPS", "Inspiron", "Precision", "Latitude", "Dell G", "G15", "G16", "m15", "m16", "m18", "x14", "x15", "x16", "x17", "OptiPlex", "Vostro", "Chromebook", "Chromebook Plus"]),
-        BasicPack("hp-basic", "HP Basic", "HP", ["HP Inc.", "Hewlett-Packard", "Hewlett-Packard Company"], ["OMEN", "Victus", "Pavilion", "Envy", "EliteBook", "ProBook", "ZBook", "Spectre", "Chromebook", "Chromebook Plus"]),
-        BasicPack("acer-basic", "Acer Basic", "Acer", ["Acer Incorporated", "Acer Inc."], ["Predator", "Nitro", "Swift", "Aspire", "TravelMate", "ConceptD", "Extensa", "Spin", "Chromebook", "Chromebook Plus"]),
-        BasicPack("msi-basic", "MSI Basic", "Micro-Star International Co., Ltd.", ["MSI", "Micro-Star International", "MICRO-STAR INTERNATIONAL CO., LTD"], ["Raider", "Stealth", "Vector", "Katana", "Cyborg", "Creator", "Prestige", "Modern", "Summit"]),
-        BasicPack("microsoft-surface-basic", "Microsoft Surface Basic", "Microsoft Corporation", ["Microsoft"], ["Surface Laptop", "Surface Pro", "Surface Book", "Surface Studio", "Surface Go"]),
-        BasicPack("gigabyte-basic", "GIGABYTE Basic", "GIGABYTE", ["Gigabyte Technology Co., Ltd.", "Gigabyte Technology Co., Ltd"], ["AORUS", "AERO", "GIGABYTE G"]),
-        BasicPack("razer-basic", "Razer Basic", "Razer", ["Razer Inc.", "Razer Inc"], ["Blade", "Razer Book"]),
-        BasicPack("samsung-basic", "Samsung Basic", "SAMSUNG ELECTRONICS CO., LTD.", ["Samsung", "Samsung Electronics", "SAMSUNG ELECTRONICS CO., LTD"], ["Galaxy Book", "Notebook 9", "Galaxy Chromebook", "Chromebook", "Chromebook Plus"]),
-        BasicPack("google-chromebook-basic", "Google Chromebook Basic", "Google", ["Google LLC", "Google Inc.", "Google Inc"], ["Pixelbook", "Pixel Slate", "Chromebook", "Chromebook Plus"]),
-        BasicPack("motorola-basic", "Motorola Basic", "Motorola", ["Motorola Mobility", "Motorola Mobility LLC", "MOTOROLA"], ["Moto Book", "MotoBook", "Motobook", "14IRH10R"]),
-        BasicPack("huawei-basic", "HUAWEI Basic", "HUAWEI", ["Huawei Technologies", "Huawei Technologies Co., Ltd.", "Huawei Technologies Co., Ltd"], ["MateBook", "MateBook X", "MateBook D", "MateBook E", "MateBook GT", "Qingyun"]),
-        BasicPack("xiaomi-basic", "Xiaomi Basic", "Xiaomi", ["Xiaomi Inc.", "Xiaomi Corporation", "Redmi", "TIMI"], ["Mi Notebook", "RedmiBook", "Redmi G", "Xiaomi Book", "Xiaomi Book Pro", "Book Pro"]),
-        BasicPack("realme-basic", "realme Basic", "realme", ["realme Chongqing MobileTelecommunications Corp., Ltd.", "realme"], ["realme Book"]),
-        BasicPack("infinix-basic", "Infinix Basic", "INFINIX", ["Infinix Mobility Limited", "Infinix"], ["INBook", "Inbook"]),
-        BasicPack("honor-basic", "HONOR Basic", "HONOR", ["Honor Device Co., Ltd.", "Honor Device Co., Ltd"], ["MagicBook"]),
-        BasicPack("lg-basic", "LG Basic", "LG Electronics", ["LG Electronics Inc.", "LG Electronics Inc", "LG"], ["gram", "UltraPC"]),
-        BasicPack("framework-basic", "Framework Basic", "Framework", ["Framework Computer Inc.", "Framework Computer"], ["Framework Laptop"]),
-        BasicPack("panasonic-basic", "Panasonic Basic", "Panasonic", ["Panasonic Corporation"], ["TOUGHBOOK", "Let's note", "Lets note"]),
-        BasicPack("dynabook-basic", "Dynabook Basic", "Dynabook Inc.", ["Dynabook", "TOSHIBA", "TOSHIBA CORPORATION"], ["Portégé", "Portege", "Tecra", "Satellite"]),
-        BasicPack("nec-lavie-basic", "NEC LAVIE Basic", "NEC", ["NEC Personal Computers, Ltd.", "NEC Personal Computers", "NEC Corporation", "LAVIE"], ["LAVIE", "LaVie", "VersaPro"]),
-        BasicPack("sharp-basic", "Sharp Basic", "SHARP", ["Sharp Corporation", "Sharp"], ["Mebius", "Dynabook", "Chromebook"]),
-        BasicPack("fujitsu-basic", "Fujitsu Basic", "FUJITSU", ["FUJITSU CLIENT COMPUTING LIMITED", "Fujitsu Client Computing Limited"], ["LIFEBOOK", "CELSIUS"]),
-        BasicPack("vaio-basic", "VAIO Basic", "VAIO Corporation", ["VAIO"], ["VAIO"]),
-        BasicPack("gateway-basic", "Gateway Basic", "Gateway", ["Gateway Inc.", "Acer Gateway"], ["Gateway"]),
-        BasicPack("chuwi-basic", "CHUWI Basic", "CHUWI", ["Chuwi Innovation And Technology", "CHUWI Innovation Limited"], ["HeroBook", "CoreBook", "MiniBook", "GemiBook", "FreeBook"]),
-        BasicPack("teclast-basic", "TECLAST Basic", "TECLAST", ["Teclast", "Guangzhou Shangke Information Technology"], ["F15", "F16", "F7", "X6"]),
-        BasicPack("jumper-basic", "Jumper Basic", "Jumper", ["Jumper Computer", "Jumper Tech"], ["EZbook", "EZpad"]),
-        BasicPack("medion-basic", "MEDION Basic", "MEDION", ["MEDION AG"], ["ERAZER", "AKOYA"]),
-        BasicPack("xmg-schenker-basic", "XMG/SCHENKER Basic", "SCHENKER", ["Schenker Technologies GmbH", "XMG", "TUXEDO"], ["XMG", "SCHENKER", "TUXEDO", "InfinityBook", "Stellaris", "Pulse", "Polaris", "Aura"]),
-        BasicPack("hasee-basic", "Hasee Basic", "HASEE", ["Hasee", "Hasee Computer"], ["Hasee", "ZhanShen", "Zhan Shen"]),
-        BasicPack("thunderobot-basic", "THUNDEROBOT Basic", "THUNDEROBOT", ["Thunderobot", "Raytheon"], ["Thunderobot", "911", "Zero", "Black Warrior"]),
-        BasicPack("machenike-basic", "MACHENIKE Basic", "MACHENIKE", ["Machenike"], ["MACHENIKE", "Machenike", "T58", "F117", "L16"]),
-        BasicPack("colorful-basic", "COLORFUL Basic", "COLORFUL", ["Colorful Technology And Development Co., Ltd.", "Colorful"], ["COLORFUL", "Evol", "X15", "MEOW"]),
-        BasicPack("maibenben-basic", "MAIBENBEN Basic", "MAIBENBEN", ["Maibenben", "MaiBenBen"], ["Maibenben", "MaiBook", "Xiaomai"]),
-        BasicPack("mechrevo-basic", "MECHREVO Basic", "MECHREVO", ["Mechanical Revolution", "MECHREVO INC.", "Tongfang", "THTF", "Tsinghua Tongfang"], ["MECHREVO", "Mechanical Revolution", "Jiaolong", "Kuangshi", "Code", "Unbounded", "F1"]),
-        BasicPack("valve-handheld-basic", "Valve Handheld Basic", "Valve", ["Valve Corporation"], ["Steam Deck"]),
-        BasicPack("gpd-handheld-basic", "GPD Handheld Basic", "GPD", ["GamePad Digital", "Shenzhen GPD Technology Co., Ltd."], ["GPD WIN", "GPD Win", "Win Max", "Win Mini", "Pocket", "Duo"]),
-        BasicPack("ayaneo-handheld-basic", "AYANEO Handheld Basic", "AYANEO", ["AYANEO", "AOKZOE", "Ayn Technologies", "AYN"], ["AYANEO", "AOKZOE", "Loki", "NEXT", "Air Plus"]),
-        BasicPack("one-netbook-handheld-basic", "ONE-NETBOOK Handheld Basic", "ONE-NETBOOK", ["One-Netbook", "ONE-NETBOOK Technology", "ONEXPLAYER", "OneXPlayer"], ["OneXPlayer", "ONEXPLAYER", "One-Netbook", "OneMix", "OneGx"]),
-        BasicPack("minisforum-basic", "MINISFORUM Basic", "MINISFORUM", ["Micro Computer (HK) Tech Limited", "Minisforum"], ["MINISFORUM", "UM", "HX", "Venus Series"]),
-        BasicPack("beelink-basic", "Beelink Basic", "Beelink", ["AZW", "Shenzhen AZW Technology Co., Ltd.", "Beelink"], ["SER", "GTR", "EQ", "Beelink"]),
-        BasicPack("geekom-basic", "GEEKOM Basic", "GEEKOM", ["Geekom", "GEEKOM"], ["Mini IT", "MiniAir", "A7", "GT"]),
-        BasicPack("gmktec-basic", "GMKtec Basic", "GMKtec", ["GMK", "GMKtec", "Shenzhen GMKtec"], ["NucBox", "EVO-X", "K8", "K6", "M7", "M5"]),
-        BasicPack("morefine-basic", "Morefine Basic", "Morefine", ["MORE FINE", "Shenzhen Morefine"], ["Morefine", "S500", "S600", "M600", "M9"]),
-        BasicPack("acemagic-basic", "ACEMAGIC Basic", "ACEMAGIC", ["Ace Magician", "ACEMAGICIAN", "ACEMAGIC", "KAMRUI"], ["ACEMAGIC", "Kron", "F5A", "Tank", "AM", "AD", "S1"]),
-        BasicPack("aoostar-basic", "AOOSTAR Basic", "AOOSTAR", ["AOOSTAR", "Aoostar"], ["GEM", "GOD", "WTR", "MN", "N1", "R7 NAS"]),
-        BasicPack("regional-mini-pc-basic", "Regional Mini PC Basic", "TRIGKEY", ["TRIGKEY", "Trigkey", "BOSGAME", "Bosgame", "FIREBAT", "Firebat", "CHATREEY", "Chatreey", "SZBOX", "FEVM"], ["Mini PC", "MiniPC"]),
-        BasicPack("zotac-basic", "ZOTAC Basic", "ZOTAC", ["ZOTAC International"], ["ZBOX", "MAGNUS", "ZOTAC"]),
-        BasicPack("system76-basic", "System76 Basic", "System76", ["System76, Inc.", "System 76", "Notebook"], ["Adder WS", "addw", "Bonobo WS", "bonw", "Darter Pro", "darp", "Galago Pro", "galp", "Gazelle", "gaze", "Kudu", "Lemur Pro", "lemp", "Meerkat", "meer", "Oryx Pro", "oryp", "Pangolin Pro", "panp", "Serval WS", "serw", "Thelio"]),
-        BasicPack("star-labs-basic", "Star Labs Basic", "Star Labs", ["Star Labs Systems", "StarLabs", "Star Labs Systems Ltd"], ["StarFighter", "StarBook", "StarLite", "StarLite Mk", "Byte"]),
-        BasicPack("slimbook-basic", "Slimbook Basic", "SLIMBOOK", ["Slimbook", "Slimbook S.L.", "Slimbook SL"], ["Elemental", "Excalibur", "EVO", "Executive", "Creative", "KDE Slimbook", "Fedora Slimbook", "Manjaro Slimbook", "Slimbook One", "Slimbook Zero"]),
-        BasicPack("clevo-tongfang-basic", "Clevo/Tongfang Basic", "CLEVO", ["Notebook", "Tongfang", "Eluktronics", "MECHREVO", "THUNDEROBOT", "Hasee", "SAGER"], ["MECHREVO", "THUNDEROBOT", "Hasee", "SAGER", "Eluktronics", "Maingear"]),
-        BasicPack("eluktronics-basic", "Eluktronics Basic", "Eluktronics", ["Eluktronics", "Eluktronics Inc."], ["Eluktronics", "RP", "MAX", "MECH", "Prometheus", "Hydroc"]),
-        BasicPack("maingear-basic", "MAINGEAR Basic", "MAINGEAR", ["Maingear", "MAINGEAR"], ["MAINGEAR", "Vector", "ML", "MG"]),
-        BasicPack("monster-tulpar-basic", "Monster/Tulpar Basic", "Monster", ["Monster Notebook", "Monster Computer", "Tulpar"], ["Tulpar", "Abra", "Semruk", "Huma"]),
-        BasicPack("dream-machines-basic", "Dream Machines Basic", "Dream Machines", ["Dream Machines", "Dream Machines Sp. z o.o."], ["Dream Machines", "RG", "RT", "RX", "RS"]),
-        BasicPack("pcspecialist-basic", "PCSpecialist Basic", "PCSpecialist", ["PC Specialist", "PC Specialist Ltd", "PCSpecialist"], ["Recoil", "Defiance", "Ionico", "Elimina", "Lafite"]),
-        BasicPack("eurocom-basic", "Eurocom Basic", "EUROCOM", ["Eurocom", "Eurocom Corporation"], ["Sky", "Nightsky", "Raptor", "Commander", "Panther"]),
-        BasicPack("origin-pc-basic", "Origin PC Basic", "Origin PC", ["ORIGIN PC", "OriginPC", "Corsair"], ["EON", "EON16", "EON17", "NS", "NT"]),
-        BasicPack("corsair-basic", "Corsair Basic", "Corsair", ["CORSAIR", "Corsair Memory, Inc.", "Corsair Components, Inc."], ["Voyager", "Corsair One", "Vengeance"]),
-        BasicPack("cyberpower-ibuypower-basic", "CyberPower/iBUYPOWER Basic", "CyberPowerPC", ["CyberPowerPC", "CyberPower Inc.", "iBUYPOWER", "iBUYPOWER Computer"], ["Tracer", "Gamer", "Slate", "Y60", "RDY"]),
-        BasicPack("casper-excalibur-basic", "Casper/Excalibur Basic", "Casper", ["Casper Bilgisayar", "Casper", "Excalibur"], ["Excalibur", "Nirvana"]),
-        BasicPack("nexstgo-avita-basic", "Nexstgo/Avita Basic", "Nexstgo", ["Nexstgo", "Nexstgo Company Limited", "Avita", "AVITA"], ["AVITA", "Avita", "LIBER", "ADMIROR", "PURA"]),
-        BasicPack("positivo-basic", "Positivo Basic", "Positivo", ["Positivo Tecnologia", "Positivo Informatica", "Positivo"], ["Motion", "Vision", "Master", "Duo"]),
-        BasicPack("wortmann-terra-basic", "Wortmann/TERRA Basic", "Wortmann", ["Wortmann AG", "WORTMANN", "TERRA"], ["TERRA", "Mobile", "Pad", "PC"]),
-        BasicPack("universal-workstation-basic", "Universal Workstation Basic", "*", [], ["Workstation", "Precision", "ZBook", "ThinkStation", "ProArt Station", "Creator Workstation"]),
-        BasicPack("universal-motherboard-basic", "Universal Motherboard Basic", "*", [], ["Motherboard", "Custom PC", "To Be Filled By O.E.M.", "SYS-", "MS-7", "B650", "X670", "Z690", "Z790", "B760", "X570", "B550", "TRX40", "WRX80"]),
-        BasicPack("universal-desktop-basic", "Universal Desktop Basic", "*", [], ["Desktop", "Tower", "Mini PC", "MiniPC", "AIO", "All-in-One", "All in One", "System Product Name"]),
-        BasicPack("universal-barebone-basic", "Universal Barebone Basic", "*", [], ["Barebone", "Notebook", "Default string"]),
-        BasicPack("handheld-pc-basic", "Handheld PC Basic", "*", [], ["Steam Deck", "GPD", "AYANEO", "AOKZOE", "ONEXPLAYER", "ONE-NETBOOK", "ROG Ally", "Legion Go"]),
-        BasicPack("mini-pc-basic", "Mini PC Basic", "*", [], ["MINISFORUM", "Beelink", "GEEKOM", "ZOTAC"])
-    ];
+    public CrossPlatformDeviceSupportEvaluator(IReadOnlyCollection<DevicePackDefinition>? packs = null)
+    {
+        _packs = packs ?? DevicePackCatalogLoader.Load();
+    }
 
     public DeviceSupportStatus Evaluate(HardwareIdentity hardware, bool isWindows)
     {
-        var matchedPack = DevicePacks.FirstOrDefault(pack => Matches(pack, hardware));
-        if (matchedPack is null)
-            return GenericBasic("No cross-platform device pack matched the hardware identity.");
+        var platform = hardware.Source.StartsWith("linux", StringComparison.OrdinalIgnoreCase)
+            ? "linux"
+            : hardware.Source.StartsWith("macos", StringComparison.OrdinalIgnoreCase)
+                ? "macos"
+                : isWindows ? "windows" : "unknown";
+        var identity = new DeviceIdentity(
+            platform,
+            RuntimeInformation.OSArchitecture.ToString(),
+            hardware.Vendor,
+            hardware.Model,
+            hardware.ProductName,
+            string.Empty,
+            hardware.SerialNumber,
+            hardware.Source);
 
-        var reason = isWindows
-            ? "Matched cross-platform basic device pack. Use the Windows desktop app for supported hardware-control features."
-            : "Matched cross-platform basic device pack. Hardware writes remain disabled on non-Windows platforms.";
-
-        return new DeviceSupportStatus(
-            "Safe basic mode",
-            matchedPack.Id,
-            matchedPack.DisplayName,
-            matchedPack.EnabledFeatures,
-            matchedPack.HiddenFeatures,
-            reason);
+        return DeviceSupportStatus.From(
+            DeviceSupportMatcher.Evaluate(identity, _packs));
     }
+}
 
-    private static bool Matches(CrossPlatformDevicePack pack, HardwareIdentity hardware)
+internal static class DevicePackCatalogLoader
+{
+    private static readonly JsonSerializerOptions JsonOptions = new()
     {
-        if (!VendorMatches(pack, hardware))
-            return false;
+        PropertyNameCaseInsensitive = true,
+        ReadCommentHandling = JsonCommentHandling.Skip,
+        AllowTrailingCommas = true
+    };
 
-        if (pack.ModelKeywords.Length == 0)
-            return true;
-
-        var modelSignals = ModelSignals(hardware).ToArray();
-        if (modelSignals.Length == 0)
-            return !pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase);
-
-        return pack.ModelKeywords.Any(keyword => modelSignals.Any(signal => signal.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
-    }
-
-    private static bool VendorMatches(CrossPlatformDevicePack pack, HardwareIdentity hardware)
+    public static IReadOnlyCollection<DevicePackDefinition> Load()
     {
-        if (pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        var vendorSignals = VendorSignals(hardware).ToArray();
-        if (vendorSignals.Length == 0)
-            return false;
-
-        return vendorSignals.Any(vendor =>
+        foreach (var path in CandidatePaths())
         {
-            var normalizedVendor = NormalizeVendorName(vendor);
-            return VendorNameMatches(pack.Vendor, vendor, normalizedVendor) ||
-                   pack.VendorAliases.Any(alias => VendorNameMatches(alias, vendor, normalizedVendor));
-        });
-    }
+            try
+            {
+                if (!File.Exists(path))
+                    continue;
 
-    private static IEnumerable<string> VendorSignals(HardwareIdentity hardware)
-    {
-        if (!string.IsNullOrWhiteSpace(hardware.Vendor))
-            yield return hardware.Vendor;
-    }
-
-    private static IEnumerable<string> ModelSignals(HardwareIdentity hardware)
-    {
-        if (!string.IsNullOrWhiteSpace(hardware.Model))
-            yield return hardware.Model;
-        if (!string.IsNullOrWhiteSpace(hardware.ProductName))
-            yield return hardware.ProductName;
-    }
-
-    private static bool VendorNameMatches(string packVendor, string machineVendor, string normalizedMachineVendor)
-    {
-        if (packVendor.Equals(machineVendor, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        var normalizedPackVendor = NormalizeVendorName(packVendor);
-        return !string.IsNullOrWhiteSpace(normalizedPackVendor) &&
-               !string.IsNullOrWhiteSpace(normalizedMachineVendor) &&
-               (normalizedPackVendor.Equals(normalizedMachineVendor, StringComparison.OrdinalIgnoreCase) ||
-                normalizedMachineVendor.StartsWith(normalizedPackVendor, StringComparison.OrdinalIgnoreCase) ||
-                normalizedPackVendor.StartsWith(normalizedMachineVendor, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static string NormalizeVendorName(string vendor)
-    {
-        if (string.IsNullOrWhiteSpace(vendor))
-            return string.Empty;
-
-        var builder = new StringBuilder(vendor.Length);
-        foreach (var character in vendor.Normalize(NormalizationForm.FormD))
-        {
-            if (CharUnicodeInfo.GetUnicodeCategory(character) == UnicodeCategory.NonSpacingMark)
-                continue;
-
-            if (char.IsLetterOrDigit(character))
-                builder.Append(char.ToUpperInvariant(character));
+                var json = File.ReadAllText(path);
+                var packs = JsonSerializer.Deserialize<DevicePackDefinition[]>(json, JsonOptions);
+                if (packs is { Length: > 0 })
+                    return packs;
+            }
+            catch
+            {
+                // A missing or invalid optional catalog degrades to generic basic mode.
+            }
         }
 
-        return builder.ToString()
-            .Replace("INCORPORATED", "INC", StringComparison.Ordinal)
-            .Replace("CORPORATION", "CORP", StringComparison.Ordinal)
-            .Replace("COMPANY", "CO", StringComparison.Ordinal)
-            .Replace("LIMITED", "LTD", StringComparison.Ordinal);
+        return [];
     }
 
-    private static DeviceSupportStatus GenericBasic(string reason) =>
-        new(
-            "Safe basic mode",
-            "generic-pc-basic",
-            "Generic PC Basic",
-            BasicEnabledFeatures,
-            BasicHiddenFeatures,
-            reason);
+    private static IEnumerable<string> CandidatePaths()
+    {
+        yield return Path.Combine(AppContext.BaseDirectory, "resources", "device-packs.json");
+        yield return Path.Combine(Directory.GetCurrentDirectory(), "resources", "device-packs.json");
 
-    private static CrossPlatformDevicePack BasicPack(
-        string id,
-        string displayName,
-        string vendor,
-        string[] vendorAliases,
-        string[] modelKeywords) =>
-        new(
-            id,
-            displayName,
-            vendor,
-            vendorAliases,
-            modelKeywords,
-            BasicEnabledFeatures,
-            BasicHiddenFeatures);
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        for (var depth = 0; depth < 8 && directory is not null; depth++, directory = directory.Parent)
+            yield return Path.Combine(directory.FullName, "resources", "device-packs.json");
+    }
 }

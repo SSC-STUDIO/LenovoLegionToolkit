@@ -14,8 +14,8 @@ public sealed class DeviceSupportStatusTests
             new HardwareIdentity("Apple Inc.", "MacBook Pro MacBookPro18,3", "MacBook Pro", "MAC-SERIAL", "test"),
             isWindows: false);
 
-        support.DevicePackId.Should().Be("apple-mac-basic");
-        support.DisplayName.Should().Be("Apple Mac Basic");
+        support.DevicePackId.Should().Be("apple-basic");
+        support.DisplayName.Should().Be("Apple Basic");
         support.SupportLevel.Should().Be("Safe basic mode");
         support.IsHardwareControlAvailable.Should().BeFalse();
         support.HiddenFeatures.Should().Contain("lenovo-hardware-controls");
@@ -47,12 +47,12 @@ public sealed class DeviceSupportStatusTests
 
     [Theory]
     [InlineData("TIMI", "Redmi G Pro 2024", "xiaomi-basic")]
-    [InlineData("LENOVO", "IdeaPad Gaming 3 15ACH6", "lenovo-ideapad-yoga-basic")]
-    [InlineData("LENOVO", "Yoga Pro 7 14AHP9", "lenovo-ideapad-yoga-basic")]
+    [InlineData("LENOVO", "IdeaPad Gaming 3 15ACH6", "lenovo-ideapad-gaming")]
+    [InlineData("LENOVO", "Yoga Pro 7 14AHP9", "lenovo-yoga")]
     [InlineData("LENOVO", "小新 Pro 16 2024", "lenovo-xiaoxin-basic")]
     [InlineData("realme", "realme Book Prime", "realme-basic")]
     [InlineData("Infinix Mobility Limited", "INBook X2", "infinix-basic")]
-    [InlineData("Motorola Mobility LLC", "Moto Book 60 14IRH10R", "motorola-basic")]
+    [InlineData("Motorola Mobility LLC", "Moto Book 60 14IRH10R", "motorola-lenovo-basic")]
     [InlineData("Gateway", "Gateway 14.1 Ultra Slim", "gateway-basic")]
     [InlineData("CHUWI", "CoreBook X", "chuwi-basic")]
     [InlineData("TECLAST", "F15 Plus", "teclast-basic")]
@@ -101,7 +101,7 @@ public sealed class DeviceSupportStatusTests
     [InlineData("Super Micro Computer, Inc.", "X13 Workstation", "universal-workstation-basic")]
     [InlineData("ASRock", "Z790 Taichi", "universal-motherboard-basic")]
     [InlineData("Default string", "System Product Name", "universal-desktop-basic")]
-    [InlineData("CLEVO", "Barebone GM7", "universal-barebone-basic")]
+    [InlineData("CLEVO", "Barebone GM7", "clevo-tongfang-basic")]
     [InlineData("To Be Filled By O.E.M.", "To Be Filled By O.E.M.", "universal-motherboard-basic")]
     public void Evaluate_ShouldMatchExpandedBrandBasicPacks(string vendor, string model, string expectedPackId)
     {
@@ -122,7 +122,7 @@ public sealed class DeviceSupportStatusTests
             new HardwareIdentity("LENOVO", "Legion Pro 7 16IRX9", "Legion Pro 7", "SERIAL", "test"),
             isWindows: false);
 
-        support.DevicePackId.Should().Be("lenovo-legion-basic");
+        support.DevicePackId.Should().Be("lenovo-legion-pro-7");
         support.IsHardwareControlAvailable.Should().BeFalse();
         support.HiddenFeatures.Should().Contain("power-modes");
         support.Reason.Should().MatchRegex("(?i)disabled");
@@ -135,7 +135,7 @@ public sealed class DeviceSupportStatusTests
             new HardwareIdentity("LENOVO", "Legion Pro 7 16IRX9", "Legion Pro 7", "SERIAL", "test"),
             isWindows: true);
 
-        support.DevicePackId.Should().Be("lenovo-legion-basic");
+        support.DevicePackId.Should().Be("lenovo-legion-pro-7");
         support.IsHardwareControlAvailable.Should().BeFalse();
         support.Reason.Should().MatchRegex("(?i)Windows desktop app");
     }

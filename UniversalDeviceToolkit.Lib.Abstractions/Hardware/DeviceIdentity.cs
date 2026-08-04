@@ -13,6 +13,8 @@ public sealed record DeviceIdentity(
     string SerialNumber,
     string Source)
 {
+    public string MachineType { get; init; } = string.Empty;
+
     public static DeviceIdentity Unknown(string platform, string source) =>
         new(platform, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, source);
 }

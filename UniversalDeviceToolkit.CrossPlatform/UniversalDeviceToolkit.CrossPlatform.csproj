@@ -19,4 +19,11 @@
   <ItemGroup>
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\resources\device-packs.json"
+          Link="resources\device-packs.json"
+          CopyToOutputDirectory="PreserveNewest"
+          CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
