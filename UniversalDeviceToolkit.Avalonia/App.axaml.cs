@@ -24,7 +24,7 @@ public partial class App : Application
 
     private TrayIcon? _trayIcon;
 
-    public static IPlatformServices PlatformServices { get; private set; } = new SamplePlatformServices();
+    public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
 
     public App()
     {
@@ -44,7 +44,7 @@ public partial class App : Application
         return new DeviceAdapterPlatformServices(new WindowsDeviceAdapter());
 #else
         if (OperatingSystem.IsLinux())
-            return new PlatformCapabilityServices(new LinuxPlatformServices());
+            return new DeviceAdapterPlatformServices(new LinuxDeviceAdapter());
 
         if (OperatingSystem.IsMacOS())
             return new DeviceAdapterPlatformServices(new MacOSDeviceAdapter());
