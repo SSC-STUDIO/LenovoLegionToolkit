@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
              xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsAppearanceView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
         <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_Title, Fallback=Appearance}"
@@ -36,6 +37,7 @@
                      (title bar + traffic lights / content / dock), selected = accent border. -->
                 <StackPanel Orientation="Horizontal" Spacing="12">
                     <Button x:Name="ThemeLightCard" Tag="Light" Click="ThemeCard_Click"
+                            automation:AutomationProperties.Name="{local:Loc Key=Appearance_Light, Fallback=Light}"
                             Padding="0" Background="Transparent" BorderThickness="0">
                         <StackPanel Spacing="6">
                             <Border x:Name="ThemeLightPreview" Width="120" Height="84" CornerRadius="6"
@@ -87,6 +89,7 @@
                         </StackPanel>
                     </Button>
                     <Button x:Name="ThemeDarkCard" Tag="Dark" Click="ThemeCard_Click"
+                            automation:AutomationProperties.Name="{local:Loc Key=Appearance_Dark, Fallback=Dark}"
                             Padding="0" Background="Transparent" BorderThickness="0">
                         <StackPanel Spacing="6">
                             <Border x:Name="ThemeDarkPreview" Width="120" Height="84" CornerRadius="6"
@@ -138,6 +141,7 @@
                         </StackPanel>
                     </Button>
                     <Button x:Name="ThemeSystemCard" Tag="System" Click="ThemeCard_Click"
+                            automation:AutomationProperties.Name="{local:Loc Key=Appearance_System, Fallback=Follow system}"
                             Padding="0" Background="Transparent" BorderThickness="0">
                         <StackPanel Spacing="6">
                             <Border x:Name="ThemeSystemPreview" Width="120" Height="84" CornerRadius="6"
@@ -200,6 +204,7 @@
 
                 <!-- 3. Apply accent color to the whole theme -->
                 <CheckBox x:Name="ApplyAccentColorToThemeCheckBox"
+                          automation:AutomationProperties.Name="{local:Loc Key=Appearance_ApplyAccent, Fallback=Apply accent color to theme}"
                           FontWeight="Medium"
                           Content="{local:Loc Key=Appearance_ApplyAccent, Fallback=Change system color when changing the global interface color}"
                           IsCheckedChanged="ApplyAccentColorToThemeCheckBox_IsCheckedChanged"/>
@@ -225,6 +230,7 @@
                             <!-- BorderBrush/BorderThickness bind to the precomputed selection visuals
                                  (selected = 2.5px accent border), so the current accent stays highlighted. -->
                             <Button Width="36" Height="36" Margin="0,0,8,8"
+                                    automation:AutomationProperties.Name="{local:Loc Key=Appearance_Accent, Fallback=Accent color}"
                                     Padding="2" CornerRadius="18"
                                     Background="Transparent"
                                     BorderBrush="{Binding SelectionBorderBrush}"
@@ -253,7 +259,9 @@
                 <TextBlock Text="{local:Loc Key=Appearance_LanguageDescription, Fallback=Select the display language for the application.}"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                            FontSize="{StaticResource FontSizeSmallCaption}"/>
-                <ComboBox x:Name="LanguageComboBox" MinWidth="220" HorizontalAlignment="Left"
+                <ComboBox x:Name="LanguageComboBox"
+                          automation:AutomationProperties.Name="{local:Loc Key=Appearance_Language, Fallback=Language}"
+                          MinWidth="220" HorizontalAlignment="Left"
                           Margin="0,8,0,0" SelectionChanged="LanguageComboBox_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>

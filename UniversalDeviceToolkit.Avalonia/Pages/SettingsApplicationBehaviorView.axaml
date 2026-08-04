@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
              xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsApplicationBehaviorView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
         <controls:LocalizedTextBlock Text="{local:Loc Key=Application_Title, Fallback=Application Behavior}"
@@ -40,7 +41,9 @@
                                OverflowMode="Wrap"
                                MaxLines="3"/>
                 </StackPanel>
-                <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="False"/>
+                <ToggleSwitch Grid.Column="1"
+                              automation:AutomationProperties.Name="{local:Loc Key=Application_LaunchStartup, Fallback=Launch at startup}"
+                              VerticalAlignment="Center" IsChecked="False"/>
             </Grid>
         </Border>
 
@@ -66,7 +69,9 @@
                                OverflowMode="Wrap"
                                MaxLines="3"/>
                 </StackPanel>
-                <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="True"/>
+                <ToggleSwitch Grid.Column="1"
+                              automation:AutomationProperties.Name="{local:Loc Key=Application_MinimizeTray, Fallback=Minimize to system tray}"
+                              VerticalAlignment="Center" IsChecked="True"/>
             </Grid>
         </Border>
 
@@ -92,7 +97,9 @@
                                OverflowMode="Wrap"
                                MaxLines="3"/>
                 </StackPanel>
-                <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="True"/>
+                <ToggleSwitch Grid.Column="1"
+                              automation:AutomationProperties.Name="{local:Loc Key=Application_AutoRefresh, Fallback=Auto-refresh hardware data}"
+                              VerticalAlignment="Center" IsChecked="True"/>
             </Grid>
         </Border>
     </StackPanel>
