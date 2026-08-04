@@ -433,7 +433,7 @@ internal static partial class Program
             var item = items[index];
             ActivateElement(item);
             WaitForAnimationsToComplete();
-            var itemLabel = SanitizeFileNameSegment(GetElementName(item));
+            var itemLabel = SanitizeFileNameSegment(GetAutomationLabel(item));
             var label = string.IsNullOrWhiteSpace(itemLabel)
                 ? $"settings-item-{index + 1}"
                 : $"settings-{index + 1}-{itemLabel}";
@@ -1228,6 +1228,30 @@ internal static partial class Program
         catch (ElementNotAvailableException)
         {
             return string.Empty;
+        }
+    }
+
+    private static string GetAutomationLabel(AutomationElement element)
+    {
+        var name = GetElementName(element);
+        if (!name.Contains("NavigationItemViewModel", StringComparison.OrdinalIgnoreCase))
+            return name;
+
+        try
+        {
+            var textNames = element.FindAll(
+                    TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Text))
+                .Cast<AutomationElement>()
+                .Select(GetElementName)
+                .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+                .Where(candidate => !candidate.Equals(name, StringComparison.Ordinal))
+                .ToArray();
+            return textNames.FirstOrDefault() ?? name;
+        }
+        catch (ElementNotAvailableException)
+        {
+            return name;
         }
     }
 
