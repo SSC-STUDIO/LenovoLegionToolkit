@@ -41,4 +41,27 @@ public sealed class L10nLayoutBudgetGuardTests
         avaloniaSettings.Should().Contain("OverflowMode=\"Ellipsis\"");
         avaloniaWindow.Should().Contain("LocalizedTextBlock");
     }
+
+    [Fact]
+    public void TurnOffMonitorsCard_ShouldKeepItsSingleActionBesideTheDescription()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var xaml = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.WPF",
+            "Controls",
+            "Dashboard",
+            "TurnOffMonitorsControl.xaml"));
+
+        xaml.Should().Contain("<Grid MinHeight=\"44\">");
+        xaml.Should().Contain("<ColumnDefinition Width=\"*\" MinWidth=\"0\" />");
+        xaml.Should().Contain("<ColumnDefinition Width=\"Auto\" />");
+        xaml.Should().Contain("Grid.Column=\"1\"");
+        xaml.Should().Contain("VerticalAlignment=\"Center\"");
+
+        var headerEnd = xaml.IndexOf("</custom:CardControl.Header>", StringComparison.Ordinal);
+        headerEnd.Should().BeGreaterThan(0);
+        xaml[(headerEnd + "</custom:CardControl.Header>".Length)..]
+            .Should().NotContain("<wpfui:Button");
+    }
 }

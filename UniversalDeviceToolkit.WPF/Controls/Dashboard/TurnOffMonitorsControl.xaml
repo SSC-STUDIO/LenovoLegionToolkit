@@ -13,14 +13,26 @@
     mc:Ignorable="d">
     <custom:CardControl Margin="0,0,0,8" Icon="Desktop24">
         <custom:CardControl.Header>
-            <controls:CardHeaderControl Title="{x:Static resources:Resource.TurnOffMonitorsControl_Title}" Subtitle="{x:Static resources:Resource.TurnOffMonitorsControl_Message}" />
+            <Grid MinHeight="44">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="0" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <controls:CardHeaderControl
+                    Grid.Column="0"
+                    Margin="0,0,16,0"
+                    Title="{x:Static resources:Resource.TurnOffMonitorsControl_Title}"
+                    Subtitle="{x:Static resources:Resource.TurnOffMonitorsControl_Message}" />
+                <wpfui:Button
+                    x:Name="_turnOffButton"
+                    Grid.Column="1"
+                    MinWidth="120"
+                    VerticalAlignment="Center"
+                    AutomationProperties.Name="{x:Static resources:Resource.TurnOffMonitorsControl_Title}"
+                    Click="TurnOffButton_Click"
+                    Content="{x:Static resources:Resource.TurnOffMonitorsControl_TurnOff}"
+                    Focusable="True" />
+            </Grid>
         </custom:CardControl.Header>
-        <wpfui:Button
-            x:Name="_turnOffButton"
-            MinWidth="120"
-            AutomationProperties.Name="{x:Static resources:Resource.TurnOffMonitorsControl_Title}"
-            Click="TurnOffButton_Click"
-            Content="{x:Static resources:Resource.TurnOffMonitorsControl_TurnOff}"
-            Focusable="True" />
     </custom:CardControl>
 </controls:AbstractRefreshingControl>
