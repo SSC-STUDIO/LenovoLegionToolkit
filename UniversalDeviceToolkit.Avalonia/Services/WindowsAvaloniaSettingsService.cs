@@ -15,6 +15,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     public Task<AvaloniaSettingsPageData> GetPageAsync(string pageKey) =>
         Task.FromResult(pageKey switch
         {
+            "Application" => BuildApplicationPage(),
+            "Display" => BuildDisplayPage(),
             "SmartKeys" => BuildSmartKeysPage(),
             "Update" => BuildUpdatePage(),
             "Power" => BuildPowerPage(),
@@ -140,6 +142,47 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             Warning: "No compatible Smart Key device was detected.")],
         false,
         "The current machine does not expose the Lenovo Smart Key adapter.");
+
+    private AvaloniaSettingsPageData BuildApplicationPage()
+    {
+        var store = _applicationSettings.Store;
+        return new AvaloniaSettingsPageData(
+            "Application",
+            "Application Behavior",
+            "Configure how the application behaves on startup and during use.",
+            [
+                new("LaunchAtStartup", "Launch at startup", "Automatically start the application when Windows starts.", AvaloniaSettingEditor.Toggle, false, Warning: "Startup registration is managed by the Windows host shell."),
+                new("MinimizeToTray", "Minimize to system tray", "Keep the application running in the system tray when it is minimized or closed.", AvaloniaSettingEditor.Toggle, true, store.MinimizeToTray),
+                new("MinimizeOnClose", "Minimize on close", "Hide the window instead of exiting when the close button is pressed.", AvaloniaSettingEditor.Toggle, true, store.MinimizeOnClose),
+                new("AnimationsEnabled", "Enable animations", "Use page and control transition animations throughout the application.", AvaloniaSettingEditor.Toggle, true, store.AnimationsEnabled),
+                new("EnableHardwareSensors", "Enable hardware sensors", "Poll supported hardware sensors for dashboard readings.", AvaloniaSettingEditor.Toggle, true, store.EnableHardwareSensors),
+                new("DisableUnsupportedHardwareWarning", "Disable compatibility warning", "Hide the warning shown when hardware-specific features are unavailable.", AvaloniaSettingEditor.Toggle, true, store.DisableUnsupportedHardwareWarning),
+            ],
+            true);
+    }
+
+    private AvaloniaSettingsPageData BuildDisplayPage()
+    {
+        var store = _applicationSettings.Store;
+        var backdrop = store.WindowBackdropStyle switch
+        {
+            WindowBackdropStyle.Windows => "Mica",
+            WindowBackdropStyle.macOS => "Acrylic",
+            _ => "Off",
+        };
+        return new AvaloniaSettingsPageData(
+            "Display",
+            "Display",
+            "Adjust display-related settings for your device.",
+            [
+                new("RefreshRate", "Refresh rate", "Display refresh-rate control requires a compatible Lenovo panel.", AvaloniaSettingEditor.Selection, false, Values: new[] { "60 Hz", "120 Hz", "144 Hz", "165 Hz" }, SelectedValue: "60 Hz", Warning: "No safe cross-platform refresh-rate adapter is available."),
+                new("SynchronizeBrightness", "Synchronize brightness to all power plans", "Keep brightness synchronized across Windows power plans.", AvaloniaSettingEditor.Toggle, true, store.SynchronizeBrightnessToAllPowerPlans),
+                new("ForceSoftwareRendering", "Force software rendering", "Use software rendering for the application window.", AvaloniaSettingEditor.Toggle, true, store.ForceSoftwareRendering),
+                new("WindowBackdrop", "Window backdrop", "Choose the backdrop style used by the application window.", AvaloniaSettingEditor.Selection, true, Values: new[] { "Mica", "Acrylic", "Off" }, SelectedValue: backdrop),
+                new("Overdrive", "Display overdrive", "Enable panel overdrive on supported hardware.", AvaloniaSettingEditor.Toggle, false, Warning: "Display overdrive requires the Lenovo display adapter."),
+            ],
+            true);
+    }
 
     private AvaloniaSettingsPageData BuildUpdatePage()
     {

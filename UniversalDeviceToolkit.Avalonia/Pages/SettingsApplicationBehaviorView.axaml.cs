@@ -1,11 +1,9 @@
-using Avalonia.Controls;
-
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
-public partial class SettingsApplicationBehaviorView : UserControl
+public sealed class SettingsApplicationBehaviorView : SettingsCapabilityView
 {
-    public SettingsApplicationBehaviorView()
-    {
-        InitializeComponent();
-    }
+    public SettingsApplicationBehaviorView() : base(
+        "Application",
+        "Application Behavior",
+        "Configure how the application behaves on startup and during use.") { }
 }

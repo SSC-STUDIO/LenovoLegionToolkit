@@ -1,11 +1,9 @@
-using Avalonia.Controls;
-
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
-public partial class SettingsDisplayView : UserControl
+public sealed class SettingsDisplayView : SettingsCapabilityView
 {
-    public SettingsDisplayView()
-    {
-        InitializeComponent();
-    }
+    public SettingsDisplayView() : base(
+        "Display",
+        "Display",
+        "Adjust display-related settings for your device.") { }
 }

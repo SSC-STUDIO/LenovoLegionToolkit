@@ -6,6 +6,8 @@ internal sealed class UnavailableAvaloniaSettingsService : IAvaloniaSettingsServ
     {
         var title = pageKey switch
         {
+            "Application" => "Application Behavior",
+            "Display" => "Display",
             "SmartKeys" => "Smart Keys",
             "Update" => "Update",
             "Power" => "Power",
