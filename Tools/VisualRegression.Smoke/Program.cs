@@ -1246,6 +1246,7 @@ internal static partial class Program
                 .Select(GetElementName)
                 .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
                 .Where(candidate => !candidate.Equals(name, StringComparison.Ordinal))
+                .Where(candidate => !candidate.EndsWith("24", StringComparison.OrdinalIgnoreCase))
                 .ToArray();
             return textNames.FirstOrDefault() ?? name;
         }
