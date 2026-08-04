@@ -86,7 +86,7 @@ echo "WSL distribution: $(cat /etc/os-release | sed -n 's/^PRETTY_NAME=//p' | tr
 echo "dotnet: $(dotnet --version)"
 
 dotnet restore UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj \
-  --locked-mode -p:EnableWindowsTargeting=true
+  --locked-mode --force-evaluate -p:EnableWindowsTargeting=true
 dotnet build UniversalDeviceToolkit.Platform.Linux/UniversalDeviceToolkit.Platform.Linux.csproj --configuration "$configuration" --no-restore
 dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration "$configuration" --no-restore
 dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj \
