@@ -163,6 +163,7 @@ internal static partial class Program
             }
 
             CapturePage(currentDirectory, mainWindow, "dashboard");
+            CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), "dashboard");
             CaptureWindowLifecycleStates(currentDirectory, mainWindow);
             CaptureResizeSequence(currentDirectory, mainWindow);
 
@@ -433,6 +434,7 @@ internal static partial class Program
         AutomationElement mainWindow)
     {
         CapturePage(currentDirectory, mainWindow, "dashboard");
+        CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), "dashboard");
         CaptureWindowLifecycleStates(currentDirectory, mainWindow);
         CaptureResizeSequence(currentDirectory, mainWindow);
 
@@ -512,6 +514,7 @@ internal static partial class Program
                 ? $"settings-item-{visited.Count}"
                 : $"settings-{visited.Count}-{itemLabel}";
             CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
+            CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), label);
             CaptureFirstComboState(currentDirectory, mainWindow, label);
             CaptureFirstSafeToggleState(currentDirectory, mainWindow, label);
         }
@@ -577,6 +580,7 @@ internal static partial class Program
 
             var label = $"settings-{visited.Count}-{SanitizeFileNameSegment(descriptor.Label)}";
             CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
+            CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), label);
             CaptureFirstComboState(currentDirectory, mainWindow, label);
             CaptureFirstSafeToggleState(currentDirectory, mainWindow, label);
         }
