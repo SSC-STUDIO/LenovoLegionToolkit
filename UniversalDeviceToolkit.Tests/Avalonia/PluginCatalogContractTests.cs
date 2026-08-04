@@ -1,5 +1,6 @@
 using FluentAssertions;
 using UniversalDeviceToolkit.Avalonia.Services;
+using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Avalonia;
 
