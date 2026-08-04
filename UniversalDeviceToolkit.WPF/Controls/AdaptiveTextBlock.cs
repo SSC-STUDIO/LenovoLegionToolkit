@@ -299,12 +299,21 @@ public class AdaptiveTextBlock : TextBlock
             foreground,
             pixelsPerDip)
         {
-            MaxTextWidth = ShouldWrap() ? Math.Max(0, maxWidth) : double.PositiveInfinity,
+            // WPF's formatter rejects zero/near-zero paragraph widths during the
+            // first layout pass. The caller already skips genuinely unavailable
+            // space; clamp transient sub-pixel widths to one DIP here.
+            // Keep the formatter's paragraph finite even for single-line mode. The
+            // no-wrap setting prevents reflow; the natural-width check handles the
+            // ellipsis decision separately.
+            MaxTextWidth = NormalizeMeasureWidth(maxWidth),
             Trimming = TextTrimming
         };
 
         return formatted.Height;
     }
+
+    private static double NormalizeMeasureWidth(double width) =>
+        double.IsNaN(width) || double.IsInfinity(width) ? 1.0 : Math.Max(1.0, width);
 
     private static bool IsValidFontSize(double fontSize) =>
         !double.IsNaN(fontSize) && !double.IsInfinity(fontSize) && fontSize > 0;

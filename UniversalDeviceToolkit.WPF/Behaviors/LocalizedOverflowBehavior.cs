@@ -102,7 +102,10 @@ public static class LocalizedOverflowBehavior
             return;
         }
 
-        var availableWidth = Math.Max(0, textBlock.ActualWidth - textBlock.Padding.Left - textBlock.Padding.Right);
+        var availableWidth = textBlock.ActualWidth - textBlock.Padding.Left - textBlock.Padding.Right;
+        if (double.IsNaN(availableWidth) || double.IsInfinity(availableWidth))
+            availableWidth = 1;
+        availableWidth = Math.Max(1, availableWidth);
         var formatted = new FormattedText(
             textBlock.Text,
             CultureInfo.CurrentUICulture,
@@ -112,7 +115,7 @@ public static class LocalizedOverflowBehavior
             Brushes.Black,
             VisualTreeHelper.GetDpi(textBlock).PixelsPerDip)
         {
-            MaxTextWidth = mode == LocalizedOverflowMode.Wrap ? availableWidth : double.PositiveInfinity,
+            MaxTextWidth = availableWidth,
             Trimming = TextTrimming.CharacterEllipsis,
         };
 
