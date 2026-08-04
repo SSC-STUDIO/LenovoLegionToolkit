@@ -15,7 +15,11 @@ public interface IPlatformServices
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
+    Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
+    Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
+    Task<bool> SetAutomationEnabledAsync(bool enabled);
+    Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines);
     Task<KeyboardLightingState?> GetKeyboardLightingStateAsync();
     Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update);
 }
@@ -43,7 +47,47 @@ public sealed record FeatureActionItem(
     string Status,
     bool IsEnabled,
     bool IsSelected,
-    bool IsToggle);
+    bool IsToggle,
+    string? Category = null);
+
+/// <summary>
+/// Host-neutral description of a plugin entry page. WPF plugins can expose a
+/// WPF control that Avalonia cannot embed; those entries remain routable and
+/// receive an explicit compatibility state instead of a placeholder page.
+/// </summary>
+public sealed record PluginPageState(
+    string PluginId,
+    string Title,
+    string Description,
+    string? IconIdentifier,
+    bool IsInstalled,
+    bool HasFeaturePage,
+    bool IsAvaloniaPage,
+    string StatusMessage,
+    object? Content = null);
+
+/// <summary>
+/// Editing projection for the shared automation store. The Avalonia host preserves
+/// every existing pipeline while allowing names, deletion, ordering and manual
+/// quick-action creation to round-trip through the same store as WPF.
+/// </summary>
+public sealed record AutomationWorkspaceState(
+    bool IsEnabled,
+    IReadOnlyList<AutomationPipelineItem> Pipelines);
+
+public sealed record AutomationPipelineItem(
+    Guid Id,
+    string? Name,
+    string? IconName,
+    string Trigger,
+    int StepCount,
+    bool IsAutomatic);
+
+public sealed record AutomationPipelineDraft(
+    Guid? Id,
+    string? Name,
+    string? IconName,
+    bool IsAutomatic);
 
 public sealed record KeyboardColorState(byte R, byte G, byte B)
 {

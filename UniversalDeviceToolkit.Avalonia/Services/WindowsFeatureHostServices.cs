@@ -1,11 +1,14 @@
 #if WINDOWS
 
 using System.Globalization;
+using System.Reflection;
+using Avalonia.Controls;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Abstractions.Macro;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Optimization;
@@ -108,6 +111,82 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public async Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync()
+    {
+        await EnsureAutomationInitializedAsync().ConfigureAwait(false);
+        var pipelines = await _automation.GetPipelinesAsync().ConfigureAwait(false);
+        return new AutomationWorkspaceState(
+            _automation.IsEnabled,
+            pipelines.Select(p => new AutomationPipelineItem(
+                    p.Id,
+                    p.Name,
+                    p.IconName,
+                    p.Trigger?.DisplayName ?? "Manual quick action",
+                    p.Steps.Count,
+                    p.Trigger is not null))
+                .ToArray());
+    }
+
+    public async Task<bool> SetAutomationEnabledAsync(bool enabled)
+    {
+        try
+        {
+            await EnsureAutomationInitializedAsync().ConfigureAwait(false);
+            await _automation.SetEnabledAsync(enabled).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> drafts)
+    {
+        try
+        {
+            await EnsureAutomationInitializedAsync().ConfigureAwait(false);
+            var existing = await _automation.GetPipelinesAsync().ConfigureAwait(false);
+            var byId = existing.ToDictionary(p => p.Id);
+            var saved = new List<AutomationPipeline>();
+            var seen = new HashSet<Guid>();
+
+            foreach (var draft in drafts)
+            {
+                if (draft.Id is Guid id && byId.TryGetValue(id, out var pipeline))
+                {
+                    if (!seen.Add(id))
+                        continue;
+
+                    pipeline.Name = NormalizePipelineName(draft.Name);
+                    pipeline.IconName = draft.IconName;
+                    saved.Add(pipeline);
+                    continue;
+                }
+
+                // New trigger pipelines require the WPF trigger configuration
+                // dialog. Avalonia currently creates manual quick actions only.
+                if (draft.IsAutomatic || string.IsNullOrWhiteSpace(draft.Name))
+                    continue;
+
+                saved.Add(new AutomationPipeline(NormalizePipelineName(draft.Name)!)
+                {
+                    IconName = draft.IconName,
+                });
+            }
+
+            await _automation.ReloadPipelinesAsync(saved).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string? NormalizePipelineName(string? name) =>
+        string.IsNullOrWhiteSpace(name) ? null : name.Trim();
+
     private async Task<bool> SetActionCoreAsync(string routeKey, string actionKey, bool isSelected)
     {
         switch (routeKey)
@@ -165,6 +244,13 @@ internal sealed class WindowsFeatureHostServices
             case "PluginExtensions" when actionKey == "plugin-check-updates":
                 await _plugins.CheckForUpdatesAsync().ConfigureAwait(false);
                 return true;
+            case "PluginExtensions" when actionKey.StartsWith("plugin-open:", StringComparison.OrdinalIgnoreCase):
+                var openId = actionKey["plugin-open:".Length..];
+                return !string.IsNullOrWhiteSpace(openId)
+                       && _plugins.IsInstalled(openId)
+                       && _plugins.GetRegisteredPlugins()
+                           .FirstOrDefault(plugin => plugin.Id.Equals(openId, StringComparison.OrdinalIgnoreCase)) is { } openPlugin
+                       && HasPluginFeaturePage(openPlugin);
             case "PluginExtensions" when actionKey.StartsWith("plugin-reload:", StringComparison.OrdinalIgnoreCase):
                 var reloadId = actionKey["plugin-reload:".Length..];
                 if (string.IsNullOrWhiteSpace(reloadId) || !_plugins.IsInstalled(reloadId))
@@ -735,6 +821,18 @@ internal sealed class WindowsFeatureHostServices
                 false));
             if (installed)
             {
+                if (plugin is not null && HasPluginFeaturePage(plugin))
+                {
+                    actions.Add(new FeatureActionItem(
+                        $"plugin-open:{pluginId}",
+                        $"Open {name}",
+                        "Open this installed extension in the host plugin page route.",
+                        "Open",
+                        true,
+                        false,
+                        false));
+                }
+
                 actions.Add(new FeatureActionItem(
                     $"plugin-reload:{pluginId}",
                     $"Reload {name}",
@@ -755,6 +853,145 @@ internal sealed class WindowsFeatureHostServices
             $"{installedCount} installed plugin extension(s) loaded by the shared plugin manager.",
             true,
             actions);
+    }
+
+    public Task<PluginPageState> GetPluginPageStateAsync(string pluginId)
+    {
+        var normalizedId = pluginId?.Trim() ?? string.Empty;
+        var plugin = _plugins.GetRegisteredPlugins()
+            .FirstOrDefault(candidate => candidate.Id.Equals(normalizedId, StringComparison.OrdinalIgnoreCase));
+        var metadata = string.IsNullOrWhiteSpace(normalizedId)
+            ? null
+            : _plugins.GetPluginMetadata(normalizedId);
+        var title = metadata?.GetDisplayName(LocalizationRuntime.CurrentCulture)
+            ?? plugin?.Name
+            ?? normalizedId;
+        var description = metadata?.GetDisplayDescription(LocalizationRuntime.CurrentCulture)
+            ?? plugin?.Description
+            ?? "No plugin description was provided by the host.";
+        var icon = metadata?.Icon ?? plugin?.Icon;
+        var installed = !string.IsNullOrWhiteSpace(normalizedId) && _plugins.IsInstalled(normalizedId);
+
+        if (plugin is null)
+        {
+            return Task.FromResult(new PluginPageState(
+                normalizedId,
+                title,
+                description,
+                icon,
+                installed,
+                false,
+                false,
+                "The plugin is not loaded by the host plugin manager."));
+        }
+
+        if (!TryResolvePluginPage(plugin, out var pageTitle, out var pageIcon, out var createPage))
+        {
+            return Task.FromResult(new PluginPageState(
+                normalizedId,
+                title,
+                description,
+                icon,
+                installed,
+                false,
+                false,
+                "This plugin does not provide a feature page."));
+        }
+
+        try
+        {
+            var content = createPage();
+            var isAvaloniaPage = content is Control;
+            return Task.FromResult(new PluginPageState(
+                normalizedId,
+                string.IsNullOrWhiteSpace(pageTitle) ? title : pageTitle,
+                description,
+                string.IsNullOrWhiteSpace(pageIcon) ? icon : pageIcon,
+                installed,
+                true,
+                isAvaloniaPage,
+                isAvaloniaPage
+                    ? "The plugin provided an Avalonia page and it is hosted below."
+                    : "This plugin provides a WPF page. Avalonia keeps the route visible but cannot embed WPF controls.",
+                content));
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(new PluginPageState(
+                normalizedId,
+                string.IsNullOrWhiteSpace(pageTitle) ? title : pageTitle,
+                description,
+                string.IsNullOrWhiteSpace(pageIcon) ? icon : pageIcon,
+                installed,
+                true,
+                false,
+                $"The plugin page could not be created: {ex.Message}"));
+        }
+    }
+
+    private static bool HasPluginFeaturePage(IPlugin plugin)
+    {
+        try
+        {
+            return TryResolvePluginPage(plugin, out _, out _, out _);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool TryResolvePluginPage(
+        IPlugin plugin,
+        out string? title,
+        out string? icon,
+        out Func<object> createPage)
+    {
+        title = null;
+        icon = null;
+        createPage = null!;
+
+        var getFeatureExtension = plugin.GetType().GetMethod(
+            "GetFeatureExtension",
+            BindingFlags.Public | BindingFlags.Instance);
+        if (getFeatureExtension is null)
+            return false;
+
+        object? featureExtension;
+        try
+        {
+            featureExtension = getFeatureExtension.Invoke(plugin, null);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            throw new InvalidOperationException(ex.InnerException.Message, ex.InnerException);
+        }
+
+        if (featureExtension is null)
+            return false;
+
+        if (featureExtension is IPluginPage pluginPage)
+        {
+            title = pluginPage.PageTitle;
+            icon = pluginPage.PageIcon;
+            createPage = pluginPage.CreatePage;
+            return true;
+        }
+
+        var pageType = featureExtension.GetType();
+        var createPageMethod = pageType.GetMethod(
+            "CreatePage",
+            BindingFlags.Public | BindingFlags.Instance,
+            Type.EmptyTypes);
+        if (createPageMethod is null)
+            return false;
+
+        title = pageType.GetProperty("PageTitle", BindingFlags.Public | BindingFlags.Instance)
+            ?.GetValue(featureExtension) as string;
+        icon = pageType.GetProperty("PageIcon", BindingFlags.Public | BindingFlags.Instance)
+            ?.GetValue(featureExtension) as string;
+        createPage = () => createPageMethod.Invoke(featureExtension, null) ?? new object();
+        return true;
     }
 
     private async Task<FeaturePageState> GetOptimizationStateAsync()
@@ -796,7 +1033,8 @@ internal sealed class WindowsFeatureHostServices
                     applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
                     true,
                     applied,
-                    FeatureActionContract.IsToggleAction(action.RollbackAsync is not null)));
+                    FeatureActionContract.IsToggleAction(action.RollbackAsync is not null),
+                    ResolveResource(category.TitleResourceKey)));
             }
         }
 

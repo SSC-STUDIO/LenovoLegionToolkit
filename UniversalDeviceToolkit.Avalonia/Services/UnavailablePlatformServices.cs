@@ -54,6 +54,25 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         Task.FromResult(false);
 
+    public Task<PluginPageState> GetPluginPageStateAsync(string pluginId) =>
+        Task.FromResult(new PluginPageState(
+            pluginId,
+            pluginId,
+            AvaloniaLocalization.GetString("PluginPage_AdapterDescription", "Plugin pages require the host plugin service."),
+            null,
+            false,
+            false,
+            false,
+            AvaloniaLocalization.GetString("PluginPage_AdapterUnavailable", "No platform adapter can host plugin pages.")));
+
+    public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
+        Task.FromResult(new AutomationWorkspaceState(false, Array.Empty<AutomationPipelineItem>()));
+
+    public Task<bool> SetAutomationEnabledAsync(bool enabled) => Task.FromResult(false);
+
+    public Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines) =>
+        Task.FromResult(false);
+
     public Task<KeyboardLightingState?> GetKeyboardLightingStateAsync() =>
         Task.FromResult<KeyboardLightingState?>(null);
 
