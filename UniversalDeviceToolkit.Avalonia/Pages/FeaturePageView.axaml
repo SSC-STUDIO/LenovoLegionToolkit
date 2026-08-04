@@ -92,6 +92,10 @@
                                 Content="Network acceleration"
                                 Click="NetworkAccelerationButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationButton" />
+                        <Button x:Name="DriverDownloadButton"
+                                Content="Driver downloads"
+                                Click="DriverDownloadButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaDriverDownloadButton" />
                     </StackPanel>
                     <StackPanel x:Name="OptimizationCommands"
                                 Orientation="Horizontal"

@@ -109,4 +109,14 @@ public sealed class AvaloniaMigrationContractTests
         state.Groups.Should().BeEmpty();
         state.Status.Should().NotBeNullOrWhiteSpace();
     }
+
+    [Fact]
+    public async Task PortablePlatformServices_ShouldExposeExplicitDriverUnavailableState()
+    {
+        var state = await new UnavailablePlatformServices().GetDriverDownloadStateAsync();
+
+        state.IsAvailable.Should().BeFalse();
+        state.Packages.Should().BeEmpty();
+        state.Error.Should().NotBeNullOrWhiteSpace();
+    }
 }

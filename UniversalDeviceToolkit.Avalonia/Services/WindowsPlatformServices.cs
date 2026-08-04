@@ -135,6 +135,21 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.RunNetworkDiagnosticsAsync()
             : _featureHost.RunNetworkDiagnosticsAsync();
 
+    public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
+        _featureHost is null
+            ? _inner.GetDriverDownloadStateAsync()
+            : _featureHost.GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates) =>
+        _featureHost is null
+            ? _inner.SearchDriverPackagesAsync(source, machineType, os, onlyUpdates)
+            : _featureHost.SearchDriverPackagesAsync(source, machineType, os, onlyUpdates);
+
+    public Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder) =>
+        _featureHost is null
+            ? _inner.DownloadDriverPackageAsync(packageId, destinationFolder)
+            : _featureHost.DownloadDriverPackageAsync(packageId, destinationFolder);
+
     private async Task<IReadOnlyList<SensorReadingItem>> AppendHardwareSensorReadingsAsync(
         IReadOnlyList<SensorReadingItem> existing)
     {

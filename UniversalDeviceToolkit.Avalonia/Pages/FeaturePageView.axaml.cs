@@ -53,6 +53,7 @@ public partial class FeaturePageView : UserControl
             _lastState = state;
             OptimizationToolbar.IsVisible = string.Equals(_descriptor.RouteKey, "WindowsOptimization", StringComparison.Ordinal);
             NetworkAccelerationButton.IsVisible = OptimizationToolbar.IsVisible;
+            DriverDownloadButton.IsVisible = OptimizationToolbar.IsVisible;
             StatusTitle.Text = state.IsAvailable
                 ? AvaloniaLocalization.GetString("FeaturePage_Available", "Available")
                 : AvaloniaLocalization.GetString("FeaturePage_Unsupported", "Unavailable on this device");
@@ -157,6 +158,24 @@ public partial class FeaturePageView : UserControl
             MinHeight = 520,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
             Content = new NetworkAccelerationPage(_platformServices),
+        };
+        window.Show(owner);
+    }
+
+    private void DriverDownloadButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        var window = new Window
+        {
+            Title = AvaloniaLocalization.GetString("WindowsOptimizationPage_Tab_DriverDownload", "Driver downloads"),
+            Width = 860,
+            Height = 720,
+            MinWidth = 680,
+            MinHeight = 560,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Content = new DriverDownloadPage(_platformServices),
         };
         window.Show(owner);
     }

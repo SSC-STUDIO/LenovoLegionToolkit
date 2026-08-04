@@ -31,6 +31,9 @@ public interface IPlatformServices
     Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled);
     Task<bool> ToggleNetworkAccelerationAsync();
     Task<string> RunNetworkDiagnosticsAsync();
+    Task<DriverDownloadState> GetDriverDownloadStateAsync();
+    Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates);
+    Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);
 }
 
 public sealed record FeatureGroupItem(string Title, string Description, string Status);
@@ -170,6 +173,25 @@ public sealed record NetworkAccelerationState(
     int ListenPort,
     IReadOnlyList<NetworkAccelerationGroupState> Groups,
     string? Diagnostics = null);
+
+public sealed record DriverPackageItem(
+    string Id,
+    string Title,
+    string Description,
+    string Version,
+    string Category,
+    string FileSize,
+    bool IsUpdate,
+    bool IsRecommended);
+
+public sealed record DriverDownloadState(
+    bool IsAvailable,
+    bool IsScanning,
+    string MachineType,
+    string Os,
+    string Source,
+    IReadOnlyList<DriverPackageItem> Packages,
+    string? Error = null);
 /// <summary>
 /// Read-only sensor data prepared for the dashboard. Value and Unit are kept
 /// separately so the UI can render a stable metric row and an optional gauge

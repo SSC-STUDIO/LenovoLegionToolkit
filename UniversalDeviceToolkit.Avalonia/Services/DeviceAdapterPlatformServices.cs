@@ -183,6 +183,21 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<string> RunNetworkDiagnosticsAsync() =>
         Task.FromResult(DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host."));
 
+    public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
+        Task.FromResult(new DriverDownloadState(
+            false,
+            false,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            Array.Empty<DriverPackageItem>(),
+            DashboardLocalization.Get("DriverDownload_AdapterUnavailable", "Driver downloads require the Windows host.")));
+
+    public Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates) =>
+        GetDriverDownloadStateAsync();
+
+    public Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder) => Task.FromResult(false);
+
     private static IReadOnlyList<FeatureActionItem> BuildActions(
         string key,
         string title,

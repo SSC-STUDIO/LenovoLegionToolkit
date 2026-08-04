@@ -2,6 +2,7 @@
 
 using System.Globalization;
 using System.Reflection;
+using System.IO;
 using Avalonia.Controls;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Abstractions.Localization;
@@ -12,10 +13,12 @@ using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.PackageDownloader;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
@@ -36,6 +39,11 @@ internal sealed class WindowsFeatureHostServices
     private readonly WindowsOptimizationService? _optimization;
     private readonly INetworkAccelerationService? _networkAcceleration;
     private readonly INetworkDiagnosticsService? _networkDiagnostics;
+    private readonly PackageDownloaderFactory? _packageDownloaderFactory;
+    private readonly PackageDownloaderSettings? _packageDownloaderSettings;
+    private IPackageDownloader? _driverDownloader;
+    private List<Package> _driverPackages = [];
+    private readonly object _driverLock = new();
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private readonly object _macroRecordingLock = new();
     private readonly HashSet<string> _selectedCleanupActions;
@@ -55,7 +63,9 @@ internal sealed class WindowsFeatureHostServices
         IPluginManager plugins,
         WindowsOptimizationService? optimization,
         INetworkAccelerationService? networkAcceleration,
-        INetworkDiagnosticsService? networkDiagnostics)
+        INetworkDiagnosticsService? networkDiagnostics,
+        PackageDownloaderFactory? packageDownloaderFactory,
+        PackageDownloaderSettings? packageDownloaderSettings)
     {
         _keyboard = keyboard;
         _spectrum = spectrum;
@@ -66,6 +76,8 @@ internal sealed class WindowsFeatureHostServices
         _optimization = optimization;
         _networkAcceleration = networkAcceleration;
         _networkDiagnostics = networkDiagnostics;
+        _packageDownloaderFactory = packageDownloaderFactory;
+        _packageDownloaderSettings = packageDownloaderSettings;
         _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
         _selectedCleanupActions = new HashSet<string>(
             _applicationSettings?.Store.SelectedCleanupActions ?? [],
@@ -91,7 +103,9 @@ internal sealed class WindowsFeatureHostServices
                 IoCContainer.Resolve<IPluginManager>(),
                 IoCContainer.TryResolve<WindowsOptimizationService>(),
                 IoCContainer.TryResolve<INetworkAccelerationService>(),
-                IoCContainer.TryResolve<INetworkDiagnosticsService>());
+                IoCContainer.TryResolve<INetworkDiagnosticsService>(),
+                IoCContainer.TryResolve<PackageDownloaderFactory>(),
+                IoCContainer.TryResolve<PackageDownloaderSettings>());
         }
         catch
         {
@@ -222,6 +236,119 @@ internal sealed class WindowsFeatureHostServices
 
         var report = await _networkDiagnostics.RunQuickCheckAsync().ConfigureAwait(false);
         return report.Summary;
+    }
+
+    public Task<DriverDownloadState> GetDriverDownloadStateAsync()
+    {
+        lock (_driverLock)
+        {
+            return Task.FromResult(BuildDriverDownloadState(
+                isScanning: false,
+                machineType: string.Empty,
+                os: string.Empty,
+                source: string.Empty));
+        }
+    }
+
+    public async Task<DriverDownloadState> SearchDriverPackagesAsync(
+        string source,
+        string machineType,
+        string os,
+        bool onlyUpdates)
+    {
+        if (_packageDownloaderFactory is null)
+        {
+            return new DriverDownloadState(
+                false,
+                false,
+                machineType,
+                os,
+                source,
+                [],
+                "The driver download service is not initialized in this host.");
+        }
+
+        if (!Enum.TryParse<PackageDownloaderFactory.Type>(source, true, out var sourceType)
+            || !Enum.TryParse<OS>(os, true, out var operatingSystem))
+        {
+            return new DriverDownloadState(false, false, machineType, os, source, [], "Select a valid driver source and operating system.");
+        }
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(machineType))
+            {
+                var machine = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                machineType = machine.MachineType;
+            }
+
+            var downloader = _packageDownloaderFactory.GetInstance(sourceType);
+            var packages = await downloader.GetPackagesAsync(machineType, operatingSystem).ConfigureAwait(false);
+            var hidden = _packageDownloaderSettings?.Store.HiddenPackages ?? [];
+            var filtered = packages
+                .Where(package => !hidden.Contains(package.Id)
+                    && (!onlyUpdates || package.IsUpdate))
+                .ToList();
+            lock (_driverLock)
+            {
+                _driverDownloader = downloader;
+                _driverPackages = filtered;
+            }
+
+            return BuildDriverDownloadState(false, machineType, os, source);
+        }
+        catch (Exception ex)
+        {
+            return new DriverDownloadState(true, false, machineType, os, source, [], ex.Message);
+        }
+    }
+
+    public async Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder)
+    {
+        if (string.IsNullOrWhiteSpace(packageId)
+            || string.IsNullOrWhiteSpace(destinationFolder)
+            || !Directory.Exists(destinationFolder))
+            return false;
+
+        IPackageDownloader? downloader;
+        Package package;
+        lock (_driverLock)
+        {
+            downloader = _driverDownloader;
+            package = _driverPackages.FirstOrDefault(candidate => candidate.Id.Equals(packageId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (downloader is null || string.IsNullOrWhiteSpace(package.Id))
+            return false;
+
+        await downloader.DownloadPackageFileAsync(package, destinationFolder).ConfigureAwait(false);
+        return true;
+    }
+
+    private DriverDownloadState BuildDriverDownloadState(
+        bool isScanning,
+        string machineType,
+        string os,
+        string source)
+    {
+        var packages = _driverPackages
+            .Select(package => new DriverPackageItem(
+                package.Id,
+                package.Title,
+                package.Description,
+                package.Version,
+                package.Category,
+                package.FileSize,
+                package.IsUpdate,
+                package.Title.Contains("recommended", StringComparison.OrdinalIgnoreCase)))
+            .ToArray();
+        return new DriverDownloadState(
+            _packageDownloaderFactory is not null,
+            isScanning,
+            machineType,
+            os,
+            source,
+            packages);
     }
 
     public async Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync()

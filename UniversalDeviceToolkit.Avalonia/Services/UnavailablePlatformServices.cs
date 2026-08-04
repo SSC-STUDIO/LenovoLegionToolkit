@@ -107,4 +107,19 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> ToggleNetworkAccelerationAsync() => Task.FromResult(false);
     public Task<string> RunNetworkDiagnosticsAsync() =>
         Task.FromResult(AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host."));
+
+    public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
+        Task.FromResult(new DriverDownloadState(
+            false,
+            false,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            Array.Empty<DriverPackageItem>(),
+            AvaloniaLocalization.GetString("DriverDownload_AdapterUnavailable", "Driver downloads require the Windows host.")));
+
+    public Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates) =>
+        GetDriverDownloadStateAsync();
+
+    public Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder) => Task.FromResult(false);
 }
