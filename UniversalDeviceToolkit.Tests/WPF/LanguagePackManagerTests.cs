@@ -137,7 +137,7 @@ public sealed class LanguagePackManagerTests : IDisposable
               "schemaVersion": 1,
               "languages": [
                 {
-                  "culture": "de",
+                  "culture": "de-DE",
                   "url": "https://example.test/de.zip",
                   "sha256": "{{languageSha256}}"
                 }
@@ -197,6 +197,69 @@ public sealed class LanguagePackManagerTests : IDisposable
             TryDeleteDirectory(directory);
             TryDeleteDirectory(legacyDirectory);
         }
+    }
+
+    [Theory]
+    [InlineData("de-DE", "de")]
+    [InlineData("pt-br", "pt-BR")]
+    [InlineData("zh-CN", "zh-Hans")]
+    [InlineData("zh-TW", "zh-Hant")]
+    [InlineData("uz", "uz-Latn-UZ")]
+    [InlineData("ff-Latn-SN", "ff-Latn-SN")]
+    public void NormalizeAssetCultureName_UsesSharedNamesWithoutBreakingUnknownFallbacks(
+        string input,
+        string expected)
+    {
+        LanguagePackManager.NormalizeAssetCultureName(new CultureInfo(input)).Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("en")]
+    [InlineData("en-US")]
+    public void IsEnglish_RecognizesEnglishCultureAliases(string cultureName)
+    {
+        var manager = new LanguagePackManager(new OnlineResourceCatalogClient(
+            new TestHttpClientFactory(new Dictionary<string, byte[]>())));
+
+        manager.IsEnglish(new CultureInfo(cultureName)).Should().BeTrue();
+    }
+
+    [Fact]
+    public void GetInstallUrl_UsesCanonicalCultureName()
+    {
+        var manager = new LanguagePackManager(new OnlineResourceCatalogClient(
+            new TestHttpClientFactory(new Dictionary<string, byte[]>())));
+
+        manager.GetInstallUrl(new CultureInfo("pt-br")).Should().EndWith("/pt-BR.zip");
+    }
+
+    [Fact]
+    public async Task QueryCatalogAsync_NormalizesCultureNamesAndParents()
+    {
+        var catalogJson = """
+            {
+              "schemaVersion": 1,
+              "languages": [
+                {
+                  "culture": "de-DE",
+                  "parent": "de-DE",
+                  "displayName": "German",
+                  "url": "https://example.test/de-DE.zip",
+                  "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                }
+              ]
+            }
+            """;
+        var responses = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["https://example.test/resources/stable/catalog.json"] = Encoding.UTF8.GetBytes(catalogJson)
+        };
+        var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(responses)));
+
+        var entry = (await manager.QueryCatalogAsync()).Should().ContainSingle().Subject;
+
+        entry.Culture.Should().Be("de");
+        entry.Parent.Should().Be("de");
     }
 
     [Fact]

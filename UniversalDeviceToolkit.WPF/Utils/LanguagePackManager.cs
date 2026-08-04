@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.ResourcesCatalog;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -29,10 +30,11 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         AssemblyLoadContext.Default.Resolving += ResolveUserLanguageSatelliteAssembly;
 
     public bool IsEnglish(CultureInfo cultureInfo) =>
-        cultureInfo.Name.Equals(EnglishCulture.Name, StringComparison.OrdinalIgnoreCase);
+        NormalizeAssetCultureName(cultureInfo).Equals(EnglishCulture.Name, StringComparison.OrdinalIgnoreCase);
 
     public bool IsInstalled(CultureInfo cultureInfo)
     {
+        cultureInfo = NormalizeRequestedCulture(cultureInfo);
         if (IsEnglish(cultureInfo))
             return true;
 
@@ -43,6 +45,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
     public string GetInstallUrl(CultureInfo cultureInfo)
     {
+        cultureInfo = NormalizeRequestedCulture(cultureInfo);
         var version = GetCurrentVersion();
         return $"{AppIdentity.ResourcesBaseUrl}/{version}/languages/{NormalizeAssetCultureName(cultureInfo)}.zip";
     }
@@ -72,6 +75,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
     public async Task InstallAsync(CultureInfo cultureInfo, IProgress<float>? progress = null, CancellationToken token = default)
     {
+        cultureInfo = NormalizeRequestedCulture(cultureInfo);
         if (IsEnglish(cultureInfo))
             return;
 
@@ -200,6 +204,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
     public void Uninstall(CultureInfo cultureInfo)
     {
+        cultureInfo = NormalizeRequestedCulture(cultureInfo);
         if (IsEnglish(cultureInfo))
             return;
 
@@ -212,6 +217,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
     public void QueueUninstall(CultureInfo cultureInfo)
     {
+        cultureInfo = NormalizeRequestedCulture(cultureInfo);
         if (IsEnglish(cultureInfo))
             return;
 
@@ -246,8 +252,39 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         }
     }
 
-    public static string NormalizeAssetCultureName(CultureInfo cultureInfo) =>
-        cultureInfo.Name;
+    public static string NormalizeAssetCultureName(CultureInfo cultureInfo)
+    {
+        ArgumentNullException.ThrowIfNull(cultureInfo);
+
+        // The shared catalog owns the spelling used by resource folders and CDN
+        // assets. Preserve unknown valid cultures for the full-portable fallback
+        // path, which can still contain legacy or test-only satellite folders.
+        return IsKnownCultureFamily(cultureInfo)
+            ? LocalizationCatalog.NormalizeCulture(cultureInfo).Name
+            : cultureInfo.Name;
+    }
+
+    private static CultureInfo NormalizeRequestedCulture(CultureInfo cultureInfo)
+    {
+        ArgumentNullException.ThrowIfNull(cultureInfo);
+
+        var normalizedName = NormalizeAssetCultureName(cultureInfo);
+        return normalizedName.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase)
+            ? cultureInfo
+            : new CultureInfo(normalizedName);
+    }
+
+    private static bool IsKnownCultureFamily(CultureInfo cultureInfo)
+    {
+        var parentName = cultureInfo.Parent.Name;
+        return LocalizationCatalog.SupportedCultures.Any(supported =>
+            supported.Name.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase)
+            || (!string.IsNullOrWhiteSpace(parentName)
+                && supported.Name.Equals(parentName, StringComparison.OrdinalIgnoreCase))
+            || supported.TwoLetterISOLanguageName.Equals(
+                cultureInfo.TwoLetterISOLanguageName,
+                StringComparison.OrdinalIgnoreCase));
+    }
 
     private static string GetCurrentVersion()
     {
@@ -263,14 +300,16 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
         foreach (var candidate in EnumerateCultureLookupNames(cultureInfo))
         {
             var resource = catalog.Languages.FirstOrDefault(language =>
-                language.Culture.Equals(candidate, StringComparison.OrdinalIgnoreCase));
+                NormalizeCatalogCultureName(language.Culture)
+                    .Equals(candidate, StringComparison.OrdinalIgnoreCase));
 
             if (resource is null)
             {
                 resource = catalog.Languages.FirstOrDefault(language =>
-                    !string.IsNullOrWhiteSpace(language.Parent) &&
-                    language.Parent.Equals(candidate, StringComparison.OrdinalIgnoreCase) &&
-                    language.Culture.Equals(NormalizeAssetCultureName(cultureInfo), StringComparison.OrdinalIgnoreCase));
+                    NormalizeCatalogParentName(language.Parent)
+                        ?.Equals(candidate, StringComparison.OrdinalIgnoreCase) == true
+                    && NormalizeCatalogCultureName(language.Culture)
+                        .Equals(NormalizeAssetCultureName(cultureInfo), StringComparison.OrdinalIgnoreCase));
             }
 
             if (resource is null)
@@ -325,14 +364,36 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
     private static LanguagePackCatalogEntry ToCatalogEntry(OnlineLanguageResource resource) =>
         new(
-            resource.Culture,
-            resource.Parent,
+            NormalizeCatalogCultureName(resource.Culture),
+            NormalizeCatalogParentName(resource.Parent),
             resource.Size,
             resource.Sha256,
             resource.ResourceVersion,
             resource.MinAppVersion,
             resource.Url,
             resource.DisplayName);
+
+    private static string NormalizeCatalogCultureName(string cultureName)
+    {
+        if (string.IsNullOrWhiteSpace(cultureName))
+            return string.Empty;
+
+        try
+        {
+            return NormalizeAssetCultureName(new CultureInfo(cultureName.Trim()));
+        }
+        catch (CultureNotFoundException)
+        {
+            // Leave validation of malformed catalog entries to the caller while
+            // keeping catalog inspection non-destructive.
+            return cultureName.Trim();
+        }
+    }
+
+    private static string? NormalizeCatalogParentName(string? cultureName) =>
+        string.IsNullOrWhiteSpace(cultureName)
+            ? cultureName
+            : NormalizeCatalogCultureName(cultureName);
 
     private static LanguagePackException WrapInstallFailure(CultureInfo cultureInfo, Exception fallbackEx, Exception primaryEx)
     {
@@ -778,6 +839,7 @@ public class LanguagePackManager(OnlineResourceCatalogClient resourceCatalogClie
 
     private static string[] GetResourceDirectoryNames(CultureInfo cultureInfo)
     {
+        cultureInfo = NormalizeRequestedCulture(cultureInfo);
         var names = new System.Collections.Generic.List<string>();
         var current = cultureInfo;
 

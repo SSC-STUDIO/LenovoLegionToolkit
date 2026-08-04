@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.WPF.Resources;
@@ -168,21 +169,12 @@ public partial class PluginExtensionsPage
 
     private static IEnumerable<string> EnumerateCultureNames(CultureInfo culture)
     {
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var current = culture;
-        while (current != CultureInfo.InvariantCulture)
-        {
-            if (seen.Add(current.Name))
-                yield return current.Name;
+        foreach (var fallbackCulture in LocalizationCatalog.GetFallbackChain(culture))
+            yield return fallbackCulture.Name;
 
-            if (current.Name.Equals("zh-Hans", StringComparison.OrdinalIgnoreCase) && seen.Add("zh"))
-                yield return "zh";
-
-            current = current.Parent;
-        }
-
-        if (seen.Add("en"))
-            yield return "en";
+        // Plugin manifests may use the explicit neutral key even when their
+        // host resource catalog uses the canonical English key.
+        yield return "default";
     }
 
     private static PluginManifest? TryReadInstalledPluginManifest(string pluginId, string? pluginFilePath)

@@ -57,4 +57,5 @@
   <data name="Retry"><value>&#x91CD;&#x8BD5;</value></data>
   <data name="Exit"><value>&#x9000;&#x51FA;</value></data>
   <data name="CancelConfirm"><value>&#x786E;&#x5B9A;&#x8981;&#x53D6;&#x6D88;&#x5B89;&#x88C5;&#x5417;&#xFF1F;</value></data>
+  <data name="OperationFailedDetail"><value>操作失败：{0}</value></data>
 </root>

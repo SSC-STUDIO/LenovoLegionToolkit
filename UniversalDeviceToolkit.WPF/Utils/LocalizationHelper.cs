@@ -310,39 +310,26 @@ public static class LocalizationHelper
         if (cultureInfo is null)
             return null;
 
-        var exact = Languages.FirstOrDefault(language =>
-            language.Name.Equals(cultureInfo.Name, StringComparison.OrdinalIgnoreCase));
-        if (exact is not null)
-            return exact;
-
-        // English variants always map to built-in "en".
-        if (cultureInfo.TwoLetterISOLanguageName.Equals("en", StringComparison.OrdinalIgnoreCase))
-            return DefaultLanguage;
-
-        if (cultureInfo.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase))
-        {
-            var traditional = cultureInfo.Name.Contains("Hant", StringComparison.OrdinalIgnoreCase)
-                              || cultureInfo.Name.Contains("TW", StringComparison.OrdinalIgnoreCase)
-                              || cultureInfo.Name.Contains("HK", StringComparison.OrdinalIgnoreCase)
-                              || cultureInfo.Name.Contains("MO", StringComparison.OrdinalIgnoreCase);
-            return Languages.FirstOrDefault(l =>
-                l.Name.Equals(traditional ? "zh-Hant" : "zh-Hans", StringComparison.OrdinalIgnoreCase));
-        }
-
-        var parentMatch = Languages.FirstOrDefault(language =>
-            language.Name.Equals(cultureInfo.Parent.Name, StringComparison.OrdinalIgnoreCase));
-        if (parentMatch is not null)
-            return parentMatch;
-
-        return Languages.FirstOrDefault(language =>
-            language.TwoLetterISOLanguageName.Equals(cultureInfo.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase));
+        return LocalizationCatalog.NormalizeCulture(cultureInfo);
     }
 
-    private static Task SaveLanguageToFileAsync(CultureInfo cultureInfo) => File.WriteAllTextAsync(LanguagePath, cultureInfo.Name);
+    private static Task SaveLanguageToFileAsync(CultureInfo cultureInfo)
+    {
+        var normalized = ResolveSupportedLanguage(cultureInfo) ?? DefaultLanguage;
+        Directory.CreateDirectory(Path.GetDirectoryName(LanguagePath)!);
+        return File.WriteAllTextAsync(LanguagePath, normalized.Name);
+    }
 
     private static void SetLanguageInternal(CultureInfo cultureInfo)
     {
         cultureInfo = ResolveSupportedLanguage(cultureInfo) ?? DefaultLanguage;
+
+        // Keep the WPF resource lifecycle and the shared host runtime in sync. The WPF
+        // language gate still owns its online-pack and first-run policy, while the shared
+        // runtime provides one canonical culture state for plugins and other hosts.
+        LocalizationRuntime.SetCultureAsync(cultureInfo, persist: false)
+            .GetAwaiter()
+            .GetResult();
 
         // Format numbers/dates in invariant-friendly English culture; UI strings use UI culture.
         var english = new CultureInfo("en");

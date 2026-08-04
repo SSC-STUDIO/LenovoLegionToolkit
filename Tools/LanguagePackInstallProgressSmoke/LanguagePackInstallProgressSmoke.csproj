@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
     <Compile Include="..\..\UniversalDeviceToolkit.WPF\Utils\LanguagePackManager.cs" Link="LanguagePackManager.cs" />
+    <Compile Include="..\..\UniversalDeviceToolkit.WPF\Utils\LanguagePackModels.cs" Link="LanguagePackModels.cs" />
   </ItemGroup>
 
 </Project>

@@ -52,7 +52,7 @@ static async Task<bool> RunProgressReportsEndAtOneAsync()
     };
 
     var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(responses)));
-    var installRoot = AppContext.BaseDirectory;
+    var installRoot = Path.Combine(Folders.AppData, "language-packs");
     var directories = new[]
     {
         Path.Combine(installRoot, "ff"),
@@ -150,7 +150,7 @@ static async Task<bool> RunInstallsResourceFilesAsync()
     };
 
     var manager = new LanguagePackManager(new OnlineResourceCatalogClient(new TestHttpClientFactory(responses)));
-    var installRoot = AppContext.BaseDirectory;
+    var installRoot = Path.Combine(Folders.AppData, "language-packs");
     var ffDirectory = Path.Combine(installRoot, "ff");
     var ffLatnDirectory = Path.Combine(installRoot, "ff-Latn");
     var ffLatnSnDirectory = Path.Combine(installRoot, "ff-Latn-SN");
@@ -173,7 +173,7 @@ static async Task<bool> RunInstallsResourceFilesAsync()
             return false;
         }
 
-        Console.WriteLine($"{pass}: Language pack files installed to app base directory.");
+        Console.WriteLine($"{pass}: Language pack files installed to the user language-pack directory.");
         return true;
     }
     finally

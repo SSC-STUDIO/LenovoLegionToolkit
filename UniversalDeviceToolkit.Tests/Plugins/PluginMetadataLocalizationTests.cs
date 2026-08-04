@@ -38,6 +38,23 @@ public class PluginMetadataLocalizationTests
         metadata.GetDisplayTags(new CultureInfo("ja-JP")).Should().Equal("mouse", "customization", "cursor", "productivity");
     }
 
+    [Fact]
+    public void GetDisplayValues_ShouldNormalizeRegionalCultureToCanonicalLanguage()
+    {
+        var metadata = new PluginMetadata
+        {
+            Name = "Fallback Name",
+            LocalizedNames = new Dictionary<string, string>
+            {
+                ["zh-Hant"] = "繁體名稱",
+                ["en"] = "English Name"
+            }
+        };
+
+        metadata.GetDisplayName(new CultureInfo("zh-TW")).Should().Be("繁體名稱");
+        metadata.GetDisplayName(new CultureInfo("de-DE")).Should().Be("English Name");
+    }
+
     private static PluginMetadata CreateMetadata()
     {
         return new PluginMetadata

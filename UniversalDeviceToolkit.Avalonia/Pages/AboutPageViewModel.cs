@@ -3,6 +3,8 @@ using System.Reflection;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Avalonia.Localization;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -46,13 +48,19 @@ public partial class AboutPageViewModel : ObservableObject
         VersionText = version ?? string.Empty;
 
         var build = GetBuildDateTime();
-        BuildText = string.IsNullOrWhiteSpace(build) ? string.Empty : $"Build: {build}";
+        BuildText = string.IsNullOrWhiteSpace(build)
+            ? string.Empty
+            : string.Format(
+                System.Globalization.CultureInfo.InvariantCulture,
+                AvaloniaLocalization.GetString("About_Build", "Build: {0}"),
+                build);
 
         var copyright = GetCopyrightText();
         CopyrightText = copyright ?? string.Empty;
 
         // Show translation credit for non-English locales
-        ShowTranslationCredit = !System.Globalization.CultureInfo.CurrentUICulture.Equals(new System.Globalization.CultureInfo("en"));
+        ShowTranslationCredit = !LocalizationCatalog.NormalizeCulture(LocalizationRuntime.CurrentCulture)
+            .Name.Equals(LocalizationCatalog.DefaultCulture.Name, StringComparison.OrdinalIgnoreCase);
     }
 
     private static string? GetVersionText()

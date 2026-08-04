@@ -48,18 +48,18 @@ static int PrintStatus()
     Console.WriteLine($"{T("Label_Hardware", "Hardware")}: {FormatHardwareSummary(status.Hardware)}");
     Console.WriteLine($"{T("Label_Telemetry", "Telemetry")}: {FormatTelemetrySummary(status.Telemetry)}");
     Console.WriteLine($"{T("Label_Power", "Power")}: {FormatPowerSummary(status.Power)}");
-    Console.WriteLine($"Power profile: {FormatPowerProfileSummary(status.PowerProfile)}");
-    Console.WriteLine($"CPU governor: {FormatCpuGovernorSummary(status.CpuGovernor)}");
-    Console.WriteLine($"Battery charge limit: {FormatBatteryChargeLimitSummary(status.BatteryChargeLimit)}");
-    Console.WriteLine($"Display brightness: {FormatDisplayBrightnessSummary(status.DisplayBrightness)}");
-    Console.WriteLine($"Plugins: {FormatPluginSummary(status.Plugins)}");
+    Console.WriteLine($"{T("Label_PowerProfile", "Power profile")}: {FormatPowerProfileSummary(status.PowerProfile)}");
+    Console.WriteLine($"{T("Label_CpuGovernor", "CPU governor")}: {FormatCpuGovernorSummary(status.CpuGovernor)}");
+    Console.WriteLine($"{T("Label_BatteryChargeLimit", "Battery charge limit")}: {FormatBatteryChargeLimitSummary(status.BatteryChargeLimit)}");
+    Console.WriteLine($"{T("Label_DisplayBrightness", "Display brightness")}: {FormatDisplayBrightnessSummary(status.DisplayBrightness)}");
+    Console.WriteLine($"{T("Label_Plugins", "Plugins")}: {FormatPluginSummary(status.Plugins)}");
     Console.WriteLine($"{T("Label_Controls", "Controls")}: {FormatControlSummary(status.Controls)}");
-    Console.WriteLine($"Device pack: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
-    Console.WriteLine($"{T("Label_SupportLevel", "Support level")}: {status.SupportLevel}");
+    Console.WriteLine($"{T("Label_DevicePack", "Device pack")}: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
+    Console.WriteLine($"{T("Label_SupportLevel", "Support level")}: {LocalizeSupportLevel(status.SupportLevel)}");
     Console.WriteLine();
 
     foreach (var capability in status.Capabilities)
-        Console.WriteLine($"[{(capability.Available ? "yes" : "no ")}] {capability.Name} - {capability.Detail}");
+        Console.WriteLine($"[{FormatBoolean(capability.Available)}] {T(capability.NameKey, capability.Name)} - {T(capability.DetailKey, capability.Detail)}");
 
     return 0;
 }
@@ -81,11 +81,11 @@ static int PrintHardware()
     var hardware = CrossPlatformStatus.Create().Hardware;
 
     Console.WriteLine(T("Hardware_Title", "Hardware identity"));
-    Console.WriteLine($"Vendor: {ValueOrUnknown(hardware.Vendor)}");
-    Console.WriteLine($"Model: {ValueOrUnknown(hardware.Model)}");
-    Console.WriteLine($"Product: {ValueOrUnknown(hardware.ProductName)}");
-    Console.WriteLine($"Serial: {ValueOrUnknown(hardware.SerialNumber)}");
-    Console.WriteLine($"Source: {hardware.Source}");
+    Console.WriteLine($"{T("Label_Vendor", "Vendor")}: {ValueOrUnknown(hardware.Vendor)}");
+    Console.WriteLine($"{T("Label_Model", "Model")}: {ValueOrUnknown(hardware.Model)}");
+    Console.WriteLine($"{T("Label_Product", "Product")}: {ValueOrUnknown(hardware.ProductName)}");
+    Console.WriteLine($"{T("Label_Serial", "Serial")}: {ValueOrUnknown(hardware.SerialNumber)}");
+    Console.WriteLine($"{T("Label_Source", "Source")}: {hardware.Source}");
     return 0;
 }
 
@@ -93,36 +93,36 @@ static int PrintTelemetry()
 {
     var telemetry = CrossPlatformStatus.Create().Telemetry;
 
-    Console.WriteLine("System telemetry");
-    Console.WriteLine($"CPU: {ValueOrUnknown(telemetry.CpuModel)}");
-    Console.WriteLine($"Logical processors: {telemetry.LogicalProcessorCount?.ToString() ?? "unknown"}");
-    Console.WriteLine($"Memory total: {FormatGibibytes(telemetry.MemoryTotalGiB)}");
-    Console.WriteLine($"Memory available: {FormatGibibytes(telemetry.MemoryAvailableGiB)}");
-    Console.WriteLine($"Source: {telemetry.Source}");
+    Console.WriteLine(T("Telemetry_Title", "System telemetry"));
+    Console.WriteLine($"{T("Label_Cpu", "CPU")}: {ValueOrUnknown(telemetry.CpuModel)}");
+    Console.WriteLine($"{T("Label_LogicalProcessors", "Logical processors")}: {telemetry.LogicalProcessorCount?.ToString() ?? UnknownValue()}");
+    Console.WriteLine($"{T("Label_MemoryTotal", "Memory total")}: {FormatGibibytes(telemetry.MemoryTotalGiB)}");
+    Console.WriteLine($"{T("Label_MemoryAvailable", "Memory available")}: {FormatGibibytes(telemetry.MemoryAvailableGiB)}");
+    Console.WriteLine($"{T("Label_Source", "Source")}: {telemetry.Source}");
 
     if (telemetry.CpuFrequencies.Length > 0)
     {
-        Console.WriteLine("CPU frequencies:");
+        Console.WriteLine(T("Telemetry_CpuFrequencies", "CPU frequencies:"));
         foreach (var reading in telemetry.CpuFrequencies)
             Console.WriteLine($"  {reading.Name}: {reading.MHz:0.#} MHz ({reading.Source})");
     }
 
     if (telemetry.Temperatures.Length > 0)
     {
-        Console.WriteLine("Temperatures:");
+        Console.WriteLine(T("Telemetry_Temperatures", "Temperatures:"));
         foreach (var reading in telemetry.Temperatures)
             Console.WriteLine($"  {reading.Name}: {reading.Celsius:0.0} C ({reading.Source})");
     }
 
     if (telemetry.FanSpeeds.Length > 0)
     {
-        Console.WriteLine("Fans:");
+        Console.WriteLine(T("Telemetry_Fans", "Fans:"));
         foreach (var reading in telemetry.FanSpeeds)
             Console.WriteLine($"  {reading.Name}: {reading.Rpm} RPM ({reading.Source})");
     }
 
     foreach (var note in telemetry.Notes)
-        Console.WriteLine($"Note: {note}");
+        Console.WriteLine($"{T("Label_Note", "Note")}: {note}");
 
     return 0;
 }
@@ -131,31 +131,31 @@ static int PrintPower()
 {
     var power = CrossPlatformStatus.Create().Power;
 
-    Console.WriteLine("Power status");
-    Console.WriteLine($"Source: {power.Source}");
-    Console.WriteLine($"External power: {FormatBoolean(power.IsExternalPowerConnected)}");
-    Console.WriteLine($"Battery present: {(power.HasBattery ? "yes" : "no")}");
+    Console.WriteLine(T("Power_Title", "Power status"));
+    Console.WriteLine($"{T("Label_Source", "Source")}: {power.Source}");
+    Console.WriteLine($"{T("Label_ExternalPower", "External power")}: {FormatBoolean(power.IsExternalPowerConnected)}");
+    Console.WriteLine($"{T("Label_BatteryPresent", "Battery present")}: {FormatBoolean(power.HasBattery)}");
 
     if (power.Supplies.Length > 0)
     {
-        Console.WriteLine("Supplies:");
+        Console.WriteLine(T("Power_Supplies", "Supplies:"));
         foreach (var supply in power.Supplies)
         {
             Console.WriteLine($"  {supply.Name} ({supply.Type})");
-            Console.WriteLine($"    Status: {ValueOrUnknown(supply.Status)}");
-            Console.WriteLine($"    Charge: {FormatPercent(supply.ChargePercent)}");
-            Console.WriteLine($"    Energy: {FormatEnergy(supply.EnergyNowWh, supply.EnergyFullWh, supply.EnergyFullDesignWh)}");
-            Console.WriteLine($"    Power draw: {FormatWatts(supply.PowerDrawW)}");
-            Console.WriteLine($"    Voltage: {FormatVolts(supply.VoltageV)}");
-            Console.WriteLine($"    Cycle count: {supply.CycleCount?.ToString() ?? "unknown"}");
-            Console.WriteLine($"    Online: {FormatBoolean(supply.IsOnline)}");
-            Console.WriteLine($"    Present: {FormatBoolean(supply.IsPresent)}");
-            Console.WriteLine($"    Health: {ValueOrUnknown(supply.Health)}");
+            Console.WriteLine($"    {T("Label_Status", "Status")}: {ValueOrUnknown(supply.Status)}");
+            Console.WriteLine($"    {T("Label_Charge", "Charge")}: {FormatPercent(supply.ChargePercent)}");
+            Console.WriteLine($"    {T("Label_Energy", "Energy")}: {FormatEnergy(supply.EnergyNowWh, supply.EnergyFullWh, supply.EnergyFullDesignWh)}");
+            Console.WriteLine($"    {T("Label_PowerDraw", "Power draw")}: {FormatWatts(supply.PowerDrawW)}");
+            Console.WriteLine($"    {T("Label_Voltage", "Voltage")}: {FormatVolts(supply.VoltageV)}");
+            Console.WriteLine($"    {T("Label_CycleCount", "Cycle count")}: {supply.CycleCount?.ToString() ?? UnknownValue()}");
+            Console.WriteLine($"    {T("Label_Online", "Online")}: {FormatBoolean(supply.IsOnline)}");
+            Console.WriteLine($"    {T("Label_Present", "Present")}: {FormatBoolean(supply.IsPresent)}");
+            Console.WriteLine($"    {T("Label_Health", "Health")}: {ValueOrUnknown(supply.Health)}");
         }
     }
 
     foreach (var note in power.Notes)
-        Console.WriteLine($"Note: {note}");
+        Console.WriteLine($"{T("Label_Note", "Note")}: {note}");
 
     return 0;
 }
@@ -166,9 +166,11 @@ static int PrintOrSetPowerProfile(IReadOnlyList<string> arguments)
         return PrintPowerProfile();
 
     var result = new PowerProfileWriter(new ProcessCommandRunner()).SetProfile(arguments[0]);
-    Console.WriteLine(result.Succeeded ? "Power profile changed" : "Power profile change failed");
-    Console.WriteLine($"Profile: {result.ProfileId}");
-    Console.WriteLine($"Detail: {result.Detail}");
+    Console.WriteLine(result.Succeeded
+        ? T("PowerProfile_Changed", "Power profile changed")
+        : T("PowerProfile_ChangeFailed", "Power profile change failed"));
+    Console.WriteLine($"{T("Label_Profile", "Profile")}: {result.ProfileId}");
+    Console.WriteLine($"{T("Label_Detail", "Detail")}: {result.Detail}");
     return result.Succeeded ? 0 : 1;
 }
 
@@ -176,20 +178,20 @@ static int PrintPowerProfile()
 {
     var profile = CrossPlatformStatus.Create().PowerProfile;
 
-    Console.WriteLine("Power profile");
-    Console.WriteLine($"Source: {profile.Source}");
-    Console.WriteLine($"Active: {ValueOrUnknown(profile.ActiveProfile)}");
-    Console.WriteLine($"Can set profile: {(profile.CanSetProfile ? "yes" : "no")}");
+    Console.WriteLine(T("PowerProfile_Title", "Power profile"));
+    Console.WriteLine($"{T("Label_Source", "Source")}: {profile.Source}");
+    Console.WriteLine($"{T("Label_Active", "Active")}: {ValueOrUnknown(profile.ActiveProfile)}");
+    Console.WriteLine($"{T("Label_CanSetProfile", "Can set profile")}: {FormatBoolean(profile.CanSetProfile)}");
 
     if (profile.AvailableProfiles.Length > 0)
     {
-        Console.WriteLine("Available profiles:");
+        Console.WriteLine(T("PowerProfile_Available", "Available profiles:"));
         foreach (var option in profile.AvailableProfiles)
-            Console.WriteLine($"  [{(option.IsActive ? "yes" : "no ")}] {option.Id} - {option.DisplayName}");
+            Console.WriteLine($"  [{FormatBoolean(option.IsActive)}] {option.Id} - {option.DisplayName}");
     }
 
     foreach (var note in profile.Notes)
-        Console.WriteLine($"Note: {note}");
+        Console.WriteLine($"{T("Label_Note", "Note")}: {note}");
 
     return 0;
 }
@@ -201,27 +203,27 @@ static int PrintPlugins(IReadOnlyList<string> arguments)
         ? CrossPlatformStatus.Create().Plugins
         : new PluginDiscoveryReader(new PhysicalFileSystem(), explicitRoot).Read();
 
-    Console.WriteLine("Plugin discovery");
-    Console.WriteLine($"Source: {plugins.Source}");
-    Console.WriteLine($"Search roots: {plugins.SearchRoots.Length}");
+    Console.WriteLine(T("Plugins_Title", "Plugin discovery"));
+    Console.WriteLine($"{T("Label_Source", "Source")}: {plugins.Source}");
+    Console.WriteLine($"{T("Label_SearchRoots", "Search roots")}: {plugins.SearchRoots.Length}");
     foreach (var root in plugins.SearchRoots)
         Console.WriteLine($"  {root}");
 
-    Console.WriteLine($"Plugins: {plugins.Plugins.Length}");
+    Console.WriteLine($"{T("Label_Plugins", "Plugins")}: {plugins.Plugins.Length}");
     foreach (var plugin in plugins.Plugins)
     {
         Console.WriteLine($"  {plugin.Id} ({plugin.Version})");
-        Console.WriteLine($"    Name: {ValueOrUnknown(plugin.Name)}");
-        Console.WriteLine($"    Cross-platform candidate: {(plugin.IsCrossPlatformCandidate ? "yes" : "no")}");
-        Console.WriteLine($"    Runtime contribution: {(plugin.HasRuntimeContribution ? "yes" : "no")}");
-        Console.WriteLine($"    Optimization actions: {plugin.OptimizationActionCount}");
-        Console.WriteLine($"    Target platforms: {(plugin.TargetPlatforms.Length == 0 ? "unspecified" : string.Join(", ", plugin.TargetPlatforms))}");
-        Console.WriteLine($"    Reason: {plugin.Reason}");
-        Console.WriteLine($"    Manifest: {plugin.ManifestPath}");
+        Console.WriteLine($"    {T("Label_Name", "Name")}: {ValueOrUnknown(plugin.Name)}");
+        Console.WriteLine($"    {T("Label_CrossPlatformCandidate", "Cross-platform candidate")}: {FormatBoolean(plugin.IsCrossPlatformCandidate)}");
+        Console.WriteLine($"    {T("Label_RuntimeContribution", "Runtime contribution")}: {FormatBoolean(plugin.HasRuntimeContribution)}");
+        Console.WriteLine($"    {T("Label_OptimizationActions", "Optimization actions")}: {plugin.OptimizationActionCount}");
+        Console.WriteLine($"    {T("Label_TargetPlatforms", "Target platforms")}: {(plugin.TargetPlatforms.Length == 0 ? T("Value_Unspecified", "unspecified") : string.Join(", ", plugin.TargetPlatforms))}");
+        Console.WriteLine($"    {T("Label_Reason", "Reason")}: {plugin.Reason}");
+        Console.WriteLine($"    {T("Label_Manifest", "Manifest")}: {plugin.ManifestPath}");
     }
 
     foreach (var note in plugins.Notes)
-        Console.WriteLine($"Note: {note}");
+        Console.WriteLine($"{T("Label_Note", "Note")}: {note}");
 
     return 0;
 }
@@ -230,28 +232,28 @@ static int PrintControls()
 {
     var controls = CrossPlatformStatus.Create().Controls;
 
-    Console.WriteLine("Hardware controls");
-    Console.WriteLine($"Source: {controls.Source}");
-    Console.WriteLine($"Controls: {controls.Controls.Length}");
+    Console.WriteLine(T("Controls_Title", "Hardware controls"));
+    Console.WriteLine($"{T("Label_Source", "Source")}: {controls.Source}");
+    Console.WriteLine($"{T("Label_Controls", "Controls")}: {controls.Controls.Length}");
 
     foreach (var control in controls.Controls)
     {
         Console.WriteLine($"  {control.Id} - {control.DisplayName}");
-        Console.WriteLine($"    Kind: {control.Kind}");
-        Console.WriteLine($"    Available: {(control.IsAvailable ? "yes" : "no")}");
-        Console.WriteLine($"    Writable: {(control.IsWritable ? "yes" : "no")}");
-        Console.WriteLine($"    Current: {ValueOrUnknown(control.CurrentValue)}");
-        Console.WriteLine($"    Detail: {control.Detail}");
+        Console.WriteLine($"    {T("Label_Kind", "Kind")}: {control.Kind}");
+        Console.WriteLine($"    {T("Label_Available", "Available")}: {FormatBoolean(control.IsAvailable)}");
+        Console.WriteLine($"    {T("Label_Writable", "Writable")}: {FormatBoolean(control.IsWritable)}");
+        Console.WriteLine($"    {T("Label_Current", "Current")}: {ValueOrUnknown(control.CurrentValue)}");
+        Console.WriteLine($"    {T("Label_Detail", "Detail")}: {control.Detail}");
         if (control.Options.Length > 0)
         {
-            Console.WriteLine("    Options:");
+            Console.WriteLine($"    {T("Label_Options", "Options")}:");
             foreach (var option in control.Options)
-                Console.WriteLine($"      [{(option.IsActive ? "yes" : "no ")}] {option.Value} - {option.DisplayName}");
+                Console.WriteLine($"      [{FormatBoolean(option.IsActive)}] {option.Value} - {option.DisplayName}");
         }
     }
 
     foreach (var note in controls.Notes)
-        Console.WriteLine($"Note: {note}");
+        Console.WriteLine($"{T("Label_Note", "Note")}: {note}");
 
     return 0;
 }
@@ -260,23 +262,27 @@ static int SetControl(IReadOnlyList<string> arguments)
 {
     if (arguments.Count < 2)
     {
-        Console.Error.WriteLine("Usage: udt set <control-id> <value>");
+        Console.Error.WriteLine(T("Set_Usage", "Usage: udt set <control-id> <value>"));
         return 2;
     }
 
     var result = new HardwareControlSurfaceWriter(new PhysicalFileSystem(), new ProcessCommandRunner()).Set(arguments[0], arguments[1]);
-    Console.WriteLine(result.Succeeded ? "Control changed" : "Control change failed");
-    Console.WriteLine($"Control: {result.ControlId}");
-    Console.WriteLine($"Value: {result.Value}");
-    Console.WriteLine($"Detail: {result.Detail}");
+    Console.WriteLine(result.Succeeded
+        ? T("Control_Changed", "Control changed")
+        : T("Control_ChangeFailed", "Control change failed"));
+    Console.WriteLine($"{T("Label_Control", "Control")}: {result.ControlId}");
+    Console.WriteLine($"{T("Label_Value", "Value")}: {result.Value}");
+    Console.WriteLine($"{T("Label_Detail", "Detail")}: {result.Detail}");
     return result.Succeeded ? 0 : 1;
 }
 
 static int Elevate(IReadOnlyList<string> arguments)
 {
     var result = new ElevationLauncher().Launch(arguments);
-    Console.WriteLine(result.Succeeded ? "Elevation requested" : "Elevation request failed");
-    Console.WriteLine($"Detail: {result.Detail}");
+    Console.WriteLine(result.Succeeded
+        ? T("Elevation_Requested", "Elevation requested")
+        : T("Elevation_Failed", "Elevation request failed"));
+    Console.WriteLine($"{T("Label_Detail", "Detail")}: {result.Detail}");
     return result.Succeeded ? 0 : 1;
 }
 
@@ -284,13 +290,13 @@ static int PrintSupport()
 {
     var support = CrossPlatformStatus.Create().DeviceSupport;
 
-    Console.WriteLine("Device support");
-    Console.WriteLine($"Level: {support.SupportLevel}");
-    Console.WriteLine($"Pack: {support.DisplayName} ({support.DevicePackId})");
-    Console.WriteLine($"Reason: {support.Reason}");
-    Console.WriteLine($"Hardware controls: {(support.IsHardwareControlAvailable ? "available" : "hidden")}");
-    Console.WriteLine($"Enabled features: {string.Join(", ", support.EnabledFeatures)}");
-    Console.WriteLine($"Hidden features: {string.Join(", ", support.HiddenFeatures)}");
+    Console.WriteLine(T("Support_Title", "Device support"));
+    Console.WriteLine($"{T("Label_Level", "Level")}: {support.SupportLevel}");
+    Console.WriteLine($"{T("Label_Pack", "Pack")}: {support.DisplayName} ({support.DevicePackId})");
+    Console.WriteLine($"{T("Label_Reason", "Reason")}: {support.Reason}");
+    Console.WriteLine($"{T("Label_HardwareControls", "Hardware controls")}: {(support.IsHardwareControlAvailable ? T("Value_Available", "available") : T("Value_Hidden", "hidden"))}");
+    Console.WriteLine($"{T("Label_EnabledFeatures", "Enabled features")}: {string.Join(", ", support.EnabledFeatures)}");
+    Console.WriteLine($"{T("Label_HiddenFeatures", "Hidden features")}: {string.Join(", ", support.HiddenFeatures)}");
     return 0;
 }
 
@@ -298,19 +304,44 @@ static int PrintDoctor()
 {
     var report = CrossPlatformStatus.Create().Doctor;
 
-    Console.WriteLine("Doctor report");
-    Console.WriteLine($"Overall: {report.OverallStatus}");
+    Console.WriteLine(T("Doctor_Title", "Doctor report"));
+    Console.WriteLine($"{T("Label_Overall", "Overall")}: {report.OverallStatus}");
     foreach (var check in report.Checks)
-        Console.WriteLine($"[{check.Status.ToString().ToLowerInvariant()}] {check.Name} - {check.Detail}");
+        Console.WriteLine($"[{FormatDoctorStatus(check.Status)}] {LocalizeDoctorCheckName(check.Name)} - {check.LocalizedDetail?.Invoke() ?? check.Detail}");
 
     return report.OverallStatus == "fail" ? 1 : 0;
 }
+
+static string FormatDoctorStatus(DoctorCheckStatus status) => status switch
+{
+    DoctorCheckStatus.Pass => T("Doctor_Status_Pass", "pass"),
+    DoctorCheckStatus.Warn => T("Doctor_Status_Warn", "warn"),
+    DoctorCheckStatus.Fail => T("Doctor_Status_Fail", "fail"),
+    _ => status.ToString().ToLowerInvariant(),
+};
+
+static string LocalizeDoctorCheckName(string name) => name switch
+{
+    "Runtime" => T("Doctor_Check_Runtime", name),
+    "Hardware identity" => T("Doctor_Check_HardwareIdentity", name),
+    "Read-only telemetry" => T("Doctor_Check_ReadOnlyTelemetry", name),
+    "Power diagnostics" => T("Doctor_Check_PowerDiagnostics", name),
+    "Power profile" => T("Doctor_Check_PowerProfile", name),
+    "CPU governor" => T("Doctor_Check_CpuGovernor", name),
+    "Battery charge limit" => T("Doctor_Check_BatteryChargeLimit", name),
+    "Display brightness" => T("Doctor_Check_DisplayBrightness", name),
+    "Plugin manifests" => T("Doctor_Check_PluginManifests", name),
+    "Control surface" => T("Doctor_Check_ControlSurface", name),
+    "Device support" => T("Doctor_Check_DeviceSupport", name),
+    "Hardware controls" => T("Doctor_Check_HardwareControls", name),
+    _ => name,
+};
 
 static int PrintHelp()
 {
     Console.WriteLine(T("Help_Title", "Cross-platform diagnostics"));
     Console.WriteLine();
-    Console.WriteLine("Usage:");
+    Console.WriteLine(T("Help_Usage", "Usage:"));
     Console.WriteLine($"  udt status    {T("Help_Status", "Print human-readable platform support status.")}");
     Console.WriteLine($"  udt json      {T("Help_Json", "Print platform support status as JSON.")}");
     Console.WriteLine($"  udt hardware  {T("Help_Hardware", "Print basic hardware identity for device-pack matching.")}");
@@ -330,13 +361,26 @@ static int PrintHelp()
     return 0;
 }
 
+static string LocalizeSupportLevel(string value) => value switch
+{
+    "Windows desktop app and full hardware-control stack are available." =>
+        T("SupportLevel_Windows", value),
+    "Basic cross-platform diagnostics are available; vendor-specific hardware control is not enabled on this platform." =>
+        T("SupportLevel_CrossPlatform", value),
+    "Unsupported OS; diagnostics may be incomplete." =>
+        T("SupportLevel_Unsupported", value),
+    _ => value,
+};
+
 static string FormatHardwareSummary(HardwareIdentity hardware)
 {
     var values = new[] { hardware.Vendor, hardware.Model }
         .Where(value => !string.IsNullOrWhiteSpace(value))
         .ToArray();
 
-    return values.Length == 0 ? $"unknown ({hardware.Source})" : $"{string.Join(' ', values)} ({hardware.Source})";
+    return values.Length == 0
+        ? T("Summary_UnknownSource", "unknown ({0})", hardware.Source)
+        : T("Summary_WithSource", "{0} ({1})", string.Join(' ', values), hardware.Source);
 }
 
 static string FormatTelemetrySummary(SystemTelemetry telemetry)
@@ -345,15 +389,17 @@ static string FormatTelemetrySummary(SystemTelemetry telemetry)
     if (!string.IsNullOrWhiteSpace(telemetry.CpuModel))
         parts.Add(telemetry.CpuModel);
     if (telemetry.MemoryTotalGiB is not null)
-        parts.Add($"{telemetry.MemoryTotalGiB:0.##} GiB RAM");
+        parts.Add(T("Telemetry_MemorySummary", "{0:0.##} GiB RAM", telemetry.MemoryTotalGiB));
     if (telemetry.CpuFrequencies.Length > 0)
-        parts.Add($"{telemetry.CpuFrequencies.Length} CPU frequency readings");
+        parts.Add(T("Telemetry_FrequencySummary", "{0} CPU frequency readings", telemetry.CpuFrequencies.Length));
     if (telemetry.Temperatures.Length > 0)
-        parts.Add($"{telemetry.Temperatures.Length} temperature readings");
+        parts.Add(T("Telemetry_TemperatureSummary", "{0} temperature readings", telemetry.Temperatures.Length));
     if (telemetry.FanSpeeds.Length > 0)
-        parts.Add($"{telemetry.FanSpeeds.Length} fan readings");
+        parts.Add(T("Telemetry_FanSummary", "{0} fan readings", telemetry.FanSpeeds.Length));
 
-    return parts.Count == 0 ? $"unknown ({telemetry.Source})" : $"{string.Join(", ", parts)} ({telemetry.Source})";
+    return parts.Count == 0
+        ? T("Summary_UnknownSource", "unknown ({0})", telemetry.Source)
+        : T("Summary_WithSource", "{0} ({1})", string.Join(", ", parts), telemetry.Source);
 }
 
 static string FormatPowerSummary(PowerStatus power)
@@ -365,85 +411,103 @@ static string FormatPowerSummary(PowerStatus power)
         var batteryParts = new List<string> { ValueOrUnknown(battery.Status) };
         if (battery.ChargePercent is not null)
             batteryParts.Add($"{battery.ChargePercent:0.#}%");
-        parts.Add($"battery {string.Join(' ', batteryParts.Where(part => !string.IsNullOrWhiteSpace(part)))}");
+        parts.Add(T("Power_BatterySummary", "battery {0}", string.Join(' ', batteryParts.Where(part => !string.IsNullOrWhiteSpace(part)))));
     }
 
     if (power.IsExternalPowerConnected is not null)
-        parts.Add(power.IsExternalPowerConnected.Value ? "external power connected" : "external power offline");
+        parts.Add(power.IsExternalPowerConnected.Value
+            ? T("Power_ExternalConnected", "external power connected")
+            : T("Power_ExternalOffline", "external power offline"));
 
-    return parts.Count == 0 ? $"unknown ({power.Source})" : $"{string.Join(", ", parts)} ({power.Source})";
+    return parts.Count == 0
+        ? T("Summary_UnknownSource", "unknown ({0})", power.Source)
+        : T("Summary_WithSource", "{0} ({1})", string.Join(", ", parts), power.Source);
 }
 
 static string FormatPowerProfileSummary(PowerProfileStatus profile)
 {
     if (!string.IsNullOrWhiteSpace(profile.ActiveProfile))
-        return $"{profile.ActiveProfile} ({profile.Source})";
+        return T("Summary_WithSource", "{0} ({1})", profile.ActiveProfile, profile.Source);
 
-    return $"unknown ({profile.Source})";
+    return T("Summary_UnknownSource", "unknown ({0})", profile.Source);
 }
 
 static string FormatCpuGovernorSummary(CpuGovernorStatus governor)
 {
     if (!string.IsNullOrWhiteSpace(governor.ActiveGovernor))
-        return $"{governor.ActiveGovernor} across {governor.Policies.Length} policies ({governor.Source})";
+        return T("CpuGovernor_Summary", "{0} across {1} policies ({2})",
+            governor.ActiveGovernor, governor.Policies.Length, governor.Source);
 
-    return $"unknown ({governor.Source})";
+    return T("Summary_UnknownSource", "unknown ({0})", governor.Source);
 }
 
 static string FormatBatteryChargeLimitSummary(BatteryChargeLimitStatus chargeLimit)
 {
     var device = chargeLimit.Devices.FirstOrDefault();
     return device?.EndThreshold is null
-        ? $"unknown ({chargeLimit.Source})"
-        : $"{device.EndThreshold}% on {device.Id} ({chargeLimit.Source})";
+        ? T("Summary_UnknownSource", "unknown ({0})", chargeLimit.Source)
+        : T("BatteryChargeLimit_Summary", "{0}% on {1} ({2})", device.EndThreshold, device.Id, chargeLimit.Source);
 }
 
 static string FormatDisplayBrightnessSummary(DisplayBrightnessStatus brightness)
 {
     var device = brightness.Devices.FirstOrDefault();
     return device is null
-        ? $"unknown ({brightness.Source})"
-        : $"{device.Percent}% on {device.Id} ({brightness.Source})";
+        ? T("Summary_UnknownSource", "unknown ({0})", brightness.Source)
+        : T("DisplayBrightness_Summary", "{0}% on {1} ({2})", device.Percent, device.Id, brightness.Source);
 }
 
 static string FormatPluginSummary(PluginDiscoveryReport plugins)
 {
     var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
     return plugins.Plugins.Length == 0
-        ? $"none found ({plugins.Source})"
-        : $"{plugins.Plugins.Length} manifests, {candidates} cross-platform candidates ({plugins.Source})";
+        ? T("Plugins_NoneFound", "none found ({0})", plugins.Source)
+        : T("Plugins_Summary", "{0} manifests, {1} cross-platform candidates ({2})",
+            plugins.Plugins.Length, candidates, plugins.Source);
 }
 
 static string FormatControlSummary(HardwareControlSurface controls)
 {
     var writable = controls.Controls.Count(control => control.IsWritable);
     var available = controls.Controls.Count(control => control.IsAvailable);
-    return $"{available} available, {writable} writable ({controls.Source})";
+    return T("Controls_Summary", "{0} available, {1} writable ({2})", available, writable, controls.Source);
 }
 
-static string ValueOrUnknown(string value) => string.IsNullOrWhiteSpace(value) ? "unknown" : value;
+static string UnknownValue() => T("Value_Unknown", "unknown");
 
-static string FormatGibibytes(double? value) => value is null ? "unknown" : $"{value:0.##} GiB";
+static string ValueOrUnknown(string value) => string.IsNullOrWhiteSpace(value) ? UnknownValue() : value;
 
-static string FormatPercent(double? value) => value is null ? "unknown" : $"{value:0.#}%";
+static string FormatGibibytes(double? value) => value is null
+    ? UnknownValue()
+    : T("Format_Gibibytes", "{0:0.##} GiB", value);
 
-static string FormatWatts(double? value) => value is null ? "unknown" : $"{value:0.##} W";
+static string FormatPercent(double? value) => value is null
+    ? UnknownValue()
+    : T("Format_Percent", "{0:0.#}%", value);
 
-static string FormatVolts(double? value) => value is null ? "unknown" : $"{value:0.##} V";
+static string FormatWatts(double? value) => value is null
+    ? UnknownValue()
+    : T("Format_Watts", "{0:0.##} W", value);
 
-static string FormatBoolean(bool? value) => value is null ? "unknown" : value.Value ? "yes" : "no";
+static string FormatVolts(double? value) => value is null
+    ? UnknownValue()
+    : T("Format_Volts", "{0:0.##} V", value);
+
+static string FormatBoolean(bool? value) => value is null
+    ? UnknownValue()
+    : value.Value ? T("Value_Yes", "yes") : T("Value_No", "no");
 
 static string FormatEnergy(double? nowWh, double? fullWh, double? designWh)
 {
     var parts = new List<string>();
     if (nowWh is not null)
-        parts.Add($"{nowWh:0.##} Wh now");
+        parts.Add(T("Format_EnergyNow", "{0:0.##} Wh now", nowWh));
     if (fullWh is not null)
-        parts.Add($"{fullWh:0.##} Wh full");
+        parts.Add(T("Format_EnergyFull", "{0:0.##} Wh full", fullWh));
     if (designWh is not null)
-        parts.Add($"{designWh:0.##} Wh design");
+        parts.Add(T("Format_EnergyDesign", "{0:0.##} Wh design", designWh));
 
-    return parts.Count == 0 ? "unknown" : string.Join(", ", parts);
+    return parts.Count == 0 ? UnknownValue() : string.Join(", ", parts);
 }
 
 static int PrintUnknownCommand(string command)
@@ -532,47 +596,72 @@ internal sealed record CrossPlatformStatus(
 
     private static CapabilityStatus[] BuildCapabilities(bool isWindows, bool isMacOS, bool isLinux) =>
     [
-        new("Cross-platform CLI", true, "This net10.0 entry point runs without WindowsDesktop, WPF, WMI, registry, or Win32 APIs."),
-        new("Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
-        new("Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
-        new("Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, frequency, and safe temperature/fan telemetry where available."),
-        new("Power diagnostics", true, "Reads Linux power_supply or macOS pmset battery and external power status without changing hardware state."),
-        new("Platform power profiles", isMacOS || isLinux, isLinux
-            ? "Can inspect and set Linux power-profiles-daemon profiles through powerprofilesctl."
-            : isMacOS
-                ? "Can inspect and set macOS low power mode through pmset."
-                : "Use the Windows desktop app for Windows power mode and Lenovo thermal mode integration."),
-        new("CPU governor", isLinux, isLinux
-            ? "Can inspect and set Linux CPU frequency governors through /sys/devices/system/cpu."
-            : "Linux CPU governor control is not available on this platform."),
-        new("Battery charge limit", isLinux, isLinux
-            ? "Can inspect and set Linux battery charge thresholds through /sys/class/power_supply."
-            : "Linux battery charge threshold control is not available on this platform."),
-        new("Display brightness", isLinux, isLinux
-            ? "Can inspect and set Linux backlight brightness through /sys/class/backlight."
-            : "Linux backlight control is not available on this platform."),
-        new("Plugin manifest discovery", true, "Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies."),
-        new("Cross-platform control surface", true, "Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface."),
-        new("Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
-        new("Windows hardware controls", isWindows, isWindows
-            ? "Use the Windows desktop app or existing udt-cli.exe CLI for Lenovo hardware controls."
-            : "Windows-only controls are intentionally hidden on macOS/Linux."),
-        new("Plugin runtime", isWindows, isWindows
-            ? "Windows plugin workflows remain available in the desktop app."
-            : "Cross-platform plugin loading is a future expansion point and is not enabled yet."),
-        new("Linux diagnostics", isLinux, isLinux
-            ? "Running on Linux; safe diagnostics are enabled."
-            : "Not running on Linux."),
-        new("macOS diagnostics", isMacOS, isMacOS
-            ? "Running on macOS; safe diagnostics are enabled."
-            : "Not running on macOS.")
+        Capability("CrossPlatformCli", "Cross-platform CLI", true, "This net10.0 entry point runs without WindowsDesktop, WPF, WMI, registry, or Win32 APIs."),
+        Capability("MachineDiagnostics", "Machine diagnostics", true, "Reports OS, architecture, machine name, and .NET runtime."),
+        Capability("HardwareIdentity", "Hardware identity", true, "Reads Linux DMI or macOS system profiler identity when available; avoids privileged hardware writes."),
+        Capability("ReadOnlyTelemetry", "Read-only telemetry", true, "Reads Linux procfs/sysfs or macOS sysctl CPU, memory, frequency, and safe temperature/fan telemetry where available."),
+        Capability("PowerDiagnostics", "Power diagnostics", true, "Reads Linux power_supply or macOS pmset battery and external power status without changing hardware state."),
+        Capability("PlatformPowerProfiles", "Platform power profiles", isMacOS || isLinux,
+            isLinux
+                ? "Can inspect and set Linux power-profiles-daemon profiles through powerprofilesctl."
+                : isMacOS
+                    ? "Can inspect and set macOS low power mode through pmset."
+                    : "Use the Windows desktop app for Windows power mode and Lenovo thermal mode integration.",
+            isLinux ? "Capability_PlatformPowerProfiles_Linux_Detail" : isMacOS ? "Capability_PlatformPowerProfiles_Mac_Detail" : "Capability_PlatformPowerProfiles_Windows_Detail"),
+        Capability("CpuGovernor", "CPU governor", isLinux,
+            isLinux
+                ? "Can inspect and set Linux CPU frequency governors through /sys/devices/system/cpu."
+                : "Linux CPU governor control is not available on this platform.",
+            isLinux ? "Capability_CpuGovernor_Linux_Detail" : "Capability_CpuGovernor_Other_Detail"),
+        Capability("BatteryChargeLimit", "Battery charge limit", isLinux,
+            isLinux
+                ? "Can inspect and set Linux battery charge thresholds through /sys/class/power_supply."
+                : "Linux battery charge threshold control is not available on this platform.",
+            isLinux ? "Capability_BatteryChargeLimit_Linux_Detail" : "Capability_BatteryChargeLimit_Other_Detail"),
+        Capability("DisplayBrightness", "Display brightness", isLinux,
+            isLinux
+                ? "Can inspect and set Linux backlight brightness through /sys/class/backlight."
+                : "Linux backlight control is not available on this platform.",
+            isLinux ? "Capability_DisplayBrightness_Linux_Detail" : "Capability_DisplayBrightness_Other_Detail"),
+        Capability("PluginManifestDiscovery", "Plugin manifest discovery", true, "Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies."),
+        Capability("CrossPlatformControlSurface", "Cross-platform control surface", true, "Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface."),
+        Capability("BasicModeCompatibility", "Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
+        Capability("WindowsHardwareControls", "Windows hardware controls", isWindows,
+            isWindows
+                ? "Use the Windows desktop app or existing udt-cli.exe CLI for Lenovo hardware controls."
+                : "Windows-only controls are intentionally hidden on macOS/Linux.",
+            isWindows ? "Capability_WindowsHardwareControls_Windows_Detail" : "Capability_WindowsHardwareControls_Other_Detail"),
+        Capability("PluginRuntime", "Plugin runtime", isWindows,
+            isWindows
+                ? "Windows plugin workflows remain available in the desktop app."
+                : "Cross-platform plugin loading is a future expansion point and is not enabled yet.",
+            isWindows ? "Capability_PluginRuntime_Windows_Detail" : "Capability_PluginRuntime_Other_Detail"),
+        Capability("LinuxDiagnostics", "Linux diagnostics", isLinux,
+            isLinux ? "Running on Linux; safe diagnostics are enabled." : "Not running on Linux.",
+            isLinux ? "Capability_LinuxDiagnostics_Linux_Detail" : "Capability_LinuxDiagnostics_Other_Detail"),
+        Capability("MacOsDiagnostics", "macOS diagnostics", isMacOS,
+            isMacOS ? "Running on macOS; safe diagnostics are enabled." : "Not running on macOS.",
+            isMacOS ? "Capability_MacOsDiagnostics_Mac_Detail" : "Capability_MacOsDiagnostics_Other_Detail")
     ];
+
+    private static CapabilityStatus Capability(
+        string key,
+        string name,
+        bool available,
+        string detail,
+        string? detailKey = null) =>
+        new(name, available, detail, $"Capability_{key}_Name", detailKey ?? $"Capability_{key}_Detail");
 
     private static string GetVersion() =>
         typeof(CrossPlatformStatus).Assembly.GetName().Version?.ToString() ?? "unknown";
 }
 
-internal sealed record CapabilityStatus(string Name, bool Available, string Detail);
+internal sealed record CapabilityStatus(
+    string Name,
+    bool Available,
+    string Detail,
+    [property: JsonIgnore] string NameKey,
+    [property: JsonIgnore] string DetailKey);
 
 internal sealed record LanguageArguments(CultureInfo? OverrideCulture, IReadOnlyList<string> Remaining)
 {
@@ -613,5 +702,17 @@ internal static class CrossPlatformStrings
 
     static CrossPlatformStrings() => Localizer.CurrentCulture = LocalizationRuntime.CurrentCulture;
 
-    public static string Get(string key, string fallback) => Localizer.GetString(key, fallback);
+    public static string Get(string key, string fallback)
+    {
+        Localizer.CurrentCulture = LocalizationRuntime.CurrentCulture;
+        return Localizer.GetString(key, fallback);
+    }
+
+    public static string Format(string key, string fallback, params object[] args)
+    {
+        var template = Get(key, fallback);
+        return args.Length == 0
+            ? template
+            : string.Format(Localizer.CurrentCulture, template, args);
+    }
 }

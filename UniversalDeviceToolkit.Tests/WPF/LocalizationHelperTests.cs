@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FluentAssertions;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
 using Xunit;
@@ -58,6 +59,20 @@ public sealed class LocalizationHelperTests : IDisposable
         File.Exists(langPath).Should().BeTrue();
         (await File.ReadAllTextAsync(langPath)).Trim().Should().Be("de");
         CultureInfo.CurrentUICulture.Name.Should().Be("de");
+        LocalizationRuntime.CurrentCulture.Name.Should().Be("de");
+    }
+
+    [Theory]
+    [InlineData("en-US", "en")]
+    [InlineData("zh-TW", "zh-Hant")]
+    public async Task SetLanguageAsync_ShouldPersistCanonicalCultureName(string requested, string expected)
+    {
+        await LocalizationHelper.SetLanguageAsync(new CultureInfo(requested));
+
+        var langPath = Path.Combine(Folders.AppData, "lang");
+        (await File.ReadAllTextAsync(langPath)).Trim().Should().Be(expected);
+        CultureInfo.CurrentUICulture.Name.Should().Be(expected);
+        LocalizationRuntime.CurrentCulture.Name.Should().Be(expected);
     }
 
     [SkippableFact]
@@ -119,6 +134,7 @@ public sealed class LocalizationHelperTests : IDisposable
             System.Threading.Thread.CurrentThread.CurrentUICulture = english;
             CultureInfo.DefaultThreadCurrentCulture = english;
             CultureInfo.DefaultThreadCurrentUICulture = english;
+            LocalizationRuntime.SetCultureAsync("en", persist: false).GetAwaiter().GetResult();
             LocalizationHelper.ApplyCoreResourceCultures(english);
             UnitTestBase.ForceKnownResourceCultures(english);
         }

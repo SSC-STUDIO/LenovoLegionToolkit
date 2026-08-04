@@ -75,24 +75,24 @@ public sealed class WindowsPlatformServices : IPlatformServices
 
             var featureGroups = new List<FeatureGroupItem>
             {
-                new("Device", machine.Model, machine.MachineType),
-                new("BIOS", machine.BiosVersionRaw ?? "Unknown", machine.Generation > 0 ? $"Gen {machine.Generation}" : "Unknown"),
-                new("Power Mode", "System power management",
+                new(DashboardLocalization.Get("Dashboard_Feature_Device", "Device"), machine.Model, machine.MachineType),
+                new(DashboardLocalization.Get("Dashboard_Feature_Bios", "BIOS"), machine.BiosVersionRaw ?? Unknown(), machine.Generation > 0 ? DashboardLocalization.Format("Dashboard_Status_Generation", "Gen {0}", machine.Generation) : Unknown()),
+                new(DashboardLocalization.Get("Dashboard_Feature_PowerMode", "Power Mode"), DashboardLocalization.Get("Dashboard_Description_PowerManagement", "System power management"),
                     string.Join(", ", machine.SupportedPowerModes)),
             };
 
             if (UniversalDeviceToolkit.Lib.System.Battery.IsBatteryMonitoringSupported())
             {
                 var battery = UniversalDeviceToolkit.Lib.System.Battery.GetBatteryInformation();
-                featureGroups.Add(new("Battery", "Battery management",
-                    battery.IsCharging ? "Charging" : battery.BatteryPercentage > 0 ? $"{battery.BatteryPercentage}%" : "Monitoring"));
+                featureGroups.Add(new(DashboardLocalization.Get("Dashboard_Feature_Battery", "Battery"), DashboardLocalization.Get("Dashboard_Description_BatteryManagement", "Battery management"),
+                    battery.IsCharging ? DashboardLocalization.Get("Dashboard_Status_Charging", "Charging") : battery.BatteryPercentage > 0 ? $"{battery.BatteryPercentage}%" : DashboardLocalization.Get("Dashboard_Status_Monitoring", "Monitoring")));
             }
             else
             {
-                featureGroups.Add(new("Battery", "Battery management", "Not supported"));
+                featureGroups.Add(new(DashboardLocalization.Get("Dashboard_Feature_Battery", "Battery"), DashboardLocalization.Get("Dashboard_Description_BatteryManagement", "Battery management"), NotSupported()));
             }
 
-            featureGroups.Add(new("Keyboard", "Backlight control", await DetectKeyboardBacklightAsync().ConfigureAwait(false)));
+            featureGroups.Add(new(DashboardLocalization.Get("Dashboard_Feature_Keyboard", "Keyboard"), DashboardLocalization.Get("Dashboard_Description_BacklightControl", "Backlight control"), await DetectKeyboardBacklightAsync().ConfigureAwait(false)));
 
             return featureGroups;
         }
@@ -108,18 +108,18 @@ public sealed class WindowsPlatformServices : IPlatformServices
         {
             var spectrum = UniversalDeviceToolkit.Lib.IoCContainer.Resolve<SpectrumKeyboardBacklightController>();
             if (await spectrum.IsSupportedAsync().ConfigureAwait(false))
-                return "Spectrum";
+                return DashboardLocalization.Get("Dashboard_Status_Spectrum", "Spectrum");
 
             var rgb = UniversalDeviceToolkit.Lib.IoCContainer.Resolve<RGBKeyboardBacklightController>();
             if (await rgb.IsSupportedAsync().ConfigureAwait(false))
-                return "Per-key";
+                return DashboardLocalization.Get("Dashboard_Status_PerKey", "Per-key");
 
-            return "Not supported";
+            return NotSupported();
         }
         catch (Exception ex)
         {
             Log.Instance.Error("Failed to detect keyboard backlight type.", ex);
-            return "Not supported";
+            return NotSupported();
         }
     }
 
@@ -143,11 +143,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             var battery = UniversalDeviceToolkit.Lib.System.Battery.GetBatteryInformation();
             var readings = new List<SensorReadingItem>();
 
-            readings.Add(new("Battery Charge", battery.BatteryPercentage.ToString() + "%"));
-            readings.Add(new("Battery Status", battery.IsCharging ? "Charging" : "Discharging"));
-            readings.Add(new("Min Discharge Rate", battery.MinDischargeRate.ToString() + " mW"));
-            readings.Add(new("Max Discharge Rate", battery.MaxDischargeRate.ToString() + " mW"));
-            readings.Add(new("Cycle Count", battery.CycleCount.ToString()));
+            readings.Add(new(DashboardLocalization.Get("Dashboard_Sensor_BatteryCharge", "Battery Charge"), battery.BatteryPercentage.ToString() + "%"));
+            readings.Add(new(DashboardLocalization.Get("Dashboard_Sensor_BatteryStatus", "Battery Status"), battery.IsCharging ? DashboardLocalization.Get("Dashboard_Status_Charging", "Charging") : DashboardLocalization.Get("Dashboard_Status_Discharging", "Discharging")));
+            readings.Add(new(DashboardLocalization.Get("Dashboard_Sensor_MinDischargeRate", "Min Discharge Rate"), battery.MinDischargeRate.ToString() + " mW"));
+            readings.Add(new(DashboardLocalization.Get("Dashboard_Sensor_MaxDischargeRate", "Max Discharge Rate"), battery.MaxDischargeRate.ToString() + " mW"));
+            readings.Add(new(DashboardLocalization.Get("Dashboard_Sensor_CycleCount", "Cycle Count"), battery.CycleCount.ToString()));
 
             return Task.FromResult<IReadOnlyList<SensorReadingItem>>(readings);
         }
@@ -156,6 +156,12 @@ public sealed class WindowsPlatformServices : IPlatformServices
             return new SamplePlatformServices().GetSensorReadingsAsync();
         }
     }
+
+    private static string Unknown() =>
+        DashboardLocalization.Get("Dashboard_Status_Unknown", "Unknown");
+
+    private static string NotSupported() =>
+        DashboardLocalization.Get("Dashboard_Status_NotSupported", "Not supported");
 }
 
 #endif

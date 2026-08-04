@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Globalization;
 using System.Resources;
+using System.Text.RegularExpressions;
 using System.Xml;
 using FluentAssertions;
 using UniversalDeviceToolkit.Abstractions.Localization;
@@ -147,6 +148,45 @@ public sealed class LocalizationRuntimeTests : IDisposable
             chinese[key].Should().NotBeNullOrWhiteSpace($"zh-Hans key '{key}' must have a value");
             ExtractFormatIndexes(chinese[key]).Should().BeEquivalentTo(ExtractFormatIndexes(neutral[key]));
         }
+    }
+
+    [Fact]
+    public void AvaloniaXaml_FixedUserVisibleText_UsesLocalizationOrBinding()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var pages = Directory.EnumerateFiles(
+                Path.Combine(root, "UniversalDeviceToolkit.Avalonia"),
+                "*.axaml",
+                SearchOption.AllDirectories)
+            .Where(path => !path.Contains(Path.DirectorySeparatorChar + "obj" + Path.DirectorySeparatorChar,
+                StringComparison.OrdinalIgnoreCase));
+        var attributePattern = new Regex(
+            "\\b(Text|Content|Header|ToolTip|Watermark)=\"([^\"]*)\"",
+            RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        var violations = new List<string>();
+
+        foreach (var path in pages)
+        {
+            var source = File.ReadAllText(path);
+            foreach (Match match in attributePattern.Matches(source))
+            {
+                var value = match.Groups[2].Value.Trim();
+                if (value.Length == 0 || value.StartsWith("{", StringComparison.Ordinal))
+                    continue;
+
+                // Values such as "60 Hz" describe a numeric choice and do not need translation.
+                if (value.All(character => char.IsDigit(character) || char.IsWhiteSpace(character)
+                    || character is '%' or '.' or ':' or '/' or '+' or '-'
+                    || char.IsLetter(character) && value.Any(char.IsDigit)))
+                {
+                    continue;
+                }
+
+                violations.Add($"{Path.GetRelativePath(root, path)}: {match.Groups[1].Value}=\"{value}\"");
+            }
+        }
+
+        violations.Should().BeEmpty("fixed Avalonia UI text must use {local:Loc ...} or a binding");
     }
 
     public void Dispose()

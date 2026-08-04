@@ -15,13 +15,13 @@ public sealed class PlatformCapabilityServices(PlatformServices capabilities) : 
         var platformName = capabilities.PlatformName;
         IReadOnlyList<FeatureGroupItem> groups =
         [
-            CreateFeature("GPU", capabilities.SupportsGpuManagement),
-            CreateFeature("Fan Control", capabilities.SupportsFanControl),
-            CreateFeature("Keyboard", capabilities.SupportsKeyboardBacklight),
-            CreateFeature("Battery", capabilities.SupportsBatteryManagement),
-            CreateFeature("Display", capabilities.SupportsDisplayControl),
-            CreateFeature("Power Profile", capabilities.SupportsPowerProfile),
-            new("System Telemetry", platformName, Status(capabilities.SupportsSystemTelemetry)),
+            CreateFeature("Dashboard_Feature_GPU", "GPU", capabilities.SupportsGpuManagement),
+            CreateFeature("Dashboard_Feature_FanControl", "Fan Control", capabilities.SupportsFanControl),
+            CreateFeature("Dashboard_Feature_Keyboard", "Keyboard", capabilities.SupportsKeyboardBacklight),
+            CreateFeature("Dashboard_Feature_Battery", "Battery", capabilities.SupportsBatteryManagement),
+            CreateFeature("Dashboard_Feature_Display", "Display", capabilities.SupportsDisplayControl),
+            CreateFeature("Dashboard_Feature_PowerProfile", "Power Profile", capabilities.SupportsPowerProfile),
+            new(DashboardLocalization.Get("Dashboard_Feature_SystemTelemetry", "System Telemetry"), platformName, Status(capabilities.SupportsSystemTelemetry)),
         ];
 
         return Task.FromResult(groups);
@@ -32,12 +32,12 @@ public sealed class PlatformCapabilityServices(PlatformServices capabilities) : 
         var status = Status(capabilities.SupportsSystemTelemetry);
         IReadOnlyList<SensorReadingItem> readings =
         [
-            new("CPU Temperature", status),
-            new("GPU Temperature", capabilities.SupportsGpuManagement ? status : "Not supported"),
-            new("CPU Usage", status),
-            new("Memory Usage", status),
-            new("Fan Speed", capabilities.SupportsFanControl ? status : "Not supported"),
-            new("Battery", capabilities.SupportsBatteryManagement ? status : "Not supported"),
+            new(DashboardLocalization.Get("Dashboard_Sensor_CpuTemperature", "CPU Temperature"), status),
+            new(DashboardLocalization.Get("Dashboard_Sensor_GpuTemperature", "GPU Temperature"), capabilities.SupportsGpuManagement ? status : NotSupported()),
+            new(DashboardLocalization.Get("Dashboard_Sensor_CpuUsage", "CPU Usage"), status),
+            new(DashboardLocalization.Get("Dashboard_Sensor_MemoryUsage", "Memory Usage"), status),
+            new(DashboardLocalization.Get("Dashboard_Sensor_FanSpeed", "Fan Speed"), capabilities.SupportsFanControl ? status : NotSupported()),
+            new(DashboardLocalization.Get("Dashboard_Sensor_Battery", "Battery"), capabilities.SupportsBatteryManagement ? status : NotSupported()),
         ];
 
         return Task.FromResult(readings);
@@ -45,8 +45,13 @@ public sealed class PlatformCapabilityServices(PlatformServices capabilities) : 
 
     public Task<bool> IsSupportedLegionMachineAsync() => Task.FromResult(false);
 
-    private static FeatureGroupItem CreateFeature(string title, bool supported) =>
-        new(title, "Platform capability", Status(supported));
+    private static FeatureGroupItem CreateFeature(string key, string fallback, bool supported) =>
+        new(DashboardLocalization.Get(key, fallback), DashboardLocalization.Get("Dashboard_Description_PlatformCapability", "Platform capability"), Status(supported));
 
-    private static string Status(bool supported) => supported ? "Available" : "Not supported";
+    private static string Status(bool supported) => supported
+        ? DashboardLocalization.Get("Dashboard_Status_Available", "Available")
+        : NotSupported();
+
+    private static string NotSupported() =>
+        DashboardLocalization.Get("Dashboard_Status_NotSupported", "Not supported");
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
@@ -71,16 +72,18 @@ public class PluginMetadata
         CultureInfo culture,
         out T? value)
     {
-        if (dictionary.TryGetValue(culture.Name, out var exact))
+        foreach (var candidate in LocalizationCatalog.GetFallbackChain(culture))
         {
-            value = exact;
-            return true;
+            if (dictionary.TryGetValue(candidate.Name, out var localized))
+            {
+                value = localized;
+                return true;
+            }
         }
 
-        if (culture.Parent != null && !string.IsNullOrEmpty(culture.Parent.Name) &&
-            dictionary.TryGetValue(culture.Parent.Name, out var parent))
+        if (dictionary.TryGetValue("default", out var defaultValue))
         {
-            value = parent;
+            value = defaultValue;
             return true;
         }
 

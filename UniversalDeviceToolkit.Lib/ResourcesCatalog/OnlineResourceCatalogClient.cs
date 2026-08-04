@@ -34,8 +34,8 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
         if (!string.IsNullOrWhiteSpace(catalogUrl))
         {
             if (!Uri.TryCreate(catalogUrl, UriKind.Absolute, out var uri) ||
-                uri.Scheme != Uri.UriSchemeHttps ||
-                !IsAllowedCatalogHost(uri.Host))
+                (uri.Scheme != Uri.UriSchemeHttps && !IsAllowedTestCatalogUri(uri)) ||
+                (!IsAllowedCatalogHost(uri.Host) && !IsAllowedTestCatalogUri(uri)))
             {
                 catalogUrl = null;
             }
@@ -62,6 +62,16 @@ public sealed class OnlineResourceCatalogClient(HttpClientFactory httpClientFact
             return true;
 #endif
         return AllowedCatalogHosts.Contains(host);
+    }
+
+    private static bool IsAllowedTestCatalogUri(Uri uri)
+    {
+#if UDT_TEST_HOOKS
+        // The local mock catalog is intentionally available only to test builds.
+        return uri.Scheme == Uri.UriSchemeHttp && uri.IsLoopback;
+#else
+        return false;
+#endif
     }
 
     public async Task<OnlineResourceCatalog> GetCatalogAsync(CancellationToken token = default)

@@ -28,8 +28,18 @@ public class OptimizationCategoryExtenderTests : TemporaryFileTestBase
 
     public override void Dispose()
     {
-        Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _originalAppDataOverride);
-        base.Dispose();
+        try
+        {
+            // The extender logs provider failures through the process singleton.
+            // Release the async file sink before the temporary AppData directory
+            // is removed by TemporaryFileTestBase.
+            Log.ResetForTests();
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _originalAppDataOverride);
+            base.Dispose();
+        }
     }
 
     [Fact]

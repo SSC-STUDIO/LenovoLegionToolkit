@@ -197,7 +197,7 @@ internal static class InstallerEngine
         progress.Report(new EngineProgress { Status = Strings.Get("StatusCheckingRuntime") });
         if (!TryGetDesktopRuntime(out var runtimeVersion))
         {
-            InstallerLog.Info("Desktop runtime missing; installing…");
+            InstallerLog.Info("Desktop runtime missing; installing...");
             await InstallDesktopRuntimeAsync(progress, ct).ConfigureAwait(false);
             if (!TryGetDesktopRuntime(out _))
                 throw new InvalidOperationException("Microsoft .NET Desktop Runtime 10 is still missing after installation.");

@@ -28,10 +28,11 @@ var artifactRoot = Path.Combine(Path.GetTempPath(), $"udt-lang-ui-smoke-{DateTim
 var sandboxRoot = Path.Combine(artifactRoot, "sandbox");
 var appDataDirectory = Path.Combine(sandboxRoot, "appdata");
 Directory.CreateDirectory(appDataDirectory);
+var languagePackRoot = Path.Combine(appDataDirectory, "language-packs");
 
 var version = GetAppVersion(runtimeDirectory);
 var targetCulture = options.Culture;
-var cultureDirectory = targetCulture.Split('-')[0];
+var cultureDirectory = GetPrimaryResourceDirectoryName(targetCulture);
 var uiMarkers = GetUiMarkersForCulture(targetCulture);
 
 var effectiveCatalogUrl = ResolveCatalogUrl(options);
@@ -42,7 +43,7 @@ Console.WriteLine($"[lang-ui-smoke] Mode: {modeLabel}, culture: {targetCulture}"
 if (effectiveCatalogUrl is not null)
     Console.WriteLine("[lang-ui-smoke] Start mock server first: Tools/LanguagePackMockBackend/Start-MockCatalogServer.ps1");
 
-RemoveAppLanguageSatellite(runtimeDirectory, cultureDirectory);
+RemoveAppLanguageSatellite(languagePackRoot, cultureDirectory);
 
 await PreflightOnlineCatalogAsync(version, targetCulture, effectiveCatalogUrl, options.SkipPreflight);
 
@@ -134,7 +135,7 @@ try
     ActivateElement(installButton);
     Console.WriteLine("[lang-ui-smoke] Clicked install language");
 
-    var cultureInstallDirectory = Path.Combine(runtimeDirectory, cultureDirectory);
+    var cultureInstallDirectory = Path.Combine(languagePackRoot, cultureDirectory);
     var sawInstallUi = WaitForLanguageInstallActivity(mainWindow, cultureInstallDirectory, installActivityTimeout);
     if (!sawInstallUi)
     {
@@ -243,28 +244,36 @@ static string ResolveRuntimeDirectory(string repositoryRoot, string? appDirector
 
     foreach (var configuration in new[] { "Debug", "Release" })
     {
-        var root = Path.Combine(repositoryRoot, "UniversalDeviceToolkit.WPF", "bin", configuration);
-        if (!Directory.Exists(root))
-            continue;
+        foreach (var root in new[]
+        {
+            Path.Combine(repositoryRoot, "UniversalDeviceToolkit.WPF", "bin", configuration),
+            Path.Combine(repositoryRoot, "UniversalDeviceToolkit.WPF", "bin", "x64", configuration)
+        })
+        {
+            if (!Directory.Exists(root))
+                continue;
 
-        var runtimeDirectory = Directory
-            .EnumerateFiles(root, "Universal Device Toolkit.exe", SearchOption.AllDirectories)
-            .Select(Path.GetDirectoryName)
-            .OfType<string>()
-            .Where(path => !string.IsNullOrWhiteSpace(path))
-            .OrderByDescending(Directory.GetLastWriteTimeUtc)
-            .FirstOrDefault();
+            var runtimeDirectory = Directory
+                .EnumerateFiles(root, "*", SearchOption.AllDirectories)
+                .Where(path => Path.GetFileName(path).Equals("Universal Device Toolkit.exe", StringComparison.OrdinalIgnoreCase)
+                    || Path.GetFileName(path).Equals("Universal Device Toolkit.dll", StringComparison.OrdinalIgnoreCase))
+                .Select(Path.GetDirectoryName)
+                .OfType<string>()
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .OrderByDescending(Directory.GetLastWriteTimeUtc)
+                .FirstOrDefault();
 
-        if (!string.IsNullOrWhiteSpace(runtimeDirectory))
-            return runtimeDirectory;
+            if (!string.IsNullOrWhiteSpace(runtimeDirectory))
+                return runtimeDirectory;
+        }
     }
 
     throw new DirectoryNotFoundException("Build the WPF app first (Debug or Release).");
 }
 
-static void RemoveAppLanguageSatellite(string runtimeDirectory, string cultureDirectoryName)
+static void RemoveAppLanguageSatellite(string languagePackRoot, string cultureDirectoryName)
 {
-    var satellitePath = Path.Combine(runtimeDirectory, cultureDirectoryName, "Universal Device Toolkit.resources.dll");
+    var satellitePath = Path.Combine(languagePackRoot, cultureDirectoryName, "Universal Device Toolkit.resources.dll");
     if (!File.Exists(satellitePath))
         return;
 
@@ -277,6 +286,17 @@ static void RemoveAppLanguageSatellite(string runtimeDirectory, string cultureDi
     {
         Console.WriteLine($"[lang-ui-smoke] Warning: could not remove '{satellitePath}': {ex.Message}");
     }
+}
+
+static string GetPrimaryResourceDirectoryName(string cultureName)
+{
+    var culture = new CultureInfo(cultureName);
+    return culture.Name switch
+    {
+        "zh-Hans" => "zh",
+        "uz-Latn-UZ" => "uz",
+        _ => culture.Name
+    };
 }
 
 static string GetAppVersion(string runtimeDirectory)
@@ -420,8 +440,7 @@ static async Task<int> RunBackendOnlyInstallAsync(
             Console.WriteLine($"{pass}: Backend install progress reached 100%.");
         }
 
-        // LanguagePackManager is compiled into this smoke exe; installs target AppContext.BaseDirectory, not the WPF output folder.
-        var satellitePath = Path.Combine(AppContext.BaseDirectory, cultureDirectory, "Universal Device Toolkit.resources.dll");
+        var satellitePath = Path.Combine(Folders.AppData, "language-packs", cultureDirectory, "Universal Device Toolkit.resources.dll");
         if (!File.Exists(satellitePath))
         {
             Console.WriteLine($"{fail}: App satellite not found at '{satellitePath}'.");

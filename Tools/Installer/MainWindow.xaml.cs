@@ -171,7 +171,9 @@ public partial class MainWindow : Window
 
             var machine = MachineDetector.Detect();
             DeviceDetectedText.Text = Strings.Format("DeviceDetected",
-                string.IsNullOrWhiteSpace(machine.Vendor) ? "—" : machine.ToString());
+                string.IsNullOrWhiteSpace(machine.Vendor) && string.IsNullOrWhiteSpace(machine.ProductName)
+                    ? "-"
+                    : machine.ToString());
 
             var choices = DevicePackMatcher.BuildSelectable(machine)
                 .Select(p => new DeviceChoice(p.Id, p.DisplayName, p.IsHardware))
@@ -253,7 +255,7 @@ public partial class MainWindow : Window
         if (error is not null)
         {
             DoneTitle.Text = Strings.Get("ErrorTitle");
-            DoneText.Text = error;
+            DoneText.Text = Strings.Format("OperationFailedDetail", error);
             LaunchCheck.Visibility = Visibility.Collapsed;
             NextButton.Content = Strings.Get("Retry");
             CancelButton.Visibility = Visibility.Visible;
@@ -307,7 +309,7 @@ public partial class MainWindow : Window
         }
         catch (Exception ex)
         {
-            RuntimeStatusText.Text = $"{Strings.Get("RuntimeFailed")} ({ex.Message})";
+            RuntimeStatusText.Text = Strings.Format("OperationFailedDetail", ex.Message);
         }
         finally
         {

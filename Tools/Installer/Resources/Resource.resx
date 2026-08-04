@@ -60,4 +60,5 @@ Click Next to continue.</value></data>
   <data name="Retry"><value>Retry</value></data>
   <data name="Exit"><value>Exit</value></data>
   <data name="CancelConfirm"><value>Cancel the installation?</value></data>
+  <data name="OperationFailedDetail"><value>The operation failed: {0}</value></data>
 </root>
