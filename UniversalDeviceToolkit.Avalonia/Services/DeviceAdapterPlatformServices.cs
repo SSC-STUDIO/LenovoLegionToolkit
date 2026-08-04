@@ -165,6 +165,24 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update) =>
         Task.FromResult(false);
 
+    public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync() =>
+        Task.FromResult(new NetworkAccelerationState(
+            false,
+            false,
+            false,
+            false,
+            "Off",
+            DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host."),
+            0,
+            Array.Empty<NetworkAccelerationGroupState>()));
+
+    public Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled) => Task.FromResult(false);
+    public Task<bool> SetNetworkAccelerationModeAsync(string mode) => Task.FromResult(false);
+    public Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled) => Task.FromResult(false);
+    public Task<bool> ToggleNetworkAccelerationAsync() => Task.FromResult(false);
+    public Task<string> RunNetworkDiagnosticsAsync() =>
+        Task.FromResult(DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host."));
+
     private static IReadOnlyList<FeatureActionItem> BuildActions(
         string key,
         string title,

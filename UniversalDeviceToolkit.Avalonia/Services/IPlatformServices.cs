@@ -25,6 +25,12 @@ public interface IPlatformServices
     Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines);
     Task<KeyboardLightingState?> GetKeyboardLightingStateAsync();
     Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update);
+    Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync();
+    Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled);
+    Task<bool> SetNetworkAccelerationModeAsync(string mode);
+    Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled);
+    Task<bool> ToggleNetworkAccelerationAsync();
+    Task<string> RunNetworkDiagnosticsAsync();
 }
 
 public sealed record FeatureGroupItem(string Title, string Description, string Status);
@@ -145,6 +151,25 @@ public sealed record KeyboardLightingUpdate(
     string? RgbBrightness = null,
     IReadOnlyList<KeyboardColorState>? RgbZones = null,
     IReadOnlyList<KeyboardSpectrumEffectState>? SpectrumEffects = null);
+
+public sealed record NetworkAccelerationGroupState(
+    string Id,
+    string DisplayName,
+    string Description,
+    bool IsEnabled,
+    bool IsFavorite,
+    int DomainCount);
+
+public sealed record NetworkAccelerationState(
+    bool IsAvailable,
+    bool IsBackendReady,
+    bool IsEnabled,
+    bool IsRunning,
+    string Mode,
+    string Status,
+    int ListenPort,
+    IReadOnlyList<NetworkAccelerationGroupState> Groups,
+    string? Diagnostics = null);
 /// <summary>
 /// Read-only sensor data prepared for the dashboard. Value and Unit are kept
 /// separately so the UI can render a stable metric row and an optional gauge

@@ -98,4 +98,15 @@ public sealed class AvaloniaMigrationContractTests
         FeatureActionContract.CleanupRunActionKey.Should().Be("cleanup-run");
         FeatureActionContract.CleanupClearActionKey.Should().Be("cleanup-clear");
     }
+
+    [Fact]
+    public async Task PortablePlatformServices_ShouldExposeExplicitNetworkUnavailableState()
+    {
+        var state = await new UnavailablePlatformServices().GetNetworkAccelerationStateAsync();
+
+        state.IsAvailable.Should().BeFalse();
+        state.IsRunning.Should().BeFalse();
+        state.Groups.Should().BeEmpty();
+        state.Status.Should().NotBeNullOrWhiteSpace();
+    }
 }

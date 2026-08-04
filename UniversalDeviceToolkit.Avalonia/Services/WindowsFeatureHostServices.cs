@@ -11,6 +11,7 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Macro;
+using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
@@ -33,6 +34,8 @@ internal sealed class WindowsFeatureHostServices
     private readonly AutomationProcessor _automation;
     private readonly IPluginManager _plugins;
     private readonly WindowsOptimizationService? _optimization;
+    private readonly INetworkAccelerationService? _networkAcceleration;
+    private readonly INetworkDiagnosticsService? _networkDiagnostics;
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private readonly object _macroRecordingLock = new();
     private readonly HashSet<string> _selectedCleanupActions;
@@ -50,7 +53,9 @@ internal sealed class WindowsFeatureHostServices
         IMacroController macro,
         AutomationProcessor automation,
         IPluginManager plugins,
-        WindowsOptimizationService? optimization)
+        WindowsOptimizationService? optimization,
+        INetworkAccelerationService? networkAcceleration,
+        INetworkDiagnosticsService? networkDiagnostics)
     {
         _keyboard = keyboard;
         _spectrum = spectrum;
@@ -59,6 +64,8 @@ internal sealed class WindowsFeatureHostServices
         _automation = automation;
         _plugins = plugins;
         _optimization = optimization;
+        _networkAcceleration = networkAcceleration;
+        _networkDiagnostics = networkDiagnostics;
         _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
         _selectedCleanupActions = new HashSet<string>(
             _applicationSettings?.Store.SelectedCleanupActions ?? [],
@@ -82,7 +89,9 @@ internal sealed class WindowsFeatureHostServices
                 IoCContainer.Resolve<IMacroController>(),
                 IoCContainer.Resolve<AutomationProcessor>(),
                 IoCContainer.Resolve<IPluginManager>(),
-                IoCContainer.TryResolve<WindowsOptimizationService>());
+                IoCContainer.TryResolve<WindowsOptimizationService>(),
+                IoCContainer.TryResolve<INetworkAccelerationService>(),
+                IoCContainer.TryResolve<INetworkDiagnosticsService>());
         }
         catch
         {
@@ -116,6 +125,103 @@ internal sealed class WindowsFeatureHostServices
             // never surface a host-service exception from an async UI event.
             return false;
         }
+    }
+
+    public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync()
+    {
+        if (_networkAcceleration is null)
+        {
+            return Task.FromResult(new NetworkAccelerationState(
+                false,
+                false,
+                false,
+                false,
+                "Off",
+                "The network acceleration service is not initialized in this host.",
+                0,
+                Array.Empty<NetworkAccelerationGroupState>()));
+        }
+
+        var config = _networkAcceleration.Config;
+        var groups = (config.DomainGroups ?? [])
+            .Select(group => new NetworkAccelerationGroupState(
+                group.Id,
+                group.DisplayName,
+                group.Description ?? string.Empty,
+                group.Enabled,
+                group.IsFavorite,
+                (group.Domains?.Count ?? 0) + (group.SubItems?.Count ?? 0)))
+            .ToArray();
+        return Task.FromResult(new NetworkAccelerationState(
+            true,
+            _networkAcceleration.IsBackendReady,
+            config.AccelerationEnabled,
+            _networkAcceleration.IsRunning,
+            config.Mode.ToString(),
+            _networkAcceleration.StatusText,
+            config.ListenPort,
+            groups));
+    }
+
+    public async Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled)
+    {
+        if (_networkAcceleration is null)
+            return false;
+
+        _networkAcceleration.Config.AccelerationEnabled = enabled;
+        if (!enabled)
+            await _networkAcceleration.StopAsync().ConfigureAwait(false);
+        await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> SetNetworkAccelerationModeAsync(string mode)
+    {
+        if (_networkAcceleration is null
+            || !Enum.TryParse<NetworkAccelerationMode>(mode, true, out var parsed))
+            return false;
+
+        _networkAcceleration.Config.Mode = parsed;
+        await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled)
+    {
+        if (_networkAcceleration is null || string.IsNullOrWhiteSpace(groupId))
+            return false;
+
+        var group = _networkAcceleration.Config.DomainGroups?
+            .FirstOrDefault(candidate => candidate.Id.Equals(groupId, StringComparison.OrdinalIgnoreCase));
+        if (group is null)
+            return false;
+
+        group.Enabled = enabled;
+        await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> ToggleNetworkAccelerationAsync()
+    {
+        if (_networkAcceleration is null)
+            return false;
+
+        if (_networkAcceleration.IsRunning)
+        {
+            await _networkAcceleration.StopAsync().ConfigureAwait(false);
+            return true;
+        }
+
+        return await _networkAcceleration.StartAsync().ConfigureAwait(false);
+    }
+
+    public async Task<string> RunNetworkDiagnosticsAsync()
+    {
+        if (_networkDiagnostics is null)
+            return "Network diagnostics are not initialized in this host.";
+
+        var report = await _networkDiagnostics.RunQuickCheckAsync().ConfigureAwait(false);
+        return report.Summary;
     }
 
     public async Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync()

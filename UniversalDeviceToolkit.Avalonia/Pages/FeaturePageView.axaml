@@ -88,6 +88,10 @@
                                 Content="Cleanup"
                                 Click="CleanupModeButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupModeButton" />
+                        <Button x:Name="NetworkAccelerationButton"
+                                Content="Network acceleration"
+                                Click="NetworkAccelerationButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationButton" />
                     </StackPanel>
                     <StackPanel x:Name="OptimizationCommands"
                                 Orientation="Horizontal"

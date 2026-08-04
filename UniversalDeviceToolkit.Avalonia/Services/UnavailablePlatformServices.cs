@@ -89,4 +89,22 @@ public sealed class UnavailablePlatformServices : IPlatformServices
 
     public Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update) =>
         Task.FromResult(false);
+
+    public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync() =>
+        Task.FromResult(new NetworkAccelerationState(
+            false,
+            false,
+            false,
+            false,
+            "Off",
+            AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host."),
+            0,
+            Array.Empty<NetworkAccelerationGroupState>()));
+
+    public Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled) => Task.FromResult(false);
+    public Task<bool> SetNetworkAccelerationModeAsync(string mode) => Task.FromResult(false);
+    public Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled) => Task.FromResult(false);
+    public Task<bool> ToggleNetworkAccelerationAsync() => Task.FromResult(false);
+    public Task<string> RunNetworkDiagnosticsAsync() =>
+        Task.FromResult(AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host."));
 }

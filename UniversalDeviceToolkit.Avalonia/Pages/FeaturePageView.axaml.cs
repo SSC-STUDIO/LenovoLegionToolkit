@@ -52,6 +52,7 @@ public partial class FeaturePageView : UserControl
             var state = await _platformServices.GetFeaturePageStateAsync(_descriptor.RouteKey);
             _lastState = state;
             OptimizationToolbar.IsVisible = string.Equals(_descriptor.RouteKey, "WindowsOptimization", StringComparison.Ordinal);
+            NetworkAccelerationButton.IsVisible = OptimizationToolbar.IsVisible;
             StatusTitle.Text = state.IsAvailable
                 ? AvaloniaLocalization.GetString("FeaturePage_Available", "Available")
                 : AvaloniaLocalization.GetString("FeaturePage_Unsupported", "Unavailable on this device");
@@ -140,6 +141,24 @@ public partial class FeaturePageView : UserControl
         _showCleanup = true;
         if (_lastState is not null)
             RenderFeatureItems(_lastState);
+    }
+
+    private void NetworkAccelerationButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        var window = new Window
+        {
+            Title = AvaloniaLocalization.GetString("NetworkAccelerationPage_Title", "Network acceleration"),
+            Width = 760,
+            Height = 680,
+            MinWidth = 620,
+            MinHeight = 520,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Content = new NetworkAccelerationPage(_platformServices),
+        };
+        window.Show(owner);
     }
 
     private async void OptimizationCommandButton_Click(object? sender, RoutedEventArgs e)

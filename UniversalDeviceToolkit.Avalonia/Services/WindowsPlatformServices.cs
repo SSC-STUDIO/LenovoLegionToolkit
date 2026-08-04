@@ -105,6 +105,36 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetKeyboardLightingAsync(update)
             : _featureHost.SetKeyboardLightingAsync(update);
 
+    public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync() =>
+        _featureHost is null
+            ? _inner.GetNetworkAccelerationStateAsync()
+            : _featureHost.GetNetworkAccelerationStateAsync();
+
+    public Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled) =>
+        _featureHost is null
+            ? _inner.SetNetworkAccelerationEnabledAsync(enabled)
+            : _featureHost.SetNetworkAccelerationEnabledAsync(enabled);
+
+    public Task<bool> SetNetworkAccelerationModeAsync(string mode) =>
+        _featureHost is null
+            ? _inner.SetNetworkAccelerationModeAsync(mode)
+            : _featureHost.SetNetworkAccelerationModeAsync(mode);
+
+    public Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled) =>
+        _featureHost is null
+            ? _inner.SetNetworkAccelerationGroupEnabledAsync(groupId, enabled)
+            : _featureHost.SetNetworkAccelerationGroupEnabledAsync(groupId, enabled);
+
+    public Task<bool> ToggleNetworkAccelerationAsync() =>
+        _featureHost is null
+            ? _inner.ToggleNetworkAccelerationAsync()
+            : _featureHost.ToggleNetworkAccelerationAsync();
+
+    public Task<string> RunNetworkDiagnosticsAsync() =>
+        _featureHost is null
+            ? _inner.RunNetworkDiagnosticsAsync()
+            : _featureHost.RunNetworkDiagnosticsAsync();
+
     private async Task<IReadOnlyList<SensorReadingItem>> AppendHardwareSensorReadingsAsync(
         IReadOnlyList<SensorReadingItem> existing)
     {
