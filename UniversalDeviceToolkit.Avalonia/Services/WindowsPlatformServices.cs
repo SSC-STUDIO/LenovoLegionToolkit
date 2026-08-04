@@ -85,6 +85,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.GetAutomationWorkspaceAsync()
             : _featureHost.GetAutomationWorkspaceAsync();
 
+    public Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync() =>
+        _featureHost is null
+            ? _inner.GetAutomationTriggerOptionsAsync()
+            : _featureHost.GetAutomationTriggerOptionsAsync();
+
     public Task<bool> SetAutomationEnabledAsync(bool enabled) =>
         _featureHost is null
             ? _inner.SetAutomationEnabledAsync(enabled)

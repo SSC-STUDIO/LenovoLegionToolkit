@@ -10,6 +10,7 @@ using UniversalDeviceToolkit.Abstractions.Macro;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
+using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
@@ -364,8 +365,19 @@ internal sealed class WindowsFeatureHostServices
                     p.IconName,
                     p.Trigger?.DisplayName ?? "Manual quick action",
                     p.Steps.Count,
-                    p.Trigger is not null))
+                    p.Trigger is not null)
+                {
+                    TriggerKey = GetAutomationTriggerKey(p.Trigger),
+                })
                 .ToArray());
+    }
+
+    public async Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync()
+    {
+        await EnsureAutomationInitializedAsync().ConfigureAwait(false);
+        return CreateAutomationTriggerDefinitions()
+            .Select(definition => new AutomationTriggerOption(definition.Key, definition.Trigger.DisplayName))
+            .ToArray();
     }
 
     public async Task<bool> SetAutomationEnabledAsync(bool enabled)
@@ -401,14 +413,32 @@ internal sealed class WindowsFeatureHostServices
 
                     pipeline.Name = NormalizePipelineName(draft.Name);
                     pipeline.IconName = draft.IconName;
+                    if (draft.IsAutomatic && !string.IsNullOrWhiteSpace(draft.TriggerKey))
+                    {
+                        var trigger = CreateAutomationTrigger(draft.TriggerKey);
+                        if (trigger is not null)
+                            pipeline.Trigger = trigger;
+                    }
                     saved.Add(pipeline);
                     continue;
                 }
 
-                // New trigger pipelines require the WPF trigger configuration
-                // dialog. Avalonia currently creates manual quick actions only.
-                if (draft.IsAutomatic || string.IsNullOrWhiteSpace(draft.Name))
+                if (string.IsNullOrWhiteSpace(draft.Name))
                     continue;
+
+                if (draft.IsAutomatic)
+                {
+                    var trigger = CreateAutomationTrigger(draft.TriggerKey);
+                    if (trigger is null)
+                        continue;
+
+                    saved.Add(new AutomationPipeline(trigger)
+                    {
+                        Name = NormalizePipelineName(draft.Name),
+                        IconName = draft.IconName,
+                    });
+                    continue;
+                }
 
                 saved.Add(new AutomationPipeline(NormalizePipelineName(draft.Name)!)
                 {
@@ -427,6 +457,46 @@ internal sealed class WindowsFeatureHostServices
 
     private static string? NormalizePipelineName(string? name) =>
         string.IsNullOrWhiteSpace(name) ? null : name.Trim();
+
+    private static IReadOnlyList<(string Key, IAutomationPipelineTrigger Trigger)> CreateAutomationTriggerDefinitions() =>
+    [
+        ("on-startup", new OnStartupAutomationPipelineTrigger()),
+        ("on-resume", new OnResumeAutomationPipelineTrigger()),
+        ("ac-adapter-connected", new ACAdapterConnectedAutomationPipelineTrigger()),
+        ("ac-adapter-disconnected", new ACAdapterDisconnectedAutomationPipelineTrigger()),
+        ("display-on", new DisplayOnAutomationPipelineTrigger()),
+        ("display-off", new DisplayOffAutomationPipelineTrigger()),
+        ("session-lock", new SessionLockAutomationPipelineTrigger()),
+        ("session-unlock", new SessionUnlockAutomationPipelineTrigger()),
+        ("lid-opened", new LidOpenedAutomationPipelineTrigger()),
+        ("lid-closed", new LidClosedAutomationPipelineTrigger()),
+        ("hdr-on", new HDROnAutomationPipelineTrigger()),
+        ("hdr-off", new HDROffAutomationPipelineTrigger()),
+        ("wifi-disconnected", new WiFiDisconnectedAutomationPipelineTrigger()),
+    ];
+
+    private static IAutomationPipelineTrigger? CreateAutomationTrigger(string? key) =>
+        CreateAutomationTriggerDefinitions()
+            .FirstOrDefault(definition => string.Equals(definition.Key, key, StringComparison.OrdinalIgnoreCase))
+            .Trigger;
+
+    private static string? GetAutomationTriggerKey(IAutomationPipelineTrigger? trigger) => trigger switch
+    {
+        OnStartupAutomationPipelineTrigger => "on-startup",
+        OnResumeAutomationPipelineTrigger => "on-resume",
+        ACAdapterConnectedAutomationPipelineTrigger => "ac-adapter-connected",
+        ACAdapterDisconnectedAutomationPipelineTrigger => "ac-adapter-disconnected",
+        DisplayOnAutomationPipelineTrigger => "display-on",
+        DisplayOffAutomationPipelineTrigger => "display-off",
+        SessionLockAutomationPipelineTrigger => "session-lock",
+        SessionUnlockAutomationPipelineTrigger => "session-unlock",
+        LidOpenedAutomationPipelineTrigger => "lid-opened",
+        LidClosedAutomationPipelineTrigger => "lid-closed",
+        HDROnAutomationPipelineTrigger => "hdr-on",
+        HDROffAutomationPipelineTrigger => "hdr-off",
+        WiFiDisconnectedAutomationPipelineTrigger => "wifi-disconnected",
+        _ => null,
+    };
 
     public Task<MacroWorkspaceState> GetMacroWorkspaceAsync()
     {

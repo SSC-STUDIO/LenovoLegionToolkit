@@ -154,6 +154,9 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
         Task.FromResult(new AutomationWorkspaceState(false, Array.Empty<AutomationPipelineItem>()));
 
+    public Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync() =>
+        Task.FromResult<IReadOnlyList<AutomationTriggerOption>>(Array.Empty<AutomationTriggerOption>());
+
     public Task<bool> SetAutomationEnabledAsync(bool enabled) => Task.FromResult(false);
 
     public Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines) =>
