@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.FeaturePageView"
+             automation:AutomationProperties.AutomationId="AvaloniaFeaturePage">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="18"
+                    Margin="32,24,32,32"
+                    MaxWidth="920"
+                    HorizontalAlignment="Left">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                <Border Width="48"
+                        Height="48"
+                        CornerRadius="{StaticResource CornerRadiusControl}"
+                        Background="{DynamicResource StatusNeutralBackgroundBrush}"
+                        VerticalAlignment="Top">
+                    <controls:NavigationIcon x:Name="PageIcon"
+                                             FontSize="{StaticResource IconSizeLG}"
+                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </Border>
+                <StackPanel Grid.Column="1" Spacing="4">
+                    <controls:LocalizedTextBlock x:Name="PageTitle"
+                                                 FontSize="{StaticResource FontSizeDisplaySection}"
+                                                 FontWeight="Medium"
+                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2"
+                                                 automation:AutomationProperties.AutomationId="FeaturePageTitle" />
+                    <controls:LocalizedTextBlock x:Name="PageDescription"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="3"
+                                                 automation:AutomationProperties.AutomationId="FeaturePageDescription" />
+                </StackPanel>
+            </Grid>
+
+            <Border x:Name="StatusCard"
+                    Background="{DynamicResource StatusInfoBackgroundBrush}"
+                    BorderBrush="{DynamicResource StatusInfoBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border Width="36"
+                            Height="36"
+                            CornerRadius="{StaticResource CornerRadiusRound}"
+                            Background="{DynamicResource StatusInfoBrush}"
+                            VerticalAlignment="Top">
+                        <TextBlock Text="i"
+                                   FontSize="{StaticResource FontSizeSection}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <controls:LocalizedTextBlock x:Name="StatusTitle"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium"
+                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2"
+                                                     automation:AutomationProperties.AutomationId="FeaturePageStatusTitle" />
+                        <controls:LocalizedTextBlock x:Name="StatusMessage"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="4"
+                                                     automation:AutomationProperties.AutomationId="FeaturePageStatusMessage" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <ItemsControl x:Name="FeatureItems"
+                          automation:AutomationProperties.AutomationId="FeaturePageItems" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

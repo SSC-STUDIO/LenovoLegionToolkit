@@ -117,59 +117,17 @@ public partial class MainWindow : Window
         SetActiveButton(SettingsButton);
     }
 
-    private void ShowHostCapabilityPage(string route)
+    private void ShowFeaturePage(string route)
     {
-        var descriptor = route switch
+        MainContent.Content = route switch
         {
-            MainNavigation.Keyboard => new HostCapabilityDescriptor(
-                "MainWindow_NavigationItem_Keyboard",
-                "Keyboard",
-                "HostCapability_KeyboardDescription",
-                "Configure keyboard backlight and keyboard-specific controls.",
-                "Keyboard24",
-                "HostCapability_KeyboardReason",
-                "Keyboard hardware controls require the Windows device adapter."),
-            MainNavigation.Actions => new HostCapabilityDescriptor(
-                "MainWindow_NavigationItem_Actions",
-                "Actions",
-                "HostCapability_ActionsDescription",
-                "Run supported device actions and hardware workflows.",
-                "Rocket24",
-                "HostCapability_ActionsReason",
-                "Hardware action execution is not exposed by this host."),
-            MainNavigation.Macro => new HostCapabilityDescriptor(
-                "MainWindow_NavigationItem_Macro",
-                "Macro",
-                "HostCapability_MacroDescription",
-                "Create and manage device macros.",
-                "ReceiptPlay24",
-                "HostCapability_MacroReason",
-                "Macro execution requires the Windows input and device services."),
-            MainNavigation.WindowsOptimization => new HostCapabilityDescriptor(
-                "MainWindow_NavigationItem_WindowsOptimization",
-                "System optimization",
-                "HostCapability_WindowsOptimizationDescription",
-                "Review Windows optimization actions and their current state.",
-                "Gauge24",
-                "HostCapability_WindowsOptimizationReason",
-                "Windows optimization actions are only available through the Windows host."),
-            MainNavigation.PluginExtensions => new HostCapabilityDescriptor(
-                "MainWindow_NavigationItem_PluginExtensions",
-                "Plugin Extensions",
-                "HostCapability_PluginExtensionsDescription",
-                "Discover and manage optional plugin extensions.",
-                "Apps24",
-                "HostCapability_PluginExtensionsReason",
-                "Plugin discovery and installation services are not available in this host."),
-            _ => throw new ArgumentOutOfRangeException(nameof(route), route, "Unknown host capability route."),
+            MainNavigation.Keyboard => new KeyboardBacklightPage(_platformServices),
+            MainNavigation.Actions => new ActionsPage(_platformServices),
+            MainNavigation.Macro => new MacroPage(_platformServices),
+            MainNavigation.WindowsOptimization => new WindowsOptimizationPage(_platformServices),
+            MainNavigation.PluginExtensions => new PluginExtensionsPage(_platformServices),
+            _ => throw new ArgumentOutOfRangeException(nameof(route), route, "Unknown feature route."),
         };
-
-        MainContent.Content = new HostCapabilityView(
-            descriptor.TitleKey,
-            descriptor.TitleFallback,
-            Localization.AvaloniaLocalization.GetString(descriptor.DescriptionKey, descriptor.DescriptionFallback),
-            descriptor.IconIdentifier,
-            Localization.AvaloniaLocalization.GetString(descriptor.ReasonKey, descriptor.ReasonFallback));
         _activePage = route;
         SetActiveButton(GetNavigationButton(route));
     }
@@ -196,7 +154,7 @@ public partial class MainWindow : Window
             case MainNavigation.Macro:
             case MainNavigation.WindowsOptimization:
             case MainNavigation.PluginExtensions:
-                ShowHostCapabilityPage(route!.Trim().ToLowerInvariant());
+                ShowFeaturePage(route!.Trim().ToLowerInvariant());
                 break;
         }
     }
@@ -247,12 +205,4 @@ public partial class MainWindow : Window
         _ => DashboardButton,
     };
 
-    private sealed record HostCapabilityDescriptor(
-        string TitleKey,
-        string TitleFallback,
-        string DescriptionKey,
-        string DescriptionFallback,
-        string IconIdentifier,
-        string ReasonKey,
-        string ReasonFallback);
 }
