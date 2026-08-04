@@ -4,91 +4,64 @@
              xmlns:automation="using:Avalonia.Automation"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsCapabilityView"
              automation:AutomationProperties.AutomationId="AvaloniaSettingsCapabilityView">
-    <StackPanel Spacing="16"
-                MaxWidth="680"
-                HorizontalAlignment="Left">
-        <controls:LocalizedTextBlock x:Name="TitleBlock"
-                   FontSize="{StaticResource FontSizeDisplaySection}"
-                   FontWeight="Medium"
-                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                   OverflowMode="Wrap"
-                   MaxLines="2"
-                   automation:AutomationProperties.AutomationId="SettingsCapabilityTitle" />
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16"
+                    Margin="32,24,32,32"
+                    MaxWidth="820"
+                    HorizontalAlignment="Left">
+            <controls:LocalizedTextBlock x:Name="TitleBlock"
+                                         FontSize="{StaticResource FontSizeDisplaySection}"
+                                         FontWeight="Medium"
+                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                         OverflowMode="Wrap"
+                                         MaxLines="2"
+                                         automation:AutomationProperties.AutomationId="SettingsCapabilityTitle" />
+            <controls:LocalizedTextBlock x:Name="DescriptionBlock"
+                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                         OverflowMode="Wrap"
+                                         MaxLines="3"
+                                         automation:AutomationProperties.AutomationId="SettingsCapabilityDescription" />
 
-        <controls:LocalizedTextBlock x:Name="DescriptionBlock"
-                   Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                   TextWrapping="Wrap"
-                   OverflowMode="Wrap"
-                   MaxLines="3"
-                   Margin="0,0,0,8"
-                   automation:AutomationProperties.AutomationId="SettingsCapabilityDescription" />
+            <Border x:Name="AvailabilityCard"
+                    Background="{DynamicResource StatusInfoBackgroundBrush}"
+                    BorderBrush="{DynamicResource StatusInfoBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border Width="36"
+                            Height="36"
+                            CornerRadius="{StaticResource CornerRadiusRound}"
+                            Background="{DynamicResource StatusInfoBrush}"
+                            VerticalAlignment="Top">
+                        <TextBlock Text="i"
+                                   FontSize="{StaticResource FontSizeSection}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <controls:LocalizedTextBlock x:Name="StatusTitleBlock"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium"
+                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2"
+                                                     automation:AutomationProperties.AutomationId="SettingsCapabilityStatusTitle" />
+                        <controls:LocalizedTextBlock x:Name="StatusMessageBlock"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="4"
+                                                     automation:AutomationProperties.AutomationId="SettingsCapabilityStatusMessage" />
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="{StaticResource CornerRadiusCard}"
-                Padding="16">
-            <Grid ColumnDefinitions="Auto,*">
-                <Border Width="40"
-                        Height="40"
-                        Background="{DynamicResource StatusInfoBackgroundBrush}"
-                        CornerRadius="{StaticResource CornerRadiusControl}"
-                        VerticalAlignment="Top">
-                    <TextBlock Text="i"
-                               FontSize="22"
-                               FontWeight="SemiBold"
-                               Foreground="{DynamicResource StatusInfoBrush}"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center" />
-                </Border>
-                <StackPanel Grid.Column="1"
-                            Margin="16,0,0,0"
-                            Spacing="5">
-                    <controls:LocalizedTextBlock x:Name="StatusTitleBlock"
-                               FontSize="{StaticResource FontSizeSubsection}"
-                               FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                               OverflowMode="Wrap"
-                               MaxLines="2"
-                               automation:AutomationProperties.AutomationId="SettingsCapabilityStatusTitle" />
-                    <controls:LocalizedTextBlock x:Name="StatusMessageBlock"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               TextWrapping="Wrap"
-                               OverflowMode="Wrap"
-                               MaxLines="3"
-                               automation:AutomationProperties.AutomationId="SettingsCapabilityStatusMessage" />
-                </StackPanel>
-            </Grid>
-        </Border>
-
-        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1"
-                CornerRadius="{StaticResource CornerRadiusCard}"
-                Padding="16">
-            <Grid ColumnDefinitions="*,Auto">
-                <StackPanel Spacing="4">
-                    <controls:LocalizedTextBlock Text="{Binding FeatureLabel}"
-                               FontSize="{StaticResource FontSizeBody}"
-                               FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                               OverflowMode="Wrap"
-                               MaxLines="2" />
-                    <controls:LocalizedTextBlock Text="{Binding FeatureMessage}"
-                               FontSize="{StaticResource FontSizeSmallCaption}"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               TextWrapping="Wrap"
-                               OverflowMode="Wrap"
-                               MaxLines="3" />
-                </StackPanel>
-                <Button Grid.Column="1"
-                        IsEnabled="False"
-                        MinWidth="{StaticResource ButtonMinWidthStandard}"
-                        Content="{Binding UnavailableLabel}"
-                        automation:AutomationProperties.AutomationId="SettingsCapabilityUnavailableButton"
-                        automation:AutomationProperties.Name="{Binding UnavailableLabel}"
-                        Margin="16,0,0,0" />
-            </Grid>
-        </Border>
-    </StackPanel>
+            <StackPanel x:Name="OptionsPanel"
+                        Spacing="8"
+                        automation:AutomationProperties.AutomationId="SettingsCapabilityOptions" />
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>
