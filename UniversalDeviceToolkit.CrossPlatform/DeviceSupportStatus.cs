@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using System.Text.Json;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 
 internal sealed record DeviceSupportStatus(
@@ -52,48 +51,5 @@ internal sealed class CrossPlatformDeviceSupportEvaluator
 
         return DeviceSupportStatus.From(
             DeviceSupportMatcher.Evaluate(identity, _packs));
-    }
-}
-
-internal static class DevicePackCatalogLoader
-{
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        ReadCommentHandling = JsonCommentHandling.Skip,
-        AllowTrailingCommas = true
-    };
-
-    public static IReadOnlyCollection<DevicePackDefinition> Load()
-    {
-        foreach (var path in CandidatePaths())
-        {
-            try
-            {
-                if (!File.Exists(path))
-                    continue;
-
-                var json = File.ReadAllText(path);
-                var packs = JsonSerializer.Deserialize<DevicePackDefinition[]>(json, JsonOptions);
-                if (packs is { Length: > 0 })
-                    return packs;
-            }
-            catch
-            {
-                // A missing or invalid optional catalog degrades to generic basic mode.
-            }
-        }
-
-        return [];
-    }
-
-    private static IEnumerable<string> CandidatePaths()
-    {
-        yield return Path.Combine(AppContext.BaseDirectory, "resources", "device-packs.json");
-        yield return Path.Combine(Directory.GetCurrentDirectory(), "resources", "device-packs.json");
-
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        for (var depth = 0; depth < 8 && directory is not null; depth++, directory = directory.Parent)
-            yield return Path.Combine(directory.FullName, "resources", "device-packs.json");
     }
 }

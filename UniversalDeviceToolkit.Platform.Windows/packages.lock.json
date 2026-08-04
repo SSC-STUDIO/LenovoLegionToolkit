@@ -2,10 +2,23 @@
   "version": 2,
   "dependencies": {
     "net10.0-windows10.0.26100": {
+      "System.Management": {
+        "type": "Direct",
+        "requested": "[10.0.10, )",
+        "resolved": "10.0.10",
+        "contentHash": "U13ksdXfQlF2WDdu3S4ZPVpikFs2HgV3dbJJZLeZpBIQ4z/xCmQnwEf6LsEEIC2zSamVVa1acA9RdVhZwnWKeA=="
+      },
       "universaldevicetoolkit.lib.abstractions": {
         "type": "Project"
       }
     },
-    "net10.0-windows10.0.26100/win-x64": {}
+    "net10.0-windows10.0.26100/win-x64": {
+      "System.Management": {
+        "type": "Direct",
+        "requested": "[10.0.10, )",
+        "resolved": "10.0.10",
+        "contentHash": "U13ksdXfQlF2WDdu3S4ZPVpikFs2HgV3dbJJZLeZpBIQ4z/xCmQnwEf6LsEEIC2zSamVVa1acA9RdVhZwnWKeA=="
+      }
+    }
   }
 }
