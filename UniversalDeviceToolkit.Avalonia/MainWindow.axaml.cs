@@ -1,6 +1,8 @@
 using global::Avalonia;
 using global::Avalonia.Controls;
 using global::Avalonia.Interactivity;
+using global::Avalonia.Media;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Services;
 
@@ -15,6 +17,7 @@ public partial class MainWindow : Window
     {
         _platformServices = platformServices;
         InitializeComponent();
+        ApplyTextDirection(LocalizationRuntime.CurrentCulture);
         Loaded += OnLoaded;
         
         // Handle window state changes (minimize/restore)
@@ -86,6 +89,7 @@ public partial class MainWindow : Window
 
     public void RefreshForCulture()
     {
+        ApplyTextDirection(LocalizationRuntime.CurrentCulture);
         Title = Localization.AvaloniaLocalization.GetString("Window_Title", "Universal Device Toolkit");
 
         switch (_activePage)
@@ -100,6 +104,13 @@ public partial class MainWindow : Window
                 ShowDashboardPage();
                 break;
         }
+    }
+
+    private void ApplyTextDirection(System.Globalization.CultureInfo culture)
+    {
+        FlowDirection = LocalizationCatalog.IsRightToLeft(culture)
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
     }
 
     private void SetActiveButton(Button activeButton)

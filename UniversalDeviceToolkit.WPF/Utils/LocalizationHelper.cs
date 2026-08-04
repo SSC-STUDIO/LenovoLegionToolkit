@@ -51,7 +51,7 @@ public static class LocalizationHelper
 
     public static readonly CultureInfo[] Languages = LocalizationCatalog.SupportedCultures.ToArray();
 
-    public static FlowDirection Direction => Resource.Culture?.TextInfo.IsRightToLeft ?? false
+    public static FlowDirection Direction => LocalizationCatalog.IsRightToLeft(Resource.Culture)
         ? FlowDirection.RightToLeft
         : FlowDirection.LeftToRight;
 
@@ -78,7 +78,7 @@ public static class LocalizationHelper
 
     public static string ForceLeftToRight(string str)
     {
-        if (Resource.Culture?.TextInfo.IsRightToLeft ?? false)
+        if (LocalizationCatalog.IsRightToLeft(Resource.Culture))
             return "\u200e" + str + "\u200e";
         return str;
     }

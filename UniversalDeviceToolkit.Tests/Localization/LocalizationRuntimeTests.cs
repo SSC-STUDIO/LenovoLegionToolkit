@@ -73,6 +73,16 @@ public sealed class LocalizationRuntimeTests : IDisposable
             chain.Should().NotContain(culture => culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase));
     }
 
+    [Theory]
+    [InlineData("ar", true)]
+    [InlineData("ar-SA", true)]
+    [InlineData("de", false)]
+    [InlineData("zh-Hant", false)]
+    public void IsRightToLeft_UsesTheNormalizedCultureTextInfo(string cultureName, bool expected)
+    {
+        LocalizationCatalog.IsRightToLeft(new CultureInfo(cultureName)).Should().Be(expected);
+    }
+
     [Fact]
     public void Initialize_WithoutOverride_ReadsPersistedCulture()
     {

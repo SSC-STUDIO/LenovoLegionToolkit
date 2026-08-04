@@ -96,6 +96,9 @@ public static class LocalizationCatalog
         && culture != CultureInfo.InvariantCulture
         && culture.Name.StartsWith("zh", StringComparison.OrdinalIgnoreCase);
 
+    public static bool IsRightToLeft(CultureInfo? culture) =>
+        NormalizeCulture(culture).TextInfo.IsRightToLeft;
+
     public static string GetString(ResourceManager manager, string key, string fallback, CultureInfo? culture = null)
     {
         ArgumentNullException.ThrowIfNull(manager);

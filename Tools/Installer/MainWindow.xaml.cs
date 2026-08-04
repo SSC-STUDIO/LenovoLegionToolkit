@@ -39,6 +39,7 @@ public partial class MainWindow : Window
     {
         _args = args;
         InitializeComponent();
+        ApplyTextDirection();
         LocalizeStaticText();
 
         Title = Strings.Get("WindowTitle");
@@ -132,6 +133,7 @@ public partial class MainWindow : Window
             _updatingLanguage = true;
             var culture = await LocalizationRuntime.SetCultureAsync(language.Culture, persist: false);
             Strings.ApplyCulture(culture);
+            ApplyTextDirection();
             LocalizeStaticText();
 
             switch (_currentPage)
@@ -159,6 +161,11 @@ public partial class MainWindow : Window
             _updatingLanguage = false;
         }
     }
+
+    private void ApplyTextDirection() =>
+        FlowDirection = LocalizationCatalog.IsRightToLeft(LocalizationRuntime.CurrentCulture)
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
 
     private void ShowDevice()
     {
