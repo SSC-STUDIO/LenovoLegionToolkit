@@ -80,7 +80,7 @@ jobs:
         run: |
           $arguments = @(
             '--repo-root', $PWD,
-            '--output-directory', (Join-Path $env:RUNNER_TEMP "visual-regression-smoke-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"),
+            '--output-directory', (Join-Path $PWD 'artifacts/ui-audit'),
             '--configuration', 'Release',
             '--host', $env:HOST,
             '--viewport', $env:VIEWPORT
@@ -107,10 +107,15 @@ jobs:
             throw "Visual regression smoke failed with exit code $exitCode."
           }
 
+          $cultureCount = (Get-ChildItem -Directory (Join-Path $PWD "artifacts/ui-audit/$env:HOST") -ErrorAction SilentlyContinue).Count
+          if ($env:OSD_ONLY -ne 'true' -and $cultureCount -ne 25) {
+            throw "Expected 25 culture artifact directories for $env:HOST, found $cultureCount."
+          }
+
       - name: Upload visual regression artifacts
         uses: actions/upload-artifact@v7
         if: always()
         with:
           name: visual-regression-smoke-${{ matrix.host }}-${{ matrix.viewport }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/visual-regression-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/ui-audit
           if-no-files-found: warn
