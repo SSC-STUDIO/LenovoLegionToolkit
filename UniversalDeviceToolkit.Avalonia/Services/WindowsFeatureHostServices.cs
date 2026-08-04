@@ -885,7 +885,25 @@ internal sealed class WindowsFeatureHostServices
                 "The plugin is not loaded by the host plugin manager."));
         }
 
-        if (!TryResolvePluginPage(plugin, out var pageTitle, out var pageIcon, out var createPage))
+        string? pageTitle;
+        string? pageIcon;
+        Func<object> createPage;
+        try
+        {
+            if (!TryResolvePluginPage(plugin, out pageTitle, out pageIcon, out createPage))
+            {
+                return Task.FromResult(new PluginPageState(
+                    normalizedId,
+                    title,
+                    description,
+                    icon,
+                    installed,
+                    false,
+                    false,
+                    "This plugin does not provide a feature page."));
+            }
+        }
+        catch (Exception ex)
         {
             return Task.FromResult(new PluginPageState(
                 normalizedId,
@@ -893,9 +911,9 @@ internal sealed class WindowsFeatureHostServices
                 description,
                 icon,
                 installed,
+                true,
                 false,
-                false,
-                "This plugin does not provide a feature page."));
+                $"The plugin feature page could not be resolved: {ex.Message}"));
         }
 
         try

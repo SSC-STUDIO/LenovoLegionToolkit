@@ -92,7 +92,23 @@ public sealed class PluginHostedPage : UserControl
             return;
 
         _loaded = true;
-        var state = await _platformServices.GetPluginPageStateAsync(_pluginId);
+        PluginPageState state;
+        try
+        {
+            state = await _platformServices.GetPluginPageStateAsync(_pluginId);
+        }
+        catch (Exception ex)
+        {
+            state = new PluginPageState(
+                _pluginId,
+                _pluginId,
+                string.Empty,
+                null,
+                false,
+                true,
+                false,
+                $"The plugin page could not be loaded: {ex.Message}");
+        }
         _title.Text = string.IsNullOrWhiteSpace(state.Title) ? state.PluginId : state.Title;
         _description.Text = state.Description;
         _status.Text = state.StatusMessage;
