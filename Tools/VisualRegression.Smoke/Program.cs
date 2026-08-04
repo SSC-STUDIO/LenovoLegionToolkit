@@ -752,6 +752,7 @@ internal static partial class Program
         ShowWindow(hwnd, 6); // SW_MINIMIZE
         Thread.Sleep(450);
         states.Add(new { state = "minimized", iconic = IsIconic(hwnd), zoomed = IsZoomed(hwnd) });
+        CaptureDesktopLifecycleState(currentDirectory, "window-minimized-desktop");
 
         ShowWindow(hwnd, 9); // SW_RESTORE
         Thread.Sleep(350);
@@ -789,6 +790,74 @@ internal static partial class Program
                 viewport = _activeViewport.Label,
                 states
             }, _jsonOptions));
+    }
+
+    private static void CaptureDesktopLifecycleState(string currentDirectory, string label)
+    {
+        var screens = System.Windows.Forms.Screen.AllScreens;
+        if (screens.Length == 0)
+            throw new InvalidOperationException("Interactive desktop has no screens for lifecycle capture.");
+
+        var left = screens.Min(screen => screen.Bounds.Left);
+        var top = screens.Min(screen => screen.Bounds.Top);
+        var right = screens.Max(screen => screen.Bounds.Right);
+        var bottom = screens.Max(screen => screen.Bounds.Bottom);
+        var bounds = new Rectangle(left, top, right - left, bottom - top);
+
+        var sequence = ++_captureSequence;
+        var fileStem = $"{sequence:000}-{SanitizeFileNameSegment(label)}";
+        var fileName = ToArtifactPath(Path.Combine("window", SanitizeFileNameSegment(label), $"{fileStem}.png"));
+        var outputPath = Path.Combine(currentDirectory, fileName);
+        var videoFileName = ToArtifactPath(Path.ChangeExtension(fileName, ".mp4"));
+
+        using var recorder = _videoEnabled
+            ? WindowVideoRecorder.Start(bounds, Path.Combine(currentDirectory, videoFileName))
+            : null;
+        CaptureDesktopFromScreen(bounds, outputPath);
+        Thread.Sleep(350);
+
+        AssertCaptureDimensions(outputPath, label);
+        AssertNotBlankCapture(outputPath, label);
+
+        var snapshotFileName = ToArtifactPath(Path.ChangeExtension(fileName, ".json"));
+        var ocrFileName = ToArtifactPath(Path.ChangeExtension(fileName, ".ocr.json"));
+        File.WriteAllText(
+            Path.Combine(currentDirectory, snapshotFileName),
+            JsonSerializer.Serialize(new
+            {
+                label,
+                capturedAt = DateTimeOffset.Now,
+                desktop = true,
+                bounds = new { bounds.Left, bounds.Top, bounds.Width, bounds.Height }
+            }, _jsonOptions));
+        File.WriteAllText(
+            Path.Combine(currentDirectory, ocrFileName),
+            JsonSerializer.Serialize(new
+            {
+                label,
+                source = "desktop",
+                items = Array.Empty<object>()
+            }, _jsonOptions));
+
+        _captures.Add(new CaptureRecord(
+            _captures.Count + 1,
+            label,
+            fileName,
+            snapshotFileName,
+            _videoEnabled ? videoFileName : null,
+            ocrFileName,
+            DateTimeOffset.Now));
+        WriteCaptureStateResult(currentDirectory, _captures[^1]);
+        Console.WriteLine($"[visual-smoke] Captured desktop lifecycle state {label}: {outputPath}");
+    }
+
+    private static void CaptureDesktopFromScreen(Rectangle bounds, string outputPath)
+    {
+        using var bitmap = new Bitmap(Math.Max(1, bounds.Width), Math.Max(1, bounds.Height));
+        using var graphics = Graphics.FromImage(bitmap);
+        graphics.CopyFromScreen(bounds.Left, bounds.Top, 0, 0, bitmap.Size);
+        Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
+        bitmap.Save(outputPath, System.Drawing.Imaging.ImageFormat.Png);
     }
 
     private static void CaptureResizeSequence(string currentDirectory, AutomationElement mainWindow)

@@ -22,8 +22,13 @@ internal sealed class WindowVideoRecorder : IDisposable
         if (!GetWindowRect((IntPtr)windowHandle, out var rect))
             throw new InvalidOperationException($"Could not read window bounds for video capture: {windowHandle}.");
 
-        var width = Math.Max(2, rect.Right - rect.Left);
-        var height = Math.Max(2, rect.Bottom - rect.Top);
+        return Start(new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top), outputPath);
+    }
+
+    public static WindowVideoRecorder Start(Rectangle bounds, string outputPath)
+    {
+        var width = Math.Max(2, bounds.Width);
+        var height = Math.Max(2, bounds.Height);
         if (width % 2 != 0)
             width--;
         if (height % 2 != 0)
@@ -41,7 +46,7 @@ internal sealed class WindowVideoRecorder : IDisposable
                 Arguments = string.Join(' ',
                     "-hide_banner -loglevel error -y",
                     "-f gdigrab -framerate 30",
-                    $"-offset_x {rect.Left} -offset_y {rect.Top}",
+                    $"-offset_x {bounds.Left} -offset_y {bounds.Top}",
                     $"-video_size {width}x{height}",
                     "-draw_mouse 1 -i desktop",
                     "-c:v libx264 -preset ultrafast -pix_fmt yuv420p",
