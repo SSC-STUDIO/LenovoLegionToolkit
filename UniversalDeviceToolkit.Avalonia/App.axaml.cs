@@ -21,6 +21,7 @@ using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.CLI;
 #endif
 
 namespace UniversalDeviceToolkit.Avalonia;
@@ -89,6 +90,9 @@ public partial class App : Application
 
             // Set up system tray icon programmatically
             SetupTrayIcon();
+#if WINDOWS
+            _ = StartWindowsHostServicesAsync();
+#endif
         }
         base.OnFrameworkInitializationCompleted();
     }
@@ -107,6 +111,10 @@ public partial class App : Application
                     builder.RegisterInstance(settings).As<ApplicationSettings>().SingleInstance();
                     builder.RegisterType<AvaloniaMainThreadDispatcher>()
                         .As<IMainThreadDispatcher>()
+                        .SingleInstance();
+                    builder.RegisterType<IpcServer>()
+                        .AsSelf()
+                        .As<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>()
                         .SingleInstance();
                 },
                 new UniversalDeviceToolkit.Lib.IoCModule(),
@@ -250,12 +258,41 @@ public partial class App : Application
     private void ExitApplication()
     {
         IsExiting = true;
+#if WINDOWS
+        try
+        {
+            IoCContainer.TryResolve<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>()?
+                .StopAsync()
+                .GetAwaiter()
+                .GetResult();
+        }
+        catch
+        {
+            // Process teardown remains best effort; the named pipe is scoped to this process.
+        }
+#endif
         _trayIcon?.Dispose();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Shutdown();
         }
     }
+
+#if WINDOWS
+    private static async Task StartWindowsHostServicesAsync()
+    {
+        try
+        {
+            var lifecycle = IoCContainer.TryResolve<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>();
+            if (lifecycle is not null)
+                await lifecycle.StartStopIfNeededAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Avalonia Windows host service startup failed.", ex);
+        }
+    }
+#endif
 }
 
 /// <summary>
