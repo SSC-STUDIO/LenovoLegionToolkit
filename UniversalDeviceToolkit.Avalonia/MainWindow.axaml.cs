@@ -106,6 +106,13 @@ public partial class MainWindow : Window
         Navigate(MainNavigation.Settings);
     }
 
+    private void OnPluginActionRequested(string actionKey)
+    {
+        const string prefix = "plugin-open:";
+        if (actionKey.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            Navigate(MainNavigation.CreatePluginRoute(actionKey[prefix.Length..]));
+    }
+
     private void ShowDashboardPage()
     {
         _activePage = MainNavigation.Dashboard;
@@ -135,11 +142,24 @@ public partial class MainWindow : Window
             MainNavigation.Actions => new ActionsPage(_platformServices),
             MainNavigation.Macro => new MacroPage(_platformServices),
             MainNavigation.WindowsOptimization => new WindowsOptimizationPage(_platformServices),
-            MainNavigation.PluginExtensions => new PluginExtensionsPage(_platformServices),
+            MainNavigation.PluginExtensions => new PluginExtensionsPage(_platformServices, OnPluginActionRequested),
             _ => throw new ArgumentOutOfRangeException(nameof(route), route, "Unknown feature route."),
         };
         _activePage = route;
         SetActiveButton(GetNavigationButton(route));
+    }
+
+    private void ShowPluginPage(string route)
+    {
+        if (!MainNavigation.TryGetPluginId(route, out var pluginId))
+            return;
+
+        _activePage = MainNavigation.CreatePluginRoute(pluginId);
+        MainContent.Content = new PluginHostedPage(
+            _platformServices,
+            pluginId,
+            () => Navigate(MainNavigation.PluginExtensions));
+        SetActiveButton(PluginExtensionsButton);
     }
 
     /// <summary>
@@ -148,6 +168,12 @@ public partial class MainWindow : Window
     /// </summary>
     public void Navigate(string? route)
     {
+        if (MainNavigation.TryGetPluginId(route, out _))
+        {
+            ShowPluginPage(route!.Trim());
+            return;
+        }
+
         switch (route?.Trim().ToLowerInvariant())
         {
             case MainNavigation.Dashboard:
@@ -198,7 +224,10 @@ public partial class MainWindow : Window
         SetNavigationVisibility(PluginExtensionsButton, MainNavigation.PluginExtensions, settings);
         SetNavigationVisibility(AboutButton, MainNavigation.About, settings);
 
-        if (!NavigationVisibilityPolicy.IsVisible(_activePage, settings)
+        var activeBaseRoute = MainNavigation.TryGetPluginId(_activePage, out _)
+            ? MainNavigation.PluginExtensions
+            : _activePage;
+        if (!NavigationVisibilityPolicy.IsVisible(activeBaseRoute, settings)
             && !string.Equals(_activePage, MainNavigation.Dashboard, StringComparison.OrdinalIgnoreCase))
         {
             ShowDashboardPage();
@@ -248,6 +277,7 @@ public partial class MainWindow : Window
         MainNavigation.PluginExtensions => PluginExtensionsButton,
         MainNavigation.Settings => SettingsButton,
         MainNavigation.About => AboutButton,
+        _ when MainNavigation.TryGetPluginId(route, out _) => PluginExtensionsButton,
         _ => DashboardButton,
     };
 
