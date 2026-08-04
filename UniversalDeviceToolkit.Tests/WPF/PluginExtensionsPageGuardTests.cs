@@ -114,6 +114,20 @@ public sealed class PluginExtensionsPageGuardTests
     }
 
     [Fact]
+    public void FilteringResponsibilities_ShouldLiveInDedicatedPartial()
+    {
+        var mainSource = File.ReadAllText(FindRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs"));
+        var filteringSource = File.ReadAllText(FindRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.Filtering.cs"));
+
+        mainSource.Should().NotContain("private void ApplyFilters()");
+        mainSource.Should().NotContain("private void UpdatePluginsList(List<IPlugin> plugins)");
+        mainSource.Should().NotContain("private void SelectPreferredPlugin(HashSet<string> visiblePluginIds)");
+        filteringSource.Should().Contain("private void ApplyFilters()");
+        filteringSource.Should().Contain("private void UpdatePluginsList(List<IPlugin> plugins)");
+        filteringSource.Should().Contain("private void SelectPreferredPlugin(HashSet<string> visiblePluginIds)");
+    }
+
+    [Fact]
     public void LocalInstall_ShouldRefreshRuntimeUiAndShowCapabilityAwareFeedback()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
@@ -258,6 +272,14 @@ public sealed class PluginExtensionsPageGuardTests
                         "PluginExtensionsPage.State.cs");
                     if (File.Exists(statePath))
                         source += Environment.NewLine + File.ReadAllText(statePath);
+
+                    var filteringPath = Path.Combine(
+                        candidateRoot,
+                        "UniversalDeviceToolkit.WPF",
+                        "Pages",
+                        "PluginExtensionsPage.Filtering.cs");
+                    if (File.Exists(filteringPath))
+                        source += Environment.NewLine + File.ReadAllText(filteringPath);
                 }
 
                 return source;
@@ -265,6 +287,19 @@ public sealed class PluginExtensionsPageGuardTests
         }
 
         throw new DirectoryNotFoundException($"Could not locate repository file '{expectedRelativePath}'.");
+    }
+
+    private static string FindRepositoryFile(params string[] pathParts)
+    {
+        var expectedRelativePath = Path.Combine(pathParts);
+        foreach (var candidateRoot in GetRepositoryRootCandidates())
+        {
+            var path = Path.Combine(candidateRoot, expectedRelativePath);
+            if (File.Exists(path))
+                return path;
+        }
+
+        throw new FileNotFoundException($"Could not locate repository file '{expectedRelativePath}'.");
     }
 
     private static IEnumerable<string> GetRepositoryRootCandidates()
