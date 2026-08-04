@@ -8,6 +8,7 @@ using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -27,7 +28,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         pageKey switch
         {
             "Appearance" => BuildAppearancePage(),
-            "Application" => BuildApplicationPage(),
+            "Application" => await BuildApplicationPageAsync().ConfigureAwait(false),
             "Display" => await BuildDisplayPageAsync().ConfigureAwait(false),
             "SmartKeys" => await BuildSmartKeysPageAsync().ConfigureAwait(false),
             "Update" => BuildUpdatePage(),
@@ -64,6 +65,15 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             case ("Application", "ShowOsd"):
                 _osdSettings.Store.ShowOsd = value;
                 _osdSettings.SynchronizeStore();
+                break;
+            case ("Application", "VantageDisabled"):
+                await SetSoftwareDisabledAsync<VantageDisabler>(value).ConfigureAwait(false);
+                break;
+            case ("Application", "LegionZoneDisabled"):
+                await SetSoftwareDisabledAsync<LegionZoneDisabler>(value).ConfigureAwait(false);
+                break;
+            case ("Application", "FnKeysDisabled"):
+                await SetSoftwareDisabledAsync<FnKeysDisabler>(value).ConfigureAwait(false);
                 break;
             case ("Appearance", "ApplyAccentColorToSystem"):
                 store.ApplyAccentColorToSystem = value;
@@ -152,8 +162,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                     break;
                 }
 
-                throw new KeyNotFoundException($"Unknown toggle {pageKey}/{optionKey}.");
-        }
+        throw new KeyNotFoundException($"Unknown toggle {pageKey}/{optionKey}.");
+    }
 
         return;
     }
@@ -164,6 +174,12 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         {
             _applicationSettings.Store.Theme = ParseEnum<Theme>(value, "Theme");
             _applicationSettings.SynchronizeStore();
+            return;
+        }
+
+        if (pageKey == "Application" && optionKey == "Autorun")
+        {
+            Autorun.Set(ParseEnum<AutorunState>(value, "Autorun"));
             return;
         }
 
@@ -434,23 +450,56 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             true);
     }
 
-    private AvaloniaSettingsPageData BuildApplicationPage()
+    private async Task<AvaloniaSettingsPageData> BuildApplicationPageAsync()
     {
         var store = _applicationSettings.Store;
+        var (vantage, legionZone, fnKeys) = await GetSoftwareStatusesAsync().ConfigureAwait(false);
         return new AvaloniaSettingsPageData(
             "Application",
             "Application Behavior",
             "Configure how the application behaves on startup and during use.",
             [
-                new("LaunchAtStartup", "Launch at startup", "Automatically start the application when Windows starts.", AvaloniaSettingEditor.Toggle, false, Warning: "Startup registration is managed by the Windows host shell."),
+                new("Autorun", "Launch at startup", "Automatically start the application when Windows starts.", AvaloniaSettingEditor.Selection, true,
+                    Values: Enum.GetValues<AutorunState>().Select(value => value.ToString()).ToArray(), SelectedValue: Autorun.State.ToString()),
                 new("MinimizeToTray", "Minimize to system tray", "Keep the application running in the system tray when it is minimized or closed.", AvaloniaSettingEditor.Toggle, true, store.MinimizeToTray),
                 new("MinimizeOnClose", "Minimize on close", "Hide the window instead of exiting when the close button is pressed.", AvaloniaSettingEditor.Toggle, true, store.MinimizeOnClose),
+                new("VantageDisabled", "Disable Lenovo Vantage", "Stop Lenovo Vantage services while Universal Device Toolkit controls the device.", AvaloniaSettingEditor.Toggle, vantage != SoftwareStatus.NotFound, vantage == SoftwareStatus.Disabled,
+                    Warning: vantage == SoftwareStatus.NotFound ? "Lenovo Vantage was not detected." : null),
+                new("LegionZoneDisabled", "Disable Legion Zone", "Stop Legion Zone services while Universal Device Toolkit controls the device.", AvaloniaSettingEditor.Toggle, legionZone != SoftwareStatus.NotFound, legionZone == SoftwareStatus.Disabled,
+                    Warning: legionZone == SoftwareStatus.NotFound ? "Legion Zone was not detected." : null),
+                new("FnKeysDisabled", "Disable Lenovo Fn keys service", "Stop the Lenovo hotkey service when Smart Keys are managed by this application.", AvaloniaSettingEditor.Toggle, fnKeys != SoftwareStatus.NotFound, fnKeys == SoftwareStatus.Disabled,
+                    Warning: fnKeys == SoftwareStatus.NotFound ? "The Lenovo Fn keys service was not detected." : null),
                 new("AnimationsEnabled", "Enable animations", "Use page and control transition animations throughout the application.", AvaloniaSettingEditor.Toggle, true, store.AnimationsEnabled),
                 new("EnableHardwareSensors", "Enable hardware sensors", "Poll supported hardware sensors for dashboard readings.", AvaloniaSettingEditor.Toggle, true, store.EnableHardwareSensors),
                 new("DisableUnsupportedHardwareWarning", "Disable compatibility warning", "Hide the warning shown when hardware-specific features are unavailable.", AvaloniaSettingEditor.Toggle, true, store.DisableUnsupportedHardwareWarning),
                 new("ShowOsd", "Show on-screen display", "Show hardware status changes in the on-screen display.", AvaloniaSettingEditor.Toggle, true, _osdSettings.Store.ShowOsd),
             ],
             true);
+    }
+
+    private static async Task<(SoftwareStatus Vantage, SoftwareStatus LegionZone, SoftwareStatus FnKeys)> GetSoftwareStatusesAsync()
+    {
+        var vantage = IoCContainer.TryResolve<VantageDisabler>();
+        var legionZone = IoCContainer.TryResolve<LegionZoneDisabler>();
+        var fnKeys = IoCContainer.TryResolve<FnKeysDisabler>();
+        var tasks = new[]
+        {
+            vantage?.GetStatusAsync() ?? Task.FromResult(SoftwareStatus.NotFound),
+            legionZone?.GetStatusAsync() ?? Task.FromResult(SoftwareStatus.NotFound),
+            fnKeys?.GetStatusAsync() ?? Task.FromResult(SoftwareStatus.NotFound),
+        };
+        await Task.WhenAll(tasks).ConfigureAwait(false);
+        return (tasks[0].Result, tasks[1].Result, tasks[2].Result);
+    }
+
+    private static async Task SetSoftwareDisabledAsync<T>(bool disabled) where T : AbstractSoftwareDisabler
+    {
+        var disabler = IoCContainer.TryResolve<T>()
+            ?? throw new PlatformNotSupportedException($"{typeof(T).Name} is not initialized.");
+        if (disabled)
+            await disabler.DisableAsync().ConfigureAwait(false);
+        else
+            await disabler.EnableAsync().ConfigureAwait(false);
     }
 
     private async Task<AvaloniaSettingsPageData> BuildDisplayPageAsync()
