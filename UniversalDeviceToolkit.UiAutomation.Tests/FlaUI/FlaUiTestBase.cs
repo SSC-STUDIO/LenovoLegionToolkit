@@ -118,7 +118,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
 
             try
             {
-                App = Application.Launch(_appPath);
+                App = Application.Launch(_appPath, "--safe-start --disable-update-checker");
             }
             catch (System.ComponentModel.Win32Exception ex)
             {
@@ -157,20 +157,26 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
         public virtual async Task DisposeAsync()
         {
             var cleanupFailures = new List<Exception>();
+            var app = App;
 
             try
             {
-                if (App != null && !App.HasExited)
+                if (app != null && !HasExitedOrLostProcess(app))
                 {
-                    App.Close();
+                    app.Close();
                     // Give the app time to close gracefully
                     await Task.Delay(2000);
-                    if (!App.HasExited)
+                    if (!HasExitedOrLostProcess(app))
                     {
-                        App.Kill();
+                        app.Kill();
                         await Task.Delay(1000);
                     }
                 }
+            }
+            catch (InvalidOperationException) when (app != null && HasExitedOrLostProcess(app))
+            {
+                // FlaUI's Process wrapper can lose its native process handle when
+                // the application exits during startup. That is already clean.
             }
             catch (Exception ex)
             {
@@ -208,6 +214,18 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
             }
         }
 
+        private static bool HasExitedOrLostProcess(Application app)
+        {
+            try
+            {
+                return app.HasExited;
+            }
+            catch (InvalidOperationException)
+            {
+                return true;
+            }
+        }
+
         /// <summary>
         /// Waits for the main window to appear.
         /// Uses multiple strategies to find the window:
@@ -228,7 +246,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
                 var byPid = desktop.FindFirstChild(c => c.ByProcessId(processId));
                 if (byPid != null)
                 {
-                    return (Window)byPid;
+                    return byPid.AsWindow();
                 }
 
                 // Strategy 2: Iterate all top-level windows and check ProcessId
@@ -239,7 +257,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
                     {
                         if (elem.Properties.ProcessId.Value == processId)
                         {
-                            return (Window)elem;
+                            return elem.AsWindow();
                         }
                     }
                     catch
@@ -256,7 +274,7 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
                         if (elem.Properties.Name.Value.IndexOf(
                             "Universal Device Toolkit", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            return (Window)elem;
+                            return elem.AsWindow();
                         }
                     }
                     catch
@@ -293,9 +311,10 @@ namespace UniversalDeviceToolkit.Tests.FlaUI
                 Path.Combine(solutionDir, "Build", "Universal Device Toolkit", "Universal Device Toolkit.exe"),
                 Path.Combine(solutionDir, "Build", "Universal Device Toolkit.exe"),
                 Path.Combine(solutionDir, "Build", "UniversalDeviceToolkit", "Universal Device Toolkit.exe"),
-                // x64 platform builds (solution default)
-                Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "x64", "Debug", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
+                // x64 platform builds (nightly and CI use Release; prefer it when
+                // both configurations are present to avoid launching stale output).
                 Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "x64", "Release", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
+                Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "x64", "Debug", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
                 // Legacy/non-x64 output layouts
                 Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "Debug", "net10.0-windows10.0.26100.0", "win-x64", "Universal Device Toolkit.exe"),
                 Path.Combine(solutionDir, "UniversalDeviceToolkit.WPF", "bin", "Debug", "net10.0-windows10.0.26100.0", "win-x86", "Universal Device Toolkit.exe"),
