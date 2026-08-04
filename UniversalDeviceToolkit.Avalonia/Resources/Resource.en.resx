@@ -129,6 +129,15 @@ Only actions that match current state will run.</value>
   <data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
     <value>Add new</value>
   </data>
+  <data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
+    <value>Add automatic</value>
+  </data>
+  <data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
+    <value>New automatic pipeline</value>
+  </data>
+  <data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
+    <value>Automatic triggers are unavailable.</value>
+  </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>No Quick Actions defined. Click "Add new" to create new Quick Action.</value>
   </data>
