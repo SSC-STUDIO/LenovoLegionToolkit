@@ -43,6 +43,11 @@ public class MacroController : IMacroController, IDisposable
 
     public bool IsEnabled => _settings.Store.IsEnabled;
 
+    /// <summary>
+    /// Gets whether the recorder currently owns an input hook.
+    /// </summary>
+    public bool IsRecording => _recorder.IsRecording;
+
     public MacroController(MacroSettings settings, IMainThreadDispatcher mainThreadDispatcher)
     {
         _settings = settings;
@@ -73,6 +78,20 @@ public class MacroController : IMacroController, IDisposable
     }
 
     public Dictionary<MacroIdentifier, MacroSequence> GetSequences() => _settings.Store.Sequences;
+
+    /// <summary>
+    /// Starts playback for a stored keyboard sequence. The method is intentionally
+    /// non-blocking, matching the global hook playback behavior.
+    /// </summary>
+    public bool TryPlaySequence(ulong key)
+    {
+        var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
+        if (!_settings.Store.Sequences.TryGetValue(identifier, out var sequence) || sequence.Events is not { Length: > 0 })
+            return false;
+
+        Play(sequence);
+        return true;
+    }
 
     public void SetSequences(Dictionary<MacroIdentifier, MacroSequence> sequences)
     {

@@ -29,6 +29,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly WindowsOptimizationService? _optimization;
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private bool _automationInitialized;
+    private static readonly ulong[] MacroKeys = [0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69];
 
     private WindowsFeatureHostServices(
         IKeyboardBacklightDetectionService keyboard,
@@ -81,6 +82,24 @@ internal sealed class WindowsFeatureHostServices
             case "Macro" when actionKey == "macro-controller":
                 _macro.SetEnabled(isSelected);
                 return true;
+            case "Macro" when actionKey == "macro-record" && _macro is MacroController recordingController:
+                if (recordingController.IsRecording)
+                    return false;
+
+                recordingController.StartRecording(MacroRecorderSettings.Keyboard);
+                return true;
+            case "Macro" when actionKey == "macro-stop-recording" && _macro is MacroController stoppingController:
+                if (!stoppingController.IsRecording)
+                    return false;
+
+                stoppingController.StopRecording();
+                return true;
+            case "Macro" when actionKey.StartsWith("macro-key:", StringComparison.OrdinalIgnoreCase)
+                                 && _macro is MacroController playbackController:
+                if (!ulong.TryParse(actionKey["macro-key:".Length..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var macroKey))
+                    return false;
+
+                return playbackController.TryPlaySequence(macroKey);
             case "Actions" when actionKey == "automation-enabled":
                 await EnsureAutomationInitializedAsync().ConfigureAwait(false);
                 await _automation.SetEnabledAsync(isSelected).ConfigureAwait(false);
@@ -145,21 +164,83 @@ internal sealed class WindowsFeatureHostServices
                 false)]);
     }
 
-    private FeaturePageState GetMacroState() => new(
-        "Macro",
-        "Macro",
-        "Create and manage device macros.",
-        "Available",
-        "The shared macro controller is connected to the Windows input service.",
-        true,
-        [new FeatureActionItem(
-            "macro-controller",
-            "Enable macro input",
-            "Enable or disable the global macro input hook used by the macro workspace.",
-            _macro.IsEnabled ? "Enabled" : "Disabled",
+    private FeaturePageState GetMacroState()
+    {
+        var controller = _macro as MacroController;
+        var sequences = controller?.GetSequences();
+        var actions = new List<FeatureActionItem>
+        {
+            new FeatureActionItem(
+                "macro-controller",
+                "Enable macro input",
+                "Enable or disable the global macro input hook used by the macro workspace.",
+                _macro.IsEnabled ? "Enabled" : "Disabled",
+                true,
+                _macro.IsEnabled,
+                true),
+        };
+
+        if (controller is null)
+        {
+            actions.Add(new FeatureActionItem(
+                "macro-controller-status",
+                "Macro workspace",
+                "The host macro controller does not expose sequence editing on this adapter.",
+                "Unavailable",
+                false,
+                false,
+                false));
+        }
+        else
+        {
+            actions.Add(new FeatureActionItem(
+                "macro-record",
+                "Record keyboard sequence",
+                "Capture keyboard input into the selected macro slot. Stop recording from the same workspace action.",
+                controller.IsRecording ? "Recording" : "Record",
+                !controller.IsRecording,
+                false,
+                false));
+            actions.Add(new FeatureActionItem(
+                "macro-stop-recording",
+                "Stop recording",
+                "Stop the active macro recording and persist the captured sequence.",
+                "Stop",
+                controller.IsRecording,
+                false,
+                false));
+
+            foreach (var key in MacroKeys)
+            {
+                var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
+                sequences!.TryGetValue(identifier, out var sequence);
+                var eventCount = sequence.Events?.Length ?? 0;
+                var digit = key - 0x60;
+                var title = $"Numpad {digit}";
+                var description = eventCount == 0
+                    ? "No sequence is stored for this macro slot."
+                    : $"{eventCount} recorded event(s), repeats {Math.Max(1, sequence.RepeatCount)} time(s). Click Play to send it through the shared macro player.";
+                actions.Add(new FeatureActionItem(
+                    $"macro-key:{key:X}",
+                    title,
+                    description,
+                    eventCount == 0 ? "Empty" : "Play",
+                    eventCount > 0,
+                    false,
+                    false));
+            }
+        }
+
+        var populated = sequences?.Count ?? 0;
+        return new FeaturePageState(
+            "Macro",
+            "Macro",
+            "Create and manage device macros.",
+            "Available",
+            $"The shared macro controller is connected. {populated} keyboard sequence(s) are stored.",
             true,
-            _macro.IsEnabled,
-            true)]);
+            actions);
+    }
 
     private async Task<FeaturePageState> GetAutomationStateAsync()
     {
