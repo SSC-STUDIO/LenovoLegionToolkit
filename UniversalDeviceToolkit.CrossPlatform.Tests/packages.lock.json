@@ -284,6 +284,13 @@
           "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
         }
       },
+      "universaldevicetoolkit.tests.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "FluentAssertions": "[8.10.0, )",
+          "xunit": "[2.9.3, )"
+        }
+      },
       "universaldevicetoolkit.viewmodels": {
         "type": "Project",
         "dependencies": {

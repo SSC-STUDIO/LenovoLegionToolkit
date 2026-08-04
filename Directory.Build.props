@@ -44,7 +44,7 @@
     Includes: CrossPlatform (CLI), Lib.Shared (extracted cross-platform business logic),
     Lib.Abstractions (pure interfaces), ViewModels, and Avalonia (cross-platform UI).
   -->
-  <PropertyGroup Condition="$(MSBuildProjectName.Contains('CrossPlatform')) or $(MSBuildProjectName.Contains('Shared')) or $(MSBuildProjectName.Contains('Abstractions')) or $(MSBuildProjectName.Contains('ViewModels')) or $(MSBuildProjectName.Contains('Avalonia')) or $(MSBuildProjectName.Contains('Platform.Linux')) or $(MSBuildProjectName.Contains('Platform.MacOS')) or $(MSBuildProjectName.Contains('Platform.Windows.Core'))">
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('CrossPlatform')) or $(MSBuildProjectName.Contains('Shared')) or $(MSBuildProjectName.Contains('Abstractions')) or $(MSBuildProjectName.Contains('ViewModels')) or $(MSBuildProjectName.Contains('Avalonia')) or $(MSBuildProjectName.Contains('Platform.Linux')) or $(MSBuildProjectName.Contains('Platform.MacOS')) or $(MSBuildProjectName.Contains('Platform.Windows.Core')) or $(MSBuildProjectName.Contains('Tests.Infrastructure'))">
     <DisableUdtForceX64>true</DisableUdtForceX64>
   </PropertyGroup>
 

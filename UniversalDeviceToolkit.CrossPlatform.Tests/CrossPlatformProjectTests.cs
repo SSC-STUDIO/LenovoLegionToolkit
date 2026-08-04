@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System.Xml.Linq;
+using UniversalDeviceToolkit.Tests;
 using Xunit;
 
 namespace UniversalDeviceToolkit.CrossPlatform.Tests;
