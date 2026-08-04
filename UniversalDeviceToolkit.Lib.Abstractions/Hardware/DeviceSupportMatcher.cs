@@ -114,7 +114,7 @@ public static class DeviceSupportMatcher
 
         var keywordScore = pack.ModelKeywords
             .Where(keyword => ContainsSignal(modelSignals, keyword))
-            .Select(keyword => 3000 + keyword.Length)
+            .Select(keyword => KeywordScore(keyword))
             .DefaultIfEmpty(-1)
             .Max();
         var prefixScore = pack.ModelPrefixes
@@ -133,6 +133,14 @@ public static class DeviceSupportMatcher
 
     private static int VendorScore(DevicePackDefinition pack) =>
         pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase) ? 0 : 10000;
+
+    private static int KeywordScore(string keyword) =>
+        IsPlaceholderKeyword(keyword) ? 500 + keyword.Length : 3000 + keyword.Length;
+
+    private static bool IsPlaceholderKeyword(string keyword) =>
+        keyword.Equals("Default string", StringComparison.OrdinalIgnoreCase) ||
+        keyword.Equals("System Product Name", StringComparison.OrdinalIgnoreCase) ||
+        keyword.Equals("To Be Filled By O.E.M.", StringComparison.OrdinalIgnoreCase);
 
     private static bool VendorMatches(DevicePackDefinition pack, DeviceIdentity identity)
     {

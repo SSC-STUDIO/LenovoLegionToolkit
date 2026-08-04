@@ -71,7 +71,9 @@ public class CatalogDeviceSupportProvider(
                 return FromPack(preferred);
         }
 
-        var pack = FindSharedMatch(devicePacks, machineInformation);
+        var pack = _installedCatalog?.DevicePacks is { Count: > 0 } installedPacks
+            ? FindSharedMatch(installedPacks, machineInformation) ?? FindSharedMatch(devicePacks, machineInformation)
+            : FindSharedMatch(devicePacks, machineInformation);
         if (pack is null)
             return BasicMode();
 
