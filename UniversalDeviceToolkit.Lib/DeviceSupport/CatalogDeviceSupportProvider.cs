@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Hardware;
 
 namespace UniversalDeviceToolkit.Lib.DeviceSupport;
 
@@ -71,8 +71,7 @@ public class CatalogDeviceSupportProvider(
                 return FromPack(preferred);
         }
 
-        var pack = devicePacks.FirstOrDefault(devicePack => MatchesMachineType(devicePack, machineInformation))
-                   ?? devicePacks.FirstOrDefault(devicePack => MatchesModel(devicePack, machineInformation));
+        var pack = FindSharedMatch(devicePacks, machineInformation);
         if (pack is null)
             return BasicMode();
 
@@ -120,40 +119,66 @@ public class CatalogDeviceSupportProvider(
         HiddenFeatures = BasicModeHiddenFeatures
     };
 
-    private static bool MatchesMachineType(DevicePack pack, MachineInformation machineInformation)
+    private static DevicePack? FindSharedMatch(
+        IReadOnlyCollection<DevicePack> devicePacks,
+        MachineInformation machineInformation)
     {
-        if (!VendorMatches(pack, machineInformation))
-            return false;
+        if (devicePacks.Count == 0)
+            return null;
 
-        var candidates = GetMachineTypeCandidates(machineInformation).ToArray();
-        if (candidates.Length == 0)
-            return false;
-
-        var packTypes = GetCollectionOrEmpty(pack.MachineTypes);
-        return candidates.Any(candidate =>
-            packTypes.Any(machineType => machineType.Equals(candidate, StringComparison.OrdinalIgnoreCase)));
+        var definitions = devicePacks.Select(ToDefinition).ToArray();
+        var support = DeviceSupportMatcher.Evaluate(ToDeviceIdentity(machineInformation), definitions);
+        return devicePacks.FirstOrDefault(pack =>
+            pack.Id.Equals(support.DevicePackId, StringComparison.OrdinalIgnoreCase));
     }
 
-    /// <summary>
-    /// Collect 4-char Lenovo MTM codes from MachineType, Model, and DMI SKU
-    /// (e.g. LENOVO_MT_83DF_BU_idea_FM_Legion Y9000P IRX9).
-    /// </summary>
-    private static IEnumerable<string> GetMachineTypeCandidates(MachineInformation machineInformation)
-    {
-        if (!string.IsNullOrWhiteSpace(machineInformation.MachineType))
+    private static DevicePackDefinition ToDefinition(DevicePack pack) =>
+        new()
         {
-            yield return machineInformation.MachineType.Trim();
-            var fromType = ExtractMachineTypeToken(machineInformation.MachineType);
-            if (fromType is not null)
-                yield return fromType;
-        }
+            Id = pack.Id,
+            DisplayName = pack.DisplayName,
+            Vendor = pack.Vendor,
+            VendorAliases = GetCollectionOrEmpty(pack.VendorAliases),
+            Families = GetCollectionOrEmpty(pack.Families),
+            ModelPrefixes = GetCollectionOrEmpty(pack.ModelPrefixes),
+            ModelKeywords = GetCollectionOrEmpty(pack.ModelKeywords),
+            MachineTypes = GetCollectionOrEmpty(pack.MachineTypes),
+            EnabledFeatures = GetCollectionOrEmpty(pack.EnabledFeatures),
+            HiddenFeatures = GetCollectionOrEmpty(pack.HiddenFeatures),
+        };
 
-        foreach (var signal in GetModelSignals(machineInformation))
+    private static DeviceIdentity ToDeviceIdentity(MachineInformation machineInformation)
+    {
+        var hardware = machineInformation.Hardware ?? HardwareInventory.Empty;
+        var vendor = FirstPresent(
+            machineInformation.Vendor,
+            hardware.ComputerSystem.Manufacturer,
+            hardware.BaseBoard.Manufacturer,
+            hardware.Chassis.Manufacturer);
+        var modelSignals = new[] { machineInformation.Model }
+            .Concat(hardware.MatchSignals)
+            .Where(signal => !string.IsNullOrWhiteSpace(signal))
+            .Select(signal => signal.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        var model = FirstPresent(new[] { machineInformation.Model }.Concat(modelSignals).ToArray());
+        var machineType = ExtractMachineTypeToken(machineInformation.MachineType) ??
+                          modelSignals.Select(ExtractMachineTypeToken).FirstOrDefault(token => token is not null) ??
+                          machineInformation.MachineType?.Trim() ??
+                          string.Empty;
+
+        return new DeviceIdentity(
+            "windows",
+            RuntimeInformation.OSArchitecture.ToString(),
+            vendor,
+            model,
+            string.Join(" ", modelSignals),
+            machineInformation.BiosVersionRaw ?? string.Empty,
+            machineInformation.SerialNumber,
+            "wpf-wmi")
         {
-            var token = ExtractMachineTypeToken(signal);
-            if (token is not null)
-                yield return token;
-        }
+            MachineType = machineType,
+        };
     }
 
     private static string? ExtractMachineTypeToken(string? value)
@@ -189,136 +214,8 @@ public class CatalogDeviceSupportProvider(
         char.IsDigit(token[1]) &&
         token.Skip(2).All(c => char.IsLetterOrDigit(c));
 
-    private static bool MatchesModel(DevicePack pack, MachineInformation machineInformation)
-    {
-        if (!VendorMatches(pack, machineInformation))
-            return false;
-
-        var modelSignals = GetModelSignals(machineInformation).ToArray();
-        var modelPrefixes = GetCollectionOrEmpty(pack.ModelPrefixes);
-        var machineTypes = GetCollectionOrEmpty(pack.MachineTypes);
-        var modelKeywords = GetCollectionOrEmpty(pack.ModelKeywords);
-        var families = GetCollectionOrEmpty(pack.Families);
-
-        if (modelPrefixes.Any(prefix => modelSignals.Any(signal => signal.Contains(prefix, StringComparison.OrdinalIgnoreCase))))
-            return true;
-
-        if (modelKeywords.Any(keyword => modelSignals.Any(signal => signal.Contains(keyword, StringComparison.OrdinalIgnoreCase))))
-            return true;
-
-        if (!PackUsesWildcardVendor(pack) && FamilyMatchesVendorAlias(pack, families, machineInformation))
-            return true;
-
-        if (modelPrefixes.Count == 0 &&
-            machineTypes.Count == 0 &&
-            modelKeywords.Count == 0 &&
-            families.Any(family => modelSignals.Any(signal => signal.Contains(family, StringComparison.OrdinalIgnoreCase))))
-            return true;
-
-        return modelPrefixes.Count == 0 &&
-               machineTypes.Count == 0 &&
-               modelKeywords.Count == 0 &&
-               families.Count == 0;
-    }
-
-    private static bool VendorMatches(DevicePack pack, MachineInformation machineInformation)
-    {
-        var vendorSignals = GetVendorSignals(machineInformation).ToArray();
-        if (vendorSignals.Length == 0)
-            return false;
-
-        if (string.IsNullOrWhiteSpace(pack.Vendor))
-            return false;
-
-        if (PackUsesWildcardVendor(pack))
-            return true;
-
-        return vendorSignals.Any(vendor =>
-        {
-            var normalizedVendor = NormalizeVendorName(vendor);
-            return VendorNameMatches(pack.Vendor, vendor, normalizedVendor) ||
-                   GetCollectionOrEmpty(pack.VendorAliases).Any(alias => VendorNameMatches(alias, vendor, normalizedVendor));
-        });
-    }
-
-    private static IEnumerable<string> GetVendorSignals(MachineInformation machineInformation)
-    {
-        if (!string.IsNullOrWhiteSpace(machineInformation.Vendor))
-            yield return machineInformation.Vendor;
-
-        var hardware = machineInformation.Hardware ?? HardwareInventory.Empty;
-        if (!string.IsNullOrWhiteSpace(hardware.ComputerSystem.Manufacturer))
-            yield return hardware.ComputerSystem.Manufacturer;
-        if (!string.IsNullOrWhiteSpace(hardware.BaseBoard.Manufacturer))
-            yield return hardware.BaseBoard.Manufacturer;
-        if (!string.IsNullOrWhiteSpace(hardware.Chassis.Manufacturer))
-            yield return hardware.Chassis.Manufacturer;
-    }
-
-    private static bool PackUsesWildcardVendor(DevicePack pack) =>
-        pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase);
-
-    private static bool FamilyMatchesVendorAlias(DevicePack pack, IReadOnlyCollection<string> families, MachineInformation machineInformation) =>
-        families.Count > 0 &&
-        GetVendorSignals(machineInformation).Any(vendor =>
-        {
-            var normalizedVendor = NormalizeVendorName(vendor);
-            return GetCollectionOrEmpty(pack.VendorAliases).Any(alias =>
-                VendorNameMatches(alias, vendor, normalizedVendor) &&
-                families.Any(family =>
-                    !string.IsNullOrWhiteSpace(family) &&
-                    !string.IsNullOrWhiteSpace(alias) &&
-                    (alias.Contains(family, StringComparison.OrdinalIgnoreCase) ||
-                     family.Contains(alias, StringComparison.OrdinalIgnoreCase))));
-        });
-
-    private static IEnumerable<string> GetModelSignals(MachineInformation machineInformation)
-    {
-        if (!string.IsNullOrWhiteSpace(machineInformation.Model))
-            yield return machineInformation.Model;
-
-        var hardware = machineInformation.Hardware ?? HardwareInventory.Empty;
-        foreach (var signal in hardware.MatchSignals)
-        {
-            if (!string.IsNullOrWhiteSpace(signal))
-                yield return signal;
-        }
-    }
-
-    private static bool VendorNameMatches(string packVendor, string machineVendor, string normalizedMachineVendor)
-    {
-        if (packVendor.Equals(machineVendor, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        var normalizedPackVendor = NormalizeVendorName(packVendor);
-        return !string.IsNullOrWhiteSpace(normalizedPackVendor) &&
-               !string.IsNullOrWhiteSpace(normalizedMachineVendor) &&
-               (normalizedPackVendor.Equals(normalizedMachineVendor, StringComparison.OrdinalIgnoreCase) ||
-                normalizedMachineVendor.StartsWith(normalizedPackVendor, StringComparison.OrdinalIgnoreCase) ||
-                normalizedPackVendor.StartsWith(normalizedMachineVendor, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static string NormalizeVendorName(string vendor)
-    {
-        if (string.IsNullOrWhiteSpace(vendor))
-            return string.Empty;
-
-        var builder = new StringBuilder(vendor.Length);
-        foreach (var character in vendor.Normalize(NormalizationForm.FormD))
-        {
-            if (CharUnicodeInfo.GetUnicodeCategory(character) == UnicodeCategory.NonSpacingMark)
-                continue;
-
-            if (char.IsLetterOrDigit(character))
-                builder.Append(char.ToUpperInvariant(character));
-        }
-
-        return builder.ToString()
-            .Replace("INCORPORATED", "INC", StringComparison.Ordinal)
-            .Replace("CORPORATION", "CORP", StringComparison.Ordinal)
-            .Replace("COMPANY", "CO", StringComparison.Ordinal)
-            .Replace("LIMITED", "LTD", StringComparison.Ordinal);
-    }
+    private static string FirstPresent(params string?[] values) =>
+        values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))?.Trim() ?? string.Empty;
 
     private static IReadOnlyCollection<string> GetCollectionOrEmpty(IReadOnlyCollection<string>? values) =>
         values ?? [];
