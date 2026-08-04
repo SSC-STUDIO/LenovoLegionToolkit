@@ -147,12 +147,17 @@ function Compress-DirectoryContents {
 function Get-LanguageDirectories {
     param([Parameter(Mandatory = $true)][string]$BuildPath)
 
-    $mainAppSatelliteName = 'Universal Device Toolkit.resources.dll'
     Get-ChildItem -LiteralPath $BuildPath -Directory |
         Where-Object {
-            Test-Path -LiteralPath (Join-Path $_.FullName $mainAppSatelliteName)
+            Test-MainAppSatellite $_.FullName
         } |
         Sort-Object Name
+}
+
+function Test-MainAppSatellite {
+    param([Parameter(Mandatory = $true)][string]$DirectoryPath)
+
+    Test-Path -LiteralPath (Join-Path $DirectoryPath 'Universal Device Toolkit.resources.dll')
 }
 
 function New-FileMetadata {
@@ -489,7 +494,7 @@ function Prepare-ReleaseAssets {
             $sourceDirectories = @($pack.Directories |
                 ForEach-Object {
                     $candidate = Join-Path $buildPath $_
-                    if (Test-Path -LiteralPath $candidate) {
+                    if (Test-MainAppSatellite $candidate) {
                         $candidate
                     }
                 })
