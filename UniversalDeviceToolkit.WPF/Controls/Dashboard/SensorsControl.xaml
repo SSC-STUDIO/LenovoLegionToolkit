@@ -44,6 +44,13 @@
             <Setter Property="MinWidth" Value="0" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
         </Style>
+        <Style x:Key="StatValueTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,2,0,2" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Style>
         <!--
           Detail values (PCIe throughput, CPU power breakdown) can be long. Wrap + trim so they
           stay inside their column instead of painting over the adjacent temperature field
@@ -303,13 +310,13 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_cpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_cpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_cpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_cpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_cpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_cpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
                         </Grid>
                     </Grid>
 
@@ -425,13 +432,13 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Health}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_batteryHealthMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_batteryHealthMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_batteryTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_batteryTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Rate}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_batteryRateMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_batteryRateMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
                         </Grid>
                     </Grid>
 
@@ -558,13 +565,13 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_gpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_gpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
 
                             <Label Grid.Row="1" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_gpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_gpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
 
                             <Label Grid.Row="2" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Style="{StaticResource StatLabelStyle}" />
-                            <controls:MarqueeMetricBar x:Name="_gpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueStyle}" />
+                            <controls:MarqueeMetricBar x:Name="_gpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
                         </Grid>
                     </Grid>
 

@@ -1477,6 +1477,7 @@ internal static partial class Program
                 || snapshot.Height is null
                 || snapshot.Width <= 1
                 || snapshot.Height <= 1
+                || IsIconGlyph(snapshot.Name)
                 || (!snapshot.Type.Equals("Text", StringComparison.Ordinal)
                     && !snapshot.Type.Equals("Label", StringComparison.Ordinal)))
             {
@@ -1567,6 +1568,11 @@ internal static partial class Program
 
     private static bool IsFrameworkTemplatePart(ElementSnapshot snapshot) =>
         IsFrameworkTemplatePart(snapshot.AutomationId, snapshot.ClassName);
+
+    private static bool IsIconGlyph(string? value) =>
+        !string.IsNullOrEmpty(value)
+        && value.Length <= 2
+        && value.All(character => char.GetUnicodeCategory(character) == UnicodeCategory.PrivateUse);
 
     private static bool IsFrameworkTemplatePart(string? automationId, string? className) =>
         (!string.IsNullOrWhiteSpace(automationId)

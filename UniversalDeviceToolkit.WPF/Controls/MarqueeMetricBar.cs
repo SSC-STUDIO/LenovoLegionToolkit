@@ -45,7 +45,7 @@ public class MarqueeMetricBar : ContentControl
     private Grid? _viewport;
     private StackPanel? _content;
     private ProgressBar? _bar;
-    private Label? _label;
+    private TextBlock? _label;
     private TranslateTransform? _scrollTransform;
     private Storyboard? _activeStoryboard;
     private bool _isOverflowing;
@@ -123,7 +123,7 @@ public class MarqueeMetricBar : ContentControl
         set => SetValue(BarStyleProperty, value);
     }
 
-    /// <summary>Style applied to the value Label (the app-wide StatValueStyle).</summary>
+    /// <summary>Style applied to the value TextBlock (the app-wide StatValueTextBlockStyle).</summary>
     public static readonly DependencyProperty TextStyleProperty = DependencyProperty.Register(
         nameof(TextStyle), typeof(Style), typeof(MarqueeMetricBar),
         new FrameworkPropertyMetadata(null, OnTextStyleChanged));
@@ -185,7 +185,7 @@ public class MarqueeMetricBar : ContentControl
         bar.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
         content.AppendChild(bar);
 
-        var text = new FrameworkElementFactory(typeof(Label));
+        var text = new FrameworkElementFactory(typeof(TextBlock));
         text.Name = "PART_Text";
         text.SetValue(FrameworkElement.VerticalAlignmentProperty, VerticalAlignment.Center);
         text.SetValue(FrameworkElement.MarginProperty, new Thickness(BarTextGap, 0, 0, 0));
@@ -205,7 +205,7 @@ public class MarqueeMetricBar : ContentControl
         _viewport = Template.FindName("PART_Viewport", this) as Grid;
         _content = Template.FindName("PART_Content", this) as StackPanel;
         _bar = Template.FindName("PART_Bar", this) as ProgressBar;
-        _label = Template.FindName("PART_Text", this) as Label;
+        _label = Template.FindName("PART_Text", this) as TextBlock;
 
         if (_content is not null)
         {
@@ -231,7 +231,7 @@ public class MarqueeMetricBar : ContentControl
         {
             if (TextStyle is not null)
                 _label.Style = TextStyle;
-            _label.Content = Text;
+            _label.Text = Text;
         }
 
         RecalculateLayout();
@@ -250,7 +250,7 @@ public class MarqueeMetricBar : ContentControl
         var self = (MarqueeMetricBar)d;
         if (self._label is not null)
         {
-            self._label.Content = self.Text;
+            self._label.Text = self.Text;
             self.RecalculateLayout();
         }
     }
@@ -293,7 +293,7 @@ public class MarqueeMetricBar : ContentControl
     {
         if (_label is null)
             return string.Empty;
-        return _label.Content as string ?? _label.Content?.ToString() ?? string.Empty;
+        return _label.Text ?? string.Empty;
     }
 
     private double MeasureNaturalTextWidth()
