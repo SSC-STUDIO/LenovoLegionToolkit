@@ -186,6 +186,7 @@
        
             <ListBox
                 x:Name="_navigationListBox"
+                AutomationProperties.AutomationId="SettingsNavigationList"
                 BorderThickness="0"
                 Background="Transparent"
                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
@@ -223,6 +224,8 @@
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
+                        <Setter Property="AutomationProperties.Name" Value="{Binding Title}" />
+                        <Setter Property="AutomationProperties.AutomationId" Value="{Binding Key, StringFormat=SettingsNav_{0}}" />
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="Padding" Value="0" />
                         <Setter Property="Margin" Value="0,0,0,2" />
@@ -291,6 +294,7 @@
         <!-- Right Content Area -->
         <ContentControl
             x:Name="_contentControl"
+            AutomationProperties.AutomationId="SettingsContentControl"
             Grid.Column="2"
             Margin="16,0,0,0">
             <ContentControl.RenderTransform>
@@ -301,4 +305,3 @@
         </controls:LoadableControl>
     </Grid>
 </Page>
-

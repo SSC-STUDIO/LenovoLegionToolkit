@@ -21,7 +21,9 @@
                            automation:AutomationProperties.Name="{local:Loc Key=Settings_Title, Fallback=Settings}"
                            Margin="12,0,0,16"/>
 
-                <ListBox ItemsSource="{Binding NavigationItems}"
+                <ListBox x:Name="SettingsNavigationList"
+                         automation:AutomationProperties.AutomationId="AvaloniaSettingsNavigationList"
+                         ItemsSource="{Binding NavigationItems}"
                          SelectedIndex="{Binding SelectedNavigationIndex}"
                          BorderThickness="0"
                          Background="Transparent">
