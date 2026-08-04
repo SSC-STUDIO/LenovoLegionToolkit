@@ -273,6 +273,7 @@ internal static partial class Program
                 [],
                 ["Settings"],
                 root => FindVisibleTextContains(root, "Settings")));
+            CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
             NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
                 "about",
@@ -404,7 +405,8 @@ internal static partial class Program
     private static void CaptureAvaloniaSettingsItems(string currentDirectory, AutomationElement mainWindow)
     {
         var live = ResolveLiveWindow(mainWindow);
-        var items = live.FindAll(
+        var navigation = FindByAutomationId(live, "AvaloniaSettingsNavigationList") ?? live;
+        var items = navigation.FindAll(
                 TreeScope.Descendants,
                 new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
             .Cast<AutomationElement>()
@@ -413,11 +415,145 @@ internal static partial class Program
 
         for (var index = 0; index < items.Length; index++)
         {
+            live = ResolveLiveWindow(mainWindow);
+            navigation = FindByAutomationId(live, "AvaloniaSettingsNavigationList") ?? live;
+            items = navigation.FindAll(
+                    TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+                .Cast<AutomationElement>()
+                .Where(IsVisible)
+                .ToArray();
+            if (index >= items.Length)
+                break;
+
             var item = items[index];
             ActivateElement(item);
             WaitForAnimationsToComplete();
-            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), $"settings-item-{index + 1}");
+            var itemLabel = SanitizeFileNameSegment(GetElementName(item));
+            var label = string.IsNullOrWhiteSpace(itemLabel)
+                ? $"settings-item-{index + 1}"
+                : $"settings-{index + 1}-{itemLabel}";
+            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
+            CaptureFirstComboState(currentDirectory, mainWindow, label);
+            CaptureFirstSafeToggleState(currentDirectory, mainWindow, label);
         }
+    }
+
+    private static void CaptureWpfSettingsStates(string currentDirectory, AutomationElement mainWindow)
+    {
+        var live = ResolveLiveWindow(mainWindow);
+        var navigation = WaitForAutomationId(live, "SettingsNavigationList", TimeSpan.FromSeconds(15));
+        var items = WaitUntil(
+            () => navigation.FindAll(
+                    TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+                .Cast<AutomationElement>()
+                .Any(IsVisible),
+            TimeSpan.FromSeconds(15),
+            TimeSpan.FromMilliseconds(250));
+
+        if (!items)
+            throw new TimeoutException("Settings navigation did not expose any visible items.");
+
+        var count = navigation.FindAll(
+                TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+            .Cast<AutomationElement>()
+            .Count(IsVisible);
+
+        for (var index = 0; index < count; index++)
+        {
+            live = ResolveLiveWindow(mainWindow);
+            navigation = FindByAutomationId(live, "SettingsNavigationList") ?? navigation;
+            var visibleItems = navigation.FindAll(
+                    TreeScope.Descendants,
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
+                .Cast<AutomationElement>()
+                .Where(IsVisible)
+                .ToArray();
+            if (index >= visibleItems.Length)
+                break;
+
+            var item = visibleItems[index];
+            var itemName = GetElementName(item);
+            var automationId = item.Current.AutomationId;
+            ActivateElement(item);
+            WaitUntil(
+                () => IsVisible(FindByAutomationId(ResolveLiveWindow(mainWindow), "SettingsContentControl")),
+                TimeSpan.FromSeconds(10),
+                TimeSpan.FromMilliseconds(200));
+            WaitForAnimationsToComplete();
+
+            var label = $"settings-{index + 1}-{SanitizeFileNameSegment(
+                string.IsNullOrWhiteSpace(automationId) ? itemName : automationId)}";
+            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
+            CaptureFirstComboState(currentDirectory, mainWindow, label);
+            CaptureFirstSafeToggleState(currentDirectory, mainWindow, label);
+        }
+    }
+
+    private static void CaptureFirstComboState(string currentDirectory, AutomationElement mainWindow, string label)
+    {
+        var live = ResolveLiveWindow(mainWindow);
+        var combo = live.FindAll(
+                TreeScope.Descendants,
+                new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ComboBox))
+            .Cast<AutomationElement>()
+            .FirstOrDefault(IsVisible);
+        if (combo is null || !combo.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var pattern))
+            return;
+
+        var expander = (ExpandCollapsePattern)pattern;
+        if (expander.Current.ExpandCollapseState == ExpandCollapseState.Expanded)
+            return;
+
+        expander.Expand();
+        Thread.Sleep(250);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), $"{label}-combo-expanded");
+
+        if (combo.TryGetCurrentPattern(ExpandCollapsePattern.Pattern, out var collapsePattern))
+            ((ExpandCollapsePattern)collapsePattern).Collapse();
+        Thread.Sleep(150);
+    }
+
+    private static void CaptureFirstSafeToggleState(string currentDirectory, AutomationElement mainWindow, string label)
+    {
+        var live = ResolveLiveWindow(mainWindow);
+        var toggle = live.FindAll(
+                TreeScope.Descendants,
+                new OrCondition(
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.CheckBox),
+                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Button)))
+            .Cast<AutomationElement>()
+            .Where(IsVisible)
+            .FirstOrDefault(element => IsSafeToggle(element));
+        if (toggle is null || !toggle.TryGetCurrentPattern(TogglePattern.Pattern, out var pattern))
+            return;
+
+        var togglePattern = (TogglePattern)pattern;
+        var initialState = togglePattern.Current.ToggleState;
+        if (initialState == ToggleState.Indeterminate)
+            return;
+
+        togglePattern.Toggle();
+        Thread.Sleep(300);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), $"{label}-toggle-changed");
+
+        if (toggle.TryGetCurrentPattern(TogglePattern.Pattern, out var restorePattern)
+            && ((TogglePattern)restorePattern).Current.ToggleState != initialState)
+        {
+            ((TogglePattern)restorePattern).Toggle();
+            Thread.Sleep(250);
+        }
+    }
+
+    private static bool IsSafeToggle(AutomationElement element)
+    {
+        var id = element.Current.AutomationId ?? string.Empty;
+        return !id.Contains("GodMode", StringComparison.OrdinalIgnoreCase)
+               && !id.Contains("ForceSoftware", StringComparison.OrdinalIgnoreCase)
+               && !id.Contains("OnBattery", StringComparison.OrdinalIgnoreCase)
+               && !id.Contains("Disable", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void CaptureNavigationSidebarStates(string currentDirectory, AutomationElement mainWindow)
@@ -718,7 +854,10 @@ internal static partial class Program
         CaptureWindowFromScreen(windowHandle, outputPath);
 
         AssertCaptureDimensions(outputPath, label);
+        AssertNotBlankCapture(outputPath, label);
         AssertThemeSurface(outputPath, label);
+
+        ValidateAutomationLayout(label, mainWindow);
 
         var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
         var snapshot = BuildSnapshot(label, mainWindow);
@@ -745,6 +884,65 @@ internal static partial class Program
         }
 
         Console.WriteLine($"[visual-smoke] Capture size for {label}: {bitmap.Width}x{bitmap.Height} (window target {_windowWidth}x{_windowHeight})");
+    }
+
+    private static void AssertNotBlankCapture(string outputPath, string label)
+    {
+        using var bitmap = new Bitmap(outputPath);
+        var sample = SampleRegion(bitmap, 0, 0, bitmap.Width, bitmap.Height);
+        if (sample.AverageLuminance < 2.0 || sample.AverageLuminance > 253.5)
+        {
+            throw new InvalidOperationException(
+                $"Screenshot '{label}' appears blank or fully solid. Average luminance {sample.AverageLuminance:F1}: {outputPath}");
+        }
+    }
+
+    private static void ValidateAutomationLayout(string label, AutomationElement root)
+    {
+        var rootRect = root.Current.BoundingRectangle;
+        if (rootRect.Width <= 1 || rootRect.Height <= 1)
+            throw new InvalidOperationException($"UI Automation root has invalid bounds for '{label}'.");
+
+        var interactiveTypes = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "Button",
+            "CheckBox",
+            "ComboBox",
+            "ListItem",
+            "RadioButton",
+            "TabItem",
+        };
+
+        foreach (var element in EnumerateDescendants(root, 600))
+        {
+            ElementSnapshot? snapshot;
+            try
+            {
+                snapshot = SafeDescribeElement(element);
+            }
+            catch (ElementNotAvailableException)
+            {
+                continue;
+            }
+
+            if (snapshot is null || snapshot.IsOffscreen || !interactiveTypes.Contains(snapshot.Type)
+                || snapshot.X is null || snapshot.Y is null || snapshot.Width is null || snapshot.Height is null)
+                continue;
+
+            if (snapshot.Width <= 1 || snapshot.Height <= 1)
+                throw new InvalidOperationException(
+                    $"Interactive UIA element '{snapshot.AutomationId ?? snapshot.Name}' has empty bounds on '{label}'.");
+
+            const double tolerance = 6;
+            if (snapshot.X < rootRect.Left - tolerance
+                || snapshot.Y < rootRect.Top - tolerance
+                || snapshot.X + snapshot.Width > rootRect.Right + tolerance
+                || snapshot.Y + snapshot.Height > rootRect.Bottom + tolerance)
+            {
+                throw new InvalidOperationException(
+                    $"Interactive UIA element '{snapshot.AutomationId ?? snapshot.Name}' exceeds the window bounds on '{label}'.");
+            }
+        }
     }
 
     private static void AssertThemeSurface(string outputPath, string label)
