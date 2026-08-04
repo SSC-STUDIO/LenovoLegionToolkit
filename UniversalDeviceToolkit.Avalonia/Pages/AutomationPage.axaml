@@ -50,7 +50,7 @@
                 </Grid>
             </Border>
 
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
                 <StackPanel Spacing="4">
                     <controls:LocalizedTextBlock x:Name="PipelinesTitle"
                                                  FontWeight="Medium"
@@ -67,6 +67,11 @@
                         MinWidth="132"
                         VerticalAlignment="Center"
                         automation:AutomationProperties.AutomationId="AutomationAddManualPipelineButton" />
+                <Button x:Name="AddAutomaticButton"
+                        Grid.Column="2"
+                        MinWidth="150"
+                        VerticalAlignment="Center"
+                        automation:AutomationProperties.AutomationId="AutomationAddAutomaticPipelineButton" />
             </Grid>
 
             <StackPanel x:Name="PipelineList" Spacing="8"

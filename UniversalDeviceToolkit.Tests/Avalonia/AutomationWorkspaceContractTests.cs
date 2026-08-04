@@ -30,6 +30,31 @@ public sealed class AutomationWorkspaceContractTests
     }
 
     [Fact]
+    public void AutomationPipelineDraft_AutomaticPipelineCarriesStableTriggerKey()
+    {
+        var draft = new AutomationPipelineDraft(
+            null,
+            "Start with Windows",
+            null,
+            true)
+        {
+            TriggerKey = "on-startup",
+        };
+
+        draft.IsAutomatic.Should().BeTrue();
+        draft.TriggerKey.Should().Be("on-startup");
+    }
+
+    [Fact]
+    public void AutomationTriggerOption_UsesStableKeyIndependentOfLocalizedDisplayName()
+    {
+        var option = new AutomationTriggerOption("on-resume", "Resume");
+
+        option.Key.Should().Be("on-resume");
+        option.DisplayName.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
     public void AutomationPipelineItem_ReportsTriggerAndStepCountForEditorRows()
     {
         var item = new AutomationPipelineItem(
@@ -43,5 +68,19 @@ public sealed class AutomationWorkspaceContractTests
         item.IsAutomatic.Should().BeTrue();
         item.Trigger.Should().Be("At sunset");
         item.StepCount.Should().Be(2);
+    }
+
+    [Fact]
+    public void AutomationPipelineItem_UnknownTriggerKeyCanBeNullForLosslessPreservation()
+    {
+        var item = new AutomationPipelineItem(
+            Guid.NewGuid(),
+            "Composite",
+            null,
+            "Combined trigger",
+            1,
+            true);
+
+        item.TriggerKey.Should().BeNull();
     }
 }

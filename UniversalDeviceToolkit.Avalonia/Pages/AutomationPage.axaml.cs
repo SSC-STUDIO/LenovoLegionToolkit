@@ -20,6 +20,7 @@ public partial class AutomationPage : UserControl
 {
     private readonly IPlatformServices _platformServices;
     private readonly List<PipelineRow> _rows = [];
+    private IReadOnlyList<AutomationTriggerOption> _triggerOptions = Array.Empty<AutomationTriggerOption>();
     private bool _isRefreshing;
     private bool _isDirty;
 
@@ -41,11 +42,13 @@ public partial class AutomationPage : UserControl
             "AutomationPage_QuickActions_Message",
             "Run configured pipelines on demand.");
         AddButton.Content = Get("AddNew", "Add new");
+        AddAutomaticButton.Content = Get("AutomationPage_AddAutomaticPipeline", "Add automatic");
         SaveButton.Content = Get("Save", "Save");
         RevertButton.Content = Get("Revert", "Revert");
         EmptyText.Text = Get("AutomationPage_QuickActions_Empty", "No automation pipelines configured.");
 
         AddButton.Click += AddButton_Click;
+        AddAutomaticButton.Click += AddAutomaticButton_Click;
         SaveButton.Click += SaveButton_Click;
         RevertButton.Click += RevertButton_Click;
         EnabledToggle.IsCheckedChanged += EnabledToggle_IsCheckedChanged;
@@ -64,6 +67,7 @@ public partial class AutomationPage : UserControl
         {
             _isRefreshing = true;
             SetFeedback(null);
+            _triggerOptions = await _platformServices.GetAutomationTriggerOptionsAsync();
             var state = await _platformServices.GetAutomationWorkspaceAsync();
             EnabledToggle.IsChecked = state.IsEnabled;
             PipelineList.Children.Clear();
@@ -109,6 +113,21 @@ public partial class AutomationPage : UserControl
         };
         var copy = new StackPanel { Spacing = 4, MinWidth = 0 };
         copy.Children.Add(nameEditor);
+
+        ComboBox? triggerEditor = null;
+        if (pipeline.IsAutomatic && _triggerOptions.Count > 0 && pipeline.TriggerKey is not null)
+        {
+            triggerEditor = new ComboBox
+            {
+                ItemsSource = _triggerOptions,
+                SelectedItem = _triggerOptions.FirstOrDefault(option =>
+                    string.Equals(option.Key, pipeline.TriggerKey, StringComparison.OrdinalIgnoreCase)),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                MinWidth = 180,
+            };
+            copy.Children.Add(triggerEditor);
+        }
+
         copy.Children.Add(summary);
 
         var runButton = new Button
@@ -160,12 +179,24 @@ public partial class AutomationPage : UserControl
         };
         AutomationProperties.SetName(card, pipeline.Name ?? pipeline.Trigger);
 
-        var row = new PipelineRow(pipeline.Id, pipeline.IsAutomatic, pipeline.IconName, nameEditor, card);
+        var row = new PipelineRow(pipeline.Id, pipeline.IsAutomatic, pipeline.IconName, nameEditor, card, triggerEditor);
         nameEditor.TextChanged += (_, _) =>
         {
             if (!_isRefreshing)
                 MarkDirty();
         };
+        if (triggerEditor is not null)
+        {
+            triggerEditor.SelectionChanged += (_, _) =>
+            {
+                if (_isRefreshing)
+                    return;
+
+                if (triggerEditor.SelectedItem is AutomationTriggerOption option)
+                    summary.Text = FormatSummary(pipeline with { Trigger = option.DisplayName });
+                MarkDirty();
+            };
+        }
         runButton.Click += async (_, _) => await RunPipelineAsync(row);
         deleteButton.Click += (_, _) => DeleteRow(row);
         return row;
@@ -180,6 +211,34 @@ public partial class AutomationPage : UserControl
             Get("AutomationPage_QuickActions_Title", "Manual quick action"),
             0,
             false);
+        var row = CreateRow(item) with { IsNew = true };
+        _rows.Insert(0, row);
+        PipelineList.Children.Insert(0, row.Card);
+        EmptyText.IsVisible = false;
+        MarkDirty();
+        row.NameEditor.Focus();
+        row.NameEditor.SelectAll();
+    }
+
+    private void AddAutomaticButton_Click(object? sender, RoutedEventArgs e)
+    {
+        var option = _triggerOptions.FirstOrDefault();
+        if (option is null)
+        {
+            SetFeedback(Get("AutomationPage_AddAutomaticPipeline_Error", "Automatic triggers are unavailable."));
+            return;
+        }
+
+        var item = new AutomationPipelineItem(
+            Guid.Empty,
+            Get("AutomationPage_AddAutomaticPipeline_Placeholder", "New automatic pipeline"),
+            null,
+            option.DisplayName,
+            0,
+            true)
+        {
+            TriggerKey = option.Key,
+        };
         var row = CreateRow(item) with { IsNew = true };
         _rows.Insert(0, row);
         PipelineList.Children.Insert(0, row.Card);
@@ -230,7 +289,12 @@ public partial class AutomationPage : UserControl
                 row.IsNew ? null : row.Id,
                 row.NameEditor.Text,
                 row.IconName,
-                row.IsAutomatic))
+                row.IsAutomatic)
+            {
+                TriggerKey = row.TriggerEditor?.SelectedItem is AutomationTriggerOption option
+                    ? option.Key
+                    : null,
+            })
             .ToArray();
         SaveButton.IsEnabled = false;
         try
@@ -294,5 +358,6 @@ public partial class AutomationPage : UserControl
         string? IconName,
         TextBox NameEditor,
         Border Card,
+        ComboBox? TriggerEditor = null,
         bool IsNew = false);
 }

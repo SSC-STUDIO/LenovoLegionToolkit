@@ -21,6 +21,7 @@ public interface IPlatformServices
     Task<bool> SetMacroEnabledAsync(bool enabled);
     Task<bool> SetMacroSequenceOptionsAsync(ulong key, int repeatCount, bool ignoreDelays, bool interruptOnOtherKey);
     Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
+    Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync();
     Task<bool> SetAutomationEnabledAsync(bool enabled);
     Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines);
     Task<KeyboardLightingState?> GetKeyboardLightingStateAsync();
@@ -105,13 +106,30 @@ public sealed record AutomationPipelineItem(
     string? IconName,
     string Trigger,
     int StepCount,
-    bool IsAutomatic);
+    bool IsAutomatic)
+{
+    /// <summary>
+    /// Stable host-neutral key for editing a known automatic trigger.
+    /// Unknown trigger types remain null and are preserved by the host.
+    /// </summary>
+    public string? TriggerKey { get; init; }
+}
 
 public sealed record AutomationPipelineDraft(
     Guid? Id,
     string? Name,
     string? IconName,
-    bool IsAutomatic);
+    bool IsAutomatic)
+{
+    /// <summary>
+    /// Stable trigger key selected by the Avalonia editor for automatic pipelines.
+    /// </summary>
+    public string? TriggerKey { get; init; }
+}
+
+public sealed record AutomationTriggerOption(
+    string Key,
+    string DisplayName);
 
 public sealed record KeyboardColorState(byte R, byte G, byte B)
 {
