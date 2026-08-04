@@ -223,7 +223,7 @@ public partial class AutomationPage : UserControl
                 return;
             var stepRow = CreateStepRow(option, option.DefaultConfigurationJson, stepsPanel, stepRows);
             stepRows.Add(stepRow);
-            stepsPanel.Children.Insert(Math.Max(0, stepsPanel.Children.Count - 1), stepRow.Card);
+            stepsPanel.Children.Add(stepRow.Card);
             summary.Text = FormatSummary(triggerEditor?.SelectedItem is AutomationTriggerOption t ? t.DisplayName : pipeline.Trigger, pipeline.IsAutomatic, stepRows.Count);
             runButton.IsEnabled = true;
             addStepEditor.SelectedItem = null;
