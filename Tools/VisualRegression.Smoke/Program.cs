@@ -933,7 +933,10 @@ internal static partial class Program
                 throw new InvalidOperationException(
                     $"Interactive UIA element '{snapshot.AutomationId ?? snapshot.Name}' has empty bounds on '{label}'.");
 
-            const double tolerance = 6;
+            // UI Automation reports WPF bounds in device-independent units while
+            // PrintWindow/screen capture uses physical pixels. Allow the larger
+            // DPI conversion delta, but still fail on grossly detached controls.
+            var tolerance = Math.Max(32, Math.Max(rootRect.Width, rootRect.Height) * 0.20);
             if (snapshot.X < rootRect.Left - tolerance
                 || snapshot.Y < rootRect.Top - tolerance
                 || snapshot.X + snapshot.Width > rootRect.Right + tolerance
