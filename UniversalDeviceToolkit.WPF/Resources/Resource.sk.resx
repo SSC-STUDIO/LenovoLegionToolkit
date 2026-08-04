@@ -3676,7 +3676,7 @@ Vyžaduje reštart.</value>
     <value>Skupiny domén</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: zapnuté {1}/{2}, domény: {3} (vstavané Steam/GitHub, predvolene vyp. — podľa potreby upravte pokročilú konfiguráciu).</value>
+    <value>{0}/{1} skupín zapnutých, domény: {2} (vstavané Steam/GitHub, predvolene vyp. — podľa potreby upravte pokročilú konfiguráciu).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Beží ({0}) loopback:{1}</value>

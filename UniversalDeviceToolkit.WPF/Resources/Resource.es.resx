@@ -3680,7 +3680,7 @@ No afectará a otras ventanas a pantalla completa, pero no podrá hacer clic en 
     <value>Grupos de dominios</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} habilitados, {3} dominios (Steam/GitHub integrados, desactivados por defecto — edite la configuración avanzada si es necesario).</value>
+    <value>{0}/{1} grupos habilitados, {2} dominios (Steam/GitHub integrados, desactivados por defecto — edite la configuración avanzada si es necesario).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>En ejecución ({0}) loopback:{1}</value>

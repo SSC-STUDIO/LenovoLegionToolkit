@@ -3675,7 +3675,7 @@ Necesită repornirea.</value>
     <value>Grupuri de domenii</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} activate, {3} domenii (Steam/GitHub integrate, dezactivate implicit — editați configurația avansată dacă e nevoie).</value>
+    <value>{0}/{1} grupuri activate, {2} domenii (Steam/GitHub integrate, dezactivate implicit — editați configurația avansată dacă e nevoie).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Rulează ({0}) loopback:{1}</value>

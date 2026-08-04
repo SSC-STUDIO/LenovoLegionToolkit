@@ -3678,7 +3678,7 @@ Andere Vollbildfenster werden dadurch nicht beeinträchtigt, aber Sie können ni
     <value>Domänengruppen</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} aktiviert, {3} Domänen (Steam/GitHub integriert, standardmäßig aus — ggf. erweiterte Konfiguration bearbeiten).</value>
+    <value>{0}/{1} Gruppen aktiviert, {2} Domänen (Steam/GitHub integriert, standardmäßig aus — ggf. erweiterte Konfiguration bearbeiten).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Läuft ({0}) Loopback:{1}</value>

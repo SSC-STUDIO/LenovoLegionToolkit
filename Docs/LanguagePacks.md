@@ -1,6 +1,6 @@
 # Language Packs
 
-UDT Online ships an English-only host. Non-English UI is delivered as culture satellite packs from the online resource catalog.
+UDT Online ships an English-only host. Non-English UI is delivered as culture satellite packs from the online resource catalog. The Full portable package and Full installer retain all supported satellites for offline use.
 
 **Program plan (lifecycle + startup gate + acceptance):** `Docs/OnlineLanguageAndUpstreamAbsorptionPlan.md`
 
@@ -48,4 +48,4 @@ Settings-page installs use in-page progress through `LanguagePackInstallCoordina
 
 ## Shipping footprint
 
-Online packages must not ship non-English satellite assemblies. `Scripts/Prune-ShippingFootprint.ps1` removes disallowed `*.resources.dll` culture folders; allowed cultures are listed in `Directory.Build.props` (`UdtSatelliteResourceLanguages`).
+Online packages must not ship non-English satellite assemblies. `Scripts/Build-LanguageAssets.ps1` first creates one archive per supported culture, including the main WPF satellite and dependency satellites, then removes all culture directories from the Online copy. The release workflow therefore does not prune cultures before language archives are created. `Scripts/Build-LanguageAssets.ps1` fails when a supported culture is missing the main WPF satellite instead of publishing an incomplete pack.

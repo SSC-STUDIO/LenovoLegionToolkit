@@ -4058,7 +4058,7 @@ Ondersteunde formaten zijn: {1}.</value>
     <value>Domeingroepen</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} ingeschakeld, {3} domeinen (Steam/GitHub ingebouwd, standaard uit — bewerk indien nodig de geavanceerde configuratie).</value>
+    <value>{0}/{1} groepen ingeschakeld, {2} domeinen (Steam/GitHub ingebouwd, standaard uit — bewerk indien nodig de geavanceerde configuratie).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Actief ({0}) loopback:{1}</value>

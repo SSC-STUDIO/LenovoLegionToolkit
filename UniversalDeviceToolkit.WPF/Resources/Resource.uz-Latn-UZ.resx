@@ -4057,7 +4057,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Domen guruhlari</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} yoqilgan, {3} domen (o‘rnatilgan Steam/GitHub, sukut bo‘yicha o‘chiq — kerak bo‘lsa kengaytirilgan konfiguratsiyani tahrirlang).</value>
+    <value>{0}/{1} guruh yoqilgan, {2} domen (o‘rnatilgan Steam/GitHub, sukut bo‘yicha o‘chiq — kerak bo‘lsa kengaytirilgan konfiguratsiyani tahrirlang).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Ishlamoqda ({0}) loopback:{1}</value>

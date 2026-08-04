@@ -3678,7 +3678,7 @@ Chức năng này không ảnh hưởng các cửa sổ ở chế độ toàn m�
     <value>Nhóm miền</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} bật, {3} miền (Steam/GitHub tích hợp, mặc định tắt — chỉnh cấu hình nâng cao nếu cần).</value>
+    <value>{0}/{1} nhóm bật, {2} miền (Steam/GitHub tích hợp, mặc định tắt — chỉnh cấu hình nâng cao nếu cần).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Đang chạy ({0}) loopback:{1}</value>

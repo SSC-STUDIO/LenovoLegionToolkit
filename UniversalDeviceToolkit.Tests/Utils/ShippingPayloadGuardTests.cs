@@ -118,6 +118,7 @@ public sealed class ShippingPayloadGuardTests
         publishStep.Run.Should().Contain("./Scripts/Build-PluginRuntimeAssets.ps1");
         publishStep.Run.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT");
         publishStep.Run.Should().Contain("./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT");
+        publishStep.Run.Should().NotContain("-AllowedCultures 'en;zh-Hans;zh-Hant'");
         prepareStep.Run.Should().Contain("./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT");
         crossPlatformStep.Run.Should().Contain("./Scripts/Build-CrossPlatformCliAsset.ps1");
         crossPlatformStep.Condition.Should().Be("${{ env.ENABLE_CROSS_PLATFORM_CLI == 'true' }}");
@@ -159,6 +160,8 @@ public sealed class ShippingPayloadGuardTests
         languageAssetsScript.Should().Contain("Assert-CrossPlatformCliReleaseAllowed -ReleaseVersion $Version");
         languageAssetsScript.Should().Contain("Cross-platform CLI assets are not published before 5.x.x.");
         languageAssetsScript.Should().Contain("if ($IncludeCrossPlatformCli)");
+        languageAssetsScript.Should().Contain("Universal Device Toolkit.resources.dll");
+        languageAssetsScript.Should().Contain("Build all supported satellite cultures before packaging.");
         languageAssetsScript.Should().Contain("if ($IncludeCrossPlatformCli -and (Test-Path -LiteralPath (Join-Path $ReleaseOutputPath $crossPlatformCliName)))");
         languageAssetsScript.Should().Contain("$hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName)");
         languageAssetsScript.Should().Contain("$downloads['cli']");

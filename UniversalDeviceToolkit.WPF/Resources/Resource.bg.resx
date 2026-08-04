@@ -3702,7 +3702,7 @@
     <value>Групи домейни</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: активирани {1}/{2}, домейни: {3} (вградени Steam/GitHub, по подразбиране изкл. — при нужда редактирайте разширената конфигурация).</value>
+    <value>{0}/{1} групи са активирани, домейни: {2} (вградени Steam/GitHub, по подразбиране изкл. — при нужда редактирайте разширената конфигурация).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Работи ({0}) loopback:{1}</value>

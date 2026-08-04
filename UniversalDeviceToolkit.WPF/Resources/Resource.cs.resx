@@ -3730,7 +3730,7 @@ Vyžaduje restart.</value>
     <value>Skupiny domén</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: zapnuto {1}/{2}, domény: {3} (vestavěné Steam/GitHub, ve výchozím stavu vyp. — v případě potřeby upravte pokročilou konfiguraci).</value>
+    <value>{0}/{1} skupin zapnuto, domény: {2} (vestavěné Steam/GitHub, ve výchozím stavu vyp. — v případě potřeby upravte pokročilou konfiguraci).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Běží ({0}) loopback:{1}</value>

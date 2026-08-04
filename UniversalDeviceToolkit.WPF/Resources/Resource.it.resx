@@ -3666,7 +3666,7 @@ Richiede il riavvio.</value>
     <value>Gruppi di domini</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} abilitati, {3} domini (Steam/GitHub integrati, disattivati per impostazione predefinita — modifica la config avanzata se necessario).</value>
+    <value>{0}/{1} gruppi abilitati, {2} domini (Steam/GitHub integrati, disattivati per impostazione predefinita — modifica la config avanzata se necessario).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>In esecuzione ({0}) loopback:{1}</value>

@@ -3675,7 +3675,7 @@
     <value>مجموعات النطاقات</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: مفعّل {1}/{2}، النطاقات: {3} (Steam/GitHub مدمج، معطّل افتراضيًا — عدّل التكوين المتقدم عند الحاجة).</value>
+    <value>{0}/{1} مجموعات مفعّلة، النطاقات: {2} (Steam/GitHub مدمج، معطّل افتراضيًا — عدّل التكوين المتقدم عند الحاجة).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>قيد التشغيل ({0}) loopback:{1}</value>

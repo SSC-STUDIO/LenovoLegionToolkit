@@ -3679,7 +3679,7 @@
     <value>Группы доменов</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} включено, доменов: {3} (встроенные Steam/GitHub, по умолчанию выкл. — при необходимости правьте расширенную конфигурацию).</value>
+    <value>{0}/{1} групп включено, доменов: {2} (встроенные Steam/GitHub, по умолчанию выкл. — при необходимости правьте расширенную конфигурацию).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Работает ({0}) loopback:{1}</value>

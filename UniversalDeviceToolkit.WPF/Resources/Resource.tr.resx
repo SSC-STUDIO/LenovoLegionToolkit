@@ -3679,7 +3679,7 @@ Diğer tam ekran pencereleri etkilemeyecek, ancak bildirimlere tıklayamayacaks�
     <value>Etki alanı grupları</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} etkin, {3} etki alanı (yerleşik Steam/GitHub, varsayılan kapalı — gerekirse gelişmiş yapılandırmayı düzenleyin).</value>
+    <value>{0}/{1} grup etkin, {2} etki alanı (yerleşik Steam/GitHub, varsayılan kapalı — gerekirse gelişmiş yapılandırmayı düzenleyin).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Çalışıyor ({0}) loopback:{1}</value>

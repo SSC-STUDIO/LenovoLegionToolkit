@@ -3678,7 +3678,7 @@
     <value>Ομάδες τομέων</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: ενεργοποιημένα {1}/{2}, τομείς: {3} (ενσωματωμένα Steam/GitHub, απενεργοποιημένα από προεπιλογή — επεξεργαστείτε τη σύνθετη διαμόρφωση αν χρειάζεται).</value>
+    <value>{0}/{1} ομάδες ενεργές, τομείς: {2} (ενσωματωμένα Steam/GitHub, απενεργοποιημένα από προεπιλογή — επεξεργαστείτε τη σύνθετη διαμόρφωση αν χρειάζεται).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Εκτελείται ({0}) loopback:{1}</value>

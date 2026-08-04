@@ -3678,7 +3678,7 @@ Nepieciešama restartēšana.</value>
     <value>Domēnu grupas</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: iespējoti {1}/{2}, domēni: {3} (iebūvēti Steam/GitHub, pēc noklusējuma izsl. — vajadzības gadījumā rediģējiet papildu konfigurāciju).</value>
+    <value>{0}/{1} grupas iespējotas, domēni: {2} (iebūvēti Steam/GitHub, pēc noklusējuma izsl. — vajadzības gadījumā rediģējiet papildu konfigurāciju).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Darbojas ({0}) loopback:{1}</value>

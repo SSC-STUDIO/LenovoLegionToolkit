@@ -3678,7 +3678,7 @@ Nécessite un redémarrage.</value>
     <value>Groupes de domaines</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0} : {1}/{2} activés, {3} domaines (Steam/GitHub intégrés, désactivés par défaut — modifiez la config avancée si besoin).</value>
+    <value>{0}/{1} groupes activés, {2} domaines (Steam/GitHub intégrés, désactivés par défaut — modifiez la config avancée si besoin).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>En cours ({0}) loopback:{1}</value>

@@ -3679,7 +3679,7 @@ ex. C:\Drivers</value>
     <value>Grupos de domínios</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} ativados, {3} domínios (Steam/GitHub integrados, desativados por padrão — edite a configuração avançada se necessário).</value>
+    <value>{0}/{1} grupos ativados, {2} domínios (Steam/GitHub integrados, desativados por padrão — edite a configuração avançada se necessário).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Em execução ({0}) loopback:{1}</value>

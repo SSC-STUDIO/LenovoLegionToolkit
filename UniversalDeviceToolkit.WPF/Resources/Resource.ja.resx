@@ -3677,7 +3677,7 @@
     <value>ドメイン グループ</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: {1}/{2} 有効、{3} ドメイン（Steam/GitHub 組み込み、既定ではオフ — 必要に応じて詳細設定を編集）。</value>
+    <value>{0}/{1} グループ有効、{2} ドメイン（Steam/GitHub 組み込み、既定ではオフ — 必要に応じて詳細設定を編集）。</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>実行中 ({0}) loopback:{1}</value>

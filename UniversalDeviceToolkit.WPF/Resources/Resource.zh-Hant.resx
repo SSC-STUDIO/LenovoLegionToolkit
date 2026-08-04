@@ -3700,7 +3700,7 @@
     <value>網域群組</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}：已啟用 {1}/{2}，{3} 個網域（內建 Steam/GitHub，預設關閉 — 需要時請編輯進階設定）。</value>
+    <value>已啟用 {0}/{1} 組，{2} 個網域（內建 Steam/GitHub，預設關閉 — 需要時請編輯進階設定）。</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>執行中 ({0}) loopback:{1}</value>

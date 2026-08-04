@@ -3675,7 +3675,7 @@
     <value>Групи доменів</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: увімкнено {1}/{2}, доменів: {3} (вбудовані Steam/GitHub, типово вимк. — за потреби змініть розширену конфігурацію).</value>
+    <value>{0}/{1} груп увімкнено, доменів: {2} (вбудовані Steam/GitHub, типово вимк. — за потреби змініть розширену конфігурацію).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Працює ({0}) loopback:{1}</value>

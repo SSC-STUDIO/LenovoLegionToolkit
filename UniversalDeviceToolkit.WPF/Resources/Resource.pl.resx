@@ -3678,7 +3678,7 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Grupy domen</value>
   </data>
   <data name="NetworkAccelerationPage_DomainGroupsSummary" xml:space="preserve">
-    <value>{0}: włączono {1}/{2}, domeny: {3} (wbudowane Steam/GitHub, domyślnie wył. — w razie potrzeby edytuj konfigurację zaawansowaną).</value>
+    <value>{0}/{1} grup włączonych, domeny: {2} (wbudowane Steam/GitHub, domyślnie wył. — w razie potrzeby edytuj konfigurację zaawansowaną).</value>
   </data>
   <data name="NetworkAccelerationPage_StatusRunning" xml:space="preserve">
     <value>Działa ({0}) loopback:{1}</value>
