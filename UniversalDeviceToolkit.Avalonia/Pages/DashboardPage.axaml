@@ -2,19 +2,60 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
                  xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+                 xmlns:automation="using:Avalonia.Automation"
                  x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="24" Margin="24">
+        <StackPanel Spacing="20" Margin="32">
 
-            <!-- Page Title -->
-            <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Title, Fallback=Dashboard}"
-                       FontSize="{StaticResource FontSizePageTitle}"
-                       FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       OverflowMode="Wrap"
-                       MaxLines="2" />
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                <StackPanel Spacing="4">
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Title, Fallback=Dashboard}"
+                               FontSize="{StaticResource FontSizePageTitle}"
+                               FontWeight="Medium"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               OverflowMode="Wrap"
+                               MaxLines="2" />
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Subtitle, Fallback=Device health and controls}"
+                               FontSize="{StaticResource FontSizeSmallBody}"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               OverflowMode="Wrap"
+                               MaxLines="2" />
+                </StackPanel>
+                <Button Grid.Column="1"
+                        x:Name="DashboardRefreshButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaDashboardRefreshButton"
+                        Command="{Binding RefreshCommand}"
+                        ToolTip.Tip="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh dashboard}"
+                        Padding="10,6"
+                        MinWidth="80"
+                        CornerRadius="{StaticResource CornerRadiusControl}"
+                        Background="{DynamicResource ButtonBackgroundBrush}"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:NavigationIcon IconIdentifier="ArrowSync24"
+                                                 FontSize="{StaticResource IconSizeCompact}" />
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                    </StackPanel>
+                </Button>
+                <Border Grid.Column="2"
+                        Background="{DynamicResource StatusSuccessBackgroundBrush}"
+                        BorderBrush="{DynamicResource StatusSuccessBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusRound}"
+                        Padding="12,6"
+                        VerticalAlignment="Center">
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Ready, Fallback=Ready}"
+                               Foreground="{DynamicResource StatusSuccessBrush}"
+                               FontSize="{StaticResource FontSizeSmallCaption}"
+                               FontWeight="SemiBold"
+                               OverflowMode="Ellipsis"
+                               MaxLines="1" />
+                </Border>
+            </Grid>
 
             <!-- Feature Groups -->
             <TextBlock Text="{local:Loc Key=Dashboard_FeatureGroups, Fallback=Feature Groups}"
@@ -30,8 +71,12 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Classes="cardControl" Width="280" Margin="0,0,12,12">
-                            <StackPanel Spacing="8" Margin="4">
+                        <Border Classes="cardControl" Width="300" Margin="0,0,12,12"
+                                Background="{DynamicResource CardBackgroundBrush}"
+                                BorderBrush="{DynamicResource CardBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource CornerRadiusCard}">
+                            <StackPanel Spacing="10" Margin="16">
                                 <controls:LocalizedTextBlock Text="{Binding Title}"
                                            Classes="cardTitle"
                                            OverflowMode="Wrap"
@@ -41,8 +86,15 @@
                                            OverflowMode="Wrap"
                                            MaxLines="3" />
                                 <Border Classes="badge" HorizontalAlignment="Left"
-                                        Margin="0,4,0,0">
-                                    <TextBlock Text="{Binding Status}" />
+                                        Background="{DynamicResource StatusInfoBackgroundBrush}"
+                                        BorderBrush="{DynamicResource StatusInfoBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="{StaticResource CornerRadiusRound}"
+                                        Padding="8,4"
+                                        Margin="0,2,0,0">
+                                    <TextBlock Text="{Binding Status}"
+                                               Foreground="{DynamicResource StatusInfoBrush}"
+                                               FontSize="{StaticResource FontSizeSmallCaption}" />
                                 </Border>
                             </StackPanel>
                         </Border>
@@ -57,28 +109,93 @@
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                        Margin="0,8,0,0" />
 
-            <Border Classes="cardControl" Padding="16">
-                <StackPanel Spacing="8">
-                    <ItemsControl ItemsSource="{Binding SensorReadings}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ColumnDefinitions="*,Auto" Margin="0,6">
-                                    <TextBlock Grid.Column="0"
-                                               Text="{Binding Name}"
-                                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                               VerticalAlignment="Center" />
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding DisplayValue}"
-                                               FontWeight="Medium"
-                                               FontSize="{StaticResource FontSizeGaugeValue}"
-                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                               VerticalAlignment="Center" />
+            <ItemsControl ItemsSource="{Binding SensorReadings}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Classes="cardControl"
+                                Width="280"
+                                Margin="0,0,12,12"
+                                Background="{DynamicResource CardBackgroundBrush}"
+                                BorderBrush="{DynamicResource CardBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource CornerRadiusCard}"
+                                Padding="16">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <controls:LocalizedTextBlock Text="{Binding Name}"
+                                                                 FontSize="{StaticResource FontSizeBody}"
+                                                                 FontWeight="Medium"
+                                                                 OverflowMode="Ellipsis"
+                                                                 MaxLines="1"
+                                                                 MinWidth="0" />
+                                    <controls:LocalizedTextBlock Grid.Column="1"
+                                                                 Text="{Binding CategoryLabel}"
+                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                 OverflowMode="Ellipsis"
+                                                                 MaxLines="1"
+                                                                 MaxWidth="96" />
                                 </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Border>
+                                <Grid Grid.Row="1" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                    <Border Width="64"
+                                            Height="64"
+                                            CornerRadius="{StaticResource CornerRadiusRound}"
+                                            Background="{DynamicResource StatusInfoBackgroundBrush}"
+                                            BorderBrush="{DynamicResource StatusInfoBrush}"
+                                            BorderThickness="2"
+                                            VerticalAlignment="Center">
+                                        <controls:LocalizedTextBlock Text="{Binding DisplayValue}"
+                                                                     HorizontalAlignment="Center"
+                                                                     VerticalAlignment="Center"
+                                                                     TextAlignment="Center"
+                                                                     MaxWidth="58"
+                                                                     OverflowMode="Ellipsis"
+                                                                     MaxLines="2"
+                                                                     FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                     FontWeight="SemiBold"
+                                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
+                                        <controls:LocalizedTextBlock Text="{Binding DisplayValue}"
+                                                                     FontSize="{StaticResource FontSizeGaugeValue}"
+                                                                     FontWeight="SemiBold"
+                                                                     OverflowMode="Ellipsis"
+                                                                     MaxLines="1" />
+                                        <controls:LocalizedTextBlock Text="{Binding CategoryLabel}"
+                                                                     FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                     OverflowMode="Ellipsis"
+                                                                     MaxLines="1" />
+                                    </StackPanel>
+                                </Grid>
+                                <ProgressBar Grid.Row="2"
+                                             IsVisible="{Binding HasProgress}"
+                                             Value="{Binding ProgressPercent}"
+                                             Maximum="100"
+                                             Height="6"
+                                             CornerRadius="{StaticResource CornerRadiusProgressBar}"
+                                             Foreground="{DynamicResource AccentBackgroundBrush}"
+                                             Background="{DynamicResource ChartTrackBrush}" />
+                                <Border Grid.Row="3"
+                                        Background="{DynamicResource StatusNeutralBackgroundBrush}"
+                                        CornerRadius="{StaticResource CornerRadiusCompact}"
+                                        Padding="8,5">
+                                    <controls:LocalizedTextBlock Text="{Binding Name}"
+                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                 OverflowMode="Ellipsis"
+                                                                 MaxLines="1" />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
         </StackPanel>
     </ScrollViewer>

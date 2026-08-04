@@ -11,7 +11,12 @@ namespace UniversalDeviceToolkit.Avalonia;
 public partial class MainWindow : Window
 {
     private readonly IPlatformServices _platformServices;
-    private string _activePage = "Dashboard";
+    private string _activePage = MainNavigation.Dashboard;
+
+    /// <summary>
+    /// Gets the route currently rendered by the shell.
+    /// </summary>
+    public string ActiveRoute => _activePage;
 
     public MainWindow(IPlatformServices platformServices)
     {
@@ -53,38 +58,58 @@ public partial class MainWindow : Window
 
     private void DashboardButton_Click(object? sender, RoutedEventArgs e)
     {
-        ShowDashboardPage();
+        Navigate(MainNavigation.Dashboard);
     }
 
     private void AboutButton_Click(object? sender, RoutedEventArgs e)
     {
-        ShowAboutPage();
+        Navigate(MainNavigation.About);
     }
 
     private void SettingsButton_Click(object? sender, RoutedEventArgs e)
     {
-        ShowSettingsPage();
+        Navigate(MainNavigation.Settings);
     }
 
     private void ShowDashboardPage()
     {
-        _activePage = "Dashboard";
+        _activePage = MainNavigation.Dashboard;
         MainContent.Content = new DashboardPage(_platformServices);
         SetActiveButton(DashboardButton);
     }
 
     private void ShowAboutPage()
     {
-        _activePage = "About";
+        _activePage = MainNavigation.About;
         MainContent.Content = new AboutPage();
         SetActiveButton(AboutButton);
     }
 
     public void ShowSettingsPage()
     {
-        _activePage = "Settings";
+        _activePage = MainNavigation.Settings;
         MainContent.Content = new SettingsPage(_platformServices);
         SetActiveButton(SettingsButton);
+    }
+
+    /// <summary>
+    /// Navigates to a route supported by this host. Unknown routes are ignored so
+    /// plugin or WPF-only links cannot leave the content surface in a blank state.
+    /// </summary>
+    public void Navigate(string? route)
+    {
+        switch (route?.Trim().ToLowerInvariant())
+        {
+            case MainNavigation.Dashboard:
+                ShowDashboardPage();
+                break;
+            case MainNavigation.About:
+                ShowAboutPage();
+                break;
+            case MainNavigation.Settings:
+                ShowSettingsPage();
+                break;
+        }
     }
 
     public void RefreshForCulture()
@@ -94,10 +119,10 @@ public partial class MainWindow : Window
 
         switch (_activePage)
         {
-            case "About":
+            case MainNavigation.About:
                 ShowAboutPage();
                 break;
-            case "Settings":
+            case MainNavigation.Settings:
                 ShowSettingsPage();
                 break;
             default:

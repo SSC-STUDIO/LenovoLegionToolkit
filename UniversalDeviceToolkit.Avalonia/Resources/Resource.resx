@@ -24,6 +24,7 @@
   <data name="Dashboard_Title"><value>Dashboard</value></data>
   <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
   <data name="Dashboard_Sensors"><value>Sensors</value></data>
+  <data name="Dashboard_Refresh"><value>Refresh</value></data>
   <data name="Dashboard_Feature_Device"><value>Device</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
   <data name="Dashboard_Feature_PowerMode"><value>Power Mode</value></data>

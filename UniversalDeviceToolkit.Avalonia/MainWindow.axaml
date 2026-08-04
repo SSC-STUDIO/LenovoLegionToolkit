@@ -9,61 +9,99 @@
         MinWidth="900" MinHeight="600">
     <Window.Styles>
         <Style Selector="Button.navButton">
-            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="FontWeight" Value="Normal" />
             <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="Padding" Value="16,11" />
+            <Setter Property="MinHeight" Value="44" />
             <Setter Property="CornerRadius" Value="{DynamicResource CornerRadiusCompact}" />
             <Setter Property="MinWidth" Value="0" />
-            <Setter Property="ContentTemplate">
-                <DataTemplate>
-                    <controls:LocalizedTextBlock Text="{Binding}"
-                                                 OverflowMode="Ellipsis"
-                                                 MaxLines="1"
-                                                 HorizontalAlignment="Stretch"
-                                                 MinWidth="0" />
-                </DataTemplate>
-            </Setter>
+        </Style>
+        <Style Selector="Button.navButton:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
         </Style>
         <Style Selector="Button.navButton.active">
-            <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource AccentBackgroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="FontWeight" Value="Medium" />
         </Style>
     </Window.Styles>
-    <DockPanel>
-        <Border DockPanel.Dock="Left" Width="280" Background="{DynamicResource NavigationPaneBackgroundBrush}">
-            <StackPanel Spacing="8" Margin="16">
+    <DockPanel Background="{DynamicResource AppBackgroundBrush}">
+        <Border DockPanel.Dock="Left"
+                Width="280"
+                Margin="12,12,0,12"
+                Background="{DynamicResource NavigationPaneBackgroundBrush}"
+                CornerRadius="{DynamicResource CornerRadiusSurface}">
+            <StackPanel Spacing="6" Margin="16,18">
                 <TextBlock Text="{local:Loc Key=Navigation, Fallback=Navigation}"
                            VerticalAlignment="Center"
-                           HorizontalAlignment="Center"
+                           HorizontalAlignment="Left"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                           FontSize="14"
-                           Margin="0,8,0,16"/>
+                           FontSize="{StaticResource FontSizeCaption}"
+                           Margin="12,4,0,14"/>
                 <Button x:Name="DashboardButton"
                         automation:AutomationProperties.AutomationId="AvaloniaDashboardButton"
                         automation:AutomationProperties.Name="{local:Loc Key=Nav_Dashboard, Fallback=Dashboard}"
                         Classes="navButton"
-                        Content="{local:Loc Key=Nav_Dashboard, Fallback=Dashboard}"
-                        Click="DashboardButton_Click"/>
+                        Tag="Home24"
+                        Click="DashboardButton_Click">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}"
+                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=Nav_Dashboard, Fallback=Dashboard}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1"
+                                                     HorizontalAlignment="Stretch"
+                                                     MinWidth="0" />
+                    </Grid>
+                </Button>
                 <Button x:Name="AboutButton"
                         automation:AutomationProperties.AutomationId="AvaloniaAboutButton"
                         automation:AutomationProperties.Name="{local:Loc Key=Nav_About, Fallback=About}"
                         Classes="navButton"
-                        Content="{local:Loc Key=Nav_About, Fallback=About}"
+                        Tag="Info24"
                         Click="AboutButton_Click"
-                        Margin="0,4,0,0"/>
+                        Margin="0,4,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}"
+                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=Nav_About, Fallback=About}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1"
+                                                     HorizontalAlignment="Stretch"
+                                                     MinWidth="0" />
+                    </Grid>
+                </Button>
                 <Button x:Name="SettingsButton"
                         automation:AutomationProperties.AutomationId="AvaloniaSettingsButton"
                         automation:AutomationProperties.Name="{local:Loc Key=Nav_Settings, Fallback=Settings}"
                         Classes="navButton"
-                        Content="{local:Loc Key=Nav_Settings, Fallback=Settings}"
+                        Tag="Settings24"
                         Click="SettingsButton_Click"
-                        Margin="0,4,0,0"/>
+                        Margin="0,4,0,0">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}"
+                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                     Text="{local:Loc Key=Nav_Settings, Fallback=Settings}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1"
+                                                     HorizontalAlignment="Stretch"
+                                                     MinWidth="0" />
+                    </Grid>
+                </Button>
             </StackPanel>
         </Border>
-        <Border Background="{DynamicResource AppSurfaceCardBrush}">
+        <Border Margin="12"
+                Background="{DynamicResource AppSurfaceCardBrush}"
+                CornerRadius="{DynamicResource CornerRadiusSurface}"
+                ClipToBounds="True">
             <ContentControl x:Name="MainContent"
                             automation:AutomationProperties.AutomationId="AvaloniaMainContent" />
         </Border>

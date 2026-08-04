@@ -1,27 +1,29 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Avalonia.Media;
 
 namespace UniversalDeviceToolkit.Avalonia.Controls;
 
 /// <summary>
-/// Renders the shared navigation icon identifiers without exposing the identifier
-/// itself as user-facing text. The glyphs use symbols available in the standard
-/// Windows/Linux UI fonts and remain monochrome so they follow the navigation theme.
+/// Renders shared navigation icon identifiers without exposing the identifier
+/// itself as user-facing text. Segoe Fluent Icons codepoints are used when the
+/// font is available; the symbol fallback remains legible on other platforms.
 /// </summary>
 public sealed class NavigationIcon : TextBlock
 {
     private static readonly IReadOnlyDictionary<string, string> Glyphs =
         new Dictionary<string, string>(StringComparer.Ordinal)
         {
-            ["PaintBrush24"] = "✎",
-            ["Apps24"] = "▦",
-            ["Keyboard24"] = "⌨",
-            ["Desktop24"] = "▣",
-            ["ArrowSync24"] = "↻",
-            ["Battery024"] = "▰",
-            ["PlugConnected24"] = "⚡",
+            ["Home24"] = "\uE80F",
+            ["Info24"] = "\uE946",
+            ["Settings24"] = "\uE713",
+            ["PaintBrush24"] = "\uE790",
+            ["Apps24"] = "\uE71D",
+            ["Keyboard24"] = "\uE765",
+            ["Desktop24"] = "\uE7F4",
+            ["ArrowSync24"] = "\uE895",
+            ["Battery024"] = "\uE850",
+            ["PlugConnected24"] = "\uE839",
         };
 
     public static readonly StyledProperty<string?> IconIdentifierProperty =
@@ -35,7 +37,7 @@ public sealed class NavigationIcon : TextBlock
 
     public NavigationIcon()
     {
-        FontFamily = new FontFamily("Segoe UI Symbol");
+        FontFamily = new FontFamily("Segoe MDL2 Assets, Segoe Fluent Icons, Segoe UI Symbol");
         TextAlignment = TextAlignment.Center;
         VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center;
         HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Center;
@@ -53,6 +55,6 @@ public sealed class NavigationIcon : TextBlock
     {
         Text = IconIdentifier is not null && Glyphs.TryGetValue(IconIdentifier, out var glyph)
             ? glyph
-            : "•";
+            : "\uE7B7";
     }
 }

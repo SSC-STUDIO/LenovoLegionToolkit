@@ -49,7 +49,10 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
         return snapshot.SensorReadings
             .Select(reading => new SensorReadingItem(
                 reading.Name,
-                $"{reading.Value.ToString("0.##", CultureInfo.InvariantCulture)} {reading.Unit}".Trim()))
+                $"{reading.Value.ToString("0.##", CultureInfo.InvariantCulture)} {reading.Unit}".Trim(),
+                reading.Category,
+                reading.Value,
+                reading.Unit))
             .ToArray();
     }
 

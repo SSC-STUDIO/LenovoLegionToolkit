@@ -24,6 +24,7 @@
   <data name="Dashboard_Title"><value>&#x4EEA;&#x8868;&#x76D8;</value></data>
   <data name="Dashboard_FeatureGroups"><value>&#x529F;&#x80FD;&#x7EC4;</value></data>
   <data name="Dashboard_Sensors"><value>&#x4F20;&#x611F;&#x5668;</value></data>
+  <data name="Dashboard_Refresh"><value>&#x5237;&#x65B0;</value></data>
   <data name="Dashboard_Feature_Device"><value>&#x8BBE;&#x5907;</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
   <data name="Dashboard_Feature_PowerMode"><value>&#x7535;&#x6E90;&#x6A21;&#x5F0F;</value></data>

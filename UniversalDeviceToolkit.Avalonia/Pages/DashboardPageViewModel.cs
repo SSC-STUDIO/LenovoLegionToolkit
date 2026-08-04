@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
@@ -10,6 +11,9 @@ public partial class DashboardPageViewModel : ObservableObject
 {
     public ObservableCollection<FeatureGroupItem> FeatureGroups { get; } = new();
     public ObservableCollection<SensorReadingItem> SensorReadings { get; } = new();
+
+    [ObservableProperty]
+    private bool _isLoading;
 
     private readonly IPlatformServices _platformServices;
 
@@ -20,6 +24,10 @@ public partial class DashboardPageViewModel : ObservableObject
 
     public async Task LoadAsync()
     {
+        if (IsLoading)
+            return;
+
+        IsLoading = true;
         try
         {
             var featureGroups = await _platformServices.GetFeatureGroupsAsync();
@@ -37,5 +45,12 @@ public partial class DashboardPageViewModel : ObservableObject
         {
             System.Diagnostics.Debug.WriteLine($"Dashboard load failed: {ex.Message}");
         }
+        finally
+        {
+            IsLoading = false;
+        }
     }
+
+    [RelayCommand]
+    private Task RefreshAsync() => LoadAsync();
 }

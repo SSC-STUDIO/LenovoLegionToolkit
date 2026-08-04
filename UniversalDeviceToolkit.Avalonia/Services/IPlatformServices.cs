@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,4 +16,22 @@ public interface IPlatformServices
 }
 
 public sealed record FeatureGroupItem(string Title, string Description, string Status);
-public sealed record SensorReadingItem(string Name, string DisplayValue);
+/// <summary>
+/// Read-only sensor data prepared for the dashboard. Value and Unit are kept
+/// separately so the UI can render a stable metric row and an optional gauge
+/// without parsing localized display text.
+/// </summary>
+public sealed record SensorReadingItem(
+    string Name,
+    string DisplayValue,
+    string Category = "",
+    double? Value = null,
+    string Unit = "")
+{
+    public bool HasProgress => Value is >= 0 and <= 100 &&
+                                Unit.Contains('%', StringComparison.Ordinal);
+
+    public double ProgressPercent => Math.Clamp(Value ?? 0, 0, 100);
+
+    public string CategoryLabel => string.IsNullOrWhiteSpace(Category) ? "Sensor" : Category;
+}
