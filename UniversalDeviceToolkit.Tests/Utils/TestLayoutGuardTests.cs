@@ -24,11 +24,11 @@ public sealed class TestLayoutGuardTests
     private static readonly IReadOnlyDictionary<string, string[]> AggregateTypeContracts =
         new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
         {
-            ["FanTableInfoTests.cs"] = ["FanTableInfoStructTests"],
-            ["MacroTests.cs"] = [
+            ["Hardware/FanTableInfoTests.cs"] = ["FanTableInfoStructTests"],
+            ["Automation/MacroTests.cs"] = [
                 "MacroEventTests", "MacroIdentifierTests", "MacroSequenceTests",
                 "MacroControllerCleanUpTests", "MacroControllerEnabledTests", "MacroControllerAllowedKeysTests"],
-            ["WindowsOptimizationRollbackTests.cs"] = [
+            ["Optimization/WindowsOptimizationRollbackTests.cs"] = [
                 "WindowsOptimizationActionDefinitionContractTests",
                 "WindowsOptimizationActionDefinitionSnapshotTests"],
             ["Controllers/SensorsControllerTests.cs"] = [
