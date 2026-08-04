@@ -26,6 +26,11 @@ internal static partial class Program
     private const int _windowHeight = 850;
     private const int _minWindowWidth = 1000;
     private const int _minWindowHeight = 650;
+    private static int _activeWindowWidth = _windowWidth;
+    private static int _activeWindowHeight = _windowHeight;
+    private static int _activeMinimumWidth = _minWindowWidth;
+    private static int _activeMinimumHeight = _minWindowHeight;
+    private static Viewport _activeViewport = Viewport.Default;
     private static readonly string[] _wpfAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
     private static readonly string[] _avaloniaAppBaseNames = ["udt-gui"];
 
@@ -44,7 +49,9 @@ internal static partial class Program
         try
         {
             var options = SmokeOptions.Parse(args);
-            return options.AllCultures
+            return options.Viewports.Length > 1
+                ? RunViewportBatch(args, options)
+                : options.AllCultures
                 ? RunCultureBatch(args, options)
                 : RunSingle(args, options);
         }
@@ -66,6 +73,11 @@ internal static partial class Program
             _captureSequence = 0;
             _videoEnabled = options.Video;
             _host = options.Host;
+            _activeViewport = options.Viewports[0];
+            _activeWindowWidth = _activeViewport.Width;
+            _activeWindowHeight = _activeViewport.Height;
+            _activeMinimumWidth = Math.Max(640, _activeWindowWidth - 16);
+            _activeMinimumHeight = Math.Max(480, _activeWindowHeight - 16);
             _assertDarkThemeSurface = options.Theme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
             var repoRoot = Path.GetFullPath(options.RepoRoot);
             var outputRoot = Path.GetFullPath(options.OutputDirectory);
@@ -151,6 +163,8 @@ internal static partial class Program
             }
 
             CapturePage(currentDirectory, mainWindow, "dashboard");
+            CaptureWindowLifecycleStates(currentDirectory, mainWindow);
+            CaptureResizeSequence(currentDirectory, mainWindow);
 
             if (options.SwitchTheme is { } switchTheme)
             {
@@ -337,7 +351,8 @@ internal static partial class Program
         var failures = new List<string>();
         foreach (var culture in LocalizationCatalog.SupportedCultures)
         {
-            var cultureOutput = Path.Combine(options.OutputDirectory, options.Host, culture.Name);
+            var viewportLabel = options.Viewports[0].Label;
+            var cultureOutput = Path.Combine(options.OutputDirectory, options.Host, culture.Name, viewportLabel);
             Console.WriteLine($"[visual-smoke] Starting {options.Host} culture {culture.Name} -> {cultureOutput}");
 
             var result = RunSingle(
@@ -363,7 +378,46 @@ internal static partial class Program
         };
         Directory.CreateDirectory(options.OutputDirectory);
         File.WriteAllText(
-            Path.Combine(options.OutputDirectory, $"{options.Host}-batch-result.json"),
+            Path.Combine(options.OutputDirectory, $"{options.Host}-{options.Viewports[0].Label}-batch-result.json"),
+            JsonSerializer.Serialize(batchResult, _jsonOptions));
+
+        return failures.Count == 0 ? 0 : 1;
+    }
+
+    private static int RunViewportBatch(string[] args, SmokeOptions options)
+    {
+        var failures = new List<string>();
+        foreach (var viewport in options.Viewports)
+        {
+            var viewportOptions = options with { Viewports = [viewport] };
+            var result = options.AllCultures
+                ? RunCultureBatch(args, viewportOptions)
+                : RunSingle(
+                    args,
+                    viewportOptions with
+                    {
+                        OutputDirectory = Path.Combine(
+                            options.OutputDirectory,
+                            options.Host,
+                            LocalizationCatalog.NormalizeCulture(options.Language).Name,
+                            viewport.Label)
+                    });
+
+            if (result != 0)
+                failures.Add(viewport.Label);
+        }
+
+        Directory.CreateDirectory(options.OutputDirectory);
+        var batchResult = new
+        {
+            host = options.Host,
+            viewports = options.Viewports.Select(viewport => viewport.Label).ToArray(),
+            failures,
+            succeeded = failures.Count == 0,
+            completedAt = DateTimeOffset.Now
+        };
+        File.WriteAllText(
+            Path.Combine(options.OutputDirectory, $"{options.Host}-viewport-batch-result.json"),
             JsonSerializer.Serialize(batchResult, _jsonOptions));
 
         return failures.Count == 0 ? 0 : 1;
@@ -647,9 +701,9 @@ internal static partial class Program
 
         var toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
         ActivateElement(toggle);
-        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-start", _windowWidth, _windowHeight, waitForAnimations: false);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         Thread.Sleep(450);
-        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-mid", _windowWidth, _windowHeight, waitForAnimations: false);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-mid", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
@@ -667,7 +721,7 @@ internal static partial class Program
 
         toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
         ActivateElement(toggle);
-        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-start", _windowWidth, _windowHeight, waitForAnimations: false);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
@@ -678,6 +732,78 @@ internal static partial class Program
         if (Math.Abs(restoredWidth - initialWidth) > 12)
             throw new InvalidOperationException(
                 $"Navigation pane toggle did not restore width. Initial={initialWidth:F1}px, restored={restoredWidth:F1}px.");
+    }
+
+    private static void CaptureWindowLifecycleStates(string currentDirectory, AutomationElement mainWindow)
+    {
+        mainWindow = ResolveLiveWindow(mainWindow);
+        if (!TryGetNativeWindowHandle(mainWindow, out var handle))
+            throw new InvalidOperationException("Window handle unavailable for lifecycle audit.");
+
+        var hwnd = (IntPtr)handle;
+        var states = new List<object>();
+
+        ShowWindow(hwnd, 6); // SW_MINIMIZE
+        Thread.Sleep(450);
+        states.Add(new { state = "minimized", iconic = IsIconic(hwnd), zoomed = IsZoomed(hwnd) });
+
+        ShowWindow(hwnd, 9); // SW_RESTORE
+        Thread.Sleep(350);
+        CapturePage(
+            currentDirectory,
+            ResolveLiveWindow(mainWindow),
+            "window-restored-from-minimized",
+            _activeWindowWidth,
+            _activeWindowHeight,
+            waitForAnimations: true,
+            normalizeWindow: false);
+        states.Add(new { state = "restored", iconic = IsIconic(hwnd), zoomed = IsZoomed(hwnd) });
+
+        ShowWindow(hwnd, 3); // SW_MAXIMIZE
+        Thread.Sleep(450);
+        CapturePage(
+            currentDirectory,
+            ResolveLiveWindow(mainWindow),
+            "window-maximized",
+            _activeWindowWidth,
+            _activeWindowHeight,
+            waitForAnimations: true,
+            normalizeWindow: false);
+        states.Add(new { state = "maximized", iconic = IsIconic(hwnd), zoomed = IsZoomed(hwnd) });
+
+        ShowWindow(hwnd, 9); // SW_RESTORE
+        NormalizeWindow(ResolveLiveWindow(mainWindow));
+        states.Add(new { state = "restored-after-maximize", iconic = IsIconic(hwnd), zoomed = IsZoomed(hwnd) });
+
+        File.WriteAllText(
+            Path.Combine(currentDirectory, "window-lifecycle.json"),
+            JsonSerializer.Serialize(new
+            {
+                generatedAt = DateTimeOffset.Now,
+                viewport = _activeViewport.Label,
+                states
+            }, _jsonOptions));
+    }
+
+    private static void CaptureResizeSequence(string currentDirectory, AutomationElement mainWindow)
+    {
+        var sizes = new[]
+        {
+            (_activeWindowWidth, _activeWindowHeight),
+            (Math.Max(640, Math.Min(_activeWindowWidth, 900)), Math.Max(480, Math.Min(_activeWindowHeight, 700))),
+            (_activeWindowWidth, _activeWindowHeight)
+        }.Distinct().ToArray();
+
+        for (var index = 0; index < sizes.Length; index++)
+        {
+            var (width, height) = sizes[index];
+            CapturePage(
+                currentDirectory,
+                ResolveLiveWindow(mainWindow),
+                $"dashboard-resize-{width}x{height}",
+                width,
+                height);
+        }
     }
 
     private static double MeasureNavigationPaneWidth(AutomationElement mainWindow)
@@ -890,6 +1016,10 @@ internal static partial class Program
         var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
         var snapshot = BuildSnapshot(label, window);
         File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, _jsonOptions));
+        var ocrFileName = Path.ChangeExtension(fileName, ".ocr.json");
+        File.WriteAllText(
+            Path.Combine(currentDirectory, ocrFileName),
+            JsonSerializer.Serialize(BuildTextAudit(label, window), _jsonOptions));
 
         _captures.Add(new CaptureRecord(
             _captures.Count + 1,
@@ -897,6 +1027,7 @@ internal static partial class Program
             fileName,
             Path.GetFileName(snapshotPath),
             recorder?.FileName is { } videoPath ? Path.GetFileName(videoPath) : null,
+            Path.GetFileName(ocrFileName),
             DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
     }
@@ -915,10 +1046,10 @@ internal static partial class Program
     }
 
     private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label)
-        => CapturePage(currentDirectory, mainWindow, label, _windowWidth, _windowHeight);
+        => CapturePage(currentDirectory, mainWindow, label, _activeWindowWidth, _activeWindowHeight);
 
     private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label, int width, int height)
-        => CapturePage(currentDirectory, mainWindow, label, width, height, waitForAnimations: true);
+        => CapturePage(currentDirectory, mainWindow, label, width, height, waitForAnimations: true, normalizeWindow: true);
 
     private static void CapturePage(
         string currentDirectory,
@@ -926,20 +1057,27 @@ internal static partial class Program
         string label,
         int width,
         int height,
-        bool waitForAnimations)
+        bool waitForAnimations,
+        bool normalizeWindow = true)
     {
         mainWindow = ResolveLiveWindow(mainWindow);
-        NormalizeWindow(mainWindow, width, height);
+        if (normalizeWindow)
+            NormalizeWindow(mainWindow, width, height);
+        else
+            BringToForeground(mainWindow);
 
         if (!TryGetNativeWindowHandle(mainWindow, out var windowHandle))
             throw new InvalidOperationException($"Window handle unavailable for '{label}'.");
 
         var sequence = ++_captureSequence;
         var fileStem = $"{sequence:000}-{SanitizeFileNameSegment(label)}";
-        var fileName = $"{fileStem}.png";
+        var capturePath = ClassifyCaptureLabel(label);
+        var relativeDirectory = Path.Combine(capturePath.Page, capturePath.State);
+        var fileName = ToArtifactPath(Path.Combine(relativeDirectory, $"{fileStem}.png"));
         var outputPath = Path.Combine(currentDirectory, fileName);
+        var videoFileName = ToArtifactPath(Path.ChangeExtension(fileName, ".mp4"));
         using var recorder = _videoEnabled
-            ? WindowVideoRecorder.Start(windowHandle, Path.Combine(currentDirectory, $"{fileStem}.mp4"))
+            ? WindowVideoRecorder.Start(windowHandle, Path.Combine(currentDirectory, videoFileName))
             : null;
 
         if (waitForAnimations)
@@ -953,31 +1091,90 @@ internal static partial class Program
 
         ValidateAutomationLayout(label, mainWindow);
 
-        var snapshotPath = Path.Combine(currentDirectory, Path.ChangeExtension(fileName, ".json"));
+        var snapshotFileName = ToArtifactPath(Path.ChangeExtension(fileName, ".json"));
+        var snapshotPath = Path.Combine(currentDirectory, snapshotFileName);
         var snapshot = BuildSnapshot(label, mainWindow);
         File.WriteAllText(snapshotPath, JsonSerializer.Serialize(snapshot, _jsonOptions));
+
+        var ocrFileName = ToArtifactPath(Path.ChangeExtension(fileName, ".ocr.json"));
+        File.WriteAllText(
+            Path.Combine(currentDirectory, ocrFileName),
+            JsonSerializer.Serialize(BuildTextAudit(label, mainWindow), _jsonOptions));
 
         _captures.Add(new CaptureRecord(
             _captures.Count + 1,
             label,
             fileName,
-            Path.GetFileName(snapshotPath),
-            recorder?.FileName is { } videoPath ? Path.GetFileName(videoPath) : null,
+            snapshotFileName,
+            recorder is null ? null : videoFileName,
+            ocrFileName,
             DateTimeOffset.Now));
         Console.WriteLine($"[visual-smoke] Captured {label}: {outputPath}");
+    }
+
+    private static CapturePath ClassifyCaptureLabel(string label)
+    {
+        var normalized = SanitizeFileNameSegment(label);
+        if (normalized.StartsWith("settings-", StringComparison.Ordinal))
+            return new CapturePath("settings", normalized);
+        if (normalized.StartsWith("nav-sidebar", StringComparison.Ordinal))
+            return new CapturePath("navigation", normalized);
+        if (normalized.StartsWith("window-", StringComparison.Ordinal))
+            return new CapturePath("window", normalized);
+        if (normalized.StartsWith("dashboard", StringComparison.Ordinal))
+            return new CapturePath("dashboard", normalized);
+
+        var separator = normalized.IndexOf('-');
+        return separator > 0
+            ? new CapturePath(normalized[..separator], normalized)
+            : new CapturePath(normalized, "ready");
+    }
+
+    private static string ToArtifactPath(string path) => path.Replace('\\', '/');
+
+    private static object BuildTextAudit(string label, AutomationElement root)
+    {
+        var textItems = EnumerateDescendants(root, 1000)
+            .Select(SafeDescribeElement)
+            .Where(element => element is { IsOffscreen: false } && !string.IsNullOrWhiteSpace(element.Name))
+            .Select(element => new
+            {
+                text = element!.Name!,
+                fullText = element.Name!,
+                type = element.Type,
+                automationId = element.AutomationId,
+                x = element.X,
+                y = element.Y,
+                width = element.Width,
+                height = element.Height
+            })
+            .DistinctBy(item => $"{item.type}|{item.automationId}|{item.text}|{item.x}|{item.y}")
+            .ToArray();
+
+        return new
+        {
+            label,
+            source = "uia",
+            generatedAt = DateTimeOffset.Now,
+            items = textItems,
+            truncatedCandidates = textItems
+                .Where(item => item.text.EndsWith("...", StringComparison.Ordinal)
+                               || item.text.EndsWith("…", StringComparison.Ordinal))
+                .ToArray()
+        };
     }
 
     private static void AssertCaptureDimensions(string outputPath, string label)
     {
         using var bitmap = new Bitmap(outputPath);
-        if (bitmap.Width < _minWindowWidth || bitmap.Height < _minWindowHeight)
+        if (bitmap.Width < _activeMinimumWidth || bitmap.Height < _activeMinimumHeight)
         {
             throw new InvalidOperationException(
-                $"Screenshot '{label}' is too small ({bitmap.Width}x{bitmap.Height}). Expected at least {_minWindowWidth}x{_minWindowHeight}. " +
-                $"Ensure IPC capture succeeded and the main window was normalized to {_windowWidth}x{_windowHeight}.");
+                $"Screenshot '{label}' is too small ({bitmap.Width}x{bitmap.Height}). Expected at least {_activeMinimumWidth}x{_activeMinimumHeight}. " +
+                $"Ensure IPC capture succeeded and the main window was normalized to {_activeWindowWidth}x{_activeWindowHeight}.");
         }
 
-        Console.WriteLine($"[visual-smoke] Capture size for {label}: {bitmap.Width}x{bitmap.Height} (window target {_windowWidth}x{_windowHeight})");
+        Console.WriteLine($"[visual-smoke] Capture size for {label}: {bitmap.Width}x{bitmap.Height} (window target {_activeWindowWidth}x{_activeWindowHeight})");
     }
 
     private static void AssertNotBlankCapture(string outputPath, string label)
@@ -1612,7 +1809,7 @@ internal static partial class Program
     }
 
     private static void NormalizeWindow(AutomationElement window)
-        => NormalizeWindow(window, _windowWidth, _windowHeight);
+        => NormalizeWindow(window, _activeWindowWidth, _activeWindowHeight);
 
     private static void NormalizeWindow(AutomationElement window, int width, int height)
     {
@@ -1884,8 +2081,8 @@ internal static partial class Program
         root["ThemeStylePreset"] = themeStyle;
         root["WindowSize"] = new JsonObject
         {
-            ["Width"] = _windowWidth,
-            ["Height"] = _windowHeight
+            ["Width"] = _activeWindowWidth,
+            ["Height"] = _activeWindowHeight
         };
         root["MinimizeToTray"] = false;
         root["MinimizeOnClose"] = false;
@@ -2245,10 +2442,13 @@ internal static partial class Program
         {
             var imagePath = Path.Combine(currentDirectory, capture.FileName);
             var snapshotPath = Path.Combine(currentDirectory, capture.SnapshotFileName);
+            var ocrPath = Path.Combine(currentDirectory, capture.OcrFileName);
             if (!File.Exists(imagePath) || new FileInfo(imagePath).Length == 0)
                 throw new InvalidOperationException($"Missing screenshot artifact for '{capture.Label}': {imagePath}");
             if (!File.Exists(snapshotPath) || new FileInfo(snapshotPath).Length == 0)
                 throw new InvalidOperationException($"Missing UI Automation snapshot for '{capture.Label}': {snapshotPath}");
+            if (!File.Exists(ocrPath) || new FileInfo(ocrPath).Length == 0)
+                throw new InvalidOperationException($"Missing text audit artifact for '{capture.Label}': {ocrPath}");
 
             if (_videoEnabled)
             {
@@ -2345,6 +2545,12 @@ internal static partial class Program
     [DllImport("user32.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.StdCall)]
     private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
 
+    [DllImport("user32.dll")]
+    private static extern bool IsIconic(IntPtr hWnd);
+
+    [DllImport("user32.dll")]
+    private static extern bool IsZoomed(IntPtr hWnd);
+
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, uint flags);
 
@@ -2361,12 +2567,15 @@ internal static partial class Program
 
     private sealed record NavigationItemDescriptor(string Key, string Label);
 
+    private sealed record CapturePath(string Page, string State);
+
     private sealed record CaptureRecord(
         int Sequence,
         string Label,
         string FileName,
         string SnapshotFileName,
         string? VideoFileName,
+        string OcrFileName,
         DateTimeOffset CapturedAt);
 
     private sealed record RegionSample(double AverageLuminance);
@@ -2392,6 +2601,31 @@ internal static partial class Program
         public int Bottom;
     }
 
+    private sealed record Viewport(int Width, int Height)
+    {
+        public static Viewport Default { get; } = new(1300, 850);
+
+        public string Label => $"{Width}x{Height}";
+
+        public static Viewport Parse(string value)
+        {
+            var parts = value.Trim().Split(['x', 'X', '*'], StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length != 2
+                || !int.TryParse(parts[0], out var width)
+                || !int.TryParse(parts[1], out var height)
+                || width < 640
+                || height < 480
+                || width > 8192
+                || height > 8192)
+            {
+                throw new ArgumentException(
+                    $"Invalid viewport '{value}'. Expected WIDTHxHEIGHT between 640x480 and 8192x8192.");
+            }
+
+            return new Viewport(width, height);
+        }
+    }
+
     private sealed record SmokeOptions(
         string RepoRoot,
         string OutputDirectory,
@@ -2410,7 +2644,8 @@ internal static partial class Program
         bool NavigationSidebarOnly,
         bool ReadmeScreenshots,
         bool Video,
-        bool EnableAnimations)
+        bool EnableAnimations,
+        Viewport[] Viewports)
     {
         public static SmokeOptions Parse(IReadOnlyList<string> args)
         {
@@ -2440,7 +2675,16 @@ internal static partial class Program
             var expectKeyboardNavigation = !args.Contains("--expect-no-keyboard-navigation", StringComparer.OrdinalIgnoreCase);
             var video = args.Contains("--video", StringComparer.OrdinalIgnoreCase);
             var enableAnimations = video || args.Contains("--animations", StringComparer.OrdinalIgnoreCase);
-            return new SmokeOptions(repoRoot, outputDirectory, configuration, host, theme, themeStyle, language, allCultures, pluginOnly, osdOnly, settingsOnly, switchTheme, keepApp, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots, video, enableAnimations);
+            var viewportArgument = ReadOption(args, "--viewports", "--viewport");
+            var viewports = string.IsNullOrWhiteSpace(viewportArgument)
+                ? [Viewport.Default]
+                : viewportArgument
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(Viewport.Parse)
+                    .DistinctBy(viewport => viewport.Label, StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+
+            return new SmokeOptions(repoRoot, outputDirectory, configuration, host, theme, themeStyle, language, allCultures, pluginOnly, osdOnly, settingsOnly, switchTheme, keepApp, expectKeyboardNavigation, navigationSidebarOnly, readmeScreenshots, video, enableAnimations, viewports);
         }
 
         private static string? ReadOption(IReadOnlyList<string> args, params string[] names)
