@@ -2,12 +2,14 @@
 
 using System.Globalization;
 using UniversalDeviceToolkit.Abstractions.Hardware;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Abstractions.Macro;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
+using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
 
@@ -252,8 +254,8 @@ internal sealed class WindowsFeatureHostServices
 
                 actions.Add(new FeatureActionItem(
                     action.Key,
-                    action.TitleResourceKey,
-                    action.DescriptionResourceKey,
+                    ResolveResource(action.TitleResourceKey),
+                    ResolveResource(action.DescriptionResourceKey),
                     applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
                     true,
                     applied,
@@ -270,6 +272,9 @@ internal sealed class WindowsFeatureHostServices
             true,
             actions);
     }
+
+    private static string ResolveResource(string key) =>
+        LibResource.ResourceManager.GetString(key, LocalizationRuntime.CurrentCulture) ?? key;
 }
 
 internal sealed class AvaloniaMainThreadDispatcher : IMainThreadDispatcher
