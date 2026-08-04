@@ -31,9 +31,9 @@
       },
       "Microsoft.Windows.CsWin32": {
         "type": "Direct",
-        "requested": "[0.3.275, )",
-        "resolved": "0.3.275",
-        "contentHash": "PzFiVQdVxDY+iTX9U2K3IPVy4uvouZLDDsfRw5G+apVAcMGEeNlIqa/XLGu9xyGgysbwTulWsvlHHL4dX9aIQw==",
+        "requested": "[0.3.298, )",
+        "resolved": "0.3.298",
+        "contentHash": "moz/CojV5HSeJYV9pNVE6mWMKnJGvPgdD31EhBLyUJ8Ui06PBrH9oPFK1ljXbJJMM4EzKnkE1a0AtBbH1BHDGA==",
         "dependencies": {
           "Microsoft.Windows.SDK.Win32Docs": "0.1.42-alpha",
           "Microsoft.Windows.SDK.Win32Metadata": "70.0.11-preview",
@@ -78,12 +78,12 @@
       },
       "RAMSPDToolkit-NDD": {
         "type": "Direct",
-        "requested": "[1.4.2, )",
-        "resolved": "1.4.2",
-        "contentHash": "pqIwn/HqXFnW4FVKybq6gZh3YK14OOLGWkgZzDdewjAInCOu86EO2L+FCQo8j1/v1sKwv+vgX5pnehxyrlJYJw==",
+        "requested": "[1.6.0, )",
+        "resolved": "1.6.0",
+        "contentHash": "tqZVwWtKjZ4Xpe5Fua9L244EIG2mRw4H86k+p3W1lEEXKtuLfKwLj9b1zHvywsRq9lUPOItKYANM/Br1bd4S7g==",
         "dependencies": {
-          "BlackSharp.Core": "1.0.4",
-          "System.Management": "10.0.0"
+          "BlackSharp.Core": "1.1.4",
+          "System.Management": "10.0.3"
         }
       },
       "Serilog": {
@@ -157,8 +157,8 @@
       },
       "BlackSharp.Core": {
         "type": "Transitive",
-        "resolved": "1.0.7",
-        "contentHash": "LbEc4w0oZ7w4p6+8OjPZgwsJW470aQRuYZgZ9aMN2PW9R79pW3OnZQ32AVVx/21rstX9mKbXaOLWpSAxoANYxQ=="
+        "resolved": "1.1.4",
+        "contentHash": "+itaAmbgowTKPxfgajCjpRn6hq7aW4UF83bKFvLVFtXNYdKTipnUDbYhu8E3MzFkOSmBHNkZu6jxoU8+WzD3rA=="
       },
       "DiskInfoToolkit": {
         "type": "Transitive",
