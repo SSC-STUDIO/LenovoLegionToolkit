@@ -16,6 +16,8 @@ public interface IPlatformServices
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
+    Task<KeyboardLightingState?> GetKeyboardLightingStateAsync();
+    Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update);
 }
 
 public sealed record FeatureGroupItem(string Title, string Description, string Status);
@@ -42,6 +44,48 @@ public sealed record FeatureActionItem(
     bool IsEnabled,
     bool IsSelected,
     bool IsToggle);
+
+public sealed record KeyboardColorState(byte R, byte G, byte B)
+{
+    public string Hex => $"#{R:X2}{G:X2}{B:X2}";
+}
+
+public sealed record KeyboardSpectrumEffectState(
+    string Type,
+    string Speed,
+    string Direction,
+    string ClockwiseDirection,
+    IReadOnlyList<KeyboardColorState> Colors,
+    IReadOnlyList<ushort> Keys);
+
+public sealed record KeyboardRgbPresetState(
+    string Key,
+    string DisplayName,
+    bool IsSelected,
+    string Effect,
+    string Speed,
+    string Brightness,
+    IReadOnlyList<KeyboardColorState> Zones);
+
+public sealed record KeyboardLightingState(
+    string Mode,
+    int Brightness,
+    bool LogoEnabled,
+    int SelectedProfile,
+    IReadOnlyList<KeyboardSpectrumEffectState> SpectrumEffects,
+    IReadOnlyList<KeyboardRgbPresetState> RgbPresets);
+
+public sealed record KeyboardLightingUpdate(
+    string Mode,
+    int? SelectedProfile = null,
+    int? Brightness = null,
+    bool? LogoEnabled = null,
+    string? RgbPreset = null,
+    string? RgbEffect = null,
+    string? RgbSpeed = null,
+    string? RgbBrightness = null,
+    IReadOnlyList<KeyboardColorState>? RgbZones = null,
+    IReadOnlyList<KeyboardSpectrumEffectState>? SpectrumEffects = null);
 /// <summary>
 /// Read-only sensor data prepared for the dashboard. Value and Unit are kept
 /// separately so the UI can render a stable metric row and an optional gauge

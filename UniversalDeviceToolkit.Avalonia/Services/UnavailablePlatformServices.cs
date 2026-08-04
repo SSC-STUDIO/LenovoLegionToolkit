@@ -53,4 +53,10 @@ public sealed class UnavailablePlatformServices : IPlatformServices
 
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         Task.FromResult(false);
+
+    public Task<KeyboardLightingState?> GetKeyboardLightingStateAsync() =>
+        Task.FromResult<KeyboardLightingState?>(null);
+
+    public Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update) =>
+        Task.FromResult(false);
 }

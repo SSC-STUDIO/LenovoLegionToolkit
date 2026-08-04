@@ -1,0 +1,165 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="UniversalDeviceToolkit.Avalonia.Pages.KeyboardBacklightPage"
+             automation:AutomationProperties.AutomationId="AvaloniaKeyboardBacklightPage">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="16"
+                    Margin="32,24,32,32"
+                    MaxWidth="920"
+                    HorizontalAlignment="Left">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                <Border Width="48"
+                        Height="48"
+                        CornerRadius="{StaticResource CornerRadiusControl}"
+                        Background="{DynamicResource StatusNeutralBackgroundBrush}"
+                        VerticalAlignment="Top">
+                    <controls:NavigationIcon IconIdentifier="Keyboard24"
+                                             FontSize="{StaticResource IconSizeLG}"
+                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </Border>
+                <StackPanel Grid.Column="1" Spacing="4">
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=KeyboardBacklightPage_Title, Fallback=Keyboard Backlight}"
+                                                 FontSize="{StaticResource FontSizeDisplaySection}"
+                                                 FontWeight="Medium"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2" />
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=KeyboardBacklightPage_Description, Fallback=Configure keyboard lighting and effects.}"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="3" />
+                </StackPanel>
+            </Grid>
+
+            <Border x:Name="StatusCard"
+                    Background="{DynamicResource StatusInfoBackgroundBrush}"
+                    BorderBrush="{DynamicResource StatusInfoBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                    <Border Width="36"
+                            Height="36"
+                            CornerRadius="{StaticResource CornerRadiusRound}"
+                            Background="{DynamicResource StatusInfoBrush}"
+                            VerticalAlignment="Top">
+                        <TextBlock Text="i"
+                                   FontSize="{StaticResource FontSizeSection}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <controls:LocalizedTextBlock x:Name="StatusTitle"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock x:Name="StatusMessage"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="4" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <controls:LocalizedTextBlock x:Name="ErrorMessage"
+                                         IsVisible="False"
+                                         Foreground="{DynamicResource StatusCriticalTextBrush}"
+                                         OverflowMode="Wrap"
+                                         MaxLines="3" />
+
+            <StackPanel x:Name="SpectrumPanel" IsVisible="False" Spacing="12">
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <StackPanel Spacing="12">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_SpectrumProfiles, Fallback=Spectrum profiles}"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <WrapPanel x:Name="SpectrumProfiles" Orientation="Horizontal" />
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Brightness, Fallback=Brightness}"
+                                                         VerticalAlignment="Center"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <Slider x:Name="SpectrumBrightness"
+                                    Grid.Column="1"
+                                    Minimum="0"
+                                    Maximum="9"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    VerticalAlignment="Center"
+                                    ValueChanged="SpectrumBrightness_ValueChanged" />
+                            <TextBlock x:Name="SpectrumBrightnessValue"
+                                       Grid.Column="2"
+                                       MinWidth="32"
+                                       TextAlignment="Right"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                        <CheckBox x:Name="SpectrumLogo"
+                                  Content="{local:Loc Key=Keyboard_LogoLighting, Fallback=Keyboard logo lighting}"
+                                  Click="SpectrumLogo_Click" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Effects, Fallback=Effects}"
+                                                         FontSize="{StaticResource FontSizeSubsection}"
+                                                         FontWeight="Medium"
+                                                         VerticalAlignment="Center" />
+                            <Button Grid.Column="1"
+                                    x:Name="SaveSpectrumButton"
+                                    Content="{local:Loc Key=Common_Save, Fallback=Save}"
+                                    Click="SaveSpectrum_Click" />
+                        </Grid>
+                        <ItemsControl x:Name="SpectrumEffects" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel x:Name="RgbPanel" IsVisible="False" Spacing="12">
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <StackPanel Spacing="12">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_RGBPresets, Fallback=RGB presets}"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <WrapPanel x:Name="RgbPresets" Orientation="Horizontal" />
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="10">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Effect, Fallback=Effect}"
+                                                         VerticalAlignment="Center" />
+                            <ComboBox x:Name="RgbEffect" Grid.Column="1" SelectionChanged="RgbSetting_Changed" />
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Speed, Fallback=Speed}"
+                                                         Grid.Row="1"
+                                                         VerticalAlignment="Center" />
+                            <ComboBox x:Name="RgbSpeed" Grid.Row="1" Grid.Column="1" SelectionChanged="RgbSetting_Changed" />
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Brightness, Fallback=Brightness}"
+                                                         Grid.Row="2"
+                                                         VerticalAlignment="Center" />
+                            <ComboBox x:Name="RgbBrightness" Grid.Row="2" Grid.Column="1" SelectionChanged="RgbSetting_Changed" />
+                        </Grid>
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Zones, Fallback=Zones}"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium" />
+                        <WrapPanel x:Name="RgbZones" Orientation="Horizontal" />
+                        <Button x:Name="SaveRgbButton"
+                                HorizontalAlignment="Right"
+                                Content="{local:Loc Key=Common_Save, Fallback=Save}"
+                                Click="SaveRgb_Click" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

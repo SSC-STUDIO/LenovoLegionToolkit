@@ -212,16 +212,6 @@ public partial class FeaturePageView : UserControl
 
 }
 
-public sealed class KeyboardBacklightPage(IPlatformServices services) : FeaturePageView(services, new(
-    "Keyboard",
-    "Keyboard",
-    "Configure keyboard backlight and keyboard-specific controls.",
-    "Keyboard24",
-    "Keyboard hardware controls require a compatible Windows device adapter.",
-    "Open keyboard controls",
-    "Review supported lighting modes and keyboard hardware state.",
-    "Keyboard24"));
-
 public sealed class ActionsPage(IPlatformServices services) : FeaturePageView(services, new(
     "Actions",
     "Actions",

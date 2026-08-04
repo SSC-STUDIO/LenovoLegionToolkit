@@ -278,6 +278,154 @@ internal sealed class WindowsFeatureHostServices
                 : actions);
     }
 
+    public async Task<KeyboardLightingState?> GetKeyboardLightingStateAsync()
+    {
+        if (_spectrum is not null && await _spectrum.IsSupportedAsync().ConfigureAwait(false))
+        {
+            var profile = await _spectrum.GetProfileAsync().ConfigureAwait(false);
+            var brightness = await _spectrum.GetBrightnessAsync().ConfigureAwait(false);
+            var logoEnabled = await _spectrum.GetLogoStatusAsync().ConfigureAwait(false);
+            var (_, effects) = await _spectrum.GetProfileDescriptionAsync(profile).ConfigureAwait(false);
+            return new KeyboardLightingState(
+                "Spectrum",
+                brightness,
+                logoEnabled,
+                profile,
+                effects.Select(effect => new KeyboardSpectrumEffectState(
+                    effect.Type.ToString(),
+                    effect.Speed.ToString(),
+                    effect.Direction.ToString(),
+                    effect.ClockwiseDirection.ToString(),
+                    effect.Colors.Select(ToKeyboardColor).ToArray(),
+                    effect.Keys)).ToArray(),
+                []);
+        }
+
+        if (_rgb is not null && await _rgb.IsSupportedAsync().ConfigureAwait(false))
+        {
+            var state = await _rgb.GetStateAsync().ConfigureAwait(false);
+            var presets = Enum.GetValues<RGBKeyboardBacklightPreset>()
+                .Select(preset =>
+                {
+                    var description = state.Presets.GetValueOrDefault(
+                        preset,
+                        RGBKeyboardBacklightBacklightPresetDescription.Default);
+                    var zones = preset == RGBKeyboardBacklightPreset.Off
+                        ? []
+                        : new[]
+                        {
+                            ToKeyboardColor(description.Zone1),
+                            ToKeyboardColor(description.Zone2),
+                            ToKeyboardColor(description.Zone3),
+                            ToKeyboardColor(description.Zone4),
+                        };
+                    return new KeyboardRgbPresetState(
+                        preset.ToString(),
+                        preset.ToString(),
+                        state.SelectedPreset == preset,
+                        description.Effect.ToString(),
+                        description.Speed.ToString(),
+                        description.Brightness.ToString(),
+                        zones);
+                })
+                .ToArray();
+
+            return new KeyboardLightingState("RGB", 0, false, 0, [], presets);
+        }
+
+        return null;
+    }
+
+    public async Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update)
+    {
+        if (update.Mode.Equals("Spectrum", StringComparison.OrdinalIgnoreCase) && _spectrum is not null)
+        {
+            if (!await _spectrum.IsSupportedAsync().ConfigureAwait(false))
+                return false;
+
+            if (update.SelectedProfile is { } profile && update.SpectrumEffects is null)
+                await _spectrum.SetProfileAsync(profile).ConfigureAwait(false);
+            if (update.Brightness is { } brightness)
+                await _spectrum.SetBrightnessAsync(Math.Clamp(brightness, 0, 9)).ConfigureAwait(false);
+            if (update.LogoEnabled is { } logoEnabled)
+                await _spectrum.SetLogoStatusAsync(logoEnabled).ConfigureAwait(false);
+            if (update.SpectrumEffects is not null)
+            {
+                var selectedProfile = update.SelectedProfile ?? await _spectrum.GetProfileAsync().ConfigureAwait(false);
+                var effects = new List<SpectrumKeyboardBacklightEffect>();
+                foreach (var item in update.SpectrumEffects)
+                {
+                    if (!Enum.TryParse<SpectrumKeyboardBacklightEffectType>(item.Type, true, out var type)
+                        || !Enum.TryParse<SpectrumKeyboardBacklightSpeed>(item.Speed, true, out var speed)
+                        || !Enum.TryParse<SpectrumKeyboardBacklightDirection>(item.Direction, true, out var direction)
+                        || !Enum.TryParse<SpectrumKeyboardBacklightClockwiseDirection>(item.ClockwiseDirection, true, out var clockwise))
+                    {
+                        return false;
+                    }
+
+                    effects.Add(new SpectrumKeyboardBacklightEffect(
+                        type,
+                        speed,
+                        direction,
+                        clockwise,
+                        item.Colors.Select(ToRgbColor).ToArray(),
+                        item.Keys.ToArray()));
+                }
+
+                await _spectrum.SetProfileDescriptionAsync(selectedProfile, effects.ToArray()).ConfigureAwait(false);
+            }
+
+            return true;
+        }
+
+        if (update.Mode.Equals("RGB", StringComparison.OrdinalIgnoreCase) && _rgb is not null)
+        {
+            if (!await _rgb.IsSupportedAsync().ConfigureAwait(false))
+                return false;
+
+            var state = await _rgb.GetStateAsync().ConfigureAwait(false);
+            var selected = state.SelectedPreset;
+            if (!string.IsNullOrWhiteSpace(update.RgbPreset)
+                && !Enum.TryParse(update.RgbPreset, true, out selected))
+            {
+                return false;
+            }
+
+            if (update.RgbEffect is null && update.RgbSpeed is null
+                && update.RgbBrightness is null && update.RgbZones is null)
+            {
+                await _rgb.SetPresetAsync(selected).ConfigureAwait(false);
+                return true;
+            }
+
+            var current = state.Presets.GetValueOrDefault(
+                selected,
+                RGBKeyboardBacklightBacklightPresetDescription.Default);
+            if (!Enum.TryParse(update.RgbEffect ?? current.Effect.ToString(), true, out RGBKeyboardBacklightEffect effect)
+                || !Enum.TryParse(update.RgbSpeed ?? current.Speed.ToString(), true, out RGBKeyboardBacklightSpeed speed)
+                || !Enum.TryParse(update.RgbBrightness ?? current.Brightness.ToString(), true, out RGBKeyboardBacklightBrightness brightness))
+            {
+                return false;
+            }
+
+            var zones = update.RgbZones?.Count >= 4
+                ? update.RgbZones.Take(4).Select(ToRgbColor).ToArray()
+                : [current.Zone1, current.Zone2, current.Zone3, current.Zone4];
+            var presets = new Dictionary<RGBKeyboardBacklightPreset, RGBKeyboardBacklightBacklightPresetDescription>(state.Presets)
+            {
+                [selected] = new(effect, speed, brightness, zones[0], zones[1], zones[2], zones[3]),
+            };
+            await _rgb.SetStateAsync(new(selected, presets)).ConfigureAwait(false);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static KeyboardColorState ToKeyboardColor(RGBColor color) => new(color.R, color.G, color.B);
+
+    private static RGBColor ToRgbColor(KeyboardColorState color) => new(color.R, color.G, color.B);
+
     private static async Task AdjustSpectrumBrightnessAsync(SpectrumKeyboardBacklightController controller, int delta)
     {
         var current = await controller.GetBrightnessAsync().ConfigureAwait(false);

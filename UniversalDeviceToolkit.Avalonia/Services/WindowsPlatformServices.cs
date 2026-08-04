@@ -41,6 +41,16 @@ public sealed class WindowsPlatformServices : IPlatformServices
         _featureHost is null
             ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)
             : _featureHost.SetActionAsync(routeKey, actionKey, isSelected);
+
+    public Task<KeyboardLightingState?> GetKeyboardLightingStateAsync() =>
+        _featureHost is null
+            ? _inner.GetKeyboardLightingStateAsync()
+            : _featureHost.GetKeyboardLightingStateAsync();
+
+    public Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update) =>
+        _featureHost is null
+            ? _inner.SetKeyboardLightingAsync(update)
+            : _featureHost.SetKeyboardLightingAsync(update);
 }
 
 #endif
