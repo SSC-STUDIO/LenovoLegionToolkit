@@ -511,3 +511,11 @@
 - Windows 验证：Avalonia 双 TFM `--locked-mode` restore 通过，Release 双目标构建 `0` 警告、`0` 错误。
 - WSL 验证：Ubuntu `26.04 LTS`、.NET `10.0.110`；Linux locked restore、Linux 平台库和跨平台测试构建 `0` 警告、`0` 错误，跨平台测试 `153/153` 通过、`0` Skip，`status`、`hardware`、`json` 三个 CLI smoke 全部通过。
 - macOS 仍需由 macOS CI runner 提供实测结果；完整 FlaUI nightly、安装目录 ACL 审计和按需提权端到端验证仍未完成。
+
+## 37. 2026-08-04 重复测试组件与淘汰项目最终审计
+
+- `111dd332` 完成共享测试基础设施收敛：`Tests`、`Fast.Tests`、`CrossPlatform.Tests` 和 `UiAutomation.Tests` 复用唯一的 `Tests.Infrastructure`；跨平台测试不再保留重复的 `RepositoryPaths` 实现。
+- 旧的 `UniversalDeviceToolkit.Platform.Windows.Tests` 已迁入主测试项目，当前没有 `.csproj`、源码或项目/CI 引用；Windows 适配器测试由主测试项目继续覆盖。
+- `SolutionProjectInventoryGuardTests` 保证仓库项目必须进入方案或显式外部清单。`PerformanceTest` 及工具 smoke 项目已纳入方案/CI；Linux/macOS 平台库已由 Avalonia 和 CrossPlatform 消费；`Plugins.Abstractions` 是跨仓库插件 SDK，由 `crossplatform-libs.yml` 独立构建，属于有意保留的外部项目，不是淘汰项目。
+- Android 支持已由 `d4025280` 移除并由 `AndroidSupportGuardTests` 固化；当前构建定义不再声明 Android/Xamarin/MAUI 目标。
+- 最终审计未发现可在不破坏外部插件 ABI、专用桌面 UI runner 或跨平台验证链的前提下删除的受跟踪项目；继续删除这些保留项会扩大范围并破坏现有契约。
