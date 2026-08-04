@@ -242,6 +242,14 @@ public sealed class PluginExtensionsPageGuardTests
                         "PluginExtensionsPage.Presentation.cs");
                     if (File.Exists(presentationPath))
                         source += Environment.NewLine + File.ReadAllText(presentationPath);
+
+                    var lifecyclePath = Path.Combine(
+                        candidateRoot,
+                        "UniversalDeviceToolkit.WPF",
+                        "Pages",
+                        "PluginExtensionsPage.Lifecycle.cs");
+                    if (File.Exists(lifecyclePath))
+                        source += Environment.NewLine + File.ReadAllText(lifecyclePath);
                 }
 
                 return source;
