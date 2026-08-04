@@ -532,6 +532,7 @@
                                                     Visibility="{Binding IsInstalling, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                                             <wpfui:Button x:Name="PluginUpdateButton"
                                                            AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginInstallButton_{0}}"
+                                                           AutomationProperties.Name="{Binding DataContext.InstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
                                                            Style="{StaticResource DetailPrimaryActionButtonStyle}"
                                                            Click="PluginInstallButton_Click"
                                                            Tag="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
@@ -544,6 +545,7 @@
                                             </wpfui:Button>
 
                                             <wpfui:Button AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginConfigureButton_{0}}"
+                                                          AutomationProperties.Name="{Binding DataContext.ConfigureButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
                                                           ToolTip="{Binding DataContext.ConfigureButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
                                                           Visibility="{Binding DataContext.ShouldShowConfigureButton, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -556,6 +558,7 @@
                                             </wpfui:Button>
 
                                             <wpfui:Button AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginOpenButton_{0}}"
+                                                          AutomationProperties.Name="{Binding DataContext.OpenButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
                                                           Style="{StaticResource DetailSecondaryActionButtonStyle}"
                                                           Click="PluginOpenButton_Click"
                                                           Tag="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
@@ -573,6 +576,7 @@
                                             </wpfui:Button>
 
                                             <wpfui:Button AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=ListBoxItem}, StringFormat=PluginUninstallButton_{0}}"
+                                                          AutomationProperties.Name="{Binding DataContext.UninstallButtonText, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
                                                           Style="{StaticResource DetailDangerActionButtonStyle}"
                                                           Visibility="{Binding DataContext.ShouldShowInstalledActions, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                           Click="PluginUninstallButton_Click"

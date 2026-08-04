@@ -1505,7 +1505,9 @@ internal static partial class Program
                 var smallerArea = Math.Min(left.Width!.Value * left.Height!.Value, right.Width!.Value * right.Height!.Value);
                 if (smallerArea > 0 && overlap / smallerArea >= 0.20)
                     throw new InvalidOperationException(
-                        $"Visible text nodes overlap on '{label}': '{left.Name}' and '{right.Name}'.");
+                        $"Visible text nodes overlap on '{label}': '{left.Name}' " +
+                        $"[{left.Type}/{left.AutomationId ?? "-"} @ {left.X},{left.Y} {left.Width}x{left.Height}] and " +
+                        $"'{right.Name}' [{right.Type}/{right.AutomationId ?? "-"} @ {right.X},{right.Y} {right.Width}x{right.Height}].");
             }
         }
 
