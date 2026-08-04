@@ -71,6 +71,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)
             : _featureHost.SetActionAsync(routeKey, actionKey, isSelected);
 
+    public Task<bool> ImportPluginAsync(string zipFilePath) =>
+        _featureHost is null
+            ? _inner.ImportPluginAsync(zipFilePath)
+            : _featureHost.ImportPluginAsync(zipFilePath);
+
     public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
         _featureHost is null
             ? _inner.GetMacroWorkspaceAsync()

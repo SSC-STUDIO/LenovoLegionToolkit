@@ -189,6 +189,27 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public async Task<bool> ImportPluginAsync(string zipFilePath)
+    {
+        if (string.IsNullOrWhiteSpace(zipFilePath) || !File.Exists(zipFilePath))
+            return false;
+
+        try
+        {
+            var installer = new PluginInstallationService(_plugins);
+            var imported = await installer.ExtractAndInstallPluginAsync(
+                zipFilePath,
+                PluginPaths.GetPluginsDirectory()).ConfigureAwait(false);
+            if (imported)
+                await _plugins.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+            return imported;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync()
     {
         if (_networkAcceleration is null)

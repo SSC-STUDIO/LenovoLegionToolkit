@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
              xmlns:automation="using:Avalonia.Automation"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.FeaturePageView"
              automation:AutomationProperties.AutomationId="AvaloniaFeaturePage">
@@ -96,6 +97,11 @@
                                 Content="{local:Loc Key=WindowsOptimizationPage_Tab_DriverDownload, Fallback=Driver downloads}"
                                 Click="DriverDownloadButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaDriverDownloadButton" />
+                        <Button x:Name="PluginImportButton"
+                                Content="{local:Loc Key=PluginExtensionsPage_ImportFromFiles, Fallback=Import from files}"
+                                Click="PluginImportButton_Click"
+                                IsVisible="False"
+                                automation:AutomationProperties.AutomationId="AvaloniaPluginImportButton" />
                     </StackPanel>
                     <StackPanel x:Name="OptimizationCommands"
                                 Orientation="Horizontal"

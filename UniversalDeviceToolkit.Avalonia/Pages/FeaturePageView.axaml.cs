@@ -52,9 +52,14 @@ public partial class FeaturePageView : UserControl
             _isApplying = true;
             var state = await _platformServices.GetFeaturePageStateAsync(_descriptor.RouteKey);
             _lastState = state;
-            OptimizationToolbar.IsVisible = string.Equals(_descriptor.RouteKey, "WindowsOptimization", StringComparison.Ordinal);
-            NetworkAccelerationButton.IsVisible = OptimizationToolbar.IsVisible;
-            DriverDownloadButton.IsVisible = OptimizationToolbar.IsVisible;
+            var isOptimization = string.Equals(_descriptor.RouteKey, "WindowsOptimization", StringComparison.Ordinal);
+            var isPluginExtensions = string.Equals(_descriptor.RouteKey, "PluginExtensions", StringComparison.Ordinal);
+            OptimizationToolbar.IsVisible = isOptimization || isPluginExtensions;
+            OptimizationModeButton.IsVisible = isOptimization;
+            CleanupModeButton.IsVisible = isOptimization;
+            NetworkAccelerationButton.IsVisible = isOptimization;
+            DriverDownloadButton.IsVisible = isOptimization;
+            PluginImportButton.IsVisible = isPluginExtensions;
             StatusTitle.Text = state.IsAvailable
                 ? AvaloniaLocalization.GetString("FeaturePage_Available", "Available")
                 : AvaloniaLocalization.GetString("FeaturePage_Unsupported", "Unavailable on this device");
@@ -117,6 +122,13 @@ public partial class FeaturePageView : UserControl
     {
         if (!OptimizationToolbar.IsVisible)
             return;
+
+        if (!string.Equals(_descriptor.RouteKey, "WindowsOptimization", StringComparison.Ordinal))
+        {
+            OptimizationCommands.IsVisible = false;
+            CleanupCommands.IsVisible = false;
+            return;
+        }
 
         OptimizationCommands.IsVisible = !_showCleanup;
         CleanupCommands.IsVisible = _showCleanup;
@@ -182,6 +194,51 @@ public partial class FeaturePageView : UserControl
             Content = new DriverDownloadPage(_platformServices),
         };
         window.Show(owner);
+    }
+
+    private async void PluginImportButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (TopLevel.GetTopLevel(this) is not TopLevel topLevel)
+            return;
+
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = true,
+            Title = AvaloniaLocalization.GetString(
+                "PluginExtensionsPage_SelectPluginFiles",
+                "Select plugin ZIP files"),
+            FileTypeFilter =
+            [new FilePickerFileType("Plugin ZIP") { Patterns = ["*.zip"] }],
+        });
+
+        if (files.Count == 0)
+            return;
+
+        var imported = 0;
+        foreach (var file in files)
+        {
+            if (await _platformServices.ImportPluginAsync(file.Path.LocalPath))
+                imported++;
+        }
+
+        if (imported == 0)
+        {
+            ToolTip.SetTip(
+                PluginImportButton,
+                AvaloniaLocalization.GetString(
+                    "PluginExtensionsPage_BulkImportFailed",
+                    "No plugin packages could be imported."));
+            return;
+        }
+
+        ToolTip.SetTip(
+            PluginImportButton,
+            string.Format(
+                AvaloniaLocalization.GetString(
+                    "PluginExtensionsPage_BulkImportSuccessMessage",
+                    "Imported {0} plugin package(s)."),
+                imported));
+        await RefreshStateAsync();
     }
 
     private async void OptimizationCommandButton_Click(object? sender, RoutedEventArgs e)

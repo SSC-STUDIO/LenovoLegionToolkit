@@ -54,6 +54,8 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         Task.FromResult(false);
 
+    public Task<bool> ImportPluginAsync(string zipFilePath) => Task.FromResult(false);
+
     public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync() =>
         Task.FromResult<IReadOnlyList<CustomCleanupRuleItem>>([]);
 

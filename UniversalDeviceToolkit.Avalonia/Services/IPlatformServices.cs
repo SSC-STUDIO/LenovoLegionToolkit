@@ -15,6 +15,7 @@ public interface IPlatformServices
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
+    Task<bool> ImportPluginAsync(string zipFilePath);
     Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync();
     Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules);
     Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
