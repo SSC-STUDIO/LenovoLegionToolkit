@@ -67,40 +67,53 @@ if ($distros -notcontains $Distro) {
     throw "WSL distribution '$Distro' was not found. Installed distributions: $($distros -join ', ')"
 }
 
-$repoInWsl = Remove-WslOutputPadding (& $wslCommand.Source -d $Distro -- wslpath -a $repoRoot | Out-String)
+# wsl.exe forwards backslashes as escape characters when it invokes a Linux
+# command. Double them before calling wslpath so OneDrive and other Windows
+# path segments are preserved verbatim.
+$repoPathForWsl = $repoRoot.Replace('\', '\\')
+$repoInWsl = Remove-WslOutputPadding (& $wslCommand.Source -d $Distro -- wslpath -a -- $repoPathForWsl | Out-String)
 if ([string]::IsNullOrWhiteSpace($repoInWsl)) {
     throw "Could not convert repository path '$repoRoot' into a WSL path."
 }
 
 $bashScript = @'
 set -euo pipefail
-repo="$1"
+repo="$(printf '%s' "$1" | base64 -d)"
+configuration="$(printf '%s' "$2" | base64 -d)"
 cd "$repo"
 
 echo "WSL distribution: $(cat /etc/os-release | sed -n 's/^PRETTY_NAME=//p' | tr -d '"')"
 echo "dotnet: $(dotnet --version)"
 
-dotnet restore UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --locked-mode
-dotnet build UniversalDeviceToolkit.Platform.Linux/UniversalDeviceToolkit.Platform.Linux.csproj --configuration "$2" --no-restore
-dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration "$2" --no-restore
+dotnet restore UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj \
+  --locked-mode -p:EnableWindowsTargeting=true
+dotnet build UniversalDeviceToolkit.Platform.Linux/UniversalDeviceToolkit.Platform.Linux.csproj --configuration "$configuration" --no-restore
+dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration "$configuration" --no-restore
 dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj \
-  --configuration "$2" --no-build \
+  --configuration "$configuration" --no-build \
   --logger "trx;LogFileName=wsl-linux-test-results.trx"
 
-status="$(dotnet run --project UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj --configuration "$2" --no-build -- status)"
+status="$(dotnet run --project UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj --configuration "$configuration" --no-build -- status)"
 echo "$status" | grep -qi 'cross-platform diagnostics'
 
-hardware="$(dotnet run --project UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj --configuration "$2" --no-build -- hardware)"
+hardware="$(dotnet run --project UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj --configuration "$configuration" --no-build -- hardware)"
 echo "$hardware" | grep -qi 'Hardware identity'
 
-json="$(dotnet run --project UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj --configuration "$2" --no-build -- json)"
+json="$(dotnet run --project UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj --configuration "$configuration" --no-build -- json)"
 echo "$json" | grep -q 'Universal Device Toolkit'
 
 echo 'WSL Linux verification passed.'
 '@
 
 Write-Host "Running portable verification in WSL distribution '$Distro'..." -ForegroundColor Cyan
-& $wslCommand.Source -d $Distro -- bash -lc $bashScript 'udt-wsl-verification' $repoInWsl $Configuration
+$bashScriptBase64 = [Convert]::ToBase64String(
+    [Text.Encoding]::UTF8.GetBytes($bashScript))
+$repoArgumentBase64 = [Convert]::ToBase64String(
+    [Text.Encoding]::UTF8.GetBytes($repoInWsl))
+$configurationBase64 = [Convert]::ToBase64String(
+    [Text.Encoding]::UTF8.GetBytes($Configuration))
+$bootstrap = "printf '%s' '$bashScriptBase64' | base64 -d | bash -s -- '$repoArgumentBase64' '$configurationBase64'"
+& $wslCommand.Source -d $Distro -- bash -lc $bootstrap
 if ($LASTEXITCODE -ne 0) {
     throw "WSL verification failed with exit code $LASTEXITCODE."
 }
