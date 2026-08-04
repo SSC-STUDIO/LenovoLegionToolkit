@@ -45,6 +45,7 @@ public partial class SettingsAppearanceView : UserControl
 
     // Local UI state, mirrored to _themePrefs on change and restored from it on load.
     private bool _applyAccentColorToTheme = true;
+    private bool _applyAccentColorToSystem = true;
     private Color? _selectedAccent;
 
     public SettingsAppearanceView()
@@ -69,6 +70,7 @@ public partial class SettingsAppearanceView : UserControl
                 option.Culture.Name.Equals(LocalizationRuntime.CurrentCulture.Name, StringComparison.OrdinalIgnoreCase));
 
             ApplyAccentColorToThemeCheckBox.IsChecked = _applyAccentColorToTheme;
+            ApplyAccentColorToSystemCheckBox.IsChecked = _applyAccentColorToSystem;
             AccentSwatches.ItemsSource = BuildSwatches();
             UpdateThemeCardSelection(GetCurrentThemeTag());
             RestoreAppearanceOptions();
@@ -103,6 +105,7 @@ public partial class SettingsAppearanceView : UserControl
             app.RequestedThemeVariant = variant;
 
         _applyAccentColorToTheme = store.ApplyAccentColorToTheme;
+        _applyAccentColorToSystem = store.ApplyAccentColorToSystem;
 
         if (!store.UseSystemAccent
             && !string.IsNullOrWhiteSpace(store.AccentColorHex)
@@ -211,6 +214,19 @@ public partial class SettingsAppearanceView : UserControl
         _themePrefs.SynchronizeStore();
     }
 
+    private void ApplyAccentColorToSystemCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        _applyAccentColorToSystem = ApplyAccentColorToSystemCheckBox.IsChecked == true;
+        if (_applyAccentColorToSystem && _selectedAccent is { } color)
+            ApplyAccentColorToSystem(color);
+
+        _themePrefs.Store.ApplyAccentColorToSystem = _applyAccentColorToSystem;
+        _themePrefs.SynchronizeStore();
+    }
+
     private void AccentColorSwatch_Click(object? sender, RoutedEventArgs e)
     {
         if (_isRefreshing || sender is not Button { Tag: AccentSwatchItem item })
@@ -233,6 +249,7 @@ public partial class SettingsAppearanceView : UserControl
                 ApplyAccentColor(_selectedAccent.Value);
             else
                 ClearAccentOverride();
+            ApplyAccentColorToSystem(_selectedAccent.Value);
 
             _themePrefs.Store.UseSystemAccent = false;
             _themePrefs.Store.AccentColorHex = string.Format("#{0:X2}{1:X2}{2:X2}", item.R, item.G, item.B);
@@ -371,6 +388,24 @@ public partial class SettingsAppearanceView : UserControl
 
         foreach (var key in AccentResourceKeys)
             app.Resources.Remove(key);
+    }
+
+    private void ApplyAccentColorToSystem(Color color)
+    {
+        if (!_applyAccentColorToSystem)
+            return;
+
+#if WINDOWS
+        try
+        {
+            UniversalDeviceToolkit.Lib.System.SystemTheme.SetAccentColor(
+                new UniversalDeviceToolkit.Lib.RGBColor(color.R, color.G, color.B));
+        }
+        catch (Exception ex)
+        {
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace("Couldn't apply the selected accent color to Windows.", ex);
+        }
+#endif
     }
 
     private static Color Lighten(Color c, double factor) => Color.FromArgb(

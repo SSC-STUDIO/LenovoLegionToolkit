@@ -13,6 +13,9 @@ public sealed class AvaloniaThemePreferenceStore
     /// <summary>Whether the accent color should be applied to the theme.</summary>
     public bool ApplyAccentColorToTheme { get; set; } = true;
 
+    /// <summary>Whether a selected custom accent should also be written to the Windows system.</summary>
+    public bool ApplyAccentColorToSystem { get; set; } = true;
+
     /// <summary>True maps to AccentColorSource.System; false means a custom accent color is used.</summary>
     public bool UseSystemAccent { get; set; } = true;
 

@@ -209,6 +209,12 @@
                           Content="{local:Loc Key=Appearance_ApplyAccent, Fallback=Change system color when changing the global interface color}"
                           IsCheckedChanged="ApplyAccentColorToThemeCheckBox_IsCheckedChanged"/>
 
+                <CheckBox x:Name="ApplyAccentColorToSystemCheckBox"
+                          automation:AutomationProperties.Name="{local:Loc Key=Appearance_ApplyAccentSystem, Fallback=Apply accent color to Windows}"
+                          FontWeight="Medium"
+                          Content="{local:Loc Key=Appearance_ApplyAccentSystem, Fallback=Apply accent color to Windows}"
+                          IsCheckedChanged="ApplyAccentColorToSystemCheckBox_IsCheckedChanged"/>
+
                 <!-- 4. Separator -->
                 <Border Height="1" Margin="0,4"
                         Background="{DynamicResource CardStrokeColorDefaultBrush}"/>
