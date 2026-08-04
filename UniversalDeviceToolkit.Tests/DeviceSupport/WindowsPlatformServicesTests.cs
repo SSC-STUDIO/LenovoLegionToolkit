@@ -1,7 +1,7 @@
 using UniversalDeviceToolkit.Platform.Windows;
 using Xunit;
 
-namespace UniversalDeviceToolkit.Platform.Windows.Tests;
+namespace UniversalDeviceToolkit.Tests.DeviceSupport;
 
 public sealed class WindowsPlatformServicesTests
 {

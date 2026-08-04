@@ -92,12 +92,9 @@
                         Appearance="Secondary"
                         Background="{DynamicResource StatusSuccessBrush}"
                         BorderBrush="{DynamicResource StatusSuccessBrush}"
+                        Content="{x:Static resources:Resource.PackageControl_Recommended}"
                         Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                        Visibility="Collapsed">
-                        <wpfui:Badge.Content>
-                            <TextBlock Text="{x:Static resources:Resource.WindowsOptimization_Action_Recommended_Tag}" />
-                        </wpfui:Badge.Content>
-                    </wpfui:Badge>
+                        Visibility="Collapsed" />
 
                     <Border
                         x:Name="_statusBadge"
