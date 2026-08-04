@@ -79,4 +79,23 @@ public sealed class AvaloniaMigrationContractTests
     {
         FeatureActionContract.IsToggleAction(hasRollback).Should().Be(expectedToggle);
     }
+
+    [Theory]
+    [InlineData("cleanup.browserCache", true)]
+    [InlineData("cleanup.custom", true)]
+    [InlineData("performance.telemetry", false)]
+    [InlineData("cleanup-scan", false)]
+    public void OptimizationActionKeys_ClassifyCleanupSelections(string actionKey, bool expectedCleanup)
+    {
+        FeatureActionContract.IsCleanupAction(actionKey).Should().Be(expectedCleanup);
+    }
+
+    [Fact]
+    public void OptimizationBatchActions_UseStableKeys()
+    {
+        FeatureActionContract.OptimizationApplyRecommendedActionKey.Should().Be("optimization-apply-recommended");
+        FeatureActionContract.CleanupScanActionKey.Should().Be("cleanup-scan");
+        FeatureActionContract.CleanupRunActionKey.Should().Be("cleanup-run");
+        FeatureActionContract.CleanupClearActionKey.Should().Be("cleanup-clear");
+    }
 }

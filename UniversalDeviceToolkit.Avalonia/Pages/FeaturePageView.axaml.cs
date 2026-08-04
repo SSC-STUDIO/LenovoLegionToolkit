@@ -17,6 +17,8 @@ public partial class FeaturePageView : UserControl
     private readonly FeaturePageDescriptor _descriptor;
     private readonly Action<string>? _actionRequested;
     private bool _isApplying;
+    private FeaturePageState? _lastState;
+    private bool _showCleanup;
 
     protected FeaturePageView(
         IPlatformServices platformServices,
@@ -48,6 +50,8 @@ public partial class FeaturePageView : UserControl
         {
             _isApplying = true;
             var state = await _platformServices.GetFeaturePageStateAsync(_descriptor.RouteKey);
+            _lastState = state;
+            OptimizationToolbar.IsVisible = string.Equals(_descriptor.RouteKey, "WindowsOptimization", StringComparison.Ordinal);
             StatusTitle.Text = state.IsAvailable
                 ? AvaloniaLocalization.GetString("FeaturePage_Available", "Available")
                 : AvaloniaLocalization.GetString("FeaturePage_Unsupported", "Unavailable on this device");
@@ -57,27 +61,97 @@ public partial class FeaturePageView : UserControl
             StatusCard.Background = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBackgroundBrush" : "StatusInfoBackgroundBrush");
             StatusCard.BorderBrush = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBrush" : "StatusInfoBrush");
 
-            FeatureItems.Items.Clear();
-            string? lastCategory = null;
-            foreach (var item in state.Actions)
-            {
-                if (!string.IsNullOrWhiteSpace(item.Category)
-                    && !string.Equals(lastCategory, item.Category, StringComparison.Ordinal))
-                {
-                    FeatureItems.Items.Add(CreateCategoryHeading(item.Category));
-                    lastCategory = item.Category;
-                }
-
-                FeatureItems.Items.Add(CreateFeatureCard(item));
-            }
-
-            if (state.Actions.Count == 0)
-                FeatureItems.Items.Add(CreateEmptyState());
+            RenderFeatureItems(state);
         }
         catch (Exception ex)
         {
             StatusTitle.Text = AvaloniaLocalization.GetString("FeaturePage_LoadFailed", "Unable to load feature state");
             StatusMessage.Text = ex.Message;
+        }
+        finally
+        {
+            _isApplying = false;
+        }
+    }
+
+    private void RenderFeatureItems(FeaturePageState state)
+    {
+        FeatureItems.Items.Clear();
+        var visibleActions = state.Actions.Where(action =>
+            !_descriptor.RouteKey.Equals("WindowsOptimization", StringComparison.Ordinal)
+            || (_showCleanup
+                ? FeatureActionContract.IsCleanupAction(action.Key)
+                    || action.Key is FeatureActionContract.CleanupScanActionKey
+                    or FeatureActionContract.CleanupRunActionKey
+                    or FeatureActionContract.CleanupClearActionKey
+                : !FeatureActionContract.IsCleanupAction(action.Key)
+                    && action.Key != FeatureActionContract.CleanupScanActionKey
+                    && action.Key != FeatureActionContract.CleanupRunActionKey
+                    && action.Key != FeatureActionContract.CleanupClearActionKey)).ToArray();
+
+        string? lastCategory = null;
+        foreach (var item in visibleActions)
+        {
+            if (!string.IsNullOrWhiteSpace(item.Category)
+                && !string.Equals(lastCategory, item.Category, StringComparison.Ordinal))
+            {
+                FeatureItems.Items.Add(CreateCategoryHeading(item.Category));
+                lastCategory = item.Category;
+            }
+
+            FeatureItems.Items.Add(CreateFeatureCard(item));
+        }
+
+        if (visibleActions.Length == 0)
+            FeatureItems.Items.Add(CreateEmptyState());
+        UpdateOptimizationCommands(state);
+    }
+
+    private void UpdateOptimizationCommands(FeaturePageState state)
+    {
+        if (!OptimizationToolbar.IsVisible)
+            return;
+
+        OptimizationCommands.IsVisible = !_showCleanup;
+        CleanupCommands.IsVisible = _showCleanup;
+        var cleanupSelected = state.Actions.Any(item => FeatureActionContract.IsCleanupAction(item.Key) && item.IsSelected);
+        foreach (var button in CleanupCommands.Children.OfType<Button>())
+        {
+            var actionKey = button.Tag?.ToString();
+            button.IsEnabled = actionKey switch
+            {
+                FeatureActionContract.CleanupClearActionKey => cleanupSelected,
+                FeatureActionContract.CleanupScanActionKey => cleanupSelected,
+                FeatureActionContract.CleanupRunActionKey => cleanupSelected,
+                _ => true,
+            };
+        }
+    }
+
+    private void OptimizationModeButton_Click(object? sender, RoutedEventArgs e)
+    {
+        _showCleanup = false;
+        if (_lastState is not null)
+            RenderFeatureItems(_lastState);
+    }
+
+    private void CleanupModeButton_Click(object? sender, RoutedEventArgs e)
+    {
+        _showCleanup = true;
+        if (_lastState is not null)
+            RenderFeatureItems(_lastState);
+    }
+
+    private async void OptimizationCommandButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: string actionKey } || _isApplying)
+            return;
+
+        _isApplying = true;
+        try
+        {
+            if (await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, actionKey, true))
+                await RefreshStateAsync();
         }
         finally
         {

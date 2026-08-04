@@ -71,6 +71,53 @@
                 </Grid>
             </Border>
 
+            <Border x:Name="OptimizationToolbar"
+                    IsVisible="False"
+                    Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="12">
+                <StackPanel Spacing="10">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="OptimizationModeButton"
+                                Content="Optimization"
+                                Click="OptimizationModeButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaOptimizationModeButton" />
+                        <Button x:Name="CleanupModeButton"
+                                Content="Cleanup"
+                                Click="CleanupModeButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaCleanupModeButton" />
+                    </StackPanel>
+                    <StackPanel x:Name="OptimizationCommands"
+                                Orientation="Horizontal"
+                                Spacing="8">
+                        <Button x:Name="ApplyRecommendedButton"
+                                Content="Apply recommended"
+                                Click="OptimizationCommandButton_Click"
+                                Tag="optimization-apply-recommended"
+                                automation:AutomationProperties.AutomationId="AvaloniaApplyRecommendedButton" />
+                    </StackPanel>
+                    <StackPanel x:Name="CleanupCommands"
+                                Orientation="Horizontal"
+                                Spacing="8"
+                                IsVisible="False">
+                        <Button Content="Scan selected"
+                                Click="OptimizationCommandButton_Click"
+                                Tag="cleanup-scan"
+                                automation:AutomationProperties.AutomationId="AvaloniaCleanupScanButton" />
+                        <Button Content="Run selected"
+                                Click="OptimizationCommandButton_Click"
+                                Tag="cleanup-run"
+                                automation:AutomationProperties.AutomationId="AvaloniaCleanupRunButton" />
+                        <Button Content="Clear selection"
+                                Click="OptimizationCommandButton_Click"
+                                Tag="cleanup-clear"
+                                automation:AutomationProperties.AutomationId="AvaloniaCleanupClearButton" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
             <ItemsControl x:Name="FeatureItems"
                           automation:AutomationProperties.AutomationId="FeaturePageItems" />
         </StackPanel>

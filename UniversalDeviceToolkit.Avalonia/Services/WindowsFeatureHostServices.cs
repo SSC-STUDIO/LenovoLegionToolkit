@@ -35,6 +35,9 @@ internal sealed class WindowsFeatureHostServices
     private readonly WindowsOptimizationService? _optimization;
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private readonly object _macroRecordingLock = new();
+    private readonly HashSet<string> _selectedCleanupActions;
+    private readonly ApplicationSettings? _applicationSettings;
+    private long _estimatedCleanupSize;
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
     private bool _automationInitialized;
@@ -56,6 +59,10 @@ internal sealed class WindowsFeatureHostServices
         _automation = automation;
         _plugins = plugins;
         _optimization = optimization;
+        _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
+        _selectedCleanupActions = new HashSet<string>(
+            _applicationSettings?.Store.SelectedCleanupActions ?? [],
+            StringComparer.OrdinalIgnoreCase);
 
         if (_macro is MacroController macroController)
         {
@@ -331,6 +338,62 @@ internal sealed class WindowsFeatureHostServices
 
                 return _plugins.UninstallPlugin(uninstallId);
             case "WindowsOptimization" when _optimization is not null:
+                if (FeatureActionContract.IsCleanupAction(actionKey))
+                {
+                    if (isSelected)
+                        _selectedCleanupActions.Add(actionKey);
+                    else
+                        _selectedCleanupActions.Remove(actionKey);
+
+                    PersistCleanupSelection();
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.OptimizationApplyRecommendedActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    var recommended = _optimization.GetCategories()
+                        .Where(category => !FeatureActionContract.IsCleanupAction(category.Key))
+                        .SelectMany(category => category.Actions)
+                        .Where(action => action.Recommended)
+                        .Select(action => action.Key)
+                        .ToArray();
+                    await _optimization.ExecuteActionsAsync(recommended, CancellationToken.None).ConfigureAwait(false);
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.CleanupScanActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_selectedCleanupActions.Count == 0)
+                        return false;
+
+                    _estimatedCleanupSize = await _optimization.EstimateCleanupSizeAsync(
+                        _selectedCleanupActions,
+                        CancellationToken.None).ConfigureAwait(false);
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.CleanupClearActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    _selectedCleanupActions.Clear();
+                    _estimatedCleanupSize = 0;
+                    PersistCleanupSelection();
+                    return true;
+                }
+
+                if (actionKey.Equals(FeatureActionContract.CleanupRunActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_selectedCleanupActions.Count == 0)
+                        return false;
+
+                    await _optimization.ExecuteActionsAsync(
+                        _selectedCleanupActions,
+                        CancellationToken.None).ConfigureAwait(false);
+                    _selectedCleanupActions.Clear();
+                    _estimatedCleanupSize = 0;
+                    PersistCleanupSelection();
+                    return true;
+                }
+
                 var action = _optimization.GetCategories()
                     .SelectMany(category => category.Actions)
                     .FirstOrDefault(candidate => candidate.Key.Equals(actionKey, StringComparison.OrdinalIgnoreCase));
@@ -351,6 +414,15 @@ internal sealed class WindowsFeatureHostServices
             default:
                 return false;
         }
+    }
+
+    private void PersistCleanupSelection()
+    {
+        if (_applicationSettings is null)
+            return;
+
+        _applicationSettings.Store.SelectedCleanupActions = _selectedCleanupActions.ToList();
+        _applicationSettings.SynchronizeStore();
     }
 
     private async Task<FeaturePageState> GetKeyboardStateAsync()
@@ -1085,13 +1157,52 @@ internal sealed class WindowsFeatureHostServices
                 []);
         }
 
-        var actions = new List<FeatureActionItem>();
+        var actions = new List<FeatureActionItem>
+        {
+            new FeatureActionItem(
+                FeatureActionContract.OptimizationApplyRecommendedActionKey,
+                "Apply recommended optimizations",
+                "Apply all recommended non-cleanup Windows optimization actions as one batch.",
+                "Apply",
+                true,
+                false,
+                false,
+                "Batch operations"),
+            new FeatureActionItem(
+                FeatureActionContract.CleanupScanActionKey,
+                "Estimate selected cleanup",
+                "Estimate the space that the selected cleanup actions can reclaim.",
+                _selectedCleanupActions.Count == 0 ? "Select items" : "Scan",
+                _selectedCleanupActions.Count > 0,
+                false,
+                false,
+                "Cleanup"),
+            new FeatureActionItem(
+                FeatureActionContract.CleanupRunActionKey,
+                "Run selected cleanup",
+                "Execute the selected cleanup actions and clear their saved selection.",
+                "Run",
+                _selectedCleanupActions.Count > 0,
+                false,
+                false,
+                "Cleanup"),
+            new FeatureActionItem(
+                FeatureActionContract.CleanupClearActionKey,
+                "Clear cleanup selection",
+                "Remove all selected cleanup actions without running them.",
+                "Clear",
+                _selectedCleanupActions.Count > 0,
+                false,
+                false,
+                "Cleanup"),
+        };
         foreach (var category in _optimization.GetCategories())
         {
             foreach (var action in category.Actions)
             {
+                var isCleanup = FeatureActionContract.IsCleanupAction(action.Key);
                 var applied = false;
-                if (action.IsAppliedAsync is not null)
+                if (!isCleanup && action.IsAppliedAsync is not null)
                 {
                     try
                     {
@@ -1107,10 +1218,12 @@ internal sealed class WindowsFeatureHostServices
                     action.Key,
                     ResolveResource(action.TitleResourceKey),
                     ResolveResource(action.DescriptionResourceKey),
-                    applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
+                    isCleanup
+                        ? (_selectedCleanupActions.Contains(action.Key) ? "Selected" : "Select")
+                        : applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
                     true,
-                    applied,
-                    FeatureActionContract.IsToggleAction(action.RollbackAsync is not null),
+                    isCleanup ? _selectedCleanupActions.Contains(action.Key) : applied,
+                    isCleanup || FeatureActionContract.IsToggleAction(action.RollbackAsync is not null),
                     ResolveResource(category.TitleResourceKey)));
             }
         }
@@ -1120,9 +1233,29 @@ internal sealed class WindowsFeatureHostServices
             "System optimization",
             "Review Windows optimization actions and their current state.",
             "Available",
-            $"{actions.Count} Windows optimization action(s) loaded from the shared service.",
+            $"{actions.Count} Windows optimization action(s) loaded from the shared service. "
+            + (_estimatedCleanupSize > 0
+                ? $"Estimated cleanup: {FormatBytes(_estimatedCleanupSize)}."
+                : string.Empty),
             true,
             actions);
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        if (bytes <= 0)
+            return "0 B";
+
+        var units = new[] { "B", "KB", "MB", "GB", "TB" };
+        var value = (double)bytes;
+        var index = 0;
+        while (value >= 1024 && index < units.Length - 1)
+        {
+            value /= 1024;
+            index++;
+        }
+
+        return $"{value:0.##} {units[index]}";
     }
 
     private static string ResolveResource(string key) =>
