@@ -243,16 +243,6 @@ public partial class FeaturePageView : UserControl
 
 public sealed class ActionsPage(IPlatformServices services) : AutomationPage(services);
 
-public sealed class MacroPage(IPlatformServices services) : FeaturePageView(services, new(
-    "Macro",
-    "Macro",
-    "Create and manage device macros.",
-    "ReceiptPlay24",
-    "Macro execution requires the Windows input and device services.",
-    "Open macro workspace",
-    "Macro definitions can be reviewed without sending input to the host.",
-    "ReceiptPlay24"));
-
 public sealed class WindowsOptimizationPage(IPlatformServices services) : FeaturePageView(services, new(
     "WindowsOptimization",
     "System optimization",

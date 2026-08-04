@@ -17,6 +17,9 @@ public interface IPlatformServices
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
+    Task<MacroWorkspaceState> GetMacroWorkspaceAsync();
+    Task<bool> SetMacroEnabledAsync(bool enabled);
+    Task<bool> SetMacroSequenceOptionsAsync(ulong key, int repeatCount, bool ignoreDelays, bool interruptOnOtherKey);
     Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
     Task<bool> SetAutomationEnabledAsync(bool enabled);
     Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines);
@@ -74,6 +77,18 @@ public sealed record PluginPageState(
 public sealed record AutomationWorkspaceState(
     bool IsEnabled,
     IReadOnlyList<AutomationPipelineItem> Pipelines);
+
+public sealed record MacroWorkspaceState(
+    bool IsEnabled,
+    bool IsRecording,
+    IReadOnlyList<MacroSlotState> Slots);
+
+public sealed record MacroSlotState(
+    ulong Key,
+    int EventCount,
+    int RepeatCount,
+    bool IgnoreDelays,
+    bool InterruptOnOtherKey);
 
 public sealed record AutomationPipelineItem(
     Guid Id,

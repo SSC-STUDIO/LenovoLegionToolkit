@@ -187,6 +187,65 @@ internal sealed class WindowsFeatureHostServices
     private static string? NormalizePipelineName(string? name) =>
         string.IsNullOrWhiteSpace(name) ? null : name.Trim();
 
+    public Task<MacroWorkspaceState> GetMacroWorkspaceAsync()
+    {
+        if (_macro is not MacroController controller)
+            return Task.FromResult(new MacroWorkspaceState(_macro.IsEnabled, false, Array.Empty<MacroSlotState>()));
+
+        var sequences = controller.GetSequences();
+        var slots = MacroKeys.Select(key =>
+        {
+            var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
+            sequences.TryGetValue(identifier, out var sequence);
+            return new MacroSlotState(
+                key,
+                sequence.Events?.Length ?? 0,
+                Math.Clamp(sequence.RepeatCount, 1, 10),
+                sequence.IgnoreDelays,
+                sequence.InterruptOnOtherKey);
+        }).ToArray();
+
+        return Task.FromResult(new MacroWorkspaceState(controller.IsEnabled, controller.IsRecording, slots));
+    }
+
+    public Task<bool> SetMacroEnabledAsync(bool enabled)
+    {
+        try
+        {
+            _macro.SetEnabled(enabled);
+            return Task.FromResult(true);
+        }
+        catch
+        {
+            return Task.FromResult(false);
+        }
+    }
+
+    public Task<bool> SetMacroSequenceOptionsAsync(
+        ulong key,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey)
+    {
+        if (_macro is not MacroController controller
+            || !MacroKeys.Contains(key)
+            || !MacroController.AllowedRepeatCounts.Contains(repeatCount))
+            return Task.FromResult(false);
+
+        var sequences = controller.GetSequences();
+        var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
+        sequences.TryGetValue(identifier, out var existing);
+        sequences[identifier] = new MacroSequence
+        {
+            RepeatCount = repeatCount,
+            IgnoreDelays = ignoreDelays,
+            InterruptOnOtherKey = interruptOnOtherKey,
+            Events = existing.Events ?? [],
+        };
+        controller.SetSequences(sequences);
+        return Task.FromResult(true);
+    }
+
     private async Task<bool> SetActionCoreAsync(string routeKey, string actionKey, bool isSelected)
     {
         switch (routeKey)

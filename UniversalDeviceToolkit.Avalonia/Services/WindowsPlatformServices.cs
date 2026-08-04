@@ -61,6 +61,25 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)
             : _featureHost.SetActionAsync(routeKey, actionKey, isSelected);
 
+    public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
+        _featureHost is null
+            ? _inner.GetMacroWorkspaceAsync()
+            : _featureHost.GetMacroWorkspaceAsync();
+
+    public Task<bool> SetMacroEnabledAsync(bool enabled) =>
+        _featureHost is null
+            ? _inner.SetMacroEnabledAsync(enabled)
+            : _featureHost.SetMacroEnabledAsync(enabled);
+
+    public Task<bool> SetMacroSequenceOptionsAsync(
+        ulong key,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey) =>
+        _featureHost is null
+            ? _inner.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey)
+            : _featureHost.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey);
+
     public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
         _featureHost is null
             ? _inner.GetAutomationWorkspaceAsync()

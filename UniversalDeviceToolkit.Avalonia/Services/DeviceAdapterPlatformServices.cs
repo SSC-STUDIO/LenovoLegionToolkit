@@ -129,6 +129,17 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         Task.FromResult(false);
 
+    public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
+        Task.FromResult(new MacroWorkspaceState(false, false, Array.Empty<MacroSlotState>()));
+
+    public Task<bool> SetMacroEnabledAsync(bool enabled) => Task.FromResult(false);
+
+    public Task<bool> SetMacroSequenceOptionsAsync(
+        ulong key,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey) => Task.FromResult(false);
+
     public Task<PluginPageState> GetPluginPageStateAsync(string pluginId) =>
         Task.FromResult(new PluginPageState(
             pluginId,
