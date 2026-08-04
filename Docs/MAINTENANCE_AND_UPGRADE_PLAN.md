@@ -491,3 +491,9 @@
 - `20a19205` 为 `InstallerInstallPathPolicyRuntimeTests` 增加专用管理员令牌测试：在 Program Files 下创建临时安装树，调用实际构建的 `PrepareForInstall`，检查根目录、嵌套目录和文件均关闭 ACL 继承，`BUILTIN\\Users` 仅具备读执行权限且不具备写入/删除/改权限能力。
 - Windows 本机管理员环境验证：ACL 审计 `3/3` 通过、`0` Skip；测试在 `finally` 删除唯一创建的 `UniversalDeviceToolkit-AclAudit-*` 临时目录，当前 Program Files 未残留审计目录。
 - 非管理员 runner 会因明确的“需要提升管理员令牌”前置条件跳过该专用测试；普通路径策略测试仍保持无环境依赖。R4 的完整安装、卸载、UAC worker 和权限模型端到端验证仍未完成。
+
+## 34. 2026-08-04 PluginRepositoryService 清单持久化职责拆分
+
+- `faa2be10` 将 `EnsureInstalledManifest`、`TryReadInstalledManifest` 和清单序列化依赖移至 `PluginRepositoryService.Installation.Manifest.cs`；`Installation.cs` 现在只保留解压、校验、备份、复制、信任记录和回滚事务。
+- 验证：插件项目 Release 构建 `0` 警告、`0` 错误；所有 `DownloadAndInstallPluginAsync` 定向用例 `11/11` 通过、`0` Skip。
+- 完整 `PluginRepositoryServiceTests` 本轮实际结果为 `37/38`：唯一失败仍为 `FetchAvailablePluginsAsync_ShouldUseCachedStoreWhenRemoteSourcesFail`，原因是当前复用的生产插件程序集未以 `EnableUdtTestHooks` 构建，属于测试环境构建隔离问题，不能记为全量通过。
