@@ -30,6 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         host: [wpf, avalonia]
+        viewport: [900x700, 1200x850]
 
     steps:
       - name: Checkout
@@ -75,12 +76,14 @@ jobs:
           OSD_ONLY: ${{ inputs.osd_only || 'false' }}
           KEEP_APP: ${{ inputs.keep_app || 'false' }}
           HOST: ${{ matrix.host }}
+          VIEWPORT: ${{ matrix.viewport }}
         run: |
           $arguments = @(
             '--repo-root', $PWD,
             '--output-directory', (Join-Path $env:RUNNER_TEMP "visual-regression-smoke-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"),
             '--configuration', 'Release',
-            '--host', $env:HOST
+            '--host', $env:HOST,
+            '--viewport', $env:VIEWPORT
           )
 
           if ($env:OSD_ONLY -eq 'true') {
@@ -108,6 +111,6 @@ jobs:
         uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: visual-regression-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          name: visual-regression-smoke-${{ matrix.host }}-${{ matrix.viewport }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/visual-regression-smoke-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: warn
