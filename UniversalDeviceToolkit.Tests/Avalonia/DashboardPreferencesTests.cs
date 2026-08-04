@@ -2,6 +2,7 @@ using System.Text.Json;
 using FluentAssertions;
 using UniversalDeviceToolkit.Shared.Settings;
 using UniversalDeviceToolkit.Shared.Utils;
+using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Avalonia;
 
