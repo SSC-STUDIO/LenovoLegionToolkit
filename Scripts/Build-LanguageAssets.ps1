@@ -147,10 +147,10 @@ function Compress-DirectoryContents {
 function Get-LanguageDirectories {
     param([Parameter(Mandatory = $true)][string]$BuildPath)
 
+    $mainAppSatelliteName = 'Universal Device Toolkit.resources.dll'
     Get-ChildItem -LiteralPath $BuildPath -Directory |
         Where-Object {
-            Get-ChildItem -LiteralPath $_.FullName -File -Filter '*.resources.dll' -ErrorAction SilentlyContinue |
-                Select-Object -First 1
+            Test-Path -LiteralPath (Join-Path $_.FullName $mainAppSatelliteName)
         } |
         Sort-Object Name
 }
@@ -495,8 +495,7 @@ function Prepare-ReleaseAssets {
                 })
 
             if ($sourceDirectories.Count -eq 0) {
-                Write-Warning "Skipping language pack '$culture' because no matching resource directory was found."
-                continue
+                throw "Language pack '$culture' cannot be created because the main WPF satellite '$culture/Universal Device Toolkit.resources.dll' is missing from '$buildPath'. Build all supported satellite cultures before packaging."
             }
 
             $packStage = Join-Path $stagingRoot $culture

@@ -130,7 +130,10 @@ jobs:
           }
         }
 
-        ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT -AllowedCultures 'en;zh-Hans;zh-Hant'
+        # Keep every supported satellite until Build-LanguageAssets creates the
+        # per-culture archives. The online copy is pruned by that script after
+        # the archives have been produced.
+        ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $env:BUILD_OUTPUT
         ./Scripts/Build-PluginRuntimeAssets.ps1 `
           -PluginsRepositoryRoot "$env:GITHUB_WORKSPACE/UniversalDeviceToolkit-Plugins" `
           -HostSourceDir $env:BUILD_OUTPUT `
