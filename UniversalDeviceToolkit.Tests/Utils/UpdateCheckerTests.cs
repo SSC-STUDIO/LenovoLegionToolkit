@@ -22,6 +22,29 @@ public class UpdateCheckerTests : TemporaryFileTestBase
         .GetMethod("ValidateUpdatePackageAsync", BindingFlags.NonPublic | BindingFlags.Static)!;
 
     [Fact]
+    public void FilterPublicApplicationReleases_ShouldIgnoreRollingPluginCatalog()
+    {
+        // Arrange
+        var catalogRelease = CreateRelease("plugin-catalog", string.Empty, prerelease: false);
+        var applicationRelease = CreateRelease("v5.0.1", string.Empty, prerelease: false);
+        var previewRelease = CreateRelease("v5.1.0-rc.1", string.Empty, prerelease: true);
+
+        // Act
+        var stableReleases = UpdateChecker.FilterPublicApplicationReleases(
+            [catalogRelease, applicationRelease, previewRelease],
+            includePrerelease: false);
+        var previewReleases = UpdateChecker.FilterPublicApplicationReleases(
+            [catalogRelease, applicationRelease, previewRelease],
+            includePrerelease: true);
+
+        // Assert
+        stableReleases.Should().ContainSingle().Which.TagName.Should().Be("v5.0.1");
+        previewReleases.Should().HaveCount(2);
+        previewReleases.Should().NotContain(release =>
+            string.Equals(release.TagName, "plugin-catalog", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
     public void Update_ShouldRecognizeCurrentSha256TextAsset()
     {
         // Arrange
@@ -253,12 +276,19 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     private static string ComputeSha256(byte[] bytes) => Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
 
     private static Release CreateRelease(string body, params (string Name, string Url)[] assets)
+        => CreateRelease("v2.14.0", body, prerelease: false, assets);
+
+    private static Release CreateRelease(
+        string tagName,
+        string body,
+        bool prerelease,
+        params (string Name, string Url)[] assets)
     {
         var release = CreateUninitialized<Release>();
-        SetAutoProperty(release, nameof(Release.TagName), "v2.14.0");
-        SetAutoProperty(release, nameof(Release.Name), "Lenovo Legion Toolkit v2.14.0");
+        SetAutoProperty(release, nameof(Release.TagName), tagName);
+        SetAutoProperty(release, nameof(Release.Name), $"Universal Device Toolkit {tagName}");
         SetAutoProperty(release, nameof(Release.Body), body);
-        SetAutoProperty(release, nameof(Release.Prerelease), false);
+        SetAutoProperty(release, nameof(Release.Prerelease), prerelease);
         SetAutoProperty(release, nameof(Release.Draft), false);
         SetAutoProperty(release, nameof(Release.CreatedAt), DateTimeOffset.UtcNow);
         SetAutoProperty(release, nameof(Release.PublishedAt), DateTimeOffset.UtcNow);
