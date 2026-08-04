@@ -25,6 +25,7 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.WPF.CLI.Features;
 using UniversalDeviceToolkit.WPF.Utils;
 
@@ -40,7 +41,7 @@ public class IpcServer(
     INetworkAccelerationService networkAccelerationService,
     INetworkDiagnosticsService networkDiagnosticsService,
     INetworkStateRecoveryService networkStateRecoveryService
-    )
+    ) : ICliHostLifecycle
 {
 
 

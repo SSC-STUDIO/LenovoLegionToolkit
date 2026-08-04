@@ -27,7 +27,7 @@ public class IoCModule : Module
         builder.Register<DashboardSettings>().SingleInstance();
         builder.Register<HardwareSensorSettings>().SingleInstance();
 
-        builder.Register<IpcServer>().SingleInstance();
+        builder.Register<IpcServer>().AsSelf().As<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>().SingleInstance();
         builder.Register<WindowsOptimizationElevationClient>()
             .As<IWindowsOptimizationExecutor>();
 

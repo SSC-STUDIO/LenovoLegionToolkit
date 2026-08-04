@@ -12,6 +12,7 @@ using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Abstractions.Lifecycle;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -157,8 +158,21 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 }
                 break;
             case ("Integrations", "CLI"):
+                var previousCli = _integrationsSettings.Store.CLI;
                 _integrationsSettings.Store.CLI = value;
                 _integrationsSettings.SynchronizeStore();
+                try
+                {
+                    var lifecycle = IoCContainer.TryResolve<ICliHostLifecycle>()
+                        ?? throw new PlatformNotSupportedException("The CLI host service is not initialized.");
+                    await lifecycle.StartStopIfNeededAsync().ConfigureAwait(false);
+                }
+                catch
+                {
+                    _integrationsSettings.Store.CLI = previousCli;
+                    _integrationsSettings.SynchronizeStore();
+                    throw;
+                }
                 break;
             case ("Integrations", "CLIPath"):
                 SystemPath.SetCLI(value);
