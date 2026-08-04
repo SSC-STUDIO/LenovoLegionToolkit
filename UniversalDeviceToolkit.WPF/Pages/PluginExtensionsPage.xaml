@@ -327,6 +327,7 @@
                 <wpfui:Button
                     x:Name="_refreshButton"
                     AutomationProperties.AutomationId="PluginRefreshButton"
+                    AutomationProperties.Name="{x:Static resources:Resource.PluginExtensionsPage_RefreshTooltip}"
                     Appearance="Secondary"
                     Margin="8,0,0,0"
                     Height="36"
