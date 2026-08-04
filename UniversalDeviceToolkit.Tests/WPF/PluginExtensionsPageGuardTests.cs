@@ -250,6 +250,14 @@ public sealed class PluginExtensionsPageGuardTests
                         "PluginExtensionsPage.Lifecycle.cs");
                     if (File.Exists(lifecyclePath))
                         source += Environment.NewLine + File.ReadAllText(lifecyclePath);
+
+                    var statePath = Path.Combine(
+                        candidateRoot,
+                        "UniversalDeviceToolkit.WPF",
+                        "Pages",
+                        "PluginExtensionsPage.State.cs");
+                    if (File.Exists(statePath))
+                        source += Environment.NewLine + File.ReadAllText(statePath);
                 }
 
                 return source;
