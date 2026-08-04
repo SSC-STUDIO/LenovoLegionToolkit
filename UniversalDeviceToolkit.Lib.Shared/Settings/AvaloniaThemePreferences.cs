@@ -18,6 +18,15 @@ public sealed class AvaloniaThemePreferenceStore
 
     /// <summary>Custom accent color in "#RRGGBB" form; ignored when <see cref="UseSystemAccent"/> is true.</summary>
     public string? AccentColorHex { get; set; }
+
+    /// <summary>Temperature display unit: "Celsius" or "Fahrenheit".</summary>
+    public string TemperatureUnit { get; set; } = "Celsius";
+
+    /// <summary>Portable font family choice used by the Avalonia host.</summary>
+    public string FontFamily { get; set; } = "Default";
+
+    /// <summary>Portable UI density choice: Compact, Standard, Large or ExtraLarge.</summary>
+    public string UiScale { get; set; } = "Standard";
 }
 
 /// <summary>

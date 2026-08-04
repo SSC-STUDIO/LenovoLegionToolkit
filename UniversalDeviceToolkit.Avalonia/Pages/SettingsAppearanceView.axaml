@@ -245,6 +245,85 @@
             </StackPanel>
         </Border>
 
+        <!-- The WPF appearance page exposes these values as persisted settings. Keep them in
+             the cross-platform preference store so switching hosts does not discard them. -->
+        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}"
+                Padding="16">
+            <StackPanel Spacing="10">
+                <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_Advanced, Fallback=Appearance options}"
+                                             FontSize="{StaticResource FontSizeSubsection}"
+                                             FontWeight="Medium"
+                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                             OverflowMode="Wrap"
+                                             MaxLines="2" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <StackPanel Spacing="2">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_TemperatureUnit, Fallback=Temperature unit}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_TemperatureUnitDescription, Fallback=Choose how temperatures are displayed.}"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="3" />
+                    </StackPanel>
+                    <ComboBox x:Name="TemperatureComboBox"
+                              Grid.Column="1"
+                              MinWidth="150"
+                              SelectionChanged="TemperatureComboBox_SelectionChanged"
+                              AutomationProperties.Name="{local:Loc Key=Appearance_TemperatureUnit, Fallback=Temperature unit}">
+                        <ComboBoxItem Content="°C" Tag="Celsius" />
+                        <ComboBoxItem Content="°F" Tag="Fahrenheit" />
+                    </ComboBox>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <StackPanel Spacing="2">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_Font, Fallback=Application font}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_FontDescription, Fallback=Choose the application font family.}"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="3" />
+                    </StackPanel>
+                    <ComboBox x:Name="FontComboBox"
+                              Grid.Column="1"
+                              MinWidth="190"
+                              SelectionChanged="FontComboBox_SelectionChanged"
+                              AutomationProperties.Name="{local:Loc Key=Appearance_Font, Fallback=Application font}">
+                        <ComboBoxItem Content="Default" Tag="Default" />
+                        <ComboBoxItem Content="Segoe UI Variable" Tag="Segoe UI Variable" />
+                        <ComboBoxItem Content="Microsoft YaHei UI" Tag="Microsoft YaHei UI" />
+                        <ComboBoxItem Content="DengXian" Tag="DengXian" />
+                        <ComboBoxItem Content="Noto Sans CJK SC" Tag="Noto Sans CJK SC" />
+                    </ComboBox>
+                </Grid>
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                    <StackPanel Spacing="2">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_UiScale, Fallback=Interface scale}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_UiScaleDescription, Fallback=Adjust text and control density together.}"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="3" />
+                    </StackPanel>
+                    <ComboBox x:Name="UiScaleComboBox"
+                              Grid.Column="1"
+                              MinWidth="150"
+                              SelectionChanged="UiScaleComboBox_SelectionChanged"
+                              AutomationProperties.Name="{local:Loc Key=Appearance_UiScale, Fallback=Interface scale}">
+                        <ComboBoxItem Content="Compact" Tag="Compact" />
+                        <ComboBoxItem Content="Standard" Tag="Standard" />
+                        <ComboBoxItem Content="Large" Tag="Large" />
+                        <ComboBoxItem Content="Extra large" Tag="ExtraLarge" />
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+        </Border>
+
         <!-- Language -->
         <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"

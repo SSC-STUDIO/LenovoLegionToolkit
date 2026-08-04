@@ -71,6 +71,7 @@ public partial class SettingsAppearanceView : UserControl
             ApplyAccentColorToThemeCheckBox.IsChecked = _applyAccentColorToTheme;
             AccentSwatches.ItemsSource = BuildSwatches();
             UpdateThemeCardSelection(GetCurrentThemeTag());
+            RestoreAppearanceOptions();
         }
         finally
         {
@@ -115,6 +116,50 @@ public partial class SettingsAppearanceView : UserControl
         {
             _selectedAccent = null;
         }
+    }
+
+    private void RestoreAppearanceOptions()
+    {
+        var store = _themePrefs.Store;
+        SelectComboItem(TemperatureComboBox, store.TemperatureUnit);
+        SelectComboItem(FontComboBox, store.FontFamily);
+        SelectComboItem(UiScaleComboBox, store.UiScale);
+    }
+
+    private void TemperatureComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing || TemperatureComboBox.SelectedItem is not ComboBoxItem item || item.Tag is not string value)
+            return;
+
+        _themePrefs.Store.TemperatureUnit = value;
+        _themePrefs.SynchronizeStore();
+    }
+
+    private void FontComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing || FontComboBox.SelectedItem is not ComboBoxItem item || item.Tag is not string value)
+            return;
+
+        _themePrefs.Store.FontFamily = value;
+        _themePrefs.SynchronizeStore();
+    }
+
+    private void UiScaleComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing || UiScaleComboBox.SelectedItem is not ComboBoxItem item || item.Tag is not string value)
+            return;
+
+        _themePrefs.Store.UiScale = value;
+        _themePrefs.SynchronizeStore();
+    }
+
+    private static void SelectComboItem(ComboBox comboBox, string value)
+    {
+        var item = comboBox.Items
+            .OfType<ComboBoxItem>()
+            .FirstOrDefault(candidate => string.Equals(candidate.Tag?.ToString(), value, StringComparison.OrdinalIgnoreCase));
+        if (item is not null)
+            comboBox.SelectedItem = item;
     }
 
     private static string GetCurrentThemeTag()
