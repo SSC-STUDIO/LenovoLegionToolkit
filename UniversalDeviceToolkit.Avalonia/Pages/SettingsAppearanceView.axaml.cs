@@ -2,8 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
+using Avalonia.Threading;
+using System.Globalization;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Shared.Settings;
 using RoutedEventArgs = global::Avalonia.Interactivity.RoutedEventArgs;
 
@@ -37,6 +40,8 @@ public partial class SettingsAppearanceView : UserControl
 
     // Guards initialization so refreshing the UI does not re-enter the change handlers.
     private bool _isRefreshing;
+    private readonly IAvaloniaLanguagePackService _languagePackService = AvaloniaLanguagePackServiceFactory.Create();
+    private bool _languageOperationInProgress;
 
     // Cross-platform theme/accent persistence. Uses a dedicated file (avalonia-theme.json) via the
     // Lib.Shared AbstractSettings base with a primitive-typed DTO, so this cross-platform (net10.0)
@@ -52,10 +57,14 @@ public partial class SettingsAppearanceView : UserControl
     {
         InitializeComponent();
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+        _languagePackService.Changed += LanguagePackService_Changed;
     }
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
+        _languagePackService.Changed -= LanguagePackService_Changed;
+        _languagePackService.Changed += LanguagePackService_Changed;
         _isRefreshing = true;
         try
         {
@@ -68,6 +77,7 @@ public partial class SettingsAppearanceView : UserControl
             LanguageComboBox.ItemsSource = languages;
             LanguageComboBox.SelectedItem = languages.FirstOrDefault(option =>
                 option.Culture.Name.Equals(LocalizationRuntime.CurrentCulture.Name, StringComparison.OrdinalIgnoreCase));
+            UpdateLanguagePackButtons();
 
             ApplyAccentColorToThemeCheckBox.IsChecked = _applyAccentColorToTheme;
             ApplyAccentColorToSystemCheckBox.IsChecked = _applyAccentColorToSystem;
@@ -81,12 +91,141 @@ public partial class SettingsAppearanceView : UserControl
         }
     }
 
+    private void OnUnloaded(object? sender, RoutedEventArgs e) =>
+        _languagePackService.Changed -= LanguagePackService_Changed;
+
     private async void LanguageComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_isRefreshing || LanguageComboBox.SelectedItem is not LanguageOption option)
             return;
 
+        if (!_languagePackService.IsEnglish(option.Culture)
+            && !_languagePackService.IsInstalled(option.Culture))
+        {
+            try
+            {
+                await RunLanguagePackOperationAsync(
+                    () => _languagePackService.InstallAsync(option.Culture),
+                    option.Culture);
+            }
+            catch
+            {
+                RestoreLanguageSelection();
+            }
+
+            return;
+        }
+
         await LocalizationRuntime.SetCultureAsync(option.Culture, persist: true);
+        UpdateLanguagePackButtons();
+    }
+
+    private async void InstallLanguageButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_languageOperationInProgress || LanguageComboBox.SelectedItem is not LanguageOption option)
+            return;
+
+        try
+        {
+            await RunLanguagePackOperationAsync(
+                () => _languagePackService.InstallAsync(option.Culture),
+                option.Culture);
+        }
+        catch
+        {
+            RestoreLanguageSelection();
+        }
+    }
+
+    private async void UninstallLanguageButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_languageOperationInProgress || LanguageComboBox.SelectedItem is not LanguageOption option
+            || _languagePackService.IsEnglish(option.Culture))
+            return;
+
+        try
+        {
+            await RunLanguagePackOperationAsync(
+                () => _languagePackService.UninstallAsync(option.Culture),
+                option.Culture,
+                applyCulture: false);
+            RestoreLanguageSelection();
+        }
+        catch
+        {
+            UpdateLanguagePackButtons();
+        }
+    }
+
+    private async Task RunLanguagePackOperationAsync(
+        Func<Task> operation,
+        CultureInfo culture,
+        bool applyCulture = true)
+    {
+        _languageOperationInProgress = true;
+        UpdateLanguagePackButtons();
+        LanguageOperationPanel.IsVisible = true;
+        LanguageOperationProgress.Value = 0;
+        try
+        {
+            await operation();
+            if (applyCulture)
+                await LocalizationRuntime.SetCultureAsync(culture, persist: true);
+        }
+        finally
+        {
+            LanguageOperationPanel.IsVisible = false;
+            _languageOperationInProgress = false;
+            UpdateLanguagePackButtons();
+        }
+    }
+
+    private void LanguagePackService_Changed(object? sender, EventArgs e)
+    {
+        void UpdateFromUiThread()
+        {
+            UpdateLanguagePackButtons();
+            if (_languagePackService.IsActive)
+            {
+                LanguageOperationPanel.IsVisible = true;
+                LanguageOperationProgress.Value = _languagePackService.Progress;
+            }
+        }
+
+        if (Dispatcher.UIThread.CheckAccess())
+            UpdateFromUiThread();
+        else
+            Dispatcher.UIThread.Post(UpdateFromUiThread);
+    }
+
+    private void UpdateLanguagePackButtons()
+    {
+        if (InstallLanguageButton is null || UninstallLanguageButton is null)
+            return;
+
+        var selected = (LanguageComboBox.SelectedItem as LanguageOption)?.Culture;
+        var isEnglish = selected is null || _languagePackService.IsEnglish(selected);
+        var isInstalled = selected is not null && _languagePackService.IsInstalled(selected);
+        InstallLanguageButton.IsEnabled = !_languageOperationInProgress && !isEnglish && !isInstalled;
+        UninstallLanguageButton.IsEnabled = !_languageOperationInProgress && !isEnglish && isInstalled;
+    }
+
+    private void RestoreLanguageSelection()
+    {
+        _isRefreshing = true;
+        try
+        {
+            LanguageComboBox.SelectedItem = LanguageComboBox.Items
+                .OfType<LanguageOption>()
+                .FirstOrDefault(option => option.Culture.Name.Equals(
+                    LocalizationRuntime.CurrentCulture.Name,
+                    StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            _isRefreshing = false;
+            UpdateLanguagePackButtons();
+        }
     }
 
     // Restores persisted theme/accent preferences into the live application and local UI state.

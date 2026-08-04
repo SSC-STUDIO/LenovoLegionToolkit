@@ -354,9 +354,26 @@
                                                          OverflowMode="Ellipsis"
                                                          MaxLines="1"
                                                          MinWidth="0" />
-                        </DataTemplate>
+                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </controls:AccessibleComboBox>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <controls:AccessibleButton x:Name="InstallLanguageButton"
+                                               Content="{local:Loc Key=SettingsPage_Language_Install, Fallback=Install}"
+                                               AutomationName="{local:Loc Key=SettingsPage_Language_Install, Fallback=Install}"
+                                               Click="InstallLanguageButton_Click" />
+                    <controls:AccessibleButton x:Name="UninstallLanguageButton"
+                                               Content="{local:Loc Key=SettingsPage_Language_Uninstall, Fallback=Uninstall}"
+                                               AutomationName="{local:Loc Key=SettingsPage_Language_Uninstall, Fallback=Uninstall}"
+                                               Click="UninstallLanguageButton_Click" />
+                </StackPanel>
+                <StackPanel x:Name="LanguageOperationPanel" IsVisible="False" Spacing="4">
+                    <controls:LocalizedTextBlock x:Name="LanguageOperationStatus"
+                                                 Text="{local:Loc Key=SettingsPage_Language_Installing, Fallback=Installing language pack}"
+                                                 OverflowMode="Ellipsis"
+                                                 MaxLines="1" />
+                    <ProgressBar x:Name="LanguageOperationProgress" Minimum="0" Maximum="1" Height="6" />
+                </StackPanel>
             </StackPanel>
         </Border>
     </StackPanel>
