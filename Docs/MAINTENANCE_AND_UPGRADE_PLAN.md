@@ -161,13 +161,13 @@
 | R16 | 死岛治理 | Linux/MacOS 已接入 Avalonia/CrossPlatform；PerformanceTest 已接 CI；Coverage 分类已无生产引用 | 收尾孤立工具项目清单 |
 | R17 | 供应链补洞 | 资源目录 host 白名单、语言包/设备包下载哈希 |
 | R18 | 残留文件入库 | `.opencode`、DotSettings、body/resp.json 已清理并加忽略规则 | 后续只防止重新入库 |
-| R19 | 命名空间/目录错位 4 处 + 根目录 77 文件 | Tests 目录 |
+| R19 | 命名空间/目录错位 4 处 + 根目录 77 文件 | 已完成：`14f05d2a` 归位 58 个测试文件，布局 Guard 2/2 |
 
 ### P3（随手清理）
 | # | 项 |
 |---|---|
 | R20 | 37 处 ConfigureAwait(true) 机械清理 | 已从源码移除 |
-| R21 | 7 处硬编码异常消息归入 Resource |
+| R21 | 7 处硬编码异常消息归入 Resource（已完成，`ExceptionResourceGuardTests` 2/2） |
 | R22 | 文档纠偏 3 处 + README 路径不一致 |
 | R23 | sln 外 4 工具项目收纳、InnoDependencies 空目录、陈旧分支清理 |
 
@@ -303,7 +303,7 @@
 | R13 项目默认值集中 | 已完成 | `Directory.Build.props` 提供 Nullable/ImplicitUsings 默认值；CLI.Lib、Lib、Lib.Macro、WPF 的显式 `ImplicitUsings=disable` 经过 Guard 固化；方案 Release 构建 0 警告/0 错误 |
 | 测试日志资源释放 | 已完成 | `Log.ResetForTests()` 在 AppData 临时目录清理前释放异步 sink；插件仓库优化筛选 156/156 通过 |
 
-当前仍未完成的工作包括 R4 权限模型收尾、R7 深层职责拆分、R15/R19/R21/R22/R23 治理项，以及真实桌面 FlaUI nightly。R5/R6/R8/R14/R16/R17/R18/R20 已在后续记录中完成；R2 的签名动作不会在缺少凭据时伪造成功，当前本地仍只验证 workflow 契约和验签脚本。
+当前仍未完成的工作包括 R4 权限模型收尾、R7 深层职责拆分、R15/R22/R23 治理项，以及真实桌面 FlaUI nightly。R5/R6/R8/R14/R16/R17/R18/R19/R20/R21 已在后续记录中完成；R2 的签名动作不会在缺少凭据时伪造成功，当前本地仍只验证 workflow 契约和验签脚本。
 ## 8. 2026-08-03 系统优化反向动作加固
 
 - 注册表优化动作保留跨 `GetCategories()` 调用的原始值快照；历史上没有快照的已应用动作回退为删除优化值，恢复 Windows 默认/继承行为。
@@ -373,7 +373,7 @@
 - 清理页也通过同一 worker 执行选中的内置 `cleanup.*` action；worker 拒绝插件清理 action 和混合/空操作组，避免 `asInvoker` 下权限不足被误报为完整成功。
 - Windows 验证：WPF Release 构建 0 警告/0 错误；插件仓库、插件 ViewModel、页面 Guard、可执行文件解析、图标解析定向测试 91/91；提权协议测试 8/8。
 - WSL 验证前置：`wsl.exe` 存在，但当前系统没有已安装 distribution，`Scripts/Test-CrossPlatformInWsl.ps1` 只能按设计报告前置失败；不执行自动安装。Linux 真实运行需用户安装 distribution 后重跑，macOS 仍由 CI runner 验证。
-- 仍需：插件安装生命周期和页面主状态块的更深拆分；安装目录 ACL/按需提权完整审计；CI 上 macOS、WSL Linux 和 FlaUI nightly 的真实结果；R15/R19/R21 收尾。
+- 仍需：插件安装生命周期和页面主状态块的更深拆分；安装目录 ACL/按需提权完整审计；CI 上 macOS、WSL Linux 和 FlaUI nightly 的真实结果；R15/R22/R23 收尾。
 
 ## 17. 2026-08-03 文档与迁移防回流收尾
 
@@ -388,10 +388,16 @@
 - `73b93c87` 收紧安装器信任边界：安装器要求管理员权限，默认安装到受保护的 Program Files，拒绝目录外路径和 reparse-point 路径；在线语言包迁移到用户 AppData，避免运行期写入受保护安装目录。
 - `5a01b8ab` 将 Release/Shipping workflow Guard 改为按 job/step/with 结构解析；解析器同时支持 GitHub Actions 的标准缩进序列，避免 YAML 换行、引号或 step 缩进变化造成误报。
 - 验证：Installer Release 构建 0 警告/0 错误；安装器安全 Guard 2/2；语言包测试 6/6；Release/Shipping/CI Guard 28/28。
-- 当前仍未完成：`PluginExtensionsPage` 安装生命周期的进一步拆分、剩余测试归位、真实 WSL Linux/macOS runner、FlaUI nightly，以及按需提权模型重构。并发工作区修改未混入上述提交。
+- 当前仍未完成：`PluginExtensionsPage` 安装生命周期的进一步拆分、真实 WSL Linux/macOS runner、FlaUI nightly、R15/R22/R23，以及按需提权模型重构。R19 测试归位和 R21 异常资源化已完成；并发工作区修改未混入上述提交。
 
 ## 19. 2026-08-03 插件安装生命周期与 WSL 前置
 
 - `4ada5e2e` 将 `PluginExtensionsPage` 的批量更新、批量安装、在线/本地安装、安装后反馈和卸载流程移至 `PluginExtensionsPage.Installation.cs`；页面主文件减少约 425 行，页面 Guard 已支持组合读取 partial 文件。
 - 验证：WPF Release 构建 0 警告/0 错误；插件仓库、插件 ViewModel、页面 Guard 65/65；系统优化及 toggle 相关测试 117/117。
 - 已尝试准备 WSL：Windows Subsystem for Linux 与 Virtual Machine Platform 均已启用，DISM 返回 `3010`，需要重启后才能安装 Ubuntu/执行 `Scripts/Test-CrossPlatformInWsl.ps1`。本轮没有把 Linux 结果记为通过；macOS 仍必须由 macOS CI runner 验证。
+
+## 20. 2026-08-04 测试归位与异常资源化收尾
+
+- `14f05d2a` 将主测试项目根目录中的领域测试归位到 `Automation`、`CLI`、`DeviceSupport`、`Hardware`、`Models`、`Network`、`Plugins`、`Settings`、`UI`、`Optimization` 等目录，删除与现有插件测试重复的旧根目录副本，并同步 namespace。
+- `TestLayoutGuardTests` 的聚合类型契约已改为使用归位后的相对路径；布局和临时 Phase 命名 Guard `2/2` 通过。
+- R21 的 `SettingsBackupService`、两个 AbstractComboBox 基类和 `FeatureRegistration` 已使用 Resource-backed 异常消息；`ExceptionResourceGuardTests` `2/2` 通过，防止硬编码消息回流。
