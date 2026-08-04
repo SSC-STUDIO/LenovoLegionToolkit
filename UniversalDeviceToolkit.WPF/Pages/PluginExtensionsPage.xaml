@@ -299,6 +299,7 @@
                 <ComboBox
                     x:Name="_filterComboBox"
                     AutomationProperties.AutomationId="PluginFilterComboBox"
+                    AutomationProperties.Name="{x:Static resources:Resource.Filter}"
                     MinWidth="142"
                     Height="36"
                     Margin="8,0,0,0"
