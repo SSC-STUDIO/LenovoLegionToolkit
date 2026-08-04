@@ -1490,6 +1490,8 @@ internal static partial class Program
             using var pipe = new NamedPipeClientStream(".", _pipeName, PipeDirection.InOut, PipeOptions.None);
             pipe.Connect(5000);
             pipe.ReadMode = PipeTransmissionMode.Message;
+            pipe.ReadTimeout = 5000;
+            pipe.WriteTimeout = 5000;
 
             var request = new IpcRequest
             {
