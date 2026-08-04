@@ -22,7 +22,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private readonly ApplicationSettings _applicationSettings = SharedApplicationSettings;
     private readonly OsdSettings _osdSettings = new();
     private readonly UpdateCheckSettings _updateSettings = new();
-    private readonly IntegrationsSettings _integrationsSettings = new();
+    private readonly IntegrationsSettings _integrationsSettings =
+        IoCContainer.TryResolve<IntegrationsSettings>() ?? new IntegrationsSettings();
 
     public async Task<AvaloniaSettingsPageData> GetPageAsync(string pageKey) =>
         pageKey switch
@@ -105,6 +106,22 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 break;
             case ("Display", "NotificationSound"):
                 store.Notifications.NotificationSound = value;
+                _applicationSettings.SynchronizeStore();
+                break;
+            case ("Display", "NotificationSuccess")
+                or ("Display", "NotificationUpdateAvailable")
+                or ("Display", "NotificationCapsNumLock")
+                or ("Display", "NotificationFnLock")
+                or ("Display", "NotificationTouchpadLock")
+                or ("Display", "NotificationKeyboardBacklight")
+                or ("Display", "NotificationCameraLock")
+                or ("Display", "NotificationMicrophone")
+                or ("Display", "NotificationPowerMode")
+                or ("Display", "NotificationRefreshRate")
+                or ("Display", "NotificationACAdapter")
+                or ("Display", "NotificationSmartKey")
+                or ("Display", "NotificationAutomation"):
+                SetNotificationToggle(optionKey, value);
                 _applicationSettings.SynchronizeStore();
                 break;
             case ("Display", "NavigationPaneExpanded"):
@@ -277,6 +294,18 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     public async Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values)
     {
+        if (pageKey == "Display" && optionKey == "ExcludedRefreshRates")
+        {
+            var excluded = values
+                .Select(ParseRefreshRate)
+                .DistinctBy(rate => rate.Frequency)
+                .ToList();
+            _applicationSettings.Store.ExcludedRefreshRates.Clear();
+            _applicationSettings.Store.ExcludedRefreshRates.AddRange(excluded);
+            _applicationSettings.SynchronizeStore();
+            return;
+        }
+
         if (pageKey != "SmartKeys"
             || (optionKey != "SmartKeySinglePressActions" && optionKey != "SmartKeyDoublePressActions"))
             throw new KeyNotFoundException($"Unknown multi-selection {pageKey}/{optionKey}.");
@@ -536,6 +565,10 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             "Adjust display-related settings for your device.",
             [
                 new("RefreshRate", "Refresh rate", "Choose a supported refresh rate for the built-in display.", AvaloniaSettingEditor.Selection, refreshRates.Length > 0, Values: refreshRates, SelectedValue: currentRefreshRate, Warning: refreshRates.Length == 0 ? "No supported built-in display refresh rates were detected." : null),
+                new("ExcludedRefreshRates", "Excluded refresh rates", "Do not use selected refresh rates for special-key cycling.", AvaloniaSettingEditor.MultiSelection, refreshRates.Length > 0,
+                    Values: refreshRates,
+                    SelectedValues: store.ExcludedRefreshRates.Select(rate => rate.DisplayName).ToArray(),
+                    Warning: refreshRates.Length == 0 ? "No built-in display refresh rates were detected." : null),
                 new("SynchronizeBrightness", "Synchronize brightness to all power plans", "Keep brightness synchronized across Windows power plans.", AvaloniaSettingEditor.Toggle, true, store.SynchronizeBrightnessToAllPowerPlans),
                 new("ForceSoftwareRendering", "Force software rendering", "Use software rendering for the application window.", AvaloniaSettingEditor.Toggle, true, store.ForceSoftwareRendering),
                 new("WindowBackdrop", "Window backdrop", "Choose the backdrop style used by the application window.", AvaloniaSettingEditor.Selection, true,
@@ -551,6 +584,19 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 new("NotificationAlwaysOnTop", "Keep notifications on top", "Keep notifications above other windows.", AvaloniaSettingEditor.Toggle, true, store.NotificationAlwaysOnTop),
                 new("NotificationOnAllScreens", "Show notifications on all screens", "Show notifications on every connected display.", AvaloniaSettingEditor.Toggle, true, store.NotificationOnAllScreens),
                 new("NotificationSound", "Notification sound", "Play a short sound for in-app notifications.", AvaloniaSettingEditor.Toggle, true, store.Notifications.NotificationSound),
+                new("NotificationSuccess", "Success notifications", "Show successful operation notifications.", AvaloniaSettingEditor.Toggle, true, store.Notifications.SuccessNotifications),
+                new("NotificationUpdateAvailable", "Update notifications", "Show notifications when a new application version is available.", AvaloniaSettingEditor.Toggle, true, store.Notifications.UpdateAvailable),
+                new("NotificationCapsNumLock", "Caps and Num Lock notifications", "Show Caps Lock and Num Lock changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.CapsNumLock),
+                new("NotificationFnLock", "Fn Lock notifications", "Show Fn Lock changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.FnLock),
+                new("NotificationTouchpadLock", "Touchpad notifications", "Show touchpad lock changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.TouchpadLock),
+                new("NotificationKeyboardBacklight", "Keyboard backlight notifications", "Show keyboard backlight changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.KeyboardBacklight),
+                new("NotificationCameraLock", "Camera notifications", "Show camera state changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.CameraLock),
+                new("NotificationMicrophone", "Microphone notifications", "Show microphone state changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.Microphone),
+                new("NotificationPowerMode", "Power mode notifications", "Show power mode changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.PowerMode),
+                new("NotificationRefreshRate", "Refresh rate notifications", "Show refresh rate changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.RefreshRate),
+                new("NotificationACAdapter", "AC adapter notifications", "Show AC adapter changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.ACAdapter),
+                new("NotificationSmartKey", "Smart Key notifications", "Show Smart Key actions.", AvaloniaSettingEditor.Toggle, true, store.Notifications.SmartKey),
+                new("NotificationAutomation", "Automation notifications", "Show automation notifications.", AvaloniaSettingEditor.Toggle, true, store.Notifications.AutomationNotification),
                 new("NavigationPaneExpanded", "Expanded navigation", "Keep the main navigation pane expanded.", AvaloniaSettingEditor.Toggle, true, store.NavigationPaneExpanded),
                 new("Overdrive", "Display overdrive", "Enable panel overdrive on supported hardware.", AvaloniaSettingEditor.Toggle, false, Warning: "Display overdrive requires the Lenovo display adapter."),
                 ..navigationOptions,
@@ -676,6 +722,35 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         {
             return null;
         }
+    }
+
+    private void SetNotificationToggle(string optionKey, bool value)
+    {
+        switch (optionKey)
+        {
+            case "NotificationSuccess": _applicationSettings.Store.Notifications.SuccessNotifications = value; break;
+            case "NotificationUpdateAvailable": _applicationSettings.Store.Notifications.UpdateAvailable = value; break;
+            case "NotificationCapsNumLock": _applicationSettings.Store.Notifications.CapsNumLock = value; break;
+            case "NotificationFnLock": _applicationSettings.Store.Notifications.FnLock = value; break;
+            case "NotificationTouchpadLock": _applicationSettings.Store.Notifications.TouchpadLock = value; break;
+            case "NotificationKeyboardBacklight": _applicationSettings.Store.Notifications.KeyboardBacklight = value; break;
+            case "NotificationCameraLock": _applicationSettings.Store.Notifications.CameraLock = value; break;
+            case "NotificationMicrophone": _applicationSettings.Store.Notifications.Microphone = value; break;
+            case "NotificationPowerMode": _applicationSettings.Store.Notifications.PowerMode = value; break;
+            case "NotificationRefreshRate": _applicationSettings.Store.Notifications.RefreshRate = value; break;
+            case "NotificationACAdapter": _applicationSettings.Store.Notifications.ACAdapter = value; break;
+            case "NotificationSmartKey": _applicationSettings.Store.Notifications.SmartKey = value; break;
+            case "NotificationAutomation": _applicationSettings.Store.Notifications.AutomationNotification = value; break;
+            default: throw new KeyNotFoundException($"Unknown notification option '{optionKey}'.");
+        }
+    }
+
+    private static RefreshRate ParseRefreshRate(string value)
+    {
+        var normalized = value.Replace(" Hz", string.Empty, StringComparison.OrdinalIgnoreCase).Trim();
+        return int.TryParse(normalized, NumberStyles.Integer, CultureInfo.InvariantCulture, out var frequency) && frequency > 0
+            ? new RefreshRate(frequency)
+            : throw new ArgumentException($"Invalid refresh rate '{value}'.", nameof(value));
     }
 
     private static string FormatTemperatureUnit(TemperatureUnit value) => value switch
