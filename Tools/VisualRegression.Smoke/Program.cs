@@ -1873,6 +1873,8 @@ internal static partial class Program
 
         var directCandidates = runtimeRoots.SelectMany(runtimeRoot => new[]
         {
+            Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0"),
+            Path.Combine(runtimeRoot, "net10.0"),
             Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
             Path.Combine(runtimeRoot, "net10.0", "win-x64"),
             Path.Combine(runtimeRoot, "net10.0-windows", "win-x64")
@@ -1887,7 +1889,7 @@ internal static partial class Program
         var discovered = runtimeRoots
             .Where(Directory.Exists)
             .SelectMany(runtimeRoot => Directory.EnumerateDirectories(runtimeRoot, "net10.0*", SearchOption.TopDirectoryOnly))
-            .Select(path => Path.Combine(path, "win-x64"))
+            .SelectMany(path => new[] { path, Path.Combine(path, "win-x64") })
             .Where(Directory.Exists)
             .Where(path => ContainsMainAppStartupEntry(path, host))
             .OrderByDescending(Directory.GetLastWriteTimeUtc)
