@@ -192,7 +192,7 @@ internal static class InstallerEngine
         CancellationToken ct)
     {
         var installDir = Path.GetFullPath(options.InstallDir);
-        InstallerInstallPathPolicy.Validate(installDir);
+        InstallerInstallPathPolicy.PrepareForInstall(installDir);
         InstallerLog.Info($"Install started -> '{installDir}' (embedded payload: {HasEmbeddedPayload}).");
 
         progress.Report(new EngineProgress { Status = Strings.Get("StatusCheckingRuntime") });
@@ -219,7 +219,6 @@ internal static class InstallerEngine
         }
 
         progress.Report(new EngineProgress { Percent = 0, Status = Strings.Get("StatusExtracting") });
-        Directory.CreateDirectory(installDir);
         string? downloadedPayload = null;
         try
         {
@@ -445,6 +444,7 @@ internal static class InstallerEngine
         CancellationToken ct)
     {
         var installDir = Path.GetFullPath(options.InstallDir);
+        InstallerInstallPathPolicy.ValidateForUninstall(installDir);
         var runningInsideInstallDir = IsRunningFrom(installDir);
 
         progress.Report(new EngineProgress { Percent = 5, Status = Strings.Get("StatusUnregisterShell") });

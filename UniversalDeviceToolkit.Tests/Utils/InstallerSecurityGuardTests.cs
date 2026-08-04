@@ -18,8 +18,14 @@ public sealed class InstallerSecurityGuardTests
 
         manifest.Should().Contain("requestedExecutionLevel level=\"requireAdministrator\"");
         constants.Should().Contain("Environment.SpecialFolder.ProgramFiles");
-        engine.Should().Contain("InstallerInstallPathPolicy.Validate(installDir)");
+        engine.Should().Contain("InstallerInstallPathPolicy.PrepareForInstall(installDir)");
+        engine.Should().Contain("InstallerInstallPathPolicy.ValidateForUninstall(installDir)");
         policy.Should().Contain("FileAttributes.ReparsePoint");
+        policy.Should().Contain("DirectorySecurity");
+        policy.Should().Contain("FileSecurity");
+        policy.Should().Contain("SetAccessRuleProtection(isProtected: true, preserveInheritance: false)");
+        policy.Should().Contain("WellKnownSidType.BuiltinAdministratorsSid");
+        policy.Should().Contain("WellKnownSidType.BuiltinUsersSid");
         policy.Should().Contain("must be installed below the protected Program Files directory");
     }
 
