@@ -255,6 +255,6 @@ See **[NamespaceMigration.md](./NamespaceMigration.md)** for the RootNamespace/A
 
 - [ ] Plugin SDK documentation and examples
 - [ ] Web-based management interface (optional)
-- Mobile and Android companion apps are out of scope and are not supported.
+- [ ] Mobile companion app (future consideration)
 - [ ] Cloud sync for settings (privacy-first design)
 - [ ] Enhanced telemetry option (opt-in only)
