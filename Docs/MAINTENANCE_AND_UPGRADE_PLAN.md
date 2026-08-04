@@ -382,3 +382,10 @@
 - 新增 `ViewModelMigrationGuardTests`，锁定 WPF 页面使用共享 `UniversalDeviceToolkit.ViewModels`，防止 `KeyboardBacklightViewModel`/`MacroViewModel` 双实现回流。
 - `GitHubWorkflowContract` 新增命令选项解析，CI Guard 对 `--filter`/`--logger` 断言改为参数级契约；相关 Guard 测试 18/18 通过，降低 YAML 换行和引号变化造成的误报。
 - 已验证 `feature/ui-optimization` 无相对 `master` 的独有提交并删除本地陈旧分支；未触碰其他工作树改动。
+
+## 18. 2026-08-03 安装器安全与 workflow Guard 收尾
+
+- `73b93c87` 收紧安装器信任边界：安装器要求管理员权限，默认安装到受保护的 Program Files，拒绝目录外路径和 reparse-point 路径；在线语言包迁移到用户 AppData，避免运行期写入受保护安装目录。
+- `5a01b8ab` 将 Release/Shipping workflow Guard 改为按 job/step/with 结构解析；解析器同时支持 GitHub Actions 的标准缩进序列，避免 YAML 换行、引号或 step 缩进变化造成误报。
+- 验证：Installer Release 构建 0 警告/0 错误；安装器安全 Guard 2/2；语言包测试 6/6；Release/Shipping/CI Guard 28/28。
+- 当前仍未完成：`PluginExtensionsPage` 安装生命周期的进一步拆分、剩余测试归位、真实 WSL Linux/macOS runner、FlaUI nightly，以及按需提权模型重构。并发工作区修改未混入上述提交。
