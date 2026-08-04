@@ -8,6 +8,7 @@ public enum AvaloniaSettingEditor
     Toggle,
     Selection,
     Text,
+    Action,
 }
 
 public sealed record AvaloniaSettingOption(
@@ -20,7 +21,8 @@ public sealed record AvaloniaSettingOption(
     string? TextValue = null,
     IReadOnlyList<string>? Values = null,
     string? SelectedValue = null,
-    string? Warning = null);
+    string? Warning = null,
+    string? ActionText = null);
 
 public sealed record AvaloniaSettingsPageData(
     string PageKey,
@@ -41,6 +43,7 @@ public interface IAvaloniaSettingsService
     Task SetToggleAsync(string pageKey, string optionKey, bool value);
     Task SetSelectionAsync(string pageKey, string optionKey, string value);
     Task SetTextAsync(string pageKey, string optionKey, string? value);
+    Task InvokeActionAsync(string pageKey, string optionKey);
 }
 
 public static class AvaloniaSettingsServiceFactory

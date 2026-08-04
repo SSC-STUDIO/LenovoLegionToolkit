@@ -100,6 +100,7 @@ public partial class SettingsCapabilityView : UserControl
             AvaloniaSettingEditor.Toggle => CreateToggle(option),
             AvaloniaSettingEditor.Selection => CreateSelection(option),
             AvaloniaSettingEditor.Text => CreateTextBox(option),
+            AvaloniaSettingEditor.Action => CreateAction(option),
             _ => new TextBlock { Text = option.Title },
         };
 
@@ -186,6 +187,29 @@ public partial class SettingsCapabilityView : UserControl
             await PersistAsync(() => _settingsService.SetTextAsync(_pageKey, option.Key, textBox.Text), textBox);
         };
         return textBox;
+    }
+
+    private Button CreateAction(AvaloniaSettingOption option)
+    {
+        var button = new Button
+        {
+            Content = option.ActionText ?? option.Title,
+            IsEnabled = option.IsEnabled,
+            MinWidth = 180,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        AutomationProperties.SetAutomationId(button, $"AvaloniaSettings_{_pageKey}_{option.Key}");
+        AutomationProperties.SetName(button, option.Title);
+        ToolTip.SetTip(button, option.Warning ?? option.Description);
+        button.Click += async (_, _) =>
+        {
+            if (_isApplying)
+                return;
+            await PersistAsync(
+                () => _settingsService.InvokeActionAsync(_pageKey, option.Key),
+                button);
+        };
+        return button;
     }
 
     private Control CreateEmptyState(bool isAvailable) => new Border

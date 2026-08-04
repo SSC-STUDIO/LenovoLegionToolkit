@@ -4,6 +4,7 @@ using System.Globalization;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -210,6 +211,14 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         {
             _updateSettings.Store.UpdateCheckFrequency = ParseEnum<UpdateCheckFrequency>(value, "UpdateFrequency");
             _updateSettings.SynchronizeStore();
+            IoCContainer.TryResolve<UpdateChecker>()?.UpdateMinimumTimeSpanForRefresh();
+            return Task.CompletedTask;
+        }
+
+        if (pageKey == "SmartKeys" && optionKey == "SmartFnLockFlags")
+        {
+            _applicationSettings.Store.SmartFnLockFlags = ParseSmartFnLockFlags(value);
+            _applicationSettings.SynchronizeStore();
             return Task.CompletedTask;
         }
 
@@ -238,19 +247,51 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         return Task.CompletedTask;
     }
 
+    public async Task InvokeActionAsync(string pageKey, string optionKey)
+    {
+        if (pageKey != "Update" || optionKey != "CheckForUpdates")
+            throw new KeyNotFoundException($"Unknown action {pageKey}/{optionKey}.");
+
+        var updateChecker = IoCContainer.TryResolve<UpdateChecker>()
+            ?? throw new PlatformNotSupportedException("The update checker is not initialized.");
+
+        if (updateChecker.Disable)
+            throw new InvalidOperationException(updateChecker.DisableReason ?? "Update checks are disabled for this session.");
+
+        await updateChecker.CheckAsync(forceCheck: true).ConfigureAwait(false);
+    }
+
     private AvaloniaSettingsPageData BuildSmartKeysPage() => new(
         "SmartKeys",
         "Smart Keys",
         "Configure Fn-lock and Smart Key behavior.",
-        [new AvaloniaSettingOption(
-            "SmartKeyHardware",
-            "Smart Key hardware actions",
-            "Hardware-specific Smart Key actions are exposed by the Windows device adapter.",
-            AvaloniaSettingEditor.Toggle,
-            false,
-            Warning: "No compatible Smart Key device was detected.")],
-        false,
-        "The current machine does not expose the Lenovo Smart Key adapter.");
+        [
+            new(
+                "SmartFnLockFlags",
+                "Fn-lock modifier keys",
+                "Choose which modifier keys are required when toggling Fn-lock.",
+                AvaloniaSettingEditor.Selection,
+                true,
+                Values: GetSmartFnLockValues(_applicationSettings.Store.SmartFnLockFlags),
+                SelectedValue: FormatSmartFnLockFlags(_applicationSettings.Store.SmartFnLockFlags)),
+            new(
+                "SmartKeySinglePressAction",
+                "Smart Key single-press action",
+                "Choose the pipeline triggered by a single press of the Smart Key.",
+                AvaloniaSettingEditor.Action,
+                false,
+                ActionText: "Configure single press",
+                Warning: "Smart Key pipeline selection is not yet available in the Avalonia host."),
+            new(
+                "SmartKeyDoublePressAction",
+                "Smart Key double-press action",
+                "Choose the pipeline triggered by a double press of the Smart Key.",
+                AvaloniaSettingEditor.Action,
+                false,
+                ActionText: "Configure double press",
+                Warning: "Smart Key pipeline selection is not yet available in the Avalonia host."),
+        ],
+        true);
 
     private AvaloniaSettingsPageData BuildAppearancePage()
     {
@@ -353,6 +394,13 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private AvaloniaSettingsPageData BuildUpdatePage()
     {
         var store = _updateSettings.Store;
+        var updateChecker = IoCContainer.TryResolve<UpdateChecker>();
+        var isUpdateCheckerEnabled = updateChecker is not null && !updateChecker.Disable;
+        var disabledReason = updateChecker?.Disable == true
+            ? updateChecker.DisableReason ?? "Update checks are disabled for this session."
+            : updateChecker is null
+                ? "The update checker is not initialized in this host."
+                : null;
         var frequencies = Enum.GetValues<UpdateCheckFrequency>()
             .Select(value => value.ToString())
             .ToArray();
@@ -361,10 +409,11 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             "Update",
             "Choose how Universal Device Toolkit checks for new releases.",
             [
-                new("UpdateFrequency", "Update check frequency", "How often automatic update checks run.", AvaloniaSettingEditor.Selection, true, Values: frequencies, SelectedValue: store.UpdateCheckFrequency.ToString()),
-                new("IncludePrereleaseUpdates", "Include prerelease updates", "Offer preview releases in addition to stable releases.", AvaloniaSettingEditor.Toggle, true, store.IncludePrereleaseUpdates),
-                new("RepositoryOwner", "Repository owner", "Override the update repository owner in debug builds.", AvaloniaSettingEditor.Text, true, TextValue: store.UpdateRepositoryOwner ?? ""),
-                new("RepositoryName", "Repository name", "Override the update repository name in debug builds.", AvaloniaSettingEditor.Text, true, TextValue: store.UpdateRepositoryName ?? ""),
+                new("CheckForUpdates", "Check for updates", "Check for a newer release immediately.", AvaloniaSettingEditor.Action, isUpdateCheckerEnabled, ActionText: "Check now", Warning: disabledReason),
+                new("UpdateFrequency", "Update check frequency", "How often automatic update checks run.", AvaloniaSettingEditor.Selection, isUpdateCheckerEnabled, Values: frequencies, SelectedValue: store.UpdateCheckFrequency.ToString(), Warning: disabledReason),
+                new("IncludePrereleaseUpdates", "Include prerelease updates", "Offer preview releases in addition to stable releases.", AvaloniaSettingEditor.Toggle, isUpdateCheckerEnabled, store.IncludePrereleaseUpdates, Warning: disabledReason),
+                new("RepositoryOwner", "Repository owner", "Override the update repository owner in debug builds.", AvaloniaSettingEditor.Text, isUpdateCheckerEnabled, TextValue: store.UpdateRepositoryOwner ?? "", Warning: disabledReason),
+                new("RepositoryName", "Repository name", "Override the update repository name in debug builds.", AvaloniaSettingEditor.Text, isUpdateCheckerEnabled, TextValue: store.UpdateRepositoryName ?? "", Warning: disabledReason),
             ],
             true);
     }
@@ -416,6 +465,53 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         TemperatureUnit.F => "\u00B0F",
         _ => "\u00B0C",
     };
+
+    private static IReadOnlyList<string> GetSmartFnLockValues(ModifierKey current)
+    {
+        var values = new List<string> { "Off", "Alt", "Alt + Ctrl + Shift" };
+        var formattedCurrent = FormatSmartFnLockFlags(current);
+        if (!values.Contains(formattedCurrent, StringComparer.OrdinalIgnoreCase))
+            values.Add(formattedCurrent);
+        return values;
+    }
+
+    private static string FormatSmartFnLockFlags(ModifierKey value) => value switch
+    {
+        ModifierKey.None => "Off",
+        ModifierKey.Alt => "Alt",
+        ModifierKey.Alt | ModifierKey.Ctrl | ModifierKey.Shift => "Alt + Ctrl + Shift",
+        _ => string.Join(" + ", new[]
+        {
+            value.HasFlag(ModifierKey.Alt) ? "Alt" : null,
+            value.HasFlag(ModifierKey.Ctrl) ? "Ctrl" : null,
+            value.HasFlag(ModifierKey.Shift) ? "Shift" : null,
+        }.Where(part => part is not null)),
+    };
+
+    private static ModifierKey ParseSmartFnLockFlags(string value)
+    {
+        var normalized = value.Trim();
+        if (string.Equals(normalized, "Off", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(normalized, nameof(ModifierKey.None), StringComparison.OrdinalIgnoreCase))
+            return ModifierKey.None;
+
+        var result = ModifierKey.None;
+        var parts = normalized.Replace('+', ',').Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        foreach (var part in parts)
+        {
+            result |= part.Trim().ToLowerInvariant() switch
+            {
+                "alt" => ModifierKey.Alt,
+                "ctrl" or "control" => ModifierKey.Ctrl,
+                "shift" => ModifierKey.Shift,
+                _ => throw new ArgumentException($"Unknown Smart Fn-lock modifier '{part}'.", nameof(value)),
+            };
+        }
+
+        return result == ModifierKey.None
+            ? throw new ArgumentException($"Unknown Smart Fn-lock value '{value}'.", nameof(value))
+            : result;
+    }
 
     private static TemperatureUnit ParseTemperatureUnit(string value) =>
         value.Contains('F', StringComparison.OrdinalIgnoreCase)
