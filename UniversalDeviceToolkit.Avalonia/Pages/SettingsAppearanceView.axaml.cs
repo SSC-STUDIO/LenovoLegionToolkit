@@ -61,7 +61,7 @@ public partial class SettingsAppearanceView : UserControl
         _languagePackService.Changed += LanguagePackService_Changed;
     }
 
-    private async void OnLoaded(object? sender, RoutedEventArgs e)
+    private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         _languagePackService.Changed -= LanguagePackService_Changed;
         _languagePackService.Changed += LanguagePackService_Changed;
@@ -70,26 +70,7 @@ public partial class SettingsAppearanceView : UserControl
         {
             RestorePreferences();
 
-            IReadOnlyList<AvaloniaLanguageOption> availableLanguages;
-            try
-            {
-                availableLanguages = await _languagePackService.GetLanguagesAsync().ConfigureAwait(true);
-            }
-            catch
-            {
-                availableLanguages = LocalizationCatalog.SupportedCultures
-                    .Select(culture => new AvaloniaLanguageOption(
-                        culture,
-                        LocalizationCatalog.GetDisplayName(culture),
-                        IsInstalled: true,
-                        IsEnglish: culture.Name.Equals("en", StringComparison.OrdinalIgnoreCase)))
-                    .ToArray();
-            }
-
-            var languages = availableLanguages
-                .Select(option => new LanguageOption(option.Culture, option.DisplayName))
-                .OrderBy(option => option.DisplayName, StringComparer.CurrentCultureIgnoreCase)
-                .ToArray();
+            var languages = BuildBuiltInLanguageOptions();
             LanguageComboBox.ItemsSource = languages;
             LanguageComboBox.SelectedItem = languages.FirstOrDefault(option =>
                 option.Culture.Name.Equals(LocalizationRuntime.CurrentCulture.Name, StringComparison.OrdinalIgnoreCase));
@@ -105,7 +86,53 @@ public partial class SettingsAppearanceView : UserControl
         {
             _isRefreshing = false;
         }
+
+        _ = RefreshLanguageCatalogAsync();
     }
+
+    private async Task RefreshLanguageCatalogAsync()
+    {
+        try
+        {
+            var available = await _languagePackService.GetLanguagesAsync().ConfigureAwait(false);
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                if (VisualRoot is null)
+                    return;
+
+                var selectedCulture = LocalizationRuntime.CurrentCulture;
+                _isRefreshing = true;
+                try
+                {
+                    var languages = available
+                        .Select(option => new LanguageOption(option.Culture, option.DisplayName))
+                        .OrderBy(option => option.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+                        .ToArray();
+                    LanguageComboBox.ItemsSource = languages;
+                    LanguageComboBox.SelectedItem = languages.FirstOrDefault(option =>
+                        option.Culture.Name.Equals(selectedCulture.Name, StringComparison.OrdinalIgnoreCase));
+                }
+                finally
+                {
+                    _isRefreshing = false;
+                    UpdateLanguagePackButtons();
+                }
+            });
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch
+        {
+            // Built-in language resources remain usable when the online catalog is unavailable.
+        }
+    }
+
+    private static LanguageOption[] BuildBuiltInLanguageOptions() =>
+        LocalizationCatalog.SupportedCultures
+            .Select(culture => new LanguageOption(culture, LocalizationCatalog.GetDisplayName(culture)))
+            .OrderBy(option => option.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+            .ToArray();
 
     private void OnUnloaded(object? sender, RoutedEventArgs e) =>
         _languagePackService.Changed -= LanguagePackService_Changed;
