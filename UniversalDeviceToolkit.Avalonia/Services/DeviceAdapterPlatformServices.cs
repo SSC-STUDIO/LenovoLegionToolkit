@@ -37,14 +37,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     {
         var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
         if (snapshot.SensorReadings.Count == 0)
-        {
-            return
-            [
-                new(
-                    DashboardLocalization.Get("Dashboard_Feature_SystemTelemetry", "System Telemetry"),
-                    DashboardLocalization.Get("Dashboard_Status_NotSupported", "Not supported")),
-            ];
-        }
+            return Array.Empty<SensorReadingItem>();
 
         return snapshot.SensorReadings
             .Select(reading => new SensorReadingItem(
@@ -63,6 +56,96 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
                snapshot.Support.DevicePackId.Contains("legion", StringComparison.OrdinalIgnoreCase);
     }
 
+    public async Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey)
+    {
+        var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
+        var capabilityId = routeKey switch
+        {
+            "Keyboard" => "keyboard-backlight",
+            "Actions" => "hardware-identity",
+            "Macro" => "keyboard-backlight",
+            "WindowsOptimization" => "read-only-telemetry",
+            "PluginExtensions" => "plugin-extensions",
+            _ => string.Empty,
+        };
+        var capability = snapshot.Capabilities.FirstOrDefault(item =>
+            item.Id.Equals(capabilityId, StringComparison.OrdinalIgnoreCase));
+        var isAvailable = capability?.IsAvailable == true &&
+                          (routeKey is not "Actions" || capability.CanWrite);
+        var statusMessage = capability?.Reason
+            ?? DashboardLocalization.Get("FeaturePage_AdapterUnavailable", "The platform adapter did not report this feature.");
+
+        var actions = routeKey switch
+        {
+            "Keyboard" => BuildActions(
+                "keyboard-backlight",
+                "Keyboard backlight",
+                "Read the detected keyboard backlight capability and supported hardware state.",
+                capability,
+                isToggle: false),
+            "Actions" => snapshot.Capabilities
+                .Select(item => new FeatureActionItem(
+                    item.Id,
+                    Humanize(item.Id),
+                    item.Reason,
+                    FormatCapabilityStatus(item),
+                    item.CanWrite,
+                    false,
+                    false))
+                .ToArray(),
+            "Macro" => BuildActions(
+                "macro-controller",
+                "Macro controller",
+                "Macro input requires the host macro controller and input permissions.",
+                null,
+                isToggle: true),
+            "WindowsOptimization" => BuildActions(
+                "optimization-service",
+                "Windows optimization service",
+                "Optimization actions are exposed only through the Windows optimization service.",
+                capability,
+                isToggle: false),
+            "PluginExtensions" => BuildActions(
+                "plugin-extensions",
+                "Plugin extension manager",
+                "Plugin discovery and installation require the plugin host service.",
+                capability,
+                isToggle: false),
+            _ => [],
+        };
+
+        return new FeaturePageState(
+            routeKey,
+            Humanize(routeKey),
+            DashboardLocalization.Get("FeaturePage_PlatformDescription", "This feature is provided by the host platform adapter."),
+            isAvailable
+                ? DashboardLocalization.Get("FeaturePage_Available", "Available")
+                : DashboardLocalization.Get("FeaturePage_Unsupported", "Unavailable on this device"),
+            statusMessage,
+            isAvailable,
+            actions);
+    }
+
+    public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
+        Task.FromResult(false);
+
+    private static IReadOnlyList<FeatureActionItem> BuildActions(
+        string key,
+        string title,
+        string description,
+        DeviceCapability? capability,
+        bool isToggle) =>
+        [new FeatureActionItem(
+            key,
+            title,
+            description,
+            capability is null
+                ? DashboardLocalization.Get("Dashboard_Status_NotSupported", "Not supported")
+                : FormatCapabilityStatus(capability),
+            capability?.CanWrite == true,
+            false,
+            isToggle)];
+
     public async Task<DashboardSnapshot> GetDashboardSnapshotAsync()
     {
         var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
@@ -72,7 +155,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
             FormatIdentity(snapshot.Identity),
             snapshot.Support.DisplayName,
             string.IsNullOrWhiteSpace(snapshot.PowerStatus)
-                ? DashboardLocalization.Get("Dashboard_Status_Unknown", "Unknown")
+                ? DashboardLocalization.Get("Dashboard_Status_NoPowerTelemetry", "No power telemetry available")
                 : snapshot.PowerStatus!,
             featureGroups,
             sensors,
@@ -160,14 +243,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     private IReadOnlyList<SensorReadingItem> BuildSensorReadings(DeviceSnapshot snapshot)
     {
         if (snapshot.SensorReadings.Count == 0)
-        {
-            return
-            [
-                new(
-                    DashboardLocalization.Get("Dashboard_Feature_SystemTelemetry", "System Telemetry"),
-                    DashboardLocalization.Get("Dashboard_Status_NotSupported", "Not supported")),
-            ];
-        }
+            return Array.Empty<SensorReadingItem>();
 
         return snapshot.SensorReadings
             .Select(reading => new SensorReadingItem(

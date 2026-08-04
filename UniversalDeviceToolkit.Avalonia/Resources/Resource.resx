@@ -44,6 +44,18 @@
   <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
   <data name="Dashboard_Sensors"><value>Sensors</value></data>
   <data name="Dashboard_Refresh"><value>Refresh</value></data>
+  <data name="Dashboard_Status_NoTelemetry"><value>No telemetry available</value></data>
+  <data name="Dashboard_Status_NoPowerTelemetry"><value>No power telemetry available</value></data>
+  <data name="Dashboard_Description_NoAdapter"><value>No platform adapter is registered for telemetry.</value></data>
+  <data name="Dashboard_Status_Live"><value>Live</value></data>
+  <data name="Dashboard_Telemetry_CPU"><value>CPU</value></data>
+  <data name="Dashboard_Telemetry_CPUDescription"><value>Processor usage and temperature</value></data>
+  <data name="Dashboard_Telemetry_GPU"><value>GPU</value></data>
+  <data name="Dashboard_Telemetry_GPUDescription"><value>Graphics processor usage and temperature</value></data>
+  <data name="Dashboard_Telemetry_Battery"><value>Battery</value></data>
+  <data name="Dashboard_Telemetry_BatteryDescription"><value>Charge and battery health</value></data>
+  <data name="Dashboard_Telemetry_System"><value>System</value></data>
+  <data name="Dashboard_Telemetry_SystemDescription"><value>Additional platform telemetry</value></data>
   <data name="Dashboard_Feature_Device"><value>Device</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
   <data name="Dashboard_Feature_PowerMode"><value>Power Mode</value></data>
@@ -2906,4 +2918,4 @@ It won't affect other full screen windows, but you will not be able to click on 
     <value>Feature returned no value.</value>
   </data><data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
     <value>State is not supported.</value>
-  </data></root>
+  </data><data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>This feature is provided by the host platform adapter.</value></data><data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>No platform adapter reported this feature.</value></data><data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Platform adapter</value></data><data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Install or enable a compatible platform adapter to use this feature.</value></data><data name="FeaturePage_NoActions" xml:space="preserve"><value>No actions were reported by the platform adapter.</value></data></root>

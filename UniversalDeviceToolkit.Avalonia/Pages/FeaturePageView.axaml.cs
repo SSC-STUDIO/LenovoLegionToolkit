@@ -15,6 +15,7 @@ public partial class FeaturePageView : UserControl
 {
     private readonly IPlatformServices _platformServices;
     private readonly FeaturePageDescriptor _descriptor;
+    private bool _isApplying;
 
     protected FeaturePageView(IPlatformServices platformServices, FeaturePageDescriptor descriptor)
     {
@@ -35,60 +36,81 @@ public partial class FeaturePageView : UserControl
         Loaded -= OnLoaded;
         try
         {
-            var supported = await _platformServices.IsSupportedLegionMachineAsync();
-            var groups = await _platformServices.GetFeatureGroupsAsync();
-            StatusTitle.Text = supported
+            _isApplying = true;
+            var state = await _platformServices.GetFeaturePageStateAsync(_descriptor.RouteKey);
+            StatusTitle.Text = state.IsAvailable
                 ? AvaloniaLocalization.GetString("FeaturePage_Available", "Available")
                 : AvaloniaLocalization.GetString("FeaturePage_Unsupported", "Unavailable on this device");
-            StatusMessage.Text = supported
-                ? AvaloniaLocalization.GetString("FeaturePage_AvailableMessage", "The platform adapter reported this feature as available.")
-                : _descriptor.UnsupportedReason;
-            StatusCard.Background = GetResource<IBrush>(supported ? "StatusSuccessBackgroundBrush" : "StatusInfoBackgroundBrush");
-            StatusCard.BorderBrush = GetResource<IBrush>(supported ? "StatusSuccessBrush" : "StatusInfoBrush");
+            StatusMessage.Text = string.IsNullOrWhiteSpace(state.StatusMessage)
+                ? _descriptor.UnsupportedReason
+                : state.StatusMessage;
+            StatusCard.Background = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBackgroundBrush" : "StatusInfoBackgroundBrush");
+            StatusCard.BorderBrush = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBrush" : "StatusInfoBrush");
 
             FeatureItems.Items.Clear();
-            foreach (var item in BuildItems(groups, supported))
+            foreach (var item in state.Actions)
                 FeatureItems.Items.Add(CreateFeatureCard(item));
+
+            if (state.Actions.Count == 0)
+                FeatureItems.Items.Add(CreateEmptyState());
         }
         catch (Exception ex)
         {
             StatusTitle.Text = AvaloniaLocalization.GetString("FeaturePage_LoadFailed", "Unable to load feature state");
             StatusMessage.Text = ex.Message;
         }
-    }
-
-    private IEnumerable<FeatureItem> BuildItems(IReadOnlyList<FeatureGroupItem> groups, bool supported)
-    {
-        yield return new FeatureItem(
-            _descriptor.PrimaryActionTitle,
-            _descriptor.PrimaryActionDescription,
-            _descriptor.PrimaryActionIcon,
-            _descriptor.PrimaryActionTitle,
-            supported && _descriptor.PrimaryActionEnabled);
-
-        foreach (var group in groups.Take(4))
+        finally
         {
-            yield return new FeatureItem(
-                group.Title,
-                group.Description,
-                _descriptor.PrimaryActionIcon,
-                group.Status,
-                false);
+            _isApplying = false;
         }
     }
 
-    private Border CreateFeatureCard(FeatureItem item)
+    private Border CreateFeatureCard(FeatureActionItem item)
     {
-        var action = new Button
+        Control action;
+        if (item.IsToggle)
         {
-            Content = item.ActionLabel,
-            IsEnabled = item.IsActionEnabled,
-            MinWidth = 120,
-            VerticalAlignment = VerticalAlignment.Top,
-        };
-        AutomationProperties.SetAutomationId(action, $"Avalonia{_descriptor.RouteKey}_{Sanitize(item.ActionLabel)}Button");
-        AutomationProperties.SetName(action, item.ActionLabel);
-        ToolTip.SetTip(action, item.Description);
+            var toggle = new CheckBox
+            {
+                IsChecked = item.IsSelected,
+                IsEnabled = item.IsEnabled,
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                MinWidth = 48,
+            };
+            AutomationProperties.SetAutomationId(toggle, $"Avalonia{_descriptor.RouteKey}_{item.Key}Toggle");
+            AutomationProperties.SetName(toggle, item.Title);
+            ToolTip.SetTip(toggle, item.Description);
+            toggle.IsCheckedChanged += async (_, _) =>
+            {
+                if (_isApplying || toggle.IsChecked is not bool selected)
+                    return;
+                var accepted = await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, item.Key, selected);
+                if (!accepted)
+                    ToolTip.SetTip(toggle, item.Description + " " + item.Status);
+            };
+            action = toggle;
+        }
+        else
+        {
+            var button = new Button
+            {
+                Content = item.Status,
+                IsEnabled = item.IsEnabled,
+                MinWidth = 120,
+                VerticalAlignment = VerticalAlignment.Top,
+            };
+            AutomationProperties.SetAutomationId(button, $"Avalonia{_descriptor.RouteKey}_{item.Key}Action");
+            AutomationProperties.SetName(button, item.Title);
+            ToolTip.SetTip(button, item.Description);
+            button.Click += async (_, _) =>
+            {
+                var accepted = await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, item.Key, true);
+                if (!accepted)
+                    ToolTip.SetTip(button, item.Description + " " + item.Status);
+            };
+            action = button;
+        }
 
         var title = new LocalizedTextBlock
         {
@@ -113,7 +135,7 @@ public partial class FeaturePageView : UserControl
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), ColumnSpacing = 14 };
         var icon = new NavigationIcon
         {
-            IconIdentifier = item.IconIdentifier,
+            IconIdentifier = item.IsToggle ? "ToggleRight24" : _descriptor.PrimaryActionIcon,
             FontSize = GetResource<double>("IconSizeLG"),
             Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
             VerticalAlignment = VerticalAlignment.Top,
@@ -138,6 +160,22 @@ public partial class FeaturePageView : UserControl
         return card;
     }
 
+    private Border CreateEmptyState() => new()
+    {
+        Background = GetResource<IBrush>("CardBackgroundBrush"),
+        BorderBrush = GetResource<IBrush>("CardBorderBrush"),
+        BorderThickness = new Thickness(1),
+        CornerRadius = GetResource<CornerRadius>("CornerRadiusCard"),
+        Padding = new Thickness(16),
+        Child = new LocalizedTextBlock
+        {
+            Text = AvaloniaLocalization.GetString("FeaturePage_NoActions", "No actions were reported by the platform adapter."),
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 3,
+        },
+    };
+
     private T GetResource<T>(object key)
     {
         if (this.TryFindResource(key, out var value) && value is T typedValue)
@@ -152,9 +190,6 @@ public partial class FeaturePageView : UserControl
         throw new InvalidOperationException($"Missing Avalonia resource '{key}'.");
     }
 
-    private static string Sanitize(string value) =>
-        string.Concat(value.Where(char.IsLetterOrDigit));
-
     protected sealed record FeaturePageDescriptor(
         string RouteKey,
         string Title,
@@ -166,12 +201,6 @@ public partial class FeaturePageView : UserControl
         string PrimaryActionIcon,
         bool PrimaryActionEnabled = false);
 
-    private sealed record FeatureItem(
-        string Title,
-        string Description,
-        string IconIdentifier,
-        string ActionLabel,
-        bool IsActionEnabled);
 }
 
 public sealed class KeyboardBacklightPage(IPlatformServices services) : FeaturePageView(services, new(

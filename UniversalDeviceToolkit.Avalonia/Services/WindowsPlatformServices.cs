@@ -29,6 +29,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
     public Task<DashboardSnapshot> GetDashboardSnapshotAsync() => _inner.GetDashboardSnapshotAsync();
 
     public Task<bool> IsSupportedLegionMachineAsync() => _inner.IsSupportedLegionMachineAsync();
+
+    public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) => _inner.GetFeaturePageStateAsync(routeKey);
+
+    public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
+        _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected);
 }
 
 #endif
