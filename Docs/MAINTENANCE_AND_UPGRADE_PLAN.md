@@ -456,3 +456,10 @@
 - `b3d098c7` 将 `Microsoft.Windows.CsWin32` 从 `0.3.275` 升至 `0.3.298`，将 `RAMSPDToolkit-NDD` 从 `1.4.2` 升至 `1.6.0`，并同步受影响项目的 lock 文件。
 - 按计划未升级 `Microsoft.Windows.SDK.BuildTools`；Avalonia `11.3.6 -> 12.1.1` 保留为独立大版本评估，不混入本次小版本变更。
 - 验证：solution `--locked-mode` restore 通过；Lib 与 WPF Release 构建均为 `0` 警告、`0` 错误；Fast 测试 `13/13`、安装器/权限/FanCurve/插件安全定向测试 `9/9` 通过，均 `0` Skip。
+
+## 29. 2026-08-04 Installer 路径策略运行时审计
+
+- `344301de` 为主测试项目加入 Installer 项目引用，并通过反射加载实际构建的 `UniversalDeviceToolkit.Installer.dll`，新增 `InstallerInstallPathPolicyRuntimeTests`。
+- 运行时测试验证 Program Files 根目录不可直接安装、其子目录可接受、相邻目录和临时目录均拒绝；`Validate` 对受保护目录之外的路径抛出 `UnauthorizedAccessException`，不创建文件或修改 ACL。
+- 验证：Installer Release 构建 `0` 警告、`0` 错误；Installer 运行时边界与既有安全 Guard `4/4` 通过、`0` Skip。
+- R4 仍未完全结束：真实 ACL 写入/继承审计需要管理员专用安装环境，按需提权模型的完整端到端验证也仍需专用桌面环境；本地路径策略测试不替代这两项验收。
