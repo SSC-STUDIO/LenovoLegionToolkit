@@ -75,7 +75,10 @@
   <data name="Settings_Appearance"><value>&#x5916;&#x89C2;</value></data>
   <data name="Settings_Application"><value>&#x5E94;&#x7528;&#x884C;&#x4E3A;</value></data>
   <data name="Settings_Display"><value>&#x663E;&#x793A;</value></data>
-  <data name="Settings_Placeholder"><value>&#x201C;{0}&#x201D;&#x8BBE;&#x7F6E;&#x5C06;&#x5728;&#x6B64;&#x5904;&#x5B9E;&#x73B0;&#x3002;</value></data>
+  <data name="Settings_PlatformUnavailable_Title"><value>&#x5F53;&#x524D;&#x5BBF;&#x4E3B;&#x4E0D;&#x53EF;&#x7528;</value></data>
+  <data name="Settings_PlatformUnavailable_Message"><value>&#x5F53;&#x524D; Avalonia &#x5BBF;&#x4E3B;&#x6CA1;&#x6709;&#x4E3A;&#x6B64;&#x8BBE;&#x7F6E;&#x63D0;&#x4F9B;&#x5B89;&#x5168;&#x9002;&#x914D;&#x5668;&#x3002;</value></data>
+  <data name="Settings_PlatformUnavailable_Feature"><value>&#x529F;&#x80FD;&#x53EF;&#x7528;&#x6027;</value></data>
+  <data name="Settings_PlatformUnavailable_Action"><value>&#x4E0D;&#x53EF;&#x7528;</value></data>
   <data name="Appearance_Title"><value>&#x5916;&#x89C2;</value></data>
   <data name="Appearance_Description"><value>&#x81EA;&#x5B9A;&#x4E49;&#x5E94;&#x7528;&#x7684;&#x5916;&#x89C2;&#x548C;&#x4F7F;&#x7528;&#x4F53;&#x9A8C;&#x3002;</value></data>
   <data name="Appearance_ThemeMode"><value>&#x5168;&#x5C40;&#x754C;&#x9762;&#x989C;&#x8272;&#x6A21;&#x5F0F;</value></data>

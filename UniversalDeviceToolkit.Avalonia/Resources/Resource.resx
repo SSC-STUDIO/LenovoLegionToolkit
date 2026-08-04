@@ -75,7 +75,10 @@
   <data name="Settings_Appearance"><value>Appearance</value></data>
   <data name="Settings_Application"><value>Application</value></data>
   <data name="Settings_Display"><value>Display</value></data>
-  <data name="Settings_Placeholder"><value>Settings for &quot;{0}&quot; will be implemented here.</value></data>
+  <data name="Settings_PlatformUnavailable_Title"><value>Unavailable in this host</value></data>
+  <data name="Settings_PlatformUnavailable_Message"><value>This Avalonia host does not expose a safe adapter for this setting.</value></data>
+  <data name="Settings_PlatformUnavailable_Feature"><value>Feature availability</value></data>
+  <data name="Settings_PlatformUnavailable_Action"><value>Unavailable</value></data>
   <data name="Appearance_Title"><value>Appearance</value></data>
   <data name="Appearance_Description"><value>Customize the look and feel of the application.</value></data>
   <data name="Appearance_ThemeMode"><value>Global interface color mode</value></data>

@@ -1,5 +1,3 @@
-using Avalonia.Controls;
-using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
@@ -63,35 +61,12 @@ public partial class SettingsPageViewModel : ObservableObject
         {
             "Appearance" => new SettingsAppearanceView(),
             "Application" => new SettingsApplicationBehaviorView(),
+            "SmartKeys" => new SettingsSmartKeysView(),
             "Display" => new SettingsDisplayView(),
-            _ => BuildPlaceholderView(item)
-        };
-    }
-
-    private static Control BuildPlaceholderView(NavigationItemViewModel item)
-    {
-        return new StackPanel
-        {
-            Spacing = 12,
-            Children =
-            {
-                new TextBlock
-                {
-                    Text = item.Title,
-                    FontSize = 22,
-                    FontWeight = FontWeight.SemiBold,
-                },
-                new TextBlock
-                {
-                    Text = string.Format(
-                        Localization.AvaloniaLocalization.GetString(
-                            "Settings_Placeholder",
-                            "Settings for \"{0}\" will be implemented here."),
-                        item.Title),
-                    Opacity = 0.7,
-                    TextWrapping = TextWrapping.Wrap,
-                }
-            }
+            "Update" => new SettingsUpdateView(),
+            "Power" => new SettingsPowerView(),
+            "Integrations" => new SettingsIntegrationsView(),
+            _ => null
         };
     }
 }
