@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "custom-mouse",
+  "name": "Cursor \u0026 Pointer",
+  "version": "1.0.18",
+  "minHostVersion": "5.0.0",
+  "author": "SSC-STUDIO",
+  "isSystemPlugin": false,
+  "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins",
+  "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/issues",
+  "contributes": {
+    "featurePage": null,
+    "settingsPage": {
+      "class": "UniversalDeviceToolkit.Plugins.CustomMouse.CustomMouseSettingsControl",
+      "title": "Cursor \u0026 Pointer"
+    },
+    "runtime": {
+      "class": "UniversalDeviceToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
+    },
+    "optimizationActions": [
+      {
+        "id": "custom.mouse",
+        "title": "Cursor \u0026 Pointer"
+      }
+    ]
+  },
+  "package": {
+    "assetName": "custom-mouse-v1.0.18.zip",
+    "requiredFiles": [
+      "UniversalDeviceToolkit.Plugins.CustomMouse.dll",
+      "UniversalDeviceToolkit.Plugins.SDK.dll",
+      "plugin.json",
+      "plugin.manifest.json"
+    ]
+  },
+  "store": {
+    "description": "Personalize your mouse experience with theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore.",
+    "icon": "Pen24",
+    "iconBackground": "#2563EB",
+    "tags": [
+      "mouse",
+      "cursor",
+      "productivity"
+    ],
+    "dependencies": [],
+    "supportedLanguages": [
+      "ar",
+      "bg",
+      "bs",
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "ja",
+      "ko",
+      "lv",
+      "nl",
+      "nl-NL",
+      "no",
+      "pl",
+      "pt",
+      "pt-BR",
+      "ro",
+      "ru",
+      "sk",
+      "tr",
+      "uk",
+      "uz",
+      "uz-Latn-UZ",
+      "vi",
+      "zh",
+      "zh-Hans",
+      "zh-Hant"
+    ],
+    "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins"
+  },
+  "lifecycle": "Active",
+  "localizedNames": {},
+  "localizedDescriptions": {},
+  "localizedTags": {}
+}

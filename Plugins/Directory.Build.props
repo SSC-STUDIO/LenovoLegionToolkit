@@ -1,0 +1,153 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<Project>
+
+
+  <!-- Shipped plugin ZIP versions live in each plugin's plugin.manifest.json.
+       Use udt-plugin.cmd bump-version, then package and generate-store. -->
+  <PropertyGroup>
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>CS1591;CA1062;CA2024</WarningsAsErrors>
+    <PluginSatelliteResourceLanguages>ar;bg;bs;ca;cs;de;el;en;es;fr;hu;it;ja;ko;lv;nl;nl-nl;no;pl;pt;pt-br;ro;ru;sk;tr;uk;uz;uz-latn-uz;vi;zh;zh-hans;zh-hant</PluginSatelliteResourceLanguages>
+    <IsPluginTestProject>$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))</IsPluginTestProject>
+    <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
+    <IsTemplatePluginProject Condition="'$(MSBuildProjectName)' == 'UniversalDeviceToolkit.Plugins.Template'">True</IsTemplatePluginProject>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <HostDependenciesDir>$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
+    <HostLibPath Condition="'$(HostLibPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Lib.dll</HostLibPath>
+    <HostLibPath Condition="!Exists('$(HostLibPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.dll</HostLibPath>
+    <HostLibPluginsPath Condition="'$(HostLibPluginsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
+    <HostLibPluginsPath Condition="!Exists('$(HostLibPluginsPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.Plugins.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
+    <HostAbstractionsPath Condition="'$(HostAbstractionsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
+    <HostAbstractionsPath Condition="!Exists('$(HostAbstractionsPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Plugins.Abstractions.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
+    <HostWpfPath Condition="'$(HostWpfPath)' == ''">$(HostDependenciesDir)Universal Device Toolkit.dll</HostWpfPath>
+    <HostWpfPath Condition="!Exists('$(HostWpfPath)') AND Exists('$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll')">$(MSBuildThisFileDirectory)..\UniversalDeviceToolkit\Build\Universal Device Toolkit.dll</HostWpfPath>
+    <EnsureHostDependenciesScript>$(MSBuildThisFileDirectory)Scripts\ensure-host-dependencies.ps1</EnsureHostDependenciesScript>
+    <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' == 'Windows_NT'">powershell</PowerShellExecutable>
+    <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' != 'Windows_NT'">pwsh</PowerShellExecutable>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginToolProject)' != 'True' AND '$(IsPluginTestProject)' != 'True'">
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'UniversalDeviceToolkit.Plugins.SDK'">
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+    <Copyright>© 2025-2026 SSC-STUDIO</Copyright>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Authors>SSC-STUDIO</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
+    <UseCommonControls>true</UseCommonControls>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+    <!-- Plugin ZIPs must carry non-host NuGet sidecars such as Logging.Abstractions and AsyncLock. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+
+  <PropertyGroup>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
+    <SatelliteResourceLanguages>$(PluginSatelliteResourceLanguages)</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Update="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+   <Reference Include="UniversalDeviceToolkit.Lib">
+     <HintPath>$(HostLibPath)</HintPath>
+     <Private>false</Private>
+   </Reference>
+    <Reference Include="UniversalDeviceToolkit.Lib.Plugins">
+      <HintPath>$(HostLibPluginsPath)</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UniversalDeviceToolkit.Plugins.Abstractions">
+      <HintPath>$(HostAbstractionsPath)</HintPath>
+      <Private>false</Private>
+    </Reference>
+ </ItemGroup>
+
+
+  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
+    <None Include="plugin.manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="EnsureHostDependencies"
+          BeforeTargets="ResolveReferences"
+          Condition="'$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostDependenciesDir)UniversalDeviceToolkit.Lib.dll') OR !Exists('$(HostDependenciesDir)UniversalDeviceToolkit.Lib.Plugins.dll') OR !Exists('$(HostDependenciesDir)Universal Device Toolkit.dll') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
+    <Message Importance="high" Text="Host dependencies are missing from Dependencies\Host. Bootstrapping required host binaries..." />
+    <Exec Command="&quot;$(PowerShellExecutable)&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(EnsureHostDependenciesScript)&quot;"
+          WorkingDirectory="$(MSBuildThisFileDirectory)" />
+  </Target>
+
+
+  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
+    <ItemGroup>
+      <FilesToDelete Include="$(OutputPath)*.deps.json" />
+      <FilesToDelete Include="$(OutputPath)*.runtimeconfig.json" />
+      <FilesToDelete Include="$(OutputPath)Universal Device Toolkit.*" />
+      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.WPF.*" />
+      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.*" />
+      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.Macro.*" />
+      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Plugins.Abstractions.*" />
+      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.Automation.*" />
+      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.CLI.Lib.*" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
+    <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
+    <PropertyGroup>
+      <SDKDllSource>$(MSBuildThisFileDirectory)Build\SDK\UniversalDeviceToolkit.Plugins.SDK.dll</SDKDllSource>
+    </PropertyGroup>
+    <Copy SourceFiles="$(SDKDllSource)" DestinationFolder="$(OutputPath)" Condition="Exists('$(SDKDllSource)')" ContinueOnError="true" />
+  </Target>
+
+</Project>

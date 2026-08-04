@@ -1,0 +1,31 @@
+<Project>
+
+  <Target Name="CreatePluginTestReferenceDirectories"
+          BeforeTargets="_CopyFilesMarkedCopyLocal"
+          Condition="$(IsTestProject) == 'true' Or $(IsTestProject) == 'True'">
+    <ItemGroup>
+      <PluginTestSatelliteLanguages Include="$(PluginSatelliteResourceLanguages)"
+                                    Condition="'$(PluginSatelliteResourceLanguages)' != ''" />
+      <PluginTestReferenceDirectories Include="@(PluginTestSatelliteLanguages->'$(OutDir)%(Identity)\\')" />
+      <PluginTestReferenceDirectories Include="$(OutDir)%(ReferenceCopyLocalPaths.DestinationSubDirectory)"
+                                      Condition="'%(ReferenceCopyLocalPaths.DestinationSubDirectory)' != ''" />
+    </ItemGroup>
+
+    <!-- Test projects copy localized plugin resources into culture subfolders. -->
+    <MakeDir Directories="@(PluginTestReferenceDirectories)" />
+  </Target>
+
+  <Target Name="CopyHostDependenciesToOutput"
+          AfterTargets="Build"
+          Condition="'$(IsPluginTestProject)' == 'True' OR '$(IsPluginToolProject)' == 'True'">
+    <ItemGroup>
+      <HostDependencyFiles Include="$(HostDependenciesDir)*.dll" />
+    </ItemGroup>
+    <!-- Test and tool hosts need transitive host dependencies (e.g. Serilog) next to their binaries. -->
+    <Copy SourceFiles="@(HostDependencyFiles)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true"
+          ContinueOnError="true" />
+  </Target>
+
+</Project>

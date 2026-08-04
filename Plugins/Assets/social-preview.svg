@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0078D4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00B4FC;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bg)" />
+
+  <!-- Decorative circles -->
+  <circle cx="1100" cy="100" r="200" fill="#0078D4" opacity="0.05" />
+  <circle cx="1200" cy="500" r="150" fill="#00B4FC" opacity="0.05" />
+  <circle cx="100" cy="540" r="180" fill="#0078D4" opacity="0.03" />
+
+  <!-- Logo area (left) -->
+  <rect x="80" y="200" width="80" height="80" rx="16" fill="url(#accent)" opacity="0.9" />
+  <text x="120" y="255" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="white" text-anchor="middle">UDT</text>
+
+  <!-- Title -->
+  <text x="200" y="245" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="bold" fill="white">Universal Device Toolkit</text>
+  <text x="200" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="normal" fill="#00B4FC">Plugins</text>
+
+  <!-- Tagline -->
+  <text x="80" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="20" fill="#b0b0b0">Extend your Windows device management with community-driven plugins</text>
+
+  <!-- Divider -->
+  <line x1="80" y1="380" x2="600" y2="380" stroke="#0078D4" stroke-width="2" opacity="0.5" />
+
+  <!-- Plugin features -->
+  <text x="80" y="420" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="white">Network Acceleration</text>
+  <text x="80" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#b0b0b0">Real-time telemetry &amp; gaming presets</text>
+
+  <text x="80" y="480" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="white">Custom Mouse</text>
+  <text x="80" y="505" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#b0b0b0">DPI profiles &amp; theme-aware cursors</text>
+
+  <text x="350" y="420" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="white">ViVeTool GUI</text>
+  <text x="350" y="445" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#b0b0b0">Unlock hidden Windows features</text>
+
+  <text x="350" y="480" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="white">Shell Integration</text>
+  <text x="350" y="505" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="#b0b0b0">Right-click context menu access</text>
+
+  <!-- Right side: badges -->
+  <rect x="700" y="160" width="480" height="340" rx="20" fill="white" opacity="0.05" stroke="#0078D4" stroke-width="1" opacity="0.3" />
+
+  <!-- Free badge -->
+  <rect x="740" y="200" width="160" height="50" rx="25" fill="url(#accent)" opacity="0.9" />
+  <text x="820" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">100% FREE</text>
+
+  <!-- Open source badge -->
+  <rect x="920" y="200" width="220" height="50" rx="25" fill="#2d7d46" opacity="0.9" />
+  <text x="1030" y="232" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="bold" fill="white" text-anchor="middle">OPEN SOURCE</text>
+
+  <!-- No ads -->
+  <rect x="740" y="270" width="400" height="50" rx="25" fill="#1a1a2e" stroke="#00B4FC" stroke-width="1" />
+  <text x="940" y="302" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="white" text-anchor="middle">No ads &bull; No telemetry &bull; No paywalls</text>
+
+  <!-- .NET 10 -->
+  <rect x="740" y="340" width="120" height="40" rx="8" fill="#512bd4" opacity="0.8" />
+  <text x="800" y="366" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">.NET 10</text>
+
+  <!-- C# -->
+  <rect x="875" y="340" width="80" height="40" rx="8" fill="#178600" opacity="0.8" />
+  <text x="915" y="366" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">C#</text>
+
+  <!-- WPF -->
+  <rect x="970" y="340" width="80" height="40" rx="8" fill="#0078D4" opacity="0.8" />
+  <text x="1010" y="366" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">WPF</text>
+
+  <!-- Windows -->
+  <rect x="1070" y="340" width="130" height="40" rx="8" fill="#00B4FC" opacity="0.8" />
+  <text x="1135" y="366" font-family="Segoe UI, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">Windows 10/11</text>
+
+  <!-- Bottom bar -->
+  <rect x="0" y="590" width="1280" height="50" fill="black" opacity="0.3" />
+  <text x="80" y="622" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#b0b0b0">github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins</text>
+  <text x="1200" y="622" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#00B4FC" text-anchor="end">MIT License</text>
+</svg>

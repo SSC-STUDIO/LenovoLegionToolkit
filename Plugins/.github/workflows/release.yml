@@ -1,0 +1,135 @@
+name: Release Plugins
+
+on:
+  workflow_dispatch:
+    inputs:
+      plugin_ids:
+        description: 'Comma-separated plugin ids to publish'
+        required: true
+        default: 'custom-mouse'
+  # Tag push trigger: pushing e.g. custom-mouse-v1.0.18 publishes that plugin.
+  push:
+    tags:
+      - '*-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    env:
+      PLUGIN_IDS: ${{ github.event.inputs.plugin_ids || startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+
+    steps:
+      - name: Resolve plugin ids from tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          $pluginId = "${{ github.ref_name }}" -replace '-v[0-9].*$', ''
+          "PLUGIN_IDS=$pluginId" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Host "Tag trigger: plugin id = $pluginId"
+
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+          # Tag triggers check out master (tag points at master's tip) so the
+          # store.json commit step can push; detached tag HEADs cannot push.
+          ref: ${{ startsWith(github.ref, 'refs/tags/') && 'master' || github.ref }}
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Prime plugin tooling CLI
+        shell: pwsh
+        run: |
+          .\Scripts\Invoke-PluginTooling.ps1 --help
+
+      - name: Validate official candidates
+        shell: pwsh
+        run: |
+          .\Scripts\Invoke-PluginTooling.ps1 `
+            validate `
+            --plugin-ids "${{ env.PLUGIN_IDS }}" `
+            --profile official-candidate
+
+      - name: Build selected plugins
+        shell: pwsh
+        run: |
+          $pluginIds = "${{ env.PLUGIN_IDS }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          foreach ($pluginId in $pluginIds) {
+            .\Scripts\Invoke-PluginTooling.ps1 `
+              build `
+              --plugin $pluginId
+          }
+
+      - name: Pack selected plugins
+        shell: pwsh
+        run: |
+          $pluginIds = "${{ env.PLUGIN_IDS }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          New-Item -ItemType Directory -Path .\Build\release-assets -Force | Out-Null
+          foreach ($pluginId in $pluginIds) {
+            .\Scripts\Invoke-PluginTooling.ps1 `
+              package `
+              --plugin $pluginId `
+              --output-dir .\Build\release-assets
+          }
+
+      - name: Publish GitHub releases
+        shell: pwsh
+        run: |
+          $pluginIds = "${{ env.PLUGIN_IDS }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+          foreach ($pluginId in $pluginIds) {
+            $manifestPath = $null
+            foreach ($pluginDirectory in Get-ChildItem -Path .\Plugins -Directory) {
+              $candidate = Join-Path $pluginDirectory.FullName 'plugin.manifest.json'
+              if (-not (Test-Path $candidate)) {
+                $candidate = Join-Path $pluginDirectory.FullName 'plugin.json'
+              }
+              if ((Test-Path $candidate) -and ((Get-Content $candidate -Raw | ConvertFrom-Json -AsHashtable).id) -eq $pluginId) {
+                $manifestPath = Get-Item $candidate
+                break
+              }
+            }
+
+            if (-not $manifestPath) {
+              throw "Manifest for plugin '$pluginId' was not found."
+            }
+
+            $manifest = Get-Content $manifestPath.FullName -Raw | ConvertFrom-Json -AsHashtable
+            $tag = "$pluginId-v$($manifest.version)"
+            $zip = ".\Build\release-assets\$tag.zip"
+
+            gh release view $tag *> $null
+            if ($LASTEXITCODE -eq 0) {
+              gh release upload $tag $zip --clobber
+            } else {
+              gh release create $tag $zip --title $tag --generate-notes
+            }
+          }
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Regenerate store.json
+        shell: pwsh
+        run: |
+          .\Scripts\Invoke-PluginTooling.ps1 `
+            generate-store `
+            --plugin-ids "${{ env.PLUGIN_IDS }}" `
+            --asset-root .\Build\release-assets `
+            --output .\store.json `
+            --merge-existing `
+            --require-assets
+
+      - name: Commit updated store.json
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add store.json
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(store): update store metadata for released plugins"
+          git push origin HEAD:master

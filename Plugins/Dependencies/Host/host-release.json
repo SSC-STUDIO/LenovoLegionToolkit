@@ -1,0 +1,18 @@
+{
+  "hostVersion": "5.0.0",
+  "hostTag": "v5.0.0",
+  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v5.0.0/UniversalDeviceToolkit_v5.0.0_win-x64.zip",
+  "artifacts": {
+    "package": "UniversalDeviceToolkit_v5.0.0_win-x64.zip",
+    "lib": "UniversalDeviceToolkit.Lib.dll",
+    "libPlugins": "UniversalDeviceToolkit.Lib.Plugins.dll",
+    "wpf": "Universal Device Toolkit.dll",
+    "transitiveDependencies": [
+      "Serilog.dll",
+      "Serilog.Sinks.Async.dll",
+      "Serilog.Sinks.File.dll"
+    ]
+  },
+  "source": "vendored-host-build",
+  "notes": "Phase 3 ABI hard cutover: host Lib/Lib.Plugins assembly identities are UniversalDeviceToolkit.Lib / UniversalDeviceToolkit.Lib.Plugins. Refresh these host references from a matching UniversalDeviceToolkit build before shipping plugin changes that depend on new host APIs. Serilog is a transitive dependency of UniversalDeviceToolkit.Lib and must be vendored alongside the host binaries."
+}
