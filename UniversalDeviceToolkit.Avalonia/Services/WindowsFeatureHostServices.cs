@@ -554,14 +554,6 @@ internal sealed class WindowsFeatureHostServices
         else
         {
             actions.Add(new FeatureActionItem(
-                "macro-record",
-                "Record keyboard sequence",
-                "Capture keyboard input into the selected macro slot. Stop recording from the same workspace action.",
-                controller.IsRecording ? "Recording" : "Record",
-                !controller.IsRecording,
-                false,
-                false));
-            actions.Add(new FeatureActionItem(
                 "macro-stop-recording",
                 "Stop recording",
                 "Stop the active macro recording and persist the captured sequence.",
