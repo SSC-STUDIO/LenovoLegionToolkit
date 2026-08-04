@@ -122,6 +122,30 @@ public sealed class LocalizationRuntimeTests : IDisposable
     }
 
     [Fact]
+    public void AvaloniaSettingsNavigation_ResolvesChineseLabels()
+    {
+        var localizer = new ResourceManagerStringLocalizer(new ResourceManager(
+            "UniversalDeviceToolkit.Avalonia.Resources.Resource",
+            typeof(UniversalDeviceToolkit.Avalonia.App).Assembly));
+
+        localizer.CurrentCulture = new CultureInfo("zh-Hans");
+
+        var labels = new Dictionary<string, string>
+        {
+            ["SettingsPage_Navigation_Appearance"] = "外观",
+            ["SettingsPage_Navigation_Application"] = "应用程序",
+            ["SettingsPage_Navigation_SmartKeys"] = "快捷键",
+            ["SettingsPage_Navigation_Display"] = "显示",
+            ["SettingsPage_Update_Title"] = "更新",
+            ["SettingsPage_Power_Title"] = "电源",
+            ["SettingsPage_Integrations_Title"] = "应用集成",
+        };
+
+        foreach (var (key, expected) in labels)
+            localizer.GetString(key).Should().Be(expected, key);
+    }
+
+    [Fact]
     public void CliResourceSets_HaveMatchingKeysAndPlaceholders()
     {
         var manager = new ResourceManager(

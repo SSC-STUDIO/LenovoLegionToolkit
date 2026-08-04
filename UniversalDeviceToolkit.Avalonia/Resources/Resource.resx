@@ -65,6 +65,13 @@
   <data name="Dashboard_Sensor_MaxDischargeRate"><value>Max Discharge Rate</value></data>
   <data name="Dashboard_Sensor_CycleCount"><value>Cycle Count</value></data>
   <data name="Settings_Title"><value>Settings</value></data>
+  <data name="SettingsPage_Navigation_Appearance"><value>Appearance</value></data>
+  <data name="SettingsPage_Navigation_Application"><value>Application</value></data>
+  <data name="SettingsPage_Navigation_SmartKeys"><value>Smart Keys</value></data>
+  <data name="SettingsPage_Navigation_Display"><value>Display</value></data>
+  <data name="SettingsPage_Update_Title"><value>Update</value></data>
+  <data name="SettingsPage_Power_Title"><value>Power</value></data>
+  <data name="SettingsPage_Integrations_Title"><value>Integrations</value></data>
   <data name="Settings_Appearance"><value>Appearance</value></data>
   <data name="Settings_Application"><value>Application</value></data>
   <data name="Settings_Display"><value>Display</value></data>
