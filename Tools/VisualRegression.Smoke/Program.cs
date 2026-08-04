@@ -935,6 +935,8 @@ internal static partial class Program
                 try
                 {
                     var type = element.Current.ControlType;
+                    if (IsFrameworkTemplatePart(element))
+                        return false;
                     return type == ControlType.Button
                            || type == ControlType.CheckBox
                            || type == ControlType.ComboBox
@@ -1388,7 +1390,8 @@ internal static partial class Program
                 continue;
             }
 
-            if (snapshot is null || snapshot.IsOffscreen || !interactiveTypes.Contains(snapshot.Type)
+            if (snapshot is null || snapshot.IsOffscreen || IsFrameworkTemplatePart(snapshot)
+                || !interactiveTypes.Contains(snapshot.Type)
                 || snapshot.X is null || snapshot.Y is null || snapshot.Width is null || snapshot.Height is null)
                 continue;
 
@@ -1509,6 +1512,27 @@ internal static partial class Program
         !string.IsNullOrWhiteSpace(value)
         && (value.EndsWith("...", StringComparison.Ordinal)
             || value.EndsWith("…", StringComparison.Ordinal));
+
+    private static bool IsFrameworkTemplatePart(AutomationElement element)
+    {
+        try
+        {
+            return IsFrameworkTemplatePart(element.Current.AutomationId, element.Current.ClassName);
+        }
+        catch (ElementNotAvailableException)
+        {
+            return true;
+        }
+    }
+
+    private static bool IsFrameworkTemplatePart(ElementSnapshot snapshot) =>
+        IsFrameworkTemplatePart(snapshot.AutomationId, snapshot.ClassName);
+
+    private static bool IsFrameworkTemplatePart(string? automationId, string? className) =>
+        (!string.IsNullOrWhiteSpace(automationId)
+         && automationId.StartsWith("PART_", StringComparison.OrdinalIgnoreCase))
+        || string.Equals(className, "ScrollBar", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(className, "RepeatButton", StringComparison.OrdinalIgnoreCase);
 
     private static void AssertThemeSurface(string outputPath, string label)
     {
