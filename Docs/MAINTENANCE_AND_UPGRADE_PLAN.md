@@ -450,3 +450,9 @@
 - `PluginExtensionsPageGuardTests` 的组合源码读取已纳入 `Lifecycle.cs` 和 `State.cs`，避免 partial 化后 Guard 只读主文件造成漏检。
 - 验证：WPF Release 当前项目构建 `0` 警告、`0` 错误；插件页面 Guard 与 ViewModel 定向测试 `29/29` 通过、`0` Skip。
 - R7 仍需评估 `PluginRepositoryService` 安装生命周期和页面筛选/列表构造是否值得继续拆分；完整 FlaUI nightly、macOS runner、安装目录权限审计和按需提权模型重构仍未完成。
+
+## 28. 2026-08-04 依赖小版本升级与锁文件验收
+
+- `b3d098c7` 将 `Microsoft.Windows.CsWin32` 从 `0.3.275` 升至 `0.3.298`，将 `RAMSPDToolkit-NDD` 从 `1.4.2` 升至 `1.6.0`，并同步受影响项目的 lock 文件。
+- 按计划未升级 `Microsoft.Windows.SDK.BuildTools`；Avalonia `11.3.6 -> 12.1.1` 保留为独立大版本评估，不混入本次小版本变更。
+- 验证：solution `--locked-mode` restore 通过；Lib 与 WPF Release 构建均为 `0` 警告、`0` 错误；Fast 测试 `13/13`、安装器/权限/FanCurve/插件安全定向测试 `9/9` 通过，均 `0` Skip。
