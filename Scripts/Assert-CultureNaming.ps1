@@ -147,6 +147,18 @@ foreach ($catalogPath in $catalogFiles) {
     }
 }
 
+# 5b. Published language-pack file names. Windows is case-insensitive, but
+# GitHub Pages and raw/CDN paths are not; mixed-case BCP 47 names must remain
+# identical between the ZIP file and the catalog URL.
+$languageRoots = Get-ChildItem -Path (Join-Path $repo 'resources\stable') -Directory -ErrorAction SilentlyContinue |
+    ForEach-Object { Join-Path $_.FullName 'languages' } |
+    Where-Object { Test-Path -LiteralPath $_ }
+foreach ($languageRoot in $languageRoots) {
+    Get-ChildItem -LiteralPath $languageRoot -Filter '*.zip' -File -ErrorAction SilentlyContinue | ForEach-Object {
+        Assert-Canonical $_.BaseName 'published language-pack file name' $_.FullName
+    }
+}
+
 # 6. Shared LocalizationCatalog (C# source)
 $catalogNames = @([regex]::Matches($catalogBlock.Groups['values'].Value, 'new\("([a-zA-Z0-9@-]+)"\)') |
     ForEach-Object { $_.Groups[1].Value })

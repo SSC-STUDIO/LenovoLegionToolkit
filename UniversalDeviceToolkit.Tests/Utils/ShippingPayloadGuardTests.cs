@@ -180,6 +180,16 @@ public sealed class ShippingPayloadGuardTests
     }
 
     [Fact]
+    public void LegacyLanguagePublisher_ShouldUseSharedCanonicalCultureNames()
+    {
+        var script = ReadRepositoryFile("Tools", "Publish-LanguageResources.ps1");
+
+        script.Should().Contain("UniversalDeviceToolkit.Lib.Abstractions\\Localization\\LocalizationCatalog.cs");
+        script.Should().Contain("Resolve-CanonicalCulture");
+        script.Should().NotContain("$dir.Name.ToLowerInvariant()");
+    }
+
+    [Fact]
     public void ShippingAppProjects_ShouldRejectPublishWithTestHooks()
     {
         var directoryTargets = ReadRepositoryFile("Directory.Build.targets");

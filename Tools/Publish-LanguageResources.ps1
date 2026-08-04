@@ -30,6 +30,31 @@ param(
 $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$sharedCatalogPath = Join-Path $repoRoot "UniversalDeviceToolkit.Lib.Abstractions\Localization\LocalizationCatalog.cs"
+if (-not (Test-Path -LiteralPath $sharedCatalogPath)) {
+    throw "Shared localization catalog not found: $sharedCatalogPath"
+}
+
+$sharedCatalogText = Get-Content -LiteralPath $sharedCatalogPath -Raw -Encoding UTF8
+$sharedCatalogBlock = [regex]::Match(
+    $sharedCatalogText,
+    'SupportedCultures\s*\{\s*get;\s*\}\s*=\s*\[(?<values>[\s\S]*?)\];')
+$sharedCultures = @([regex]::Matches($sharedCatalogBlock.Groups['values'].Value, 'new\("([^"]+)"\)') |
+    ForEach-Object { $_.Groups[1].Value })
+if ($sharedCultures.Count -eq 0) {
+    throw "Could not read supported cultures from $sharedCatalogPath"
+}
+
+function Resolve-CanonicalCulture([string]$Name) {
+    $match = $sharedCultures | Where-Object {
+        $_.Equals($Name, [StringComparison]::OrdinalIgnoreCase)
+    } | Select-Object -First 1
+    if (-not $match) {
+        throw "Runtime satellite directory '$Name' is not in the shared culture catalog."
+    }
+
+    return [string]$match
+}
 
 if (-not $RuntimeDir) {
     $binRoot = Join-Path $repoRoot "UniversalDeviceToolkit.WPF\bin"
@@ -56,7 +81,7 @@ $cultureDirs = Get-ChildItem -Path $RuntimeDir -Directory |
     Sort-Object Name
 
 foreach ($dir in $cultureDirs) {
-    $culture = $dir.Name.ToLowerInvariant()
+    $culture = Resolve-CanonicalCulture $dir.Name
     if ($culture -eq "en") { continue } # English is built into the app; no pack needed.
 
     $zipPath = Join-Path $langDir "$culture.zip"
