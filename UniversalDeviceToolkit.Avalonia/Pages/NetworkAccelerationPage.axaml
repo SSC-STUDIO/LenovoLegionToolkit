@@ -59,8 +59,8 @@
                                   automation:AutomationProperties.Name="{local:Loc Key=NetworkAccelerationPage_ModeLabel, Fallback=Mode}" />
                     </Grid>
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button x:Name="StartStopButton"
-                                Content="Start"
+                <Button x:Name="StartStopButton"
+                        Content="{local:Loc Key=NetworkAccelerationPage_Start, Fallback=Start}"
                                 Click="StartStopButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationStartStop" />
                         <Button Content="{local:Loc Key=NetworkAccelerationPage_RunDiagnostics, Fallback=Run diagnostics}"

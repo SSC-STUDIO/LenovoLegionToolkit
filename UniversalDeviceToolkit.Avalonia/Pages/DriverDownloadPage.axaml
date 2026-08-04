@@ -35,7 +35,7 @@
                               automation:AutomationProperties.AutomationId="AvaloniaDriverSource" />
                     <TextBox x:Name="MachineTypeTextBox"
                              Grid.Column="1"
-                             Watermark="Machine type"
+                             Watermark="{local:Loc Key=PackagesPage_MachineType_Placeholder, Fallback=Machine type}"
                              automation:AutomationProperties.AutomationId="AvaloniaDriverMachineType" />
                     <ComboBox x:Name="OsComboBox"
                               Grid.Column="2"

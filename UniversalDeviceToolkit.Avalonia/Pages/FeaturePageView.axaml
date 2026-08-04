@@ -81,19 +81,19 @@
                 <StackPanel Spacing="10">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <Button x:Name="OptimizationModeButton"
-                                Content="Optimization"
+                                Content="{local:Loc Key=WindowsOptimizationPage_Tab_Optimization, Fallback=Optimization}"
                                 Click="OptimizationModeButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaOptimizationModeButton" />
                         <Button x:Name="CleanupModeButton"
-                                Content="Cleanup"
+                                Content="{local:Loc Key=WindowsOptimizationPage_Tab_Cleanup, Fallback=Cleanup}"
                                 Click="CleanupModeButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupModeButton" />
                         <Button x:Name="NetworkAccelerationButton"
-                                Content="Network acceleration"
+                                Content="{local:Loc Key=WindowsOptimizationPage_Tab_NetworkAcceleration, Fallback=Network acceleration}"
                                 Click="NetworkAccelerationButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationButton" />
                         <Button x:Name="DriverDownloadButton"
-                                Content="Driver downloads"
+                                Content="{local:Loc Key=WindowsOptimizationPage_Tab_DriverDownload, Fallback=Driver downloads}"
                                 Click="DriverDownloadButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaDriverDownloadButton" />
                     </StackPanel>
@@ -101,7 +101,7 @@
                                 Orientation="Horizontal"
                                 Spacing="8">
                         <Button x:Name="ApplyRecommendedButton"
-                                Content="Apply recommended"
+                                Content="{local:Loc Key=WindowsOptimizationPage_SelectRecommended_Button, Fallback=Apply recommended}"
                                 Click="OptimizationCommandButton_Click"
                                 Tag="optimization-apply-recommended"
                                 automation:AutomationProperties.AutomationId="AvaloniaApplyRecommendedButton" />
@@ -110,15 +110,15 @@
                                 Orientation="Horizontal"
                                 Spacing="8"
                                 IsVisible="False">
-                        <Button Content="Scan selected"
+                        <Button Content="{local:Loc Key=WindowsOptimizationPage_Scan_Button, Fallback=Scan selected}"
                                 Click="OptimizationCommandButton_Click"
                                 Tag="cleanup-scan"
                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupScanButton" />
-                        <Button Content="Run selected"
+                        <Button Content="{local:Loc Key=WindowsOptimizationPage_RunCleanup_Button, Fallback=Run selected}"
                                 Click="OptimizationCommandButton_Click"
                                 Tag="cleanup-run"
                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupRunButton" />
-                        <Button Content="Clear selection"
+                        <Button Content="{local:Loc Key=WindowsOptimizationPage_ClearSelection_Button, Fallback=Clear selection}"
                                 Click="OptimizationCommandButton_Click"
                                 Tag="cleanup-clear"
                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupClearButton" />
