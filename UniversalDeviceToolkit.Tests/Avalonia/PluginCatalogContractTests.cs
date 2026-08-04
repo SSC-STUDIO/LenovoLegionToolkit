@@ -15,6 +15,7 @@ public sealed class PluginCatalogContractTests
 
         state.IsAvailable.Should().BeFalse();
         state.Plugins.Should().BeEmpty();
+        (await service.InstallPluginAsync("missing-plugin")).Should().BeFalse();
         (await service.UpdatePluginAsync("missing-plugin")).Should().BeFalse();
     }
 }
