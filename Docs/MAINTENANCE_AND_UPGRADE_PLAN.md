@@ -413,3 +413,10 @@
 
 - `CiWorkflowGuardTests`、`ReleaseSigningGuardTests`、`ShippingPayloadGuardTests` 和其他 workflow 检查均通过 `GitHubWorkflowContract` 解析 workflow，再按 job、step、`with` 和命令参数断言；没有直接依赖 YAML 原文缩进或换行。
 - 运行时发现并修复 `UpstreamCapabilityMatrixGuardTests` 对已删除可选 `site/index.html` 的过时硬编码依赖；Guard 全集最终 `140/140` 通过，修复提交为 `6650fdba`。
+
+## 23. 2026-08-04 系统优化权限与桌面测试验收
+
+- `4e78c143` 新增权限模型 Guard，校验 WPF `asInvoker`、Autorun `TaskRunLevel.LUA`、`runas` worker、随机 token、管道 ACL 和内置动作组隔离；测试 `3/3` 通过。安装目录 ACL 与完整权限模型审计仍待后续完成。
+- 系统优化定向测试当前 `123/123` 通过，覆盖推荐仅修改待应用状态、应用/取消分离、机器状态扫描、反向取消和批量执行。
+- `6bfe8d12` 修复 FlaUI 基类的显式路径语义：默认构造器可搜索程序，显式路径不再回退搜索；`FlaUISetupTests` `4/4` 通过。完整 FlaUI nightly 本地运行 180 秒超时，仅记录为环境/清理问题，未标记为通过。
+- WSL 相关可选功能已启用，但本机尚无 Linux distribution，`Scripts/Test-CrossPlatformInWsl.ps1` 尚未获得真实执行结果；macOS 仍需 macOS CI runner 验证。
