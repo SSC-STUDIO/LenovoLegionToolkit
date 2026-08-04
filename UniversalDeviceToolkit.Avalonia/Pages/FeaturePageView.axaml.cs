@@ -38,6 +38,7 @@ public partial class FeaturePageView : UserControl
         StatusMessage.Text = AvaloniaLocalization.GetString("FeaturePage_Loading", "Reading the current platform capability...");
         AutomationProperties.SetName(this, descriptor.Title);
         PluginSearchBox.TextChanged += PluginSearchBox_TextChanged;
+        PluginFilterBox.SelectionChanged += PluginFilterBox_SelectionChanged;
         Loaded += OnLoaded;
     }
 
@@ -146,12 +147,20 @@ public partial class FeaturePageView : UserControl
         }
 
         var filter = PluginSearchBox.Text?.Trim() ?? string.Empty;
+        var filterMode = PluginFilterBox.SelectedIndex;
         var matches = catalog.Plugins.Where(plugin =>
-            string.IsNullOrWhiteSpace(filter)
-            || plugin.Name.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
-            || plugin.Id.Contains(filter, StringComparison.OrdinalIgnoreCase)
-            || plugin.Description.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
-            || plugin.Tags.Any(tag => tag.Contains(filter, StringComparison.CurrentCultureIgnoreCase)));
+            (filterMode switch
+            {
+                1 => plugin.IsInstalled,
+                2 => !plugin.IsInstalled,
+                3 => plugin.IsInstalled && plugin.AvailableUpdateVersion is not null,
+                _ => true,
+            })
+            && (string.IsNullOrWhiteSpace(filter)
+                || plugin.Name.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
+                || plugin.Id.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                || plugin.Description.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
+                || plugin.Tags.Any(tag => tag.Contains(filter, StringComparison.CurrentCultureIgnoreCase))));
 
         var count = 0;
         foreach (var plugin in matches)
@@ -325,6 +334,12 @@ public partial class FeaturePageView : UserControl
     }
 
     private void PluginSearchBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_lastState is not null && _descriptor.RouteKey.Equals("PluginExtensions", StringComparison.Ordinal))
+            RenderFeatureItems(_lastState);
+    }
+
+    private void PluginFilterBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (_lastState is not null && _descriptor.RouteKey.Equals("PluginExtensions", StringComparison.Ordinal))
             RenderFeatureItems(_lastState);

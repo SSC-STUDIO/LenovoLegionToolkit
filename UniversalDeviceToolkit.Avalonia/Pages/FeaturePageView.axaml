@@ -105,18 +105,27 @@
                     </StackPanel>
                     <Grid x:Name="PluginCatalogToolbar"
                           IsVisible="False"
-                          ColumnDefinitions="*,Auto,Auto"
+                          ColumnDefinitions="*,160,Auto,Auto"
                           ColumnSpacing="8">
                         <TextBox x:Name="PluginSearchBox"
                                  Watermark="{local:Loc Key=PluginExtensionsPage_Search, Fallback=Search plugins}"
                                  automation:AutomationProperties.AutomationId="AvaloniaPluginSearchBox" />
+                        <ComboBox x:Name="PluginFilterBox"
+                                  Grid.Column="1"
+                                  SelectedIndex="0"
+                                  automation:AutomationProperties.AutomationId="AvaloniaPluginFilterBox">
+                            <ComboBoxItem Content="{local:Loc Key=PluginExtensionsPage_FilterAll, Fallback=All}" />
+                            <ComboBoxItem Content="{local:Loc Key=PluginExtensionsPage_FilterInstalled, Fallback=Installed}" />
+                            <ComboBoxItem Content="{local:Loc Key=PluginExtensionsPage_FilterAvailable, Fallback=Available}" />
+                            <ComboBoxItem Content="{local:Loc Key=PluginExtensionsPage_FilterUpdates, Fallback=Updates}" />
+                        </ComboBox>
                         <Button x:Name="PluginRefreshButton"
-                                Grid.Column="1"
+                                Grid.Column="2"
                                 Content="{local:Loc Key=PluginExtensionsPage_Refresh, Fallback=Refresh}"
                                 Click="PluginRefreshButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaPluginRefreshButton" />
                         <Button x:Name="PluginUpdateButton"
-                                Grid.Column="2"
+                                Grid.Column="3"
                                 Content="{local:Loc Key=PluginExtensionsPage_CheckUpdates, Fallback=Check updates}"
                                 Click="PluginUpdateButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaPluginCheckUpdatesButton" />
