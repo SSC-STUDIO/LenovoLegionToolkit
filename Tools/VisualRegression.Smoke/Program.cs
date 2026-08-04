@@ -1309,7 +1309,8 @@ internal static partial class Program
             .Select(element => new
             {
                 text = element!.Name!,
-                fullText = element.Name!,
+                fullText = string.IsNullOrWhiteSpace(element.HelpText) ? element.Name! : element.HelpText,
+                tooltip = element.HelpText,
                 type = element.Type,
                 automationId = element.AutomationId,
                 x = element.X,
@@ -1374,6 +1375,7 @@ internal static partial class Program
         };
 
         var visibleInteractive = new List<(AutomationElement Element, ElementSnapshot Snapshot)>();
+        var visibleText = new List<ElementSnapshot>();
         foreach (var element in EnumerateDescendants(root, 600))
         {
             ElementSnapshot? snapshot;
@@ -1393,6 +1395,10 @@ internal static partial class Program
             if (string.IsNullOrWhiteSpace(snapshot.Name))
                 throw new InvalidOperationException(
                     $"Interactive UIA element '{snapshot.AutomationId ?? snapshot.Type}' has no Automation name on '{label}'.");
+
+            if (IsEllipsized(snapshot.Name) && string.IsNullOrWhiteSpace(snapshot.HelpText))
+                throw new InvalidOperationException(
+                    $"Ellipsized UIA element '{snapshot.AutomationId ?? snapshot.Name}' has no full-text Tooltip on '{label}'.");
 
             if (snapshot.Width <= 1 || snapshot.Height <= 1)
                 throw new InvalidOperationException(
@@ -1414,6 +1420,47 @@ internal static partial class Program
             }
 
             visibleInteractive.Add((element, snapshot));
+        }
+
+        foreach (var element in EnumerateDescendants(root, 1000))
+        {
+            var snapshot = SafeDescribeElement(element);
+            if (snapshot is null
+                || snapshot.IsOffscreen
+                || string.IsNullOrWhiteSpace(snapshot.Name)
+                || snapshot.X is null
+                || snapshot.Y is null
+                || snapshot.Width is null
+                || snapshot.Height is null
+                || snapshot.Width <= 1
+                || snapshot.Height <= 1
+                || (!snapshot.Type.Equals("Text", StringComparison.Ordinal)
+                    && !snapshot.Type.Equals("Label", StringComparison.Ordinal)))
+            {
+                continue;
+            }
+
+            if (IsEllipsized(snapshot.Name) && string.IsNullOrWhiteSpace(snapshot.HelpText))
+                throw new InvalidOperationException(
+                    $"Ellipsized text '{snapshot.Name}' has no full-text Tooltip on '{label}'.");
+            visibleText.Add(snapshot);
+        }
+
+        for (var leftIndex = 0; leftIndex < visibleText.Count; leftIndex++)
+        {
+            var left = visibleText[leftIndex];
+            for (var rightIndex = leftIndex + 1; rightIndex < visibleText.Count; rightIndex++)
+            {
+                var right = visibleText[rightIndex];
+                if (Contains(left, right) || Contains(right, left))
+                    continue;
+
+                var overlap = IntersectionArea(left, right);
+                var smallerArea = Math.Min(left.Width!.Value * left.Height!.Value, right.Width!.Value * right.Height!.Value);
+                if (smallerArea > 0 && overlap / smallerArea >= 0.20)
+                    throw new InvalidOperationException(
+                        $"Visible text nodes overlap on '{label}': '{left.Name}' and '{right.Name}'.");
+            }
         }
 
         for (var leftIndex = 0; leftIndex < visibleInteractive.Count; leftIndex++)
@@ -1457,6 +1504,11 @@ internal static partial class Program
         var y = Math.Max(0d, Math.Min(leftBottom, rightBottom) - Math.Max(leftY, rightY));
         return x * y;
     }
+
+    private static bool IsEllipsized(string? value) =>
+        !string.IsNullOrWhiteSpace(value)
+        && (value.EndsWith("...", StringComparison.Ordinal)
+            || value.EndsWith("…", StringComparison.Ordinal));
 
     private static void AssertThemeSurface(string outputPath, string label)
     {
@@ -1540,6 +1592,7 @@ internal static partial class Program
             return new ElementSnapshot(
                 element.Current.ControlType.ProgrammaticName.Replace("ControlType.", string.Empty, StringComparison.Ordinal),
                 element.Current.Name,
+                element.Current.HelpText,
                 element.Current.AutomationId,
                 element.Current.ClassName,
                 element.Current.IsEnabled,
@@ -2932,6 +2985,7 @@ internal static partial class Program
     private sealed record ElementSnapshot(
         string Type,
         string? Name,
+        string? HelpText,
         string? AutomationId,
         string? ClassName,
         bool IsEnabled,
