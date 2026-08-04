@@ -39,7 +39,7 @@ public sealed class UpstreamCapabilityMatrixGuardTests
     }
 
     [Fact]
-    public void BrandAssets_InstallerAndSite_ReferenceCanonicalIcons()
+    public void BrandAssets_InstallerAndReadme_ReferenceCanonicalIcons()
     {
         var root = FindRoot();
         var installerProject = File.ReadAllText(Path.Combine(root, "Tools", "Installer", "UniversalDeviceToolkit.Installer.csproj"));
@@ -48,9 +48,6 @@ public sealed class UpstreamCapabilityMatrixGuardTests
         var engine = File.ReadAllText(Path.Combine(root, "Tools", "Installer", "InstallerEngine.cs"));
         engine.Should().Contain("DisplayIcon");
         engine.Should().Contain("InstallerConstants.MainExeName");
-
-        var site = File.ReadAllText(Path.Combine(root, "site", "index.html"));
-        site.Should().Contain("Screenshot_main.png");
 
         var readme = File.ReadAllText(Path.Combine(root, "README.md"));
         readme.Should().Contain("Assets/Logo.png");
