@@ -504,3 +504,10 @@
 - `PluginExtensionsPageGuardTests` 已聚合 Online partial 并增加职责归位断言，防止在线状态方法回流主文件。
 - 验证：WPF `x64 Release` 构建 `0` 警告、`0` 错误；页面 Guard `11/11` 通过、`0` Skip。
 - R7 仍未完成：`PluginExtensionsPage` 的其余主状态/导航职责和 `PluginRepositoryService` 解压备份事务仍可继续审查；完整 FlaUI nightly、macOS runner 和 R4 按需提权端到端验证仍待专用环境。
+
+## 36. 2026-08-04 Avalonia 分平台 locked restore
+
+- `7779e670` 为 Avalonia 项目按宿主平台选择目标框架和锁文件：Windows 使用 `net10.0;net10.0-windows10.0.26100.0` 与 `packages.lock.json`，Linux/macOS 使用 portable `net10.0` 与 `packages.lock.unix.json`，避免跨平台 restore 把 Windows 依赖带入非 Windows 图。
+- Windows 验证：Avalonia 双 TFM `--locked-mode` restore 通过，Release 双目标构建 `0` 警告、`0` 错误。
+- WSL 验证：Ubuntu `26.04 LTS`、.NET `10.0.110`；Linux locked restore、Linux 平台库和跨平台测试构建 `0` 警告、`0` 错误，跨平台测试 `153/153` 通过、`0` Skip，`status`、`hardware`、`json` 三个 CLI smoke 全部通过。
+- macOS 仍需由 macOS CI runner 提供实测结果；完整 FlaUI nightly、安装目录 ACL 审计和按需提权端到端验证仍未完成。
