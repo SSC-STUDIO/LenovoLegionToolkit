@@ -1478,6 +1478,7 @@ internal static partial class Program
                 || snapshot.Width <= 1
                 || snapshot.Height <= 1
                 || IsIconGlyph(snapshot.Name)
+                || string.Equals(snapshot.AutomationId, "MessageText", StringComparison.Ordinal)
                 || (!snapshot.Type.Equals("Text", StringComparison.Ordinal)
                     && !snapshot.Type.Equals("Label", StringComparison.Ordinal)))
             {
