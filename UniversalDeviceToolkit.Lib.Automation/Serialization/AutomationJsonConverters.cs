@@ -28,6 +28,38 @@ internal static class AutomationJsonDiscriminators
     }
 }
 
+/// <summary>
+/// Public bridge for hosts that need to edit automation data without taking a
+/// dependency on the internal converter implementation. The discriminator based
+/// payload is intentionally stable and preserves unknown trigger/step properties.
+/// </summary>
+public static class AutomationSerialization
+{
+    public static JsonSerializerOptions CreateOptions()
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = false,
+        };
+        options.Converters.Add(new AutomationPipelineTriggerJsonConverter());
+        options.Converters.Add(new AutomationStepJsonConverter());
+        return options;
+    }
+
+    public static string SerializeTrigger(IAutomationPipelineTrigger trigger) =>
+        JsonSerializer.Serialize<IAutomationPipelineTrigger?>(trigger, CreateOptions());
+
+    public static IAutomationPipelineTrigger? DeserializeTrigger(string json) =>
+        JsonSerializer.Deserialize<IAutomationPipelineTrigger?>(json, CreateOptions());
+
+    public static string SerializeStep(IAutomationStep step) =>
+        JsonSerializer.Serialize<IAutomationStep?>(step, CreateOptions());
+
+    public static IAutomationStep? DeserializeStep(string json) =>
+        JsonSerializer.Deserialize<IAutomationStep?>(json, CreateOptions());
+}
+
 internal sealed class AutomationPipelineTriggerJsonConverter : JsonConverter<IAutomationPipelineTrigger?>
 {
     private static readonly Dictionary<string, Type> TypesByDiscriminator = [];

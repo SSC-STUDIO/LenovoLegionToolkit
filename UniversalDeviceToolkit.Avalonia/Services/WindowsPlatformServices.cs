@@ -76,6 +76,16 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.ImportPluginAsync(zipFilePath)
             : _featureHost.ImportPluginAsync(zipFilePath);
 
+    public Task<PluginCatalogState> GetPluginCatalogAsync(bool forceRefresh = false) =>
+        _featureHost is null
+            ? _inner.GetPluginCatalogAsync(forceRefresh)
+            : _featureHost.GetPluginCatalogAsync(forceRefresh);
+
+    public Task<bool> UpdatePluginAsync(string pluginId) =>
+        _featureHost is null
+            ? _inner.UpdatePluginAsync(pluginId)
+            : _featureHost.UpdatePluginAsync(pluginId);
+
     public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
         _featureHost is null
             ? _inner.GetMacroWorkspaceAsync()
@@ -104,6 +114,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
         _featureHost is null
             ? _inner.GetAutomationTriggerOptionsAsync()
             : _featureHost.GetAutomationTriggerOptionsAsync();
+
+    public Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync() =>
+        _featureHost is null
+            ? _inner.GetAutomationStepOptionsAsync()
+            : _featureHost.GetAutomationStepOptionsAsync();
 
     public Task<bool> SetAutomationEnabledAsync(bool enabled) =>
         _featureHost is null

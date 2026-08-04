@@ -103,6 +103,24 @@
                                 IsVisible="False"
                                 automation:AutomationProperties.AutomationId="AvaloniaPluginImportButton" />
                     </StackPanel>
+                    <Grid x:Name="PluginCatalogToolbar"
+                          IsVisible="False"
+                          ColumnDefinitions="*,Auto,Auto"
+                          ColumnSpacing="8">
+                        <TextBox x:Name="PluginSearchBox"
+                                 Watermark="{local:Loc Key=PluginExtensionsPage_Search, Fallback=Search plugins}"
+                                 automation:AutomationProperties.AutomationId="AvaloniaPluginSearchBox" />
+                        <Button x:Name="PluginRefreshButton"
+                                Grid.Column="1"
+                                Content="{local:Loc Key=PluginExtensionsPage_Refresh, Fallback=Refresh}"
+                                Click="PluginRefreshButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaPluginRefreshButton" />
+                        <Button x:Name="PluginUpdateButton"
+                                Grid.Column="2"
+                                Content="{local:Loc Key=PluginExtensionsPage_CheckUpdates, Fallback=Check updates}"
+                                Click="PluginUpdateButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaPluginCheckUpdatesButton" />
+                    </Grid>
                     <StackPanel x:Name="OptimizationCommands"
                                 Orientation="Horizontal"
                                 Spacing="8">

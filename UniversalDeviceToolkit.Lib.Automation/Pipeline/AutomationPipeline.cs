@@ -23,7 +23,7 @@ public class AutomationPipeline
 
     public List<IAutomationStep> Steps { get; init; } = [];
 
-    public bool IsExclusive { get; init; } = true;
+    public bool IsExclusive { get; set; } = true;
 
     [JsonIgnore]
     public IEnumerable<IAutomationPipelineTrigger> AllTriggers

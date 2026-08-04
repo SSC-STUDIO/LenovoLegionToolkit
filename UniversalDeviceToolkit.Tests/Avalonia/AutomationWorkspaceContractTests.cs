@@ -83,4 +83,34 @@ public sealed class AutomationWorkspaceContractTests
 
         item.TriggerKey.Should().BeNull();
     }
+
+    [Fact]
+    public void AutomationDraft_RoundTripsOrderedStepsAndAdvancedTriggerConfiguration()
+    {
+        var draft = new AutomationPipelineDraft(Guid.NewGuid(), "Night mode", null, true)
+        {
+            TriggerKey = "hardware-sensor",
+            TriggerConfigurationJson = "{\"$type\":\"hardwareSensor\",\"Threshold\":80}",
+            IsExclusive = false,
+            Steps =
+            [
+                new AutomationStepItem("Delay", "Delay", "{\"$type\":\"delay\",\"State\":{\"DelaySeconds\":2}}"),
+                new AutomationStepItem("PowerMode", "Power mode", "{\"$type\":\"powerMode\",\"State\":2}"),
+            ],
+        };
+
+        draft.IsExclusive.Should().BeFalse();
+        draft.Steps.Select(step => step.TypeKey).Should().Equal("Delay", "PowerMode");
+        draft.TriggerConfigurationJson.Should().Contain("hardwareSensor");
+    }
+
+    [Fact]
+    public void AutomationStepOption_DefaultConfigurationIsIndependentFromLocalizedDisplayName()
+    {
+        var option = new AutomationStepOption("Run", "Run script", "{\"$type\":\"run\"}");
+
+        option.TypeKey.Should().Be("Run");
+        option.DisplayName.Should().Be("Run script");
+        option.DefaultConfigurationJson.Should().Contain("$type");
+    }
 }

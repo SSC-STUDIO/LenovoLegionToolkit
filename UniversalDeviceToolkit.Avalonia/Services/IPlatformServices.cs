@@ -16,6 +16,8 @@ public interface IPlatformServices
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<bool> ImportPluginAsync(string zipFilePath);
+    Task<PluginCatalogState> GetPluginCatalogAsync(bool forceRefresh = false);
+    Task<bool> UpdatePluginAsync(string pluginId);
     Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync();
     Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules);
     Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
@@ -25,6 +27,7 @@ public interface IPlatformServices
     Task<bool> SetMacroSequenceOptionsAsync(ulong key, int repeatCount, bool ignoreDelays, bool interruptOnOtherKey);
     Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
     Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync();
+    Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync();
     Task<bool> SetAutomationEnabledAsync(bool enabled);
     Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines);
     Task<KeyboardLightingState?> GetKeyboardLightingStateAsync();
@@ -94,6 +97,31 @@ public sealed record PluginPageState(
     object? Content = null);
 
 /// <summary>
+/// Host-neutral projection of the online plugin catalog merged with locally
+/// installed and registered extensions. The UI can filter and present this
+/// list without depending on the WPF plugin view models.
+/// </summary>
+public sealed record PluginCatalogState(
+    bool IsAvailable,
+    string StatusMessage,
+    IReadOnlyList<PluginCatalogItem> Plugins);
+
+public sealed record PluginCatalogItem(
+    string Id,
+    string Name,
+    string Description,
+    string? Details,
+    string Version,
+    string Author,
+    bool IsInstalled,
+    bool IsSystemPlugin,
+    string? AvailableUpdateVersion,
+    bool SupportsSettingsPage,
+    bool SupportsFeaturePage,
+    bool SupportsOptimizationActions,
+    IReadOnlyList<string> Tags);
+
+/// <summary>
 /// Editing projection for the shared automation store. The Avalonia host preserves
 /// every existing pipeline while allowing names, deletion, ordering and manual
 /// quick-action creation to round-trip through the same store as WPF.
@@ -127,6 +155,15 @@ public sealed record AutomationPipelineItem(
     /// Unknown trigger types remain null and are preserved by the host.
     /// </summary>
     public string? TriggerKey { get; init; }
+
+    /// <summary>Serialized trigger configuration used for lossless advanced editing.</summary>
+    public string? TriggerConfigurationJson { get; init; }
+
+    /// <summary>Ordered, serialized steps exposed to the cross-platform editor.</summary>
+    public IReadOnlyList<AutomationStepItem> Steps { get; init; } = Array.Empty<AutomationStepItem>();
+
+    /// <summary>Whether a matching automatic pipeline stops subsequent pipelines.</summary>
+    public bool IsExclusive { get; init; } = true;
 }
 
 public sealed record AutomationPipelineDraft(
@@ -139,11 +176,35 @@ public sealed record AutomationPipelineDraft(
     /// Stable trigger key selected by the Avalonia editor for automatic pipelines.
     /// </summary>
     public string? TriggerKey { get; init; }
+
+    /// <summary>Serialized trigger configuration selected by the editor.</summary>
+    public string? TriggerConfigurationJson { get; init; }
+
+    /// <summary>Ordered serialized steps to persist with the pipeline.</summary>
+    public IReadOnlyList<AutomationStepItem> Steps { get; init; } = Array.Empty<AutomationStepItem>();
+
+    /// <summary>Whether the automatic pipeline is exclusive.</summary>
+    public bool IsExclusive { get; init; } = true;
 }
+
+/// <summary>
+/// Host-neutral automation step descriptor. The JSON payload is produced by the
+/// shared automation converter and is therefore lossless for all known step types.
+/// </summary>
+public sealed record AutomationStepItem(
+    string TypeKey,
+    string DisplayName,
+    string ConfigurationJson);
+
+public sealed record AutomationStepOption(
+    string TypeKey,
+    string DisplayName,
+    string DefaultConfigurationJson);
 
 public sealed record AutomationTriggerOption(
     string Key,
-    string DisplayName);
+    string DisplayName,
+    string? DefaultConfigurationJson = null);
 
 public sealed record KeyboardColorState(byte R, byte G, byte B)
 {

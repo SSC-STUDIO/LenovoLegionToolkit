@@ -56,6 +56,14 @@ public sealed class UnavailablePlatformServices : IPlatformServices
 
     public Task<bool> ImportPluginAsync(string zipFilePath) => Task.FromResult(false);
 
+    public Task<PluginCatalogState> GetPluginCatalogAsync(bool forceRefresh = false) =>
+        Task.FromResult(new PluginCatalogState(
+            false,
+            AvaloniaLocalization.GetString("PluginExtensionsPage_StoreUnavailableMessage", "Plugin store is unavailable on this host."),
+            Array.Empty<PluginCatalogItem>()));
+
+    public Task<bool> UpdatePluginAsync(string pluginId) => Task.FromResult(false);
+
     public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync() =>
         Task.FromResult<IReadOnlyList<CustomCleanupRuleItem>>([]);
 
@@ -89,6 +97,9 @@ public sealed class UnavailablePlatformServices : IPlatformServices
 
     public Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync() =>
         Task.FromResult<IReadOnlyList<AutomationTriggerOption>>(Array.Empty<AutomationTriggerOption>());
+
+    public Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync() =>
+        Task.FromResult<IReadOnlyList<AutomationStepOption>>(Array.Empty<AutomationStepOption>());
 
     public Task<bool> SetAutomationEnabledAsync(bool enabled) => Task.FromResult(false);
 

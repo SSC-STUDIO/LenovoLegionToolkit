@@ -131,6 +131,14 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public Task<bool> ImportPluginAsync(string zipFilePath) => Task.FromResult(false);
 
+    public Task<PluginCatalogState> GetPluginCatalogAsync(bool forceRefresh = false) =>
+        Task.FromResult(new PluginCatalogState(
+            false,
+            DashboardLocalization.Get("PluginExtensionsPage_StoreUnavailableMessage", "Plugin store requires the host plugin service."),
+            Array.Empty<PluginCatalogItem>()));
+
+    public Task<bool> UpdatePluginAsync(string pluginId) => Task.FromResult(false);
+
     public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync() =>
         Task.FromResult<IReadOnlyList<CustomCleanupRuleItem>>([]);
 
@@ -164,6 +172,9 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync() =>
         Task.FromResult<IReadOnlyList<AutomationTriggerOption>>(Array.Empty<AutomationTriggerOption>());
+
+    public Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync() =>
+        Task.FromResult<IReadOnlyList<AutomationStepOption>>(Array.Empty<AutomationStepOption>());
 
     public Task<bool> SetAutomationEnabledAsync(bool enabled) => Task.FromResult(false);
 

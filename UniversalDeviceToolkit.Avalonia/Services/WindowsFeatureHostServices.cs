@@ -11,6 +11,8 @@ using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
+using UniversalDeviceToolkit.Lib.Automation.Serialization;
+using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
@@ -22,6 +24,7 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Utils;
+using UniversalDeviceToolkit.Avalonia.Localization;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -203,6 +206,132 @@ internal sealed class WindowsFeatureHostServices
             if (imported)
                 await _plugins.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
             return imported;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<PluginCatalogState> GetPluginCatalogAsync(bool forceRefresh = false)
+    {
+        var manifests = new Dictionary<string, PluginManifest>(StringComparer.OrdinalIgnoreCase);
+        var status = AvaloniaLocalization.GetString(
+            "PluginExtensionsPage_StoreUnavailableMessage",
+            "Installed plugins remain available. Retry when the network is back.");
+        var storeAvailable = false;
+
+        var repository = IoCContainer.TryResolve<PluginRepositoryService>();
+        if (repository is not null)
+        {
+            try
+            {
+                foreach (var manifest in await repository.FetchAvailablePluginsAsync(forceRefresh).ConfigureAwait(false))
+                {
+                    if (!string.IsNullOrWhiteSpace(manifest.Id))
+                        manifests[manifest.Id] = manifest;
+                }
+
+                storeAvailable = true;
+                status = AvaloniaLocalization.GetString("PluginExtensionsPage_Available", "Available");
+            }
+            catch
+            {
+                // Keep installed entries usable when the online catalog is down.
+            }
+        }
+
+        foreach (var plugin in _plugins.GetRegisteredPlugins())
+        {
+            if (manifests.ContainsKey(plugin.Id))
+                continue;
+
+            var metadata = _plugins.GetPluginMetadata(plugin.Id);
+            manifests[plugin.Id] = new PluginManifest
+            {
+                Id = plugin.Id,
+                Name = metadata?.GetDisplayName(LocalizationRuntime.CurrentCulture) ?? plugin.Name ?? plugin.Id,
+                Description = metadata?.GetDisplayDescription(LocalizationRuntime.CurrentCulture) ?? plugin.Description ?? string.Empty,
+                Version = metadata?.Version ?? "0.0.0",
+                Author = metadata?.Author ?? string.Empty,
+                IsSystemPlugin = metadata?.IsSystemPlugin == true || plugin.IsSystemPlugin,
+                Tags = metadata?.GetDisplayTags(LocalizationRuntime.CurrentCulture).ToArray(),
+            };
+        }
+
+        foreach (var pluginId in _plugins.GetInstalledPluginIds().Where(id => !string.IsNullOrWhiteSpace(id)))
+        {
+            if (manifests.ContainsKey(pluginId))
+                continue;
+
+            var metadata = _plugins.GetPluginMetadata(pluginId);
+            var installedManifest = PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);
+            manifests[pluginId] = installedManifest ?? new PluginManifest
+            {
+                Id = pluginId,
+                Name = metadata?.GetDisplayName(LocalizationRuntime.CurrentCulture) ?? pluginId,
+                Description = metadata?.GetDisplayDescription(LocalizationRuntime.CurrentCulture) ?? string.Empty,
+                Version = metadata?.Version ?? "0.0.0",
+                Author = metadata?.Author ?? string.Empty,
+                IsSystemPlugin = metadata?.IsSystemPlugin == true,
+                Tags = metadata?.GetDisplayTags(LocalizationRuntime.CurrentCulture).ToArray(),
+            };
+        }
+
+        Dictionary<string, string> updates;
+        try
+        {
+            updates = await _plugins.CheckForUpdatesAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            updates = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        var items = manifests.Values
+            .OrderBy(manifest => manifest.Name, StringComparer.CurrentCultureIgnoreCase)
+            .Select(manifest =>
+            {
+                var installed = _plugins.IsInstalled(manifest.Id);
+                var capabilities = PluginUiCapabilityResolver.ResolveFromManifest(manifest);
+                if (installed)
+                    capabilities = capabilities.Merge(PluginUiCapabilityResolver.ResolveFromInstalledManifest(manifest.Id));
+
+                return new PluginCatalogItem(
+                    manifest.Id,
+                    string.IsNullOrWhiteSpace(manifest.Name) ? manifest.Id : manifest.Name,
+                    manifest.Description ?? string.Empty,
+                    manifest.Details,
+                    string.IsNullOrWhiteSpace(manifest.Version) ? "0.0.0" : manifest.Version,
+                    manifest.Author ?? string.Empty,
+                    installed,
+                    manifest.IsSystemPlugin,
+                    updates.TryGetValue(manifest.Id, out var update) ? update : null,
+                    capabilities.SupportsSettingsPage,
+                    capabilities.SupportsFeaturePage,
+                    capabilities.SupportsOptimizationCategory,
+                    manifest.Tags ?? Array.Empty<string>());
+            })
+            .ToArray();
+
+        return new PluginCatalogState(storeAvailable || items.Length > 0, status, items);
+    }
+
+    public async Task<bool> UpdatePluginAsync(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        var repository = IoCContainer.TryResolve<PluginRepositoryService>();
+        if (repository is null)
+            return false;
+
+        try
+        {
+            var manifest = (await repository.FetchAvailablePluginsAsync().ConfigureAwait(false))
+                .FirstOrDefault(item => item.Id.Equals(pluginId, StringComparison.OrdinalIgnoreCase));
+            return manifest is not null
+                && await repository.DownloadAndInstallPluginAsync(manifest).ConfigureAwait(false);
         }
         catch
         {
@@ -435,6 +564,11 @@ internal sealed class WindowsFeatureHostServices
                     p.Trigger is not null)
                 {
                     TriggerKey = GetAutomationTriggerKey(p.Trigger),
+                    TriggerConfigurationJson = p.Trigger is null ? null : AutomationSerialization.SerializeTrigger(p.Trigger),
+                    IsExclusive = p.IsExclusive,
+                    Steps = p.Steps
+                        .Select(CreateAutomationStepItem)
+                        .ToArray(),
                 })
                 .ToArray());
     }
@@ -443,8 +577,74 @@ internal sealed class WindowsFeatureHostServices
     {
         await EnsureAutomationInitializedAsync().ConfigureAwait(false);
         return CreateAutomationTriggerDefinitions()
-            .Select(definition => new AutomationTriggerOption(definition.Key, definition.Trigger.DisplayName))
+            .Select(definition => new AutomationTriggerOption(
+                definition.Key,
+                definition.Trigger.DisplayName,
+                AutomationSerialization.SerializeTrigger(definition.Trigger)))
             .ToArray();
+    }
+
+    public async Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync()
+    {
+        var candidates = new IAutomationStep[]
+        {
+            new AlwaysOnUsbAutomationStep(default),
+            new BatteryAutomationStep(default),
+            new BatteryNightChargeAutomationStep(default),
+            new DeactivateGPUAutomationStep(default),
+            new DelayAutomationStep(default),
+            new DisplayBrightnessAutomationStep(50),
+            new DpiScaleAutomationStep(default),
+            new FlipToStartAutomationStep(default),
+            new FnLockAutomationStep(default),
+            new GodModePresetAutomationStep(default),
+            new HDRAutomationStep(default),
+            new InstantBootAutomationStep(default),
+            new MacroAutomationStep(default),
+            new MicrophoneAutomationStep(default),
+            new SpeakerAutomationStep(default),
+            new NotificationAutomationStep(default),
+            new OsdAutomationStep(default),
+            new OneLevelWhiteKeyboardBacklightAutomationStep(default),
+            new OverclockDiscreteGPUAutomationStep(default),
+            new OverDriveAutomationStep(default),
+            new PanelLogoBacklightAutomationStep(default),
+            new PlaySoundAutomationStep(default),
+            new PortsBacklightAutomationStep(default),
+            new PowerModeAutomationStep(default),
+            new QuickActionAutomationStep(default),
+            new RefreshRateAutomationStep(default),
+            new ResolutionAutomationStep(default),
+            new RGBKeyboardBacklightAutomationStep(default),
+            new RunAutomationStep(default, default, default, default),
+            new SpectrumKeyboardBacklightBrightnessAutomationStep(0),
+            new SpectrumKeyboardBacklightProfileAutomationStep(1),
+            new SpectrumKeyboardBacklightImportProfileAutomationStep(default),
+            new TouchpadLockAutomationStep(default),
+            new TurnOffMonitorsAutomationStep(),
+            new TurnOffWiFiAutomationStep(),
+            new TurnOnWiFiAutomationStep(),
+            new HybridModeAutomationStep(default),
+            new WhiteKeyboardBacklightAutomationStep(default),
+            new WinKeyAutomationStep(default),
+            new ShowMainWindowAutomationStep(),
+            new HideMainWindowAutomationStep(),
+        };
+
+        var supported = await Task.WhenAll(candidates.Select(async step =>
+        {
+            try { return new { Step = step, Supported = await step.IsSupportedAsync().ConfigureAwait(false) }; }
+            catch { return new { Step = step, Supported = false }; }
+        })).ConfigureAwait(false);
+
+        return supported.Where(x => x.Supported).Select(x =>
+        {
+            var type = x.Step.GetType();
+            var key = type.Name.EndsWith("AutomationStep", StringComparison.Ordinal)
+                ? type.Name[..^"AutomationStep".Length]
+                : type.Name;
+            return new AutomationStepOption(key, key, AutomationSerialization.SerializeStep(x.Step));
+        }).ToArray();
     }
 
     public async Task<bool> SetAutomationEnabledAsync(bool enabled)
@@ -480,12 +680,23 @@ internal sealed class WindowsFeatureHostServices
 
                     pipeline.Name = NormalizePipelineName(draft.Name);
                     pipeline.IconName = draft.IconName;
-                    if (draft.IsAutomatic && !string.IsNullOrWhiteSpace(draft.TriggerKey))
+                    pipeline.IsExclusive = draft.IsExclusive;
+                    pipeline.Steps.Clear();
+                    foreach (var stepItem in draft.Steps)
                     {
-                        var trigger = CreateAutomationTrigger(draft.TriggerKey);
+                        var step = TryDeserializeStep(stepItem.ConfigurationJson);
+                        if (step is not null)
+                            pipeline.Steps.Add(step);
+                    }
+                    if (draft.IsAutomatic)
+                    {
+                        var trigger = TryDeserializeTrigger(draft.TriggerConfigurationJson)
+                            ?? CreateAutomationTrigger(draft.TriggerKey);
                         if (trigger is not null)
                             pipeline.Trigger = trigger;
                     }
+                    else
+                        pipeline.Trigger = null;
                     saved.Add(pipeline);
                     continue;
                 }
@@ -495,7 +706,8 @@ internal sealed class WindowsFeatureHostServices
 
                 if (draft.IsAutomatic)
                 {
-                    var trigger = CreateAutomationTrigger(draft.TriggerKey);
+                    var trigger = TryDeserializeTrigger(draft.TriggerConfigurationJson)
+                        ?? CreateAutomationTrigger(draft.TriggerKey);
                     if (trigger is null)
                         continue;
 
@@ -503,6 +715,11 @@ internal sealed class WindowsFeatureHostServices
                     {
                         Name = NormalizePipelineName(draft.Name),
                         IconName = draft.IconName,
+                        IsExclusive = draft.IsExclusive,
+                        Steps = draft.Steps
+                            .Select(item => TryDeserializeStep(item.ConfigurationJson))
+                            .OfType<IAutomationStep>()
+                            .ToList(),
                     });
                     continue;
                 }
@@ -510,6 +727,11 @@ internal sealed class WindowsFeatureHostServices
                 saved.Add(new AutomationPipeline(NormalizePipelineName(draft.Name)!)
                 {
                     IconName = draft.IconName,
+                    IsExclusive = draft.IsExclusive,
+                    Steps = draft.Steps
+                        .Select(item => TryDeserializeStep(item.ConfigurationJson))
+                        .OfType<IAutomationStep>()
+                        .ToList(),
                 });
             }
 
@@ -540,6 +762,32 @@ internal sealed class WindowsFeatureHostServices
         ("hdr-on", new HDROnAutomationPipelineTrigger()),
         ("hdr-off", new HDROffAutomationPipelineTrigger()),
         ("wifi-disconnected", new WiFiDisconnectedAutomationPipelineTrigger()),
+        ("external-display-connected", new ExternalDisplayConnectedAutomationPipelineTrigger()),
+        ("external-display-disconnected", new ExternalDisplayDisconnectedAutomationPipelineTrigger()),
+        ("low-wattage-ac-adapter-connected", new LowWattageACAdapterConnectedAutomationPipelineTrigger()),
+        ("game-started", new GamesAreRunningAutomationPipelineTrigger()),
+        ("game-stopped", new GamesStopAutomationPipelineTrigger()),
+        ("processes-running", new ProcessesAreRunningAutomationPipelineTrigger(Array.Empty<ProcessInfo>())),
+        ("processes-stopped", new ProcessesStopRunningAutomationPipelineTrigger(Array.Empty<ProcessInfo>())),
+        ("device-connected", new DeviceConnectedAutomationPipelineTrigger(Array.Empty<string>())),
+        ("device-disconnected", new DeviceDisconnectedAutomationPipelineTrigger(Array.Empty<string>())),
+        ("time", new TimeAutomationPipelineTrigger(false, false, null, Array.Empty<DayOfWeek>())),
+        ("periodic", new PeriodicAutomationPipelineTrigger(TimeSpan.FromMinutes(30))),
+        ("user-inactivity", new UserInactivityAutomationPipelineTrigger(TimeSpan.FromMinutes(5))),
+        ("wifi-connected", new WiFiConnectedAutomationPipelineTrigger(Array.Empty<string>())),
+        ("power-mode", new PowerModeAutomationPipelineTrigger(PowerModeState.Balance)),
+        ("hardware-sensor", new HardwareSensorAutomationPipelineTrigger(
+            HardwareSensorMetric.CpuTemperature,
+            HardwareSensorComparison.GreaterThanOrEqual,
+            80,
+            TimeSpan.Zero,
+            TimeSpan.Zero)),
+        ("battery-percentage", new BatteryPercentageAutomationPipelineTrigger(
+            BatteryPercentageComparison.BelowOrEqual,
+            20,
+            TimeSpan.Zero,
+            TimeSpan.Zero,
+            BatteryChargeFilter.Any)),
     ];
 
     private static IAutomationPipelineTrigger? CreateAutomationTrigger(string? key) =>
@@ -564,6 +812,31 @@ internal sealed class WindowsFeatureHostServices
         WiFiDisconnectedAutomationPipelineTrigger => "wifi-disconnected",
         _ => null,
     };
+
+    private static AutomationStepItem CreateAutomationStepItem(IAutomationStep step)
+    {
+        var type = step.GetType();
+        var key = type.Name.EndsWith("AutomationStep", StringComparison.Ordinal)
+            ? type.Name[..^"AutomationStep".Length]
+            : type.Name;
+        return new AutomationStepItem(key, key, AutomationSerialization.SerializeStep(step));
+    }
+
+    private static IAutomationStep? TryDeserializeStep(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return null;
+        try { return AutomationSerialization.DeserializeStep(json); }
+        catch { return null; }
+    }
+
+    private static IAutomationPipelineTrigger? TryDeserializeTrigger(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return null;
+        try { return AutomationSerialization.DeserializeTrigger(json); }
+        catch { return null; }
+    }
 
     public Task<MacroWorkspaceState> GetMacroWorkspaceAsync()
     {

@@ -19,6 +19,7 @@ public partial class FeaturePageView : UserControl
     private readonly Action<string>? _actionRequested;
     private bool _isApplying;
     private FeaturePageState? _lastState;
+    private PluginCatalogState? _pluginCatalog;
     private bool _showCleanup;
 
     protected FeaturePageView(
@@ -36,6 +37,7 @@ public partial class FeaturePageView : UserControl
         StatusTitle.Text = AvaloniaLocalization.GetString("FeaturePage_StatusTitle", "Feature status");
         StatusMessage.Text = AvaloniaLocalization.GetString("FeaturePage_Loading", "Reading the current platform capability...");
         AutomationProperties.SetName(this, descriptor.Title);
+        PluginSearchBox.TextChanged += PluginSearchBox_TextChanged;
         Loaded += OnLoaded;
     }
 
@@ -55,11 +57,21 @@ public partial class FeaturePageView : UserControl
             var isOptimization = string.Equals(_descriptor.RouteKey, "WindowsOptimization", StringComparison.Ordinal);
             var isPluginExtensions = string.Equals(_descriptor.RouteKey, "PluginExtensions", StringComparison.Ordinal);
             OptimizationToolbar.IsVisible = isOptimization || isPluginExtensions;
+            PluginCatalogToolbar.IsVisible = isPluginExtensions;
             OptimizationModeButton.IsVisible = isOptimization;
             CleanupModeButton.IsVisible = isOptimization;
             NetworkAccelerationButton.IsVisible = isOptimization;
             DriverDownloadButton.IsVisible = isOptimization;
             PluginImportButton.IsVisible = isPluginExtensions;
+            if (isPluginExtensions)
+            {
+                _pluginCatalog = await _platformServices.GetPluginCatalogAsync().ConfigureAwait(true);
+                PluginUpdateButton.IsEnabled = _pluginCatalog.Plugins.Any(plugin =>
+                    plugin.IsInstalled && plugin.AvailableUpdateVersion is not null && !plugin.IsSystemPlugin);
+                if (!string.IsNullOrWhiteSpace(_pluginCatalog.StatusMessage))
+                    state = state with { StatusMessage = _pluginCatalog.StatusMessage };
+            }
+            _lastState = state;
             StatusTitle.Text = state.IsAvailable
                 ? AvaloniaLocalization.GetString("FeaturePage_Available", "Available")
                 : AvaloniaLocalization.GetString("FeaturePage_Unsupported", "Unavailable on this device");
@@ -85,6 +97,12 @@ public partial class FeaturePageView : UserControl
     private void RenderFeatureItems(FeaturePageState state)
     {
         FeatureItems.Items.Clear();
+        if (_descriptor.RouteKey.Equals("PluginExtensions", StringComparison.Ordinal))
+        {
+            RenderPluginCatalog();
+            UpdateOptimizationCommands(state);
+            return;
+        }
         var visibleActions = state.Actions.Where(action =>
             !_descriptor.RouteKey.Equals("WindowsOptimization", StringComparison.Ordinal)
             || (_showCleanup
@@ -118,6 +136,166 @@ public partial class FeaturePageView : UserControl
         UpdateOptimizationCommands(state);
     }
 
+    private void RenderPluginCatalog()
+    {
+        var catalog = _pluginCatalog;
+        if (catalog is null || catalog.Plugins.Count == 0)
+        {
+            FeatureItems.Items.Add(CreateEmptyState());
+            return;
+        }
+
+        var filter = PluginSearchBox.Text?.Trim() ?? string.Empty;
+        var matches = catalog.Plugins.Where(plugin =>
+            string.IsNullOrWhiteSpace(filter)
+            || plugin.Name.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
+            || plugin.Id.Contains(filter, StringComparison.OrdinalIgnoreCase)
+            || plugin.Description.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
+            || plugin.Tags.Any(tag => tag.Contains(filter, StringComparison.CurrentCultureIgnoreCase)));
+
+        var count = 0;
+        foreach (var plugin in matches)
+        {
+            FeatureItems.Items.Add(CreatePluginCatalogCard(plugin));
+            count++;
+        }
+
+        if (count == 0)
+        {
+            FeatureItems.Items.Add(new LocalizedTextBlock
+            {
+                Text = AvaloniaLocalization.GetString(
+                    "PluginExtensionsPage_NoSearchResults",
+                    "No plugin extensions match the current search."),
+                Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+                OverflowMode = LocalizedOverflowMode.Wrap,
+                MaxLines = 3,
+            });
+        }
+    }
+
+    private Border CreatePluginCatalogCard(PluginCatalogItem plugin)
+    {
+        var title = new LocalizedTextBlock
+        {
+            Text = plugin.Name,
+            FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 2,
+        };
+        var details = new LocalizedTextBlock
+        {
+            Text = string.Join(" ", new[]
+            {
+                plugin.Description,
+                string.IsNullOrWhiteSpace(plugin.Author) ? null : $"{plugin.Author} |",
+                $"v{plugin.Version}",
+                plugin.AvailableUpdateVersion is null ? null : $"-> v{plugin.AvailableUpdateVersion}",
+            }.Where(value => !string.IsNullOrWhiteSpace(value))),
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 3,
+        };
+        var capabilities = new LocalizedTextBlock
+        {
+            Text = FormatPluginCapabilities(plugin),
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+        };
+        var copy = new StackPanel { Spacing = 4, MinWidth = 0 };
+        copy.Children.Add(title);
+        copy.Children.Add(details);
+        copy.Children.Add(capabilities);
+
+        var commands = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 6,
+            VerticalAlignment = VerticalAlignment.Top,
+        };
+        if (plugin.IsInstalled)
+        {
+            if (plugin.AvailableUpdateVersion is not null && !plugin.IsSystemPlugin)
+            {
+                var update = CreatePluginButton(
+                    AvaloniaLocalization.GetString("PluginExtensionsPage_Update", "Update"),
+                    $"plugin-update:{plugin.Id}",
+                    plugin.Name);
+                commands.Children.Add(update);
+            }
+
+            if (plugin.SupportsFeaturePage)
+                commands.Children.Add(CreatePluginButton(
+                    AvaloniaLocalization.GetString("PluginExtensionsPage_Open", "Open"),
+                    $"plugin-open:{plugin.Id}",
+                    plugin.Name));
+
+            if (!plugin.IsSystemPlugin)
+                commands.Children.Add(CreatePluginButton(
+                    AvaloniaLocalization.GetString("PluginExtensionsPage_Uninstall", "Uninstall"),
+                    $"plugin-uninstall:{plugin.Id}",
+                    plugin.Name));
+        }
+        else
+        {
+            commands.Children.Add(CreatePluginButton(
+                AvaloniaLocalization.GetString("PluginExtensionsPage_Install", "Install"),
+                $"plugin-install:{plugin.Id}",
+                plugin.Name));
+        }
+
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), ColumnSpacing = 14 };
+        grid.Children.Add(new NavigationIcon
+        {
+            IconIdentifier = string.IsNullOrWhiteSpace(plugin.Id) ? "Apps24" : "Apps24",
+            FontSize = GetResource<double>("IconSizeLG"),
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            VerticalAlignment = VerticalAlignment.Top,
+        });
+        Grid.SetColumn(copy, 1);
+        grid.Children.Add(copy);
+        Grid.SetColumn(commands, 2);
+        grid.Children.Add(commands);
+        var card = new Border
+        {
+            Background = GetResource<IBrush>("CardBackgroundBrush"),
+            BorderBrush = GetResource<IBrush>("CardBorderBrush"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = GetResource<CornerRadius>("CornerRadiusCard"),
+            Padding = new Thickness(16),
+            Margin = new Thickness(0, 0, 0, 8),
+            Child = grid,
+        };
+        AutomationProperties.SetName(card, plugin.Name);
+        ToolTip.SetTip(card, plugin.Details ?? plugin.Description);
+        return card;
+    }
+
+    private Button CreatePluginButton(string content, string actionKey, string pluginName)
+    {
+        var button = new Button { Content = content, MinWidth = 82 };
+        AutomationProperties.SetName(button, $"{content} {pluginName}");
+        button.Tag = actionKey;
+        button.Click += PluginActionButton_Click;
+        return button;
+    }
+
+    private string FormatPluginCapabilities(PluginCatalogItem plugin)
+    {
+        var capabilities = new List<string>();
+        if (plugin.SupportsSettingsPage)
+            capabilities.Add(AvaloniaLocalization.GetString("PluginExtensionsPage_CapabilitySettings", "Settings"));
+        if (plugin.SupportsFeaturePage)
+            capabilities.Add(AvaloniaLocalization.GetString("PluginExtensionsPage_CapabilityQuickOpen", "Feature page"));
+        if (plugin.SupportsOptimizationActions)
+            capabilities.Add(AvaloniaLocalization.GetString("PluginExtensionsPage_CapabilityOptimize", "Optimization"));
+        return capabilities.Count == 0
+            ? AvaloniaLocalization.GetString("PluginExtensionsPage_NoCapabilities", "No UI capabilities reported")
+            : string.Join(" | ", capabilities);
+    }
+
     private void UpdateOptimizationCommands(FeaturePageState state)
     {
         if (!OptimizationToolbar.IsVisible)
@@ -143,6 +321,78 @@ public partial class FeaturePageView : UserControl
                 FeatureActionContract.CleanupRunActionKey => cleanupSelected,
                 _ => true,
             };
+        }
+    }
+
+    private void PluginSearchBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_lastState is not null && _descriptor.RouteKey.Equals("PluginExtensions", StringComparison.Ordinal))
+            RenderFeatureItems(_lastState);
+    }
+
+    private async void PluginRefreshButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isApplying)
+            return;
+
+        _isApplying = true;
+        try
+        {
+            _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
+            if (_lastState is not null)
+                RenderFeatureItems(_lastState);
+        }
+        finally
+        {
+            _isApplying = false;
+        }
+    }
+
+    private async void PluginUpdateButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isApplying)
+            return;
+
+        _isApplying = true;
+        try
+        {
+            var updates = _pluginCatalog?.Plugins
+                .Where(plugin => plugin.IsInstalled && plugin.AvailableUpdateVersion is not null && !plugin.IsSystemPlugin)
+                .ToArray() ?? [];
+            foreach (var plugin in updates)
+                await _platformServices.UpdatePluginAsync(plugin.Id);
+
+            _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
+            if (_lastState is not null)
+                RenderFeatureItems(_lastState);
+        }
+        finally
+        {
+            _isApplying = false;
+        }
+    }
+
+    private async void PluginActionButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: string actionKey } || _isApplying)
+            return;
+
+        _isApplying = true;
+        try
+        {
+            var accepted = actionKey.StartsWith("plugin-update:", StringComparison.OrdinalIgnoreCase)
+                ? await _platformServices.UpdatePluginAsync(actionKey["plugin-update:".Length..])
+                : await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, actionKey, true);
+            if (accepted)
+            {
+                _pluginCatalog = await _platformServices.GetPluginCatalogAsync();
+                if (_lastState is not null)
+                    RenderFeatureItems(_lastState);
+            }
+        }
+        finally
+        {
+            _isApplying = false;
         }
     }
 
