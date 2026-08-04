@@ -250,28 +250,4 @@ public partial class PluginRepositoryService
         }
     }
 
-    private static Task RestorePluginDirectoryAsync(string pluginDir, string? backupDir, string pluginId)
-    {
-        try
-        {
-            if (Directory.Exists(pluginDir))
-                Directory.Delete(pluginDir, true);
-
-            if (!string.IsNullOrWhiteSpace(backupDir) && Directory.Exists(backupDir))
-            {
-                Directory.Move(backupDir, pluginDir);
-
-                if (Log.Instance.IsTraceEnabled)
-                    Log.Instance.Trace($"Rolled back plugin directory for {pluginId} from backup {backupDir}.");
-            }
-        }
-        catch (Exception restoreEx)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to roll back plugin directory for {pluginId}: {restoreEx.Message}", restoreEx);
-        }
-
-        return Task.CompletedTask;
-    }
-
 }
