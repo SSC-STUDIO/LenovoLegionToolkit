@@ -212,6 +212,7 @@ internal static partial class Program
                     [],
                     ["Settings"],
                     root => FindVisibleTextContains(root, "Settings") && FindVisibleTextContains(root, "Theme style")));
+                CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
                 WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
