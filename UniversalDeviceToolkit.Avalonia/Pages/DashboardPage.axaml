@@ -160,13 +160,27 @@
             </ItemsControl>
 
             <!-- Sensors Panel -->
-            <TextBlock Text="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
-                       FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Margin="0,8,0,0" />
+            <Grid ColumnDefinitions="*,Auto"
+                  Margin="0,8,0,0">
+                <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
+                                             FontSize="{StaticResource FontSizeSubsection}"
+                                             FontWeight="Medium"
+                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                             VerticalAlignment="Center"
+                                             OverflowMode="Ellipsis"
+                                             MaxLines="1" />
+                <ToggleSwitch Grid.Column="1"
+                              IsChecked="{Binding ShowSensors, Mode=TwoWay}"
+                              automation:AutomationProperties.AutomationId="AvaloniaDashboardShowSensorsToggle"
+                              automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
+                              ToolTip.Tip="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
+                              MinWidth="120"
+                              HorizontalContentAlignment="Left"
+                              VerticalAlignment="Center" />
+            </Grid>
 
-            <ItemsControl ItemsSource="{Binding TelemetryCards}">
+            <ItemsControl ItemsSource="{Binding TelemetryCards}"
+                          IsVisible="{Binding ShowSensors}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal" />

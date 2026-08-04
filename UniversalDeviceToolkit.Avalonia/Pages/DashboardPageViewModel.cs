@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Shared.Settings;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -27,11 +28,41 @@ public partial class DashboardPageViewModel : ObservableObject
     [ObservableProperty]
     private string _lastUpdatedText = string.Empty;
 
+    private readonly AvaloniaDashboardPreferences _dashboardPreferences;
+    private bool _showSensors;
+    private int _sensorsRefreshIntervalSeconds;
+
+    /// <summary>
+    /// Mirrors the WPF dashboard's sensor visibility setting while keeping the
+    /// portable Avalonia host independent from WPF-only settings types.
+    /// </summary>
+    public bool ShowSensors
+    {
+        get => _showSensors;
+        set
+        {
+            if (!SetProperty(ref _showSensors, value))
+                return;
+
+            _dashboardPreferences.Store.ShowSensors = value;
+            _dashboardPreferences.SynchronizeStore();
+        }
+    }
+
     private readonly IPlatformServices _platformServices;
     private CancellationTokenSource? _pollingCancellation;
     private int _refreshVersion;
 
-    public DashboardPageViewModel(IPlatformServices platformServices) => _platformServices = platformServices;
+    public DashboardPageViewModel(
+        IPlatformServices platformServices,
+        AvaloniaDashboardPreferences? dashboardPreferences = null)
+    {
+        _platformServices = platformServices;
+        _dashboardPreferences = dashboardPreferences ?? new AvaloniaDashboardPreferences();
+        _showSensors = _dashboardPreferences.Store.ShowSensors;
+        _sensorsRefreshIntervalSeconds = NormalizeRefreshInterval(
+            _dashboardPreferences.Store.SensorsRefreshIntervalSeconds);
+    }
 
     public void StartPolling()
     {
@@ -91,7 +122,7 @@ public partial class DashboardPageViewModel : ObservableObject
         try
         {
             await LoadAsync();
-            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_sensorsRefreshIntervalSeconds));
             while (await timer.WaitForNextTickAsync(cancellationToken))
                 await LoadAsync();
         }
@@ -134,6 +165,8 @@ public partial class DashboardPageViewModel : ObservableObject
                 : Array.Empty<SensorReadingItem>());
         }
     }
+
+    private static int NormalizeRefreshInterval(int seconds) => Math.Clamp(seconds, 1, 60);
 }
 
 public sealed partial class DashboardSensorViewModel : ObservableObject
