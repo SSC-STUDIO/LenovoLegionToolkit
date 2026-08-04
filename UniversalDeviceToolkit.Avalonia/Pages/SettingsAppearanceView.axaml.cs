@@ -61,7 +61,7 @@ public partial class SettingsAppearanceView : UserControl
         _languagePackService.Changed += LanguagePackService_Changed;
     }
 
-    private void OnLoaded(object? sender, RoutedEventArgs e)
+    private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         _languagePackService.Changed -= LanguagePackService_Changed;
         _languagePackService.Changed += LanguagePackService_Changed;
@@ -70,8 +70,24 @@ public partial class SettingsAppearanceView : UserControl
         {
             RestorePreferences();
 
-            var languages = LocalizationCatalog.SupportedCultures
-                .Select(culture => new LanguageOption(culture, LocalizationCatalog.GetDisplayName(culture)))
+            IReadOnlyList<AvaloniaLanguageOption> availableLanguages;
+            try
+            {
+                availableLanguages = await _languagePackService.GetLanguagesAsync().ConfigureAwait(true);
+            }
+            catch
+            {
+                availableLanguages = LocalizationCatalog.SupportedCultures
+                    .Select(culture => new AvaloniaLanguageOption(
+                        culture,
+                        LocalizationCatalog.GetDisplayName(culture),
+                        IsInstalled: true,
+                        IsEnglish: culture.Name.Equals("en", StringComparison.OrdinalIgnoreCase)))
+                    .ToArray();
+            }
+
+            var languages = availableLanguages
+                .Select(option => new LanguageOption(option.Culture, option.DisplayName))
                 .OrderBy(option => option.DisplayName, StringComparer.CurrentCultureIgnoreCase)
                 .ToArray();
             LanguageComboBox.ItemsSource = languages;
@@ -102,17 +118,7 @@ public partial class SettingsAppearanceView : UserControl
         if (!_languagePackService.IsEnglish(option.Culture)
             && !_languagePackService.IsInstalled(option.Culture))
         {
-            try
-            {
-                await RunLanguagePackOperationAsync(
-                    () => _languagePackService.InstallAsync(option.Culture),
-                    option.Culture);
-            }
-            catch
-            {
-                RestoreLanguageSelection();
-            }
-
+            UpdateLanguagePackButtons();
             return;
         }
 
@@ -131,9 +137,10 @@ public partial class SettingsAppearanceView : UserControl
                 () => _languagePackService.InstallAsync(option.Culture),
                 option.Culture);
         }
-        catch
+        catch (Exception ex)
         {
             RestoreLanguageSelection();
+            ShowLanguageOperationError(ex, "SettingsPage_Language_InstallFailed", "Language installation failed");
         }
     }
 
@@ -151,9 +158,9 @@ public partial class SettingsAppearanceView : UserControl
                 applyCulture: false);
             RestoreLanguageSelection();
         }
-        catch
+        catch (Exception ex)
         {
-            UpdateLanguagePackButtons();
+            ShowLanguageOperationError(ex, "SettingsPage_Language_UninstallFailed", "Language uninstall failed");
         }
     }
 
@@ -182,15 +189,7 @@ public partial class SettingsAppearanceView : UserControl
 
     private void LanguagePackService_Changed(object? sender, EventArgs e)
     {
-        void UpdateFromUiThread()
-        {
-            UpdateLanguagePackButtons();
-            if (_languagePackService.IsActive)
-            {
-                LanguageOperationPanel.IsVisible = true;
-                LanguageOperationProgress.Value = _languagePackService.Progress;
-            }
-        }
+        void UpdateFromUiThread() => UpdateLanguagePackButtons();
 
         if (Dispatcher.UIThread.CheckAccess())
             UpdateFromUiThread();
@@ -206,8 +205,29 @@ public partial class SettingsAppearanceView : UserControl
         var selected = (LanguageComboBox.SelectedItem as LanguageOption)?.Culture;
         var isEnglish = selected is null || _languagePackService.IsEnglish(selected);
         var isInstalled = selected is not null && _languagePackService.IsInstalled(selected);
-        InstallLanguageButton.IsEnabled = !_languageOperationInProgress && !isEnglish && !isInstalled;
-        UninstallLanguageButton.IsEnabled = !_languageOperationInProgress && !isEnglish && isInstalled;
+        var operationActive = _languageOperationInProgress || _languagePackService.IsActive;
+        var isAvailable = _languagePackService.IsAvailable;
+        InstallLanguageButton.IsVisible = isAvailable && !isEnglish && !isInstalled;
+        UninstallLanguageButton.IsVisible = isAvailable && !isEnglish && isInstalled;
+        InstallLanguageButton.IsEnabled = !operationActive;
+        UninstallLanguageButton.IsEnabled = !operationActive;
+        LanguageOperationPanel.IsVisible = operationActive;
+        if (operationActive)
+        {
+            LanguageOperationProgress.Value = _languagePackService.IsActive
+                ? _languagePackService.Progress
+                : 0;
+            LanguageOperationStatus.Text = _languagePackService.IsActive
+                ? $"{AvaloniaLocalization.GetString("SettingsPage_Language_Installing", "Installing language pack")} {Math.Round(_languagePackService.Progress * 100):0}%"
+                : AvaloniaLocalization.GetString("SettingsPage_Language_Installing", "Installing language pack");
+        }
+    }
+
+    private void ShowLanguageOperationError(Exception exception, string key, string fallback)
+    {
+        LanguageOperationPanel.IsVisible = true;
+        LanguageOperationProgress.Value = 0;
+        LanguageOperationStatus.Text = $"{AvaloniaLocalization.GetString(key, fallback)}: {exception.Message}";
     }
 
     private void RestoreLanguageSelection()
