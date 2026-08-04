@@ -1,16 +1,21 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsApplicationBehaviorView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
-        <TextBlock Text="{local:Loc Key=Application_Title, Fallback=Application Behavior}"
+        <controls:LocalizedTextBlock Text="{local:Loc Key=Application_Title, Fallback=Application Behavior}"
                    FontSize="{StaticResource FontSizeDisplaySection}"
                    FontWeight="Medium"
-                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                   OverflowMode="Wrap"
+                   MaxLines="2"/>
 
-        <TextBlock Text="{local:Loc Key=Application_Description, Fallback=Configure how the application behaves on startup and during use.}"
+        <controls:LocalizedTextBlock Text="{local:Loc Key=Application_Description, Fallback=Configure how the application behaves on startup and during use.}"
                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                    TextWrapping="Wrap"
+                   OverflowMode="Wrap"
+                   MaxLines="3"
                    Margin="0,0,0,8"/>
 
         <!-- Startup Behavior -->
@@ -19,16 +24,21 @@
                 BorderThickness="1"
                 CornerRadius="{StaticResource CornerRadiusCard}"
                 Padding="16">
-            <Grid ColumnDefinitions="*,Auto">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" MinWidth="0"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="{local:Loc Key=Application_LaunchStartup, Fallback=Launch at Startup}"
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Application_LaunchStartup, Fallback=Launch at Startup}"
                                FontSize="{StaticResource FontSizeBody}"
                                FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                    <TextBlock Text="{local:Loc Key=Application_LaunchStartupDescription, Fallback=Automatically start the application when Windows starts.}"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               OverflowMode="Wrap"
+                               MaxLines="2"/>
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Application_LaunchStartupDescription, Fallback=Automatically start the application when Windows starts.}"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                FontSize="{StaticResource FontSizeSmallCaption}"
-                               TextWrapping="Wrap"/>
+                               TextWrapping="Wrap"
+                               OverflowMode="Wrap"
+                               MaxLines="3"/>
                 </StackPanel>
                 <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="False"/>
             </Grid>
@@ -40,16 +50,21 @@
                 BorderThickness="1"
                 CornerRadius="{StaticResource CornerRadiusCard}"
                 Padding="16">
-            <Grid ColumnDefinitions="*,Auto">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" MinWidth="0"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="{local:Loc Key=Application_MinimizeTray, Fallback=Minimize to System Tray}"
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Application_MinimizeTray, Fallback=Minimize to System Tray}"
                                FontSize="{StaticResource FontSizeBody}"
                                FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                    <TextBlock Text="{local:Loc Key=Application_MinimizeTrayDescription, Fallback=Keep the application running in the system tray when closed.}"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               OverflowMode="Wrap"
+                               MaxLines="2"/>
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Application_MinimizeTrayDescription, Fallback=Keep the application running in the system tray when closed.}"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                FontSize="{StaticResource FontSizeSmallCaption}"
-                               TextWrapping="Wrap"/>
+                               TextWrapping="Wrap"
+                               OverflowMode="Wrap"
+                               MaxLines="3"/>
                 </StackPanel>
                 <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="True"/>
             </Grid>
@@ -61,16 +76,21 @@
                 BorderThickness="1"
                 CornerRadius="{StaticResource CornerRadiusCard}"
                 Padding="16">
-            <Grid ColumnDefinitions="*,Auto">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" MinWidth="0"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
-                    <TextBlock Text="{local:Loc Key=Application_AutoRefresh, Fallback=Auto-refresh Hardware Data}"
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Application_AutoRefresh, Fallback=Auto-refresh Hardware Data}"
                                FontSize="{StaticResource FontSizeBody}"
                                FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                    <TextBlock Text="{local:Loc Key=Application_AutoRefreshDescription, Fallback=Periodically poll hardware sensors for updated readings.}"
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                               OverflowMode="Wrap"
+                               MaxLines="2"/>
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Application_AutoRefreshDescription, Fallback=Periodically poll hardware sensors for updated readings.}"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                FontSize="{StaticResource FontSizeSmallCaption}"
-                               TextWrapping="Wrap"/>
+                               TextWrapping="Wrap"
+                               OverflowMode="Wrap"
+                               MaxLines="3"/>
                 </StackPanel>
                 <ToggleSwitch Grid.Column="1" VerticalAlignment="Center" IsChecked="True"/>
             </Grid>

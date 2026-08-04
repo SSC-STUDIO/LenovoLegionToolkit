@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+        xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
         x:Class="UniversalDeviceToolkit.Avalonia.MainWindow"
         Title="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}"
         Width="1200" Height="800"
@@ -13,6 +14,16 @@
             <Setter Property="HorizontalContentAlignment" Value="Left" />
             <Setter Property="Padding" Value="16,10" />
             <Setter Property="CornerRadius" Value="{DynamicResource CornerRadiusCompact}" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="ContentTemplate">
+                <DataTemplate>
+                    <controls:LocalizedTextBlock Text="{Binding}"
+                                                 OverflowMode="Ellipsis"
+                                                 MaxLines="1"
+                                                 HorizontalAlignment="Stretch"
+                                                 MinWidth="0" />
+                </DataTemplate>
+            </Setter>
         </Style>
         <Style Selector="Button.navButton.active">
             <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />

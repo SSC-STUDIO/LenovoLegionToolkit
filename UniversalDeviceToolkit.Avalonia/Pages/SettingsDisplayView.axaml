@@ -1,16 +1,21 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsDisplayView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
-        <TextBlock Text="{local:Loc Key=Display_Title, Fallback=Display}"
+        <controls:LocalizedTextBlock Text="{local:Loc Key=Display_Title, Fallback=Display}"
                    FontSize="{StaticResource FontSizeDisplaySection}"
                    FontWeight="Medium"
-                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                   OverflowMode="Wrap"
+                   MaxLines="2"/>
 
-        <TextBlock Text="{local:Loc Key=Display_Description, Fallback=Adjust display-related settings for your device.}"
+        <controls:LocalizedTextBlock Text="{local:Loc Key=Display_Description, Fallback=Adjust display-related settings for your device.}"
                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                    TextWrapping="Wrap"
+                   OverflowMode="Wrap"
+                   MaxLines="3"
                    Margin="0,0,0,8"/>
 
         <!-- Refresh Rate -->
@@ -29,6 +34,14 @@
                            FontSize="{StaticResource FontSizeSmallCaption}"/>
                 <ComboBox SelectedIndex="0" MinWidth="160" HorizontalAlignment="Left"
                           Margin="0,8,0,0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <controls:LocalizedTextBlock Text="{Binding Content}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1"
+                                                         MinWidth="0" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                     <ComboBoxItem Content="60 Hz"/>
                     <ComboBoxItem Content="120 Hz"/>
                     <ComboBoxItem Content="144 Hz"/>
@@ -43,7 +56,8 @@
                 BorderThickness="1"
                 CornerRadius="{StaticResource CornerRadiusCard}"
                 Padding="16">
-            <Grid ColumnDefinitions="*,Auto">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*" MinWidth="0"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Center">
                     <TextBlock Text="{local:Loc Key=Display_Overdrive, Fallback=Overdrive}"
                                FontSize="{StaticResource FontSizeBody}"

@@ -14,11 +14,16 @@ public enum CardHeaderWarningSeverity
 
 public class CardHeaderControl : UserControl
 {
-    private readonly TextBlock _titleTextBlock = new()
+    private readonly AdaptiveTextBlock _titleTextBlock = new()
     {
         FontWeight = FontWeights.Medium,
+        TextWrapping = TextWrapping.Wrap,
         VerticalAlignment = VerticalAlignment.Center,
         TextTrimming = TextTrimming.CharacterEllipsis,
+        MaxLines = 2,
+        MinFontSize = 11,
+        OverflowMode = UniversalDeviceToolkit.Abstractions.Localization.LocalizedOverflowMode.Wrap,
+        AutoToolTip = true,
     };
 
     private readonly AdaptiveTextBlock _subtitleTextBlock = new()
@@ -29,13 +34,18 @@ public class CardHeaderControl : UserControl
         MaxHeight = 60, // Limit subtitle to about 3 lines to prevent card bloat
         MaxLines = 3,
         MinFontSize = 11,
+        OverflowMode = UniversalDeviceToolkit.Abstractions.Localization.LocalizedOverflowMode.Wrap,
         AutoToolTip = true,
     };
 
-    private readonly TextBlock _warningTextBlock = new()
+    private readonly AdaptiveTextBlock _warningTextBlock = new()
     {
         TextWrapping = TextWrapping.Wrap,
         TextTrimming = TextTrimming.CharacterEllipsis,
+        MaxLines = 3,
+        MinFontSize = 11,
+        OverflowMode = UniversalDeviceToolkit.Abstractions.Localization.LocalizedOverflowMode.Wrap,
+        AutoToolTip = true,
     };
 
     private readonly Border _warningSurface = new()
@@ -52,7 +62,7 @@ public class CardHeaderControl : UserControl
     {
         ColumnDefinitions =
         {
-            new ColumnDefinition { Width = new(1, GridUnitType.Star) },
+            new ColumnDefinition { Width = new(1, GridUnitType.Star), MinWidth = 0 },
             new ColumnDefinition { Width = GridLength.Auto },
         },
         RowDefinitions =

@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls">
 
     <!-- Badge: small label for status or count display -->
     <Style Selector="Border.badge">
@@ -7,7 +8,7 @@
         <Setter Property="CornerRadius" Value="{DynamicResource CornerRadiusCompact}" />
         <Setter Property="Background" Value="{DynamicResource AccentFillColorDefaultBrush}" />
     </Style>
-    <Style Selector="Border.badge > TextBlock">
+    <Style Selector="Border.badge > TextBlock, Border.badge > controls|LocalizedTextBlock">
         <Setter Property="Foreground" Value="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
         <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
         <Setter Property="FontWeight" Value="Medium" />

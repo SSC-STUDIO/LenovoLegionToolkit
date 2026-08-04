@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+                 xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
                  x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage">
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
@@ -8,10 +9,12 @@
         <StackPanel Spacing="24" Margin="24">
 
             <!-- Page Title -->
-            <TextBlock Text="{local:Loc Key=Dashboard_Title, Fallback=Dashboard}"
+            <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Title, Fallback=Dashboard}"
                        FontSize="{StaticResource FontSizePageTitle}"
                        FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                       OverflowMode="Wrap"
+                       MaxLines="2" />
 
             <!-- Feature Groups -->
             <TextBlock Text="{local:Loc Key=Dashboard_FeatureGroups, Fallback=Feature Groups}"
@@ -29,10 +32,14 @@
                     <DataTemplate>
                         <Border Classes="cardControl" Width="280" Margin="0,0,12,12">
                             <StackPanel Spacing="8" Margin="4">
-                                <TextBlock Text="{Binding Title}"
-                                           Classes="cardTitle" />
-                                <TextBlock Text="{Binding Description}"
-                                           Classes="cardDescription" />
+                                <controls:LocalizedTextBlock Text="{Binding Title}"
+                                           Classes="cardTitle"
+                                           OverflowMode="Wrap"
+                                           MaxLines="2" />
+                                <controls:LocalizedTextBlock Text="{Binding Description}"
+                                           Classes="cardDescription"
+                                           OverflowMode="Wrap"
+                                           MaxLines="3" />
                                 <Border Classes="badge" HorizontalAlignment="Left"
                                         Margin="0,4,0,0">
                                     <TextBlock Text="{Binding Status}" />

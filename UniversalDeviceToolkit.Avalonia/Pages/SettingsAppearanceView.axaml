@@ -1,16 +1,21 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsAppearanceView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
-        <TextBlock Text="{local:Loc Key=Appearance_Title, Fallback=Appearance}"
+        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_Title, Fallback=Appearance}"
                    FontSize="{StaticResource FontSizeDisplaySection}"
                    FontWeight="Medium"
-                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                   OverflowMode="Wrap"
+                   MaxLines="2"/>
 
-        <TextBlock Text="{local:Loc Key=Appearance_Description, Fallback=Customize the look and feel of the application.}"
+        <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_Description, Fallback=Customize the look and feel of the application.}"
                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                    TextWrapping="Wrap"
+                   OverflowMode="Wrap"
+                   MaxLines="3"
                    Margin="0,0,0,8"/>
 
         <!-- Unified theme & accent configuration (mirrors the WPF Appearance area) -->
@@ -21,9 +26,11 @@
                 Padding="14,12">
             <StackPanel Spacing="10">
                 <!-- 1. Global interface color mode -->
-                <TextBlock Text="{local:Loc Key=Appearance_ThemeMode, Fallback=Global interface color mode}"
+                <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_ThemeMode, Fallback=Global interface color mode}"
                            FontWeight="Medium"
-                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           OverflowMode="Wrap"
+                           MaxLines="2"/>
 
                 <!-- 2. Three mode preview cards: 120x84 macOS window previews
                      (title bar + traffic lights / content / dock), selected = accent border. -->
@@ -247,7 +254,16 @@
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                            FontSize="{StaticResource FontSizeSmallCaption}"/>
                 <ComboBox x:Name="LanguageComboBox" MinWidth="220" HorizontalAlignment="Left"
-                          Margin="0,8,0,0" SelectionChanged="LanguageComboBox_SelectionChanged"/>
+                          Margin="0,8,0,0" SelectionChanged="LanguageComboBox_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <controls:LocalizedTextBlock Text="{Binding DisplayName}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1"
+                                                         MinWidth="0" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
             </StackPanel>
         </Border>
     </StackPanel>

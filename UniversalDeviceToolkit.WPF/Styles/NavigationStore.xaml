@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
+    xmlns:overflow="clr-namespace:UniversalDeviceToolkit.WPF.Behaviors"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
@@ -116,7 +117,12 @@
                                                 Foreground="{TemplateBinding Foreground}"
                                                 Text="{TemplateBinding Content}"
                                                 TextAlignment="Center"
-                                                TextWrapping="Wrap" />
+                                                TextWrapping="Wrap"
+                                                TextTrimming="CharacterEllipsis"
+                                                AutomationProperties.Name="{TemplateBinding Content}"
+                                                overflow:LocalizedOverflowBehavior.IsEnabled="True"
+                                                overflow:LocalizedOverflowBehavior.Mode="Wrap"
+                                                overflow:LocalizedOverflowBehavior.MaxLines="2" />
                                         </ContentPresenter.Content>
                                     </ContentPresenter>
                                 </Grid>
@@ -166,7 +172,12 @@
                                     FontSize="{DynamicResource FontSizeSmallBody}"
                                     Foreground="{TemplateBinding Foreground}"
                                     Text="{TemplateBinding Content}"
-                                    TextTrimming="CharacterEllipsis" />
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap"
+                                    AutomationProperties.Name="{TemplateBinding Content}"
+                                    overflow:LocalizedOverflowBehavior.IsEnabled="True"
+                                    overflow:LocalizedOverflowBehavior.Mode="Ellipsis"
+                                    overflow:LocalizedOverflowBehavior.MaxLines="1" />
                             </Grid>
                         </Grid>
                     </Border>

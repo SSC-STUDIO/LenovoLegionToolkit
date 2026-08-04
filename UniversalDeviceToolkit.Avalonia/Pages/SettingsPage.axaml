@@ -1,6 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsPage">
 
     <Grid ColumnDefinitions="280,Auto,*">
@@ -9,11 +11,14 @@
                 Background="{DynamicResource NavigationPaneBackgroundBrush}"
                 Padding="12,16">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top"
+                <controls:LocalizedTextBlock DockPanel.Dock="Top"
                            Text="{local:Loc Key=Settings_Title, Fallback=Settings}"
                            FontSize="{StaticResource FontSizeDisplaySection}"
                            FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                           OverflowMode="Wrap"
+                           MaxLines="2"
+                           automation:AutomationProperties.Name="{local:Loc Key=Settings_Title, Fallback=Settings}"
                            Margin="12,0,0,16"/>
 
                 <ListBox ItemsSource="{Binding NavigationItems}"
@@ -22,18 +27,24 @@
                          Background="Transparent">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="0,2">
-                                <TextBlock Text="{Binding IconIdentifier}"
+                            <Grid Margin="0,2" ColumnDefinitions="Auto,*">
+                                <TextBlock Grid.Column="0" Text="{Binding IconIdentifier}"
                                            FontSize="{StaticResource IconSizeMD}"
                                            VerticalAlignment="Center"
                                            Margin="0,0,12,0"
                                            Width="24"
                                            TextAlignment="Center"/>
-                                <TextBlock Text="{Binding Title}"
+                                <controls:LocalizedTextBlock Grid.Column="1"
+                                           Text="{Binding Title}"
                                            FontSize="{StaticResource FontSizeCaption}"
                                            VerticalAlignment="Center"
-                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
-                            </StackPanel>
+                                           HorizontalAlignment="Stretch"
+                                           MinWidth="0"
+                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                           OverflowMode="Ellipsis"
+                                           MaxLines="1"
+                                           automation:AutomationProperties.Name="{Binding Title}"/>
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.Styles>
