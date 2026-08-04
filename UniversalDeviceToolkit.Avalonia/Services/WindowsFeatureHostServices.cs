@@ -6,6 +6,7 @@ using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Abstractions.Macro;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
@@ -23,6 +24,8 @@ namespace UniversalDeviceToolkit.Avalonia.Services;
 internal sealed class WindowsFeatureHostServices
 {
     private readonly IKeyboardBacklightDetectionService _keyboard;
+    private readonly SpectrumKeyboardBacklightController? _spectrum;
+    private readonly RGBKeyboardBacklightController? _rgb;
     private readonly IMacroController _macro;
     private readonly AutomationProcessor _automation;
     private readonly IPluginManager _plugins;
@@ -33,12 +36,16 @@ internal sealed class WindowsFeatureHostServices
 
     private WindowsFeatureHostServices(
         IKeyboardBacklightDetectionService keyboard,
+        SpectrumKeyboardBacklightController? spectrum,
+        RGBKeyboardBacklightController? rgb,
         IMacroController macro,
         AutomationProcessor automation,
         IPluginManager plugins,
         WindowsOptimizationService? optimization)
     {
         _keyboard = keyboard;
+        _spectrum = spectrum;
+        _rgb = rgb;
         _macro = macro;
         _automation = automation;
         _plugins = plugins;
@@ -51,6 +58,8 @@ internal sealed class WindowsFeatureHostServices
         {
             return new WindowsFeatureHostServices(
                 IoCContainer.Resolve<IKeyboardBacklightDetectionService>(),
+                IoCContainer.TryResolve<SpectrumKeyboardBacklightController>(),
+                IoCContainer.TryResolve<RGBKeyboardBacklightController>(),
                 IoCContainer.Resolve<IMacroController>(),
                 IoCContainer.Resolve<AutomationProcessor>(),
                 IoCContainer.Resolve<IPluginManager>(),
@@ -79,6 +88,20 @@ internal sealed class WindowsFeatureHostServices
     {
         switch (routeKey)
         {
+            case "Keyboard" when actionKey == "keyboard-spectrum-brightness-up" && _spectrum is not null:
+                await AdjustSpectrumBrightnessAsync(_spectrum, 1).ConfigureAwait(false);
+                return true;
+            case "Keyboard" when actionKey == "keyboard-spectrum-brightness-down" && _spectrum is not null:
+                await AdjustSpectrumBrightnessAsync(_spectrum, -1).ConfigureAwait(false);
+                return true;
+            case "Keyboard" when actionKey == "keyboard-spectrum-logo" && _spectrum is not null:
+                await _spectrum.SetLogoStatusAsync(isSelected).ConfigureAwait(false);
+                return true;
+            case "Keyboard" when actionKey.StartsWith("keyboard-rgb-preset:", StringComparison.OrdinalIgnoreCase)
+                                 && _rgb is not null
+                                 && Enum.TryParse<RGBKeyboardBacklightPreset>(actionKey["keyboard-rgb-preset:".Length..], true, out var preset):
+                await _rgb.SetPresetAsync(preset).ConfigureAwait(false);
+                return true;
             case "Macro" when actionKey == "macro-controller":
                 _macro.SetEnabled(isSelected);
                 return true;
@@ -163,6 +186,79 @@ internal sealed class WindowsFeatureHostServices
         var spectrum = await _keyboard.IsSpectrumSupportedAsync().ConfigureAwait(false);
         var rgb = !spectrum && await _keyboard.IsRgbSupportedAsync().ConfigureAwait(false);
         var status = spectrum ? "Spectrum supported" : rgb ? "RGB supported" : "No compatible keyboard detected";
+        var actions = new List<FeatureActionItem>();
+
+        if (spectrum && _spectrum is not null)
+        {
+            var brightness = -1;
+            try
+            {
+                brightness = await _spectrum.GetBrightnessAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+                // Keep controls visible even when a transient device read fails.
+            }
+
+            actions.Add(new FeatureActionItem(
+                "keyboard-spectrum-brightness-down",
+                "Decrease keyboard brightness",
+                brightness >= 0 ? $"Current Spectrum brightness: {brightness}/9." : "Decrease the Spectrum keyboard brightness.",
+                "Decrease",
+                brightness != 0,
+                false,
+                false));
+            actions.Add(new FeatureActionItem(
+                "keyboard-spectrum-brightness-up",
+                "Increase keyboard brightness",
+                brightness >= 0 ? $"Current Spectrum brightness: {brightness}/9." : "Increase the Spectrum keyboard brightness.",
+                "Increase",
+                brightness < 9,
+                false,
+                false));
+
+            try
+            {
+                var logoEnabled = await _spectrum.GetLogoStatusAsync().ConfigureAwait(false);
+                actions.Add(new FeatureActionItem(
+                    "keyboard-spectrum-logo",
+                    "Keyboard logo lighting",
+                    "Turn the Spectrum keyboard logo lighting on or off.",
+                    logoEnabled ? "On" : "Off",
+                    true,
+                    logoEnabled,
+                    true));
+            }
+            catch
+            {
+                // Logo support varies by device generation.
+            }
+        }
+        else if (rgb && _rgb is not null)
+        {
+            RGBKeyboardBacklightPreset? selectedPreset = null;
+            try
+            {
+                selectedPreset = (await _rgb.GetStateAsync().ConfigureAwait(false)).SelectedPreset;
+            }
+            catch
+            {
+                // Presets remain available even when the current state cannot be read.
+            }
+
+            foreach (var preset in Enum.GetValues<RGBKeyboardBacklightPreset>())
+            {
+                actions.Add(new FeatureActionItem(
+                    $"keyboard-rgb-preset:{preset}",
+                    $"RGB preset: {preset}",
+                    "Apply this RGB keyboard backlight preset.",
+                    selectedPreset == preset ? "Selected" : "Apply",
+                    true,
+                    false,
+                    false));
+            }
+        }
+
         return new FeaturePageState(
             "Keyboard",
             "Keyboard",
@@ -170,14 +266,22 @@ internal sealed class WindowsFeatureHostServices
             spectrum || rgb ? "Available" : "Unavailable on this device",
             status,
             spectrum || rgb,
-            [new FeatureActionItem(
-                "keyboard-backlight",
-                "Keyboard backlight detection",
-                "The shared Windows keyboard service reports the detected backlight mode.",
-                status,
-                false,
-                false,
-                false)]);
+            actions.Count == 0
+                ? [new FeatureActionItem(
+                    "keyboard-backlight",
+                    "Keyboard backlight detection",
+                    "The shared Windows keyboard service reports the detected backlight mode.",
+                    status,
+                    false,
+                    false,
+                    false)]
+                : actions);
+    }
+
+    private static async Task AdjustSpectrumBrightnessAsync(SpectrumKeyboardBacklightController controller, int delta)
+    {
+        var current = await controller.GetBrightnessAsync().ConfigureAwait(false);
+        await controller.SetBrightnessAsync(Math.Clamp(current + delta, 0, 9)).ConfigureAwait(false);
     }
 
     private FeaturePageState GetMacroState()
