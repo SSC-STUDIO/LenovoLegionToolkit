@@ -1,6 +1,9 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using FluentAssertions;
 using Xunit;
 
@@ -38,6 +41,41 @@ public sealed class InstallerInstallPathPolicyRuntimeTests
         invocation.InnerException.Should().BeOfType<UnauthorizedAccessException>();
     }
 
+    [SkippableFact]
+    public void PrepareForInstall_ShouldProtectNestedPayloadAcl()
+    {
+        var isAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent())
+            .IsInRole(WindowsBuiltInRole.Administrator);
+        Skip.If(!isAdministrator, "Program Files ACL audit requires an elevated administrator token");
+
+        var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        var auditRoot = Path.Combine(
+            programFiles,
+            $"UniversalDeviceToolkit-AclAudit-{Guid.NewGuid():N}");
+        var nestedDirectory = Path.Combine(auditRoot, "payload");
+        var payloadFile = Path.Combine(nestedDirectory, "payload.dll");
+
+        try
+        {
+            Directory.CreateDirectory(nestedDirectory);
+            File.WriteAllText(payloadFile, "acl-audit");
+
+            var policyType = LoadPolicyType();
+            var prepare = policyType.GetMethod("PrepareForInstall", BindingFlags.Public | BindingFlags.Static);
+            prepare.Should().NotBeNull();
+            prepare!.Invoke(null, [auditRoot]);
+
+            AssertProtectedReadOnlyAcl(auditRoot, isDirectory: true);
+            AssertProtectedReadOnlyAcl(nestedDirectory, isDirectory: true);
+            AssertProtectedReadOnlyAcl(payloadFile, isDirectory: false);
+        }
+        finally
+        {
+            if (Directory.Exists(auditRoot))
+                Directory.Delete(auditRoot, recursive: true);
+        }
+    }
+
     private static bool InvokeIsUnderProgramFiles(string path)
     {
         var policyType = LoadPolicyType();
@@ -53,5 +91,50 @@ public sealed class InstallerInstallPathPolicyRuntimeTests
 
         var assembly = Assembly.LoadFrom(installerPath);
         return assembly.GetType("UniversalDeviceToolkit.Installer.InstallerInstallPathPolicy", throwOnError: true)!;
+    }
+
+    private static void AssertProtectedReadOnlyAcl(string path, bool isDirectory)
+    {
+        AuthorizationRuleCollection accessRules;
+        bool areAccessRulesProtected;
+        if (isDirectory)
+        {
+            var security = new DirectoryInfo(path).GetAccessControl();
+            accessRules = security.GetAccessRules(
+                includeExplicit: true,
+                includeInherited: true,
+                targetType: typeof(SecurityIdentifier));
+            areAccessRulesProtected = security.AreAccessRulesProtected;
+        }
+        else
+        {
+            var security = new FileInfo(path).GetAccessControl();
+            accessRules = security.GetAccessRules(
+                includeExplicit: true,
+                includeInherited: true,
+                targetType: typeof(SecurityIdentifier));
+            areAccessRulesProtected = security.AreAccessRulesProtected;
+        }
+
+        areAccessRulesProtected.Should().BeTrue(path);
+
+        var usersSid = new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, domainSid: null);
+        var usersRules = accessRules
+            .OfType<FileSystemAccessRule>()
+            .Where(rule => rule.AccessControlType == AccessControlType.Allow
+                           && rule.IdentityReference is SecurityIdentifier sid
+                           && sid.Equals(usersSid))
+            .ToArray();
+
+        usersRules.Should().ContainSingle(path);
+        foreach (var rule in usersRules)
+        {
+            rule.FileSystemRights.Should().HaveFlag(FileSystemRights.ReadAndExecute);
+            var writeRights = FileSystemRights.Write
+                              | FileSystemRights.Delete
+                              | FileSystemRights.ChangePermissions
+                              | FileSystemRights.TakeOwnership;
+            ((int)(rule.FileSystemRights & writeRights)).Should().Be(0, path);
+        }
     }
 }
