@@ -1,8 +1,11 @@
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
+using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.WPF.Controls;
 
@@ -23,13 +26,15 @@ namespace UniversalDeviceToolkit.WPF.Controls;
 /// </summary>
 public class AdaptiveTextBlock : TextBlock
 {
-    private const double DefaultMinFontSize = 10.0;
+    private const double DefaultMinFontSize = LocalizedOverflowPolicy.MinimumReadableFontSize;
     private const double DefaultFontSize = 12.0;
     private const double DefaultScaleStep = 0.5;
     private const double DefaultLineHeightFactor = 1.35;
 
     private double _baseFontSize;
     private bool _isAdapting;
+    private bool _ownsToolTip;
+    private DependencyPropertyDescriptor? _textDescriptor;
 
     public static readonly DependencyProperty MaxLinesProperty =
         DependencyProperty.Register(
@@ -52,6 +57,16 @@ public class AdaptiveTextBlock : TextBlock
             typeof(AdaptiveTextBlock),
             new PropertyMetadata(true, OnAutoToolTipChanged));
 
+    public static readonly DependencyProperty OverflowModeProperty =
+        DependencyProperty.Register(
+            nameof(OverflowMode),
+            typeof(LocalizedOverflowMode),
+            typeof(AdaptiveTextBlock),
+            new FrameworkPropertyMetadata(
+                LocalizedOverflowMode.Wrap,
+                FrameworkPropertyMetadataOptions.AffectsMeasure,
+                OnOverflowModeChanged));
+
     static AdaptiveTextBlock()
     {
         // Keep the TextBlock default template so styles and resource references
@@ -70,12 +85,16 @@ public class AdaptiveTextBlock : TextBlock
         AddAdaptCallback(TextWrappingProperty);
         AddAdaptCallback(TextTrimmingProperty);
         AddAdaptCallback(PaddingProperty);
+        AddAdaptCallback(LanguageProperty);
     }
 
     public AdaptiveTextBlock()
     {
         Loaded += OnLoaded;
         SizeChanged += OnSizeChanged;
+        Unloaded += OnUnloaded;
+        _textDescriptor = DependencyPropertyDescriptor.FromProperty(TextProperty, typeof(TextBlock));
+        _textDescriptor?.AddValueChanged(this, OnTextChanged);
     }
 
     /// <summary>
@@ -106,6 +125,16 @@ public class AdaptiveTextBlock : TextBlock
         set => SetValue(AutoToolTipProperty, value);
     }
 
+    /// <summary>
+    /// Selects the semantic overflow behavior. Wrap allows a bounded number of lines;
+    /// Ellipsis keeps the control compact and single-line.
+    /// </summary>
+    public LocalizedOverflowMode OverflowMode
+    {
+        get => (LocalizedOverflowMode)GetValue(OverflowModeProperty);
+        set => SetValue(OverflowModeProperty, value);
+    }
+
     private static void AddAdaptCallback(DependencyProperty property)
     {
         property.OverrideMetadata(
@@ -116,10 +145,21 @@ public class AdaptiveTextBlock : TextBlock
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         _baseFontSize = NormalizeFontSize(FontSize);
+        ApplyOverflowMode();
+        UpdateAutomationName();
         Adapt();
     }
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e) => Adapt();
+
+    private void OnUnloaded(object sender, RoutedEventArgs e) => RestoreOwnedToolTip();
+
+    private void OnTextChanged(object? sender, EventArgs e)
+    {
+        ApplyOverflowMode();
+        UpdateAutomationName();
+        Adapt();
+    }
 
     private static void OnLayoutConstraintChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -131,6 +171,15 @@ public class AdaptiveTextBlock : TextBlock
     {
         if (d is AdaptiveTextBlock block)
             block.Adapt();
+    }
+
+    private static void OnOverflowModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is AdaptiveTextBlock block)
+        {
+            block.ApplyOverflowMode();
+            block.Adapt();
+        }
     }
 
     private static void OnAdaptTriggerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -174,7 +223,7 @@ public class AdaptiveTextBlock : TextBlock
 
             // Fast path: the base font size already fits.
             var baseHeight = MeasureHeight(_baseFontSize, availableWidth);
-            if (baseHeight > constraint)
+            if (OverflowMode == LocalizedOverflowMode.Wrap && baseHeight > constraint)
             {
                 // Scale down in small steps until the text fits or we hit the minimum.
                 for (var size = _baseFontSize - DefaultScaleStep; size >= minFontSize; size -= DefaultScaleStep)
@@ -208,6 +257,7 @@ public class AdaptiveTextBlock : TextBlock
             }
 
             UpdateToolTip(constraint, availableWidth);
+            UpdateAutomationName();
         }
         finally
         {
@@ -227,7 +277,9 @@ public class AdaptiveTextBlock : TextBlock
             return MaxLines * lineHeight;
         }
 
-        return double.NaN;
+        return OverflowMode == LocalizedOverflowMode.Ellipsis
+            ? _baseFontSize * DefaultLineHeightFactor
+            : double.NaN;
     }
 
     private double MeasureHeight(double fontSize, double maxWidth)
@@ -261,7 +313,9 @@ public class AdaptiveTextBlock : TextBlock
         IsValidFontSize(fontSize) ? fontSize : DefaultFontSize;
 
     private bool ShouldWrap() =>
-        TextWrapping == TextWrapping.Wrap || TextWrapping == TextWrapping.WrapWithOverflow;
+        OverflowMode == LocalizedOverflowMode.Wrap
+            || TextWrapping == TextWrapping.Wrap
+            || TextWrapping == TextWrapping.WrapWithOverflow;
 
     private double GetPixelsPerDip()
     {
@@ -279,23 +333,72 @@ public class AdaptiveTextBlock : TextBlock
     {
         if (!AutoToolTip)
         {
-            ToolTip = null;
-            ToolTipService.SetIsEnabled(this, false);
+            RestoreOwnedToolTip();
             return;
         }
 
-        var fullHeight = MeasureHeight(_baseFontSize, availableWidth);
-        var truncated = fullHeight > constraint;
+        var truncated = ShouldWrap()
+            ? MeasureHeight(_baseFontSize, availableWidth) > constraint + 0.5
+            : MeasureNaturalWidth(_baseFontSize) > availableWidth + 1.0;
 
         if (truncated)
         {
-            ToolTip = Text;
+            if (!_ownsToolTip && ToolTip is null)
+                _ownsToolTip = true;
+            if (_ownsToolTip)
+                ToolTip = Text;
             ToolTipService.SetIsEnabled(this, true);
         }
         else
         {
-            ToolTip = null;
-            ToolTipService.SetIsEnabled(this, false);
+            RestoreOwnedToolTip();
         }
+    }
+
+    private void ApplyOverflowMode()
+    {
+        if (OverflowMode == LocalizedOverflowMode.Wrap)
+        {
+            TextWrapping = TextWrapping.Wrap;
+            TextTrimming = TextTrimming.CharacterEllipsis;
+            if (MaxLines <= 0)
+                MaxLines = LocalizedOverflowPolicy.DescriptionMaxLines;
+        }
+        else
+        {
+            TextWrapping = TextWrapping.NoWrap;
+            TextTrimming = TextTrimming.CharacterEllipsis;
+            MaxLines = 1;
+        }
+    }
+
+    private double MeasureNaturalWidth(double fontSize)
+    {
+        var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
+        var formatted = new FormattedText(
+            Text,
+            CultureInfo.CurrentUICulture,
+            FlowDirection,
+            typeface,
+            NormalizeFontSize(fontSize),
+            Foreground ?? Brushes.Black,
+            GetPixelsPerDip());
+        return formatted.WidthIncludingTrailingWhitespace;
+    }
+
+    private void UpdateAutomationName()
+    {
+        if (!string.IsNullOrWhiteSpace(Text) && string.IsNullOrWhiteSpace(AutomationProperties.GetName(this)))
+            AutomationProperties.SetName(this, Text);
+    }
+
+    private void RestoreOwnedToolTip()
+    {
+        if (!_ownsToolTip)
+            return;
+
+        ToolTip = null;
+        ToolTipService.SetIsEnabled(this, false);
+        _ownsToolTip = false;
     }
 }
