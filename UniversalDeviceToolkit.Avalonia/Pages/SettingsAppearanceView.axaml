@@ -280,8 +280,8 @@
                               MinWidth="150"
                               SelectionChanged="TemperatureComboBox_SelectionChanged"
                               AutomationProperties.Name="{local:Loc Key=Appearance_TemperatureUnit, Fallback=Temperature unit}">
-                        <ComboBoxItem Content="°C" Tag="Celsius" />
-                        <ComboBoxItem Content="°F" Tag="Fahrenheit" />
+                        <ComboBoxItem Content="{local:Loc Key=Celsius, Fallback=°C}" Tag="Celsius" />
+                        <ComboBoxItem Content="{local:Loc Key=Fahrenheit, Fallback=°F}" Tag="Fahrenheit" />
                     </ComboBox>
                 </Grid>
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
@@ -299,11 +299,11 @@
                               MinWidth="190"
                               SelectionChanged="FontComboBox_SelectionChanged"
                               AutomationProperties.Name="{local:Loc Key=Appearance_Font, Fallback=Application font}">
-                        <ComboBoxItem Content="Default" Tag="Default" />
-                        <ComboBoxItem Content="Segoe UI Variable" Tag="Segoe UI Variable" />
-                        <ComboBoxItem Content="Microsoft YaHei UI" Tag="Microsoft YaHei UI" />
-                        <ComboBoxItem Content="DengXian" Tag="DengXian" />
-                        <ComboBoxItem Content="Noto Sans CJK SC" Tag="Noto Sans CJK SC" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="Default" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="Segoe UI Variable" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="Microsoft YaHei UI" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="DengXian" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="Noto Sans CJK SC" />
                     </ComboBox>
                 </Grid>
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
@@ -321,10 +321,10 @@
                               MinWidth="150"
                               SelectionChanged="UiScaleComboBox_SelectionChanged"
                               AutomationProperties.Name="{local:Loc Key=Appearance_UiScale, Fallback=Interface scale}">
-                        <ComboBoxItem Content="Compact" Tag="Compact" />
-                        <ComboBoxItem Content="Standard" Tag="Standard" />
-                        <ComboBoxItem Content="Large" Tag="Large" />
-                        <ComboBoxItem Content="Extra large" Tag="ExtraLarge" />
+                        <ComboBoxItem Content="{local:Loc Key=Compact, Fallback=Compact}" Tag="Compact" />
+                        <ComboBoxItem Content="{local:Loc Key=Standard, Fallback=Standard}" Tag="Standard" />
+                        <ComboBoxItem Content="{local:Loc Key=Large, Fallback=Large}" Tag="Large" />
+                        <ComboBoxItem Content="{local:Loc Key=ExtraLarge, Fallback=Extra large}" Tag="ExtraLarge" />
                     </ComboBox>
                 </Grid>
             </StackPanel>

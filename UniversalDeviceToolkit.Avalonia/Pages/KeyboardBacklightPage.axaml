@@ -46,12 +46,11 @@
                             CornerRadius="{StaticResource CornerRadiusRound}"
                             Background="{DynamicResource StatusInfoBrush}"
                             VerticalAlignment="Top">
-                        <TextBlock Text="i"
-                                   FontSize="{StaticResource FontSizeSection}"
-                                   FontWeight="SemiBold"
-                                   Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
+                        <controls:NavigationIcon IconIdentifier="Info24"
+                                                 FontSize="{StaticResource IconSizeMD}"
+                                                 Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center" />
                     </Border>
                     <StackPanel Grid.Column="1" Spacing="4">
                         <controls:LocalizedTextBlock x:Name="StatusTitle"
