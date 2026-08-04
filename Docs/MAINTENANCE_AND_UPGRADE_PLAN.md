@@ -145,7 +145,7 @@
 |---|---|---|---|
 | R5 | Lib/Shared 四组双实现漂移 | 已改为 Shared 实现 + Lib 兼容 facade | 保持 wrapper，不再新增独立实现 |
 | R6 | WPF 本地 VM 与新 ViewModels 项目重复 | 本地副本已删除，页面统一解析 `UniversalDeviceToolkit.ViewModels` | 增加迁移 Guard，防止副本回流 |
-| R7 | 巨型文件 3 个 >1900 行 | `PluginRepositoryService`、`SensorsControl`、`PluginExtensionsPage` 已部分 partial 化 | 继续拆分安装生命周期和 UI 状态职责 |
+| R7 | 巨型文件 3 个 >1900 行 | `PluginRepositoryService`、`SensorsControl`、`PluginExtensionsPage` 已部分 partial 化；仓库下载和包校验职责已进一步隔离 | 继续拆分安装生命周期和 UI 状态职责 |
 | R8 | 测试全串行（CI 30-90 分钟） | 已启用程序集/集合并行，状态集合隔离 | 保持并行基线，关注新增全局状态测试 |
 | R9 | 插件信任链旁路 | PluginSignatureValidator.cs:118-159 | trusted store 完整性校验或移除免签通道 |
 | R10 | IPC 认证不区分提权态 | WPF\CLI\IpcServer.cs | 校验对端提权令牌 |
@@ -420,3 +420,11 @@
 - 系统优化定向测试当前 `123/123` 通过，覆盖推荐仅修改待应用状态、应用/取消分离、机器状态扫描、反向取消和批量执行。
 - `6bfe8d12` 修复 FlaUI 基类的显式路径语义：默认构造器可搜索程序，显式路径不再回退搜索；`FlaUISetupTests` `4/4` 通过。完整 FlaUI nightly 本地运行 180 秒超时，仅记录为环境/清理问题，未标记为通过。
 - WSL 相关可选功能已启用，但本机尚无 Linux distribution，`Scripts/Test-CrossPlatformInWsl.ps1` 尚未获得真实执行结果；macOS 仍需 macOS CI runner 验证。
+
+## 24. 2026-08-04 WSL 实测与插件仓库职责拆分
+
+- `ae9936cf` 将 `PluginRepositoryService` 的下载候选、Native curl、托管 HTTP 重试和下载进度处理移至 `PluginRepositoryService.Download.cs`；`708e63b0` 将本地包回退、ZIP/DLL 完整性、主 DLL 解析和运行时依赖落盘移至 `PluginRepositoryService.Package.cs`。主文件由 1121 行降至 812 行，未修改生产公共 API。
+- Windows 验证：插件库和主测试项目 Release 构建均为 `0` 警告、`0` 错误；`Plugins` 领域测试 `714/714` 通过、`0` Skip，仓库服务定向测试 `36/36` 通过。
+- WSL Linux 已完成真实执行：Ubuntu `26.04`、.NET `10.0.110`；Linux TFM 构建和跨平台测试构建均为 `0` 警告、`0` 错误，跨平台测试 `153/153` 通过、`0` Skip；`status`、`hardware`、`json` 三个 CLI smoke 均通过。
+- Android 支持面已在 `d4025280` 中移除，并由 `AndroidSupportGuardTests` 固化；移动/Android companion app 已明确为不支持范围。
+- 仍需：`PluginRepositoryService` 安装生命周期和 `PluginExtensionsPage` 主状态块的更深拆分；macOS runner、完整 FlaUI nightly、安装目录权限完整审计和按需提权模型重构仍未完成。
