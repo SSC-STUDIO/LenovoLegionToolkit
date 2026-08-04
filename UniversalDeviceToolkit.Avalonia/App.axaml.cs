@@ -4,14 +4,17 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
+using Avalonia.Styling;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Shared.Settings;
 using UniversalDeviceToolkit.Platform.Linux;
 using UniversalDeviceToolkit.Platform.MacOS;
 #if WINDOWS
 using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.WindowsDeviceAdapter;
+using UniversalDeviceToolkit.Lib.Settings;
 #endif
 
 namespace UniversalDeviceToolkit.Avalonia;
@@ -23,6 +26,10 @@ public partial class App : Application
     public ICommand ExitCommand { get; }
 
     private TrayIcon? _trayIcon;
+
+#if WINDOWS
+    private ApplicationSettings? _applicationSettings;
+#endif
 
     public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
 
@@ -62,6 +69,10 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+            ApplyPersistedTheme();
+#if WINDOWS
+            _applicationSettings = new ApplicationSettings();
+#endif
             desktop.MainWindow = new MainWindow(PlatformServices);
             // Minimize to tray instead of closing
             desktop.MainWindow.Closing += OnMainWindowClosing;
@@ -70,6 +81,17 @@ public partial class App : Application
             SetupTrayIcon();
         }
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void ApplyPersistedTheme()
+    {
+        var theme = new AvaloniaThemePreferences().Store.Theme;
+        RequestedThemeVariant = theme switch
+        {
+            "Light" => ThemeVariant.Light,
+            "Dark" => ThemeVariant.Dark,
+            _ => ThemeVariant.Default
+        };
     }
 
     private void SetupTrayIcon()
@@ -122,8 +144,34 @@ public partial class App : Application
     {
         if (sender is Window window && !IsExiting)
         {
-            e.Cancel = true;
-            window.Hide();
+#if WINDOWS
+            var settings = _applicationSettings?.Store;
+            if (settings?.MinimizeOnClose == true)
+            {
+                e.Cancel = true;
+                window.WindowState = WindowState.Minimized;
+                return;
+            }
+
+            if (settings?.MinimizeToTray == true)
+            {
+                e.Cancel = true;
+                window.Hide();
+                return;
+            }
+#endif
+        }
+    }
+
+    internal bool MinimizeToTrayEnabled
+    {
+        get
+        {
+#if WINDOWS
+            return _applicationSettings?.Store.MinimizeToTray == true;
+#else
+            return false;
+#endif
         }
     }
 

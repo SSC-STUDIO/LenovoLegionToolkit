@@ -35,6 +35,14 @@ public partial class MainWindow : Window
         // Force UI refresh when window state changes
         if (e.Property == WindowStateProperty)
         {
+            if (WindowState == WindowState.Minimized
+                && Application.Current is App app
+                && app.MinimizeToTrayEnabled)
+            {
+                Hide();
+                return;
+            }
+
             if (WindowState == WindowState.Normal || WindowState == WindowState.Maximized)
             {
                 // Invalidate visual to force redraw
