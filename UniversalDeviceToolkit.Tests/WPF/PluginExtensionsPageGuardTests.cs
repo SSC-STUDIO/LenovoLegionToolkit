@@ -128,6 +128,22 @@ public sealed class PluginExtensionsPageGuardTests
     }
 
     [Fact]
+    public void OnlineRefreshResponsibilities_ShouldLiveInDedicatedPartial()
+    {
+        var mainSource = File.ReadAllText(FindRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs"));
+        var onlineSource = File.ReadAllText(FindRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.Online.cs"));
+
+        mainSource.Should().NotContain("private async void RefreshButton_Click");
+        mainSource.Should().NotContain("private async Task FetchOnlinePluginsAsync");
+        mainSource.Should().NotContain("private void UpdateStoreOfflineBanner");
+        mainSource.Should().NotContain("private async void StoreRetryButton_Click");
+        onlineSource.Should().Contain("private async void RefreshButton_Click");
+        onlineSource.Should().Contain("private async Task FetchOnlinePluginsAsync");
+        onlineSource.Should().Contain("private void UpdateStoreOfflineBanner");
+        onlineSource.Should().Contain("private async void StoreRetryButton_Click");
+    }
+
+    [Fact]
     public void LocalInstall_ShouldRefreshRuntimeUiAndShowCapabilityAwareFeedback()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "PluginExtensionsPage.xaml.cs");
@@ -280,6 +296,14 @@ public sealed class PluginExtensionsPageGuardTests
                         "PluginExtensionsPage.Filtering.cs");
                     if (File.Exists(filteringPath))
                         source += Environment.NewLine + File.ReadAllText(filteringPath);
+
+                    var onlinePath = Path.Combine(
+                        candidateRoot,
+                        "UniversalDeviceToolkit.WPF",
+                        "Pages",
+                        "PluginExtensionsPage.Online.cs");
+                    if (File.Exists(onlinePath))
+                        source += Environment.NewLine + File.ReadAllText(onlinePath);
                 }
 
                 return source;
