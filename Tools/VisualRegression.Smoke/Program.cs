@@ -578,6 +578,9 @@ internal static partial class Program
 
         var toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
         ActivateElement(toggle);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-start", _windowWidth, _windowHeight, waitForAnimations: false);
+        Thread.Sleep(450);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-mid", _windowWidth, _windowHeight, waitForAnimations: false);
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
@@ -595,6 +598,7 @@ internal static partial class Program
 
         toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
         ActivateElement(toggle);
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-start", _windowWidth, _windowHeight, waitForAnimations: false);
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
@@ -840,6 +844,15 @@ internal static partial class Program
         => CapturePage(currentDirectory, mainWindow, label, _windowWidth, _windowHeight);
 
     private static void CapturePage(string currentDirectory, AutomationElement mainWindow, string label, int width, int height)
+        => CapturePage(currentDirectory, mainWindow, label, width, height, waitForAnimations: true);
+
+    private static void CapturePage(
+        string currentDirectory,
+        AutomationElement mainWindow,
+        string label,
+        int width,
+        int height,
+        bool waitForAnimations)
     {
         mainWindow = ResolveLiveWindow(mainWindow);
         NormalizeWindow(mainWindow, width, height);
@@ -855,7 +868,8 @@ internal static partial class Program
             ? WindowVideoRecorder.Start(windowHandle, Path.Combine(currentDirectory, $"{fileStem}.mp4"))
             : null;
 
-        WaitForAnimationsToComplete();
+        if (waitForAnimations)
+            WaitForAnimationsToComplete();
 
         CaptureWindowFromScreen(windowHandle, outputPath);
 
