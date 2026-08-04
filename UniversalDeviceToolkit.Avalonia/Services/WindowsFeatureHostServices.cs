@@ -95,6 +95,21 @@ internal sealed class WindowsFeatureHostServices
 
     public async Task<bool> SetActionAsync(string routeKey, string actionKey, bool isSelected)
     {
+        try
+        {
+            return await SetActionCoreAsync(routeKey, actionKey, isSelected).ConfigureAwait(false);
+        }
+        catch
+        {
+            // Feature cards are user-triggered controls. Report a rejected action
+            // to the page so it can keep the current state and show its tooltip;
+            // never surface a host-service exception from an async UI event.
+            return false;
+        }
+    }
+
+    private async Task<bool> SetActionCoreAsync(string routeKey, string actionKey, bool isSelected)
+    {
         switch (routeKey)
         {
             case "Keyboard" when actionKey == "keyboard-spectrum-brightness-up" && _spectrum is not null:
