@@ -54,10 +54,10 @@ public partial class SettingsCapabilityView : UserControl
                 ?? AvaloniaLocalization.GetString("Settings_Page_StatusMessage", "Changes are saved immediately.");
 
             OptionsPanel.Children.Clear();
-            foreach (var option in data.Options)
+            foreach (var option in data.Options.Where(option => option.IsVisible))
                 OptionsPanel.Children.Add(CreateOptionCard(option));
 
-            if (data.Options.Count == 0)
+            if (!data.Options.Any(option => option.IsVisible))
             {
                 OptionsPanel.Children.Add(CreateEmptyState(data.IsAvailable));
             }

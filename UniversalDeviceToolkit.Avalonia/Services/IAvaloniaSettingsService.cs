@@ -24,7 +24,8 @@ public sealed record AvaloniaSettingOption(
     string? SelectedValue = null,
     IReadOnlyList<string>? SelectedValues = null,
     string? Warning = null,
-    string? ActionText = null);
+    string? ActionText = null,
+    bool IsVisible = true);
 
 public sealed record AvaloniaSettingsPageData(
     string PageKey,
