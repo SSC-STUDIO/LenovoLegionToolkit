@@ -3,6 +3,8 @@
 using System.Diagnostics;
 using System.Globalization;
 using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Settings;
@@ -27,7 +29,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             "Appearance" => BuildAppearancePage(),
             "Application" => BuildApplicationPage(),
             "Display" => await BuildDisplayPageAsync().ConfigureAwait(false),
-            "SmartKeys" => BuildSmartKeysPage(),
+            "SmartKeys" => await BuildSmartKeysPageAsync().ConfigureAwait(false),
             "Update" => BuildUpdatePage(),
             "Power" => await BuildPowerPageAsync().ConfigureAwait(false),
             "Integrations" => BuildIntegrationsPage(),
@@ -146,41 +148,41 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         return;
     }
 
-    public Task SetSelectionAsync(string pageKey, string optionKey, string value)
+    public async Task SetSelectionAsync(string pageKey, string optionKey, string value)
     {
         if (pageKey == "Appearance" && optionKey == "Theme")
         {
             _applicationSettings.Store.Theme = ParseEnum<Theme>(value, "Theme");
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Appearance" && optionKey == "ThemeStylePreset")
         {
             _applicationSettings.Store.ThemeStylePreset = ParseEnum<ThemeStylePreset>(value, "ThemeStylePreset");
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Appearance" && optionKey == "AccentColorSource")
         {
             _applicationSettings.Store.AccentColorSource = ParseEnum<AccentColorSource>(value, "AccentColorSource");
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Appearance" && optionKey == "TemperatureUnit")
         {
             _applicationSettings.Store.TemperatureUnit = ParseTemperatureUnit(value);
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Appearance" && optionKey == "AppFontStyle")
         {
             _applicationSettings.Store.AppFontStyle = ParseFontStyle(value);
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Appearance" && optionKey == "UiScale")
@@ -189,35 +191,35 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             _applicationSettings.Store.AppTextSize = step.TextSize;
             _applicationSettings.Store.AppScale = step.Scale;
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Display" && optionKey == "WindowBackdrop")
         {
             _applicationSettings.Store.WindowBackdropStyle = ParseWindowBackdrop(value);
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Display" && optionKey == "NotificationPosition")
         {
             _applicationSettings.Store.NotificationPosition = ParseEnum<NotificationPosition>(value, "NotificationPosition");
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Display" && optionKey == "NotificationDuration")
         {
             _applicationSettings.Store.NotificationDuration = ParseEnum<NotificationDuration>(value, "NotificationDuration");
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Power" && optionKey == "PowerModeMapping")
         {
             _applicationSettings.Store.PowerModeMappingMode = ParsePowerModeMapping(value);
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "Update" && optionKey == "UpdateFrequency")
@@ -225,14 +227,21 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             _updateSettings.Store.UpdateCheckFrequency = ParseEnum<UpdateCheckFrequency>(value, "UpdateFrequency");
             _updateSettings.SynchronizeStore();
             IoCContainer.TryResolve<UpdateChecker>()?.UpdateMinimumTimeSpanForRefresh();
-            return Task.CompletedTask;
+            return;
         }
 
         if (pageKey == "SmartKeys" && optionKey == "SmartFnLockFlags")
         {
             _applicationSettings.Store.SmartFnLockFlags = ParseSmartFnLockFlags(value);
             _applicationSettings.SynchronizeStore();
-            return Task.CompletedTask;
+            return;
+        }
+
+        if (pageKey == "SmartKeys"
+            && (optionKey == "SmartKeySinglePressAction" || optionKey == "SmartKeyDoublePressAction"))
+        {
+            await SetSmartKeyPipelineAsync(optionKey, value).ConfigureAwait(false);
+            return;
         }
 
         if (pageKey == "Display" && optionKey == "RefreshRate")
@@ -240,7 +249,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             if (!int.TryParse(value.Replace(" Hz", string.Empty, StringComparison.OrdinalIgnoreCase), out var frequency))
                 throw new ArgumentException($"Invalid refresh rate '{value}'.", nameof(value));
 
-            return new RefreshRateFeature().SetStateAsync(new RefreshRate(frequency));
+            await new RefreshRateFeature().SetStateAsync(new RefreshRate(frequency)).ConfigureAwait(false);
+            return;
         }
 
         throw new KeyNotFoundException($"Unknown selection {pageKey}/{optionKey}.");
@@ -290,37 +300,95 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         await updateChecker.CheckAsync(forceCheck: true).ConfigureAwait(false);
     }
 
-    private AvaloniaSettingsPageData BuildSmartKeysPage() => new(
-        "SmartKeys",
-        "Smart Keys",
-        "Configure Fn-lock and Smart Key behavior.",
-        [
-            new(
-                "SmartFnLockFlags",
-                "Fn-lock modifier keys",
-                "Choose which modifier keys are required when toggling Fn-lock.",
-                AvaloniaSettingEditor.Selection,
-                true,
-                Values: GetSmartFnLockValues(_applicationSettings.Store.SmartFnLockFlags),
-                SelectedValue: FormatSmartFnLockFlags(_applicationSettings.Store.SmartFnLockFlags)),
-            new(
-                "SmartKeySinglePressAction",
-                "Smart Key single-press action",
-                "Choose the pipeline triggered by a single press of the Smart Key.",
-                AvaloniaSettingEditor.Action,
-                false,
-                ActionText: "Configure single press",
-                Warning: "Smart Key pipeline selection is not yet available in the Avalonia host."),
-            new(
-                "SmartKeyDoublePressAction",
-                "Smart Key double-press action",
-                "Choose the pipeline triggered by a double press of the Smart Key.",
-                AvaloniaSettingEditor.Action,
-                false,
-                ActionText: "Configure double press",
-                Warning: "Smart Key pipeline selection is not yet available in the Avalonia host."),
-        ],
-        true);
+    private async Task<AvaloniaSettingsPageData> BuildSmartKeysPageAsync()
+    {
+        var pipelines = await GetManualPipelineOptionsAsync().ConfigureAwait(false);
+        var singleSelected = GetSelectedPipelineName(_applicationSettings.Store.SmartKeySinglePressActionId, pipelines);
+        var doubleSelected = GetSelectedPipelineName(_applicationSettings.Store.SmartKeyDoublePressActionId, pipelines);
+
+        return new AvaloniaSettingsPageData(
+            "SmartKeys",
+            "Smart Keys",
+            "Configure Fn-lock and Smart Key behavior.",
+            [
+                new(
+                    "SmartFnLockFlags",
+                    "Fn-lock modifier keys",
+                    "Choose which modifier keys are required when toggling Fn-lock.",
+                    AvaloniaSettingEditor.Selection,
+                    true,
+                    Values: GetSmartFnLockValues(_applicationSettings.Store.SmartFnLockFlags),
+                    SelectedValue: FormatSmartFnLockFlags(_applicationSettings.Store.SmartFnLockFlags)),
+                new(
+                    "SmartKeySinglePressAction",
+                    "Smart Key single-press action",
+                    "Choose the pipeline triggered by a single press of the Smart Key.",
+                    AvaloniaSettingEditor.Selection,
+                    pipelines.Count > 0,
+                    Values: pipelines.Select(item => item.Name).ToArray(),
+                    SelectedValue: singleSelected,
+                    Warning: pipelines.Count == 0 ? "No manual automation pipelines are configured." : null),
+                new(
+                    "SmartKeyDoublePressAction",
+                    "Smart Key double-press action",
+                    "Choose the pipeline triggered by a double press of the Smart Key.",
+                    AvaloniaSettingEditor.Selection,
+                    pipelines.Count > 0,
+                    Values: pipelines.Select(item => item.Name).ToArray(),
+                    SelectedValue: doubleSelected,
+                    Warning: pipelines.Count == 0 ? "No manual automation pipelines are configured." : null),
+            ],
+            true);
+    }
+
+    private async Task<IReadOnlyList<(Guid Id, string Name)>> GetManualPipelineOptionsAsync()
+    {
+        var options = new List<(Guid Id, string Name)> { (Guid.Empty, "This app") };
+        var automation = IoCContainer.TryResolve<AutomationProcessor>();
+        if (automation is null)
+            return options;
+
+        var pipelines = await automation.GetPipelinesAsync().ConfigureAwait(false);
+        options.AddRange(pipelines
+            .Where(pipeline => pipeline.Trigger is null)
+            .OrderBy(pipeline => pipeline.Name, StringComparer.OrdinalIgnoreCase)
+            .Select(pipeline =>
+            {
+                var name = PipelineNameLocalizer.LocalizeStoredName(pipeline.Name) ?? pipeline.Name;
+                return (pipeline.Id, string.IsNullOrWhiteSpace(name) ? $"Pipeline {pipeline.Id:D}" : name);
+            }));
+        return options;
+    }
+
+    private static string GetSelectedPipelineName(Guid? id, IReadOnlyList<(Guid Id, string Name)> options)
+    {
+        if (id is not Guid selected || selected == Guid.Empty)
+            return options[0].Name;
+
+        return options.FirstOrDefault(option => option.Id == selected).Name ?? options[0].Name;
+    }
+
+    private async Task SetSmartKeyPipelineAsync(string optionKey, string value)
+    {
+        var options = await GetManualPipelineOptionsAsync().ConfigureAwait(false);
+        var selected = options.FirstOrDefault(option => string.Equals(option.Name, value, StringComparison.Ordinal));
+        var id = selected.Id == Guid.Empty ? (Guid?)null : selected.Id;
+        var isDoublePress = optionKey == "SmartKeyDoublePressAction";
+        var list = isDoublePress
+            ? _applicationSettings.Store.SmartKeyDoublePressActionList
+            : _applicationSettings.Store.SmartKeySinglePressActionList;
+
+        list.Clear();
+        if (id is Guid pipelineId)
+            list.Add(pipelineId);
+
+        if (isDoublePress)
+            _applicationSettings.Store.SmartKeyDoublePressActionId = id;
+        else
+            _applicationSettings.Store.SmartKeySinglePressActionId = id;
+
+        _applicationSettings.SynchronizeStore();
+    }
 
     private AvaloniaSettingsPageData BuildAppearancePage()
     {
