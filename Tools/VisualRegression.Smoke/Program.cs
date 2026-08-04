@@ -1298,27 +1298,59 @@ internal static partial class Program
     private static AutomationElement ResolveLiveWindow(AutomationElement window)
     {
         var processId = window.Current.ProcessId;
-        return ResolveLiveWindowByProcessId(processId);
+        return ResolveLiveWindowByProcessId(processId, TimeSpan.FromSeconds(5));
     }
 
-    private static AutomationElement ResolveLiveWindowByProcessId(int processId)
+    private static AutomationElement ResolveLiveWindowByProcessId(int processId, TimeSpan? timeout = null)
     {
-        return TryFindMainShellWindow(processId)
-               ?? throw new InvalidOperationException($"Main shell window is not available for process {processId}.");
+        var deadline = DateTime.UtcNow + (timeout ?? TimeSpan.FromSeconds(5));
+        while (DateTime.UtcNow < deadline)
+        {
+            var window = TryFindMainShellWindow(processId);
+            if (window is not null)
+                return window;
+
+            Thread.Sleep(100);
+        }
+
+        throw new InvalidOperationException(
+            $"Main shell window is not available for process {processId} after {(timeout ?? TimeSpan.FromSeconds(5)).TotalSeconds:F0}s.");
     }
 
     private static AutomationElement WaitForAutomationId(AutomationElement root, string automationId, TimeSpan timeout)
     {
         var found = WaitUntil(
-            () => IsVisible(FindByAutomationId(ResolveLiveWindow(root), automationId)),
+            () => TryResolveLiveWindow(root, out var live)
+                  && IsVisible(FindByAutomationId(live, automationId)),
             timeout,
             TimeSpan.FromMilliseconds(200));
 
-        var element = FindByAutomationId(ResolveLiveWindow(root), automationId);
+        var element = TryResolveLiveWindow(root, out var resolved)
+            ? FindByAutomationId(resolved, automationId)
+            : null;
         if (!found || element is null)
             throw new TimeoutException($"Timed out waiting for automation id '{automationId}'.");
 
         return element;
+    }
+
+    private static bool TryResolveLiveWindow(AutomationElement window, out AutomationElement live)
+    {
+        live = null!;
+        try
+        {
+            var processId = window.Current.ProcessId;
+            var candidate = TryFindMainShellWindow(processId);
+            if (candidate is null)
+                return false;
+
+            live = candidate;
+            return true;
+        }
+        catch (ElementNotAvailableException)
+        {
+            return false;
+        }
     }
 
     private static AutomationElement? FindByAutomationId(AutomationElement root, string automationId)
