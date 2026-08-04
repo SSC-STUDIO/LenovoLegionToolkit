@@ -24,5 +24,14 @@ public sealed class UnavailablePlatformServices : IPlatformServices
                 AvaloniaLocalization.GetString("Dashboard_Status_NotSupported", "Not supported")),
         ]);
 
+    public async Task<DashboardSnapshot> GetDashboardSnapshotAsync() =>
+        new(
+            AvaloniaLocalization.GetString("Dashboard_Status_Unknown", "Unknown device"),
+            AvaloniaLocalization.GetString("Dashboard_Status_NotSupported", "Not supported"),
+            AvaloniaLocalization.GetString("Dashboard_Status_NotSupported", "Not supported"),
+            await GetFeatureGroupsAsync(),
+            await GetSensorReadingsAsync(),
+            DateTimeOffset.UtcNow);
+
     public Task<bool> IsSupportedLegionMachineAsync() => Task.FromResult(false);
 }

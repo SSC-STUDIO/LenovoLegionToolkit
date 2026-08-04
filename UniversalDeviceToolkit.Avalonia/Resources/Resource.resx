@@ -123,4 +123,19 @@
   <data name="Display_RefreshRateDescription"><value>Select the display refresh rate (requires supported hardware).</value></data>
   <data name="Display_Overdrive"><value>Overdrive</value></data>
   <data name="Display_OverdriveDescription"><value>Enable display overdrive for faster pixel response times.</value></data>
+  <data name="Dashboard_Subtitle"><value>Device health and controls</value></data>
+  <data name="Dashboard_Ready"><value>Ready</value></data>
+  <data name="Dashboard_Power"><value>Power</value></data>
+  <data name="Dashboard_LastUpdated"><value>Last updated</value></data>
+  <data name="FeaturePage_StatusTitle"><value>Feature status</value></data>
+  <data name="FeaturePage_Loading"><value>Reading the current platform capability...</value></data>
+  <data name="FeaturePage_Available"><value>Available</value></data>
+  <data name="FeaturePage_Unsupported"><value>Unavailable on this device</value></data>
+  <data name="FeaturePage_AvailableMessage"><value>The platform adapter reported this feature as available.</value></data>
+  <data name="FeaturePage_LoadFailed"><value>Unable to load feature state</value></data>
+  <data name="Settings_Page_StatusTitle"><value>Settings ready</value></data>
+  <data name="Settings_Page_StatusMessage"><value>Changes are saved immediately.</value></data>
+  <data name="Settings_Page_LoadFailed"><value>Unable to load settings</value></data>
+  <data name="Settings_Page_NoOptions"><value>No settings are available for this page.</value></data>
+  <data name="Settings_Page_UnavailableDetail"><value>The controls remain visible when the adapter is available on this platform.</value></data>
 </root>

@@ -12,6 +12,7 @@ public interface IPlatformServices
 {
     Task<IReadOnlyList<FeatureGroupItem>> GetFeatureGroupsAsync();
     Task<IReadOnlyList<SensorReadingItem>> GetSensorReadingsAsync();
+    Task<DashboardSnapshot> GetDashboardSnapshotAsync();
     Task<bool> IsSupportedLegionMachineAsync();
 }
 
@@ -35,3 +36,15 @@ public sealed record SensorReadingItem(
 
     public string CategoryLabel => string.IsNullOrWhiteSpace(Category) ? "Sensor" : Category;
 }
+
+/// <summary>
+/// Refreshable dashboard payload. History is owned by the view model so adapters only need to
+/// provide a coherent current snapshot and never retain UI state.
+/// </summary>
+public sealed record DashboardSnapshot(
+    string DeviceName,
+    string DeviceSupport,
+    string PowerStatus,
+    IReadOnlyList<FeatureGroupItem> FeatureGroups,
+    IReadOnlyList<SensorReadingItem> SensorReadings,
+    DateTimeOffset CapturedAtUtc);

@@ -5,13 +5,14 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 
 public partial class DashboardPage : UserControl
 {
+    private DashboardPageViewModel? _viewModel;
+
     public DashboardPage(IPlatformServices platformServices)
     {
         InitializeComponent();
-        DataContext = new DashboardPageViewModel(platformServices);
-        if (DataContext is DashboardPageViewModel viewModel)
-        {
-            _ = viewModel.LoadAsync();
-        }
+        _viewModel = new DashboardPageViewModel(platformServices);
+        DataContext = _viewModel;
+        AttachedToVisualTree += (_, _) => _viewModel.StartPolling();
+        DetachedFromVisualTree += (_, _) => _viewModel.StopPolling();
     }
 }

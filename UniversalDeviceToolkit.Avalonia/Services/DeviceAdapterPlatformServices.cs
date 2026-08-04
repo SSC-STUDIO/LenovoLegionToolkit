@@ -13,7 +13,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public async Task<IReadOnlyList<FeatureGroupItem>> GetFeatureGroupsAsync()
     {
-        var snapshot = await ReadSnapshotAsync().ConfigureAwait(false);
+        var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
         var groups = new List<FeatureGroupItem>
         {
             new(
@@ -35,7 +35,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public async Task<IReadOnlyList<SensorReadingItem>> GetSensorReadingsAsync()
     {
-        var snapshot = await ReadSnapshotAsync().ConfigureAwait(false);
+        var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
         if (snapshot.SensorReadings.Count == 0)
         {
             return
@@ -58,20 +58,36 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public async Task<bool> IsSupportedLegionMachineAsync()
     {
-        var snapshot = await ReadSnapshotAsync().ConfigureAwait(false);
+        var snapshot = await ReadSnapshotAsync(forceRefresh: false).ConfigureAwait(false);
         return snapshot.Support.IsHardwareControlAvailable &&
                snapshot.Support.DevicePackId.Contains("legion", StringComparison.OrdinalIgnoreCase);
     }
 
-    private async Task<DeviceSnapshot> ReadSnapshotAsync()
+    public async Task<DashboardSnapshot> GetDashboardSnapshotAsync()
     {
-        if (_snapshot is not null)
+        var snapshot = await ReadSnapshotAsync(forceRefresh: true).ConfigureAwait(false);
+        var featureGroups = BuildFeatureGroups(snapshot);
+        var sensors = BuildSensorReadings(snapshot);
+        return new DashboardSnapshot(
+            FormatIdentity(snapshot.Identity),
+            snapshot.Support.DisplayName,
+            string.IsNullOrWhiteSpace(snapshot.PowerStatus)
+                ? DashboardLocalization.Get("Dashboard_Status_Unknown", "Unknown")
+                : snapshot.PowerStatus!,
+            featureGroups,
+            sensors,
+            DateTimeOffset.UtcNow);
+    }
+
+    private async Task<DeviceSnapshot> ReadSnapshotAsync(bool forceRefresh)
+    {
+        if (!forceRefresh && _snapshot is not null)
             return _snapshot;
 
         await _snapshotLock.WaitAsync().ConfigureAwait(false);
         try
         {
-            _snapshot ??= await adapter.ReadSnapshotAsync().ConfigureAwait(false);
+            _snapshot = await adapter.ReadSnapshotAsync().ConfigureAwait(false);
             return _snapshot;
         }
         catch (Exception ex)
@@ -119,4 +135,47 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     private static string Humanize(string value) =>
         string.Join(' ', value.Split('-', StringSplitOptions.RemoveEmptyEntries)
             .Select(part => part.Length == 0 ? part : char.ToUpperInvariant(part[0]) + part[1..]));
+
+    private IReadOnlyList<FeatureGroupItem> BuildFeatureGroups(DeviceSnapshot snapshot)
+    {
+        var groups = new List<FeatureGroupItem>
+        {
+            new(
+                DashboardLocalization.Get("Dashboard_Feature_Device", "Device"),
+                FormatIdentity(snapshot.Identity),
+                snapshot.Support.DisplayName),
+            new(
+                DashboardLocalization.Get("Dashboard_Feature_DevicePack", "Device support"),
+                snapshot.Support.DevicePackId,
+                snapshot.Support.SupportLevel),
+        };
+
+        groups.AddRange(snapshot.Capabilities.Select(capability => new FeatureGroupItem(
+            Humanize(capability.Id),
+            capability.Reason,
+            FormatCapabilityStatus(capability))));
+        return groups;
+    }
+
+    private IReadOnlyList<SensorReadingItem> BuildSensorReadings(DeviceSnapshot snapshot)
+    {
+        if (snapshot.SensorReadings.Count == 0)
+        {
+            return
+            [
+                new(
+                    DashboardLocalization.Get("Dashboard_Feature_SystemTelemetry", "System Telemetry"),
+                    DashboardLocalization.Get("Dashboard_Status_NotSupported", "Not supported")),
+            ];
+        }
+
+        return snapshot.SensorReadings
+            .Select(reading => new SensorReadingItem(
+                reading.Name,
+                $"{reading.Value.ToString("0.##", CultureInfo.InvariantCulture)} {reading.Unit}".Trim(),
+                reading.Category,
+                reading.Value,
+                reading.Unit))
+            .ToArray();
+    }
 }

@@ -26,6 +26,8 @@ public sealed class WindowsPlatformServices : IPlatformServices
 
     public Task<IReadOnlyList<SensorReadingItem>> GetSensorReadingsAsync() => _inner.GetSensorReadingsAsync();
 
+    public Task<DashboardSnapshot> GetDashboardSnapshotAsync() => _inner.GetDashboardSnapshotAsync();
+
     public Task<bool> IsSupportedLegionMachineAsync() => _inner.IsSupportedLegionMachineAsync();
 }
 

@@ -22,6 +22,11 @@
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                OverflowMode="Wrap"
                                MaxLines="2" />
+                    <controls:LocalizedTextBlock Text="{Binding DeviceName}"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               FontSize="{StaticResource FontSizeSmallCaption}"
+                               OverflowMode="Ellipsis"
+                               MaxLines="1" />
                 </StackPanel>
                 <Button Grid.Column="1"
                         x:Name="DashboardRefreshButton"
@@ -48,12 +53,50 @@
                         CornerRadius="{StaticResource CornerRadiusRound}"
                         Padding="12,6"
                         VerticalAlignment="Center">
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Ready, Fallback=Ready}"
+                    <controls:LocalizedTextBlock Text="{Binding DeviceSupport}"
                                Foreground="{DynamicResource StatusSuccessBrush}"
                                FontSize="{StaticResource FontSizeSmallCaption}"
                                FontWeight="SemiBold"
                                OverflowMode="Ellipsis"
                                MaxLines="1" />
+                </Border>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <StackPanel Spacing="4">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Power, Fallback=Power}"
+                                                     FontSize="{StaticResource FontSizeBody}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                        <controls:LocalizedTextBlock Text="{Binding PowerStatus}"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1"
+                        Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <StackPanel Spacing="4">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_LastUpdated, Fallback=Last updated}"
+                                                     FontSize="{StaticResource FontSizeBody}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                        <controls:LocalizedTextBlock Text="{Binding LastUpdatedText}"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                    </StackPanel>
                 </Border>
             </Grid>
 
@@ -125,7 +168,7 @@
                                 BorderThickness="1"
                                 CornerRadius="{StaticResource CornerRadiusCard}"
                                 Padding="16">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
                                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                                     <controls:LocalizedTextBlock Text="{Binding Name}"
                                                                  FontSize="{StaticResource FontSizeBody}"
@@ -181,7 +224,13 @@
                                              CornerRadius="{StaticResource CornerRadiusProgressBar}"
                                              Foreground="{DynamicResource AccentBackgroundBrush}"
                                              Background="{DynamicResource ChartTrackBrush}" />
-                                <Border Grid.Row="3"
+                                <controls:TrendSparkline Grid.Row="3"
+                                                         ItemsSource="{Binding History}"
+                                                         Height="52"
+                                                         Margin="0,2,0,0"
+                                                         Stroke="{DynamicResource AccentBackgroundBrush}"
+                                                         Fill="{DynamicResource ChartSurfaceBrush}" />
+                                <Border Grid.Row="4"
                                         Background="{DynamicResource StatusNeutralBackgroundBrush}"
                                         CornerRadius="{StaticResource CornerRadiusCompact}"
                                         Padding="8,5">
