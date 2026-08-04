@@ -158,7 +158,7 @@ internal static partial class Program
                 _assertDarkThemeSurface = switchTheme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
                 NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
                     "settings",
-                    [],
+                    ["SettingsNavItem"],
                     ["Settings"],
                     root => FindVisibleClassContains(root, "SettingsPage")
                             || FindVisibleTextContains(root, "Settings")));
@@ -212,7 +212,7 @@ internal static partial class Program
             {
                 NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
                     "settings",
-                    [],
+                    ["SettingsNavItem"],
                     ["Settings"],
                     root => FindVisibleClassContains(root, "SettingsPage")
                             || FindVisibleTextContains(root, "Settings")));
@@ -275,7 +275,7 @@ internal static partial class Program
 
             NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
                 "settings",
-                [],
+                ["SettingsNavItem"],
                 ["Settings"],
                 root => FindVisibleClassContains(root, "SettingsPage")
                         || FindVisibleTextContains(root, "Settings")));
