@@ -225,11 +225,11 @@ public sealed class KeyboardBacklightPage(IPlatformServices services) : FeatureP
 public sealed class ActionsPage(IPlatformServices services) : FeaturePageView(services, new(
     "Actions",
     "Actions",
-    "Review supported device actions and hardware workflows.",
+    "Run configured automation pipelines and hardware workflows.",
     "Rocket24",
     "Hardware action execution is not exposed by this platform adapter.",
     "Review available actions",
-    "Actions are shown for inspection and remain non-destructive until a device adapter is available.",
+    "Automation pipelines are loaded from the shared Windows automation service and can be run individually.",
     "Rocket24"));
 
 public sealed class MacroPage(IPlatformServices services) : FeaturePageView(services, new(
@@ -249,7 +249,7 @@ public sealed class WindowsOptimizationPage(IPlatformServices services) : Featur
     "Gauge24",
     "Windows optimization actions require the Windows optimization adapter.",
     "Review optimization actions",
-    "Actions are read-only in this migration surface; no system changes are executed.",
+    "Apply or roll back supported Windows optimization actions from the shared optimization service.",
     "Gauge24"));
 
 public sealed class PluginExtensionsPage(IPlatformServices services) : FeaturePageView(services, new(
@@ -259,5 +259,5 @@ public sealed class PluginExtensionsPage(IPlatformServices services) : FeaturePa
     "Apps24",
     "Plugin discovery and installation require the plugin service adapter.",
     "Review installed extensions",
-    "Plugin actions remain non-destructive until the host adapter is available.",
+    "Manage installed and registered extensions through the shared plugin manager.",
     "Apps24"));
