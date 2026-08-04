@@ -470,3 +470,10 @@
 - `flaui-tests.yml` 将 TRX 固定写入 `TestResults/FlaUI`，在上传 artifact 前执行结果门禁；桌面前置检查失败仍直接失败，不通过 Skip 伪造绿色。
 - `CiWorkflowGuardTests` 已锁定结果目录、门禁脚本、执行顺序和两类非执行结果。
 - Windows 验证：FlaUI workflow Guard `3/3` 通过；TRX 断言脚本已验证正常、缺失、空结果、`Skipped` 和 `NotExecuted` 五类结果；完整 nightly 仍需 self-hosted 交互桌面 runner。
+
+## 31. 2026-08-04 PluginExtensionsPage 筛选职责拆分
+
+- `c3d9eb28` 将 `PluginExtensionsPage` 的 `ApplyFilters`、`UpdatePluginsList` 和 `SelectPreferredPlugin` 移至 `PluginExtensionsPage.Filtering.cs`，保持页面行为和生产公共 API 不变。
+- `PluginExtensionsPageGuardTests` 已纳入筛选 partial 的组合源码读取，并新增职责归位断言，避免后续拆分后 Guard 漏检。
+- 验证：WPF `x64 Release` 构建 `0` 警告、`0` 错误；页面 Guard `10/10` 通过、`0` Skip。
+- 插件全量验证本轮未完成：此前使用未启用 `EnableUdtTestHooks` 的复用输出时得到 `537/540`，剩余失败涉及测试 Hook/进程环境，不能将该结果记为全通过；需要隔离且正确启用 Hook 的构建输出后再复测。
