@@ -256,6 +256,61 @@ internal sealed class WindowsOptimizationElevationClient : IWindowsOptimizationE
     }
 }
 
+/// <summary>
+/// Public entry point for non-WPF hosts that reuse the Windows optimization service.
+/// The protocol and executor remain internal so callers cannot construct untrusted
+/// elevation requests directly.
+/// </summary>
+public static class WindowsOptimizationElevationBridge
+{
+    public static bool IsAvailable => IoCContainer.TryResolve<IWindowsOptimizationExecutor>() is not null;
+
+    public static Task ExecuteRecommendedAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(actionKeys);
+
+        var operations = actionKeys
+            .Select(actionKey => new WindowsOptimizationOperation(
+                actionKey,
+                Apply: true,
+                VerificationActionKey: actionKey,
+                ExpectedAppliedState: true))
+            .ToArray();
+
+        return ResolveExecutor().ExecuteAsync(operations, cancellationToken);
+    }
+
+    public static Task ExecuteCleanupAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(actionKeys);
+        return ResolveExecutor().ExecuteCleanupAsync(actionKeys, cancellationToken);
+    }
+
+    public static Task ExecuteActionAsync(
+        string actionKey,
+        bool apply,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(actionKey);
+        return ResolveExecutor().ExecuteAsync(
+            [new WindowsOptimizationOperation(
+                actionKey,
+                apply,
+                VerificationActionKey: actionKey,
+                ExpectedAppliedState: apply)],
+            cancellationToken);
+    }
+
+    private static IWindowsOptimizationExecutor ResolveExecutor() =>
+        IoCContainer.TryResolve<IWindowsOptimizationExecutor>()
+        ?? throw new InvalidOperationException(
+            "The Windows optimization elevation executor is not registered.");
+}
+
 internal sealed class WindowsOptimizationElevationRequest
 {
     public string Token { get; set; } = string.Empty;

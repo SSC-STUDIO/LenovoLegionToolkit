@@ -20,6 +20,7 @@ using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Utils;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -590,7 +591,7 @@ internal sealed class WindowsFeatureHostServices
                         .Where(action => action.Recommended)
                         .Select(action => action.Key)
                         .ToArray();
-                    await _optimization.ExecuteActionsAsync(recommended, CancellationToken.None).ConfigureAwait(false);
+                    await ExecuteRecommendedOptimizationAsync(recommended, CancellationToken.None).ConfigureAwait(false);
                     return true;
                 }
 
@@ -618,8 +619,8 @@ internal sealed class WindowsFeatureHostServices
                     if (_selectedCleanupActions.Count == 0)
                         return false;
 
-                    await _optimization.ExecuteActionsAsync(
-                        _selectedCleanupActions,
+                    await ExecuteCleanupAsync(
+                        _selectedCleanupActions.ToArray(),
                         CancellationToken.None).ConfigureAwait(false);
                     _selectedCleanupActions.Clear();
                     _estimatedCleanupSize = 0;
@@ -635,14 +636,14 @@ internal sealed class WindowsFeatureHostServices
 
                 if (isSelected)
                 {
-                    await _optimization.ApplyActionAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                    await ExecuteOptimizationActionAsync(action.Key, apply: true, CancellationToken.None).ConfigureAwait(false);
                     return true;
                 }
 
                 if (action.RollbackAsync is null)
                     return false;
 
-                await _optimization.RevertActionAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                await ExecuteOptimizationActionAsync(action.Key, apply: false, CancellationToken.None).ConfigureAwait(false);
                 return true;
             default:
                 return false;
@@ -656,6 +657,37 @@ internal sealed class WindowsFeatureHostServices
 
         _applicationSettings.Store.SelectedCleanupActions = _selectedCleanupActions.ToList();
         _applicationSettings.SynchronizeStore();
+    }
+
+    private Task ExecuteRecommendedOptimizationAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        return WindowsOptimizationElevationBridge.IsAvailable
+            ? WindowsOptimizationElevationBridge.ExecuteRecommendedAsync(actionKeys, cancellationToken)
+            : _optimization!.ExecuteActionsAsync(actionKeys, cancellationToken);
+    }
+
+    private Task ExecuteCleanupAsync(
+        IReadOnlyList<string> actionKeys,
+        CancellationToken cancellationToken)
+    {
+        return WindowsOptimizationElevationBridge.IsAvailable
+            ? WindowsOptimizationElevationBridge.ExecuteCleanupAsync(actionKeys, cancellationToken)
+            : _optimization!.ExecuteActionsAsync(actionKeys, cancellationToken);
+    }
+
+    private Task ExecuteOptimizationActionAsync(
+        string actionKey,
+        bool apply,
+        CancellationToken cancellationToken)
+    {
+        if (WindowsOptimizationElevationBridge.IsAvailable)
+            return WindowsOptimizationElevationBridge.ExecuteActionAsync(actionKey, apply, cancellationToken);
+
+        return apply
+            ? _optimization!.ApplyActionAsync(actionKey, cancellationToken)
+            : _optimization!.RevertActionAsync(actionKey, cancellationToken);
     }
 
     private async Task<FeaturePageState> GetKeyboardStateAsync()
