@@ -496,4 +496,4 @@
 
 - `faa2be10` 将 `EnsureInstalledManifest`、`TryReadInstalledManifest` 和清单序列化依赖移至 `PluginRepositoryService.Installation.Manifest.cs`；`Installation.cs` 现在只保留解压、校验、备份、复制、信任记录和回滚事务。
 - 验证：插件项目 Release 构建 `0` 警告、`0` 错误；所有 `DownloadAndInstallPluginAsync` 定向用例 `11/11` 通过、`0` Skip。
-- 完整 `PluginRepositoryServiceTests` 本轮实际结果为 `37/38`：唯一失败仍为 `FetchAvailablePluginsAsync_ShouldUseCachedStoreWhenRemoteSourcesFail`，原因是当前复用的生产插件程序集未以 `EnableUdtTestHooks` 构建，属于测试环境构建隔离问题，不能记为全量通过。
+- 完整 `PluginRepositoryServiceTests` 在正确 Hook 输出下已恢复为 `38/38`，`0` Skip；此前 `37/38` 的唯一失败来自复用未启用 `EnableUdtTestHooks` 的生产插件程序集。可复现方式是先以 `/p:EnableUdtTestHooks=true` 串行构建 `Lib.Plugins` 及其 Lib/Shared 依赖，再以 `BuildProjectReferences=false` 构建并运行测试程序集；该方式不复用 shipping 输出。
