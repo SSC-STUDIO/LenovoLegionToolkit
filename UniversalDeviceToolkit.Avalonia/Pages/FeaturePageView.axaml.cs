@@ -387,6 +387,8 @@ public partial class FeaturePageView : UserControl
                 : await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, actionKey, true);
             if (accepted)
             {
+                if (actionKey.StartsWith("plugin-open:", StringComparison.OrdinalIgnoreCase))
+                    _actionRequested?.Invoke(actionKey);
                 _pluginCatalog = await _platformServices.GetPluginCatalogAsync();
                 if (_lastState is not null)
                     RenderFeatureItems(_lastState);
