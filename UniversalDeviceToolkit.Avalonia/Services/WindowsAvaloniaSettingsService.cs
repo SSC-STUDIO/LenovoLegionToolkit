@@ -957,13 +957,15 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private AvaloniaSettingsPageData BuildIntegrationsPage()
     {
         var store = _integrationsSettings.Store;
+        var cliHostAvailable = IoCContainer.TryResolve<ICliHostLifecycle>() is not null;
         return new AvaloniaSettingsPageData(
             "Integrations",
             "Integrations",
             "Connect Universal Device Toolkit to supported external tools and services.",
             [
                 new("HWiNFO", "HWiNFO integration", "Expose hardware sensor data through HWiNFO when available.", AvaloniaSettingEditor.Toggle, true, store.HWiNFO),
-                new("CLI", "CLI interface", "Enable the local command-line interface.", AvaloniaSettingEditor.Toggle, true, store.CLI),
+                new("CLI", "CLI interface", "Enable the local command-line interface.", AvaloniaSettingEditor.Toggle, cliHostAvailable, store.CLI,
+                    Warning: cliHostAvailable ? null : "The CLI host service is not initialized for this Avalonia host."),
                 new("CLIPath", "Add CLI to PATH", "Add or remove the command-line tools from the current user's PATH.", AvaloniaSettingEditor.Toggle, true, SystemPath.HasCLI()),
             ],
             true);
