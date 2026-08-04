@@ -408,6 +408,14 @@ public partial class FeaturePageView : UserControl
                 if (_lastState is not null)
                     RenderFeatureItems(_lastState);
             }
+            else
+            {
+                ToolTip.SetTip(
+                    PluginCatalogToolbar,
+                    AvaloniaLocalization.GetString(
+                        "PluginExtensionsPage_ActionFailed",
+                        "The plugin operation could not be completed."));
+            }
         }
         finally
         {
