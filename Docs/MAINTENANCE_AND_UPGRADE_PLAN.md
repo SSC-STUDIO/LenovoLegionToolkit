@@ -477,3 +477,11 @@
 - `PluginExtensionsPageGuardTests` 已纳入筛选 partial 的组合源码读取，并新增职责归位断言，避免后续拆分后 Guard 漏检。
 - 验证：WPF `x64 Release` 构建 `0` 警告、`0` 错误；页面 Guard `10/10` 通过、`0` Skip。
 - 插件全量验证本轮未完成：此前使用未启用 `EnableUdtTestHooks` 的复用输出时得到 `537/540`，剩余失败涉及测试 Hook/进程环境，不能将该结果记为全通过；需要隔离且正确启用 Hook 的构建输出后再复测。
+
+## 32. 2026-08-04 PluginRepositoryService 安装生命周期拆分
+
+- `eae95b92` 将下载与安装编排、运行时可用性确认和临时产物清理移至 `PluginRepositoryService.Installation.Lifecycle.cs`；安装事务使用实例级互斥，避免并发替换插件目录或并发刷新运行时；未修改公共 API。
+- 安装入口在构造临时路径前校验插件 ID；所有下载/校验/解压早退路径都通过 `finally` 清理 ZIP 和解压目录，失败清理仍保留可追踪日志。
+- 验证：`UniversalDeviceToolkit.Lib.Plugins` Release 构建 `0` 警告、`0` 错误；测试项目在 `BuildProjectReferences=false` 的隔离模式下构建 `0` 警告、`0` 错误；`PluginRepositoryServiceTests` `38/38` 通过、`0` Skip。
+- 普通测试项目构建仍受外部 `.NET Host (2444)` 锁定 WPF 输出影响，曾产生 `69` 个锁重试警告和 `12` 个复制错误；这不是本次插件代码编译错误，后续需要在无 VS 构建锁的环境完成全图验证。
+- R7 仍未完成：`PluginRepositoryService` 的安装事务内部（解压/备份/回滚）和 `PluginExtensionsPage` 主状态块仍可继续按职责拆分；完整 FlaUI nightly、macOS runner、安装目录 ACL 审计和按需提权端到端验证仍待专用环境。
