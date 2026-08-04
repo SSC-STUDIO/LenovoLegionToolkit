@@ -41,6 +41,18 @@ public class WindowsOptimizationServiceTests
     }
 
     [Fact]
+    public async Task TryGetActionAppliedAsync_ShouldPropagateCancellationFromStateProbe()
+    {
+        var service = new WindowsOptimizationService(new WindowsCleanupService(new TestApplicationSettings()));
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        var act = () => service.TryGetActionAppliedAsync("performance.powerPlan", cts.Token);
+
+        await act.Should().ThrowAsync<OperationCanceledException>();
+    }
+
+    [Fact]
     public async Task EstimateCleanupSizeAsync_ShouldReturnNonZeroForValidActionKey()
     {
         // Arrange — do not use CancellationToken.None: real Temp trees can hang CI for minutes.

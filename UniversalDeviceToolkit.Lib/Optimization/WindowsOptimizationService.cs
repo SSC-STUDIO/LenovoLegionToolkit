@@ -285,6 +285,12 @@ public class WindowsOptimizationService
         {
             return await definition.IsAppliedAsync(cancellationToken).ConfigureAwait(false);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Cancellation means the page no longer needs this probe. Preserve it so
+            // the caller cannot publish a partially refreshed state as authoritative.
+            throw;
+        }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
