@@ -21,6 +21,12 @@ public static class FeatureActionContract
     public static bool TryParseMacroPlayKey(string actionKey, out ulong key) =>
         TryParseMacroKey(actionKey, MacroPlayPrefix, out key);
 
+    /// <summary>
+    /// A checkbox can represent an optimization action only when the host can
+    /// revert it. One-way actions must remain command buttons in every client.
+    /// </summary>
+    public static bool IsToggleAction(bool hasRollback) => hasRollback;
+
     private static bool TryParseMacroKey(string actionKey, string prefix, out ulong key)
     {
         key = 0;

@@ -804,7 +804,7 @@ internal sealed class WindowsFeatureHostServices
                     applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
                     true,
                     applied,
-                    action.RollbackAsync is not null));
+                    FeatureActionContract.IsToggleAction(action.RollbackAsync is not null)));
             }
         }
 

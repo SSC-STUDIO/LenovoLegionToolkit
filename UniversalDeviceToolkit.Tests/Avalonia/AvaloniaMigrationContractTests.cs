@@ -71,4 +71,12 @@ public sealed class AvaloniaMigrationContractTests
     {
         FeatureActionContract.TryParseMacroRecordKey(actionKey, out _).Should().BeFalse();
     }
+
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(false, false)]
+    public void FeatureActions_OnlyUseTogglesForReversibleOperations(bool hasRollback, bool expectedToggle)
+    {
+        FeatureActionContract.IsToggleAction(hasRollback).Should().Be(expectedToggle);
+    }
 }
