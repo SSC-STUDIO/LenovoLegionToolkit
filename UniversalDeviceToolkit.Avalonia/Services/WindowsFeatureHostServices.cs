@@ -295,7 +295,13 @@ internal sealed class WindowsFeatureHostServices
                 var installed = _plugins.IsInstalled(manifest.Id);
                 var capabilities = PluginUiCapabilityResolver.ResolveFromManifest(manifest);
                 if (installed)
+                {
                     capabilities = capabilities.Merge(PluginUiCapabilityResolver.ResolveFromInstalledManifest(manifest.Id));
+                    var runtimePlugin = _plugins.GetRegisteredPlugins()
+                        .FirstOrDefault(plugin => plugin.Id.Equals(manifest.Id, StringComparison.OrdinalIgnoreCase));
+                    if (runtimePlugin is not null)
+                        capabilities = capabilities.Merge(ResolveRuntimePluginCapabilities(runtimePlugin));
+                }
 
                 return new PluginCatalogItem(
                     manifest.Id,
@@ -315,6 +321,36 @@ internal sealed class WindowsFeatureHostServices
             .ToArray();
 
         return new PluginCatalogState(storeAvailable || items.Length > 0, status, items);
+    }
+
+    private static PluginUiCapabilities ResolveRuntimePluginCapabilities(IPlugin plugin)
+    {
+        try
+        {
+            if (plugin is PluginBase pluginBase)
+            {
+                return new PluginUiCapabilities
+                {
+                    SupportsSettingsPage = pluginBase.GetSettingsPage() is not null,
+                    SupportsFeaturePage = HasPluginFeaturePage(plugin),
+                    SupportsOptimizationCategory = pluginBase.GetOptimizationCategory() is not null,
+                };
+            }
+
+            var type = plugin.GetType();
+            var getSettingsPage = type.GetMethod("GetSettingsPage", BindingFlags.Public | BindingFlags.Instance);
+            var getOptimizationCategory = type.GetMethod("GetOptimizationCategory", BindingFlags.Public | BindingFlags.Instance);
+            return new PluginUiCapabilities
+            {
+                SupportsSettingsPage = getSettingsPage?.Invoke(plugin, null) is not null,
+                SupportsFeaturePage = HasPluginFeaturePage(plugin),
+                SupportsOptimizationCategory = getOptimizationCategory?.Invoke(plugin, null) is not null,
+            };
+        }
+        catch
+        {
+            return default;
+        }
     }
 
     public async Task<bool> UpdatePluginAsync(string pluginId)
