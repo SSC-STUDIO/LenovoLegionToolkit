@@ -101,7 +101,7 @@ Authors should not need a live main-app source checkout just to preview plugin U
 ### Launch Options
 
 ```powershell
-dotnet run --project .\Tools\PluginWorkbench\PluginWorkbench.csproj -- `
+dotnet run --project .\Tooling\PluginWorkbench\PluginWorkbench.csproj -- `
   --repository-root . `
   --plugin-id custom-mouse `
   --theme dark `
@@ -124,7 +124,7 @@ The tooling now follows the same shape as VS Code extension authoring:
 | `contributes` declares commands/views | `contributes` declares feature/settings/runtime/optimization entry points |
 | `npm run watch` or F5 starts the extension host | `dev` builds and opens `PluginWorkbench` |
 | `vsce package` creates `.vsix` | `package` creates `<plugin-id>-v<version>.zip` |
-| Marketplace metadata is derived from manifest/package fields | generated `Plugins/.build/catalog/plugin-catalog.json` is generated from manifest store metadata and release assets |
+| Marketplace metadata is derived from manifest/package fields | generated `Plugins/.build/catalog/store.json` is generated from manifest store metadata and release assets |
 
 The current difference is host compatibility: UDT still needs `plugin.json` in build output because the main app loader consumes that runtime manifest today. The author-facing source of truth is `plugin.manifest.json`; `plugin.json` is synchronized compatibility output.
 
@@ -150,7 +150,7 @@ Version numbers are easy to drift because they appear in several files. Use one 
 |---|---|---|
 | Host app (UDT) | `UniversalDeviceToolkit/Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `5.0.0` |
 | Each plugin | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | `custom-mouse` → `1.0.18` |
-| Plugin store catalog | Generated `Plugins/.build/catalog/plugin-catalog.json` (release output, not hand-edited) | per-plugin `version` + `fileSize` |
+| Plugin store catalog | Generated `Plugins/.build/catalog/store.json` (release output, not hand-edited) | per-plugin `version` + `fileSize` |
 
 Do **not** treat `UniversalDeviceToolkit/Directory.Build.props` as a plugin version. Each plugin keeps its own SemVer.
 
@@ -186,9 +186,9 @@ Authoring metadata split:
 - `plugin.manifest.json`: authoring source of truth for identity, contributions, package contents, and store metadata
 - `plugin.json`: generated/synchronized runtime compatibility manifest
 - `store-entry.json`: legacy compatibility output for official metadata
-- generated `Plugins/.build/catalog/plugin-catalog.json`: generated release output
+- generated `Plugins/.build/catalog/store.json`: generated release output
 
-That means new plugin contributors should not start by editing generated `Plugins/.build/catalog/plugin-catalog.json`.
+That means new plugin contributors should not start by editing generated `Plugins/.build/catalog/store.json`.
 
 ## CI Model
 
@@ -203,7 +203,7 @@ Manual official publishing should:
 2. build them
 3. package stable ZIP assets
 4. publish GitHub releases
-5. regenerate generated `Plugins/.build/catalog/plugin-catalog.json` with `generate-store --plugin-ids <ids> --merge-existing --require-assets`
+5. regenerate generated `Plugins/.build/catalog/store.json` with `generate-store --plugin-ids <ids> --merge-existing --require-assets`
 
 ## Notes
 

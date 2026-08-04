@@ -84,7 +84,7 @@ PluginWorkbench supports System / Light / Dark, host-style shells, and Preview v
 .\udt-plugin.cmd validate --plugin my-plugin --profile official-candidate
 ```
 
-## 8. Do not start from generated `Plugins/.build/catalog/plugin-catalog.json`
+## 8. Do not start from generated `Plugins/.build/catalog/store.json`
 
 Author flow:
 
@@ -93,4 +93,4 @@ Author flow:
 3. Preview / test / validate
 4. Package
 
-Generated `Plugins/.build/catalog/plugin-catalog.json` is **release output** for active marketplace plugins only.
+Generated `Plugins/.build/catalog/store.json` is **release output** for active marketplace plugins only.

@@ -45,7 +45,7 @@
 | Active | **ViVeTool** | v1.2.4 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
 | Active | **Nilesoft Shell Manager** | v1.0.14 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
 
-> Catalog versions match `Plugins/Official/*/plugin.manifest.json` (source of truth). The generated catalog is `Plugins/.build/catalog/plugin-catalog.json` and is published in the rolling `plugin-catalog` release.
+> Catalog versions match `Plugins/Official/*/plugin.manifest.json` (source of truth). The generated catalog is `Plugins/.build/catalog/store.json` and is published in the rolling `plugin-catalog` release as the `store.json` asset.
 
 ---
 
@@ -129,7 +129,7 @@ Canonical CLI entry: **`udt-plugin.cmd`**
 | `package` | Installable ZIP |
 | `bump-version` / `sync-version` | SemVer source of truth → project files |
 | `promote` | Official store metadata in `plugin.manifest.json` |
-| `generate-store` | Regenerate generated `Plugins/.build/catalog/plugin-catalog.json` from manifests + assets |
+| `generate-store` | Regenerate generated `Plugins/.build/catalog/store.json` from manifests + assets |
 
 > Mental model (VS Code extension-like): `plugin.manifest.json` ≈ `package.json`, `dev` ≈ `npm run dev`, `package` ≈ `vsce package`.
 
@@ -186,9 +186,9 @@ UniversalDeviceToolkit/
 | Host app | `Plugins/HostBaseline/host-release.json` | **5.0.0** |
 | Each plugin SemVer | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | see catalog |
 | Min host | `minHostVersion` in manifest; runtime `plugin.json` still exposes ABI field `MinLltVersion` | **5.0.0** |
-| Store catalog | Generated `Plugins/.build/catalog/plugin-catalog.json` | release output only |
+| Store catalog | Generated `Plugins/.build/catalog/store.json` | release output only |
 
-Do not hand-edit generated `Plugins/.build/catalog/plugin-catalog.json` for routine authoring. Prefer:
+Do not hand-edit generated `Plugins/.build/catalog/store.json` for routine authoring. Prefer:
 
 ```powershell
 .\udt-plugin.cmd bump-version --plugin custom-mouse --part patch

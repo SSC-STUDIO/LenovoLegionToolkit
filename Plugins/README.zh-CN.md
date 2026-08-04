@@ -29,7 +29,7 @@
 | 上架 | **ViVeTool** | v1.2.4 | 可视化浏览/开关 Windows 隐藏功能标志 | `vive-tool` |
 | 上架 | **Nilesoft Shell 管理器** | v1.0.14 | 管理 Nilesoft Shell 注册与 UDT 配置（需单独安装 Shell） | `shell-integration` |
 
-> 版本以各插件 `plugin.manifest.json` 为准；上架清单见根目录 [`Plugins/.build/catalog/plugin-catalog.json`](./.build/catalog/plugin-catalog.json)（发布生成物）。
+> 版本以各插件 `plugin.manifest.json` 为准；上架清单见 [`Plugins/.build/catalog/store.json`](./.build/catalog/store.json)（发布生成物，Release 资产名也是 `store.json`）。
 
 ---
 
@@ -92,7 +92,7 @@ Shared + 官方插件有完整单元测试，GitHub Actions 覆盖构建/校验/
 | `dev` | 构建 + Workbench 预览 |
 | `test` / `validate` / `package` | 测试、门禁、打 ZIP |
 | `bump-version` / `sync-version` | 版本真相源同步 |
-| `promote` / `generate-store` | 官方商店元数据 / 生成 `Plugins/.build/catalog/plugin-catalog.json` |
+| `promote` / `generate-store` | 官方商店元数据 / 生成 `Plugins/.build/catalog/store.json` |
 
 ---
 
@@ -125,7 +125,7 @@ UniversalDeviceToolkit/
 | 宿主 | `host-release.json` / 主仓 | **5.0.0** |
 | 插件 SemVer | `plugin.manifest.json` → `version` | 见上表 |
 | 最低宿主 | `minHostVersion`；运行时 `plugin.json` 的 `MinLltVersion` 为宿主 ABI 字段名 | **5.0.0** |
-| 商店目录 | 生成的 `Plugins/.build/catalog/plugin-catalog.json` | 勿手改作为日常入口 |
+| 商店目录 | 生成的 `Plugins/.build/catalog/store.json` | 勿手改作为日常入口 |
 
 ---
 

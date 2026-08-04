@@ -167,7 +167,7 @@ When evaluating UI via FlaUI + WinRT OCR:
 
 ### Store Metadata Strict Mode
 - `store-entry.json` MUST byte-match the `store` block of the sibling `plugin.manifest.json` (promote/generate-sync keeps them in lockstep).
-- NEVER regenerate the generated `Plugins/.build/catalog/plugin-catalog.json` wholesale via `generate-store` when some plugins lack a published release ZIP: it zeroes `fileSize`/`hash` for those plugins (silent regression). Merge the `store-entry.json` of a new plugin incrementally instead.
+- NEVER regenerate the generated `Plugins/.build/catalog/store.json` wholesale via `generate-store` when some plugins lack a published release ZIP: it zeroes `fileSize`/`hash` for those plugins (silent regression). Merge the `store-entry.json` of a new plugin incrementally instead.
 - Release assets are the single source for `fileSize`/`hash`; only present `release-assets/<id>-v<ver>.zip` entries may carry nonzero sizes.
 
 ### Release Automation
@@ -249,7 +249,7 @@ When evaluating UI via FlaUI + WinRT OCR:
 ---
 
 ### [2026-07-07] CS0104 Ambiguity When Adding Lib.Plugins Reference
-- **Symptom / Pitfall**: After adding `<Reference Include="UniversalDeviceToolkit.Lib.Plugins">` to `Tools\PluginWorkbench\PluginWorkbench.csproj`, build fails with 2 CS0104 errors: `PluginHostMode` is ambiguous between `UniversalDeviceToolkit.Lib.Plugins.PluginHostMode` and `UniversalDeviceToolkit.Plugins.SDK.PluginHostMode`. After adding the alias, 3 more CS0104 errors for `PluginHostContext` (static class).
+- **Symptom / Pitfall**: After adding `<Reference Include="UniversalDeviceToolkit.Lib.Plugins">` to `Tooling\PluginWorkbench\PluginWorkbench.csproj`, build fails with 2 CS0104 errors: `PluginHostMode` is ambiguous between `UniversalDeviceToolkit.Lib.Plugins.PluginHostMode` and `UniversalDeviceToolkit.Plugins.SDK.PluginHostMode`. After adding the alias, 3 more CS0104 errors for `PluginHostContext` (static class).
 - **Root Cause**: The host Lib.Plugins DLL and the SDK both define the same types (intentional type forwarding / dual-surface design). The `using UniversalDeviceToolkit.Lib.Plugins;` import was already present but harmless (the assembly was not referenced, so the types were invisible). Once Lib.Plugins.dll v4.2.1 was referenced, both namespaces became visible and C# disambiguation failed.
 - **Enforced Rule**:
   - When adding the `UniversalDeviceToolkit.Lib.Plugins` reference to any project that also imports `UniversalDeviceToolkit.Plugins.SDK`, add using aliases for ALL shared types: `using PluginHostMode = UniversalDeviceToolkit.Plugins.SDK.PluginHostMode;` and `using PluginHostContext = UniversalDeviceToolkit.Plugins.SDK.PluginHostContext;`

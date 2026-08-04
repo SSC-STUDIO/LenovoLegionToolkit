@@ -1,7 +1,7 @@
 # Plugin Consolidation Matrix
 
 Source of truth for store metadata remains the sibling repo
-`Plugins/.build/catalog/plugin-catalog.json` (published through the main repository's rolling `plugin-catalog` release).
+`Plugins/.build/catalog/store.json` (published through the main repository's rolling `plugin-catalog` release).
 This main repo keeps planning stubs under `Packaging/plugins/`; the generated catalog and ZIPs remain ignored build output.
 
 | Plugin id | Store status (sibling) | UDT plan | Notes |

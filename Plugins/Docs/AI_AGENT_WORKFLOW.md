@@ -55,7 +55,7 @@ Run full candidate validation when the repository is ready for a slower check:
 
 ## Store Generation
 
-Generated `Plugins/.build/catalog/plugin-catalog.json` should be reproducible from `plugin.manifest.json` store metadata, release assets, and a fixed release date. `store-entry.json` is compatibility output only.
+Generated `Plugins/.build/catalog/store.json` should be reproducible from `plugin.manifest.json` store metadata, release assets, and a fixed release date. `store-entry.json` is compatibility output only.
 
 Check without writing:
 
@@ -85,7 +85,7 @@ When updating only a selected release set, preserve the other published entries 
   --require-assets
 ```
 
-Do not hand-edit generated `Plugins/.build/catalog/plugin-catalog.json` for normal plugin authoring.
+Do not hand-edit generated `Plugins/.build/catalog/store.json` for normal plugin authoring.
 
 ## Workbench Smoke
 

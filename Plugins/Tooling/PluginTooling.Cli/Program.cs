@@ -125,7 +125,7 @@ static async Task<int> ProgramMainAsync(string[] args)
             DisplayName = RequireValue(argv, "--name"),
             Author = OptionalValue(argv, "--author") ?? Environment.UserName,
             Description = OptionalValue(argv, "--description") ?? string.Empty,
-            MinimumHostVersion = OptionalValue(argv, "--min-llt-version") ?? "3.6.15",
+            MinimumHostVersion = OptionalValue(argv, "--min-llt-version") ?? "5.0.0",
             Official = HasFlag(argv, "--official"),
         };
 
@@ -158,7 +158,7 @@ static async Task<int> ProgramMainAsync(string[] args)
         var pluginId = RequireValue(argv, "--plugin");
         var theme = OptionalValue(argv, "--theme") ?? "system";
         var view = OptionalValue(argv, "--view") ?? "feature";
-        var workbenchProject = Path.Combine(repositoryRoot, "Tools", "PluginWorkbench", "PluginWorkbench.csproj");
+        var workbenchProject = Path.Combine(repositoryRoot, "Tooling", "PluginWorkbench", "PluginWorkbench.csproj");
 
         var runner = new ProcessRunner();
         return await runner.RunDotnetAsync(

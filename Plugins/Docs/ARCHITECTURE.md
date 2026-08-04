@@ -50,7 +50,7 @@ UniversalDeviceToolkit/
 - `plugin.manifest.json`: 作者编辑的统一清单，包含运行时身份、贡献点、打包规则和官方商店元数据
 - `plugin.json`: 为当前宿主加载保留的运行时兼容输出
 - `store-entry.json`: 为旧发布脚本保留的官方元数据兼容输出
-- 生成的 `Plugins/.build/catalog/plugin-catalog.json`: 发布输出，不再作为新插件作者的日常编辑入口
+- 生成的 `Plugins/.build/catalog/store.json`: 发布输出，不再作为新插件作者的日常编辑入口
 
 ### 2.1 独立宿主模式
 - `PluginWorkbench` 直接加载 `Plugins/.build/plugins/...` 输出或本地 ZIP 包
@@ -178,7 +178,7 @@ Load → Start → [Runtime Loop] → Stop → Unload
 - `*.csproj`: 文件版本
 - `plugin.manifest.json`: 插件版本、贡献点、包名与商店元数据
 - `plugin.json`: 兼容运行时清单
-- `Plugins/.build/catalog/plugin-catalog.json`: 发布元数据
+- `Plugins/.build/catalog/store.json`: 发布元数据
 
 ### 发布流程
 1. 更新所有版本文件

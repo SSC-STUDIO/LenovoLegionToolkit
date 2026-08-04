@@ -79,7 +79,7 @@ Requirements:
 | Plugin SemVer | `Plugins/Official/<Name>/plugin.manifest.json` → `version` |
 | Minimum host | `minHostVersion` (must match host baseline **5.0.0+** for current ABI) |
 | Runtime host field | `plugin.json` → `MinLltVersion` (legacy JSON property name; value is the UDT host version) |
-| Plugin catalog | Generated `Plugins/.build/catalog/plugin-catalog.json` — not hand-edited for routine work |
+| Plugin catalog | Generated `Plugins/.build/catalog/store.json` — not hand-edited for routine work |
 
 ```powershell
 .\udt-plugin.cmd bump-version --plugin <id> --part patch|minor|major
@@ -114,7 +114,7 @@ Checklist:
 - [ ] Relevant tests pass (`.\udt-plugin.cmd test` or `dotnet test`)
 - [ ] Light + Dark checked in PluginWorkbench when UI changes
 - [ ] `plugin.manifest.json` / `CHANGELOG.md` updated when needed
-- [ ] No hand-edited generated `Plugins/.build/catalog/plugin-catalog.json` unless you regenerated it intentionally
+- [ ] No hand-edited generated `Plugins/.build/catalog/store.json` unless you regenerated it intentionally
 - [ ] PR describes **what** and **why**
 
 Default branch: **`master`**.

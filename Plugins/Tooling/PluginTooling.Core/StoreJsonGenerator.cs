@@ -160,7 +160,7 @@ public sealed class StoreJsonGenerator
 
         var repository = _repository.Load(request.RepositoryRoot);
         var outputPath = request.OutputPath is null
-            ? Path.Combine(repository.RootPath, ".build", "catalog", "plugin-catalog.json")
+            ? Path.Combine(repository.RootPath, ".build", "catalog", "store.json")
             : Path.GetFullPath(request.OutputPath);
 
         var store = Generate(request);
@@ -174,7 +174,7 @@ public sealed class StoreJsonGenerator
 
         var repository = _repository.Load(request.RepositoryRoot);
         var storePath = request.OutputPath is null
-            ? Path.Combine(repository.RootPath, ".build", "catalog", "plugin-catalog.json")
+            ? Path.Combine(repository.RootPath, ".build", "catalog", "store.json")
             : Path.GetFullPath(request.OutputPath);
 
         if (!File.Exists(storePath))

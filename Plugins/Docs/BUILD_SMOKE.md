@@ -46,7 +46,7 @@ Create a local ZIP:
 .\udt-plugin.cmd validate --plugin custom-mouse --profile official-candidate
 ```
 
-Before writing generated `Plugins/.build/catalog/plugin-catalog.json` for a selected release set, build the ZIPs first and require them:
+Before writing generated `Plugins/.build/catalog/store.json` for a selected release set, build the ZIPs first and require them:
 
 ```powershell
 .\udt-plugin.cmd generate-store `

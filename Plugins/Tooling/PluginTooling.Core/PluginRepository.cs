@@ -31,7 +31,7 @@ public sealed class PluginRepository
         var storeCandidates = new[]
         {
             Path.Combine(rootPath, "Catalog", "store.json"),
-            Path.Combine(rootPath, ".build", "catalog", "plugin-catalog.json"),
+            Path.Combine(rootPath, ".build", "catalog", "store.json"),
             Path.Combine(rootPath, "store.json"),
         };
         var storePath = storeCandidates.FirstOrDefault(File.Exists) ?? storeCandidates[0];

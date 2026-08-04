@@ -28,7 +28,7 @@ public class OfficialPluginPackageSmokeTests
             return;
         }
 
-        var storePath = Path.Combine(pluginsRoot, "Plugins", ".build", "catalog", "plugin-catalog.json");
+        var storePath = Path.Combine(pluginsRoot, "Plugins", ".build", "catalog", "store.json");
         var assetsRoot = Path.Combine(pluginsRoot, "Plugins", ".build", "release-assets");
         if (!File.Exists(storePath))
         {

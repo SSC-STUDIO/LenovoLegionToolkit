@@ -111,6 +111,28 @@ public class StoreJsonGeneratorTests : IDisposable
     }
 
     [Fact]
+    public void Write_DefaultsToStoreJsonUnderBuildCatalog()
+    {
+        CreatePluginFolder("catalog-path", manifestLifecycle: "Active", manifestName: "Catalog Path",
+            description: "Verify the generated catalog path.");
+
+        var path = new StoreJsonGenerator().Write(new StoreGenerationRequest
+        {
+            RepositoryRoot = _tempRoot,
+            AssetRoot = Path.Combine(_tempRoot, "Build", "release-assets"),
+            ReleaseRepositoryUrl = "https://example.com/releases",
+        });
+
+        var expectedPath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
+        Assert.Equal(expectedPath, path);
+        Assert.True(File.Exists(expectedPath));
+
+        var repository = new PluginRepository().Load(_tempRoot);
+        Assert.NotNull(repository.StoreDocument);
+        Assert.Contains(repository.StoreDocument!.Plugins, entry => entry.Id == "catalog-path");
+    }
+
+    [Fact]
     public void Generate_FallsBackToActive_WhenNoSignalsPresent()
     {
         CreatePluginFolder("custom-mouse", manifestLifecycle: null, manifestName: "Cursor & Pointer",

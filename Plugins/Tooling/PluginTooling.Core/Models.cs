@@ -540,7 +540,7 @@ public sealed class ScaffoldRequest
     public string DisplayName { get; init; } = string.Empty;
     public string Author { get; init; } = Environment.UserName;
     public string Description { get; init; } = string.Empty;
-    public string MinimumHostVersion { get; init; } = "3.6.15";
+    public string MinimumHostVersion { get; init; } = "5.0.0";
     public string? NamespaceSegment { get; init; }
     public string? ClassPrefix { get; init; }
     public bool Official { get; init; }

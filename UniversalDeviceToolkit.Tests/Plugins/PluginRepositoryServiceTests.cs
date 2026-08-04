@@ -67,7 +67,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         using var service = CreateService(request =>
         {
             request.RequestUri.Should().NotBeNull();
-            request.RequestUri!.AbsoluteUri.Should().Be("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/plugin-catalog.json");
+            request.RequestUri!.AbsoluteUri.Should().Be("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
             seenVersions.Add(request.Version);
 
             attempts++;
@@ -99,7 +99,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             var url = request.RequestUri?.AbsoluteUri ?? string.Empty;
             requestedUrls.Add(url);
 
-            if (url.Equals("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/plugin-catalog.json", StringComparison.OrdinalIgnoreCase))
+            if (url.Equals("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json", StringComparison.OrdinalIgnoreCase))
             {
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -116,7 +116,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         // Assert
         plugins.Should().ContainSingle();
         requestedUrls.Should().NotBeEmpty();
-        requestedUrls.Should().ContainSingle("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/plugin-catalog.json");
+        requestedUrls.Should().ContainSingle("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
         // Assert
         await act.Should().ThrowAsync<HttpRequestException>();
-        requestedUrls.Should().ContainSingle("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/plugin-catalog.json");
+        requestedUrls.Should().ContainSingle("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
     }
 
     [Fact]

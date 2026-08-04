@@ -43,8 +43,8 @@ jobs:
           $seedRoot = Join-Path $stageRoot 'catalog-seed'
           $assetRoot = Join-Path $stageRoot 'assets'
           $catalogRoot = Join-Path $stageRoot 'catalog'
-          $catalogPath = Join-Path $catalogRoot 'plugin-catalog.json'
-          $workingCatalog = Join-Path $env:GITHUB_WORKSPACE 'Plugins\.build\catalog\plugin-catalog.json'
+          $catalogPath = Join-Path $catalogRoot 'store.json'
+          $workingCatalog = Join-Path $env:GITHUB_WORKSPACE 'Plugins\.build\catalog\store.json'
 
           New-Item -ItemType Directory -Path $seedRoot, $assetRoot, $catalogRoot, (Split-Path $workingCatalog) -Force | Out-Null
 
@@ -57,23 +57,23 @@ jobs:
               throw "The rolling plugin catalog release must not be a draft or prerelease."
             }
 
-            $catalogAsset = @($release.assets | Where-Object { $_.name -eq 'plugin-catalog.json' })
+            $catalogAsset = @($release.assets | Where-Object { $_.name -eq 'store.json' })
             if ($catalogAsset.Count -eq 1) {
-              gh release download $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --pattern plugin-catalog.json --dir $seedRoot --clobber
+              gh release download $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --pattern store.json --dir $seedRoot --clobber
               if ($LASTEXITCODE -ne 0) {
                 throw 'The existing plugin catalog asset could not be downloaded.'
               }
             }
             else {
-              Write-Host 'No existing plugin-catalog.json asset found; a new catalog will be generated.'
+              Write-Host 'No existing store.json asset found; a new catalog will be generated.'
             }
           }
           elseif ($releaseOutput -notmatch '(?i)(not found|404)') {
             throw "Unable to inspect the rolling plugin catalog release: $releaseOutput"
           }
 
-          if (Test-Path (Join-Path $seedRoot 'plugin-catalog.json')) {
-            Copy-Item (Join-Path $seedRoot 'plugin-catalog.json') $workingCatalog -Force
+          if (Test-Path (Join-Path $seedRoot 'store.json')) {
+            Copy-Item (Join-Path $seedRoot 'store.json') $workingCatalog -Force
           }
           elseif (Test-Path $workingCatalog) {
             Remove-Item $workingCatalog -Force
@@ -231,7 +231,7 @@ jobs:
           $newAssetNames = Get-Content -LiteralPath (Join-Path $env:CATALOG_STAGE_ROOT 'new-assets.json') -Raw | ConvertFrom-Json
           $pluginIds = @("${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 
-          $previousCatalog = Join-Path $env:CATALOG_STAGE_ROOT 'catalog-seed\plugin-catalog.json'
+          $previousCatalog = Join-Path $env:CATALOG_STAGE_ROOT 'catalog-seed\store.json'
           $beforeAssetNames = @($before.assets | ForEach-Object { $_.name })
           try {
             gh release upload $env:CATALOG_RELEASE_TAG $env:CATALOG_OUTPUT_PATH --repo "${{ github.repository }}" --clobber
@@ -279,8 +279,8 @@ jobs:
           if ($finalRelease.name -ne $env:CATALOG_RELEASE_TITLE -or $finalRelease.isDraft -or $finalRelease.isPrerelease) {
             throw 'The final rolling plugin catalog release metadata is invalid.'
           }
-          if (@($finalRelease.assets | Where-Object { $_.name -eq 'plugin-catalog.json' }).Count -ne 1) {
-            throw 'The final rolling plugin catalog release is missing plugin-catalog.json.'
+          if (@($finalRelease.assets | Where-Object { $_.name -eq 'store.json' }).Count -ne 1) {
+            throw 'The final rolling plugin catalog release is missing store.json.'
           }
 
           foreach ($pluginId in $pluginIds) {

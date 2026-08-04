@@ -54,7 +54,7 @@ public partial class PluginRepositoryService : IDisposable
     // so the main repository's Releases page stays readable.
     private static readonly string[] PluginStoreUrls =
     {
-        "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/plugin-catalog.json"
+        "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json"
     };
     private static readonly string[] PluginReleasesApiUrls =
     {
