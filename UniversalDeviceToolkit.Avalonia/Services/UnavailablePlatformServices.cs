@@ -54,6 +54,12 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         Task.FromResult(false);
 
+    public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync() =>
+        Task.FromResult<IReadOnlyList<CustomCleanupRuleItem>>([]);
+
+    public Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules) =>
+        Task.FromResult(false);
+
     public Task<MacroWorkspaceState> GetMacroWorkspaceAsync() =>
         Task.FromResult(new MacroWorkspaceState(false, false, Array.Empty<MacroSlotState>()));
 

@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
@@ -103,6 +104,9 @@ public partial class FeaturePageView : UserControl
 
             FeatureItems.Items.Add(CreateFeatureCard(item));
         }
+
+        if (_showCleanup && _descriptor.RouteKey.Equals("WindowsOptimization", StringComparison.Ordinal))
+            FeatureItems.Items.Add(CreateCustomCleanupPanel(state.CustomCleanupRules ?? []));
 
         if (visibleActions.Length == 0)
             FeatureItems.Items.Add(CreateEmptyState());
@@ -315,6 +319,213 @@ public partial class FeaturePageView : UserControl
         },
     };
 
+    private Border CreateCustomCleanupPanel(IReadOnlyList<CustomCleanupRuleItem> rules)
+    {
+        var content = new StackPanel { Spacing = 8 };
+        content.Children.Add(new LocalizedTextBlock
+        {
+            Text = AvaloniaLocalization.GetString(
+                "WindowsOptimizationPage_CustomCleanup_Header",
+                "Custom cleanup"),
+            FontSize = GetResource<double>("FontSizeSubsection"),
+            FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 2,
+        });
+        content.Children.Add(new LocalizedTextBlock
+        {
+            Text = AvaloniaLocalization.GetString(
+                "WindowsOptimizationPage_CustomCleanup_Description",
+                "Choose folders and file extensions to include in custom cleanup."),
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 3,
+        });
+
+        var rulesPanel = new StackPanel { Spacing = 6 };
+        if (rules.Count == 0)
+        {
+            rulesPanel.Children.Add(new LocalizedTextBlock
+            {
+                Text = AvaloniaLocalization.GetString(
+                    "WindowsOptimizationPage_CustomCleanup_Empty",
+                    "No custom cleanup rules have been added."),
+                Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+                OverflowMode = LocalizedOverflowMode.Wrap,
+                MaxLines = 2,
+            });
+        }
+        else
+        {
+            for (var index = 0; index < rules.Count; index++)
+            {
+                var rule = rules[index];
+                rulesPanel.Children.Add(CreateCustomCleanupRuleRow(rule, index));
+            }
+        }
+
+        content.Children.Add(rulesPanel);
+
+        var commands = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        var add = new Button
+        {
+            Content = AvaloniaLocalization.GetString(
+                "WindowsOptimizationPage_CustomCleanup_Add", "Add"),
+        };
+        AutomationProperties.SetAutomationId(add, "AvaloniaCustomCleanupAddButton");
+        add.Click += async (_, _) => await AddCustomCleanupRuleAsync(rules);
+        commands.Children.Add(add);
+
+        var clear = new Button
+        {
+            Content = AvaloniaLocalization.GetString(
+                "WindowsOptimizationPage_CustomCleanup_Clear", "Clear"),
+            IsEnabled = rules.Count > 0,
+        };
+        AutomationProperties.SetAutomationId(clear, "AvaloniaCustomCleanupClearButton");
+        clear.Click += async (_, _) => await ClearCustomCleanupRulesAsync();
+        commands.Children.Add(clear);
+        content.Children.Add(commands);
+
+        var panel = new Border
+        {
+            Background = GetResource<IBrush>("CardBackgroundBrush"),
+            BorderBrush = GetResource<IBrush>("CardBorderBrush"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = GetResource<CornerRadius>("CornerRadiusCard"),
+            Padding = new Thickness(16),
+            Child = content,
+        };
+        AutomationProperties.SetName(panel, AvaloniaLocalization.GetString(
+            "WindowsOptimizationPage_CustomCleanup_Header", "Custom cleanup"));
+        return panel;
+    }
+
+    private Border CreateCustomCleanupRuleRow(CustomCleanupRuleItem rule, int index)
+    {
+        var extensions = rule.Extensions.Count == 0
+            ? AvaloniaLocalization.GetString("CustomCleanupRule_NoExtensions", "All extensions")
+            : string.Join(", ", rule.Extensions);
+        var summary = $"{extensions} · "
+            + (rule.Recursive
+                ? AvaloniaLocalization.GetString("WindowsOptimizationPage_CustomCleanup_Recursive_Label", "Recursive")
+                : AvaloniaLocalization.GetString("CustomCleanupRule_NonRecursive", "Current folder only"));
+
+        var copy = new StackPanel { Spacing = 2, MinWidth = 0 };
+        copy.Children.Add(new LocalizedTextBlock
+        {
+            Text = rule.DirectoryPath,
+            FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+        });
+        copy.Children.Add(new LocalizedTextBlock
+        {
+            Text = summary,
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+        });
+
+        var edit = new Button
+        {
+            Content = AvaloniaLocalization.GetString(
+                "WindowsOptimizationPage_CustomCleanup_Edit", "Edit"),
+            VerticalAlignment = VerticalAlignment.Top,
+        };
+        AutomationProperties.SetAutomationId(edit, $"AvaloniaCustomCleanupEditButton{index}");
+        edit.Click += async (_, _) => await EditCustomCleanupRuleAsync(index, rule);
+
+        var remove = new Button
+        {
+            Content = AvaloniaLocalization.GetString(
+                "WindowsOptimizationPage_CustomCleanup_Remove", "Remove"),
+            VerticalAlignment = VerticalAlignment.Top,
+        };
+        AutomationProperties.SetAutomationId(remove, $"AvaloniaCustomCleanupRemoveButton{index}");
+        remove.Click += async (_, _) => await RemoveCustomCleanupRuleAsync(index);
+
+        var grid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"),
+            ColumnSpacing = 8,
+        };
+        grid.Children.Add(copy);
+        Grid.SetColumn(edit, 1);
+        grid.Children.Add(edit);
+        Grid.SetColumn(remove, 2);
+        grid.Children.Add(remove);
+        return new Border
+        {
+            Background = GetResource<IBrush>("SubtleFillColorTertiaryBrush"),
+            CornerRadius = GetResource<CornerRadius>("CornerRadiusControl"),
+            Padding = new Thickness(10, 8),
+            Child = grid,
+        };
+    }
+
+    private async Task AddCustomCleanupRuleAsync(IReadOnlyList<CustomCleanupRuleItem> rules)
+    {
+        var rule = await ShowCustomCleanupRuleEditorAsync(null);
+        if (rule is null)
+            return;
+
+        var updated = rules.ToList();
+        updated.Add(rule);
+        await SaveCustomCleanupRulesAsync(updated);
+    }
+
+    private async Task EditCustomCleanupRuleAsync(int index, CustomCleanupRuleItem current)
+    {
+        var rule = await ShowCustomCleanupRuleEditorAsync(current);
+        if (rule is null || _lastState?.CustomCleanupRules is not { } rules || index < 0 || index >= rules.Count)
+            return;
+
+        var updated = rules.ToList();
+        updated[index] = rule;
+        await SaveCustomCleanupRulesAsync(updated);
+    }
+
+    private async Task RemoveCustomCleanupRuleAsync(int index)
+    {
+        if (_lastState?.CustomCleanupRules is not { } rules || index < 0 || index >= rules.Count)
+            return;
+
+        var updated = rules.ToList();
+        updated.RemoveAt(index);
+        await SaveCustomCleanupRulesAsync(updated);
+    }
+
+    private Task ClearCustomCleanupRulesAsync() => SaveCustomCleanupRulesAsync([]);
+
+    private async Task SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules)
+    {
+        if (_isApplying)
+            return;
+
+        _isApplying = true;
+        try
+        {
+            if (await _platformServices.SaveCustomCleanupRulesAsync(rules))
+                await RefreshStateAsync();
+        }
+        finally
+        {
+            _isApplying = false;
+        }
+    }
+
+    private async Task<CustomCleanupRuleItem?> ShowCustomCleanupRuleEditorAsync(CustomCleanupRuleItem? current)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return null;
+
+        var editor = new CustomCleanupRuleEditorWindow(current);
+        return await editor.ShowDialog<CustomCleanupRuleItem?>(owner);
+    }
+
     private LocalizedTextBlock CreateCategoryHeading(string category) => new()
     {
         Text = category,
@@ -378,5 +589,144 @@ public sealed class PluginExtensionsPage : FeaturePageView
             "Manage installed and registered extensions through the shared plugin manager.",
             "Apps24"), actionRequested)
     {
+    }
+}
+
+/// <summary>
+/// Small host-neutral editor for one custom cleanup rule. The folder picker is used
+/// for the directory while extensions remain editable as a comma/semicolon list.
+/// </summary>
+internal sealed class CustomCleanupRuleEditorWindow : Window
+{
+    private readonly TextBox _directory;
+    private readonly TextBox _extensions;
+    private readonly CheckBox _recursive;
+    private readonly TextBlock _error;
+
+    public CustomCleanupRuleEditorWindow(CustomCleanupRuleItem? current)
+    {
+        Title = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Title", "Custom cleanup rule");
+        Width = 620;
+        MinWidth = 520;
+        SizeToContent = SizeToContent.Height;
+        WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+        _directory = new TextBox
+        {
+            Text = current?.DirectoryPath ?? string.Empty,
+            Watermark = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Folder_Label", "Folder"),
+            MinWidth = 360,
+        };
+        _extensions = new TextBox
+        {
+            Text = current is null ? string.Empty : string.Join(", ", current.Extensions),
+            Watermark = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Extensions_Hint", ".tmp, .log"),
+            MinWidth = 360,
+        };
+        _recursive = new CheckBox
+        {
+            Content = AvaloniaLocalization.GetString(
+                "CustomCleanupRuleWindow_Recursive_Label", "Include subfolders"),
+            IsChecked = current?.Recursive ?? true,
+        };
+        _error = new TextBlock
+        {
+            Foreground = new SolidColorBrush(Colors.IndianRed),
+            IsVisible = false,
+            TextWrapping = TextWrapping.Wrap,
+        };
+
+        var browse = new Button
+        {
+            Content = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Browse_Button", "Browse"),
+        };
+        browse.Click += BrowseButton_Click;
+
+        var save = new Button
+        {
+            Content = AvaloniaLocalization.GetString("Common_Save", "Save"),
+            IsDefault = true,
+        };
+        save.Click += SaveButton_Click;
+        var cancel = new Button
+        {
+            Content = AvaloniaLocalization.GetString("Common_Cancel", "Cancel"),
+            IsCancel = true,
+        };
+
+        var directoryRow = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 8 };
+        directoryRow.Children.Add(_directory);
+        Grid.SetColumn(browse, 1);
+        directoryRow.Children.Add(browse);
+
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 8,
+        };
+        buttons.Children.Add(cancel);
+        buttons.Children.Add(save);
+
+        Content = new StackPanel
+        {
+            Margin = new Thickness(24),
+            Spacing = 10,
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Folder_Label", "Folder"),
+                    FontWeight = FontWeight.Medium,
+                },
+                directoryRow,
+                new TextBlock
+                {
+                    Text = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Extensions_Label", "Extensions"),
+                    FontWeight = FontWeight.Medium,
+                },
+                _extensions,
+                new TextBlock
+                {
+                    Text = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Extensions_Hint", "Separate extensions with commas or semicolons."),
+                    Foreground = new SolidColorBrush(Colors.Gray),
+                    TextWrapping = TextWrapping.Wrap,
+                },
+                _recursive,
+                _error,
+                buttons,
+            },
+        };
+    }
+
+    private async void BrowseButton_Click(object? sender, RoutedEventArgs e)
+    {
+        var folders = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        {
+            AllowMultiple = false,
+            Title = AvaloniaLocalization.GetString("CustomCleanupRuleWindow_Browse_Button", "Choose folder"),
+        });
+        var path = folders.FirstOrDefault()?.Path.LocalPath;
+        if (!string.IsNullOrWhiteSpace(path))
+            _directory.Text = path;
+    }
+
+    private void SaveButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(_directory.Text))
+        {
+            _error.Text = AvaloniaLocalization.GetString(
+                "CustomCleanupRuleWindow_Error_Folder", "Choose a folder first.");
+            _error.IsVisible = true;
+            return;
+        }
+
+        var extensions = (_extensions.Text ?? string.Empty)
+            .Split([',', ';'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(value => value.Trim())
+            .Where(value => value.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        Close(new CustomCleanupRuleItem(_directory.Text.Trim(), extensions, _recursive.IsChecked == true));
     }
 }

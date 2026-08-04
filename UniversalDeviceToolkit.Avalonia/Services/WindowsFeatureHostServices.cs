@@ -128,6 +128,52 @@ internal sealed class WindowsFeatureHostServices
         };
     }
 
+    public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync()
+    {
+        if (_applicationSettings is null)
+            return Task.FromResult<IReadOnlyList<CustomCleanupRuleItem>>([]);
+
+        var rules = (_applicationSettings.Store.CustomCleanupRules ?? [])
+            .Where(rule => rule is not null)
+            .Select(rule => new CustomCleanupRuleItem(
+                rule.DirectoryPath ?? string.Empty,
+                (rule.Extensions ?? []).ToArray(),
+                rule.Recursive))
+            .ToArray();
+        return Task.FromResult<IReadOnlyList<CustomCleanupRuleItem>>(rules);
+    }
+
+    public Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules)
+    {
+        if (_applicationSettings is null || rules is null)
+            return Task.FromResult(false);
+
+        var normalized = new List<CustomCleanupRule>();
+        foreach (var rule in rules)
+        {
+            if (rule is null || string.IsNullOrWhiteSpace(rule.DirectoryPath))
+                continue;
+
+            var extensions = (rule.Extensions ?? [])
+                .SelectMany(value => (value ?? string.Empty).Split([',', ';'], StringSplitOptions.RemoveEmptyEntries))
+                .Select(value => value.Trim())
+                .Where(value => value.Length > 0)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            normalized.Add(new CustomCleanupRule
+            {
+                DirectoryPath = rule.DirectoryPath.Trim(),
+                Extensions = extensions,
+                Recursive = rule.Recursive,
+            });
+        }
+
+        _applicationSettings.Store.CustomCleanupRules = normalized;
+        _applicationSettings.SynchronizeStore();
+        return Task.FromResult(true);
+    }
+
     public async Task<bool> SetActionAsync(string routeKey, string actionKey, bool isSelected)
     {
         try
@@ -1573,7 +1619,13 @@ internal sealed class WindowsFeatureHostServices
                 ? $"Estimated cleanup: {FormatBytes(_estimatedCleanupSize)}."
                 : string.Empty),
             true,
-            actions);
+            actions,
+            (_applicationSettings?.Store.CustomCleanupRules ?? [])
+                .Select(rule => new CustomCleanupRuleItem(
+                    rule.DirectoryPath ?? string.Empty,
+                    (rule.Extensions ?? []).ToArray(),
+                    rule.Recursive))
+                .ToArray());
     }
 
     private static string FormatBytes(long bytes)

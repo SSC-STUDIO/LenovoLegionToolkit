@@ -51,6 +51,16 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.GetFeaturePageStateAsync(routeKey)
             : _featureHost.GetStateAsync(routeKey);
 
+    public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync() =>
+        _featureHost is null
+            ? _inner.GetCustomCleanupRulesAsync()
+            : _featureHost.GetCustomCleanupRulesAsync();
+
+    public Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules) =>
+        _featureHost is null
+            ? _inner.SaveCustomCleanupRulesAsync(rules)
+            : _featureHost.SaveCustomCleanupRulesAsync(rules);
+
     public Task<PluginPageState> GetPluginPageStateAsync(string pluginId) =>
         _featureHost is null
             ? _inner.GetPluginPageStateAsync(pluginId)

@@ -15,6 +15,8 @@ public interface IPlatformServices
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
+    Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync();
+    Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules);
     Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
     Task<MacroWorkspaceState> GetMacroWorkspaceAsync();
@@ -51,7 +53,18 @@ public sealed record FeaturePageState(
     string StatusTitle,
     string StatusMessage,
     bool IsAvailable,
-    IReadOnlyList<FeatureActionItem> Actions);
+    IReadOnlyList<FeatureActionItem> Actions,
+    IReadOnlyList<CustomCleanupRuleItem>? CustomCleanupRules = null);
+
+/// <summary>
+/// Host-neutral projection of a persisted custom cleanup rule. Extensions are stored
+/// without changing their original text; the cleanup service normalizes separators and
+/// leading dots when it executes or estimates the rule.
+/// </summary>
+public sealed record CustomCleanupRuleItem(
+    string DirectoryPath,
+    IReadOnlyList<string> Extensions,
+    bool Recursive);
 
 public sealed record FeatureActionItem(
     string Key,
