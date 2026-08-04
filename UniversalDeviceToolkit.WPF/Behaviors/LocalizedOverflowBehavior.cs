@@ -39,6 +39,16 @@ public static class LocalizedOverflowBehavior
     private static readonly DependencyProperty OwnsToolTipProperty =
         DependencyProperty.RegisterAttached("OwnsToolTip", typeof(bool), typeof(LocalizedOverflowBehavior));
 
+    private static readonly DependencyProperty OwnsMaxHeightProperty =
+        DependencyProperty.RegisterAttached("OwnsMaxHeight", typeof(bool), typeof(LocalizedOverflowBehavior));
+
+    private static readonly DependencyProperty OriginalMaxHeightProperty =
+        DependencyProperty.RegisterAttached(
+            "OriginalMaxHeight",
+            typeof(double),
+            typeof(LocalizedOverflowBehavior),
+            new PropertyMetadata(double.PositiveInfinity));
+
     public static bool GetIsEnabled(DependencyObject obj) => (bool)obj.GetValue(IsEnabledProperty);
     public static void SetIsEnabled(DependencyObject obj, bool value) => obj.SetValue(IsEnabledProperty, value);
     public static LocalizedOverflowMode GetMode(DependencyObject obj) => (LocalizedOverflowMode)obj.GetValue(ModeProperty);
@@ -67,6 +77,7 @@ public static class LocalizedOverflowBehavior
             textBlock.SizeChanged -= OnUpdated;
             descriptor?.RemoveValueChanged(textBlock, OnUpdated);
             RestoreToolTip(textBlock);
+            RestoreMaxHeight(textBlock);
         }
     }
 
@@ -84,6 +95,12 @@ public static class LocalizedOverflowBehavior
 
     private static void Update(TextBlock textBlock)
     {
+        if (!string.IsNullOrWhiteSpace(textBlock.Text)
+            && string.IsNullOrWhiteSpace(AutomationProperties.GetName(textBlock)))
+        {
+            AutomationProperties.SetName(textBlock, textBlock.Text);
+        }
+
         if (textBlock is AdaptiveTextBlock adaptive)
         {
             adaptive.OverflowMode = GetMode(textBlock);
@@ -95,6 +112,24 @@ public static class LocalizedOverflowBehavior
         var mode = GetMode(textBlock);
         textBlock.TextWrapping = mode == LocalizedOverflowMode.Wrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
         textBlock.TextTrimming = TextTrimming.CharacterEllipsis;
+
+        if (mode == LocalizedOverflowMode.Wrap && GetMaxLines(textBlock) > 0)
+        {
+            if (!GetValue(textBlock, OwnsMaxHeightProperty) && double.IsInfinity(textBlock.MaxHeight))
+            {
+                textBlock.SetValue(OriginalMaxHeightProperty, textBlock.MaxHeight);
+                SetValue(textBlock, OwnsMaxHeightProperty, true);
+            }
+
+            if (GetValue(textBlock, OwnsMaxHeightProperty))
+            {
+                var maxLineHeightForWrap = Math.Max(1, textBlock.FontSize * 1.35);
+                textBlock.MaxHeight = maxLineHeightForWrap * GetMaxLines(textBlock)
+                    + textBlock.Padding.Top + textBlock.Padding.Bottom;
+            }
+        }
+        else
+            RestoreMaxHeight(textBlock);
 
         if (!GetAutoToolTip(textBlock) || string.IsNullOrWhiteSpace(textBlock.Text) || textBlock.ActualWidth <= 0)
         {
@@ -131,7 +166,6 @@ public static class LocalizedOverflowBehavior
                 SetValue(textBlock, OwnsToolTipProperty, true);
             if (GetValue(textBlock, OwnsToolTipProperty))
                 textBlock.ToolTip = textBlock.Text;
-            AutomationProperties.SetName(textBlock, textBlock.Text);
         }
         else
             RestoreToolTip(textBlock);
@@ -147,5 +181,14 @@ public static class LocalizedOverflowBehavior
             textBlock.ToolTip = null;
             SetValue(textBlock, OwnsToolTipProperty, false);
         }
+    }
+
+    private static void RestoreMaxHeight(TextBlock textBlock)
+    {
+        if (!GetValue(textBlock, OwnsMaxHeightProperty))
+            return;
+
+        textBlock.MaxHeight = (double)textBlock.GetValue(OriginalMaxHeightProperty);
+        SetValue(textBlock, OwnsMaxHeightProperty, false);
     }
 }

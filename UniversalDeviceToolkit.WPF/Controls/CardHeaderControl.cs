@@ -20,6 +20,7 @@ public class CardHeaderControl : UserControl
         TextWrapping = TextWrapping.Wrap,
         VerticalAlignment = VerticalAlignment.Center,
         TextTrimming = TextTrimming.CharacterEllipsis,
+        MaxHeight = 48,
         MaxLines = 2,
         MinFontSize = 11,
         OverflowMode = UniversalDeviceToolkit.Abstractions.Localization.LocalizedOverflowMode.Wrap,
@@ -42,6 +43,7 @@ public class CardHeaderControl : UserControl
     {
         TextWrapping = TextWrapping.Wrap,
         TextTrimming = TextTrimming.CharacterEllipsis,
+        MaxHeight = 60,
         MaxLines = 3,
         MinFontSize = 11,
         OverflowMode = UniversalDeviceToolkit.Abstractions.Localization.LocalizedOverflowMode.Wrap,

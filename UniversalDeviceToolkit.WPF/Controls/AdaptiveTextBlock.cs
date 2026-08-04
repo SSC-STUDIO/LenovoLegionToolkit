@@ -34,6 +34,7 @@ public class AdaptiveTextBlock : TextBlock
     private double _baseFontSize;
     private bool _isAdapting;
     private bool _ownsToolTip;
+    private string? _automationText;
     private DependencyPropertyDescriptor? _textDescriptor;
 
     public static readonly DependencyProperty MaxLinesProperty =
@@ -397,8 +398,14 @@ public class AdaptiveTextBlock : TextBlock
 
     private void UpdateAutomationName()
     {
-        if (!string.IsNullOrWhiteSpace(Text) && string.IsNullOrWhiteSpace(AutomationProperties.GetName(this)))
+        var currentName = AutomationProperties.GetName(this);
+        if (!string.IsNullOrWhiteSpace(Text)
+            && (string.IsNullOrWhiteSpace(currentName)
+                || string.Equals(currentName, _automationText, StringComparison.Ordinal)))
+        {
             AutomationProperties.SetName(this, Text);
+            _automationText = Text;
+        }
     }
 
     private void RestoreOwnedToolTip()

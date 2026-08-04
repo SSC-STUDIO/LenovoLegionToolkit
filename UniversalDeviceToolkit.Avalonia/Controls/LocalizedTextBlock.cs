@@ -13,6 +13,8 @@ namespace UniversalDeviceToolkit.Avalonia.Controls;
 /// </summary>
 public class LocalizedTextBlock : TextBlock
 {
+    private bool _ownsAutomationName;
+    private bool _ownsToolTip;
     public static readonly StyledProperty<LocalizedOverflowMode> OverflowModeProperty =
         AvaloniaProperty.Register<LocalizedTextBlock, LocalizedOverflowMode>(
             nameof(OverflowMode), LocalizedOverflowMode.Ellipsis);
@@ -83,8 +85,12 @@ public class LocalizedTextBlock : TextBlock
 
     private void UpdateAutomationName()
     {
-        if (!string.IsNullOrEmpty(Text) && string.IsNullOrEmpty(AutomationProperties.GetName(this)))
+        if (!string.IsNullOrEmpty(Text)
+            && (_ownsAutomationName || string.IsNullOrEmpty(AutomationProperties.GetName(this))))
+        {
             AutomationProperties.SetName(this, Text);
+            _ownsAutomationName = true;
+        }
     }
 
     private void UpdateToolTip()
@@ -99,9 +105,14 @@ public class LocalizedTextBlock : TextBlock
                 && layout.Height >= Bounds.Height - 1;
 
         if (truncated)
+        {
             global::Avalonia.Controls.ToolTip.SetTip(this, Text);
-        else if (global::Avalonia.Controls.ToolTip.GetTip(this) is string tip
-            && string.Equals(tip, Text, StringComparison.Ordinal))
+            _ownsToolTip = true;
+        }
+        else if (_ownsToolTip)
+        {
             global::Avalonia.Controls.ToolTip.SetTip(this, null);
+            _ownsToolTip = false;
+        }
     }
 }
