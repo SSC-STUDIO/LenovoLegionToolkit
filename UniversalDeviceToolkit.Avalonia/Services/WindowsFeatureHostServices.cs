@@ -165,6 +165,13 @@ internal sealed class WindowsFeatureHostServices
             case "PluginExtensions" when actionKey == "plugin-check-updates":
                 await _plugins.CheckForUpdatesAsync().ConfigureAwait(false);
                 return true;
+            case "PluginExtensions" when actionKey.StartsWith("plugin-reload:", StringComparison.OrdinalIgnoreCase):
+                var reloadId = actionKey["plugin-reload:".Length..];
+                if (string.IsNullOrWhiteSpace(reloadId) || !_plugins.IsInstalled(reloadId))
+                    return false;
+
+                await _plugins.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
+                return true;
             case "PluginExtensions" when actionKey.StartsWith("plugin-install:", StringComparison.OrdinalIgnoreCase):
                 var installId = actionKey["plugin-install:".Length..];
                 if (string.IsNullOrWhiteSpace(installId))
@@ -464,7 +471,16 @@ internal sealed class WindowsFeatureHostServices
         }
 
         controller.StartRecording(MacroRecorderSettings.Keyboard);
-        return true;
+        if (controller.IsRecording)
+            return true;
+
+        lock (_macroRecordingLock)
+        {
+            _macroRecordingKey = null;
+            _macroRecordingEvents = null;
+        }
+
+        return false;
     }
 
     private void MacroController_RecorderReceived(object? sender, MacroController.RecorderReceivedEventArgs e)
@@ -725,6 +741,17 @@ internal sealed class WindowsFeatureHostServices
                 installed ? !systemPlugin : true,
                 false,
                 false));
+            if (installed)
+            {
+                actions.Add(new FeatureActionItem(
+                    $"plugin-reload:{pluginId}",
+                    $"Reload {name}",
+                    "Rescan the plugin directory and reload this installed extension through the shared plugin manager.",
+                    "Reload",
+                    true,
+                    false,
+                    false));
+            }
         }
 
         var installedCount = installedIds.Length;
