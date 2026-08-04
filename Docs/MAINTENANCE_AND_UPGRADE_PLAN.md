@@ -157,7 +157,7 @@
 |---|---|---|
 | R13 | 集中重复属性 | Nullable/ImplicitUsings 默认值已集中到 Directory.Build.props；4 个 framework-import 项目保留显式 disable |
 | R14 | 包版本积压 | Directory.Packages.props 一批升级 |
-| R15 | Guard 测试字符串断言脆弱 | CiWorkflowGuardTests 等 18 个 |
+| R15 | Guard 测试字符串断言脆弱 | 已完成：workflow Guard 统一使用 `GitHubWorkflowContract` 的 job/step/with/参数结构解析，Guard 全集 140/140 |
 | R16 | 死岛治理 | Linux/MacOS 已接入 Avalonia/CrossPlatform；PerformanceTest 已接 CI；Coverage 分类已无生产引用 | 收尾孤立工具项目清单 |
 | R17 | 供应链补洞 | 资源目录 host 白名单、语言包/设备包下载哈希 |
 | R18 | 残留文件入库 | `.opencode`、DotSettings、body/resp.json 已清理并加忽略规则 | 后续只防止重新入库 |
@@ -220,7 +220,7 @@
 
 ### M3 — 治理与现代化（下季度）
 1. **R14**：包版本一批升级 + 两个大版本（NAudio/Avalonia）评估矩阵。
-2. **R15**：Guard 测试改 YAML 结构断言或脚本常量单一事实源。
+2. **R15**：已由 `GitHubWorkflowContract` 统一提供 YAML job/step/with/参数结构断言；脚本行为仍保留必要的语义契约。
 3. **R16**：Platform.Linux/MacOS 接入 Avalonia 路线或归档；PerformanceTest 接 CI 基准或删除；TestCategories.Coverage 删除。
 4. **R19**：Tests 根目录 77 文件归位 + 4 处命名空间错位修复 + "Phase 系列"改名 + 三一致守卫测试。
 5. **R17/R12/R18/R22**：供应链补洞、udt 改名、残留清理、文档纠偏。
@@ -245,7 +245,7 @@
 | R3/R8 | ✅ 已完成 | 测试迁移验收与集合级并行记录；主测试 4568 总数、4538 通过、17 个明确环境 Skip |
 | R5/R6 | ✅ 已完成 | Lib 侧为 Shared 兼容 facade；WPF 重复 ViewModel 已移除 |
 | R7 | 🟡 进行中 | `PluginRepositoryService`、`SensorsControl`、`PluginExtensionsPage` 已 partial 化，仍有安装生命周期和主 UI 状态块待拆 |
-| R4/R15 | 🟡 部分完成 | 权限模型收尾和 Guard 去脆弱化仍需逐项验收 |
+| R4 | 🟡 进行中 | 权限模型收尾仍需完整审计 |
 | R19/R21/R22/R23 | ✅ 已完成 | 测试归位、异常资源化、文档纠偏和 4 个工具项目收纳均有独立提交与定向验证 |
 | WSL Linux / macOS / FlaUI nightly | ⚠️ 环境待验证 | Windows 无 WSL distribution；macOS 和桌面 UI 必须由对应 CI runner 执行 |
 
@@ -304,7 +304,7 @@
 | R13 项目默认值集中 | 已完成 | `Directory.Build.props` 提供 Nullable/ImplicitUsings 默认值；CLI.Lib、Lib、Lib.Macro、WPF 的显式 `ImplicitUsings=disable` 经过 Guard 固化；方案 Release 构建 0 警告/0 错误 |
 | 测试日志资源释放 | 已完成 | `Log.ResetForTests()` 在 AppData 临时目录清理前释放异步 sink；插件仓库优化筛选 156/156 通过 |
 
-当前仍未完成的工作包括 R4 权限模型收尾、R7 深层职责拆分、R15 Guard 去脆弱化，以及真实桌面 FlaUI nightly。R5/R6/R8/R14/R16/R17/R18/R19/R20/R21/R22/R23 已在后续记录中完成；R2 的签名动作不会在缺少凭据时伪造成功，当前本地仍只验证 workflow 契约和验签脚本。
+当前仍未完成的工作包括 R4 权限模型收尾、R7 深层职责拆分，以及真实桌面 FlaUI nightly。R5/R6/R8/R14/R15/R16/R17/R18/R19/R20/R21/R22/R23 已在后续记录中完成；R2 的签名动作不会在缺少凭据时伪造成功，当前本地仍只验证 workflow 契约和验签脚本。
 ## 8. 2026-08-03 系统优化反向动作加固
 
 - 注册表优化动作保留跨 `GetCategories()` 调用的原始值快照；历史上没有快照的已应用动作回退为删除优化值，恢复 Windows 默认/继承行为。
@@ -374,7 +374,7 @@
 - 清理页也通过同一 worker 执行选中的内置 `cleanup.*` action；worker 拒绝插件清理 action 和混合/空操作组，避免 `asInvoker` 下权限不足被误报为完整成功。
 - Windows 验证：WPF Release 构建 0 警告/0 错误；插件仓库、插件 ViewModel、页面 Guard、可执行文件解析、图标解析定向测试 91/91；提权协议测试 8/8。
 - WSL 验证前置：`wsl.exe` 存在，但当前系统没有已安装 distribution，`Scripts/Test-CrossPlatformInWsl.ps1` 只能按设计报告前置失败；不执行自动安装。Linux 真实运行需用户安装 distribution 后重跑，macOS 仍由 CI runner 验证。
-- 仍需：插件安装生命周期和页面主状态块的更深拆分；安装目录 ACL/按需提权完整审计；CI 上 macOS、WSL Linux 和 FlaUI nightly 的真实结果；R15 收尾。
+- 仍需：插件安装生命周期和页面主状态块的更深拆分；安装目录 ACL/按需提权完整审计；CI 上 macOS、WSL Linux 和 FlaUI nightly 的真实结果。
 
 ## 17. 2026-08-03 文档与迁移防回流收尾
 
@@ -389,7 +389,7 @@
 - `73b93c87` 收紧安装器信任边界：安装器要求管理员权限，默认安装到受保护的 Program Files，拒绝目录外路径和 reparse-point 路径；在线语言包迁移到用户 AppData，避免运行期写入受保护安装目录。
 - `5a01b8ab` 将 Release/Shipping workflow Guard 改为按 job/step/with 结构解析；解析器同时支持 GitHub Actions 的标准缩进序列，避免 YAML 换行、引号或 step 缩进变化造成误报。
 - 验证：Installer Release 构建 0 警告/0 错误；安装器安全 Guard 2/2；语言包测试 6/6；Release/Shipping/CI Guard 28/28。
-- 当前仍未完成：`PluginExtensionsPage` 安装生命周期的进一步拆分、真实 WSL Linux/macOS runner、FlaUI nightly、R15，以及按需提权模型重构。R19 测试归位、R21 异常资源化、R22 文档纠偏和 R23 工具收纳已完成；并发工作区修改未混入上述提交。
+- 当前仍未完成：`PluginExtensionsPage` 安装生命周期的进一步拆分、真实 WSL Linux/macOS runner、FlaUI nightly，以及按需提权模型重构。R15 Guard 去脆弱化、R19 测试归位、R21 异常资源化、R22 文档纠偏和 R23 工具收纳已完成；并发工作区修改未混入上述提交。
 
 ## 19. 2026-08-03 插件安装生命周期与 WSL 前置
 
@@ -408,3 +408,8 @@
 - `21a5d2f6` 已纠正语言包 API 文档、现代化文档状态、视觉审计历史基线、README 双 CLI 职责和 `logs` 路径。
 - `559ccf78` 将 `PerformanceTest`、`LanguagePackInstallProgressSmoke`、`LanguagePackUi.Smoke`、`UiPerformance.Smoke` 加入方案；`Plugins.Abstractions` 保留为由 `crossplatform-libs.yml` 直接构建的显式 SDK 例外。
 - `SolutionProjectInventoryGuardTests` `2/2` 通过；方案 locked restore 覆盖 32 个项目，4 个新收纳工具串行 Release 构建均为 `0` 警告/`0` 错误。`InnoDependencies` 已确认为空且无 Git 条目，陈旧 `feature/*` 分支不存在。
+
+## 22. 2026-08-04 Guard 结构化断言收尾
+
+- `CiWorkflowGuardTests`、`ReleaseSigningGuardTests`、`ShippingPayloadGuardTests` 和其他 workflow 检查均通过 `GitHubWorkflowContract` 解析 workflow，再按 job、step、`with` 和命令参数断言；没有直接依赖 YAML 原文缩进或换行。
+- 运行时发现并修复 `UpstreamCapabilityMatrixGuardTests` 对已删除可选 `site/index.html` 的过时硬编码依赖；Guard 全集最终 `140/140` 通过，修复提交为 `6650fdba`。
