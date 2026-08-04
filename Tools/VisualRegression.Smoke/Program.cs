@@ -621,7 +621,12 @@ internal static partial class Program
         var windowRect = mainWindow.Current.BoundingRectangle;
         var rootFrame = FindByAutomationId(mainWindow, "MainRootFrame");
         if (rootFrame is not null && IsVisible(rootFrame))
-            return Math.Max(0, rootFrame.Current.BoundingRectangle.Left - windowRect.Left - 30);
+        {
+            var frameRect = rootFrame.Current.BoundingRectangle;
+            var leftNavigationGap = frameRect.Left - windowRect.Left - 30;
+            var rightNavigationGap = windowRect.Right - frameRect.Right - 30;
+            return Math.Max(0, Math.Max(leftNavigationGap, rightNavigationGap));
+        }
 
         var navStore = FindByAutomationId(mainWindow, "MainNavigationStore");
         if (navStore is not null && IsVisible(navStore))
