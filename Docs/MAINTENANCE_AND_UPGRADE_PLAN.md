@@ -389,3 +389,9 @@
 - `5a01b8ab` 将 Release/Shipping workflow Guard 改为按 job/step/with 结构解析；解析器同时支持 GitHub Actions 的标准缩进序列，避免 YAML 换行、引号或 step 缩进变化造成误报。
 - 验证：Installer Release 构建 0 警告/0 错误；安装器安全 Guard 2/2；语言包测试 6/6；Release/Shipping/CI Guard 28/28。
 - 当前仍未完成：`PluginExtensionsPage` 安装生命周期的进一步拆分、剩余测试归位、真实 WSL Linux/macOS runner、FlaUI nightly，以及按需提权模型重构。并发工作区修改未混入上述提交。
+
+## 19. 2026-08-03 插件安装生命周期与 WSL 前置
+
+- `4ada5e2e` 将 `PluginExtensionsPage` 的批量更新、批量安装、在线/本地安装、安装后反馈和卸载流程移至 `PluginExtensionsPage.Installation.cs`；页面主文件减少约 425 行，页面 Guard 已支持组合读取 partial 文件。
+- 验证：WPF Release 构建 0 警告/0 错误；插件仓库、插件 ViewModel、页面 Guard 65/65；系统优化及 toggle 相关测试 117/117。
+- 已尝试准备 WSL：Windows Subsystem for Linux 与 Virtual Machine Platform 均已启用，DISM 返回 `3010`，需要重启后才能安装 Ubuntu/执行 `Scripts/Test-CrossPlatformInWsl.ps1`。本轮没有把 Linux 结果记为通过；macOS 仍必须由 macOS CI runner 验证。
