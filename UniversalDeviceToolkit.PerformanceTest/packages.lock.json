@@ -13,8 +13,8 @@
       },
       "BlackSharp.Core": {
         "type": "Transitive",
-        "resolved": "1.1.4",
-        "contentHash": "+itaAmbgowTKPxfgajCjpRn6hq7aW4UF83bKFvLVFtXNYdKTipnUDbYhu8E3MzFkOSmBHNkZu6jxoU8+WzD3rA=="
+        "resolved": "1.0.7",
+        "contentHash": "LbEc4w0oZ7w4p6+8OjPZgwsJW470aQRuYZgZ9aMN2PW9R79pW3OnZQ32AVVx/21rstX9mKbXaOLWpSAxoANYxQ=="
       },
       "DiskInfoToolkit": {
         "type": "Transitive",
@@ -235,7 +235,7 @@
           "NeoSmart.AsyncLock": "[3.2.1, )",
           "Octokit": "[14.0.0, )",
           "PresentMonFps-Modified": "[2.0.7, )",
-          "RAMSPDToolkit-NDD": "[1.6.0, )",
+          "RAMSPDToolkit-NDD": "[1.4.2, )",
           "Serilog": "[4.4.0, )",
           "Serilog.Sinks.Async": "[2.1.0, )",
           "Serilog.Sinks.File": "[7.0.0, )",
@@ -323,12 +323,12 @@
       },
       "RAMSPDToolkit-NDD": {
         "type": "CentralTransitive",
-        "requested": "[1.6.0, )",
-        "resolved": "1.6.0",
-        "contentHash": "tqZVwWtKjZ4Xpe5Fua9L244EIG2mRw4H86k+p3W1lEEXKtuLfKwLj9b1zHvywsRq9lUPOItKYANM/Br1bd4S7g==",
+        "requested": "[1.4.2, )",
+        "resolved": "1.4.2",
+        "contentHash": "pqIwn/HqXFnW4FVKybq6gZh3YK14OOLGWkgZzDdewjAInCOu86EO2L+FCQo8j1/v1sKwv+vgX5pnehxyrlJYJw==",
         "dependencies": {
-          "BlackSharp.Core": "1.1.4",
-          "System.Management": "10.0.3"
+          "BlackSharp.Core": "1.0.4",
+          "System.Management": "10.0.0"
         }
       },
       "Serilog": {
