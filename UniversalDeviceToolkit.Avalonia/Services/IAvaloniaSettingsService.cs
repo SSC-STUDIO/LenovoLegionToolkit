@@ -44,6 +44,7 @@ public interface IAvaloniaSettingsService
     Task<AvaloniaSettingsPageData> GetPageAsync(string pageKey);
     Task SetToggleAsync(string pageKey, string optionKey, bool value);
     Task SetSelectionAsync(string pageKey, string optionKey, string value);
+    Task SetAccentColorAsync(string? hexColor);
     Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values);
     Task SetBootLogoAsync(string filePath);
     Task SetTextAsync(string pageKey, string optionKey, string? value);

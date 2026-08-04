@@ -426,6 +426,26 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         throw new KeyNotFoundException($"Unknown selection {pageKey}/{optionKey}.");
     }
 
+    public Task SetAccentColorAsync(string? hexColor)
+    {
+        var store = _applicationSettings.Store;
+        if (string.IsNullOrWhiteSpace(hexColor))
+        {
+            store.AccentColorSource = AccentColorSource.System;
+            store.AccentColor = null;
+        }
+        else
+        {
+            store.AccentColorSource = AccentColorSource.Custom;
+            store.AccentColor = ParseAccentColor(hexColor);
+        }
+
+        // Selecting an accent color in WPF also returns the style preset to Default.
+        store.ThemeStylePreset = ThemeStylePreset.Default;
+        _applicationSettings.SynchronizeStore();
+        return Task.CompletedTask;
+    }
+
     public async Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values)
     {
         if (pageKey == "Display" && optionKey == "ExcludedRefreshRates")
@@ -1050,6 +1070,21 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             ? TemperatureUnit.F
             : TemperatureUnit.C;
 
+    private static RGBColor ParseAccentColor(string value)
+    {
+        var normalized = value.Trim().TrimStart('#');
+        if (normalized.Length == 8)
+            normalized = normalized[2..];
+
+        if (normalized.Length != 6
+            || !byte.TryParse(normalized[..2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var r)
+            || !byte.TryParse(normalized[2..4], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var g)
+            || !byte.TryParse(normalized[4..6], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var b))
+            throw new ArgumentException($"Invalid accent color '{value}'.", nameof(value));
+
+        return new RGBColor(r, g, b);
+    }
+
     private static string FormatFontStyle(AppFontStyle value) => value switch
     {
         AppFontStyle.FluentVariable => "Segoe UI Variable",
@@ -1099,10 +1134,10 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         var scale = value.Split('%', 2)[0].Trim();
         return scale switch
         {
-            "90" => (AppTextSize.Compact, AppScale.Small),
-            "100" => (AppTextSize.Standard, AppScale.Standard),
-            "110" => (AppTextSize.Large, AppScale.Large),
-            "125" => (AppTextSize.ExtraLarge, AppScale.ExtraLarge),
+            "90" or "Compact" => (AppTextSize.Compact, AppScale.Small),
+            "100" or "Standard" => (AppTextSize.Standard, AppScale.Standard),
+            "110" or "Large" => (AppTextSize.Large, AppScale.Large),
+            "125" or "ExtraLarge" => (AppTextSize.ExtraLarge, AppScale.ExtraLarge),
             _ => throw new ArgumentException($"Unknown UI scale '{value}'.", nameof(value)),
         };
     }

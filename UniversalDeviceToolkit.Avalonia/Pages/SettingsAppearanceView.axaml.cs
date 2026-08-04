@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
+using System.Diagnostics;
 using System.Globalization;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
@@ -42,6 +43,7 @@ public partial class SettingsAppearanceView : UserControl
     private bool _isRefreshing;
     private readonly IAvaloniaLanguagePackService _languagePackService = AvaloniaLanguagePackServiceFactory.Create();
     private bool _languageOperationInProgress;
+    private readonly IAvaloniaSettingsService _settingsService = AvaloniaSettingsServiceFactory.Create();
 
     // Cross-platform theme/accent persistence. Uses a dedicated file (avalonia-theme.json) via the
     // Lib.Shared AbstractSettings base with a primitive-typed DTO, so this cross-platform (net10.0)
@@ -322,6 +324,7 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.Store.TemperatureUnit = value;
         _themePrefs.SynchronizeStore();
+        _ = PersistSharedSelectionAsync("TemperatureUnit", value == "Fahrenheit" ? "°F" : "°C");
     }
 
     private void FontComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -331,6 +334,7 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.Store.FontFamily = value;
         _themePrefs.SynchronizeStore();
+        _ = PersistSharedSelectionAsync("AppFontStyle", value);
     }
 
     private void UiScaleComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -340,6 +344,7 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.Store.UiScale = value;
         _themePrefs.SynchronizeStore();
+        _ = PersistSharedSelectionAsync("UiScale", value);
     }
 
     private static void SelectComboItem(ComboBox comboBox, string value)
@@ -380,6 +385,7 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.Store.Theme = tag;
         _themePrefs.SynchronizeStore();
+        _ = PersistSharedSelectionAsync("Theme", tag);
     }
 
     private void ApplyAccentColorToThemeCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -398,6 +404,7 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.Store.ApplyAccentColorToTheme = _applyAccentColorToTheme;
         _themePrefs.SynchronizeStore();
+        _ = PersistSharedToggleAsync("ApplyAccentColorToTheme", _applyAccentColorToTheme);
     }
 
     private void ApplyAccentColorToSystemCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -411,6 +418,7 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.Store.ApplyAccentColorToSystem = _applyAccentColorToSystem;
         _themePrefs.SynchronizeStore();
+        _ = PersistSharedToggleAsync("ApplyAccentColorToSystem", _applyAccentColorToSystem);
     }
 
     private void AccentColorSwatch_Click(object? sender, RoutedEventArgs e)
@@ -443,8 +451,33 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.SynchronizeStore();
 
+        _ = PersistSharedAccentColorAsync(item.IsSystem
+            ? null
+            : string.Format("#{0:X2}{1:X2}{2:X2}", item.R, item.G, item.B));
+
         // Rebuild the swatch list so the newly selected item shows its persistent highlight.
         AccentSwatches.ItemsSource = BuildSwatches();
+    }
+
+    private Task PersistSharedSelectionAsync(string optionKey, string value) =>
+        PersistSharedAsync(() => _settingsService.SetSelectionAsync("Appearance", optionKey, value));
+
+    private Task PersistSharedToggleAsync(string optionKey, bool value) =>
+        PersistSharedAsync(() => _settingsService.SetToggleAsync("Appearance", optionKey, value));
+
+    private Task PersistSharedAccentColorAsync(string? hexColor) =>
+        PersistSharedAsync(() => _settingsService.SetAccentColorAsync(hexColor));
+
+    private static async Task PersistSharedAsync(Func<Task> operation)
+    {
+        try
+        {
+            await operation().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Debug.WriteLine($"Failed to persist shared Avalonia appearance setting: {exception.Message}");
+        }
     }
 
     private AccentSwatchItem[] BuildSwatches()

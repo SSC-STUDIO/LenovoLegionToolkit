@@ -30,6 +30,8 @@ internal sealed class UnavailableAvaloniaSettingsService : IAvaloniaSettingsServ
     public Task SetSelectionAsync(string pageKey, string optionKey, string value) =>
         Task.FromException(new PlatformNotSupportedException("Settings are unavailable on this host."));
 
+    public Task SetAccentColorAsync(string? hexColor) => Task.CompletedTask;
+
     public Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values) =>
         Task.FromException(new PlatformNotSupportedException("Settings are unavailable on this host."));
 
