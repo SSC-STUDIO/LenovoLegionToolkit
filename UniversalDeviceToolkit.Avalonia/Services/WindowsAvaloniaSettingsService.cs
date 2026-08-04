@@ -23,6 +23,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private readonly ApplicationSettings _applicationSettings = SharedApplicationSettings;
     private readonly OsdSettings _osdSettings = new();
     private readonly UpdateCheckSettings _updateSettings = new();
+    private readonly SettingsBackupService _settingsBackupService = new();
     private readonly IntegrationsSettings _integrationsSettings =
         IoCContainer.TryResolve<IntegrationsSettings>() ?? new IntegrationsSettings();
 
@@ -547,8 +548,22 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 new("EnableHardwareSensors", "Enable hardware sensors", "Poll supported hardware sensors for dashboard readings.", AvaloniaSettingEditor.Toggle, true, store.EnableHardwareSensors),
                 new("DisableUnsupportedHardwareWarning", "Disable compatibility warning", "Hide the warning shown when hardware-specific features are unavailable.", AvaloniaSettingEditor.Toggle, true, store.DisableUnsupportedHardwareWarning),
                 new("ShowOsd", "Show on-screen display", "Show hardware status changes in the on-screen display.", AvaloniaSettingEditor.Toggle, true, _osdSettings.Store.ShowOsd),
+                new("ExportSettings", "Export settings backup", "Save application settings to a portable backup file.", AvaloniaSettingEditor.Action, true, ActionText: "Export"),
+                new("ImportSettings", "Import settings backup", "Restore application settings from a backup file. Current settings are backed up first.", AvaloniaSettingEditor.Action, true, ActionText: "Import"),
             ],
             true);
+    }
+
+    public Task ExportSettingsAsync(string filePath)
+    {
+        _settingsBackupService.Export(filePath);
+        return Task.CompletedTask;
+    }
+
+    public Task ImportSettingsAsync(string filePath)
+    {
+        _settingsBackupService.Import(filePath);
+        return Task.CompletedTask;
     }
 
     private static async Task<(SoftwareStatus Vantage, SoftwareStatus LegionZone, SoftwareStatus FnKeys)> GetSoftwareStatusesAsync()

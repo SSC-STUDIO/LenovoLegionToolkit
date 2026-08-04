@@ -314,6 +314,39 @@ public partial class SettingsCapabilityView : UserControl
                 return;
             }
 
+            if (_pageKey == "Application" && option.Key is "ExportSettings" or "ImportSettings")
+            {
+                var topLevel = TopLevel.GetTopLevel(this);
+                if (topLevel is null)
+                    return;
+
+                var file = option.Key == "ExportSettings"
+                    ? (await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                    {
+                        SuggestedFileName = $"udt-settings-{DateTime.Now:yyyyMMdd-HHmmss}.udtbackup",
+                        DefaultExtension = "udtbackup",
+                        FileTypeChoices =
+                        [new FilePickerFileType("UDT settings backup") { Patterns = ["*.udtbackup"] }],
+                    }))
+                    : (await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                    {
+                        AllowMultiple = false,
+                        FileTypeFilter =
+                        [new FilePickerFileType("UDT settings backup") { Patterns = ["*.udtbackup"] }],
+                    })).FirstOrDefault();
+
+                var filePath = file?.Path.LocalPath;
+                if (string.IsNullOrWhiteSpace(filePath))
+                    return;
+
+                await PersistAsync(
+                    () => option.Key == "ExportSettings"
+                        ? _settingsService.ExportSettingsAsync(filePath)
+                        : _settingsService.ImportSettingsAsync(filePath),
+                    button);
+                return;
+            }
+
             await PersistAsync(
                 () => _settingsService.InvokeActionAsync(_pageKey, option.Key),
                 button);

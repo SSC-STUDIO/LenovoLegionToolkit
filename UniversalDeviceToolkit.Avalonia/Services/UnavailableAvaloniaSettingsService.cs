@@ -41,4 +41,10 @@ internal sealed class UnavailableAvaloniaSettingsService : IAvaloniaSettingsServ
 
     public Task InvokeActionAsync(string pageKey, string optionKey) =>
         Task.FromException(new PlatformNotSupportedException("Settings are unavailable on this host."));
+
+    public Task ExportSettingsAsync(string filePath) =>
+        Task.FromException(new PlatformNotSupportedException("Settings backup is unavailable on this host."));
+
+    public Task ImportSettingsAsync(string filePath) =>
+        Task.FromException(new PlatformNotSupportedException("Settings backup is unavailable on this host."));
 }

@@ -48,6 +48,8 @@ public interface IAvaloniaSettingsService
     Task SetBootLogoAsync(string filePath);
     Task SetTextAsync(string pageKey, string optionKey, string? value);
     Task InvokeActionAsync(string pageKey, string optionKey);
+    Task ExportSettingsAsync(string filePath);
+    Task ImportSettingsAsync(string filePath);
 }
 
 public static class AvaloniaSettingsServiceFactory
