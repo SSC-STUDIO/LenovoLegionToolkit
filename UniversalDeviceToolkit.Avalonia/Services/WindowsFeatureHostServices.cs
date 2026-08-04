@@ -643,7 +643,8 @@ internal sealed class WindowsFeatureHostServices
             var key = type.Name.EndsWith("AutomationStep", StringComparison.Ordinal)
                 ? type.Name[..^"AutomationStep".Length]
                 : type.Name;
-            return new AutomationStepOption(key, key, AutomationSerialization.SerializeStep(x.Step));
+            var displayName = AvaloniaLocalization.GetString($"{key}AutomationStepControl_Title", key);
+            return new AutomationStepOption(key, displayName, AutomationSerialization.SerializeStep(x.Step));
         }).ToArray();
     }
 
@@ -810,6 +811,22 @@ internal sealed class WindowsFeatureHostServices
         HDROnAutomationPipelineTrigger => "hdr-on",
         HDROffAutomationPipelineTrigger => "hdr-off",
         WiFiDisconnectedAutomationPipelineTrigger => "wifi-disconnected",
+        ExternalDisplayConnectedAutomationPipelineTrigger => "external-display-connected",
+        ExternalDisplayDisconnectedAutomationPipelineTrigger => "external-display-disconnected",
+        LowWattageACAdapterConnectedAutomationPipelineTrigger => "low-wattage-ac-adapter-connected",
+        GamesAreRunningAutomationPipelineTrigger => "game-started",
+        GamesStopAutomationPipelineTrigger => "game-stopped",
+        ProcessesAreRunningAutomationPipelineTrigger => "processes-running",
+        ProcessesStopRunningAutomationPipelineTrigger => "processes-stopped",
+        DeviceConnectedAutomationPipelineTrigger => "device-connected",
+        DeviceDisconnectedAutomationPipelineTrigger => "device-disconnected",
+        TimeAutomationPipelineTrigger => "time",
+        PeriodicAutomationPipelineTrigger => "periodic",
+        UserInactivityAutomationPipelineTrigger => "user-inactivity",
+        WiFiConnectedAutomationPipelineTrigger => "wifi-connected",
+        PowerModeAutomationPipelineTrigger => "power-mode",
+        HardwareSensorAutomationPipelineTrigger => "hardware-sensor",
+        BatteryPercentageAutomationPipelineTrigger => "battery-percentage",
         _ => null,
     };
 
@@ -819,7 +836,8 @@ internal sealed class WindowsFeatureHostServices
         var key = type.Name.EndsWith("AutomationStep", StringComparison.Ordinal)
             ? type.Name[..^"AutomationStep".Length]
             : type.Name;
-        return new AutomationStepItem(key, key, AutomationSerialization.SerializeStep(step));
+        var displayName = AvaloniaLocalization.GetString($"{key}AutomationStepControl_Title", key);
+        return new AutomationStepItem(key, displayName, AutomationSerialization.SerializeStep(step));
     }
 
     private static IAutomationStep? TryDeserializeStep(string? json)
