@@ -6,6 +6,21 @@ namespace UniversalDeviceToolkit.WPF.Controls.Custom;
 
 public class CardExpander : Wpf.Ui.Controls.CardExpander
 {
+    public override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
+
+        if (GetTemplateChild("ExpanderToggleButton") is FrameworkElement toggle)
+        {
+            var name = AutomationProperties.GetName(this);
+            if (string.IsNullOrWhiteSpace(name) && Header is DependencyObject header)
+                name = AutomationProperties.GetName(header);
+
+            AutomationProperties.SetAutomationId(toggle, "ExpanderToggleButton");
+            AutomationProperties.SetName(toggle, string.IsNullOrWhiteSpace(name) ? "Expand or collapse" : name);
+        }
+    }
+
     protected override AutomationPeer OnCreateAutomationPeer() => new CardExpanderAutomationPeer(this);
 
     private class CardExpanderAutomationPeer(CardExpander owner) : FrameworkElementAutomationPeer(owner)
