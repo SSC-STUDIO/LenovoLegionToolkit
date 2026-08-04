@@ -423,7 +423,7 @@
 
 ## 24. 2026-08-04 WSL 实测与插件仓库职责拆分
 
-- `ae9936cf` 将 `PluginRepositoryService` 的下载候选、Native curl、托管 HTTP 重试和下载进度处理移至 `PluginRepositoryService.Download.cs`；`708e63b0` 将本地包回退、ZIP/DLL 完整性、主 DLL 解析和运行时依赖落盘移至 `PluginRepositoryService.Package.cs`。主文件由 1121 行降至 812 行，未修改生产公共 API。
+- `ae9936cf` 将 `PluginRepositoryService` 的下载候选、Native curl、托管 HTTP 重试和下载进度处理移至 `PluginRepositoryService.Download.cs`；`708e63b0` 将本地包回退、ZIP/DLL 完整性、主 DLL 解析和运行时依赖落盘移至 `PluginRepositoryService.Package.cs`；`194d2e81` 将下载后安装编排和安装后可用性回滚移至 `PluginRepositoryService.Installation.cs`。主文件由 1121 行降至 700 行，未修改生产公共 API。
 - Windows 验证：插件库和主测试项目 Release 构建均为 `0` 警告、`0` 错误；`Plugins` 领域测试 `714/714` 通过、`0` Skip，仓库服务定向测试 `36/36` 通过。
 - WSL Linux 已完成真实执行：Ubuntu `26.04`、.NET `10.0.110`；Linux TFM 构建和跨平台测试构建均为 `0` 警告、`0` 错误，跨平台测试 `153/153` 通过、`0` Skip；`status`、`hardware`、`json` 三个 CLI smoke 均通过。
 - Android 支持面已在 `d4025280` 中移除，并由 `AndroidSupportGuardTests` 固化；移动/Android companion app 已明确为不支持范围。
