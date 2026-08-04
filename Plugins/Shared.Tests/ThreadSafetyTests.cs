@@ -7,6 +7,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
+[Collection("HttpClientManagerSerial")]
 public class ThreadSafetyTests
 {
     [Fact]

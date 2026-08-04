@@ -14,14 +14,19 @@
     <IsPluginTestProject>$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.Tests'))</IsPluginTestProject>
     <IsPluginToolProject Condition="'$(IsPluginToolProject)' == ''">False</IsPluginToolProject>
     <IsTemplatePluginProject Condition="'$(MSBuildProjectName)' == 'UniversalDeviceToolkit.Plugins.Template'">True</IsTemplatePluginProject>
+    <IsPluginSdkProject Condition="'$(MSBuildProjectName)' == 'UniversalDeviceToolkit.Plugins.SDK' OR '$(MSBuildProjectName)' == 'UniversalDeviceToolkit.Plugins.Abstractions'">True</IsPluginSdkProject>
+    <IsPluginSdkProject Condition="'$(IsPluginSdkProject)' == ''">False</IsPluginSdkProject>
   </PropertyGroup>
 
 
   <PropertyGroup>
-    <!-- Host binaries are generated from the main repository or downloaded into the
-         ignored versioned cache. No host DLLs are tracked in the monorepo. -->
-    <HostBaselineManifest>$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
+    <!-- Prefer the canonical baseline/cache, but keep the imported vendored host as a
+         compatibility fallback until the final ABI baseline is published. -->
+    <HostBaselineManifest Condition="'$(HostBaselineManifest)' == '' and Exists('$(MSBuildThisFileDirectory)HostBaseline\host-release.json')">$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
+    <HostBaselineManifest Condition="'$(HostBaselineManifest)' == '' and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\host-release.json')">$(MSBuildThisFileDirectory)Dependencies\Host\host-release.json</HostBaselineManifest>
+    <HostBaselineManifest Condition="'$(HostBaselineManifest)' == ''">$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
     <HostBaselineVersion Condition="'$(HostBaselineVersion)' == ''">5.0.0</HostBaselineVersion>
+    <HostDependenciesDir Condition="'$(HostDependenciesDir)' == '' and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\UniversalDeviceToolkit.Lib.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\UniversalDeviceToolkit.Lib.Plugins.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Universal Device Toolkit.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Serilog.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Serilog.Sinks.Async.dll') and Exists('$(MSBuildThisFileDirectory)Dependencies\Host\Serilog.Sinks.File.dll')">$(MSBuildThisFileDirectory)Dependencies\Host\</HostDependenciesDir>
     <HostDependenciesDir Condition="'$(HostDependenciesDir)' == ''">$(MSBuildThisFileDirectory).host\$(HostBaselineVersion)\</HostDependenciesDir>
     <HostSourceDir Condition="'$(HostSourceDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\Build\UniversalDeviceToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\Build\</HostSourceDir>
     <HostLibPath Condition="'$(HostLibPath)' == '' and Exists('$(HostSourceDir)UniversalDeviceToolkit.Lib.dll')">$(HostSourceDir)UniversalDeviceToolkit.Lib.dll</HostLibPath>
@@ -38,7 +43,7 @@
   </PropertyGroup>
 
 
-  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginToolProject)' != 'True' AND '$(IsPluginTestProject)' != 'True'">
+  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsPluginTestProject)' != 'True'">
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
@@ -53,13 +58,13 @@
   </PropertyGroup>
 
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+  <PropertyGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+  <PropertyGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <Copyright>© 2025-2026 SSC-STUDIO</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>SSC-STUDIO</Authors>
@@ -72,7 +77,7 @@
   </PropertyGroup>
 
 
-  <PropertyGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+  <PropertyGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <!-- Plugin ZIPs must carry non-host NuGet sidecars such as Logging.Abstractions and AsyncLock. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GenerateDependencyFile>false</GenerateDependencyFile>
@@ -97,7 +102,7 @@
   </ItemGroup>
 
 
-  <ItemGroup Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+  <ItemGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
    <Reference Include="UniversalDeviceToolkit.Lib">
      <HintPath>$(HostLibPath)</HintPath>
      <Private>false</Private>
@@ -109,11 +114,11 @@
  </ItemGroup>
 
 
-  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <PackageReference Include="WPF-UI" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
+  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
     <None Include="plugin.manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -121,14 +126,14 @@
 
   <Target Name="EnsureHostDependencies"
           BeforeTargets="ResolveReferences"
-          Condition="'$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostLibPath)') OR !Exists('$(HostLibPluginsPath)') OR !Exists('$(HostWpfPath)') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
+          Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostLibPath)') OR !Exists('$(HostLibPluginsPath)') OR !Exists('$(HostWpfPath)') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
     <Message Importance="high" Text="Host dependencies are missing from the main build or Plugins\.host cache. Bootstrapping required host binaries..." />
     <Exec Command="&quot;$(PowerShellExecutable)&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(EnsureHostDependenciesScript)&quot;"
           WorkingDirectory="$(MSBuildThisFileDirectory)" />
   </Target>
 
 
-  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
+  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
     <ItemGroup>
       <FilesToDelete Include="$(OutputPath)*.deps.json" />
       <FilesToDelete Include="$(OutputPath)*.runtimeconfig.json" />
@@ -144,7 +149,7 @@
     <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
   </Target>
 
-  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(MSBuildProjectName)' != 'UniversalDeviceToolkit.Plugins.SDK' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
+  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
     <PropertyGroup>
       <SDKDllSource>$(MSBuildThisFileDirectory).build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll</SDKDllSource>
     </PropertyGroup>

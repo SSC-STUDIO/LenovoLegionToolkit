@@ -6,6 +6,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 
+[Collection("HttpClientManagerSerial")]
 public class HttpClientManagerTests
 {
     [Fact]

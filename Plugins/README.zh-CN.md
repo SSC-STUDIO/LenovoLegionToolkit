@@ -109,7 +109,7 @@ UniversalDeviceToolkit/
 +- Plugins/Shared.Tests/       # Shared helper tests
 +- Plugins/Testing/            # Tooling and performance tests
 +- Plugins/Tooling/            # CLI, PluginWorkbench, and smoke tools
-+- Plugins/HostBaseline/       # Host release manifest; DLL cache is .host/
++- Plugins/Dependencies/Host/  # Vendored host baseline; downloaded cache is .host/
 +- Plugins/Templates/          # Authoring archetypes
 +- Plugins/.build/             # Ignored build, package, and catalog output
 +- Docs/Plugins/                # Plugin documentation

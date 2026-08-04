@@ -23,7 +23,7 @@ Use this when you are developing a plugin locally, in a fork, or for an early PR
 
 `udt-plugin.cmd` is the canonical entry (`llt-plugin.cmd` is a compatibility alias). It publishes the tooling CLI into `Plugins/.build/tooling` and reuses that executable. This avoids repeated `dotnet run` builds and the file-lock failures that can happen when multiple validation commands start together.
 
-**Host baseline:** Universal Device Toolkit **v5.0.0** (`Plugins/HostBaseline/host-release.json`). Official plugins declare `minHostVersion: "5.0.0"`.
+**Host baseline:** Universal Device Toolkit **v5.0.0** (`Plugins/Dependencies/Host/host-release.json`). Official plugins declare `minHostVersion: "5.0.0"`.
 
 ### Validation Profile
 

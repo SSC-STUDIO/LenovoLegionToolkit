@@ -13,7 +13,7 @@ This document is for AI agents and automation running against the plugin reposit
 udt-plugin.cmd doctor
 ```
 
-`llt-plugin.cmd` is a compatibility alias. Host baseline is **v5.0.0** (`Plugins/HostBaseline/host-release.json`).
+`llt-plugin.cmd` is a compatibility alias. Host baseline is **v5.0.0** (`Plugins/Dependencies/Host/host-release.json`).
 
 ## Agent Evidence Paths
 

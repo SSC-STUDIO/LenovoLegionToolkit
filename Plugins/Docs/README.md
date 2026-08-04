@@ -1,7 +1,7 @@
 # Documentation index
 
 Current author-facing docs for **Universal Device Toolkit Plugins**.
-Host baseline: **Universal Device Toolkit v5.0.0** (see `../../Plugins/HostBaseline/host-release.json`).
+Host baseline: **Universal Device Toolkit v5.0.0** (see `../../Plugins/Dependencies/Host/host-release.json`).
 CLI entry: **`../../Plugins/udt-plugin.cmd`** (`llt-plugin.cmd` is a compatibility alias).
 
 ## Start here

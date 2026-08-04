@@ -9,6 +9,7 @@ namespace UniversalDeviceToolkit.Plugins.Shared.Tests;
 /// Integration tests for SDK-Shared HttpClient singleton chain.
 /// Verifies that SDK PluginBase.GetSharedHttpClient() correctly delegates to HttpClientManager.
 /// </summary>
+[Collection("HttpClientManagerSerial")]
 public class SdkSharedIntegrationTests
 {
     /// <summary>

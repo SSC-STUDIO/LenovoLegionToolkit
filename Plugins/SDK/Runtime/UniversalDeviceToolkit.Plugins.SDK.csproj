@@ -21,8 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\PluginBase.cs" Link="PluginBase.cs" />
-    <Compile Include="..\PluginAttribute.cs" Link="PluginAttribute.cs" />
     <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
     <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>

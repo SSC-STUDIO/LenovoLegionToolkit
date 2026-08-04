@@ -23,7 +23,7 @@ The plugin projects are part of the main repository; no sibling checkout is requ
 /root/src/UniversalDeviceToolkit          # host and plugins
 ```
 
-If host DLLs are missing, tooling bootstraps from `Plugins/HostBaseline/host-release.json`
+If host DLLs are missing, tooling bootstraps from `Plugins/Dependencies/Host/host-release.json`
 (currently **host v5.0.0**).
 
 ## Development setup

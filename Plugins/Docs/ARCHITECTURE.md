@@ -22,7 +22,7 @@ UniversalDeviceToolkit/
 +- Plugins/Shared.Tests/       # Shared helper tests
 +- Plugins/Testing/            # Tooling and performance tests
 +- Plugins/Tooling/            # CLI, PluginWorkbench, and smoke tools
-+- Plugins/HostBaseline/       # Host release manifest; DLL cache is .host/
++- Plugins/Dependencies/Host/  # Vendored host baseline; downloaded cache is .host/
 +- Plugins/Templates/          # Authoring archetypes
 +- Plugins/.build/             # Ignored build, package, and catalog output
 +- Docs/Plugins/                # Plugin documentation
@@ -33,7 +33,7 @@ UniversalDeviceToolkit/
 
 ### 1. 独立构建模式
 - 插件项目不引用主应用源码
-- 使用 `Plugins/HostBaseline` 中的预编译引用
+- 使用 `Plugins/Dependencies/Host` 中的预编译引用
 - 通过 `Scripts/ensure-host-dependencies.ps1` 刷新宿主引用
 - 若本机没有 sibling `UniversalDeviceToolkit` 构建输出，则回退到 `host-release.json` 声明的主程序 release ZIP
 

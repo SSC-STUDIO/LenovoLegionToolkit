@@ -5,7 +5,7 @@
 .DESCRIPTION
     Fetches the latest release archive from the Shell GitHub repository, extracts the
     required files (shell.exe, shell.dll, shell.nss, imports/), and places them into
-    the Dependencies/Shell/ directory. Skips download if files already exist unless
+    the Official/ShellIntegration/Bundled/Shell/ directory. Skips download if files already exist unless
     -Force is specified.
 
 .PARAMETER Force

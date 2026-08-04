@@ -168,7 +168,7 @@ UniversalDeviceToolkit/
 |  +- Shared.Tests/          # Shared helper tests
 |  +- Testing/               # Tooling and performance tests
 |  +- Tooling/               # CLI, PluginWorkbench, and smoke tools
-|  +- HostBaseline/          # Host release manifest; DLL cache is .host/
+|  +- Dependencies/Host/     # Vendored host baseline; downloaded cache is .host/
 |  +- .build/                # Ignored build, package, and catalog output
 |  +- udt-plugin.cmd         # Canonical tooling entry
 |  +- llt-plugin.cmd          # Compatibility alias
@@ -183,7 +183,7 @@ UniversalDeviceToolkit/
 
 | Layer | Source of truth | Current baseline |
 |-------|-----------------|------------------|
-| Host app | `Plugins/HostBaseline/host-release.json` | **5.0.0** |
+| Host app | `Plugins/Dependencies/Host/host-release.json` | **5.0.0** |
 | Each plugin SemVer | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | see catalog |
 | Min host | `minHostVersion` in manifest; runtime `plugin.json` still exposes ABI field `MinLltVersion` | **5.0.0** |
 | Store catalog | Generated `Plugins/.build/catalog/plugin-catalog.json` | release output only |

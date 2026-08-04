@@ -43,7 +43,7 @@ jobs:
         run: dotnet build UniversalDeviceToolkit.ViewModels/UniversalDeviceToolkit.ViewModels.csproj --configuration Release
 
       - name: Build Plugins.Abstractions
-        run: dotnet build UniversalDeviceToolkit.Plugins.Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj --configuration Release
+        run: dotnet build Plugins/SDK/Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj --configuration Release
 
       - name: Build Platform.Linux
         if: runner.os == 'Linux'

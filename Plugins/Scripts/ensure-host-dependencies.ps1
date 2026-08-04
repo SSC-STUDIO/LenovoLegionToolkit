@@ -8,6 +8,12 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $manifestPath = Join-Path $repoRoot "HostBaseline\host-release.json"
+if (-not (Test-Path -LiteralPath $manifestPath)) {
+    $manifestPath = Join-Path $repoRoot "Dependencies\Host\host-release.json"
+}
+if (-not (Test-Path -LiteralPath $manifestPath)) {
+    throw "Host baseline manifest was not found in HostBaseline or Dependencies\Host."
+}
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 $hostVersion = [string]$manifest.hostVersion
 if ([string]::IsNullOrWhiteSpace($hostVersion)) {

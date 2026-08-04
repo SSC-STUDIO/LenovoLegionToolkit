@@ -6,7 +6,7 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 
 | Item | Value |
 |------|--------|
-| Host app | Universal Device Toolkit **v5.0.0** (`Plugins/HostBaseline/host-release.json`) |
+| Host app | Universal Device Toolkit **v5.0.0** (`Plugins/Dependencies/Host/host-release.json`) |
 | Official store plugins | `custom-mouse` 1.0.17 · `vive-tool` 1.2.3 · `shell-integration` 1.0.13 |
 | Tooling entry | `udt-plugin.cmd` (`llt-plugin.cmd` alias) |
 | Min host field | `plugin.manifest.json` → `minHostVersion` = **5.0.0**; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
