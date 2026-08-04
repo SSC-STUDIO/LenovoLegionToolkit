@@ -351,29 +351,51 @@ public class StoreJsonGeneratorTests : IDisposable
     }
 
     [Fact]
-    public void ProductionStoreJson_RoundTripsWithoutLosingModeledFields()
+    public void StoreDocument_RoundTripsLocalizedAndIntegrityFields()
     {
-        var repositoryRoot = PluginRepository.FindRepositoryRoot(AppContext.BaseDirectory);
-        var storePath = Path.Combine(repositoryRoot, "store.json");
-        Assert.True(File.Exists(storePath), $"Expected production store at {storePath}");
-
-        var original = PluginRepository.ReadJsonFile<StoreDocument>(storePath);
-        Assert.False(string.IsNullOrWhiteSpace(original.StoreVersion));
-        Assert.Equal(3, original.Plugins.Count);
-        Assert.All(original.Plugins, entry =>
+        var original = new StoreDocument
         {
-            Assert.NotEmpty(entry.LocalizedNames);
-            Assert.NotEmpty(entry.LocalizedDescriptions);
-            Assert.NotEmpty(entry.LocalizedTags);
-            // Official Active packages must ship ZIP + main-DLL integrity digests.
-            if (string.Equals(entry.Status, "Active", StringComparison.OrdinalIgnoreCase))
+            LastUpdated = "2026-07-14T00:00:00.0000000+00:00",
+            StoreVersion = "1.0.0",
+            Plugins =
             {
-                Assert.False(string.IsNullOrWhiteSpace(entry.ZipHash), $"{entry.Id} missing zipHash");
-                Assert.False(string.IsNullOrWhiteSpace(entry.FileHash), $"{entry.Id} missing fileHash");
-                Assert.Equal(64, entry.ZipHash.Length);
-                Assert.Equal(64, entry.FileHash.Length);
+                new StorePluginEntry
+                {
+                    Id = "sample-plugin",
+                    Name = "Sample Plugin",
+                    Description = "A sample plugin.",
+                    LocalizedNames = new()
+                    {
+                        ["default"] = "Sample Plugin",
+                        ["zh-Hans"] = "Sample Plugin (zh-Hans)",
+                    },
+                    LocalizedDescriptions = new()
+                    {
+                        ["default"] = "A sample plugin.",
+                        ["zh-Hans"] = "Sample plugin (zh-Hans).",
+                    },
+                    LocalizedTags = new()
+                    {
+                        ["default"] = ["sample"],
+                        ["zh-Hans"] = ["sample-zh"],
+                    },
+                    Author = "SSC-STUDIO",
+                    Version = "1.0.0",
+                    MinLltVersion = "5.0.0",
+                    DownloadUrl = "https://example.com/sample-plugin.zip",
+                    FileSize = 1234,
+                    FileHash = new string('a', 64),
+                    ZipHash = new string('b', 64),
+                    ReleaseDate = "2026-07-14T00:00:00.0000000+00:00",
+                    RepositoryUrl = "https://example.com/sample-plugin",
+                    SupportedLanguages = ["en", "zh-Hans"],
+                    Icon = "PuzzlePiece24",
+                    IconBackground = "#FFFFFF",
+                    Tags = ["sample"],
+                    Status = PluginLifecycleStatus.Active,
+                },
             }
-        });
+        };
 
         var roundTripPath = Path.Combine(_tempRoot, "store-roundtrip.json");
         PluginRepository.WriteJsonFile(roundTripPath, original);
@@ -381,19 +403,14 @@ public class StoreJsonGeneratorTests : IDisposable
 
         Assert.Equal(original.StoreVersion, roundTrip.StoreVersion);
         Assert.Equal(original.Plugins.Count, roundTrip.Plugins.Count);
-        foreach (var expected in original.Plugins)
-        {
-            var actual = roundTrip.Plugins.Single(plugin => plugin.Id == expected.Id);
-            Assert.Equal(expected.LocalizedNames.Count, actual.LocalizedNames.Count);
-            foreach (var pair in expected.LocalizedNames)
-                Assert.Equal(pair.Value, actual.LocalizedNames[pair.Key]);
-
-            Assert.Equal(expected.LocalizedDescriptions.Count, actual.LocalizedDescriptions.Count);
-            foreach (var pair in expected.LocalizedDescriptions)
-                Assert.Equal(pair.Value, actual.LocalizedDescriptions[pair.Key]);
-
-            Assert.Equal(expected.LocalizedTags["zh-Hans"], actual.LocalizedTags["zh-Hans"]);
-        }
+        var expected = Assert.Single(original.Plugins);
+        var actual = Assert.Single(roundTrip.Plugins);
+        Assert.Equal(expected.LocalizedNames, actual.LocalizedNames);
+        Assert.Equal(expected.LocalizedDescriptions, actual.LocalizedDescriptions);
+        Assert.Equal(expected.LocalizedTags["zh-Hans"], actual.LocalizedTags["zh-Hans"]);
+        Assert.Equal(expected.FileHash, actual.FileHash);
+        Assert.Equal(expected.ZipHash, actual.ZipHash);
+        Assert.Equal(expected.FileSize, actual.FileSize);
     }
 
     [Fact]

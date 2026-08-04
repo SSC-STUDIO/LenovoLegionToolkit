@@ -261,12 +261,10 @@ public partial class MainWindow : Window
         var directory = new DirectoryInfo(startPath);
         for (var depth = 0; depth < 10 && directory is not null; depth++)
         {
-            var storePath = Path.Combine(directory.FullName, "store.json");
             var solutionPath = Path.Combine(directory.FullName, "UniversalDeviceToolkit.Plugins.sln");
             var pluginsDirectory = Path.Combine(directory.FullName, "Official");
             var toolDirectory = Path.Combine(directory.FullName, @"Tooling\PluginCompletionUiTool");
-            if (File.Exists(storePath) &&
-                File.Exists(solutionPath) &&
+            if (File.Exists(solutionPath) &&
                 Directory.Exists(pluginsDirectory) &&
                 Directory.Exists(toolDirectory))
             {

@@ -14,7 +14,7 @@ public class PluginWorkbenchThemeServiceLegacyPackUriTests
 {
     private static readonly string SourcePath = Path.Combine(
         AppContext.BaseDirectory, "..", "..", "..", "..", "..",
-        "Tools", "PluginWorkbench", "PluginWorkbenchThemeService.cs");
+        "Tooling", "PluginWorkbench", "PluginWorkbenchThemeService.cs");
 
     private static string ReadSource()
     {
