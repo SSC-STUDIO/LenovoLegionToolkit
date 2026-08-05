@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
+using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
 
@@ -20,6 +22,7 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     public string IconIdentifier { get; private set; }
     public ObservableCollection<DashboardSensorViewModel> Metrics { get; } = new();
     public ObservableCollection<DashboardSensorDetailViewModel> Details { get; } = new();
+    public ObservableCollection<TrendSparklineSeries> TrendSeries { get; } = new();
     public ObservableCollection<double> History { get; } = new();
 
     [ObservableProperty]
@@ -69,6 +72,7 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
         IconIdentifier = iconIdentifier;
         _statusText = NoTelemetryText;
         _primaryValue = NoTelemetryText;
+        InitializeTrendSeries();
     }
 
     private static string NoTelemetryText =>
@@ -101,6 +105,7 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
             PrimaryProgressPercent = 0;
             IconIdentifier = "Battery024";
             OnPropertyChanged(nameof(IconIdentifier));
+            ClearTrendSeries();
             return;
         }
 
@@ -115,6 +120,10 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
             while (History.Count > HistoryCapacity)
                 History.RemoveAt(0);
         }
+        AddTrendSample("battery-rate", state.DischargeRateWatts is { } rate
+            ? Math.Abs(rate)
+            : null);
+        AddTrendSample("battery-temp", state.TemperatureCelsius);
         IconIdentifier = state.IsCharging ? "BatteryCharge24" : "Battery024";
         OnPropertyChanged(nameof(IconIdentifier));
 
@@ -141,6 +150,7 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
             IsDetailsExpanded = false;
             Details.Clear();
             DetailsStatusText = string.Empty;
+            ClearTrendSeries();
             OnPropertyChanged(nameof(HasDetails));
             OnPropertyChanged(nameof(HasDetailsStatus));
         }
@@ -159,6 +169,8 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
             else
                 Metrics.Add(new DashboardSensorViewModel(reading));
         }
+
+        UpdateTrendSeries(readings);
 
         for (var index = Metrics.Count - 1; index >= 0; index--)
         {
@@ -297,6 +309,104 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
         Details.Add(new DashboardSensorDetailViewModel(
             AvaloniaLocalization.GetString(key, fallback),
             value));
+    }
+
+    private void InitializeTrendSeries()
+    {
+        switch (Key)
+        {
+            case "cpu":
+            case "gpu":
+                TrendSeries.Add(new TrendSparklineSeries(
+                    "utilization",
+                    AvaloniaLocalization.GetString(
+                        "SensorsControl_Utilization_Title",
+                        "Utilization"),
+                    new SolidColorBrush(Color.Parse("#FF4F9DF7")),
+                    maximum: 100));
+                TrendSeries.Add(new TrendSparklineSeries(
+                    "clock",
+                    AvaloniaLocalization.GetString(
+                        "SensorsControl_CoreClock_Title",
+                        "Core clock"),
+                    new SolidColorBrush(Color.Parse("#FF6FBF73"))));
+                TrendSeries.Add(new TrendSparklineSeries(
+                    "temperature",
+                    AvaloniaLocalization.GetString(
+                        "SensorsControl_Temperature_Title",
+                        "Temperature"),
+                    new SolidColorBrush(Color.Parse("#FFD9883B")),
+                    maximum: 110));
+                break;
+            case "battery":
+                TrendSeries.Add(new TrendSparklineSeries(
+                    "battery-rate",
+                    AvaloniaLocalization.GetString(
+                        "SensorsControl_Rate",
+                        "Rate"),
+                    new SolidColorBrush(Color.Parse("#FF6FBF73"))));
+                TrendSeries.Add(new TrendSparklineSeries(
+                    "battery-temp",
+                    AvaloniaLocalization.GetString(
+                        "SensorsControl_Temperature_Title",
+                        "Temperature"),
+                    new SolidColorBrush(Color.Parse("#FFD9883B")),
+                    maximum: 60));
+                break;
+        }
+    }
+
+    private void UpdateTrendSeries(IReadOnlyList<SensorReadingItem> readings)
+    {
+        foreach (var reading in readings)
+        {
+            var key = ResolveTrendSeriesKey(reading);
+            if (key is null)
+                continue;
+
+            var value = reading.Value;
+            if (key == "clock"
+                && reading.Unit.Contains("mhz", StringComparison.OrdinalIgnoreCase))
+            {
+                value /= 1000d;
+            }
+
+            AddTrendSample(key, value);
+        }
+    }
+
+    private string? ResolveTrendSeriesKey(SensorReadingItem reading)
+    {
+        if (Key is not ("cpu" or "gpu"))
+            return null;
+
+        var text = $"{reading.Category} {reading.Name}";
+        if (text.Contains("temperature", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("temp", StringComparison.OrdinalIgnoreCase))
+            return "temperature";
+        if (text.Contains("clock", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("frequency", StringComparison.OrdinalIgnoreCase))
+            return "clock";
+        if (text.Contains("utilization", StringComparison.OrdinalIgnoreCase)
+            || text.Contains("usage", StringComparison.OrdinalIgnoreCase))
+            return "utilization";
+        return null;
+    }
+
+    private void AddTrendSample(string key, double? value)
+    {
+        if (value is not { } sample || !double.IsFinite(sample))
+            return;
+
+        TrendSeries.FirstOrDefault(series =>
+                series.Key.Equals(key, StringComparison.OrdinalIgnoreCase))
+            ?.Add(sample);
+    }
+
+    private void ClearTrendSeries()
+    {
+        foreach (var series in TrendSeries)
+            series.Clear();
     }
 
     private static string? FormatPower(double? value) => FormatUnit(value, "W", "0.#");

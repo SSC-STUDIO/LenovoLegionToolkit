@@ -358,6 +358,22 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DashboardTelemetryMarkup_UsesWpfCompatibleMultiSeriesTrendAndLegend()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DashboardPage.axaml"));
+
+        markup.Should().Contain("SeriesSource=\"{Binding TrendSeries}\"");
+        markup.Should().Contain("ItemsSource=\"{Binding TrendSeries}\"");
+        markup.Should().Contain("Capacity=\"60\"");
+        markup.Should().Contain("Background=\"{Binding Stroke}\"");
+    }
+
+    [Fact]
     public void SettingsCapabilityView_RefreshesNotificationEditorsAndUsesStableMultiSelectionIds()
     {
         var root = RepositoryPaths.FindRoot();

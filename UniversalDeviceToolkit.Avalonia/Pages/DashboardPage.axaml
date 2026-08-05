@@ -668,7 +668,7 @@
                                 CornerRadius="{StaticResource CornerRadiusCard}"
                                 Padding="16"
                                 automation:AutomationProperties.Name="{Binding Title}">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
                                 <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
                                     <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
                                                              FontSize="{StaticResource IconSizeMD}"
@@ -750,12 +750,40 @@
                                              Foreground="{DynamicResource AccentBackgroundBrush}"
                                              Background="{DynamicResource ChartTrackBrush}" />
                                 <controls:TrendSparkline Grid.Row="4"
-                                                         ItemsSource="{Binding History}"
+                                                         SeriesSource="{Binding TrendSeries}"
+                                                         Capacity="60"
                                                          Height="52"
                                                          Margin="0,2,0,0"
                                                          Stroke="{DynamicResource AccentBackgroundBrush}"
                                                          Fill="{DynamicResource ChartSurfaceBrush}" />
                                 <ItemsControl Grid.Row="5"
+                                              ItemsSource="{Binding TrendSeries}"
+                                              IsVisible="{Binding IsAvailable}"
+                                              Margin="0,0,0,2">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,0,12,0">
+                                                <Border Width="8"
+                                                        Height="8"
+                                                        CornerRadius="4"
+                                                        Background="{Binding Stroke}"
+                                                        VerticalAlignment="Center" />
+                                                <controls:LocalizedTextBlock Text="{Binding Label}"
+                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                             OverflowMode="Ellipsis"
+                                                                             MaxLines="1"
+                                                                             MaxWidth="120" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <ItemsControl Grid.Row="6"
                                               IsVisible="{Binding IsAvailable}"
                                               ItemsSource="{Binding Metrics}">
                                     <ItemsControl.ItemTemplate>
@@ -777,7 +805,7 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                <ItemsControl Grid.Row="6"
+                                <ItemsControl Grid.Row="7"
                                               IsVisible="{Binding IsDetailsExpanded}"
                                               ItemsSource="{Binding Details}">
                                     <ItemsControl.ItemTemplate>
@@ -804,14 +832,14 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <controls:LocalizedTextBlock Grid.Row="7"
+                                <controls:LocalizedTextBlock Grid.Row="8"
                                                              IsVisible="{Binding HasDetailsStatus}"
                                                              Text="{Binding DetailsStatusText}"
                                                              FontSize="{StaticResource FontSizeSmallCaption}"
                                                              Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                              OverflowMode="Wrap"
                                                              MaxLines="2" />
-                                <controls:LocalizedTextBlock Grid.Row="8"
+                                <controls:LocalizedTextBlock Grid.Row="9"
                                                              Text="{Binding WarningText}"
                                                              IsVisible="{Binding HasWarning}"
                                                              Foreground="{DynamicResource StatusWarningBrush}"
