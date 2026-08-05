@@ -94,6 +94,17 @@ public sealed class UnavailablePlatformServices : IPlatformServices
             false,
             AvaloniaLocalization.GetString("PluginPage_AdapterUnavailable", "No platform adapter can host plugin pages.")));
 
+    public Task<PluginPageState> GetPluginSettingsPageStateAsync(string pluginId) =>
+        Task.FromResult(new PluginPageState(
+            pluginId,
+            pluginId,
+            AvaloniaLocalization.GetString("PluginPage_AdapterDescription", "Plugin settings require the host plugin service."),
+            null,
+            false,
+            false,
+            false,
+            AvaloniaLocalization.GetString("PluginPage_AdapterUnavailable", "No platform adapter can host plugin settings.")));
+
     public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
         Task.FromResult(new AutomationWorkspaceState(false, Array.Empty<AutomationPipelineItem>()));
 

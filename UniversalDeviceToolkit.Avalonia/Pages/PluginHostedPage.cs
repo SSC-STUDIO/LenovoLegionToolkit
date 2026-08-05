@@ -21,6 +21,7 @@ public sealed class PluginHostedPage : UserControl
     private readonly IPlatformServices _platformServices;
     private readonly string _pluginId;
     private readonly Action _navigateBack;
+    private readonly bool _isSettings;
     private readonly TextBlock _title = new();
     private readonly TextBlock _description = new();
     private readonly TextBlock _status = new();
@@ -30,11 +31,13 @@ public sealed class PluginHostedPage : UserControl
     public PluginHostedPage(
         IPlatformServices platformServices,
         string pluginId,
-        Action navigateBack)
+        Action navigateBack,
+        bool isSettings = false)
     {
         _platformServices = platformServices;
         _pluginId = pluginId;
         _navigateBack = navigateBack;
+        _isSettings = isSettings;
 
         var backButton = new Button
         {
@@ -95,7 +98,9 @@ public sealed class PluginHostedPage : UserControl
         PluginPageState state;
         try
         {
-            state = await _platformServices.GetPluginPageStateAsync(_pluginId);
+            state = _isSettings
+                ? await _platformServices.GetPluginSettingsPageStateAsync(_pluginId)
+                : await _platformServices.GetPluginPageStateAsync(_pluginId);
         }
         catch (Exception ex)
         {
@@ -128,8 +133,12 @@ public sealed class PluginHostedPage : UserControl
         var title = new LocalizedTextBlock
         {
             Text = state.HasFeaturePage
-                ? AvaloniaLocalization.GetString("PluginPage_WpfOnlyTitle", "Plugin page requires the WPF host")
-                : AvaloniaLocalization.GetString("PluginPage_NoFeatureTitle", "No plugin feature page is available"),
+                ? AvaloniaLocalization.GetString(
+                    _isSettings ? "PluginPage_WpfOnlySettingsTitle" : "PluginPage_WpfOnlyTitle",
+                    _isSettings ? "Plugin settings require the WPF host" : "Plugin page requires the WPF host")
+                : AvaloniaLocalization.GetString(
+                    _isSettings ? "PluginPage_NoSettingsTitle" : "PluginPage_NoFeatureTitle",
+                    _isSettings ? "No plugin settings page is available" : "No plugin feature page is available"),
             FontWeight = FontWeight.Medium,
             Foreground = GetBrush("TextFillColorPrimaryBrush"),
         };

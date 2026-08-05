@@ -174,6 +174,17 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
             false,
             DashboardLocalization.Get("PluginPage_AdapterUnavailable", "The platform adapter cannot host plugin pages.")));
 
+    public Task<PluginPageState> GetPluginSettingsPageStateAsync(string pluginId) =>
+        Task.FromResult(new PluginPageState(
+            pluginId,
+            pluginId,
+            DashboardLocalization.Get("PluginPage_AdapterDescription", "Plugin settings require the host plugin service."),
+            null,
+            false,
+            false,
+            false,
+            DashboardLocalization.Get("PluginPage_AdapterUnavailable", "The platform adapter cannot host plugin settings.")));
+
     public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
         Task.FromResult(new AutomationWorkspaceState(false, Array.Empty<AutomationPipelineItem>()));
 

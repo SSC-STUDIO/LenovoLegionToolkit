@@ -1831,6 +1831,125 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public Task<PluginPageState> GetPluginSettingsPageStateAsync(string pluginId)
+    {
+        var normalizedId = pluginId?.Trim() ?? string.Empty;
+        var plugin = _plugins.GetRegisteredPlugins()
+            .FirstOrDefault(candidate => candidate.Id.Equals(normalizedId, StringComparison.OrdinalIgnoreCase));
+        var metadata = string.IsNullOrWhiteSpace(normalizedId)
+            ? null
+            : _plugins.GetPluginMetadata(normalizedId);
+        var title = metadata?.GetDisplayName(LocalizationRuntime.CurrentCulture)
+            ?? plugin?.Name
+            ?? normalizedId;
+        var description = metadata?.GetDisplayDescription(LocalizationRuntime.CurrentCulture)
+            ?? plugin?.Description
+            ?? "No plugin description was provided by the host.";
+        var icon = metadata?.Icon ?? plugin?.Icon;
+        var installed = !string.IsNullOrWhiteSpace(normalizedId) && _plugins.IsInstalled(normalizedId);
+
+        if (plugin is null)
+        {
+            return Task.FromResult(new PluginPageState(
+                normalizedId,
+                title,
+                description,
+                icon,
+                installed,
+                false,
+                false,
+                "The plugin is not loaded by the host plugin manager."));
+        }
+
+        try
+        {
+            var getSettingsPage = plugin.GetType().GetMethod(
+                "GetSettingsPage",
+                BindingFlags.Public | BindingFlags.Instance,
+                Type.EmptyTypes);
+            var settingsPage = getSettingsPage?.Invoke(plugin, null);
+            if (settingsPage is null)
+            {
+                return Task.FromResult(new PluginPageState(
+                    normalizedId,
+                    title,
+                    description,
+                    icon,
+                    installed,
+                    false,
+                    false,
+                    "This plugin does not provide a settings page."));
+            }
+
+            string? pageTitle = null;
+            string? pageIcon = null;
+            Func<object> createPage;
+            if (settingsPage is IPluginPage pluginPage)
+            {
+                pageTitle = pluginPage.PageTitle;
+                pageIcon = pluginPage.PageIcon;
+                createPage = pluginPage.CreatePage;
+            }
+            else if (settingsPage is Control)
+            {
+                createPage = () => settingsPage;
+            }
+            else
+            {
+                var pageType = settingsPage.GetType();
+                var createPageMethod = pageType.GetMethod(
+                    "CreatePage",
+                    BindingFlags.Public | BindingFlags.Instance,
+                    Type.EmptyTypes);
+                if (createPageMethod is null)
+                {
+                    return Task.FromResult(new PluginPageState(
+                        normalizedId,
+                        title,
+                        description,
+                        icon,
+                        installed,
+                        true,
+                        false,
+                        "The plugin settings page format is not supported by the Avalonia host."));
+                }
+
+                pageTitle = pageType.GetProperty("PageTitle", BindingFlags.Public | BindingFlags.Instance)
+                    ?.GetValue(settingsPage) as string;
+                pageIcon = pageType.GetProperty("PageIcon", BindingFlags.Public | BindingFlags.Instance)
+                    ?.GetValue(settingsPage) as string;
+                createPage = () => createPageMethod.Invoke(settingsPage, null) ?? new object();
+            }
+
+            var content = createPage();
+            var isAvaloniaPage = content is Control;
+            return Task.FromResult(new PluginPageState(
+                normalizedId,
+                string.IsNullOrWhiteSpace(pageTitle) ? title : pageTitle,
+                description,
+                string.IsNullOrWhiteSpace(pageIcon) ? icon : pageIcon,
+                installed,
+                true,
+                isAvaloniaPage,
+                isAvaloniaPage
+                    ? "The plugin settings page is hosted below."
+                    : "This plugin provides a WPF settings page. Avalonia keeps the route visible but cannot embed WPF controls.",
+                content));
+        }
+        catch (Exception ex)
+        {
+            return Task.FromResult(new PluginPageState(
+                normalizedId,
+                title,
+                description,
+                icon,
+                installed,
+                true,
+                false,
+                $"The plugin settings page could not be created: {ex.Message}"));
+        }
+    }
+
     private static bool HasPluginFeaturePage(IPlugin plugin)
     {
         try

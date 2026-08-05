@@ -241,6 +241,12 @@ public partial class FeaturePageView : UserControl
                     $"plugin-open:{plugin.Id}",
                     plugin.Name));
 
+            if (plugin.SupportsSettingsPage)
+                commands.Children.Add(CreatePluginButton(
+                    AvaloniaLocalization.GetString("PluginExtensionsPage_Configure", "Configure"),
+                    $"plugin-settings:{plugin.Id}",
+                    plugin.Name));
+
             if (!plugin.IsSystemPlugin)
                 commands.Children.Add(CreatePluginButton(
                     AvaloniaLocalization.GetString("PluginExtensionsPage_Uninstall", "Uninstall"),
@@ -395,18 +401,25 @@ public partial class FeaturePageView : UserControl
         _isApplying = true;
         try
         {
+            var isPluginOpen = actionKey.StartsWith("plugin-open:", StringComparison.OrdinalIgnoreCase);
+            var isPluginSettings = actionKey.StartsWith("plugin-settings:", StringComparison.OrdinalIgnoreCase);
             var accepted = actionKey.StartsWith("plugin-update:", StringComparison.OrdinalIgnoreCase)
                 ? await _platformServices.UpdatePluginAsync(actionKey["plugin-update:".Length..])
                 : actionKey.StartsWith("plugin-install:", StringComparison.OrdinalIgnoreCase)
                     ? await _platformServices.InstallPluginAsync(actionKey["plugin-install:".Length..])
-                : await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, actionKey, true);
+                    : isPluginOpen || isPluginSettings
+                        ? true
+                        : await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, actionKey, true);
             if (accepted)
             {
-                if (actionKey.StartsWith("plugin-open:", StringComparison.OrdinalIgnoreCase))
+                if (isPluginOpen || isPluginSettings)
                     _actionRequested?.Invoke(actionKey);
-                _pluginCatalog = await _platformServices.GetPluginCatalogAsync();
-                if (_lastState is not null)
-                    RenderFeatureItems(_lastState);
+                else
+                {
+                    _pluginCatalog = await _platformServices.GetPluginCatalogAsync();
+                    if (_lastState is not null)
+                        RenderFeatureItems(_lastState);
+                }
             }
             else
             {

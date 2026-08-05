@@ -13,6 +13,7 @@ public static class MainNavigation
     public const string WindowsOptimization = "windowsoptimization";
     public const string PluginExtensions = "pluginextensions";
     public const string PluginRoutePrefix = "plugin:";
+    public const string PluginSettingsRoutePrefix = "plugin-settings:";
     public const string About = "about";
     public const string Settings = "settings";
 
@@ -20,6 +21,11 @@ public static class MainNavigation
         string.IsNullOrWhiteSpace(pluginId)
             ? throw new ArgumentException("A plugin ID is required.", nameof(pluginId))
             : PluginRoutePrefix + pluginId.Trim();
+
+    public static string CreatePluginSettingsRoute(string pluginId) =>
+        string.IsNullOrWhiteSpace(pluginId)
+            ? throw new ArgumentException("A plugin ID is required.", nameof(pluginId))
+            : PluginSettingsRoutePrefix + pluginId.Trim();
 
     public static bool TryGetPluginId(string? route, out string pluginId)
     {
@@ -36,9 +42,24 @@ public static class MainNavigation
         return true;
     }
 
+    public static bool TryGetPluginSettingsId(string? route, out string pluginId)
+    {
+        pluginId = string.Empty;
+        if (string.IsNullOrWhiteSpace(route)
+            || !route.StartsWith(PluginSettingsRoutePrefix, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var candidate = route[PluginSettingsRoutePrefix.Length..].Trim();
+        if (candidate.Length == 0)
+            return false;
+
+        pluginId = candidate;
+        return true;
+    }
+
     public static bool IsKnown(string? route) => route switch
     {
         Dashboard or Keyboard or Actions or Macro or WindowsOptimization or PluginExtensions or About or Settings => true,
-        _ => TryGetPluginId(route, out _),
+        _ => TryGetPluginId(route, out _) || TryGetPluginSettingsId(route, out _),
     };
 }

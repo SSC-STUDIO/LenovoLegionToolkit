@@ -22,6 +22,7 @@ public interface IPlatformServices
     Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync();
     Task<bool> SaveCustomCleanupRulesAsync(IReadOnlyList<CustomCleanupRuleItem> rules);
     Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
+    Task<PluginPageState> GetPluginSettingsPageStateAsync(string pluginId);
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
     Task<MacroWorkspaceState> GetMacroWorkspaceAsync();
     Task<bool> SetMacroEnabledAsync(bool enabled);

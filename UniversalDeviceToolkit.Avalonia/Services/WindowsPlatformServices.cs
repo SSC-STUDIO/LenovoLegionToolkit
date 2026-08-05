@@ -66,6 +66,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.GetPluginPageStateAsync(pluginId)
             : _featureHost.GetPluginPageStateAsync(pluginId);
 
+    public Task<PluginPageState> GetPluginSettingsPageStateAsync(string pluginId) =>
+        _featureHost is null
+            ? _inner.GetPluginSettingsPageStateAsync(pluginId)
+            : _featureHost.GetPluginSettingsPageStateAsync(pluginId);
+
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         _featureHost is null
             ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)

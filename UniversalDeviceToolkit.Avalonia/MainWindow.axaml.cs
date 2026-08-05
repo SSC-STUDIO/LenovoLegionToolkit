@@ -108,9 +108,12 @@ public partial class MainWindow : Window
 
     private void OnPluginActionRequested(string actionKey)
     {
-        const string prefix = "plugin-open:";
-        if (actionKey.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-            Navigate(MainNavigation.CreatePluginRoute(actionKey[prefix.Length..]));
+        const string openPrefix = "plugin-open:";
+        const string settingsPrefix = "plugin-settings:";
+        if (actionKey.StartsWith(openPrefix, StringComparison.OrdinalIgnoreCase))
+            Navigate(MainNavigation.CreatePluginRoute(actionKey[openPrefix.Length..]));
+        else if (actionKey.StartsWith(settingsPrefix, StringComparison.OrdinalIgnoreCase))
+            Navigate(MainNavigation.CreatePluginSettingsRoute(actionKey[settingsPrefix.Length..]));
     }
 
     private void ShowDashboardPage()
@@ -151,14 +154,19 @@ public partial class MainWindow : Window
 
     private void ShowPluginPage(string route)
     {
-        if (!MainNavigation.TryGetPluginId(route, out var pluginId))
+        var isSettings = MainNavigation.TryGetPluginSettingsId(route, out var settingsPluginId);
+        if (!isSettings && !MainNavigation.TryGetPluginId(route, out settingsPluginId))
             return;
 
-        _activePage = MainNavigation.CreatePluginRoute(pluginId);
+        var pluginId = settingsPluginId;
+        _activePage = isSettings
+            ? MainNavigation.CreatePluginSettingsRoute(pluginId)
+            : MainNavigation.CreatePluginRoute(pluginId);
         MainContent.Content = new PluginHostedPage(
             _platformServices,
             pluginId,
-            () => Navigate(MainNavigation.PluginExtensions));
+            () => Navigate(MainNavigation.PluginExtensions),
+            isSettings);
         SetActiveButton(PluginExtensionsButton);
     }
 
@@ -168,7 +176,8 @@ public partial class MainWindow : Window
     /// </summary>
     public void Navigate(string? route)
     {
-        if (MainNavigation.TryGetPluginId(route, out _))
+        if (MainNavigation.TryGetPluginId(route, out _)
+            || MainNavigation.TryGetPluginSettingsId(route, out _))
         {
             ShowPluginPage(route!.Trim());
             return;
@@ -225,6 +234,7 @@ public partial class MainWindow : Window
         SetNavigationVisibility(AboutButton, MainNavigation.About, settings);
 
         var activeBaseRoute = MainNavigation.TryGetPluginId(_activePage, out _)
+            || MainNavigation.TryGetPluginSettingsId(_activePage, out _)
             ? MainNavigation.PluginExtensions
             : _activePage;
         if (!NavigationVisibilityPolicy.IsVisible(activeBaseRoute, settings)
