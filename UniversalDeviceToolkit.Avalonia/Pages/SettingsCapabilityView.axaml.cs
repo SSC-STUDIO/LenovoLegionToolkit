@@ -202,6 +202,14 @@ public partial class SettingsCapabilityView : UserControl
                 _isApplying = true;
                 combo.SelectedItem = option.SelectedValue;
                 _isApplying = false;
+                return;
+            }
+
+            if (_pageKey == "Display"
+                && option.Key == "WindowBackdrop"
+                && TopLevel.GetTopLevel(this) is MainWindow mainWindow)
+            {
+                mainWindow.ApplyWindowBackdrop();
             }
         };
         return combo;

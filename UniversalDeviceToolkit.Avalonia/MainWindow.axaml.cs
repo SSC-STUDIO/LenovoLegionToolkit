@@ -36,6 +36,8 @@ public partial class MainWindow : Window
         // Force UI refresh when window state changes
         if (e.Property == WindowStateProperty)
         {
+            ApplyWindowBackdrop();
+
             if (WindowState == WindowState.Minimized
                 && Application.Current is App app
                 && app.MinimizeToTrayEnabled)
@@ -61,9 +63,57 @@ public partial class MainWindow : Window
 
     private void OnLoaded(object? sender, RoutedEventArgs e)
     {
+        ApplyWindowBackdrop();
         ApplyNavigationVisibility();
         // Show DashboardPage by default on startup
         ShowDashboardPage();
+    }
+
+    /// <summary>
+    /// Applies the persisted backdrop preference to the current top-level window.
+    /// Avalonia accepts the levels in priority order and uses the first level the
+    /// platform supports, so unsupported Mica/Acrylic implementations degrade to
+    /// blur and finally an opaque window instead of rendering an empty black layer.
+    /// </summary>
+    public void ApplyWindowBackdrop()
+    {
+        if (WindowState == WindowState.Minimized)
+        {
+            TransparencyLevelHint = [WindowTransparencyLevel.None];
+            return;
+        }
+
+#if WINDOWS
+        var style = Services.WindowsAvaloniaSettingsService.SharedApplicationSettings
+            .Store.WindowBackdropStyle
+            .ToString();
+
+        TransparencyLevelHint = style switch
+        {
+            "Windows" =>
+            [
+                WindowTransparencyLevel.Mica,
+                WindowTransparencyLevel.AcrylicBlur,
+                WindowTransparencyLevel.Blur,
+                WindowTransparencyLevel.None,
+            ],
+            "macOS" =>
+            [
+                WindowTransparencyLevel.AcrylicBlur,
+                WindowTransparencyLevel.Blur,
+                WindowTransparencyLevel.None,
+            ],
+            _ => [WindowTransparencyLevel.None],
+        };
+#else
+        TransparencyLevelHint = [WindowTransparencyLevel.None];
+#endif
+
+        if (this.TryFindResource("AppBackgroundBrush", out var fallback)
+            && fallback is IBrush brush)
+        {
+            TransparencyBackgroundFallback = brush;
+        }
     }
 
     private void DashboardButton_Click(object? sender, RoutedEventArgs e)
