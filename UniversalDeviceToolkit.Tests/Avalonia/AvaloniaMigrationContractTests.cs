@@ -84,6 +84,40 @@ public sealed class AvaloniaMigrationContractTests
         group.ToState().Items.Should().Equal("WhiteKeyboardBacklight");
     }
 
+    [Fact]
+    public void HybridModeUsesToggleSemanticsWhenOnlyOnAndOffAreSupported()
+    {
+        var group = new DashboardGroupViewModel(
+            new DashboardGroupState("Graphics", null, Array.Empty<string>()));
+        var item = new DashboardLayoutItemViewModel(group, "HybridMode");
+
+        item.ApplyState(new DashboardItemState("HybridMode", true, "On", ["On", "Off"]));
+
+        item.IsToggleControl.Should().BeTrue();
+        item.IsComboControl.Should().BeFalse();
+        item.IsComboAvailable.Should().BeFalse();
+        item.DisplayName.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public void HybridModeKeepsComboSemanticsWhenIGpuModesAreSupported()
+    {
+        var group = new DashboardGroupViewModel(
+            new DashboardGroupState("Graphics", null, Array.Empty<string>()));
+        var item = new DashboardLayoutItemViewModel(group, "HybridMode");
+
+        item.ApplyState(new DashboardItemState(
+            "HybridMode",
+            true,
+            "On",
+            ["On", "OnIGPUOnly", "OnAuto", "Off"]));
+
+        item.IsToggleControl.Should().BeFalse();
+        item.IsComboControl.Should().BeTrue();
+        item.IsComboAvailable.Should().BeTrue();
+        item.DisplayName.Should().NotBeNullOrWhiteSpace();
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]

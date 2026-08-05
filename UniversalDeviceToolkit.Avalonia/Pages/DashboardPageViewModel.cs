@@ -669,12 +669,23 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
     public DashboardItemDescriptor Descriptor => DashboardItemDescriptors.Get(Identifier);
     public string IconIdentifier => Descriptor.IconIdentifier;
     public bool IsStandardControl => !Descriptor.IsCustomControl;
-    public bool IsToggleControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Toggle;
-    public bool IsComboControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Combo;
-    public string DisplayName => AvaloniaLocalization.GetString(
-        Descriptor.TitleKey,
-        Descriptor.FallbackTitle);
+    public bool IsToggleControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Toggle
+        || IsHybridToggleControl;
+    public bool IsComboControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Combo
+        && !IsHybridToggleControl;
+    public string DisplayName => IsHybridToggleControl
+        ? AvaloniaLocalization.GetString(
+            "ToggleHybridModeControl_Title",
+            "Hybrid graphics")
+        : AvaloniaLocalization.GetString(
+            Descriptor.TitleKey,
+            Descriptor.FallbackTitle);
     public ObservableCollection<DashboardStateOption> Options { get; } = new();
+
+    private bool IsHybridToggleControl => Identifier.Equals("HybridMode", StringComparison.OrdinalIgnoreCase)
+        && Options.Count > 0
+        && Options.All(option => option.Value.Equals("On", StringComparison.OrdinalIgnoreCase)
+            || option.Value.Equals("Off", StringComparison.OrdinalIgnoreCase));
 
     [ObservableProperty]
     private DashboardStateOption? _selectedOption;
@@ -751,6 +762,9 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
         _appliedToggleOn = IsToggleOn;
         OnPropertyChanged(nameof(HasOptions));
         OnPropertyChanged(nameof(IsComboAvailable));
+        OnPropertyChanged(nameof(IsToggleControl));
+        OnPropertyChanged(nameof(IsComboControl));
+        OnPropertyChanged(nameof(DisplayName));
         OnPropertyChanged(nameof(StateDisplayText));
     }
 
