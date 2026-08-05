@@ -375,9 +375,13 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         var wrongName = method.Invoke(
             null,
             [segments, "custom-mouse-v9.9.9.zip", "custom-mouse", "1.0.16"]);
+        var invalidAssetId = method.Invoke(
+            null,
+            [new[] { "repos", "SSC-STUDIO", "UniversalDeviceToolkit", "releases", "assets", "-1" }, "custom-mouse-v1.0.16.zip", "custom-mouse", "1.0.16"]);
 
         exact.Should().Be(true);
         wrongName.Should().Be(false);
+        invalidAssetId.Should().Be(false);
     }
 
     [Fact]

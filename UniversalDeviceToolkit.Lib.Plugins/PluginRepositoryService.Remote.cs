@@ -268,7 +268,8 @@ public partial class PluginRepositoryService
                IsOfficialPluginRepository(segments[1], segments[2]) &&
                segments[3].Equals("releases", StringComparison.OrdinalIgnoreCase) &&
                segments[4].Equals("assets", StringComparison.OrdinalIgnoreCase) &&
-               long.TryParse(segments[5], out _) &&
+               long.TryParse(segments[5], out var assetId) &&
+               assetId > 0 &&
                IsMatchingPublishedPluginAsset(assetName, pluginId, pluginVersion);
     }
 
