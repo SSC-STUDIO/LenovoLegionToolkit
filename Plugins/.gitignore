@@ -15,6 +15,7 @@ task_plan.md
 findings.md
 progress.md
 NuGet.Config
+/store.json
 
 # Accidental build outputs next to sources (keep Plugins/*/Bundled/**)
 Plugins/*/*.dll
