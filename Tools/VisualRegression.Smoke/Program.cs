@@ -44,6 +44,76 @@ internal static partial class Program
     private static bool _videoEnabled;
     private static string _host = "wpf";
 
+    // Keep the shell coverage contract in one place. Both hosts expose the same
+    // page surface even though their UI Automation identifiers differ.
+    private static readonly IReadOnlyList<AuditPageDescriptor> _pageManifest =
+    [
+        new(
+            "dashboard",
+            ["_dashboardItem"],
+            ["Dashboard"],
+            IsDashboardPageReady,
+            ["AvaloniaDashboardButton"],
+            ["Dashboard"],
+            IsDashboardPageReady),
+        new(
+            "keyboard",
+            ["_keyboardItem"],
+            ["Keyboard", "Keyboard Backlight"],
+            IsKeyboardPageReady,
+            ["AvaloniaKeyboardButton"],
+            ["Keyboard"],
+            IsFeaturePageReady),
+        new(
+            "automation",
+            ["_automationItem"],
+            ["Actions", "Automation"],
+            IsAutomationPageReady,
+            ["AvaloniaActionsButton"],
+            ["Actions"],
+            IsFeaturePageReady),
+        new(
+            "macro",
+            ["_macroItem"],
+            ["Macro"],
+            IsMacroPageReady,
+            ["AvaloniaMacroButton"],
+            ["Macro"],
+            IsFeaturePageReady),
+        new(
+            "windowsOptimization",
+            ["WindowsOptimizationNavItem", "_windowsOptimizationItem"],
+            ["System optimization", "Windows Optimization", "Windows optimization"],
+            IsWindowsOptimizationPageReady,
+            ["AvaloniaWindowsOptimizationButton"],
+            ["System optimization"],
+            IsFeaturePageReady),
+        new(
+            "pluginExtensions",
+            ["PluginExtensionsNavItem"],
+            ["Plugin Extensions"],
+            IsPluginExtensionsPageReady,
+            ["AvaloniaPluginExtensionsButton"],
+            ["Plugin Extensions"],
+            IsPluginExtensionsPageReady),
+        new(
+            "settings",
+            ["SettingsNavItem"],
+            ["Settings"],
+            IsSettingsPageReady,
+            ["AvaloniaSettingsButton"],
+            ["Settings"],
+            IsSettingsPageReady),
+        new(
+            "about",
+            ["_aboutItem"],
+            ["About"],
+            IsAboutPageReady,
+            ["AvaloniaAboutButton"],
+            ["About"],
+            IsAboutPageReady),
+    ];
+
     public static int Main(string[] args)
     {
         try
@@ -156,12 +226,7 @@ internal static partial class Program
             // Sidebar animations can leave the UIA provider with a stale hit-test
             // target after the second toggle. Re-select Dashboard and wait for its
             // content before naming subsequent captures or exercising interactions.
-            NavigateAndWait(mainWindow, new PageTarget(
-                "dashboard",
-                ["_dashboardItem"],
-                ["Dashboard"],
-                root => root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase)
-                        || FindVisibleTextContains(root, "Power Mode")));
+            NavigateAndWait(mainWindow, CreatePageTarget("dashboard", avalonia: false));
 
             if (options.NavigationSidebarOnly)
             {
@@ -181,20 +246,16 @@ internal static partial class Program
             {
                 UpdateSandboxTheme(switchTheme);
                 _assertDarkThemeSurface = switchTheme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
-                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                    "settings",
-                    ["SettingsNavItem"],
-                    ["Settings"],
-                    root => IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
-                            || FindVisibleClassContains(root, "SettingsPage")
-                            || FindVisibleTextContains(root, "Settings")));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings", avalonia: false));
                 SelectComboBoxItemByNames(WaitForNamedComboBox(ResolveLiveWindow(mainWindow), "Theme", TimeSpan.FromSeconds(10)), switchTheme);
                 WaitForAnimationsToComplete();
-                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                    $"dashboard-after-{switchTheme.ToLowerInvariant()}-switch",
-                    ["_dashboardItem"],
-                    ["Dashboard"],
-                    root => root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase) || FindVisibleTextContains(root, "Power Mode")));
+                NavigateAndCapture(
+                    currentDirectory,
+                    mainWindow,
+                    CreatePageTarget(
+                        "dashboard",
+                        avalonia: false,
+                        label: $"dashboard-after-{switchTheme.ToLowerInvariant()}-switch"));
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
                 WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
@@ -213,11 +274,7 @@ internal static partial class Program
 
             if (options.PluginOnly)
             {
-                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                    "pluginExtensions",
-                    ["PluginExtensionsNavItem"],
-                    ["Plugin Extensions"],
-                    IsPluginExtensionsPageReady));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("pluginExtensions", avalonia: false));
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
                 WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
@@ -236,13 +293,7 @@ internal static partial class Program
 
             if (options.SettingsOnly)
             {
-                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                    "settings",
-                    ["SettingsNavItem"],
-                    ["Settings"],
-                    root => IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
-                            || FindVisibleClassContains(root, "SettingsPage")
-                            || FindVisibleTextContains(root, "Settings")));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings", avalonia: false));
                 CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
@@ -262,67 +313,20 @@ internal static partial class Program
 
             if (options.ExpectKeyboardNavigation)
             {
-                NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                    "keyboard",
-                    ["_keyboardItem"],
-                    ["Keyboard", "Keyboard Backlight"],
-                    root => (root.Current.Name.Contains("Keyboard", StringComparison.OrdinalIgnoreCase)
-                             && !root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase))
-                            || FindVisibleTextContains(root, "No compatible keyboards")
-                            || IsVisible(FindByAutomationId(root, "KeyboardBacklightPageRoot"))));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("keyboard", avalonia: false));
             }
 
-            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                "automation",
-                ["_automationItem"],
-                ["Actions", "Automation"],
-                root => root.Current.Name.Contains("Automation", StringComparison.OrdinalIgnoreCase)
-                        || FindVisibleTextContains(root, "Quick Actions")
-                        || FindVisibleTextContains(root, "automatic actions")));
-
-            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                "macro",
-                ["_macroItem"],
-                ["Macro"],
-                root => root.Current.Name.Contains("Macro", StringComparison.OrdinalIgnoreCase)
-                        || FindVisibleTextContains(root, "M1")
-                        || FindVisibleTextContains(root, "Record")));
-
-            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                "windowsOptimization",
-                ["WindowsOptimizationNavItem", "_windowsOptimizationItem"],
-                ["System optimization", "Windows Optimization", "Windows optimization"],
-                IsWindowsOptimizationPageReady));
-
-            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                "pluginExtensions",
-                ["PluginExtensionsNavItem"],
-                ["Plugin Extensions"],
-                IsPluginExtensionsPageReady));
-
-            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                "settings",
-                ["SettingsNavItem"],
-                ["Settings"],
-                root => IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
-                        || FindVisibleClassContains(root, "SettingsPage")
-                        || FindVisibleTextContains(root, "Settings")));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("automation", avalonia: false));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("macro", avalonia: false));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("windowsOptimization", avalonia: false));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("pluginExtensions", avalonia: false));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings", avalonia: false));
             CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
-            NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-                "about",
-                ["_aboutItem"],
-                ["About"],
-                root => FindVisibleClassContains(root, "AboutPage")
-                        || FindVisibleTextContains(root, "Third-party libraries")
-                        || FindVisibleTextContains(root, "Application Folders")));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("about", avalonia: false));
             CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "about-min-window", _minWindowWidth, _minWindowHeight);
 
-            NavigateAndWait(mainWindow, new PageTarget(
-                "windowsOptimization",
-                ["WindowsOptimizationNavItem", "_windowsOptimizationItem"],
-                ["System optimization", "Windows Optimization", "Windows optimization"],
-                IsWindowsOptimizationPageReady));
+            NavigateAndWait(mainWindow, CreatePageTarget("windowsOptimization", avalonia: false));
             ClickTabAndCapture(currentDirectory, mainWindow, "WindowsOptimizationOptimizationTabButton", "winopt-optimization-tab", IsWindowsOptimizationPageReady);
             ClickTabAndCapture(currentDirectory, mainWindow, "WindowsOptimizationCleanupTabButton", "winopt-cleanup-tab",
                 root => IsVisible(FindByAutomationId(root, "WindowsOptimizationCategoryList")) && FindVisibleTextContains(root, "Cleanup"));
@@ -449,61 +453,17 @@ internal static partial class Program
         CaptureResizeSequence(currentDirectory, mainWindow);
 
         // The Avalonia shell exposes the WPF navigation routes through distinct
-        // feature pages. Visit each one to prove its page owns a stable content
-        // surface even when the platform adapter reports an unavailable feature.
-        foreach (var capabilityTarget in new[]
-                 {
-                     new PageTarget(
-                         "keyboard",
-                         ["AvaloniaKeyboardButton"],
-                         ["Keyboard"],
-                         root => FindVisibleClassContains(root, "FeaturePageView")
-                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
-                     new PageTarget(
-                         "actions",
-                         ["AvaloniaActionsButton"],
-                         ["Actions"],
-                         root => FindVisibleClassContains(root, "FeaturePageView")
-                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
-                     new PageTarget(
-                         "macro",
-                         ["AvaloniaMacroButton"],
-                         ["Macro"],
-                         root => FindVisibleClassContains(root, "FeaturePageView")
-                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
-                     new PageTarget(
-                         "windows-optimization",
-                         ["AvaloniaWindowsOptimizationButton"],
-                         ["System optimization"],
-                         root => FindVisibleClassContains(root, "FeaturePageView")
-                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
-                     new PageTarget(
-                         "plugin-extensions",
-                         ["AvaloniaPluginExtensionsButton"],
-                         ["Plugin Extensions"],
-                         root => FindVisibleClassContains(root, "FeaturePageView")
-                                 || IsVisible(FindByAutomationId(root, "FeaturePageItems"))),
-                 })
+        // feature pages. Visit the same manifest entries used by the WPF flow so
+        // artifact names and coverage cannot drift between hosts.
+        foreach (var page in _pageManifest.Where(page =>
+                     page.Page is "keyboard" or "automation" or "macro" or "windowsOptimization" or "pluginExtensions"))
         {
-            NavigateAndCapture(currentDirectory, mainWindow, capabilityTarget);
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget(page.Page, avalonia: true));
         }
 
-        NavigateAndCapture(currentDirectory, mainWindow, new PageTarget(
-            "about",
-            ["AvaloniaAboutButton"],
-            ["About"],
-            root => FindVisibleClassContains(root, "AboutPage")
-                    || FindVisibleTextContains(root, "Third-party Libraries")
-                    || FindVisibleTextContains(root, "Application Folders")));
+        NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("about", avalonia: true));
 
-        NavigateAndWait(mainWindow, new PageTarget(
-            "settings",
-            ["AvaloniaSettingsButton"],
-            ["Settings"],
-            root => FindVisibleClassContains(root, "SettingsPage")
-                    || FindVisibleTextContains(root, "Appearance")
-                    || FindVisibleTextContains(root, "Application Behavior")
-                    || FindVisibleTextContains(root, "Settings for")));
+        NavigateAndWait(mainWindow, CreatePageTarget("settings", avalonia: true));
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "settings");
         CaptureAvaloniaSettingsItems(currentDirectory, mainWindow);
 
@@ -2038,6 +1998,62 @@ internal static partial class Program
                && IsVisible(FindByAutomationId(root, "WindowsOptimizationOptimizationTabButton"));
     }
 
+    private static bool IsDashboardPageReady(AutomationElement root) =>
+        root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase)
+        || FindVisibleTextContains(root, "Power Mode");
+
+    private static bool IsKeyboardPageReady(AutomationElement root) =>
+        (root.Current.Name.Contains("Keyboard", StringComparison.OrdinalIgnoreCase)
+         && !root.Current.Name.Contains("Home", StringComparison.OrdinalIgnoreCase))
+        || FindVisibleTextContains(root, "No compatible keyboards")
+        || IsVisible(FindByAutomationId(root, "KeyboardBacklightPageRoot"));
+
+    private static bool IsAutomationPageReady(AutomationElement root) =>
+        root.Current.Name.Contains("Automation", StringComparison.OrdinalIgnoreCase)
+        || FindVisibleTextContains(root, "Quick Actions")
+        || FindVisibleTextContains(root, "automatic actions");
+
+    private static bool IsMacroPageReady(AutomationElement root) =>
+        root.Current.Name.Contains("Macro", StringComparison.OrdinalIgnoreCase)
+        || FindVisibleTextContains(root, "M1")
+        || FindVisibleTextContains(root, "Record");
+
+    private static bool IsFeaturePageReady(AutomationElement root) =>
+        FindVisibleClassContains(root, "FeaturePageView")
+        || IsVisible(FindByAutomationId(root, "FeaturePageItems"));
+
+    private static bool IsSettingsPageReady(AutomationElement root) =>
+        IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
+        || IsVisible(FindByAutomationId(root, "AvaloniaSettingsNavigationList"))
+        || FindVisibleClassContains(root, "SettingsPage")
+        || FindVisibleTextContains(root, "Settings");
+
+    private static bool IsAboutPageReady(AutomationElement root) =>
+        FindVisibleClassContains(root, "AboutPage")
+        || FindVisibleTextContains(root, "Third-party libraries")
+        || FindVisibleTextContains(root, "Third-party Libraries")
+        || FindVisibleTextContains(root, "Application Folders");
+
+    private static PageTarget CreatePageTarget(string page, bool avalonia, string? label = null)
+    {
+        var descriptor = _pageManifest.FirstOrDefault(item =>
+            item.Page.Equals(page, StringComparison.OrdinalIgnoreCase));
+        if (descriptor is null)
+            throw new InvalidOperationException($"Unknown visual audit page '{page}'.");
+
+        return avalonia
+            ? new PageTarget(
+                label ?? descriptor.Page,
+                descriptor.AvaloniaAutomationIds,
+                descriptor.AvaloniaNames,
+                descriptor.AvaloniaReady)
+            : new PageTarget(
+                label ?? descriptor.Page,
+                descriptor.WpfAutomationIds,
+                descriptor.WpfNames,
+                descriptor.WpfReady);
+    }
+
     private static bool IsPluginExtensionsPageReady(AutomationElement root)
     {
         if (!FindVisibleTextContains(root, "Plugin Extensions") && !IsVisible(FindByAutomationId(root, "PluginListBox")))
@@ -3101,6 +3117,15 @@ internal static partial class Program
     private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
     private sealed record PageTarget(string Label, string[] AutomationIds, string[] Names, Func<AutomationElement, bool> Ready);
+
+    private sealed record AuditPageDescriptor(
+        string Page,
+        string[] WpfAutomationIds,
+        string[] WpfNames,
+        Func<AutomationElement, bool> WpfReady,
+        string[] AvaloniaAutomationIds,
+        string[] AvaloniaNames,
+        Func<AutomationElement, bool> AvaloniaReady);
 
     private sealed record NavigationItemDescriptor(string Key, string Label);
 
