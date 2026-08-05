@@ -23,7 +23,7 @@
     <!-- The tracked manifest selects the downloadable host baseline; binaries stay in the ignored cache. -->
     <HostBaselineManifest Condition="'$(HostBaselineManifest)' == '' and Exists('$(MSBuildThisFileDirectory)HostBaseline\host-release.json')">$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
     <HostBaselineManifest Condition="'$(HostBaselineManifest)' == ''">$(MSBuildThisFileDirectory)HostBaseline\host-release.json</HostBaselineManifest>
-    <HostBaselineVersion Condition="'$(HostBaselineVersion)' == ''">5.0.0</HostBaselineVersion>
+    <HostBaselineVersion Condition="'$(HostBaselineVersion)' == ''">5.0.2</HostBaselineVersion>
     <HostDependenciesDir Condition="'$(HostDependenciesDir)' == ''">$(MSBuildThisFileDirectory).host\$(HostBaselineVersion)\</HostDependenciesDir>
     <HostSourceDir Condition="'$(HostSourceDir)' == '' and Exists('$(MSBuildThisFileDirectory)..\Build\UniversalDeviceToolkit.Lib.dll')">$(MSBuildThisFileDirectory)..\Build\</HostSourceDir>
     <HostLibPath Condition="'$(HostLibPath)' == '' and Exists('$(HostSourceDir)UniversalDeviceToolkit.Lib.dll')">$(HostSourceDir)UniversalDeviceToolkit.Lib.dll</HostLibPath>
