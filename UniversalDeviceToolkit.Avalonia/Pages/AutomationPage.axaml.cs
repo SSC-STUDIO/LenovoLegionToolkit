@@ -245,8 +245,8 @@ public partial class AutomationPage : UserControl
             MinHeight = 46,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
-        var upButton = new Button { Content = "↑", MinWidth = 30 };
-        var downButton = new Button { Content = "↓", MinWidth = 30 };
+        var upButton = CreateStepMoveButton("ArrowUp24", "MoveUp", "Move step up");
+        var downButton = CreateStepMoveButton("ArrowDown24", "MoveDown", "Move step down");
         var deleteButton = new Button { Content = Get("Delete", "Delete"), MinWidth = 64 };
         var buttons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
         buttons.Children.Add(upButton);
@@ -286,6 +286,25 @@ public partial class AutomationPage : UserControl
             MarkDirty();
         };
         return row;
+    }
+
+    private Button CreateStepMoveButton(string iconIdentifier, string resourceKey, string fallback)
+    {
+        var label = Get(resourceKey, fallback);
+        var button = new Button
+        {
+            Content = new NavigationIcon
+            {
+                IconIdentifier = iconIdentifier,
+                FontSize = GetResource<double>("IconSizeCompact", 16),
+            },
+            MinWidth = 30,
+            MinHeight = 30,
+            Padding = new Thickness(4),
+        };
+        AutomationProperties.SetName(button, label);
+        ToolTip.SetTip(button, label);
+        return button;
     }
 
     private void MoveStep(StepRow row, Panel panel, List<StepRow> rows, int delta)
