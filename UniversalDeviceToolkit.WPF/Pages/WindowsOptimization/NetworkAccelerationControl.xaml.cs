@@ -115,11 +115,22 @@ public partial class NetworkAccelerationControl : UserControl
         return true;
     }
 
-    public void FocusTargetList()
-    {
-        _targetSearchBox?.BringIntoView();
-        _targetSearchBox?.Focus();
-    }
+    public IReadOnlyList<string> GetSelectedTargetSummaries() =>
+        (_acceleration.Config.DomainGroups ?? [])
+            .Select(group => new
+            {
+                group.DisplayName,
+                SelectedCount = GetGroupSelectedCount(group),
+                TotalCount = GetGroupTargetCount(group)
+            })
+            .Where(item => item.SelectedCount > 0)
+            .Select(item => string.Format(
+                CultureInfo.CurrentCulture,
+                "{0} ({1}/{2})",
+                item.DisplayName,
+                item.SelectedCount,
+                item.TotalCount))
+            .ToArray();
 
     public NetworkAccelerationControl()
     {

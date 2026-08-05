@@ -265,6 +265,31 @@ public class NetworkAccelerationUiGuardTests
         code.Should().Contain("TargetSearchBox_TextChanged");
     }
 
+    [Fact]
+    public void NetworkAccelerationSelectionSummary_ShouldOpenSelectedTargetsWindow()
+    {
+        var root = FindRepoRoot();
+        var pageCode = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.WPF",
+            "Pages",
+            "WindowsOptimizationPage.xaml.cs"));
+        var controlCode = File.ReadAllText(FindControlCode());
+        var windowXaml = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.WPF",
+            "Windows",
+            "Utils",
+            "NetworkAccelerationSelectedTargetsWindow.xaml"));
+
+        pageCode.Should().Contain("NetworkAccelerationSelectedTargetsWindow");
+        pageCode.Should().Contain("GetSelectedTargetSummaries()");
+        pageCode.Should().NotContain("FocusTargetList()");
+        controlCode.Should().Contain("GetSelectedTargetSummaries");
+        windowXaml.Should().Contain("NetworkAccelerationSelectedTargetsWindow");
+        windowXaml.Should().Contain("NetworkAccelerationSelectedTargetsWindowCloseButton");
+    }
+
     private static string FindControlCode()
     {
         var root = FindRepoRoot();

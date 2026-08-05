@@ -49,6 +49,7 @@ public partial class WindowsOptimizationPage : Page
     private bool _hasCompletedInitialCategoriesLoad;
     
     private SelectedActionsWindow? _selectedActionsWindow;
+    private NetworkAccelerationSelectedTargetsWindow? _networkAccelerationSelectedTargetsWindow;
     private ActionDetailsWindow? _actionDetailsWindow;
     private ContextMenu? _networkAccelerationRecommendationsMenu;
 
@@ -185,7 +186,15 @@ public partial class WindowsOptimizationPage : Page
 
     private void NetworkAccelerationSelectionCountButton_Click(object sender, RoutedEventArgs e)
     {
-        _networkAccelerationControl.FocusTargetList();
+        _networkAccelerationSelectedTargetsWindow?.Close();
+        _networkAccelerationSelectedTargetsWindow = new NetworkAccelerationSelectedTargetsWindow(
+            _networkAccelerationControl.GetSelectedTargetSummaries(),
+            Resource.NetworkAccelerationPage_DomainGroupsEmptyTitle)
+        {
+            Owner = Window.GetWindow(this)
+        };
+        _networkAccelerationSelectedTargetsWindow.Closed += (_, _) => _networkAccelerationSelectedTargetsWindow = null;
+        _networkAccelerationSelectedTargetsWindow.Show();
     }
 
     private void NetworkAccelerationControl_ToolbarStateChanged(object? sender, EventArgs e) =>
@@ -328,6 +337,7 @@ public partial class WindowsOptimizationPage : Page
         // Close windows
         _actionDetailsWindow?.Close();
         _selectedActionsWindow?.Close();
+        _networkAccelerationSelectedTargetsWindow?.Close();
 
         // Unsubscribe from driver package PropertyChanged handlers to prevent memory leaks
         UnsubscribeFromPackageControlHandlers();
