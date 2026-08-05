@@ -185,6 +185,7 @@ public partial class DashboardPageViewModel : ObservableObject
             ApplyDashboardLayout(layout);
             ApplyDashboardItemStates(itemStates);
             MergeSensors(snapshot.SensorReadings);
+            await RefreshExpandedTelemetryDetailsAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
@@ -271,6 +272,28 @@ public partial class DashboardPageViewModel : ObservableObject
     {
         if (item?.IsHybridModeInfoVisible == true)
             _showHybridInfo?.Invoke(item.Options.ToArray());
+    }
+
+    [RelayCommand]
+    private async Task ToggleTelemetryDetailsAsync(DashboardTelemetryCardViewModel? card)
+    {
+        if (card is null || !card.CanShowDetails)
+            return;
+
+        if (card.IsDetailsExpanded)
+        {
+            card.IsDetailsExpanded = false;
+            return;
+        }
+
+        if (!card.HasDetails)
+        {
+            var details = await _platformServices.GetSensorDetailsAsync().ConfigureAwait(false);
+            foreach (var telemetryCard in TelemetryCards)
+                telemetryCard.UpdateDetails(details);
+        }
+
+        card.IsDetailsExpanded = true;
     }
 
     [RelayCommand]
@@ -490,6 +513,23 @@ public partial class DashboardPageViewModel : ObservableObject
             card.Update(grouped.TryGetValue(card.Key, out var values)
                 ? values
                 : Array.Empty<SensorReadingItem>());
+        }
+    }
+
+    private async Task RefreshExpandedTelemetryDetailsAsync()
+    {
+        if (!TelemetryCards.Any(card => card.IsDetailsExpanded))
+            return;
+
+        try
+        {
+            var details = await _platformServices.GetSensorDetailsAsync().ConfigureAwait(false);
+            foreach (var card in TelemetryCards)
+                card.UpdateDetails(details);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Dashboard sensor detail refresh failed: {ex.Message}");
         }
     }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Platform.Windows;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
@@ -19,12 +20,14 @@ public sealed class WindowsPlatformServices : IPlatformServices
     private readonly DeviceAdapterPlatformServices _inner;
     private readonly WindowsFeatureHostServices? _featureHost;
     private readonly ISensorsController? _sensorController;
+    private readonly SensorsGroupController? _sensorsGroupController;
 
     private WindowsPlatformServices(IDeviceAdapter adapter)
     {
         _inner = new DeviceAdapterPlatformServices(adapter);
         _featureHost = WindowsFeatureHostServices.TryCreate();
         _sensorController = IoCContainer.TryResolve<ISensorsController>();
+        _sensorsGroupController = IoCContainer.TryResolve<SensorsGroupController>();
     }
 
     public static IPlatformServices Create() => new WindowsPlatformServices(new WindowsDeviceAdapter());
@@ -35,6 +38,135 @@ public sealed class WindowsPlatformServices : IPlatformServices
     {
         var readings = await _inner.GetSensorReadingsAsync().ConfigureAwait(false);
         return await AppendHardwareSensorReadingsAsync(readings).ConfigureAwait(false);
+    }
+
+    public async Task<SensorDetailsSnapshot> GetSensorDetailsAsync()
+    {
+        if (_sensorController is null)
+            return SensorDetailsSnapshot.Empty;
+
+        try
+        {
+            if (!await _sensorController.IsSupportedAsync().ConfigureAwait(false))
+                return SensorDetailsSnapshot.Empty;
+
+            await _sensorController.PrepareAsync().ConfigureAwait(false);
+            var data = await _sensorController.GetDataAsync(detailed: true).ConfigureAwait(false);
+            var details = new SensorDetailsSnapshot
+            {
+                IsAvailable = true,
+                CpuPowerWatts = NonNegative(data.CPU.Wattage),
+                CpuVoltageVolts = Positive(data.CPU.Voltage),
+                CpuTemperatureMinimumCelsius = Positive(data.CPU.MinTemperature),
+                CpuTemperatureMaximumCelsius = Positive(data.CPU.MaxTemperatureRecord),
+                CpuVoltageMinimumVolts = Positive(data.CPU.MinVoltage),
+                CpuVoltageMaximumVolts = Positive(data.CPU.MaxVoltage),
+                GpuMemoryClockMHz = NonNegative(data.GPU.MemoryClock),
+                GpuPowerWatts = NonNegative(data.GPU.Wattage),
+                GpuVoltageVolts = Positive(data.GPU.Voltage),
+                GpuTemperatureMinimumCelsius = Positive(data.GPU.MinTemperature),
+                GpuTemperatureMaximumCelsius = Positive(data.GPU.MaxTemperatureRecord),
+                GpuVoltageMinimumVolts = Positive(data.GPU.MinVoltage),
+                GpuVoltageMaximumVolts = Positive(data.GPU.MaxVoltage),
+            };
+
+            if (_sensorsGroupController is { } group)
+            {
+                if (!group.IsLibreHardwareMonitorInitialized())
+                    await group.IsSupportedAsync().ConfigureAwait(false);
+
+                if (group.IsLibreHardwareMonitorInitialized())
+                {
+                    await group.UpdateAsync().ConfigureAwait(false);
+                    var gpuVramUsedTask = group.GetGpuVramUsedAsync();
+                    var gpuVramTotalTask = group.GetGpuVramTotalAsync();
+                    var gpuVramUsageTask = group.GetGpuVramUtilizationAsync();
+                    var gpuVramTemperatureTask = group.GetGpuVramTemperatureAsync();
+                    var gpuHotSpotTemperatureTask = group.GetGpuHotSpotTemperatureAsync();
+                    var gpuPcieRxTask = group.GetGpuPcieRxThroughputAsync();
+                    var gpuPcieTxTask = group.GetGpuPcieTxThroughputAsync();
+                    var gpuIntegratedTask = group.IsCurrentGpuIntegratedAsync();
+                    var cpuPowerTask = group.GetCpuPowerAsync();
+                    var cpuComponentPowersTask = group.GetCpuComponentPowersAsync();
+                    var cpuPCoreClockTask = group.GetCpuPCoreClockAsync();
+                    var cpuECoreClockTask = group.GetCpuECoreClockAsync();
+                    var memoryUsageTask = group.GetMemoryUsageAsync();
+                    var memoryUsedTask = group.GetMemoryUsedAsync();
+                    var memoryTotalTask = group.GetMemoryTotalAsync();
+                    var memoryTemperatureTask = group.GetHighestMemoryTemperatureAsync();
+                    var ssdTemperaturesTask = group.GetSsdTemperaturesAsync();
+
+                    await Task.WhenAll(
+                        gpuVramUsedTask,
+                        gpuVramTotalTask,
+                        gpuVramUsageTask,
+                        gpuVramTemperatureTask,
+                        gpuHotSpotTemperatureTask,
+                        gpuPcieRxTask,
+                        gpuPcieTxTask,
+                        gpuIntegratedTask,
+                        cpuPowerTask,
+                        cpuComponentPowersTask,
+                        cpuPCoreClockTask,
+                        cpuECoreClockTask,
+                        memoryUsageTask,
+                        memoryUsedTask,
+                        memoryTotalTask,
+                        memoryTemperatureTask,
+                        ssdTemperaturesTask).ConfigureAwait(false);
+
+                    var cpuComponents = await cpuComponentPowersTask.ConfigureAwait(false);
+                    var ssdTemperatures = await ssdTemperaturesTask.ConfigureAwait(false);
+                    details = details with
+                    {
+                        IsIntegratedGpu = await gpuIntegratedTask.ConfigureAwait(false),
+                        CpuPowerWatts = PreferPositive(await cpuPowerTask.ConfigureAwait(false), details.CpuPowerWatts),
+                        CpuCoresPowerWatts = Positive(cpuComponents.cores),
+                        CpuMemoryPowerWatts = Positive(cpuComponents.memory),
+                        CpuPlatformPowerWatts = Positive(cpuComponents.platform),
+                        CpuPCoreClockMHz = Positive(await cpuPCoreClockTask.ConfigureAwait(false)),
+                        CpuECoreClockMHz = Positive(await cpuECoreClockTask.ConfigureAwait(false)),
+                        CpuMemoryUsagePercent = NonNegative(await memoryUsageTask.ConfigureAwait(false)),
+                        CpuMemoryUsedGb = Positive(await memoryUsedTask.ConfigureAwait(false)),
+                        CpuMemoryTotalGb = Positive(await memoryTotalTask.ConfigureAwait(false)),
+                        CpuMemoryTemperatureCelsius = Positive(await memoryTemperatureTask.ConfigureAwait(false)),
+                        CpuSsdTemperature1Celsius = Positive(ssdTemperatures.Item1),
+                        CpuSsdTemperature2Celsius = Positive(ssdTemperatures.Item2),
+                        GpuVramUsedGb = Positive(await gpuVramUsedTask.ConfigureAwait(false)),
+                        GpuVramTotalGb = Positive(await gpuVramTotalTask.ConfigureAwait(false)),
+                        GpuVramUsagePercent = NonNegative(await gpuVramUsageTask.ConfigureAwait(false)),
+                        GpuVramTemperatureCelsius = Positive(await gpuVramTemperatureTask.ConfigureAwait(false)),
+                        GpuHotSpotTemperatureCelsius = Positive(await gpuHotSpotTemperatureTask.ConfigureAwait(false)),
+                        GpuPcieRxBytesPerSecond = NonNegative(await gpuPcieRxTask.ConfigureAwait(false)),
+                        GpuPcieTxBytesPerSecond = NonNegative(await gpuPcieTxTask.ConfigureAwait(false)),
+                    };
+                }
+            }
+
+            try
+            {
+                var battery = Battery.GetBatteryInformation();
+                details = details with
+                {
+                    BatteryHealthPercent = Positive(battery.BatteryHealth),
+                    BatteryRateWatts = battery.DischargeRate == 0 ? 0 : battery.DischargeRate / 1000d,
+                    BatteryChargeCapacityWh = Positive(battery.EstimateChargeRemaining / 1000d),
+                    BatteryFullCapacityWh = Positive(battery.FullChargeCapacity / 1000d),
+                    BatteryCycleCount = Positive(battery.CycleCount),
+                    BatteryTemperatureCelsius = battery.BatteryTemperatureC,
+                };
+            }
+            catch
+            {
+                // Sensor details remain useful when the optional battery API is unavailable.
+            }
+
+            return details;
+        }
+        catch
+        {
+            return SensorDetailsSnapshot.Empty;
+        }
     }
 
     public async Task<DashboardSnapshot> GetDashboardSnapshotAsync()
@@ -309,6 +441,15 @@ public sealed class WindowsPlatformServices : IPlatformServices
         var displayValue = $"{value:0.##} {unit}".Trim();
         readings.Add(new SensorReadingItem(name, displayValue, category, value, unit));
     }
+
+    private static double? Positive(double value) =>
+        double.IsFinite(value) && value > 0 ? value : null;
+
+    private static double? NonNegative(double value) =>
+        double.IsFinite(value) && value >= 0 ? value : null;
+
+    private static double? PreferPositive(double value, double? fallback) =>
+        Positive(value) ?? fallback;
 }
 
 #endif

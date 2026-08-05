@@ -12,6 +12,11 @@ public interface IPlatformServices
 {
     Task<IReadOnlyList<FeatureGroupItem>> GetFeatureGroupsAsync();
     Task<IReadOnlyList<SensorReadingItem>> GetSensorReadingsAsync();
+    /// <summary>
+    /// Reads the optional WPF SensorsControl detail metrics without exposing
+    /// WPF controls or localized display strings to the Avalonia host.
+    /// </summary>
+    Task<SensorDetailsSnapshot> GetSensorDetailsAsync();
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
     Task<DashboardLayoutState> GetDashboardLayoutAsync();
     Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout);
@@ -367,6 +372,60 @@ public sealed record SensorReadingItem(
     public double ProgressPercent => Math.Clamp(Value ?? 0, 0, 100);
 
     public string CategoryLabel => string.IsNullOrWhiteSpace(Category) ? "Sensor" : Category;
+}
+
+/// <summary>
+/// Optional detail metrics shown when a dashboard telemetry card is expanded.
+/// Nullable values preserve the distinction between an unsupported metric and
+/// a valid zero reading. Values use invariant units so each UI host can format
+/// them according to its current language and temperature preferences.
+/// </summary>
+public sealed record SensorDetailsSnapshot
+{
+    public static SensorDetailsSnapshot Empty { get; } = new();
+
+    public bool IsAvailable { get; init; }
+    public bool IsIntegratedGpu { get; init; }
+
+    public double? CpuPowerWatts { get; init; }
+    public double? CpuCoresPowerWatts { get; init; }
+    public double? CpuMemoryPowerWatts { get; init; }
+    public double? CpuPlatformPowerWatts { get; init; }
+    public double? CpuVoltageVolts { get; init; }
+    public double? CpuPCoreClockMHz { get; init; }
+    public double? CpuECoreClockMHz { get; init; }
+    public double? CpuMemoryUsagePercent { get; init; }
+    public double? CpuMemoryUsedGb { get; init; }
+    public double? CpuMemoryTotalGb { get; init; }
+    public double? CpuMemoryTemperatureCelsius { get; init; }
+    public double? CpuSsdTemperature1Celsius { get; init; }
+    public double? CpuSsdTemperature2Celsius { get; init; }
+    public double? CpuTemperatureMinimumCelsius { get; init; }
+    public double? CpuTemperatureMaximumCelsius { get; init; }
+    public double? CpuVoltageMinimumVolts { get; init; }
+    public double? CpuVoltageMaximumVolts { get; init; }
+
+    public double? GpuMemoryClockMHz { get; init; }
+    public double? GpuPowerWatts { get; init; }
+    public double? GpuVoltageVolts { get; init; }
+    public double? GpuVramUsedGb { get; init; }
+    public double? GpuVramTotalGb { get; init; }
+    public double? GpuVramUsagePercent { get; init; }
+    public double? GpuVramTemperatureCelsius { get; init; }
+    public double? GpuHotSpotTemperatureCelsius { get; init; }
+    public double? GpuPcieRxBytesPerSecond { get; init; }
+    public double? GpuPcieTxBytesPerSecond { get; init; }
+    public double? GpuTemperatureMinimumCelsius { get; init; }
+    public double? GpuTemperatureMaximumCelsius { get; init; }
+    public double? GpuVoltageMinimumVolts { get; init; }
+    public double? GpuVoltageMaximumVolts { get; init; }
+
+    public double? BatteryHealthPercent { get; init; }
+    public double? BatteryRateWatts { get; init; }
+    public double? BatteryChargeCapacityWh { get; init; }
+    public double? BatteryFullCapacityWh { get; init; }
+    public double? BatteryCycleCount { get; init; }
+    public double? BatteryTemperatureCelsius { get; init; }
 }
 
 /// <summary>

@@ -19,6 +19,7 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     public string Description { get; }
     public string IconIdentifier { get; }
     public ObservableCollection<DashboardSensorViewModel> Metrics { get; } = new();
+    public ObservableCollection<DashboardSensorDetailViewModel> Details { get; } = new();
     public ObservableCollection<double> History { get; } = new();
 
     [ObservableProperty]
@@ -39,7 +40,16 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     [ObservableProperty]
     private double _primaryProgressPercent;
 
+    [ObservableProperty]
+    private bool _isDetailsExpanded;
+
+    [ObservableProperty]
+    private string _detailsStatusText = string.Empty;
+
     public bool IsUnavailable => !IsAvailable;
+    public bool HasDetails => Details.Count > 0;
+    public bool CanShowDetails => IsAvailable;
+    public bool HasDetailsStatus => !string.IsNullOrWhiteSpace(DetailsStatusText);
 
     public DashboardTelemetryCardViewModel(
         string key,
@@ -57,6 +67,9 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
 
     private static string NoTelemetryText =>
         AvaloniaLocalization.GetString("Dashboard_Status_NoTelemetry", "No telemetry available");
+
+    partial void OnIsAvailableChanged(bool value) =>
+        OnPropertyChanged(nameof(CanShowDetails));
 
     public void Update(IReadOnlyList<SensorReadingItem> readings)
     {
@@ -105,10 +118,148 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
         OnPropertyChanged(nameof(IsUnavailable));
     }
 
+    public void UpdateDetails(SensorDetailsSnapshot snapshot)
+    {
+        Details.Clear();
+
+        if (!snapshot.IsAvailable)
+        {
+            DetailsStatusText = AvaloniaLocalization.GetString(
+                "Dashboard_Status_NoTelemetry",
+                "No detailed telemetry available");
+            IsDetailsExpanded = false;
+            OnPropertyChanged(nameof(HasDetails));
+            OnPropertyChanged(nameof(HasDetailsStatus));
+            return;
+        }
+
+        DetailsStatusText = string.Empty;
+
+        switch (Key)
+        {
+            case "cpu":
+                AddDetail("SensorsControl_CpuPower_Label", "CPU Power", FormatPower(snapshot.CpuPowerWatts));
+                AddDetail("SensorsControl_CpuCoresPower_Label", "Cores", FormatPower(snapshot.CpuCoresPowerWatts));
+                AddDetail("SensorsControl_CpuMemoryPower_Label", "Memory", FormatPower(snapshot.CpuMemoryPowerWatts));
+                AddDetail("SensorsControl_CpuPlatformPower_Label", "Platform", FormatPower(snapshot.CpuPlatformPowerWatts));
+                AddDetail("SensorsControl_Voltage", "Voltage", FormatVoltage(snapshot.CpuVoltageVolts));
+                AddDetail("SensorsControl_PCoreClock_Title", "P Core Clock", FormatFrequency(snapshot.CpuPCoreClockMHz));
+                AddDetail("SensorsControl_ECoreClock_Title", "E Core Clock", FormatFrequency(snapshot.CpuECoreClockMHz));
+                AddDetail("SensorsControl_MemoryUsage_Title", "Memory Usage", FormatMemory(snapshot.CpuMemoryUsedGb, snapshot.CpuMemoryTotalGb, snapshot.CpuMemoryUsagePercent));
+                AddDetail("SensorsControl_MemoryTemperature_Title", "Memory Temperature", FormatTemperature(snapshot.CpuMemoryTemperatureCelsius));
+                AddDetail("SensorsControl_SsdTemperature_Title", "SSD Temperature", FormatTemperaturePair(snapshot.CpuSsdTemperature1Celsius, snapshot.CpuSsdTemperature2Celsius));
+                AddDetail("SensorsControl_Temperature_Title", "Temperature range", FormatRange(snapshot.CpuTemperatureMinimumCelsius, snapshot.CpuTemperatureMaximumCelsius, "°C"));
+                AddDetail("SensorsControl_VoltageRange", "Voltage range", FormatRange(snapshot.CpuVoltageMinimumVolts, snapshot.CpuVoltageMaximumVolts, "V"));
+                break;
+            case "gpu":
+                AddDetail("SensorsControl_GpuMemoryClock_Title", "Memory Clock", FormatFrequency(snapshot.GpuMemoryClockMHz));
+                AddDetail("SensorsControl_Power", "Power", FormatPower(snapshot.GpuPowerWatts));
+                AddDetail("SensorsControl_Voltage", "Voltage", FormatVoltage(snapshot.GpuVoltageVolts));
+                AddDetail(
+                    "SensorsControl_VramUsage_Title",
+                    snapshot.IsIntegratedGpu ? "Shared Memory Usage" : "VRAM Usage",
+                    FormatMemory(snapshot.GpuVramUsedGb, snapshot.GpuVramTotalGb, snapshot.GpuVramUsagePercent));
+                AddDetail("SensorsControl_VramTemperature_Title", "VRAM Temperature", FormatTemperature(snapshot.GpuVramTemperatureCelsius));
+                AddDetail("SensorsControl_GpuHotSpotTemperature_Title", "GPU Hot Spot", FormatTemperature(snapshot.GpuHotSpotTemperatureCelsius));
+                AddDetail("SensorsControl_GpuPcieThroughput_Title", "PCIe Throughput", FormatThroughput(snapshot.GpuPcieRxBytesPerSecond, snapshot.GpuPcieTxBytesPerSecond));
+                AddDetail("SensorsControl_Temperature_Title", "Temperature range", FormatRange(snapshot.GpuTemperatureMinimumCelsius, snapshot.GpuTemperatureMaximumCelsius, "°C"));
+                AddDetail("SensorsControl_VoltageRange", "Voltage range", FormatRange(snapshot.GpuVoltageMinimumVolts, snapshot.GpuVoltageMaximumVolts, "V"));
+                break;
+            case "battery":
+                AddDetail("Dashboard_Sensor_BatteryHealth", "Battery health", FormatPercent(snapshot.BatteryHealthPercent));
+                AddDetail("Dashboard_Sensor_DischargeRate", "Discharge rate", FormatPower(snapshot.BatteryRateWatts));
+                AddDetail("Dashboard_Sensor_ChargeCapacity", "Charge capacity", FormatUnit(snapshot.BatteryChargeCapacityWh, "Wh"));
+                AddDetail("Dashboard_Sensor_FullCapacity", "Full capacity", FormatUnit(snapshot.BatteryFullCapacityWh, "Wh"));
+                AddDetail("Dashboard_Sensor_CycleCount", "Cycle count", FormatUnit(snapshot.BatteryCycleCount, string.Empty));
+                AddDetail("SensorsControl_MemoryTemperature_Title", "Battery temperature", FormatTemperature(snapshot.BatteryTemperatureCelsius));
+                break;
+        }
+
+        OnPropertyChanged(nameof(HasDetails));
+        OnPropertyChanged(nameof(CanShowDetails));
+        if (!HasDetails)
+            DetailsStatusText = AvaloniaLocalization.GetString(
+                "Dashboard_Status_NoTelemetry",
+                "No detailed telemetry available");
+        OnPropertyChanged(nameof(HasDetailsStatus));
+    }
+
+    private void AddDetail(string key, string fallback, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return;
+
+        Details.Add(new DashboardSensorDetailViewModel(
+            AvaloniaLocalization.GetString(key, fallback),
+            value));
+    }
+
+    private static string? FormatPower(double? value) => FormatUnit(value, "W", "0.#");
+    private static string? FormatVoltage(double? value) => FormatUnit(value, "V", "0.000");
+    private static string? FormatFrequency(double? value) => value is > 0
+        ? $"{value.Value / 1000d:0.0} GHz"
+        : null;
+    private static string? FormatPercent(double? value) => value is >= 0
+        ? $"{value.Value:0.#}%"
+        : null;
+    private static string? FormatTemperature(double? value) => FormatUnit(value, "°C", "0");
+    private static string? FormatUnit(double? value, string unit, string format = "0.#") => value is { } number && double.IsFinite(number)
+        ? $"{number.ToString(format, System.Globalization.CultureInfo.CurrentCulture)}{(string.IsNullOrEmpty(unit) ? string.Empty : $" {unit}")}"
+        : null;
+    private static string? FormatMemory(double? used, double? total, double? percent)
+    {
+        if (used is not { } usedValue || total is not { } totalValue)
+            return FormatPercent(percent);
+
+        var suffix = percent is { } percentValue ? $" ({percentValue:0.#}%)" : string.Empty;
+        return $"{usedValue:0.0} / {totalValue:0.0} GB{suffix}";
+    }
+    private static string? FormatTemperaturePair(double? first, double? second) => (FormatTemperature(first), FormatTemperature(second)) switch
+    {
+        ({ } left, { } right) => $"{left} / {right}",
+        ({ } left, null) => left,
+        (null, { } right) => right,
+        _ => null,
+    };
+    private static string? FormatRange(double? minimum, double? maximum, string unit) => (minimum, maximum) switch
+    {
+        ({ } min, { } max) => $"{min:0.###} - {max:0.###} {unit}",
+        _ => null,
+    };
+    private static string? FormatThroughput(double? rx, double? tx)
+    {
+        var left = FormatRate(rx);
+        var right = FormatRate(tx);
+        return (left, right) switch
+        {
+            ({ } a, { } b) => $"Rx {a}\nTx {b}",
+            ({ } a, null) => $"Rx {a}",
+            (null, { } b) => $"Tx {b}",
+            _ => null,
+        };
+    }
+    private static string? FormatRate(double? bytesPerSecond)
+    {
+        if (bytesPerSecond is not { } value || value < 0 || !double.IsFinite(value))
+            return null;
+        const double kb = 1024d;
+        const double mb = kb * 1024d;
+        const double gb = mb * 1024d;
+        return value switch
+        {
+            >= gb => $"{value / gb:0.00} GB/s",
+            >= mb => $"{value / mb:0.00} MB/s",
+            >= kb => $"{value / kb:0.00} KB/s",
+            _ => $"{value:0} B/s",
+        };
+    }
+
     private static SensorReadingItem? SelectPrimary(IReadOnlyList<SensorReadingItem> readings) =>
         readings.FirstOrDefault(reading => reading.HasProgress)
         ?? readings.FirstOrDefault();
 }
+
+public sealed record DashboardSensorDetailViewModel(string Name, string Value);
 
 /// <summary>
 /// Applies the WPF sensor-section contract to the Avalonia dashboard without

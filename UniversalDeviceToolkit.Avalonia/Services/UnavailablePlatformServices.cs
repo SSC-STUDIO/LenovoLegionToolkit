@@ -25,6 +25,9 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<IReadOnlyList<SensorReadingItem>> GetSensorReadingsAsync() =>
         Task.FromResult<IReadOnlyList<SensorReadingItem>>([]);
 
+    public Task<SensorDetailsSnapshot> GetSensorDetailsAsync() =>
+        Task.FromResult(SensorDetailsSnapshot.Empty);
+
     public async Task<DashboardSnapshot> GetDashboardSnapshotAsync() =>
         new(
             AvaloniaLocalization.GetString("Dashboard_Status_Unknown", "Unknown device"),

@@ -53,6 +53,9 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
             .ToArray();
     }
 
+    public Task<SensorDetailsSnapshot> GetSensorDetailsAsync() =>
+        Task.FromResult(SensorDetailsSnapshot.Empty);
+
     public async Task<bool> IsSupportedLegionMachineAsync()
     {
         var snapshot = await ReadSnapshotAsync(forceRefresh: false).ConfigureAwait(false);

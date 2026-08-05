@@ -668,8 +668,8 @@
                                 CornerRadius="{StaticResource CornerRadiusCard}"
                                 Padding="16"
                                 automation:AutomationProperties.Name="{Binding Title}">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
                                     <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
                                                              FontSize="{StaticResource IconSizeMD}"
                                                              Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -688,6 +688,20 @@
                                                                  OverflowMode="Ellipsis"
                                                                  MaxLines="1"
                                                                  MaxWidth="92" />
+                                    <ToggleButton Grid.Column="3"
+                                                  IsVisible="{Binding CanShowDetails}"
+                                                  IsChecked="{Binding IsDetailsExpanded, Mode=OneWay}"
+                                                  Command="{Binding DataContext.ToggleTelemetryDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  CommandParameter="{Binding}"
+                                                  Padding="3"
+                                                  MinWidth="28"
+                                                  VerticalAlignment="Center"
+                                                  ToolTip.Tip="{local:Loc Key=SensorsControl_Details, Fallback=Sensor details}"
+                                                  automation:AutomationProperties.AutomationId="AvaloniaDashboardTelemetryDetailsButton"
+                                                  automation:AutomationProperties.Name="{local:Loc Key=SensorsControl_Details, Fallback=Sensor details}">
+                                        <controls:NavigationIcon IconIdentifier="ChevronDown24"
+                                                                 FontSize="{StaticResource IconSizeCompact}" />
+                                    </ToggleButton>
                                 </Grid>
                                 <controls:LocalizedTextBlock Grid.Row="1"
                                                              Text="{Binding Description}"
@@ -762,7 +776,41 @@
                                             </Grid>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                <ItemsControl Grid.Row="6"
+                                              IsVisible="{Binding IsDetailsExpanded}"
+                                              ItemsSource="{Binding Details}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto"
+                                                  Margin="0,2"
+                                                  ColumnSpacing="8">
+                                                <controls:LocalizedTextBlock Text="{Binding Name}"
+                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                             OverflowMode="Ellipsis"
+                                                                             MaxLines="1"
+                                                                             MinWidth="0" />
+                                                <controls:LocalizedTextBlock Grid.Column="1"
+                                                                             Text="{Binding Value}"
+                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                             FontWeight="Medium"
+                                                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                                             OverflowMode="Wrap"
+                                                                             MaxLines="2"
+                                                                             TextWrapping="Wrap"
+                                                                             TextAlignment="Right" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
                                 </ItemsControl>
+                                <controls:LocalizedTextBlock Grid.Row="6"
+                                                             IsVisible="{Binding HasDetailsStatus}"
+                                                             Text="{Binding DetailsStatusText}"
+                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                             OverflowMode="Wrap"
+                                                             MaxLines="2" />
                             </Grid>
                         </Border>
                     </DataTemplate>

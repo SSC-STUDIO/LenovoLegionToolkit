@@ -147,6 +147,60 @@ public sealed class AvaloniaMigrationContractTests
         markup.Should().Contain("ShowHybridModeInfoCommand");
     }
 
+    [Fact]
+    public void DashboardTelemetryDetails_ExposeOnlyAvailableMetricsAndPreserveExpansionState()
+    {
+        var card = new DashboardTelemetryCardViewModel(
+            "gpu",
+            "GPU",
+            "Graphics",
+            "Gauge24");
+        card.Update([new SensorReadingItem("GPU Usage", "50 %", "GPU", 50, "%")]);
+
+        card.UpdateDetails(new SensorDetailsSnapshot
+        {
+            IsAvailable = true,
+            GpuPowerWatts = 42.5,
+            GpuVramUsedGb = 2,
+            GpuVramTotalGb = 8,
+            GpuVramUsagePercent = 25,
+        });
+
+        card.CanShowDetails.Should().BeTrue();
+        card.HasDetails.Should().BeTrue();
+        card.Details.Select(detail => detail.Value)
+            .Should().Contain(value => value.Contains("42.5", StringComparison.Ordinal));
+        card.Details.Select(detail => detail.Name)
+            .Should().NotContain(string.Empty);
+
+        card.IsDetailsExpanded = true;
+        card.IsDetailsExpanded.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task UnavailablePlatformServices_ShouldReturnEmptySensorDetails()
+    {
+        var details = await new UnavailablePlatformServices().GetSensorDetailsAsync();
+
+        details.Should().BeSameAs(SensorDetailsSnapshot.Empty);
+        details.IsAvailable.Should().BeFalse();
+    }
+
+    [Fact]
+    public void DashboardTelemetryMarkup_UsesParentCommandWithoutTwoWayCommandDoubleToggle()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DashboardPage.axaml"));
+
+        markup.Should().Contain("ToggleTelemetryDetailsCommand");
+        markup.Should().Contain("IsChecked=\"{Binding IsDetailsExpanded, Mode=OneWay}\"");
+        markup.Should().NotContain("ToggleDetailsCommand");
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]
