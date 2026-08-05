@@ -233,15 +233,15 @@
                         <RowDefinition Height="1" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                 <Border
                     Grid.Row="0"
                     Grid.Column="0"
                     Padding="3"
-                    Height="48"
+                    MinHeight="48"
                     MinWidth="48"
                     VerticalAlignment="Bottom"
                     Background="{DynamicResource AppSurfaceCardBrush}"
@@ -249,9 +249,8 @@
                         BorderThickness="1"
                         CornerRadius="{StaticResource CornerRadiusCard}"
                         Margin="0,0,20,0">
-                    <StackPanel
+                    <WrapPanel
                         HorizontalAlignment="Left"
-                        Orientation="Horizontal"
                         VerticalAlignment="Center">
                         <RadioButton
                             x:Name="_optimizationNavButton"
@@ -283,7 +282,7 @@
                             Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_NetworkAcceleration}"
                             Checked="NavButton_Checked" />
 
-                    </StackPanel>
+                    </WrapPanel>
                 </Border>
                 
                 <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">

@@ -155,6 +155,26 @@ public sealed class WindowsOptimizationPageGuardTests
     }
 
     [Fact]
+    public void Toolbar_ShouldKeepActionsVisibleAndAllowNavigationToWrap()
+    {
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
+        var toolbarStart = xaml.IndexOf("<Grid Grid.Row=\"0\" Margin=\"0,0,0,16\">", StringComparison.Ordinal);
+        var toolbarEnd = xaml.IndexOf("<Grid Grid.Row=\"1\">", toolbarStart, StringComparison.Ordinal);
+
+        toolbarStart.Should().BeGreaterThanOrEqualTo(0);
+        toolbarEnd.Should().BeGreaterThan(toolbarStart);
+
+        var toolbar = xaml[toolbarStart..toolbarEnd];
+        toolbar.Should().Contain("<ColumnDefinition Width=\"*\" />");
+        toolbar.Should().Contain("<ColumnDefinition Width=\"Auto\" />");
+        toolbar.Should().Contain("<WrapPanel");
+        toolbar.Should().Contain("MinHeight=\"48\"");
+        System.Text.RegularExpressions.Regex.IsMatch(toolbar, "(?m)^\\s+Height=\"48\"\\s*$")
+            .Should()
+            .BeFalse();
+    }
+
+    [Fact]
     public void RecommendedButton_ShouldOnlyChangePendingSelection()
     {
         var code = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml.cs");
