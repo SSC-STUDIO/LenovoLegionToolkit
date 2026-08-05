@@ -2767,6 +2767,7 @@ internal static partial class Program
             File.Copy(indexPath, canonicalIndexPath, overwrite: true);
         if (!string.Equals(Path.GetFullPath(htmlPath), Path.GetFullPath(canonicalStoryboardPath), StringComparison.OrdinalIgnoreCase))
             File.Copy(htmlPath, canonicalStoryboardPath, overwrite: true);
+        ValidateCanonicalArtifacts(outputRoot);
         Console.WriteLine($"[visual-smoke] Index: {indexPath}");
         Console.WriteLine($"[visual-smoke] Storyboard: {htmlPath}");
     }
@@ -2980,6 +2981,43 @@ internal static partial class Program
                 Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar)) ?? string.Empty);
             if (!File.Exists(Path.Combine(stateDirectory, "result.json")))
                 throw new InvalidOperationException($"Missing state result artifact for '{capture.Label}'.");
+        }
+    }
+
+    private static void ValidateCanonicalArtifacts(string outputRoot)
+    {
+        foreach (var capture in _captures)
+        {
+            var stateDirectory = Path.Combine(
+                outputRoot,
+                Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar)) ?? string.Empty);
+
+            var required = new List<string>
+            {
+                Path.Combine(stateDirectory, "keyframe.png"),
+                Path.Combine(stateDirectory, "automation.json"),
+                Path.Combine(stateDirectory, "ocr.json"),
+                Path.Combine(stateDirectory, "result.json"),
+            };
+
+            if (_videoEnabled)
+                required.Add(Path.Combine(stateDirectory, "page.mp4"));
+
+            foreach (var path in required)
+            {
+                if (!File.Exists(path) || new FileInfo(path).Length == 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Missing canonical UI audit artifact for '{capture.Label}': {path}");
+                }
+            }
+        }
+
+        foreach (var rootArtifact in new[] { "index.md", "storyboard.html", "manifest.json" })
+        {
+            var path = Path.Combine(outputRoot, rootArtifact);
+            if (!File.Exists(path) || new FileInfo(path).Length == 0)
+                throw new InvalidOperationException($"Missing canonical UI audit artifact: {path}");
         }
     }
 

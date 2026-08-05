@@ -112,6 +112,34 @@ jobs:
             throw "Expected 25 culture artifact directories for $env:HOST, found $cultureCount."
           }
 
+          if ($env:OSD_ONLY -ne 'true') {
+            $auditRoot = Join-Path $PWD "artifacts/ui-audit/$env:HOST"
+            $viewportRoot = Join-Path $auditRoot "*/$env:VIEWPORT"
+            $stateDirectories = Get-ChildItem -Path $viewportRoot -Directory -Recurse -ErrorAction SilentlyContinue |
+              Where-Object { Test-Path (Join-Path $_.FullName 'result.json') }
+
+            if ($stateDirectories.Count -eq 0) {
+              throw "No canonical page state directories were produced under $viewportRoot."
+            }
+
+            foreach ($state in $stateDirectories) {
+              foreach ($artifact in @('keyframe.png', 'automation.json', 'ocr.json', 'result.json', 'page.mp4')) {
+                $artifactPath = Join-Path $state.FullName $artifact
+                if (-not (Test-Path $artifactPath) -or (Get-Item $artifactPath).Length -eq 0) {
+                  throw "Missing or empty canonical artifact: $artifactPath"
+                }
+              }
+            }
+
+            foreach ($rootArtifact in @('index.md', 'storyboard.html', 'manifest.json')) {
+              $artifactPath = Join-Path $auditRoot "*/$env:VIEWPORT/$rootArtifact"
+              $matches = Get-ChildItem -Path $artifactPath -File -ErrorAction SilentlyContinue
+              if ($matches.Count -ne $cultureCount) {
+                throw "Expected $cultureCount '$rootArtifact' files under $auditRoot, found $($matches.Count)."
+              }
+            }
+          }
+
       - name: Upload visual regression artifacts
         uses: actions/upload-artifact@v7
         if: always()
