@@ -206,7 +206,7 @@
 
             <StackPanel
                 Grid.Column="0"
-                Margin="0">
+                Margin="0,0,0,16">
                 <TextBlock
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
@@ -229,18 +229,13 @@
                 Margin="20,32,0,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top">
-                <Border
-                    Padding="3"
+                <Grid
                     MinWidth="48"
                     HorizontalAlignment="Right"
-                    Background="{DynamicResource AppSurfaceCardBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
                     AutomationProperties.AutomationId="NetworkAccelerationSelectionSummaryBar"
                     AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
-                    <Border.Style>
-                        <Style TargetType="Border">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Collapsed" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
@@ -248,13 +243,13 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </Border.Style>
-                    <Border.Resources>
+                    </Grid.Style>
+                    <Grid.Resources>
                         <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
                             <Setter Property="MinHeight" Value="40" />
                             <Setter Property="Padding" Value="12,7" />
                         </Style>
-                    </Border.Resources>
+                    </Grid.Resources>
                     <wpfui:Button
                         MinWidth="148"
                         Appearance="Secondary"
@@ -274,20 +269,15 @@
                                 AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
                         </StackPanel>
                     </wpfui:Button>
-                </Border>
+                </Grid>
 
-                <Border
-                    Padding="3"
+                <Grid
                     MinWidth="48"
                     HorizontalAlignment="Right"
-                    Background="{DynamicResource AppSurfaceCardBrush}"
-                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
                     AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsSummaryBar"
                     AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}">
-                    <Border.Style>
-                        <Style TargetType="Border">
+                    <Grid.Style>
+                        <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Visible" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
@@ -295,13 +285,13 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </Border.Style>
-                    <Border.Resources>
+                    </Grid.Style>
+                    <Grid.Resources>
                         <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
                             <Setter Property="MinHeight" Value="40" />
                             <Setter Property="Padding" Value="12,7" />
                         </Style>
-                    </Border.Resources>
+                    </Grid.Resources>
                     <wpfui:Button
                         AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsButton"
                         MinWidth="148"
@@ -318,7 +308,7 @@
                                 Text="{Binding SelectedActionsSummary, FallbackValue=''}" />
                         </StackPanel>
                     </wpfui:Button>
-                </Border>
+                </Grid>
             </StackPanel>
         </Grid>
 
@@ -408,6 +398,7 @@
                             <Border
                                 x:Name="_networkAccelerationSelectionBar"
                                 Padding="3"
+                                MinHeight="48"
                                 MinWidth="48"
                                 HorizontalAlignment="Right"
                                 Background="{DynamicResource AppSurfaceCardBrush}"
@@ -470,6 +461,7 @@
 
                             <Border
                                 Padding="3"
+                                MinHeight="48"
                                 MinWidth="48"
                                 HorizontalAlignment="Right"
                                 Background="{DynamicResource AppSurfaceCardBrush}"
