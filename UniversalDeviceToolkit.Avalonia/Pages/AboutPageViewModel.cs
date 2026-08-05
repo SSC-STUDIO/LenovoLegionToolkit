@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.Shared.Utils;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -119,7 +120,7 @@ public partial class AboutPageViewModel : ObservableObject
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = "https://github.com/chenrunsen/UniversalDeviceToolkit",
+            FileName = AppIdentity.RepositoryUrl,
             UseShellExecute = true
         });
     }
@@ -129,7 +130,7 @@ public partial class AboutPageViewModel : ObservableObject
     {
         Process.Start(new ProcessStartInfo
         {
-            FileName = "https://github.com/chenrunsen/UniversalDeviceToolkit/releases/latest",
+            FileName = $"{AppIdentity.RepositoryUrl}/releases/latest",
             UseShellExecute = true
         });
     }
