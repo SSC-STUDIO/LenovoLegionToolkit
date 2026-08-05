@@ -134,6 +134,17 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     public void Update(IReadOnlyList<SensorReadingItem> readings)
     {
         IsAvailable = readings.Count > 0;
+        if (!IsAvailable)
+        {
+            // A card that lost its source data must not keep rendering stale
+            // details or remain expanded after the details button disappears.
+            IsDetailsExpanded = false;
+            Details.Clear();
+            DetailsStatusText = string.Empty;
+            OnPropertyChanged(nameof(HasDetails));
+            OnPropertyChanged(nameof(HasDetailsStatus));
+        }
+
         StatusText = IsAvailable
             ? AvaloniaLocalization.GetString("Dashboard_Status_Live", "Live")
             : NoTelemetryText;
@@ -187,7 +198,6 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
             DetailsStatusText = AvaloniaLocalization.GetString(
                 "Dashboard_Status_NoTelemetry",
                 "No detailed telemetry available");
-            IsDetailsExpanded = false;
             OnPropertyChanged(nameof(HasDetails));
             OnPropertyChanged(nameof(HasDetailsStatus));
             return;

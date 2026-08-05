@@ -178,6 +178,60 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DashboardTelemetryDetails_KeepOtherCardsExpandedWhenARefreshHasNoDetails()
+    {
+        var cpu = new DashboardTelemetryCardViewModel(
+            "cpu",
+            "CPU",
+            "Processor",
+            "Cpu24");
+        var gpu = new DashboardTelemetryCardViewModel(
+            "gpu",
+            "GPU",
+            "Graphics",
+            "Gpu24");
+
+        cpu.Update([new SensorReadingItem("CPU Usage", "50 %", "CPU", 50, "%")]);
+        gpu.Update([new SensorReadingItem("GPU Usage", "50 %", "GPU", 50, "%")]);
+        cpu.IsDetailsExpanded = true;
+        gpu.IsDetailsExpanded = true;
+
+        // DashboardPageViewModel applies one service response to every card.
+        // An unavailable detail response must not collapse cards as a side effect.
+        cpu.UpdateDetails(SensorDetailsSnapshot.Empty);
+        gpu.UpdateDetails(SensorDetailsSnapshot.Empty);
+
+        cpu.IsDetailsExpanded.Should().BeTrue();
+        gpu.IsDetailsExpanded.Should().BeTrue();
+        cpu.HasDetailsStatus.Should().BeTrue();
+        gpu.HasDetailsStatus.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DashboardTelemetryCard_ClearsStaleDetailsWhenSummaryBecomesUnavailable()
+    {
+        var card = new DashboardTelemetryCardViewModel(
+            "cpu",
+            "CPU",
+            "Processor",
+            "Cpu24");
+
+        card.Update([new SensorReadingItem("CPU Usage", "50 %", "CPU", 50, "%")]);
+        card.UpdateDetails(new SensorDetailsSnapshot
+        {
+            IsAvailable = true,
+            CpuPowerWatts = 12,
+        });
+        card.IsDetailsExpanded = true;
+
+        card.Update([]);
+
+        card.IsDetailsExpanded.Should().BeFalse();
+        card.Details.Should().BeEmpty();
+        card.HasDetailsStatus.Should().BeFalse();
+    }
+
+    [Fact]
     public void DashboardBatteryState_PreservesWarningsStatusAndExpandedDetails()
     {
         var card = new DashboardTelemetryCardViewModel(
