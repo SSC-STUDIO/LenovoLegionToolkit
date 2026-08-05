@@ -44,7 +44,8 @@
                     CornerRadius="{StaticResource CornerRadiusCard}"
                     Padding="16">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                    <Border Width="36"
+                    <Border x:Name="StatusIconBackground"
+                            Width="36"
                             Height="36"
                             CornerRadius="{StaticResource CornerRadiusRound}"
                             Background="{DynamicResource StatusInfoBrush}"

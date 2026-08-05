@@ -84,8 +84,10 @@ public partial class FeaturePageView : UserControl
             StatusMessage.Text = string.IsNullOrWhiteSpace(state.StatusMessage)
                 ? _descriptor.UnsupportedReason
                 : state.StatusMessage;
+            var statusBrushKey = state.IsAvailable ? "StatusSuccessBrush" : "StatusCriticalBrush";
             StatusCard.Background = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBackgroundBrush" : "StatusCriticalBackgroundBrush");
-            StatusCard.BorderBrush = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBrush" : "StatusCriticalBrush");
+            StatusCard.BorderBrush = GetResource<IBrush>(statusBrushKey);
+            StatusIconBackground.Background = GetResource<IBrush>(statusBrushKey);
 
             RenderFeatureItems(state);
         }
@@ -95,6 +97,7 @@ public partial class FeaturePageView : UserControl
             StatusMessage.Text = ex.Message;
             StatusCard.Background = GetResource<IBrush>("StatusCriticalBackgroundBrush");
             StatusCard.BorderBrush = GetResource<IBrush>("StatusCriticalBrush");
+            StatusIconBackground.Background = GetResource<IBrush>("StatusCriticalBrush");
         }
         finally
         {
