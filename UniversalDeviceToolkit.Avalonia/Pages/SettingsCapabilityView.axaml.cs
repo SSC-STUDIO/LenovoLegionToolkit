@@ -95,6 +95,17 @@ public partial class SettingsCapabilityView : UserControl
         var textStack = new StackPanel { Spacing = 3, MinWidth = 0 };
         textStack.Children.Add(title);
         textStack.Children.Add(description);
+        if (!string.IsNullOrWhiteSpace(option.Warning))
+        {
+            var warning = new Controls.LocalizedTextBlock
+            {
+                Text = option.Warning,
+                Foreground = GetResource<IBrush>("StatusWarningBrush"),
+                OverflowMode = LocalizedOverflowMode.Wrap,
+                MaxLines = 3,
+            };
+            textStack.Children.Add(warning);
+        }
 
         Control editor = option.Editor switch
         {
@@ -114,7 +125,9 @@ public partial class SettingsCapabilityView : UserControl
         var card = new Border
         {
             Background = GetResource<IBrush>("CardBackgroundBrush"),
-            BorderBrush = GetResource<IBrush>("CardBorderBrush"),
+            BorderBrush = string.IsNullOrWhiteSpace(option.Warning)
+                ? GetResource<IBrush>("CardBorderBrush")
+                : GetResource<IBrush>("StatusWarningBrush"),
             BorderThickness = new Thickness(1),
             CornerRadius = (CornerRadius)Resources["CornerRadiusCard"]!,
             Padding = new Thickness(16),
