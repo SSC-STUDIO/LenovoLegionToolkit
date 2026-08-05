@@ -31,6 +31,26 @@ public sealed class NavigationIcon : TextBlock
             ["ArrowDown24"] = "\uE74B",
             ["Battery024"] = "\uE850",
             ["PlugConnected24"] = "\uE839",
+            // Dashboard icons use the same identifiers as the WPF host. The
+            // Segoe fallback glyphs keep the semantic distinction visible on
+            // systems where the Fluent icon font is not installed.
+            ["BatteryCharge24"] = "\uE83F",
+            ["WeatherMoon24"] = "\uE708",
+            ["UsbStick24"] = "\uE839",
+            ["PlugDisconnected24"] = "\uE8E6",
+            ["LeafOne24"] = "\uE793",
+            ["DeveloperBoard24"] = "\uE950",
+            ["DeveloperBoardLightning20"] = "\uE8C4",
+            ["ScaleFill24"] = "\uE8A7",
+            ["DesktopPulse24"] = "\uE7F4",
+            ["TextFontSize24"] = "\uE8D2",
+            ["Hdr24"] = "\uE7B7",
+            ["TopSpeed24"] = "\uE9D9",
+            ["LightbulbCircle24"] = "\uE793",
+            ["UsbPlug24"] = "\uE839",
+            ["Mic24"] = "\uE720",
+            ["Tablet24"] = "\uE7F4",
+            ["Power24"] = "\uE945",
         };
 
     public static readonly StyledProperty<string?> IconIdentifierProperty =

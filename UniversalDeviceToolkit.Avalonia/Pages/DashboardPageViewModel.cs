@@ -419,36 +419,49 @@ public sealed class DashboardGroupViewModel : ObservableObject
         Items.Select(item => item.Identifier).ToArray());
 }
 
-public sealed class DashboardLayoutItemViewModel
+public sealed record DashboardItemDescriptor(
+    string TitleKey,
+    string FallbackTitle,
+    string IconIdentifier);
+
+public static class DashboardItemDescriptors
 {
-    private static readonly IReadOnlyDictionary<string, string> Labels =
-        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+    private static readonly IReadOnlyDictionary<string, DashboardItemDescriptor> Items =
+        new Dictionary<string, DashboardItemDescriptor>(StringComparer.OrdinalIgnoreCase)
         {
-            ["PowerMode"] = "Power mode",
-            ["ItsMode"] = "Intelligent thermal system",
-            ["BatteryMode"] = "Battery mode",
-            ["BatteryNightChargeMode"] = "Battery night charge",
-            ["AlwaysOnUsb"] = "Always-on USB",
-            ["InstantBoot"] = "Instant boot",
-            ["FlipToStart"] = "Flip to start",
-            ["HybridMode"] = "Hybrid graphics",
-            ["DiscreteGpu"] = "Discrete GPU",
-            ["OverclockDiscreteGpu"] = "Overclock discrete GPU",
-            ["Resolution"] = "Resolution",
-            ["RefreshRate"] = "Refresh rate",
-            ["DpiScale"] = "Display scale",
-            ["Hdr"] = "HDR",
-            ["OverDrive"] = "OverDrive",
-            ["TurnOffMonitors"] = "Turn off monitors",
-            ["Microphone"] = "Microphone",
-            ["WhiteKeyboardBacklight"] = "White keyboard backlight",
-            ["PanelLogoBacklight"] = "Panel logo backlight",
-            ["PortsBacklight"] = "Ports backlight",
-            ["TouchpadLock"] = "Touchpad lock",
-            ["FnLock"] = "Fn lock",
-            ["WinKeyLock"] = "Windows key lock",
+            ["PowerMode"] = new("PowerModeControl_Title", "Power mode", "Gauge24"),
+            ["ItsMode"] = new("DashboardITSModeControl_Title", "Intelligent thermal system", "Gauge24"),
+            ["BatteryMode"] = new("BatteryModeControl_Title", "Battery mode", "BatteryCharge24"),
+            ["BatteryNightChargeMode"] = new("BatteryNightChargeModeControl_Title", "Battery night charge", "WeatherMoon24"),
+            ["AlwaysOnUsb"] = new("AlwaysOnUSBControl_Title", "Always-on USB", "UsbStick24"),
+            ["InstantBoot"] = new("InstantBootControl_Title", "Instant boot", "PlugDisconnected24"),
+            ["FlipToStart"] = new("FlipToStartControl_Title", "Flip to start", "Power24"),
+            ["HybridMode"] = new("ComboBoxHybridModeControl_Title", "Hybrid graphics", "LeafOne24"),
+            ["DiscreteGpu"] = new("DiscreteGPUControl_Title", "Discrete GPU", "DeveloperBoard24"),
+            ["OverclockDiscreteGpu"] = new("OverclockDiscreteGPUControl_Title", "Overclock discrete GPU", "DeveloperBoardLightning20"),
+            ["Resolution"] = new("ResolutionControl_Title", "Resolution", "ScaleFill24"),
+            ["RefreshRate"] = new("RefreshRateControl_Title", "Refresh rate", "DesktopPulse24"),
+            ["DpiScale"] = new("DpiScaleControl_Title", "Display scale", "TextFontSize24"),
+            ["Hdr"] = new("HDRControl_Title", "HDR", "Hdr24"),
+            ["OverDrive"] = new("OverDriveControl_Title", "OverDrive", "TopSpeed24"),
+            ["TurnOffMonitors"] = new("TurnOffMonitorsControl_Title", "Turn off monitors", "Desktop24"),
+            ["Microphone"] = new("MicrophoneControl_Title", "Microphone", "Mic24"),
+            ["WhiteKeyboardBacklight"] = new("WhiteKeyboardBacklightControl_Title", "White keyboard backlight", "Keyboard24"),
+            ["PanelLogoBacklight"] = new("PanelLogoBacklightControl_Title", "Panel logo backlight", "LightbulbCircle24"),
+            ["PortsBacklight"] = new("PortsBacklightControl_Title", "Ports backlight", "UsbPlug24"),
+            ["TouchpadLock"] = new("TouchpadLockControl_Title", "Touchpad lock", "Tablet24"),
+            ["FnLock"] = new("FnLockControl_Title", "Fn lock", "Keyboard24"),
+            ["WinKeyLock"] = new("WinKeyControl_Title", "Windows key lock", "Keyboard24"),
         };
 
+    public static DashboardItemDescriptor Get(string identifier) =>
+        Items.TryGetValue(identifier, out var descriptor)
+            ? descriptor
+            : new DashboardItemDescriptor(identifier, identifier, "Info24");
+}
+
+public sealed class DashboardLayoutItemViewModel
+{
     public DashboardLayoutItemViewModel(DashboardGroupViewModel group, string identifier)
     {
         Group = group;
@@ -457,9 +470,11 @@ public sealed class DashboardLayoutItemViewModel
 
     public DashboardGroupViewModel Group { get; }
     public string Identifier { get; }
-    public string DisplayName => Labels.TryGetValue(Identifier, out var label)
-        ? label
-        : Identifier;
+    public DashboardItemDescriptor Descriptor => DashboardItemDescriptors.Get(Identifier);
+    public string IconIdentifier => Descriptor.IconIdentifier;
+    public string DisplayName => AvaloniaLocalization.GetString(
+        Descriptor.TitleKey,
+        Descriptor.FallbackTitle);
 }
 
 public sealed partial class DashboardSensorViewModel : ObservableObject
