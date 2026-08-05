@@ -1357,7 +1357,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 ? "The update checker is not initialized in this host."
                 : null;
         var frequencies = Enum.GetValues<UpdateCheckFrequency>()
-            .Select(value => value.ToString())
+            .Select(value => value.GetDisplayName())
             .ToArray();
         return new AvaloniaSettingsPageData(
             "Update",
@@ -1365,10 +1365,10 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             "Choose how Universal Device Toolkit checks for new releases.",
             [
                 new("CheckForUpdates", "Check for updates", "Check for a newer release immediately.", AvaloniaSettingEditor.Action, isUpdateCheckerEnabled, ActionText: "Check now", Warning: disabledReason),
-                new("UpdateFrequency", "Update check frequency", "How often automatic update checks run.", AvaloniaSettingEditor.Selection, isUpdateCheckerEnabled, Values: frequencies, SelectedValue: store.UpdateCheckFrequency.ToString(), Warning: disabledReason),
+                new("UpdateFrequency", "Update check frequency", "How often automatic update checks run.", AvaloniaSettingEditor.Selection, isUpdateCheckerEnabled, Values: frequencies, SelectedValue: store.UpdateCheckFrequency.GetDisplayName(), Warning: disabledReason),
                 new("IncludePrereleaseUpdates", "Include prerelease updates", "Offer preview releases in addition to stable releases.", AvaloniaSettingEditor.Toggle, isUpdateCheckerEnabled, store.IncludePrereleaseUpdates, Warning: disabledReason),
-                new("RepositoryOwner", "Repository owner", "Override the update repository owner in debug builds.", AvaloniaSettingEditor.Text, isUpdateCheckerEnabled, TextValue: store.UpdateRepositoryOwner ?? "", Warning: disabledReason),
-                new("RepositoryName", "Repository name", "Override the update repository name in debug builds.", AvaloniaSettingEditor.Text, isUpdateCheckerEnabled, TextValue: store.UpdateRepositoryName ?? "", Warning: disabledReason),
+                new("RepositoryOwner", "Repository owner", "Override the update repository owner in debug builds.", AvaloniaSettingEditor.Text, isUpdateCheckerEnabled, TextValue: store.UpdateRepositoryOwner ?? AppIdentity.RepositoryOwner, Warning: disabledReason),
+                new("RepositoryName", "Repository name", "Override the update repository name in debug builds.", AvaloniaSettingEditor.Text, isUpdateCheckerEnabled, TextValue: store.UpdateRepositoryName ?? AppIdentity.RepositoryName, Warning: disabledReason),
             ],
             true);
     }
