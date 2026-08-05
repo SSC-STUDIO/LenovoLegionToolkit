@@ -395,7 +395,7 @@
                                                                                  MinWidth="0" />
                                                 </StackPanel>
                                                 <ComboBox Grid.Column="2"
-                                                          IsVisible="{Binding HasOptions}"
+                                                          IsVisible="{Binding IsComboAvailable}"
                                                           ItemsSource="{Binding Options}"
                                                           SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
                                                           Width="132"
@@ -410,8 +410,16 @@
                                                         </DataTemplate>
                                                     </ComboBox.ItemTemplate>
                                                 </ComboBox>
+                                                <ToggleSwitch Grid.Column="2"
+                                                              IsVisible="{Binding IsToggleControl}"
+                                                              IsChecked="{Binding IsToggleOn, Mode=TwoWay}"
+                                                              IsEnabled="{Binding IsAvailable}"
+                                                              VerticalAlignment="Center"
+                                                              automation:AutomationProperties.Name="{Binding DisplayName}"
+                                                              Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              CommandParameter="{Binding}" />
                                                 <Button Grid.Column="3"
-                                                        IsVisible="{Binding HasOptions}"
+                                                        IsVisible="{Binding IsComboAvailable}"
                                                         Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"

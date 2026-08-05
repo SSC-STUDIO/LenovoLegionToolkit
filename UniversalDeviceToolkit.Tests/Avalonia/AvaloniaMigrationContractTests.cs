@@ -56,6 +56,17 @@ public sealed class AvaloniaMigrationContractTests
             .Should().BeTrue();
     }
 
+    [Fact]
+    public void DashboardItemDescriptors_PreserveWpfControlSemantics()
+    {
+        DashboardItemDescriptors.Get("PowerMode").PresentationMode
+            .Should().Be(DashboardItemPresentationMode.Combo);
+        DashboardItemDescriptors.Get("HDR").PresentationMode
+            .Should().Be(DashboardItemPresentationMode.Toggle);
+        DashboardItemDescriptors.Get("DiscreteGpu").PresentationMode
+            .Should().Be(DashboardItemPresentationMode.Custom);
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]

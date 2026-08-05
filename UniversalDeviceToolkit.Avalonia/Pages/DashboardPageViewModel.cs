@@ -424,6 +424,10 @@ public partial class DashboardPageViewModel : ObservableObject
         var succeeded = await _platformServices.SetDashboardItemStateAsync(
             item.Identifier,
             state).ConfigureAwait(false);
+        if (succeeded)
+            item.MarkStateApplied();
+        else if (item.IsToggleControl)
+            item.RevertToggle();
         item.StateStatusText = succeeded
             ? AvaloniaLocalization.GetString("Dashboard_ItemStateSaved", "Setting applied")
             : AvaloniaLocalization.GetString("Dashboard_ItemStateSaveFailed", "Setting could not be applied");
@@ -573,11 +577,19 @@ public sealed class DashboardGroupViewModel : ObservableObject
         Items.Select(item => item.Identifier).ToArray());
 }
 
+public enum DashboardItemPresentationMode
+{
+    Combo,
+    Toggle,
+    Custom,
+}
+
 public sealed record DashboardItemDescriptor(
     string TitleKey,
     string FallbackTitle,
     string IconIdentifier,
-    bool IsCustomControl = false);
+    bool IsCustomControl = false,
+    DashboardItemPresentationMode PresentationMode = DashboardItemPresentationMode.Combo);
 
 public static class DashboardItemDescriptors
 {
@@ -587,26 +599,26 @@ public static class DashboardItemDescriptors
             ["PowerMode"] = new("PowerModeControl_Title", "Power mode", "Gauge24"),
             ["ItsMode"] = new("DashboardITSModeControl_Title", "Intelligent thermal system", "Gauge24"),
             ["BatteryMode"] = new("BatteryModeControl_Title", "Battery mode", "BatteryCharge24"),
-            ["BatteryNightChargeMode"] = new("BatteryNightChargeModeControl_Title", "Battery night charge", "WeatherMoon24"),
+            ["BatteryNightChargeMode"] = new("BatteryNightChargeModeControl_Title", "Battery night charge", "WeatherMoon24", false, DashboardItemPresentationMode.Toggle),
             ["AlwaysOnUsb"] = new("AlwaysOnUSBControl_Title", "Always-on USB", "UsbStick24"),
             ["InstantBoot"] = new("InstantBootControl_Title", "Instant boot", "PlugDisconnected24"),
-            ["FlipToStart"] = new("FlipToStartControl_Title", "Flip to start", "Power24"),
+            ["FlipToStart"] = new("FlipToStartControl_Title", "Flip to start", "Power24", false, DashboardItemPresentationMode.Toggle),
             ["HybridMode"] = new("ComboBoxHybridModeControl_Title", "Hybrid graphics", "LeafOne24"),
-            ["DiscreteGpu"] = new("DiscreteGPUControl_Title", "Discrete GPU", "DeveloperBoard24", true),
-            ["OverclockDiscreteGpu"] = new("OverclockDiscreteGPUControl_Title", "Overclock discrete GPU", "DeveloperBoardLightning20", true),
+            ["DiscreteGpu"] = new("DiscreteGPUControl_Title", "Discrete GPU", "DeveloperBoard24", true, DashboardItemPresentationMode.Custom),
+            ["OverclockDiscreteGpu"] = new("OverclockDiscreteGPUControl_Title", "Overclock discrete GPU", "DeveloperBoardLightning20", true, DashboardItemPresentationMode.Custom),
             ["Resolution"] = new("ResolutionControl_Title", "Resolution", "ScaleFill24"),
             ["RefreshRate"] = new("RefreshRateControl_Title", "Refresh rate", "DesktopPulse24"),
             ["DpiScale"] = new("DpiScaleControl_Title", "Display scale", "TextFontSize24"),
-            ["Hdr"] = new("HDRControl_Title", "HDR", "Hdr24"),
-            ["OverDrive"] = new("OverDriveControl_Title", "OverDrive", "TopSpeed24"),
-            ["TurnOffMonitors"] = new("TurnOffMonitorsControl_Title", "Turn off monitors", "Desktop24", true),
-            ["Microphone"] = new("MicrophoneControl_Title", "Microphone", "Mic24"),
+            ["Hdr"] = new("HDRControl_Title", "HDR", "Hdr24", false, DashboardItemPresentationMode.Toggle),
+            ["OverDrive"] = new("OverDriveControl_Title", "OverDrive", "TopSpeed24", false, DashboardItemPresentationMode.Toggle),
+            ["TurnOffMonitors"] = new("TurnOffMonitorsControl_Title", "Turn off monitors", "Desktop24", true, DashboardItemPresentationMode.Custom),
+            ["Microphone"] = new("MicrophoneControl_Title", "Microphone", "Mic24", false, DashboardItemPresentationMode.Toggle),
             ["WhiteKeyboardBacklight"] = new("WhiteKeyboardBacklightControl_Title", "White keyboard backlight", "Keyboard24"),
-            ["PanelLogoBacklight"] = new("PanelLogoBacklightControl_Title", "Panel logo backlight", "LightbulbCircle24"),
-            ["PortsBacklight"] = new("PortsBacklightControl_Title", "Ports backlight", "UsbPlug24"),
-            ["TouchpadLock"] = new("TouchpadLockControl_Title", "Touchpad lock", "Tablet24"),
-            ["FnLock"] = new("FnLockControl_Title", "Fn lock", "Keyboard24"),
-            ["WinKeyLock"] = new("WinKeyControl_Title", "Windows key lock", "Keyboard24"),
+            ["PanelLogoBacklight"] = new("PanelLogoBacklightControl_Title", "Panel logo backlight", "LightbulbCircle24", false, DashboardItemPresentationMode.Toggle),
+            ["PortsBacklight"] = new("PortsBacklightControl_Title", "Ports backlight", "UsbPlug24", false, DashboardItemPresentationMode.Toggle),
+            ["TouchpadLock"] = new("TouchpadLockControl_Title", "Touchpad lock", "Tablet24", false, DashboardItemPresentationMode.Toggle),
+            ["FnLock"] = new("FnLockControl_Title", "Fn lock", "Keyboard24", false, DashboardItemPresentationMode.Toggle),
+            ["WinKeyLock"] = new("WinKeyControl_Title", "Windows key lock", "Keyboard24", false, DashboardItemPresentationMode.Toggle),
         };
 
     public static DashboardItemDescriptor Get(string identifier) =>
@@ -630,6 +642,8 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
     public DashboardItemDescriptor Descriptor => DashboardItemDescriptors.Get(Identifier);
     public string IconIdentifier => Descriptor.IconIdentifier;
     public bool IsStandardControl => !Descriptor.IsCustomControl;
+    public bool IsToggleControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Toggle;
+    public bool IsComboControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Combo;
     public string DisplayName => AvaloniaLocalization.GetString(
         Descriptor.TitleKey,
         Descriptor.FallbackTitle);
@@ -637,6 +651,9 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 
     [ObservableProperty]
     private DashboardStateOption? _selectedOption;
+
+    [ObservableProperty]
+    private bool _isToggleOn;
 
     [ObservableProperty]
     private bool _isAvailable;
@@ -647,7 +664,10 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
     [ObservableProperty]
     private string _stateStatusText = string.Empty;
 
+    private bool _appliedToggleOn;
+
     public bool HasOptions => Options.Count > 0;
+    public bool IsComboAvailable => IsComboControl && HasOptions;
 
     /// <summary>
     /// Stable summary for the normal Dashboard card. Errors are intentionally
@@ -667,6 +687,16 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 
     partial void OnStateErrorChanged(string? value) =>
         OnPropertyChanged(nameof(StateDisplayText));
+
+    partial void OnIsToggleOnChanged(bool value)
+    {
+        if (!IsToggleControl)
+            return;
+
+        var expectedValue = value ? "On" : "Off";
+        SelectedOption = Options.FirstOrDefault(option =>
+            option.Value.Equals(expectedValue, StringComparison.OrdinalIgnoreCase));
+    }
 
     public void ApplyState(DashboardItemState state)
     {
@@ -690,9 +720,22 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 
         SelectedOption = Options.FirstOrDefault(option =>
             option.Value.Equals(state.CurrentValue, StringComparison.OrdinalIgnoreCase));
+        IsToggleOn = IsOnValue(state.CurrentValue);
+        _appliedToggleOn = IsToggleOn;
         OnPropertyChanged(nameof(HasOptions));
+        OnPropertyChanged(nameof(IsComboAvailable));
         OnPropertyChanged(nameof(StateDisplayText));
     }
+
+    public void MarkStateApplied() => _appliedToggleOn = IsToggleOn;
+
+    public void RevertToggle() => IsToggleOn = _appliedToggleOn;
+
+    private static bool IsOnValue(string? value) => value is not null
+        && !value.Equals("Off", StringComparison.OrdinalIgnoreCase)
+        && !value.Equals("Disabled", StringComparison.OrdinalIgnoreCase)
+        && !value.Equals("False", StringComparison.OrdinalIgnoreCase)
+        && !value.Equals("0", StringComparison.OrdinalIgnoreCase);
 
     private static string GetStateDisplayName(string identifier, string value)
     {
