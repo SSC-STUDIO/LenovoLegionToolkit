@@ -8,6 +8,8 @@
     "libPlugins": "UniversalDeviceToolkit.Lib.Plugins.dll",
     "wpf": "Universal Device Toolkit.dll",
     "transitiveDependencies": [
+      "UniversalDeviceToolkit.Lib.Abstractions.dll",
+      "UniversalDeviceToolkit.Lib.Shared.dll",
       "Serilog.dll",
       "Serilog.Sinks.Async.dll",
       "Serilog.Sinks.File.dll"

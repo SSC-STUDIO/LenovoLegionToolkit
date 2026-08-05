@@ -162,6 +162,8 @@ jobs:
             'Universal Device Toolkit.dll',
             'UniversalDeviceToolkit.Lib.dll',
             'UniversalDeviceToolkit.Lib.Plugins.dll',
+            'UniversalDeviceToolkit.Lib.Abstractions.dll',
+            'UniversalDeviceToolkit.Lib.Shared.dll',
             'UniversalDeviceToolkit.Plugins.Abstractions.dll'
           ) | ForEach-Object { [void]$forbiddenHostFiles.Add($_) }
 

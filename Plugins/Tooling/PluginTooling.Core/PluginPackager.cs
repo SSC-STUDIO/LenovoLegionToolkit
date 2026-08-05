@@ -10,6 +10,8 @@ public sealed class PluginPackager
         "UniversalDeviceToolkit.WPF",
         "UniversalDeviceToolkit.Lib",
         "UniversalDeviceToolkit.Lib.Plugins",
+        "UniversalDeviceToolkit.Lib.Abstractions",
+        "UniversalDeviceToolkit.Lib.Shared",
         "UniversalDeviceToolkit.Lib.Macro",
         "UniversalDeviceToolkit.Lib.Automation",
         "UniversalDeviceToolkit.CLI.Lib",

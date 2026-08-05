@@ -87,6 +87,8 @@ public sealed class PluginPackagerTests : IDisposable
     public async Task PackAsync_ShouldExcludeHostRuntimeFilesFromZip()
     {
         File.WriteAllText(Path.Combine(_outputDirectory, "UniversalDeviceToolkit.Lib.dll"), "host");
+        File.WriteAllText(Path.Combine(_outputDirectory, "UniversalDeviceToolkit.Lib.Abstractions.dll"), "host abstractions");
+        File.WriteAllText(Path.Combine(_outputDirectory, "UniversalDeviceToolkit.Lib.Shared.dll"), "host shared");
         File.WriteAllText(Path.Combine(_outputDirectory, "UniversalDeviceToolkit.Lib.pdb"), "host symbols");
         File.WriteAllText(Path.Combine(_outputDirectory, "Universal Device Toolkit.dll"), "host wpf");
 
@@ -105,6 +107,8 @@ public sealed class PluginPackagerTests : IDisposable
         Assert.Contains("plugin.json", entryNames);
         Assert.Contains("plugin.manifest.json", entryNames);
         Assert.DoesNotContain("UniversalDeviceToolkit.Lib.dll", entryNames);
+        Assert.DoesNotContain("UniversalDeviceToolkit.Lib.Abstractions.dll", entryNames);
+        Assert.DoesNotContain("UniversalDeviceToolkit.Lib.Shared.dll", entryNames);
         Assert.DoesNotContain("UniversalDeviceToolkit.Lib.pdb", entryNames);
         Assert.DoesNotContain("Universal Device Toolkit.dll", entryNames);
     }

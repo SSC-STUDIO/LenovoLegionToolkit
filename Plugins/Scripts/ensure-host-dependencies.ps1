@@ -22,6 +22,8 @@ $refreshScript = Join-Path $PSScriptRoot "refresh-host-references.ps1"
 $requiredFiles = @(
     "UniversalDeviceToolkit.Lib.dll",
     "UniversalDeviceToolkit.Lib.Plugins.dll",
+    "UniversalDeviceToolkit.Lib.Abstractions.dll",
+    "UniversalDeviceToolkit.Lib.Shared.dll",
     "Universal Device Toolkit.dll",
     "Serilog.dll",
     "Serilog.Sinks.Async.dll",

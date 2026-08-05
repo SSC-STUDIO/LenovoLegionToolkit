@@ -15,6 +15,8 @@ $targetDir = if ([string]::IsNullOrWhiteSpace($TargetDir)) {
 $requiredFiles = @(
     "UniversalDeviceToolkit.Lib.dll",
     "UniversalDeviceToolkit.Lib.Plugins.dll",
+    "UniversalDeviceToolkit.Lib.Abstractions.dll",
+    "UniversalDeviceToolkit.Lib.Shared.dll",
     "UniversalDeviceToolkit.Plugins.Abstractions.dll",
     "Universal Device Toolkit.dll",
     "Serilog.dll",
