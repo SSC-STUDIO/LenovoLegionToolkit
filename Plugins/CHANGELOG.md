@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / 变更
 
-- **Documentation polish / 文档打磨**: Rewrote root `README.md` / `README.zh-CN.md` / `CONTRIBUTING.md` to match current catalog (custom-mouse **1.0.17**, vive-tool **1.2.3**, shell-integration **1.0.13**), migrated plugins delisted from store, host **v5.0.0**, and zero mojibake.
+- **Documentation polish / 文档打磨**: Rewrote root `README.md` / `README_zh-hans.md` / `CONTRIBUTING.md` to match current catalog (custom-mouse **1.0.17**, vive-tool **1.2.3**, shell-integration **1.0.13**), migrated plugins delisted from store, host **v5.0.0**, and zero mojibake.
 - **Tooling entry / 工具入口**: Added canonical `udt-plugin.cmd`; `llt-plugin.cmd` retained as compatibility alias. Updated Make.bat branding and author docs.
 - **minHostVersion / 最低宿主**: Synced active + migrated plugins to **5.0.0** across `plugin.manifest.json`, runtime `plugin.json` (`MinLltVersion` ABI field), `[Plugin] MinimumHostVersion`, and generated `Plugins/.build/catalog/store.json`.
 - **Docs index / 文档索引**: Added `Docs/README.md`; marked sprint/promo/handover docs as historical.
