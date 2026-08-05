@@ -88,7 +88,7 @@ jobs:
       - name: Validate official plugins
         shell: pwsh
         run: |
-          .\Plugins\Scripts\Invoke-PluginTooling.ps1 validate --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --profile official-release
+          .\Plugins\Scripts\Invoke-PluginTooling.ps1 validate --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --profile official-candidate
 
       - name: Build and package selected plugins
         shell: pwsh
@@ -117,6 +117,15 @@ jobs:
           .\Plugins\Scripts\Invoke-PluginTooling.ps1 generate-store --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --asset-root $env:CATALOG_ASSET_ROOT --output $env:CATALOG_OUTPUT_PATH --release-repository-url $env:CATALOG_RELEASE_URL --merge-existing --require-assets
           if ($LASTEXITCODE -ne 0) {
             throw 'Plugin catalog generation failed.'
+          }
+          Copy-Item -LiteralPath $env:CATALOG_OUTPUT_PATH -Destination (Join-Path $env:GITHUB_WORKSPACE 'Plugins\.build\catalog\store.json') -Force
+
+      - name: Validate generated official catalog
+        shell: pwsh
+        run: |
+          .\Plugins\Scripts\Invoke-PluginTooling.ps1 validate --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --profile official-release --skip-build --skip-tests
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Generated official plugin catalog validation failed.'
           }
 
       - name: Validate staged release contents
