@@ -22,9 +22,10 @@ public sealed class PluginHostedPage : UserControl
     private readonly string _pluginId;
     private readonly Action _navigateBack;
     private readonly bool _isSettings;
-    private readonly TextBlock _title = new();
-    private readonly TextBlock _description = new();
-    private readonly TextBlock _status = new();
+    private readonly NavigationIcon _icon = new();
+    private readonly LocalizedTextBlock _title = new();
+    private readonly LocalizedTextBlock _description = new();
+    private readonly LocalizedTextBlock _status = new();
     private readonly ContentControl _contentHost = new();
     private bool _loaded;
 
@@ -48,18 +49,39 @@ public sealed class PluginHostedPage : UserControl
         AutomationProperties.SetAutomationId(backButton, "AvaloniaPluginPageBackButton");
         backButton.Click += (_, _) => _navigateBack();
 
+        _icon.IconIdentifier = "Apps24";
+        _icon.FontSize = GetResource("IconSizeDialog", 24d);
+        _icon.Foreground = GetBrush("TextFillColorSecondaryBrush");
         _title.FontSize = GetResource("FontSizePageTitle", 28d);
         _title.FontWeight = FontWeight.SemiBold;
         _title.Foreground = GetBrush("TextFillColorPrimaryBrush");
+        _title.OverflowMode = LocalizedOverflowMode.Wrap;
+        _title.MaxLines = 2;
         _description.Foreground = GetBrush("TextFillColorSecondaryBrush");
-        _description.TextWrapping = TextWrapping.Wrap;
+        _description.OverflowMode = LocalizedOverflowMode.Wrap;
+        _description.MaxLines = 3;
         _status.Foreground = GetBrush("TextFillColorSecondaryBrush");
-        _status.TextWrapping = TextWrapping.Wrap;
+        _status.OverflowMode = LocalizedOverflowMode.Wrap;
+        _status.MaxLines = 4;
 
-        var header = new StackPanel { Spacing = 8 };
+        var headerCopy = new StackPanel { Spacing = 4, MinWidth = 0 };
+        headerCopy.Children.Add(_title);
+        headerCopy.Children.Add(_description);
+        var header = new Grid
+        {
+            RowDefinitions = new RowDefinitions("Auto,Auto"),
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+            ColumnSpacing = 12,
+        };
         header.Children.Add(backButton);
-        header.Children.Add(_title);
-        header.Children.Add(_description);
+        Grid.SetColumn(backButton, 0);
+        Grid.SetColumnSpan(backButton, 2);
+        Grid.SetRow(backButton, 0);
+        Grid.SetColumn(_icon, 0);
+        Grid.SetRow(_icon, 1);
+        header.Children.Add(_icon);
+        Grid.SetColumn(headerCopy, 1);
+        header.Children.Add(headerCopy);
 
         var statusCard = new Border
         {
@@ -117,6 +139,12 @@ public sealed class PluginHostedPage : UserControl
         _title.Text = string.IsNullOrWhiteSpace(state.Title) ? state.PluginId : state.Title;
         _description.Text = state.Description;
         _status.Text = state.StatusMessage;
+        _icon.IconIdentifier = NavigationIcon.HasGlyph(state.IconIdentifier)
+            ? state.IconIdentifier
+            : "Apps24";
+        ToolTip.SetTip(_title, _title.Text);
+        ToolTip.SetTip(_description, _description.Text);
+        ToolTip.SetTip(_status, _status.Text);
         AutomationProperties.SetName(this, _title.Text);
 
         if (state.Content is Control control && state.IsAvaloniaPage)

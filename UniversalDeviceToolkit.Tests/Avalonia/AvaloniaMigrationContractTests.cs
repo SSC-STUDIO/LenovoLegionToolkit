@@ -372,6 +372,22 @@ public sealed class AvaloniaMigrationContractTests
         source.Should().Contain("AvaloniaSettings_{_pageKey}_{option.Key}_{valueIndex++}");
     }
 
+    [Fact]
+    public void PluginHostedPage_UsesMappedIconAndLocalizedOverflowControls()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "PluginHostedPage.cs"));
+
+        source.Should().Contain("NavigationIcon _icon");
+        source.Should().Contain("NavigationIcon.HasGlyph(state.IconIdentifier)");
+        source.Should().Contain("LocalizedTextBlock _title");
+        source.Should().Contain("_status.MaxLines = 4");
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]
