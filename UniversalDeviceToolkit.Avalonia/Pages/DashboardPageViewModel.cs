@@ -107,16 +107,19 @@ public partial class DashboardPageViewModel : ObservableObject
 
     private readonly IPlatformServices _platformServices;
     private readonly Action<string>? _navigate;
+    private readonly Action<IReadOnlyList<DashboardStateOption>>? _showHybridInfo;
     private CancellationTokenSource? _pollingCancellation;
     private int _refreshVersion;
 
     public DashboardPageViewModel(
         IPlatformServices platformServices,
         AvaloniaDashboardPreferences? dashboardPreferences = null,
-        Action<string>? navigate = null)
+        Action<string>? navigate = null,
+        Action<IReadOnlyList<DashboardStateOption>>? showHybridInfo = null)
     {
         _platformServices = platformServices;
         _navigate = navigate;
+        _showHybridInfo = showHybridInfo;
         _dashboardPreferences = dashboardPreferences ?? new AvaloniaDashboardPreferences();
 #if WINDOWS
         _hardwareSensorSettings = IoCContainer.TryResolve<WpfHardwareSensorSettings>();
@@ -261,6 +264,13 @@ public partial class DashboardPageViewModel : ObservableObject
     {
         if (item?.IsNavigable == true && item.RouteKey is not null)
             _navigate?.Invoke(item.RouteKey);
+    }
+
+    [RelayCommand]
+    private void ShowHybridModeInfo(DashboardLayoutItemViewModel? item)
+    {
+        if (item?.IsHybridModeInfoVisible == true)
+            _showHybridInfo?.Invoke(item.Options.ToArray());
     }
 
     [RelayCommand]
@@ -673,6 +683,15 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
         || IsHybridToggleControl;
     public bool IsComboControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Combo
         && !IsHybridToggleControl;
+    /// <summary>
+    /// The WPF combo-box HybridMode card exposes an information dialog only when
+    /// the host reports one or more dedicated iGPU modes. Plain On/Off machines
+    /// use the compact toggle card and must not show a dead info affordance.
+    /// </summary>
+    public bool IsHybridModeInfoVisible => Identifier.Equals("HybridMode", StringComparison.OrdinalIgnoreCase)
+        && IsComboControl
+        && Options.Any(option => option.Value.Equals("OnIGPUOnly", StringComparison.OrdinalIgnoreCase)
+            || option.Value.Equals("OnAuto", StringComparison.OrdinalIgnoreCase));
     public string DisplayName => IsHybridToggleControl
         ? AvaloniaLocalization.GetString(
             "ToggleHybridModeControl_Title",
@@ -764,6 +783,7 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
         OnPropertyChanged(nameof(IsComboAvailable));
         OnPropertyChanged(nameof(IsToggleControl));
         OnPropertyChanged(nameof(IsComboControl));
+        OnPropertyChanged(nameof(IsHybridModeInfoVisible));
         OnPropertyChanged(nameof(DisplayName));
         OnPropertyChanged(nameof(StateDisplayText));
     }

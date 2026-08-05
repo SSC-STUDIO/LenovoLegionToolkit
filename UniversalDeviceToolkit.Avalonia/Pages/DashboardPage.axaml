@@ -367,7 +367,7 @@
                                 <ItemsControl ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto"
+                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto"
                                                   ColumnSpacing="6"
                                                   MinWidth="0"
                                                   IsVisible="{Binding IsStandardControl}"
@@ -419,6 +419,19 @@
                                                               Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                               CommandParameter="{Binding}" />
                                                 <Button Grid.Column="3"
+                                                        IsVisible="{Binding IsHybridModeInfoVisible}"
+                                                        Command="{Binding DataContext.ShowHybridModeInfoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="3"
+                                                        MinWidth="28"
+                                                        VerticalAlignment="Center"
+                                                        ToolTip.Tip="{local:Loc Key=Information, Fallback=Information}"
+                                                        automation:AutomationProperties.AutomationId="AvaloniaDashboardHybridModeInfoButton"
+                                                        automation:AutomationProperties.Name="{local:Loc Key=Information, Fallback=Information}">
+                                                    <controls:NavigationIcon IconIdentifier="Info24"
+                                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                                <Button Grid.Column="4"
                                                         IsVisible="{Binding IsComboAvailable}"
                                                         Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
@@ -430,7 +443,7 @@
                                                     <controls:NavigationIcon IconIdentifier="Checkmark24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
-                                                <Button Grid.Column="4"
+                                                <Button Grid.Column="5"
                                                         IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
@@ -441,7 +454,7 @@
                                                     <controls:NavigationIcon IconIdentifier="ChevronUp24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
-                                                <Button Grid.Column="5"
+                                                <Button Grid.Column="6"
                                                         IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
@@ -452,7 +465,7 @@
                                                     <controls:NavigationIcon IconIdentifier="ChevronDown24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
-                                                <Button Grid.Column="6"
+                                                <Button Grid.Column="7"
                                                         IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"

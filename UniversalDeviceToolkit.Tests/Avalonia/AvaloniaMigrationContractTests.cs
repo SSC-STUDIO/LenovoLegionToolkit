@@ -118,6 +118,35 @@ public sealed class AvaloniaMigrationContractTests
         item.DisplayName.Should().NotBeNullOrWhiteSpace();
     }
 
+    [Fact]
+    public void HybridModeInfoEntryOnlyAppearsForIGpuModes()
+    {
+        var group = new DashboardGroupViewModel(
+            new DashboardGroupState("Graphics", null, Array.Empty<string>()));
+        var item = new DashboardLayoutItemViewModel(group, "HybridMode");
+
+        item.ApplyState(new DashboardItemState("HybridMode", true, "On", ["On", "Off"]));
+        item.IsHybridModeInfoVisible.Should().BeFalse();
+
+        item.ApplyState(new DashboardItemState(
+            "HybridMode", true, "On", ["On", "OnIGPUOnly", "OnAuto", "Off"]));
+        item.IsHybridModeInfoVisible.Should().BeTrue();
+    }
+
+    [Fact]
+    public void DashboardMarkup_ExposesHybridModeInformationEntry()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DashboardPage.axaml"));
+
+        markup.Should().Contain("AvaloniaDashboardHybridModeInfoButton");
+        markup.Should().Contain("ShowHybridModeInfoCommand");
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]
