@@ -7,7 +7,6 @@
     <Platforms>x64</Platforms>
     <RootNamespace>UniversalDeviceToolkit.Plugins.Shared.Tests</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.Plugins.Shared.Tests</AssemblyName>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>

@@ -6,7 +6,6 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
     <Version>1.2.4</Version>
     <FileVersion>1.2.4</FileVersion>
     <AssemblyVersion>1.2.4</AssemblyVersion>

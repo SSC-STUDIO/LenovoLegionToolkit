@@ -5,7 +5,6 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
-    <Nullable>enable</Nullable>
     <Version>1.0.18</Version>
     <FileVersion>1.0.18</FileVersion>
     <AssemblyVersion>1.0.18</AssemblyVersion>

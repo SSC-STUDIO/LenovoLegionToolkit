@@ -4,7 +4,6 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>UniversalDeviceToolkit.Plugins.CustomMouse.Tests</RootNamespace>
     <AssemblyName>UniversalDeviceToolkit.Plugins.CustomMouse.Tests</AssemblyName>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <IsPackable>false</IsPackable>

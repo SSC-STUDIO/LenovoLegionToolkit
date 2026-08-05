@@ -299,7 +299,7 @@ public partial class PluginRepositoryService
 
     private static bool IsTransientRemoteException(Exception ex)
     {
-        return ex is HttpRequestException
+        return ex is HttpRequestException { StatusCode: null }
             or IOException
             or TaskCanceledException
             or TimeoutException;
