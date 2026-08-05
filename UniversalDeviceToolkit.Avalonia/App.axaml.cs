@@ -22,6 +22,10 @@ using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.CLI;
+using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
+using AutomationResource = UniversalDeviceToolkit.Lib.Automation.Resources.Resource;
+using MacroResource = UniversalDeviceToolkit.Lib.Macro.Resources.Resource;
+using PluginResource = UniversalDeviceToolkit.Lib.Plugins.Resources.Resource;
 #endif
 
 namespace UniversalDeviceToolkit.Avalonia;
@@ -44,6 +48,9 @@ public partial class App : Application
     {
         var culture = LocalizationRuntime.Initialize();
         AvaloniaLocalization.ApplyCulture(culture);
+#if WINDOWS
+        ApplyWindowsResourceCulture(culture);
+#endif
         LocalizationRuntime.CultureChanged += OnCultureChanged;
 #if WINDOWS
         _applicationSettings = WindowsAvaloniaSettingsService.SharedApplicationSettings;
@@ -179,6 +186,9 @@ public partial class App : Application
     private void OnCultureChanged(object? sender, CultureChangedEventArgs e)
     {
         AvaloniaLocalization.ApplyCulture(e.Culture);
+#if WINDOWS
+        ApplyWindowsResourceCulture(e.Culture);
+#endif
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
             && desktop.MainWindow is MainWindow mainWindow)
@@ -187,6 +197,18 @@ public partial class App : Application
             SetupTrayIcon();
         }
     }
+
+#if WINDOWS
+    private static void ApplyWindowsResourceCulture(System.Globalization.CultureInfo culture)
+    {
+        // Shared Windows services use these generated Resource classes directly;
+        // keep them in lockstep with the Avalonia localizer after every language change.
+        LibResource.Culture = culture;
+        AutomationResource.Culture = culture;
+        MacroResource.Culture = culture;
+        PluginResource.Culture = culture;
+    }
+#endif
 
     private void OnMainWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
