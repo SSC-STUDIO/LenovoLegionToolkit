@@ -211,6 +211,7 @@ public partial class PluginRepositoryService : IDisposable
     private static readonly HashSet<string> AllowedDownloadHosts = new(StringComparer.OrdinalIgnoreCase)
     {
         "github.com",
+        "api.github.com",
         "raw.githubusercontent.com",
         "jsdelivr.net",
         "cdn.jsdelivr.net",
@@ -224,7 +225,7 @@ public partial class PluginRepositoryService : IDisposable
 
         if (!string.IsNullOrWhiteSpace(manifest.DownloadUrl) &&
             (manifest.DownloadUrl.StartsWith("file://", StringComparison.OrdinalIgnoreCase) ||
-             ShouldTrustDownloadedPluginPackage(manifest.DownloadUrl, manifest.Id)))
+             ShouldTrustDownloadedPluginPackage(manifest.DownloadUrl, manifest.Id, manifest.Version)))
         {
             candidates.Add(manifest.DownloadUrl);
         }

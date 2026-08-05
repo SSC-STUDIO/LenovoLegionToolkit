@@ -37,8 +37,6 @@ public partial class PluginRepositoryService
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
 
-            if (!string.IsNullOrWhiteSpace(publishedAsset.Version))
-                manifest.Version = publishedAsset.Version;
         }
 
         foreach (var candidateUrl in candidateUrls
@@ -49,7 +47,9 @@ public partial class PluginRepositoryService
             if (!downloaded)
                 continue;
 
-            var trustAsOfficial = ShouldTrustDownloadedPluginPackage(candidateUrl, manifest.Id);
+            var trustAsOfficial = (publishedAsset is not null &&
+                                   IsPublishedAssetCandidate(candidateUrl, publishedAsset)) ||
+                                  ShouldTrustDownloadedPluginPackage(candidateUrl, manifest.Id, manifest.Version);
             if (await VerifyDownloadedPackageIntegrityAsync(destinationPath, manifest, trustAsOfficial).ConfigureAwait(false))
                 return new PluginDownloadResult(Success: true, TrustAsOfficialOnlinePackage: trustAsOfficial);
 

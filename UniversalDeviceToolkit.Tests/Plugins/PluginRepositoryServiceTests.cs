@@ -5,6 +5,9 @@ using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -163,6 +166,91 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task FetchAvailablePluginsAsync_ShouldRejectV1StoreCacheAfterCacheSeedRotation()
+    {
+        // Arrange: v1 used a different HMAC seed. It must not become a valid v2 cache
+        // merely because the cache file is still present on disk.
+        using var service = CreateService(_ => throw new HttpRequestException("Network unavailable."));
+        var cachePath = GetPrivateField<string>(service, "_storeCachePath");
+        var data = Convert.ToBase64String(Encoding.UTF8.GetBytes(StoreResponseJson));
+
+        using var keyDerivation = new HMACSHA256(Encoding.UTF8.GetBytes("UDT_PluginStoreCache_v1"));
+        var legacyKey = keyDerivation.ComputeHash(Encoding.UTF8.GetBytes(Environment.MachineName));
+        string legacyHmac;
+        using (var hmac = new HMACSHA256(legacyKey))
+        {
+            legacyHmac = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes(data))).ToLowerInvariant();
+        }
+
+        File.WriteAllText(
+            cachePath,
+            JsonSerializer.Serialize(new { Data = data, Hmac = legacyHmac }),
+            Encoding.UTF8);
+
+        // Act
+        var act = async () => await service.FetchAvailablePluginsAsync();
+
+        // Assert: the stale v1 cache is ignored and the failed remote fetch is surfaced.
+        await act.Should().ThrowAsync<HttpRequestException>();
+    }
+
+    [Fact]
+    public async Task TryResolvePublishedAssetAsync_ShouldUseExactVersionFromFixedCatalogRelease()
+    {
+        // Arrange
+        var requestedUrls = new List<string>();
+        const string releaseJson = """
+        {
+          "tag_name": "plugin-catalog",
+          "draft": false,
+          "prerelease": false,
+          "assets": [
+            {
+              "name": "custom-mouse-v9.9.9.zip",
+              "browser_download_url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v9.9.9.zip",
+              "url": "https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/assets/999"
+            },
+            {
+              "name": "custom-mouse-v1.0.16.zip",
+              "browser_download_url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.16.zip",
+              "url": "https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/assets/1016"
+            }
+          ]
+        }
+        """;
+
+        using var service = CreateService(request =>
+        {
+            requestedUrls.Add(request.RequestUri?.AbsoluteUri ?? string.Empty);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(releaseJson)
+            };
+        });
+        var manifest = new PluginManifest
+        {
+            Id = "custom-mouse",
+            Version = "1.0.16"
+        };
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "TryResolvePublishedAssetAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic);
+
+        // Act
+        var task = (Task)method!.Invoke(service, [manifest])!;
+        await task;
+        var result = task.GetType().GetProperty("Result")!.GetValue(task);
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.GetType().GetProperty("AssetName")!.GetValue(result)
+            .Should().Be("custom-mouse-v1.0.16.zip");
+        manifest.Version.Should().Be("1.0.16");
+        requestedUrls.Should().ContainSingle(
+            "https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/tags/plugin-catalog");
+    }
+
+    [Fact]
     public void LocalPackageFallbackVersionGate_ShouldRejectOlderLocalPackage()
     {
         // Arrange
@@ -237,12 +325,14 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
 
     [Theory]
     [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.16.zip", true)]
-    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest/download/custom-mouse-v1.0.16.zip", true)]
-    [InlineData("https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/assets/123456", true)]
+    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest/download/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v9.9.9.zip", false)]
+    [InlineData("https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/assets/123456", false)]
+    [InlineData("https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/assets/not-a-number", false)]
     [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
     [InlineData("https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
     [InlineData("https://gh-proxy.com/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.16.zip", true)]
-    [InlineData("https://ghfast.top/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest/download/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("https://ghfast.top/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.16.zip", true)]
     [InlineData("https://gh-proxy.com/https://example.com/custom-mouse-v1.0.16.zip", false)]
     [InlineData("https://gh-proxy.com/https://github.com/SomeoneElse/UniversalDeviceToolkit/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
     [InlineData("file:///C:/Temp/custom-mouse-v1.0.16.zip", false)]
@@ -257,10 +347,37 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             BindingFlags.NonPublic | BindingFlags.Static);
 
         // Act
-        var result = method!.Invoke(null, [candidateUrl, "custom-mouse"]);
+        var result = method!.Invoke(null, [candidateUrl, "custom-mouse", "1.0.16"]);
 
         // Assert
         result.Should().Be(expected);
+    }
+
+    [Fact]
+    public void IsTrustedGitHubReleaseAssetApiPath_ShouldRequireTheExactMetadataAssetName()
+    {
+        var method = typeof(PluginRepositoryService).GetMethod(
+            "IsTrustedGitHubReleaseAssetApiPath",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        var segments = new[]
+        {
+            "repos",
+            "SSC-STUDIO",
+            "UniversalDeviceToolkit",
+            "releases",
+            "assets",
+            "123456"
+        };
+
+        var exact = method!.Invoke(
+            null,
+            [segments, "custom-mouse-v1.0.16.zip", "custom-mouse", "1.0.16"]);
+        var wrongName = method.Invoke(
+            null,
+            [segments, "custom-mouse-v9.9.9.zip", "custom-mouse", "1.0.16"]);
+
+        exact.Should().Be(true);
+        wrongName.Should().Be(false);
     }
 
     [Fact]

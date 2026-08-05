@@ -122,12 +122,14 @@ public partial class PluginRepositoryService
                         if (release.TryGetProperty("prerelease", out var prereleaseElement) && prereleaseElement.GetBoolean())
                             continue;
 
-                        if (!release.TryGetProperty("assets", out var assetsElement) || assetsElement.ValueKind != JsonValueKind.Array)
-                            continue;
-
                         var tagName = release.TryGetProperty("tag_name", out var tagNameElement)
                             ? tagNameElement.GetString() ?? string.Empty
                             : string.Empty;
+
+                        if (!tagName.Equals("plugin-catalog", StringComparison.OrdinalIgnoreCase) ||
+                            !release.TryGetProperty("assets", out var assetsElement) ||
+                            assetsElement.ValueKind != JsonValueKind.Array)
+                            continue;
 
                         foreach (var asset in assetsElement.EnumerateArray())
                         {
@@ -135,7 +137,7 @@ public partial class PluginRepositoryService
                                 ? assetNameElement.GetString() ?? string.Empty
                                 : string.Empty;
 
-                            if (!IsMatchingPublishedPluginAsset(assetName, manifest.Id))
+                            if (!IsMatchingPublishedPluginAsset(assetName, manifest.Id, manifest.Version))
                                 continue;
 
                             var browserDownloadUrl = asset.TryGetProperty("browser_download_url", out var browserDownloadUrlElement)
@@ -145,14 +147,22 @@ public partial class PluginRepositoryService
                                 ? apiUrlElement.GetString()
                                 : null;
 
-                            if (string.IsNullOrWhiteSpace(browserDownloadUrl) && string.IsNullOrWhiteSpace(apiDownloadUrl))
+                            var hasTrustedBrowserDownloadUrl = !string.IsNullOrWhiteSpace(browserDownloadUrl) &&
+                                ShouldTrustDownloadedPluginPackage(browserDownloadUrl, manifest.Id, manifest.Version);
+                            var hasTrustedApiDownloadUrl = !string.IsNullOrWhiteSpace(apiDownloadUrl) &&
+                                IsTrustedGitHubReleaseAssetApiUrl(
+                                    apiDownloadUrl,
+                                    assetName,
+                                    manifest.Id,
+                                    manifest.Version);
+
+                            if (!hasTrustedBrowserDownloadUrl && !hasTrustedApiDownloadUrl)
                                 continue;
 
                             return new PublishedPluginAsset(
-                                browserDownloadUrl,
-                                apiDownloadUrl,
-                                assetName,
-                                ExtractPublishedAssetVersion(assetName, tagName, manifest.Id));
+                                hasTrustedBrowserDownloadUrl ? browserDownloadUrl : null,
+                                hasTrustedApiDownloadUrl ? apiDownloadUrl : null,
+                                assetName);
                         }
                     }
                 }
@@ -176,7 +186,7 @@ public partial class PluginRepositoryService
         return null;
     }
 
-    private static bool ShouldTrustDownloadedPluginPackage(string candidateUrl, string pluginId)
+    private static bool ShouldTrustDownloadedPluginPackage(string candidateUrl, string pluginId, string pluginVersion)
     {
         if (string.IsNullOrWhiteSpace(candidateUrl) || string.IsNullOrWhiteSpace(pluginId))
             return false;
@@ -190,7 +200,7 @@ public partial class PluginRepositoryService
         if (GitHubDownloadMirrors.IsMirrorHost(uri.Host))
         {
             var innerUrl = uri.AbsolutePath.TrimStart('/');
-            return ShouldTrustDownloadedPluginPackage(innerUrl, pluginId);
+            return ShouldTrustDownloadedPluginPackage(innerUrl, pluginId, pluginVersion);
         }
 
         var segments = uri.AbsolutePath
@@ -199,41 +209,67 @@ public partial class PluginRepositoryService
             .ToArray();
 
         if (uri.Host.Equals("github.com", StringComparison.OrdinalIgnoreCase))
-            return IsTrustedGitHubBrowserDownloadPath(segments, pluginId);
+            return IsTrustedGitHubBrowserDownloadPath(segments, pluginId, pluginVersion);
 
         if (uri.Host.Equals("api.github.com", StringComparison.OrdinalIgnoreCase))
-            return IsTrustedGitHubReleaseAssetApiPath(segments);
+        {
+            // An API asset URL contains only an opaque numeric ID, not the asset
+            // filename. It is trusted only after it is paired with the exact
+            // filename returned by the fixed plugin-catalog release metadata.
+            return false;
+        }
 
         return false;
     }
 
-    private static bool IsTrustedGitHubBrowserDownloadPath(IReadOnlyList<string> segments, string pluginId)
+    private static bool IsTrustedGitHubBrowserDownloadPath(
+        IReadOnlyList<string> segments,
+        string pluginId,
+        string pluginVersion)
     {
-        if (segments.Count < 6 || !IsOfficialPluginRepository(segments[0], segments[1]))
+        if (segments.Count != 6 || !IsOfficialPluginRepository(segments[0], segments[1]))
             return false;
 
-        if (!segments[2].Equals("releases", StringComparison.OrdinalIgnoreCase))
+        if (!segments[2].Equals("releases", StringComparison.OrdinalIgnoreCase) ||
+            !segments[3].Equals("download", StringComparison.OrdinalIgnoreCase) ||
+            !segments[4].Equals("plugin-catalog", StringComparison.OrdinalIgnoreCase))
             return false;
 
-        var assetName = segments[^1];
-        if (!IsMatchingPublishedPluginAsset(assetName, pluginId))
-            return false;
-
-        if (segments[3].Equals("download", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        return segments.Count >= 6 &&
-               segments[3].Equals("latest", StringComparison.OrdinalIgnoreCase) &&
-               segments[4].Equals("download", StringComparison.OrdinalIgnoreCase);
+        return IsMatchingPublishedPluginAsset(segments[5], pluginId, pluginVersion);
     }
 
-    private static bool IsTrustedGitHubReleaseAssetApiPath(IReadOnlyList<string> segments)
+    private static bool IsTrustedGitHubReleaseAssetApiUrl(
+        string candidateUrl,
+        string assetName,
+        string pluginId,
+        string pluginVersion)
     {
-        return segments.Count >= 6 &&
+        if (!Uri.TryCreate(candidateUrl, UriKind.Absolute, out var uri) ||
+            !uri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase) ||
+            !uri.Host.Equals("api.github.com", StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        var segments = uri.AbsolutePath
+            .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(Uri.UnescapeDataString)
+            .ToArray();
+
+        return IsTrustedGitHubReleaseAssetApiPath(segments, assetName, pluginId, pluginVersion);
+    }
+
+    private static bool IsTrustedGitHubReleaseAssetApiPath(
+        IReadOnlyList<string> segments,
+        string assetName,
+        string pluginId,
+        string pluginVersion)
+    {
+        return segments.Count == 6 &&
                segments[0].Equals("repos", StringComparison.OrdinalIgnoreCase) &&
                IsOfficialPluginRepository(segments[1], segments[2]) &&
                segments[3].Equals("releases", StringComparison.OrdinalIgnoreCase) &&
-               segments[4].Equals("assets", StringComparison.OrdinalIgnoreCase);
+               segments[4].Equals("assets", StringComparison.OrdinalIgnoreCase) &&
+               long.TryParse(segments[5], out _) &&
+               IsMatchingPublishedPluginAsset(assetName, pluginId, pluginVersion);
     }
 
     private static bool IsOfficialPluginRepository(string owner, string repository)
@@ -242,41 +278,25 @@ public partial class PluginRepositoryService
                repository.Equals("UniversalDeviceToolkit", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static bool IsMatchingPublishedPluginAsset(string assetName, string pluginId)
+    private static bool IsMatchingPublishedPluginAsset(string assetName, string pluginId, string pluginVersion)
     {
-        if (string.IsNullOrWhiteSpace(assetName) || !assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(assetName) ||
+            string.IsNullOrWhiteSpace(pluginId) ||
+            string.IsNullOrWhiteSpace(pluginVersion))
             return false;
 
-        var prefix = $"{pluginId}-v";
-        if (!assetName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-            return false;
-
-        var versionPart = assetName[prefix.Length..^4];
-        return versionPart.Length > 0 &&
-               !versionPart.Contains('/') &&
-               !versionPart.Contains('\\');
+        return assetName.Equals(
+            $"{pluginId}-v{pluginVersion}.zip",
+            StringComparison.OrdinalIgnoreCase);
     }
 
-    private static string? ExtractPublishedAssetVersion(string assetName, string tagName, string pluginId)
+    private static bool IsPublishedAssetCandidate(string candidateUrl, PublishedPluginAsset publishedAsset)
     {
-        if (!string.IsNullOrWhiteSpace(assetName))
-        {
-            var prefix = $"{pluginId}-v";
-            if (assetName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) &&
-                assetName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
-            {
-                return assetName[prefix.Length..^4];
-            }
-        }
-
-        var tagPrefix = $"{pluginId}-v";
-        if (!string.IsNullOrWhiteSpace(tagName) && tagName.StartsWith(tagPrefix, StringComparison.OrdinalIgnoreCase))
-            return tagName[tagPrefix.Length..];
-
-        return null;
+        return string.Equals(candidateUrl, publishedAsset.DownloadUrl, StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(candidateUrl, publishedAsset.ApiDownloadUrl, StringComparison.OrdinalIgnoreCase);
     }
 
-    private sealed record PublishedPluginAsset(string? DownloadUrl, string? ApiDownloadUrl, string AssetName, string? Version);
+    private sealed record PublishedPluginAsset(string? DownloadUrl, string? ApiDownloadUrl, string AssetName);
 
     private sealed record PluginDownloadResult(bool Success, bool TrustAsOfficialOnlinePackage);
 
