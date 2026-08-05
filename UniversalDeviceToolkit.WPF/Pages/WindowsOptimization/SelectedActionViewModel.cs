@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel;
-using UniversalDeviceToolkit.WPF.Windows.Utils;
 
 namespace UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
 
-public class SelectedActionViewModel : ISelectedActionViewModel, IDisposable
+public class SelectedActionViewModel : IDisposable
 {
     private readonly OptimizationActionViewModel? _sourceAction;
     private object? _tag;

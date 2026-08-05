@@ -61,8 +61,6 @@ public partial class NetworkAccelerationControl : UserControl
 
     public bool IsAccelerationRunning => _acceleration.IsRunning;
 
-    public int SelectedTargetCount => GetSelectedTargetCount();
-
     public bool CanStartAcceleration => CanStart(out _);
 
     public string StartAvailabilityReason
@@ -114,23 +112,6 @@ public partial class NetworkAccelerationControl : UserControl
         RefreshUi();
         return true;
     }
-
-    public IReadOnlyList<string> GetSelectedTargetSummaries() =>
-        (_acceleration.Config.DomainGroups ?? [])
-            .Select(group => new
-            {
-                group.DisplayName,
-                SelectedCount = GetGroupSelectedCount(group),
-                TotalCount = GetGroupTargetCount(group)
-            })
-            .Where(item => item.SelectedCount > 0)
-            .Select(item => string.Format(
-                CultureInfo.CurrentCulture,
-                "{0} ({1}/{2})",
-                item.DisplayName,
-                item.SelectedCount,
-                item.TotalCount))
-            .ToArray();
 
     public NetworkAccelerationControl()
     {

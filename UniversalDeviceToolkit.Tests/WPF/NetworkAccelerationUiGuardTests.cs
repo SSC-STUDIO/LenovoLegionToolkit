@@ -266,28 +266,32 @@ public class NetworkAccelerationUiGuardTests
     }
 
     [Fact]
-    public void NetworkAccelerationSelectionSummary_ShouldOpenSelectedTargetsWindow()
+    public void NetworkAccelerationSelectedTargetInfo_ShouldBeRemoved()
     {
         var root = FindRepoRoot();
+        var pageXaml = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.WPF",
+            "Pages",
+            "WindowsOptimizationPage.xaml"));
         var pageCode = File.ReadAllText(Path.Combine(
             root,
             "UniversalDeviceToolkit.WPF",
             "Pages",
             "WindowsOptimizationPage.xaml.cs"));
         var controlCode = File.ReadAllText(FindControlCode());
-        var windowXaml = File.ReadAllText(Path.Combine(
+
+        pageXaml.Should().NotContain("NetworkAccelerationSelectionSummaryBar");
+        pageXaml.Should().NotContain("NetworkAccelerationSelectionCount");
+        pageCode.Should().NotContain("NetworkAccelerationSelectedTargetsWindow");
+        pageCode.Should().NotContain("GetSelectedTargetSummaries");
+        controlCode.Should().NotContain("GetSelectedTargetSummaries");
+        File.Exists(Path.Combine(
             root,
             "UniversalDeviceToolkit.WPF",
             "Windows",
             "Utils",
-            "NetworkAccelerationSelectedTargetsWindow.xaml"));
-
-        pageCode.Should().Contain("NetworkAccelerationSelectedTargetsWindow");
-        pageCode.Should().Contain("GetSelectedTargetSummaries()");
-        pageCode.Should().NotContain("FocusTargetList()");
-        controlCode.Should().Contain("GetSelectedTargetSummaries");
-        windowXaml.Should().Contain("NetworkAccelerationSelectedTargetsWindow");
-        windowXaml.Should().Contain("NetworkAccelerationSelectedTargetsWindowCloseButton");
+            "NetworkAccelerationSelectedTargetsWindow.xaml")).Should().BeFalse();
     }
 
     private static string FindControlCode()

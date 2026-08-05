@@ -99,14 +99,15 @@ public sealed class WindowsOptimizationPageGuardTests
     }
 
     [Fact]
-    public void OptimizationToolbar_ShouldPlaceSelectionSummaryAboveActionsAndOmitCancel()
+    public void OptimizationToolbar_ShouldOmitSelectionSummaryAndCancel()
     {
         var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
         var code = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml.cs");
 
         xaml.Should().Contain("WindowsOptimizationApplyButton");
-        xaml.Should().Contain("WindowsOptimizationSelectedActionsSummaryBar");
         xaml.Should().Contain("WindowsOptimizationActionBar");
+        xaml.Should().NotContain("WindowsOptimizationSelectedActionsSummaryBar");
+        xaml.Should().NotContain("WindowsOptimizationSelectedActionsButton");
         xaml.Should().NotContain("WindowsOptimizationCancelButton");
         xaml.Should().Contain("IsEnabled=\"{Binding CanApplyOptimizationChanges}\"");
         xaml.Should().Contain("IsEnabled=\"{Binding CanSelectRecommended}\"");
@@ -116,50 +117,19 @@ public sealed class WindowsOptimizationPageGuardTests
         code.Should().Contain("_optimizationStateScanCancellationTokenSource");
         code.Should().Contain("BeginOptimizationStateScan");
         code.Should().Contain("EndOptimizationStateScan");
-
-        var selectedSummaryIndex = xaml.IndexOf("WindowsOptimizationSelectedActionsButton", StringComparison.Ordinal);
-        var selectedSummaryClose = xaml.IndexOf("</wpfui:Button>", selectedSummaryIndex, StringComparison.Ordinal);
-        var actionRowIndex = xaml.IndexOf("<StackPanel Orientation=\"Horizontal\">", selectedSummaryClose, StringComparison.Ordinal);
-        var headingGridIndex = xaml.IndexOf("Margin=\"0,0,16,0\"", StringComparison.Ordinal);
-        var actionGridIndex = xaml.IndexOf("<Grid Grid.Row=\"0\" Margin=\"0,0,0,16\">", headingGridIndex, StringComparison.Ordinal);
-
-        selectedSummaryIndex.Should().BeGreaterThanOrEqualTo(0);
-        selectedSummaryClose.Should().BeGreaterThan(selectedSummaryIndex);
-        actionRowIndex.Should().BeGreaterThan(selectedSummaryClose);
-        selectedSummaryIndex.Should().BeGreaterThan(headingGridIndex);
-        selectedSummaryIndex.Should().BeLessThan(actionGridIndex);
-
-        var selectedSummaryFrameClose = xaml.IndexOf("</Border>", selectedSummaryClose, StringComparison.Ordinal);
-        var actionFrameIndex = xaml.IndexOf("WindowsOptimizationActionBar", selectedSummaryFrameClose, StringComparison.Ordinal);
-        selectedSummaryFrameClose.Should().BeGreaterThan(selectedSummaryClose);
-        actionFrameIndex.Should().BeGreaterThan(selectedSummaryFrameClose);
+        code.Should().NotContain("SelectedActionsWindow");
+        code.Should().NotContain("SelectedActionsButton_Click");
     }
 
     [Fact]
-    public void NetworkAccelerationToolbar_ShouldPlaceSelectionSummaryAboveActions()
+    public void NetworkAccelerationToolbar_ShouldNotShowSelectionSummary()
     {
         var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
 
-        xaml.Should().Contain("NetworkAccelerationSelectionSummaryBar");
-        var summaryFrameIndex = xaml.IndexOf("NetworkAccelerationSelectionSummaryBar", StringComparison.Ordinal);
-        var selectionBarIndex = xaml.IndexOf("NetworkAccelerationSelectionBar", StringComparison.Ordinal);
-        var selectionCountIndex = xaml.IndexOf("NetworkAccelerationSelectionCountButton_Click", summaryFrameIndex, StringComparison.Ordinal);
-        var selectionCountClose = xaml.IndexOf("</wpfui:Button>", selectionCountIndex, StringComparison.Ordinal);
-        var actionRowIndex = xaml.IndexOf("<StackPanel Orientation=\"Horizontal\">", selectionCountClose, StringComparison.Ordinal);
-        var headingGridIndex = xaml.IndexOf("Margin=\"0,0,16,0\"", StringComparison.Ordinal);
-        var actionGridIndex = xaml.IndexOf("<Grid Grid.Row=\"0\" Margin=\"0,0,0,16\">", headingGridIndex, StringComparison.Ordinal);
-
-        summaryFrameIndex.Should().BeGreaterThanOrEqualTo(0);
-        selectionBarIndex.Should().BeGreaterThan(summaryFrameIndex);
-        selectionCountIndex.Should().BeGreaterThan(summaryFrameIndex);
-        selectionCountClose.Should().BeGreaterThan(selectionCountIndex);
-        actionRowIndex.Should().BeGreaterThan(selectionCountClose);
-        summaryFrameIndex.Should().BeGreaterThan(headingGridIndex);
-        summaryFrameIndex.Should().BeLessThan(actionGridIndex);
-
-        var summaryFrameClose = xaml.IndexOf("</Border>", summaryFrameIndex, StringComparison.Ordinal);
-        summaryFrameClose.Should().BeGreaterThan(summaryFrameIndex);
-        selectionBarIndex.Should().BeGreaterThan(summaryFrameClose);
+        xaml.Should().NotContain("NetworkAccelerationSelectionSummaryBar");
+        xaml.Should().NotContain("NetworkAccelerationSelectionCountButton_Click");
+        xaml.Should().NotContain("NetworkAccelerationSelectionCount");
+        xaml.Should().Contain("NetworkAccelerationSelectionBar");
     }
 
     [Fact]
@@ -196,30 +166,7 @@ public sealed class WindowsOptimizationPageGuardTests
         headingStackStart.Should().BeGreaterThanOrEqualTo(0);
         headingStackEnd.Should().BeGreaterThan(headingStackStart);
         xaml[headingStackStart..headingStackEnd].Should().Contain("Margin=\"0,0,0,16\"");
-    }
-
-    [Fact]
-    public void SelectionSummaries_ShouldUseOnlyTheButtonVisualFrame()
-    {
-        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
-
-        AssertSummaryContainerHasNoVisualFrame(xaml, "NetworkAccelerationSelectionSummaryBar", "NetworkAccelerationSelectionCountButton_Click");
-        AssertSummaryContainerHasNoVisualFrame(xaml, "WindowsOptimizationSelectedActionsSummaryBar", "WindowsOptimizationSelectedActionsButton");
-    }
-
-    private static void AssertSummaryContainerHasNoVisualFrame(string xaml, string summaryAutomationId, string buttonMarker)
-    {
-        var summaryIndex = xaml.IndexOf($"AutomationProperties.AutomationId=\"{summaryAutomationId}\"", StringComparison.Ordinal);
-        var buttonIndex = xaml.IndexOf(buttonMarker, summaryIndex, StringComparison.Ordinal);
-
-        summaryIndex.Should().BeGreaterThanOrEqualTo(0);
-        buttonIndex.Should().BeGreaterThan(summaryIndex);
-
-        var summaryContainer = xaml[summaryIndex..buttonIndex];
-        summaryContainer.Should().Contain("<Grid.Style>");
-        summaryContainer.Should().NotContain("BorderBrush=");
-        summaryContainer.Should().NotContain("BorderThickness=");
-        summaryContainer.Should().NotContain("CornerRadius=");
+        xaml.Should().Contain("<Grid Margin=\"16,16,0,0\">");
     }
 
     [Fact]

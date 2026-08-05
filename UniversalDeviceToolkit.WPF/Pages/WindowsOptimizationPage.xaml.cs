@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,8 +47,6 @@ public partial class WindowsOptimizationPage : Page
     private int _pluginRefreshVersion;
     private bool _hasCompletedInitialCategoriesLoad;
     
-    private SelectedActionsWindow? _selectedActionsWindow;
-    private NetworkAccelerationSelectedTargetsWindow? _networkAccelerationSelectedTargetsWindow;
     private ActionDetailsWindow? _actionDetailsWindow;
     private ContextMenu? _networkAccelerationRecommendationsMenu;
 
@@ -184,32 +181,11 @@ public partial class WindowsOptimizationPage : Page
         UpdateNetworkAccelerationSelectionChrome();
     }
 
-    private void NetworkAccelerationSelectionCountButton_Click(object sender, RoutedEventArgs e)
-    {
-        _networkAccelerationSelectedTargetsWindow?.Close();
-        _networkAccelerationSelectedTargetsWindow = new NetworkAccelerationSelectedTargetsWindow(
-            _networkAccelerationControl.GetSelectedTargetSummaries(),
-            Resource.NetworkAccelerationPage_DomainGroupsEmptyTitle)
-        {
-            Owner = Window.GetWindow(this)
-        };
-        _networkAccelerationSelectedTargetsWindow.Closed += (_, _) => _networkAccelerationSelectedTargetsWindow = null;
-        _networkAccelerationSelectedTargetsWindow.Show();
-    }
-
     private void NetworkAccelerationControl_ToolbarStateChanged(object? sender, EventArgs e) =>
         UpdateNetworkAccelerationSelectionChrome();
 
     private void UpdateNetworkAccelerationSelectionChrome()
     {
-        var selectedCount = _networkAccelerationControl.SelectedTargetCount;
-        _networkAccelerationSelectionCount.Text = selectedCount == 0
-            ? Resource.NetworkAccelerationPage_SelectionCountZero
-            : string.Format(
-                CultureInfo.CurrentCulture,
-                Resource.NetworkAccelerationPage_SelectionCountFormat,
-                selectedCount);
-
         var recommendedGroups = _networkAccelerationControl.GetRecommendedTargetGroups();
         _networkAccelerationSelectionFavoriteButton.IsEnabled = recommendedGroups.Count > 0;
 
@@ -336,8 +312,6 @@ public partial class WindowsOptimizationPage : Page
 
         // Close windows
         _actionDetailsWindow?.Close();
-        _selectedActionsWindow?.Close();
-        _networkAccelerationSelectedTargetsWindow?.Close();
 
         // Unsubscribe from driver package PropertyChanged handlers to prevent memory leaks
         UnsubscribeFromPackageControlHandlers();
@@ -479,22 +453,6 @@ public partial class WindowsOptimizationPage : Page
             {
                 ViewModel.CurrentMode = WindowsOptimizationViewModel.PageMode.NetworkAcceleration;
             }
-        }
-    }
-
-    private void SelectedActionsButton_Click(object sender, RoutedEventArgs e)
-    {
-        _selectedActionsWindow?.Close();
-
-        _selectedActionsWindow = new SelectedActionsWindow(ViewModel.VisibleSelectedActions, Resource.WindowsOptimizationPage_SelectedActions_Empty)
-        {
-            Owner = Window.GetWindow(this)
-        };
-
-        if (_selectedActionsWindow != null)
-        {
-            _selectedActionsWindow.Closed += (s, args) => _selectedActionsWindow = null;
-            _selectedActionsWindow.Show();
         }
     }
 
