@@ -15,6 +15,8 @@ using UniversalDeviceToolkit.Lib.Automation.Serialization;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.FlipToStart;
+using UniversalDeviceToolkit.Lib.Features.InstantBoot;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.PackageDownloader;
@@ -58,6 +60,12 @@ internal sealed class WindowsFeatureHostServices
     private readonly ApplicationSettings? _applicationSettings;
     private readonly DashboardSettings? _dashboardSettings;
     private readonly PowerModeFeature? _powerMode;
+    private readonly BatteryFeature? _battery;
+    private readonly BatteryNightChargeFeature? _batteryNightCharge;
+    private readonly AlwaysOnUSBFeature? _alwaysOnUsb;
+    private readonly InstantBootFeature? _instantBoot;
+    private readonly FlipToStartFeature? _flipToStart;
+    private readonly ITSModeFeature? _itsMode;
     private long _estimatedCleanupSize;
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
@@ -91,6 +99,12 @@ internal sealed class WindowsFeatureHostServices
         _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
         _dashboardSettings = IoCContainer.TryResolve<DashboardSettings>();
         _powerMode = IoCContainer.TryResolve<PowerModeFeature>();
+        _battery = IoCContainer.TryResolve<BatteryFeature>();
+        _batteryNightCharge = IoCContainer.TryResolve<BatteryNightChargeFeature>();
+        _alwaysOnUsb = IoCContainer.TryResolve<AlwaysOnUSBFeature>();
+        _instantBoot = IoCContainer.TryResolve<InstantBootFeature>();
+        _flipToStart = IoCContainer.TryResolve<FlipToStartFeature>();
+        _itsMode = IoCContainer.TryResolve<ITSModeFeature>();
         _selectedCleanupActions = new HashSet<string>(
             _applicationSettings?.Store.SelectedCleanupActions ?? [],
             StringComparer.OrdinalIgnoreCase);
@@ -204,47 +218,7 @@ internal sealed class WindowsFeatureHostServices
                      .Where(identifier => !string.IsNullOrWhiteSpace(identifier))
                      .Distinct(StringComparer.OrdinalIgnoreCase))
         {
-            if (!identifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase))
-            {
-                states.Add(new DashboardItemState(
-                    identifier,
-                    false,
-                    null,
-                    Array.Empty<string>(),
-                    "This dashboard control has not been migrated yet."));
-                continue;
-            }
-
-            if (_powerMode is null)
-            {
-                states.Add(new DashboardItemState(
-                    identifier,
-                    false,
-                    null,
-                    Array.Empty<string>(),
-                    "The power mode service is unavailable."));
-                continue;
-            }
-
-            try
-            {
-                var current = await _powerMode.GetStateAsync().ConfigureAwait(false);
-                var options = await _powerMode.GetAllStatesAsync().ConfigureAwait(false);
-                states.Add(new DashboardItemState(
-                    identifier,
-                    true,
-                    current.ToString(),
-                    options.Select(option => option.ToString()).ToArray()));
-            }
-            catch (Exception ex)
-            {
-                states.Add(new DashboardItemState(
-                    identifier,
-                    false,
-                    null,
-                    Array.Empty<string>(),
-                    ex.Message));
-            }
+            states.Add(await ReadDashboardItemStateAsync(identifier).ConfigureAwait(false));
         }
 
         return states;
@@ -252,19 +226,98 @@ internal sealed class WindowsFeatureHostServices
 
     public async Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state)
     {
-        if (!itemIdentifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase)
-            || _powerMode is null
-            || !Enum.TryParse<PowerModeState>(state, ignoreCase: true, out var powerMode))
+        return itemIdentifier.ToLowerInvariant() switch
+        {
+            "powermode" => await SetDashboardFeatureStateAsync(_powerMode, state).ConfigureAwait(false),
+            "batterymode" => await SetDashboardFeatureStateAsync(_battery, state).ConfigureAwait(false),
+            "batterynightchargemode" => await SetDashboardFeatureStateAsync(_batteryNightCharge, state).ConfigureAwait(false),
+            "alwaysonusb" => await SetDashboardFeatureStateAsync(_alwaysOnUsb, state).ConfigureAwait(false),
+            "instantboot" => await SetDashboardFeatureStateAsync(_instantBoot, state).ConfigureAwait(false),
+            "fliptostart" => await SetDashboardFeatureStateAsync(_flipToStart, state).ConfigureAwait(false),
+            "itsmode" => await SetDashboardFeatureStateAsync(_itsMode, state).ConfigureAwait(false),
+            _ => false,
+        };
+    }
+
+    private async Task<DashboardItemState> ReadDashboardItemStateAsync(string identifier) =>
+        identifier.ToLowerInvariant() switch
+        {
+            "powermode" => await ReadDashboardFeatureStateAsync(identifier, _powerMode).ConfigureAwait(false),
+            "batterymode" => await ReadDashboardFeatureStateAsync(identifier, _battery).ConfigureAwait(false),
+            "batterynightchargemode" => await ReadDashboardFeatureStateAsync(identifier, _batteryNightCharge).ConfigureAwait(false),
+            "alwaysonusb" => await ReadDashboardFeatureStateAsync(identifier, _alwaysOnUsb).ConfigureAwait(false),
+            "instantboot" => await ReadDashboardFeatureStateAsync(identifier, _instantBoot).ConfigureAwait(false),
+            "fliptostart" => await ReadDashboardFeatureStateAsync(identifier, _flipToStart).ConfigureAwait(false),
+            "itsmode" => await ReadDashboardFeatureStateAsync(identifier, _itsMode).ConfigureAwait(false),
+            _ => new DashboardItemState(
+                identifier,
+                false,
+                null,
+                Array.Empty<string>(),
+                "This dashboard control has not been migrated yet."),
+        };
+
+    private static async Task<DashboardItemState> ReadDashboardFeatureStateAsync<T>(
+        string identifier,
+        IFeature<T>? feature)
+        where T : struct, Enum
+    {
+        if (feature is null)
+        {
+            return new DashboardItemState(
+                identifier,
+                false,
+                null,
+                Array.Empty<string>(),
+                "The dashboard service is unavailable.");
+        }
+
+        try
+        {
+            if (!await feature.IsSupportedAsync().ConfigureAwait(false))
+            {
+                return new DashboardItemState(
+                    identifier,
+                    false,
+                    null,
+                    Array.Empty<string>(),
+                    "This control is not supported on the current device.");
+            }
+
+            var current = await feature.GetStateAsync().ConfigureAwait(false);
+            var options = await feature.GetAllStatesAsync().ConfigureAwait(false);
+            return new DashboardItemState(
+                identifier,
+                true,
+                current.ToString(),
+                options.Select(option => option.ToString()).ToArray());
+        }
+        catch (Exception ex)
+        {
+            return new DashboardItemState(
+                identifier,
+                false,
+                null,
+                Array.Empty<string>(),
+                ex.Message);
+        }
+    }
+
+    private static async Task<bool> SetDashboardFeatureStateAsync<T>(
+        IFeature<T>? feature,
+        string state)
+        where T : struct, Enum
+    {
+        if (feature is null || !Enum.TryParse<T>(state, true, out var parsed))
             return false;
 
         try
         {
-            await _powerMode.SetStateAsync(powerMode).ConfigureAwait(false);
+            await feature.SetStateAsync(parsed).ConfigureAwait(false);
             return true;
         }
-        catch (Exception ex)
+        catch
         {
-            Log.Instance.Trace($"Failed to set dashboard item state: {itemIdentifier}", ex);
             return false;
         }
     }
