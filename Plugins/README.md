@@ -14,8 +14,8 @@
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers">
     <img src="https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=for-the-badge&color=yellow&logo=github&labelColor=222" alt="Stars" />
   </a>
-  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/SSC-STUDIO/UniversalDeviceToolkit?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=blue&labelColor=222" alt="License: MIT" />
+  <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Plugins/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-2ea44f?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=222" alt="License: MIT" />
   </a>
   <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/plugins-release.yml">
     <img src="https://img.shields.io/github/actions/workflow/status/SSC-STUDIO/UniversalDeviceToolkit/plugins-release.yml?style=for-the-badge&logo=github&logoColor=white&label=CI&labelColor=222" alt="Plugin CI" />

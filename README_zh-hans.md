@@ -98,10 +98,10 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。部分包管理器标识会暂时保留旧的 UniversalDeviceToolkit 名称，用于保证旧版用户可原地升级。
 
 > [!NOTE]
-> **双发布轨道。** 稳定版：v4.2.1（Releases / Scoop 默认）。预览版：v5.0.0-preview（插件热重载与沙箱等）。稳定用户请继续使用 v4.2.1，直至 5.x 正式版。
+> **当前稳定版：v5.0.2。** 主程序使用 `vX.Y.Z` 标签发布；官方插件包统一放在独立的、非 Latest 的 rolling [`plugin-catalog` Release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) 中。
 > **winget 说明：** 包 ID `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败。请先使用 Releases 或 Scoop。
 
-- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。Full 内置语言和机型资源；Online 体积更小，会在应用内安装语言/机型资源。**当前稳定版：v4.2.1**（v4.1.0 为更名后首个稳定版）。请始终安装最新版本；4.x 保留旧 Lenovo Legion Toolkit 原地升级兼容。
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。Full 内置语言和机型资源；Online 体积更小，会在应用内安装语言/机型资源。请始终安装最新版本；旧 Lenovo Legion Toolkit 的原地升级兼容性在支持范围内保留。
 - ~~**winget**（待上架）~~：标识已预留，提交 winget-pkgs 后才会可用。
 - **Scoop**：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`。manifest 名称暂时保留 `lenovolegiontoolkit`。
 - **校验文件**：每个 Release 附带 `SHA256.txt`，建议下载前校验。
@@ -204,7 +204,7 @@ UDT 可以做到：
 
 ### 插件扩展
 
-UDT 的官方插件维护在本仓库的 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 仓库中。该仓库包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
+UDT 的官方插件维护在本仓库的 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/tree/master/Plugins/Official) 目录中。该目录包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
 
 插件扩展页面提供了现代化、用户友好的插件管理界面：
 
@@ -485,7 +485,7 @@ UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件�
 
 ### 可用插件
 
-官方插件发布自 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit)。在线目录当前包括：
+官方插件发布自 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/tree/master/Plugins/Official)。在线目录当前包括：
 
 - **Custom Mouse（自定义鼠标）**：光标主题、指针设置与 Windows 优化动作
 - **Network Acceleration（网络加速）**：已内置到主程序「系统优化 → 网络与加速」；v5.0.0 起插件已移除
@@ -518,7 +518,7 @@ UDT 提供了功能全面的插件扩展页面，具有以下特点：
    - 从 [主仓库 plugin-catalog Release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) 下载插件 ZIP，或在使用 `Plugins\\udt-plugin.cmd package` 本地打包
    - 解压到宿主 `plugins` 目录（每个插件单独子文件夹）：
      - 已安装 UDT：`%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`
-     - 本地开发构建：`Build\plugins\`
+      - 本地开发构建：`Plugins\.build\plugins\`
    - 重启 UDT，或在插件扩展页面刷新已安装插件
 
 ### 插件开发

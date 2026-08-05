@@ -123,10 +123,10 @@ Please be patient and read through this readme carefully - it contains important
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the UniversalDeviceToolkit name for upgrade continuity.
 
 > [!NOTE]
-> **Two release tracks.** Stable: v4.2.1 (default on winget/Releases). Pre-release: v5.0.0-preview (rebuilt plugin system -- hot-reload, sandbox, dependency resolution; 2,343 tests green; global hook-leak fix). Grab the preview zip from [v5.0.0-preview](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/v5.0.0-preview.20260706001) to try plugins early; stable users stay on v4.2.1 until 5.x final.
+> **Current stable release: v5.0.2.** Application releases use the normal `vX.Y.Z` tags. Official plugin packages are published separately in the non-Latest rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog).
 > **Note on winget:** the package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships. Use Releases or Scoop in the meantime.
 
-- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. **Current stable: v4.2.1** (4.1.0 was the first stable release after the rename). Always install the newest version from the latest release page; 4.x keeps legacy Lenovo Legion Toolkit upgrade compatibility.
+- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. Always install the newest version from the latest release page; legacy Lenovo Legion Toolkit upgrade compatibility is retained where supported.
 
 #### Language packs (Full vs Online) & privacy
 

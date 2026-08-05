@@ -542,7 +542,7 @@ public class MyPlugin : PluginBase { }
 
 ## 示例插件
 
-完整实现见 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit) 的 `Plugins/` 目录：
+完整实现见主仓的 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/tree/master/Plugins/Official) 目录：
 
 
 | 插件 ID                    | 页面模型             | 说明                                                 |
