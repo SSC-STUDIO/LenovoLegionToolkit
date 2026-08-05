@@ -44,6 +44,16 @@ public sealed class WindowsPlatformServices : IPlatformServices
         return snapshot with { SensorReadings = readings };
     }
 
+    public Task<DashboardLayoutState> GetDashboardLayoutAsync() =>
+        _featureHost is null
+            ? _inner.GetDashboardLayoutAsync()
+            : _featureHost.GetDashboardLayoutAsync();
+
+    public Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout) =>
+        _featureHost is null
+            ? _inner.SaveDashboardLayoutAsync(layout)
+            : _featureHost.SaveDashboardLayoutAsync(layout);
+
     public Task<bool> IsSupportedLegionMachineAsync() => _inner.IsSupportedLegionMachineAsync();
 
     public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) =>

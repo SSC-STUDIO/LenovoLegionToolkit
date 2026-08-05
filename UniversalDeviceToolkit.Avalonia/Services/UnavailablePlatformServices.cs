@@ -1,4 +1,5 @@
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.Shared.Settings;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -7,6 +8,7 @@ namespace UniversalDeviceToolkit.Avalonia.Services;
 /// </summary>
 public sealed class UnavailablePlatformServices : IPlatformServices
 {
+    private readonly AvaloniaDashboardPreferences _dashboardPreferences = new();
     public Task<IReadOnlyList<FeatureGroupItem>> GetFeatureGroupsAsync() =>
         Task.FromResult<IReadOnlyList<FeatureGroupItem>>(
         [
@@ -31,6 +33,39 @@ public sealed class UnavailablePlatformServices : IPlatformServices
             await GetFeatureGroupsAsync(),
             await GetSensorReadingsAsync(),
             DateTimeOffset.UtcNow);
+
+    public Task<DashboardLayoutState> GetDashboardLayoutAsync()
+    {
+        var store = _dashboardPreferences.Store;
+        return Task.FromResult(new DashboardLayoutState(
+            store.ShowSensors,
+            store.SensorsRefreshIntervalSeconds,
+            store.Groups.Select(group => new DashboardGroupState(
+                group.Type,
+                group.CustomName,
+                group.Items.ToArray())).ToArray()));
+    }
+
+    public Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout)
+    {
+        if (layout is null)
+            return Task.FromResult(false);
+
+        var store = _dashboardPreferences.Store;
+        store.ShowSensors = layout.ShowSensors;
+        store.SensorsRefreshIntervalSeconds = Math.Clamp(layout.SensorsRefreshIntervalSeconds, 1, 60);
+        store.Groups = layout.Groups
+            .Where(group => group is not null && !string.IsNullOrWhiteSpace(group.Type))
+            .Select(group => new AvaloniaDashboardGroupPreference
+            {
+                Type = group.Type,
+                CustomName = group.CustomName,
+                Items = (group.Items ?? []).ToList(),
+            })
+            .ToList();
+        _dashboardPreferences.SynchronizeStore();
+        return Task.FromResult(true);
+    }
 
     public Task<bool> IsSupportedLegionMachineAsync() => Task.FromResult(false);
 

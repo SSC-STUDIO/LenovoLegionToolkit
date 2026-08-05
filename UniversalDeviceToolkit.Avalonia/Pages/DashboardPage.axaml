@@ -114,6 +114,216 @@
                 </Border>
             </Grid>
 
+            <!-- Persisted dashboard layout -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                <StackPanel Spacing="2">
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Layout, Fallback=Dashboard layout}"
+                                                 FontSize="{StaticResource FontSizeSubsection}"
+                                                 FontWeight="Medium"
+                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                 OverflowMode="Ellipsis"
+                                                 MaxLines="1" />
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_LayoutDescription, Fallback=Choose the groups and order shown on the dashboard.}"
+                                                 FontSize="{StaticResource FontSizeSmallCaption}"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2" />
+                </StackPanel>
+                <Button Grid.Column="1"
+                        Command="{Binding ToggleLayoutEditorCommand}"
+                        Padding="10,6"
+                        MinWidth="110"
+                        automation:AutomationProperties.AutomationId="AvaloniaDashboardEditLayoutButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_EditLayout, Fallback=Edit layout}"
+                        ToolTip.Tip="{local:Loc Key=Dashboard_EditLayout, Fallback=Edit layout}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <controls:NavigationIcon IconIdentifier="Edit24"
+                                                 FontSize="{StaticResource IconSizeCompact}" />
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_EditLayout, Fallback=Edit}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <ItemsControl ItemsSource="{Binding DashboardGroups}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="300"
+                                Margin="0,0,12,12"
+                                Padding="14"
+                                Background="{DynamicResource CardBackgroundBrush}"
+                                BorderBrush="{DynamicResource CardBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource CornerRadiusCard}"
+                                automation:AutomationProperties.Name="{Binding DisplayName}">
+                            <StackPanel Spacing="8">
+                                <Grid ColumnDefinitions="*,Auto,Auto">
+                                    <controls:LocalizedTextBlock Text="{Binding DisplayName}"
+                                                                 FontSize="{StaticResource FontSizeBody}"
+                                                                 FontWeight="Medium"
+                                                                 OverflowMode="Ellipsis"
+                                                                 MaxLines="1"
+                                                                 MinWidth="0" />
+                                    <Button Grid.Column="1"
+                                            Command="{Binding DataContext.MoveDashboardGroupUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Padding="4"
+                                            MinWidth="28"
+                                            ToolTip.Tip="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}"
+                                            automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}">
+                                        <controls:NavigationIcon IconIdentifier="ChevronUp24"
+                                                                 FontSize="{StaticResource IconSizeCompact}" />
+                                    </Button>
+                                    <Button Grid.Column="2"
+                                            Command="{Binding DataContext.MoveDashboardGroupDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Padding="4"
+                                            MinWidth="28"
+                                            ToolTip.Tip="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}"
+                                            automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}">
+                                        <controls:NavigationIcon IconIdentifier="ChevronDown24"
+                                                                 FontSize="{StaticResource IconSizeCompact}" />
+                                    </Button>
+                                </Grid>
+                                <ItemsControl ItemsSource="{Binding Items}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="4">
+                                                <controls:LocalizedTextBlock Text="{Binding DisplayName}"
+                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                             OverflowMode="Ellipsis"
+                                                                             MaxLines="1"
+                                                                             MinWidth="0"
+                                                                             VerticalAlignment="Center" />
+                                                <Button Grid.Column="1"
+                                                        Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="3"
+                                                        MinWidth="24"
+                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}"
+                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}">
+                                                    <controls:NavigationIcon IconIdentifier="ChevronUp24"
+                                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                                <Button Grid.Column="2"
+                                                        Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="3"
+                                                        MinWidth="24"
+                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}"
+                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}">
+                                                    <controls:NavigationIcon IconIdentifier="ChevronDown24"
+                                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                                <Button Grid.Column="3"
+                                                        Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="3"
+                                                        MinWidth="24"
+                                                        ToolTip.Tip="{local:Loc Key=Dashboard_Remove, Fallback=Remove}"
+                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Remove, Fallback=Remove}">
+                                                    <controls:NavigationIcon IconIdentifier="Delete24"
+                                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Expander IsExpanded="{Binding IsLayoutEditorOpen}"
+                      IsVisible="{Binding IsLayoutEditorOpen}"
+                      Header="{local:Loc Key=Dashboard_LayoutEditor, Fallback=Edit dashboard layout}">
+                <Border Margin="0,4,0,0"
+                        Padding="14"
+                        Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}">
+                    <StackPanel Spacing="10">
+                        <ItemsControl ItemsSource="{Binding DashboardGroups}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Margin="0,0,0,6">
+                                        <controls:LocalizedTextBlock Text="{Binding DisplayName}"
+                                                                     VerticalAlignment="Center"
+                                                                     OverflowMode="Ellipsis"
+                                                                     MaxLines="1" />
+                                        <TextBox Grid.Column="1"
+                                                 IsVisible="{Binding IsCustom}"
+                                                 Text="{Binding CustomName, Mode=TwoWay}"
+                                                 Watermark="{local:Loc Key=Dashboard_CustomGroupName, Fallback=Custom group name}"
+                                                 MinWidth="160" />
+                                        <Button Grid.Column="2"
+                                                IsVisible="{Binding IsCustom}"
+                                                Command="{Binding DataContext.RemoveDashboardGroupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Padding="6"
+                                                ToolTip.Tip="{local:Loc Key=Dashboard_RemoveGroup, Fallback=Remove group}"
+                                                automation:AutomationProperties.Name="{local:Loc Key=Dashboard_RemoveGroup, Fallback=Remove group}">
+                                            <controls:NavigationIcon IconIdentifier="Delete24"
+                                                                     FontSize="{StaticResource IconSizeCompact}" />
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Command="{Binding AddCustomDashboardGroupCommand}"
+                                    Padding="10,6"
+                                    automation:AutomationProperties.AutomationId="AvaloniaDashboardAddGroupButton">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <controls:NavigationIcon IconIdentifier="Add24"
+                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_AddGroup, Fallback=Add group}"
+                                                                 OverflowMode="Ellipsis"
+                                                                 MaxLines="1" />
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding RestoreDefaultDashboardLayoutCommand}"
+                                    Padding="10,6"
+                                    automation:AutomationProperties.AutomationId="AvaloniaDashboardRestoreLayoutButton">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <controls:NavigationIcon IconIdentifier="ArrowReset24"
+                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_RestoreLayout, Fallback=Restore defaults}"
+                                                                 OverflowMode="Ellipsis"
+                                                                 MaxLines="1" />
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding SaveDashboardLayoutCommand}"
+                                    Padding="10,6"
+                                    Background="{DynamicResource AccentBackgroundBrush}"
+                                    Foreground="{DynamicResource TextOnAccentBrush}"
+                                    automation:AutomationProperties.AutomationId="AvaloniaDashboardSaveLayoutButton">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <controls:NavigationIcon IconIdentifier="Save24"
+                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_SaveLayout, Fallback=Save layout}"
+                                                                 OverflowMode="Ellipsis"
+                                                                 MaxLines="1" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <controls:LocalizedTextBlock Text="{Binding LayoutStatusText}"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                    </StackPanel>
+                </Border>
+            </Expander>
+
             <!-- Feature Groups -->
             <TextBlock Text="{local:Loc Key=Dashboard_FeatureGroups, Fallback=Feature Groups}"
                        FontSize="{StaticResource FontSizeSubsection}"

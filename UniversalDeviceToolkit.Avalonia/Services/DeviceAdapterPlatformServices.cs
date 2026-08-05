@@ -1,6 +1,7 @@
 using System.Globalization;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Avalonia;
+using UniversalDeviceToolkit.Shared.Settings;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -9,6 +10,7 @@ namespace UniversalDeviceToolkit.Avalonia.Services;
 /// </summary>
 public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPlatformServices
 {
+    private readonly AvaloniaDashboardPreferences _dashboardPreferences = new();
     private readonly SemaphoreSlim _snapshotLock = new(1, 1);
     private DeviceSnapshot? _snapshot;
 
@@ -273,6 +275,33 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
             DateTimeOffset.UtcNow);
     }
 
+    public Task<DashboardLayoutState> GetDashboardLayoutAsync()
+    {
+        var store = _dashboardPreferences.Store;
+        return Task.FromResult(ToLayoutState(store));
+    }
+
+    public Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout)
+    {
+        if (layout is null)
+            return Task.FromResult(false);
+
+        var store = _dashboardPreferences.Store;
+        store.ShowSensors = layout.ShowSensors;
+        store.SensorsRefreshIntervalSeconds = Math.Clamp(layout.SensorsRefreshIntervalSeconds, 1, 60);
+        store.Groups = layout.Groups
+            .Where(group => group is not null && !string.IsNullOrWhiteSpace(group.Type))
+            .Select(group => new AvaloniaDashboardGroupPreference
+            {
+                Type = group.Type,
+                CustomName = group.CustomName,
+                Items = (group.Items ?? []).ToList(),
+            })
+            .ToList();
+        _dashboardPreferences.SynchronizeStore();
+        return Task.FromResult(true);
+    }
+
     private async Task<DeviceSnapshot> ReadSnapshotAsync(bool forceRefresh)
     {
         if (!forceRefresh && _snapshot is not null)
@@ -358,6 +387,15 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
         "plugin-extensions" => MainNavigation.PluginExtensions,
         _ => null,
     };
+
+    private static DashboardLayoutState ToLayoutState(AvaloniaDashboardPreferenceStore store) =>
+        new(
+            store.ShowSensors,
+            store.SensorsRefreshIntervalSeconds,
+            store.Groups.Select(group => new DashboardGroupState(
+                group.Type,
+                group.CustomName,
+                group.Items.ToArray())).ToArray());
 
     private IReadOnlyList<SensorReadingItem> BuildSensorReadings(DeviceSnapshot snapshot)
     {

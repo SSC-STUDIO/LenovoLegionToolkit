@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Linq;
 using UniversalDeviceToolkit.Shared.Utils;
 
 namespace UniversalDeviceToolkit.Shared.Settings;
@@ -18,6 +19,20 @@ public sealed class AvaloniaDashboardPreferenceStore
     /// by the view model before creating a timer.
     /// </summary>
     public int SensorsRefreshIntervalSeconds { get; set; } = 2;
+
+    /// <summary>
+    /// Dashboard groups use the same string enum names as the WPF dashboard.json
+    /// document, allowing either host to preserve a user's layout.
+    /// </summary>
+    public List<AvaloniaDashboardGroupPreference> Groups { get; set; } =
+        AvaloniaDashboardPreferences.CreateDefaultGroups();
+}
+
+public sealed class AvaloniaDashboardGroupPreference
+{
+    public string Type { get; set; } = "Power";
+    public string? CustomName { get; set; }
+    public List<string> Items { get; set; } = [];
 }
 
 /// <summary>
@@ -39,14 +54,54 @@ public sealed class AvaloniaDashboardPreferences : AbstractSettings<AvaloniaDash
     public override AvaloniaDashboardPreferenceStore? LoadStore()
     {
         var store = base.LoadStore();
-        return store ?? ImportWpfStore();
+        return Normalize(store ?? ImportWpfStore());
     }
 
     public override async Task<AvaloniaDashboardPreferenceStore?> LoadStoreAsync()
     {
         var store = await base.LoadStoreAsync().ConfigureAwait(false);
-        return store ?? ImportWpfStore();
+        return Normalize(store ?? ImportWpfStore());
     }
+
+    public static List<AvaloniaDashboardGroupPreference> CreateDefaultGroups() =>
+    [
+        new()
+        {
+            Type = "Power",
+            Items = [
+                "PowerMode",
+                "ItsMode",
+                "BatteryMode",
+                "BatteryNightChargeMode",
+                "AlwaysOnUsb",
+                "InstantBoot",
+                "FlipToStart",
+            ],
+        },
+        new()
+        {
+            Type = "Graphics",
+            Items = ["HybridMode", "DiscreteGpu", "OverclockDiscreteGpu"],
+        },
+        new()
+        {
+            Type = "Display",
+            Items = ["Resolution", "RefreshRate", "DpiScale", "Hdr", "OverDrive", "TurnOffMonitors"],
+        },
+        new()
+        {
+            Type = "Other",
+            Items = [
+                "Microphone",
+                "WhiteKeyboardBacklight",
+                "PanelLogoBacklight",
+                "PortsBacklight",
+                "TouchpadLock",
+                "FnLock",
+                "WinKeyLock",
+            ],
+        },
+    ];
 
     private AvaloniaDashboardPreferenceStore? ImportWpfStore()
     {
@@ -56,15 +111,10 @@ public sealed class AvaloniaDashboardPreferences : AbstractSettings<AvaloniaDash
 
         try
         {
-            using var document = JsonDocument.Parse(File.ReadAllText(path));
-            if (!document.RootElement.TryGetProperty("ShowSensors", out var showSensors)
-                || showSensors.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
-                return null;
-
-            return new AvaloniaDashboardPreferenceStore
-            {
-                ShowSensors = showSensors.GetBoolean(),
-            };
+            var options = UniversalDeviceToolkit.Shared.Serialization.LltJson.CreateSettingsOptions();
+            return JsonSerializer.Deserialize<AvaloniaDashboardPreferenceStore>(
+                File.ReadAllText(path),
+                options);
         }
         catch (JsonException)
         {
@@ -74,5 +124,35 @@ public sealed class AvaloniaDashboardPreferences : AbstractSettings<AvaloniaDash
         {
             return null;
         }
+    }
+
+    private static AvaloniaDashboardPreferenceStore Normalize(AvaloniaDashboardPreferenceStore? store)
+    {
+        var normalized = store ?? new AvaloniaDashboardPreferenceStore();
+        normalized.SensorsRefreshIntervalSeconds = Math.Clamp(
+            normalized.SensorsRefreshIntervalSeconds,
+            1,
+            60);
+
+        var groups = normalized.Groups ?? [];
+        normalized.Groups = groups
+            .Where(group => group is not null && !string.IsNullOrWhiteSpace(group.Type))
+            .Select(group => new AvaloniaDashboardGroupPreference
+            {
+                Type = group.Type,
+                CustomName = group.Type.Equals("Custom", StringComparison.OrdinalIgnoreCase)
+                    ? group.CustomName
+                    : null,
+                Items = (group.Items ?? [])
+                    .Where(item => !string.IsNullOrWhiteSpace(item))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList(),
+            })
+            .ToList();
+
+        if (normalized.Groups.Count == 0)
+            normalized.Groups = CreateDefaultGroups();
+
+        return normalized;
     }
 }

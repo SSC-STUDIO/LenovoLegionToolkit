@@ -13,6 +13,8 @@ public interface IPlatformServices
     Task<IReadOnlyList<FeatureGroupItem>> GetFeatureGroupsAsync();
     Task<IReadOnlyList<SensorReadingItem>> GetSensorReadingsAsync();
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
+    Task<DashboardLayoutState> GetDashboardLayoutAsync();
+    Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout);
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<bool> ImportPluginAsync(string zipFilePath);
@@ -345,3 +347,18 @@ public sealed record DashboardSnapshot(
     IReadOnlyList<FeatureGroupItem> FeatureGroups,
     IReadOnlyList<SensorReadingItem> SensorReadings,
     DateTimeOffset CapturedAtUtc);
+
+/// <summary>
+/// Host-neutral projection of the WPF dashboard layout document. Group and item
+/// identifiers remain stable strings so Avalonia can round-trip the shared
+/// dashboard.json without taking a dependency on WPF enum types.
+/// </summary>
+public sealed record DashboardLayoutState(
+    bool ShowSensors,
+    int SensorsRefreshIntervalSeconds,
+    IReadOnlyList<DashboardGroupState> Groups);
+
+public sealed record DashboardGroupState(
+    string Type,
+    string? CustomName,
+    IReadOnlyList<string> Items);
