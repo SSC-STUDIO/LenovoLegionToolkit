@@ -19,7 +19,15 @@ internal static class InstallerConstants
 
     /// <summary>Legacy Inno AppId — used to detect and supersede Inno-based installs.</summary>
     public const string LegacyInnoAppId = "{0C37B9AC-9C3D-4302-8ABB-125C7C7D83D5}";
-    public const string LegacyInnoUninstallKeyName = LegacyInnoAppId + "_is1";
+
+    // Inno's AppId declaration emitted the extra closing brace into the
+    // uninstall key. Keep the single-brace form for installations created by
+    // older packaging scripts that normalized the key differently.
+    internal static readonly string[] LegacyInnoUninstallKeyNames =
+    [
+        LegacyInnoAppId + "}_is1",
+        LegacyInnoAppId + "_is1",
+    ];
 
     /// <summary>Our own per-user uninstall registry key name.</summary>
     public const string UninstallKeyName = "UniversalDeviceToolkit";

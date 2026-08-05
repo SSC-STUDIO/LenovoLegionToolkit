@@ -18,6 +18,10 @@ public sealed class InstallerSecurityGuardTests
 
         manifest.Should().Contain("requestedExecutionLevel level=\"requireAdministrator\"");
         constants.Should().Contain("Environment.SpecialFolder.ProgramFiles");
+        constants.Should().Contain("LegacyInnoAppId + \"}_is1\"");
+        constants.Should().Contain("LegacyInnoAppId + \"_is1\"");
+        constants.Should().Contain("LegacyInnoUninstallKeyNames");
+        engine.Should().Contain("foreach (var keyName in InstallerConstants.LegacyInnoUninstallKeyNames)");
         engine.Should().Contain("InstallerInstallPathPolicy.PrepareForInstall(installDir)");
         engine.Should().Contain("InstallerInstallPathPolicy.ValidateForUninstall(installDir)");
         policy.Should().Contain("FileAttributes.ReparsePoint");

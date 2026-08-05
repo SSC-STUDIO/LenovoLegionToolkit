@@ -150,11 +150,14 @@ internal static class InstallerEngine
             try
             {
                 using var baseKey = RegistryKey.OpenBaseKey(hive, view);
-                using var key = baseKey.OpenSubKey(
-                    $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{InstallerConstants.LegacyInnoUninstallKeyName}");
-                var uninstall = key?.GetValue("UninstallString") as string;
-                if (!string.IsNullOrWhiteSpace(uninstall))
-                    return uninstall;
+                foreach (var keyName in InstallerConstants.LegacyInnoUninstallKeyNames)
+                {
+                    using var key = baseKey.OpenSubKey(
+                        $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{keyName}");
+                    var uninstall = key?.GetValue("UninstallString") as string;
+                    if (!string.IsNullOrWhiteSpace(uninstall))
+                        return uninstall;
+                }
             }
             catch
             {
@@ -173,9 +176,12 @@ internal static class InstallerEngine
             try
             {
                 using var baseKey = RegistryKey.OpenBaseKey(hive, view);
-                baseKey.DeleteSubKeyTree(
-                    $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{InstallerConstants.LegacyInnoUninstallKeyName}",
-                    throwOnMissingSubKey: false);
+                foreach (var keyName in InstallerConstants.LegacyInnoUninstallKeyNames)
+                {
+                    baseKey.DeleteSubKeyTree(
+                        $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{keyName}",
+                        throwOnMissingSubKey: false);
+                }
             }
             catch
             {
