@@ -65,6 +65,36 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetDashboardItemStateAsync(itemIdentifier, state)
             : _featureHost.SetDashboardItemStateAsync(itemIdentifier, state);
 
+    public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
+        _featureHost is null
+            ? _inner.GetDiscreteGpuStateAsync()
+            : _featureHost.GetDiscreteGpuStateAsync();
+
+    public Task<bool> KillDiscreteGpuProcessesAsync() =>
+        _featureHost is null
+            ? _inner.KillDiscreteGpuProcessesAsync()
+            : _featureHost.KillDiscreteGpuProcessesAsync();
+
+    public Task<bool> RestartDiscreteGpuAsync() =>
+        _featureHost is null
+            ? _inner.RestartDiscreteGpuAsync()
+            : _featureHost.RestartDiscreteGpuAsync();
+
+    public Task<bool> TurnOffMonitorsAsync() =>
+        _featureHost is null
+            ? _inner.TurnOffMonitorsAsync()
+            : _featureHost.TurnOffMonitorsAsync();
+
+    public Task<GpuOverclockState> GetGpuOverclockStateAsync() =>
+        _featureHost is null
+            ? _inner.GetGpuOverclockStateAsync()
+            : _featureHost.GetGpuOverclockStateAsync();
+
+    public Task<bool> SetGpuOverclockAsync(bool enabled, int coreDeltaMhz, int memoryDeltaMhz) =>
+        _featureHost is null
+            ? _inner.SetGpuOverclockAsync(enabled, coreDeltaMhz, memoryDeltaMhz)
+            : _featureHost.SetGpuOverclockAsync(enabled, coreDeltaMhz, memoryDeltaMhz);
+
     public Task<bool> IsSupportedLegionMachineAsync() => _inner.IsSupportedLegionMachineAsync();
 
     public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) =>

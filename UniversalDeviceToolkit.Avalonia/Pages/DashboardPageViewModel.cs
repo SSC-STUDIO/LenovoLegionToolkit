@@ -32,6 +32,47 @@ public partial class DashboardPageViewModel : ObservableObject
     private string _powerStatus = "Unknown";
 
     [ObservableProperty]
+    private DiscreteGpuState _discreteGpuState = new(
+        false,
+        "Unavailable",
+        string.Empty,
+        0,
+        false,
+        false,
+        "GPU telemetry has not been loaded.");
+
+    [ObservableProperty]
+    private GpuOverclockState _gpuOverclockState = new(
+        false,
+        false,
+        0,
+        0,
+        0,
+        0,
+        "GPU overclock telemetry has not been loaded.");
+
+    [ObservableProperty]
+    private bool _gpuOverclockEnabled;
+
+    [ObservableProperty]
+    private double _gpuCoreDeltaMhz;
+
+    [ObservableProperty]
+    private double _gpuMemoryDeltaMhz;
+
+    [ObservableProperty]
+    private string _gpuActionStatus = string.Empty;
+
+    public int GpuCoreMinimum => -GpuOverclockState.MaxCoreDeltaMhz;
+    public int GpuMemoryMinimum => -GpuOverclockState.MaxMemoryDeltaMhz;
+
+    partial void OnGpuOverclockStateChanged(GpuOverclockState value)
+    {
+        OnPropertyChanged(nameof(GpuCoreMinimum));
+        OnPropertyChanged(nameof(GpuMemoryMinimum));
+    }
+
+    [ObservableProperty]
     private string _lastUpdatedText = string.Empty;
 
     [ObservableProperty]
@@ -117,13 +158,21 @@ public partial class DashboardPageViewModel : ObservableObject
             var layout = await layoutTask.ConfigureAwait(false);
             var itemStateTask = _platformServices.GetDashboardItemStatesAsync(
                 layout.Groups.SelectMany(group => group.Items).ToArray());
+            var gpuStateTask = _platformServices.GetDiscreteGpuStateAsync();
+            var overclockStateTask = _platformServices.GetGpuOverclockStateAsync();
+            await Task.WhenAll(itemStateTask, gpuStateTask, overclockStateTask).ConfigureAwait(false);
             var itemStates = await itemStateTask.ConfigureAwait(false);
+            var gpuState = await gpuStateTask.ConfigureAwait(false);
+            var overclockState = await overclockStateTask.ConfigureAwait(false);
             if (version != Volatile.Read(ref _refreshVersion))
                 return;
 
             DeviceName = snapshot.DeviceName;
             DeviceSupport = snapshot.DeviceSupport;
             PowerStatus = snapshot.PowerStatus;
+            DiscreteGpuState = gpuState;
+            GpuOverclockState = overclockState;
+            ApplyGpuOverclockState(overclockState);
             LastUpdatedText = snapshot.CapturedAtUtc.ToLocalTime().ToString("HH:mm:ss");
 
             FeatureGroups.Clear();
@@ -146,6 +195,66 @@ public partial class DashboardPageViewModel : ObservableObject
 
     [RelayCommand]
     private Task RefreshAsync() => LoadAsync();
+
+    [RelayCommand]
+    private async Task KillDiscreteGpuProcessesAsync()
+    {
+        if (!await _platformServices.KillDiscreteGpuProcessesAsync().ConfigureAwait(false))
+        {
+            GpuActionStatus = AvaloniaLocalization.GetString(
+                "Dashboard_GpuActionFailed",
+                "GPU action failed");
+            return;
+        }
+
+        GpuActionStatus = AvaloniaLocalization.GetString(
+            "Dashboard_GpuProcessesStopped",
+            "GPU processes stopped");
+        DiscreteGpuState = await _platformServices.GetDiscreteGpuStateAsync().ConfigureAwait(false);
+    }
+
+    [RelayCommand]
+    private async Task RestartDiscreteGpuAsync()
+    {
+        if (!await _platformServices.RestartDiscreteGpuAsync().ConfigureAwait(false))
+        {
+            GpuActionStatus = AvaloniaLocalization.GetString(
+                "Dashboard_GpuActionFailed",
+                "GPU action failed");
+            return;
+        }
+
+        GpuActionStatus = AvaloniaLocalization.GetString(
+            "Dashboard_GpuRestarted",
+            "GPU restart requested");
+        DiscreteGpuState = await _platformServices.GetDiscreteGpuStateAsync().ConfigureAwait(false);
+    }
+
+    [RelayCommand]
+    private async Task TurnOffMonitorsAsync()
+    {
+        GpuActionStatus = await _platformServices.TurnOffMonitorsAsync().ConfigureAwait(false)
+            ? AvaloniaLocalization.GetString("Dashboard_MonitorsTurnedOff", "Monitors turned off")
+            : AvaloniaLocalization.GetString("Dashboard_GpuActionFailed", "GPU action failed");
+    }
+
+    [RelayCommand]
+    private async Task ApplyGpuOverclockAsync()
+    {
+        var succeeded = await _platformServices.SetGpuOverclockAsync(
+            GpuOverclockEnabled,
+            (int)Math.Round(GpuCoreDeltaMhz),
+            (int)Math.Round(GpuMemoryDeltaMhz)).ConfigureAwait(false);
+        GpuActionStatus = AvaloniaLocalization.GetString(
+            succeeded ? "Dashboard_GpuOverclockSaved" : "Dashboard_GpuActionFailed",
+            succeeded ? "GPU overclock settings applied" : "GPU action failed");
+        if (succeeded)
+        {
+            var refreshed = await _platformServices.GetGpuOverclockStateAsync().ConfigureAwait(false);
+            GpuOverclockState = refreshed;
+            ApplyGpuOverclockState(refreshed);
+        }
+    }
 
     [RelayCommand]
     private void OpenFeature(FeatureGroupItem? item)
@@ -412,6 +521,13 @@ public partial class DashboardPageViewModel : ObservableObject
     }
 
     private static int NormalizeRefreshInterval(int seconds) => Math.Clamp(seconds, 1, 60);
+
+    private void ApplyGpuOverclockState(GpuOverclockState state)
+    {
+        GpuOverclockEnabled = state.IsEnabled;
+        GpuCoreDeltaMhz = state.CoreDeltaMhz;
+        GpuMemoryDeltaMhz = state.MemoryDeltaMhz;
+    }
 }
 
 public sealed class DashboardGroupViewModel : ObservableObject
@@ -460,7 +576,8 @@ public sealed class DashboardGroupViewModel : ObservableObject
 public sealed record DashboardItemDescriptor(
     string TitleKey,
     string FallbackTitle,
-    string IconIdentifier);
+    string IconIdentifier,
+    bool IsCustomControl = false);
 
 public static class DashboardItemDescriptors
 {
@@ -475,14 +592,14 @@ public static class DashboardItemDescriptors
             ["InstantBoot"] = new("InstantBootControl_Title", "Instant boot", "PlugDisconnected24"),
             ["FlipToStart"] = new("FlipToStartControl_Title", "Flip to start", "Power24"),
             ["HybridMode"] = new("ComboBoxHybridModeControl_Title", "Hybrid graphics", "LeafOne24"),
-            ["DiscreteGpu"] = new("DiscreteGPUControl_Title", "Discrete GPU", "DeveloperBoard24"),
-            ["OverclockDiscreteGpu"] = new("OverclockDiscreteGPUControl_Title", "Overclock discrete GPU", "DeveloperBoardLightning20"),
+            ["DiscreteGpu"] = new("DiscreteGPUControl_Title", "Discrete GPU", "DeveloperBoard24", true),
+            ["OverclockDiscreteGpu"] = new("OverclockDiscreteGPUControl_Title", "Overclock discrete GPU", "DeveloperBoardLightning20", true),
             ["Resolution"] = new("ResolutionControl_Title", "Resolution", "ScaleFill24"),
             ["RefreshRate"] = new("RefreshRateControl_Title", "Refresh rate", "DesktopPulse24"),
             ["DpiScale"] = new("DpiScaleControl_Title", "Display scale", "TextFontSize24"),
             ["Hdr"] = new("HDRControl_Title", "HDR", "Hdr24"),
             ["OverDrive"] = new("OverDriveControl_Title", "OverDrive", "TopSpeed24"),
-            ["TurnOffMonitors"] = new("TurnOffMonitorsControl_Title", "Turn off monitors", "Desktop24"),
+            ["TurnOffMonitors"] = new("TurnOffMonitorsControl_Title", "Turn off monitors", "Desktop24", true),
             ["Microphone"] = new("MicrophoneControl_Title", "Microphone", "Mic24"),
             ["WhiteKeyboardBacklight"] = new("WhiteKeyboardBacklightControl_Title", "White keyboard backlight", "Keyboard24"),
             ["PanelLogoBacklight"] = new("PanelLogoBacklightControl_Title", "Panel logo backlight", "LightbulbCircle24"),
@@ -512,6 +629,7 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
     public string Identifier { get; }
     public DashboardItemDescriptor Descriptor => DashboardItemDescriptors.Get(Identifier);
     public string IconIdentifier => Descriptor.IconIdentifier;
+    public bool IsStandardControl => !Descriptor.IsCustomControl;
     public string DisplayName => AvaloniaLocalization.GetString(
         Descriptor.TitleKey,
         Descriptor.FallbackTitle);

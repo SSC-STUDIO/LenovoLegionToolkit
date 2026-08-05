@@ -26,6 +26,7 @@ using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.PackageDownloader;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Listeners;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Extensions;
@@ -83,6 +84,9 @@ internal sealed class WindowsFeatureHostServices
     private readonly ResolutionFeature? _resolution;
     private readonly RefreshRateFeature? _refreshRate;
     private readonly DpiScaleFeature? _dpiScale;
+    private readonly GPUController? _gpuController;
+    private readonly GPUOverclockController? _gpuOverclockController;
+    private readonly NativeWindowsMessageListener? _nativeWindowsMessageListener;
     private long _estimatedCleanupSize;
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
@@ -135,6 +139,9 @@ internal sealed class WindowsFeatureHostServices
         _resolution = IoCContainer.TryResolve<ResolutionFeature>();
         _refreshRate = IoCContainer.TryResolve<RefreshRateFeature>();
         _dpiScale = IoCContainer.TryResolve<DpiScaleFeature>();
+        _gpuController = IoCContainer.TryResolve<GPUController>();
+        _gpuOverclockController = IoCContainer.TryResolve<GPUOverclockController>();
+        _nativeWindowsMessageListener = IoCContainer.TryResolve<NativeWindowsMessageListener>();
         _selectedCleanupActions = new HashSet<string>(
             _applicationSettings?.Store.SelectedCleanupActions ?? [],
             StringComparer.OrdinalIgnoreCase);
@@ -281,6 +288,162 @@ internal sealed class WindowsFeatureHostServices
             _ => false,
         };
     }
+
+    public async Task<DiscreteGpuState> GetDiscreteGpuStateAsync()
+    {
+        if (_gpuController is null)
+            return UnavailableGpuState("The GPU controller is unavailable.");
+
+        try
+        {
+            if (!await _gpuController.IsSupportedAsync().ConfigureAwait(false))
+                return UnavailableGpuState("Discrete GPU monitoring is not supported on this device.");
+
+            if (!_gpuController.IsStarted)
+                await _gpuController.StartAsync().ConfigureAwait(false);
+
+            var status = await _gpuController.RefreshNowAsync().ConfigureAwait(false);
+            var canKill = status.State is GPUState.Active && status.ProcessCount > 0;
+            var canRestart = status.State is GPUState.Active or GPUState.Inactive;
+            return new DiscreteGpuState(
+                true,
+                GetGpuStatusText(status.State),
+                status.PerformanceState ?? AvaloniaLocalization.GetString(
+                    "DiscreteGPUControl_PerformanceState_Unknown",
+                    "Unknown"),
+                status.ProcessCount,
+                canKill,
+                canRestart);
+        }
+        catch (Exception ex)
+        {
+            return UnavailableGpuState(ex.Message);
+        }
+    }
+
+    public async Task<bool> KillDiscreteGpuProcessesAsync()
+    {
+        if (_gpuController is null)
+            return false;
+
+        try
+        {
+            await _gpuController.KillGPUProcessesAsync().ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> RestartDiscreteGpuAsync()
+    {
+        if (_gpuController is null)
+            return false;
+
+        try
+        {
+            await _gpuController.RestartGPUAsync().ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> TurnOffMonitorsAsync()
+    {
+        if (_nativeWindowsMessageListener is null)
+            return false;
+
+        try
+        {
+            await _nativeWindowsMessageListener.TurnOffMonitorAsync().ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<GpuOverclockState> GetGpuOverclockStateAsync()
+    {
+        if (_gpuOverclockController is null)
+            return UnavailableOverclockState("The GPU overclock controller is unavailable.");
+
+        try
+        {
+            if (!await _gpuOverclockController.IsSupportedAsync().ConfigureAwait(false))
+                return UnavailableOverclockState("GPU overclocking is not supported on this device.");
+
+            var (enabled, info) = _gpuOverclockController.GetState();
+            return new GpuOverclockState(
+                true,
+                enabled,
+                info.CoreDeltaMhz,
+                info.MemoryDeltaMhz,
+                GPUOverclockController.GetMaxCoreDeltaMhz(),
+                GPUOverclockController.GetMaxMemoryDeltaMhz());
+        }
+        catch (Exception ex)
+        {
+            return UnavailableOverclockState(ex.Message);
+        }
+    }
+
+    public async Task<bool> SetGpuOverclockAsync(bool enabled, int coreDeltaMhz, int memoryDeltaMhz)
+    {
+        if (_gpuOverclockController is null)
+            return false;
+
+        try
+        {
+            if (!await _gpuOverclockController.IsSupportedAsync().ConfigureAwait(false))
+                return false;
+
+            var coreLimit = GPUOverclockController.GetMaxCoreDeltaMhz();
+            var memoryLimit = GPUOverclockController.GetMaxMemoryDeltaMhz();
+            var info = new GPUOverclockInfo(
+                Math.Clamp(coreDeltaMhz, -coreLimit, coreLimit),
+                Math.Clamp(memoryDeltaMhz, -memoryLimit, memoryLimit));
+            _gpuOverclockController.SaveState(enabled, info);
+            await _gpuOverclockController.ApplyStateAsync(true).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static DiscreteGpuState UnavailableGpuState(string error) =>
+        new(
+            false,
+            AvaloniaLocalization.GetString("Dashboard_Status_Unavailable", "Unavailable"),
+            string.Empty,
+            0,
+            false,
+            false,
+            error);
+
+    private static GpuOverclockState UnavailableOverclockState(string error) =>
+        new(false, false, 0, 0, 0, 0, error);
+
+    private static string GetGpuStatusText(GPUState state) => state switch
+    {
+        GPUState.Active => AvaloniaLocalization.GetString("Active", "Active"),
+        GPUState.MonitorConnected => AvaloniaLocalization.GetString(
+            "DiscreteGPUControl_MonitorConnected", "External monitor connected"),
+        GPUState.Inactive => AvaloniaLocalization.GetString("Inactive", "Inactive"),
+        GPUState.PoweredOff => AvaloniaLocalization.GetString("PoweredOff", "Powered off"),
+        GPUState.NvidiaGpuNotFound => AvaloniaLocalization.GetString(
+            "Dashboard_Status_Unavailable", "Unavailable"),
+        _ => AvaloniaLocalization.GetString(
+            "DiscreteGPUControl_PerformanceState_Unknown", "Unknown"),
+    };
 
     private async Task<DashboardItemState> ReadDashboardItemStateAsync(string identifier) =>
         identifier.ToLowerInvariant() switch

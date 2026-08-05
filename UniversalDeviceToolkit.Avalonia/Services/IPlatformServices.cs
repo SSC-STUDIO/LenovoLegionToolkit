@@ -17,6 +17,12 @@ public interface IPlatformServices
     Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout);
     Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(IReadOnlyList<string> itemIdentifiers);
     Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state);
+    Task<DiscreteGpuState> GetDiscreteGpuStateAsync();
+    Task<bool> KillDiscreteGpuProcessesAsync();
+    Task<bool> RestartDiscreteGpuAsync();
+    Task<bool> TurnOffMonitorsAsync();
+    Task<GpuOverclockState> GetGpuOverclockStateAsync();
+    Task<bool> SetGpuOverclockAsync(bool enabled, int coreDeltaMhz, int memoryDeltaMhz);
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<bool> ImportPluginAsync(string zipFilePath);
@@ -375,3 +381,23 @@ public sealed record DashboardItemState(
     string? CurrentValue,
     IReadOnlyList<string> Options,
     string? ErrorMessage = null);
+
+/// <summary>Host-neutral projection of the WPF discrete GPU monitor.</summary>
+public sealed record DiscreteGpuState(
+    bool IsAvailable,
+    string Status,
+    string PerformanceState,
+    int ProcessCount,
+    bool CanKillProcesses,
+    bool CanRestart,
+    string? Error = null);
+
+/// <summary>Host-neutral projection of GPU overclock settings and limits.</summary>
+public sealed record GpuOverclockState(
+    bool IsAvailable,
+    bool IsEnabled,
+    int CoreDeltaMhz,
+    int MemoryDeltaMhz,
+    int MaxCoreDeltaMhz,
+    int MaxMemoryDeltaMhz,
+    string? Error = null);

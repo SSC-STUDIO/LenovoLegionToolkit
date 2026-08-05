@@ -84,6 +84,39 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state) =>
         Task.FromResult(false);
 
+    public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
+        Task.FromResult(new DiscreteGpuState(
+            false,
+            AvaloniaLocalization.GetString("Dashboard_Status_Unavailable", "Unavailable"),
+            string.Empty,
+            0,
+            false,
+            false,
+            AvaloniaLocalization.GetString(
+                "Dashboard_AdapterControlsUnavailable",
+                "No platform adapter is registered for GPU controls.")));
+
+    public Task<bool> KillDiscreteGpuProcessesAsync() => Task.FromResult(false);
+
+    public Task<bool> RestartDiscreteGpuAsync() => Task.FromResult(false);
+
+    public Task<bool> TurnOffMonitorsAsync() => Task.FromResult(false);
+
+    public Task<GpuOverclockState> GetGpuOverclockStateAsync() =>
+        Task.FromResult(new GpuOverclockState(
+            false,
+            false,
+            0,
+            0,
+            0,
+            0,
+            AvaloniaLocalization.GetString(
+                "Dashboard_AdapterControlsUnavailable",
+                "No platform adapter is registered for GPU controls.")));
+
+    public Task<bool> SetGpuOverclockAsync(bool enabled, int coreDeltaMhz, int memoryDeltaMhz) =>
+        Task.FromResult(false);
+
     public Task<bool> IsSupportedLegionMachineAsync() => Task.FromResult(false);
 
     public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) =>

@@ -30,4 +30,31 @@ public sealed class DashboardItemStateContractTests
         (await services.SetDashboardItemStateAsync("PowerMode", "Performance"))
             .Should().BeFalse();
     }
+
+    [Fact]
+    public async Task UnavailableHostReportsGpuControlsAsUnavailable()
+    {
+        var services = new UnavailablePlatformServices();
+
+        var gpu = await services.GetDiscreteGpuStateAsync();
+        var overclock = await services.GetGpuOverclockStateAsync();
+
+        gpu.IsAvailable.Should().BeFalse();
+        gpu.CanKillProcesses.Should().BeFalse();
+        gpu.CanRestart.Should().BeFalse();
+        gpu.Error.Should().NotBeNullOrWhiteSpace();
+        overclock.IsAvailable.Should().BeFalse();
+        overclock.Error.Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
+    public async Task UnavailableHostRejectsGpuMutations()
+    {
+        var services = new UnavailablePlatformServices();
+
+        (await services.KillDiscreteGpuProcessesAsync()).Should().BeFalse();
+        (await services.RestartDiscreteGpuAsync()).Should().BeFalse();
+        (await services.TurnOffMonitorsAsync()).Should().BeFalse();
+        (await services.SetGpuOverclockAsync(true, 100, 100)).Should().BeFalse();
+    }
 }

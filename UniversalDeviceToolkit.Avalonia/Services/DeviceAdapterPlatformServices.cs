@@ -319,6 +319,39 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state) =>
         Task.FromResult(false);
 
+    public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
+        Task.FromResult(new DiscreteGpuState(
+            false,
+            DashboardLocalization.Get("Dashboard_Status_Unavailable", "Unavailable"),
+            string.Empty,
+            0,
+            false,
+            false,
+            DashboardLocalization.Get(
+                "Dashboard_AdapterControlsUnavailable",
+                "The platform adapter does not expose GPU controls.")));
+
+    public Task<bool> KillDiscreteGpuProcessesAsync() => Task.FromResult(false);
+
+    public Task<bool> RestartDiscreteGpuAsync() => Task.FromResult(false);
+
+    public Task<bool> TurnOffMonitorsAsync() => Task.FromResult(false);
+
+    public Task<GpuOverclockState> GetGpuOverclockStateAsync() =>
+        Task.FromResult(new GpuOverclockState(
+            false,
+            false,
+            0,
+            0,
+            0,
+            0,
+            DashboardLocalization.Get(
+                "Dashboard_AdapterControlsUnavailable",
+                "The platform adapter does not expose GPU controls.")));
+
+    public Task<bool> SetGpuOverclockAsync(bool enabled, int coreDeltaMhz, int memoryDeltaMhz) =>
+        Task.FromResult(false);
+
     private async Task<DeviceSnapshot> ReadSnapshotAsync(bool forceRefresh)
     {
         if (!forceRefresh && _snapshot is not null)
