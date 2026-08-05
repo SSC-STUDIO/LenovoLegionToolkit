@@ -5,6 +5,7 @@ using System.Globalization;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Messaging;
@@ -81,7 +82,25 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             ["SynchronizeBrightness"] = ("SettingsPage_SynchronizeBrightnessToAllPowerPlans_Title", "SettingsPage_SynchronizeBrightnessToAllPowerPlans_Message"),
             ["ForceSoftwareRendering"] = ("SettingsPage_ForceSoftwareRendering_Title", "SettingsPage_ForceSoftwareRendering_Message"),
             ["WindowBackdrop"] = ("SettingsPage_WindowBackdrop_Title", "SettingsPage_WindowBackdrop_Message"),
-            ["DontShowNotifications"] = ("SettingsPage_Notifications_Title", "SettingsPage_Notifications_Message"),
+            ["DontShowNotifications"] = ("NotificationsSettingsWindow_DontShowNotifications_Title", "NotificationsSettingsWindow_DontShowNotifications_Message"),
+            ["NotificationPosition"] = ("NotificationsSettingsWindow_NotificationPosition_Title", "SettingsPage_Notifications_Message"),
+            ["NotificationDuration"] = ("NotificationsSettingsWindow_NotificationDuration_Title", "SettingsPage_Notifications_Message"),
+            ["NotificationAlwaysOnTop"] = ("NotificationsSettingsWindow_NotificationAlwaysOnTop_Title", "NotificationsSettingsWindow_NotificationAlwaysOnTop_Message"),
+            ["NotificationOnAllScreens"] = ("NotificationsSettingsWindow_NotificationOnAllScreens_Title", "NotificationsSettingsWindow_NotificationOnAllScreens_Message"),
+            ["NotificationSound"] = ("NotificationsSettingsWindow_NotificationSound_Title", "NotificationsSettingsWindow_NotificationSound_Message"),
+            ["NotificationSuccess"] = ("NotificationsSettingsWindow_SuccessNotifications_Title", "NotificationsSettingsWindow_SuccessNotifications_Message"),
+            ["NotificationUpdateAvailable"] = ("NotificationsSettingsWindow_Updates_Title", "SettingsPage_Notifications_Message"),
+            ["NotificationCapsNumLock"] = ("NotificationsSettingsWindow_CapsAndNumLock", "SettingsPage_Notifications_Message"),
+            ["NotificationFnLock"] = ("NotificationsSettingsWindow_FnLock", "SettingsPage_Notifications_Message"),
+            ["NotificationTouchpadLock"] = ("NotificationsSettingsWindow_TouchpadLock", "SettingsPage_Notifications_Message"),
+            ["NotificationKeyboardBacklight"] = ("NotificationsSettingsWindow_KeyboardBacklight", "SettingsPage_Notifications_Message"),
+            ["NotificationCameraLock"] = ("NotificationsSettingsWindow_Camera", "SettingsPage_Notifications_Message"),
+            ["NotificationMicrophone"] = ("NotificationsSettingsWindow_Microphone", "SettingsPage_Notifications_Message"),
+            ["NotificationPowerMode"] = ("NotificationsSettingsWindow_PowerMode", "SettingsPage_Notifications_Message"),
+            ["NotificationRefreshRate"] = ("NotificationsSettingsWindow_RefreshRate", "SettingsPage_Notifications_Message"),
+            ["NotificationACAdapter"] = ("NotificationsSettingsWindow_ACAdapter", "SettingsPage_Notifications_Message"),
+            ["NotificationSmartKey"] = ("NotificationsSettingsWindow_SmartKey", "SettingsPage_Notifications_Message"),
+            ["NotificationAutomation"] = ("NotificationsSettingsWindow_Automation", "SettingsPage_Notifications_Message"),
             ["NavigationPaneExpanded"] = ("SettingsPage_NavigationItems_Title", "SettingsPage_NavigationItems_Message"),
             ["BootLogo"] = ("SettingsPage_BootLogo_Title", "SettingsPage_BootLogo_Message"),
             ["BootLogoReset"] = ("SettingsPage_BootLogo_Title", "SettingsPage_BootLogo_Message"),
@@ -1266,6 +1285,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             ? SoftwareStatus.NotFound
             : await fnKeys.GetStatusAsync().ConfigureAwait(false);
         var showFnKeyDependentOptions = fnKeysStatus != SoftwareStatus.Enabled;
+        var notificationsEnabled = !store.DontShowNotifications;
 
         var navigationOptions = NavigationVisibilityPolicy.Entries
             .Select(entry => new AvaloniaSettingOption(
@@ -1294,30 +1314,30 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                     Values: Enum.GetValues<WindowBackdropStyle>().Select(FormatWindowBackdrop).ToArray(),
                     SelectedValue: FormatWindowBackdrop(store.WindowBackdropStyle)),
                 new("DontShowNotifications", "Disable notifications", "Hide on-screen application notifications.", AvaloniaSettingEditor.Toggle, true, store.DontShowNotifications),
-                new("NotificationPosition", "Notification position", "Choose where on-screen notifications are displayed.", AvaloniaSettingEditor.Selection, true,
-                    Values: Enum.GetValues<NotificationPosition>().Select(value => value.ToString()).ToArray(),
-                    SelectedValue: store.NotificationPosition.ToString(),
+                new("NotificationPosition", "Notification position", "Choose where on-screen notifications are displayed.", AvaloniaSettingEditor.Selection, notificationsEnabled,
+                    Values: Enum.GetValues<NotificationPosition>().Select(FormatNotificationPosition).ToArray(),
+                    SelectedValue: FormatNotificationPosition(store.NotificationPosition),
                     IsVisible: showFnKeyDependentOptions),
-                new("NotificationDuration", "Notification duration", "Choose how long on-screen notifications remain visible.", AvaloniaSettingEditor.Selection, true,
-                    Values: Enum.GetValues<NotificationDuration>().Select(value => value.ToString()).ToArray(),
-                    SelectedValue: store.NotificationDuration.ToString(),
+                new("NotificationDuration", "Notification duration", "Choose how long on-screen notifications remain visible.", AvaloniaSettingEditor.Selection, notificationsEnabled,
+                    Values: Enum.GetValues<NotificationDuration>().Select(FormatNotificationDuration).ToArray(),
+                    SelectedValue: FormatNotificationDuration(store.NotificationDuration),
                     IsVisible: showFnKeyDependentOptions),
-                new("NotificationAlwaysOnTop", "Keep notifications on top", "Keep notifications above other windows.", AvaloniaSettingEditor.Toggle, true, store.NotificationAlwaysOnTop, IsVisible: showFnKeyDependentOptions),
-                new("NotificationOnAllScreens", "Show notifications on all screens", "Show notifications on every connected display.", AvaloniaSettingEditor.Toggle, true, store.NotificationOnAllScreens, IsVisible: showFnKeyDependentOptions),
-                new("NotificationSound", "Notification sound", "Play a short sound for in-app notifications.", AvaloniaSettingEditor.Toggle, true, store.Notifications.NotificationSound, IsVisible: showFnKeyDependentOptions),
-                new("NotificationSuccess", "Success notifications", "Show successful operation notifications.", AvaloniaSettingEditor.Toggle, true, store.Notifications.SuccessNotifications, IsVisible: showFnKeyDependentOptions),
-                new("NotificationUpdateAvailable", "Update notifications", "Show notifications when a new application version is available.", AvaloniaSettingEditor.Toggle, true, store.Notifications.UpdateAvailable, IsVisible: showFnKeyDependentOptions),
-                new("NotificationCapsNumLock", "Caps and Num Lock notifications", "Show Caps Lock and Num Lock changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.CapsNumLock, IsVisible: showFnKeyDependentOptions),
-                new("NotificationFnLock", "Fn Lock notifications", "Show Fn Lock changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.FnLock, IsVisible: showFnKeyDependentOptions),
-                new("NotificationTouchpadLock", "Touchpad notifications", "Show touchpad lock changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.TouchpadLock, IsVisible: showFnKeyDependentOptions),
-                new("NotificationKeyboardBacklight", "Keyboard backlight notifications", "Show keyboard backlight changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.KeyboardBacklight, IsVisible: showFnKeyDependentOptions),
-                new("NotificationCameraLock", "Camera notifications", "Show camera state changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.CameraLock, IsVisible: showFnKeyDependentOptions),
-                new("NotificationMicrophone", "Microphone notifications", "Show microphone state changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.Microphone, IsVisible: showFnKeyDependentOptions),
-                new("NotificationPowerMode", "Power mode notifications", "Show power mode changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.PowerMode, IsVisible: showFnKeyDependentOptions),
-                new("NotificationRefreshRate", "Refresh rate notifications", "Show refresh rate changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.RefreshRate, IsVisible: showFnKeyDependentOptions),
-                new("NotificationACAdapter", "AC adapter notifications", "Show AC adapter changes.", AvaloniaSettingEditor.Toggle, true, store.Notifications.ACAdapter, IsVisible: showFnKeyDependentOptions),
-                new("NotificationSmartKey", "Smart Key notifications", "Show Smart Key actions.", AvaloniaSettingEditor.Toggle, true, store.Notifications.SmartKey, IsVisible: showFnKeyDependentOptions),
-                new("NotificationAutomation", "Automation notifications", "Show automation notifications.", AvaloniaSettingEditor.Toggle, true, store.Notifications.AutomationNotification, IsVisible: showFnKeyDependentOptions),
+                new("NotificationAlwaysOnTop", "Keep notifications on top", "Keep notifications above other windows.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.NotificationAlwaysOnTop, IsVisible: showFnKeyDependentOptions),
+                new("NotificationOnAllScreens", "Show notifications on all screens", "Show notifications on every connected display.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.NotificationOnAllScreens, IsVisible: showFnKeyDependentOptions),
+                new("NotificationSound", "Notification sound", "Play a short sound for in-app notifications.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.NotificationSound, IsVisible: showFnKeyDependentOptions),
+                new("NotificationSuccess", "Success notifications", "Show successful operation notifications.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.SuccessNotifications, IsVisible: showFnKeyDependentOptions),
+                new("NotificationUpdateAvailable", "Update notifications", "Show notifications when a new application version is available.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.UpdateAvailable, IsVisible: showFnKeyDependentOptions),
+                new("NotificationCapsNumLock", "Caps and Num Lock notifications", "Show Caps Lock and Num Lock changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.CapsNumLock, IsVisible: showFnKeyDependentOptions),
+                new("NotificationFnLock", "Fn Lock notifications", "Show Fn Lock changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.FnLock, IsVisible: showFnKeyDependentOptions),
+                new("NotificationTouchpadLock", "Touchpad notifications", "Show touchpad lock changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.TouchpadLock, IsVisible: showFnKeyDependentOptions),
+                new("NotificationKeyboardBacklight", "Keyboard backlight notifications", "Show keyboard backlight changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.KeyboardBacklight, IsVisible: showFnKeyDependentOptions),
+                new("NotificationCameraLock", "Camera notifications", "Show camera state changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.CameraLock, IsVisible: showFnKeyDependentOptions),
+                new("NotificationMicrophone", "Microphone notifications", "Show microphone state changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.Microphone, IsVisible: showFnKeyDependentOptions),
+                new("NotificationPowerMode", "Power mode notifications", "Show power mode changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.PowerMode, IsVisible: showFnKeyDependentOptions),
+                new("NotificationRefreshRate", "Refresh rate notifications", "Show refresh rate changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.RefreshRate, IsVisible: showFnKeyDependentOptions),
+                new("NotificationACAdapter", "AC adapter notifications", "Show AC adapter changes.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.ACAdapter, IsVisible: showFnKeyDependentOptions),
+                new("NotificationSmartKey", "Smart Key notifications", "Show Smart Key actions.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.SmartKey, IsVisible: showFnKeyDependentOptions),
+                new("NotificationAutomation", "Automation notifications", "Show automation notifications.", AvaloniaSettingEditor.Toggle, notificationsEnabled, store.Notifications.AutomationNotification, IsVisible: showFnKeyDependentOptions),
                 new("NavigationPaneExpanded", "Expanded navigation", "Keep the main navigation pane expanded.", AvaloniaSettingEditor.Toggle, true, store.NavigationPaneExpanded),
                 new("BootLogo", "Custom boot logo", "Choose and install a custom UEFI boot logo image.", AvaloniaSettingEditor.Action, bootLogoSupported, ActionText: "Choose image", Warning: bootLogoSupported ? null : "Boot logo controls are not available on this device."),
                 new("BootLogoReset", "Restore default boot logo", "Remove the custom UEFI boot logo and restore the firmware default.", AvaloniaSettingEditor.Action, bootLogoSupported, ActionText: "Restore", Warning: bootLogoSupported ? null : "Boot logo controls are not available on this device."),
@@ -1649,10 +1669,23 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         throw new ArgumentException($"Unknown power mode mapping '{value}'.", nameof(value));
     }
 
-    private static T ParseEnum<T>(string value, string optionKey) where T : struct, Enum =>
-        Enum.TryParse<T>(value, ignoreCase: true, out var parsed)
-            ? parsed
-            : throw new ArgumentException($"Unknown {optionKey} value '{value}'.", nameof(value));
+    private static T ParseEnum<T>(string value, string optionKey) where T : struct, Enum
+    {
+        if (Enum.TryParse<T>(value, ignoreCase: true, out var parsed))
+            return parsed;
+
+        foreach (var enumValue in Enum.GetValues<T>())
+        {
+            if (string.Equals(enumValue.GetDisplayName(), value.Trim(), StringComparison.OrdinalIgnoreCase))
+                return enumValue;
+        }
+
+        throw new ArgumentException($"Unknown {optionKey} value '{value}'.", nameof(value));
+    }
+
+    private static string FormatNotificationPosition(NotificationPosition value) => value.GetDisplayName();
+
+    private static string FormatNotificationDuration(NotificationDuration value) => value.GetDisplayName();
 
     private AvaloniaSettingsPageData BuildIntegrationsPage()
     {
