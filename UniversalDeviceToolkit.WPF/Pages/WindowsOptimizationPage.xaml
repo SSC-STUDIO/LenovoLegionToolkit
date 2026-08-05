@@ -190,7 +190,7 @@
         <Style x:Key="DriverSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}" />
     </Page.Resources>
 
-        <Grid>
+        <Grid Margin="16,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -206,7 +206,7 @@
 
             <StackPanel
                 Grid.Column="0"
-                Margin="0,16,0,24">
+                Margin="0">
                 <TextBlock
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
@@ -226,7 +226,7 @@
             <!-- Selection summaries sit beside the page heading; action buttons stay on the nav row below. -->
             <StackPanel
                 Grid.Column="1"
-                Margin="20,16,0,0"
+                Margin="20,32,0,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top">
                 <Border
@@ -334,8 +334,8 @@
                         <RowDefinition Height="1" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                 <Border

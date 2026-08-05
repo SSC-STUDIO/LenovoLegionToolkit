@@ -173,8 +173,10 @@ public sealed class WindowsOptimizationPageGuardTests
         toolbarEnd.Should().BeGreaterThan(toolbarStart);
 
         var toolbar = xaml[toolbarStart..toolbarEnd];
-        toolbar.Should().Contain("<ColumnDefinition Width=\"*\" />");
-        toolbar.Should().Contain("<ColumnDefinition Width=\"Auto\" />");
+        var navAutoColumnIndex = toolbar.IndexOf("<ColumnDefinition Width=\"Auto\" />", StringComparison.Ordinal);
+        var navStarColumnIndex = toolbar.IndexOf("<ColumnDefinition Width=\"*\" />", StringComparison.Ordinal);
+        navAutoColumnIndex.Should().BeGreaterThanOrEqualTo(0);
+        navStarColumnIndex.Should().BeGreaterThan(navAutoColumnIndex);
         toolbar.Should().Contain("<WrapPanel");
         toolbar.Should().Contain("MinHeight=\"48\"");
         System.Text.RegularExpressions.Regex.IsMatch(toolbar, "(?m)^\\s+Height=\"48\"\\s*$")
