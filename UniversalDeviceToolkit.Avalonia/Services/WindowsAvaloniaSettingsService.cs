@@ -1209,6 +1209,11 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     public Task ImportSettingsAsync(string filePath)
     {
         _settingsBackupService.Import(filePath);
+        _applicationSettings.InvalidateCache();
+        _osdSettings.InvalidateCache();
+        _hardwareSensorSettings.InvalidateCache();
+        _updateSettings.InvalidateCache();
+        _integrationsSettings.InvalidateCache();
         return Task.CompletedTask;
     }
 
