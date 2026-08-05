@@ -27,6 +27,7 @@ public interface IPlatformServices
     Task<MacroWorkspaceState> GetMacroWorkspaceAsync();
     Task<bool> SetMacroEnabledAsync(bool enabled);
     Task<bool> SetMacroSequenceOptionsAsync(ulong key, int repeatCount, bool ignoreDelays, bool interruptOnOtherKey);
+    Task<bool> ClearMacroSequenceAsync(ulong key);
     Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
     Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync();
     Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync();
@@ -154,7 +155,21 @@ public sealed record MacroSlotState(
     int EventCount,
     int RepeatCount,
     bool IgnoreDelays,
-    bool InterruptOnOtherKey);
+    bool InterruptOnOtherKey,
+    IReadOnlyList<MacroEventItem>? Events = null);
+
+/// <summary>
+/// Host-neutral projection of one recorded macro event. Keeping the event fields
+/// primitive lets Avalonia render the sequence without taking a dependency on WPF
+/// controls while preserving the data needed for an equivalent event summary.
+/// </summary>
+public sealed record MacroEventItem(
+    string Source,
+    string Direction,
+    uint Key,
+    int X,
+    int Y,
+    TimeSpan Delay);
 
 public sealed record AutomationPipelineItem(
     Guid Id,

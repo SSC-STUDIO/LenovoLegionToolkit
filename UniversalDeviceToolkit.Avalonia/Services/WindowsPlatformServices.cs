@@ -115,6 +115,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey)
             : _featureHost.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey);
 
+    public Task<bool> ClearMacroSequenceAsync(ulong key) =>
+        _featureHost is null
+            ? _inner.ClearMacroSequenceAsync(key)
+            : _featureHost.ClearMacroSequenceAsync(key);
+
     public Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync() =>
         _featureHost is null
             ? _inner.GetAutomationWorkspaceAsync()

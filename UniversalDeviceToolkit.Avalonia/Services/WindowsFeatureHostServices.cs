@@ -926,12 +926,22 @@ internal sealed class WindowsFeatureHostServices
         {
             var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
             sequences.TryGetValue(identifier, out var sequence);
+            var events = (sequence.Events ?? [])
+                .Select(macroEvent => new MacroEventItem(
+                    macroEvent.Source.ToString(),
+                    macroEvent.Direction.ToString(),
+                    macroEvent.Key,
+                    macroEvent.Point.X,
+                    macroEvent.Point.Y,
+                    macroEvent.Delay))
+                .ToArray();
             return new MacroSlotState(
                 key,
                 sequence.Events?.Length ?? 0,
                 Math.Clamp(sequence.RepeatCount, 1, 10),
                 sequence.IgnoreDelays,
-                sequence.InterruptOnOtherKey);
+                sequence.InterruptOnOtherKey,
+                events);
         }).ToArray();
 
         return Task.FromResult(new MacroWorkspaceState(controller.IsEnabled, controller.IsRecording, slots));
@@ -970,6 +980,25 @@ internal sealed class WindowsFeatureHostServices
             IgnoreDelays = ignoreDelays,
             InterruptOnOtherKey = interruptOnOtherKey,
             Events = existing.Events ?? [],
+        };
+        controller.SetSequences(sequences);
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> ClearMacroSequenceAsync(ulong key)
+    {
+        if (_macro is not MacroController controller || !MacroKeys.Contains(key))
+            return Task.FromResult(false);
+
+        var sequences = controller.GetSequences();
+        var identifier = new MacroIdentifier(MacroSource.Keyboard, key);
+        sequences.TryGetValue(identifier, out var existing);
+        sequences[identifier] = new MacroSequence
+        {
+            RepeatCount = Math.Clamp(existing.RepeatCount, 1, 10),
+            IgnoreDelays = existing.IgnoreDelays,
+            InterruptOnOtherKey = existing.InterruptOnOtherKey,
+            Events = [],
         };
         controller.SetSequences(sequences);
         return Task.FromResult(true);

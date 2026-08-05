@@ -18,6 +18,7 @@ public sealed class MacroWorkspaceContractTests
         state.Slots.Should().BeEmpty();
         (await service.SetMacroEnabledAsync(true)).Should().BeFalse();
         (await service.SetMacroSequenceOptionsAsync(0x60, 1, false, false)).Should().BeFalse();
+        (await service.ClearMacroSequenceAsync(0x60)).Should().BeFalse();
     }
 
     [Fact]
@@ -30,5 +31,21 @@ public sealed class MacroWorkspaceContractTests
         slot.RepeatCount.Should().Be(3);
         slot.IgnoreDelays.Should().BeTrue();
         slot.InterruptOnOtherKey.Should().BeFalse();
+    }
+
+    [Fact]
+    public void MacroSlotState_CanCarryRecordedEventDetails()
+    {
+        var delay = TimeSpan.FromMilliseconds(125);
+        var slot = new MacroSlotState(
+            0x60,
+            1,
+            1,
+            false,
+            false,
+            [new MacroEventItem("Keyboard", "Down", 0x41, 0, 0, delay)]);
+
+        slot.Events.Should().ContainSingle().Which.Should().BeEquivalentTo(
+            new MacroEventItem("Keyboard", "Down", 0x41, 0, 0, delay));
     }
 }

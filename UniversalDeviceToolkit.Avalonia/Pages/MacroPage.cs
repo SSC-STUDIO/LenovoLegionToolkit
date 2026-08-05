@@ -179,6 +179,27 @@ public sealed class MacroPage : UserControl
         copy.Children.Add(title);
         copy.Children.Add(summary);
 
+        if (slot.Events is { Count: > 0 })
+        {
+            var eventList = new StackPanel
+            {
+                Spacing = 2,
+                Margin = new Thickness(0, 5, 0, 0),
+            };
+            foreach (var macroEvent in slot.Events)
+            {
+                eventList.Children.Add(CreateText(
+                    FormatEvent(macroEvent),
+                    "FontSizeCaption",
+                    "TextFillColorSecondaryBrush",
+                    FontWeight.Normal,
+                    LocalizedOverflowMode.Ellipsis,
+                    1));
+            }
+
+            copy.Children.Add(eventList);
+        }
+
         var play = new Button
         {
             Content = Get("Play", "Play"),
@@ -191,12 +212,21 @@ public sealed class MacroPage : UserControl
             IsEnabled = !isRecording,
             MinWidth = 84,
         };
+        var clear = new Button
+        {
+            Content = Get("Clear", "Clear"),
+            IsEnabled = slot.EventCount > 0 && !isRecording,
+            MinWidth = 72,
+        };
         play.Click += async (_, _) => await RunActionAsync($"macro-key:{slot.Key:X}");
         record.Click += async (_, _) => await RunActionAsync($"macro-record:{slot.Key:X}");
+        clear.Click += async (_, _) => await ClearSequenceAsync(slot.Key);
         AutomationProperties.SetAutomationId(play, $"AvaloniaMacro_{slot.Key:X}_PlayButton");
         AutomationProperties.SetAutomationId(record, $"AvaloniaMacro_{slot.Key:X}_RecordButton");
+        AutomationProperties.SetAutomationId(clear, $"AvaloniaMacro_{slot.Key:X}_ClearButton");
         ToolTip.SetTip(play, summary.Text);
         ToolTip.SetTip(record, Get("MacroPage_RecordDescription", "Capture keyboard input into this macro slot."));
+        ToolTip.SetTip(clear, Get("MacroPage_ClearDescription", "Remove all recorded events from this macro slot."));
 
         var repeat = new NumericUpDown
         {
@@ -224,6 +254,7 @@ public sealed class MacroPage : UserControl
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
         actions.Children.Add(play);
         actions.Children.Add(record);
+        actions.Children.Add(clear);
         actions.Children.Add(repeat);
 
         var options = new StackPanel { Spacing = 4 };
@@ -278,6 +309,25 @@ public sealed class MacroPage : UserControl
         }
 
         await RefreshAsync();
+    }
+
+    private async Task ClearSequenceAsync(ulong key)
+    {
+        if (_isRefreshing || !await _platformServices.ClearMacroSequenceAsync(key))
+        {
+            _statusBlock.Text = Get("MacroPage_ClearError", "Unable to clear this macro slot.");
+            return;
+        }
+
+        await RefreshAsync();
+    }
+
+    private static string FormatEvent(MacroEventItem macroEvent)
+    {
+        var location = macroEvent.X == 0 && macroEvent.Y == 0
+            ? string.Empty
+            : $" ({macroEvent.X}, {macroEvent.Y})";
+        return $"{macroEvent.Source} {macroEvent.Direction} | {macroEvent.Key}{location} | +{macroEvent.Delay.TotalMilliseconds:0} ms";
     }
 
     private async Task SaveOptionsAsync(
