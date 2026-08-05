@@ -253,6 +253,7 @@ internal sealed class WindowsFeatureHostServices
         var states = new List<DashboardItemState>();
         foreach (var identifier in itemIdentifiers
                      .Where(identifier => !string.IsNullOrWhiteSpace(identifier))
+                     .Where(identifier => !DashboardItemStateRouting.IsDedicatedControl(identifier))
                      .Distinct(StringComparer.OrdinalIgnoreCase))
         {
             states.Add(await ReadDashboardItemStateAsync(identifier).ConfigureAwait(false));
@@ -473,7 +474,7 @@ internal sealed class WindowsFeatureHostServices
                 false,
                 null,
                 Array.Empty<string>(),
-                "This dashboard control has not been migrated yet."),
+                AvaloniaLocalization.GetString("Dashboard_Status_Unavailable", "Unavailable")),
         };
 
     private static async Task<DashboardItemState> ReadDashboardFeatureStateAsync<T>(

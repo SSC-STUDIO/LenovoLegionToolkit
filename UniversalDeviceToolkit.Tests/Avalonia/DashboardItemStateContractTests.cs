@@ -23,6 +23,20 @@ public sealed class DashboardItemStateContractTests
     }
 
     [Fact]
+    public async Task DedicatedDashboardControlsUseTheirOwnStateContracts()
+    {
+        var services = new UnavailablePlatformServices();
+
+        var states = await services.GetDashboardItemStatesAsync(
+            ["DiscreteGpu", "OverclockDiscreteGpu", "TurnOffMonitors", "PowerMode"]);
+
+        states.Select(state => state.Identifier)
+            .Should().Equal("PowerMode");
+        states.Should().NotContain(state =>
+            DashboardItemStateRouting.IsDedicatedControl(state.Identifier));
+    }
+
+    [Fact]
     public async Task UnavailableHostDoesNotClaimDashboardMutationsSucceeded()
     {
         var services = new UnavailablePlatformServices();

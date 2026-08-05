@@ -15,6 +15,11 @@ public interface IPlatformServices
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
     Task<DashboardLayoutState> GetDashboardLayoutAsync();
     Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout);
+    /// <summary>
+    /// Reads the state for standard dashboard controls. Dedicated controls,
+    /// such as the discrete GPU and monitor actions, are intentionally omitted
+    /// because they expose their own host-neutral state contracts below.
+    /// </summary>
     Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(IReadOnlyList<string> itemIdentifiers);
     Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state);
     Task<DiscreteGpuState> GetDiscreteGpuStateAsync();
@@ -54,6 +59,26 @@ public interface IPlatformServices
     Task<DriverDownloadState> GetDriverDownloadStateAsync();
     Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates);
     Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);
+}
+
+/// <summary>
+/// Keeps dashboard state routing aligned across the Windows host, the portable
+/// adapter and the unavailable-host fallback. Dedicated cards must not be sent
+/// through the standard option/toggle state contract.
+/// </summary>
+public static class DashboardItemStateRouting
+{
+    private static readonly HashSet<string> DedicatedControlIdentifiers = new(
+        StringComparer.OrdinalIgnoreCase)
+    {
+        "DiscreteGpu",
+        "OverclockDiscreteGpu",
+        "TurnOffMonitors",
+    };
+
+    public static bool IsDedicatedControl(string? identifier) =>
+        !string.IsNullOrWhiteSpace(identifier)
+        && DedicatedControlIdentifiers.Contains(identifier);
 }
 
 public sealed record FeatureGroupItem(

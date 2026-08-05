@@ -307,6 +307,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
         Task.FromResult<IReadOnlyList<DashboardItemState>>(
             itemIdentifiers
                 .Where(identifier => !string.IsNullOrWhiteSpace(identifier))
+                .Where(identifier => !DashboardItemStateRouting.IsDedicatedControl(identifier))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .Select(identifier => new DashboardItemState(
                     identifier,
