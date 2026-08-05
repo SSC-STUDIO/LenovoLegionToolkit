@@ -64,9 +64,12 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
         var capabilityId = routeKey switch
         {
             "Keyboard" => "keyboard-backlight",
-            "Actions" => "hardware-identity",
-            "Macro" => "keyboard-backlight",
-            "WindowsOptimization" => "read-only-telemetry",
+            // Actions and Macro are host automation surfaces, not generic device
+            // capabilities. The portable adapter must not make them appear
+            // available just because it can read hardware identity or telemetry.
+            "Actions" => "actions",
+            "Macro" => "macro-controller",
+            "WindowsOptimization" => "windows-optimization",
             "PluginExtensions" => "plugin-extensions",
             _ => string.Empty,
         };
@@ -339,8 +342,6 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     private static string? GetFeatureRoute(string capabilityId) => capabilityId.ToLowerInvariant() switch
     {
         "keyboard-backlight" => MainNavigation.Keyboard,
-        "hardware-identity" => MainNavigation.Actions,
-        "read-only-telemetry" => MainNavigation.WindowsOptimization,
         "plugin-extensions" => MainNavigation.PluginExtensions,
         _ => null,
     };
