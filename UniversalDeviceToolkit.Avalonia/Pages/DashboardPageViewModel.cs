@@ -109,6 +109,7 @@ public partial class DashboardPageViewModel : ObservableObject
     private readonly Action<string>? _navigate;
     private readonly Action<IReadOnlyList<DashboardStateOption>>? _showHybridInfo;
     private CancellationTokenSource? _pollingCancellation;
+    private CancellationTokenSource? _batteryPollingCancellation;
     private int _refreshVersion;
 
     public DashboardPageViewModel(
@@ -135,7 +136,9 @@ public partial class DashboardPageViewModel : ObservableObject
             return;
 
         _pollingCancellation = new CancellationTokenSource();
+        _batteryPollingCancellation = new CancellationTokenSource();
         _ = PollAsync(_pollingCancellation.Token);
+        _ = PollBatteryAsync(_batteryPollingCancellation.Token);
     }
 
     public void StopPolling()
@@ -143,6 +146,9 @@ public partial class DashboardPageViewModel : ObservableObject
         _pollingCancellation?.Cancel();
         _pollingCancellation?.Dispose();
         _pollingCancellation = null;
+        _batteryPollingCancellation?.Cancel();
+        _batteryPollingCancellation?.Dispose();
+        _batteryPollingCancellation = null;
     }
 
     public async Task LoadAsync()
@@ -477,6 +483,29 @@ public partial class DashboardPageViewModel : ObservableObject
             using var timer = new PeriodicTimer(TimeSpan.FromSeconds(_sensorsRefreshIntervalSeconds));
             while (await timer.WaitForNextTickAsync(cancellationToken))
                 await LoadAsync();
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+        }
+    }
+
+    private async Task PollBatteryAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+            while (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                if (!ShowSensors)
+                    continue;
+
+                var battery = await _platformServices
+                    .GetDashboardBatteryStateAsync()
+                    .ConfigureAwait(false);
+                var batteryCard = TelemetryCards.FirstOrDefault(card =>
+                    card.Key.Equals("battery", StringComparison.OrdinalIgnoreCase));
+                batteryCard?.UpdateBatteryState(battery);
+            }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

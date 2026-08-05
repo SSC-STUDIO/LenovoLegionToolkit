@@ -18,6 +18,12 @@ public interface IPlatformServices
     /// </summary>
     Task<SensorDetailsSnapshot> GetSensorDetailsAsync();
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
+    /// <summary>
+    /// Reads the lightweight battery projection independently from the full
+    /// dashboard snapshot. Windows refreshes this surface more frequently than
+    /// the configurable sensor polling interval.
+    /// </summary>
+    Task<DashboardBatteryState> GetDashboardBatteryStateAsync();
     Task<DashboardLayoutState> GetDashboardLayoutAsync();
     Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout);
     /// <summary>

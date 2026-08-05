@@ -37,6 +37,9 @@ public sealed class UnavailablePlatformServices : IPlatformServices
             await GetSensorReadingsAsync(),
             DateTimeOffset.UtcNow);
 
+    public Task<DashboardBatteryState> GetDashboardBatteryStateAsync() =>
+        Task.FromResult(DashboardBatteryState.Empty);
+
     public Task<DashboardLayoutState> GetDashboardLayoutAsync()
     {
         var store = _dashboardPreferences.Store;

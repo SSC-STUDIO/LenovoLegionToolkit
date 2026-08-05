@@ -278,6 +278,9 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
             DateTimeOffset.UtcNow);
     }
 
+    public Task<DashboardBatteryState> GetDashboardBatteryStateAsync() =>
+        Task.FromResult(DashboardBatteryState.Empty);
+
     public Task<DashboardLayoutState> GetDashboardLayoutAsync()
     {
         var store = _dashboardPreferences.Store;

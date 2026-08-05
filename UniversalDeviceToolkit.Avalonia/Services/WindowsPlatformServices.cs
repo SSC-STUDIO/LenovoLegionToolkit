@@ -143,7 +143,7 @@ public sealed class WindowsPlatformServices : IPlatformServices
                 }
             }
 
-            var batteryState = await GetDashboardBatteryStateAsync().ConfigureAwait(false);
+            var batteryState = await ReadDashboardBatteryStateAsync().ConfigureAwait(false);
             if (batteryState.IsAvailable)
             {
                 details = details with
@@ -183,9 +183,12 @@ public sealed class WindowsPlatformServices : IPlatformServices
     {
         var snapshot = await _inner.GetDashboardSnapshotAsync().ConfigureAwait(false);
         var readings = await AppendHardwareSensorReadingsAsync(snapshot.SensorReadings).ConfigureAwait(false);
-        var battery = await GetDashboardBatteryStateAsync().ConfigureAwait(false);
+        var battery = await ReadDashboardBatteryStateAsync().ConfigureAwait(false);
         return snapshot with { SensorReadings = readings, Battery = battery };
     }
+
+    public Task<DashboardBatteryState> GetDashboardBatteryStateAsync() =>
+        ReadDashboardBatteryStateAsync();
 
     public Task<DashboardLayoutState> GetDashboardLayoutAsync() =>
         _featureHost is null
@@ -422,7 +425,7 @@ public sealed class WindowsPlatformServices : IPlatformServices
         }
     }
 
-    private static async Task<DashboardBatteryState> GetDashboardBatteryStateAsync()
+    private static async Task<DashboardBatteryState> ReadDashboardBatteryStateAsync()
     {
         try
         {

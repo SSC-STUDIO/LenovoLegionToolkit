@@ -294,6 +294,15 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public async Task UnavailablePlatformServices_ShouldReturnEmptyBatteryState()
+    {
+        var battery = await new UnavailablePlatformServices().GetDashboardBatteryStateAsync();
+
+        battery.Should().BeSameAs(DashboardBatteryState.Empty);
+        battery.IsAvailable.Should().BeFalse();
+    }
+
+    [Fact]
     public void DashboardTelemetryMarkup_UsesParentCommandWithoutTwoWayCommandDoubleToggle()
     {
         var root = RepositoryPaths.FindRoot();
