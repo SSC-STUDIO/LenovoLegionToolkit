@@ -15,6 +15,7 @@ public partial class MainWindow : Window
 {
     private readonly IPlatformServices _platformServices;
     private string _activePage = MainNavigation.Dashboard;
+    private bool? _keyboardHardwareAvailable;
 
     /// <summary>
     /// Gets the route currently rendered by the shell.
@@ -65,12 +66,13 @@ public partial class MainWindow : Window
         InvalidateMeasure();
     }
 
-    private void OnLoaded(object? sender, RoutedEventArgs e)
+    private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         ApplyWindowBackdrop();
         ApplyNavigationVisibility();
         // Show DashboardPage by default on startup
         ShowDashboardPage();
+        await UpdateHardwareDependentNavigationAsync();
     }
 
     /// <summary>
@@ -275,6 +277,7 @@ public partial class MainWindow : Window
 
         ApplyNavigationVisibility();
         Navigate(_activePage);
+        _ = UpdateHardwareDependentNavigationAsync();
     }
 
     /// <summary>
@@ -290,7 +293,7 @@ public partial class MainWindow : Window
         IReadOnlyDictionary<string, bool>? settings = null;
 #endif
 
-        SetNavigationVisibility(KeyboardButton, MainNavigation.Keyboard, settings);
+        SetNavigationVisibility(KeyboardButton, MainNavigation.Keyboard, settings, _keyboardHardwareAvailable);
         SetNavigationVisibility(ActionsButton, MainNavigation.Actions, settings);
         SetNavigationVisibility(MacroButton, MainNavigation.Macro, settings);
         SetNavigationVisibility(WindowsOptimizationButton, MainNavigation.WindowsOptimization, settings);
@@ -302,7 +305,7 @@ public partial class MainWindow : Window
             || MainNavigation.TryGetPluginSettingsId(_activePage, out _)
             ? MainNavigation.PluginExtensions
             : _activePage;
-        if (!NavigationVisibilityPolicy.IsVisible(activeBaseRoute, settings)
+        if (!NavigationVisibilityPolicy.IsVisible(activeBaseRoute, settings, _keyboardHardwareAvailable)
             && !string.Equals(_activePage, MainNavigation.Dashboard, StringComparison.OrdinalIgnoreCase))
         {
             ShowDashboardPage();
@@ -312,9 +315,33 @@ public partial class MainWindow : Window
     private static void SetNavigationVisibility(
         Button button,
         string route,
-        IReadOnlyDictionary<string, bool>? settings)
+        IReadOnlyDictionary<string, bool>? settings,
+        bool? keyboardHardwareAvailable = null)
     {
-        button.IsVisible = NavigationVisibilityPolicy.IsVisible(route, settings);
+        button.IsVisible = NavigationVisibilityPolicy.IsVisible(
+            route,
+            settings,
+            keyboardHardwareAvailable);
+    }
+
+    private async Task UpdateHardwareDependentNavigationAsync()
+    {
+        try
+        {
+            // Use the same host-neutral capability state as the Keyboard page so
+            // the shell does not expose a control that the current device cannot use.
+            var state = await _platformServices
+                .GetFeaturePageStateAsync("Keyboard")
+                .ConfigureAwait(true);
+            _keyboardHardwareAvailable = state.IsAvailable;
+            ApplyNavigationVisibility();
+        }
+        catch
+        {
+            // Keep the entry visible when capability detection fails. The page can
+            // still explain the unavailable state, matching the WPF fail-open path.
+            _keyboardHardwareAvailable = null;
+        }
     }
 
     /// <summary>

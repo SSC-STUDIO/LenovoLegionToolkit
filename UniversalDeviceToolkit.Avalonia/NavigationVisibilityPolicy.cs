@@ -19,12 +19,17 @@ public static class NavigationVisibilityPolicy
 
     public static bool IsVisible(
         string route,
-        IReadOnlyDictionary<string, bool>? settings)
+        IReadOnlyDictionary<string, bool>? settings,
+        bool? keyboardHardwareAvailable = null)
     {
         var entry = Entries.FirstOrDefault(item =>
             item.Route.Equals(route, StringComparison.OrdinalIgnoreCase));
         if (entry is null)
             return true;
+
+        if (entry.Route.Equals(MainNavigation.Keyboard, StringComparison.OrdinalIgnoreCase)
+            && keyboardHardwareAvailable == false)
+            return false;
 
         return settings is null
             || !settings.TryGetValue(entry.Key, out var isVisible)

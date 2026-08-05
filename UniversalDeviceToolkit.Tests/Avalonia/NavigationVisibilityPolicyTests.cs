@@ -36,4 +36,25 @@ public sealed class NavigationVisibilityPolicyTests
         NavigationVisibilityPolicy.IsVisible(MainNavigation.Macro, settings).Should().BeTrue();
         NavigationVisibilityPolicy.IsVisible(MainNavigation.Dashboard, settings).Should().BeTrue();
     }
+
+    [Fact]
+    public void IsVisible_HidesKeyboardOnlyWhenHardwareIsUnavailable()
+    {
+        NavigationVisibilityPolicy.IsVisible(
+                MainNavigation.Keyboard,
+                settings: null,
+                keyboardHardwareAvailable: false)
+            .Should().BeFalse();
+
+        NavigationVisibilityPolicy.IsVisible(
+                MainNavigation.Keyboard,
+                settings: null,
+                keyboardHardwareAvailable: true)
+            .Should().BeTrue();
+
+        NavigationVisibilityPolicy.IsVisible(
+                MainNavigation.Keyboard,
+                settings: null)
+            .Should().BeTrue();
+    }
 }
