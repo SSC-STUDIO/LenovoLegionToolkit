@@ -254,6 +254,21 @@ public sealed class AvaloniaMigrationContractTests
         markup.Should().NotContain("ToggleDetailsCommand");
     }
 
+    [Fact]
+    public void SettingsCapabilityView_RefreshesNotificationEditorsAndUsesStableMultiSelectionIds()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "SettingsCapabilityView.axaml.cs"));
+
+        source.Should().Contain("option.Key == \"DontShowNotifications\"");
+        source.Should().Contain("await RefreshPageAsync();");
+        source.Should().Contain("AvaloniaSettings_{_pageKey}_{option.Key}_{valueIndex++}");
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]

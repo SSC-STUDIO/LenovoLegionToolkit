@@ -178,6 +178,15 @@ public partial class SettingsCapabilityView : UserControl
                     mainWindow.ApplyNavigationPaneState();
             }
 
+            // The WPF notifications window disables every dependent editor as
+            // soon as the master switch changes. Rebuild the Avalonia option
+            // cards as well so the current view reflects that state immediately.
+            if (_pageKey == "Display" && option.Key == "DontShowNotifications")
+            {
+                await RefreshPageAsync();
+                return;
+            }
+
             if (_pageKey == "Application" && option.Key is "EnableHardwareSensors" or "ShowOsd")
                 await RefreshPageAsync();
         };
@@ -262,6 +271,7 @@ public partial class SettingsCapabilityView : UserControl
             MaxWidth = 360,
             HorizontalAlignment = HorizontalAlignment.Right,
         };
+        var valueIndex = 0;
         foreach (var value in option.Values ?? [])
         {
             var checkBox = new CheckBox
@@ -271,6 +281,9 @@ public partial class SettingsCapabilityView : UserControl
                 IsEnabled = option.IsEnabled,
                 HorizontalContentAlignment = HorizontalAlignment.Left,
             };
+            AutomationProperties.SetAutomationId(
+                checkBox,
+                $"AvaloniaSettings_{_pageKey}_{option.Key}_{valueIndex++}");
             AutomationProperties.SetName(checkBox, value);
             ToolTip.SetTip(checkBox, option.Description);
             checkBox.IsCheckedChanged += async (_, _) =>
