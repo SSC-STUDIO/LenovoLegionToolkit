@@ -93,6 +93,7 @@
   <data name="Dashboard_Sensor_Battery"><value>Battery</value></data>
   <data name="Dashboard_Sensor_BatteryCharge"><value>Battery Charge</value></data>
   <data name="Dashboard_Sensor_BatteryStatus"><value>Battery Status</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
   <data name="Dashboard_Sensor_MinDischargeRate"><value>Min Discharge Rate</value></data>
   <data name="Dashboard_Sensor_MaxDischargeRate"><value>Max Discharge Rate</value></data>
   <data name="Dashboard_Sensor_CycleCount"><value>Cycle Count</value></data>

@@ -178,6 +178,59 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DashboardBatteryState_PreservesWarningsStatusAndExpandedDetails()
+    {
+        var card = new DashboardTelemetryCardViewModel(
+            "battery",
+            "Battery",
+            "Charge",
+            "Battery024");
+
+        card.UpdateBatteryState(new DashboardBatteryState
+        {
+            IsAvailable = true,
+            IsCharging = true,
+            IsLowBattery = true,
+            PowerAdapterStatus = "ConnectedLowWattage",
+            Percentage = 18,
+            DischargeRateWatts = 12,
+            MinDischargeRateWatts = 4,
+            MaxDischargeRateWatts = 18,
+            DesignCapacityWh = 80,
+            ModelName = "Test battery",
+        });
+
+        card.IsAvailable.Should().BeTrue();
+        card.HasPrimaryProgress.Should().BeTrue();
+        card.PrimaryProgressPercent.Should().Be(18);
+        card.StatusText.Should().NotBeNullOrWhiteSpace();
+        card.HasWarning.Should().BeTrue();
+        card.WarningText.Should().NotBeNullOrWhiteSpace();
+        card.WarningText.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+            .Should().HaveCount(2);
+        card.IconIdentifier.Should().Be("BatteryCharge24");
+
+        card.UpdateDetails(new SensorDetailsSnapshot
+        {
+            IsAvailable = true,
+            BatteryIsCharging = true,
+            BatteryIsLowBattery = true,
+            BatteryPowerAdapterStatus = "ConnectedLowWattage",
+            BatteryPercentage = 18,
+            BatteryRateWatts = 12,
+            BatteryMinRateWatts = 4,
+            BatteryMaxRateWatts = 18,
+            BatteryDesignCapacityWh = 80,
+            BatteryModelName = "Test battery",
+        });
+
+        card.Details.Select(detail => detail.Name)
+            .Should().Contain(name => name.Contains("Battery", StringComparison.OrdinalIgnoreCase));
+        card.Details.Select(detail => detail.Value)
+            .Should().Contain(value => value.Contains("80", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task UnavailablePlatformServices_ShouldReturnEmptySensorDetails()
     {
         var details = await new UnavailablePlatformServices().GetSensorDetailsAsync();

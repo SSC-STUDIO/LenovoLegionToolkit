@@ -421,11 +421,55 @@ public sealed record SensorDetailsSnapshot
     public double? GpuVoltageMaximumVolts { get; init; }
 
     public double? BatteryHealthPercent { get; init; }
+    public bool BatteryIsCharging { get; init; }
+    public bool BatteryIsLowBattery { get; init; }
+    public string? BatteryPowerAdapterStatus { get; init; }
+    public double? BatteryPercentage { get; init; }
+    public double? BatteryLifeRemainingSeconds { get; init; }
+    public double? BatteryFullLifeRemainingSeconds { get; init; }
     public double? BatteryRateWatts { get; init; }
+    public double? BatteryMinRateWatts { get; init; }
+    public double? BatteryMaxRateWatts { get; init; }
+    public double? BatteryDesignCapacityWh { get; init; }
     public double? BatteryChargeCapacityWh { get; init; }
     public double? BatteryFullCapacityWh { get; init; }
     public double? BatteryCycleCount { get; init; }
     public double? BatteryTemperatureCelsius { get; init; }
+    public DateTimeOffset? BatteryManufactureDate { get; init; }
+    public DateTimeOffset? BatteryFirstUseDate { get; init; }
+    public DateTimeOffset? BatteryOnBatterySince { get; init; }
+    public string? BatteryModelName { get; init; }
+}
+
+/// <summary>
+/// Lightweight battery state included in the regular dashboard snapshot. It
+/// keeps warnings and the status/icon current without forcing the expensive
+/// CPU/GPU detail query that is reserved for an expanded card.
+/// </summary>
+public sealed record DashboardBatteryState
+{
+    public static DashboardBatteryState Empty { get; } = new();
+
+    public bool IsAvailable { get; init; }
+    public bool IsCharging { get; init; }
+    public bool IsLowBattery { get; init; }
+    public string PowerAdapterStatus { get; init; } = "Unknown";
+    public double? Percentage { get; init; }
+    public double? LifeRemainingSeconds { get; init; }
+    public double? FullLifeRemainingSeconds { get; init; }
+    public double? DischargeRateWatts { get; init; }
+    public double? MinDischargeRateWatts { get; init; }
+    public double? MaxDischargeRateWatts { get; init; }
+    public double? DesignCapacityWh { get; init; }
+    public double? ChargeCapacityWh { get; init; }
+    public double? FullCapacityWh { get; init; }
+    public double? HealthPercent { get; init; }
+    public double? CycleCount { get; init; }
+    public double? TemperatureCelsius { get; init; }
+    public DateTimeOffset? ManufactureDate { get; init; }
+    public DateTimeOffset? FirstUseDate { get; init; }
+    public DateTimeOffset? OnBatterySince { get; init; }
+    public string? ModelName { get; init; }
 }
 
 /// <summary>
@@ -438,7 +482,8 @@ public sealed record DashboardSnapshot(
     string PowerStatus,
     IReadOnlyList<FeatureGroupItem> FeatureGroups,
     IReadOnlyList<SensorReadingItem> SensorReadings,
-    DateTimeOffset CapturedAtUtc);
+    DateTimeOffset CapturedAtUtc,
+    DashboardBatteryState? Battery = null);
 
 /// <summary>
 /// Host-neutral projection of the WPF dashboard layout document. Group and item

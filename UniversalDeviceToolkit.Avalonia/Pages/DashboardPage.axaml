@@ -668,7 +668,7 @@
                                 CornerRadius="{StaticResource CornerRadiusCard}"
                                 Padding="16"
                                 automation:AutomationProperties.Name="{Binding Title}">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
                                 <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
                                     <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
                                                              FontSize="{StaticResource IconSizeMD}"
@@ -804,13 +804,21 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <controls:LocalizedTextBlock Grid.Row="6"
+                                <controls:LocalizedTextBlock Grid.Row="7"
                                                              IsVisible="{Binding HasDetailsStatus}"
                                                              Text="{Binding DetailsStatusText}"
                                                              FontSize="{StaticResource FontSizeSmallCaption}"
                                                              Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                              OverflowMode="Wrap"
                                                              MaxLines="2" />
+                                <controls:LocalizedTextBlock Grid.Row="8"
+                                                             Text="{Binding WarningText}"
+                                                             IsVisible="{Binding HasWarning}"
+                                                             Foreground="{DynamicResource StatusWarningBrush}"
+                                                             OverflowMode="Wrap"
+                                                             MaxLines="2"
+                                                             TextWrapping="Wrap"
+                                                             automation:AutomationProperties.AutomationId="AvaloniaDashboardTelemetryWarning" />
                             </Grid>
                         </Border>
                     </DataTemplate>

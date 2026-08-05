@@ -185,6 +185,9 @@ public partial class DashboardPageViewModel : ObservableObject
             ApplyDashboardLayout(layout);
             ApplyDashboardItemStates(itemStates);
             MergeSensors(snapshot.SensorReadings);
+            var batteryCard = TelemetryCards.FirstOrDefault(card =>
+                card.Key.Equals("battery", StringComparison.OrdinalIgnoreCase));
+            batteryCard?.UpdateBatteryState(snapshot.Battery ?? DashboardBatteryState.Empty);
             await RefreshExpandedTelemetryDetailsAsync().ConfigureAwait(false);
         }
         catch (Exception ex)

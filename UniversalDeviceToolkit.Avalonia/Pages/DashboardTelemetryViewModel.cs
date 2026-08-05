@@ -17,7 +17,7 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     public string Key { get; }
     public string Title { get; }
     public string Description { get; }
-    public string IconIdentifier { get; }
+    public string IconIdentifier { get; private set; }
     public ObservableCollection<DashboardSensorViewModel> Metrics { get; } = new();
     public ObservableCollection<DashboardSensorDetailViewModel> Details { get; } = new();
     public ObservableCollection<double> History { get; } = new();
@@ -46,10 +46,16 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     [ObservableProperty]
     private string _detailsStatusText = string.Empty;
 
+    [ObservableProperty]
+    private string _warningText = string.Empty;
+
     public bool IsUnavailable => !IsAvailable;
     public bool HasDetails => Details.Count > 0;
     public bool CanShowDetails => IsAvailable;
     public bool HasDetailsStatus => !string.IsNullOrWhiteSpace(DetailsStatusText);
+    public bool HasWarning => !string.IsNullOrWhiteSpace(WarningText);
+
+    private DashboardBatteryState? _batteryState;
 
     public DashboardTelemetryCardViewModel(
         string key,
@@ -70,6 +76,60 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
 
     partial void OnIsAvailableChanged(bool value) =>
         OnPropertyChanged(nameof(CanShowDetails));
+
+    partial void OnWarningTextChanged(string value) =>
+        OnPropertyChanged(nameof(HasWarning));
+
+    /// <summary>
+    /// Applies the lightweight battery projection from the normal dashboard
+    /// refresh. WPF shows these warnings without opening the detail surface, so
+    /// they must not depend on the lazy CPU/GPU query.
+    /// </summary>
+    public void UpdateBatteryState(DashboardBatteryState state)
+    {
+        if (!Key.Equals("battery", StringComparison.OrdinalIgnoreCase))
+            return;
+
+        _batteryState = state;
+        if (!state.IsAvailable)
+        {
+            IsAvailable = false;
+            WarningText = string.Empty;
+            StatusText = NoTelemetryText;
+            PrimaryValue = NoTelemetryText;
+            HasPrimaryProgress = false;
+            PrimaryProgressPercent = 0;
+            IconIdentifier = "Battery024";
+            OnPropertyChanged(nameof(IconIdentifier));
+            return;
+        }
+
+        IsAvailable = true;
+        StatusText = GetBatteryStatusText(state);
+        PrimaryValue = FormatPercent(state.Percentage) ?? NoTelemetryText;
+        HasPrimaryProgress = state.Percentage is >= 0 and <= 100;
+        PrimaryProgressPercent = Math.Clamp(state.Percentage ?? 0, 0, 100);
+        if (state.Percentage is { } percentage && double.IsFinite(percentage))
+        {
+            History.Add(percentage);
+            while (History.Count > HistoryCapacity)
+                History.RemoveAt(0);
+        }
+        IconIdentifier = state.IsCharging ? "BatteryCharge24" : "Battery024";
+        OnPropertyChanged(nameof(IconIdentifier));
+
+        var warnings = new List<string>();
+        if (state.IsLowBattery)
+            warnings.Add(AvaloniaLocalization.GetString("BatteryPage_LowLevel", "Battery level low"));
+        if (string.Equals(state.PowerAdapterStatus, "ConnectedLowWattage", StringComparison.OrdinalIgnoreCase))
+        {
+            warnings.Add(AvaloniaLocalization.GetString(
+                "BatteryPage_LowWattageChargerConnected",
+                "Low wattage charger connected"));
+        }
+
+        WarningText = string.Join(Environment.NewLine, warnings);
+    }
 
     public void Update(IReadOnlyList<SensorReadingItem> readings)
     {
@@ -166,12 +226,47 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
                 AddDetail("SensorsControl_VoltageRange", "Voltage range", FormatRange(snapshot.GpuVoltageMinimumVolts, snapshot.GpuVoltageMaximumVolts, "V"));
                 break;
             case "battery":
-                AddDetail("Dashboard_Sensor_BatteryHealth", "Battery health", FormatPercent(snapshot.BatteryHealthPercent));
-                AddDetail("Dashboard_Sensor_DischargeRate", "Discharge rate", FormatPower(snapshot.BatteryRateWatts));
-                AddDetail("Dashboard_Sensor_ChargeCapacity", "Charge capacity", FormatUnit(snapshot.BatteryChargeCapacityWh, "Wh"));
-                AddDetail("Dashboard_Sensor_FullCapacity", "Full capacity", FormatUnit(snapshot.BatteryFullCapacityWh, "Wh"));
-                AddDetail("Dashboard_Sensor_CycleCount", "Cycle count", FormatUnit(snapshot.BatteryCycleCount, string.Empty));
-                AddDetail("SensorsControl_MemoryTemperature_Title", "Battery temperature", FormatTemperature(snapshot.BatteryTemperatureCelsius));
+                var state = _batteryState ?? new DashboardBatteryState
+                {
+                    IsAvailable = snapshot.BatteryHealthPercent is not null
+                        || snapshot.BatteryPercentage is not null
+                        || snapshot.BatteryRateWatts is not null,
+                    IsCharging = snapshot.BatteryIsCharging,
+                    IsLowBattery = snapshot.BatteryIsLowBattery,
+                    PowerAdapterStatus = snapshot.BatteryPowerAdapterStatus ?? "Unknown",
+                    Percentage = snapshot.BatteryPercentage,
+                    LifeRemainingSeconds = snapshot.BatteryLifeRemainingSeconds,
+                    FullLifeRemainingSeconds = snapshot.BatteryFullLifeRemainingSeconds,
+                    DischargeRateWatts = snapshot.BatteryRateWatts,
+                    MinDischargeRateWatts = snapshot.BatteryMinRateWatts,
+                    MaxDischargeRateWatts = snapshot.BatteryMaxRateWatts,
+                    DesignCapacityWh = snapshot.BatteryDesignCapacityWh,
+                    ChargeCapacityWh = snapshot.BatteryChargeCapacityWh,
+                    FullCapacityWh = snapshot.BatteryFullCapacityWh,
+                    HealthPercent = snapshot.BatteryHealthPercent,
+                    CycleCount = snapshot.BatteryCycleCount,
+                    TemperatureCelsius = snapshot.BatteryTemperatureCelsius,
+                    ManufactureDate = snapshot.BatteryManufactureDate,
+                    FirstUseDate = snapshot.BatteryFirstUseDate,
+                    OnBatterySince = snapshot.BatteryOnBatterySince,
+                    ModelName = snapshot.BatteryModelName,
+                };
+                UpdateBatteryState(state);
+                AddDetail("Dashboard_Sensor_BatteryStatus", "Battery status", GetBatteryStatusText(state));
+                AddDetail("Dashboard_Sensor_BatteryHealth", "Battery health", FormatPercent(state.HealthPercent));
+                AddDetail("Dashboard_Sensor_BatteryCharge", "Battery charge", FormatPercent(state.Percentage));
+                AddDetail("Dashboard_Sensor_DischargeRate", "Discharge rate", FormatPower(state.DischargeRateWatts));
+                AddDetail("SensorsControl_RateRange", "Discharge range", FormatSignedRange(state.MinDischargeRateWatts, state.MaxDischargeRateWatts));
+                AddDetail("Dashboard_Sensor_ChargeCapacity", "Charge capacity", FormatUnit(state.ChargeCapacityWh, "Wh"));
+                AddDetail("Dashboard_Sensor_FullCapacity", "Full capacity", FormatUnit(state.FullCapacityWh, "Wh"));
+                AddDetail("SensorsControl_DesignCapacity", "Design capacity", FormatUnit(state.DesignCapacityWh, "Wh"));
+                AddDetail("Dashboard_Sensor_CycleCount", "Cycle count", FormatUnit(state.CycleCount, string.Empty));
+                AddDetail("SensorsControl_MemoryTemperature_Title", "Battery temperature", FormatTemperature(state.TemperatureCelsius));
+                AddDetail("Dashboard_Sensor_BatteryModel", "Battery model", state.ModelName);
+                AddDetail("BatteryPage_ManufactureDate_Title", "Manufacture date", FormatDate(state.ManufactureDate));
+                AddDetail("BatteryPage_FirstUseDate_Title", "First use", FormatDate(state.FirstUseDate));
+                if (!state.IsCharging)
+                    AddDetail("BatteryPage_OnBatterySince_Title", "On battery since", FormatDate(state.OnBatterySince));
                 break;
         }
 
@@ -226,6 +321,12 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
         ({ } min, { } max) => $"{min:0.###} - {max:0.###} {unit}",
         _ => null,
     };
+
+    private static string? FormatSignedRange(double? minimum, double? maximum) => (minimum, maximum) switch
+    {
+        ({ } min, { } max) => $"{min:+0.0;-0.0;0.0} W ~ {max:+0.0;-0.0;0.0} W",
+        _ => null,
+    };
     private static string? FormatThroughput(double? rx, double? tx)
     {
         var left = FormatRate(rx);
@@ -257,6 +358,42 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     private static SensorReadingItem? SelectPrimary(IReadOnlyList<SensorReadingItem> readings) =>
         readings.FirstOrDefault(reading => reading.HasProgress)
         ?? readings.FirstOrDefault();
+
+    private static string GetBatteryStatusText(DashboardBatteryState state)
+    {
+        if (state.IsCharging)
+        {
+            return state.DischargeRateWatts is > 0
+                ? AvaloniaLocalization.GetString(
+                    "BatteryPage_ACAdapterConnectedAndCharging",
+                    "Connected, charging...")
+                : AvaloniaLocalization.GetString(
+                    "BatteryPage_ACAdapterConnectedNotCharging",
+                    "Connected, not charging");
+        }
+
+        if (state.LifeRemainingSeconds is > 0)
+        {
+            var remaining = TimeSpan.FromSeconds(state.LifeRemainingSeconds.Value);
+            var formatted = remaining.TotalHours >= 1
+                ? remaining.ToString("h\\:mm", System.Globalization.CultureInfo.CurrentCulture)
+                : remaining.ToString("m\\:ss", System.Globalization.CultureInfo.CurrentCulture);
+            return string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                AvaloniaLocalization.GetString(
+                    "BatteryPage_EstimatedBatteryLifeRemaining",
+                    "Estimated time remaining: {0}"),
+                formatted);
+        }
+
+        return AvaloniaLocalization.GetString(
+            "BatteryPage_EstimatingBatteryLife",
+            "Estimating time...");
+    }
+
+    private static string? FormatDate(DateTimeOffset? value) => value?.ToString(
+        "d",
+        System.Globalization.CultureInfo.CurrentCulture);
 }
 
 public sealed record DashboardSensorDetailViewModel(string Name, string Value);
