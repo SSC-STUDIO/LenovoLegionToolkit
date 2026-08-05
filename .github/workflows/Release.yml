@@ -10,6 +10,10 @@ on:
         description: "Existing vX.Y.Z tag to rebuild (used for recovery or a deliberate manual release)"
         required: true
         type: string
+      source_ref:
+        description: "Optional source branch or commit for a recovery rebuild"
+        required: false
+        type: string
       skip_tests:
         description: "Skip the release test gate only for an explicitly approved recovery run"
         required: true
@@ -36,7 +40,7 @@ jobs:
       uses: actions/checkout@v7
       with:
         fetch-depth: 0
-        ref: ${{ inputs.release_tag || github.ref }}
+        ref: ${{ inputs.source_ref || inputs.release_tag || github.ref }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
