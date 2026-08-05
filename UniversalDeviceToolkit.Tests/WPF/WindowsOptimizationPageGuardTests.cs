@@ -105,6 +105,8 @@ public sealed class WindowsOptimizationPageGuardTests
         var code = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml.cs");
 
         xaml.Should().Contain("WindowsOptimizationApplyButton");
+        xaml.Should().Contain("WindowsOptimizationSelectedActionsSummaryBar");
+        xaml.Should().Contain("WindowsOptimizationActionBar");
         xaml.Should().NotContain("WindowsOptimizationCancelButton");
         xaml.Should().Contain("IsEnabled=\"{Binding CanApplyOptimizationChanges}\"");
         xaml.Should().Contain("IsEnabled=\"{Binding CanSelectRecommended}\"");
@@ -122,6 +124,11 @@ public sealed class WindowsOptimizationPageGuardTests
         selectedSummaryIndex.Should().BeGreaterThanOrEqualTo(0);
         selectedSummaryClose.Should().BeGreaterThan(selectedSummaryIndex);
         actionRowIndex.Should().BeGreaterThan(selectedSummaryClose);
+
+        var selectedSummaryFrameClose = xaml.IndexOf("</Border>", selectedSummaryClose, StringComparison.Ordinal);
+        var actionFrameIndex = xaml.IndexOf("WindowsOptimizationActionBar", selectedSummaryFrameClose, StringComparison.Ordinal);
+        selectedSummaryFrameClose.Should().BeGreaterThan(selectedSummaryClose);
+        actionFrameIndex.Should().BeGreaterThan(selectedSummaryFrameClose);
     }
 
     [Fact]
@@ -129,15 +136,22 @@ public sealed class WindowsOptimizationPageGuardTests
     {
         var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
 
+        xaml.Should().Contain("NetworkAccelerationSelectionSummaryBar");
+        var summaryFrameIndex = xaml.IndexOf("NetworkAccelerationSelectionSummaryBar", StringComparison.Ordinal);
         var selectionBarIndex = xaml.IndexOf("NetworkAccelerationSelectionBar", StringComparison.Ordinal);
-        var selectionCountIndex = xaml.IndexOf("NetworkAccelerationSelectionCountButton_Click", selectionBarIndex, StringComparison.Ordinal);
+        var selectionCountIndex = xaml.IndexOf("NetworkAccelerationSelectionCountButton_Click", summaryFrameIndex, StringComparison.Ordinal);
         var selectionCountClose = xaml.IndexOf("</wpfui:Button>", selectionCountIndex, StringComparison.Ordinal);
         var actionRowIndex = xaml.IndexOf("<StackPanel Orientation=\"Horizontal\">", selectionCountClose, StringComparison.Ordinal);
 
-        selectionBarIndex.Should().BeGreaterThanOrEqualTo(0);
-        selectionCountIndex.Should().BeGreaterThan(selectionBarIndex);
+        summaryFrameIndex.Should().BeGreaterThanOrEqualTo(0);
+        selectionBarIndex.Should().BeGreaterThan(summaryFrameIndex);
+        selectionCountIndex.Should().BeGreaterThan(summaryFrameIndex);
         selectionCountClose.Should().BeGreaterThan(selectionCountIndex);
         actionRowIndex.Should().BeGreaterThan(selectionCountClose);
+
+        var summaryFrameClose = xaml.IndexOf("</Border>", summaryFrameIndex, StringComparison.Ordinal);
+        summaryFrameClose.Should().BeGreaterThan(summaryFrameIndex);
+        selectionBarIndex.Should().BeGreaterThan(summaryFrameClose);
     }
 
     [Fact]
