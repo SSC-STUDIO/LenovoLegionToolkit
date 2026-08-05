@@ -16,7 +16,11 @@ using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
+using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Features.InstantBoot;
+using UniversalDeviceToolkit.Lib.Features.OverDrive;
+using UniversalDeviceToolkit.Lib.Features.PanelLogo;
+using UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.PackageDownloader;
@@ -66,6 +70,16 @@ internal sealed class WindowsFeatureHostServices
     private readonly InstantBootFeature? _instantBoot;
     private readonly FlipToStartFeature? _flipToStart;
     private readonly ITSModeFeature? _itsMode;
+    private readonly HybridModeFeature? _hybridMode;
+    private readonly HDRFeature? _hdr;
+    private readonly OverDriveFeature? _overDrive;
+    private readonly MicrophoneFeature? _microphone;
+    private readonly FnLockFeature? _fnLock;
+    private readonly WinKeyFeature? _winKey;
+    private readonly TouchpadLockFeature? _touchpadLock;
+    private readonly PortsBacklightFeature? _portsBacklight;
+    private readonly PanelLogoBacklightFeature? _panelLogoBacklight;
+    private readonly WhiteKeyboardBacklightFeature? _whiteKeyboardBacklight;
     private long _estimatedCleanupSize;
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
@@ -105,6 +119,16 @@ internal sealed class WindowsFeatureHostServices
         _instantBoot = IoCContainer.TryResolve<InstantBootFeature>();
         _flipToStart = IoCContainer.TryResolve<FlipToStartFeature>();
         _itsMode = IoCContainer.TryResolve<ITSModeFeature>();
+        _hybridMode = IoCContainer.TryResolve<HybridModeFeature>();
+        _hdr = IoCContainer.TryResolve<HDRFeature>();
+        _overDrive = IoCContainer.TryResolve<OverDriveFeature>();
+        _microphone = IoCContainer.TryResolve<MicrophoneFeature>();
+        _fnLock = IoCContainer.TryResolve<FnLockFeature>();
+        _winKey = IoCContainer.TryResolve<WinKeyFeature>();
+        _touchpadLock = IoCContainer.TryResolve<TouchpadLockFeature>();
+        _portsBacklight = IoCContainer.TryResolve<PortsBacklightFeature>();
+        _panelLogoBacklight = IoCContainer.TryResolve<PanelLogoBacklightFeature>();
+        _whiteKeyboardBacklight = IoCContainer.TryResolve<WhiteKeyboardBacklightFeature>();
         _selectedCleanupActions = new HashSet<string>(
             _applicationSettings?.Store.SelectedCleanupActions ?? [],
             StringComparer.OrdinalIgnoreCase);
@@ -235,6 +259,16 @@ internal sealed class WindowsFeatureHostServices
             "instantboot" => await SetDashboardFeatureStateAsync(_instantBoot, state).ConfigureAwait(false),
             "fliptostart" => await SetDashboardFeatureStateAsync(_flipToStart, state).ConfigureAwait(false),
             "itsmode" => await SetDashboardFeatureStateAsync(_itsMode, state).ConfigureAwait(false),
+            "hybridmode" => await SetDashboardFeatureStateAsync(_hybridMode, state).ConfigureAwait(false),
+            "hdr" => await SetDashboardFeatureStateAsync(_hdr, state).ConfigureAwait(false),
+            "overdrive" => await SetDashboardFeatureStateAsync(_overDrive, state).ConfigureAwait(false),
+            "microphone" => await SetDashboardFeatureStateAsync(_microphone, state).ConfigureAwait(false),
+            "fnlock" => await SetDashboardFeatureStateAsync(_fnLock, state).ConfigureAwait(false),
+            "winkeylock" => await SetDashboardFeatureStateAsync(_winKey, state).ConfigureAwait(false),
+            "touchpadlock" => await SetDashboardFeatureStateAsync(_touchpadLock, state).ConfigureAwait(false),
+            "portsbacklight" => await SetDashboardFeatureStateAsync(_portsBacklight, state).ConfigureAwait(false),
+            "panellogobacklight" => await SetDashboardFeatureStateAsync(_panelLogoBacklight, state).ConfigureAwait(false),
+            "whitekeyboardbacklight" => await SetDashboardFeatureStateAsync(_whiteKeyboardBacklight, state).ConfigureAwait(false),
             _ => false,
         };
     }
@@ -249,6 +283,16 @@ internal sealed class WindowsFeatureHostServices
             "instantboot" => await ReadDashboardFeatureStateAsync(identifier, _instantBoot).ConfigureAwait(false),
             "fliptostart" => await ReadDashboardFeatureStateAsync(identifier, _flipToStart).ConfigureAwait(false),
             "itsmode" => await ReadDashboardFeatureStateAsync(identifier, _itsMode).ConfigureAwait(false),
+            "hybridmode" => await ReadDashboardFeatureStateAsync(identifier, _hybridMode).ConfigureAwait(false),
+            "hdr" => await ReadDashboardFeatureStateAsync(identifier, _hdr).ConfigureAwait(false),
+            "overdrive" => await ReadDashboardFeatureStateAsync(identifier, _overDrive).ConfigureAwait(false),
+            "microphone" => await ReadDashboardFeatureStateAsync(identifier, _microphone).ConfigureAwait(false),
+            "fnlock" => await ReadDashboardFeatureStateAsync(identifier, _fnLock).ConfigureAwait(false),
+            "winkeylock" => await ReadDashboardFeatureStateAsync(identifier, _winKey).ConfigureAwait(false),
+            "touchpadlock" => await ReadDashboardFeatureStateAsync(identifier, _touchpadLock).ConfigureAwait(false),
+            "portsbacklight" => await ReadDashboardFeatureStateAsync(identifier, _portsBacklight).ConfigureAwait(false),
+            "panellogobacklight" => await ReadDashboardFeatureStateAsync(identifier, _panelLogoBacklight).ConfigureAwait(false),
+            "whitekeyboardbacklight" => await ReadDashboardFeatureStateAsync(identifier, _whiteKeyboardBacklight).ConfigureAwait(false),
             _ => new DashboardItemState(
                 identifier,
                 false,

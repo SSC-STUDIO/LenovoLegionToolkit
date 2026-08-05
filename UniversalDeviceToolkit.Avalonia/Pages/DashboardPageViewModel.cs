@@ -552,10 +552,31 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 
     private static string GetStateDisplayName(string identifier, string value)
     {
-        if (identifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase))
+        var resourcePrefix = identifier switch
+        {
+            "PowerMode" => "PowerModeState_",
+            "BatteryMode" => "BatteryState_",
+            "BatteryNightChargeMode" => "BatteryNightChargeState_",
+            "AlwaysOnUsb" => "AlwaysOnUSBState_",
+            "InstantBoot" => "InstantBootState_",
+            "FlipToStart" => "FlipToStartState_",
+            "HybridMode" => "HybridModeState_",
+            "Hdr" => "HDRState_",
+            "OverDrive" => "OverdriveState_",
+            "Microphone" => "MicrophoneState_",
+            "FnLock" => "FnLockState_",
+            "WinKeyLock" => "WinKeyState_",
+            "TouchpadLock" => "TouchpadLockState_",
+            "PortsBacklight" => "PortsBacklightState_",
+            "PanelLogoBacklight" => "PanelLogoBacklightState_",
+            "WhiteKeyboardBacklight" => "WhiteKeyboardBacklightState_",
+            _ => null,
+        };
+
+        if (resourcePrefix is not null)
         {
             return AvaloniaLocalization.GetString(
-                $"PowerModeState_{value}",
+                resourcePrefix + value,
                 Humanize(value));
         }
 
