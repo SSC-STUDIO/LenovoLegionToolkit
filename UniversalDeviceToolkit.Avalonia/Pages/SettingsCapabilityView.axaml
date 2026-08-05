@@ -58,6 +58,22 @@
                 </Grid>
             </Border>
 
+            <Border x:Name="ActionFeedbackBar"
+                    Classes="infoBar informational"
+                    IsVisible="False"
+                    automation:AutomationProperties.AutomationId="SettingsActionFeedback">
+                <StackPanel Spacing="4">
+                    <controls:LocalizedTextBlock x:Name="ActionFeedbackTitleBlock"
+                                                 Classes="infoBarTitle"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2" />
+                    <controls:LocalizedTextBlock x:Name="ActionFeedbackMessageBlock"
+                                                 Classes="infoBarMessage"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="3" />
+                </StackPanel>
+            </Border>
+
             <StackPanel x:Name="OptionsPanel"
                         Spacing="8"
                         automation:AutomationProperties.AutomationId="SettingsCapabilityOptions" />

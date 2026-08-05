@@ -646,13 +646,26 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         if (pageKey != "Update" || optionKey != "CheckForUpdates")
             throw new KeyNotFoundException($"Unknown action {pageKey}/{optionKey}.");
 
+        await CheckForUpdatesAsync().ConfigureAwait(false);
+    }
+
+    public async Task<AvaloniaUpdateCheckResult> CheckForUpdatesAsync()
+    {
         var updateChecker = IoCContainer.TryResolve<UpdateChecker>()
             ?? throw new PlatformNotSupportedException("The update checker is not initialized.");
 
         if (updateChecker.Disable)
             throw new InvalidOperationException(updateChecker.DisableReason ?? "Update checks are disabled for this session.");
 
-        await updateChecker.CheckAsync(forceCheck: true).ConfigureAwait(false);
+        var version = await updateChecker.CheckAsync(forceCheck: true).ConfigureAwait(false);
+        var status = updateChecker.Status switch
+        {
+            UpdateCheckStatus.Success => AvaloniaUpdateCheckStatus.Success,
+            UpdateCheckStatus.RateLimitReached => AvaloniaUpdateCheckStatus.RateLimitReached,
+            _ => AvaloniaUpdateCheckStatus.Error,
+        };
+
+        return new AvaloniaUpdateCheckResult(status, version?.ToString(3));
     }
 
     private async Task<AvaloniaSettingsPageData> BuildSmartKeysPageAsync()

@@ -5,6 +5,7 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
@@ -16,6 +17,7 @@ public partial class SettingsCapabilityView : UserControl
     private readonly string _pageKey;
     private readonly IAvaloniaSettingsService _settingsService;
     private bool _isApplying;
+    private DispatcherTimer? _feedbackTimer;
 
     protected SettingsCapabilityView(string pageKey, string titleFallback, string descriptionFallback)
     {
@@ -333,6 +335,12 @@ public partial class SettingsCapabilityView : UserControl
             if (_isApplying)
                 return;
 
+            if (_pageKey == "Update" && option.Key == "CheckForUpdates")
+            {
+                await CheckForUpdatesAsync(button, option.IsEnabled);
+                return;
+            }
+
             if (_pageKey == "Display" && option.Key == "BootLogo")
             {
                 var topLevel = TopLevel.GetTopLevel(this);
@@ -394,6 +402,80 @@ public partial class SettingsCapabilityView : UserControl
                 button);
         };
         return button;
+    }
+
+    private async Task CheckForUpdatesAsync(Button button, bool wasEnabled)
+    {
+        button.IsEnabled = false;
+        ShowActionFeedback(
+            AvaloniaLocalization.GetString("SettingsPage_CheckUpdates_Started_Title", "Checking for updates..."),
+            null,
+            "informational",
+            autoHide: false);
+
+        try
+        {
+            var result = await _settingsService.CheckForUpdatesAsync();
+            var feedback = AvaloniaUpdateFeedback.Resolve(result);
+            var title = AvaloniaLocalization.GetString(feedback.TitleKey, "Update check complete");
+            var message = feedback.MessageKey is null
+                ? null
+                : AvaloniaLocalization.GetString(feedback.MessageKey, "The update check did not complete.");
+
+            if (feedback.Kind == AvaloniaUpdateFeedbackKind.UpdateAvailable
+                && !string.IsNullOrWhiteSpace(result.LatestVersion)
+                && message is not null)
+            {
+                message = string.Format(message, result.LatestVersion);
+            }
+
+            ShowActionFeedback(title, message, feedback.Kind switch
+            {
+                AvaloniaUpdateFeedbackKind.UpdateAvailable => "informational",
+                AvaloniaUpdateFeedbackKind.NoUpdates => "success",
+                AvaloniaUpdateFeedbackKind.RateLimitReached => "error",
+                _ => "error",
+            });
+        }
+        catch (Exception ex)
+        {
+            ToolTip.SetTip(button, ex.Message);
+            ShowActionFeedback(
+                AvaloniaLocalization.GetString("MainWindow_CheckForUpdates_Error_Title", "Failed to check for updates"),
+                ex.Message,
+                "error");
+        }
+        finally
+        {
+            button.IsEnabled = wasEnabled;
+        }
+    }
+
+    private void ShowActionFeedback(string title, string? message, string variant, bool autoHide = true)
+    {
+        foreach (var className in new[] { "informational", "success", "warning", "error" })
+            ActionFeedbackBar.Classes.Remove(className);
+        ActionFeedbackBar.Classes.Add(variant);
+        ActionFeedbackTitleBlock.Text = title;
+        ActionFeedbackMessageBlock.Text = message ?? string.Empty;
+        ActionFeedbackMessageBlock.IsVisible = !string.IsNullOrWhiteSpace(message);
+        ActionFeedbackBar.IsVisible = true;
+
+        _feedbackTimer?.Stop();
+        if (!autoHide)
+            return;
+
+        _feedbackTimer ??= new DispatcherTimer { Interval = TimeSpan.FromSeconds(8) };
+        _feedbackTimer.Stop();
+        _feedbackTimer.Tick -= FeedbackTimer_Tick;
+        _feedbackTimer.Tick += FeedbackTimer_Tick;
+        _feedbackTimer.Start();
+    }
+
+    private void FeedbackTimer_Tick(object? sender, EventArgs e)
+    {
+        _feedbackTimer?.Stop();
+        ActionFeedbackBar.IsVisible = false;
     }
 
     private Control CreateEmptyState(bool isAvailable) => new Border

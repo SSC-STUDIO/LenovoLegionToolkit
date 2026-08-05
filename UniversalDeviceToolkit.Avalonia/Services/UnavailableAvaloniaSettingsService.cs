@@ -41,6 +41,9 @@ internal sealed class UnavailableAvaloniaSettingsService : IAvaloniaSettingsServ
     public Task SetTextAsync(string pageKey, string optionKey, string? value) =>
         Task.FromException(new PlatformNotSupportedException("Settings are unavailable on this host."));
 
+    public Task<AvaloniaUpdateCheckResult> CheckForUpdatesAsync() =>
+        Task.FromResult(new AvaloniaUpdateCheckResult(AvaloniaUpdateCheckStatus.Unavailable));
+
     public Task InvokeActionAsync(string pageKey, string optionKey) =>
         Task.FromException(new PlatformNotSupportedException("Settings are unavailable on this host."));
 
