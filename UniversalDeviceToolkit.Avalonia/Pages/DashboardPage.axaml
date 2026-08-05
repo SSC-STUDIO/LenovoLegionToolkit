@@ -194,26 +194,39 @@
                                 <ItemsControl ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="4">
+                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto"
+                                                  ColumnSpacing="6"
+                                                  MinWidth="0"
+                                                  ToolTip.Tip="{Binding StateError}">
                                                 <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
                                                                          FontSize="{StaticResource IconSizeCompact}"
                                                                          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                         VerticalAlignment="Center" />
-                                                <controls:LocalizedTextBlock Grid.Column="1"
-                                                                             Text="{Binding DisplayName}"
-                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                             OverflowMode="Ellipsis"
-                                                                             MaxLines="1"
-                                                                             MinWidth="0"
-                                                                             VerticalAlignment="Center" />
+                                                                         VerticalAlignment="Top" />
+                                                <StackPanel Grid.Column="1"
+                                                            Spacing="2"
+                                                            MinWidth="0"
+                                                            VerticalAlignment="Center">
+                                                    <controls:LocalizedTextBlock Text="{Binding DisplayName}"
+                                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                                 FontWeight="Medium"
+                                                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                                                 OverflowMode="Ellipsis"
+                                                                                 MaxLines="1"
+                                                                                 MinWidth="0" />
+                                                    <controls:LocalizedTextBlock Text="{Binding StateDisplayText}"
+                                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                 OverflowMode="Ellipsis"
+                                                                                 MaxLines="1"
+                                                                                 MinWidth="0" />
+                                                </StackPanel>
                                                 <ComboBox Grid.Column="2"
                                                           IsVisible="{Binding HasOptions}"
                                                           ItemsSource="{Binding Options}"
                                                           SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
                                                           Width="132"
                                                           MinWidth="96"
-                                                          ToolTip.Tip="{Binding StateError}"
+                                                          VerticalAlignment="Center"
                                                           automation:AutomationProperties.Name="{Binding DisplayName}">
                                                     <ComboBox.ItemTemplate>
                                                         <DataTemplate>
@@ -228,13 +241,15 @@
                                                         Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"
-                                                        MinWidth="24"
-                                                        ToolTip.Tip="{Binding StateStatusText}"
+                                                        MinWidth="28"
+                                                        VerticalAlignment="Center"
+                                                        ToolTip.Tip="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
                                                         automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Apply, Fallback=Apply}">
                                                     <controls:NavigationIcon IconIdentifier="Checkmark24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
                                                 <Button Grid.Column="4"
+                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"
@@ -245,6 +260,7 @@
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
                                                 <Button Grid.Column="5"
+                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"
@@ -255,6 +271,7 @@
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
                                                 <Button Grid.Column="6"
+                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"

@@ -69,6 +69,39 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DashboardItemStateSummary_UsesSelectedOptionForNormalCard()
+    {
+        var group = new DashboardGroupViewModel(
+            new DashboardGroupState("Power", null, Array.Empty<string>()));
+        var item = new DashboardLayoutItemViewModel(group, "PowerMode");
+
+        item.ApplyState(new DashboardItemState(
+            "PowerMode",
+            true,
+            "Performance",
+            ["Quiet", "Performance"]));
+
+        item.StateDisplayText.Should().Be("Performance");
+    }
+
+    [Fact]
+    public void DashboardItemStateSummary_PrioritizesServiceError()
+    {
+        var group = new DashboardGroupViewModel(
+            new DashboardGroupState("Graphics", null, Array.Empty<string>()));
+        var item = new DashboardLayoutItemViewModel(group, "DiscreteGpu");
+
+        item.ApplyState(new DashboardItemState(
+            "DiscreteGpu",
+            false,
+            null,
+            Array.Empty<string>(),
+            "GPU service unavailable"));
+
+        item.StateDisplayText.Should().Be("GPU service unavailable");
+    }
+
+    [Fact]
     public void LanguagePackService_ReportsBuiltInEnglishWithoutNetworkAccess()
     {
         var service = AvaloniaLanguagePackServiceFactory.Create();

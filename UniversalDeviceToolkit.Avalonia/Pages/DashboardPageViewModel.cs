@@ -155,7 +155,13 @@ public partial class DashboardPageViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ToggleLayoutEditor() => IsLayoutEditorOpen = !IsLayoutEditorOpen;
+    private void ToggleLayoutEditor()
+    {
+        IsLayoutEditorOpen = !IsLayoutEditorOpen;
+        OnPropertyChanged(nameof(IsLayoutEditorClosed));
+    }
+
+    public bool IsLayoutEditorClosed => !IsLayoutEditorOpen;
 
     [RelayCommand]
     private async Task SaveDashboardLayoutAsync()
@@ -525,6 +531,25 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 
     public bool HasOptions => Options.Count > 0;
 
+    /// <summary>
+    /// Stable summary for the normal Dashboard card. Errors are intentionally
+    /// surfaced in the card instead of being available only through a tooltip.
+    /// </summary>
+    public string StateDisplayText => StateError
+        ?? SelectedOption?.DisplayName
+        ?? (IsAvailable
+            ? AvaloniaLocalization.GetString("Dashboard_Status_NoSelection", "No selection")
+            : AvaloniaLocalization.GetString("Dashboard_Status_Unavailable", "Unavailable"));
+
+    partial void OnSelectedOptionChanged(DashboardStateOption? value) =>
+        OnPropertyChanged(nameof(StateDisplayText));
+
+    partial void OnIsAvailableChanged(bool value) =>
+        OnPropertyChanged(nameof(StateDisplayText));
+
+    partial void OnStateErrorChanged(string? value) =>
+        OnPropertyChanged(nameof(StateDisplayText));
+
     public void ApplyState(DashboardItemState state)
     {
         IsAvailable = state.IsAvailable;
@@ -548,6 +573,7 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
         SelectedOption = Options.FirstOrDefault(option =>
             option.Value.Equals(state.CurrentValue, StringComparison.OrdinalIgnoreCase));
         OnPropertyChanged(nameof(HasOptions));
+        OnPropertyChanged(nameof(StateDisplayText));
     }
 
     private static string GetStateDisplayName(string identifier, string value)
