@@ -38,6 +38,11 @@ public partial class SettingsCapabilityView : UserControl
             return;
 
         control.Loaded -= OnLoaded;
+        await RefreshPageAsync();
+    }
+
+    private async Task RefreshPageAsync()
+    {
         try
         {
             _isApplying = true;
@@ -161,11 +166,16 @@ public partial class SettingsCapabilityView : UserControl
                 _isApplying = true;
                 toggle.IsChecked = option.BoolValue;
                 _isApplying = false;
+                return;
             }
-            else if (TopLevel.GetTopLevel(this) is MainWindow mainWindow)
+
+            if (TopLevel.GetTopLevel(this) is MainWindow mainWindow)
             {
                 mainWindow.ApplyNavigationVisibility();
             }
+
+            if (_pageKey == "Application" && option.Key is "EnableHardwareSensors" or "ShowOsd")
+                await RefreshPageAsync();
         };
         return toggle;
     }
@@ -356,11 +366,13 @@ public partial class SettingsCapabilityView : UserControl
                 if (string.IsNullOrWhiteSpace(filePath))
                     return;
 
-                await PersistAsync(
+                var imported = await PersistAsync(
                     () => option.Key == "ExportSettings"
                         ? _settingsService.ExportSettingsAsync(filePath)
                         : _settingsService.ImportSettingsAsync(filePath),
                     button);
+                if (imported && option.Key == "ImportSettings")
+                    await RefreshPageAsync();
                 return;
             }
 
