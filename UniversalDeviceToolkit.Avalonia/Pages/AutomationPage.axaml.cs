@@ -296,7 +296,7 @@ public partial class AutomationPage : UserControl
             Content = new NavigationIcon
             {
                 IconIdentifier = iconIdentifier,
-                FontSize = GetResource<double>("IconSizeCompact", 16),
+                FontSize = 16,
             },
             MinWidth = 30,
             MinHeight = 30,
