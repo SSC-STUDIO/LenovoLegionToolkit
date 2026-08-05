@@ -17,6 +17,7 @@ using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using MachineCompatibility = UniversalDeviceToolkit.Lib.Utils.Compatibility;
+using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -34,6 +35,34 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             ["FnKeysDisabled"] = ("SettingsPage_DisableLenovoHotkeys_Title", "SettingsPage_DisableLenovoHotkeys_Message"),
             ["EnableHardwareSensors"] = ("SettingsPage_HardwareSensors_Title", "SettingsPage_HardwareSensors_Message"),
             ["ShowOsd"] = ("SettingsPage_Osd_Title", "SettingsPage_Osd_Message"),
+            ["OsdItems"] = ("OsdSettings_Tabs_SensorItems", "OsdSettings_Tabs_SensorItems"),
+            ["OsdTempWarning"] = ("OsdSettings_Thresholds_Temperature", "OsdSettings_Thresholds_Warning"),
+            ["OsdTempCritical"] = ("OsdSettings_Thresholds_Temperature", "OsdSettings_Thresholds_Critical"),
+            ["OsdUsageWarning"] = ("OsdSettings_Thresholds_Usage", "OsdSettings_Thresholds_Warning"),
+            ["OsdUsageCritical"] = ("OsdSettings_Thresholds_Usage", "OsdSettings_Thresholds_Critical"),
+            ["OsdFpsCritical"] = ("OsdSettings_Thresholds_Performance", "OsdSettings_Thresholds_FpsRedline_Description"),
+            ["OsdLowFpsDelta"] = ("OsdSettings_Thresholds_LowFpsDelta", "OsdSettings_Thresholds_LowFpsDelta_Description"),
+            ["HardwareSectionsVisible"] = ("SensorSections_Visible_Title", "SettingsPage_HardwareSensors_Message"),
+            ["HardwareSectionsOrder"] = ("SensorSections_Order_Title", "SettingsPage_HardwareSensors_Message"),
+            ["HardwareSelectedGpuIsIgpu"] = ("SettingsPage_HardwareSensors_Title", "SettingsPage_HardwareSensors_Message"),
+            ["HardwareCpuAverageFrequency"] = ("SettingsPage_HardwareSensors_Title", "SettingsPage_HardwareSensors_Message"),
+            ["HardwareMemoryInGigabytes"] = ("SettingsPage_HardwareSensors_Title", "SettingsPage_HardwareSensors_Message"),
+            ["OsdStyle"] = ("OsdSettings_General_OverlayStyle", "OsdSettings_General_OverlayStyle"),
+            ["OsdRefreshInterval"] = ("OsdSettings_General_RefreshInterval", "OsdSettings_General_RefreshInterval_Tooltip"),
+            ["OsdSnapThreshold"] = ("OsdSettings_General_SnapThreshold", "OsdSettings_General_SnapThreshold"),
+            ["OsdLockPosition"] = ("OsdSettings_General_LockPosition", "OsdSettings_General_LockPosition"),
+            ["OsdResetPosition"] = ("OsdSettings_General_ResetPosition", "OsdSettings_General_ResetPosition"),
+            ["OsdOpacity"] = ("OsdSettings_Appearance_Opacity", "OsdSettings_Appearance_Opacity"),
+            ["OsdCornerRadiusTop"] = ("OsdSettings_Appearance_CornerRadiusTop", "OsdSettings_Appearance_CornerRadiusTop"),
+            ["OsdCornerRadiusBottom"] = ("OsdSettings_Appearance_CornerRadiusBottom", "OsdSettings_Appearance_CornerRadiusBottom"),
+            ["OsdFontSize"] = ("OsdSettings_Appearance_FontSize", "OsdSettings_Appearance_FontSize"),
+            ["OsdBackgroundColor"] = ("OsdSettings_Appearance_BackgroundColor", "OsdSettings_Appearance_BackgroundColor"),
+            ["OsdCategoryColor"] = ("OsdSettings_Appearance_CategoryColor", "OsdSettings_Appearance_CategoryColor"),
+            ["OsdLabelColor"] = ("OsdSettings_Appearance_LabelColor", "OsdSettings_Appearance_LabelColor"),
+            ["OsdValueColor"] = ("OsdSettings_Appearance_ValueColor", "OsdSettings_Appearance_ValueColor"),
+            ["OsdWarningColor"] = ("OsdSettings_Appearance_WarningColor", "OsdSettings_Appearance_WarningColor"),
+            ["OsdCriticalColor"] = ("OsdSettings_Appearance_CriticalColor", "OsdSettings_Appearance_CriticalColor"),
+            ["OsdSeparatorColor"] = ("OsdSettings_Appearance_SeparatorColor", "OsdSettings_Appearance_SeparatorColor"),
             ["ExportSettings"] = ("SettingsPage_SettingsBackup_Title", "SettingsPage_SettingsBackup_Message"),
             ["ImportSettings"] = ("SettingsPage_SettingsBackup_Title", "SettingsPage_SettingsBackup_Message"),
             ["Theme"] = ("SettingsPage_Theme_Title", "SettingsPage_Theme_Description"),
@@ -88,6 +117,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private readonly ApplicationSettings _applicationSettings = SharedApplicationSettings;
     private readonly OsdSettings _osdSettings =
         IoCContainer.TryResolve<OsdSettings>() ?? new OsdSettings();
+    private readonly WpfHardwareSensorSettings _hardwareSensorSettings =
+        IoCContainer.TryResolve<WpfHardwareSensorSettings>() ?? new WpfHardwareSensorSettings();
     private readonly UpdateCheckSettings _updateSettings = new();
     private readonly SettingsBackupService _settingsBackupService = new();
     private readonly IntegrationsSettings _integrationsSettings =
@@ -187,6 +218,26 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 break;
             case ("Application", "ShowOsd"):
                 await SetOsdAsync(value).ConfigureAwait(false);
+                break;
+            case ("Application", "OsdLockPosition"):
+                _osdSettings.Store.IsLocked = value;
+                _osdSettings.SynchronizeStore();
+                PublishOsdAppearanceChanged();
+                break;
+            case ("Application", "HardwareSelectedGpuIsIgpu"):
+                _hardwareSensorSettings.Store.SelectedGpuIsIgpu = value;
+                _hardwareSensorSettings.SynchronizeStore();
+                _hardwareSensorSettings.NotifySectionsChanged();
+                break;
+            case ("Application", "HardwareCpuAverageFrequency"):
+                _hardwareSensorSettings.Store.ShowCpuAverageFrequency = value;
+                _hardwareSensorSettings.SynchronizeStore();
+                _hardwareSensorSettings.NotifySectionsChanged();
+                break;
+            case ("Application", "HardwareMemoryInGigabytes"):
+                _hardwareSensorSettings.Store.DisplayMemoryInGigabytes = value;
+                _hardwareSensorSettings.SynchronizeStore();
+                _hardwareSensorSettings.NotifySectionsChanged();
                 break;
             case ("Application", "VantageDisabled"):
                 await SetSoftwareDisabledAsync<VantageDisabler>(value).ConfigureAwait(false);
@@ -313,14 +364,31 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                     break;
                 }
 
-        throw new KeyNotFoundException($"Unknown toggle {pageKey}/{optionKey}.");
-    }
-
-        return;
+                throw new KeyNotFoundException($"Unknown toggle {pageKey}/{optionKey}.");
+        }
     }
 
     public async Task SetSelectionAsync(string pageKey, string optionKey, string value)
     {
+        if (pageKey == "Application" && optionKey == "OsdStyle")
+        {
+            _osdSettings.Store.SelectedStyleIndex = ParseOsdStyle(value);
+            _osdSettings.SynchronizeStore();
+            if (_osdSettings.Store.ShowOsd)
+                MessagingCenter.Publish(new OsdChangedMessage(OsdState.Show));
+            else
+                PublishOsdAppearanceChanged();
+            return;
+        }
+
+        if (pageKey == "Application" && optionKey == "HardwareSectionsOrder")
+        {
+            _hardwareSensorSettings.Store.SectionOrder = ParseSectionOrder(value);
+            _hardwareSensorSettings.SynchronizeStore();
+            _hardwareSensorSettings.NotifySectionsChanged();
+            return;
+        }
+
         if (pageKey == "Appearance" && optionKey == "Theme")
         {
             _applicationSettings.Store.Theme = ParseEnum<Theme>(value, "Theme");
@@ -448,6 +516,22 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     public async Task SetMultiSelectionAsync(string pageKey, string optionKey, IReadOnlyList<string> values)
     {
+        if (pageKey == "Application" && optionKey == "OsdItems")
+        {
+            _osdSettings.Store.Items = ParseOsdItems(values);
+            _osdSettings.SynchronizeStore();
+            MessagingCenter.Publish(new OsdElementChangedMessage(_osdSettings.Store.Items));
+            return;
+        }
+
+        if (pageKey == "Application" && optionKey == "HardwareSectionsVisible")
+        {
+            _hardwareSensorSettings.Store.VisibleSections = NormalizeVisibleSections(values);
+            _hardwareSensorSettings.SynchronizeStore();
+            _hardwareSensorSettings.NotifySectionsChanged();
+            return;
+        }
+
         if (pageKey == "Display" && optionKey == "ExcludedRefreshRates")
         {
             var excluded = values
@@ -503,6 +587,12 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     public Task SetTextAsync(string pageKey, string optionKey, string? value)
     {
+        if (pageKey == "Application" && IsOsdTextOption(optionKey))
+        {
+            SetOsdTextOption(optionKey, value);
+            return Task.CompletedTask;
+        }
+
         if (pageKey != "Update" || (optionKey != "RepositoryOwner" && optionKey != "RepositoryName"))
             throw new KeyNotFoundException($"Unknown text option {pageKey}/{optionKey}.");
 
@@ -517,6 +607,17 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     public async Task InvokeActionAsync(string pageKey, string optionKey)
     {
+        if (pageKey == "Application" && optionKey == "OsdResetPosition")
+        {
+            _osdSettings.Store.PanelPositionX = null;
+            _osdSettings.Store.PanelPositionY = null;
+            _osdSettings.Store.BarPositionX = null;
+            _osdSettings.Store.BarPositionY = null;
+            _osdSettings.SynchronizeStore();
+            PublishOsdAppearanceChanged();
+            return;
+        }
+
         if (pageKey == "Display" && optionKey == "BootLogoReset")
         {
             if (!await BootLogo.IsSupportedAsync().ConfigureAwait(false))
@@ -710,6 +811,116 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                     Warning: hardwareSensorsSupported && store.EnableHardwareSensors
                         ? null
                         : "Enable supported hardware sensors before enabling the on-screen display."),
+                new("OsdStyle", "Overlay style", "Choose the panel or bar layout used by the on-screen display.", AvaloniaSettingEditor.Selection,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    Values: ["Panel", "Bar"],
+                    SelectedValue: FormatOsdStyle(_osdSettings.Store.SelectedStyleIndex),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdRefreshInterval", "Refresh interval", "How often the on-screen display refreshes its sensor values (0.1-10 seconds).", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.OsdRefreshInterval.ToString("0.##", CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdSnapThreshold", "Snap threshold", "Distance in pixels used to snap the overlay to screen edges (0-100).", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.SnapThreshold.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdLockPosition", "Lock position", "Prevent the on-screen display from being dragged.", AvaloniaSettingEditor.Toggle,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    _osdSettings.Store.IsLocked,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdResetPosition", "Reset position", "Clear the saved position and place the overlay at its default location.", AvaloniaSettingEditor.Action,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    ActionText: "Reset",
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdOpacity", "Opacity", "Overlay background opacity from 0 to 1.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.BackgroundOpacity.ToString("0.##", CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdCornerRadiusTop", "Top corner radius", "Top corner radius in pixels (0-50).", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.CornerRadiusTop.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdCornerRadiusBottom", "Bottom corner radius", "Bottom corner radius in pixels (0-50).", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.CornerRadiusBottom.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdFontSize", "Font size", "Overlay font size in pixels (8-24).", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.FontSize.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdBackgroundColor", "Background color", "Overlay background color as #RRGGBB.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.BackgroundColor,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdCategoryColor", "Category color", "Sensor category color as #RRGGBB.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.CategoryColor,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdLabelColor", "Label color", "Sensor label color as #RRGGBB.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.LabelColor,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdValueColor", "Value color", "Sensor value color as #RRGGBB.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.ValueColor,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdWarningColor", "Warning color", "Warning color as #RRGGBB.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.WarningColor,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdCriticalColor", "Critical color", "Critical color as #RRGGBB.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.CriticalColor,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdSeparatorColor", "Separator color", "Separator color as #RRGGBB.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.SeparatorColor,
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdItems", "Sensor items", "Choose the sensor items shown in the on-screen display.", AvaloniaSettingEditor.MultiSelection,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    Values: Enum.GetValues<OsdItem>().Select(FormatOsdItem).ToArray(),
+                    SelectedValues: _osdSettings.Store.Items.Select(FormatOsdItem).ToArray(),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdTempWarning", "Temperature warning", "Temperature threshold that changes a sensor to the warning color.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.TempThresholdWarning.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdTempCritical", "Temperature critical", "Temperature threshold that changes a sensor to the critical color.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.TempThresholdCritical.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdUsageWarning", "Usage warning", "Usage threshold that changes a sensor to the warning color.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.UsageThresholdWarning.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdUsageCritical", "Usage critical", "Usage threshold that changes a sensor to the critical color.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.UsageThresholdCritical.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdFpsCritical", "FPS critical", "FPS threshold that marks the frame rate as critical.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.FpsThresholdCritical.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("OsdLowFpsDelta", "Low FPS delta", "Frame-rate drop delta used for the low-FPS indicator.", AvaloniaSettingEditor.Text,
+                    hardwareSensorsSupported && store.EnableHardwareSensors,
+                    TextValue: _osdSettings.Store.LowFpsDeltaThreshold.ToString(CultureInfo.InvariantCulture),
+                    IsVisible: hardwareSensorsSupported && store.EnableHardwareSensors),
+                new("HardwareSectionsVisible", "Visible sensor sections", "Choose which dashboard sensor sections are displayed.", AvaloniaSettingEditor.MultiSelection,
+                    hardwareSensorsSupported,
+                    Values: HardwareSensorSections,
+                    SelectedValues: NormalizeVisibleSections(_hardwareSensorSettings.Store.VisibleSections),
+                    IsVisible: hardwareSensorsSupported),
+                new("HardwareSectionsOrder", "Sensor section order", "Choose the order used by dashboard sensor sections.", AvaloniaSettingEditor.Selection,
+                    hardwareSensorsSupported,
+                    Values: SectionOrderValues,
+                    SelectedValue: FormatSectionOrder(_hardwareSensorSettings.Store.SectionOrder),
+                    IsVisible: hardwareSensorsSupported),
+                new("HardwareSelectedGpuIsIgpu", "Use integrated GPU", "Treat the selected GPU as the integrated GPU for sensor reporting.", AvaloniaSettingEditor.Toggle,
+                    hardwareSensorsSupported, _hardwareSensorSettings.Store.SelectedGpuIsIgpu, IsVisible: hardwareSensorsSupported),
+                new("HardwareCpuAverageFrequency", "Show average CPU frequency", "Show average CPU frequency alongside per-core values.", AvaloniaSettingEditor.Toggle,
+                    hardwareSensorsSupported, _hardwareSensorSettings.Store.ShowCpuAverageFrequency, IsVisible: hardwareSensorsSupported),
+                new("HardwareMemoryInGigabytes", "Display memory in gigabytes", "Display memory values in gigabytes instead of megabytes.", AvaloniaSettingEditor.Toggle,
+                    hardwareSensorsSupported, _hardwareSensorSettings.Store.DisplayMemoryInGigabytes, IsVisible: hardwareSensorsSupported),
                 new("ExportSettings", "Export settings backup", "Save application settings to a portable backup file.", AvaloniaSettingEditor.Action, true, ActionText: "Export"),
                 new("ImportSettings", "Import settings backup", "Restore application settings from a backup file. Current settings are backed up first.", AvaloniaSettingEditor.Action, true, ActionText: "Import"),
             ],
@@ -737,6 +948,226 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         _osdSettings.SynchronizeStore();
         MessagingCenter.Publish(new OsdChangedMessage(enabled ? OsdState.Show : OsdState.Hidden));
     }
+
+    private static readonly string[] HardwareSensorSections = ["CPU", "Battery", "GPU"];
+
+    private static readonly string[] SectionOrderValues =
+    [
+        "CPU, Battery, GPU",
+        "CPU, GPU, Battery",
+        "Battery, CPU, GPU",
+        "Battery, GPU, CPU",
+        "GPU, CPU, Battery",
+        "GPU, Battery, CPU",
+    ];
+
+    private static string FormatOsdStyle(int styleIndex) => styleIndex == 1 ? "Bar" : "Panel";
+
+    private static string FormatOsdItem(OsdItem item) => item switch
+    {
+        OsdItem.Fps => Get("Osd_Fps", "FPS"),
+        OsdItem.LowFps => Get("Osd_Low_Fps", "Low FPS"),
+        OsdItem.FrameTime => Get("Osd_Frame_Time", "Frame time"),
+        OsdItem.CpuFrequency => $"{Get("Osd_Cpu", "CPU")} Frequency",
+        OsdItem.GpuFrequency => $"{Get("Osd_Gpu", "GPU")} Frequency",
+        OsdItem.CpuPCoreFrequency => $"{Get("Osd_Cpu", "CPU")} {Get("Osd_PCoreClock", "P-core clock")}",
+        OsdItem.CpuECoreFrequency => $"{Get("Osd_Cpu", "CPU")} {Get("Osd_ECoreClock", "E-core clock")}",
+        OsdItem.CpuUtilization => $"{Get("Osd_Cpu", "CPU")} Utilization",
+        OsdItem.GpuUtilization => $"{Get("Osd_Gpu", "GPU")} Utilization",
+        OsdItem.MemoryUtilization => $"{Get("Osd_Pch", "PCH")} {Get("Osd_Memory_Utilization", "Memory utilization")}",
+        OsdItem.CpuTemperature => $"{Get("Osd_Cpu", "CPU")} Temperature",
+        OsdItem.GpuTemperature => $"{Get("Osd_Gpu", "GPU")} Temperature",
+        OsdItem.CpuPower => $"{Get("Osd_Cpu", "CPU")} Power",
+        OsdItem.GpuPower => $"{Get("Osd_Gpu", "GPU")} Power",
+        OsdItem.CpuFan => $"{Get("Osd_Cpu", "CPU")} {Get("Osd_CPU_Fan", "Fan")}",
+        OsdItem.GpuFan => $"{Get("Osd_Gpu", "GPU")} {Get("Osd_GPU_Fan", "Fan")}",
+        OsdItem.PchFan => Get("Osd_PCH_Fan", "PCH Fan"),
+        OsdItem.GpuVramUtilization => $"{Get("Osd_Gpu", "GPU")} VRAM utilization",
+        OsdItem.GpuVramTemperature => $"{Get("Osd_Gpu", "GPU")} VRAM temperature",
+        OsdItem.MemoryTemperature => $"{Get("Osd_Pch", "PCH")} {Get("Osd_Memory_Temperature", "Memory temperature")}",
+        OsdItem.Disk1Temperature => Get("Osd_Disk_0_Temperature", "Disk 1 temperature"),
+        OsdItem.Disk2Temperature => Get("Osd_Disk_1_Temperature", "Disk 2 temperature"),
+        OsdItem.PchTemperature => $"{Get("Osd_Pch", "PCH")} Temperature",
+        _ => item.ToString(),
+    };
+
+    private static List<OsdItem> ParseOsdItems(IEnumerable<string> values)
+    {
+        var result = new List<OsdItem>();
+        foreach (var value in values)
+        {
+            var candidates = Enum.GetValues<OsdItem>();
+            var item = candidates.FirstOrDefault(candidate =>
+                candidate.ToString().Equals(value, StringComparison.OrdinalIgnoreCase)
+                || FormatOsdItem(candidate).Equals(value, StringComparison.OrdinalIgnoreCase));
+            if (!candidates.Any(candidate =>
+                    candidate.ToString().Equals(value, StringComparison.OrdinalIgnoreCase)
+                    || FormatOsdItem(candidate).Equals(value, StringComparison.OrdinalIgnoreCase)))
+                throw new ArgumentException($"Unknown OSD sensor item '{value}'.", nameof(values));
+            if (!result.Contains(item))
+                result.Add(item);
+        }
+
+        return result;
+    }
+
+    private static string[] NormalizeVisibleSections(IEnumerable<string>? values)
+    {
+        var selected = (values ?? []).Where(value =>
+                HardwareSensorSections.Contains(value, StringComparer.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        return selected.Length == 0 ? [.. HardwareSensorSections] : selected;
+    }
+
+    private static string[] ParseSectionOrder(string value)
+    {
+        var normalized = value.Trim();
+        if (!SectionOrderValues.Contains(normalized, StringComparer.Ordinal))
+            throw new ArgumentException($"Unknown sensor section order '{value}'.", nameof(value));
+        return normalized.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+    }
+
+    private static string FormatSectionOrder(IEnumerable<string>? values)
+    {
+        var normalized = (values ?? []).Where(value =>
+                HardwareSensorSections.Contains(value, StringComparer.OrdinalIgnoreCase))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (normalized.Length != HardwareSensorSections.Length)
+            normalized = [.. HardwareSensorSections];
+
+        var formatted = string.Join(", ", normalized);
+        return SectionOrderValues.Contains(formatted, StringComparer.Ordinal)
+            ? formatted
+            : SectionOrderValues[0];
+    }
+
+    private static int ParseOsdStyle(string value) => value.Trim() switch
+    {
+        "Panel" => 0,
+        "Bar" => 1,
+        _ => throw new ArgumentException($"Unknown OSD style '{value}'.", nameof(value)),
+    };
+
+    private static bool IsOsdTextOption(string optionKey) => optionKey is
+        "OsdRefreshInterval" or "OsdSnapThreshold" or "OsdOpacity" or
+        "OsdCornerRadiusTop" or "OsdCornerRadiusBottom" or "OsdFontSize" or
+        "OsdBackgroundColor" or "OsdCategoryColor" or "OsdLabelColor" or
+        "OsdValueColor" or "OsdWarningColor" or "OsdCriticalColor" or "OsdSeparatorColor" or
+        "OsdTempWarning" or "OsdTempCritical" or "OsdUsageWarning" or "OsdUsageCritical" or
+        "OsdFpsCritical" or "OsdLowFpsDelta";
+
+    private void SetOsdTextOption(string optionKey, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentException("An OSD value is required.", nameof(value));
+
+        var normalized = value.Trim();
+        switch (optionKey)
+        {
+            case "OsdRefreshInterval":
+                _osdSettings.Store.OsdRefreshInterval = ParseOsdDouble(normalized, 0.1, 10, optionKey);
+                break;
+            case "OsdSnapThreshold":
+                _osdSettings.Store.SnapThreshold = ParseOsdInt(normalized, 0, 100, optionKey);
+                break;
+            case "OsdOpacity":
+                _osdSettings.Store.BackgroundOpacity = ParseOsdDouble(normalized, 0, 1, optionKey);
+                break;
+            case "OsdCornerRadiusTop":
+                _osdSettings.Store.CornerRadiusTop = ParseOsdInt(normalized, 0, 50, optionKey);
+                break;
+            case "OsdCornerRadiusBottom":
+                _osdSettings.Store.CornerRadiusBottom = ParseOsdInt(normalized, 0, 50, optionKey);
+                break;
+            case "OsdFontSize":
+                _osdSettings.Store.FontSize = ParseOsdInt(normalized, 8, 24, optionKey);
+                break;
+            case "OsdTempWarning":
+                _osdSettings.Store.TempThresholdWarning = ParseOsdInt(normalized, 0, 110, optionKey);
+                break;
+            case "OsdTempCritical":
+                _osdSettings.Store.TempThresholdCritical = ParseOsdInt(normalized, 0, 110, optionKey);
+                break;
+            case "OsdUsageWarning":
+                _osdSettings.Store.UsageThresholdWarning = ParseOsdInt(normalized, 0, 100, optionKey);
+                break;
+            case "OsdUsageCritical":
+                _osdSettings.Store.UsageThresholdCritical = ParseOsdInt(normalized, 0, 100, optionKey);
+                break;
+            case "OsdFpsCritical":
+                _osdSettings.Store.FpsThresholdCritical = ParseOsdInt(normalized, 0, 1000, optionKey);
+                break;
+            case "OsdLowFpsDelta":
+                _osdSettings.Store.LowFpsDeltaThreshold = ParseOsdInt(normalized, 0, 1000, optionKey);
+                break;
+            case "OsdBackgroundColor":
+                _osdSettings.Store.BackgroundColor = NormalizeOsdColor(normalized, optionKey);
+                break;
+            case "OsdCategoryColor":
+                _osdSettings.Store.CategoryColor = NormalizeOsdColor(normalized, optionKey);
+                break;
+            case "OsdLabelColor":
+                _osdSettings.Store.LabelColor = NormalizeOsdColor(normalized, optionKey);
+                break;
+            case "OsdValueColor":
+                _osdSettings.Store.ValueColor = NormalizeOsdColor(normalized, optionKey);
+                break;
+            case "OsdWarningColor":
+                _osdSettings.Store.WarningColor = NormalizeOsdColor(normalized, optionKey);
+                break;
+            case "OsdCriticalColor":
+                _osdSettings.Store.CriticalColor = NormalizeOsdColor(normalized, optionKey);
+                break;
+            case "OsdSeparatorColor":
+                _osdSettings.Store.SeparatorColor = NormalizeOsdColor(normalized, optionKey);
+                break;
+            default:
+                throw new KeyNotFoundException($"Unknown OSD text option '{optionKey}'.");
+        }
+
+        _osdSettings.SynchronizeStore();
+        PublishOsdAppearanceChanged();
+    }
+
+    private static double ParseOsdDouble(string value, double minimum, double maximum, string optionKey)
+    {
+        if (!double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed)
+            || double.IsNaN(parsed)
+            || double.IsInfinity(parsed)
+            || parsed < minimum
+            || parsed > maximum)
+            throw new ArgumentException($"OSD option '{optionKey}' must be between {minimum} and {maximum}.", nameof(value));
+
+        return parsed;
+    }
+
+    private static int ParseOsdInt(string value, int minimum, int maximum, string optionKey)
+    {
+        if (!int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed)
+            || parsed < minimum
+            || parsed > maximum)
+            throw new ArgumentException($"OSD option '{optionKey}' must be between {minimum} and {maximum}.", nameof(value));
+
+        return parsed;
+    }
+
+    private static string NormalizeOsdColor(string value, string optionKey)
+    {
+        try
+        {
+            var color = ParseAccentColor(value);
+            return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+        }
+        catch (ArgumentException)
+        {
+            throw new ArgumentException($"OSD option '{optionKey}' must be a #RRGGBB color.", nameof(value));
+        }
+    }
+
+    private static void PublishOsdAppearanceChanged() =>
+        MessagingCenter.Publish(new OsdAppearanceChangedMessage());
 
     private static async Task<bool> GetHardwareSensorsSupportedAsync()
     {

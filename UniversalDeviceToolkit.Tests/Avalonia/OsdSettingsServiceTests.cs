@@ -37,10 +37,24 @@ public sealed class OsdSettingsServiceTests
             "OsdWarningColor",
             "OsdCriticalColor",
             "OsdSeparatorColor",
+            "OsdItems",
+            "OsdTempWarning",
+            "OsdTempCritical",
+            "OsdUsageWarning",
+            "OsdUsageCritical",
+            "OsdFpsCritical",
+            "OsdLowFpsDelta",
+            "HardwareSectionsVisible",
+            "HardwareSectionsOrder",
+            "HardwareSelectedGpuIsIgpu",
+            "HardwareCpuAverageFrequency",
+            "HardwareMemoryInGigabytes",
         ]);
 
         page.Options.Single(option => option.Key == "OsdStyle").Values
             .Should().BeEquivalentTo(["Panel", "Bar"]);
+        page.Options.Single(option => option.Key == "HardwareSectionsOrder").Values
+            .Should().Contain("GPU, Battery, CPU");
     }
 
     [Theory]
@@ -48,6 +62,9 @@ public sealed class OsdSettingsServiceTests
     [InlineData("OsdRefreshInterval", "11")]
     [InlineData("OsdOpacity", "1.1")]
     [InlineData("OsdFontSize", "7")]
+    [InlineData("OsdTempWarning", "111")]
+    [InlineData("OsdUsageCritical", "101")]
+    [InlineData("OsdFpsCritical", "1001")]
     [InlineData("OsdBackgroundColor", "not-a-color")]
     public async Task WindowsOsdTextOptions_RejectValuesOutsideWpfRanges(string optionKey, string value)
     {
