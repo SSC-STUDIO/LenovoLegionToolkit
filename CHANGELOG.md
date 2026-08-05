@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.2] - 2026-08-05
+
+### Added
+
+- Consolidated the official plugin source, SDK, tooling, tests, documentation, and release automation into the main repository under `Plugins/`.
+- Added the managed `plugin-catalog` release flow for publishing one catalog and the current official plugin packages without cluttering application releases.
+
+### Changed
+
+- Plugin discovery and package downloads now use the main repository's fixed catalog release; the application update checker ignores the rolling catalog tag.
+- Preserved the legacy plugin loading and application update path needed for existing installations while directing upgraded clients to the main repository.
+
 ## [5.0.1] - 2026-07-23
 
 ### Added / 新增
