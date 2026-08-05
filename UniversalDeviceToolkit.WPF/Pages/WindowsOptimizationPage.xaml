@@ -201,9 +201,12 @@
             Margin="0,0,16,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Margin="0,16,0,24">
+            <StackPanel
+                Grid.Column="0"
+                Margin="0,16,0,24">
                 <TextBlock
                     Margin="0,0,0,8"
                     AutomationProperties.Name="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
@@ -218,6 +221,104 @@
                     Text="{Binding PageHeaderDescription, FallbackValue={x:Static resources:Resource.WindowsOptimizationPage_Info}}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- Selection summaries sit beside the page heading; action buttons stay on the nav row below. -->
+            <StackPanel
+                Grid.Column="1"
+                Margin="20,16,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top">
+                <Border
+                    Padding="3"
+                    MinWidth="48"
+                    HorizontalAlignment="Right"
+                    Background="{DynamicResource AppSurfaceCardBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    AutomationProperties.AutomationId="NetworkAccelerationSelectionSummaryBar"
+                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Border.Resources>
+                        <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                            <Setter Property="MinHeight" Value="40" />
+                            <Setter Property="Padding" Value="12,7" />
+                        </Style>
+                    </Border.Resources>
+                    <wpfui:Button
+                        MinWidth="148"
+                        Appearance="Secondary"
+                        Focusable="False"
+                        IsTabStop="False"
+                        Click="NetworkAccelerationSelectionCountButton_Click"
+                        ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}"
+                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:SymbolIcon
+                                Margin="0,0,8,0"
+                                Symbol="DocumentBulletList24" />
+                            <TextBlock
+                                x:Name="_networkAccelerationSelectionCount"
+                                VerticalAlignment="Center"
+                                Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
+                                AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
+                        </StackPanel>
+                    </wpfui:Button>
+                </Border>
+
+                <Border
+                    Padding="3"
+                    MinWidth="48"
+                    HorizontalAlignment="Right"
+                    Background="{DynamicResource AppSurfaceCardBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsSummaryBar"
+                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Border.Resources>
+                        <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
+                            <Setter Property="MinHeight" Value="40" />
+                            <Setter Property="Padding" Value="12,7" />
+                        </Style>
+                    </Border.Resources>
+                    <wpfui:Button
+                        AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsButton"
+                        MinWidth="148"
+                        Appearance="Secondary"
+                        ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
+                        AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
+                        Click="SelectedActionsButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:SymbolIcon
+                                Margin="0,0,8,0"
+                                Symbol="DocumentBulletList24" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Text="{Binding SelectedActionsSummary, FallbackValue=''}" />
+                        </StackPanel>
+                    </wpfui:Button>
+                </Border>
             </StackPanel>
         </Grid>
 
@@ -299,59 +400,11 @@
                             FontSize="{DynamicResource FontSizeCaption}"
                             Visibility="Collapsed" />
 
-                        <!-- Keep the summary and action chrome in separate frames. The action frame shares the nav baseline. -->
+                        <!-- Action chrome shares the nav baseline; summaries live beside the page heading above. -->
                         <StackPanel
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom">
-                            <Border
-                                Padding="3"
-                                Margin="0,0,0,4"
-                                MinWidth="48"
-                                HorizontalAlignment="Right"
-                                Background="{DynamicResource AppSurfaceCardBrush}"
-                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="{StaticResource CornerRadiusCard}"
-                                AutomationProperties.AutomationId="NetworkAccelerationSelectionSummaryBar"
-                                AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <Border.Resources>
-                                    <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-                                        <Setter Property="MinHeight" Value="40" />
-                                        <Setter Property="Padding" Value="12,7" />
-                                    </Style>
-                                </Border.Resources>
-                                <wpfui:Button
-                                    MinWidth="148"
-                                    Appearance="Secondary"
-                                    Focusable="False"
-                                    IsTabStop="False"
-                                    Click="NetworkAccelerationSelectionCountButton_Click"
-                                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}"
-                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <wpfui:SymbolIcon
-                                            Margin="0,0,8,0"
-                                            Symbol="DocumentBulletList24" />
-                                        <TextBlock
-                                            x:Name="_networkAccelerationSelectionCount"
-                                            VerticalAlignment="Center"
-                                            Text="{x:Static resources:Resource.NetworkAccelerationPage_SelectionCountZero}"
-                                            AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
-                                    </StackPanel>
-                                </wpfui:Button>
-                            </Border>
-
                             <Border
                                 x:Name="_networkAccelerationSelectionBar"
                                 Padding="3"
@@ -413,51 +466,6 @@
                                         ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
                                     </wpfui:Button>
                                 </StackPanel>
-                            </Border>
-
-                            <Border
-                                Padding="3"
-                                Margin="0,0,0,4"
-                                MinWidth="48"
-                                HorizontalAlignment="Right"
-                                Background="{DynamicResource AppSurfaceCardBrush}"
-                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="{StaticResource CornerRadiusCard}"
-                                AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsSummaryBar"
-                                AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsNetworkAccelerationMode}" Value="True">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <Border.Resources>
-                                    <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-                                        <Setter Property="MinHeight" Value="40" />
-                                        <Setter Property="Padding" Value="12,7" />
-                                    </Style>
-                                </Border.Resources>
-                                <wpfui:Button
-                                    AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsButton"
-                                    MinWidth="148"
-                                    Appearance="Secondary"
-                                    ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
-                                    AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
-                                    Click="SelectedActionsButton_Click">
-                                    <StackPanel Orientation="Horizontal">
-                                        <wpfui:SymbolIcon
-                                            Margin="0,0,8,0"
-                                            Symbol="DocumentBulletList24" />
-                                        <TextBlock
-                                            VerticalAlignment="Center"
-                                            Text="{Binding SelectedActionsSummary, FallbackValue=''}" />
-                                    </StackPanel>
-                                </wpfui:Button>
                             </Border>
 
                             <Border

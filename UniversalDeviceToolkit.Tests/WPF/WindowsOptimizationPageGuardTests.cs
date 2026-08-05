@@ -120,10 +120,14 @@ public sealed class WindowsOptimizationPageGuardTests
         var selectedSummaryIndex = xaml.IndexOf("WindowsOptimizationSelectedActionsButton", StringComparison.Ordinal);
         var selectedSummaryClose = xaml.IndexOf("</wpfui:Button>", selectedSummaryIndex, StringComparison.Ordinal);
         var actionRowIndex = xaml.IndexOf("<StackPanel Orientation=\"Horizontal\">", selectedSummaryClose, StringComparison.Ordinal);
+        var headingGridIndex = xaml.IndexOf("Margin=\"0,0,16,0\"", StringComparison.Ordinal);
+        var actionGridIndex = xaml.IndexOf("Margin=\"0,0,0,16\"", headingGridIndex, StringComparison.Ordinal);
 
         selectedSummaryIndex.Should().BeGreaterThanOrEqualTo(0);
         selectedSummaryClose.Should().BeGreaterThan(selectedSummaryIndex);
         actionRowIndex.Should().BeGreaterThan(selectedSummaryClose);
+        selectedSummaryIndex.Should().BeGreaterThan(headingGridIndex);
+        selectedSummaryIndex.Should().BeLessThan(actionGridIndex);
 
         var selectedSummaryFrameClose = xaml.IndexOf("</Border>", selectedSummaryClose, StringComparison.Ordinal);
         var actionFrameIndex = xaml.IndexOf("WindowsOptimizationActionBar", selectedSummaryFrameClose, StringComparison.Ordinal);
@@ -142,12 +146,16 @@ public sealed class WindowsOptimizationPageGuardTests
         var selectionCountIndex = xaml.IndexOf("NetworkAccelerationSelectionCountButton_Click", summaryFrameIndex, StringComparison.Ordinal);
         var selectionCountClose = xaml.IndexOf("</wpfui:Button>", selectionCountIndex, StringComparison.Ordinal);
         var actionRowIndex = xaml.IndexOf("<StackPanel Orientation=\"Horizontal\">", selectionCountClose, StringComparison.Ordinal);
+        var headingGridIndex = xaml.IndexOf("Margin=\"0,0,16,0\"", StringComparison.Ordinal);
+        var actionGridIndex = xaml.IndexOf("Margin=\"0,0,0,16\"", headingGridIndex, StringComparison.Ordinal);
 
         summaryFrameIndex.Should().BeGreaterThanOrEqualTo(0);
         selectionBarIndex.Should().BeGreaterThan(summaryFrameIndex);
         selectionCountIndex.Should().BeGreaterThan(summaryFrameIndex);
         selectionCountClose.Should().BeGreaterThan(selectionCountIndex);
         actionRowIndex.Should().BeGreaterThan(selectionCountClose);
+        summaryFrameIndex.Should().BeGreaterThan(headingGridIndex);
+        summaryFrameIndex.Should().BeLessThan(actionGridIndex);
 
         var summaryFrameClose = xaml.IndexOf("</Border>", summaryFrameIndex, StringComparison.Ordinal);
         summaryFrameClose.Should().BeGreaterThan(summaryFrameIndex);
@@ -158,7 +166,7 @@ public sealed class WindowsOptimizationPageGuardTests
     public void Toolbar_ShouldKeepActionsVisibleAndAllowNavigationToWrap()
     {
         var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
-        var toolbarStart = xaml.IndexOf("<Grid Grid.Row=\"0\" Margin=\"0,0,0,16\">", StringComparison.Ordinal);
+        var toolbarStart = xaml.IndexOf("Margin=\"0,0,0,16\"", StringComparison.Ordinal);
         var toolbarEnd = xaml.IndexOf("<Grid Grid.Row=\"1\">", toolbarStart, StringComparison.Ordinal);
 
         toolbarStart.Should().BeGreaterThanOrEqualTo(0);
