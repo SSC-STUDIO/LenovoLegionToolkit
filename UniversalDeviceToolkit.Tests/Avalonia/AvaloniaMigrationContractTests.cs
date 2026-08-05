@@ -30,6 +30,32 @@ public sealed class AvaloniaMigrationContractTests
         DashboardTelemetryGroups.Classify(reading).Should().Be(expectedGroup);
     }
 
+    [Fact]
+    public void DashboardSensorLayout_FiltersHiddenSectionsAndPreservesConfiguredOrder()
+    {
+        var readings = new SensorReadingItem[]
+        {
+            new("GPU Temperature", "70 C", "GPU", 70, "C"),
+            new("System Memory", "8 GB", "System", 8, "GB"),
+            new("CPU Usage", "40 %", "CPU", 40, "%"),
+            new("Battery Charge", "80 %", "Battery", 80, "%"),
+        };
+
+        var filtered = DashboardSensorLayout.FilterAndOrder(
+            readings,
+            ["GPU", "CPU"],
+            ["GPU", "CPU", "Battery"]);
+
+        filtered.Select(reading => reading.Name)
+            .Should().Equal("GPU Temperature", "CPU Usage", "System Memory");
+        DashboardSensorLayout.GetCardOrder(["GPU", "CPU", "Battery"])
+            .Should().Equal("gpu", "cpu", "battery", "system");
+        DashboardSensorLayout.IsCardVisible("battery", ["GPU", "CPU"])
+            .Should().BeFalse();
+        DashboardSensorLayout.IsCardVisible("system", ["GPU", "CPU"])
+            .Should().BeTrue();
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]

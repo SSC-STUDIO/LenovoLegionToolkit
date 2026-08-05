@@ -3,6 +3,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Shared.Settings;
+#if WINDOWS
+using UniversalDeviceToolkit.Lib;
+using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
+#endif
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -31,6 +35,9 @@ public partial class DashboardPageViewModel : ObservableObject
     private readonly AvaloniaDashboardPreferences _dashboardPreferences;
     private bool _showSensors;
     private int _sensorsRefreshIntervalSeconds;
+#if WINDOWS
+    private readonly WpfHardwareSensorSettings? _hardwareSensorSettings;
+#endif
 
     /// <summary>
     /// Mirrors the WPF dashboard's sensor visibility setting while keeping the
@@ -59,6 +66,9 @@ public partial class DashboardPageViewModel : ObservableObject
     {
         _platformServices = platformServices;
         _dashboardPreferences = dashboardPreferences ?? new AvaloniaDashboardPreferences();
+#if WINDOWS
+        _hardwareSensorSettings = IoCContainer.TryResolve<WpfHardwareSensorSettings>();
+#endif
         _showSensors = _dashboardPreferences.Store.ShowSensors;
         _sensorsRefreshIntervalSeconds = NormalizeRefreshInterval(
             _dashboardPreferences.Store.SensorsRefreshIntervalSeconds);
@@ -133,10 +143,11 @@ public partial class DashboardPageViewModel : ObservableObject
 
     private void MergeSensors(IReadOnlyList<SensorReadingItem> readings)
     {
+        var effectiveReadings = ApplyHardwareSensorPreferences(readings);
         var byName = SensorReadings.ToDictionary(item => item.Name, StringComparer.OrdinalIgnoreCase);
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var reading in readings)
+        foreach (var reading in effectiveReadings)
         {
             seen.Add(reading.Name);
             if (byName.TryGetValue(reading.Name, out var existing))
@@ -154,7 +165,7 @@ public partial class DashboardPageViewModel : ObservableObject
                 SensorReadings.RemoveAt(index);
         }
 
-        var grouped = readings
+        var grouped = effectiveReadings
             .GroupBy(DashboardTelemetryGroups.Classify, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => (IReadOnlyList<SensorReadingItem>)group.ToArray(), StringComparer.OrdinalIgnoreCase);
 
@@ -164,6 +175,47 @@ public partial class DashboardPageViewModel : ObservableObject
                 ? values
                 : Array.Empty<SensorReadingItem>());
         }
+    }
+
+    private IReadOnlyList<SensorReadingItem> ApplyHardwareSensorPreferences(
+        IReadOnlyList<SensorReadingItem> readings)
+    {
+#if WINDOWS
+        var store = _hardwareSensorSettings?.Store;
+        var visibleSections = store?.VisibleSections;
+        var sectionOrder = store?.SectionOrder;
+#else
+        IReadOnlyList<string>? visibleSections = null;
+        IReadOnlyList<string>? sectionOrder = null;
+#endif
+
+        var effectiveReadings = DashboardSensorLayout.FilterAndOrder(
+            readings,
+            visibleSections,
+            sectionOrder);
+
+        var visible = DashboardSensorLayout.NormalizeVisibleSections(visibleSections);
+        var orderedCards = DashboardSensorLayout.GetCardOrder(sectionOrder);
+        foreach (var card in TelemetryCards)
+            card.IsVisible = DashboardSensorLayout.IsCardVisible(card.Key, visible);
+
+        for (var targetIndex = 0; targetIndex < orderedCards.Count; targetIndex++)
+        {
+            var currentIndex = -1;
+            for (var index = 0; index < TelemetryCards.Count; index++)
+            {
+                if (string.Equals(TelemetryCards[index].Key, orderedCards[targetIndex], StringComparison.OrdinalIgnoreCase))
+                {
+                    currentIndex = index;
+                    break;
+                }
+            }
+
+            if (currentIndex >= 0 && currentIndex != targetIndex)
+                TelemetryCards.Move(currentIndex, targetIndex);
+        }
+
+        return effectiveReadings;
     }
 
     private static int NormalizeRefreshInterval(int seconds) => Math.Clamp(seconds, 1, 60);

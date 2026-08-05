@@ -191,6 +191,7 @@
                         <Border Classes="cardControl"
                                 Width="320"
                                 Margin="0,0,12,12"
+                                IsVisible="{Binding IsVisible}"
                                 Background="{DynamicResource CardBackgroundBrush}"
                                 BorderBrush="{DynamicResource CardBorderBrush}"
                                 BorderThickness="1"
