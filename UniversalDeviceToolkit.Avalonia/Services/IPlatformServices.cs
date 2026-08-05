@@ -44,7 +44,19 @@ public interface IPlatformServices
     Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);
 }
 
-public sealed record FeatureGroupItem(string Title, string Description, string Status);
+public sealed record FeatureGroupItem(
+    string Title,
+    string Description,
+    string Status,
+    string? RouteKey = null)
+{
+    /// <summary>
+    /// Gets whether the dashboard can open a host page for this capability.
+    /// Capability snapshots may contain vendor-specific entries that do not
+    /// have a corresponding route, so those remain informational cards.
+    /// </summary>
+    public bool IsNavigable => !string.IsNullOrWhiteSpace(RouteKey);
+}
 
 /// <summary>
 /// UI-facing state for a feature route. The page model deliberately keeps action state

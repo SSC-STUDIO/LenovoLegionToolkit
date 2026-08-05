@@ -116,7 +116,7 @@ public partial class MainWindow : Window
     private void ShowDashboardPage()
     {
         _activePage = MainNavigation.Dashboard;
-        MainContent.Content = new DashboardPage(_platformServices);
+        MainContent.Content = new DashboardPage(_platformServices, Navigate);
         SetActiveButton(DashboardButton);
     }
 

@@ -57,14 +57,17 @@ public partial class DashboardPageViewModel : ObservableObject
     }
 
     private readonly IPlatformServices _platformServices;
+    private readonly Action<string>? _navigate;
     private CancellationTokenSource? _pollingCancellation;
     private int _refreshVersion;
 
     public DashboardPageViewModel(
         IPlatformServices platformServices,
-        AvaloniaDashboardPreferences? dashboardPreferences = null)
+        AvaloniaDashboardPreferences? dashboardPreferences = null,
+        Action<string>? navigate = null)
     {
         _platformServices = platformServices;
+        _navigate = navigate;
         _dashboardPreferences = dashboardPreferences ?? new AvaloniaDashboardPreferences();
 #if WINDOWS
         _hardwareSensorSettings = IoCContainer.TryResolve<WpfHardwareSensorSettings>();
@@ -126,6 +129,13 @@ public partial class DashboardPageViewModel : ObservableObject
 
     [RelayCommand]
     private Task RefreshAsync() => LoadAsync();
+
+    [RelayCommand]
+    private void OpenFeature(FeatureGroupItem? item)
+    {
+        if (item?.IsNavigable == true && item.RouteKey is not null)
+            _navigate?.Invoke(item.RouteKey);
+    }
 
     private async Task PollAsync(CancellationToken cancellationToken)
     {

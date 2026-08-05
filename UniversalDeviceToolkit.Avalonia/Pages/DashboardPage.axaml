@@ -133,27 +133,43 @@
                                 BorderBrush="{DynamicResource CardBorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="{StaticResource CornerRadiusCard}">
-                            <StackPanel Spacing="10" Margin="16">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="16" RowSpacing="10">
                                 <controls:LocalizedTextBlock Text="{Binding Title}"
                                            Classes="cardTitle"
                                            OverflowMode="Wrap"
                                            MaxLines="2" />
-                                <controls:LocalizedTextBlock Text="{Binding Description}"
+                                <controls:LocalizedTextBlock Grid.Row="1" Text="{Binding Description}"
                                            Classes="cardDescription"
                                            OverflowMode="Wrap"
                                            MaxLines="3" />
-                                <Border Classes="badge" HorizontalAlignment="Left"
+                                <Border Grid.Row="2" Classes="badge" HorizontalAlignment="Left"
                                         Background="{DynamicResource StatusInfoBackgroundBrush}"
                                         BorderBrush="{DynamicResource StatusInfoBrush}"
                                         BorderThickness="1"
                                         CornerRadius="{StaticResource CornerRadiusRound}"
                                         Padding="8,4"
                                         Margin="0,2,0,0">
-                                    <TextBlock Text="{Binding Status}"
+                                    <controls:LocalizedTextBlock Text="{Binding Status}"
                                                Foreground="{DynamicResource StatusInfoBrush}"
-                                               FontSize="{StaticResource FontSizeSmallCaption}" />
+                                               FontSize="{StaticResource FontSizeSmallCaption}"
+                                               OverflowMode="Ellipsis"
+                                               MaxLines="1" />
                                 </Border>
-                            </StackPanel>
+                                <Button Grid.Row="3"
+                                        HorizontalAlignment="Left"
+                                        Padding="8,4"
+                                        MinWidth="36"
+                                        IsVisible="{Binding IsNavigable}"
+                                        IsEnabled="{Binding IsNavigable}"
+                                        Command="{Binding DataContext.OpenFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        CommandParameter="{Binding}"
+                                        ToolTip.Tip="{Binding Title}"
+                                        automation:AutomationProperties.Name="{Binding Title}"
+                                        automation:AutomationProperties.AutomationId="DashboardFeatureOpenButton">
+                                    <controls:NavigationIcon IconIdentifier="ArrowRight24"
+                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                </Button>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

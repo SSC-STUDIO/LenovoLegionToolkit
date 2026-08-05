@@ -25,6 +25,7 @@ public sealed class NavigationIcon : TextBlock
             ["Gauge24"] = "\uE9D9",
             ["Desktop24"] = "\uE7F4",
             ["ArrowSync24"] = "\uE895",
+            ["ArrowRight24"] = "\uE72A",
             ["ArrowUp24"] = "\uE74A",
             ["ArrowDown24"] = "\uE74B",
             ["Battery024"] = "\uE850",

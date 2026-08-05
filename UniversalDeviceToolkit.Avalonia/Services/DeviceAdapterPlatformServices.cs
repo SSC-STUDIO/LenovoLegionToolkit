@@ -1,5 +1,6 @@
 using System.Globalization;
 using UniversalDeviceToolkit.Abstractions.Hardware;
+using UniversalDeviceToolkit.Avalonia;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -29,7 +30,8 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
         groups.AddRange(snapshot.Capabilities.Select(capability => new FeatureGroupItem(
             Humanize(capability.Id),
             capability.Reason,
-            FormatCapabilityStatus(capability))));
+            FormatCapabilityStatus(capability),
+            GetFeatureRoute(capability.Id))));
         return groups;
     }
 
@@ -329,9 +331,19 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
         groups.AddRange(snapshot.Capabilities.Select(capability => new FeatureGroupItem(
             Humanize(capability.Id),
             capability.Reason,
-            FormatCapabilityStatus(capability))));
+            FormatCapabilityStatus(capability),
+            GetFeatureRoute(capability.Id))));
         return groups;
     }
+
+    private static string? GetFeatureRoute(string capabilityId) => capabilityId.ToLowerInvariant() switch
+    {
+        "keyboard-backlight" => MainNavigation.Keyboard,
+        "hardware-identity" => MainNavigation.Actions,
+        "read-only-telemetry" => MainNavigation.WindowsOptimization,
+        "plugin-extensions" => MainNavigation.PluginExtensions,
+        _ => null,
+    };
 
     private IReadOnlyList<SensorReadingItem> BuildSensorReadings(DeviceSnapshot snapshot)
     {
