@@ -84,8 +84,8 @@ public partial class FeaturePageView : UserControl
             StatusMessage.Text = string.IsNullOrWhiteSpace(state.StatusMessage)
                 ? _descriptor.UnsupportedReason
                 : state.StatusMessage;
-            StatusCard.Background = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBackgroundBrush" : "StatusInfoBackgroundBrush");
-            StatusCard.BorderBrush = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBrush" : "StatusInfoBrush");
+            StatusCard.Background = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBackgroundBrush" : "StatusCriticalBackgroundBrush");
+            StatusCard.BorderBrush = GetResource<IBrush>(state.IsAvailable ? "StatusSuccessBrush" : "StatusCriticalBrush");
 
             RenderFeatureItems(state);
         }
@@ -93,6 +93,8 @@ public partial class FeaturePageView : UserControl
         {
             StatusTitle.Text = AvaloniaLocalization.GetString("FeaturePage_LoadFailed", "Unable to load feature state");
             StatusMessage.Text = ex.Message;
+            StatusCard.Background = GetResource<IBrush>("StatusCriticalBackgroundBrush");
+            StatusCard.BorderBrush = GetResource<IBrush>("StatusCriticalBrush");
         }
         finally
         {
@@ -584,6 +586,7 @@ public partial class FeaturePageView : UserControl
 
     private Border CreateFeatureCard(FeatureActionItem item)
     {
+        var statusKind = FeatureActionContract.ResolveStatusKind(item);
         Control action;
         if (item.IsToggle)
         {
@@ -655,6 +658,8 @@ public partial class FeaturePageView : UserControl
         var copy = new StackPanel { Spacing = 4, MinWidth = 0 };
         copy.Children.Add(title);
         copy.Children.Add(description);
+        if (statusKind != FeatureActionStatusKind.Neutral && !string.IsNullOrWhiteSpace(item.Status))
+            copy.Children.Add(CreateStatusBadge(item.Status, statusKind));
 
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), ColumnSpacing = 14 };
         var icon = new NavigationIcon
@@ -682,6 +687,32 @@ public partial class FeaturePageView : UserControl
         };
         AutomationProperties.SetName(card, item.Title);
         return card;
+    }
+
+    private Border CreateStatusBadge(string status, FeatureActionStatusKind statusKind)
+    {
+        var badge = new Border
+        {
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Child = new LocalizedTextBlock
+            {
+                Text = status,
+                OverflowMode = LocalizedOverflowMode.Ellipsis,
+                MaxLines = 1,
+                MaxWidth = 220,
+            },
+        };
+        badge.Classes.Add("badge");
+        badge.Classes.Add(statusKind switch
+        {
+            FeatureActionStatusKind.Success => "success",
+            FeatureActionStatusKind.Warning => "warning",
+            FeatureActionStatusKind.Critical => "danger",
+            _ => "info",
+        });
+        ToolTip.SetTip(badge, status);
+        AutomationProperties.SetName(badge, status);
+        return badge;
     }
 
     private Border CreateEmptyState() => new()

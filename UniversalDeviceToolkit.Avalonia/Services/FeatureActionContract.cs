@@ -34,6 +34,49 @@ public static class FeatureActionContract
     public static bool IsCleanupAction(string actionKey) =>
         actionKey.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Resolves the visual state for legacy action producers that have not yet
+    /// supplied an explicit semantic status. Explicit values always win so a
+    /// localized host can keep its original text without coupling rendering to
+    /// a particular language.
+    /// </summary>
+    public static FeatureActionStatusKind ResolveStatusKind(FeatureActionItem item)
+    {
+        if (item.StatusKind != FeatureActionStatusKind.Neutral)
+            return item.StatusKind;
+
+        var status = item.Status.Trim();
+        if (status.Length == 0)
+            return FeatureActionStatusKind.Neutral;
+
+        if (status.Equals("Applied", StringComparison.OrdinalIgnoreCase)
+            || status.Equals("Selected", StringComparison.OrdinalIgnoreCase)
+            || status.Equals("Enabled", StringComparison.OrdinalIgnoreCase)
+            || status.Equals("On", StringComparison.OrdinalIgnoreCase))
+            return FeatureActionStatusKind.Success;
+
+        if (status.Equals("Recommended", StringComparison.OrdinalIgnoreCase)
+            || status.Equals("Select items", StringComparison.OrdinalIgnoreCase)
+            || status.Contains("warning", StringComparison.OrdinalIgnoreCase)
+            || status.Contains("low wattage", StringComparison.OrdinalIgnoreCase))
+            return FeatureActionStatusKind.Warning;
+
+        if (status.Equals("Recording", StringComparison.OrdinalIgnoreCase)
+            || status.Equals("System", StringComparison.OrdinalIgnoreCase)
+            || status.Equals("Check", StringComparison.OrdinalIgnoreCase))
+            return FeatureActionStatusKind.Info;
+
+        if (status.Contains("unavailable", StringComparison.OrdinalIgnoreCase)
+            || status.Contains("not supported", StringComparison.OrdinalIgnoreCase)
+            || status.Contains("not available", StringComparison.OrdinalIgnoreCase)
+            || status.Contains("no compatible", StringComparison.OrdinalIgnoreCase)
+            || status.Contains("failed", StringComparison.OrdinalIgnoreCase)
+            || status.Contains("error", StringComparison.OrdinalIgnoreCase))
+            return FeatureActionStatusKind.Critical;
+
+        return FeatureActionStatusKind.Neutral;
+    }
+
     private static bool TryParseMacroKey(string actionKey, string prefix, out ulong key)
     {
         key = 0;

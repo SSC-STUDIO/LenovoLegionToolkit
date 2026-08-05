@@ -456,6 +456,45 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Theory]
+    [InlineData("Recommended", FeatureActionStatusKind.Warning)]
+    [InlineData("Applied", FeatureActionStatusKind.Success)]
+    [InlineData("Selected", FeatureActionStatusKind.Success)]
+    [InlineData("Not supported", FeatureActionStatusKind.Critical)]
+    [InlineData("Recording", FeatureActionStatusKind.Info)]
+    [InlineData("Available", FeatureActionStatusKind.Neutral)]
+    public void FeatureActions_ResolveStatusKindWithoutDependingOnLocalizedText(
+        string status,
+        FeatureActionStatusKind expected)
+    {
+        var action = new FeatureActionItem(
+            "test",
+            "Test action",
+            "Test description",
+            status,
+            true,
+            false,
+            false);
+
+        FeatureActionContract.ResolveStatusKind(action).Should().Be(expected);
+    }
+
+    [Fact]
+    public void FeatureActions_ExplicitStatusKindOverridesFallbackText()
+    {
+        var action = new FeatureActionItem(
+            "test",
+            "Test action",
+            "Test description",
+            "Applied",
+            true,
+            false,
+            false,
+            StatusKind: FeatureActionStatusKind.Critical);
+
+        FeatureActionContract.ResolveStatusKind(action).Should().Be(FeatureActionStatusKind.Critical);
+    }
+
+    [Theory]
     [InlineData("cleanup.browserCache", true)]
     [InlineData("cleanup.custom", true)]
     [InlineData("performance.telemetry", false)]

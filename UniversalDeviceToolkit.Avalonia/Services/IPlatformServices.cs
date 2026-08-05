@@ -140,7 +140,21 @@ public sealed record FeatureActionItem(
     bool IsEnabled,
     bool IsSelected,
     bool IsToggle,
-    string? Category = null);
+    string? Category = null,
+    FeatureActionStatusKind StatusKind = FeatureActionStatusKind.Neutral);
+
+/// <summary>
+/// Semantic visual state for a feature action. The UI uses this instead of
+/// assuming that a translated status string has a particular value.
+/// </summary>
+public enum FeatureActionStatusKind
+{
+    Neutral,
+    Info,
+    Success,
+    Warning,
+    Critical,
+}
 
 /// <summary>
 /// Host-neutral description of a plugin entry page. WPF plugins can expose a
