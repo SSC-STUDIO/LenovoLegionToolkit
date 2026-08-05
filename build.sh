@@ -42,8 +42,19 @@ dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.Lib.Shared/UniversalDeviceToolk
 dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.ViewModels/UniversalDeviceToolkit.ViewModels.csproj" \
     --configuration "$CONFIGURATION" --verbosity minimal
 
-dotnet build "$SCRIPT_DIR/Plugins/SDK/Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj" \
-    --configuration "$CONFIGURATION" --verbosity minimal
+case "$(uname -s)" in
+    MINGW*|MSYS*|CYGWIN*)
+        echo "--- Building official plugin solution ---"
+        dotnet build "$SCRIPT_DIR/Plugins/UniversalDeviceToolkit.Plugins.sln" \
+            --configuration "$CONFIGURATION" --verbosity minimal \
+            -m:1 --disable-build-servers
+        ;;
+    *)
+        echo "--- Building portable plugin contract ---"
+        dotnet build "$SCRIPT_DIR/Plugins/SDK/Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj" \
+            --configuration "$CONFIGURATION" --verbosity minimal
+        ;;
+esac
 
 # Build Avalonia application
 echo ""
