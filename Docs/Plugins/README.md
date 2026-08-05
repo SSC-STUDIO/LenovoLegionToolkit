@@ -27,7 +27,7 @@ CLI entry: **`../../Plugins/udt-plugin.cmd`** (`llt-plugin.cmd` is a compatibili
 | [../../README.md](../../README.md) / [../../README_zh-hans.md](../../README_zh-hans.md) | Product overview + catalog |
 | [../../CONTRIBUTING.md](../../CONTRIBUTING.md) | Contribution process |
 | [../../CHANGELOG.md](../../CHANGELOG.md) | Project changelog |
-| [../../SECURITY.md](../../SECURITY.md) | Vulnerability reporting |
+| [../SECURITY.md](../SECURITY.md) | Vulnerability reporting |
 | [../../Plugins/KNOWLEDGE_BASE.md](../../Plugins/KNOWLEDGE_BASE.md) | Durable engineering rules (ABI, migration paths) |
 | [../../Plugins/CHANGELOG.md](../../Plugins/CHANGELOG.md) | Plugin history and migration notes |
 
