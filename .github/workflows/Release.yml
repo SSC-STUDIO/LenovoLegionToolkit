@@ -10,6 +10,11 @@ on:
         description: "Existing vX.Y.Z tag to rebuild (used for recovery or a deliberate manual release)"
         required: true
         type: string
+      skip_tests:
+        description: "Skip the release test gate only for an explicitly approved recovery run"
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -53,6 +58,7 @@ jobs:
         $requestedReleaseTag = "${{ inputs.release_tag }}".Trim()
         $releaseRefName = if ($requestedReleaseTag) { $requestedReleaseTag } else { "${{ github.ref_name }}" }
         $isManualRelease = [bool]$requestedReleaseTag
+        $skipTests = $isManualRelease -and ("${{ inputs.skip_tests }}".Trim().ToLowerInvariant() -eq 'true')
 
         $releaseVersion = [string]$group.ReleaseVersion
         if ([string]::IsNullOrWhiteSpace($releaseVersion) -or $releaseVersion -match '\$\(') {
@@ -82,6 +88,7 @@ jobs:
         "RELEASE_TAG=$releaseRefName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "RELEASE_IS_MANUAL=$($isManualRelease.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "RELEASE_IS_PRERELEASE=$($isPrerelease.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "RELEASE_SKIP_TESTS=$($skipTests.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "ENABLE_CROSS_PLATFORM_CLI=$($includeCrossPlatformCli.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel" + "_Full_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "SETUP_ONLINE_ASSET=UniversalDeviceToolkit_v$versionLabel" + "_Online_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -109,15 +116,22 @@ jobs:
           throw 'Solution restore failed.'
         }
 
+    - name: Record skipped release test gate
+      if: ${{ env.RELEASE_SKIP_TESTS == 'true' }}
+      shell: pwsh
+      run: Write-Warning 'The release test gate was explicitly skipped for this manual migration recovery run.'
+
     - name: Build release test project
+      if: ${{ env.RELEASE_SKIP_TESTS != 'true' }}
       run: dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
 
     - name: Test solution
+      if: ${{ env.RELEASE_SKIP_TESTS != 'true' }}
       run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
     - name: Upload release test coverage
       uses: actions/upload-artifact@v7
-      if: always()
+      if: ${{ always() && env.RELEASE_SKIP_TESTS != 'true' }}
       with:
         name: release-test-coverage-${{ github.run_id }}
         path: '**/*coverage.cobertura.xml'
