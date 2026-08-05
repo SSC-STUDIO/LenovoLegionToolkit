@@ -4,9 +4,9 @@
 
 - Official plugins for **Universal Device Toolkit** (UDT)
 - Default git branch: **`master`**
-- Host baseline: **v5.0.0** (`Dependencies/Host/host-release.json`)
+- Host baseline: **v5.0.2** (`Plugins/HostBaseline/host-release.json`)
 - Canonical CLI: **`udt-plugin.cmd`** (`llt-plugin.cmd` = alias)
-- Plugin version SoT: `Plugins/<Name>/plugin.manifest.json`
+- Plugin version SoT: `Plugins/Official/<Name>/plugin.manifest.json`
 - Root `store.json` is **generated release output**, not the normal authoring entry
 
 ## Windows shell

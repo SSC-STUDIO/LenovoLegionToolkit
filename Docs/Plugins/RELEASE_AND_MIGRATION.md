@@ -2,6 +2,8 @@
 
 This document is the operational entry point for the plugin monorepo. The source code, SDK, tooling, tests, and release workflow now live in the main `UniversalDeviceToolkit` repository.
 
+As of 2026-08-05, the migration is live: the main repository's `v5.0.2` release is the application Latest release, `plugin-catalog` is the managed catalog release, and `UniversalDeviceToolkit-Plugins` is archived. The remaining checklist items below are validation gates, not instructions to recreate the retired repository layout.
+
 ## Canonical Layout
 
 | Concern | Canonical location |
@@ -52,16 +54,16 @@ For a legacy client whose update feed still points at the old `LenovoLegionToolk
 1. Publish the new main application release under the main repository's normal `vX.Y.Z` tag, including the compatibility installer asset name expected by the legacy updater (`LenovoLegionToolkit_vX.Y.Z_Setup.exe`) and its SHA256 file.
 2. Publish one final compatibility release in the legacy application repository, using the same installer payload and an explicit note directing users to `UniversalDeviceToolkit`. Do not publish plugin packages there.
 3. Test the upgrade from a clean legacy installation, including install path, settings migration, first launch, plugin discovery, and rollback on a failed download.
-4. After the transition window, archive the legacy application/plugin repositories and leave a permanent README redirect to the main repository. Do not delete historical releases needed by existing clients.
+4. The legacy plugin repository is now archived with its historical releases and assets preserved. Leave its README redirect in place; do not delete historical releases needed by existing clients.
 5. The upgraded client then reads `plugin-catalog/store.json` from the main repository and installs packages from the same rolling release.
 
 This keeps the old client useful as the transport into the new host while keeping application releases and plugin assets visually separate on GitHub.
 
 ## Retirement Checklist
 
-- [ ] Main repository contains the complete plugin history and current source.
-- [ ] `store.json` and all package ZIPs are published from the fixed `plugin-catalog` release.
-- [ ] Old plugin repository README points to `Plugins/Official` in the main repository.
+- [x] Main repository contains the complete plugin history and current source.
+- [x] `store.json` and all package ZIPs are published from the fixed `plugin-catalog` release.
+- [x] Old plugin repository README points to `Plugins/Official` in the main repository.
 - [ ] Legacy application bridge release has been tested from a clean install.
 - [ ] Existing plugin installations load or migrate without a host DLL bundled in new ZIPs.
-- [ ] Old repository is archived only after the agreed client upgrade window.
+- [x] Old plugin repository is archived only after the agreed client upgrade window.
