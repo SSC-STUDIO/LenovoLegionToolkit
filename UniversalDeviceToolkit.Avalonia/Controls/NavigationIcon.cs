@@ -51,6 +51,7 @@ public sealed class NavigationIcon : TextBlock
             ["Mic24"] = "\uE720",
             ["Tablet24"] = "\uE7F4",
             ["Power24"] = "\uE945",
+            ["Checkmark24"] = "\uE73E",
         };
 
     public static readonly StyledProperty<string?> IconIdentifierProperty =

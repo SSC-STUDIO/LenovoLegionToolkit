@@ -194,7 +194,7 @@
                                 <ItemsControl ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto" ColumnSpacing="4">
+                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="4">
                                                 <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
                                                                          FontSize="{StaticResource IconSizeCompact}"
                                                                          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -207,7 +207,34 @@
                                                                              MaxLines="1"
                                                                              MinWidth="0"
                                                                              VerticalAlignment="Center" />
-                                                <Button Grid.Column="2"
+                                                <ComboBox Grid.Column="2"
+                                                          IsVisible="{Binding HasOptions}"
+                                                          ItemsSource="{Binding Options}"
+                                                          SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
+                                                          Width="132"
+                                                          MinWidth="96"
+                                                          ToolTip.Tip="{Binding StateError}"
+                                                          automation:AutomationProperties.Name="{Binding DisplayName}">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <controls:LocalizedTextBlock Text="{Binding DisplayName}"
+                                                                                         OverflowMode="Ellipsis"
+                                                                                         MaxLines="1" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                                <Button Grid.Column="3"
+                                                        IsVisible="{Binding HasOptions}"
+                                                        Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="3"
+                                                        MinWidth="24"
+                                                        ToolTip.Tip="{Binding StateStatusText}"
+                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Apply, Fallback=Apply}">
+                                                    <controls:NavigationIcon IconIdentifier="Checkmark24"
+                                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                                <Button Grid.Column="4"
                                                         Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"
@@ -217,7 +244,7 @@
                                                     <controls:NavigationIcon IconIdentifier="ChevronUp24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
-                                                <Button Grid.Column="3"
+                                                <Button Grid.Column="5"
                                                         Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"
@@ -227,7 +254,7 @@
                                                     <controls:NavigationIcon IconIdentifier="ChevronDown24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
-                                                <Button Grid.Column="4"
+                                                <Button Grid.Column="6"
                                                         Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
                                                         Padding="3"

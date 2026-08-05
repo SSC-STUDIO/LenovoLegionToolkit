@@ -115,6 +115,9 @@ public partial class DashboardPageViewModel : ObservableObject
             await Task.WhenAll(snapshotTask, layoutTask).ConfigureAwait(false);
             var snapshot = await snapshotTask.ConfigureAwait(false);
             var layout = await layoutTask.ConfigureAwait(false);
+            var itemStateTask = _platformServices.GetDashboardItemStatesAsync(
+                layout.Groups.SelectMany(group => group.Items).ToArray());
+            var itemStates = await itemStateTask.ConfigureAwait(false);
             if (version != Volatile.Read(ref _refreshVersion))
                 return;
 
@@ -128,6 +131,7 @@ public partial class DashboardPageViewModel : ObservableObject
                 FeatureGroups.Add(group);
 
             ApplyDashboardLayout(layout);
+            ApplyDashboardItemStates(itemStates);
             MergeSensors(snapshot.SensorReadings);
         }
         catch (Exception ex)
@@ -280,6 +284,34 @@ public partial class DashboardPageViewModel : ObservableObject
         DashboardGroups.Clear();
         foreach (var group in layout.Groups)
             DashboardGroups.Add(new DashboardGroupViewModel(group));
+    }
+
+    private void ApplyDashboardItemStates(IReadOnlyList<DashboardItemState> states)
+    {
+        var byIdentifier = states.ToDictionary(
+            state => state.Identifier,
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var item in DashboardGroups.SelectMany(group => group.Items))
+        {
+            if (byIdentifier.TryGetValue(item.Identifier, out var state))
+                item.ApplyState(state);
+        }
+    }
+
+    [RelayCommand]
+    private async Task SetDashboardItemStateAsync(DashboardLayoutItemViewModel? item)
+    {
+        if (item?.SelectedOption is null || !item.IsAvailable)
+            return;
+
+        var state = item.SelectedOption.Value;
+        var succeeded = await _platformServices.SetDashboardItemStateAsync(
+            item.Identifier,
+            state).ConfigureAwait(false);
+        item.StateStatusText = succeeded
+            ? AvaloniaLocalization.GetString("Dashboard_ItemStateSaved", "Setting applied")
+            : AvaloniaLocalization.GetString("Dashboard_ItemStateSaveFailed", "Setting could not be applied");
     }
 
     private async Task PollAsync(CancellationToken cancellationToken)
@@ -460,7 +492,9 @@ public static class DashboardItemDescriptors
             : new DashboardItemDescriptor(identifier, identifier, "Info24");
 }
 
-public sealed class DashboardLayoutItemViewModel
+public sealed record DashboardStateOption(string Value, string DisplayName);
+
+public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 {
     public DashboardLayoutItemViewModel(DashboardGroupViewModel group, string identifier)
     {
@@ -475,6 +509,75 @@ public sealed class DashboardLayoutItemViewModel
     public string DisplayName => AvaloniaLocalization.GetString(
         Descriptor.TitleKey,
         Descriptor.FallbackTitle);
+    public ObservableCollection<DashboardStateOption> Options { get; } = new();
+
+    [ObservableProperty]
+    private DashboardStateOption? _selectedOption;
+
+    [ObservableProperty]
+    private bool _isAvailable;
+
+    [ObservableProperty]
+    private string? _stateError;
+
+    [ObservableProperty]
+    private string _stateStatusText = string.Empty;
+
+    public bool HasOptions => Options.Count > 0;
+
+    public void ApplyState(DashboardItemState state)
+    {
+        IsAvailable = state.IsAvailable;
+        StateError = state.ErrorMessage;
+        Options.Clear();
+        foreach (var value in state.Options.Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            Options.Add(new DashboardStateOption(
+                value,
+                GetStateDisplayName(Identifier, value)));
+        }
+
+        if (state.CurrentValue is not null
+            && Options.All(option => !option.Value.Equals(state.CurrentValue, StringComparison.OrdinalIgnoreCase)))
+        {
+            Options.Add(new DashboardStateOption(
+                state.CurrentValue,
+                GetStateDisplayName(Identifier, state.CurrentValue)));
+        }
+
+        SelectedOption = Options.FirstOrDefault(option =>
+            option.Value.Equals(state.CurrentValue, StringComparison.OrdinalIgnoreCase));
+        OnPropertyChanged(nameof(HasOptions));
+    }
+
+    private static string GetStateDisplayName(string identifier, string value)
+    {
+        if (identifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase))
+        {
+            return AvaloniaLocalization.GetString(
+                $"PowerModeState_{value}",
+                Humanize(value));
+        }
+
+        return Humanize(value);
+    }
+
+    private static string Humanize(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var builder = new System.Text.StringBuilder(value.Length + 8);
+        for (var index = 0; index < value.Length; index++)
+        {
+            var character = value[index];
+            if (index > 0 && char.IsUpper(character) && !char.IsUpper(value[index - 1]))
+                builder.Append(' ');
+            builder.Append(index == 0 ? char.ToUpperInvariant(character) : character);
+        }
+
+        return builder.ToString();
+    }
 }
 
 public sealed partial class DashboardSensorViewModel : ObservableObject
