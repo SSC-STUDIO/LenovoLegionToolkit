@@ -69,6 +69,8 @@ public partial class FeaturePageView : UserControl
                 _pluginCatalog = await _platformServices.GetPluginCatalogAsync().ConfigureAwait(true);
                 PluginUpdateButton.IsEnabled = _pluginCatalog.Plugins.Any(plugin =>
                     plugin.IsInstalled && plugin.AvailableUpdateVersion is not null && !plugin.IsSystemPlugin);
+                PluginInstallButton.IsEnabled = _pluginCatalog.Plugins.Any(plugin =>
+                    !plugin.IsInstalled && !plugin.IsSystemPlugin);
                 if (!string.IsNullOrWhiteSpace(_pluginCatalog.StatusMessage))
                     state = state with { StatusMessage = _pluginCatalog.StatusMessage };
             }
@@ -382,6 +384,30 @@ public partial class FeaturePageView : UserControl
                 .ToArray() ?? [];
             foreach (var plugin in updates)
                 await _platformServices.UpdatePluginAsync(plugin.Id);
+
+            _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
+            if (_lastState is not null)
+                RenderFeatureItems(_lastState);
+        }
+        finally
+        {
+            _isApplying = false;
+        }
+    }
+
+    private async void PluginInstallButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isApplying)
+            return;
+
+        _isApplying = true;
+        try
+        {
+            var installable = _pluginCatalog?.Plugins
+                .Where(plugin => !plugin.IsInstalled && !plugin.IsSystemPlugin)
+                .ToArray() ?? [];
+            foreach (var plugin in installable)
+                await _platformServices.InstallPluginAsync(plugin.Id);
 
             _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
             if (_lastState is not null)

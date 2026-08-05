@@ -105,7 +105,7 @@
                     </StackPanel>
                     <Grid x:Name="PluginCatalogToolbar"
                           IsVisible="False"
-                          ColumnDefinitions="*,160,Auto,Auto"
+                          ColumnDefinitions="*,160,Auto,Auto,Auto"
                           ColumnSpacing="8">
                         <TextBox x:Name="PluginSearchBox"
                                  Watermark="{local:Loc Key=PluginExtensionsPage_Search, Fallback=Search plugins}"
@@ -129,6 +129,11 @@
                                 Content="{local:Loc Key=PluginExtensionsPage_CheckUpdates, Fallback=Check updates}"
                                 Click="PluginUpdateButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaPluginCheckUpdatesButton" />
+                        <Button x:Name="PluginInstallButton"
+                                Grid.Column="4"
+                                Content="{local:Loc Key=PluginExtensionsPage_InstallAll, Fallback=Install all}"
+                                Click="PluginInstallButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaPluginInstallAllButton" />
                     </Grid>
                     <StackPanel x:Name="OptimizationCommands"
                                 Orientation="Horizontal"
