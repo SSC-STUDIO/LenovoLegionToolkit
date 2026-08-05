@@ -575,9 +575,6 @@ public partial class WindowsOptimizationPage : Page
         }
     }
 
-    private void CancelOptimizationButton_Click(object sender, RoutedEventArgs e) =>
-        ViewModel.CancelOptimizationChanges();
-
     private void SelectRecommendedButton_Click(object sender, RoutedEventArgs e)
     {
         if (ViewModel.CurrentMode == WindowsOptimizationViewModel.PageMode.DriverDownload)

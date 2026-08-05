@@ -99,22 +99,45 @@ public sealed class WindowsOptimizationPageGuardTests
     }
 
     [Fact]
-    public void OptimizationToolbar_ShouldExposeSeparateApplyAndCancelActions()
+    public void OptimizationToolbar_ShouldPlaceSelectionSummaryAboveActionsAndOmitCancel()
     {
         var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
         var code = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml.cs");
 
         xaml.Should().Contain("WindowsOptimizationApplyButton");
-        xaml.Should().Contain("WindowsOptimizationCancelButton");
+        xaml.Should().NotContain("WindowsOptimizationCancelButton");
         xaml.Should().Contain("IsEnabled=\"{Binding CanApplyOptimizationChanges}\"");
-        xaml.Should().Contain("IsEnabled=\"{Binding CanCancelOptimizationChanges}\"");
         xaml.Should().Contain("IsEnabled=\"{Binding CanSelectRecommended}\"");
         xaml.Should().Contain("IsEnabled=\"{Binding CanEdit}\"");
         code.Should().Contain("ApplyOptimizationButton_Click");
-        code.Should().Contain("CancelOptimizationButton_Click");
+        code.Should().NotContain("CancelOptimizationButton_Click");
         code.Should().Contain("_optimizationStateScanCancellationTokenSource");
         code.Should().Contain("BeginOptimizationStateScan");
         code.Should().Contain("EndOptimizationStateScan");
+
+        var selectedSummaryIndex = xaml.IndexOf("WindowsOptimizationSelectedActionsButton", StringComparison.Ordinal);
+        var selectedSummaryClose = xaml.IndexOf("</wpfui:Button>", selectedSummaryIndex, StringComparison.Ordinal);
+        var actionRowIndex = xaml.IndexOf("<StackPanel Orientation=\"Horizontal\">", selectedSummaryClose, StringComparison.Ordinal);
+
+        selectedSummaryIndex.Should().BeGreaterThanOrEqualTo(0);
+        selectedSummaryClose.Should().BeGreaterThan(selectedSummaryIndex);
+        actionRowIndex.Should().BeGreaterThan(selectedSummaryClose);
+    }
+
+    [Fact]
+    public void NetworkAccelerationToolbar_ShouldPlaceSelectionSummaryAboveActions()
+    {
+        var xaml = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml");
+
+        var selectionBarIndex = xaml.IndexOf("NetworkAccelerationSelectionBar", StringComparison.Ordinal);
+        var selectionCountIndex = xaml.IndexOf("NetworkAccelerationSelectionCountButton_Click", selectionBarIndex, StringComparison.Ordinal);
+        var selectionCountClose = xaml.IndexOf("</wpfui:Button>", selectionCountIndex, StringComparison.Ordinal);
+        var actionRowIndex = xaml.IndexOf("<StackPanel Orientation=\"Horizontal\">", selectionCountClose, StringComparison.Ordinal);
+
+        selectionBarIndex.Should().BeGreaterThanOrEqualTo(0);
+        selectionCountIndex.Should().BeGreaterThan(selectionBarIndex);
+        selectionCountClose.Should().BeGreaterThan(selectionCountIndex);
+        actionRowIndex.Should().BeGreaterThan(selectionCountClose);
     }
 
     [Fact]

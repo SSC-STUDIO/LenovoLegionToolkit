@@ -162,7 +162,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(IsOptimizationMode));
         OnPropertyChanged(nameof(HasPendingOptimizationChanges));
         OnPropertyChanged(nameof(CanApplyOptimizationChanges));
-        OnPropertyChanged(nameof(CanCancelOptimizationChanges));
         OnPropertyChanged(nameof(CanSelectRecommended));
         OnPropertyChanged(nameof(PageHeaderTitle));
         OnPropertyChanged(nameof(PageHeaderDescription));
@@ -196,7 +195,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             _isBusy = value;
             OnPropertyChanged(nameof(IsBusy));
             OnPropertyChanged(nameof(CanApplyOptimizationChanges));
-            OnPropertyChanged(nameof(CanCancelOptimizationChanges));
             OnPropertyChanged(nameof(CanSelectRecommended));
             UpdateOptimizationActionEditability();
         }
@@ -213,7 +211,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
             _isOptimizationStateScanned = value;
             OnPropertyChanged(nameof(IsOptimizationStateScanned));
             OnPropertyChanged(nameof(CanApplyOptimizationChanges));
-            OnPropertyChanged(nameof(CanCancelOptimizationChanges));
             OnPropertyChanged(nameof(CanSelectRecommended));
             UpdateOptimizationActionEditability();
         }
@@ -224,9 +221,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         .Any(action => action.IsVisible && action.IsEnabled && action.IsDirty);
 
     public bool CanApplyOptimizationChanges =>
-        IsOptimizationMode && IsOptimizationStateScanned && HasPendingOptimizationChanges && !IsBusy;
-
-    public bool CanCancelOptimizationChanges =>
         IsOptimizationMode && IsOptimizationStateScanned && HasPendingOptimizationChanges && !IsBusy;
 
     public bool CanSelectRecommended =>
@@ -658,7 +652,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         OnPropertyChanged(nameof(SelectedActionsSummary));
         OnPropertyChanged(nameof(HasPendingOptimizationChanges));
         OnPropertyChanged(nameof(CanApplyOptimizationChanges));
-        OnPropertyChanged(nameof(CanCancelOptimizationChanges));
 
         if (CurrentMode == PageMode.Cleanup)
         {
@@ -881,28 +874,6 @@ public class WindowsOptimizationViewModel : INotifyPropertyChanged, IDisposable
         finally
         {
             await RunOnUiAsync(() => IsBusy = false);
-        }
-    }
-
-    public void CancelOptimizationChanges()
-    {
-        if (IsBusy || !IsOptimizationMode || !IsOptimizationStateScanned)
-            return;
-
-        _isRefreshingStates = true;
-        try
-        {
-            foreach (var action in SnapshotOptimizationActions())
-            {
-                if (action.IsApplied.HasValue)
-                    action.IsSelected = action.IsApplied.Value;
-            }
-
-            UpdateSelectedActions();
-        }
-        finally
-        {
-            _isRefreshingStates = false;
         }
     }
 

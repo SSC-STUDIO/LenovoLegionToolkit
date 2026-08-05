@@ -237,13 +237,14 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Border
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Padding="3"
-                        Height="48"
-                        MinWidth="48"
-                        Background="{DynamicResource AppSurfaceCardBrush}"
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="3"
+                    Height="48"
+                    MinWidth="48"
+                    VerticalAlignment="Center"
+                    Background="{DynamicResource AppSurfaceCardBrush}"
                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                         BorderThickness="1"
                         CornerRadius="{StaticResource CornerRadiusCard}"
@@ -305,7 +306,6 @@
                             x:Name="_networkAccelerationSelectionBar"
                             Grid.Column="1"
                             Padding="3"
-                            Height="48"
                             MinWidth="48"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
@@ -338,11 +338,11 @@
                                     </Style.Triggers>
                                 </Style>
                             </Border.Resources>
-                            <StackPanel Orientation="Horizontal">
-                                <!-- Count summary: click scrolls to the first selected tile (or explains how to select) -->
+                            <StackPanel>
+                                <!-- Keep the selection summary above the network actions, matching the optimization toolbar. -->
                                 <wpfui:Button
                                     MinWidth="148"
-                                    Margin="0,0,4,0"
+                                    Margin="0,0,0,4"
                                     Appearance="Secondary"
                                     Focusable="False"
                                     IsTabStop="False"
@@ -360,39 +360,40 @@
                                             AutomationProperties.AutomationId="NetworkAccelerationSelectionCount" />
                                     </StackPanel>
                                 </wpfui:Button>
-                                <wpfui:Button
-                                    x:Name="_networkAccelerationSelectionFavoriteButton"
-                                    MinWidth="40"
-                                    Margin="0,0,4,0"
-                                    Appearance="Secondary"
-                                    IsEnabled="False"
-                                    Click="NetworkAccelerationSelectionFavoriteButton_Click"
-                                    ToolTipService.ShowOnDisabled="True"
-                                    AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
-                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
-                                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}">
-                                    <wpfui:SymbolIcon Symbol="Star24" />
-                                </wpfui:Button>
-                                <wpfui:Button
-                                    x:Name="_networkAccelerationSelectionStartButton"
-                                    MinWidth="40"
-                                    Margin="0"
-                                    Appearance="Secondary"
-                                    IsEnabled="False"
-                                    Click="NetworkAccelerationSelectionStartButton_Click"
-                                    Icon="Play24"
-                                    ToolTipService.ShowOnDisabled="True"
-                                    AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
-                                    AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
-                                    ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
-                                </wpfui:Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <wpfui:Button
+                                        x:Name="_networkAccelerationSelectionFavoriteButton"
+                                        MinWidth="40"
+                                        Margin="0,0,4,0"
+                                        Appearance="Secondary"
+                                        IsEnabled="False"
+                                        Click="NetworkAccelerationSelectionFavoriteButton_Click"
+                                        ToolTipService.ShowOnDisabled="True"
+                                        AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
+                                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
+                                        ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}">
+                                        <wpfui:SymbolIcon Symbol="Star24" />
+                                    </wpfui:Button>
+                                    <wpfui:Button
+                                        x:Name="_networkAccelerationSelectionStartButton"
+                                        MinWidth="40"
+                                        Margin="0"
+                                        Appearance="Secondary"
+                                        IsEnabled="False"
+                                        Click="NetworkAccelerationSelectionStartButton_Click"
+                                        Icon="Play24"
+                                        ToolTipService.ShowOnDisabled="True"
+                                        AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
+                                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
+                                        ToolTip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
+                                    </wpfui:Button>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 
                         <Border
                             Grid.Column="1"
                             Padding="3"
-                            Height="48"
                             MinWidth="48"
                             HorizontalAlignment="Right"
                             Background="{DynamicResource AppSurfaceCardBrush}"
@@ -415,11 +416,11 @@
                                     <Setter Property="Padding" Value="12,7" />
                                 </Style>
                             </Border.Resources>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel>
                             <wpfui:Button
                                 AutomationProperties.AutomationId="WindowsOptimizationSelectedActionsButton"
                                 MinWidth="148"
-                                Margin="0,0,4,0"
+                                Margin="0,0,0,4"
                                 Appearance="Secondary"
                                 ToolTip="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
                                 AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}"
@@ -433,6 +434,7 @@
                                         Text="{Binding SelectedActionsSummary, FallbackValue=''}" />
                                 </StackPanel>
                             </wpfui:Button>
+                            <StackPanel Orientation="Horizontal">
                             <wpfui:Button
                                 x:Name="_selectRecommendedButton"
                                 AutomationProperties.AutomationId="WindowsOptimizationSelectRecommendedButton"
@@ -454,28 +456,6 @@
                                 AutomationProperties.Name="{x:Static resources:Resource.Apply}"
                                 IsEnabled="{Binding CanApplyOptimizationChanges}"
                                 Click="ApplyOptimizationButton_Click">
-                                <wpfui:Button.Style>
-                                    <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
-                                        <Setter Property="MinHeight" Value="40" />
-                                        <Setter Property="Padding" Value="12,7" />
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsOptimizationMode}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </wpfui:Button.Style>
-                            </wpfui:Button>
-                            <wpfui:Button
-                                x:Name="_cancelOptimizationButton"
-                                AutomationProperties.AutomationId="WindowsOptimizationCancelButton"
-                                Margin="0,0,4,0"
-                                Appearance="Secondary"
-                                Content="{x:Static resources:Resource.Cancel}"
-                                AutomationProperties.Name="{x:Static resources:Resource.Cancel}"
-                                IsEnabled="{Binding CanCancelOptimizationChanges}"
-                                Click="CancelOptimizationButton_Click">
                                 <wpfui:Button.Style>
                                     <Style TargetType="wpfui:Button" BasedOn="{StaticResource {x:Type wpfui:Button}}">
                                         <Setter Property="MinHeight" Value="40" />
@@ -538,6 +518,7 @@
                                     </wpfui:SymbolIcon.Style>
                                 </wpfui:SymbolIcon>
                             </wpfui:Button>
+                            </StackPanel>
                             </StackPanel>
                         </Border>
                     </Grid>

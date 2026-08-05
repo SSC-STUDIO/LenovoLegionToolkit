@@ -60,14 +60,14 @@ public sealed class WindowsOptimizationViewModelGuardTests
     }
 
     [Fact]
-    public void ApplyAndCancel_ShouldOnlyOperateInOptimizationMode()
+    public void Apply_ShouldOnlyOperateInOptimizationMode()
     {
         var source = ReadRepositoryFile("UniversalDeviceToolkit.WPF", "ViewModels", "WindowsOptimizationViewModel.cs");
         var applyMethod = ExtractMethod(source, "public async Task ApplyOptimizationChangesAsync(");
-        var cancelMethod = ExtractMethod(source, "public void CancelOptimizationChanges()");
 
         applyMethod.Should().Contain("!IsOptimizationMode");
-        cancelMethod.Should().Contain("!IsOptimizationMode");
+        source.Should().NotContain("CanCancelOptimizationChanges");
+        source.Should().NotContain("CancelOptimizationChanges");
     }
 
     private static string ExtractMethod(string source, string signature)
