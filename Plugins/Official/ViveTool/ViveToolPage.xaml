@@ -1,0 +1,425 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Plugins.ViveTool.ViveToolPage"
+    x:Name="PageRoot"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+    xmlns:plugin="clr-namespace:UniversalDeviceToolkit.Plugins.ViveTool"
+    xmlns:pluginRes="clr-namespace:UniversalDeviceToolkit.Plugins.ViveTool.Resources"
+    xmlns:utils="clr-namespace:UniversalDeviceToolkit.Plugins.ViveTool.Utils"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    AutomationProperties.AutomationId="ViveToolPageRoot"
+    FlowDirection="LeftToRight"
+    Loaded="Page_Loaded"
+    SnapsToDevicePixels="True"
+    TextOptions.TextFormattingMode="Display"
+    TextOptions.TextRenderingMode="Auto"
+    Unloaded="Page_Unloaded"
+    UseLayoutRounding="True">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/DesignTokens.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+            <plugin:FeatureStatusConverter x:Key="FeatureStatusConverter" />
+
+            <!-- Shared caution banner chrome (local copy; PluginUiStyles.xaml is shared-owned) -->
+            <Style x:Key="PluginCautionBannerStyle" TargetType="Border">
+                <Setter Property="Background" Value="{DynamicResource SystemFillColorCautionBackgroundBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource SystemFillColorCautionBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+            </Style>
+
+            <Style x:Key="FeatureRowStyle" TargetType="DataGridRow">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+                <Setter Property="Padding" Value="0,4" />
+                <Setter Property="MinHeight" Value="46" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Status}" Value="1">
+                        <Setter Property="Background" Value="{DynamicResource SystemFillColorSuccessBackgroundBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Status}" Value="2">
+                        <Setter Property="Background" Value="{DynamicResource SystemFillColorCriticalBackgroundBrush}" />
+                    </DataTrigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+            <!-- Hero Header -->
+            <Border Grid.Row="0"
+                    Margin="0,0,0,16"
+                    Padding="16,14"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            Width="40" Height="40"
+                            CornerRadius="{StaticResource PluginCornerRadiusControl}"
+                            Margin="0,0,16,0"
+                            Background="{DynamicResource SystemAccentColorPrimaryBrush}">
+                        <wpfui:SymbolIcon Symbol="Code24"
+                                          FontSize="{StaticResource PluginIconSizeLG}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}" />
+                    </Border>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_PageTitle}"
+                                   FontSize="{StaticResource PluginFontSizeBody}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Margin="0,3,0,0"
+                                   Text="{x:Static pluginRes:Resource.ViveTool_PageDescription}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{StaticResource PluginFontSizeCaption}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2"
+                                MinWidth="160"
+                                Margin="16,0,0,0"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ViveToolStatusDescription}"
+                                   AutomationProperties.AutomationId="ViveToolStatusDescriptionText"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Right"
+                                   FontSize="{StaticResource PluginFontSizeCaption}"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="{Binding ViveToolPath}"
+                                   AutomationProperties.AutomationId="ViveToolPathText"
+                                   Margin="0,3,0,0"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Right"
+                                   FontSize="{StaticResource PluginFontSizeSmall}"
+                                   Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Warning Banner -->
+            <Border Grid.Row="1"
+                    Style="{StaticResource PluginCautionBannerStyle}"
+                    Margin="0,0,0,16"
+                    Padding="14,10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <wpfui:SymbolIcon Symbol="Warning24"
+                                      FontSize="{StaticResource PluginIconSizeMD}"
+                                      Margin="0,1,10,0"
+                                      VerticalAlignment="Top"
+                                      Foreground="{DynamicResource SystemFillColorCautionBrush}" />
+                    <TextBlock Grid.Column="1"
+                               Text="{x:Static pluginRes:Resource.ViveTool_WarningMessage}"
+                               TextWrapping="Wrap"
+                               FontSize="{StaticResource PluginFontSizeCaption}"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </Grid>
+            </Border>
+
+            <!-- Missing Tool Banner -->
+            <Border Grid.Row="2"
+                    Style="{StaticResource PluginCautionBannerStyle}"
+                    Margin="0,0,0,16"
+                    Padding="16,14"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
+                    Visibility="{Binding IsViveToolAvailable, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Margin="0,0,24,0">
+                        <TextBlock Text="{x:Static pluginRes:Resource.ViveTool_MissingToolMessage}"
+                                   FontSize="{StaticResource PluginFontSizeLabel}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Margin="0,4,0,0"
+                                   Text="{x:Static pluginRes:Resource.ViveTool_PathDescription}"
+                                   TextWrapping="Wrap"
+                                   FontSize="{StaticResource PluginFontSizeCaption}"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <wpfui:Button Content="{x:Static pluginRes:Resource.ViveTool_GoToSettings}"
+                                      AutomationProperties.AutomationId="ViveToolMissingGoToSettingsButton"
+                                      Appearance="Primary"
+                                      Icon="Settings24"
+                                      Click="GoToSettingsButton_Click"
+                                      Padding="14,6"
+                                      Margin="0,0,8,0" />
+                        <wpfui:Button Content="{x:Static pluginRes:Resource.ViveTool_Refresh}"
+                                      AutomationProperties.AutomationId="ViveToolMissingRefreshStatusButton"
+                                      Icon="ArrowClockwise24"
+                                      Click="RefreshStatusButton_Click"
+                                      Padding="14,6" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Search & Actions Toolbar -->
+            <Border Grid.Row="3"
+                    Margin="0,0,0,12"
+                    Padding="12,10"
+                    CornerRadius="{StaticResource PluginCornerRadiusCard}"
+                    Background="{DynamicResource ControlFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    Visibility="{Binding IsViveToolAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" MinWidth="170" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <wpfui:TextBox x:Name="_searchTextBox"
+                                   AutomationProperties.AutomationId="ViveToolSearchTextBox"
+                                   Grid.Column="0"
+                                   Height="34"
+                                   FontSize="{StaticResource PluginFontSizeLabel}"
+                                   Icon="Search24"
+                                   PlaceholderText="{x:Static pluginRes:Resource.ViveTool_SearchPlaceholder}"
+                                   TextChanged="SearchTextBox_TextChanged"
+                                   Margin="0,0,12,0" />
+
+                    <ComboBox x:Name="_statusFilterComboBox"
+                              AutomationProperties.AutomationId="ViveToolStatusFilterComboBox"
+                              Grid.Column="1"
+                              Height="34"
+                              Margin="0,0,12,0"
+                              SelectionChanged="StatusFilterComboBox_SelectionChanged" />
+
+                    <TextBlock x:Name="_featureCountTextBlock"
+                               AutomationProperties.AutomationId="ViveToolFeatureCountText"
+                               Grid.Column="2"
+                               MinWidth="220"
+                               MaxWidth="360"
+                               VerticalAlignment="Center"
+                               TextAlignment="Right"
+                               TextWrapping="Wrap"
+                               FontSize="{StaticResource PluginFontSizeCaption}"
+                               Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+
+                    <StackPanel Grid.Row="1"
+                                Grid.ColumnSpan="3"
+                                Margin="0,10,0,0"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+                        <wpfui:Button x:Name="_importButton"
+                                      AutomationProperties.AutomationId="ViveToolImportButton"
+                                      Appearance="Primary"
+                                      Icon="ArrowImport24"
+                                      Content="{x:Static pluginRes:Resource.ViveTool_Import}"
+                                      Click="ImportButton_Click"
+                                      Margin="0,0,8,0"
+                                      Padding="12,5" />
+                        <wpfui:Button x:Name="_exportButton"
+                                      AutomationProperties.AutomationId="ViveToolExportButton"
+                                      Icon="ArrowExport24"
+                                      Content="{x:Static pluginRes:Resource.ViveTool_Export}"
+                                      Click="ExportButton_Click"
+                                      Margin="0,0,8,0"
+                                      Padding="12,5" />
+                        <wpfui:Button x:Name="_refreshListButton"
+                                      AutomationProperties.AutomationId="ViveToolRefreshListButton"
+                                      Icon="ArrowClockwise24"
+                                      Content="{x:Static pluginRes:Resource.ViveTool_RefreshList}"
+                                      Click="RefreshListButton_Click"
+                                      Margin="0,0,8,0"
+                                      Padding="12,5" />
+                        <wpfui:Button Content="{x:Static pluginRes:Resource.ViveTool_GoToSettings}"
+                                      AutomationProperties.AutomationId="ViveToolFeatureGoToSettingsButton"
+                                      Icon="Settings24"
+                                      Click="GoToSettingsButton_Click"
+                                      Padding="12,5" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Feature Grid -->
+            <Grid Grid.Row="4"
+                  Visibility="{Binding IsViveToolAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel x:Name="_loadingPanel"
+                            AutomationProperties.AutomationId="ViveToolLoadingPanel"
+                            HorizontalAlignment="Center"
+                            Margin="0,36,0,40"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Visibility="Collapsed">
+                    <wpfui:ProgressRing Height="20"
+                                        IsIndeterminate="True"
+                                        Margin="0,0,12,0"
+                                        Width="20" />
+                    <TextBlock FontSize="{StaticResource PluginFontSizeLabel}"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="{x:Static pluginRes:Resource.ViveTool_Loading}" />
+                </StackPanel>
+
+                <DataGrid x:Name="_featuresDataGrid"
+                          AutomationProperties.AutomationId="ViveToolFeaturesDataGrid"
+                          AutoGenerateColumns="False"
+                          Background="{x:Null}"
+                          BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                          BorderThickness="1"
+                          CanUserReorderColumns="False"
+                          GridLinesVisibility="None"
+                          HeadersVisibility="Column"
+                          IsReadOnly="True"
+                          ItemsSource="{Binding Features}"
+                          RowHeight="46"
+                          RowStyle="{StaticResource FeatureRowStyle}"
+                          ColumnHeaderHeight="36"
+                          AlternationCount="2"
+                          AlternatingRowBackground="{DynamicResource ControlFillColorSecondaryBrush}"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          SelectionMode="Single">
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Padding" Value="10,0" />
+                            <Setter Property="FontSize" Value="{StaticResource PluginFontSizeSmall}" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                            <Setter Property="BorderThickness" Value="0,0,0,1" />
+                            <Setter Property="HorizontalContentAlignment" Value="Left" />
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Id}"
+                                            Header="{x:Static pluginRes:Resource.ViveTool_FeatureId}"
+                                            MinWidth="90"
+                                            Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="FontFamily" Value="Consolas" />
+                                    <Setter Property="FontSize" Value="{StaticResource PluginFontSizeCaption}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Name}"
+                                            Header="{x:Static pluginRes:Resource.ViveTool_FeatureName}"
+                                            Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                                    <Setter Property="FontSize" Value="{StaticResource PluginFontSizeCaption}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Status, Converter={StaticResource FeatureStatusConverter}}"
+                                            Header="{x:Static pluginRes:Resource.ViveTool_Status}"
+                                            MinWidth="90"
+                                            Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="FontWeight" Value="SemiBold" />
+                                    <Setter Property="FontSize" Value="{StaticResource PluginFontSizeCaption}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="1">
+                                            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorSuccessBrush}" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="2">
+                                            <Setter Property="Foreground" Value="{DynamicResource SystemFillColorCriticalBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Header="{x:Static pluginRes:Resource.ViveTool_Actions}"
+                                                MinWidth="180"
+                                                Width="2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel HorizontalAlignment="Center"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                        <wpfui:Button Appearance="Primary"
+                                                      AutomationProperties.AutomationId="{Binding Id, StringFormat=ViveToolEnableFeatureButton_{0}}"
+                                                      Click="EnableFeatureButton_Click"
+                                                      Content="{x:Static pluginRes:Resource.ViveTool_Enable}"
+                                                      FontSize="{StaticResource PluginFontSizeSmall}"
+                                                      Icon="Checkmark24"
+                                                      Margin="0,0,6,0"
+                                                      Padding="10,3"
+                                                      Tag="{Binding Id}" />
+                                        <wpfui:Button Click="DisableFeatureButton_Click"
+                                                      AutomationProperties.AutomationId="{Binding Id, StringFormat=ViveToolDisableFeatureButton_{0}}"
+                                                      Content="{x:Static pluginRes:Resource.ViveTool_Disable}"
+                                                      FontSize="{StaticResource PluginFontSizeSmall}"
+                                                      Icon="Dismiss24"
+                                                      Padding="10,3"
+                                                      Tag="{Binding Id}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel x:Name="_emptyStatePanel"
+                            AutomationProperties.AutomationId="ViveToolEmptyStatePanel"
+                            HorizontalAlignment="Center"
+                            Margin="0,48,0,40"
+                            VerticalAlignment="Center"
+                            Visibility="Collapsed">
+                    <wpfui:SymbolIcon Symbol="Search24"
+                                      FontSize="{StaticResource PluginIconSizeLG}"
+                                      HorizontalAlignment="Center"
+                                      Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                    <TextBlock Margin="0,12,0,0"
+                               FontSize="{StaticResource PluginFontSizeBody}"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                               Text="{x:Static pluginRes:Resource.ViveTool_NoFeaturesFound}"
+                               TextAlignment="Center" />
+                </StackPanel>
+            </Grid>
+
+    </Grid>
+</UserControl>

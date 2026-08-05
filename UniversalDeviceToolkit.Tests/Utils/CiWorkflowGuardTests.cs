@@ -265,6 +265,27 @@ public sealed class CiWorkflowGuardTests
         source.Should().Contain("UDT_ALLOW_FLAUI_TESTS");
     }
 
+    [Fact]
+    public void PluginCatalogReleaseWorkflow_ShouldPublishCatalogAfterPackageValidation()
+    {
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "plugins-release.yml");
+
+        workflow.Should().Contain("group: plugin-catalog-release");
+        workflow.Should().Contain("cancel-in-progress: false");
+        workflow.Should().Contain("CATALOG_RELEASE_TITLE: 'Official Plugin Catalog (managed)'");
+        workflow.Should().Contain("Validate staged release contents");
+        workflow.Should().Contain("$previousCatalog");
+        workflow.Should().Contain("throw $catalogError");
+
+        var packageUploadIndex = workflow.IndexOf("- name: Upload new package assets", StringComparison.Ordinal);
+        var catalogUploadIndex = workflow.IndexOf("- name: Publish catalog asset last and prune stale packages", StringComparison.Ordinal);
+        var staleAssetDeleteIndex = workflow.IndexOf("gh release delete-asset", StringComparison.Ordinal);
+
+        packageUploadIndex.Should().BeGreaterThanOrEqualTo(0);
+        catalogUploadIndex.Should().BeGreaterThan(packageUploadIndex);
+        staleAssetDeleteIndex.Should().BeGreaterThan(catalogUploadIndex);
+    }
+
     private static GitHubWorkflowContract ReadWorkflow(string fileName) =>
         GitHubWorkflowContract.Parse(RepositoryPaths.ReadFile(".github", "workflows", fileName));
 

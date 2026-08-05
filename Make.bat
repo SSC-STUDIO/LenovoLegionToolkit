@@ -192,7 +192,7 @@ for %%p in (
     UniversalDeviceToolkit.ViewModels
     UniversalDeviceToolkit.Lib.Abstractions
     UniversalDeviceToolkit.Lib.Shared
-    UniversalDeviceToolkit.Plugins.Abstractions
+    Plugins\SDK\Abstractions
 ) do (
     if exist "%%p\bin" rmdir /s /q "%%p\bin"
     if exist "%%p\obj" rmdir /s /q "%%p\obj"

@@ -32,6 +32,8 @@ public class UpdateChecker
         "LenovoLegionToolkit"
     };
 
+    private const string PluginCatalogReleaseTag = "plugin-catalog";
+
     private DateTime _lastUpdate;
     private TimeSpan _minimumTimeSpanForRefresh;
     private Update[] _updates = [];
@@ -46,6 +48,19 @@ public class UpdateChecker
 
         UpdateMinimumTimeSpanForRefresh();
         _lastUpdate = _updateCheckSettings.Store.LastUpdateCheckDateTime ?? DateTime.MinValue;
+    }
+
+    internal static Release[] FilterPublicApplicationReleases(
+        IEnumerable<Release> releases,
+        bool includePrerelease)
+    {
+        ArgumentNullException.ThrowIfNull(releases);
+
+        return releases
+            .Where(r => !r.Draft &&
+                        (includePrerelease || !r.Prerelease) &&
+                        !string.Equals(r.TagName, PluginCatalogReleaseTag, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
     }
 
     public async Task<Version?> CheckAsync(bool forceCheck)
@@ -122,9 +137,7 @@ public class UpdateChecker
                     Log.Instance.Trace($"Current version: {thisReleaseVersion}, Found releases: {releases.Count}");
 
                 var includePrerelease = _updateCheckSettings.Store.IncludePrereleaseUpdates;
-                var publicReleases = releases
-                    .Where(r => !r.Draft && (includePrerelease || !r.Prerelease))
-                    .ToArray();
+                var publicReleases = FilterPublicApplicationReleases(releases, includePrerelease);
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Public releases (non-draft{(includePrerelease ? ", incl. prereleases" : ", stable only")}): {publicReleases.Length}");
 

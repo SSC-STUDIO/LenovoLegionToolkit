@@ -13,12 +13,6 @@ jobs:
       uses: actions/checkout@v7
       with:
         fetch-depth: 0
-    - name: Checkout plugin repository
-      uses: actions/checkout@v7
-      with:
-        repository: SSC-STUDIO/UniversalDeviceToolkit-Plugins
-        path: UniversalDeviceToolkit-Plugins
-        ref: master
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:

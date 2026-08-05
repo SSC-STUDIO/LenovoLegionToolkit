@@ -94,7 +94,7 @@ No third-party accelerator SDKs, no remote script injection, no unreviewed onlin
 
 ## Plugin consolidation
 
-Official plugins live in [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins).
+Official plugins live in this repository under `Plugins/Official/`.
 See `Docs/PluginConsolidation.md`.
 
 - **Network Acceleration** plugin: **delisted** from store; migration source only.

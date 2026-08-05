@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "vive-tool",
+  "name": "ViVeTool",
+  "version": "1.2.4",
+  "minHostVersion": "5.0.0",
+  "author": "SSC-STUDIO",
+  "isSystemPlugin": false,
+  "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
+  "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues",
+  "contributes": {
+    "featurePage": {
+      "class": "UniversalDeviceToolkit.Plugins.ViveTool.ViveToolPage",
+      "title": "ViVeTool"
+    },
+    "settingsPage": {
+      "class": "UniversalDeviceToolkit.Plugins.ViveTool.ViveToolSettingsPage",
+      "title": "ViVeTool Settings"
+    },
+    "runtime": null,
+    "optimizationActions": []
+  },
+  "package": {
+    "assetName": "vive-tool-v1.2.4.zip",
+    "requiredFiles": [
+      "UniversalDeviceToolkit.Plugins.ViveTool.dll",
+      "UniversalDeviceToolkit.Plugins.SDK.dll",
+      "plugin.json",
+      "plugin.manifest.json"
+    ]
+  },
+  "store": {
+    "description": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
+    "icon": "Code24",
+    "iconBackground": "#7C3AED",
+    "tags": [
+      "windows",
+      "feature-flags",
+      "tweaks"
+    ],
+    "dependencies": [],
+    "supportedLanguages": [
+      "ar",
+      "bg",
+      "bs",
+      "ca",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es",
+      "fr",
+      "hu",
+      "it",
+      "ja",
+      "ko",
+      "lv",
+      "nl",
+      "nl-NL",
+      "no",
+      "pl",
+      "pt",
+      "pt-BR",
+      "ro",
+      "ru",
+      "sk",
+      "tr",
+      "uk",
+      "uz",
+      "uz-Latn-UZ",
+      "vi",
+      "zh",
+      "zh-Hans",
+      "zh-Hant"
+    ],
+    "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit"
+  },
+  "lifecycle": "Active",
+  "localizedNames": {},
+  "localizedDescriptions": {},
+  "localizedTags": {}
+}

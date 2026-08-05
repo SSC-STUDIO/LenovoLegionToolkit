@@ -42,7 +42,7 @@ dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.Lib.Shared/UniversalDeviceToolk
 dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.ViewModels/UniversalDeviceToolkit.ViewModels.csproj" \
     --configuration "$CONFIGURATION" --verbosity minimal
 
-dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.Plugins.Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj" \
+dotnet build "$SCRIPT_DIR/Plugins/SDK/Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj" \
     --configuration "$CONFIGURATION" --verbosity minimal
 
 # Build Avalonia application

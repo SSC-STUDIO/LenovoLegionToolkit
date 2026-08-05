@@ -1,0 +1,86 @@
+name: Build Plugins
+
+on:
+  workflow_dispatch:
+    inputs:
+      plugin_ids:
+        description: 'Comma-separated plugin ids; leave empty for all official plugins'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 1
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Resolve plugin selection
+        id: plugins
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $inputIds = "${{ github.event.inputs.plugin_ids }}".Trim()
+
+          if ($inputIds) {
+            $selection = $inputIds.Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Select-Object -Unique
+          } else {
+            $selection = Get-ChildItem -Path .\Plugins\Official -Directory |
+              Where-Object { $_.Name -notlike '*.Tests' } |
+              ForEach-Object {
+                $manifestPath = Join-Path $_.FullName 'plugin.manifest.json'
+                if (Test-Path $manifestPath) {
+                  (Get-Content $manifestPath -Raw | ConvertFrom-Json -AsHashtable).id
+                }
+              } |
+              Where-Object { $_ } |
+              Sort-Object -Unique
+          }
+
+          if (-not @($selection).Count) {
+            throw 'No plugins selected for build.'
+          }
+
+          "plugin_ids=$(@($selection) -join ',')" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Validate selected plugins
+        shell: pwsh
+        run: |
+          .\Plugins\Scripts\Invoke-PluginTooling.ps1 `
+            validate `
+            --repository-root .\Plugins `
+            --plugin-ids "${{ steps.plugins.outputs.plugin_ids }}" `
+            --profile contributor
+
+      - name: Package selected plugins
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path .\Plugins\.build\artifacts -Force | Out-Null
+          $pluginIds = "${{ steps.plugins.outputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+
+          foreach ($pluginId in $pluginIds) {
+            .\Plugins\Scripts\Invoke-PluginTooling.ps1 `
+              package `
+              --repository-root .\Plugins `
+              --plugin $pluginId `
+              --output-dir .\Plugins\.build\artifacts
+          }
+
+      - name: Upload plugin packages
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: plugin-zips
+          path: Plugins/.build/artifacts/*.zip
+          if-no-files-found: error
+          retention-days: 7

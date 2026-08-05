@@ -1,0 +1,32 @@
+.build/
+.host/
+.catalog/
+Build/
+**/bin/
+**/obj/
+!.gitkeep
+artifacts/
+artifacts-plugin-completion-check.log
+.vs/
+*.user
+*.DotSettings.user
+TestResults/
+task_plan.md
+findings.md
+progress.md
+NuGet.Config
+/store.json
+
+# Accidental build outputs next to sources (keep Plugins/*/Bundled/**)
+Plugins/*/*.dll
+Plugins/*/*.pdb
+Plugins/*/*.xml
+*.bak
+*.bak-*
+*~
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Local tooling config (machine-specific MCP bridge)
+.mcp.json

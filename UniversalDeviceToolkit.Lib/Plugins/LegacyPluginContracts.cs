@@ -10,7 +10,7 @@ namespace UniversalDeviceToolkit.Lib.Plugins;
 // It mirrors (same namespace, intentionally different assembly) the external
 // contract in UniversalDeviceToolkit.Plugins.Abstractions
 // (net10.0, assembly UniversalDeviceToolkit.Plugins.Abstractions), which the
-// external plugin repository (UniversalDeviceToolkit-Plugins) compiles against
+// external plugin projects under Plugins/Official compile against
 // via HintPath.
 //
 // Older plugins referencing this assembly must remain binary-compatible with

@@ -71,6 +71,7 @@
     <PackageVersion Include="FlaUI.UIA3" Version="5.0.0" />
     <PackageVersion Include="FlaUI.Core" Version="5.0.0" />
     <PackageVersion Include="Xunit.SkippableFact" Version="1.5.61" />
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.2" />
   </ItemGroup>
 
   <!-- ==================== Pinned Transitive Dependencies ==================== -->
@@ -85,6 +86,7 @@
     <PackageVersion Include="System.Security.Permissions" Version="10.0.8" />
     <PackageVersion Include="System.Windows.Extensions" Version="10.0.8" />
     <PackageVersion Include="xunit.analyzers" Version="1.27.0" />
+    <PackageVersion Include="MessagePack" Version="3.1.7" />
   </ItemGroup>
 
   <!-- ==================== Avalonia/UI Dependencies ==================== -->

@@ -37,7 +37,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
           "author": "UDT Team",
           "version": "1.0.9",
           "minimumHostVersion": "3.6.1",
-          "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/shell-integration-v1.0.9/shell-integration-v1.0.9.zip"
+          "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/shell-integration-v1.0.9.zip"
         }
       ]
     }
@@ -59,7 +59,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task FetchAvailablePluginsAsync_ShouldRetryTransientStoreFailureAndSucceed()
+    public async Task FetchAvailablePluginsAsync_ShouldRetryTransientCatalogFailureAndSucceed()
     {
         // Arrange
         var attempts = 0;
@@ -67,7 +67,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         using var service = CreateService(request =>
         {
             request.RequestUri.Should().NotBeNull();
-            request.RequestUri!.AbsoluteUri.Should().StartWith("https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit-Plugins@master/store.json");
+            request.RequestUri!.AbsoluteUri.Should().Be("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
             seenVersions.Add(request.Version);
 
             attempts++;
@@ -90,7 +90,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task FetchAvailablePluginsAsync_ShouldPreferMirrorBeforeRawGithubSources()
+    public async Task FetchAvailablePluginsAsync_ShouldUseMainRepositoryCatalog()
     {
         // Arrange
         var requestedUrls = new List<string>();
@@ -99,7 +99,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             var url = request.RequestUri?.AbsoluteUri ?? string.Empty;
             requestedUrls.Add(url);
 
-            if (url.Contains("cdn.jsdelivr.net", StringComparison.OrdinalIgnoreCase))
+            if (url.Equals("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json", StringComparison.OrdinalIgnoreCase))
             {
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -116,11 +116,11 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         // Assert
         plugins.Should().ContainSingle();
         requestedUrls.Should().NotBeEmpty();
-        requestedUrls[0].Should().Contain("cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit-Plugins@master/store.json");
+        requestedUrls.Should().ContainSingle("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
     }
 
     [Fact]
-    public async Task FetchAvailablePluginsAsync_ShouldFallbackToMirrorWhenPrimarySourcesFail()
+    public async Task FetchAvailablePluginsAsync_ShouldNotUseLegacyPluginRepository()
     {
         // Arrange
         var requestedUrls = new List<string>();
@@ -129,25 +129,15 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             var url = request.RequestUri?.AbsoluteUri ?? string.Empty;
             requestedUrls.Add(url);
 
-            if (url.Contains("cdn.jsdelivr.net", StringComparison.OrdinalIgnoreCase))
-            {
-                return new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(StoreResponseJson)
-                };
-            }
-
             return new HttpResponseMessage(HttpStatusCode.NotFound);
         });
 
         // Act
-        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
+        var act = async () => await service.FetchAvailablePluginsAsync(forceRefresh: true);
 
         // Assert
-        plugins.Should().ContainSingle(plugin => plugin.Id == "shell-integration");
-        requestedUrls.Should().Contain(url => url.Contains("cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit-Plugins@master/store.json", StringComparison.OrdinalIgnoreCase));
-        requestedUrls.Should().NotContain(url => url.Contains("raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/master/store.json", StringComparison.OrdinalIgnoreCase));
-        requestedUrls.Should().NotContain(url => url.Contains("raw.githubusercontent.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/refs/heads/master/store.json", StringComparison.OrdinalIgnoreCase));
+        await act.Should().ThrowAsync<HttpRequestException>();
+        requestedUrls.Should().ContainSingle("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
     }
 
     [Fact]
@@ -246,18 +236,19 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Theory]
-    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", true)]
-    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/latest/download/custom-mouse-v1.0.16.zip", true)]
-    [InlineData("https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/assets/123456", true)]
-    [InlineData("https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", true)]
-    [InlineData("https://gh-proxy.com/https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", true)]
-    [InlineData("https://ghfast.top/https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/latest/download/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest/download/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/assets/123456", true)]
+    [InlineData("https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://github.com/SSC-STUDIO/LenovoLegionToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://gh-proxy.com/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.16.zip", true)]
+    [InlineData("https://ghfast.top/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest/download/custom-mouse-v1.0.16.zip", true)]
     [InlineData("https://gh-proxy.com/https://example.com/custom-mouse-v1.0.16.zip", false)]
-    [InlineData("https://gh-proxy.com/https://github.com/SomeoneElse/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://gh-proxy.com/https://github.com/SomeoneElse/UniversalDeviceToolkit/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
     [InlineData("file:///C:/Temp/custom-mouse-v1.0.16.zip", false)]
     [InlineData("https://example.com/custom-mouse-v1.0.16.zip", false)]
-    [InlineData("https://github.com/SomeoneElse/UniversalDeviceToolkit-Plugins/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
-    [InlineData("https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit-Plugins@master/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://github.com/SomeoneElse/UniversalDeviceToolkit/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
+    [InlineData("https://cdn.jsdelivr.net/gh/SSC-STUDIO/UniversalDeviceToolkit@master/releases/download/custom-mouse-v1.0.16/custom-mouse-v1.0.16.zip", false)]
     public void ShouldTrustDownloadedPluginPackage_ShouldOnlyTrustOfficialGitHubReleaseAssets(string candidateUrl, bool expected)
     {
         // Arrange
@@ -374,7 +365,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             Name = "Invalid plugin",
             Version = "1.0.0",
             MinimumHostVersion = "1.0.0",
-            DownloadUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins/releases/download/escape.zip"
+            DownloadUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/escape.zip"
         };
 
         using var service = CreateService(_ =>

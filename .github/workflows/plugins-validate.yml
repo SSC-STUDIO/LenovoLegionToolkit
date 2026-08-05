@@ -1,0 +1,53 @@
+name: Validate Plugins
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'Plugins/**'
+      - 'Plugins/SDK/Abstractions/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - '.github/workflows/plugins-validate.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'Plugins/**'
+      - 'Plugins/SDK/Abstractions/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - '.github/workflows/plugins-validate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Run governance gate
+        shell: pwsh
+        run: .\Plugins\Scripts\governance-gate.ps1 -Root .\Plugins
+
+      - name: Prime plugin tooling CLI
+        shell: pwsh
+        run: .\Plugins\Scripts\Invoke-PluginTooling.ps1 --repository-root .\Plugins --help
+
+      - name: Validate all official plugins
+        shell: pwsh
+        run: |
+          .\Plugins\Scripts\Invoke-PluginTooling.ps1 `
+            validate `
+            --repository-root .\Plugins `
+            --profile contributor

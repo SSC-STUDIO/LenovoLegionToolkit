@@ -4,6 +4,9 @@
     "net10.0-windows10.0.26100": {
       "universaldevicetoolkit.cli.lib": {
         "type": "Project"
+      },
+      "universaldevicetoolkit.lib.abstractions": {
+        "type": "Project"
       }
     },
     "net10.0-windows10.0.26100/win-x64": {}

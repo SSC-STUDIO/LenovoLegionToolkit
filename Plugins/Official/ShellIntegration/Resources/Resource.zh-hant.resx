@@ -1,0 +1,376 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PluginName" xml:space="preserve">
+    <value>Shell 整合</value>
+  </data>
+  <data name="PluginDescription" xml:space="preserve">
+    <value>將 Universal Device Toolkit 整合到 Windows 右鍵選單。</value>
+  </data>
+  <data name="SettingsPageTitle" xml:space="preserve">
+    <value>Shell 整合</value>
+  </data>
+  <data name="Subtitle" xml:space="preserve">
+    <value>使用受管的 Shell 控制、動效調整與即時預覽重新打造右鍵選單體驗。</value>
+  </data>
+  <data name="EnableButton" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="DisableButton" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="OpenStyleSettingsButton" xml:space="preserve">
+    <value>開啟樣式設定</value>
+  </data>
+  <data name="OpenStyleShortButton" xml:space="preserve">
+    <value>開啟資料夾</value>
+  </data>
+  <data name="RefreshButton" xml:space="preserve">
+    <value>重新整理</value>
+  </data>
+  <data name="ResetButton" xml:space="preserve">
+    <value>還原預設</value>
+  </data>
+  <data name="ApplyButton" xml:space="preserve">
+    <value>套用變更</value>
+  </data>
+  <data name="OptimizationHint" xml:space="preserve">
+    <value>你也可以在系統最佳化頁面使用 Shell 動作。</value>
+  </data>
+  <data name="StatusDetected" xml:space="preserve">
+    <value>已偵測到 Nilesoft Shell。</value>
+  </data>
+  <data name="StatusNotDetected" xml:space="preserve">
+    <value>未偵測到 Nilesoft Shell。</value>
+  </data>
+  <data name="StatusRegistered" xml:space="preserve">
+    <value>右鍵選單增強目前已啟用。</value>
+  </data>
+  <data name="StatusUnregistered" xml:space="preserve">
+    <value>右鍵選單增強目前已關閉。</value>
+  </data>
+  <data name="StatusDetailDefault" xml:space="preserve">
+    <value>外掛現在會自行管理 Shell 設定檔與產生的設定檔。</value>
+  </data>
+  <data name="StatusEnabledBadge" xml:space="preserve">
+    <value>已啟用</value>
+  </data>
+  <data name="StatusDisabledBadge" xml:space="preserve">
+    <value>已關閉</value>
+  </data>
+  <data name="StatusMissingBadge" xml:space="preserve">
+    <value>未安裝</value>
+  </data>
+  <data name="StatusUnknownBadge" xml:space="preserve">
+    <value>檢查中</value>
+  </data>
+  <data name="PathLabel" xml:space="preserve">
+    <value>路徑</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>未找到</value>
+  </data>
+  <data name="ManagedConfigLabel" xml:space="preserve">
+    <value>受管設定</value>
+  </data>
+  <data name="ManagedConfigNotReady" xml:space="preserve">
+    <value>偵測到 Shell 後會建立受管設定。</value>
+  </data>
+  <data name="StatusEnableCompleted" xml:space="preserve">
+    <value>啟用命令已完成。</value>
+  </data>
+  <data name="StatusEnableFailed" xml:space="preserve">
+    <value>啟用命令失敗。</value>
+  </data>
+  <data name="StatusDisableCompleted" xml:space="preserve">
+    <value>停用命令已完成。</value>
+  </data>
+  <data name="StatusDisableFailed" xml:space="preserve">
+    <value>停用命令失敗。</value>
+  </data>
+  <data name="StatusOpenedStyleSettings" xml:space="preserve">
+    <value>已開啟受管設定資料夾。</value>
+  </data>
+  <data name="ProfileSavedShellMissing" xml:space="preserve">
+    <value>設定已儲存，但目前系統未找到 Shell。</value>
+  </data>
+  <data name="ApplyCompletedEnabled" xml:space="preserve">
+    <value>設定已套用，右鍵選單增強已啟用。</value>
+  </data>
+  <data name="ApplyCompletedDisabled" xml:space="preserve">
+    <value>設定已套用，右鍵選單增強已關閉。</value>
+  </data>
+  <data name="FallbackLoadError" xml:space="preserve">
+    <value>增強設定介面未能載入。</value>
+  </data>
+  <data name="AppearanceSection" xml:space="preserve">
+    <value>行為</value>
+  </data>
+  <data name="AppearanceSectionHint" xml:space="preserve">
+    <value>在寫入受管設定前，先調整延遲、動效與整體渲染風格。</value>
+  </data>
+  <data name="PaletteSection" xml:space="preserve">
+    <value>配色</value>
+  </data>
+  <data name="PaletteSectionHint" xml:space="preserve">
+    <value>直接在外掛中調整選單配色，並保持產生主題一致。</value>
+  </data>
+  <data name="PreviewSection" xml:space="preserve">
+    <value>即時預覽</value>
+  </data>
+  <data name="PreviewHint" xml:space="preserve">
+    <value>這個預覽會模擬產生的 Shell 主題，方便你在套用前調整。</value>
+  </data>
+  <data name="PathsSection" xml:space="preserve">
+    <value>設定狀態</value>
+  </data>
+  <data name="MotionToggleLabel" xml:space="preserve">
+    <value>啟用動效點綴</value>
+  </data>
+  <data name="ShadowToggleLabel" xml:space="preserve">
+    <value>啟用陰影層次</value>
+  </data>
+  <data name="ColorSchemeLabel" xml:space="preserve">
+    <value>配色模式</value>
+  </data>
+  <data name="ColorSchemeAuto" xml:space="preserve">
+    <value>跟隨系統</value>
+  </data>
+  <data name="ColorSchemeLight" xml:space="preserve">
+    <value>永遠淺色</value>
+  </data>
+  <data name="ColorSchemeDark" xml:space="preserve">
+    <value>永遠深色</value>
+  </data>
+  <data name="VisualEffectLabel" xml:space="preserve">
+    <value>背景效果</value>
+  </data>
+  <data name="EffectNone" xml:space="preserve">
+    <value>無</value>
+  </data>
+  <data name="EffectTransparent" xml:space="preserve">
+    <value>透明</value>
+  </data>
+  <data name="EffectBlur" xml:space="preserve">
+    <value>模糊</value>
+  </data>
+  <data name="EffectAcrylic" xml:space="preserve">
+    <value>壓克力</value>
+  </data>
+  <data name="ShowDelayLabel" xml:space="preserve">
+    <value>子選單顯示延遲</value>
+  </data>
+  <data name="ShowDelayValueFormat" xml:space="preserve">
+    <value>{0} 毫秒</value>
+  </data>
+  <data name="ShadowStrengthLabel" xml:space="preserve">
+    <value>陰影透明度</value>
+  </data>
+  <data name="ShadowStrengthValueFormat" xml:space="preserve">
+    <value>{0}%</value>
+  </data>
+  <data name="AccentColorLabel" xml:space="preserve">
+    <value>強調色</value>
+  </data>
+  <data name="BackgroundColorLabel" xml:space="preserve">
+    <value>背景色</value>
+  </data>
+  <data name="HoverColorLabel" xml:space="preserve">
+    <value>懸停色</value>
+  </data>
+  <data name="TextColorLabel" xml:space="preserve">
+    <value>文字顏色</value>
+  </data>
+  <data name="MutedColorLabel" xml:space="preserve">
+    <value>弱化文字顏色</value>
+  </data>
+  <data name="TintColorLabel" xml:space="preserve">
+    <value>效果染色色</value>
+  </data>
+  <data name="PreviewPrimary" xml:space="preserve">
+    <value>效能模式</value>
+  </data>
+  <data name="PreviewPrimaryHint" xml:space="preserve">
+    <value>帶有目前強調色的固定快捷操作。</value>
+  </data>
+  <data name="PreviewSecondary" xml:space="preserve">
+    <value>混合顯卡</value>
+  </data>
+  <data name="PreviewSecondaryHint" xml:space="preserve">
+    <value>次級選單動作的懸停狀態。</value>
+  </data>
+  <data name="PreviewTertiary" xml:space="preserve">
+    <value>開啟工具箱面板</value>
+  </data>
+  <data name="PreviewTertiaryHint" xml:space="preserve">
+    <value>使用產生背景配色的一般選單項。</value>
+  </data>
+  <data name="OpenConfigButton" xml:space="preserve">
+    <value>開啟設定檔</value>
+  </data>
+  <data name="OpenShellFolderButton" xml:space="preserve">
+    <value>開啟 Shell 資料夾</value>
+  </data>
+  <data name="StatusConfigNotFound" xml:space="preserve">
+    <value>找不到設定檔。</value>
+  </data>
+  <data name="StatusOpenedConfig" xml:space="preserve">
+    <value>已開啟設定檔。</value>
+  </data>
+  <data name="StatusOpenedShellFolder" xml:space="preserve">
+    <value>已開啟 Shell 資料夾。</value>
+  </data>
+  <data name="StatusShellFolderNotFound" xml:space="preserve">
+    <value>找不到 Shell 資料夾。</value>
+  </data>
+  <data name="VersionLabel" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="OverviewTitle" xml:space="preserve">
+    <value>Shell 整合概覽</value>
+  </data>
+  <data name="OverviewDescription" xml:space="preserve">
+    <value>查看註冊狀態、安裝路徑，並快速存取打包的 Shell 工具。</value>
+  </data>
+  <data name="RegistrationLabel" xml:space="preserve">
+    <value>註冊狀態</value>
+  </data>
+  <data name="ConfigLabel" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="ActionsTitle" xml:space="preserve">
+    <value>快捷操作</value>
+  </data>
+  <data name="ActionsDescription" xml:space="preserve">
+    <value>套用註冊變更或開啟此外掛使用的 Shell 資源。</value>
+  </data>
+  <data name="RegisteredState" xml:space="preserve">
+    <value>已偵測</value>
+  </data>
+  <data name="MissingState" xml:space="preserve">
+    <value>未偵測</value>
+  </data>
+    <data name="ExportProfileButton" xml:space="preserve">
+    <value>匯出設定檔</value>
+  </data>
+  <data name="ImportProfileButton" xml:space="preserve">
+    <value>匯入設定檔</value>
+  </data>
+  <data name="OpenManagedConfigButton" xml:space="preserve">
+    <value>開啟受管理設定</value>
+  </data>
+  <data name="ProfileFileDialogFilter" xml:space="preserve">
+    <value>JSON 檔案 (*.json)|*.json|所有檔案 (*.*)|*.*</value>
+  </data>
+  <data name="ResetManagedConfigButton" xml:space="preserve">
+    <value>重設受管理設定</value>
+  </data>
+  <data name="StatusManagedConfigFolderUnavailable" xml:space="preserve">
+    <value>受管理設定資料夾無法使用。</value>
+  </data>
+  <data name="StatusManagedConfigResetCompleted" xml:space="preserve">
+    <value>受管理設定已重設為預設值。</value>
+  </data>
+  <data name="StatusManagedConfigResetFailed" xml:space="preserve">
+    <value>受管理設定重設失敗。</value>
+  </data>
+  <data name="StatusManagedConfigSyncCompleted" xml:space="preserve">
+    <value>受管理設定已同步。</value>
+  </data>
+  <data name="StatusManagedConfigSyncFailed" xml:space="preserve">
+    <value>受管理設定同步失敗。</value>
+  </data>
+  <data name="StatusOpenedManagedConfig" xml:space="preserve">
+    <value>已開啟受管理設定資料夾。</value>
+  </data>
+  <data name="StatusProfileExportCompleted" xml:space="preserve">
+    <value>設定檔已匯出。</value>
+  </data>
+  <data name="StatusProfileExportFailed" xml:space="preserve">
+    <value>設定檔匯出失敗。</value>
+  </data>
+  <data name="StatusProfileImportCompleted" xml:space="preserve">
+    <value>設定檔已匯入。</value>
+  </data>
+  <data name="StatusProfileImportFailed" xml:space="preserve">
+    <value>設定檔匯入失敗。</value>
+  </data>
+  <data name="SyncManagedConfigButton" xml:space="preserve">
+    <value>同步受管理設定</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Description" xml:space="preserve">
+    <value>從 Windows 內容功能表取消註冊 Nilesoft Shell。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Disable_Title" xml:space="preserve">
+    <value>停用 Shell 整合</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Description" xml:space="preserve">
+    <value>註冊 Nilesoft Shell 並套用受管理設定。</value>
+  </data>
+  <data name="WindowsOptimization_Action_NilesoftShell_Enable_Title" xml:space="preserve">
+    <value>啟用 Shell 整合</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Description" xml:space="preserve">
+    <value>啟用或停用 Nilesoft Shell 與 Windows 內容功能表的整合。</value>
+  </data>
+  <data name="WindowsOptimization_Category_NilesoftShell_Title" xml:space="preserve">
+    <value>Nilesoft Shell</value>
+  </data>
+<data name="OpenFileButton" xml:space="preserve"><value>Open File</value></data><data name="OpenFolderButton" xml:space="preserve"><value>Open Folder</value></data></root>

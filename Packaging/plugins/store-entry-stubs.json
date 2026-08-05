@@ -1,5 +1,5 @@
 {
-  "note": "Local planning stubs only. Published store.json lives in UniversalDeviceToolkit-Plugins. Host app version: UniversalDeviceToolkit/Directory.Build.props (Major/Minor/Patch). Plugin versions: each plugin's plugin.manifest.json; bump via llt-plugin.cmd bump-version.",
+  "note": "Local planning stubs only. The generated plugin catalog is published as store.json in the main repository's rolling plugin-catalog release. Host app version: Directory.Build.props (Major/Minor/Patch). Plugin versions: each Plugins/Official/*/plugin.manifest.json; bump via Plugins/udt-plugin.cmd bump-version.",
   "lastUpdated": "2026-07-14",
   "plugins": [
     {

@@ -19,12 +19,11 @@ function Resolve-PluginsRepositoryRoot {
 
     $coreRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
     $candidates = @(
-        (Join-Path $coreRoot "..\UniversalDeviceToolkit-Plugins"),
-        (Join-Path $coreRoot "UniversalDeviceToolkit-Plugins")
+        (Join-Path $coreRoot "Plugins")
     )
 
     foreach ($candidate in $candidates) {
-        if (Test-Path -LiteralPath (Join-Path $candidate "UniversalDeviceToolkit-Plugins.sln")) {
+        if (Test-Path -LiteralPath (Join-Path $candidate "UniversalDeviceToolkit.Plugins.sln")) {
             return (Resolve-Path -LiteralPath $candidate).Path
         }
     }
@@ -70,8 +69,8 @@ if ($LASTEXITCODE -ne 0) {
     throw "ensure-host-dependencies.ps1 failed with exit code $LASTEXITCODE."
 }
 
-$sdkProject = Join-Path $pluginsRoot "SDK\UniversalDeviceToolkit.Plugins.SDK.csproj"
-$sharedProject = Join-Path $pluginsRoot "Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj"
+$sdkProject = Join-Path $pluginsRoot "SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj"
+$sharedProject = Join-Path $pluginsRoot "Shared\UniversalDeviceToolkit.Plugins.Shared.csproj"
 
 Write-Host "Restoring plugin SDK and Shared"
 # Disable CPM: the plugins repo carries inline PackageReference versions and, when
@@ -91,11 +90,11 @@ if ($LASTEXITCODE -ne 0) { throw "Plugin Shared build failed." }
 
 $runtimeFiles = @(
     @{
-        Source = Join-Path $pluginsRoot "Build\Shared\UniversalDeviceToolkit.Plugins.Shared.dll"
+        Source = Join-Path $pluginsRoot ".build\shared\UniversalDeviceToolkit.Plugins.Shared.dll"
         Name = "UniversalDeviceToolkit.Plugins.Shared.dll"
     },
     @{
-        Source = Join-Path $pluginsRoot "Build\SDK\UniversalDeviceToolkit.Plugins.SDK.dll"
+        Source = Join-Path $pluginsRoot ".build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll"
         Name = "UniversalDeviceToolkit.Plugins.SDK.dll"
     }
 )

@@ -1,0 +1,91 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
+    <Nullable>enable</Nullable>
+    <Version>1.0.14</Version>
+    <FileVersion>1.0.14</FileVersion>
+    <AssemblyVersion>1.0.14</AssemblyVersion>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.ShellIntegration</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Shell binary source paths: local repo (priority) and cached download (fallback) -->
+  <PropertyGroup>
+    <ShellLocalBinPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', '..', 'Shell', 'src', 'bin'))</ShellLocalBinPath>
+    <ShellCachedBinPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'Bundled', 'Shell'))</ShellCachedBinPath>
+    <FetchShellScript>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', '..', 'Scripts', 'fetch-shell-binaries.ps1'))</FetchShellScript>
+    <_ShellLocalExists Condition="Exists('$(ShellLocalBinPath)\shell.exe')">true</_ShellLocalExists>
+    <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
+  </PropertyGroup>
+
+  <!-- Priority 1: Local Shell repo (for developers who have it cloned) -->
+  <ItemGroup Condition="'$(_ShellLocalExists)' == 'true'">
+    <None Include="$(ShellLocalBinPath)\shell.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellLocalBinPath)\shell.dll" Condition="Exists('$(ShellLocalBinPath)\shell.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellLocalBinPath)\shell.nss" Condition="Exists('$(ShellLocalBinPath)\shell.nss')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellLocalBinPath)\imports\**\*.*" Condition="Exists('$(ShellLocalBinPath)\imports')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>imports\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+  <!-- Priority 2: Cached download from this plugin's Bundled/Shell/ directory. -->
+  <ItemGroup Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' == 'true'">
+    <None Include="$(ShellCachedBinPath)\shell.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellCachedBinPath)\shell.dll" Condition="Exists('$(ShellCachedBinPath)\shell.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellCachedBinPath)\shell.nss" Condition="Exists('$(ShellCachedBinPath)\shell.nss')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(ShellCachedBinPath)\imports\**\*.*" Condition="Exists('$(ShellCachedBinPath)\imports')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>imports\%(RecursiveDir)%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+  <!-- Auto-fetch Shell binaries if neither local repo nor cache has them -->
+  <Target Name="FetchShellBinaries" BeforeTargets="BeforeBuild" Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true'">
+    <Message Importance="high" Text="Shell binaries not found locally or in cache. Running fetch script..." />
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true" StandardOutputImportance="normal" />
+    <!-- Re-evaluate after download so the ItemGroup picks up the files -->
+    <PropertyGroup>
+      <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
+    </PropertyGroup>
+    <Error Condition="'$(_ShellCachedExists)' != 'true'" Text="Shell binaries could not be fetched. Build aborted because shell.exe is required for a valid Shell Integration package." />
+  </Target>
+
+</Project>

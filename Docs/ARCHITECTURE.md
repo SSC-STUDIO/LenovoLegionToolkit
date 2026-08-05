@@ -140,7 +140,7 @@ Plugin Structure (runtime, in host plugins directory):
 +-- [resources]             # Plugin resources
 ```
 
-Official plugins are built and published from the separate [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) repository; the host loads their packaged output.
+Official plugins live under `Plugins/Official/` in this repository. They are built by the monorepo plugin workflows and published as assets of the rolling `plugin-catalog` release; the host loads their packaged output.
 
 ### Plugin Types
 
@@ -150,7 +150,7 @@ Host-side categories (legacy):
 2. **Integration Plugins**: Third-party service integrations
 3. **Tool Plugins**: Standalone utilities
 
-Author scaffolding in [UniversalDeviceToolkit-Plugins](https://github.com/SSC-STUDIO/UniversalDeviceToolkit-Plugins) uses `settings-only`, `feature-settings`, and `runtime-optimization` templates, which map to settings pages, feature + settings pages, and Windows optimization integrations respectively.
+Author scaffolding under `Plugins/Templates/PluginArchetypes/` uses `settings-only`, `feature-settings`, and `runtime-optimization` templates, which map to settings pages, feature + settings pages, and Windows optimization integrations respectively.
 
 ### Plugin Lifecycle
 

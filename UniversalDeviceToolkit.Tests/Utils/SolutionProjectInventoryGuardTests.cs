@@ -16,20 +16,21 @@ public sealed class SolutionProjectInventoryGuardTests
         "\\\"(?<path>[^\\\"]+\\.csproj)\\\"",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
+    private static readonly IReadOnlyList<string> RepositorySolutions =
+    [
+        "UniversalDeviceToolkit.sln",
+        "Plugins/UniversalDeviceToolkit.Plugins.sln",
+    ];
+
     private static readonly IReadOnlyDictionary<string, string> ExternalProjects =
-        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["UniversalDeviceToolkit.Plugins.Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj"] =
-                "Built directly by crossplatform-libs.yml as the independent plugin SDK surface."
-        };
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
     [Fact]
     public void EveryRepositoryProject_ShouldBeInSolutionOrExplicitlyExternal()
     {
         var root = RepositoryPaths.FindRoot();
-        var solutionPath = Path.Combine(root, "UniversalDeviceToolkit.sln");
-        var solutionProjects = SolutionProject.Matches(File.ReadAllText(solutionPath))
-            .Select(match => Normalize(match.Groups["path"].Value))
+        var solutionProjects = RepositorySolutions
+            .SelectMany(solution => ReadSolutionProjects(root, solution))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var repositoryProjects = Directory.EnumerateFiles(root, "*.csproj", SearchOption.AllDirectories)
@@ -60,6 +61,18 @@ public sealed class SolutionProjectInventoryGuardTests
     }
 
     private static string Normalize(string path) => path.Replace('\\', '/').TrimStart('.', '/');
+
+    private static IEnumerable<string> ReadSolutionProjects(string root, string relativeSolutionPath)
+    {
+        var solutionPath = Path.Combine(root, relativeSolutionPath.Replace('/', Path.DirectorySeparatorChar));
+        var solutionRoot = Path.GetDirectoryName(solutionPath)!;
+        var solutionRootRelativePath = Path.GetRelativePath(root, solutionRoot);
+
+        return SolutionProject.Matches(File.ReadAllText(solutionPath))
+            .Select(match => Normalize(Path.Combine(
+                solutionRootRelativePath,
+                match.Groups["path"].Value)));
+    }
 
     private static bool IsBuildOutput(string path) =>
         path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)

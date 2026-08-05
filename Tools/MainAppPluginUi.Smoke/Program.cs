@@ -1178,9 +1178,7 @@ Environment variables:
 
         var sourceCandidates = new[]
         {
-            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", "plugins")),
-            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "plugins")),
-            Path.Combine(repositoryRoot, "Build", "plugins")
+            Path.Combine(repositoryRoot, "Plugins", ".build", "plugins")
         };
 
         var sourceRoot = sourceCandidates.FirstOrDefault(Directory.Exists);
@@ -1226,9 +1224,7 @@ Environment variables:
     {
         var sourceCandidates = new[]
         {
-            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", "plugins")),
-            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "plugins")),
-            Path.Combine(repositoryRoot, "Build", "plugins")
+            Path.Combine(repositoryRoot, "Plugins", ".build", "plugins")
         };
 
         var sourceRoot = sourceCandidates.FirstOrDefault(Directory.Exists);
@@ -1555,9 +1551,7 @@ Environment variables:
     {
         var sourceCandidates = new[]
         {
-            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", "plugins")),
-            Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", "plugins")),
-            Path.Combine(repositoryRoot, "Build", "plugins")
+            Path.Combine(repositoryRoot, "Plugins", ".build", "plugins")
         };
 
         var sourceRoot = sourceCandidates.FirstOrDefault(Directory.Exists);
@@ -1805,10 +1799,8 @@ Environment variables:
         var sourceCandidates = sourceDirectories
             .SelectMany(directoryName => new[]
             {
-                Path.GetFullPath(Path.Combine(repositoryRoot, "..", "UniversalDeviceToolkit-Plugins", "Build", directoryName, fileName)),
-                Path.GetFullPath(Path.Combine(repositoryRoot, "..", "LenovoLegionToolkit-Plugins", "Build", directoryName, fileName))
+                Path.Combine(repositoryRoot, "Plugins", ".build", directoryName, fileName)
             })
-            .Concat(sourceDirectories.Select(directoryName => Path.Combine(repositoryRoot, "Build", directoryName, fileName)))
             .ToArray();
 
         var sourcePath = sourceCandidates.FirstOrDefault(File.Exists);

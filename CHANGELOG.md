@@ -484,12 +484,12 @@ Expanded 2025 Lenovo Legion and LOQ Gen 10 model detection. / - 扩展 2025 年 
 
 ### Fixed / 修复
 
-- **Plugin Store Source / 插件商店源**: Removed the failing `main/store.json` probe from the plugin store fetch path and now fetch the published `master/store.json` directly, avoiding the initial 404/timeout hop before plugin downloads / 从插件商店拉取路径中移除失效的 `main/store.json` 探测，改为直接获取已发布的 `master/store.json`，避免插件下载前先经历一次 404/超时跳转
+- **Plugin Store Source / 插件商店源**: The plugin catalog is now fetched from the main repository's rolling `plugin-catalog` release, avoiding a separate repository and keeping application releases readable / 插件目录现在从主仓库滚动的 `plugin-catalog` 发布获取，避免额外仓库并保持应用发布列表清晰
 - **Plugin Marketplace / 插件市场**: Verified end-to-end download, install, and load of `shell-integration v1.0.4` through the main app plugin system after the store-source correction / 在修正商店源之后，已通过主程序插件系统端到端验证 `shell-integration v1.0.4` 的下载、安装与加载流程
 
 ### Improved / 改进
 
-- **Plugin Documentation / 插件文档**: Added README links to the official `UniversalDeviceToolkit-Plugins` repository so plugin source, manifests, and release metadata are discoverable from the main project
+- **Plugin Documentation / 插件文档**: Added main-repository links to `Plugins/Official`, manifests, and release metadata so the complete plugin surface is discoverable from one project
 
 ### Fixed / 修复
 
@@ -533,7 +533,7 @@ Expanded 2025 Lenovo Legion and LOQ Gen 10 model detection. / - 扩展 2025 年 
 
 ### Improved / 改进
 
-- **Plugin Tooling / 插件工具**: Added a standalone plugin completion UI tool in the sibling `UniversalDeviceToolkit-Plugins` repository (`Tools/PluginCompletionUiTool`) for independent visual validation without launching the main app / 在兄弟仓库 `UniversalDeviceToolkit-Plugins` 中新增独立的插件完成可视化校验工具（`Tools/PluginCompletionUiTool`），无需启动主程序即可进行可视化验证
+- **Plugin Tooling / 插件工具**: Added `Plugins/Tooling/PluginCompletionUiTool` for independent visual validation without launching the main app / 在主仓库 `Plugins/Tooling/PluginCompletionUiTool` 中新增独立的插件完成可视化校验工具，无需启动主程序即可进行可视化验证
 
 ## [3.6.2] - 2026-02-26
 
