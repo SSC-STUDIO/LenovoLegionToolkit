@@ -302,6 +302,23 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
         return Task.FromResult(true);
     }
 
+    public Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(
+        IReadOnlyList<string> itemIdentifiers) =>
+        Task.FromResult<IReadOnlyList<DashboardItemState>>(
+            itemIdentifiers
+                .Where(identifier => !string.IsNullOrWhiteSpace(identifier))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(identifier => new DashboardItemState(
+                    identifier,
+                    false,
+                    null,
+                    Array.Empty<string>(),
+                    "This device adapter does not expose dashboard controls."))
+                .ToArray());
+
+    public Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state) =>
+        Task.FromResult(false);
+
     private async Task<DeviceSnapshot> ReadSnapshotAsync(bool forceRefresh)
     {
         if (!forceRefresh && _snapshot is not null)

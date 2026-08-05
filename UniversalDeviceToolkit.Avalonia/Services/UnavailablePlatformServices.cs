@@ -67,6 +67,23 @@ public sealed class UnavailablePlatformServices : IPlatformServices
         return Task.FromResult(true);
     }
 
+    public Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(
+        IReadOnlyList<string> itemIdentifiers) =>
+        Task.FromResult<IReadOnlyList<DashboardItemState>>(
+            itemIdentifiers
+                .Where(identifier => !string.IsNullOrWhiteSpace(identifier))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(identifier => new DashboardItemState(
+                    identifier,
+                    false,
+                    null,
+                    Array.Empty<string>(),
+                    "No platform adapter is registered for dashboard controls."))
+                .ToArray());
+
+    public Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state) =>
+        Task.FromResult(false);
+
     public Task<bool> IsSupportedLegionMachineAsync() => Task.FromResult(false);
 
     public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) =>

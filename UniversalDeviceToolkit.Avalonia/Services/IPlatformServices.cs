@@ -15,6 +15,8 @@ public interface IPlatformServices
     Task<DashboardSnapshot> GetDashboardSnapshotAsync();
     Task<DashboardLayoutState> GetDashboardLayoutAsync();
     Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout);
+    Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(IReadOnlyList<string> itemIdentifiers);
+    Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state);
     Task<bool> IsSupportedLegionMachineAsync();
     Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey);
     Task<bool> ImportPluginAsync(string zipFilePath);
@@ -362,3 +364,14 @@ public sealed record DashboardGroupState(
     string Type,
     string? CustomName,
     IReadOnlyList<string> Items);
+
+/// <summary>
+/// Host-neutral state for one persisted dashboard item. Options are stable enum
+/// names so the Avalonia host can localize them without depending on WPF types.
+/// </summary>
+public sealed record DashboardItemState(
+    string Identifier,
+    bool IsAvailable,
+    string? CurrentValue,
+    IReadOnlyList<string> Options,
+    string? ErrorMessage = null);

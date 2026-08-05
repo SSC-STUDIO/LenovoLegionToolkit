@@ -54,6 +54,17 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SaveDashboardLayoutAsync(layout)
             : _featureHost.SaveDashboardLayoutAsync(layout);
 
+    public Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(
+        IReadOnlyList<string> itemIdentifiers) =>
+        _featureHost is null
+            ? _inner.GetDashboardItemStatesAsync(itemIdentifiers)
+            : _featureHost.GetDashboardItemStatesAsync(itemIdentifiers);
+
+    public Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state) =>
+        _featureHost is null
+            ? _inner.SetDashboardItemStateAsync(itemIdentifier, state)
+            : _featureHost.SetDashboardItemStateAsync(itemIdentifier, state);
+
     public Task<bool> IsSupportedLegionMachineAsync() => _inner.IsSupportedLegionMachineAsync();
 
     public Task<FeaturePageState> GetFeaturePageStateAsync(string routeKey) =>

@@ -14,6 +14,7 @@ using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Serialization;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.PackageDownloader;
@@ -56,6 +57,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly HashSet<string> _selectedCleanupActions;
     private readonly ApplicationSettings? _applicationSettings;
     private readonly DashboardSettings? _dashboardSettings;
+    private readonly PowerModeFeature? _powerMode;
     private long _estimatedCleanupSize;
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
@@ -88,6 +90,7 @@ internal sealed class WindowsFeatureHostServices
         _packageDownloaderSettings = packageDownloaderSettings;
         _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
         _dashboardSettings = IoCContainer.TryResolve<DashboardSettings>();
+        _powerMode = IoCContainer.TryResolve<PowerModeFeature>();
         _selectedCleanupActions = new HashSet<string>(
             _applicationSettings?.Store.SelectedCleanupActions ?? [],
             StringComparer.OrdinalIgnoreCase);
@@ -192,6 +195,79 @@ internal sealed class WindowsFeatureHostServices
             group.Type.ToString(),
             group.CustomName,
             group.Items.Select(item => item.ToString()).ToArray());
+
+    public async Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(
+        IReadOnlyList<string> itemIdentifiers)
+    {
+        var states = new List<DashboardItemState>();
+        foreach (var identifier in itemIdentifiers
+                     .Where(identifier => !string.IsNullOrWhiteSpace(identifier))
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (!identifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase))
+            {
+                states.Add(new DashboardItemState(
+                    identifier,
+                    false,
+                    null,
+                    Array.Empty<string>(),
+                    "This dashboard control has not been migrated yet."));
+                continue;
+            }
+
+            if (_powerMode is null)
+            {
+                states.Add(new DashboardItemState(
+                    identifier,
+                    false,
+                    null,
+                    Array.Empty<string>(),
+                    "The power mode service is unavailable."));
+                continue;
+            }
+
+            try
+            {
+                var current = await _powerMode.GetStateAsync().ConfigureAwait(false);
+                var options = await _powerMode.GetAllStatesAsync().ConfigureAwait(false);
+                states.Add(new DashboardItemState(
+                    identifier,
+                    true,
+                    current.ToString(),
+                    options.Select(option => option.ToString()).ToArray()));
+            }
+            catch (Exception ex)
+            {
+                states.Add(new DashboardItemState(
+                    identifier,
+                    false,
+                    null,
+                    Array.Empty<string>(),
+                    ex.Message));
+            }
+        }
+
+        return states;
+    }
+
+    public async Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state)
+    {
+        if (!itemIdentifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase)
+            || _powerMode is null
+            || !Enum.TryParse<PowerModeState>(state, ignoreCase: true, out var powerMode))
+            return false;
+
+        try
+        {
+            await _powerMode.SetStateAsync(powerMode).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace($"Failed to set dashboard item state: {itemIdentifier}", ex);
+            return false;
+        }
+    }
 
     public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync()
     {
