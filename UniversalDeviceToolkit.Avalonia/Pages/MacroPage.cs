@@ -218,8 +218,30 @@ public sealed class MacroPage : UserControl
             IsEnabled = slot.EventCount > 0 && !isRecording,
             MinWidth = 72,
         };
+
+        var recordingOptions = new ComboBox
+        {
+            ItemsSource = new[]
+            {
+                Get("MacroSequenceControl_Keyboard", "Keyboard"),
+                Get("MacroSequenceControl_KeyboardMouse", "Keyboard + mouse"),
+                Get("MacroSequenceControl_KeyboardMouseMovement", "Keyboard + mouse movement"),
+            },
+            SelectedIndex = 0,
+            IsEnabled = !isRecording,
+            MinWidth = 180,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        ToolTip.SetTip(
+            recordingOptions,
+            Get("MacroSequenceControl_RecordingOptions", "Choose which input sources recording captures."));
+        AutomationProperties.SetAutomationId(recordingOptions, $"AvaloniaMacro_{slot.Key:X}_RecordingOptions");
+        AutomationProperties.SetName(
+            recordingOptions,
+            Get("MacroSequenceControl_RecordingOptions", "Recording options"));
+
         play.Click += async (_, _) => await RunActionAsync($"macro-key:{slot.Key:X}");
-        record.Click += async (_, _) => await RunActionAsync($"macro-record:{slot.Key:X}");
+        record.Click += async (_, _) => await StartRecordingAsync(slot.Key, recordingOptions.SelectedIndex);
         clear.Click += async (_, _) => await ClearSequenceAsync(slot.Key);
         AutomationProperties.SetAutomationId(play, $"AvaloniaMacro_{slot.Key:X}_PlayButton");
         AutomationProperties.SetAutomationId(record, $"AvaloniaMacro_{slot.Key:X}_RecordButton");
@@ -262,6 +284,7 @@ public sealed class MacroPage : UserControl
         options.Children.Add(interrupt);
 
         var right = new StackPanel { Spacing = 8, HorizontalAlignment = HorizontalAlignment.Right };
+        right.Children.Add(recordingOptions);
         right.Children.Add(actions);
         right.Children.Add(options);
 
@@ -303,6 +326,24 @@ public sealed class MacroPage : UserControl
     private async Task RunActionAsync(string actionKey)
     {
         if (!await _platformServices.SetFeatureActionAsync("Macro", actionKey, true))
+        {
+            _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
+            return;
+        }
+
+        await RefreshAsync();
+    }
+
+    private async Task StartRecordingAsync(ulong key, int selectedMode)
+    {
+        var mode = selectedMode switch
+        {
+            1 => MacroRecordingMode.KeyboardMouse,
+            2 => MacroRecordingMode.KeyboardMouseMovement,
+            _ => MacroRecordingMode.Keyboard,
+        };
+
+        if (!await _platformServices.StartMacroRecordingAsync(key, mode))
         {
             _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
             return;

@@ -303,6 +303,32 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public async Task UnavailablePlatformServices_ShouldRejectMacroRecordingModes()
+    {
+        var services = new UnavailablePlatformServices();
+
+        (await services.StartMacroRecordingAsync(0x60, MacroRecordingMode.Keyboard)).Should().BeFalse();
+        (await services.StartMacroRecordingAsync(0x60, MacroRecordingMode.KeyboardMouse)).Should().BeFalse();
+        (await services.StartMacroRecordingAsync(0x60, MacroRecordingMode.KeyboardMouseMovement)).Should().BeFalse();
+    }
+
+    [Fact]
+    public void MacroPage_ExposesTheWpfRecordingSourceOptions()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "MacroPage.cs"));
+
+        source.Should().Contain("MacroSequenceControl_Keyboard");
+        source.Should().Contain("MacroSequenceControl_KeyboardMouse");
+        source.Should().Contain("MacroSequenceControl_KeyboardMouseMovement");
+        source.Should().Contain("StartMacroRecordingAsync");
+    }
+
+    [Fact]
     public void DashboardTelemetryMarkup_UsesParentCommandWithoutTwoWayCommandDoubleToggle()
     {
         var root = RepositoryPaths.FindRoot();

@@ -1498,6 +1498,14 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public Task<bool> StartMacroRecordingAsync(ulong key, MacroRecordingMode mode)
+    {
+        if (_macro is not MacroController controller || !MacroKeys.Contains(key))
+            return Task.FromResult(false);
+
+        return Task.FromResult(StartMacroRecording(controller, key, ToMacroRecorderSettings(mode)));
+    }
+
     public Task<bool> SetMacroSequenceOptionsAsync(
         ulong key,
         int repeatCount,
@@ -1564,10 +1572,10 @@ internal sealed class WindowsFeatureHostServices
                 _macro.SetEnabled(isSelected);
                 return true;
             case "Macro" when actionKey == "macro-record" && _macro is MacroController recordingController:
-                return StartMacroRecording(recordingController, 0x60);
+                return StartMacroRecording(recordingController, 0x60, MacroRecorderSettings.Keyboard);
             case "Macro" when FeatureActionContract.TryParseMacroRecordKey(actionKey, out var recordingKey)
                                  && _macro is MacroController recordingController:
-                return StartMacroRecording(recordingController, recordingKey);
+                return StartMacroRecording(recordingController, recordingKey, MacroRecorderSettings.Keyboard);
             case "Macro" when actionKey == "macro-stop-recording" && _macro is MacroController stoppingController:
                 if (!stoppingController.IsRecording)
                     return false;
@@ -1996,7 +2004,10 @@ internal sealed class WindowsFeatureHostServices
         await controller.SetBrightnessAsync(Math.Clamp(current + delta, 0, 9)).ConfigureAwait(false);
     }
 
-    private bool StartMacroRecording(MacroController controller, ulong key)
+    private bool StartMacroRecording(
+        MacroController controller,
+        ulong key,
+        MacroRecorderSettings settings)
     {
         if (controller.IsRecording)
             return false;
@@ -2007,7 +2018,7 @@ internal sealed class WindowsFeatureHostServices
             _macroRecordingEvents = [];
         }
 
-        controller.StartRecording(MacroRecorderSettings.Keyboard);
+        controller.StartRecording(settings);
         if (controller.IsRecording)
             return true;
 
@@ -2019,6 +2030,15 @@ internal sealed class WindowsFeatureHostServices
 
         return false;
     }
+
+    private static MacroRecorderSettings ToMacroRecorderSettings(MacroRecordingMode mode) => mode switch
+    {
+        MacroRecordingMode.KeyboardMouse => MacroRecorderSettings.Keyboard | MacroRecorderSettings.Mouse,
+        MacroRecordingMode.KeyboardMouseMovement => MacroRecorderSettings.Keyboard
+            | MacroRecorderSettings.Mouse
+            | MacroRecorderSettings.Movement,
+        _ => MacroRecorderSettings.Keyboard,
+    };
 
     private void MacroController_RecorderReceived(object? sender, MacroController.RecorderReceivedEventArgs e)
     {

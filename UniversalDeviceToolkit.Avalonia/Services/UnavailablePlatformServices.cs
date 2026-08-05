@@ -169,6 +169,9 @@ public sealed class UnavailablePlatformServices : IPlatformServices
 
     public Task<bool> SetMacroEnabledAsync(bool enabled) => Task.FromResult(false);
 
+    public Task<bool> StartMacroRecordingAsync(ulong key, MacroRecordingMode mode) =>
+        Task.FromResult(false);
+
     public Task<bool> SetMacroSequenceOptionsAsync(
         ulong key,
         int repeatCount,

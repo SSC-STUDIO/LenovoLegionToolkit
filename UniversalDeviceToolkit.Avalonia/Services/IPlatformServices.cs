@@ -52,6 +52,7 @@ public interface IPlatformServices
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
     Task<MacroWorkspaceState> GetMacroWorkspaceAsync();
     Task<bool> SetMacroEnabledAsync(bool enabled);
+    Task<bool> StartMacroRecordingAsync(ulong key, MacroRecordingMode mode);
     Task<bool> SetMacroSequenceOptionsAsync(ulong key, int repeatCount, bool ignoreDelays, bool interruptOnOtherKey);
     Task<bool> ClearMacroSequenceAsync(ulong key);
     Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
@@ -195,6 +196,13 @@ public sealed record MacroWorkspaceState(
     bool IsEnabled,
     bool IsRecording,
     IReadOnlyList<MacroSlotState> Slots);
+
+public enum MacroRecordingMode
+{
+    Keyboard,
+    KeyboardMouse,
+    KeyboardMouseMovement,
+}
 
 public sealed record MacroSlotState(
     ulong Key,

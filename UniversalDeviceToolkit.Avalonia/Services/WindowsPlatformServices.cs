@@ -303,6 +303,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetMacroEnabledAsync(enabled)
             : _featureHost.SetMacroEnabledAsync(enabled);
 
+    public Task<bool> StartMacroRecordingAsync(ulong key, MacroRecordingMode mode) =>
+        _featureHost is null
+            ? _inner.StartMacroRecordingAsync(key, mode)
+            : _featureHost.StartMacroRecordingAsync(key, mode);
+
     public Task<bool> SetMacroSequenceOptionsAsync(
         ulong key,
         int repeatCount,
