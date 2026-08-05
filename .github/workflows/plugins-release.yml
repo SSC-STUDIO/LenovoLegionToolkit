@@ -128,6 +128,35 @@ jobs:
           $pluginIds = @("${{ github.event.inputs.plugin_ids }}".Split(',') | ForEach-Object { $_.Trim() } | Where-Object { $_ })
           $catalog = Get-Content -LiteralPath $env:CATALOG_OUTPUT_PATH -Raw | ConvertFrom-Json
           $catalogPlugins = @($catalog.plugins)
+          $activeEntries = @($catalogPlugins | Where-Object {
+            $status = [string]$_.status
+            [string]::IsNullOrWhiteSpace($status) -or $status -eq 'Active'
+          })
+          if ($activeEntries.Count -eq 0) {
+            throw 'The staged catalog must contain at least one Active plugin.'
+          }
+
+          $expectedAssetNames = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+          [void]$expectedAssetNames.Add('store.json')
+          $activeIds = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+          foreach ($entry in $activeEntries) {
+            $entryId = [string]$entry.id
+            $entryVersion = [string]$entry.version
+            if ([string]::IsNullOrWhiteSpace($entryId) -or [string]::IsNullOrWhiteSpace($entryVersion)) {
+              throw 'Every Active catalog entry must contain id and version.'
+            }
+            if (-not $activeIds.Add($entryId)) {
+              throw "The staged catalog contains duplicate Active plugin id '$entryId'."
+            }
+
+            $expectedPackageName = "$entryId-v$entryVersion.zip"
+            $downloadAssetName = ([string]$entry.downloadUrl).TrimEnd('/').Split('/')[-1]
+            if ($downloadAssetName -ne $expectedPackageName) {
+              throw "Active plugin '$entryId' must point to its current package '$expectedPackageName'."
+            }
+            [void]$expectedAssetNames.Add($expectedPackageName)
+          }
+
           $forbiddenHostFiles = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
           @(
             'Universal Device Toolkit.dll',
@@ -149,6 +178,9 @@ jobs:
             }
 
             $entry = $entries[0]
+            if (-not [string]::IsNullOrWhiteSpace([string]$entry.status) -and [string]$entry.status -ne 'Active') {
+              throw "Selected plugin '$pluginId' is not Active in the staged catalog."
+            }
             if ([int64]$entry.fileSize -ne $asset.Length) {
               throw "Catalog fileSize does not match the staged ZIP for '$pluginId'."
             }
@@ -177,6 +209,12 @@ jobs:
             finally {
               $archive.Dispose()
             }
+          }
+
+          $stagedAssetNames = @(Get-ChildItem -LiteralPath $env:CATALOG_ASSET_ROOT -File | ForEach-Object { $_.Name })
+          $unexpectedStagedAssets = @($stagedAssetNames | Where-Object { -not $expectedAssetNames.Contains($_) })
+          if ($unexpectedStagedAssets.Count -ne 0) {
+            throw "Staged release contains assets that are not catalog packages: $($unexpectedStagedAssets -join ', ')"
           }
 
       - name: Ensure managed rolling release
@@ -279,8 +317,44 @@ jobs:
           if ($finalRelease.name -ne $env:CATALOG_RELEASE_TITLE -or $finalRelease.isDraft -or $finalRelease.isPrerelease) {
             throw 'The final rolling plugin catalog release metadata is invalid.'
           }
-          if (@($finalRelease.assets | Where-Object { $_.name -eq 'store.json' }).Count -ne 1) {
-            throw 'The final rolling plugin catalog release is missing store.json.'
+
+          $catalog = Get-Content -LiteralPath $env:CATALOG_OUTPUT_PATH -Raw | ConvertFrom-Json
+          $activeEntries = @($catalog.plugins | Where-Object {
+            $status = [string]$_.status
+            [string]::IsNullOrWhiteSpace($status) -or $status -eq 'Active'
+          })
+          if ($activeEntries.Count -eq 0) {
+            throw 'The final catalog must contain at least one Active plugin.'
+          }
+
+          $expectedAssetNames = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+          [void]$expectedAssetNames.Add('store.json')
+          $activeIds = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+          foreach ($entry in $activeEntries) {
+            $entryId = [string]$entry.id
+            $entryVersion = [string]$entry.version
+            if ([string]::IsNullOrWhiteSpace($entryId) -or [string]::IsNullOrWhiteSpace($entryVersion)) {
+              throw 'Every Active catalog entry must contain id and version.'
+            }
+            if (-not $activeIds.Add($entryId)) {
+              throw "The final catalog contains duplicate Active plugin id '$entryId'."
+            }
+
+            $expectedPackageName = "$entryId-v$entryVersion.zip"
+            $downloadAssetName = ([string]$entry.downloadUrl).TrimEnd('/').Split('/')[-1]
+            if ($downloadAssetName -ne $expectedPackageName) {
+              throw "Active plugin '$entryId' must point to its current package '$expectedPackageName'."
+            }
+            [void]$expectedAssetNames.Add($expectedPackageName)
+          }
+
+          $actualAssetNames = @($finalRelease.assets | ForEach-Object { [string]$_.name })
+          if ($actualAssetNames.Count -ne $expectedAssetNames.Count -or
+              (@($actualAssetNames | Where-Object { -not $expectedAssetNames.Contains($_) }).Count -ne 0) -or
+              (@($expectedAssetNames | Where-Object { $actualAssetNames -notcontains $_ }).Count -ne 0)) {
+            $expectedText = @($expectedAssetNames | Sort-Object) -join ', '
+            $actualText = @($actualAssetNames | Sort-Object) -join ', '
+            throw "The final rolling plugin catalog release asset set is invalid. Expected [$expectedText]; actual [$actualText]."
           }
 
           foreach ($pluginId in $pluginIds) {
