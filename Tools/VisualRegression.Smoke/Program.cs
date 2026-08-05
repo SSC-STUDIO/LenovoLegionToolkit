@@ -2577,49 +2577,49 @@ internal static partial class Program
                 "plugins": [
                   {
                     "id": "custom-mouse",
-                    "name": "Custom Mouse",
-                    "description": "Customize mouse cursor style behavior and mouse settings",
+                    "name": "Cursor & Pointer",
+                    "description": "Personalize your mouse experience with theme-aware cursor styles, Windows pointer speed, button swapping, and safe cursor backup and restore.",
                     "author": "SSC-STUDIO",
-                    "version": "1.0.15",
-                    "minLLTVersion": "3.6.1",
-                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.15.zip",
+                    "version": "1.0.18",
+                    "minLLTVersion": "5.0.0",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.18.zip",
                     "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Plugins/Official/CustomMouse/CHANGELOG.md",
                     "releaseDate": "2026-04-29T12:18:46Z",
                     "icon": "Pen24",
                     "iconBackground": "#2563EB",
                     "dependencies": [],
-                    "tags": [ "mouse", "customization", "gaming" ]
+                    "tags": [ "mouse", "cursor", "productivity" ]
                   },
                   {
                     "id": "shell-integration",
-                    "name": "Shell Integration",
-                    "description": "Integrate Universal Device Toolkit with Windows shell context menu",
+                    "name": "Nilesoft Shell Manager",
+                    "description": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
                     "author": "SSC-STUDIO",
-                    "version": "1.0.11",
-                    "minLLTVersion": "3.6.1",
+                    "version": "1.0.14",
+                    "minLLTVersion": "5.0.0",
                     "isSystemPlugin": true,
-                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/shell-integration-v1.0.11.zip",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/shell-integration-v1.0.14.zip",
                     "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Plugins/Official/ShellIntegration/CHANGELOG.md",
                     "releaseDate": "2026-04-29T12:18:46Z",
                     "icon": "Folder24",
                     "iconBackground": "#0F766E",
                     "dependencies": [],
-                    "tags": [ "system", "shell", "integration" ]
+                    "tags": [ "system", "shell", "context-menu" ]
                   },
                   {
                     "id": "vive-tool",
                     "name": "ViVeTool",
-                    "description": "Manage Windows feature flags using ViVeTool",
+                    "description": "Unlock hidden Windows features and customize your system with ViVeTool \u2014 the ultimate Windows feature flag manager.",
                     "author": "SSC-STUDIO",
-                    "version": "1.2.1",
-                    "minLLTVersion": "3.6.1",
-                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/vive-tool-v1.2.1.zip",
+                    "version": "1.2.4",
+                    "minLLTVersion": "5.0.0",
+                    "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/vive-tool-v1.2.4.zip",
                     "changelog": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Plugins/Official/ViveTool/CHANGELOG.md",
                     "releaseDate": "2026-04-29T12:18:46Z",
                     "icon": "Code24",
                     "iconBackground": "#7C3AED",
                     "dependencies": [],
-                    "tags": [ "windows", "feature-flags", "vivetool" ]
+                    "tags": [ "windows", "feature-flags", "tweaks" ]
                   }
                 ]
               }
