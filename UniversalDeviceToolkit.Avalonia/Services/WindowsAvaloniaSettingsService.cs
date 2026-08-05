@@ -1372,6 +1372,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         var availabilityWarning = powerModeSupported
             ? null
             : "Power mode controls are not available on this device.";
+        var usesWindowsPowerMode = store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerMode;
+        var usesWindowsPowerPlan = store.PowerModeMappingMode == PowerModeMappingMode.WindowsPowerPlan;
 
         return new AvaloniaSettingsPageData(
             "Power",
@@ -1383,9 +1385,9 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 new("PowerModeMapping", "Power mode mapping", "Choose how device power modes map to Windows.", AvaloniaSettingEditor.Selection, powerModeSupported,
                     Values: Enum.GetValues<PowerModeMappingMode>().Select(FormatPowerModeMapping).ToArray(), SelectedValue: mapping, Warning: availabilityWarning),
                 new("ResetBatteryOnReboot", "Reset battery timer on reboot", "Reset the battery since timer after Windows restarts.", AvaloniaSettingEditor.Toggle, true, store.ResetBatteryOnSinceTimerOnReboot),
-                new("OpenPowerModes", "Windows power modes", "Open the Windows power mode controls.", AvaloniaSettingEditor.Action, powerModeSupported, ActionText: "Open", Warning: availabilityWarning),
-                new("OpenPowerPlans", "Windows power plans", "Open the classic Windows power plan controls.", AvaloniaSettingEditor.Action, powerModeSupported, ActionText: "Open", Warning: availabilityWarning),
-                new("OpenPowerPlansControlPanel", "Power options control panel", "Open the Windows Power Options control panel.", AvaloniaSettingEditor.Action, true, ActionText: "Open"),
+                new("OpenPowerModes", "Windows power modes", "Open the Windows power mode controls.", AvaloniaSettingEditor.Action, powerModeSupported, ActionText: "Open", Warning: availabilityWarning, IsVisible: powerModeSupported && usesWindowsPowerMode),
+                new("OpenPowerPlans", "Windows power plans", "Open the classic Windows power plan controls.", AvaloniaSettingEditor.Action, powerModeSupported, ActionText: "Open", Warning: availabilityWarning, IsVisible: powerModeSupported && usesWindowsPowerPlan),
+                new("OpenPowerPlansControlPanel", "Power options control panel", "Open the Windows Power Options control panel.", AvaloniaSettingEditor.Action, true, ActionText: "Open", IsVisible: powerModeSupported && usesWindowsPowerPlan),
             ],
             true);
     }

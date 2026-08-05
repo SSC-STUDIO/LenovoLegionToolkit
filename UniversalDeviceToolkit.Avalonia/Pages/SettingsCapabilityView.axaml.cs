@@ -213,6 +213,9 @@ public partial class SettingsCapabilityView : UserControl
             {
                 mainWindow.ApplyWindowBackdrop();
             }
+
+            if (_pageKey == "Power" && option.Key == "PowerModeMapping")
+                await RefreshPageAsync();
         };
         return combo;
     }
