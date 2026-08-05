@@ -4,6 +4,15 @@ This document is the operational entry point for the plugin monorepo. The source
 
 As of 2026-08-05, the migration is live: the main repository's `v5.0.2` release is the application Latest release, `plugin-catalog` is the managed catalog release, and `UniversalDeviceToolkit-Plugins` is archived. The remaining checklist items below are validation gates, not instructions to recreate the retired repository layout.
 
+## Migration Provenance
+
+The migration boundary is recorded against these immutable source refs:
+
+- Main repository before the history import: `a18b5c1e140ce7cab11b53d3a5f85c6a3ce2b6ce`.
+- Legacy plugin repository source snapshot: `b5cb7df11a8a8f6fc448b635b85dd06bca6bb4b5`.
+- History import commit: `f6266d0344af37f803cbab8740b27d00fffeaf16`.
+- Canonical topology commit: `9d4633a636227343c0975d42efc02927c1fdff70`.
+
 ## Canonical Layout
 
 | Concern | Canonical location |
