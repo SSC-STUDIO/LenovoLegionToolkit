@@ -23,7 +23,7 @@ Use this when you are developing a plugin locally, in a fork, or for an early PR
 
 `udt-plugin.cmd` is the canonical entry (`llt-plugin.cmd` is a compatibility alias). It publishes the tooling CLI into `Plugins/.build/tooling` and reuses that executable. This avoids repeated `dotnet run` builds and the file-lock failures that can happen when multiple validation commands start together.
 
-**Host baseline:** Universal Device Toolkit **v5.0.0** (`Plugins/HostBaseline/host-release.json`). Official plugins declare `minHostVersion: "5.0.0"`.
+**Published host baseline:** Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`). Official plugins currently declare `minHostVersion: "5.0.0"` unless a manifest says otherwise.
 
 ### Validation Profile
 
@@ -148,7 +148,7 @@ Version numbers are easy to drift because they appear in several files. Use one 
 
 | Layer | Source of truth | Example |
 |---|---|---|
-| Host app (UDT) | `UniversalDeviceToolkit/Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `5.0.0` |
+| Host app (UDT) | `UniversalDeviceToolkit/Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `5.0.2` |
 | Each plugin | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | `custom-mouse` → `1.0.18` |
 | Plugin store catalog | Generated `Plugins/.build/catalog/store.json` (release output, not hand-edited) | per-plugin `version` + `fileSize` |
 

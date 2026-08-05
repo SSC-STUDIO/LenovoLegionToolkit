@@ -2,7 +2,7 @@
 
 Shortest path for creating a plugin in this repository.
 
-**Host baseline:** Universal Device Toolkit **v5.0.0+**  
+**Minimum supported host:** Universal Device Toolkit **v5.0.0+**; current published baseline **v5.0.2**<br>
 **CLI:** `udt-plugin.cmd` (`udt-plugin.cmd` is a compatibility alias)
 
 ## 1. Check the environment
@@ -17,7 +17,7 @@ If host references are missing:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\Scripts\ensure-host-dependencies.ps1
 ```
 
-This uses `Plugins/HostBaseline/host-release.json` (currently `5.0.0`) and downloads the matching host binaries into the ignored `.host/` cache.
+This uses `Plugins/HostBaseline/host-release.json` (currently `5.0.2`) and downloads the matching host binaries into the ignored `.host/` cache.
 
 ## 2. Scaffold
 
