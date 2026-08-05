@@ -2,6 +2,7 @@ using FluentAssertions;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.WPF.CLI;
 using Xunit;
 
@@ -326,6 +327,19 @@ public sealed class AvaloniaMigrationContractTests
         source.Should().Contain("MacroSequenceControl_KeyboardMouse");
         source.Should().Contain("MacroSequenceControl_KeyboardMouseMovement");
         source.Should().Contain("StartMacroRecordingAsync");
+    }
+
+    [Theory]
+    [InlineData("Add24")]
+    [InlineData("ArrowReset24")]
+    [InlineData("ChevronDown24")]
+    [InlineData("ChevronUp24")]
+    [InlineData("Delete24")]
+    [InlineData("Edit24")]
+    [InlineData("Save24")]
+    public void NavigationIcon_MapsEveryDashboardLayoutCommandIcon(string identifier)
+    {
+        NavigationIcon.HasGlyph(identifier).Should().BeTrue();
     }
 
     [Fact]

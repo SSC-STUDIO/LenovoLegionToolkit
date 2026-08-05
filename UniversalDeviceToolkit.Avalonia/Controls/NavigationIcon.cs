@@ -29,6 +29,13 @@ public sealed class NavigationIcon : TextBlock
             ["ArrowRight24"] = "\uE72A",
             ["ArrowUp24"] = "\uE74A",
             ["ArrowDown24"] = "\uE74B",
+            ["ArrowReset24"] = "\uE72C",
+            ["ChevronDown24"] = "\uE70D",
+            ["ChevronUp24"] = "\uE70E",
+            ["Add24"] = "\uE710",
+            ["Edit24"] = "\uE70F",
+            ["Delete24"] = "\uE74D",
+            ["Save24"] = "\uE74E",
             ["Battery024"] = "\uE850",
             ["PlugConnected24"] = "\uE839",
             // Dashboard icons use the same identifiers as the WPF host. The
@@ -71,6 +78,9 @@ public sealed class NavigationIcon : TextBlock
         HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Center;
         UpdateGlyph();
     }
+
+    public static bool HasGlyph(string? identifier) =>
+        !string.IsNullOrWhiteSpace(identifier) && Glyphs.ContainsKey(identifier);
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
