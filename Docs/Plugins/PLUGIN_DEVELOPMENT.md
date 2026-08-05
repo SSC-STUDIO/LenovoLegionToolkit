@@ -207,6 +207,6 @@ Manual official publishing should:
 
 ## Notes
 
-- Do not add source `ProjectReference` links back to the sibling main repository.
+- Do not add source `ProjectReference` links back to the host application's source projects.
 - Keep plugin outputs under `Plugins/.build/plugins/UniversalDeviceToolkit.Plugins.<FolderName>/`.
 - Keep release ZIP naming stable: `<plugin-id>-v<version>.zip`.

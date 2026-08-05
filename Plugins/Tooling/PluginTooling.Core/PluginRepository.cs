@@ -19,22 +19,10 @@ public sealed class PluginRepository
         var rootPath = Path.GetFullPath(repositoryRoot);
         EnsureRepositoryRoot(rootPath);
 
-        var canonicalSolutionPath = Path.Combine(rootPath, "UniversalDeviceToolkit.Plugins.sln");
-        var legacySolutionPath = Path.Combine(rootPath, "UniversalDeviceToolkit-Plugins.sln");
-        var solutionPath = File.Exists(canonicalSolutionPath) ? canonicalSolutionPath : legacySolutionPath;
-        var canonicalPluginsRoot = Path.Combine(rootPath, "Official");
-        var legacyPluginsRoot = Path.Combine(rootPath, "Plugins");
-        var pluginsRoot = Directory.Exists(canonicalPluginsRoot) ? canonicalPluginsRoot : legacyPluginsRoot;
-        var hostDependenciesRoot = Directory.Exists(Path.Combine(rootPath, "HostBaseline"))
-            ? Path.Combine(rootPath, ".host")
-            : Path.Combine(rootPath, "Dependencies", "Host");
-        var storeCandidates = new[]
-        {
-            Path.Combine(rootPath, "Catalog", "store.json"),
-            Path.Combine(rootPath, ".build", "catalog", "store.json"),
-            Path.Combine(rootPath, "store.json"),
-        };
-        var storePath = storeCandidates.FirstOrDefault(File.Exists) ?? storeCandidates[0];
+        var solutionPath = Path.Combine(rootPath, "UniversalDeviceToolkit.Plugins.sln");
+        var pluginsRoot = Path.Combine(rootPath, "Official");
+        var hostDependenciesRoot = Path.Combine(rootPath, ".host");
+        var storePath = Path.Combine(rootPath, ".build", "catalog", "store.json");
 
         var plugins = DiscoverPlugins(rootPath, pluginsRoot)
             .OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
@@ -52,10 +40,8 @@ public sealed class PluginRepository
         var current = new DirectoryInfo(Path.GetFullPath(startPath));
         for (var i = 0; i < 10 && current is not null; i++)
         {
-            if ((File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit.Plugins.sln")) &&
-                 Directory.Exists(Path.Combine(current.FullName, "Official"))) ||
-                (File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit-Plugins.sln")) &&
-                 Directory.Exists(Path.Combine(current.FullName, "Plugins"))))
+            if (File.Exists(Path.Combine(current.FullName, "UniversalDeviceToolkit.Plugins.sln")) &&
+                Directory.Exists(Path.Combine(current.FullName, "Official")))
             {
                 return current.FullName;
             }
@@ -151,9 +137,7 @@ public sealed class PluginRepository
     {
         var canonicalRoot = File.Exists(Path.Combine(rootPath, "UniversalDeviceToolkit.Plugins.sln")) &&
                             Directory.Exists(Path.Combine(rootPath, "Official"));
-        var legacyRoot = File.Exists(Path.Combine(rootPath, "UniversalDeviceToolkit-Plugins.sln")) &&
-                         Directory.Exists(Path.Combine(rootPath, "Plugins"));
-        if (!canonicalRoot && !legacyRoot)
+        if (!canonicalRoot)
         {
             throw new DirectoryNotFoundException($"Path is not a plugin repository root: {rootPath}");
         }

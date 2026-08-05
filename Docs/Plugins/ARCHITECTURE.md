@@ -35,7 +35,7 @@ UniversalDeviceToolkit/
 - 插件项目不引用主应用源码
 - 使用 `Plugins/.host/<host-version>` 中的预编译引用；仓库不跟踪宿主 DLL
 - 通过 `Scripts/ensure-host-dependencies.ps1` 刷新宿主引用
-- 若本机没有 sibling `UniversalDeviceToolkit` 构建输出，则回退到 `host-release.json` 声明的主程序 release ZIP
+- 若本机没有主仓 `Build/` 构建输出，则回退到 `host-release.json` 声明的主程序 release ZIP
 
 ### 2. SDK抽象层
 - 提供 `PluginBase` 作为所有插件的基类

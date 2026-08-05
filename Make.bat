@@ -54,7 +54,7 @@ echo --- Building Platform.Windows ---
 dotnet build UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj --configuration Release --verbosity minimal
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
-REM Stage plugin runtime DLLs (SDK/Shared) from the sibling plugins repo before the payload assert.
+REM Stage plugin runtime DLLs (SDK/Shared) from the in-tree Plugins solution before the payload assert.
 powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-PluginRuntimeAssets.ps1" -DestinationPath "%BUILD_DIR%" -Configuration Release
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 

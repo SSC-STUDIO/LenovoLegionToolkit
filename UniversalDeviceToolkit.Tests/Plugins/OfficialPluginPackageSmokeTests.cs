@@ -23,7 +23,7 @@ public class OfficialPluginPackageSmokeTests
         var pluginsRoot = FindPluginsRepositoryRoot();
         if (pluginsRoot is null)
         {
-            // Core-only checkouts (Release CI without local sibling) skip — host still
+            // Core-only checkouts (Release CI without generated plugin assets) skip — host still
             // fail-closes official installs without hashes at runtime.
             return;
         }
@@ -37,8 +37,8 @@ public class OfficialPluginPackageSmokeTests
 
         if (!Directory.Exists(assetsRoot))
         {
-            // Sibling checkout without packaged assets (e.g. Release CI checks out the
-            // plugins repo for runtime staging but never packages locally) — nothing to
+            // A checkout without packaged assets (for example, a host-only build that
+            // stages runtime assemblies but never packages locally) has nothing to
             // compare hashes against here; runtime still fail-closes without hashes.
             return;
         }

@@ -10,9 +10,9 @@ public class DoctorServiceTests
     {
         var tempDir = Path.Combine(Path.GetTempPath(), $"doctor-test-{Guid.NewGuid():N}");
         Directory.CreateDirectory(tempDir);
-        Directory.CreateDirectory(Path.Combine(tempDir, "Plugins"));
-        Directory.CreateDirectory(Path.Combine(tempDir, "Dependencies", "Host"));
-        File.WriteAllText(Path.Combine(tempDir, "UniversalDeviceToolkit-Plugins.sln"), "Microsoft Visual Studio Solution File");
+        Directory.CreateDirectory(Path.Combine(tempDir, "Official"));
+        Directory.CreateDirectory(Path.Combine(tempDir, ".host"));
+        File.WriteAllText(Path.Combine(tempDir, "UniversalDeviceToolkit.Plugins.sln"), "Microsoft Visual Studio Solution File");
         return tempDir;
     }
 
@@ -43,7 +43,7 @@ public class DoctorServiceTests
     public void Run_UsesWpfNameFromHostReleaseJson_NotLegacyLltName()
     {
         var repoDir = CreateMinimalRepo();
-        var hostDir = Path.Combine(repoDir, "Dependencies", "Host");
+        var hostDir = Path.Combine(repoDir, ".host");
 
         try
         {
@@ -72,7 +72,7 @@ public class DoctorServiceTests
     public void Run_StaleLegacyNameNeverUsed_EvenWhenWpfDllMissing()
     {
         var repoDir = CreateMinimalRepo();
-        var hostDir = Path.Combine(repoDir, "Dependencies", "Host");
+        var hostDir = Path.Combine(repoDir, ".host");
 
         try
         {
@@ -101,7 +101,7 @@ public class DoctorServiceTests
     public void Run_FallsBackToCorrectDefault_WhenHostReleaseJsonMissing()
     {
         var repoDir = CreateMinimalRepo();
-        var hostDir = Path.Combine(repoDir, "Dependencies", "Host");
+        var hostDir = Path.Combine(repoDir, ".host");
 
         try
         {
@@ -130,7 +130,7 @@ public class DoctorServiceTests
     public void Run_LibNameAlsoReadFromHostReleaseJson()
     {
         var repoDir = CreateMinimalRepo();
-        var hostDir = Path.Combine(repoDir, "Dependencies", "Host");
+        var hostDir = Path.Combine(repoDir, ".host");
 
         try
         {

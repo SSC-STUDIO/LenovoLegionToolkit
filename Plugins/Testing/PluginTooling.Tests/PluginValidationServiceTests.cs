@@ -13,7 +13,7 @@ public class PluginValidationServiceTests : IDisposable
         _tempRoot = Path.Combine(Path.GetTempPath(), "udt-validation-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_tempRoot);
         File.WriteAllText(
-            Path.Combine(_tempRoot, "UniversalDeviceToolkit-Plugins.sln"),
+            Path.Combine(_tempRoot, "UniversalDeviceToolkit.Plugins.sln"),
             "Microsoft Visual Studio Solution File, Format Version 12.00\n");
     }
 
@@ -57,7 +57,7 @@ public class PluginValidationServiceTests : IDisposable
         // Create a fake build output directory so ValidatePackageContents
         // is reached (it early-returns when the directory does not exist).
         var outputDir = Path.Combine(
-            _tempRoot, "Build", "plugins", "UniversalDeviceToolkit.Plugins.test-plugin");
+            _tempRoot, ".build", "plugins", "UniversalDeviceToolkit.Plugins.test-plugin");
         Directory.CreateDirectory(outputDir);
         File.WriteAllText(Path.Combine(outputDir, "dummy.txt"), "placeholder");
 
@@ -83,7 +83,7 @@ public class PluginValidationServiceTests : IDisposable
         string? optimizationActions = null,
         string? requiredFiles = null)
     {
-        var pluginDir = Path.Combine(_tempRoot, "Plugins", folderName);
+        var pluginDir = Path.Combine(_tempRoot, "Official", folderName);
         Directory.CreateDirectory(pluginDir);
 
         // Legacy plugin.json

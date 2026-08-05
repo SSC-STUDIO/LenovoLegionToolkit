@@ -1,6 +1,5 @@
 param(
     [string]$SourceDir = "",
-    [switch]$UseSiblingRepoBuild,
     [string]$TargetDir = ""
 )
 
@@ -23,12 +22,8 @@ $requiredFiles = @(
     "Serilog.Sinks.File.dll"
 )
 
-if ([string]::IsNullOrWhiteSpace($SourceDir) -and $UseSiblingRepoBuild) {
-    $SourceDir = Join-Path $repoRoot "..\Build"
-}
-
 if ([string]::IsNullOrWhiteSpace($SourceDir)) {
-    throw "Please provide -SourceDir, or pass -UseSiblingRepoBuild to use sibling repo Release output."
+    throw "Please provide -SourceDir from the main repository Build output."
 }
 
 $resolvedSource = (Resolve-Path $SourceDir).Path

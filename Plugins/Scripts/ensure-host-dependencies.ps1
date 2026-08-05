@@ -1,6 +1,5 @@
 param(
     [string]$SourceDir = "",
-    [switch]$UseSiblingRepoBuild,
     [switch]$ForceRefresh
 )
 
@@ -37,26 +36,6 @@ function Test-HostDependenciesComplete {
     }
 
     return $true
-}
-
-function Resolve-SiblingSourceDir {
-    $candidates = @(
-        (Join-Path $repoRoot "..\Build")
-    )
-
-    foreach ($candidate in $candidates) {
-        $libCandidate = Join-Path $candidate "UniversalDeviceToolkit.Lib.dll"
-        $libPluginsCandidate = Join-Path $candidate "UniversalDeviceToolkit.Lib.Plugins.dll"
-        $wpfCandidate = Join-Path $candidate "Universal Device Toolkit.dll"
-        $serilogCandidate = Join-Path $candidate "Serilog.dll"
-        $serilogAsyncCandidate = Join-Path $candidate "Serilog.Sinks.Async.dll"
-        $serilogFileCandidate = Join-Path $candidate "Serilog.Sinks.File.dll"
-        if ((Test-Path $libCandidate) -and (Test-Path $libPluginsCandidate) -and (Test-Path $wpfCandidate) -and (Test-Path $serilogCandidate) -and (Test-Path $serilogAsyncCandidate) -and (Test-Path $serilogFileCandidate)) {
-            return $candidate
-        }
-    }
-
-    return $null
 }
 
 function Copy-FromSourceDir {
@@ -135,15 +114,5 @@ if (-not [string]::IsNullOrWhiteSpace($SourceDir)) {
     Copy-FromSourceDir -ResolvedSourceDir $SourceDir
     exit 0
 }
-
-$siblingSourceDir = Resolve-SiblingSourceDir
-if ($UseSiblingRepoBuild -or -not [string]::IsNullOrWhiteSpace($siblingSourceDir)) {
-    if (-not [string]::IsNullOrWhiteSpace($siblingSourceDir)) {
-        Copy-FromSourceDir -ResolvedSourceDir $siblingSourceDir
-        exit 0
-    }
-
-        Write-Warning "UseSiblingRepoBuild was requested but no sibling UniversalDeviceToolkit build output was found."
-    }
 
 Copy-FromReleaseZip

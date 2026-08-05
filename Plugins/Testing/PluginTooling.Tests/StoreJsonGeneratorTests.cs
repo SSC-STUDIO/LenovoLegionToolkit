@@ -50,9 +50,11 @@ public class StoreJsonGeneratorTests : IDisposable
         _tempRoot = Path.Combine(Path.GetTempPath(), "udt-store-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_tempRoot);
 
-        // The PluginRepository.EnsureRepositoryRoot guard requires both
-        // UniversalDeviceToolkit-Plugins.sln and a Plugins/ directory at the root.
-        File.WriteAllText(Path.Combine(_tempRoot, "UniversalDeviceToolkit-Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
+        // The PluginRepository.EnsureRepositoryRoot guard requires the canonical
+        // plugin solution and the Official/ directory at the repository root.
+        Directory.CreateDirectory(Path.Combine(_tempRoot, "Official"));
+        Directory.CreateDirectory(Path.Combine(_tempRoot, ".build", "catalog"));
+        File.WriteAllText(Path.Combine(_tempRoot, "UniversalDeviceToolkit.Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
     }
 
     public void Dispose()
@@ -119,7 +121,7 @@ public class StoreJsonGeneratorTests : IDisposable
         var path = new StoreJsonGenerator().Write(new StoreGenerationRequest
         {
             RepositoryRoot = _tempRoot,
-            AssetRoot = Path.Combine(_tempRoot, "Build", "release-assets"),
+            AssetRoot = Path.Combine(_tempRoot, ".build", "release-assets"),
             ReleaseRepositoryUrl = "https://example.com/releases",
         });
 
@@ -199,7 +201,7 @@ public class StoreJsonGeneratorTests : IDisposable
         CreatePluginFolder("hash-plugin", manifestLifecycle: "Active", manifestName: "Hash Plugin",
             description: "Integrity hashes from release ZIP.");
 
-        var assetDir = Path.Combine(_tempRoot, "Build", "release-assets");
+        var assetDir = Path.Combine(_tempRoot, ".build", "release-assets");
         Directory.CreateDirectory(assetDir);
         var zipPath = Path.Combine(assetDir, "hash-plugin-v1.0.0.zip");
         var dllBytes = new byte[] { 0x4D, 0x5A, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00 }; // tiny PE-like payload
@@ -232,7 +234,7 @@ public class StoreJsonGeneratorTests : IDisposable
         bool includeLocalization = false,
         string author = "SSC-STUDIO")
     {
-        var pluginDir = Path.Combine(_tempRoot, "Plugins", folderName);
+        var pluginDir = Path.Combine(_tempRoot, "Official", folderName);
         Directory.CreateDirectory(pluginDir);
 
         var legacyManifest = new
@@ -303,11 +305,11 @@ public class StoreJsonGeneratorTests : IDisposable
         CreatePluginFolder("custom-mouse", manifestLifecycle: "Active", manifestName: "Cursor & Pointer",
             description: "Mouse customization plugin.");
 
-        var assetDir = Path.Combine(_tempRoot, "Build", "release-assets");
+        var assetDir = Path.Combine(_tempRoot, ".build", "release-assets");
         Directory.CreateDirectory(assetDir);
         File.WriteAllBytes(Path.Combine(assetDir, "custom-mouse-v1.0.0.zip"), new byte[1234]);
 
-        var storePath = Path.Combine(_tempRoot, "store.json");
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
         File.WriteAllText(storePath,
             """
             {
@@ -443,7 +445,7 @@ public class StoreJsonGeneratorTests : IDisposable
 
         // Write a store.json with a 2-part SemVer version string ("1.0" not "1.0.0").
         // BumpStoreVersion must handle Version.Build == -1 from 2-part parsing.
-        var storePath = Path.Combine(_tempRoot, "store.json");
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
         File.WriteAllText(storePath,
             """
             {
@@ -461,7 +463,7 @@ public class StoreJsonGeneratorTests : IDisposable
         var request = new StoreGenerationRequest
         {
             RepositoryRoot = _tempRoot,
-            AssetRoot = Path.Combine(_tempRoot, "Build", "release-assets"),
+            AssetRoot = Path.Combine(_tempRoot, ".build", "release-assets"),
             ReleaseRepositoryUrl = "https://example.com/releases",
             MergeExisting = true,
             RequireAssets = false,
@@ -483,7 +485,7 @@ public class StoreJsonGeneratorTests : IDisposable
         // System.Text.Json deserializes "field": null to null even when the
         // C# property has a non-null default, causing NullReferenceException
         // in EntriesEqual → StringDictionariesEqual/TagDictionariesEqual/SequenceEqual.
-        var storePath = Path.Combine(_tempRoot, "store.json");
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
         File.WriteAllText(storePath,
             """
             {
@@ -526,7 +528,7 @@ public class StoreJsonGeneratorTests : IDisposable
         CreatePluginFolder("dup-plugin", manifestLifecycle: "Active", manifestName: "Dup Plugin",
             description: "Plugin with duplicate store entries.");
 
-        var storePath = Path.Combine(_tempRoot, "store.json");
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
         File.WriteAllText(storePath,
             """
             {
@@ -597,7 +599,7 @@ public class StoreJsonGeneratorTests : IDisposable
         CreatePluginFolder("dup-nomerge", manifestLifecycle: "Active", manifestName: "Dup NoMerge",
             description: "Plugin with duplicate store entries, no merge.");
 
-        var storePath = Path.Combine(_tempRoot, "store.json");
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
         File.WriteAllText(storePath,
             """
             {
@@ -662,7 +664,7 @@ public class StoreJsonGeneratorTests : IDisposable
         var request = new StoreGenerationRequest
         {
             RepositoryRoot = _tempRoot,
-            AssetRoot = Path.Combine(_tempRoot, "Build", "release-assets"),
+            AssetRoot = Path.Combine(_tempRoot, ".build", "release-assets"),
             ReleaseRepositoryUrl = "https://example.com/releases",
             MergeExisting = mergeExisting,
             RequireAssets = false,
@@ -678,7 +680,7 @@ public class StoreJsonGeneratorTests : IDisposable
         // When plugin.manifest.json has "tags": null, "dependencies": null, etc.,
         // StoreJsonGenerator.Generate must null-coalesce before .ToList().
         // This exercises the initial entry creation path (lines 79/82/83).
-        var pluginDir = Path.Combine(_tempRoot, "Plugins", "null-collections");
+        var pluginDir = Path.Combine(_tempRoot, "Official", "null-collections");
         Directory.CreateDirectory(pluginDir);
 
         var legacyManifest = JsonSerializer.Serialize(new
@@ -732,7 +734,7 @@ public class StoreJsonGeneratorTests : IDisposable
     {
         // HasStoreMetadata in StoreJsonGenerator accesses store.Tags.Count and
         // store.SupportedLanguages.Count. With null collections, this must not throw.
-        var pluginDir = Path.Combine(_tempRoot, "Plugins", "null-required-files");
+        var pluginDir = Path.Combine(_tempRoot, "Official", "null-required-files");
         Directory.CreateDirectory(pluginDir);
 
         File.WriteAllText(Path.Combine(pluginDir, "plugin.json"),
@@ -777,7 +779,7 @@ public class StoreJsonGeneratorTests : IDisposable
         // PluginManifestMigrator.Migrate accesses SupportedLanguages.Count, Tags.Count,
         // RequiredFiles.Contains/Add, and SupportedLanguages.AddRange — all NRE-prone
         // when JSON has explicit null for these collections.
-        var pluginDir = Path.Combine(_tempRoot, "Plugins", "migrate-null-test");
+        var pluginDir = Path.Combine(_tempRoot, "Official", "migrate-null-test");
         Directory.CreateDirectory(pluginDir);
 
         File.WriteAllText(Path.Combine(pluginDir, "plugin.json"),

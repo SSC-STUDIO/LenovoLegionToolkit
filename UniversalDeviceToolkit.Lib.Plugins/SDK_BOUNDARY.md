@@ -150,7 +150,7 @@ plugin-author channels.
 
 - The host does not compile the SDK sources itself: the SDK surface is
   consumed exclusively through the pre-built `Plugins.SDK` /
-  `Plugins.Shared` assemblies produced by the external plugins repository
+  `Plugins.Shared` assemblies produced by the in-tree Plugins solution
   and copied into the app output by the host's csproj.
 - `[assembly: InternalsVisibleTo("UniversalDeviceToolkit.Tests")]` in
   `AssemblyInfo.cs` grants the test project access to internal members for

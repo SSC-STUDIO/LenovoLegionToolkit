@@ -13,13 +13,13 @@ public sealed class PluginPackagerTests : IDisposable
     public PluginPackagerTests()
     {
         _root = Path.Combine(Path.GetTempPath(), "udt-packager-tests", Guid.NewGuid().ToString("N"));
-        _pluginDirectory = Path.Combine(_root, "Plugins", "Sample");
-        _outputDirectory = Path.Combine(_root, "Build", "plugins", "UniversalDeviceToolkit.Plugins.Sample");
+        _pluginDirectory = Path.Combine(_root, "Official", "Sample");
+        _outputDirectory = Path.Combine(_root, ".build", "plugins", "UniversalDeviceToolkit.Plugins.Sample");
 
         Directory.CreateDirectory(_pluginDirectory);
         Directory.CreateDirectory(_outputDirectory);
         File.WriteAllText(
-            Path.Combine(_root, "UniversalDeviceToolkit-Plugins.sln"),
+            Path.Combine(_root, "UniversalDeviceToolkit.Plugins.sln"),
             "Microsoft Visual Studio Solution File, Format Version 12.00\n");
 
         File.WriteAllText(Path.Combine(_pluginDirectory, "plugin.manifest.json"),

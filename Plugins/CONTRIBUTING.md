@@ -93,7 +93,7 @@ Requirements:
 - Prefer `PluginBase` and documented SDK interfaces
 - UI: `DynamicResource` colors, `.resx` strings, `WpfFallbackHelper` fallback UI
 - `TreatWarningsAsErrors` is enabled — keep zero warnings
-- No source references into the sibling host repo; use the downloaded host cache selected by `HostBaseline/host-release.json`
+- No source references into host application source; use the downloaded `.host/<host-version>/` cache selected by `HostBaseline/host-release.json`
 
 ### Commit messages
 

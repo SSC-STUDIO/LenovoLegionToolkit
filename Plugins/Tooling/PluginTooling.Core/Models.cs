@@ -188,7 +188,7 @@ public sealed record PluginContext(
 {
     public string OutputDirectory => Path.Combine(
         RepositoryRoot,
-        File.Exists(Path.Combine(RepositoryRoot, "UniversalDeviceToolkit.Plugins.sln")) ? ".build" : "Build",
+        ".build",
         "plugins",
         $"UniversalDeviceToolkit.Plugins.{FolderName}");
     public string ExpectedAssemblyName => $"UniversalDeviceToolkit.Plugins.{FolderName}";

@@ -2,7 +2,7 @@
 // FROZEN EXTERNAL PLUGIN ABI — DO NOT MODIFY SIGNATURES
 // ============================================================================
 // This project is NOT part of the host solution build graph. It is the
-// compile-time ABI contract for the external plugin repository
+// compile-time ABI contract for plugins built outside the host application
 // (Plugins/Official), which references
 // UniversalDeviceToolkit.Plugins.Abstractions.dll via HintPath.
 //

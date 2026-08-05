@@ -11,9 +11,9 @@ public class PluginVersionSynchronizerTests : IDisposable
     public PluginVersionSynchronizerTests()
     {
         _tempRoot = Path.Combine(Path.GetTempPath(), "udt-version-sync-tests", Guid.NewGuid().ToString("N"));
-        _pluginDirectory = Path.Combine(_tempRoot, "Plugins", "Sample");
+        _pluginDirectory = Path.Combine(_tempRoot, "Official", "Sample");
         Directory.CreateDirectory(_pluginDirectory);
-        File.WriteAllText(Path.Combine(_tempRoot, "UniversalDeviceToolkit-Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
+        File.WriteAllText(Path.Combine(_tempRoot, "UniversalDeviceToolkit.Plugins.sln"), "Microsoft Visual Studio Solution File, Format Version 12.00\n");
     }
 
     public void Dispose()
