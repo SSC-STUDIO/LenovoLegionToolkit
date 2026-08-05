@@ -65,6 +65,23 @@ public sealed class AvaloniaMigrationContractTests
             .Should().Be(DashboardItemPresentationMode.Toggle);
         DashboardItemDescriptors.Get("DiscreteGpu").PresentationMode
             .Should().Be(DashboardItemPresentationMode.Custom);
+        DashboardItemDescriptors.Get(DashboardGroupViewModel.OneLevelWhiteKeyboardBacklightIdentifier)
+            .PresentationMode.Should().Be(DashboardItemPresentationMode.Toggle);
+    }
+
+    [Fact]
+    public void WhiteKeyboardBacklightLayoutRendersBothWpfControlsAndPersistsOneItem()
+    {
+        var group = new DashboardGroupViewModel(new DashboardGroupState(
+            "Other",
+            null,
+            ["WhiteKeyboardBacklight"]));
+
+        group.Items.Select(item => item.Identifier)
+            .Should().Equal(
+                "WhiteKeyboardBacklight",
+                DashboardGroupViewModel.OneLevelWhiteKeyboardBacklightIdentifier);
+        group.ToState().Items.Should().Equal("WhiteKeyboardBacklight");
     }
 
     [Theory]

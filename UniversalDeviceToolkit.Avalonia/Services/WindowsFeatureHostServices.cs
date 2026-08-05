@@ -81,6 +81,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly PortsBacklightFeature? _portsBacklight;
     private readonly PanelLogoBacklightFeature? _panelLogoBacklight;
     private readonly WhiteKeyboardBacklightFeature? _whiteKeyboardBacklight;
+    private readonly OneLevelWhiteKeyboardBacklightFeature? _oneLevelWhiteKeyboardBacklight;
     private readonly ResolutionFeature? _resolution;
     private readonly RefreshRateFeature? _refreshRate;
     private readonly DpiScaleFeature? _dpiScale;
@@ -136,6 +137,7 @@ internal sealed class WindowsFeatureHostServices
         _portsBacklight = IoCContainer.TryResolve<PortsBacklightFeature>();
         _panelLogoBacklight = IoCContainer.TryResolve<PanelLogoBacklightFeature>();
         _whiteKeyboardBacklight = IoCContainer.TryResolve<WhiteKeyboardBacklightFeature>();
+        _oneLevelWhiteKeyboardBacklight = IoCContainer.TryResolve<OneLevelWhiteKeyboardBacklightFeature>();
         _resolution = IoCContainer.TryResolve<ResolutionFeature>();
         _refreshRate = IoCContainer.TryResolve<RefreshRateFeature>();
         _dpiScale = IoCContainer.TryResolve<DpiScaleFeature>();
@@ -283,6 +285,7 @@ internal sealed class WindowsFeatureHostServices
             "portsbacklight" => await SetDashboardFeatureStateAsync(_portsBacklight, state).ConfigureAwait(false),
             "panellogobacklight" => await SetDashboardFeatureStateAsync(_panelLogoBacklight, state).ConfigureAwait(false),
             "whitekeyboardbacklight" => await SetDashboardFeatureStateAsync(_whiteKeyboardBacklight, state).ConfigureAwait(false),
+            "onelevelwhitekeyboardbacklight" => await SetDashboardFeatureStateAsync(_oneLevelWhiteKeyboardBacklight, state).ConfigureAwait(false),
             "resolution" => await SetResolutionStateAsync(state).ConfigureAwait(false),
             "refreshrate" => await SetRefreshRateStateAsync(state).ConfigureAwait(false),
             "dpiscale" => await SetDpiScaleStateAsync(state).ConfigureAwait(false),
@@ -466,6 +469,7 @@ internal sealed class WindowsFeatureHostServices
             "portsbacklight" => await ReadDashboardFeatureStateAsync(identifier, _portsBacklight).ConfigureAwait(false),
             "panellogobacklight" => await ReadDashboardFeatureStateAsync(identifier, _panelLogoBacklight).ConfigureAwait(false),
             "whitekeyboardbacklight" => await ReadDashboardFeatureStateAsync(identifier, _whiteKeyboardBacklight).ConfigureAwait(false),
+            "onelevelwhitekeyboardbacklight" => await ReadDashboardFeatureStateAsync(identifier, _oneLevelWhiteKeyboardBacklight).ConfigureAwait(false),
             "resolution" => await ReadDashboardValueStateAsync(identifier, _resolution).ConfigureAwait(false),
             "refreshrate" => await ReadDashboardValueStateAsync(identifier, _refreshRate).ConfigureAwait(false),
             "dpiscale" => await ReadDashboardValueStateAsync(identifier, _dpiScale).ConfigureAwait(false),

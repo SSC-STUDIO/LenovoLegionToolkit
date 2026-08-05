@@ -536,14 +536,28 @@ public partial class DashboardPageViewModel : ObservableObject
 
 public sealed class DashboardGroupViewModel : ObservableObject
 {
+    public const string OneLevelWhiteKeyboardBacklightIdentifier = "OneLevelWhiteKeyboardBacklight";
+
     private string? _customName;
 
     public DashboardGroupViewModel(DashboardGroupState state)
     {
         Type = state.Type;
         _customName = state.CustomName;
-        Items = new ObservableCollection<DashboardLayoutItemViewModel>(
-            state.Items.Select(item => new DashboardLayoutItemViewModel(this, item)));
+        var items = new List<DashboardLayoutItemViewModel>();
+        foreach (var identifier in state.Items)
+        {
+            items.Add(new DashboardLayoutItemViewModel(this, identifier));
+            // WPF renders both white-backlight controls from one persisted item.
+            if (identifier.Equals("WhiteKeyboardBacklight", StringComparison.OrdinalIgnoreCase))
+            {
+                items.Add(new DashboardLayoutItemViewModel(
+                    this,
+                    OneLevelWhiteKeyboardBacklightIdentifier));
+            }
+        }
+
+        Items = new ObservableCollection<DashboardLayoutItemViewModel>(items);
     }
 
     public string Type { get; }
@@ -574,7 +588,9 @@ public sealed class DashboardGroupViewModel : ObservableObject
     public DashboardGroupState ToState() => new(
         Type,
         IsCustom ? CustomName : null,
-        Items.Select(item => item.Identifier).ToArray());
+        Items.Select(item => item.PersistenceIdentifier)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray());
 }
 
 public enum DashboardItemPresentationMode
@@ -614,6 +630,12 @@ public static class DashboardItemDescriptors
             ["TurnOffMonitors"] = new("TurnOffMonitorsControl_Title", "Turn off monitors", "Desktop24", true, DashboardItemPresentationMode.Custom),
             ["Microphone"] = new("MicrophoneControl_Title", "Microphone", "Mic24", false, DashboardItemPresentationMode.Toggle),
             ["WhiteKeyboardBacklight"] = new("WhiteKeyboardBacklightControl_Title", "White keyboard backlight", "Keyboard24"),
+            [DashboardGroupViewModel.OneLevelWhiteKeyboardBacklightIdentifier] = new(
+                "OneLevelWhiteKeyboardBacklightControl_Title",
+                "One-level white keyboard backlight",
+                "Keyboard24",
+                false,
+                DashboardItemPresentationMode.Toggle),
             ["PanelLogoBacklight"] = new("PanelLogoBacklightControl_Title", "Panel logo backlight", "LightbulbCircle24", false, DashboardItemPresentationMode.Toggle),
             ["PortsBacklight"] = new("PortsBacklightControl_Title", "Ports backlight", "UsbPlug24", false, DashboardItemPresentationMode.Toggle),
             ["TouchpadLock"] = new("TouchpadLockControl_Title", "Touchpad lock", "Tablet24", false, DashboardItemPresentationMode.Toggle),
@@ -639,6 +661,11 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 
     public DashboardGroupViewModel Group { get; }
     public string Identifier { get; }
+    public string PersistenceIdentifier => Identifier.Equals(
+        DashboardGroupViewModel.OneLevelWhiteKeyboardBacklightIdentifier,
+        StringComparison.OrdinalIgnoreCase)
+        ? "WhiteKeyboardBacklight"
+        : Identifier;
     public DashboardItemDescriptor Descriptor => DashboardItemDescriptors.Get(Identifier);
     public string IconIdentifier => Descriptor.IconIdentifier;
     public bool IsStandardControl => !Descriptor.IsCustomControl;
@@ -757,6 +784,7 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
             "PortsBacklight" => "PortsBacklightState_",
             "PanelLogoBacklight" => "PanelLogoBacklightState_",
             "WhiteKeyboardBacklight" => "WhiteKeyboardBacklightState_",
+            DashboardGroupViewModel.OneLevelWhiteKeyboardBacklightIdentifier => "OneLevelWhiteKeyboardBacklightState_",
             _ => null,
         };
 
