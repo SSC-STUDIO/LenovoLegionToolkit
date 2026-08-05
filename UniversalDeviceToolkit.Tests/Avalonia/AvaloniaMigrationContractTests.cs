@@ -419,6 +419,73 @@ public sealed class AvaloniaMigrationContractTests
         source.Should().Contain("ToolTip.SetTip(toggle, item.Description + \" \" + item.Status)");
     }
 
+    [Fact]
+    public void SettingsPageViewModel_MapsEveryWpfSettingsCapabilityWithoutPlaceholderContent()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "SettingsPageViewModel.cs"));
+
+        source.Should().NotContain("BuildPlaceholderView");
+        source.Should().Contain("SettingsAppearanceView");
+        source.Should().Contain("SettingsApplicationBehaviorView");
+        source.Should().Contain("SettingsSmartKeysView");
+        source.Should().Contain("SettingsDisplayView");
+        source.Should().Contain("SettingsUpdateView");
+        source.Should().Contain("SettingsPowerView");
+        source.Should().Contain("SettingsIntegrationsView");
+    }
+
+    [Fact]
+    public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsPlatformServices.cs"));
+
+        foreach (var property in new[]
+                 {
+                     "CpuPowerWatts",
+                     "CpuCoresPowerWatts",
+                     "CpuMemoryPowerWatts",
+                     "CpuPlatformPowerWatts",
+                     "CpuPCoreClockMHz",
+                     "CpuECoreClockMHz",
+                     "CpuMemoryUsagePercent",
+                     "CpuMemoryTemperatureCelsius",
+                     "CpuSsdTemperature1Celsius",
+                     "CpuSsdTemperature2Celsius",
+                     "GpuMemoryClockMHz",
+                     "GpuPowerWatts",
+                     "GpuVramUsedGb",
+                     "GpuVramTotalGb",
+                     "GpuVramUsagePercent",
+                     "GpuVramTemperatureCelsius",
+                     "GpuHotSpotTemperatureCelsius",
+                     "GpuPcieRxBytesPerSecond",
+                     "GpuPcieTxBytesPerSecond",
+                     "BatteryIsCharging",
+                     "BatteryIsLowBattery",
+                     "BatteryMinRateWatts",
+                     "BatteryMaxRateWatts",
+                     "BatteryDesignCapacityWh",
+                     "BatteryChargeCapacityWh",
+                     "BatteryFullCapacityWh",
+                     "BatteryManufactureDate",
+                     "BatteryFirstUseDate",
+                     "BatteryOnBatterySince",
+                 })
+        {
+            source.Should().Contain($"{property} =");
+        }
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]
