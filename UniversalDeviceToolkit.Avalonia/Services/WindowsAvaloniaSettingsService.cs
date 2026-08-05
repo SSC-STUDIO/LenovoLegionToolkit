@@ -16,8 +16,10 @@ using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using MachineCompatibility = UniversalDeviceToolkit.Lib.Utils.Compatibility;
+using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
@@ -1505,37 +1507,79 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     private static IReadOnlyList<string> GetSmartFnLockValues(ModifierKey current)
     {
-        var values = new List<string> { "Off", "Alt", "Alt + Ctrl + Shift" };
+        var values = new[]
+        {
+            ModifierKey.None,
+            ModifierKey.Alt,
+            ModifierKey.Alt | ModifierKey.Ctrl | ModifierKey.Shift,
+        }
+        .Select(FormatSmartFnLockFlags)
+        .ToList();
         var formattedCurrent = FormatSmartFnLockFlags(current);
         if (!values.Contains(formattedCurrent, StringComparer.OrdinalIgnoreCase))
             values.Add(formattedCurrent);
         return values;
     }
 
-    private static string FormatSmartFnLockFlags(ModifierKey value) => value switch
+    private static string FormatSmartFnLockFlags(ModifierKey value)
     {
-        ModifierKey.None => "Off",
-        ModifierKey.Alt => "Alt",
-        ModifierKey.Alt | ModifierKey.Ctrl | ModifierKey.Shift => "Alt + Ctrl + Shift",
-        _ => string.Join(" + ", new[]
+        if (value == ModifierKey.None)
         {
-            value.HasFlag(ModifierKey.Alt) ? "Alt" : null,
-            value.HasFlag(ModifierKey.Ctrl) ? "Ctrl" : null,
-            value.HasFlag(ModifierKey.Shift) ? "Shift" : null,
-        }.Where(part => part is not null)),
-    };
+            return AvaloniaLocalization.GetString(
+                "FnLockState_Off",
+                LibResource.ResourceManager.GetString(
+                    "FnLockState_Off",
+                    LocalizationRuntime.CurrentCulture) ?? "Off");
+        }
+
+        var names = new[]
+        {
+            (ModifierKey.Shift, "Shift"),
+            (ModifierKey.Ctrl, "Ctrl"),
+            (ModifierKey.Alt, "Alt"),
+        }
+        .Where(item => value.HasFlag(item.Item1))
+        .Select(item => LibResource.ResourceManager.GetString(
+            $"ModifierKey_{item.Item2}",
+            LocalizationRuntime.CurrentCulture) ?? item.Item2);
+        return string.Join(", ", names);
+    }
 
     private static ModifierKey ParseSmartFnLockFlags(string value)
     {
         var normalized = value.Trim();
+        foreach (var candidate in new[]
+                 {
+                     ModifierKey.None,
+                     ModifierKey.Alt,
+                     ModifierKey.Alt | ModifierKey.Ctrl | ModifierKey.Shift,
+                 })
+        {
+            if (string.Equals(normalized, FormatSmartFnLockFlags(candidate), StringComparison.OrdinalIgnoreCase))
+                return candidate;
+        }
+
         if (string.Equals(normalized, "Off", StringComparison.OrdinalIgnoreCase)
             || string.Equals(normalized, nameof(ModifierKey.None), StringComparison.OrdinalIgnoreCase))
             return ModifierKey.None;
 
         var result = ModifierKey.None;
-        var parts = normalized.Replace('+', ',').Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var parts = normalized
+            .Replace('+', ',')
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         foreach (var part in parts)
         {
+            var modifier = Enum.GetValues<ModifierKey>()
+                .Where(candidate => candidate != ModifierKey.None)
+                .FirstOrDefault(candidate =>
+                    string.Equals(part, candidate.ToString(), StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(part, FormatSmartFnLockFlags(candidate), StringComparison.OrdinalIgnoreCase));
+            if (modifier != ModifierKey.None)
+            {
+                result |= modifier;
+                continue;
+            }
+
             result |= part.Trim().ToLowerInvariant() switch
             {
                 "alt" => ModifierKey.Alt,

@@ -1,6 +1,8 @@
 #if WINDOWS
 
 using FluentAssertions;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Avalonia.Services;
 using Xunit;
 
@@ -14,6 +16,8 @@ public sealed class SmartKeysSettingsServiceTests
         var service = AvaloniaSettingsServiceFactory.Create();
 
         var page = await service.GetPageAsync("SmartKeys");
+        var localizedCombination = (ModifierKey.Alt | ModifierKey.Ctrl | ModifierKey.Shift)
+            .GetFlagsDisplayName(ModifierKey.None);
 
         page.IsAvailable.Should().BeTrue();
         page.Options.Should().ContainSingle(option =>
@@ -21,7 +25,8 @@ public sealed class SmartKeysSettingsServiceTests
             && option.Editor == AvaloniaSettingEditor.Selection
             && option.Values!.Contains("Off")
             && option.Values!.Contains("Alt")
-            && option.Values!.Contains("Alt + Ctrl + Shift"));
+            && option.Values!.Contains(localizedCombination)
+            && !option.Values!.Contains("Alt + Ctrl + Shift"));
         page.Options.Should().Contain(option =>
             option.Key == "SmartKeySinglePressActions"
             && option.Editor == AvaloniaSettingEditor.MultiSelection);
@@ -36,14 +41,21 @@ public sealed class SmartKeysSettingsServiceTests
         var service = AvaloniaSettingsServiceFactory.Create();
         var pageBefore = await service.GetPageAsync("SmartKeys");
         var original = pageBefore.Options.Single(option => option.Key == "SmartFnLockFlags").SelectedValue;
+        var combination = pageBefore.Options
+            .Single(option => option.Key == "SmartFnLockFlags")
+            .Values!
+            .Single(value => value.Equals(
+                (ModifierKey.Alt | ModifierKey.Ctrl | ModifierKey.Shift)
+                    .GetFlagsDisplayName(ModifierKey.None),
+                StringComparison.OrdinalIgnoreCase));
 
         try
         {
-            await service.SetSelectionAsync("SmartKeys", "SmartFnLockFlags", "Alt + Ctrl + Shift");
+            await service.SetSelectionAsync("SmartKeys", "SmartFnLockFlags", combination);
 
             var pageAfter = await service.GetPageAsync("SmartKeys");
             pageAfter.Options.Single(option => option.Key == "SmartFnLockFlags")
-                .SelectedValue.Should().Be("Alt + Ctrl + Shift");
+                .SelectedValue.Should().Be(combination);
         }
         finally
         {
