@@ -388,6 +388,21 @@ public sealed class AvaloniaMigrationContractTests
         source.Should().Contain("_status.MaxLines = 4");
     }
 
+    [Fact]
+    public void FeaturePageView_RollsBackRejectedToggleActions()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "FeaturePageView.axaml.cs"));
+
+        source.Should().Contain("accepted = await _platformServices.SetFeatureActionAsync");
+        source.Should().Contain("toggle.IsChecked = item.IsSelected;");
+        source.Should().Contain("ToolTip.SetTip(toggle, item.Description + \" \" + item.Status)");
+    }
+
     [Theory]
     [InlineData(0, true)]
     [InlineData(100, true)]

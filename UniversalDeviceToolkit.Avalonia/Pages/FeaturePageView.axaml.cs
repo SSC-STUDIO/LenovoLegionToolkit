@@ -608,9 +608,31 @@ public partial class FeaturePageView : UserControl
             {
                 if (_isApplying || toggle.IsChecked is not bool selected)
                     return;
-                var accepted = await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, item.Key, selected);
+                bool accepted;
+                try
+                {
+                    accepted = await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, item.Key, selected);
+                }
+                catch (Exception ex)
+                {
+                    accepted = false;
+                    if (System.Diagnostics.Debugger.IsAttached)
+                        System.Diagnostics.Debug.WriteLine($"Feature action failed: {ex.Message}");
+                }
+
                 if (!accepted)
+                {
+                    _isApplying = true;
+                    try
+                    {
+                        toggle.IsChecked = item.IsSelected;
+                    }
+                    finally
+                    {
+                        _isApplying = false;
+                    }
                     ToolTip.SetTip(toggle, item.Description + " " + item.Status);
+                }
                 else
                     await RefreshStateAsync();
             };
