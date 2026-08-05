@@ -61,7 +61,7 @@ The catalog release must never be used as an application update. The main applic
 For a legacy client whose update feed still points at the old `LenovoLegionToolkit` repository, use this one-time bridge sequence:
 
 1. Publish the new main application release under the main repository's normal `vX.Y.Z` tag, including the compatibility installer asset name expected by the legacy updater (`LenovoLegionToolkit_vX.Y.Z_Setup.exe`) and its SHA256 file.
-2. Publish one final compatibility release in the legacy application repository, using the same installer payload and an explicit note directing users to `UniversalDeviceToolkit`. Do not publish plugin packages there.
+2. Do not create a second legacy-application Release. The legacy repository route resolves to the main repository, and the same `vX.Y.Z` Release carries the `LenovoLegionToolkit_vX.Y.Z_Setup.exe` compatibility alias and the migration note. Do not publish plugin packages under a separate application tag.
 3. Test the upgrade from a clean legacy installation, including install path, settings migration, first launch, plugin discovery, and rollback on a failed download.
 4. The legacy plugin repository is now archived with its historical releases and assets preserved. Leave its README redirect in place; do not delete historical releases needed by existing clients.
 5. The upgraded client then reads `plugin-catalog/store.json` from the main repository and installs packages from the same rolling release.
