@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Existing vX.Y.Z tag to rebuild (used for recovery or a deliberate manual release)"
+        required: true
+        type: string
 
 jobs:
   build:
@@ -25,6 +31,7 @@ jobs:
       uses: actions/checkout@v7
       with:
         fetch-depth: 0
+        ref: ${{ inputs.release_tag || github.ref }}
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
@@ -43,6 +50,10 @@ jobs:
         [xml]$props = Get-Content -Raw 'Directory.Build.props'
         $group = $props.Project.PropertyGroup | Select-Object -First 1
 
+        $requestedReleaseTag = "${{ inputs.release_tag }}".Trim()
+        $releaseRefName = if ($requestedReleaseTag) { $requestedReleaseTag } else { "${{ github.ref_name }}" }
+        $isManualRelease = [bool]$requestedReleaseTag
+
         $releaseVersion = [string]$group.ReleaseVersion
         if ([string]::IsNullOrWhiteSpace($releaseVersion) -or $releaseVersion -match '\$\(') {
           $majorVersion = [string]$group.MajorVersion
@@ -56,7 +67,7 @@ jobs:
           $releaseVersion = "$majorVersion.$minorVersion.$patchVersion"
         }
 
-        $tagVersion = "${{ github.ref_name }}" -replace '^v', ''
+        $tagVersion = $releaseRefName -replace '^v', ''
         $normalizedTagVersion = if ($tagVersion -match '^(\d+\.\d+\.\d+)') { $Matches[1] } else { $tagVersion }
         if ($normalizedTagVersion -ne $releaseVersion) {
           throw "Git tag version '$tagVersion' does not match Directory.Build.props version '$releaseVersion'."
@@ -65,8 +76,12 @@ jobs:
         $versionLabel = if ($tagVersion -match '-') { $tagVersion } else { $releaseVersion }
         $majorVersionNumber = [int]($releaseVersion.Split('.')[0])
         $includeCrossPlatformCli = $majorVersionNumber -ge 5
+        $isPrerelease = $releaseRefName -match '-'
         "VERSION=$versionLabel" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "BUILD_VERSION=$releaseVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "RELEASE_TAG=$releaseRefName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "RELEASE_IS_MANUAL=$($isManualRelease.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        "RELEASE_IS_PRERELEASE=$($isPrerelease.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "ENABLE_CROSS_PLATFORM_CLI=$($includeCrossPlatformCli.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "SETUP_FULL_ASSET=UniversalDeviceToolkit_v$versionLabel" + "_Full_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
         "SETUP_ONLINE_ASSET=UniversalDeviceToolkit_v$versionLabel" + "_Online_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
@@ -79,7 +94,20 @@ jobs:
         "LEGACY_SETUP_ASSET=LenovoLegionToolkit_v$versionLabel" + "_Setup.exe" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Restore solution
-      run: dotnet restore UniversalDeviceToolkit.sln --locked-mode
+      shell: pwsh
+      run: |
+        if ($env:RELEASE_IS_MANUAL -eq 'true') {
+          # Manual recovery runs may rebuild a historical tag whose lock file
+          # predates project-reference changes already present in that tag.
+          dotnet restore UniversalDeviceToolkit.sln --force-evaluate
+        }
+        else {
+          dotnet restore UniversalDeviceToolkit.sln --locked-mode
+        }
+
+        if ($LASTEXITCODE -ne 0) {
+          throw 'Solution restore failed.'
+        }
 
     - name: Build release test project
       run: dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
@@ -251,7 +279,7 @@ jobs:
         ./Scripts/Build-LanguageAssets.ps1 @finalizeArgs
 
     - name: Validate package manifests
-      if: ${{ !contains(github.ref_name, '-') }}
+      if: ${{ env.RELEASE_IS_PRERELEASE != 'true' }}
       shell: pwsh
       run: |
         $releaseDate = [DateTime]::UtcNow.ToString('yyyy-MM-dd', [System.Globalization.CultureInfo]::InvariantCulture)
@@ -302,12 +330,13 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         name: Universal Device Toolkit v${{ env.VERSION }}
+        tag_name: ${{ env.RELEASE_TAG }}
         files: |
           release-assets/*.exe
           release-assets/*.zip
           release-assets/*_SHA256.txt
         fail_on_unmatched_files: true
-        prerelease: ${{ contains(github.ref_name, '-') }}
+        prerelease: ${{ env.RELEASE_IS_PRERELEASE == 'true' }}
 
     - name: Apply release notes (UTF-8)
       shell: pwsh
@@ -319,7 +348,7 @@ jobs:
           throw "Release notes file not found at $notesPath"
         }
 
-        gh release edit "${{ github.ref_name }}" `
+        gh release edit "$env:RELEASE_TAG" `
           --repo "${{ github.repository }}" `
           --notes-file $notesPath
 
