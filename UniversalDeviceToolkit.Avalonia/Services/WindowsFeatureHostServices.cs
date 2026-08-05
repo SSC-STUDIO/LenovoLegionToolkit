@@ -80,6 +80,9 @@ internal sealed class WindowsFeatureHostServices
     private readonly PortsBacklightFeature? _portsBacklight;
     private readonly PanelLogoBacklightFeature? _panelLogoBacklight;
     private readonly WhiteKeyboardBacklightFeature? _whiteKeyboardBacklight;
+    private readonly ResolutionFeature? _resolution;
+    private readonly RefreshRateFeature? _refreshRate;
+    private readonly DpiScaleFeature? _dpiScale;
     private long _estimatedCleanupSize;
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
@@ -129,6 +132,9 @@ internal sealed class WindowsFeatureHostServices
         _portsBacklight = IoCContainer.TryResolve<PortsBacklightFeature>();
         _panelLogoBacklight = IoCContainer.TryResolve<PanelLogoBacklightFeature>();
         _whiteKeyboardBacklight = IoCContainer.TryResolve<WhiteKeyboardBacklightFeature>();
+        _resolution = IoCContainer.TryResolve<ResolutionFeature>();
+        _refreshRate = IoCContainer.TryResolve<RefreshRateFeature>();
+        _dpiScale = IoCContainer.TryResolve<DpiScaleFeature>();
         _selectedCleanupActions = new HashSet<string>(
             _applicationSettings?.Store.SelectedCleanupActions ?? [],
             StringComparer.OrdinalIgnoreCase);
@@ -269,6 +275,9 @@ internal sealed class WindowsFeatureHostServices
             "portsbacklight" => await SetDashboardFeatureStateAsync(_portsBacklight, state).ConfigureAwait(false),
             "panellogobacklight" => await SetDashboardFeatureStateAsync(_panelLogoBacklight, state).ConfigureAwait(false),
             "whitekeyboardbacklight" => await SetDashboardFeatureStateAsync(_whiteKeyboardBacklight, state).ConfigureAwait(false),
+            "resolution" => await SetResolutionStateAsync(state).ConfigureAwait(false),
+            "refreshrate" => await SetRefreshRateStateAsync(state).ConfigureAwait(false),
+            "dpiscale" => await SetDpiScaleStateAsync(state).ConfigureAwait(false),
             _ => false,
         };
     }
@@ -293,6 +302,9 @@ internal sealed class WindowsFeatureHostServices
             "portsbacklight" => await ReadDashboardFeatureStateAsync(identifier, _portsBacklight).ConfigureAwait(false),
             "panellogobacklight" => await ReadDashboardFeatureStateAsync(identifier, _panelLogoBacklight).ConfigureAwait(false),
             "whitekeyboardbacklight" => await ReadDashboardFeatureStateAsync(identifier, _whiteKeyboardBacklight).ConfigureAwait(false),
+            "resolution" => await ReadDashboardValueStateAsync(identifier, _resolution).ConfigureAwait(false),
+            "refreshrate" => await ReadDashboardValueStateAsync(identifier, _refreshRate).ConfigureAwait(false),
+            "dpiscale" => await ReadDashboardValueStateAsync(identifier, _dpiScale).ConfigureAwait(false),
             _ => new DashboardItemState(
                 identifier,
                 false,
@@ -364,6 +376,129 @@ internal sealed class WindowsFeatureHostServices
         {
             return false;
         }
+    }
+
+    private async Task<DashboardItemState> ReadDashboardValueStateAsync<T>(
+        string identifier,
+        IFeature<T>? feature)
+        where T : struct
+    {
+        if (feature is null)
+        {
+            return new DashboardItemState(
+                identifier,
+                false,
+                null,
+                Array.Empty<string>(),
+                "The dashboard service is unavailable.");
+        }
+
+        try
+        {
+            if (!await feature.IsSupportedAsync().ConfigureAwait(false))
+            {
+                return new DashboardItemState(
+                    identifier,
+                    false,
+                    null,
+                    Array.Empty<string>(),
+                    "This control is not supported on the current device.");
+            }
+
+            var current = await feature.GetStateAsync().ConfigureAwait(false);
+            var options = await feature.GetAllStatesAsync().ConfigureAwait(false);
+            return new DashboardItemState(
+                identifier,
+                true,
+                SerializeDashboardValue(current),
+                options.Select(SerializeDashboardValue).ToArray());
+        }
+        catch (Exception ex)
+        {
+            return new DashboardItemState(identifier, false, null, Array.Empty<string>(), ex.Message);
+        }
+    }
+
+    private async Task<bool> SetResolutionStateAsync(string state)
+    {
+        if (_resolution is null || !TryParseResolution(state, out var resolution))
+            return false;
+
+        try
+        {
+            await _resolution.SetStateAsync(resolution).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async Task<bool> SetRefreshRateStateAsync(string state)
+    {
+        if (_refreshRate is null || !TryParseInteger(state, out var frequency))
+            return false;
+
+        try
+        {
+            await _refreshRate.SetStateAsync(new RefreshRate(frequency)).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async Task<bool> SetDpiScaleStateAsync(string state)
+    {
+        if (_dpiScale is null || !TryParseInteger(state, out var scale))
+            return false;
+
+        try
+        {
+            await _dpiScale.SetStateAsync(new DpiScale(scale)).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string SerializeDashboardValue<T>(T value)
+        where T : struct => value switch
+        {
+            Resolution resolution => resolution.ToString(),
+            RefreshRate refreshRate => refreshRate.Frequency.ToString(CultureInfo.InvariantCulture),
+            DpiScale dpiScale => dpiScale.Scale.ToString(CultureInfo.InvariantCulture),
+            IDisplayName displayName => displayName.DisplayName,
+            _ => value.ToString() ?? string.Empty,
+        };
+
+    private static bool TryParseResolution(string value, out Resolution resolution)
+    {
+        resolution = default;
+        var parts = value.Split('x', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length == 2
+            && int.TryParse(parts[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var width)
+            && int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var height)
+            && width > 0
+            && height > 0
+            && SetResolution(width, height, ref resolution);
+    }
+
+    private static bool SetResolution(int width, int height, ref Resolution resolution)
+    {
+        resolution = new Resolution(width, height);
+        return true;
+    }
+
+    private static bool TryParseInteger(string value, out int result)
+    {
+        var digits = new string(value.Where(character => char.IsDigit(character) || character == '-').ToArray());
+        return int.TryParse(digits, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
     }
 
     public Task<IReadOnlyList<CustomCleanupRuleItem>> GetCustomCleanupRulesAsync()
