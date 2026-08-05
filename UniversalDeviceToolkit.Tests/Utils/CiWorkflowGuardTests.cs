@@ -253,6 +253,17 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
+    public void PluginValidationWorkflow_ShouldPrimeToolingWithHelpCommand()
+    {
+        var step = ReadWorkflow("plugins-validate.yml")
+            .Job("validate")
+            .Step("Prime plugin tooling CLI");
+
+        step.Run.Should().Contain("Invoke-PluginTooling.ps1 --help");
+        step.Run.Should().NotContain("Invoke-PluginTooling.ps1 --repository-root");
+    }
+
+    [Fact]
     public void FlaUiTestBase_ShouldResolveX64BuildOutputPaths()
     {
         var source = RepositoryPaths.ReadFile(
