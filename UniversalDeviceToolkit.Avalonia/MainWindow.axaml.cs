@@ -1,8 +1,11 @@
 using global::Avalonia;
+using global::Avalonia.Automation;
 using global::Avalonia.Controls;
 using global::Avalonia.Interactivity;
+using global::Avalonia.Layout;
 using global::Avalonia.Media;
 using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Services;
 
@@ -22,6 +25,7 @@ public partial class MainWindow : Window
     {
         _platformServices = platformServices;
         InitializeComponent();
+        ApplyNavigationPaneState();
         ApplyNavigationVisibility();
         ApplyTextDirection(LocalizationRuntime.CurrentCulture);
         Loaded += OnLoaded;
@@ -156,6 +160,16 @@ public partial class MainWindow : Window
         Navigate(MainNavigation.Settings);
     }
 
+    private void NavigationToggleButton_Click(object? sender, RoutedEventArgs e)
+    {
+#if WINDOWS
+        var settings = Services.WindowsAvaloniaSettingsService.SharedApplicationSettings;
+        settings.Store.NavigationPaneExpanded = !settings.Store.NavigationPaneExpanded;
+        settings.SynchronizeStore();
+#endif
+        ApplyNavigationPaneState();
+    }
+
     private void OnPluginActionRequested(string actionKey)
     {
         const string openPrefix = "plugin-open:";
@@ -282,6 +296,7 @@ public partial class MainWindow : Window
         SetNavigationVisibility(WindowsOptimizationButton, MainNavigation.WindowsOptimization, settings);
         SetNavigationVisibility(PluginExtensionsButton, MainNavigation.PluginExtensions, settings);
         SetNavigationVisibility(AboutButton, MainNavigation.About, settings);
+        ApplyNavigationPaneState();
 
         var activeBaseRoute = MainNavigation.TryGetPluginId(_activePage, out _)
             || MainNavigation.TryGetPluginSettingsId(_activePage, out _)
@@ -300,6 +315,67 @@ public partial class MainWindow : Window
         IReadOnlyDictionary<string, bool>? settings)
     {
         button.IsVisible = NavigationVisibilityPolicy.IsVisible(route, settings);
+    }
+
+    /// <summary>
+    /// Applies the persisted navigation-pane state to the Avalonia shell. The
+    /// collapsed rail keeps icons and automation names while removing labels so
+    /// the content surface receives the same usable width as the WPF host.
+    /// </summary>
+    public void ApplyNavigationPaneState()
+    {
+#if WINDOWS
+        var expanded = Services.WindowsAvaloniaSettingsService.SharedApplicationSettings
+            .Store.NavigationPaneExpanded;
+#else
+        const bool expanded = true;
+#endif
+
+        NavigationPane.Width = expanded ? 280 : 72;
+        NavigationStack.Margin = expanded
+            ? new Thickness(16, 18)
+            : new Thickness(8, 18);
+        NavigationHeader.IsVisible = expanded;
+
+        foreach (var label in new[]
+                 {
+                     DashboardLabel,
+                     KeyboardLabel,
+                     ActionsLabel,
+                     MacroLabel,
+                     WindowsOptimizationLabel,
+                     PluginExtensionsLabel,
+                     AboutLabel,
+                     SettingsLabel,
+                 })
+        {
+            label.IsVisible = expanded;
+        }
+
+        foreach (var button in new[]
+                 {
+                     DashboardButton,
+                     KeyboardButton,
+                     ActionsButton,
+                     MacroButton,
+                     WindowsOptimizationButton,
+                     PluginExtensionsButton,
+                     SettingsButton,
+                     AboutButton,
+                 })
+        {
+            button.HorizontalContentAlignment = expanded
+                ? HorizontalAlignment.Left
+                : HorizontalAlignment.Center;
+            button.Padding = expanded ? new Thickness(16, 11) : new Thickness(10);
+        }
+
+        NavigationToggleIcon.IconIdentifier = expanded ? "ArrowLeft24" : "ArrowRight24";
+        var toggleText = expanded
+            ? AvaloniaLocalization.GetString("SettingsPage_NavigationItems_Title", "Collapse navigation pane")
+            : AvaloniaLocalization.GetString("SettingsPage_NavigationItems_Title", "Expand navigation pane");
+        ToolTip.SetTip(NavigationToggleButton, toggleText);
+        AutomationProperties.SetName(NavigationToggleButton, toggleText);
     }
 
     private void ApplyTextDirection(System.Globalization.CultureInfo culture)

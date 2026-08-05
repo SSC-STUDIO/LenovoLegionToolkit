@@ -26,15 +26,31 @@
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="FontWeight" Value="Medium" />
         </Style>
+        <Style Selector="Button.navToggleButton">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="MinHeight" Value="40" />
+        </Style>
     </Window.Styles>
     <DockPanel Background="{DynamicResource AppBackgroundBrush}">
-        <Border DockPanel.Dock="Left"
+        <Border x:Name="NavigationPane"
+                DockPanel.Dock="Left"
                 Width="280"
                 Margin="12,12,0,12"
                 Background="{DynamicResource NavigationPaneBackgroundBrush}"
                 CornerRadius="{DynamicResource CornerRadiusSurface}">
-            <StackPanel Spacing="6" Margin="16,18">
-                <TextBlock Text="{local:Loc Key=Navigation, Fallback=Navigation}"
+            <StackPanel x:Name="NavigationStack" Spacing="6" Margin="16,18">
+                <Button x:Name="NavigationToggleButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaNavigationPaneToggle"
+                        Classes="navButton navToggleButton"
+                        Click="NavigationToggleButton_Click"
+                        ToolTip.Tip="{local:Loc Key=SettingsPage_NavigationItems_Title, Fallback=Toggle navigation pane}">
+                    <controls:NavigationIcon x:Name="NavigationToggleIcon"
+                                             IconIdentifier="ArrowLeft24"
+                                             FontSize="{StaticResource IconSizeMD}" />
+                </Button>
+                <TextBlock x:Name="NavigationHeader"
+                           Text="{local:Loc Key=Navigation, Fallback=Navigation}"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Left"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -50,7 +66,7 @@
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}"
                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="DashboardLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=Nav_Dashboard, Fallback=Dashboard}"
                                                      OverflowMode="Ellipsis"
                                                      MaxLines="1"
@@ -68,7 +84,7 @@
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="KeyboardLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=MainWindow_NavigationItem_Keyboard, Fallback=Keyboard}"
                                                      OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
                     </Grid>
@@ -83,7 +99,7 @@
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="ActionsLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=MainWindow_NavigationItem_Actions, Fallback=Actions}"
                                                      OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
                     </Grid>
@@ -98,7 +114,7 @@
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="MacroLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=MainWindow_NavigationItem_Macro, Fallback=Macro}"
                                                      OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
                     </Grid>
@@ -113,7 +129,7 @@
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="WindowsOptimizationLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=MainWindow_NavigationItem_WindowsOptimization, Fallback=System optimization}"
                                                      OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
                     </Grid>
@@ -128,7 +144,7 @@
                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="PluginExtensionsLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=MainWindow_NavigationItem_PluginExtensions, Fallback=Plugin Extensions}"
                                                      OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
                     </Grid>
@@ -144,7 +160,7 @@
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}"
                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="AboutLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=Nav_About, Fallback=About}"
                                                      OverflowMode="Ellipsis"
                                                      MaxLines="1"
@@ -163,7 +179,7 @@
                         <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
                                                  FontSize="{StaticResource IconSizeMD}"
                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <controls:LocalizedTextBlock Grid.Column="1"
+                        <controls:LocalizedTextBlock x:Name="SettingsLabel" Grid.Column="1"
                                                      Text="{local:Loc Key=Nav_Settings, Fallback=Settings}"
                                                      OverflowMode="Ellipsis"
                                                      MaxLines="1"

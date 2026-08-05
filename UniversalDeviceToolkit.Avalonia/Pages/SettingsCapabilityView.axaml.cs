@@ -172,6 +172,8 @@ public partial class SettingsCapabilityView : UserControl
             if (TopLevel.GetTopLevel(this) is MainWindow mainWindow)
             {
                 mainWindow.ApplyNavigationVisibility();
+                if (_pageKey == "Display" && option.Key == "NavigationPaneExpanded")
+                    mainWindow.ApplyNavigationPaneState();
             }
 
             if (_pageKey == "Application" && option.Key is "EnableHardwareSensors" or "ShowOsd")
