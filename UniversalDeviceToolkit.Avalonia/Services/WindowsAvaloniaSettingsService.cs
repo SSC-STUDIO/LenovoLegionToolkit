@@ -1623,16 +1623,31 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
 
     private static string FormatPowerModeMapping(PowerModeMappingMode value) => value switch
     {
-        PowerModeMappingMode.WindowsPowerPlan => "Windows power plans",
-        _ => "Windows power mode",
+        PowerModeMappingMode.Disabled => AvaloniaLocalization.GetString(
+            "PowerModeMappingMode_Disabled",
+            "Disabled"),
+        PowerModeMappingMode.WindowsPowerPlan => AvaloniaLocalization.GetString(
+            "PowerModeMappingMode_WindowsPowerPlan",
+            "Windows power plans"),
+        _ => AvaloniaLocalization.GetString(
+            "PowerModeMappingMode_WindowsPowerMode",
+            "Windows power mode"),
     };
 
-    private static PowerModeMappingMode ParsePowerModeMapping(string value) => value switch
+    private static PowerModeMappingMode ParsePowerModeMapping(string value)
     {
-        "Windows power plans" or nameof(PowerModeMappingMode.WindowsPowerPlan) => PowerModeMappingMode.WindowsPowerPlan,
-        "Windows power mode" or nameof(PowerModeMappingMode.WindowsPowerMode) => PowerModeMappingMode.WindowsPowerMode,
-        _ => throw new ArgumentException($"Unknown power mode mapping '{value}'.", nameof(value)),
-    };
+        var normalized = value.Trim();
+        foreach (var mode in Enum.GetValues<PowerModeMappingMode>())
+        {
+            if (string.Equals(normalized, mode.ToString(), StringComparison.OrdinalIgnoreCase)
+                || string.Equals(normalized, FormatPowerModeMapping(mode), StringComparison.OrdinalIgnoreCase))
+            {
+                return mode;
+            }
+        }
+
+        throw new ArgumentException($"Unknown power mode mapping '{value}'.", nameof(value));
+    }
 
     private static T ParseEnum<T>(string value, string optionKey) where T : struct, Enum =>
         Enum.TryParse<T>(value, ignoreCase: true, out var parsed)

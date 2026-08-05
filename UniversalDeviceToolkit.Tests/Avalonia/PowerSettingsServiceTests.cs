@@ -27,11 +27,12 @@ public sealed class PowerSettingsServiceTests
             return;
         }
 
-        mapping.SelectedValue.Should().BeOneOf("Windows power mode", "Windows power plans");
+        mapping.SelectedValue.Should().BeOneOf("Disabled", "Windows power mode", "Windows power plans");
         var usesPowerMode = mapping.SelectedValue == "Windows power mode";
+        var isDisabled = mapping.SelectedValue == "Disabled";
         powerModes.IsVisible.Should().Be(usesPowerMode);
-        powerPlans.IsVisible.Should().Be(!usesPowerMode);
-        controlPanel.IsVisible.Should().Be(!usesPowerMode);
+        powerPlans.IsVisible.Should().Be(!usesPowerMode && !isDisabled);
+        controlPanel.IsVisible.Should().Be(!usesPowerMode && !isDisabled);
     }
 }
 
