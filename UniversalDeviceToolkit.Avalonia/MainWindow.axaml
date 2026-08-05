@@ -149,6 +149,9 @@
                                                      OverflowMode="Ellipsis" MaxLines="1" MinWidth="0" />
                     </Grid>
                 </Button>
+                <StackPanel x:Name="PluginNavigationItems"
+                            Spacing="6"
+                            Margin="0,2,0,0" />
                 <Button x:Name="AboutButton"
                         automation:AutomationProperties.AutomationId="AvaloniaAboutButton"
                         automation:AutomationProperties.Name="{local:Loc Key=Nav_About, Fallback=About}"

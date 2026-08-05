@@ -4,6 +4,7 @@ using global::Avalonia.Controls;
 using global::Avalonia.Interactivity;
 using global::Avalonia.Layout;
 using global::Avalonia.Media;
+using System.Text;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Pages;
@@ -14,6 +15,9 @@ namespace UniversalDeviceToolkit.Avalonia;
 public partial class MainWindow : Window
 {
     private readonly IPlatformServices _platformServices;
+    private readonly Dictionary<string, PluginNavigationEntry> _pluginNavigationEntries =
+        new(StringComparer.OrdinalIgnoreCase);
+    private readonly SemaphoreSlim _pluginNavigationRefreshLock = new(1, 1);
     private string _activePage = MainNavigation.Dashboard;
     private bool? _keyboardHardwareAvailable;
 
@@ -73,6 +77,7 @@ public partial class MainWindow : Window
         // Show DashboardPage by default on startup
         ShowDashboardPage();
         await UpdateHardwareDependentNavigationAsync();
+        await RefreshPluginNavigationItemsAsync();
     }
 
     /// <summary>
@@ -182,6 +187,120 @@ public partial class MainWindow : Window
             Navigate(MainNavigation.CreatePluginSettingsRoute(actionKey[settingsPrefix.Length..]));
     }
 
+    private async Task RefreshPluginNavigationItemsAsync(bool forceRefresh = false)
+    {
+        await _pluginNavigationRefreshLock.WaitAsync().ConfigureAwait(true);
+        try
+        {
+            var catalog = await _platformServices
+                .GetPluginCatalogAsync(forceRefresh)
+                .ConfigureAwait(true);
+            var visiblePlugins = PluginNavigationPolicy.GetVisiblePlugins(catalog);
+            var visibleIds = visiblePlugins
+                .Select(plugin => plugin.Id.Trim())
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var staleId in _pluginNavigationEntries.Keys
+                         .Where(id => !visibleIds.Contains(id))
+                         .ToArray())
+            {
+                var stale = _pluginNavigationEntries[staleId];
+                PluginNavigationItems.Children.Remove(stale.Button);
+                _pluginNavigationEntries.Remove(staleId);
+            }
+
+            foreach (var plugin in visiblePlugins)
+            {
+                var pluginId = plugin.Id.Trim();
+                if (_pluginNavigationEntries.TryGetValue(pluginId, out var existing))
+                {
+                    UpdatePluginNavigationEntry(existing, plugin);
+                    continue;
+                }
+
+                var entry = CreatePluginNavigationEntry(plugin);
+                _pluginNavigationEntries.Add(pluginId, entry);
+                PluginNavigationItems.Children.Add(entry.Button);
+            }
+
+            PluginNavigationItems.IsVisible = _pluginNavigationEntries.Count > 0;
+            ApplyNavigationPaneState();
+            SetActiveButton(GetNavigationButton(_activePage));
+        }
+        catch
+        {
+            // Plugin discovery is optional. A failed catalog read must not make
+            // the shell unusable or remove the static Plugin Extensions route.
+        }
+        finally
+        {
+            _pluginNavigationRefreshLock.Release();
+        }
+    }
+
+    private PluginNavigationEntry CreatePluginNavigationEntry(PluginCatalogItem plugin)
+    {
+        var displayName = GetPluginDisplayName(plugin);
+        var label = new Controls.LocalizedTextBlock
+        {
+            Text = displayName,
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+            MinWidth = 0,
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        var button = new Button
+        {
+            Tag = plugin.Id,
+            Margin = new Thickness(0, 0, 0, 0),
+            Content = new Grid
+            {
+                ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+                ColumnSpacing = 12,
+            },
+        };
+        button.Classes.Add("navButton");
+        ToolTip.SetTip(button, displayName);
+        var content = (Grid)button.Content;
+        var iconSize = this.TryFindResource("IconSizeMD", out var resourceIconSize)
+            && resourceIconSize is double resolvedIconSize
+            ? resolvedIconSize
+            : 20d;
+        content.Children.Add(new Controls.NavigationIcon
+        {
+            IconIdentifier = "Apps24",
+            FontSize = iconSize,
+        });
+        Grid.SetColumn(label, 1);
+        content.Children.Add(label);
+
+        AutomationProperties.SetAutomationId(button, CreatePluginAutomationId(plugin.Id));
+        AutomationProperties.SetName(button, displayName);
+        button.Click += (_, _) => Navigate(MainNavigation.CreatePluginRoute(plugin.Id));
+        return new PluginNavigationEntry(button, label, plugin.Id);
+    }
+
+    private static void UpdatePluginNavigationEntry(
+        PluginNavigationEntry entry,
+        PluginCatalogItem plugin)
+    {
+        var displayName = GetPluginDisplayName(plugin);
+        entry.Label.Text = displayName;
+        ToolTip.SetTip(entry.Button, displayName);
+        AutomationProperties.SetName(entry.Button, displayName);
+    }
+
+    private static string GetPluginDisplayName(PluginCatalogItem plugin) =>
+        string.IsNullOrWhiteSpace(plugin.Name) ? plugin.Id.Trim() : plugin.Name.Trim();
+
+    private static string CreatePluginAutomationId(string pluginId)
+    {
+        var builder = new StringBuilder("AvaloniaPluginNavItem_");
+        foreach (var character in pluginId)
+            builder.Append(char.IsLetterOrDigit(character) ? character : '_');
+        return builder.ToString();
+    }
+
     private void ShowDashboardPage()
     {
         _activePage = MainNavigation.Dashboard;
@@ -211,11 +330,16 @@ public partial class MainWindow : Window
             MainNavigation.Actions => new ActionsPage(_platformServices),
             MainNavigation.Macro => new MacroPage(_platformServices),
             MainNavigation.WindowsOptimization => new WindowsOptimizationPage(_platformServices),
-            MainNavigation.PluginExtensions => new PluginExtensionsPage(_platformServices, OnPluginActionRequested),
+            MainNavigation.PluginExtensions => new PluginExtensionsPage(
+                _platformServices,
+                OnPluginActionRequested,
+                () => _ = RefreshPluginNavigationItemsAsync(forceRefresh: true)),
             _ => throw new ArgumentOutOfRangeException(nameof(route), route, "Unknown feature route."),
         };
         _activePage = route;
         SetActiveButton(GetNavigationButton(route));
+        if (string.Equals(route, MainNavigation.PluginExtensions, StringComparison.OrdinalIgnoreCase))
+            _ = RefreshPluginNavigationItemsAsync();
     }
 
     private void ShowPluginPage(string route)
@@ -233,7 +357,7 @@ public partial class MainWindow : Window
             pluginId,
             () => Navigate(MainNavigation.PluginExtensions),
             isSettings);
-        SetActiveButton(PluginExtensionsButton);
+        SetActiveButton(GetNavigationButton(route));
     }
 
     /// <summary>
@@ -278,6 +402,7 @@ public partial class MainWindow : Window
         ApplyNavigationVisibility();
         Navigate(_activePage);
         _ = UpdateHardwareDependentNavigationAsync();
+        _ = RefreshPluginNavigationItemsAsync();
     }
 
     /// <summary>
@@ -379,6 +504,9 @@ public partial class MainWindow : Window
             label.IsVisible = expanded;
         }
 
+        foreach (var entry in _pluginNavigationEntries.Values)
+            entry.Label.IsVisible = expanded;
+
         foreach (var button in new[]
                  {
                      DashboardButton,
@@ -395,6 +523,15 @@ public partial class MainWindow : Window
                 ? HorizontalAlignment.Left
                 : HorizontalAlignment.Center;
             button.Padding = expanded ? new Thickness(16, 11) : new Thickness(10);
+        }
+
+        foreach (var entry in _pluginNavigationEntries.Values)
+        {
+            entry.Button.HorizontalContentAlignment = expanded
+                ? HorizontalAlignment.Left
+                : HorizontalAlignment.Center;
+            entry.Button.Padding = expanded ? new Thickness(16, 11) : new Thickness(10);
+            entry.Button.IsVisible = PluginExtensionsButton.IsVisible;
         }
 
         NavigationToggleIcon.IconIdentifier = expanded ? "ArrowLeft24" : "ArrowRight24";
@@ -428,6 +565,9 @@ public partial class MainWindow : Window
         {
             btn.Classes.Set("active", btn == activeButton);
         }
+
+        foreach (var entry in _pluginNavigationEntries.Values)
+            entry.Button.Classes.Set("active", entry.Button == activeButton);
     }
 
     private Button GetNavigationButton(string route) => route switch
@@ -440,8 +580,18 @@ public partial class MainWindow : Window
         MainNavigation.PluginExtensions => PluginExtensionsButton,
         MainNavigation.Settings => SettingsButton,
         MainNavigation.About => AboutButton,
-        _ when MainNavigation.TryGetPluginId(route, out _) => PluginExtensionsButton,
+        _ when MainNavigation.TryGetPluginId(route, out var pluginId)
+            && _pluginNavigationEntries.TryGetValue(pluginId, out var entry) => entry.Button,
+        _ when MainNavigation.TryGetPluginSettingsId(route, out var settingsPluginId)
+            && _pluginNavigationEntries.TryGetValue(settingsPluginId, out var settingsEntry) => settingsEntry.Button,
+        _ when MainNavigation.TryGetPluginId(route, out _)
+            || MainNavigation.TryGetPluginSettingsId(route, out _) => PluginExtensionsButton,
         _ => DashboardButton,
     };
+
+    private sealed record PluginNavigationEntry(
+        Button Button,
+        Controls.LocalizedTextBlock Label,
+        string PluginId);
 
 }

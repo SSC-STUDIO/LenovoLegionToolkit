@@ -17,6 +17,7 @@ public partial class FeaturePageView : UserControl
     private readonly IPlatformServices _platformServices;
     private readonly FeaturePageDescriptor _descriptor;
     private readonly Action<string>? _actionRequested;
+    private readonly Action? _pluginCatalogChanged;
     private bool _isApplying;
     private FeaturePageState? _lastState;
     private PluginCatalogState? _pluginCatalog;
@@ -25,11 +26,13 @@ public partial class FeaturePageView : UserControl
     protected FeaturePageView(
         IPlatformServices platformServices,
         FeaturePageDescriptor descriptor,
-        Action<string>? actionRequested = null)
+        Action<string>? actionRequested = null,
+        Action? pluginCatalogChanged = null)
     {
         _platformServices = platformServices;
         _descriptor = descriptor;
         _actionRequested = actionRequested;
+        _pluginCatalogChanged = pluginCatalogChanged;
         InitializeComponent();
         PageTitle.Text = descriptor.Title;
         PageDescription.Text = descriptor.Description;
@@ -362,6 +365,7 @@ public partial class FeaturePageView : UserControl
         try
         {
             _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
+            _pluginCatalogChanged?.Invoke();
             if (_lastState is not null)
                 RenderFeatureItems(_lastState);
         }
@@ -386,6 +390,7 @@ public partial class FeaturePageView : UserControl
                 await _platformServices.UpdatePluginAsync(plugin.Id);
 
             _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
+            _pluginCatalogChanged?.Invoke();
             if (_lastState is not null)
                 RenderFeatureItems(_lastState);
         }
@@ -410,6 +415,7 @@ public partial class FeaturePageView : UserControl
                 await _platformServices.InstallPluginAsync(plugin.Id);
 
             _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
+            _pluginCatalogChanged?.Invoke();
             if (_lastState is not null)
                 RenderFeatureItems(_lastState);
         }
@@ -443,6 +449,7 @@ public partial class FeaturePageView : UserControl
                 else
                 {
                     _pluginCatalog = await _platformServices.GetPluginCatalogAsync();
+                    _pluginCatalogChanged?.Invoke();
                     if (_lastState is not null)
                         RenderFeatureItems(_lastState);
                 }
@@ -555,6 +562,7 @@ public partial class FeaturePageView : UserControl
                     "Imported {0} plugin package(s)."),
                 imported));
         await RefreshStateAsync();
+        _pluginCatalogChanged?.Invoke();
     }
 
     private async void OptimizationCommandButton_Click(object? sender, RoutedEventArgs e)
@@ -951,7 +959,10 @@ public sealed class WindowsOptimizationPage(IPlatformServices services) : Featur
 
 public sealed class PluginExtensionsPage : FeaturePageView
 {
-    public PluginExtensionsPage(IPlatformServices services, Action<string>? actionRequested = null)
+    public PluginExtensionsPage(
+        IPlatformServices services,
+        Action<string>? actionRequested = null,
+        Action? pluginCatalogChanged = null)
         : base(services, new(
             "PluginExtensions",
             "Plugin Extensions",
@@ -960,7 +971,7 @@ public sealed class PluginExtensionsPage : FeaturePageView
             "Plugin discovery and installation require the plugin service adapter.",
             "Review installed extensions",
             "Manage installed and registered extensions through the shared plugin manager.",
-            "Apps24"), actionRequested)
+            "Apps24"), actionRequested, pluginCatalogChanged)
     {
     }
 }
