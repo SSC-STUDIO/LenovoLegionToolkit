@@ -43,6 +43,8 @@ internal static partial class Program
     private static string _appDataDirectory = string.Empty;
     private static bool _videoEnabled;
     private static string _host = "wpf";
+    private static string _auditCulture = "en";
+    private static string _auditViewport = "1300x850";
 
     // Keep the shell coverage contract in one place. Both hosts expose the same
     // page surface even though their UI Automation identifiers differ.
@@ -144,6 +146,8 @@ internal static partial class Program
             _videoEnabled = options.Video;
             _host = options.Host;
             _activeViewport = options.Viewports[0];
+            _auditCulture = LocalizationCatalog.NormalizeCulture(options.Language).Name;
+            _auditViewport = _activeViewport.Label;
             _activeWindowWidth = _activeViewport.Width;
             _activeWindowHeight = _activeViewport.Height;
             _activeMinimumWidth = Math.Max(640, _activeWindowWidth - 16);
@@ -2747,6 +2751,7 @@ internal static partial class Program
         {
             "# Visual Regression Smoke",
             string.Empty,
+            $"Host: `{_host}`; Culture: `{_auditCulture}`; Viewport: `{_auditViewport}`",
             $"Generated: {DateTimeOffset.Now:O}",
             $"AppData: `{appDataDirectory}`",
             string.Empty,
@@ -2842,7 +2847,11 @@ internal static partial class Program
         var canonicalManifest = new
         {
             schema = "udt.ui-audit.v1",
+            host = _host,
+            culture = _auditCulture,
+            viewport = _auditViewport,
             generatedAt = DateTimeOffset.Now,
+            expectedPages = _pageManifest.Select(page => page.Page).ToArray(),
             captures = _captures.Select(capture => new
             {
                 capture.Label,
@@ -2877,6 +2886,8 @@ internal static partial class Program
         {
             capture.Sequence,
             capture.Label,
+            page = Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar))?.Split(Path.DirectorySeparatorChar)[0],
+            state = Path.GetDirectoryName(capture.FileName.Replace('/', Path.DirectorySeparatorChar))?.Split(Path.DirectorySeparatorChar).Skip(1).FirstOrDefault(),
             capture.FileName,
             capture.SnapshotFileName,
             capture.VideoFileName,
@@ -2905,6 +2916,7 @@ internal static partial class Program
   <div class="layout">
     <aside>
       <h1>Visual Regression Smoke</h1>
+      <p class="muted">Host: {{_host}} | Culture: {{_auditCulture}} | Viewport: {{_auditViewport}}</p>
       <p class="muted">Page-by-page WPF/Avalonia screenshots, UIA snapshots and animation recordings.</p>
       <div id="list"></div>
     </aside>
@@ -2925,7 +2937,7 @@ internal static partial class Program
     function select(index) {
       const item = captures[index];
       title.textContent = `${item.Sequence}. ${item.Label}`;
-      meta.textContent = `${item.FileName} | ${item.SnapshotFileName} | ${item.capturedAt}`;
+      meta.textContent = `${item.page}/${item.state} | ${item.FileName} | ${item.SnapshotFileName} | ${item.capturedAt}`;
       image.src = item.FileName;
       if (item.VideoFileName) {
         video.src = item.VideoFileName;
@@ -3026,6 +3038,10 @@ internal static partial class Program
         var resultPath = Path.Combine(outputRoot, "result.json");
         var result = new
         {
+            schema = "udt.ui-audit.v1",
+            host = _host,
+            culture = _auditCulture,
+            viewport = _auditViewport,
             finishedAt = DateTimeOffset.Now,
             appDataDirectory,
             processId = process?.Id,

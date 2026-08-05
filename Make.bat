@@ -37,6 +37,10 @@ IF %ERROR_COUNT% NEQ 0 GOTO END
 CALL :VALIDATE_MAIN_WINDOW_XAML
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
+echo --- Building main solution ---
+dotnet build UniversalDeviceToolkit.sln --configuration Release --disable-build-servers -m:1
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
 dotnet publish UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
@@ -56,6 +60,12 @@ IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 REM Stage plugin runtime DLLs (SDK/Shared) from the in-tree Plugins solution before the payload assert.
 powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-PluginRuntimeAssets.ps1" -DestinationPath "%BUILD_DIR%" -Configuration Release
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
+IF %ERROR_COUNT% NEQ 0 GOTO END
+
+echo --- Building in-tree plugin solution ---
+dotnet build Plugins\UniversalDeviceToolkit.Plugins.sln --configuration Release --disable-build-servers -m:1
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 IF %ERROR_COUNT% NEQ 0 GOTO END

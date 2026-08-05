@@ -127,6 +127,15 @@ jobs:
           throw 'Solution restore failed.'
         }
 
+    - name: Build main solution
+      run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore -m:1 --disable-build-servers
+
+    - name: Restore plugin solution
+      run: dotnet restore Plugins/UniversalDeviceToolkit.Plugins.sln --locked-mode
+
+    - name: Build plugin solution
+      run: dotnet build Plugins/UniversalDeviceToolkit.Plugins.sln --configuration Release --no-restore -m:1 --disable-build-servers
+
     - name: Record skipped release test gate
       if: ${{ env.RELEASE_SKIP_TESTS == 'true' }}
       shell: pwsh
