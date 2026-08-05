@@ -36,12 +36,14 @@ internal static partial class Program
 
     private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
     private static readonly List<CaptureRecord> _captures = new();
+    private static readonly List<AnimationAuditRecord> _animationAudits = new();
     private static int _captureSequence;
     private static string _pipeName = string.Empty;
     private static int _processId;
     private static bool _assertDarkThemeSurface;
     private static string _appDataDirectory = string.Empty;
     private static bool _videoEnabled;
+    private static bool _animationsEnabled;
     private static string _host = "wpf";
     private static string _auditCulture = "en";
     private static string _auditViewport = "1300x850";
@@ -142,8 +144,10 @@ internal static partial class Program
         try
         {
             _captures.Clear();
+            _animationAudits.Clear();
             _captureSequence = 0;
             _videoEnabled = options.Video;
+            _animationsEnabled = options.EnableAnimations;
             _host = options.Host;
             _activeViewport = options.Viewports[0];
             _auditCulture = LocalizationCatalog.NormalizeCulture(options.Language).Name;
@@ -225,7 +229,7 @@ internal static partial class Program
             }
 
             CapturePage(currentDirectory, mainWindow, "main-window-ready");
-            CaptureNavigationSidebarStates(currentDirectory, mainWindow);
+            CaptureNavigationSidebarStates(currentDirectory, mainWindow, "NavigationPaneToggle");
 
             // Sidebar animations can leave the UIA provider with a stale hit-test
             // target after the second toggle. Re-select Dashboard and wait for its
@@ -452,6 +456,7 @@ internal static partial class Program
         AutomationElement mainWindow)
     {
         CapturePage(currentDirectory, mainWindow, "dashboard");
+        CaptureNavigationSidebarStates(currentDirectory, mainWindow, "AvaloniaNavigationPaneToggle");
         CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), "dashboard");
         CaptureWindowLifecycleStates(currentDirectory, mainWindow);
         CaptureResizeSequence(currentDirectory, mainWindow);
@@ -705,7 +710,10 @@ internal static partial class Program
                && !id.Contains("Disable", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static void CaptureNavigationSidebarStates(string currentDirectory, AutomationElement mainWindow)
+    private static void CaptureNavigationSidebarStates(
+        string currentDirectory,
+        AutomationElement mainWindow,
+        string toggleAutomationId)
     {
         mainWindow = ResolveLiveWindow(mainWindow);
         BringToForeground(mainWindow);
@@ -720,17 +728,20 @@ internal static partial class Program
             CapturePage(currentDirectory, mainWindow, "nav-sidebar-compact");
         LogShellState("nav-sidebar-expanded");
 
-        var toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
+        var toggle = WaitForAutomationId(mainWindow, toggleAutomationId, TimeSpan.FromSeconds(10));
+        var transitionStartWidth = MeasureNavigationPaneWidth(mainWindow);
         ActivateElement(toggle);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         LogShellState("nav-sidebar-transition-start");
-        Thread.Sleep(450);
+        Thread.Sleep(_animationsEnabled ? 75 : 450);
+        var transitionMidWidth = MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow));
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-mid", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         LogShellState("nav-sidebar-transition-mid");
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
         var afterToggleWidth = WaitForNavigationPaneWidthChange(mainWindow, initialWidth, TimeSpan.FromSeconds(5));
+        var stableAfterToggleWidth = WaitForStableNavigationPaneWidth(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(2));
         Console.WriteLine($"[visual-smoke] Navigation pane width (after toggle): {afterToggleWidth:F1}px");
 
         if (afterToggleWidth >= 150)
@@ -743,21 +754,112 @@ internal static partial class Program
             throw new InvalidOperationException(
                 $"Navigation pane toggle did not change width. Before={initialWidth:F1}px, after={afterToggleWidth:F1}px.");
 
-        toggle = WaitForAutomationId(mainWindow, "NavigationPaneToggle", TimeSpan.FromSeconds(10));
+        AssertAnimationTransition(
+            "collapse",
+            initialWidth,
+            transitionStartWidth,
+            transitionMidWidth,
+            stableAfterToggleWidth);
+
+        toggle = WaitForAutomationId(mainWindow, toggleAutomationId, TimeSpan.FromSeconds(10));
+        var restoreStartWidth = MeasureNavigationPaneWidth(mainWindow);
         ActivateElement(toggle);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         LogShellState("nav-sidebar-restore-transition-start");
+        Thread.Sleep(_animationsEnabled ? 75 : 450);
+        var restoreMidWidth = MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow));
+        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-mid", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
+        LogShellState("nav-sidebar-restore-transition-mid");
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
         var restoredWidth = WaitForNavigationPaneWidthChange(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
+        var stableRestoredWidth = WaitForStableNavigationPaneWidth(mainWindow, restoredWidth, TimeSpan.FromSeconds(2));
         Console.WriteLine($"[visual-smoke] Navigation pane width (restored): {restoredWidth:F1}px");
         CapturePage(currentDirectory, mainWindow, "nav-sidebar-toggle-restored");
         LogShellState("nav-sidebar-toggle-restored");
 
-        if (Math.Abs(restoredWidth - initialWidth) > 12)
+        AssertAnimationTransition(
+            "restore",
+            afterToggleWidth,
+            restoreStartWidth,
+            restoreMidWidth,
+            stableRestoredWidth);
+
+        if (Math.Abs(stableRestoredWidth - initialWidth) > 12)
             throw new InvalidOperationException(
-                $"Navigation pane toggle did not restore width. Initial={initialWidth:F1}px, restored={restoredWidth:F1}px.");
+                $"Navigation pane toggle did not restore width. Initial={initialWidth:F1}px, restored={stableRestoredWidth:F1}px.");
+    }
+
+    private static double WaitForStableNavigationPaneWidth(
+        AutomationElement mainWindow,
+        double expectedWidth,
+        TimeSpan timeout)
+    {
+        const double tolerance = 2;
+        var samples = new Queue<double>();
+        var deadline = DateTime.UtcNow + timeout;
+
+        while (DateTime.UtcNow < deadline)
+        {
+            samples.Enqueue(MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow)));
+            while (samples.Count > 3)
+                samples.Dequeue();
+
+            if (samples.Count == 3
+                && samples.Max() - samples.Min() <= tolerance
+                && Math.Abs(samples.Last() - expectedWidth) <= 12)
+            {
+                return samples.Last();
+            }
+
+            Thread.Sleep(75);
+        }
+
+        throw new InvalidOperationException(
+            $"Navigation pane width did not stabilize near {expectedWidth:F1}px. " +
+            $"Samples=[{string.Join(", ", samples.Select(sample => sample.ToString("F1", CultureInfo.InvariantCulture)))}].");
+    }
+
+    private static void AssertAnimationTransition(
+        string direction,
+        double expectedStartWidth,
+        double startWidth,
+        double midWidth,
+        double endWidth)
+    {
+        const double endpointTolerance = 32;
+        const double overshootTolerance = 8;
+        var minimum = Math.Min(expectedStartWidth, endWidth) - endpointTolerance;
+        var maximum = Math.Max(expectedStartWidth, endWidth) + endpointTolerance;
+
+        if (startWidth < minimum || startWidth > maximum || midWidth < minimum || midWidth > maximum)
+        {
+            throw new InvalidOperationException(
+                $"Navigation pane {direction} animation left its endpoints. " +
+                $"Expected=[{expectedStartWidth:F1}, {endWidth:F1}], " +
+                $"observed start={startWidth:F1}, mid={midWidth:F1}.");
+        }
+
+        var delta = endWidth - expectedStartWidth;
+        if (Math.Abs(delta) > endpointTolerance
+            && ((midWidth - expectedStartWidth) * delta < -overshootTolerance
+                || (midWidth - endWidth) * delta > overshootTolerance))
+        {
+            throw new InvalidOperationException(
+                $"Navigation pane {direction} animation moved in the wrong direction. " +
+                $"Start={expectedStartWidth:F1}, mid={midWidth:F1}, end={endWidth:F1}.");
+        }
+
+        _animationAudits.Add(new AnimationAuditRecord(
+            direction,
+            expectedStartWidth,
+            startWidth,
+            midWidth,
+            endWidth,
+            Math.Abs(midWidth - startWidth) > 4,
+            _animationsEnabled,
+            DateTimeOffset.Now));
     }
 
     private static void CaptureWindowLifecycleStates(string currentDirectory, AutomationElement mainWindow)
@@ -905,6 +1007,10 @@ internal static partial class Program
     {
         mainWindow = ResolveLiveWindow(mainWindow);
         var windowRect = mainWindow.Current.BoundingRectangle;
+        var avaloniaPane = FindByAutomationId(mainWindow, "AvaloniaNavigationPane");
+        if (avaloniaPane is not null && IsVisible(avaloniaPane))
+            return avaloniaPane.Current.BoundingRectangle.Width;
+
         var rootFrame = FindByAutomationId(mainWindow, "MainRootFrame");
         if (rootFrame is not null && IsVisible(rootFrame))
         {
@@ -2745,6 +2851,7 @@ internal static partial class Program
     {
         ValidateCaptureArtifacts(currentDirectory);
         MaterializeCanonicalArtifacts(currentDirectory, outputRoot);
+        WriteAnimationAudit(currentDirectory, outputRoot);
 
         var indexPath = Path.Combine(currentDirectory, "index.md");
         var lines = new List<string>
@@ -2754,6 +2861,7 @@ internal static partial class Program
             $"Host: `{_host}`; Culture: `{_auditCulture}`; Viewport: `{_auditViewport}`",
             $"Generated: {DateTimeOffset.Now:O}",
             $"AppData: `{appDataDirectory}`",
+            "Animation audit: `animation-stability.json`",
             string.Empty,
             "## Captures",
         };
@@ -2775,6 +2883,26 @@ internal static partial class Program
         ValidateCanonicalArtifacts(outputRoot);
         Console.WriteLine($"[visual-smoke] Index: {indexPath}");
         Console.WriteLine($"[visual-smoke] Storyboard: {htmlPath}");
+    }
+
+    private static void WriteAnimationAudit(string currentDirectory, string outputRoot)
+    {
+        var audit = new
+        {
+            schema = "udt.ui-animation-audit.v1",
+            host = _host,
+            culture = _auditCulture,
+            viewport = _auditViewport,
+            animationsEnabled = _animationsEnabled,
+            generatedAt = DateTimeOffset.Now,
+            transitions = _animationAudits
+        };
+        var json = JsonSerializer.Serialize(audit, _jsonOptions);
+        var currentPath = Path.Combine(currentDirectory, "animation-stability.json");
+        var canonicalPath = Path.Combine(outputRoot, "animation-stability.json");
+        File.WriteAllText(currentPath, json);
+        if (!string.Equals(Path.GetFullPath(currentPath), Path.GetFullPath(canonicalPath), StringComparison.OrdinalIgnoreCase))
+            File.WriteAllText(canonicalPath, json);
     }
 
     private static void WriteCaptureStateResult(string currentDirectory, CaptureRecord capture)
@@ -2851,6 +2979,7 @@ internal static partial class Program
             culture = _auditCulture,
             viewport = _auditViewport,
             generatedAt = DateTimeOffset.Now,
+            animationAudit = "animation-stability.json",
             expectedPages = _pageManifest.Select(page => page.Page).ToArray(),
             captures = _captures.Select(capture => new
             {
@@ -3025,7 +3154,7 @@ internal static partial class Program
             }
         }
 
-        foreach (var rootArtifact in new[] { "index.md", "storyboard.html", "manifest.json" })
+        foreach (var rootArtifact in new[] { "index.md", "storyboard.html", "manifest.json", "animation-stability.json" })
         {
             var path = Path.Combine(outputRoot, rootArtifact);
             if (!File.Exists(path) || new FileInfo(path).Length == 0)
@@ -3047,6 +3176,7 @@ internal static partial class Program
             processId = process?.Id,
             exitCode,
             error,
+            animationAudit = "animation-stability.json",
             captures = _captures,
             appLog = Directory.Exists(Path.Combine(appDataDirectory, "logs"))
                 ? Directory.GetFiles(Path.Combine(appDataDirectory, "logs"), "*.json").OrderByDescending(File.GetLastWriteTimeUtc).FirstOrDefault()
@@ -3192,6 +3322,16 @@ internal static partial class Program
         string SnapshotFileName,
         string? VideoFileName,
         string OcrFileName,
+        DateTimeOffset CapturedAt);
+
+    private sealed record AnimationAuditRecord(
+        string Direction,
+        double ExpectedStartWidth,
+        double StartWidth,
+        double MidWidth,
+        double EndWidth,
+        bool ObservedIntermediateMotion,
+        bool AnimationsEnabled,
         DateTimeOffset CapturedAt);
 
     private sealed record RegionSample(double AverageLuminance);

@@ -13,6 +13,7 @@ public sealed class AvaloniaNavigationPaneContractTests
         var markup = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "MainWindow.axaml"));
 
         markup.Should().Contain("x:Name=\"NavigationPane\"");
+        markup.Should().Contain("AvaloniaNavigationPane");
         markup.Should().Contain("x:Name=\"NavigationToggleButton\"");
         markup.Should().Contain("AvaloniaNavigationPaneToggle");
         markup.Should().Contain("IconIdentifier=\"ArrowLeft24\"");

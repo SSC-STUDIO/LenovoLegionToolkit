@@ -35,6 +35,7 @@
     <DockPanel Background="{DynamicResource AppBackgroundBrush}">
         <Border x:Name="NavigationPane"
                 DockPanel.Dock="Left"
+                automation:AutomationProperties.AutomationId="AvaloniaNavigationPane"
                 Width="280"
                 Margin="12,12,0,12"
                 Background="{DynamicResource NavigationPaneBackgroundBrush}"
