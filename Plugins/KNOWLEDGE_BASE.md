@@ -6,11 +6,23 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 
 | Item | Value |
 |------|--------|
-| Host app | Universal Device Toolkit **v5.0.0** (`Plugins/HostBaseline/host-release.json`) |
-| Official store plugins | `custom-mouse` 1.0.17 · `vive-tool` 1.2.3 · `shell-integration` 1.0.13 |
+| Host app | Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`) |
+| Official store plugins | `custom-mouse` 1.0.18 · `vive-tool` 1.2.4 · `shell-integration` 1.0.14 |
 | Tooling entry | `udt-plugin.cmd` (`llt-plugin.cmd` alias) |
-| Min host field | `plugin.manifest.json` → `minHostVersion` = **5.0.0**; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
+| Min host field | `plugin.manifest.json` → `minHostVersion` = **5.0.0** current floor; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
 | Version SoT | each `plugin.manifest.json` → `version` |
+
+---
+
+### [2026-08-05] Plugin monorepo migration is live
+- **Symptom / Pitfall**: A sibling plugin checkout and per-plugin GitHub Releases made the source tree and Releases page look like separate products.
+- **Root Cause**: Plugin source, SDK, tooling, and release metadata had not yet shared the main repository's canonical topology.
+- **Enforced Rule**:
+  - Official source lives under `Plugins/Official/`; SDK, shared code, tests, and tooling stay under their role-based `Plugins/` directories.
+  - Host binaries come from the tracked `HostBaseline/host-release.json` into the ignored `.host/<host-version>/` cache; never commit host DLLs or place them in plugin ZIPs.
+  - `store.json` and current official ZIPs are published only in the main repository's non-Latest `plugin-catalog` release.
+  - New code must not add a fallback to the archived plugin repository; legacy client compatibility remains a documented migration path only.
+- **Evidence**: See `Docs/Plugins/RELEASE_AND_MIGRATION.md` for provenance, release sequencing, and the remaining runtime validation gates.
 
 ---
 
@@ -236,9 +248,9 @@ When evaluating UI via FlaUI + WinRT OCR:
 
 ### [2026-07-07] Host v4.2.1 Serilog Transitive Dependency
 - **Symptom / Pitfall**: After upgrading vendored host DLLs from v3.6.14 to v4.2.1, plugin tests fail with `System.IO.FileNotFoundException: Could not load file or assembly 'Serilog, Version=4.3.0.0'`. 15/409 tests fail (14 in ViveTool, 1 in NetworkAcceleration). PluginLoader-based workbench fails to load any plugin with `InvalidOperationException` at `PluginWorkbenchSession.cs:155`.
-- **Root Cause**: v4.2.1 `UniversalDeviceToolkit.Lib.dll` uses Serilog 4.3.0 in `Log..ctor()` (logging initialization), which is a new transitive dependency not present in v3.6.14. The plugin repo's `Dependencies\Host\` only vendored the 3 host DLLs (Lib, Lib.Plugins, WPF) but not their transitive dependencies.
+- **Root Cause**: v4.2.1 `UniversalDeviceToolkit.Lib.dll` uses Serilog 4.3.0 in `Log..ctor()` (logging initialization), which is a new transitive dependency not present in v3.6.14. The historical plugin repo's `Dependencies\Host\` only vendored the 3 host DLLs (Lib, Lib.Plugins, WPF) but not their transitive dependencies.
 - **Enforced Rule**:
-  - `Dependencies\Host\` MUST contain all transitive dependencies of the vendored host DLLs, not just the top-level assemblies
+  - The ignored `.host\<host-version>\` cache MUST contain all transitive dependencies of the published host DLLs, not just the top-level assemblies
   - When syncing host DLLs from the main repo's `Build\` directory, copy ALL `*.dll` files (or at minimum, the transitive deps reachable via `Assembly.GetReferencedAssemblies()`)
   - `ensure-host-dependencies.ps1` and `refresh-host-references.ps1` `$requiredFiles` lists MUST be kept in sync with actual host transitive deps
   - `host-release.json` MUST document `transitiveDependencies` so the next sync doesn't drop them again
