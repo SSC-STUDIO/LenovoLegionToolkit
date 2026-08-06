@@ -119,6 +119,7 @@
                         BorderBrush="{DynamicResource CardBorderBrush}"
                         BorderThickness="1"
                         CornerRadius="{StaticResource CornerRadiusCard}"
+                        ClipToBounds="True"
                         Padding="16"
                         ToolTip.Tip="{Binding DiscreteGpuState.Error}">
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
@@ -159,26 +160,42 @@
                                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                      OverflowMode="Ellipsis"
                                                      MaxLines="1" />
-                        <StackPanel Grid.Row="3" Orientation="Horizontal" Spacing="8">
-                            <Button Command="{Binding KillDiscreteGpuProcessesCommand}"
+                        <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="8">
+                            <Button Grid.Column="0"
+                                    Command="{Binding KillDiscreteGpuProcessesCommand}"
                                     IsEnabled="{Binding DiscreteGpuState.CanKillProcesses}"
                                     Padding="8,4"
+                                    MinWidth="0"
+                                    Width="140"
+                                    MaxWidth="140"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
                                     ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}"
                                     automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}">
                                 <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop apps}"
+                                                             Width="120"
+                                                             HorizontalAlignment="Stretch"
                                                              OverflowMode="Ellipsis"
                                                              MaxLines="1" />
                             </Button>
-                            <Button Command="{Binding RestartDiscreteGpuCommand}"
+                            <Button Grid.Column="1"
+                                    Command="{Binding RestartDiscreteGpuCommand}"
                                     IsEnabled="{Binding DiscreteGpuState.CanRestart}"
                                     Padding="8,4"
+                                    MinWidth="0"
+                                    Width="140"
+                                    MaxWidth="140"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch"
                                     ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
                                     automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}">
                                 <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
+                                                             Width="120"
+                                                             HorizontalAlignment="Stretch"
                                                              OverflowMode="Ellipsis"
                                                              MaxLines="1" />
                             </Button>
-                        </StackPanel>
+                        </Grid>
                     </Grid>
                 </Border>
 
@@ -257,11 +274,12 @@
                 </Border>
             </Grid>
 
-            <Border Background="{DynamicResource CardBackgroundBrush}"
-                    BorderBrush="{DynamicResource CardBorderBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Padding="16">
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        ClipToBounds="True"
+                        Padding="16">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                     <StackPanel Spacing="2" MinWidth="0">
                         <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
@@ -278,9 +296,14 @@
                     <Button Grid.Column="1"
                             Command="{Binding TurnOffMonitorsCommand}"
                             Padding="10,6"
+                            MinWidth="0"
+                            MaxWidth="180"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
                             ToolTip.Tip="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
                             automation:AutomationProperties.Name="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}">
                         <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off}"
+                                                     HorizontalAlignment="Stretch"
                                                      OverflowMode="Ellipsis"
                                                      MaxLines="1" />
                     </Button>
