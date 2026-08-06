@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:schema id="root">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -182,5 +182,14 @@
   </data>
   <data name="HardwareSensorAutomationPipelineTrigger_DisplayName_Format" xml:space="preserve">
     <value>{0} {1} {2}</value>
+  </data>
+  <data name="FeatureRegistration_NotSupported" xml:space="preserve">
+    <value>Feature is not supported.</value>
+  </data>
+  <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
+    <value>Feature returned no value.</value>
+  </data>
+  <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
+    <value>State is not supported.</value>
   </data>
 </root>

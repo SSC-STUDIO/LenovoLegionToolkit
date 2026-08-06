@@ -1,6 +1,5 @@
 using Autofac;
 using UniversalDeviceToolkit.Lib.Extensions;
-using UniversalDeviceToolkit.WPF.CLI;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.ViewModels;
@@ -16,7 +15,6 @@ public class IoCModule : Module
         builder.Register<MainWindow>();
         builder.Register<MainThreadDispatcher>();
 
-        builder.Register<SpectrumScreenCapture>();
         builder.Register<LanguagePackManager>();
         builder.Register<LanguagePackInstallCoordinator>().SingleInstance();
         builder.Register<PluginInstallCoordinator>().SingleInstance();
@@ -30,7 +28,6 @@ public class IoCModule : Module
             .As<UniversalDeviceToolkit.Lib.Settings.HardwareSensorSettings>()
             .SingleInstance();
 
-        builder.Register<IpcServer>().AsSelf().As<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>().SingleInstance();
         builder.Register<WindowsOptimizationElevationClient>()
             .As<IWindowsOptimizationExecutor>();
 

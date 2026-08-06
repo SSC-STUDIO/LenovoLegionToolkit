@@ -76,6 +76,7 @@ public class IoCModule : Module
         // ApplicationSettings is registered via pre-build action in StartupOrchestrator
         // to reuse the pre-created instance and avoid double-instantiation.
         builder.Register<OsdSettings>();
+        builder.Register<HardwareSensorSettings>().SingleInstance();
         builder.Register<BalanceModeSettings>();
         builder.Register<GodModeSettings>();
         builder.Register<GPUOverclockSettings>();
@@ -193,6 +194,9 @@ public class IoCModule : Module
         builder.Register<FpsSensorController>();
         builder.Register<SmartFnLockController>();
         builder.Register<SpectrumKeyboardBacklightController>();
+        builder.Register<SpectrumScreenCapture>()
+            .As<SpectrumKeyboardBacklightController.ISpectrumScreenCapture>()
+            .SingleInstance();
         builder.Register<WindowsPowerModeController>();
         builder.Register<WindowsPowerPlanController>();
 

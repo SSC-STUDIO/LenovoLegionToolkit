@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="FeatureRegistration_NotSupported" xml:space="preserve">
+    <value>Feature is not supported.</value>
+  </data>
+  <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
+    <value>Feature returned no value.</value>
+  </data>
+  <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
+    <value>State is not supported.</value>
+  </data>
+</root>

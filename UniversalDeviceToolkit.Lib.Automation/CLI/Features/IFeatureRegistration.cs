@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace UniversalDeviceToolkit.WPF.CLI.Features;
+namespace UniversalDeviceToolkit.Lib.Automation.CLI.Features;
 
 public interface IFeatureRegistration
 {

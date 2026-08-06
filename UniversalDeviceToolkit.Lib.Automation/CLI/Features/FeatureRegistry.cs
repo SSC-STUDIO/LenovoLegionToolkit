@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using UniversalDeviceToolkit.Lib;
 
-namespace UniversalDeviceToolkit.WPF.CLI.Features;
+namespace UniversalDeviceToolkit.Lib.Automation.CLI.Features;
 
 public static class FeatureRegistry
 {

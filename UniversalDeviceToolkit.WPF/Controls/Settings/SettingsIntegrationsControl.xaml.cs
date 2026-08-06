@@ -2,10 +2,10 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using UniversalDeviceToolkit.Lib.Integrations;
+using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.WPF.CLI;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings
 {

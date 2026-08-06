@@ -1,4 +1,5 @@
 using Autofac;
+using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Extensions;
 
@@ -10,5 +11,9 @@ public class IoCModule : Module
     {
         builder.Register<AutomationSettings>();
         builder.Register<AutomationProcessor>();
+        builder.Register<IpcServer>()
+            .AsSelf()
+            .As<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>()
+            .SingleInstance();
     }
 }

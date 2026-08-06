@@ -17,11 +17,11 @@ using Autofac;
 using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.WindowsDeviceAdapter;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.WPF.CLI;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using AutomationResource = UniversalDeviceToolkit.Lib.Automation.Resources.Resource;
 using MacroResource = UniversalDeviceToolkit.Lib.Macro.Resources.Resource;
@@ -118,10 +118,6 @@ public partial class App : Application
                     builder.RegisterInstance(settings).As<ApplicationSettings>().SingleInstance();
                     builder.RegisterType<AvaloniaMainThreadDispatcher>()
                         .As<IMainThreadDispatcher>()
-                        .SingleInstance();
-                    builder.RegisterType<IpcServer>()
-                        .AsSelf()
-                        .As<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>()
                         .SingleInstance();
                 },
                 new UniversalDeviceToolkit.Lib.IoCModule(),

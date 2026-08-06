@@ -10,7 +10,6 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using UniversalDeviceToolkit.CLI.Lib;
 using UniversalDeviceToolkit.CLI.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Extensions;
@@ -26,10 +25,9 @@ using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
-using UniversalDeviceToolkit.WPF.CLI.Features;
-using UniversalDeviceToolkit.WPF.Utils;
+using UniversalDeviceToolkit.Lib.Automation.CLI.Features;
 
-namespace UniversalDeviceToolkit.WPF.CLI;
+namespace UniversalDeviceToolkit.Lib.Automation.CLI;
 
 public class IpcServer(
     AutomationProcessor automationProcessor,
@@ -359,12 +357,12 @@ public class IpcServer(
         var version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "unknown";
         var repositoryOwner = !string.IsNullOrWhiteSpace(updateCheckSettings.Store.UpdateRepositoryOwner)
             ? updateCheckSettings.Store.UpdateRepositoryOwner
-            : UniversalDeviceToolkit.WPF.Constants.UpdateRepositoryOwner;
+            : AppIdentity.RepositoryOwner;
         var repositoryName = !string.IsNullOrWhiteSpace(updateCheckSettings.Store.UpdateRepositoryName)
             ? updateCheckSettings.Store.UpdateRepositoryName
-            : UniversalDeviceToolkit.WPF.Constants.UpdateRepositoryName;
+            : AppIdentity.RepositoryName;
         var updateStatus = updateChecker.Disable
-            ? $"disabled ({updateChecker.DisableReason ?? UniversalDeviceToolkit.WPF.Flags.DisableUpdateCheckerSwitch})"
+            ? $"disabled ({updateChecker.DisableReason ?? "--disable-update-checker"})"
             : "enabled";
 
         return string.Join(Environment.NewLine,

@@ -1,21 +1,57 @@
 using FluentAssertions;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Lib;
-using UniversalDeviceToolkit.WPF.CLI;
+using UniversalDeviceToolkit.Lib.Automation.CLI;
 using Xunit;
+using AutomationResource = UniversalDeviceToolkit.Lib.Automation.Resources.Resource;
+using WpfResource = UniversalDeviceToolkit.WPF.Resources.Resource;
 
 namespace UniversalDeviceToolkit.Tests.Avalonia;
 
 public sealed class AvaloniaMigrationContractTests
 {
     [Fact]
-    public void WpfIpcServer_ImplementsSharedCliLifecycleContract()
+    public void SharedIpcServer_ImplementsSharedCliLifecycleContract()
     {
         typeof(IpcServer).GetInterfaces().Should().Contain(typeof(ICliHostLifecycle));
+    }
+
+    [Fact]
+    public void SharedIpcServer_DoesNotReferenceWpfHostAssembly()
+    {
+        typeof(IpcServer).Assembly
+            .GetReferencedAssemblies()
+            .Select(assembly => assembly.Name)
+            .Should()
+            .NotContain("Universal Device Toolkit");
+    }
+
+    [Fact]
+    public void SharedIpcFeatureErrors_PreserveAllWpfTranslations()
+    {
+        var keys = new[]
+        {
+            "FeatureRegistration_NotSupported",
+            "FeatureRegistration_NullReturnValue",
+            "FeatureRegistration_StateNotSupported",
+        };
+
+        foreach (var culture in LocalizationCatalog.SupportedCultures)
+        {
+            foreach (var key in keys)
+            {
+                var expected = WpfResource.ResourceManager.GetString(key, culture);
+                expected.Should().NotBeNullOrWhiteSpace($"WPF must provide {key} for {culture.Name}");
+
+                AutomationResource.ResourceManager.GetString(key, culture)
+                    .Should().Be(expected, $"the shared IPC host must preserve {key} for {culture.Name}");
+            }
+        }
     }
 
     [Theory]

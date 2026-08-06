@@ -8,8 +8,8 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using UniversalDeviceToolkit.WPF.CLI;
-using UniversalDeviceToolkit.WPF.CLI.Features;
+using UniversalDeviceToolkit.Lib.Automation.CLI;
+using UniversalDeviceToolkit.Lib.Automation.CLI.Features;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.WPF;

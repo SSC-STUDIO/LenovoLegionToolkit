@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Controllers;
 
-namespace UniversalDeviceToolkit.WPF.Utils;
+namespace UniversalDeviceToolkit.Lib.Controllers;
 
 public class SpectrumScreenCapture : SpectrumKeyboardBacklightController.ISpectrumScreenCapture
 {
