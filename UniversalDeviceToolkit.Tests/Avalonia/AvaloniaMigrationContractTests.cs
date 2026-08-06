@@ -500,6 +500,27 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaKeyboardSpectrum_PreservesWpfAddAndDeleteEffectActions()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml"));
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+
+        markup.Should().Contain("AvaloniaSpectrumAddEffect");
+        source.Should().Contain("AddSpectrumEffect_Click");
+        source.Should().Contain("RemoveSpectrumEffect_Click");
+        source.Should().Contain("SpectrumEffects: _spectrumEditors.Select");
+    }
+
+    [Fact]
     public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
     {
         var root = RepositoryPaths.FindRoot();

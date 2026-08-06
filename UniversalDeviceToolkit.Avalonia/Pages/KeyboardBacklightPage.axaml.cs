@@ -158,6 +158,17 @@ public partial class KeyboardBacklightPage : UserControl
         });
         details.Children.Add(editor.Colors);
 
+        var removeButton = new Button
+        {
+            Content = AvaloniaLocalization.GetString("Delete", "Delete"),
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Tag = editor,
+        };
+        AutomationProperties.SetName(removeButton, AvaloniaLocalization.GetString("Delete", "Delete"));
+        ToolTip.SetTip(removeButton, AvaloniaLocalization.GetString("Delete", "Delete"));
+        removeButton.Click += RemoveSpectrumEffect_Click;
+        details.Children.Add(removeButton);
+
         return new Border
         {
             Background = GetResource<IBrush>("CardBackgroundBrush"),
@@ -176,6 +187,36 @@ public partial class KeyboardBacklightPage : UserControl
             return;
 
         await ApplyAsync(new KeyboardLightingUpdate("Spectrum", SelectedProfile: profile));
+    }
+
+    private void AddSpectrumEffect_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || _state is null)
+            return;
+
+        var editor = new SpectrumEffectEditor(new KeyboardSpectrumEffectState(
+            "Always",
+            "None",
+            "None",
+            "None",
+            [new KeyboardColorState(255, 255, 255)],
+            []));
+        _spectrumEditors.Add(editor);
+        SpectrumEffects.Items.Add(CreateSpectrumEffectCard(editor));
+    }
+
+    private async void RemoveSpectrumEffect_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || _state is null || sender is not Button { Tag: SpectrumEffectEditor editor })
+            return;
+
+        _spectrumEditors.Remove(editor);
+        await ApplyAsync(new KeyboardLightingUpdate(
+            "Spectrum",
+            SelectedProfile: _state.SelectedProfile,
+            Brightness: (int)SpectrumBrightness.Value,
+            LogoEnabled: SpectrumLogo.IsChecked == true,
+            SpectrumEffects: _spectrumEditors.Select(item => item.ToState()).ToArray()));
     }
 
     private void SpectrumBrightness_ValueChanged(object? sender, global::Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs e)

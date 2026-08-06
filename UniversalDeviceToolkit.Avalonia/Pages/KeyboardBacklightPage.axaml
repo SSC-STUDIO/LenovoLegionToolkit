@@ -107,12 +107,17 @@
                         <CheckBox x:Name="SpectrumLogo"
                                   Content="{local:Loc Key=Keyboard_LogoLighting, Fallback=Keyboard logo lighting}"
                                   Click="SpectrumLogo_Click" />
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
                             <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Effects, Fallback=Effects}"
                                                          FontSize="{StaticResource FontSizeSubsection}"
                                                          FontWeight="Medium"
                                                          VerticalAlignment="Center" />
                             <Button Grid.Column="1"
+                                    x:Name="AddSpectrumEffectButton"
+                                    Content="{local:Loc Key=SpectrumKeyboardBacklightControl_AddEffect, Fallback=Add effect}"
+                                    Click="AddSpectrumEffect_Click"
+                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumAddEffect" />
+                            <Button Grid.Column="2"
                                     x:Name="SaveSpectrumButton"
                                     Content="{local:Loc Key=Common_Save, Fallback=Save}"
                                     Click="SaveSpectrum_Click" />
