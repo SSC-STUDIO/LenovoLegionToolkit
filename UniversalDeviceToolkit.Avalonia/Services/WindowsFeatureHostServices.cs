@@ -32,8 +32,8 @@ using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Shared.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
-using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF;
 using UniversalDeviceToolkit.Avalonia.Localization;
 
@@ -65,7 +65,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly object _macroRecordingLock = new();
     private readonly HashSet<string> _selectedCleanupActions;
     private readonly ApplicationSettings? _applicationSettings;
-    private readonly DashboardSettings? _dashboardSettings;
+    private readonly AvaloniaDashboardPreferences _dashboardPreferences;
     private readonly PowerModeFeature? _powerMode;
     private readonly AIController? _aiController;
     private readonly GodModeController? _godModeController;
@@ -125,7 +125,7 @@ internal sealed class WindowsFeatureHostServices
         _packageDownloaderFactory = packageDownloaderFactory;
         _packageDownloaderSettings = packageDownloaderSettings;
         _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
-        _dashboardSettings = IoCContainer.TryResolve<DashboardSettings>();
+        _dashboardPreferences = new AvaloniaDashboardPreferences();
         _powerMode = IoCContainer.TryResolve<PowerModeFeature>();
         _aiController = IoCContainer.TryResolve<AIController>();
         _godModeController = IoCContainer.TryResolve<GodModeController>();
@@ -201,17 +201,12 @@ internal sealed class WindowsFeatureHostServices
 
     public Task<DashboardLayoutState> GetDashboardLayoutAsync()
     {
-        if (_dashboardSettings is null)
-        {
-            return Task.FromResult(new DashboardLayoutState(
-                true,
-                1,
-                DashboardGroup.DefaultGroups.Select(ToDashboardGroupState).ToArray()));
-        }
-
-        var store = _dashboardSettings.Store;
-        var groups = (store.Groups ?? DashboardGroup.DefaultGroups)
-            .Select(ToDashboardGroupState)
+        var store = _dashboardPreferences.Store;
+        var groups = store.Groups
+            .Select(group => new DashboardGroupState(
+                group.Type,
+                group.CustomName,
+                group.Items.ToArray()))
             .ToArray();
         return Task.FromResult(new DashboardLayoutState(
             store.ShowSensors,
@@ -221,41 +216,28 @@ internal sealed class WindowsFeatureHostServices
 
     public Task<bool> SaveDashboardLayoutAsync(DashboardLayoutState layout)
     {
-        if (_dashboardSettings is null || layout is null)
+        if (layout is null)
             return Task.FromResult(false);
 
-        var groups = new List<DashboardGroup>();
-        foreach (var group in layout.Groups ?? [])
-        {
-            if (!Enum.TryParse<DashboardGroupType>(group.Type, true, out var type))
-                continue;
-
-            var items = (group.Items ?? [])
-                .Where(item => Enum.TryParse<DashboardItem>(item, true, out _))
-                .Select(item => Enum.Parse<DashboardItem>(item, true))
-                .Distinct()
-                .ToArray();
-            groups.Add(new DashboardGroup(type, group.CustomName, items));
-        }
-
-        if (groups.Count == 0)
-            return Task.FromResult(false);
-
-        _dashboardSettings.Store.ShowSensors = layout.ShowSensors;
-        _dashboardSettings.Store.SensorsRefreshIntervalSeconds = Math.Clamp(
+        var store = _dashboardPreferences.Store;
+        store.ShowSensors = layout.ShowSensors;
+        store.SensorsRefreshIntervalSeconds = Math.Clamp(
             layout.SensorsRefreshIntervalSeconds,
             1,
             60);
-        _dashboardSettings.Store.Groups = groups.ToArray();
-        _dashboardSettings.SynchronizeStore();
+        store.Groups = (layout.Groups ?? [])
+            .Where(group => group is not null && !string.IsNullOrWhiteSpace(group.Type))
+            .Select(group => new AvaloniaDashboardGroupPreference
+            {
+                Type = group.Type,
+                CustomName = group.CustomName,
+                Items = (group.Items ?? []).ToList(),
+            })
+            .ToList();
+        AvaloniaDashboardPreferences.Normalize(store);
+        _dashboardPreferences.SynchronizeStore();
         return Task.FromResult(true);
     }
-
-    private static DashboardGroupState ToDashboardGroupState(DashboardGroup group) =>
-        new(
-            group.Type.ToString(),
-            group.CustomName,
-            group.Items.Select(item => item.ToString()).ToArray());
 
     public async Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(
         IReadOnlyList<string> itemIdentifiers)

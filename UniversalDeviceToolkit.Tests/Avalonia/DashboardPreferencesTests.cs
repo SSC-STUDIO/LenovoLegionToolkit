@@ -13,7 +13,8 @@ public sealed class DashboardPreferencesTests
         var store = new AvaloniaDashboardPreferenceStore();
 
         store.ShowSensors.Should().BeTrue();
-        store.SensorsRefreshIntervalSeconds.Should().Be(2);
+        store.SensorsRefreshIntervalSeconds.Should().Be(1);
+        store.SchemaVersion.Should().Be(4);
     }
 
     [Fact]
@@ -85,9 +86,59 @@ public sealed class DashboardPreferencesTests
             var preferences = new AvaloniaDashboardPreferences(tempRoot);
 
             preferences.Store.SensorsRefreshIntervalSeconds.Should().Be(60);
-            preferences.Store.Groups.Should().ContainSingle();
-            preferences.Store.Groups[0].CustomName.Should().Be("Work");
-            preferences.Store.Groups[0].Items.Should().Equal("PowerMode");
+            preferences.Store.Groups.Should().Contain(group =>
+                group.Type == "Custom" && group.CustomName == "Work");
+            preferences.Store.Groups.Should().Contain(group => group.Type == "Graphics");
+            var items = preferences.Store.Groups.SelectMany(group => group.Items).ToArray();
+            items.Should().Contain("PowerMode");
+            items.Should().Contain("ItsMode");
+            items.Should().NotContain("Invalid");
+        }
+        finally
+        {
+            try { Directory.Delete(tempRoot, recursive: true); } catch { }
+        }
+    }
+
+    [Fact]
+    public void DashboardPreferences_SaveUsesTheSharedWpfCompatibleFileName()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "udt-dashboard-save-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempRoot);
+
+        try
+        {
+            var preferences = new AvaloniaDashboardPreferences(tempRoot);
+            preferences.Store.ShowSensors = false;
+            preferences.SynchronizeStore();
+
+            File.Exists(Path.Combine(tempRoot, "dashboard.json")).Should().BeTrue();
+            File.Exists(Path.Combine(tempRoot, "avalonia-dashboard.json")).Should().BeFalse();
+            using var document = JsonDocument.Parse(File.ReadAllText(Path.Combine(tempRoot, "dashboard.json")));
+            document.RootElement.GetProperty("ShowSensors").GetBoolean().Should().BeFalse();
+        }
+        finally
+        {
+            try { Directory.Delete(tempRoot, recursive: true); } catch { }
+        }
+    }
+
+    [Fact]
+    public void DashboardPreferences_ReadsThePreviousAvaloniaFileWhenCanonicalFileIsMissing()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "udt-dashboard-legacy-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempRoot);
+
+        try
+        {
+            File.WriteAllText(
+                Path.Combine(tempRoot, "avalonia-dashboard.json"),
+                "{\"ShowSensors\":false,\"SensorsRefreshIntervalSeconds\":9}");
+
+            var preferences = new AvaloniaDashboardPreferences(tempRoot);
+
+            preferences.Store.ShowSensors.Should().BeFalse();
+            preferences.Store.SensorsRefreshIntervalSeconds.Should().Be(9);
         }
         finally
         {
