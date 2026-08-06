@@ -8,6 +8,7 @@ using System.Text;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Pages;
+using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia;
@@ -130,6 +131,12 @@ public partial class MainWindow : Window
     private void DashboardButton_Click(object? sender, RoutedEventArgs e)
     {
         Navigate(MainNavigation.Dashboard);
+    }
+
+    private async void DeviceInfoButton_Click(object? sender, RoutedEventArgs e)
+    {
+        var dialog = new DeviceInformationWindow();
+        await dialog.ShowDialog(this);
     }
 
     private void KeyboardButton_Click(object? sender, RoutedEventArgs e)
@@ -492,6 +499,7 @@ public partial class MainWindow : Window
         foreach (var label in new[]
                  {
                      DashboardLabel,
+                     DeviceInfoLabel,
                      KeyboardLabel,
                      ActionsLabel,
                      MacroLabel,
@@ -510,6 +518,7 @@ public partial class MainWindow : Window
         foreach (var button in new[]
                  {
                      DashboardButton,
+                     DeviceInfoButton,
                      KeyboardButton,
                      ActionsButton,
                      MacroButton,

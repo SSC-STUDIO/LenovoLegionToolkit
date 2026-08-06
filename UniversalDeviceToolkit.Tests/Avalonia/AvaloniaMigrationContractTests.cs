@@ -151,6 +151,22 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DeviceInformationWindow_AndShellEntryRemainReachable()
+    {
+        typeof(DeviceInformationWindow).Should().BeAssignableTo<Avalonia.Controls.Window>();
+
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "MainWindow.axaml"));
+
+        markup.Should().Contain("AvaloniaDeviceInfoButton");
+        markup.Should().Contain("DeviceInfoButton_Click");
+        markup.Should().Contain("DeviceInformationWindow_Device_Title");
+    }
+
+    [Fact]
     public void DashboardTelemetryDetails_ExposeOnlyAvailableMetricsAndPreserveExpansionState()
     {
         var card = new DashboardTelemetryCardViewModel(

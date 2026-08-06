@@ -57,6 +57,24 @@
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                            FontSize="{StaticResource FontSizeCaption}"
                            Margin="12,4,0,14"/>
+                <Button x:Name="DeviceInfoButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaDeviceInfoButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=DeviceInformationWindow_Device_Title, Fallback=Device information}"
+                        Classes="navButton"
+                        Tag="Laptop24"
+                        Click="DeviceInfoButton_Click"
+                        Margin="0,0,0,4">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <controls:NavigationIcon IconIdentifier="{Binding Tag, RelativeSource={RelativeSource AncestorType=Button}}"
+                                                 FontSize="{StaticResource IconSizeMD}" />
+                        <controls:LocalizedTextBlock x:Name="DeviceInfoLabel"
+                                                     Grid.Column="1"
+                                                     Text="{local:Loc Key=DeviceInformationWindow_Device_Title, Fallback=Device information}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1"
+                                                     MinWidth="0" />
+                    </Grid>
+                </Button>
                 <Button x:Name="DashboardButton"
                         automation:AutomationProperties.AutomationId="AvaloniaDashboardButton"
                         automation:AutomationProperties.Name="{local:Loc Key=Nav_Dashboard, Fallback=Dashboard}"
