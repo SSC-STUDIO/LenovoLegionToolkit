@@ -1,4 +1,6 @@
+using System;
 using System.Reflection;
+using System.IO;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using UniversalDeviceToolkit.Plugins.SDK;
@@ -75,5 +77,42 @@ public class ViveToolPluginTests
         var avaloniaPage = Assert.IsType<AvaloniaViveToolSettingsPage>(page.CreateAvaloniaPage());
         Assert.Equal("AvaloniaViveToolSettingsRoot", AutomationProperties.GetAutomationId(avaloniaPage));
         Assert.IsAssignableFrom<Control>(avaloniaPage);
+    }
+
+    [Fact]
+    public void AvaloniaFeaturePage_PreservesWpfWarningImportProgressAndLoadingContracts()
+    {
+        var source = ReadAvaloniaPagesSource();
+
+        Assert.Contains("Resource.ViveTool_WarningMessage", source);
+        Assert.Contains("ViveToolFeatureGoToSettingsButton", source);
+        Assert.Contains("ViveToolMissingRefreshStatusButton", source);
+        Assert.Contains("ImportFeaturesFromUrlAsync", source);
+        Assert.Contains("PickImportModeAsync", source);
+        Assert.Contains("EstimatedViveToolDownloadBytes", source);
+        Assert.Contains("AvaloniaViveToolDownloadProgressBar", source);
+        Assert.Contains("_featureList.IsVisible = !busy", source);
+        Assert.Contains("ViveToolEmptyStatePanel", source);
+    }
+
+    private static string ReadAvaloniaPagesSource()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
+            {
+                return File.ReadAllText(Path.Combine(
+                    directory.FullName,
+                    "Plugins",
+                    "Official",
+                    "ViveTool",
+                    "AvaloniaViveToolPages.cs"));
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new DirectoryNotFoundException("UniversalDeviceToolkit repository root was not found.");
     }
 }

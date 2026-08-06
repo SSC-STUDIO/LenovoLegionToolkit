@@ -12,6 +12,7 @@ using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
 using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
 using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
+using UniversalDeviceToolkit.Plugins.SDK;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool;
 
@@ -28,9 +29,15 @@ public sealed class AvaloniaViveToolPage : UserControl
     private readonly TextBlock _status = new();
     private readonly TextBlock _summary = new();
     private readonly TextBlock _loading = new();
+    private readonly ProgressBar _downloadProgress = new() { IsVisible = false, Minimum = 0, Maximum = 100, Height = 6 };
+    private readonly TextBlock _downloadProgressText = new() { IsVisible = false };
     private readonly StackPanel _featureList = new();
     private readonly Border _missingBanner;
     private readonly Button _downloadButton;
+    private readonly Border _emptyState;
+    private Button? _goToSettingsButton;
+    private Button? _missingGoToSettingsButton;
+    private Button? _missingRefreshButton;
     private readonly List<FeatureFlagInfo> _allFeatures = [];
     private bool _loaded;
 
@@ -61,19 +68,35 @@ public sealed class AvaloniaViveToolPage : UserControl
         AutomationProperties.SetAutomationId(_statusFilter, "AvaloniaViveToolStatusFilterComboBox");
         _statusFilter.SelectionChanged += (_, _) => ApplyFilter();
 
-        var refreshButton = ActionButton(Resource.ViveTool_RefreshList, "AvaloniaViveToolRefreshListButton", RefreshAsync);
+        var refreshButton = ActionButton(Resource.ViveTool_RefreshList, "AvaloniaViveToolRefreshListButton", () => RefreshAsync(clearFeatureCache: true));
         var importButton = ActionButton(Resource.ViveTool_Import, "AvaloniaViveToolImportButton", ImportAsync);
         var exportButton = ActionButton(Resource.ViveTool_Export, "AvaloniaViveToolExportButton", ExportAsync);
         _downloadButton = ActionButton(Resource.ViveTool_Download, "AvaloniaViveToolDownloadButton", DownloadAsync);
+        _goToSettingsButton = ActionButton(Resource.ViveTool_GoToSettings, "ViveToolFeatureGoToSettingsButton", GoToSettingsAsync);
         _loading.Text = Resource.ViveTool_Loading;
         _loading.IsVisible = false;
         _loading.Foreground = Brushes.Gray;
         AutomationProperties.SetAutomationId(_loading, "AvaloniaViveToolLoadingText");
+        _downloadProgress.Foreground = Brushes.DodgerBlue;
+        AutomationProperties.SetAutomationId(_downloadProgress, "AvaloniaViveToolDownloadProgressBar");
+        _downloadProgressText.Foreground = Brushes.Gray;
+        _downloadProgressText.TextWrapping = TextWrapping.Wrap;
+        AutomationProperties.SetAutomationId(_downloadProgressText, "AvaloniaViveToolDownloadProgressText");
         _summary.TextWrapping = TextWrapping.Wrap;
         _summary.Foreground = Brushes.Gray;
         AutomationProperties.SetAutomationId(_summary, "AvaloniaViveToolFeatureSummaryText");
         _status.TextWrapping = TextWrapping.Wrap;
         AutomationProperties.SetAutomationId(_status, "AvaloniaViveToolStatusText");
+
+        var missingActions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        _missingGoToSettingsButton = ActionButton(Resource.ViveTool_GoToSettings, "ViveToolMissingGoToSettingsButton", GoToSettingsAsync);
+        _missingRefreshButton = ActionButton(
+            Resource.ViveTool_Refresh,
+            "ViveToolMissingRefreshStatusButton",
+            () => RefreshAsync());
+        missingActions.Children.Add(_downloadButton);
+        missingActions.Children.Add(_missingGoToSettingsButton);
+        missingActions.Children.Add(_missingRefreshButton);
 
         _missingBanner = new Border
         {
@@ -89,12 +112,9 @@ public sealed class AvaloniaViveToolPage : UserControl
                 {
                     Heading(Resource.ViveTool_MissingToolMessage),
                     Body(Resource.ViveTool_PathDescription),
-                    new StackPanel
-                    {
-                        Orientation = Orientation.Horizontal,
-                        Spacing = 8,
-                        Children = { _downloadButton },
-                    },
+                    missingActions,
+                    _downloadProgress,
+                    _downloadProgressText,
                 },
             },
         };
@@ -119,6 +139,7 @@ public sealed class AvaloniaViveToolPage : UserControl
             HorizontalAlignment = HorizontalAlignment.Right,
             Children = { importButton, exportButton, refreshButton },
         };
+        actions.Children.Add(_goToSettingsButton!);
         Grid.SetRow(actions, 1);
         Grid.SetColumnSpan(actions, 3);
         toolbar.Children.Add(actions);
@@ -130,8 +151,25 @@ public sealed class AvaloniaViveToolPage : UserControl
         root.Children.Add(Heading(Resource.ViveTool_PageTitle, 20));
         root.Children.Add(Body(Resource.ViveTool_PageDescription));
         root.Children.Add(Card(Resource.ViveTool_ViveToolStatus, _status));
+        root.Children.Add(Card(Resource.ViveTool_WarningTitle, Body(Resource.ViveTool_WarningMessage)));
         root.Children.Add(_missingBanner);
-        root.Children.Add(Card(Resource.ViveTool_FeatureFlags, new StackPanel { Spacing = 8, Children = { toolbar, _loading, _featureList } }));
+        _emptyState = new Border
+        {
+            IsVisible = false,
+            Padding = new Thickness(16, 28),
+            Child = new StackPanel
+            {
+                Spacing = 8,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Children =
+                {
+                    new TextBlock { Text = "?", FontSize = 24, HorizontalAlignment = HorizontalAlignment.Center, Foreground = Brushes.Gray },
+                    new TextBlock { Text = Resource.ViveTool_NoFeaturesFound, TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center, Foreground = Brushes.Gray },
+                },
+            },
+        };
+        AutomationProperties.SetAutomationId(_emptyState, "ViveToolEmptyStatePanel");
+        root.Children.Add(Card(Resource.ViveTool_FeatureFlags, new StackPanel { Spacing = 8, Children = { toolbar, _loading, _featureList, _emptyState } }));
         Content = new ScrollViewer
         {
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
@@ -148,11 +186,14 @@ public sealed class AvaloniaViveToolPage : UserControl
         await RefreshAsync();
     }
 
-    private async Task RefreshAsync()
+    private async Task RefreshAsync(bool clearFeatureCache = false)
     {
         SetBusy(true);
         try
         {
+            if (clearFeatureCache)
+                _service.ClearFeatureCache();
+
             var available = await _service.IsViveToolAvailableAsync().ConfigureAwait(true);
             var path = await _service.GetViveToolPathAsync().ConfigureAwait(true);
             _missingBanner.IsVisible = !available || string.IsNullOrWhiteSpace(path);
@@ -190,12 +231,28 @@ public sealed class AvaloniaViveToolPage : UserControl
     private async Task DownloadAsync()
     {
         SetBusy(true);
+        _downloadProgress.IsVisible = true;
+        _downloadProgressText.IsVisible = true;
+        _downloadProgress.Value = 0;
+        _downloadProgressText.Text = Resource.ViveTool_Downloading;
         try
         {
-            var success = await _service.DownloadViveToolAsync().ConfigureAwait(true);
+            const long estimatedTotalBytes = UniversalDeviceToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
+            var progress = new Progress<long>(bytesDownloaded =>
+            {
+                var percent = Math.Min(100, bytesDownloaded * 100d / estimatedTotalBytes);
+                _downloadProgress.Value = percent;
+                _downloadProgressText.Text = string.Format(
+                    CultureInfo.CurrentCulture,
+                    Resource.ViveTool_DownloadProgress,
+                    ByteFormatter.FormatBytes(bytesDownloaded),
+                    ByteFormatter.FormatBytes(estimatedTotalBytes),
+                    (int)percent);
+            });
+            var success = await _service.DownloadViveToolAsync(progress).ConfigureAwait(true);
             _status.Text = success ? Resource.ViveTool_DownloadComplete : Resource.ViveTool_DownloadFailed;
             if (success)
-                await RefreshAsync().ConfigureAwait(true);
+                await RefreshAsync(clearFeatureCache: true).ConfigureAwait(true);
         }
         catch (Exception ex)
         {
@@ -203,19 +260,30 @@ public sealed class AvaloniaViveToolPage : UserControl
         }
         finally
         {
+            _downloadProgress.IsVisible = false;
+            _downloadProgressText.IsVisible = false;
             SetBusy(false);
         }
     }
 
     private async Task ImportAsync()
     {
-        var file = await PickFileAsync(Resource.ViveTool_ImportFromFile).ConfigureAwait(true);
-        if (file is null)
+        var fromFile = await PickImportModeAsync().ConfigureAwait(true);
+        if (fromFile is null)
             return;
+
+        var source = fromFile.Value
+            ? await PickFileAsync(Resource.ViveTool_ImportFromFile).ConfigureAwait(true)
+            : await PickUrlAsync().ConfigureAwait(true);
+        if (string.IsNullOrWhiteSpace(source))
+            return;
+
         SetBusy(true);
         try
         {
-            var imported = await _service.ImportFeaturesFromFileAsync(file).ConfigureAwait(true);
+            var imported = fromFile.Value
+                ? await _service.ImportFeaturesFromFileAsync(source).ConfigureAwait(true)
+                : await _service.ImportFeaturesFromUrlAsync(source).ConfigureAwait(true);
             var existing = _allFeatures.Select(item => item.Id).ToHashSet();
             _allFeatures.AddRange(imported.Where(item => existing.Add(item.Id)));
             _status.Text = string.Format(CultureInfo.CurrentCulture, Resource.ViveTool_ImportSuccessMessage, imported.Count);
@@ -229,6 +297,14 @@ public sealed class AvaloniaViveToolPage : UserControl
         {
             SetBusy(false);
         }
+    }
+
+    private async Task GoToSettingsAsync()
+    {
+        if (!PluginHostContextRuntime.Current.OpenPluginSettings("vive-tool"))
+            return;
+
+        await RefreshAsync().ConfigureAwait(true);
     }
 
     private async Task ExportAsync()
@@ -276,11 +352,13 @@ public sealed class AvaloniaViveToolPage : UserControl
         var filtered = FeatureFilter.FilterFeatures(_allFeatures, _searchBox.Text, selected?.Status);
         _summary.Text = BuildSummary(filtered);
         _featureList.Children.Clear();
+        _featureList.IsVisible = !_loading.IsVisible;
+        _emptyState.IsVisible = filtered.Count == 0 && !_loading.IsVisible;
+        if (_loading.IsVisible)
+            return;
+
         foreach (var feature in filtered)
             _featureList.Children.Add(BuildFeatureRow(feature));
-
-        if (filtered.Count == 0 && !_loading.IsVisible)
-            _featureList.Children.Add(Body(Resource.ViveTool_NoFeaturesFound));
     }
 
     private Control BuildFeatureRow(FeatureFlagInfo feature)
@@ -343,6 +421,9 @@ public sealed class AvaloniaViveToolPage : UserControl
         _downloadButton.IsEnabled = !busy;
         _searchBox.IsEnabled = !busy;
         _statusFilter.IsEnabled = !busy;
+        _featureList.IsVisible = !busy;
+        if (busy)
+            _emptyState.IsVisible = false;
     }
 
     private static string BuildSummary(IReadOnlyList<FeatureFlagInfo> features)
@@ -381,6 +462,100 @@ public sealed class AvaloniaViveToolPage : UserControl
             AllowMultiple = false,
         }).ConfigureAwait(true);
         return files.Count == 0 ? null : files[0].Path.LocalPath;
+    }
+
+    private async Task<bool?> PickImportModeAsync()
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return null;
+
+        bool? result = null;
+        var dialog = new Window
+        {
+            Title = Resource.ViveTool_Import,
+            Width = 480,
+            SizeToContent = SizeToContent.Height,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+        var fileButton = new Button { Content = Resource.ViveTool_ImportFromFile, MinWidth = 180, Padding = new Thickness(12, 7) };
+        var urlButton = new Button { Content = Resource.ViveTool_ImportFromUrl, MinWidth = 180, Padding = new Thickness(12, 7) };
+        var cancelButton = new Button { Content = Resource.ViveTool_Cancel, MinWidth = 100, Padding = new Thickness(12, 7) };
+        AutomationProperties.SetAutomationId(fileButton, "ViveToolImportFromFileButton");
+        AutomationProperties.SetAutomationId(urlButton, "ViveToolImportFromUrlButton");
+        AutomationProperties.SetAutomationId(cancelButton, "ViveToolImportCancelButton");
+        fileButton.Click += (_, _) => { result = true; dialog.Close(); };
+        urlButton.Click += (_, _) => { result = false; dialog.Close(); };
+        cancelButton.Click += (_, _) => dialog.Close();
+        dialog.Content = new StackPanel
+        {
+            Spacing = 12,
+            Margin = new Thickness(20),
+            Children =
+            {
+                Body(Resource.ViveTool_ImportDescription),
+                fileButton,
+                urlButton,
+                cancelButton,
+            },
+        };
+        await dialog.ShowDialog(owner).ConfigureAwait(true);
+        return result;
+    }
+
+    private async Task<string?> PickUrlAsync()
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return null;
+
+        string? result = null;
+        var dialog = new Window
+        {
+            Title = Resource.ViveTool_ImportFromUrl,
+            Width = 560,
+            SizeToContent = SizeToContent.Height,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+        };
+        var input = new TextBox
+        {
+            Watermark = "https://example.com/features.json",
+            MinWidth = 500,
+        };
+        var importButton = new Button { Content = Resource.ViveTool_Import, MinWidth = 120, Padding = new Thickness(12, 7) };
+        var cancelButton = new Button { Content = Resource.ViveTool_Cancel, MinWidth = 100, Padding = new Thickness(12, 7) };
+        AutomationProperties.SetAutomationId(input, "ViveToolImportUrlTextBox");
+        AutomationProperties.SetAutomationId(importButton, "ViveToolImportUrlConfirmButton");
+        AutomationProperties.SetAutomationId(cancelButton, "ViveToolImportUrlCancelButton");
+        importButton.Click += (_, _) =>
+        {
+            if (!Uri.TryCreate(input.Text?.Trim(), UriKind.Absolute, out var uri)
+                || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            {
+                input.BorderBrush = Brushes.IndianRed;
+                return;
+            }
+
+            result = uri.ToString();
+            dialog.Close();
+        };
+        cancelButton.Click += (_, _) => dialog.Close();
+        dialog.Content = new StackPanel
+        {
+            Spacing = 10,
+            Margin = new Thickness(20),
+            Children =
+            {
+                Body(Resource.ViveTool_ImportUrlDescription),
+                input,
+                new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    Spacing = 8,
+                    Children = { importButton, cancelButton },
+                },
+            },
+        };
+        await dialog.ShowDialog(owner).ConfigureAwait(true);
+        return result;
     }
 
     private static Button ActionButton(string text, string automationId, Func<Task> action)
