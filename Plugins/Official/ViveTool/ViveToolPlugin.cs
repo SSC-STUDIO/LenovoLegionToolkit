@@ -49,6 +49,15 @@ public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
     {
         return new ViveToolPage();
     }
+
+    /// <summary>
+    /// Optional Avalonia factory. The legacy WPF factory above remains the
+    /// default for the WPF host and preserves the plugin ABI.
+    /// </summary>
+    public object CreateAvaloniaPage()
+    {
+        return new AvaloniaViveToolPage();
+    }
 }
 
 public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
@@ -59,5 +68,14 @@ public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPl
     public object CreatePage()
     {
         return new ViveToolSettingsPage();
+    }
+
+    /// <summary>
+    /// Optional Avalonia factory. The WPF settings page is still returned by
+    /// <see cref="CreatePage"/> for the legacy desktop host.
+    /// </summary>
+    public object CreateAvaloniaPage()
+    {
+        return new AvaloniaViveToolSettingsPage();
     }
 }
