@@ -81,6 +81,7 @@ public partial class SettingsAppearanceView : UserControl
             ApplyAccentColorToThemeCheckBox.IsChecked = _applyAccentColorToTheme;
             ApplyAccentColorToSystemCheckBox.IsChecked = _applyAccentColorToSystem;
             AccentSwatches.ItemsSource = BuildSwatches();
+            UpdateCustomAccentControl();
             UpdateThemeCardSelection(GetCurrentThemeTag());
             RestoreAppearanceOptions();
         }
@@ -457,6 +458,28 @@ public partial class SettingsAppearanceView : UserControl
 
         // Rebuild the swatch list so the newly selected item shows its persistent highlight.
         AccentSwatches.ItemsSource = BuildSwatches();
+        UpdateCustomAccentControl();
+    }
+
+    private void CustomAccentColorView_ColorChanged(object? sender, ColorChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        _selectedAccent = e.NewColor;
+        if (_applyAccentColorToTheme)
+            ApplyAccentColor(e.NewColor);
+        else
+            ClearAccentOverride();
+        ApplyAccentColorToSystem(e.NewColor);
+
+        _themePrefs.Store.UseSystemAccent = false;
+        _themePrefs.Store.AccentColorHex = $"#{e.NewColor.R:X2}{e.NewColor.G:X2}{e.NewColor.B:X2}";
+        _themePrefs.SynchronizeStore();
+
+        _ = PersistSharedAccentColorAsync(_themePrefs.Store.AccentColorHex);
+        AccentSwatches.ItemsSource = BuildSwatches();
+        UpdateCustomAccentControl();
     }
 
     private Task PersistSharedSelectionAsync(string optionKey, string value) =>
@@ -498,6 +521,46 @@ public partial class SettingsAppearanceView : UserControl
 
         ApplySwatchSelection(items);
         return items.ToArray();
+    }
+
+    private void UpdateCustomAccentControl()
+    {
+        if (CustomAccentColorView is null || CustomAccentPreview is null || CustomAccentColorButton is null)
+            return;
+
+        var color = GetCurrentAccentColor();
+        var wasRefreshing = _isRefreshing;
+        _isRefreshing = true;
+        try
+        {
+            CustomAccentColorView.Color = color;
+        }
+        finally
+        {
+            _isRefreshing = wasRefreshing;
+        }
+
+        CustomAccentPreview.Background = new SolidColorBrush(color);
+        CustomAccentColorButton.BorderBrush = _selectedAccent is null
+            ? GetDefaultStrokeBrush()
+            : GetAccentBrush();
+        CustomAccentColorButton.BorderThickness = new Thickness(_selectedAccent is null ? 1 : 2.5);
+    }
+
+    private Color GetCurrentAccentColor()
+    {
+        if (_selectedAccent is { } selected)
+            return selected;
+
+        if (this.TryFindResource("SystemAccentColor", out var value))
+        {
+            if (value is Color color)
+                return color;
+            if (value is SolidColorBrush brush)
+                return brush.Color;
+        }
+
+        return Color.FromRgb(0, 120, 212);
     }
 
     // Marks the swatch matching the current accent as selected (or the system swatch when no custom

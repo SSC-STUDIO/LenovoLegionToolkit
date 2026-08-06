@@ -224,30 +224,62 @@
                            FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
 
-                <!-- 6. Accent color swatches -->
-                <ItemsControl x:Name="AccentSwatches">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <!-- BorderBrush/BorderThickness bind to the precomputed selection visuals
-                                 (selected = 2.5px accent border), so the current accent stays highlighted. -->
-                            <controls:AccessibleButton Width="36" Height="36" Margin="0,0,8,8"
-                                    AutomationName="{Binding DisplayName}"
-                                    Padding="2" CornerRadius="18"
-                                    Background="Transparent"
-                                    BorderBrush="{Binding SelectionBorderBrush}"
-                                    BorderThickness="{Binding SelectionBorderThickness}"
-                                    Tag="{Binding}"
-                                    Click="AccentColorSwatch_Click">
-                                <Border Width="32" Height="32" CornerRadius="16" Background="{Binding Brush}"/>
-                            </controls:AccessibleButton>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <!-- 6. Accent color swatches and the WPF-equivalent custom picker. -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <ItemsControl x:Name="AccentSwatches">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- BorderBrush/BorderThickness bind to the precomputed selection visuals
+                                     (selected = 2.5px accent border), so the current accent stays highlighted. -->
+                                <controls:AccessibleButton Width="36" Height="36" Margin="0,0,0,8"
+                                        AutomationName="{Binding DisplayName}"
+                                        Padding="2" CornerRadius="18"
+                                        Background="Transparent"
+                                        BorderBrush="{Binding SelectionBorderBrush}"
+                                        BorderThickness="{Binding SelectionBorderThickness}"
+                                        Tag="{Binding}"
+                                        Click="AccentColorSwatch_Click">
+                                    <Border Width="32" Height="32" CornerRadius="16" Background="{Binding Brush}"/>
+                                </controls:AccessibleButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <controls:AccessibleButton x:Name="CustomAccentColorButton"
+                                               Width="36"
+                                               Height="36"
+                                               Margin="0,0,0,8"
+                                               Padding="2"
+                                               CornerRadius="18"
+                                               Background="Transparent"
+                                               AutomationName="{local:Loc Key=Appearance_CustomAccent, Fallback=Custom accent color}">
+                        <Border x:Name="CustomAccentPreview"
+                                Width="32"
+                                Height="32"
+                                CornerRadius="16"
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" />
+                        <controls:AccessibleButton.Flyout>
+                            <Flyout Placement="Bottom">
+                                <Border Padding="8"
+                                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="{StaticResource CornerRadiusCard}">
+                                    <ColorView x:Name="CustomAccentColorView"
+                                               Width="260"
+                                               Height="300"
+                                               IsAlphaEnabled="False"
+                                               ColorChanged="CustomAccentColorView_ColorChanged" />
+                                </Border>
+                            </Flyout>
+                        </controls:AccessibleButton.Flyout>
+                    </controls:AccessibleButton>
+                </StackPanel>
             </StackPanel>
         </Border>
 

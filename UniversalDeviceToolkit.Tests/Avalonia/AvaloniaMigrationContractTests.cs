@@ -440,6 +440,28 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaAppearance_ProvidesWpfEquivalentCustomAccentPicker()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "SettingsAppearanceView.axaml"));
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "SettingsAppearanceView.axaml.cs"));
+
+        markup.Should().Contain("CustomAccentColorButton");
+        markup.Should().Contain("ColorView");
+        markup.Should().Contain("CustomAccentColorView_ColorChanged");
+        source.Should().Contain("_themePrefs.Store.UseSystemAccent = false");
+        source.Should().Contain("PersistSharedAccentColorAsync");
+    }
+
+    [Fact]
     public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
     {
         var root = RepositoryPaths.FindRoot();
