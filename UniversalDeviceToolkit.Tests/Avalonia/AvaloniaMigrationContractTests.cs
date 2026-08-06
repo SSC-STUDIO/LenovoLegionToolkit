@@ -73,6 +73,59 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DashboardItemPicker_FiltersExistingItemsAcrossGroupsAndPreservesWhiteBacklightPersistence()
+    {
+        var services = new UnavailablePlatformServices();
+        var viewModel = new DashboardPageViewModel(services);
+        var existingGroup = new DashboardGroupViewModel(
+            new DashboardGroupState("Power", null, ["PowerMode"]));
+        var targetGroup = new DashboardGroupViewModel(
+            new DashboardGroupState("Custom", "Custom", Array.Empty<string>()));
+        viewModel.DashboardGroups.Add(existingGroup);
+        viewModel.DashboardGroups.Add(targetGroup);
+
+        viewModel.ToggleDashboardItemPickerCommand.Execute(targetGroup);
+
+        viewModel.AvailableDashboardItems
+            .Select(item => item.Identifier)
+            .Should()
+            .NotContain("PowerMode");
+
+        var whiteBacklight = viewModel.AvailableDashboardItems
+            .Single(item => item.Identifier.Equals(
+                "WhiteKeyboardBacklight",
+                StringComparison.OrdinalIgnoreCase));
+        viewModel.AddDashboardItemCommand.Execute(whiteBacklight);
+
+        targetGroup.Items.Select(item => item.Identifier)
+            .Should()
+            .Equal(
+                "WhiteKeyboardBacklight",
+                DashboardGroupViewModel.OneLevelWhiteKeyboardBacklightIdentifier);
+        targetGroup.ToState().Items.Should().Equal("WhiteKeyboardBacklight");
+        viewModel.AvailableDashboardItems
+            .Select(item => item.Identifier)
+            .Should()
+            .NotContain("WhiteKeyboardBacklight");
+    }
+
+    [Fact]
+    public void DashboardLayoutMarkup_ExposesInlineAddItemPicker()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DashboardPage.axaml"));
+
+        markup.Should().Contain("AvaloniaDashboardAddItemButton");
+        markup.Should().Contain("ToggleDashboardItemPickerCommand");
+        markup.Should().Contain("AddDashboardItemCommand");
+        markup.Should().Contain("AvailableDashboardItems");
+    }
+
+    [Fact]
     public void WhiteKeyboardBacklightLayoutRendersBothWpfControlsAndPersistsOneItem()
     {
         var group = new DashboardGroupViewModel(new DashboardGroupState(
@@ -153,7 +206,7 @@ public sealed class AvaloniaMigrationContractTests
     [Fact]
     public void DeviceInformationWindow_AndShellEntryRemainReachable()
     {
-        typeof(DeviceInformationWindow).Should().BeAssignableTo<Avalonia.Controls.Window>();
+        typeof(DeviceInformationWindow).Should().BeAssignableTo<global::Avalonia.Controls.Window>();
 
         var root = RepositoryPaths.FindRoot();
         var markup = File.ReadAllText(Path.Combine(

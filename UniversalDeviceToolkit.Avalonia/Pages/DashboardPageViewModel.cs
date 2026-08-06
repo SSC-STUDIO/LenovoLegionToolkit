@@ -128,6 +128,7 @@ public partial class DashboardPageViewModel : ObservableObject
         _showSensors = _dashboardPreferences.Store.ShowSensors;
         _sensorsRefreshIntervalSeconds = NormalizeRefreshInterval(
             _dashboardPreferences.Store.SensorsRefreshIntervalSeconds);
+        RefreshDashboardItemCandidates();
     }
 
     public void StartPolling()
@@ -370,6 +371,7 @@ public partial class DashboardPageViewModel : ObservableObject
         var index = DashboardGroups.Count(group => group.Type.Equals("Custom", StringComparison.OrdinalIgnoreCase)) + 1;
         DashboardGroups.Add(new DashboardGroupViewModel(
             new DashboardGroupState("Custom", $"Custom {index}", Array.Empty<string>())));
+        RefreshDashboardItemCandidates();
     }
 
     [RelayCommand]
@@ -378,7 +380,47 @@ public partial class DashboardPageViewModel : ObservableObject
         if (group is null || !group.Type.Equals("Custom", StringComparison.OrdinalIgnoreCase))
             return;
 
+        if (ReferenceEquals(_dashboardItemPickerGroup, group))
+            _dashboardItemPickerGroup = null;
         DashboardGroups.Remove(group);
+        RefreshDashboardItemCandidates();
+    }
+
+    [RelayCommand]
+    private void ToggleDashboardItemPicker(DashboardGroupViewModel? group)
+    {
+        if (group is null)
+            return;
+
+        if (ReferenceEquals(_dashboardItemPickerGroup, group) && group.IsAddItemPickerOpen)
+        {
+            group.IsAddItemPickerOpen = false;
+            _dashboardItemPickerGroup = null;
+            return;
+        }
+
+        foreach (var candidateGroup in DashboardGroups)
+            candidateGroup.IsAddItemPickerOpen = ReferenceEquals(candidateGroup, group);
+
+        _dashboardItemPickerGroup = group;
+        RefreshDashboardItemCandidates();
+    }
+
+    [RelayCommand]
+    private void AddDashboardItem(DashboardItemCandidateViewModel? candidate)
+    {
+        if (candidate is null || _dashboardItemPickerGroup is null)
+            return;
+
+        if (!AvailableDashboardItems.Any(item => item.Identifier.Equals(
+                candidate.Identifier,
+                StringComparison.OrdinalIgnoreCase)))
+            return;
+
+        _dashboardItemPickerGroup.AddItem(candidate.Identifier);
+        _dashboardItemPickerGroup.IsAddItemPickerOpen = false;
+        _dashboardItemPickerGroup = null;
+        RefreshDashboardItemCandidates();
     }
 
     [RelayCommand]
@@ -429,7 +471,10 @@ public partial class DashboardPageViewModel : ObservableObject
     private void RemoveDashboardItem(DashboardLayoutItemViewModel? item)
     {
         if (item?.Group is not null)
+        {
             item.Group.Items.Remove(item);
+            RefreshDashboardItemCandidates();
+        }
     }
 
     private void ApplyDashboardLayout(DashboardLayoutState layout)
@@ -441,6 +486,34 @@ public partial class DashboardPageViewModel : ObservableObject
         DashboardGroups.Clear();
         foreach (var group in layout.Groups)
             DashboardGroups.Add(new DashboardGroupViewModel(group));
+
+        _dashboardItemPickerGroup = null;
+        RefreshDashboardItemCandidates();
+    }
+
+    private DashboardGroupViewModel? _dashboardItemPickerGroup;
+
+    public ObservableCollection<DashboardItemCandidateViewModel> AvailableDashboardItems { get; } = new();
+
+    public bool HasAvailableDashboardItems => AvailableDashboardItems.Count > 0;
+
+    private void RefreshDashboardItemCandidates()
+    {
+        var existingIdentifiers = DashboardGroups
+            .SelectMany(group => group.Items)
+            .Select(item => item.PersistenceIdentifier)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        AvailableDashboardItems.Clear();
+        foreach (var identifier in DashboardItemDescriptors.AllIdentifiers)
+        {
+            if (existingIdentifiers.Contains(identifier))
+                continue;
+
+            AvailableDashboardItems.Add(new DashboardItemCandidateViewModel(identifier));
+        }
+
+        OnPropertyChanged(nameof(HasAvailableDashboardItems));
     }
 
     private void ApplyDashboardItemStates(IReadOnlyList<DashboardItemState> states)
@@ -616,7 +689,7 @@ public partial class DashboardPageViewModel : ObservableObject
     }
 }
 
-public sealed class DashboardGroupViewModel : ObservableObject
+public sealed partial class DashboardGroupViewModel : ObservableObject
 {
     public const string OneLevelWhiteKeyboardBacklightIdentifier = "OneLevelWhiteKeyboardBacklight";
 
@@ -657,6 +730,9 @@ public sealed class DashboardGroupViewModel : ObservableObject
 
     public ObservableCollection<DashboardLayoutItemViewModel> Items { get; }
 
+    [ObservableProperty]
+    private bool _isAddItemPickerOpen;
+
     public string? CustomName
     {
         get => _customName;
@@ -673,6 +749,35 @@ public sealed class DashboardGroupViewModel : ObservableObject
         Items.Select(item => item.PersistenceIdentifier)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray());
+
+    public void AddItem(string identifier)
+    {
+        if (Items.Any(item => item.PersistenceIdentifier.Equals(identifier, StringComparison.OrdinalIgnoreCase)))
+            return;
+
+        Items.Add(new DashboardLayoutItemViewModel(this, identifier));
+        if (identifier.Equals("WhiteKeyboardBacklight", StringComparison.OrdinalIgnoreCase))
+        {
+            Items.Add(new DashboardLayoutItemViewModel(
+                this,
+                OneLevelWhiteKeyboardBacklightIdentifier));
+        }
+    }
+}
+
+public sealed class DashboardItemCandidateViewModel
+{
+    public DashboardItemCandidateViewModel(string identifier)
+    {
+        Identifier = identifier;
+    }
+
+    public string Identifier { get; }
+    public DashboardItemDescriptor Descriptor => DashboardItemDescriptors.Get(Identifier);
+    public string DisplayName => AvaloniaLocalization.GetString(
+        Descriptor.TitleKey,
+        Descriptor.FallbackTitle);
+    public string IconIdentifier => Descriptor.IconIdentifier;
 }
 
 public enum DashboardItemPresentationMode
@@ -691,6 +796,33 @@ public sealed record DashboardItemDescriptor(
 
 public static class DashboardItemDescriptors
 {
+    private static readonly string[] IdentifierOrder =
+    [
+        "PowerMode",
+        "BatteryMode",
+        "BatteryNightChargeMode",
+        "AlwaysOnUsb",
+        "InstantBoot",
+        "HybridMode",
+        "DiscreteGpu",
+        "OverclockDiscreteGpu",
+        "PanelLogoBacklight",
+        "PortsBacklight",
+        "Resolution",
+        "RefreshRate",
+        "DpiScale",
+        "Hdr",
+        "OverDrive",
+        "TurnOffMonitors",
+        "Microphone",
+        "FlipToStart",
+        "TouchpadLock",
+        "FnLock",
+        "WinKeyLock",
+        "WhiteKeyboardBacklight",
+        "ItsMode",
+    ];
+
     private static readonly IReadOnlyDictionary<string, DashboardItemDescriptor> Items =
         new Dictionary<string, DashboardItemDescriptor>(StringComparer.OrdinalIgnoreCase)
         {
@@ -729,6 +861,8 @@ public static class DashboardItemDescriptors
         Items.TryGetValue(identifier, out var descriptor)
             ? descriptor
             : new DashboardItemDescriptor(identifier, identifier, "Info24");
+
+    public static IReadOnlyList<string> AllIdentifiers => IdentifierOrder;
 }
 
 public sealed record DashboardStateOption(string Value, string DisplayName);

@@ -499,27 +499,73 @@
                         <ItemsControl ItemsSource="{Binding DashboardGroups}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Margin="0,0,0,6">
+                                    <StackPanel Spacing="6" Margin="0,0,0,6">
+                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
                                         <controls:LocalizedTextBlock Text="{Binding DisplayName}"
                                                                      VerticalAlignment="Center"
                                                                      OverflowMode="Ellipsis"
                                                                      MaxLines="1" />
                                         <TextBox Grid.Column="1"
                                                  IsVisible="{Binding IsCustom}"
-                                                 Text="{Binding CustomName, Mode=TwoWay}"
-                                                 Watermark="{local:Loc Key=Dashboard_CustomGroupName, Fallback=Custom group name}"
-                                                 MinWidth="160" />
+                                                  Text="{Binding CustomName, Mode=TwoWay}"
+                                                  Watermark="{local:Loc Key=Dashboard_CustomGroupName, Fallback=Custom group name}"
+                                                  MinWidth="160" />
                                         <Button Grid.Column="2"
+                                                Command="{Binding DataContext.ToggleDashboardItemPickerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                IsEnabled="{Binding DataContext.HasAvailableDashboardItems, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Padding="6"
+                                                ToolTip.Tip="{local:Loc Key=Add, Fallback=Add}"
+                                                automation:AutomationProperties.AutomationId="AvaloniaDashboardAddItemButton"
+                                                automation:AutomationProperties.Name="{local:Loc Key=Add, Fallback=Add}">
+                                            <controls:NavigationIcon IconIdentifier="Add24"
+                                                                     FontSize="{StaticResource IconSizeCompact}" />
+                                        </Button>
+                                        <Button Grid.Column="3"
                                                 IsVisible="{Binding IsCustom}"
                                                 Command="{Binding DataContext.RemoveDashboardGroupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Padding="6"
                                                 ToolTip.Tip="{local:Loc Key=Dashboard_RemoveGroup, Fallback=Remove group}"
                                                 automation:AutomationProperties.Name="{local:Loc Key=Dashboard_RemoveGroup, Fallback=Remove group}">
-                                            <controls:NavigationIcon IconIdentifier="Delete24"
-                                                                     FontSize="{StaticResource IconSizeCompact}" />
-                                        </Button>
-                                    </Grid>
+                                             <controls:NavigationIcon IconIdentifier="Delete24"
+                                                                      FontSize="{StaticResource IconSizeCompact}" />
+                                         </Button>
+                                        </Grid>
+                                        <Border IsVisible="{Binding IsAddItemPickerOpen}"
+                                                Padding="8"
+                                                Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                                                BorderBrush="{DynamicResource CardBorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="{StaticResource CornerRadiusControl}">
+                                            <ItemsControl ItemsSource="{Binding DataContext.AvailableDashboardItems, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Button Command="{Binding DataContext.AddDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding}"
+                                                                Padding="8,5"
+                                                                Margin="0,0,6,6"
+                                                                ToolTip.Tip="{Binding DisplayName}"
+                                                                automation:AutomationProperties.Name="{Binding DisplayName}">
+                                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
+                                                                                         FontSize="{StaticResource IconSizeCompact}" />
+                                                                <controls:LocalizedTextBlock Text="{Binding DisplayName}"
+                                                                                             OverflowMode="Ellipsis"
+                                                                                             MaxLines="1"
+                                                                                             MaxWidth="160" />
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Border>
+                                    </StackPanel>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
