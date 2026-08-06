@@ -62,6 +62,9 @@ public interface IPlatformServices
     Task<bool> SaveAutomationWorkspaceAsync(IReadOnlyList<AutomationPipelineDraft> pipelines);
     Task<KeyboardLightingState?> GetKeyboardLightingStateAsync();
     Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update);
+    Task<bool> ResetKeyboardSpectrumProfileAsync();
+    Task<bool> ExportKeyboardSpectrumProfileAsync(string filePath);
+    Task<bool> ImportKeyboardSpectrumProfileAsync(string filePath);
     Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync();
     Task<bool> SetNetworkAccelerationEnabledAsync(bool enabled);
     Task<bool> SetNetworkAccelerationModeAsync(string mode);

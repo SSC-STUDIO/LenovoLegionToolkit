@@ -357,6 +357,21 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetKeyboardLightingAsync(update)
             : _featureHost.SetKeyboardLightingAsync(update);
 
+    public Task<bool> ResetKeyboardSpectrumProfileAsync() =>
+        _featureHost is null
+            ? _inner.ResetKeyboardSpectrumProfileAsync()
+            : _featureHost.ResetKeyboardSpectrumProfileAsync();
+
+    public Task<bool> ExportKeyboardSpectrumProfileAsync(string filePath) =>
+        _featureHost is null
+            ? _inner.ExportKeyboardSpectrumProfileAsync(filePath)
+            : _featureHost.ExportKeyboardSpectrumProfileAsync(filePath);
+
+    public Task<bool> ImportKeyboardSpectrumProfileAsync(string filePath) =>
+        _featureHost is null
+            ? _inner.ImportKeyboardSpectrumProfileAsync(filePath)
+            : _featureHost.ImportKeyboardSpectrumProfileAsync(filePath);
+
     public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync() =>
         _featureHost is null
             ? _inner.GetNetworkAccelerationStateAsync()

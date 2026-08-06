@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Platform.Storage;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
@@ -217,6 +218,97 @@ public partial class KeyboardBacklightPage : UserControl
             Brightness: (int)SpectrumBrightness.Value,
             LogoEnabled: SpectrumLogo.IsChecked == true,
             SpectrumEffects: _spectrumEditors.Select(item => item.ToState()).ToArray()));
+    }
+
+    private async void ResetSpectrum_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        try
+        {
+            if (!await _platformServices.ResetKeyboardSpectrumProfileAsync().ConfigureAwait(true))
+            {
+                ErrorMessage.Text = AvaloniaLocalization.GetString(
+                    "KeyboardBacklightPage_SaveFailed",
+                    "The keyboard controller rejected this change.");
+                ErrorMessage.IsVisible = true;
+                return;
+            }
+
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage.Text = ex.Message;
+            ErrorMessage.IsVisible = true;
+        }
+    }
+
+    private async void ExportSpectrum_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || _state is null)
+            return;
+
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+            return;
+
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            SuggestedFileName = $"spectrum-profile-{_state.SelectedProfile}.json",
+            DefaultExtension = "json",
+            FileTypeChoices = [new FilePickerFileType("JSON") { Patterns = ["*.json"] }],
+        });
+        var path = file?.Path.LocalPath;
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+
+        if (!await _platformServices.ExportKeyboardSpectrumProfileAsync(path).ConfigureAwait(true))
+        {
+            ErrorMessage.Text = AvaloniaLocalization.GetString(
+                "KeyboardBacklightPage_SaveFailed",
+                "The keyboard controller rejected this change.");
+            ErrorMessage.IsVisible = true;
+        }
+    }
+
+    private async void ImportSpectrum_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var topLevel = TopLevel.GetTopLevel(this);
+        if (topLevel is null)
+            return;
+
+        var files = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            AllowMultiple = false,
+            FileTypeFilter = [new FilePickerFileType("JSON") { Patterns = ["*.json"] }],
+        });
+        var path = files.FirstOrDefault()?.Path.LocalPath;
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+
+        try
+        {
+            if (!await _platformServices.ImportKeyboardSpectrumProfileAsync(path).ConfigureAwait(true))
+            {
+                ErrorMessage.Text = AvaloniaLocalization.GetString(
+                    "KeyboardBacklightPage_SaveFailed",
+                    "The keyboard controller rejected this change.");
+                ErrorMessage.IsVisible = true;
+                return;
+            }
+
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage.Text = ex.Message;
+            ErrorMessage.IsVisible = true;
+        }
     }
 
     private void SpectrumBrightness_ValueChanged(object? sender, global::Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs e)

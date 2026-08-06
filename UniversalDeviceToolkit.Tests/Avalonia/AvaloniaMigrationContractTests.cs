@@ -521,6 +521,37 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaKeyboardSpectrum_PreservesWpfProfileImportExportAndResetActions()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml"));
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+        var service = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+
+        markup.Should().Contain("AvaloniaSpectrumReset");
+        markup.Should().Contain("AvaloniaSpectrumExport");
+        markup.Should().Contain("AvaloniaSpectrumImport");
+        source.Should().Contain("ResetSpectrum_Click");
+        source.Should().Contain("ExportSpectrum_Click");
+        source.Should().Contain("ImportSpectrum_Click");
+        service.Should().Contain("ExportProfileDescriptionAsync");
+        service.Should().Contain("ImportProfileDescription");
+        service.Should().Contain("SetProfileDefaultAsync");
+    }
+
+    [Fact]
     public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
     {
         var root = RepositoryPaths.FindRoot();

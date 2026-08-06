@@ -1995,6 +1995,39 @@ internal sealed class WindowsFeatureHostServices
         return false;
     }
 
+    public async Task<bool> ResetKeyboardSpectrumProfileAsync()
+    {
+        if (_spectrum is null || !await _spectrum.IsSupportedAsync().ConfigureAwait(false))
+            return false;
+
+        var profile = await _spectrum.GetProfileAsync().ConfigureAwait(false);
+        await _spectrum.SetProfileDefaultAsync(profile).ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> ExportKeyboardSpectrumProfileAsync(string filePath)
+    {
+        if (_spectrum is null || string.IsNullOrWhiteSpace(filePath)
+            || !await _spectrum.IsSupportedAsync().ConfigureAwait(false))
+            return false;
+
+        var profile = await _spectrum.GetProfileAsync().ConfigureAwait(false);
+        await _spectrum.ExportProfileDescriptionAsync(profile, filePath).ConfigureAwait(false);
+        return true;
+    }
+
+    public async Task<bool> ImportKeyboardSpectrumProfileAsync(string filePath)
+    {
+        if (_spectrum is null || string.IsNullOrWhiteSpace(filePath)
+            || !File.Exists(filePath)
+            || !await _spectrum.IsSupportedAsync().ConfigureAwait(false))
+            return false;
+
+        var profile = await _spectrum.GetProfileAsync().ConfigureAwait(false);
+        await _spectrum.ImportProfileDescription(profile, filePath).ConfigureAwait(false);
+        return true;
+    }
+
     private static KeyboardColorState ToKeyboardColor(RGBColor color) => new(color.R, color.G, color.B);
 
     private static RGBColor ToRgbColor(KeyboardColorState color) => new(color.R, color.G, color.B);

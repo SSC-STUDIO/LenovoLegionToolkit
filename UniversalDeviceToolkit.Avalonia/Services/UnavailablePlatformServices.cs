@@ -222,6 +222,12 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update) =>
         Task.FromResult(false);
 
+    public Task<bool> ResetKeyboardSpectrumProfileAsync() => Task.FromResult(false);
+
+    public Task<bool> ExportKeyboardSpectrumProfileAsync(string filePath) => Task.FromResult(false);
+
+    public Task<bool> ImportKeyboardSpectrumProfileAsync(string filePath) => Task.FromResult(false);
+
     public Task<NetworkAccelerationState> GetNetworkAccelerationStateAsync() =>
         Task.FromResult(new NetworkAccelerationState(
             false,

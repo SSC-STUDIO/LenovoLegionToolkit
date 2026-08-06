@@ -107,7 +107,7 @@
                         <CheckBox x:Name="SpectrumLogo"
                                   Content="{local:Loc Key=Keyboard_LogoLighting, Fallback=Keyboard logo lighting}"
                                   Click="SpectrumLogo_Click" />
-                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                        <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8">
                             <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Effects, Fallback=Effects}"
                                                          FontSize="{StaticResource FontSizeSubsection}"
                                                          FontWeight="Medium"
@@ -118,6 +118,27 @@
                                     Click="AddSpectrumEffect_Click"
                                     automation:AutomationProperties.AutomationId="AvaloniaSpectrumAddEffect" />
                             <Button Grid.Column="2"
+                                    x:Name="ResetSpectrumButton"
+                                    Click="ResetSpectrum_Click"
+                                    ToolTip.Tip="{local:Loc Key=SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip, Fallback=Reset to default}"
+                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumReset">
+                                <controls:NavigationIcon IconIdentifier="ArrowClockwise24" />
+                            </Button>
+                            <Button Grid.Column="3"
+                                    x:Name="ExportSpectrumButton"
+                                    Click="ExportSpectrum_Click"
+                                    ToolTip.Tip="{local:Loc Key=Export, Fallback=Export}"
+                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumExport">
+                                <controls:NavigationIcon IconIdentifier="ArrowExportLtr24" />
+                            </Button>
+                            <Button Grid.Column="4"
+                                    x:Name="ImportSpectrumButton"
+                                    Click="ImportSpectrum_Click"
+                                    ToolTip.Tip="{local:Loc Key=Import, Fallback=Import}"
+                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumImport">
+                                <controls:NavigationIcon IconIdentifier="ArrowImport24" />
+                            </Button>
+                            <Button Grid.Column="5"
                                     x:Name="SaveSpectrumButton"
                                     Content="{local:Loc Key=Common_Save, Fallback=Save}"
                                     Click="SaveSpectrum_Click" />
