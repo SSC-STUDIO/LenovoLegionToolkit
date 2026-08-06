@@ -5,11 +5,15 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
 using Avalonia.Styling;
+using Avalonia.Threading;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Avalonia.Windows;
 using UniversalDeviceToolkit.Shared.Settings;
+using UniversalDeviceToolkit.Shared.Diagnostics;
+using UniversalDeviceToolkit.Shared.Logging;
 using UniversalDeviceToolkit.Platform.Linux;
 using UniversalDeviceToolkit.Platform.MacOS;
 #if WINDOWS
@@ -39,6 +43,8 @@ public partial class App : Application
     public ICommand ExitCommand { get; }
 
     private TrayIcon? _trayIcon;
+    private int _handlingFatalException;
+    private bool _exceptionHandlersRegistered;
 
 #if WINDOWS
     private ApplicationSettings? _applicationSettings;
@@ -50,6 +56,7 @@ public partial class App : Application
 
     public App()
     {
+        RegisterExceptionHandlers();
         var culture = LocalizationRuntime.Initialize();
         AvaloniaLocalization.ApplyCulture(culture);
 #if WINDOWS
@@ -122,6 +129,7 @@ public partial class App : Application
                 global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
             _ = StartWindowsHostServicesAsync();
 #endif
+            Dispatcher.UIThread.Post(CheckPendingCrashReports, DispatcherPriority.Background);
         }
         base.OnFrameworkInitializationCompleted();
     }
@@ -298,9 +306,12 @@ public partial class App : Application
         }
     }
 
-    private void ExitApplication()
+    private void ExitApplication() => ExitApplication(null);
+
+    private void ExitApplication(int? exitCode)
     {
         IsExiting = true;
+        UnregisterExceptionHandlers();
 #if WINDOWS
         _notificationManager?.Dispose();
         _notificationManager = null;
@@ -322,7 +333,120 @@ public partial class App : Application
         _trayIcon?.Dispose();
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.Shutdown();
+            if (exitCode is { } code)
+                desktop.Shutdown(code);
+            else
+                desktop.Shutdown();
+        }
+        else if (exitCode is { } code)
+            Environment.ExitCode = code;
+    }
+
+    private void RegisterExceptionHandlers()
+    {
+        if (_exceptionHandlersRegistered)
+            return;
+
+        _exceptionHandlersRegistered = true;
+        AppDomain.CurrentDomain.UnhandledException += OnAppDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
+        Dispatcher.UIThread.UnhandledException += OnDispatcherUnhandledException;
+    }
+
+    private void UnregisterExceptionHandlers()
+    {
+        if (!_exceptionHandlersRegistered)
+            return;
+
+        _exceptionHandlersRegistered = false;
+        AppDomain.CurrentDomain.UnhandledException -= OnAppDomainUnhandledException;
+        TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
+        Dispatcher.UIThread.UnhandledException -= OnDispatcherUnhandledException;
+    }
+
+    private void OnAppDomainUnhandledException(object? sender, UnhandledExceptionEventArgs args)
+    {
+        var exception = args.ExceptionObject as Exception
+            ?? new InvalidOperationException($"Unknown unhandled exception: {args.ExceptionObject}");
+        HandleFatalException(exception, "AppDomain", 100);
+    }
+
+    private void OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs args)
+    {
+        args.Handled = true;
+        HandleFatalException(args.Exception, "Dispatcher", 101);
+    }
+
+    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs args)
+    {
+        try
+        {
+            SharedLog.Error("Avalonia unobserved task exception.", args.Exception);
+            CrashReportStore.Save(args.Exception, "TaskScheduler");
+        }
+        finally
+        {
+            args.SetObserved();
+        }
+    }
+
+    private void HandleFatalException(Exception exception, string source, int exitCode)
+    {
+        if (Interlocked.CompareExchange(ref _handlingFatalException, 1, 0) != 0)
+        {
+            Environment.FailFast($"Fatal error: re-entered Avalonia {source} exception handler", exception);
+            return;
+        }
+
+        try
+        {
+            SharedLog.Error($"Avalonia {source} unhandled exception.", exception);
+            CrashReportStore.Save(exception, source);
+        }
+        catch
+        {
+            // A fatal exception must still close the host if reporting itself fails.
+        }
+        finally
+        {
+            try
+            {
+                if (Dispatcher.UIThread.CheckAccess())
+                    ExitApplication(exitCode);
+                else
+                    Dispatcher.UIThread.Post(() => ExitApplication(exitCode));
+            }
+            catch
+            {
+                Environment.Exit(exitCode);
+            }
+        }
+    }
+
+    private void CheckPendingCrashReports()
+    {
+        try
+        {
+            CrashReportStore.CleanupOld();
+            var reports = CrashReportStore.GetUnsent();
+            if (reports.Count == 0)
+                return;
+
+            var mostRecent = reports
+                .OrderByDescending(path => File.GetCreationTimeUtc(path))
+                .FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(mostRecent))
+                return;
+
+            foreach (var report in reports.Where(path => !string.Equals(path, mostRecent, StringComparison.OrdinalIgnoreCase)))
+                CrashReportStore.Delete(report);
+
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: Window owner })
+                new AvaloniaCrashReportWindow(mostRecent).Show(owner);
+        }
+        catch (Exception exception)
+        {
+            SharedLog.Warning("Failed to show pending Avalonia crash report.", exception);
         }
     }
 
