@@ -4,7 +4,9 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using UniversalDeviceToolkit.Plugins.SDK;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 
 namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
@@ -21,6 +23,18 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
     private readonly TextBlock _version;
     private readonly TextBlock _path;
     private readonly TextBlock _status;
+    private Button? _enableButton;
+    private Button? _disableButton;
+    private Button? _openStyleSettingsButton;
+    private Button? _openShellFolderButton;
+    private Button? _openConfigButton;
+    private Button? _openManagedConfigButton;
+    private Button? _syncManagedConfigButton;
+    private Button? _resetManagedConfigButton;
+    private Button? _importProfileButton;
+    private Button? _applyDefaultPresetButton;
+    private Button? _applyCompactDarkPresetButton;
+    private Button? _applyMinimalLightPresetButton;
 
     public AvaloniaShellIntegrationSettingsControl(ShellIntegrationPlugin plugin)
     {
@@ -30,6 +44,7 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
         _path = ValueText();
         _status = new TextBlock { TextWrapping = TextWrapping.Wrap, Foreground = Brushes.Gray };
         AutomationProperties.SetAutomationId(this, "AvaloniaShellIntegrationSettingsRoot");
+        AutomationProperties.SetAutomationId(_status, "AvaloniaShellIntegrationSettingsStatus");
         Content = BuildContent();
         Loaded += async (_, _) => await RefreshAsync().ConfigureAwait(true);
     }
@@ -50,114 +65,180 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
         root.Children.Add(Card(ShellIntegrationText.OverviewTitle, ShellIntegrationText.OverviewDescription, summary));
 
         var actions = new StackPanel { Spacing = 8 };
-        actions.Children.Add(new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children =
-            {
-                ActionButton(ShellIntegrationText.EnableButton, EnableAsync),
-                ActionButton(ShellIntegrationText.DisableButton, DisableAsync),
-                ActionButton(ShellIntegrationText.OpenStyleSettingsButton, (Action)OpenStyleSettings),
-                ActionButton(ShellIntegrationText.SyncManagedConfigButton, SyncAsync),
-                ActionButton(ShellIntegrationText.ResetManagedConfigButton, ResetAsync),
-            },
-        });
-        actions.Children.Add(new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children =
-            {
-                ActionButton(ShellIntegrationText.OpenShellFolderButton, OpenFolder),
-                ActionButton(ShellIntegrationText.OpenConfigButton, OpenConfig),
-                ActionButton(ShellIntegrationText.OpenManagedConfigButton, OpenManaged),
-            },
-        });
+        var managementButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        _enableButton = ActionButton(ShellIntegrationText.EnableButton, EnableAsync, "AvaloniaShellIntegrationEnableButton");
+        _disableButton = ActionButton(ShellIntegrationText.DisableButton, DisableAsync, "AvaloniaShellIntegrationDisableButton");
+        _openStyleSettingsButton = ActionButton(ShellIntegrationText.OpenStyleSettingsButton, OpenStyleSettingsAsync, "AvaloniaShellIntegrationOpenStyleSettingsButton");
+        _syncManagedConfigButton = ActionButton(ShellIntegrationText.SyncManagedConfigButton, SyncAsync, "AvaloniaShellIntegrationSyncButton");
+        _resetManagedConfigButton = ActionButton(ShellIntegrationText.ResetManagedConfigButton, ResetAsync, "AvaloniaShellIntegrationResetButton");
+        managementButtons.Children.Add(_enableButton);
+        managementButtons.Children.Add(_disableButton);
+        managementButtons.Children.Add(_openStyleSettingsButton);
+        managementButtons.Children.Add(_syncManagedConfigButton);
+        managementButtons.Children.Add(_resetManagedConfigButton);
+        actions.Children.Add(managementButtons);
+
+        var fileButtons = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        _openShellFolderButton = ActionButton(ShellIntegrationText.OpenShellFolderButton, OpenFolder, "AvaloniaShellIntegrationOpenShellFolderButton");
+        _openConfigButton = ActionButton(ShellIntegrationText.OpenConfigButton, OpenConfig, "AvaloniaShellIntegrationOpenConfigButton");
+        _openManagedConfigButton = ActionButton(ShellIntegrationText.OpenManagedConfigButton, OpenManaged, "AvaloniaShellIntegrationOpenManagedConfigButton");
+        fileButtons.Children.Add(_openShellFolderButton);
+        fileButtons.Children.Add(_openConfigButton);
+        fileButtons.Children.Add(_openManagedConfigButton);
+        actions.Children.Add(fileButtons);
         root.Children.Add(Card(ShellIntegrationText.ActionsTitle, ShellIntegrationText.ActionsDescription, actions));
 
-        var presets = new StackPanel
-        {
-            Orientation = Orientation.Horizontal,
-            Spacing = 8,
-            Children =
-            {
-                ActionButton(ShellIntegrationText.PresetDefaultButton, () => ApplyPresetAsync(ShellIntegrationPreset.Default)),
-                ActionButton(ShellIntegrationText.PresetCompactDarkButton, () => ApplyPresetAsync(ShellIntegrationPreset.CompactDark)),
-                ActionButton(ShellIntegrationText.PresetMinimalLightButton, () => ApplyPresetAsync(ShellIntegrationPreset.MinimalLight)),
-                ActionButton(ShellIntegrationText.ExportProfileButton, ExportAsync),
-                ActionButton(ShellIntegrationText.ImportProfileButton, ImportAsync),
-            },
-        };
+        var presets = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+        _applyDefaultPresetButton = ActionButton(ShellIntegrationText.PresetDefaultButton, () => ApplyPresetAsync(ShellIntegrationPreset.Default), "AvaloniaShellIntegrationDefaultPresetButton");
+        _applyCompactDarkPresetButton = ActionButton(ShellIntegrationText.PresetCompactDarkButton, () => ApplyPresetAsync(ShellIntegrationPreset.CompactDark), "AvaloniaShellIntegrationCompactDarkPresetButton");
+        _applyMinimalLightPresetButton = ActionButton(ShellIntegrationText.PresetMinimalLightButton, () => ApplyPresetAsync(ShellIntegrationPreset.MinimalLight), "AvaloniaShellIntegrationMinimalLightPresetButton");
+        var exportProfileButton = ActionButton(ShellIntegrationText.ExportProfileButton, ExportAsync, "AvaloniaShellIntegrationExportProfileButton");
+        _importProfileButton = ActionButton(ShellIntegrationText.ImportProfileButton, ImportAsync, "AvaloniaShellIntegrationImportProfileButton");
+        presets.Children.Add(_applyDefaultPresetButton);
+        presets.Children.Add(_applyCompactDarkPresetButton);
+        presets.Children.Add(_applyMinimalLightPresetButton);
+        presets.Children.Add(exportProfileButton);
+        presets.Children.Add(_importProfileButton);
         root.Children.Add(Card(ShellIntegrationText.PresetsTitle, ShellIntegrationText.PresetsDescription, presets));
         root.Children.Add(Card(ShellIntegrationText.StatusDetected, ShellIntegrationText.OptimizationHint, _status));
         return new ScrollViewer { Content = root, HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled };
     }
 
-    private Task RefreshAsync()
+    private Task RefreshAsync(string? suffix = null, bool? isError = null)
     {
         var installed = _plugin.IsShellInstalled();
         var registered = installed && _plugin.IsShellRegistered();
+        var shellFolder = _plugin.GetShellFolderPath();
+        var shellConfigPath = _plugin.GetShellConfigPath();
+        var configExists = !string.IsNullOrWhiteSpace(shellConfigPath) && File.Exists(shellConfigPath);
+        var allowSystemActions = PluginHostContextRuntime.Current.AllowSystemActions;
+        var isPreview = PluginHostContextRuntime.Current.Mode == UniversalDeviceToolkit.Lib.Plugins.PluginHostMode.Preview;
+        var canManageShell = installed && allowSystemActions;
+        var canManageConfig = installed;
+
         _registration.Text = registered
             ? ShellIntegrationText.RegisteredState
             : installed ? ShellIntegrationText.MissingState : ShellIntegrationText.NotFound;
         _version.Text = _plugin.GetShellVersion() ?? ShellIntegrationText.NotFound;
         _path.Text = _plugin.GetShellInstallPath() ?? ShellIntegrationText.NotFound;
-        _status.Text = registered
+
+        if (_enableButton is not null)
+        {
+            _enableButton.IsVisible = !registered;
+            _enableButton.IsEnabled = canManageShell;
+        }
+
+        if (_disableButton is not null)
+        {
+            _disableButton.IsVisible = registered;
+            _disableButton.IsEnabled = canManageShell;
+        }
+
+        if (_openStyleSettingsButton is not null)
+            _openStyleSettingsButton.IsEnabled = canManageShell || isPreview;
+        if (_openShellFolderButton is not null)
+            _openShellFolderButton.IsEnabled = !string.IsNullOrWhiteSpace(shellFolder);
+        if (_openConfigButton is not null)
+            _openConfigButton.IsEnabled = configExists;
+        if (_openManagedConfigButton is not null)
+            _openManagedConfigButton.IsEnabled = canManageConfig;
+        if (_syncManagedConfigButton is not null)
+            _syncManagedConfigButton.IsEnabled = canManageConfig;
+        if (_resetManagedConfigButton is not null)
+            _resetManagedConfigButton.IsEnabled = canManageConfig;
+        if (_importProfileButton is not null)
+            _importProfileButton.IsEnabled = canManageConfig;
+        if (_applyDefaultPresetButton is not null)
+            _applyDefaultPresetButton.IsEnabled = canManageConfig;
+        if (_applyCompactDarkPresetButton is not null)
+            _applyCompactDarkPresetButton.IsEnabled = canManageConfig;
+        if (_applyMinimalLightPresetButton is not null)
+            _applyMinimalLightPresetButton.IsEnabled = canManageConfig;
+
+        var prefix = registered
             ? ShellIntegrationText.StatusDetected
             : installed ? ShellIntegrationText.StatusRegistrationMissing : ShellIntegrationText.StatusNotDetected;
+        var status = $"{prefix}\n{ShellIntegrationText.PathLabel}: {_path.Text}";
+        if (!string.Equals(_version.Text, ShellIntegrationText.NotFound, StringComparison.Ordinal))
+            status += $"\n{ShellIntegrationText.VersionLabel}: {_version.Text}";
+        if (!allowSystemActions)
+            status += "\nPreview mode: runtime actions are disabled.";
+        if (!string.IsNullOrWhiteSpace(suffix))
+            status += $"\n{suffix}";
+
+        _status.Text = status;
+        var effectiveIsError = isError ?? (!installed || !registered);
+        _status.Foreground = effectiveIsError
+            ? Brushes.IndianRed
+            : Brushes.SeaGreen;
         return Task.CompletedTask;
     }
 
     private async Task EnableAsync()
     {
         var success = await _plugin.EnableShellAsync().ConfigureAwait(true);
-        _status.Text = success ? ShellIntegrationText.StatusEnableCompleted : ShellIntegrationText.StatusEnableFailed;
-        await RefreshAsync().ConfigureAwait(true);
+        await RefreshAsync(
+            success ? ShellIntegrationText.StatusEnableCompleted : ShellIntegrationText.StatusEnableFailed,
+            !success).ConfigureAwait(true);
     }
 
     private async Task DisableAsync()
     {
         var success = await _plugin.DisableShellAsync().ConfigureAwait(true);
-        _status.Text = success ? ShellIntegrationText.StatusDisableCompleted : ShellIntegrationText.StatusDisableFailed;
-        await RefreshAsync().ConfigureAwait(true);
+        await RefreshAsync(
+            success ? ShellIntegrationText.StatusDisableCompleted : ShellIntegrationText.StatusDisableFailed,
+            !success).ConfigureAwait(true);
     }
 
     private async Task SyncAsync()
     {
         var success = await _plugin.SyncManagedConfigurationAsync().ConfigureAwait(true);
-        _status.Text = success ? ShellIntegrationText.StatusManagedConfigSyncCompleted : ShellIntegrationText.StatusManagedConfigSyncFailed;
+        await RefreshAsync(
+            success ? ShellIntegrationText.StatusManagedConfigSyncCompleted : ShellIntegrationText.StatusManagedConfigSyncFailed,
+            !success).ConfigureAwait(true);
     }
 
     private async Task ResetAsync()
     {
         var success = await _plugin.ResetManagedConfigurationAsync().ConfigureAwait(true);
-        _status.Text = success ? ShellIntegrationText.StatusManagedConfigResetCompleted : ShellIntegrationText.StatusManagedConfigResetFailed;
+        await RefreshAsync(
+            success ? ShellIntegrationText.StatusManagedConfigResetCompleted : ShellIntegrationText.StatusManagedConfigResetFailed,
+            !success).ConfigureAwait(true);
     }
 
     private async Task ApplyPresetAsync(ShellIntegrationPreset preset)
     {
         var success = await _plugin.ApplyPresetAsync(preset).ConfigureAwait(true);
-        _status.Text = success
+        await RefreshAsync(success
             ? preset switch
             {
                 ShellIntegrationPreset.CompactDark => ShellIntegrationText.StatusPresetAppliedCompactDark,
                 ShellIntegrationPreset.MinimalLight => ShellIntegrationText.StatusPresetAppliedMinimalLight,
                 _ => ShellIntegrationText.StatusPresetAppliedDefault,
             }
-            : ShellIntegrationText.StatusPresetApplyFailed;
+            : ShellIntegrationText.StatusPresetApplyFailed,
+            !success).ConfigureAwait(true);
     }
 
-    private void OpenFolder() => _status.Text = _plugin.OpenShellFolder()
-        ? ShellIntegrationText.StatusOpenedShellFolder : ShellIntegrationText.StatusShellFolderNotFound;
+    private async void OpenFolder() => await RefreshAsync(
+        _plugin.OpenShellFolder()
+            ? ShellIntegrationText.StatusOpenedShellFolder
+            : ShellIntegrationText.StatusShellFolderNotFound,
+        !_plugin.IsShellInstalled()).ConfigureAwait(true);
 
-    private void OpenConfig() => _status.Text = _plugin.OpenShellConfigFile()
-        ? ShellIntegrationText.StatusOpenedConfig : ShellIntegrationText.StatusConfigNotFound;
+    private async void OpenConfig() => await RefreshAsync(
+        _plugin.OpenShellConfigFile()
+            ? ShellIntegrationText.StatusOpenedConfig
+            : ShellIntegrationText.StatusConfigNotFound,
+        !File.Exists(_plugin.GetShellConfigPath() ?? string.Empty)).ConfigureAwait(true);
 
-    private void OpenManaged() => _status.Text = _plugin.OpenManagedConfigFolder()
-        ? ShellIntegrationText.StatusOpenedManagedConfig : ShellIntegrationText.StatusManagedConfigFolderUnavailable;
+    private async void OpenManaged() => await RefreshAsync(
+        _plugin.OpenManagedConfigFolder()
+            ? ShellIntegrationText.StatusOpenedManagedConfig
+            : ShellIntegrationText.StatusManagedConfigFolderUnavailable,
+        !_plugin.IsShellInstalled()).ConfigureAwait(true);
 
-    private void OpenStyleSettings()
+    private async Task OpenStyleSettingsAsync()
     {
         var window = new Window
         {
@@ -166,10 +247,16 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
             Height = 620,
             MinWidth = 560,
             MinHeight = 420,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            FlowDirection = ResolveFlowDirection(),
             Content = new AvaloniaShellIntegrationStyleSettingsControl(_plugin),
         };
-        window.Show();
-        _status.Text = ShellIntegrationText.StatusOpenedStyleSettings;
+        if (TopLevel.GetTopLevel(this) is Window owner)
+            await window.ShowDialog(owner).ConfigureAwait(true);
+        else
+            window.Show();
+
+        await RefreshAsync(ShellIntegrationText.StatusOpenedStyleSettings, false).ConfigureAwait(true);
     }
 
     private async Task ExportAsync()
@@ -181,7 +268,9 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
         }
 
         var success = _plugin.ExportProfile(file.Path.LocalPath, out var error);
-        _status.Text = success ? ShellIntegrationText.StatusProfileExportCompleted : ShellIntegrationText.StatusProfileExportFailed + " " + error;
+        await RefreshAsync(
+            success ? ShellIntegrationText.StatusProfileExportCompleted : ShellIntegrationText.StatusProfileExportFailed + " " + error,
+            !success).ConfigureAwait(true);
     }
 
     private async Task ImportAsync()
@@ -193,7 +282,9 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
         }
 
         var result = await _plugin.ImportProfileAsync(file.Path.LocalPath).ConfigureAwait(true);
-        _status.Text = result.Success ? ShellIntegrationText.StatusProfileImportCompleted : ShellIntegrationText.StatusProfileImportFailed + " " + result.Error;
+        await RefreshAsync(
+            result.Success ? ShellIntegrationText.StatusProfileImportCompleted : ShellIntegrationText.StatusProfileImportFailed + " " + result.Error,
+            !result.Success).ConfigureAwait(true);
     }
 
     private async Task<IStorageFile?> PickSaveFileAsync()
@@ -248,20 +339,33 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
         };
     }
 
-    private static Button ActionButton(string text, Func<Task> action)
+    private static Button ActionButton(string text, Func<Task> action, string? automationId = null)
     {
         var button = new Button { Content = text, Padding = new Thickness(12, 7), MinWidth = 120 };
+        if (!string.IsNullOrWhiteSpace(automationId))
+            AutomationProperties.SetAutomationId(button, automationId);
         ToolTip.SetTip(button, text);
         button.Click += async (_, _) => await action().ConfigureAwait(true);
         return button;
     }
 
-    private static Button ActionButton(string text, Action action)
+    private static Button ActionButton(string text, Action action, string? automationId = null)
     {
         var button = new Button { Content = text, Padding = new Thickness(12, 7), MinWidth = 120 };
+        if (!string.IsNullOrWhiteSpace(automationId))
+            AutomationProperties.SetAutomationId(button, automationId);
         ToolTip.SetTip(button, text);
         button.Click += (_, _) => action();
         return button;
+    }
+
+    private static FlowDirection ResolveFlowDirection()
+    {
+        var culture = UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.Culture
+                      ?? CultureInfo.CurrentUICulture;
+        return culture.TextInfo.IsRightToLeft
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
     }
 }
 
@@ -280,6 +384,7 @@ public sealed class AvaloniaShellIntegrationStyleSettingsControl : UserControl
         var configPath = plugin.GetShellConfigPath();
         var importsFolder = string.IsNullOrWhiteSpace(shellFolder) ? null : Path.Combine(shellFolder, "imports");
         var root = new StackPanel { Spacing = 10, Margin = new Thickness(20) };
+        root.FlowDirection = ResolveFlowDirection();
         root.Children.Add(new TextBlock
         {
             Text = ShellIntegrationText.SettingsPageTitle,
@@ -288,12 +393,12 @@ public sealed class AvaloniaShellIntegrationStyleSettingsControl : UserControl
             TextWrapping = TextWrapping.Wrap,
         });
         root.Children.Add(_status);
-        root.Children.Add(PathRow("shell.nss", configPath, ShellIntegrationText.OpenFileButton, false));
-        root.Children.Add(PathRow("theme.nss", Join(importsFolder, "theme.nss"), ShellIntegrationText.OpenFileButton, false));
-        root.Children.Add(PathRow("images.nss", Join(importsFolder, "images.nss"), ShellIntegrationText.OpenFileButton, false));
-        root.Children.Add(PathRow("modify.nss", Join(importsFolder, "modify.nss"), ShellIntegrationText.OpenFileButton, false));
-        root.Children.Add(PathRow("imports", importsFolder, ShellIntegrationText.OpenFolderButton, true));
-        root.Children.Add(PathRow("Shell Folder", shellFolder, ShellIntegrationText.OpenShellFolderButton, true));
+        root.Children.Add(PathRow("shell.nss", configPath, ShellIntegrationText.OpenFileButton, false, "AvaloniaShellIntegrationOpenShellConfigFileButton"));
+        root.Children.Add(PathRow("theme.nss", Join(importsFolder, "theme.nss"), ShellIntegrationText.OpenFileButton, false, "AvaloniaShellIntegrationOpenThemeFileButton"));
+        root.Children.Add(PathRow("images.nss", Join(importsFolder, "images.nss"), ShellIntegrationText.OpenFileButton, false, "AvaloniaShellIntegrationOpenImagesFileButton"));
+        root.Children.Add(PathRow("modify.nss", Join(importsFolder, "modify.nss"), ShellIntegrationText.OpenFileButton, false, "AvaloniaShellIntegrationOpenModifyFileButton"));
+        root.Children.Add(PathRow("imports", importsFolder, ShellIntegrationText.OpenFolderButton, true, "AvaloniaShellIntegrationOpenImportsFolderButton"));
+        root.Children.Add(PathRow("Shell Folder", shellFolder, ShellIntegrationText.OpenShellFolderButton, true, "AvaloniaShellIntegrationOpenShellFolderButton"));
         Content = new ScrollViewer
         {
             HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
@@ -302,7 +407,7 @@ public sealed class AvaloniaShellIntegrationStyleSettingsControl : UserControl
         AutomationProperties.SetAutomationId(this, "AvaloniaShellIntegrationStyleSettingsRoot");
     }
 
-    private Border PathRow(string title, string? path, string actionLabel, bool directory)
+    private Border PathRow(string title, string? path, string actionLabel, bool directory, string automationId)
     {
         var value = new TextBlock
         {
@@ -311,6 +416,7 @@ public sealed class AvaloniaShellIntegrationStyleSettingsControl : UserControl
             Foreground = string.IsNullOrWhiteSpace(path) ? Brushes.IndianRed : Brushes.Gray,
         };
         var open = new Button { Content = actionLabel, MinWidth = 120, Padding = new Thickness(12, 7), IsEnabled = !string.IsNullOrWhiteSpace(path) };
+        AutomationProperties.SetAutomationId(open, automationId);
         ToolTip.SetTip(open, actionLabel);
         open.Click += (_, _) => OpenPath(path, directory);
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 12 };
@@ -350,4 +456,13 @@ public sealed class AvaloniaShellIntegrationStyleSettingsControl : UserControl
 
     private static string? Join(string? directory, string fileName) =>
         string.IsNullOrWhiteSpace(directory) ? null : Path.Combine(directory, fileName);
+
+    private static FlowDirection ResolveFlowDirection()
+    {
+        var culture = UniversalDeviceToolkit.Plugins.ShellIntegration.Resources.Resource.Culture
+                      ?? CultureInfo.CurrentUICulture;
+        return culture.TextInfo.IsRightToLeft
+            ? FlowDirection.RightToLeft
+            : FlowDirection.LeftToRight;
+    }
 }
