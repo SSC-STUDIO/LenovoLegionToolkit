@@ -41,6 +41,7 @@ public interface IPlatformServices
     Task<BalanceModeSettingsState> GetBalanceModeSettingsAsync();
     Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled);
     Task<GodModeSettingsState> GetGodModeSettingsAsync();
+    Task<IReadOnlyList<ushort>?> GetDefaultGodModeFanCurveAsync();
     Task<bool> SetGodModePresetAsync(Guid presetId);
     Task<bool> AddGodModePresetAsync(string name);
     Task<bool> RenameGodModePresetAsync(Guid presetId, string name);

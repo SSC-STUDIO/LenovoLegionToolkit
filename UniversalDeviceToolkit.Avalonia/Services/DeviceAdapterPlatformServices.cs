@@ -355,6 +355,9 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
             Guid.Empty,
             Array.Empty<GodModePresetState>()));
 
+    public Task<IReadOnlyList<ushort>?> GetDefaultGodModeFanCurveAsync() =>
+        Task.FromResult<IReadOnlyList<ushort>?>(null);
+
     public Task<bool> SetGodModePresetAsync(Guid presetId) =>
         Task.FromResult(false);
 

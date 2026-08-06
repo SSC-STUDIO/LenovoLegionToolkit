@@ -226,6 +226,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.GetGodModeSettingsAsync()
             : _featureHost.GetGodModeSettingsAsync();
 
+    public Task<IReadOnlyList<ushort>?> GetDefaultGodModeFanCurveAsync() =>
+        _featureHost is null
+            ? _inner.GetDefaultGodModeFanCurveAsync()
+            : _featureHost.GetDefaultGodModeFanCurveAsync();
+
     public Task<bool> SetGodModePresetAsync(Guid presetId) =>
         _featureHost is null
             ? _inner.SetGodModePresetAsync(presetId)

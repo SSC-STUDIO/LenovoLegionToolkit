@@ -383,6 +383,26 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public async Task<IReadOnlyList<ushort>?> GetDefaultGodModeFanCurveAsync()
+    {
+        if (_godModeController is null)
+            return null;
+
+        try
+        {
+            if (!await _godModeController.IsSupportedAsync().ConfigureAwait(false))
+                return null;
+
+            var table = (await _godModeController.GetDefaultFanTableAsync().ConfigureAwait(false))
+                .GetTable();
+            return [.. table];
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public async Task<bool> SetGodModePresetAsync(Guid presetId)
     {
         if (_godModeController is null)

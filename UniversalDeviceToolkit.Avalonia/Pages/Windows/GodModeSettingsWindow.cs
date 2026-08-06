@@ -34,6 +34,7 @@ public sealed class GodModeSettingsWindow : Window
     private NumericUpDown? _minOffsetEditor;
     private NumericUpDown? _maxOffsetEditor;
     private ToggleSwitch? _fanFullSpeedEditor;
+    private Button? _defaultFanCurveButton;
     private GodModeSettingsState? _state;
     private GodModePresetState? _activePreset;
     private bool _isLoaded;
@@ -246,6 +247,7 @@ public sealed class GodModeSettingsWindow : Window
         _activePreset = preset;
         _valueEditors.Clear();
         _fanEditors.Clear();
+        _defaultFanCurveButton = null;
         _minOffsetEditor = null;
         _maxOffsetEditor = null;
         _fanFullSpeedEditor = null;
@@ -303,6 +305,13 @@ public sealed class GodModeSettingsWindow : Window
                     });
                 }
                 _fanPanel.Children.Add(curveGrid);
+
+                _defaultFanCurveButton = ActionButton(
+                    Get("Default", "Default"),
+                    "GodModeDefaultFanCurveButton",
+                    RestoreDefaultFanCurveAsync);
+                _defaultFanCurveButton.HorizontalAlignment = HorizontalAlignment.Left;
+                _fanPanel.Children.Add(_defaultFanCurveButton);
             }
 
             if (preset.FanFullSpeed.HasValue)
@@ -339,6 +348,38 @@ public sealed class GodModeSettingsWindow : Window
                     -100,
                     0,
                     "GodModeMinValueOffset");
+        }
+    }
+
+    private async Task RestoreDefaultFanCurveAsync()
+    {
+        if (_fanEditors.Count != 10 || _defaultFanCurveButton is null)
+            return;
+
+        _defaultFanCurveButton.IsEnabled = false;
+        try
+        {
+            var defaultCurve = await _platformServices
+                .GetDefaultGodModeFanCurveAsync()
+                .ConfigureAwait(true);
+            if (defaultCurve is not { Count: 10 })
+            {
+                SetError(Get(
+                    "GodModeSettingsWindow_DefaultFanCurveFailed",
+                    "The default fan curve is unavailable."));
+                return;
+            }
+
+            for (var index = 0; index < _fanEditors.Count; index++)
+                _fanEditors[index].Value = defaultCurve[index];
+
+            SetSuccess(Get(
+                "GodModeSettingsWindow_DefaultFanCurveApplied",
+                "The default fan curve was restored. Save to apply it."));
+        }
+        finally
+        {
+            _defaultFanCurveButton.IsEnabled = _state?.IsAvailable == true;
         }
     }
 

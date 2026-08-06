@@ -143,6 +143,25 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public async Task GodModeFanCurve_DefaultRestoreRemainsReachableInAvalonia()
+    {
+        var services = new UnavailablePlatformServices();
+
+        (await services.GetDefaultGodModeFanCurveAsync()).Should().BeNull();
+
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "Windows",
+            "GodModeSettingsWindow.cs"));
+
+        source.Should().Contain("GodModeDefaultFanCurveButton");
+        source.Should().Contain("GetDefaultGodModeFanCurveAsync");
+    }
+
+    [Fact]
     public void DashboardItemPicker_FiltersExistingItemsAcrossGroupsAndPreservesWhiteBacklightPersistence()
     {
         var services = new UnavailablePlatformServices();
