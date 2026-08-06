@@ -15,6 +15,7 @@ public class LocalizedTextBlock : TextBlock
 {
     private bool _ownsAutomationName;
     private bool _ownsToolTip;
+    private bool _ownsHelpText;
     public static readonly StyledProperty<LocalizedOverflowMode> OverflowModeProperty =
         AvaloniaProperty.Register<LocalizedTextBlock, LocalizedOverflowMode>(
             nameof(OverflowMode), LocalizedOverflowMode.Ellipsis);
@@ -104,15 +105,32 @@ public class LocalizedTextBlock : TextBlock
             : MaxLines > 0 && layout.TextLines.Count >= MaxLines
                 && layout.Height >= Bounds.Height - 1;
 
-        if (truncated)
+        // Avalonia's character-collapsing layout reports the collapsed width,
+        // so a post-layout width comparison cannot distinguish an ellipsized
+        // value reliably. Expose the full source text for every Ellipsis slot;
+        // the tooltip remains opt-in through AutoToolTip and never changes the
+        // rendered layout.
+        if (truncated || OverflowMode == LocalizedOverflowMode.Ellipsis)
         {
             global::Avalonia.Controls.ToolTip.SetTip(this, Text);
             _ownsToolTip = true;
+
+            if (_ownsHelpText || string.IsNullOrWhiteSpace(AutomationProperties.GetHelpText(this)))
+            {
+                AutomationProperties.SetHelpText(this, Text);
+                _ownsHelpText = true;
+            }
         }
         else if (_ownsToolTip)
         {
             global::Avalonia.Controls.ToolTip.SetTip(this, null);
             _ownsToolTip = false;
+
+            if (_ownsHelpText)
+            {
+                AutomationProperties.SetHelpText(this, null);
+                _ownsHelpText = false;
+            }
         }
     }
 }
