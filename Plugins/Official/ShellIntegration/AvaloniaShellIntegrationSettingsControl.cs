@@ -4,6 +4,8 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using System.Diagnostics;
+using System.IO;
 
 namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 
@@ -56,6 +58,7 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
             {
                 ActionButton(ShellIntegrationText.EnableButton, EnableAsync),
                 ActionButton(ShellIntegrationText.DisableButton, DisableAsync),
+                ActionButton(ShellIntegrationText.OpenStyleSettingsButton, (Action)OpenStyleSettings),
                 ActionButton(ShellIntegrationText.SyncManagedConfigButton, SyncAsync),
                 ActionButton(ShellIntegrationText.ResetManagedConfigButton, ResetAsync),
             },
@@ -154,6 +157,21 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
     private void OpenManaged() => _status.Text = _plugin.OpenManagedConfigFolder()
         ? ShellIntegrationText.StatusOpenedManagedConfig : ShellIntegrationText.StatusManagedConfigFolderUnavailable;
 
+    private void OpenStyleSettings()
+    {
+        var window = new Window
+        {
+            Title = ShellIntegrationText.SettingsPageTitle,
+            Width = 760,
+            Height = 620,
+            MinWidth = 560,
+            MinHeight = 420,
+            Content = new AvaloniaShellIntegrationStyleSettingsControl(_plugin),
+        };
+        window.Show();
+        _status.Text = ShellIntegrationText.StatusOpenedStyleSettings;
+    }
+
     private async Task ExportAsync()
     {
         var file = await PickSaveFileAsync().ConfigureAwait(true);
@@ -245,4 +263,91 @@ public sealed class AvaloniaShellIntegrationSettingsControl : UserControl
         button.Click += (_, _) => action();
         return button;
     }
+}
+
+/// <summary>
+/// Avalonia equivalent of the WPF style resource window. It exposes the same
+/// packaged Shell paths without depending on WPF dialogs or resource themes.
+/// </summary>
+public sealed class AvaloniaShellIntegrationStyleSettingsControl : UserControl
+{
+    private readonly TextBlock _status = new() { TextWrapping = TextWrapping.Wrap };
+
+    public AvaloniaShellIntegrationStyleSettingsControl(ShellIntegrationPlugin plugin)
+    {
+        ArgumentNullException.ThrowIfNull(plugin);
+        var shellFolder = plugin.GetShellFolderPath();
+        var configPath = plugin.GetShellConfigPath();
+        var importsFolder = string.IsNullOrWhiteSpace(shellFolder) ? null : Path.Combine(shellFolder, "imports");
+        var root = new StackPanel { Spacing = 10, Margin = new Thickness(20) };
+        root.Children.Add(new TextBlock
+        {
+            Text = ShellIntegrationText.SettingsPageTitle,
+            FontSize = 22,
+            FontWeight = FontWeight.SemiBold,
+            TextWrapping = TextWrapping.Wrap,
+        });
+        root.Children.Add(_status);
+        root.Children.Add(PathRow("shell.nss", configPath, ShellIntegrationText.OpenFileButton, false));
+        root.Children.Add(PathRow("theme.nss", Join(importsFolder, "theme.nss"), ShellIntegrationText.OpenFileButton, false));
+        root.Children.Add(PathRow("images.nss", Join(importsFolder, "images.nss"), ShellIntegrationText.OpenFileButton, false));
+        root.Children.Add(PathRow("modify.nss", Join(importsFolder, "modify.nss"), ShellIntegrationText.OpenFileButton, false));
+        root.Children.Add(PathRow("imports", importsFolder, ShellIntegrationText.OpenFolderButton, true));
+        root.Children.Add(PathRow("Shell Folder", shellFolder, ShellIntegrationText.OpenShellFolderButton, true));
+        Content = new ScrollViewer
+        {
+            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+            Content = root,
+        };
+        AutomationProperties.SetAutomationId(this, "AvaloniaShellIntegrationStyleSettingsRoot");
+    }
+
+    private Border PathRow(string title, string? path, string actionLabel, bool directory)
+    {
+        var value = new TextBlock
+        {
+            Text = string.IsNullOrWhiteSpace(path) ? ShellIntegrationText.NotFound : path,
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = string.IsNullOrWhiteSpace(path) ? Brushes.IndianRed : Brushes.Gray,
+        };
+        var open = new Button { Content = actionLabel, MinWidth = 120, Padding = new Thickness(12, 7), IsEnabled = !string.IsNullOrWhiteSpace(path) };
+        ToolTip.SetTip(open, actionLabel);
+        open.Click += (_, _) => OpenPath(path, directory);
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 12 };
+        var copy = new StackPanel { Spacing = 4, MinWidth = 0 };
+        copy.Children.Add(new TextBlock { Text = title, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
+        copy.Children.Add(value);
+        Grid.SetColumn(copy, 0);
+        Grid.SetColumn(open, 1);
+        grid.Children.Add(copy);
+        grid.Children.Add(open);
+        return new Border
+        {
+            Padding = new Thickness(14, 12),
+            BorderThickness = new Thickness(1),
+            BorderBrush = Brushes.Gray,
+            CornerRadius = new CornerRadius(8),
+            Child = grid,
+        };
+    }
+
+    private void OpenPath(string? path, bool directory)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return;
+        var exists = directory ? Directory.Exists(path) : File.Exists(path);
+        if (!exists)
+        {
+            _status.Text = directory ? ShellIntegrationText.StatusShellFolderNotFound : ShellIntegrationText.StatusConfigNotFound;
+            _status.Foreground = Brushes.IndianRed;
+            return;
+        }
+
+        Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
+        _status.Text = directory ? ShellIntegrationText.StatusOpenedShellFolder : ShellIntegrationText.StatusOpenedConfig;
+        _status.Foreground = Brushes.SeaGreen;
+    }
+
+    private static string? Join(string? directory, string fileName) =>
+        string.IsNullOrWhiteSpace(directory) ? null : Path.Combine(directory, fileName);
 }
