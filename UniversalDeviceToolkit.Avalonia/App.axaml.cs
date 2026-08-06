@@ -92,6 +92,10 @@ public partial class App : Application
             _applicationSettings ??= WindowsAvaloniaSettingsService.SharedApplicationSettings;
 #endif
             desktop.MainWindow = new MainWindow(PlatformServices);
+#if WINDOWS
+            PluginHostContext.SetCurrent(new AvaloniaPluginHostContext(
+                () => desktop.MainWindow as MainWindow));
+#endif
             // Minimize to tray instead of closing
             desktop.MainWindow.Closing += OnMainWindowClosing;
 
@@ -278,6 +282,7 @@ public partial class App : Application
     {
         IsExiting = true;
 #if WINDOWS
+        PluginHostContext.Reset();
         try
         {
             IoCContainer.TryResolve<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>()?

@@ -54,6 +54,18 @@ public sealed class AvaloniaMigrationContractTests
         }
     }
 
+    [Fact]
+    public void AvaloniaPluginHostContext_ExposesRealRuntimeCapabilities()
+    {
+        var context = new AvaloniaPluginHostContext(() => null);
+
+        context.Mode.Should().Be(UniversalDeviceToolkit.Lib.Plugins.PluginHostMode.RealRuntime);
+        context.AllowSystemActions.Should().BeTrue();
+        context.OwnerWindow.Should().BeNull();
+        context.OpenPluginSettings(string.Empty).Should().BeFalse();
+        context.ShowDialog(null!).Should().BeNull();
+    }
+
     [Theory]
     [InlineData("CPU Usage", "CPU", "cpu")]
     [InlineData("GPU Temperature", "Temperature", "gpu")]
