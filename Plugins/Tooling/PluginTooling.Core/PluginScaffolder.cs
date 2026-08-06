@@ -61,6 +61,7 @@ public sealed class PluginScaffolder
         File.WriteAllText(Path.Combine(pluginDirectory, "CHANGELOG.md"), PluginRepository.NormalizeLineEndings(BuildPluginChangelog(request.DisplayName)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Text.cs"), PluginRepository.NormalizeLineEndings(BuildTextClass(namespaceSegment, classPrefix, request)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Plugin.cs"), PluginRepository.NormalizeLineEndings(BuildPluginClass(namespaceSegment, classPrefix, request, description, archetype)));
+        File.WriteAllText(Path.Combine(pluginDirectory, $"Avalonia{classPrefix}Pages.cs"), PluginRepository.NormalizeLineEndings(BuildAvaloniaPages(namespaceSegment, classPrefix, archetype)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}Control", request.DisplayName, "Feature preview")));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "Control")));
 
@@ -170,6 +171,10 @@ public sealed class PluginScaffolder
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
@@ -368,6 +373,7 @@ public sealed class {{classPrefix}}FeaturePage : IPluginPage
     public string? PageIcon => "{{DefaultIcon}}";
 
     public object CreatePage() => new {{classPrefix}}Control();
+{{(archetype.HasFeaturePage ? $"    public object CreateAvaloniaPage() => new Avalonia{classPrefix}FeaturePage();{Environment.NewLine}" : string.Empty)}}
 }
 
 public sealed class {{classPrefix}}SettingsPage : IPluginPage
@@ -376,7 +382,82 @@ public sealed class {{classPrefix}}SettingsPage : IPluginPage
     public string? PageIcon => "Settings24";
 
     public object CreatePage() => new {{classPrefix}}SettingsControl();
+{{(archetype.HasSettingsPage ? $"    public object CreateAvaloniaPage() => new Avalonia{classPrefix}SettingsPage();{Environment.NewLine}" : string.Empty)}}
 }
+""";
+    }
+
+    private static string BuildAvaloniaPages(string namespaceSegment, string classPrefix, ArchetypeDefinition archetype)
+    {
+        var featurePage = archetype.HasFeaturePage
+            ? $$"""
+
+public sealed class Avalonia{{classPrefix}}FeaturePage : UserControl
+{
+    public Avalonia{{classPrefix}}FeaturePage()
+    {
+        Content = {{classPrefix}}AvaloniaPageBuilder.Build(
+            {{classPrefix}}Text.FeaturePageTitle,
+            {{classPrefix}}Text.FeaturePageDescription);
+    }
+}
+"""
+            : string.Empty;
+        var settingsPage = archetype.HasSettingsPage
+            ? $$"""
+
+public sealed class Avalonia{{classPrefix}}SettingsPage : UserControl
+{
+    public Avalonia{{classPrefix}}SettingsPage()
+    {
+        Content = {{classPrefix}}AvaloniaPageBuilder.Build(
+            {{classPrefix}}Text.SettingsPageTitle,
+            {{classPrefix}}Text.SettingsPageDescription);
+    }
+}
+"""
+            : string.Empty;
+
+        return $$"""
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Layout;
+using Avalonia.Media;
+
+namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}};
+
+internal static class {{classPrefix}}AvaloniaPageBuilder
+{
+    public static Control Build(string title, string description)
+    {
+        return new Border
+        {
+            Padding = new Thickness(24),
+            CornerRadius = new CornerRadius(16),
+            Child = new StackPanel
+            {
+                Spacing = 8,
+                Children =
+                {
+                    new TextBlock
+                    {
+                        Text = title,
+                        FontSize = 24,
+                        FontWeight = FontWeight.SemiBold,
+                        TextWrapping = TextWrapping.Wrap
+                    },
+                    new TextBlock
+                    {
+                        Text = description,
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = new SolidColorBrush(Color.FromArgb(190, 90, 90, 90))
+                    }
+                }
+            }
+        };
+    }
+}
+{{featurePage}}{{settingsPage}}
 """;
     }
 
