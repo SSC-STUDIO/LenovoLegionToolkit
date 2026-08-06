@@ -1150,8 +1150,10 @@ internal static partial class Program
                 ? windowRect.Width / _activeWindowWidth
                 : 1d;
             var shellMargin = 12d * Math.Clamp(scale, 0.75d, 3d);
+            var leftNavigationWidth = avaloniaPage.Bounds.Left - windowRect.Left - (shellMargin * 2);
+            var rightNavigationWidth = windowRect.Right - avaloniaPage.Bounds.Right - (shellMargin * 2);
             return RememberNavigationPaneWidth(
-                Math.Max(0, avaloniaPage.Bounds.Left - windowRect.Left - (shellMargin * 2)));
+                Math.Max(0, Math.Max(leftNavigationWidth, rightNavigationWidth)));
         }
 
         if (_lastNavigationPaneWidth is { } lastWidth)
@@ -1783,10 +1785,15 @@ internal static partial class Program
                 var overlap = IntersectionArea(left, right);
                 var smallerArea = Math.Min(left.Width!.Value * left.Height!.Value, right.Width!.Value * right.Height!.Value);
                 if (smallerArea > 0 && overlap / smallerArea >= 0.20)
+                {
+                    if (IsToggleStateLabelPair(left.Name, right.Name))
+                        continue;
+
                     throw new InvalidOperationException(
                         $"Visible text nodes overlap on '{label}': '{left.Name}' " +
                         $"[{left.Type}/{left.AutomationId ?? "-"} @ {left.X},{left.Y} {left.Width}x{left.Height}] and " +
                         $"'{right.Name}' [{right.Type}/{right.AutomationId ?? "-"} @ {right.X},{right.Y} {right.Width}x{right.Height}].");
+                }
             }
         }
 
@@ -1856,6 +1863,12 @@ internal static partial class Program
         !string.IsNullOrEmpty(value)
         && value.Length <= 2
         && value.All(character => char.GetUnicodeCategory(character) == UnicodeCategory.PrivateUse);
+
+    private static bool IsToggleStateLabelPair(string? left, string? right) =>
+        (string.Equals(left, "On", StringComparison.OrdinalIgnoreCase)
+         && string.Equals(right, "Off", StringComparison.OrdinalIgnoreCase))
+        || (string.Equals(left, "Off", StringComparison.OrdinalIgnoreCase)
+            && string.Equals(right, "On", StringComparison.OrdinalIgnoreCase));
 
     private static bool IsFrameworkTemplatePart(string? automationId, string? className) =>
         (!string.IsNullOrWhiteSpace(automationId)
