@@ -108,6 +108,41 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DashboardPowerModeSettingsEntry_UsesGodModeCapabilityForPerformanceStates()
+    {
+        var group = new DashboardGroupViewModel(
+            new DashboardGroupState("Power", null, Array.Empty<string>()));
+        var item = new DashboardLayoutItemViewModel(group, "PowerMode");
+
+        item.ApplyState(new DashboardItemState(
+            "PowerMode",
+            true,
+            "GodMode",
+            ["Balance", "Performance", "GodMode"]));
+        item.SetPowerModeSettingsAvailable(false);
+        item.SetGodModeSettingsAvailable(true);
+
+        item.IsPowerModeSettingsVisible.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task UnavailablePlatform_DoesNotExposeGodModeSettingsAction()
+    {
+        var services = new UnavailablePlatformServices();
+
+        var state = await services.GetGodModeSettingsAsync();
+
+        state.IsAvailable.Should().BeFalse();
+        state.Presets.Should().BeEmpty();
+        (await services.SaveGodModeSettingsAsync(new GodModeSettingsUpdate(
+            Guid.Empty,
+            new Dictionary<string, int>(),
+            null,
+            null,
+            null))).Should().BeFalse();
+    }
+
+    [Fact]
     public void DashboardItemPicker_FiltersExistingItemsAcrossGroupsAndPreservesWhiteBacklightPersistence()
     {
         var services = new UnavailablePlatformServices();
@@ -173,6 +208,16 @@ public sealed class AvaloniaMigrationContractTests
         markup.Should().Contain("IsPowerModeSettingsVisible");
         markup.Should().Contain("ShowPowerModeSettingsCommand");
         markup.Should().Contain("AvaloniaPowerModeSettingsButton");
+
+        var windowSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "Windows",
+            "GodModeSettingsWindow.cs"));
+        windowSource.Should().Contain("GodModePresetComboBox");
+        windowSource.Should().Contain("GodModeFanFullSpeedToggle");
+        windowSource.Should().Contain("GodModeSaveAndCloseButton");
     }
 
     [Fact]

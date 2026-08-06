@@ -108,7 +108,7 @@ public partial class DashboardPageViewModel : ObservableObject
     private readonly IPlatformServices _platformServices;
     private readonly Action<string>? _navigate;
     private readonly Action<IReadOnlyList<DashboardStateOption>>? _showHybridInfo;
-    private readonly Action? _showBalanceSettings;
+    private readonly Action<string>? _showPowerModeSettings;
     private CancellationTokenSource? _pollingCancellation;
     private CancellationTokenSource? _batteryPollingCancellation;
     private int _refreshVersion;
@@ -118,12 +118,12 @@ public partial class DashboardPageViewModel : ObservableObject
         AvaloniaDashboardPreferences? dashboardPreferences = null,
         Action<string>? navigate = null,
         Action<IReadOnlyList<DashboardStateOption>>? showHybridInfo = null,
-        Action? showBalanceSettings = null)
+        Action<string>? showPowerModeSettings = null)
     {
         _platformServices = platformServices;
         _navigate = navigate;
         _showHybridInfo = showHybridInfo;
-        _showBalanceSettings = showBalanceSettings;
+        _showPowerModeSettings = showPowerModeSettings;
         _dashboardPreferences = dashboardPreferences ?? new AvaloniaDashboardPreferences();
 #if WINDOWS
         _hardwareSensorSettings = IoCContainer.TryResolve<WpfHardwareSensorSettings>();
@@ -172,15 +172,18 @@ public partial class DashboardPageViewModel : ObservableObject
             var itemStateTask = _platformServices.GetDashboardItemStatesAsync(
                 layout.Groups.SelectMany(group => group.Items).ToArray());
             var balanceSettingsTask = _platformServices.GetBalanceModeSettingsAsync();
+            var godModeSettingsTask = _platformServices.GetGodModeSettingsAsync();
             var gpuStateTask = _platformServices.GetDiscreteGpuStateAsync();
             var overclockStateTask = _platformServices.GetGpuOverclockStateAsync();
             await Task.WhenAll(
                 itemStateTask,
                 balanceSettingsTask,
+                godModeSettingsTask,
                 gpuStateTask,
                 overclockStateTask).ConfigureAwait(false);
             var itemStates = await itemStateTask.ConfigureAwait(false);
             var balanceSettings = await balanceSettingsTask.ConfigureAwait(false);
+            var godModeSettings = await godModeSettingsTask.ConfigureAwait(false);
             var gpuState = await gpuStateTask.ConfigureAwait(false);
             var overclockState = await overclockStateTask.ConfigureAwait(false);
             if (version != Volatile.Read(ref _refreshVersion))
@@ -201,7 +204,10 @@ public partial class DashboardPageViewModel : ObservableObject
             ApplyDashboardLayout(layout);
             ApplyDashboardItemStates(itemStates);
             foreach (var item in DashboardGroups.SelectMany(group => group.Items))
+            {
                 item.SetPowerModeSettingsAvailable(balanceSettings.IsAvailable);
+                item.SetGodModeSettingsAvailable(godModeSettings.IsAvailable);
+            }
             MergeSensors(snapshot.SensorReadings);
             var batteryCard = TelemetryCards.FirstOrDefault(card =>
                 card.Key.Equals("battery", StringComparison.OrdinalIgnoreCase));
@@ -299,7 +305,7 @@ public partial class DashboardPageViewModel : ObservableObject
     private void ShowPowerModeSettings(DashboardLayoutItemViewModel? item)
     {
         if (item?.IsPowerModeSettingsVisible == true)
-            _showBalanceSettings?.Invoke();
+            _showPowerModeSettings?.Invoke(item.SelectedOption?.Value ?? string.Empty);
     }
 
     [RelayCommand]
@@ -947,13 +953,18 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
 
     private bool _appliedToggleOn;
     private bool _isPowerModeSettingsAvailable;
+    private bool _isGodModeSettingsAvailable;
 
     public bool HasOptions => Options.Count > 0;
     public bool IsComboAvailable => IsComboControl && HasOptions;
 
-    public bool IsPowerModeSettingsVisible => _isPowerModeSettingsAvailable
-        && Identifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase)
-        && SelectedOption?.Value.Equals("Balance", StringComparison.OrdinalIgnoreCase) == true;
+    public bool IsPowerModeSettingsVisible =>
+        Identifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase)
+        && ((_isPowerModeSettingsAvailable
+                && SelectedOption?.Value.Equals("Balance", StringComparison.OrdinalIgnoreCase) == true)
+            || (_isGodModeSettingsAvailable
+                && (SelectedOption?.Value.Equals("Performance", StringComparison.OrdinalIgnoreCase) == true
+                    || SelectedOption?.Value.Equals("GodMode", StringComparison.OrdinalIgnoreCase) == true)));
 
     /// <summary>
     /// Stable summary for the normal Dashboard card. Errors are intentionally
@@ -1028,6 +1039,15 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
             return;
 
         _isPowerModeSettingsAvailable = value;
+        OnPropertyChanged(nameof(IsPowerModeSettingsVisible));
+    }
+
+    public void SetGodModeSettingsAvailable(bool value)
+    {
+        if (_isGodModeSettingsAvailable == value)
+            return;
+
+        _isGodModeSettingsAvailable = value;
         OnPropertyChanged(nameof(IsPowerModeSettingsVisible));
     }
 

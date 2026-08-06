@@ -14,6 +14,7 @@ using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Serialization;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
 using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers.GodMode;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
@@ -67,6 +68,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly DashboardSettings? _dashboardSettings;
     private readonly PowerModeFeature? _powerMode;
     private readonly AIController? _aiController;
+    private readonly GodModeController? _godModeController;
     private readonly BatteryFeature? _battery;
     private readonly BatteryNightChargeFeature? _batteryNightCharge;
     private readonly AlwaysOnUSBFeature? _alwaysOnUsb;
@@ -126,6 +128,7 @@ internal sealed class WindowsFeatureHostServices
         _dashboardSettings = IoCContainer.TryResolve<DashboardSettings>();
         _powerMode = IoCContainer.TryResolve<PowerModeFeature>();
         _aiController = IoCContainer.TryResolve<AIController>();
+        _godModeController = IoCContainer.TryResolve<GodModeController>();
         _battery = IoCContainer.TryResolve<BatteryFeature>();
         _batteryNightCharge = IoCContainer.TryResolve<BatteryNightChargeFeature>();
         _alwaysOnUsb = IoCContainer.TryResolve<AlwaysOnUSBFeature>();
@@ -341,6 +344,211 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public async Task<GodModeSettingsState> GetGodModeSettingsAsync()
+    {
+        if (_godModeController is null)
+            return UnavailableGodModeSettings("The GodMode settings service is unavailable.");
+
+        try
+        {
+            if (!await _godModeController.IsSupportedAsync().ConfigureAwait(false))
+            {
+                return UnavailableGodModeSettings(
+                    "GodMode is not supported on the current device.");
+            }
+
+            var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+            if (state.Presets is null || state.Presets.Count == 0)
+                return UnavailableGodModeSettings("No GodMode presets are available.");
+
+            var needsVantageDisabled = await _godModeController
+                .NeedsVantageDisabledAsync().ConfigureAwait(false);
+            var needsLegionZoneDisabled = await _godModeController
+                .NeedsLegionZoneDisabledAsync().ConfigureAwait(false);
+            var presets = state.Presets
+                .OrderBy(pair => pair.Value.Name, StringComparer.CurrentCultureIgnoreCase)
+                .Select(pair => ToGodModePresetState(pair.Key, pair.Value))
+                .ToArray();
+            return new GodModeSettingsState(
+                true,
+                null,
+                state.ActivePresetId,
+                presets,
+                needsVantageDisabled,
+                needsLegionZoneDisabled);
+        }
+        catch (Exception ex)
+        {
+            return UnavailableGodModeSettings(ex.Message);
+        }
+    }
+
+    public async Task<bool> SetGodModePresetAsync(Guid presetId)
+    {
+        if (_godModeController is null)
+            return false;
+
+        try
+        {
+            var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+            if (state.Presets is null || !state.Presets.ContainsKey(presetId))
+                return false;
+
+            await _godModeController.SetStateAsync(state with { ActivePresetId = presetId })
+                .ConfigureAwait(false);
+            if (_powerMode is not null
+                && await _powerMode.GetStateAsync().ConfigureAwait(false) == PowerModeState.GodMode)
+            {
+                await _godModeController.ApplyStateAsync().ConfigureAwait(false);
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> AddGodModePresetAsync(string name)
+    {
+        if (_godModeController is null)
+            return false;
+
+        try
+        {
+            var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+            if (state.Presets is null
+                || !state.Presets.TryGetValue(state.ActivePresetId, out var activePreset))
+            {
+                return false;
+            }
+
+            var presetId = Guid.NewGuid();
+            var presets = new Dictionary<Guid, GodModePreset>(state.Presets)
+            {
+                [presetId] = activePreset with
+                {
+                    Name = GetUniqueGodModePresetName(name, state.Presets),
+                    SourcePowerMode = null,
+                },
+            };
+            await _godModeController.SetStateAsync(state with
+            {
+                ActivePresetId = presetId,
+                Presets = presets.AsReadOnly(),
+            }).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> RenameGodModePresetAsync(Guid presetId, string name)
+    {
+        if (_godModeController is null || string.IsNullOrWhiteSpace(name))
+            return false;
+
+        try
+        {
+            var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+            if (state.Presets is null || !state.Presets.TryGetValue(presetId, out var preset))
+                return false;
+
+            var presets = new Dictionary<Guid, GodModePreset>(state.Presets)
+            {
+                [presetId] = preset with
+                {
+                    Name = GetUniqueGodModePresetName(name, state.Presets, presetId),
+                    SourcePowerMode = null,
+                },
+            };
+            await _godModeController.SetStateAsync(state with { Presets = presets.AsReadOnly() })
+                .ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteGodModePresetAsync(Guid presetId)
+    {
+        if (_godModeController is null)
+            return false;
+
+        try
+        {
+            var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+            if (state.Presets is null
+                || state.Presets.Count <= 1
+                || !state.Presets.ContainsKey(presetId))
+            {
+                return false;
+            }
+
+            var presets = new Dictionary<Guid, GodModePreset>(state.Presets);
+            presets.Remove(presetId);
+            var activePresetId = state.ActivePresetId == presetId
+                ? presets.OrderBy(pair => pair.Value.Name, StringComparer.CurrentCultureIgnoreCase)
+                    .Select(pair => pair.Key)
+                    .First()
+                : state.ActivePresetId;
+            await _godModeController.SetStateAsync(state with
+            {
+                ActivePresetId = activePresetId,
+                Presets = presets.AsReadOnly(),
+            }).ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> SaveGodModeSettingsAsync(GodModeSettingsUpdate update)
+    {
+        if (_godModeController is null || update is null)
+            return false;
+
+        try
+        {
+            var state = await _godModeController.GetStateAsync().ConfigureAwait(false);
+            if (state.Presets is null
+                || !state.Presets.TryGetValue(update.PresetId, out var preset))
+            {
+                return false;
+            }
+
+            var updatedPreset = ApplyGodModeSettingsUpdate(preset, update);
+            var presets = new Dictionary<Guid, GodModePreset>(state.Presets)
+            {
+                [update.PresetId] = updatedPreset,
+            };
+            await _godModeController.SetStateAsync(state with
+            {
+                Presets = presets.AsReadOnly(),
+            }).ConfigureAwait(false);
+
+            if (_powerMode is not null
+                && await _powerMode.GetStateAsync().ConfigureAwait(false) != PowerModeState.GodMode)
+            {
+                await _powerMode.SetStateAsync(PowerModeState.GodMode).ConfigureAwait(false);
+            }
+
+            await _godModeController.ApplyStateAsync().ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public async Task<DiscreteGpuState> GetDiscreteGpuStateAsync()
     {
         if (_gpuController is null)
@@ -486,6 +694,160 @@ internal sealed class WindowsFeatureHostServices
 
     private static BalanceModeSettingsState UnavailableBalanceModeSettings(string error) =>
         new(false, false, error);
+
+    private static GodModeSettingsState UnavailableGodModeSettings(string error) =>
+        new(false, error, Guid.Empty, Array.Empty<GodModePresetState>());
+
+    private static string GetUniqueGodModePresetName(
+        string? requestedName,
+        IReadOnlyDictionary<Guid, GodModePreset> presets,
+        Guid? excludePresetId = null)
+    {
+        var normalized = string.IsNullOrWhiteSpace(requestedName)
+            ? AvaloniaLocalization.GetString("GodModeSettingsWindow_DefaultPresetName", "Custom mode")
+            : requestedName.Trim();
+        var names = presets
+            .Where(pair => !excludePresetId.HasValue || pair.Key != excludePresetId.Value)
+            .Select(pair => pair.Value.Name?.Trim())
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (!names.Contains(normalized))
+            return normalized;
+
+        for (var suffix = 2; ; suffix++)
+        {
+            var candidate = $"{normalized} ({suffix})";
+            if (!names.Contains(candidate))
+                return candidate;
+        }
+    }
+
+    private static readonly GodModeValueDefinition[] GodModeValueDefinitions =
+    [
+        new("CPULongTermPowerLimit", "GodModeSettingsWindow_CPU_LongTermPL", "GodModeSettingsWindow_CPU_LongTermPL_Description", "W", "CPU long-term power limit"),
+        new("CPUShortTermPowerLimit", "GodModeSettingsWindow_CPU_ShortTermPL", "GodModeSettingsWindow_CPU_ShortTermPL_Description", "W", "CPU short-term power limit"),
+        new("CPUPeakPowerLimit", "GodModeSettingsWindow_CPU_PeakPL", "GodModeSettingsWindow_CPU_PeakPL_Description", "W", "CPU peak power limit"),
+        new("CPUCrossLoadingPowerLimit", "GodModeSettingsWindow_CPU_CrossLoading", "GodModeSettingsWindow_CPU_CrossLoading_Description", "W", "CPU cross-loading limit"),
+        new("CPUPL1Tau", "GodModeSettingsWindow_CPU_PL1Tau", "GodModeSettingsWindow_CPU_PL1Tau_Description", "s", "CPU PL1 time constant"),
+        new("APUsPPTPowerLimit", "GodModeSettingsWindow_CPU_APUsPPT_PL", "GodModeSettingsWindow_CPU_APUsPPT_PL_Description", "W", "APU power limit"),
+        new("CPUTemperatureLimit", "GodModeSettingsWindow_CPU_TempLimit", "GodModeSettingsWindow_CPU_TempLimit_Description", "C", "CPU temperature limit"),
+        new("GPUPowerBoost", "GodModeSettingsWindow_GPU_DynamicBoost", "GodModeSettingsWindow_GPU_DynamicBoost_Description", "W", "GPU dynamic boost"),
+        new("GPUConfigurableTGP", "GodModeSettingsWindow_GPU_CTGP", "GodModeSettingsWindow_GPU_CTGP_Description", "W", "GPU configurable TGP"),
+        new("GPUTemperatureLimit", "GodModeSettingsWindow_GPU_TempLimit", "GodModeSettingsWindow_GPU_TempLimit_Description", "C", "GPU temperature limit"),
+        new("GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline", "GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl", "GodModeSettingsWindow_GPU_TotalProcessingPowerTargetOnAcOffsetFromBaselineControl_Description", "W", "GPU total processing power target offset"),
+        new("GPUToCPUDynamicBoost", "GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl", "GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description", "W", "GPU to CPU dynamic boost"),
+    ];
+
+    private static GodModePresetState ToGodModePresetState(Guid id, GodModePreset preset)
+    {
+        var values = GodModeValueDefinitions
+            .Select(definition => ToGodModeValueState(definition, preset))
+            .Where(value => value is not null)
+            .Cast<GodModeValueState>()
+            .ToArray();
+        return new GodModePresetState(
+            id,
+            preset.Name,
+            preset.SourcePowerMode?.ToString(),
+            values,
+            preset.FanFullSpeed,
+            preset.MinValueOffset,
+            preset.MaxValueOffset,
+            preset.FanTableInfo?.Table.GetTable());
+    }
+
+    private static GodModeValueState? ToGodModeValueState(
+        GodModeValueDefinition definition,
+        GodModePreset preset)
+    {
+        var value = GetGodModeStepperValue(preset, definition.Key);
+        if (value is null)
+            return null;
+
+        return new GodModeValueState(
+            definition.Key,
+            AvaloniaLocalization.GetString(definition.TitleKey, definition.FallbackTitle),
+            AvaloniaLocalization.GetString(definition.DescriptionKey, definition.FallbackTitle),
+            definition.Unit,
+            value.Value.Value,
+            value.Value.Min,
+            value.Value.Max,
+            Math.Max(1, value.Value.Step),
+            value.Value.DefaultValue);
+    }
+
+    private static StepperValue? GetGodModeStepperValue(GodModePreset preset, string key) => key switch
+    {
+        "CPULongTermPowerLimit" => preset.CPULongTermPowerLimit,
+        "CPUShortTermPowerLimit" => preset.CPUShortTermPowerLimit,
+        "CPUPeakPowerLimit" => preset.CPUPeakPowerLimit,
+        "CPUCrossLoadingPowerLimit" => preset.CPUCrossLoadingPowerLimit,
+        "CPUPL1Tau" => preset.CPUPL1Tau,
+        "APUsPPTPowerLimit" => preset.APUsPPTPowerLimit,
+        "CPUTemperatureLimit" => preset.CPUTemperatureLimit,
+        "GPUPowerBoost" => preset.GPUPowerBoost,
+        "GPUConfigurableTGP" => preset.GPUConfigurableTGP,
+        "GPUTemperatureLimit" => preset.GPUTemperatureLimit,
+        "GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline" => preset.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline,
+        "GPUToCPUDynamicBoost" => preset.GPUToCPUDynamicBoost,
+        _ => null,
+    };
+
+    private static GodModePreset ApplyGodModeSettingsUpdate(
+        GodModePreset preset,
+        GodModeSettingsUpdate update)
+    {
+        var updated = preset;
+        foreach (var (key, value) in update.Values)
+        {
+            updated = key switch
+            {
+                "CPULongTermPowerLimit" => updated with { CPULongTermPowerLimit = UpdateStepperValue(updated.CPULongTermPowerLimit, value) },
+                "CPUShortTermPowerLimit" => updated with { CPUShortTermPowerLimit = UpdateStepperValue(updated.CPUShortTermPowerLimit, value) },
+                "CPUPeakPowerLimit" => updated with { CPUPeakPowerLimit = UpdateStepperValue(updated.CPUPeakPowerLimit, value) },
+                "CPUCrossLoadingPowerLimit" => updated with { CPUCrossLoadingPowerLimit = UpdateStepperValue(updated.CPUCrossLoadingPowerLimit, value) },
+                "CPUPL1Tau" => updated with { CPUPL1Tau = UpdateStepperValue(updated.CPUPL1Tau, value) },
+                "APUsPPTPowerLimit" => updated with { APUsPPTPowerLimit = UpdateStepperValue(updated.APUsPPTPowerLimit, value) },
+                "CPUTemperatureLimit" => updated with { CPUTemperatureLimit = UpdateStepperValue(updated.CPUTemperatureLimit, value) },
+                "GPUPowerBoost" => updated with { GPUPowerBoost = UpdateStepperValue(updated.GPUPowerBoost, value) },
+                "GPUConfigurableTGP" => updated with { GPUConfigurableTGP = UpdateStepperValue(updated.GPUConfigurableTGP, value) },
+                "GPUTemperatureLimit" => updated with { GPUTemperatureLimit = UpdateStepperValue(updated.GPUTemperatureLimit, value) },
+                "GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline" => updated with { GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline = UpdateStepperValue(updated.GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline, value) },
+                "GPUToCPUDynamicBoost" => updated with { GPUToCPUDynamicBoost = UpdateStepperValue(updated.GPUToCPUDynamicBoost, value) },
+                _ => updated,
+            };
+        }
+
+        if (update.FanFullSpeed.HasValue)
+            updated = updated with { FanFullSpeed = update.FanFullSpeed };
+        if (update.MinValueOffset.HasValue)
+            updated = updated with { MinValueOffset = Math.Clamp(update.MinValueOffset.Value, -100, 0) };
+        if (update.MaxValueOffset.HasValue)
+            updated = updated with { MaxValueOffset = Math.Clamp(update.MaxValueOffset.Value, 0, 100) };
+        if (update.FanCurveValues is { Count: 10 } && updated.FanTableInfo is { } fanTableInfo)
+        {
+            updated = updated with
+            {
+                FanTableInfo = new FanTableInfo(
+                    fanTableInfo.Data,
+                    new FanTable(update.FanCurveValues.ToArray())),
+            };
+        }
+
+        return updated;
+    }
+
+    private static StepperValue? UpdateStepperValue(StepperValue? current, int value) =>
+        current is { } stepper
+            ? stepper.WithValue(Math.Clamp(value, stepper.Min, stepper.Max))
+            : null;
+
+    private sealed record GodModeValueDefinition(
+        string Key,
+        string TitleKey,
+        string DescriptionKey,
+        string Unit,
+        string FallbackTitle);
 
     private static string GetGpuStatusText(GPUState state) => state switch
     {

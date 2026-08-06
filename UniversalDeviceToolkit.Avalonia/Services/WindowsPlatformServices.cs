@@ -221,6 +221,36 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SaveBalanceModeSettingsAsync(aiModeEnabled)
             : _featureHost.SaveBalanceModeSettingsAsync(aiModeEnabled);
 
+    public Task<GodModeSettingsState> GetGodModeSettingsAsync() =>
+        _featureHost is null
+            ? _inner.GetGodModeSettingsAsync()
+            : _featureHost.GetGodModeSettingsAsync();
+
+    public Task<bool> SetGodModePresetAsync(Guid presetId) =>
+        _featureHost is null
+            ? _inner.SetGodModePresetAsync(presetId)
+            : _featureHost.SetGodModePresetAsync(presetId);
+
+    public Task<bool> AddGodModePresetAsync(string name) =>
+        _featureHost is null
+            ? _inner.AddGodModePresetAsync(name)
+            : _featureHost.AddGodModePresetAsync(name);
+
+    public Task<bool> RenameGodModePresetAsync(Guid presetId, string name) =>
+        _featureHost is null
+            ? _inner.RenameGodModePresetAsync(presetId, name)
+            : _featureHost.RenameGodModePresetAsync(presetId, name);
+
+    public Task<bool> DeleteGodModePresetAsync(Guid presetId) =>
+        _featureHost is null
+            ? _inner.DeleteGodModePresetAsync(presetId)
+            : _featureHost.DeleteGodModePresetAsync(presetId);
+
+    public Task<bool> SaveGodModeSettingsAsync(GodModeSettingsUpdate update) =>
+        _featureHost is null
+            ? _inner.SaveGodModeSettingsAsync(update)
+            : _featureHost.SaveGodModeSettingsAsync(update);
+
     public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
         _featureHost is null
             ? _inner.GetDiscreteGpuStateAsync()

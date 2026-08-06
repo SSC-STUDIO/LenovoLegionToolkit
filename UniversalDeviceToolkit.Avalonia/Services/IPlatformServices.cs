@@ -40,6 +40,12 @@ public interface IPlatformServices
     /// </summary>
     Task<BalanceModeSettingsState> GetBalanceModeSettingsAsync();
     Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled);
+    Task<GodModeSettingsState> GetGodModeSettingsAsync();
+    Task<bool> SetGodModePresetAsync(Guid presetId);
+    Task<bool> AddGodModePresetAsync(string name);
+    Task<bool> RenameGodModePresetAsync(Guid presetId, string name);
+    Task<bool> DeleteGodModePresetAsync(Guid presetId);
+    Task<bool> SaveGodModeSettingsAsync(GodModeSettingsUpdate update);
     Task<DiscreteGpuState> GetDiscreteGpuStateAsync();
     Task<bool> KillDiscreteGpuProcessesAsync();
     Task<bool> RestartDiscreteGpuAsync();
@@ -559,6 +565,47 @@ public sealed record BalanceModeSettingsState(
     bool IsAvailable,
     bool IsAIModeEnabled,
     string? ErrorMessage = null);
+
+/// <summary>One editable GodMode numeric parameter projected for Avalonia.</summary>
+public sealed record GodModeValueState(
+    string Key,
+    string Title,
+    string Description,
+    string Unit,
+    int Value,
+    int Minimum,
+    int Maximum,
+    int Step,
+    int? DefaultValue);
+
+/// <summary>Host-neutral projection of one WPF GodMode preset.</summary>
+public sealed record GodModePresetState(
+    Guid Id,
+    string Name,
+    string? SourcePowerMode,
+    IReadOnlyList<GodModeValueState> Values,
+    bool? FanFullSpeed,
+    int? MinValueOffset,
+    int? MaxValueOffset,
+    IReadOnlyList<ushort>? FanCurveValues);
+
+/// <summary>Host-neutral projection of the GodMode settings window.</summary>
+public sealed record GodModeSettingsState(
+    bool IsAvailable,
+    string? ErrorMessage,
+    Guid ActivePresetId,
+    IReadOnlyList<GodModePresetState> Presets,
+    bool NeedsVantageDisabled = false,
+    bool NeedsLegionZoneDisabled = false);
+
+/// <summary>Editable values sent back from the Avalonia GodMode window.</summary>
+public sealed record GodModeSettingsUpdate(
+    Guid PresetId,
+    IReadOnlyDictionary<string, int> Values,
+    bool? FanFullSpeed,
+    int? MinValueOffset,
+    int? MaxValueOffset,
+    IReadOnlyList<ushort>? FanCurveValues = null);
 
 /// <summary>Host-neutral projection of the WPF discrete GPU monitor.</summary>
 public sealed record DiscreteGpuState(

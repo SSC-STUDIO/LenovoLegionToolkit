@@ -17,7 +17,7 @@ public partial class DashboardPage : UserControl
             platformServices,
             navigate: navigate,
             showHybridInfo: ShowHybridModeInfo,
-            showBalanceSettings: ShowBalanceModeSettings);
+            showPowerModeSettings: ShowPowerModeSettings);
         DataContext = _viewModel;
         AttachedToVisualTree += (_, _) => _viewModel.StartPolling();
         DetachedFromVisualTree += (_, _) => _viewModel.StopPolling();
@@ -34,12 +34,14 @@ public partial class DashboardPage : UserControl
         await dialog.ShowDialog(owner);
     }
 
-    private async void ShowBalanceModeSettings()
+    private async void ShowPowerModeSettings(string state)
     {
         if (TopLevel.GetTopLevel(this) is not Window owner || _viewModel is null)
             return;
 
-        var dialog = new BalanceModeSettingsWindow(_platformServices);
+        Window dialog = state.Equals("Balance", StringComparison.OrdinalIgnoreCase)
+            ? new BalanceModeSettingsWindow(_platformServices)
+            : new GodModeSettingsWindow(_platformServices);
         await dialog.ShowDialog(owner);
         await _viewModel.LoadAsync();
     }

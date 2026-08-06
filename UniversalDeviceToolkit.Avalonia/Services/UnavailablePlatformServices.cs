@@ -102,6 +102,30 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled) =>
         Task.FromResult(false);
 
+    public Task<GodModeSettingsState> GetGodModeSettingsAsync() =>
+        Task.FromResult(new GodModeSettingsState(
+            false,
+            AvaloniaLocalization.GetString(
+                "Dashboard_GodModeSettings_Unavailable",
+                "GodMode settings are unavailable on this host."),
+            Guid.Empty,
+            Array.Empty<GodModePresetState>()));
+
+    public Task<bool> SetGodModePresetAsync(Guid presetId) =>
+        Task.FromResult(false);
+
+    public Task<bool> AddGodModePresetAsync(string name) =>
+        Task.FromResult(false);
+
+    public Task<bool> RenameGodModePresetAsync(Guid presetId, string name) =>
+        Task.FromResult(false);
+
+    public Task<bool> DeleteGodModePresetAsync(Guid presetId) =>
+        Task.FromResult(false);
+
+    public Task<bool> SaveGodModeSettingsAsync(GodModeSettingsUpdate update) =>
+        Task.FromResult(false);
+
     public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
         Task.FromResult(new DiscreteGpuState(
             false,

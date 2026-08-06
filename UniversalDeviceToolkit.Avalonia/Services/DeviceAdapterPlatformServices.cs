@@ -346,6 +346,30 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled) =>
         Task.FromResult(false);
 
+    public Task<GodModeSettingsState> GetGodModeSettingsAsync() =>
+        Task.FromResult(new GodModeSettingsState(
+            false,
+            DashboardLocalization.Get(
+                "Dashboard_GodModeSettings_AdapterUnavailable",
+                "GodMode settings require the Windows host."),
+            Guid.Empty,
+            Array.Empty<GodModePresetState>()));
+
+    public Task<bool> SetGodModePresetAsync(Guid presetId) =>
+        Task.FromResult(false);
+
+    public Task<bool> AddGodModePresetAsync(string name) =>
+        Task.FromResult(false);
+
+    public Task<bool> RenameGodModePresetAsync(Guid presetId, string name) =>
+        Task.FromResult(false);
+
+    public Task<bool> DeleteGodModePresetAsync(Guid presetId) =>
+        Task.FromResult(false);
+
+    public Task<bool> SaveGodModeSettingsAsync(GodModeSettingsUpdate update) =>
+        Task.FromResult(false);
+
     public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
         Task.FromResult(new DiscreteGpuState(
             false,
