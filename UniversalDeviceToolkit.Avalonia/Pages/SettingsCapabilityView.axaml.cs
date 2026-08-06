@@ -77,6 +77,17 @@ public partial class SettingsCapabilityView : UserControl
                     data.IsAvailable,
                     ActionText: AvaloniaLocalization.GetString("Configure", "Configure")));
             }
+            if (_pageKey == "Application"
+                && options.Any(option => option.Key.StartsWith("Osd", StringComparison.OrdinalIgnoreCase)))
+            {
+                options.Add(new AvaloniaSettingOption(
+                    "OsdConfigure",
+                    AvaloniaLocalization.GetString("OsdSettings_Configure_Title", "Configure on-screen display"),
+                    AvaloniaLocalization.GetString("OsdSettings_Configure_Description", "Configure the on-screen display appearance, thresholds, and sensor items."),
+                    AvaloniaSettingEditor.Action,
+                    data.IsAvailable,
+                    ActionText: AvaloniaLocalization.GetString("Configure", "Configure")));
+            }
             foreach (var option in options)
                 OptionsPanel.Children.Add(CreateOptionCard(option));
 
@@ -376,6 +387,12 @@ public partial class SettingsCapabilityView : UserControl
                 return;
             }
 
+            if (_pageKey == "Application" && option.Key == "OsdConfigure")
+            {
+                await ConfigureOsdAsync(button);
+                return;
+            }
+
             if (_pageKey == "Display" && option.Key == "BootLogo")
             {
                 var topLevel = TopLevel.GetTopLevel(this);
@@ -448,6 +465,28 @@ public partial class SettingsCapabilityView : UserControl
         try
         {
             var dialog = new HardwareSensorSectionsWindow(_settingsService);
+            await dialog.ShowDialog(owner);
+            await RefreshPageAsync();
+        }
+        catch (Exception ex)
+        {
+            ToolTip.SetTip(button, ex.Message);
+        }
+        finally
+        {
+            button.IsEnabled = true;
+        }
+    }
+
+    private async Task ConfigureOsdAsync(Button button)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        button.IsEnabled = false;
+        try
+        {
+            var dialog = new OsdSettingsWindow(_settingsService);
             await dialog.ShowDialog(owner);
             await RefreshPageAsync();
         }

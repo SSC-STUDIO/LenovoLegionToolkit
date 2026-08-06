@@ -44,5 +44,7 @@ public sealed class HardwareSensorSectionsWindowContractTests
         source.Should().Contain("new HardwareSensorSectionsWindow(_settingsService)");
         source.Should().Contain("await dialog.ShowDialog(owner)");
         source.Should().Contain("await RefreshPageAsync()");
+        source.Should().Contain("OsdConfigure");
+        source.Should().Contain("new OsdSettingsWindow(_settingsService)");
     }
 }
