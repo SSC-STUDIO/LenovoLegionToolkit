@@ -42,7 +42,7 @@ jobs:
 
       - name: Prime plugin tooling CLI
         shell: pwsh
-        run: .\Plugins\Scripts\Invoke-PluginTooling.ps1 --help
+        run: .\Plugins\Scripts\Invoke-PluginTooling.ps1 --help --repository-root .\Plugins
 
       - name: Validate all official plugins
         shell: pwsh

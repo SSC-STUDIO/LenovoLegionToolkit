@@ -259,8 +259,7 @@ public sealed class CiWorkflowGuardTests
             .Job("validate")
             .Step("Prime plugin tooling CLI");
 
-        step.Run.Should().Contain("Invoke-PluginTooling.ps1 --help");
-        step.Run.Should().NotContain("Invoke-PluginTooling.ps1 --repository-root");
+        step.Run.Should().Contain("Invoke-PluginTooling.ps1 --help --repository-root .\\Plugins");
     }
 
     [Fact]
