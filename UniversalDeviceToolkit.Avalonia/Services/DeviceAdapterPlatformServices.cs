@@ -335,6 +335,17 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     public Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state) =>
         Task.FromResult(false);
 
+    public Task<BalanceModeSettingsState> GetBalanceModeSettingsAsync() =>
+        Task.FromResult(new BalanceModeSettingsState(
+            false,
+            false,
+            DashboardLocalization.Get(
+                "Dashboard_BalanceModeSettings_AdapterUnavailable",
+                "Balance mode settings require the Windows host.")));
+
+    public Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled) =>
+        Task.FromResult(false);
+
     public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
         Task.FromResult(new DiscreteGpuState(
             false,

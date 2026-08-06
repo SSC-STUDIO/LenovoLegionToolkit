@@ -367,7 +367,7 @@
                                 <ItemsControl ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto"
+                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                                                   ColumnSpacing="6"
                                                   MinWidth="0"
                                                   IsVisible="{Binding IsStandardControl}"
@@ -444,6 +444,19 @@
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
                                                 <Button Grid.Column="5"
+                                                        IsVisible="{Binding IsPowerModeSettingsVisible}"
+                                                        Command="{Binding DataContext.ShowPowerModeSettingsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Padding="3"
+                                                        MinWidth="28"
+                                                        VerticalAlignment="Center"
+                                                        ToolTip.Tip="{local:Loc Key=PowerModeControl_Settings, Fallback=Power mode settings}"
+                                                        automation:AutomationProperties.AutomationId="AvaloniaPowerModeSettingsButton"
+                                                        automation:AutomationProperties.Name="{local:Loc Key=PowerModeControl_Settings, Fallback=Power mode settings}">
+                                                    <controls:NavigationIcon IconIdentifier="Settings24"
+                                                                             FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                                <Button Grid.Column="6"
                                                         IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
@@ -454,7 +467,7 @@
                                                     <controls:NavigationIcon IconIdentifier="ChevronUp24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
-                                                <Button Grid.Column="6"
+                                                <Button Grid.Column="7"
                                                         IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"
@@ -465,7 +478,7 @@
                                                     <controls:NavigationIcon IconIdentifier="ChevronDown24"
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
-                                                <Button Grid.Column="7"
+                                                <Button Grid.Column="8"
                                                         IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"

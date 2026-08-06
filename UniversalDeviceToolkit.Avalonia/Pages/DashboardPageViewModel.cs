@@ -108,6 +108,7 @@ public partial class DashboardPageViewModel : ObservableObject
     private readonly IPlatformServices _platformServices;
     private readonly Action<string>? _navigate;
     private readonly Action<IReadOnlyList<DashboardStateOption>>? _showHybridInfo;
+    private readonly Action? _showBalanceSettings;
     private CancellationTokenSource? _pollingCancellation;
     private CancellationTokenSource? _batteryPollingCancellation;
     private int _refreshVersion;
@@ -116,11 +117,13 @@ public partial class DashboardPageViewModel : ObservableObject
         IPlatformServices platformServices,
         AvaloniaDashboardPreferences? dashboardPreferences = null,
         Action<string>? navigate = null,
-        Action<IReadOnlyList<DashboardStateOption>>? showHybridInfo = null)
+        Action<IReadOnlyList<DashboardStateOption>>? showHybridInfo = null,
+        Action? showBalanceSettings = null)
     {
         _platformServices = platformServices;
         _navigate = navigate;
         _showHybridInfo = showHybridInfo;
+        _showBalanceSettings = showBalanceSettings;
         _dashboardPreferences = dashboardPreferences ?? new AvaloniaDashboardPreferences();
 #if WINDOWS
         _hardwareSensorSettings = IoCContainer.TryResolve<WpfHardwareSensorSettings>();
@@ -168,10 +171,16 @@ public partial class DashboardPageViewModel : ObservableObject
             var layout = await layoutTask.ConfigureAwait(false);
             var itemStateTask = _platformServices.GetDashboardItemStatesAsync(
                 layout.Groups.SelectMany(group => group.Items).ToArray());
+            var balanceSettingsTask = _platformServices.GetBalanceModeSettingsAsync();
             var gpuStateTask = _platformServices.GetDiscreteGpuStateAsync();
             var overclockStateTask = _platformServices.GetGpuOverclockStateAsync();
-            await Task.WhenAll(itemStateTask, gpuStateTask, overclockStateTask).ConfigureAwait(false);
+            await Task.WhenAll(
+                itemStateTask,
+                balanceSettingsTask,
+                gpuStateTask,
+                overclockStateTask).ConfigureAwait(false);
             var itemStates = await itemStateTask.ConfigureAwait(false);
+            var balanceSettings = await balanceSettingsTask.ConfigureAwait(false);
             var gpuState = await gpuStateTask.ConfigureAwait(false);
             var overclockState = await overclockStateTask.ConfigureAwait(false);
             if (version != Volatile.Read(ref _refreshVersion))
@@ -191,6 +200,8 @@ public partial class DashboardPageViewModel : ObservableObject
 
             ApplyDashboardLayout(layout);
             ApplyDashboardItemStates(itemStates);
+            foreach (var item in DashboardGroups.SelectMany(group => group.Items))
+                item.SetPowerModeSettingsAvailable(balanceSettings.IsAvailable);
             MergeSensors(snapshot.SensorReadings);
             var batteryCard = TelemetryCards.FirstOrDefault(card =>
                 card.Key.Equals("battery", StringComparison.OrdinalIgnoreCase));
@@ -282,6 +293,13 @@ public partial class DashboardPageViewModel : ObservableObject
     {
         if (item?.IsHybridModeInfoVisible == true)
             _showHybridInfo?.Invoke(item.Options.ToArray());
+    }
+
+    [RelayCommand]
+    private void ShowPowerModeSettings(DashboardLayoutItemViewModel? item)
+    {
+        if (item?.IsPowerModeSettingsVisible == true)
+            _showBalanceSettings?.Invoke();
     }
 
     [RelayCommand]
@@ -928,9 +946,14 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
     private string _stateStatusText = string.Empty;
 
     private bool _appliedToggleOn;
+    private bool _isPowerModeSettingsAvailable;
 
     public bool HasOptions => Options.Count > 0;
     public bool IsComboAvailable => IsComboControl && HasOptions;
+
+    public bool IsPowerModeSettingsVisible => _isPowerModeSettingsAvailable
+        && Identifier.Equals("PowerMode", StringComparison.OrdinalIgnoreCase)
+        && SelectedOption?.Value.Equals("Balance", StringComparison.OrdinalIgnoreCase) == true;
 
     /// <summary>
     /// Stable summary for the normal Dashboard card. Errors are intentionally
@@ -942,8 +965,11 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
             ? AvaloniaLocalization.GetString("Dashboard_Status_NoSelection", "No selection")
             : AvaloniaLocalization.GetString("Dashboard_Status_Unavailable", "Unavailable"));
 
-    partial void OnSelectedOptionChanged(DashboardStateOption? value) =>
+    partial void OnSelectedOptionChanged(DashboardStateOption? value)
+    {
         OnPropertyChanged(nameof(StateDisplayText));
+        OnPropertyChanged(nameof(IsPowerModeSettingsVisible));
+    }
 
     partial void OnIsAvailableChanged(bool value) =>
         OnPropertyChanged(nameof(StateDisplayText));
@@ -995,6 +1021,15 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
     }
 
     public void MarkStateApplied() => _appliedToggleOn = IsToggleOn;
+
+    public void SetPowerModeSettingsAvailable(bool value)
+    {
+        if (_isPowerModeSettingsAvailable == value)
+            return;
+
+        _isPowerModeSettingsAvailable = value;
+        OnPropertyChanged(nameof(IsPowerModeSettingsVisible));
+    }
 
     public void RevertToggle() => IsToggleOn = _appliedToggleOn;
 

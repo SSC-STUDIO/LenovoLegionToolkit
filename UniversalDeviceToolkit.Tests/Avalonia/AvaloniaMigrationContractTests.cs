@@ -72,6 +72,41 @@ public sealed class AvaloniaMigrationContractTests
             .PresentationMode.Should().Be(DashboardItemPresentationMode.Toggle);
     }
 
+    [Theory]
+    [InlineData("Balance", true, true)]
+    [InlineData("Performance", true, false)]
+    [InlineData("Balance", false, false)]
+    public void DashboardPowerModeSettingsEntry_MatchesWpfAvailability(
+        string state,
+        bool settingsAvailable,
+        bool expectedVisible)
+    {
+        var group = new DashboardGroupViewModel(
+            new DashboardGroupState("Power", null, Array.Empty<string>()));
+        var item = new DashboardLayoutItemViewModel(group, "PowerMode");
+
+        item.ApplyState(new DashboardItemState(
+            "PowerMode",
+            true,
+            state,
+            ["Balance", "Performance", "GodMode"]));
+        item.SetPowerModeSettingsAvailable(settingsAvailable);
+
+        item.IsPowerModeSettingsVisible.Should().Be(expectedVisible);
+    }
+
+    [Fact]
+    public async Task UnavailablePlatform_DoesNotExposeBalanceModeSettingsAction()
+    {
+        var services = new UnavailablePlatformServices();
+
+        var state = await services.GetBalanceModeSettingsAsync();
+
+        state.IsAvailable.Should().BeFalse();
+        state.ErrorMessage.Should().NotBeNullOrWhiteSpace();
+        (await services.SaveBalanceModeSettingsAsync(true)).Should().BeFalse();
+    }
+
     [Fact]
     public void DashboardItemPicker_FiltersExistingItemsAcrossGroupsAndPreservesWhiteBacklightPersistence()
     {
@@ -123,6 +158,21 @@ public sealed class AvaloniaMigrationContractTests
         markup.Should().Contain("ToggleDashboardItemPickerCommand");
         markup.Should().Contain("AddDashboardItemCommand");
         markup.Should().Contain("AvailableDashboardItems");
+    }
+
+    [Fact]
+    public void DashboardLayoutMarkup_ExposesBalanceModeSettingsEntry()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DashboardPage.axaml"));
+
+        markup.Should().Contain("IsPowerModeSettingsVisible");
+        markup.Should().Contain("ShowPowerModeSettingsCommand");
+        markup.Should().Contain("AvaloniaPowerModeSettingsButton");
     }
 
     [Fact]

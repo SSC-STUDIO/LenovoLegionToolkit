@@ -91,6 +91,17 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state) =>
         Task.FromResult(false);
 
+    public Task<BalanceModeSettingsState> GetBalanceModeSettingsAsync() =>
+        Task.FromResult(new BalanceModeSettingsState(
+            false,
+            false,
+            AvaloniaLocalization.GetString(
+                "Dashboard_BalanceModeSettings_Unavailable",
+                "Balance mode settings are unavailable on this host.")));
+
+    public Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled) =>
+        Task.FromResult(false);
+
     public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
         Task.FromResult(new DiscreteGpuState(
             false,

@@ -66,6 +66,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly ApplicationSettings? _applicationSettings;
     private readonly DashboardSettings? _dashboardSettings;
     private readonly PowerModeFeature? _powerMode;
+    private readonly AIController? _aiController;
     private readonly BatteryFeature? _battery;
     private readonly BatteryNightChargeFeature? _batteryNightCharge;
     private readonly AlwaysOnUSBFeature? _alwaysOnUsb;
@@ -124,6 +125,7 @@ internal sealed class WindowsFeatureHostServices
         _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
         _dashboardSettings = IoCContainer.TryResolve<DashboardSettings>();
         _powerMode = IoCContainer.TryResolve<PowerModeFeature>();
+        _aiController = IoCContainer.TryResolve<AIController>();
         _battery = IoCContainer.TryResolve<BatteryFeature>();
         _batteryNightCharge = IoCContainer.TryResolve<BatteryNightChargeFeature>();
         _alwaysOnUsb = IoCContainer.TryResolve<AlwaysOnUSBFeature>();
@@ -296,6 +298,49 @@ internal sealed class WindowsFeatureHostServices
         };
     }
 
+    public async Task<BalanceModeSettingsState> GetBalanceModeSettingsAsync()
+    {
+        if (_aiController is null || _powerMode is null)
+            return UnavailableBalanceModeSettings("The Balance mode settings service is unavailable.");
+
+        try
+        {
+            var machineInformation = await Compatibility.GetMachineInformationAsync()
+                .ConfigureAwait(false);
+            if (!machineInformation.Properties.SupportsAIMode)
+            {
+                return UnavailableBalanceModeSettings(
+                    "AI mode is not supported on the current device.");
+            }
+
+            return new BalanceModeSettingsState(true, _aiController.IsAIModeEnabled);
+        }
+        catch (Exception ex)
+        {
+            return UnavailableBalanceModeSettings(ex.Message);
+        }
+    }
+
+    public async Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled)
+    {
+        var state = await GetBalanceModeSettingsAsync().ConfigureAwait(false);
+        if (!state.IsAvailable || _aiController is null || _powerMode is null)
+            return false;
+
+        try
+        {
+            _aiController.IsAIModeEnabled = aiModeEnabled;
+            await _aiController.StopAsync().ConfigureAwait(false);
+            await _powerMode.SetStateAsync(PowerModeState.Balance).ConfigureAwait(false);
+            await _aiController.StartIfNeededAsync().ConfigureAwait(false);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public async Task<DiscreteGpuState> GetDiscreteGpuStateAsync()
     {
         if (_gpuController is null)
@@ -438,6 +483,9 @@ internal sealed class WindowsFeatureHostServices
 
     private static GpuOverclockState UnavailableOverclockState(string error) =>
         new(false, false, 0, 0, 0, 0, error);
+
+    private static BalanceModeSettingsState UnavailableBalanceModeSettings(string error) =>
+        new(false, false, error);
 
     private static string GetGpuStatusText(GPUState state) => state switch
     {

@@ -33,6 +33,13 @@ public interface IPlatformServices
     /// </summary>
     Task<IReadOnlyList<DashboardItemState>> GetDashboardItemStatesAsync(IReadOnlyList<string> itemIdentifiers);
     Task<bool> SetDashboardItemStateAsync(string itemIdentifier, string state);
+    /// <summary>
+    /// Reads the optional Balance-mode AI configuration exposed by the WPF
+    /// dashboard settings window. Hosts that do not support AI mode return an
+    /// unavailable state rather than exposing a non-functional command.
+    /// </summary>
+    Task<BalanceModeSettingsState> GetBalanceModeSettingsAsync();
+    Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled);
     Task<DiscreteGpuState> GetDiscreteGpuStateAsync();
     Task<bool> KillDiscreteGpuProcessesAsync();
     Task<bool> RestartDiscreteGpuAsync();
@@ -545,6 +552,12 @@ public sealed record DashboardItemState(
     bool IsAvailable,
     string? CurrentValue,
     IReadOnlyList<string> Options,
+    string? ErrorMessage = null);
+
+/// <summary>Host-neutral projection of the WPF Balance-mode AI settings.</summary>
+public sealed record BalanceModeSettingsState(
+    bool IsAvailable,
+    bool IsAIModeEnabled,
     string? ErrorMessage = null);
 
 /// <summary>Host-neutral projection of the WPF discrete GPU monitor.</summary>

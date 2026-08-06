@@ -211,6 +211,16 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetDashboardItemStateAsync(itemIdentifier, state)
             : _featureHost.SetDashboardItemStateAsync(itemIdentifier, state);
 
+    public Task<BalanceModeSettingsState> GetBalanceModeSettingsAsync() =>
+        _featureHost is null
+            ? _inner.GetBalanceModeSettingsAsync()
+            : _featureHost.GetBalanceModeSettingsAsync();
+
+    public Task<bool> SaveBalanceModeSettingsAsync(bool aiModeEnabled) =>
+        _featureHost is null
+            ? _inner.SaveBalanceModeSettingsAsync(aiModeEnabled)
+            : _featureHost.SaveBalanceModeSettingsAsync(aiModeEnabled);
+
     public Task<DiscreteGpuState> GetDiscreteGpuStateAsync() =>
         _featureHost is null
             ? _inner.GetDiscreteGpuStateAsync()
