@@ -2,16 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls">
 
-    <!-- Custom text controls do not inherit Fluent's Button/TextBlock brush in
-         every content-presenter path. Establish the same semantic default as
-         WPF, while allowing local status/secondary brushes to override it. -->
-    <Style Selector="controls|LocalizedTextBlock">
-        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-    </Style>
-    <Style Selector="controls|NavigationIcon">
-        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-    </Style>
-
     <StyleInclude Source="avares://udt-gui/Styles/Controls/Badge.axaml" />
     <StyleInclude Source="avares://udt-gui/Styles/Controls/CardAction.axaml" />
     <StyleInclude Source="avares://udt-gui/Styles/Controls/CardControl.axaml" />
@@ -19,5 +9,16 @@
     <StyleInclude Source="avares://udt-gui/Styles/Controls/InfoBar.axaml" />
     <StyleInclude Source="avares://udt-gui/Styles/Controls/NotificationToast.axaml" />
     <StyleInclude Source="avares://udt-gui/Styles/Controls/DynamicScrollBar.axaml" />
+
+    <!-- Custom text controls do not inherit Fluent's Button/TextBlock brush in
+         every content-presenter path. Establish the same semantic default as
+         WPF after the included control styles, while allowing local
+         status/secondary brushes to override it. -->
+    <Style Selector="controls|LocalizedTextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource UdtTextPrimaryBrush}" />
+    </Style>
+    <Style Selector="controls|NavigationIcon">
+        <Setter Property="Foreground" Value="{DynamicResource UdtTextPrimaryBrush}" />
+    </Style>
 
 </Styles>

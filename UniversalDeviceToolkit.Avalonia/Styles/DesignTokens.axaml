@@ -153,6 +153,12 @@
     <!-- ═══════════════════════════════════════════════════════ -->
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Dark">
+            <!-- Host-owned semantic text brushes avoid Fluent's default style
+                 priority changing when a custom control is inside a Button. -->
+            <SolidColorBrush x:Key="UdtTextPrimaryBrush" Color="#FFF5F5F5" />
+            <SolidColorBrush x:Key="UdtTextSecondaryBrush" Color="#FFB8B8B8" />
+            <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#FFF5F5F5" />
+            <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#FFB8B8B8" />
             <!-- Chart -->
             <SolidColorBrush x:Key="ChartTrackBrush" Color="#33FFFFFF" />
             <!-- Slightly stronger chart frame so empty/first-open trends still show clear edges. -->
@@ -199,6 +205,10 @@
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="UdtTextPrimaryBrush" Color="#FF1A1A1A" />
+            <SolidColorBrush x:Key="UdtTextSecondaryBrush" Color="#FF606060" />
+            <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="#FF1A1A1A" />
+            <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="#FF606060" />
             <!-- Chart -->
             <SolidColorBrush x:Key="ChartTrackBrush" Color="#33000000" />
             <SolidColorBrush x:Key="ChartSurfaceBrush" Color="#0C000000" />
