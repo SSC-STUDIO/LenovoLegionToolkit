@@ -237,7 +237,7 @@ public sealed class AvaloniaViveToolPage : UserControl
         _downloadProgressText.Text = Resource.ViveTool_Downloading;
         try
         {
-            const long estimatedTotalBytes = UniversalDeviceToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
+            const long estimatedTotalBytes = UniversalDeviceToolkit.Plugins.Core.Constants.EstimatedViveToolDownloadBytes;
             var progress = new Progress<long>(bytesDownloaded =>
             {
                 var percent = Math.Min(100, bytesDownloaded * 100d / estimatedTotalBytes);
@@ -756,7 +756,7 @@ public sealed class AvaloniaViveToolSettingsPage : UserControl
         {
             var progress = new Progress<long>(bytes =>
             {
-                const long total = UniversalDeviceToolkit.Plugins.Shared.Constants.EstimatedViveToolDownloadBytes;
+                const long total = UniversalDeviceToolkit.Plugins.Core.Constants.EstimatedViveToolDownloadBytes;
                 _progress.Value = Math.Min(100, bytes * 100d / total);
                 _progressText.Text = string.Format(CultureInfo.CurrentCulture, Resource.ViveTool_DownloadProgress, ByteFormatter.FormatBytes(bytes), ByteFormatter.FormatBytes(total), (int)_progress.Value);
             });

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 

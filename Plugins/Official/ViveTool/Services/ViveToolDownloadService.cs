@@ -12,7 +12,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
@@ -79,8 +79,8 @@ public class ViveToolDownloadService
             var stagingDirectory = Path.Combine(Path.GetTempPath(), $"ViVeTool_extract_{Guid.NewGuid():N}");
             try
             {
-                using var httpClient = UniversalDeviceToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(
-                    UniversalDeviceToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
+                using var httpClient = HttpClientManager.CreateClientWithTimeout(
+                    Constants.DownloadTimeoutSeconds);
 
                 // Get the response as a stream to track progress
                 // Wrap in using so the connection is returned to the pool even when
@@ -311,8 +311,8 @@ public class ViveToolDownloadService
                 return new List<FeatureFlagInfo>();
             }
 
-            using var httpClient = UniversalDeviceToolkit.Plugins.Shared.HttpClientManager.CreateClientWithTimeout(
-                UniversalDeviceToolkit.Plugins.Shared.Constants.DownloadTimeoutSeconds);
+            using var httpClient = HttpClientManager.CreateClientWithTimeout(
+                Constants.DownloadTimeoutSeconds);
             using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 

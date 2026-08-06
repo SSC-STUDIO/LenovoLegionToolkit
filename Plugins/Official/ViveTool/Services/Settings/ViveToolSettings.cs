@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Utils;
 using NeoSmart.AsyncLock;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
 

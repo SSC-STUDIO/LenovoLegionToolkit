@@ -1,6 +1,6 @@
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.SDK;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool;
