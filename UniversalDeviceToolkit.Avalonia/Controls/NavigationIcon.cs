@@ -30,6 +30,10 @@ public sealed class NavigationIcon : TextBlock
             ["ArrowUp24"] = "\uE74A",
             ["ArrowDown24"] = "\uE74B",
             ["ArrowReset24"] = "\uE72C",
+            ["ArrowClockwise24"] = "\uF13E",
+            ["ArrowExportLtr24"] = "\uE0C8",
+            ["ArrowImport24"] = "\uF15A",
+            ["ArrowRepeatAll24"] = "\uF172",
             ["ChevronDown24"] = "\uE70D",
             ["ChevronUp24"] = "\uE70E",
             ["Add24"] = "\uE710",
@@ -59,6 +63,7 @@ public sealed class NavigationIcon : TextBlock
             ["Tablet24"] = "\uE7F4",
             ["Power24"] = "\uE945",
             ["Checkmark24"] = "\uE73E",
+            ["ToggleRight24"] = "\uF82C",
         };
 
     public static readonly StyledProperty<string?> IconIdentifierProperty =

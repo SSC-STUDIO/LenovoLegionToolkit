@@ -516,12 +516,17 @@ public sealed class AvaloniaMigrationContractTests
 
     [Theory]
     [InlineData("Add24")]
+    [InlineData("ArrowClockwise24")]
+    [InlineData("ArrowExportLtr24")]
+    [InlineData("ArrowImport24")]
+    [InlineData("ArrowRepeatAll24")]
     [InlineData("ArrowReset24")]
     [InlineData("ChevronDown24")]
     [InlineData("ChevronUp24")]
     [InlineData("Delete24")]
     [InlineData("Edit24")]
     [InlineData("Save24")]
+    [InlineData("ToggleRight24")]
     public void NavigationIcon_MapsEveryDashboardLayoutCommandIcon(string identifier)
     {
         NavigationIcon.HasGlyph(identifier).Should().BeTrue();
