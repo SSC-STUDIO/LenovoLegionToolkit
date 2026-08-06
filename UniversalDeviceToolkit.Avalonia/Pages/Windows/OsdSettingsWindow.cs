@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
@@ -11,89 +12,137 @@ using UniversalDeviceToolkit.Avalonia.Services;
 namespace UniversalDeviceToolkit.Avalonia.Pages.Windows;
 
 /// <summary>
-/// Focused editor for the on-screen display settings. The Application page
-/// keeps the same options for discoverability, while this dialog mirrors the
-/// WPF window workflow and commits a coherent batch on Save.
+/// Focused OSD editor that reuses the Application settings contract while
+/// keeping the dense OSD controls out of the main settings page.
 /// </summary>
 public sealed class OsdSettingsWindow : Window
 {
+    private static readonly string[] GeneralKeys =
+    [
+        "ShowOsd",
+        "OsdStyle",
+        "OsdRefreshInterval",
+        "OsdSnapThreshold",
+        "OsdLockPosition",
+        "OsdResetPosition",
+    ];
+
+    private static readonly string[] AppearanceKeys =
+    [
+        "OsdOpacity",
+        "OsdCornerRadiusTop",
+        "OsdCornerRadiusBottom",
+        "OsdFontSize",
+        "OsdBackgroundColor",
+        "OsdCategoryColor",
+        "OsdLabelColor",
+        "OsdValueColor",
+        "OsdWarningColor",
+        "OsdCriticalColor",
+        "OsdSeparatorColor",
+    ];
+
+    private static readonly string[] SensorItemKeys = ["OsdItems"];
+
+    private static readonly string[] ThresholdKeys =
+    [
+        "OsdTempWarning",
+        "OsdTempCritical",
+        "OsdUsageWarning",
+        "OsdUsageCritical",
+        "OsdFpsCritical",
+        "OsdLowFpsDelta",
+    ];
+
     private readonly IAvaloniaSettingsService _settingsService;
-    private readonly StackPanel _optionsPanel = new() { Spacing = 10 };
+    private readonly StackPanel _groupsPanel = new() { Spacing = 14 };
     private readonly TextBlock _status = new() { TextWrapping = TextWrapping.Wrap };
     private readonly Button _saveButton;
-    private readonly Dictionary<string, Control> _editors = new(StringComparer.OrdinalIgnoreCase);
-    private readonly Dictionary<string, IReadOnlyList<CheckBox>> _multiEditors = new(StringComparer.OrdinalIgnoreCase);
-    private IReadOnlyList<AvaloniaSettingOption> _options = [];
-    private bool _loaded;
-    private bool _saving;
+    private bool _isApplying;
+    private bool _isLoaded;
+    private bool _isSaving;
 
     public OsdSettingsWindow(IAvaloniaSettingsService settingsService)
     {
         _settingsService = settingsService ?? throw new ArgumentNullException(nameof(settingsService));
-        Title = Get("OsdSettings_Window_Title", "On-screen display settings");
+        Title = Get("OsdWindow_Title", "On-screen display");
         Width = 620;
+        Height = 720;
         MinWidth = 480;
-        SizeToContent = SizeToContent.Height;
+        MinHeight = 520;
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
         AutomationProperties.SetAutomationId(this, "AvaloniaOsdSettingsWindow");
         AutomationProperties.SetName(this, Title);
+        _status.Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush");
+        AutomationProperties.SetAutomationId(_status, "AvaloniaOsdSettingsStatusText");
 
-        _saveButton = ActionButton(Get("Save", "Save"), "AvaloniaOsdSettingsSaveButton", SaveAsync);
+        _saveButton = ActionButton(
+            Get("Save", "Save"),
+            "AvaloniaOsdSettingsSaveButton",
+            SaveAndCloseAsync);
         _saveButton.IsEnabled = false;
-        var cancelButton = ActionButton(Get("Cancel", "Cancel"), "AvaloniaOsdSettingsCancelButton", () =>
-        {
-            Close(false);
-            return Task.CompletedTask;
-        });
 
-        var root = new StackPanel
+        var closeButton = ActionButton(
+            Get("Close", "Close"),
+            "AvaloniaOsdSettingsCloseButton",
+            () =>
+            {
+                Close(false);
+                return Task.CompletedTask;
+            });
+
+        var content = new StackPanel
         {
-            Spacing = 12,
-            Margin = new Thickness(20),
+            Spacing = 14,
+            Margin = new Thickness(24),
             FlowDirection = LocalizationCatalog.IsRightToLeft(LocalizationRuntime.CurrentCulture)
                 ? FlowDirection.RightToLeft
                 : FlowDirection.LeftToRight,
         };
-        root.Children.Add(new LocalizedTextBlock
+        content.Children.Add(new LocalizedTextBlock
         {
-            Text = Title,
-            FontSize = 20,
-            FontWeight = FontWeight.SemiBold,
+            Text = Get("OsdWindow_Title", "On-screen display"),
+            FontSize = 22,
+            FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
             OverflowMode = LocalizedOverflowMode.Wrap,
             MaxLines = 2,
         });
-        root.Children.Add(new LocalizedTextBlock
+        content.Children.Add(new LocalizedTextBlock
         {
-            Text = Get("OsdSettings_Window_Description", "Configure the appearance, thresholds, and sensor items shown by the on-screen display."),
-            Foreground = Brushes.Gray,
+            Text = Get("SettingsPage_Osd_Message", "Configure the on-screen display and sensor thresholds."),
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
             OverflowMode = LocalizedOverflowMode.Wrap,
             MaxLines = 3,
         });
-        root.Children.Add(_optionsPanel);
-        root.Children.Add(_status);
-        root.Children.Add(new StackPanel
+        content.Children.Add(_groupsPanel);
+        content.Children.Add(_status);
+
+        var buttons = new StackPanel
         {
             Orientation = Orientation.Horizontal,
             HorizontalAlignment = HorizontalAlignment.Right,
             Spacing = 8,
-            Children = { cancelButton, _saveButton },
-        });
+            Children = { closeButton, _saveButton },
+        };
+        content.Children.Add(buttons);
 
         Content = new ScrollViewer
         {
-            HorizontalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
-            VerticalScrollBarVisibility = Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
-            Content = root,
+            HorizontalScrollBarVisibility = global::Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled,
+            VerticalScrollBarVisibility = global::Avalonia.Controls.Primitives.ScrollBarVisibility.Auto,
+            Content = content,
         };
         Loaded += OnLoaded;
     }
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        if (_loaded)
+        if (_isLoaded)
             return;
 
-        _loaded = true;
+        _isLoaded = true;
         await LoadAsync().ConfigureAwait(true);
     }
 
@@ -101,114 +150,280 @@ public sealed class OsdSettingsWindow : Window
     {
         try
         {
+            _isApplying = true;
             var page = await _settingsService.GetPageAsync("Application").ConfigureAwait(true);
-            _options = page.Options
-                .Where(option => option.Key.StartsWith("Osd", StringComparison.OrdinalIgnoreCase))
-                .Where(option => option.IsVisible)
-                .ToArray();
-            _optionsPanel.Children.Clear();
-            _editors.Clear();
-            _multiEditors.Clear();
+            var options = page.Options
+                .Where(option => option.IsVisible
+                    && (option.Key.Equals("ShowOsd", StringComparison.Ordinal)
+                        || option.Key.StartsWith("Osd", StringComparison.Ordinal)))
+                .ToDictionary(option => option.Key, StringComparer.Ordinal);
 
-            foreach (var option in _options)
+            _groupsPanel.Children.Clear();
+            var added = new HashSet<string>(StringComparer.Ordinal);
+            AddGroup(
+                Get("OsdSettings_Tabs_General", "General"),
+                GeneralKeys,
+                options,
+                added);
+            AddGroup(
+                Get("OsdSettings_Tabs_Appearance", "Appearance"),
+                AppearanceKeys,
+                options,
+                added);
+            AddGroup(
+                Get("OsdSettings_Tabs_SensorItems", "Sensor items"),
+                SensorItemKeys,
+                options,
+                added);
+            AddGroup(
+                Get("OsdSettings_Tabs_Thresholds", "Thresholds"),
+                ThresholdKeys,
+                options,
+                added);
+
+            var remaining = options.Values
+                .Where(option => !added.Contains(option.Key))
+                .ToArray();
+            if (remaining.Length > 0)
+                AddGroup(Get("Settings", "Settings"), remaining.Select(option => option.Key).ToArray(), options, added);
+
+            if (_groupsPanel.Children.Count == 0)
             {
-                _optionsPanel.Children.Add(CreateOptionCard(option));
-                if (option.Key is "OsdItems")
-                    _optionsPanel.Children.Add(SectionHeading(Get("OsdSettings_Tabs_SensorItems", "Sensor items")));
+                _groupsPanel.Children.Add(new LocalizedTextBlock
+                {
+                    Text = page.UnavailableReason
+                        ?? Get("Settings_Page_NoOptions", "No OSD settings are available."),
+                    Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+                    OverflowMode = LocalizedOverflowMode.Wrap,
+                    MaxLines = 4,
+                });
             }
 
-            _status.Text = Get("Settings_Page_StatusMessage", "Changes are saved when you select Save.");
-            _status.Foreground = Brushes.Gray;
-            _saveButton.IsEnabled = _options.Count > 0;
+            _status.Text = page.UnavailableReason
+                ?? Get("Settings_Page_StatusMessage", "Changes are saved immediately. Select Save to close.");
+            _status.Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush");
+            _saveButton.IsEnabled = false;
         }
         catch (Exception ex)
         {
             _status.Text = ex.Message;
-            _status.Foreground = Brushes.OrangeRed;
+            _status.Foreground = GetResource<IBrush>("StatusWarningBrush");
             _saveButton.IsEnabled = false;
+        }
+        finally
+        {
+            _isApplying = false;
         }
     }
 
-    private Control CreateOptionCard(AvaloniaSettingOption option)
+    private void AddGroup(
+        string title,
+        IReadOnlyList<string> keys,
+        IReadOnlyDictionary<string, AvaloniaSettingOption> options,
+        ISet<string> added)
+    {
+        var groupOptions = keys
+            .Where(options.ContainsKey)
+            .Select(key => options[key])
+            .ToArray();
+        if (groupOptions.Length == 0)
+            return;
+
+        foreach (var option in groupOptions)
+            added.Add(option.Key);
+
+        var groupContent = new StackPanel { Spacing = 10 };
+        groupContent.Children.Add(new LocalizedTextBlock
+        {
+            Text = title,
+            FontSize = 16,
+            FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 2,
+        });
+        var rows = new StackPanel { Spacing = 0 };
+        foreach (var option in groupOptions)
+            rows.Children.Add(CreateOptionRow(option));
+        groupContent.Children.Add(rows);
+
+        var card = new Border
+        {
+            Background = GetResource<IBrush>("CardBackgroundBrush"),
+            BorderBrush = GetResource<IBrush>("CardBorderBrush"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = GetCornerRadius("CornerRadiusCard"),
+            Padding = new Thickness(16),
+            Child = groupContent,
+        };
+        _groupsPanel.Children.Add(card);
+    }
+
+    private Control CreateOptionRow(AvaloniaSettingOption option)
     {
         var title = new LocalizedTextBlock
         {
             Text = option.Title,
             FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
             OverflowMode = LocalizedOverflowMode.Wrap,
             MaxLines = 2,
         };
         var description = new LocalizedTextBlock
         {
             Text = option.Description,
-            Foreground = Brushes.Gray,
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
             OverflowMode = LocalizedOverflowMode.Wrap,
             MaxLines = 3,
         };
-        var copy = new StackPanel { Spacing = 3, MinWidth = 0 };
-        copy.Children.Add(title);
-        copy.Children.Add(description);
-
-        Control editor = option.Editor switch
+        var text = new StackPanel { Spacing = 3, MinWidth = 0 };
+        text.Children.Add(title);
+        text.Children.Add(description);
+        if (!string.IsNullOrWhiteSpace(option.Warning))
         {
-            AvaloniaSettingEditor.Toggle => CreateToggle(option),
-            AvaloniaSettingEditor.Selection => CreateSelection(option),
-            AvaloniaSettingEditor.MultiSelection => CreateMultiSelection(option),
-            AvaloniaSettingEditor.Text => CreateText(option),
-            AvaloniaSettingEditor.Action => CreateAction(option),
-            _ => new TextBlock { Text = option.Title },
-        };
+            text.Children.Add(new LocalizedTextBlock
+            {
+                Text = option.Warning,
+                Foreground = GetResource<IBrush>("StatusWarningBrush"),
+                OverflowMode = LocalizedOverflowMode.Wrap,
+                MaxLines = 3,
+            });
+        }
+
+        var editor = CreateEditor(option);
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 16 };
-        grid.Children.Add(copy);
+        grid.Children.Add(text);
         Grid.SetColumn(editor, 1);
         grid.Children.Add(editor);
-        return new Border
+
+        var row = new Border
         {
-            Background = GetBrush("CardBackgroundBrush"),
-            BorderBrush = GetBrush("CardBorderBrush"),
-            BorderThickness = new Thickness(1),
-            CornerRadius = GetResource("CornerRadiusCard", new CornerRadius(8)),
-            Padding = new Thickness(14),
+            Padding = new Thickness(0, 10),
+            BorderBrush = GetResource<IBrush>("CardBorderBrush"),
+            BorderThickness = new Thickness(0, 0, 0, 1),
             Child = grid,
         };
+        AutomationProperties.SetName(row, option.Title);
+        return row;
     }
+
+    private Control CreateEditor(AvaloniaSettingOption option) => option.Editor switch
+    {
+        AvaloniaSettingEditor.Toggle => CreateToggle(option),
+        AvaloniaSettingEditor.Selection => CreateSelection(option),
+        AvaloniaSettingEditor.MultiSelection => CreateMultiSelection(option),
+        AvaloniaSettingEditor.Text => CreateTextBox(option),
+        AvaloniaSettingEditor.Action => CreateAction(option),
+        _ => new TextBlock { Text = option.Title },
+    };
 
     private CheckBox CreateToggle(AvaloniaSettingOption option)
     {
-        var editor = new CheckBox { IsChecked = option.BoolValue, IsEnabled = option.IsEnabled, MinWidth = 48 };
-        RegisterEditor(option, editor);
-        return editor;
+        var toggle = new CheckBox
+        {
+            IsChecked = option.BoolValue,
+            IsEnabled = option.IsEnabled,
+            MinWidth = 48,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        SetAutomation(toggle, option);
+        var lastSaved = option.BoolValue;
+        toggle.IsCheckedChanged += async (_, _) =>
+        {
+            if (_isApplying || toggle.IsChecked is not bool value)
+                return;
+
+            if (await PersistAsync(
+                () => _settingsService.SetToggleAsync("Application", option.Key, value)))
+            {
+                lastSaved = value;
+            }
+            else
+            {
+                _isApplying = true;
+                toggle.IsChecked = lastSaved;
+                _isApplying = false;
+            }
+        };
+        return toggle;
     }
 
     private ComboBox CreateSelection(AvaloniaSettingOption option)
     {
-        var editor = new ComboBox
+        var combo = new ComboBox
         {
             ItemsSource = option.Values ?? [],
             SelectedItem = option.SelectedValue,
             IsEnabled = option.IsEnabled,
-            MinWidth = 190,
+            MinWidth = 180,
+            HorizontalAlignment = HorizontalAlignment.Right,
         };
-        RegisterEditor(option, editor);
-        return editor;
+        SetAutomation(combo, option);
+        var lastSaved = option.SelectedValue;
+        combo.SelectionChanged += async (_, _) =>
+        {
+            if (_isApplying || combo.SelectedItem is not string value)
+                return;
+
+            if (await PersistAsync(
+                () => _settingsService.SetSelectionAsync("Application", option.Key, value)))
+            {
+                lastSaved = value;
+            }
+            else
+            {
+                _isApplying = true;
+                combo.SelectedItem = lastSaved;
+                _isApplying = false;
+            }
+        };
+        return combo;
     }
 
-    private TextBox CreateText(AvaloniaSettingOption option)
+    private TextBox CreateTextBox(AvaloniaSettingOption option)
     {
-        var editor = new TextBox
+        var textBox = new TextBox
         {
             Text = option.TextValue ?? string.Empty,
             IsEnabled = option.IsEnabled,
-            MinWidth = 190,
+            Width = 180,
+            HorizontalAlignment = HorizontalAlignment.Right,
         };
-        RegisterEditor(option, editor);
-        return editor;
+        SetAutomation(textBox, option);
+        var lastSaved = textBox.Text;
+        textBox.LostFocus += async (_, _) =>
+        {
+            if (_isApplying || string.Equals(textBox.Text, lastSaved, StringComparison.Ordinal))
+                return;
+
+            var value = textBox.Text;
+            if (await PersistAsync(
+                () => _settingsService.SetTextAsync("Application", option.Key, value)))
+            {
+                lastSaved = value;
+            }
+            else
+            {
+                _isApplying = true;
+                textBox.Text = lastSaved;
+                _isApplying = false;
+            }
+        };
+        return textBox;
     }
 
-    private StackPanel CreateMultiSelection(AvaloniaSettingOption option)
+    private Control CreateMultiSelection(AvaloniaSettingOption option)
     {
-        var selected = (option.SelectedValues ?? []).ToHashSet(StringComparer.Ordinal);
+        var selected = new HashSet<string>(option.SelectedValues ?? [], StringComparer.Ordinal);
         var checks = new List<CheckBox>();
+        var panel = new WrapPanel
+        {
+            Orientation = Orientation.Horizontal,
+            ItemWidth = 150,
+            MaxWidth = 320,
+            HorizontalAlignment = HorizontalAlignment.Right,
+        };
         foreach (var value in option.Values ?? [])
         {
             var check = new CheckBox
@@ -216,117 +431,144 @@ public sealed class OsdSettingsWindow : Window
                 Content = value,
                 IsChecked = selected.Contains(value),
                 IsEnabled = option.IsEnabled,
+                Width = 150,
+                Margin = new Thickness(0, 2, 4, 2),
                 HorizontalContentAlignment = HorizontalAlignment.Left,
             };
+            AutomationProperties.SetAutomationId(
+                check,
+                $"AvaloniaOsdSettings_{option.Key}_{checks.Count}");
+            AutomationProperties.SetName(check, value);
+            ToolTip.SetTip(check, option.Description);
+            check.IsCheckedChanged += async (_, _) =>
+            {
+                if (_isApplying || check.IsChecked is not bool isChecked)
+                    return;
+
+                var previous = selected.ToArray();
+                if (isChecked)
+                    selected.Add(value);
+                else
+                    selected.Remove(value);
+
+                if (!await PersistAsync(
+                    () => _settingsService.SetMultiSelectionAsync(
+                        "Application",
+                        option.Key,
+                        selected.ToArray())))
+                {
+                    selected.Clear();
+                    selected.UnionWith(previous);
+                    _isApplying = true;
+                    foreach (var sibling in checks)
+                        sibling.IsChecked = selected.Contains(sibling.Content?.ToString() ?? string.Empty);
+                    _isApplying = false;
+                }
+            };
             checks.Add(check);
+            panel.Children.Add(check);
         }
 
-        var panel = new StackPanel { Spacing = 4, MinWidth = 220, MaxWidth = 360 };
-        foreach (var check in checks)
-            panel.Children.Add(check);
-        _multiEditors[option.Key] = checks;
         AutomationProperties.SetAutomationId(panel, $"AvaloniaOsdSettings_{option.Key}");
+        AutomationProperties.SetName(panel, option.Title);
+        ToolTip.SetTip(panel, option.Description);
         return panel;
     }
 
     private Button CreateAction(AvaloniaSettingOption option)
     {
-        var button = ActionButton(option.ActionText ?? option.Title, $"AvaloniaOsdSettings_{option.Key}", async () =>
-        {
-            await _settingsService.InvokeActionAsync("Application", option.Key).ConfigureAwait(true);
-        });
+        var button = ActionButton(
+            option.ActionText ?? option.Title,
+            $"AvaloniaOsdSettings_{option.Key}",
+            async () =>
+            {
+                await PersistAsync(
+                    () => _settingsService.InvokeActionAsync("Application", option.Key));
+            });
         button.IsEnabled = option.IsEnabled;
+        ToolTip.SetTip(button, option.Description);
         return button;
     }
 
-    private async Task SaveAsync()
+    private async Task<bool> PersistAsync(Func<Task> action)
     {
-        if (!_loaded || _saving)
-            return;
+        if (_isApplying || _isSaving)
+            return false;
 
-        _saving = true;
-        _saveButton.IsEnabled = false;
         try
         {
-            foreach (var option in _options)
-            {
-                if (option.Editor == AvaloniaSettingEditor.Toggle
-                    && _editors[option.Key] is CheckBox toggle
-                    && toggle.IsChecked is bool boolValue)
-                {
-                    await _settingsService.SetToggleAsync("Application", option.Key, boolValue).ConfigureAwait(true);
-                }
-                else if (option.Editor == AvaloniaSettingEditor.Selection
-                         && _editors[option.Key] is ComboBox combo
-                         && combo.SelectedItem is string selected)
-                {
-                    await _settingsService.SetSelectionAsync("Application", option.Key, selected).ConfigureAwait(true);
-                }
-                else if (option.Editor == AvaloniaSettingEditor.Text
-                         && _editors[option.Key] is TextBox text)
-                {
-                    await _settingsService.SetTextAsync("Application", option.Key, text.Text).ConfigureAwait(true);
-                }
-                else if (option.Editor == AvaloniaSettingEditor.MultiSelection
-                         && _multiEditors.TryGetValue(option.Key, out var checks))
-                {
-                    var values = checks
-                        .Where(check => check.IsChecked == true)
-                        .Select(check => check.Content?.ToString() ?? string.Empty)
-                        .Where(value => value.Length > 0)
-                        .ToArray();
-                    await _settingsService.SetMultiSelectionAsync("Application", option.Key, values).ConfigureAwait(true);
-                }
-            }
-
-            _status.Text = Get("Settings_Page_SaveSuccess", "On-screen display settings saved.");
-            _status.Foreground = Brushes.SeaGreen;
-            Close(true);
+            await action().ConfigureAwait(true);
+            _saveButton.IsEnabled = true;
+            _status.Text = Get("Settings_Page_SaveSuccess", "Setting saved.");
+            _status.Foreground = GetResource<IBrush>("StatusSuccessBrush");
+            return true;
         }
         catch (Exception ex)
         {
             _status.Text = ex.Message;
-            _status.Foreground = Brushes.OrangeRed;
-            _saveButton.IsEnabled = true;
+            _status.Foreground = GetResource<IBrush>("StatusWarningBrush");
+            return false;
+        }
+    }
+
+    private async Task SaveAndCloseAsync()
+    {
+        if (!_isLoaded || _isSaving)
+            return;
+
+        _isSaving = true;
+        _saveButton.IsEnabled = false;
+        try
+        {
+            _status.Text = Get("Settings_Page_SaveSuccess", "OSD settings saved.");
+            Close(true);
         }
         finally
         {
-            _saving = false;
+            _isSaving = false;
         }
     }
 
-    private void RegisterEditor(AvaloniaSettingOption option, Control editor)
+    private static Button ActionButton(string text, string automationId, Func<Task> action)
     {
-        _editors[option.Key] = editor;
-        AutomationProperties.SetAutomationId(editor, $"AvaloniaOsdSettings_{option.Key}");
-        AutomationProperties.SetName(editor, option.Title);
-        ToolTip.SetTip(editor, option.Description);
-    }
-
-    private Button ActionButton(string text, string automationId, Func<Task> action)
-    {
-        var button = new Button { Content = text, MinWidth = 100, Padding = new Thickness(12, 7) };
+        var button = new Button
+        {
+            Content = text,
+            MinWidth = 100,
+            Padding = new Thickness(12, 7),
+        };
         AutomationProperties.SetAutomationId(button, automationId);
         ToolTip.SetTip(button, text);
         button.Click += async (_, _) => await action().ConfigureAwait(true);
         return button;
     }
 
-    private static TextBlock SectionHeading(string text) => new()
+    private static void SetAutomation(Control control, AvaloniaSettingOption option)
     {
-        Text = text,
-        FontSize = 16,
-        FontWeight = FontWeight.SemiBold,
-        Margin = new Thickness(0, 8, 0, 0),
-    };
+        AutomationProperties.SetAutomationId(control, $"AvaloniaOsdSettings_{option.Key}");
+        AutomationProperties.SetName(control, option.Title);
+        ToolTip.SetTip(control, option.Description);
+    }
 
-    private IBrush GetBrush(string key) =>
-        this.TryFindResource(key, out var value) && value is IBrush brush
-            ? brush
-            : Brushes.Transparent;
+    private T GetResource<T>(object key) where T : class
+    {
+        if (this.TryFindResource(key, out var resource) && resource is T typedValue)
+            return typedValue;
 
-    private T GetResource<T>(string key, T fallback) =>
-        this.TryFindResource(key, out var value) && value is T resource ? resource : fallback;
+        if (typeof(T) == typeof(IBrush))
+            return (T)(object)new SolidColorBrush(Colors.Transparent);
 
-    private static string Get(string key, string fallback) => AvaloniaLocalization.GetString(key, fallback);
+        throw new InvalidOperationException($"Missing Avalonia resource '{key}'.");
+    }
+
+    private CornerRadius GetCornerRadius(object key)
+    {
+        if (this.TryFindResource(key, out var resource) && resource is CornerRadius radius)
+            return radius;
+
+        return new CornerRadius(8);
+    }
+
+    private static string Get(string key, string fallback) =>
+        AvaloniaLocalization.GetString(key, fallback);
 }
