@@ -14,6 +14,7 @@ using UniversalDeviceToolkit.Platform.Linux;
 using UniversalDeviceToolkit.Platform.MacOS;
 #if WINDOWS
 using Autofac;
+using UniversalDeviceToolkit.Avalonia.Startup;
 using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.WindowsDeviceAdapter;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib;
@@ -42,6 +43,7 @@ public partial class App : Application
 #if WINDOWS
     private ApplicationSettings? _applicationSettings;
     private AvaloniaNotificationManager? _notificationManager;
+    private AvaloniaSingleInstanceGuard? _singleInstanceGuard;
 #endif
 
     public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
@@ -89,6 +91,14 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
+#if WINDOWS
+            if (!AcquireSingleInstance())
+            {
+                desktop.Shutdown();
+                base.OnFrameworkInitializationCompleted();
+                return;
+            }
+#endif
             ApplyPersistedTheme();
 #if WINDOWS
             _applicationSettings ??= WindowsAvaloniaSettingsService.SharedApplicationSettings;
@@ -108,6 +118,8 @@ public partial class App : Application
                 _applicationSettings,
                 () => desktop.MainWindow as MainWindow,
                 IoCContainer.Resolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>());
+            _singleInstanceGuard!.StartListener(() =>
+                global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
             _ = StartWindowsHostServicesAsync();
 #endif
         }
@@ -292,6 +304,8 @@ public partial class App : Application
 #if WINDOWS
         _notificationManager?.Dispose();
         _notificationManager = null;
+        _singleInstanceGuard?.Dispose();
+        _singleInstanceGuard = null;
         PluginHostContext.Reset();
         try
         {
@@ -313,6 +327,17 @@ public partial class App : Application
     }
 
 #if WINDOWS
+    private bool AcquireSingleInstance()
+    {
+        _singleInstanceGuard = new AvaloniaSingleInstanceGuard();
+        if (_singleInstanceGuard.TryAcquire())
+            return true;
+
+        _singleInstanceGuard.Dispose();
+        _singleInstanceGuard = null;
+        return false;
+    }
+
     private static async Task StartWindowsHostServicesAsync()
     {
         try
