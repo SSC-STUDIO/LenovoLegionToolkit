@@ -46,9 +46,27 @@
                             automation:AutomationProperties.AutomationId="AvaloniaDriverScan" />
                 </Grid>
             </Border>
-            <CheckBox x:Name="OnlyUpdatesCheckBox"
-                      Content="{local:Loc Key=PackagesPage_OnlyShowUpdates, Fallback=Only show updates}"
-                      automation:AutomationProperties.AutomationId="AvaloniaDriverOnlyUpdates" />
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <TextBox x:Name="FilterTextBox"
+                         Watermark="{local:Loc Key=Filter, Fallback=Filter}"
+                         TextChanged="FilterTextBox_TextChanged"
+                         automation:AutomationProperties.AutomationId="AvaloniaDriverFilter" />
+                <CheckBox x:Name="OnlyUpdatesCheckBox"
+                          Grid.Column="1"
+                          VerticalAlignment="Center"
+                          Content="{local:Loc Key=PackagesPage_OnlyShowUpdates, Fallback=Only show updates}"
+                          Click="OnlyUpdatesCheckBox_Click"
+                          automation:AutomationProperties.AutomationId="AvaloniaDriverOnlyUpdates" />
+                <ComboBox x:Name="SortComboBox"
+                          Grid.Column="2"
+                          MinWidth="140"
+                          SelectionChanged="SortComboBox_SelectionChanged"
+                          automation:AutomationProperties.AutomationId="AvaloniaDriverSort">
+                    <ComboBoxItem Content="{local:Loc Key=PackagesPage_Sort_Name, Fallback=Name}" Tag="Name" />
+                    <ComboBoxItem Content="{local:Loc Key=PackagesPage_Sort_Category, Fallback=Category}" Tag="Category" />
+                    <ComboBoxItem Content="{local:Loc Key=PackagesPage_Sort_Date, Fallback=Version}" Tag="Version" />
+                </ComboBox>
+            </Grid>
             <controls:LocalizedTextBlock x:Name="StateText"
                                          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                          OverflowMode="Wrap"

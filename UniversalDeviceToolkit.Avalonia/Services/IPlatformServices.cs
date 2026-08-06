@@ -372,7 +372,8 @@ public sealed record DriverPackageItem(
     string Category,
     string FileSize,
     bool IsUpdate,
-    bool IsRecommended);
+    bool IsRecommended,
+    DateTime ReleaseDate = default);
 
 public sealed record DriverDownloadState(
     bool IsAvailable,

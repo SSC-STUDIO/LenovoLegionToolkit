@@ -15,6 +15,7 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 public partial class DriverDownloadPage : UserControl
 {
     private readonly IPlatformServices _platformServices;
+    private IReadOnlyList<DriverPackageItem> _packages = [];
     private bool _isApplying;
     private readonly string[] _sources = ["Vantage", "PCSupport"];
     private readonly string[] _operatingSystems = ["Windows11", "Windows10", "Windows8", "Windows7"];
@@ -33,8 +34,9 @@ public partial class DriverDownloadPage : UserControl
     {
         Loaded -= OnLoaded;
         var state = await _platformServices.GetDriverDownloadStateAsync();
-        MachineTypeTextBox.Text = state.MachineType;
-        StateText.Text = state.Error ?? string.Empty;
+            MachineTypeTextBox.Text = state.MachineType;
+            StateText.Text = state.Error ?? string.Empty;
+            RenderPackages(state.Packages);
     }
 
     private async void ScanButton_Click(object? sender, RoutedEventArgs e)
@@ -64,14 +66,45 @@ public partial class DriverDownloadPage : UserControl
 
     private void RenderPackages(IReadOnlyList<DriverPackageItem> packages)
     {
+        _packages = packages;
+        RenderVisiblePackages();
+    }
+
+    private void RenderVisiblePackages()
+    {
         PackagesPanel.Children.Clear();
-        if (packages.Count == 0)
+        var filter = FilterTextBox.Text?.Trim() ?? string.Empty;
+        var packages = _packages
+            .Where(package => !OnlyUpdatesCheckBox.IsChecked.GetValueOrDefault() || package.IsUpdate)
+            .Where(package => string.IsNullOrWhiteSpace(filter)
+                || package.Title.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
+                || package.Description.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
+                || package.Category.Contains(filter, StringComparison.CurrentCultureIgnoreCase)
+                || package.Version.Contains(filter, StringComparison.CurrentCultureIgnoreCase))
+            .ToArray();
+
+        var sortKey = (SortComboBox.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "Date";
+        packages = sortKey switch
+        {
+            "Name" => packages.OrderBy(package => package.Title, StringComparer.CurrentCultureIgnoreCase).ToArray(),
+            "Category" => packages
+                .OrderBy(package => package.Category, StringComparer.CurrentCultureIgnoreCase)
+                .ThenBy(package => package.Title, StringComparer.CurrentCultureIgnoreCase)
+                .ToArray(),
+            _ => packages.OrderByDescending(package => package.ReleaseDate).ToArray(),
+        };
+
+        if (packages.Length == 0)
         {
             PackagesPanel.Children.Add(new LocalizedTextBlock
             {
                 Text = AvaloniaLocalization.GetString(
-                    "WindowsOptimizationPage_DriverEmpty_NoResults_Message",
-                    "No driver downloads found. Try a different source or operating system."),
+                    _packages.Count == 0
+                        ? "WindowsOptimizationPage_DriverEmpty_NoResults_Message"
+                        : "WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message",
+                    _packages.Count == 0
+                        ? "No driver downloads found. Try a different source or operating system."
+                        : "No driver downloads match the current filters."),
                 Foreground = FindBrush("TextFillColorSecondaryBrush"),
                 OverflowMode = LocalizedOverflowMode.Wrap,
                 MaxLines = 3,
@@ -82,6 +115,15 @@ public partial class DriverDownloadPage : UserControl
         foreach (var package in packages)
             PackagesPanel.Children.Add(CreatePackageCard(package));
     }
+
+    private void FilterTextBox_TextChanged(object? sender, TextChangedEventArgs e) =>
+        RenderVisiblePackages();
+
+    private void OnlyUpdatesCheckBox_Click(object? sender, RoutedEventArgs e) =>
+        RenderVisiblePackages();
+
+    private void SortComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e) =>
+        RenderVisiblePackages();
 
     private Border CreatePackageCard(DriverPackageItem package)
     {

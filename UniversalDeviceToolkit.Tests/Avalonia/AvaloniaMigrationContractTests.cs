@@ -462,6 +462,28 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaDriverDownload_PreservesWpfFilterAndSortSurface()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DriverDownloadPage.axaml"));
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DriverDownloadPage.axaml.cs"));
+
+        markup.Should().Contain("AvaloniaDriverFilter");
+        markup.Should().Contain("AvaloniaDriverSort");
+        source.Should().Contain("FilterTextBox_TextChanged");
+        source.Should().Contain("OrderByDescending(package => package.ReleaseDate)");
+        source.Should().Contain("WindowsOptimizationPage_DriverEmpty_NoFilterResults_Message");
+    }
+
+    [Fact]
     public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
     {
         var root = RepositoryPaths.FindRoot();

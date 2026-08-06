@@ -1136,7 +1136,8 @@ internal sealed class WindowsFeatureHostServices
                 package.Category,
                 package.FileSize,
                 package.IsUpdate,
-                package.Title.Contains("recommended", StringComparison.OrdinalIgnoreCase)))
+                package.Title.Contains("recommended", StringComparison.OrdinalIgnoreCase),
+                package.ReleaseDate))
             .ToArray();
         return new DriverDownloadState(
             _packageDownloaderFactory is not null,
