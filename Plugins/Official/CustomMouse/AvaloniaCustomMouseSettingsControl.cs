@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Interactivity;
+using System.Threading;
 
 namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 
@@ -26,6 +27,7 @@ public sealed class AvaloniaCustomMouseSettingsControl : UserControl
     private readonly TextBlock _statusIcon;
     private readonly ProgressBar _applyProgress;
     private bool _hydrating;
+    private int _cursorThemeSelectionVersion;
 
     public AvaloniaCustomMouseSettingsControl(CustomMousePlugin plugin)
     {
@@ -105,7 +107,7 @@ public sealed class AvaloniaCustomMouseSettingsControl : UserControl
             Spacing = 8,
             Children =
             {
-                ActionButton(CustomMouseText.ApplyCursorThemeNowButton, ApplyCursorThemeAsync, "AvaloniaCustomMouseApplyCursorTheme"),
+                ActionButton(CustomMouseText.ApplyCursorThemeNowButton, () => ApplyCursorThemeAsync(), "AvaloniaCustomMouseApplyCursorTheme"),
                 ActionButton(CustomMouseText.RestoreWindowsDefaultButton, RestoreWindowsDefaultAsync, "AvaloniaCustomMouseRestoreWindowsDefault"),
             },
         });
@@ -165,7 +167,10 @@ public sealed class AvaloniaCustomMouseSettingsControl : UserControl
         _cursorTheme.SelectionChanged += async (_, _) =>
         {
             if (!_hydrating && _cursorTheme.SelectedIndex >= 0)
-                await ApplyCursorThemeAsync();
+            {
+                var selectionVersion = Interlocked.Increment(ref _cursorThemeSelectionVersion);
+                await ApplyCursorThemeAsync(selectionVersion);
+            }
         };
     }
 
@@ -235,35 +240,59 @@ public sealed class AvaloniaCustomMouseSettingsControl : UserControl
         SetStatus(CustomMouseText.StatusReloaded, false);
     }
 
-    private async Task ApplyCursorThemeAsync()
+    private async Task ApplyCursorThemeAsync(int? selectionVersion = null)
     {
         if (_cursorTheme.SelectedIndex < 0)
             return;
 
         var mode = (CursorThemeMode)_cursorTheme.SelectedIndex;
-        var applied = await _plugin.SetCursorThemeModeAsync(mode).ConfigureAwait(true);
-        if (!applied)
+        try
+        {
+            var applied = await _plugin.SetCursorThemeModeAsync(mode).ConfigureAwait(true);
+            if (selectionVersion.HasValue
+                && selectionVersion.Value != Volatile.Read(ref _cursorThemeSelectionVersion))
+            {
+                return;
+            }
+
+            if (!applied)
+            {
+                _hydrating = true;
+                _cursorTheme.SelectedIndex = (int)_plugin.Settings.CursorThemeMode;
+                _hydrating = false;
+            }
+
+            SetStatus(
+                applied ? CustomMouseText.StatusWindowsApplied : CustomMouseText.StatusCursorApplyFailed,
+                !applied);
+            RefreshSummary();
+        }
+        catch (Exception ex)
         {
             _hydrating = true;
             _cursorTheme.SelectedIndex = (int)_plugin.Settings.CursorThemeMode;
             _hydrating = false;
+            SetStatus($"{CustomMouseText.StatusCursorApplyFailed}: {ex.Message}", true);
+            RefreshSummary();
         }
-
-        SetStatus(
-            applied ? CustomMouseText.StatusWindowsApplied : CustomMouseText.StatusCursorApplyFailed,
-            !applied);
-        RefreshSummary();
     }
 
     private async Task RestoreWindowsDefaultAsync()
     {
-        var restored = await _plugin.RestoreWindowsDefaultCursorThemeAsync().ConfigureAwait(true);
-        Hydrate(setReadyStatus: false);
-        SetStatus(
-            restored
-                ? CustomMouseText.StatusWindowsDefaultRestored
-                : CustomMouseText.StatusRestoreWindowsDefaultFailed,
-            !restored);
+        try
+        {
+            var restored = await _plugin.RestoreWindowsDefaultCursorThemeAsync().ConfigureAwait(true);
+            Hydrate(setReadyStatus: false);
+            SetStatus(
+                restored
+                    ? CustomMouseText.StatusWindowsDefaultRestored
+                    : CustomMouseText.StatusRestoreWindowsDefaultFailed,
+                !restored);
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"{CustomMouseText.StatusRestoreWindowsDefaultFailed}: {ex.Message}", true);
+        }
     }
 
     private void RefreshSummary()

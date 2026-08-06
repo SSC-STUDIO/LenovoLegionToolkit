@@ -78,6 +78,8 @@ public class ShellIntegrationPluginTests
         Assert.Contains("culture.TextInfo.IsRightToLeft", source);
         Assert.Contains("ShowDialog(owner)", source);
         Assert.Contains("AvaloniaShellIntegrationOpenShellConfigFileButton", source);
+        Assert.Contains("Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true })", source);
+        Assert.Contains("catch (Exception ex)", source);
     }
 
     [Fact]

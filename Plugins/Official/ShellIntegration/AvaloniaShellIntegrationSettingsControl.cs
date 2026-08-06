@@ -449,9 +449,17 @@ public sealed class AvaloniaShellIntegrationStyleSettingsControl : UserControl
             return;
         }
 
-        Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
-        _status.Text = directory ? ShellIntegrationText.StatusOpenedShellFolder : ShellIntegrationText.StatusOpenedConfig;
-        _status.Foreground = Brushes.SeaGreen;
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
+            _status.Text = directory ? ShellIntegrationText.StatusOpenedShellFolder : ShellIntegrationText.StatusOpenedConfig;
+            _status.Foreground = Brushes.SeaGreen;
+        }
+        catch (Exception ex)
+        {
+            _status.Text = $"{(directory ? ShellIntegrationText.StatusShellFolderNotFound : ShellIntegrationText.StatusConfigNotFound)}: {ex.Message}";
+            _status.Foreground = Brushes.IndianRed;
+        }
     }
 
     private static string? Join(string? directory, string fileName) =>

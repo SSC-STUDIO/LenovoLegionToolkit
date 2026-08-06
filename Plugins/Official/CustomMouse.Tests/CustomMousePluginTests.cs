@@ -70,6 +70,9 @@ public class CustomMousePluginTests
         Assert.Contains("StatusWindowsDefaultRestored", source);
         Assert.Contains("$\"{speed}/20\"", source);
         Assert.Contains("AvaloniaCustomMouseApplyProgress", source);
+        Assert.Contains("Interlocked.Increment(ref _cursorThemeSelectionVersion)", source);
+        Assert.Contains("Volatile.Read(ref _cursorThemeSelectionVersion)", source);
+        Assert.Contains("StatusCursorApplyFailed}: {ex.Message}", source);
     }
 
     [Fact]
