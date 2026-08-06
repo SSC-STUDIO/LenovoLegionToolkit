@@ -1,6 +1,7 @@
 using FluentAssertions;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Avalonia.Pages;
+using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Lib;
@@ -418,6 +419,28 @@ public sealed class AvaloniaMigrationContractTests
         source.Should().Contain("accepted = await _platformServices.SetFeatureActionAsync");
         source.Should().Contain("toggle.IsChecked = item.IsSelected;");
         source.Should().Contain("ToolTip.SetTip(toggle, item.Description + \" \" + item.Status)");
+    }
+
+    [Fact]
+    public void WindowsOptimizationActionDetails_PreserveWpfDoubleClickSurface()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "FeaturePageView.axaml.cs"));
+
+        source.Should().Contain("args.ClickCount");
+        source.Should().Contain("new ActionDetailsWindow(item)");
+
+        var cleanup = AvaloniaActionDetailsCatalog.Get("cleanup.tempFiles");
+        cleanup.ImplementationType.Should().NotBeNullOrWhiteSpace();
+        cleanup.Details.Should().Contain(detail => detail.Contains("SystemRoot", StringComparison.Ordinal));
+
+        var unknown = AvaloniaActionDetailsCatalog.Get("plugin.custom-action");
+        unknown.ImplementationType.Should().NotBeNullOrWhiteSpace();
+        unknown.Details.Should().NotBeEmpty();
     }
 
     [Fact]

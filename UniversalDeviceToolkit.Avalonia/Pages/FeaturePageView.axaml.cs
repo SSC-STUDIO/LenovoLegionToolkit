@@ -2,12 +2,14 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
@@ -22,6 +24,7 @@ public partial class FeaturePageView : UserControl
     private FeaturePageState? _lastState;
     private PluginCatalogState? _pluginCatalog;
     private bool _showCleanup;
+    private ActionDetailsWindow? _actionDetailsWindow;
 
     protected FeaturePageView(
         IPlatformServices platformServices,
@@ -43,6 +46,11 @@ public partial class FeaturePageView : UserControl
         PluginSearchBox.TextChanged += PluginSearchBox_TextChanged;
         PluginFilterBox.SelectionChanged += PluginFilterBox_SelectionChanged;
         Loaded += OnLoaded;
+        Unloaded += (_, _) =>
+        {
+            _actionDetailsWindow?.Close();
+            _actionDetailsWindow = null;
+        };
     }
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
@@ -710,8 +718,30 @@ public partial class FeaturePageView : UserControl
             Margin = new Thickness(0, 0, 0, 8),
             Child = grid,
         };
+        if (_descriptor.RouteKey.Equals("WindowsOptimization", StringComparison.Ordinal))
+            card.PointerPressed += (_, args) => ActionCard_PointerPressed(item, args);
         AutomationProperties.SetName(card, item.Title);
         return card;
+    }
+
+    private void ActionCard_PointerPressed(FeatureActionItem item, PointerPressedEventArgs args)
+    {
+        if (args.ClickCount < 2)
+            return;
+
+        args.Handled = true;
+        if (_actionDetailsWindow is { IsVisible: true })
+        {
+            _actionDetailsWindow.Activate();
+            return;
+        }
+
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        _actionDetailsWindow = new ActionDetailsWindow(item);
+        _actionDetailsWindow.Closed += (_, _) => _actionDetailsWindow = null;
+        _actionDetailsWindow.Show(owner);
     }
 
     private Border CreateStatusBadge(string status, FeatureActionStatusKind statusKind)
