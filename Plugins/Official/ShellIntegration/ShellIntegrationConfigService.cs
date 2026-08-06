@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 
 namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 

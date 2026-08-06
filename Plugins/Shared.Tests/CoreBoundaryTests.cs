@@ -19,6 +19,7 @@ public sealed class CoreBoundaryTests
         Assert.DoesNotContain("PresentationCore", references, StringComparer.OrdinalIgnoreCase);
         Assert.DoesNotContain("WindowsBase", references, StringComparer.OrdinalIgnoreCase);
         Assert.DoesNotContain("System.Xaml", references, StringComparer.OrdinalIgnoreCase);
+        Assert.DoesNotContain("UniversalDeviceToolkit.Plugins.Shared", references, StringComparer.OrdinalIgnoreCase);
     }
 
     [Fact]

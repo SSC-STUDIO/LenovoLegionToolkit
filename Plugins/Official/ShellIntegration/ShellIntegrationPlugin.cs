@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Windows;
 using UniversalDeviceToolkit.Lib.Optimization;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 using UniversalDeviceToolkit.Plugins.ShellIntegration.Resources;
 using UniversalDeviceToolkit.Plugins.SDK;
 using Microsoft.Win32;
