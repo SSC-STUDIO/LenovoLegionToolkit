@@ -27,6 +27,7 @@ public partial class KeyboardBacklightPage : UserControl
     private static readonly string[] SpectrumSpeeds = ["None", "Speed1", "Speed2", "Speed3"];
     private static readonly string[] SpectrumDirections = ["None", "BottomToTop", "TopToBottom", "LeftToRight", "RightToLeft"];
     private static readonly string[] SpectrumClockwiseDirections = ["None", "Clockwise", "CounterClockwise"];
+    private static readonly string[] SpectrumKeyboardLayouts = ["Ansi", "Iso", "Jis"];
 
     public KeyboardBacklightPage(IPlatformServices platformServices)
     {
@@ -97,6 +98,12 @@ public partial class KeyboardBacklightPage : UserControl
     private void BuildSpectrum(KeyboardLightingState state)
     {
         SpectrumPanel.IsVisible = true;
+        SpectrumKeyboardLayoutValue.Text = state.KeyboardLayout.ToUpperInvariant();
+        ToolTip.SetTip(
+            SpectrumKeyboardLayoutValue,
+            AvaloniaLocalization.GetString(
+                "SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip",
+                "Switch keyboard layout"));
         SpectrumProfiles.Children.Clear();
         for (var profile = 1; profile <= 6; profile++)
         {
@@ -124,6 +131,18 @@ public partial class KeyboardBacklightPage : UserControl
             _spectrumEditors.Add(editor);
             SpectrumEffects.Items.Add(CreateSpectrumEffectCard(editor));
         }
+    }
+
+    private async void SwitchSpectrumLayout_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || _state is null)
+            return;
+
+        var current = SpectrumKeyboardLayouts.FirstOrDefault(
+            layout => layout.Equals(_state.KeyboardLayout, StringComparison.OrdinalIgnoreCase));
+        var currentIndex = current is null ? 0 : Array.IndexOf(SpectrumKeyboardLayouts, current);
+        var next = SpectrumKeyboardLayouts[(currentIndex + 1) % SpectrumKeyboardLayouts.Length];
+        await ApplyAsync(new KeyboardLightingUpdate("Spectrum", KeyboardLayout: next));
     }
 
     private Border CreateSpectrumEffectCard(SpectrumEffectEditor editor)

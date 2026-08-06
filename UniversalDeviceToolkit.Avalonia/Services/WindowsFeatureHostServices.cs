@@ -47,6 +47,7 @@ internal sealed class WindowsFeatureHostServices
 {
     private readonly IKeyboardBacklightDetectionService _keyboard;
     private readonly SpectrumKeyboardBacklightController? _spectrum;
+    private readonly SpectrumKeyboardSettings? _spectrumSettings;
     private readonly RGBKeyboardBacklightController? _rgb;
     private readonly IMacroController _macro;
     private readonly AutomationProcessor _automation;
@@ -92,6 +93,7 @@ internal sealed class WindowsFeatureHostServices
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
     private bool _automationInitialized;
+    private KeyboardLayout? _spectrumKeyboardLayoutOverride;
     private static readonly ulong[] MacroKeys = [0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69];
 
     private WindowsFeatureHostServices(
@@ -109,6 +111,7 @@ internal sealed class WindowsFeatureHostServices
     {
         _keyboard = keyboard;
         _spectrum = spectrum;
+        _spectrumSettings = IoCContainer.TryResolve<SpectrumKeyboardSettings>();
         _rgb = rgb;
         _macro = macro;
         _automation = automation;
@@ -1855,6 +1858,11 @@ internal sealed class WindowsFeatureHostServices
     {
         if (_spectrum is not null && await _spectrum.IsSupportedAsync().ConfigureAwait(false))
         {
+            var (spectrumLayout, detectedKeyboardLayout, keyboardKeys) =
+                await _spectrum.GetKeyboardLayoutAsync().ConfigureAwait(false);
+            var keyboardLayout = _spectrumSettings?.Store.KeyboardLayout
+                ?? _spectrumKeyboardLayoutOverride
+                ?? detectedKeyboardLayout;
             var profile = await _spectrum.GetProfileAsync().ConfigureAwait(false);
             var brightness = await _spectrum.GetBrightnessAsync().ConfigureAwait(false);
             var logoEnabled = await _spectrum.GetLogoStatusAsync().ConfigureAwait(false);
@@ -1871,7 +1879,10 @@ internal sealed class WindowsFeatureHostServices
                     effect.ClockwiseDirection.ToString(),
                     effect.Colors.Select(ToKeyboardColor).ToArray(),
                     effect.Keys)).ToArray(),
-                []);
+                [],
+                keyboardLayout.ToString(),
+                spectrumLayout.ToString(),
+                keyboardKeys.OrderBy(key => key).ToArray());
         }
 
         if (_rgb is not null && await _rgb.IsSupportedAsync().ConfigureAwait(false))
@@ -1915,6 +1926,20 @@ internal sealed class WindowsFeatureHostServices
         {
             if (!await _spectrum.IsSupportedAsync().ConfigureAwait(false))
                 return false;
+
+            if (update.KeyboardLayout is { } requestedLayout)
+            {
+                if (!Enum.TryParse<KeyboardLayout>(requestedLayout, true, out var keyboardLayout)
+                    || keyboardLayout == KeyboardLayout.Keyboard24Zone)
+                    return false;
+
+                _spectrumKeyboardLayoutOverride = keyboardLayout;
+                if (_spectrumSettings is not null)
+                {
+                    _spectrumSettings.Store.KeyboardLayout = keyboardLayout;
+                    _spectrumSettings.SynchronizeStore();
+                }
+            }
 
             if (update.SelectedProfile is { } profile && update.SpectrumEffects is null)
                 await _spectrum.SetProfileAsync(profile).ConfigureAwait(false);

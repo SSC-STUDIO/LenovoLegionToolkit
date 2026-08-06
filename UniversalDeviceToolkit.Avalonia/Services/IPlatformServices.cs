@@ -334,7 +334,10 @@ public sealed record KeyboardLightingState(
     bool LogoEnabled,
     int SelectedProfile,
     IReadOnlyList<KeyboardSpectrumEffectState> SpectrumEffects,
-    IReadOnlyList<KeyboardRgbPresetState> RgbPresets);
+    IReadOnlyList<KeyboardRgbPresetState> RgbPresets,
+    string KeyboardLayout = "Ansi",
+    string SpectrumLayout = "KeyboardOnly",
+    IReadOnlyList<ushort>? KeyboardKeys = null);
 
 public sealed record KeyboardLightingUpdate(
     string Mode,
@@ -346,7 +349,8 @@ public sealed record KeyboardLightingUpdate(
     string? RgbSpeed = null,
     string? RgbBrightness = null,
     IReadOnlyList<KeyboardColorState>? RgbZones = null,
-    IReadOnlyList<KeyboardSpectrumEffectState>? SpectrumEffects = null);
+    IReadOnlyList<KeyboardSpectrumEffectState>? SpectrumEffects = null,
+    string? KeyboardLayout = null);
 
 public sealed record NetworkAccelerationGroupState(
     string Id,

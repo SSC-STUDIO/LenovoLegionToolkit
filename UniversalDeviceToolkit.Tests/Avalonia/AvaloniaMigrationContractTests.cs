@@ -552,6 +552,33 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaKeyboardSpectrum_PreservesWpfKeyboardLayoutSwitch()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml"));
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+        var service = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+
+        markup.Should().Contain("AvaloniaSpectrumSwitchLayout");
+        source.Should().Contain("SwitchSpectrumLayout_Click");
+        source.Should().Contain("KeyboardLayout: next");
+        service.Should().Contain("GetKeyboardLayoutAsync");
+        service.Should().Contain("_spectrumSettings.Store.KeyboardLayout");
+    }
+
+    [Fact]
     public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
     {
         var root = RepositoryPaths.FindRoot();
