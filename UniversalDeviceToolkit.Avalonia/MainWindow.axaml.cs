@@ -4,6 +4,7 @@ using global::Avalonia.Controls;
 using global::Avalonia.Interactivity;
 using global::Avalonia.Layout;
 using global::Avalonia.Media;
+using global::Avalonia.Threading;
 using System.Text;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
@@ -21,6 +22,7 @@ public partial class MainWindow : Window
     private readonly SemaphoreSlim _pluginNavigationRefreshLock = new(1, 1);
     private string _activePage = MainNavigation.Dashboard;
     private bool? _keyboardHardwareAvailable;
+    private int _windowSurfaceRefreshGeneration;
 
     /// <summary>
     /// Gets the route currently rendered by the shell.
@@ -39,6 +41,7 @@ public partial class MainWindow : Window
         // Handle window state changes (minimize/restore)
         PropertyChanged += OnWindowPropertyChanged;
         SizeChanged += OnWindowSizeChanged;
+        Activated += OnWindowActivated;
     }
 
     private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -58,8 +61,7 @@ public partial class MainWindow : Window
 
             if (WindowState == WindowState.Normal || WindowState == WindowState.Maximized)
             {
-                // Invalidate visual to force redraw
-                InvalidateVisual();
+                QueueWindowSurfaceRefresh();
             }
         }
     }
@@ -69,6 +71,42 @@ public partial class MainWindow : Window
         // Trigger layout update when window is resized (including from minimized state)
         InvalidateArrange();
         InvalidateMeasure();
+    }
+
+    private void OnWindowActivated(object? sender, EventArgs e) => QueueWindowSurfaceRefresh();
+
+    /// <summary>
+    /// Restores a hidden tray window through the same redraw path used after a
+    /// native minimize/restore transition. This prevents a retained transparent
+    /// surface from being shown before the client content has been laid out.
+    /// </summary>
+    internal void RestoreFromTray()
+    {
+        if (WindowState == WindowState.Minimized)
+            WindowState = WindowState.Normal;
+
+        Show();
+        Activate();
+        QueueWindowSurfaceRefresh();
+    }
+
+    private void QueueWindowSurfaceRefresh()
+    {
+        var generation = ++_windowSurfaceRefreshGeneration;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (generation != _windowSurfaceRefreshGeneration
+                || !IsVisible
+                || WindowState == WindowState.Minimized)
+                return;
+
+            ApplyWindowBackdrop();
+            MainContent.InvalidateMeasure();
+            MainContent.InvalidateArrange();
+            InvalidateMeasure();
+            InvalidateArrange();
+            InvalidateVisual();
+        }, DispatcherPriority.Render);
     }
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)

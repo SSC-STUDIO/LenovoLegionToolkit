@@ -35,4 +35,26 @@ public sealed class AvaloniaBackdropContractTests
         source.Should().Contain("option.Key == \"WindowBackdrop\"");
         source.Should().Contain("mainWindow.ApplyWindowBackdrop();");
     }
+
+    [Fact]
+    public void TrayRestore_ShouldUseTheSameDeferredSurfaceRefreshPathAsNativeRestore()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var mainWindowSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "MainWindow.axaml.cs"));
+        var appSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "App.axaml.cs"));
+
+        mainWindowSource.Should().Contain("internal void RestoreFromTray()");
+        mainWindowSource.Should().Contain("Dispatcher.UIThread.Post");
+        mainWindowSource.Should().Contain("DispatcherPriority.Render");
+        mainWindowSource.Should().Contain("MainContent.InvalidateMeasure();");
+        mainWindowSource.Should().Contain("MainContent.InvalidateArrange();");
+        mainWindowSource.Should().Contain("QueueWindowSurfaceRefresh();");
+        appSource.Should().Contain("mainWindow.RestoreFromTray();");
+    }
 }

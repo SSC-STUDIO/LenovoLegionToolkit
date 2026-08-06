@@ -252,20 +252,22 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = desktop.MainWindow;
-            if (mainWindow == null) return;
-            
-            // Restore window state if minimized
-            if (mainWindow.WindowState == WindowState.Minimized)
+            if (desktop.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.WindowState = WindowState.Normal;
+                mainWindow.RestoreFromTray();
+                return;
             }
-            
-            mainWindow.Show();
-            mainWindow.Activate();
-            
-            // Force UI refresh after restore
-            mainWindow.InvalidateVisual();
+
+            var window = desktop.MainWindow;
+            if (window is null)
+                return;
+
+            if (window.WindowState == WindowState.Minimized)
+                window.WindowState = WindowState.Normal;
+
+            window.Show();
+            window.Activate();
+            window.InvalidateVisual();
         }
     }
 
