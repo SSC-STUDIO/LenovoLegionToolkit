@@ -12,6 +12,7 @@ public partial class DashboardPage : UserControl
     public DashboardPage(IPlatformServices platformServices, Action<string>? navigate = null)
     {
         InitializeComponent();
+        ArrangeSensorSurfaceLikeWpf();
         _platformServices = platformServices;
         _viewModel = new DashboardPageViewModel(
             platformServices,
@@ -21,6 +22,21 @@ public partial class DashboardPage : UserControl
         DataContext = _viewModel;
         AttachedToVisualTree += (_, _) => _viewModel.StartPolling();
         DetachedFromVisualTree += (_, _) => _viewModel.StopPolling();
+    }
+
+    private void ArrangeSensorSurfaceLikeWpf()
+    {
+        // WPF owns the sensor surface directly below the page header. The
+        // Avalonia page also has a settings/layout editor, so move the same
+        // controls to the top of the existing stack instead of duplicating
+        // telemetry state or introducing a second dashboard composition.
+        if (!DashboardStack.Children.Remove(TelemetryCardsPanel))
+            return;
+
+        DashboardStack.Children.Remove(SensorsHeaderPanel);
+        var insertIndex = Math.Min(1, DashboardStack.Children.Count);
+        DashboardStack.Children.Insert(insertIndex, TelemetryCardsPanel);
+        DashboardStack.Children.Insert(Math.Min(insertIndex + 1, DashboardStack.Children.Count), SensorsHeaderPanel);
     }
 
     private async void ShowHybridModeInfo(IReadOnlyList<DashboardStateOption> options)

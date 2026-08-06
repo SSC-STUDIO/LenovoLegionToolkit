@@ -7,7 +7,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="20" Margin="32">
+        <StackPanel x:Name="DashboardStack" Spacing="20" Margin="32">
 
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
                 <StackPanel Spacing="4">
@@ -712,7 +712,8 @@
             </ItemsControl>
 
             <!-- Sensors Panel -->
-            <Grid ColumnDefinitions="*,Auto"
+            <Grid x:Name="SensorsHeaderPanel"
+                  ColumnDefinitions="*,Auto"
                   Margin="0,8,0,0">
                 <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
                                              FontSize="{StaticResource FontSizeSubsection}"
@@ -731,7 +732,8 @@
                               VerticalAlignment="Center" />
             </Grid>
 
-            <ItemsControl ItemsSource="{Binding TelemetryCards}"
+            <ItemsControl x:Name="TelemetryCardsPanel"
+                          ItemsSource="{Binding TelemetryCards}"
                           IsVisible="{Binding ShowSensors}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

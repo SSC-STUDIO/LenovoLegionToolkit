@@ -1,5 +1,16 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls">
+
+    <!-- Custom text controls do not inherit Fluent's Button/TextBlock brush in
+         every content-presenter path. Establish the same semantic default as
+         WPF, while allowing local status/secondary brushes to override it. -->
+    <Style Selector="controls|LocalizedTextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
+    <Style Selector="controls|NavigationIcon">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+    </Style>
 
     <StyleInclude Source="avares://udt-gui/Styles/Controls/Badge.axaml" />
     <StyleInclude Source="avares://udt-gui/Styles/Controls/CardAction.axaml" />

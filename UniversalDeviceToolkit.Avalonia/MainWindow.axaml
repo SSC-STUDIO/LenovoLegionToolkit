@@ -26,6 +26,15 @@
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
             <Setter Property="FontWeight" Value="Medium" />
         </Style>
+        <!-- TextBlock does not reliably inherit a Button's foreground through
+             Avalonia's content presenter. Keep the navigation rail readable in
+             both theme variants, including dynamically-created plugin entries. -->
+        <Style Selector="Button.navButton controls|LocalizedTextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+        <Style Selector="Button.navButton controls|NavigationIcon">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
         <Style Selector="Button.navToggleButton">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="10" />
