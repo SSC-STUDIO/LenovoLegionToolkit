@@ -111,6 +111,63 @@ public sealed class PluginScaffolderAvaloniaTests
         Assert.Contains("AvaloniaSettingsPluginSettingsPage", source, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task CreateAsync_WritesAvaloniaProjectPagesAndFactories()
+    {
+        var repositoryRoot = Path.Combine(Path.GetTempPath(), $"plugin-scaffold-avalonia-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(Path.Combine(repositoryRoot, "Official"));
+        Directory.CreateDirectory(Path.Combine(repositoryRoot, "Templates", "PluginArchetypes", "feature-settings"));
+        File.WriteAllText(
+            Path.Combine(repositoryRoot, "UniversalDeviceToolkit.Plugins.sln"),
+            "Microsoft Visual Studio Solution File, Format Version 12.00\n" +
+            "# Visual Studio Version 17\n" +
+            "VisualStudioVersion = 17.0.31903.59\n" +
+            "MinimumVisualStudioVersion = 10.0.40219.1\n" +
+            "Global\n" +
+            "\tGlobalSection(SolutionConfigurationPlatforms) = preSolution\n" +
+            "\t\tDebug|Any CPU = Debug|Any CPU\n" +
+            "\t\tRelease|Any CPU = Release|Any CPU\n" +
+            "\tEndGlobalSection\n" +
+            "\tGlobalSection(SolutionProperties) = preSolution\n" +
+            "\t\tHideSolutionNode = FALSE\n" +
+            "\tEndGlobalSection\n" +
+            "EndGlobal\n");
+        File.WriteAllText(
+            Path.Combine(repositoryRoot, "Templates", "PluginArchetypes", "feature-settings", "template.json"),
+            "{\"name\":\"feature-settings\",\"hasFeaturePage\":true,\"hasSettingsPage\":true,\"hasRuntime\":false,\"hasOptimizationCategory\":false}");
+
+        try
+        {
+            var result = await new PluginScaffolder().CreateAsync(new ScaffoldRequest
+            {
+                RepositoryRoot = repositoryRoot,
+                Template = PluginArchetype.FeatureSettings,
+                FolderName = "GeneratedPlugin",
+                PluginId = "generated-plugin",
+                DisplayName = "Generated Plugin",
+                Author = "Test"
+            });
+
+            var project = File.ReadAllText(result.ProjectPath);
+            var pluginSource = File.ReadAllText(Path.Combine(result.PluginDirectory, "GeneratedPluginPlugin.cs"));
+            var pagesPath = Path.Combine(result.PluginDirectory, "AvaloniaGeneratedPluginPages.cs");
+            var pagesSource = File.ReadAllText(pagesPath);
+
+            Assert.Contains("<PackageReference Include=\"Avalonia\" />", project, StringComparison.Ordinal);
+            Assert.Contains("new AvaloniaGeneratedPluginFeaturePage()", pluginSource, StringComparison.Ordinal);
+            Assert.Contains("new AvaloniaGeneratedPluginSettingsPage()", pluginSource, StringComparison.Ordinal);
+            Assert.Contains("class AvaloniaGeneratedPluginFeaturePage", pagesSource, StringComparison.Ordinal);
+            Assert.Contains("class AvaloniaGeneratedPluginSettingsPage", pagesSource, StringComparison.Ordinal);
+        }
+        finally
+        {
+            if (Directory.Exists(repositoryRoot))
+            {
+                Directory.Delete(repositoryRoot, recursive: true);
+            }
+        }
+    }
+
     private static T Invoke<T>(string methodName, Type[] parameterTypes, params object?[] arguments)
     {
         var method = typeof(PluginScaffolder).GetMethod(
