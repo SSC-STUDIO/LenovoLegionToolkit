@@ -2432,6 +2432,9 @@ internal sealed class WindowsFeatureHostServices
                     false,
                     "This plugin does not provide a feature page."));
             }
+
+            if (TryGetConventionAvaloniaPageFactory(plugin, isSettings: false, out var avaloniaFactory))
+                createPage = avaloniaFactory;
         }
         catch (Exception ex)
         {
@@ -2534,7 +2537,9 @@ internal sealed class WindowsFeatureHostServices
             {
                 pageTitle = pluginPage.PageTitle;
                 pageIcon = pluginPage.PageIcon;
-                createPage = pluginPage.CreatePage;
+                createPage = TryGetAvaloniaPageFactory(settingsPage, out var avaloniaFactory)
+                    ? avaloniaFactory
+                    : pluginPage.CreatePage;
             }
             else if (settingsPage is Control)
             {
@@ -2564,8 +2569,13 @@ internal sealed class WindowsFeatureHostServices
                     ?.GetValue(settingsPage) as string;
                 pageIcon = pageType.GetProperty("PageIcon", BindingFlags.Public | BindingFlags.Instance)
                     ?.GetValue(settingsPage) as string;
-                createPage = () => createPageMethod.Invoke(settingsPage, null) ?? new object();
+                createPage = TryGetAvaloniaPageFactory(settingsPage, out var avaloniaFactory)
+                    ? avaloniaFactory
+                    : () => createPageMethod.Invoke(settingsPage, null) ?? new object();
             }
+
+            if (TryGetConventionAvaloniaPageFactory(plugin, isSettings: true, out var conventionFactory))
+                createPage = conventionFactory;
 
             var content = createPage();
             var isAvaloniaPage = content is Control;
@@ -2641,7 +2651,9 @@ internal sealed class WindowsFeatureHostServices
         {
             title = pluginPage.PageTitle;
             icon = pluginPage.PageIcon;
-            createPage = pluginPage.CreatePage;
+            createPage = TryGetAvaloniaPageFactory(featureExtension, out var avaloniaFactory)
+                ? avaloniaFactory
+                : pluginPage.CreatePage;
             return true;
         }
 
@@ -2657,8 +2669,65 @@ internal sealed class WindowsFeatureHostServices
             ?.GetValue(featureExtension) as string;
         icon = pageType.GetProperty("PageIcon", BindingFlags.Public | BindingFlags.Instance)
             ?.GetValue(featureExtension) as string;
-        createPage = () => createPageMethod.Invoke(featureExtension, null) ?? new object();
+        createPage = TryGetAvaloniaPageFactory(featureExtension, out var pageFactory)
+            ? pageFactory
+            : () => createPageMethod.Invoke(featureExtension, null) ?? new object();
         return true;
+    }
+
+    private static bool TryGetAvaloniaPageFactory(object page, out Func<object> factory)
+    {
+        factory = null!;
+        var method = page.GetType().GetMethod(
+            "CreateAvaloniaPage",
+            BindingFlags.Public | BindingFlags.Instance,
+            Type.EmptyTypes);
+        if (method is null)
+            return false;
+
+        factory = () => method.Invoke(page, null) ?? new object();
+        return true;
+    }
+
+    private static bool TryGetConventionAvaloniaPageFactory(
+        object plugin,
+        bool isSettings,
+        out Func<object> factory)
+    {
+        factory = null!;
+        var pluginType = plugin.GetType();
+        var namespaceName = pluginType.Namespace;
+        if (string.IsNullOrWhiteSpace(namespaceName))
+            return false;
+
+        var pluginName = pluginType.Name.EndsWith("Plugin", StringComparison.Ordinal)
+            ? pluginType.Name[..^"Plugin".Length]
+            : pluginType.Name;
+        var prefix = $"Avalonia{pluginName}";
+        var candidateNames = isSettings
+            ? new[] { $"{prefix}SettingsControl", $"{prefix}SettingsPage", $"{prefix}SettingsView" }
+            : new[] { $"{prefix}Page", $"{prefix}Control", $"{prefix}View" };
+
+        foreach (var candidateName in candidateNames)
+        {
+            var pageType = pluginType.Assembly.GetType($"{namespaceName}.{candidateName}");
+            if (pageType is null)
+                continue;
+
+            var constructor = pageType.GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+                .FirstOrDefault(candidate =>
+                {
+                    var parameters = candidate.GetParameters();
+                    return parameters.Length == 1 && parameters[0].ParameterType.IsInstanceOfType(plugin);
+                });
+            if (constructor is null)
+                continue;
+
+            factory = () => constructor.Invoke(new[] { plugin });
+            return true;
+        }
+
+        return false;
     }
 
     private async Task<FeaturePageState> GetOptimizationStateAsync()
