@@ -484,6 +484,22 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaKeyboardRgb_PreservesWpfZoneSynchronizationAction()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+
+        source.Should().Contain("SynchronizeRequested");
+        source.Should().Contain("RgbZoneEditor_SynchronizeRequested");
+        source.Should().Contain("zone.SetColor(color)");
+        source.Should().Contain("RGBKeyboardBacklightControl_SynchroniseZones");
+    }
+
+    [Fact]
     public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
     {
         var root = RepositoryPaths.FindRoot();

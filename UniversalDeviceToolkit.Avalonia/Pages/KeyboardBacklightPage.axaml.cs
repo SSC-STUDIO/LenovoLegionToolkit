@@ -242,9 +242,32 @@ public partial class KeyboardBacklightPage : UserControl
         foreach (var (color, index) in selected.Zones.Select((color, index) => (color, index)))
         {
             var editor = new RgbZoneEditor($"Zone {index + 1}", color);
+            editor.SynchronizeRequested += RgbZoneEditor_SynchronizeRequested;
             _rgbZones.Add(editor);
             RgbZones.Children.Add(editor.Container);
         }
+    }
+
+    private async void RgbZoneEditor_SynchronizeRequested(object? sender, EventArgs e)
+    {
+        if (_isRefreshing || sender is not RgbZoneEditor source || _state is null)
+            return;
+
+        var color = source.ReadColor();
+        foreach (var zone in _rgbZones)
+            zone.SetColor(color);
+
+        var selected = _state.RgbPresets.FirstOrDefault(preset => preset.IsSelected);
+        if (selected is null)
+            return;
+
+        await ApplyAsync(new KeyboardLightingUpdate(
+            "RGB",
+            RgbPreset: selected.Key,
+            RgbEffect: RgbEffect.SelectedItem?.ToString(),
+            RgbSpeed: RgbSpeed.SelectedItem?.ToString(),
+            RgbBrightness: RgbBrightness.SelectedItem?.ToString(),
+            RgbZones: _rgbZones.Select(zone => zone.ReadColor()).ToArray()));
     }
 
     private async void RgbPreset_Click(object? sender, RoutedEventArgs e)
@@ -370,6 +393,8 @@ public partial class KeyboardBacklightPage : UserControl
         private readonly TextBox _input;
         private readonly Border _swatch;
 
+        public event EventHandler? SynchronizeRequested;
+
         public Border Container { get; }
 
         public RgbZoneEditor(string title, KeyboardColorState color)
@@ -387,6 +412,20 @@ public partial class KeyboardBacklightPage : UserControl
             var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
             content.Children.Add(_swatch);
             content.Children.Add(_input);
+            var synchronizeButton = new Button
+            {
+                Width = 32,
+                Height = 32,
+                Padding = new Thickness(4),
+                Content = new NavigationIcon { IconIdentifier = "ArrowSync24" },
+            };
+            var synchronizeText = AvaloniaLocalization.GetString(
+                "RGBKeyboardBacklightControl_SynchroniseZones",
+                "Synchronize zones");
+            AutomationProperties.SetName(synchronizeButton, synchronizeText);
+            ToolTip.SetTip(synchronizeButton, synchronizeText);
+            synchronizeButton.Click += (_, _) => SynchronizeRequested?.Invoke(this, EventArgs.Empty);
+            content.Children.Add(synchronizeButton);
             Container = new Border
             {
                 Padding = new Thickness(8),
@@ -402,6 +441,8 @@ public partial class KeyboardBacklightPage : UserControl
         }
 
         public KeyboardColorState ReadColor() => ParseColor(_input.Text, new KeyboardColorState(255, 255, 255));
+
+        public void SetColor(KeyboardColorState color) => _input.Text = color.Hex;
 
         private void Input_TextChanged(object? sender, TextChangedEventArgs e)
         {
