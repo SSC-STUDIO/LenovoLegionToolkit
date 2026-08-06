@@ -75,5 +75,5 @@ This keeps the old client useful as the transport into the new host while keepin
 - [x] Old plugin repository README points to `Plugins/Official` in the main repository.
 - [x] Legacy plugin issues #57-#61 were moved to main-repository issues #169-#173 and labeled `area:plugins`.
 - [ ] Legacy application bridge release has been tested from a clean install.
-- [ ] Existing plugin installations load or migrate without a host DLL bundled in new ZIPs.
+- [x] Existing plugin installations load or migrate without a host DLL bundled in new ZIPs.
 - [x] Old plugin repository is archived only after the agreed client upgrade window.
