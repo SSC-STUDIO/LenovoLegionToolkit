@@ -3,7 +3,7 @@ using System.Threading;
 #nullable enable
 
 using System.Threading.Tasks;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 using Microsoft.Win32;
 
 namespace UniversalDeviceToolkit.Plugins.CustomMouse;
