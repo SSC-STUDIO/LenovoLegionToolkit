@@ -1,4 +1,5 @@
 using Autofac;
+using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
@@ -28,8 +29,7 @@ public class IoCModule : Module
             .As<UniversalDeviceToolkit.Lib.Settings.HardwareSensorSettings>()
             .SingleInstance();
 
-        builder.Register<WindowsOptimizationElevationClient>()
-            .As<IWindowsOptimizationExecutor>();
+        builder.RegisterModule(new WindowsOptimizationElevationIoCModule());
 
         builder.Register<UniversalDeviceToolkit.ViewModels.KeyboardBacklightViewModel>();
         builder.Register<WindowsOptimizationViewModel>();

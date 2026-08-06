@@ -12,19 +12,20 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Autofac;
 using UniversalDeviceToolkit.CLI.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Settings;
 
-namespace UniversalDeviceToolkit.WPF.Utils;
+namespace UniversalDeviceToolkit.Lib.Automation.Optimization;
 
-internal sealed record WindowsOptimizationOperation(
+public sealed record WindowsOptimizationOperation(
     string ActionKey,
     bool Apply,
     string VerificationActionKey,
     bool ExpectedAppliedState);
 
-internal interface IWindowsOptimizationExecutor
+public interface IWindowsOptimizationExecutor
 {
     Task ExecuteAsync(
         IReadOnlyList<WindowsOptimizationOperation> operations,
@@ -36,10 +37,10 @@ internal interface IWindowsOptimizationExecutor
 }
 
 /// <summary>
-/// Runs system optimization mutations in one elevated process. The normal WPF
-/// process remains unelevated and only performs state discovery and UI work.
+/// Runs system optimization mutations in one elevated process. The normal UI
+/// host remains unelevated and only performs state discovery and UI work.
 /// </summary>
-internal sealed class WindowsOptimizationElevationClient : IWindowsOptimizationExecutor
+public sealed class WindowsOptimizationElevationClient : IWindowsOptimizationExecutor
 {
     private readonly WindowsOptimizationService _localService;
 
@@ -257,9 +258,21 @@ internal sealed class WindowsOptimizationElevationClient : IWindowsOptimizationE
 }
 
 /// <summary>
-/// Public entry point for non-WPF hosts that reuse the Windows optimization service.
-/// The protocol and executor remain internal so callers cannot construct untrusted
-/// elevation requests directly.
+/// Registers the shared UAC elevation protocol for a Windows UI host.
+/// </summary>
+public sealed class WindowsOptimizationElevationIoCModule : Autofac.Module
+{
+    protected override void Load(ContainerBuilder builder)
+    {
+        builder.RegisterType<WindowsOptimizationElevationClient>()
+            .As<IWindowsOptimizationExecutor>();
+    }
+}
+
+/// <summary>
+/// Public entry point for Windows UI hosts that reuse the optimization UAC protocol.
+/// Request and response DTOs remain internal so callers cannot construct protocol
+/// messages directly.
 /// </summary>
 public static class WindowsOptimizationElevationBridge
 {
@@ -304,6 +317,12 @@ public static class WindowsOptimizationElevationBridge
                 ExpectedAppliedState: apply)],
             cancellationToken);
     }
+
+    /// <summary>
+    /// Handles a worker invocation before a UI host initializes its shell.
+    /// </summary>
+    public static Task<int?> TryRunWorkerAsync(IReadOnlyList<string> arguments) =>
+        ElevatedOptimizationWorker.TryRunAsync(arguments);
 
     private static IWindowsOptimizationExecutor ResolveExecutor() =>
         IoCContainer.TryResolve<IWindowsOptimizationExecutor>()

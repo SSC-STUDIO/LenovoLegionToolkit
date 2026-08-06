@@ -51,9 +51,6 @@
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj" />
-    <!-- Reuse the existing, authenticated CLI IPC host on Windows. The portable
-         Avalonia target intentionally does not carry WPF dependencies. -->
-    <ProjectReference Include="..\UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

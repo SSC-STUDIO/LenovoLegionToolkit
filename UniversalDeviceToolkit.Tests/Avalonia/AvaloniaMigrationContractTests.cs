@@ -16,6 +16,40 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class AvaloniaMigrationContractTests
 {
     [Fact]
+    public void AvaloniaHost_DoesNotReferenceTheWpfHostAssembly()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var project = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "UniversalDeviceToolkit.Avalonia.csproj"));
+        var app = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "App.axaml.cs"));
+        var featureHost = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+        var program = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Program.cs"));
+
+        project.Should().NotContain("UniversalDeviceToolkit.WPF");
+        app.Should().Contain("new WindowsOptimizationElevationIoCModule()");
+        app.Should().NotContain("UniversalDeviceToolkit.WPF");
+        featureHost.Should().NotContain("UniversalDeviceToolkit.WPF");
+        program.Should().Contain(".TryRunWorkerAsync(args)");
+        typeof(UniversalDeviceToolkit.Avalonia.App).Assembly
+            .GetReferencedAssemblies()
+            .Select(assembly => assembly.Name)
+            .Should()
+            .NotContain("Universal Device Toolkit");
+    }
+
+    [Fact]
     public void SharedIpcServer_ImplementsSharedCliLifecycleContract()
     {
         typeof(IpcServer).GetInterfaces().Should().Contain(typeof(ICliHostLifecycle));

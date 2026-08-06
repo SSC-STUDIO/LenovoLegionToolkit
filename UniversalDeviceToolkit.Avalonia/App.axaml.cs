@@ -19,6 +19,7 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -128,7 +129,7 @@ public partial class App : Application
                 new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
-                new UniversalDeviceToolkit.WPF.IoCModule());
+                new WindowsOptimizationElevationIoCModule());
         }
         catch
         {

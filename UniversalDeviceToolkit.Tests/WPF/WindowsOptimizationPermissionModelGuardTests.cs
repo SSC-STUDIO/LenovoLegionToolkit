@@ -37,7 +37,7 @@ public sealed class WindowsOptimizationPermissionModelGuardTests
     public void OptimizationMutations_ShouldBeIsolatedInAnElevatedWorker()
     {
         var elevationSource = File.ReadAllText(ReadRepositoryPath(
-            "UniversalDeviceToolkit.WPF", "Utils", "WindowsOptimizationElevation.cs"));
+            "UniversalDeviceToolkit.Lib.Automation", "Optimization", "WindowsOptimizationElevation.cs"));
         var pageSource = File.ReadAllText(ReadRepositoryPath(
             "UniversalDeviceToolkit.WPF", "Pages", "WindowsOptimizationPage.xaml.cs"));
 

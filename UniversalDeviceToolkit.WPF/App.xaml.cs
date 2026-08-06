@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.Extensions;
@@ -113,7 +114,7 @@ public partial class App
     {
         try
         {
-            var elevatedWorkerExitCode = await ElevatedOptimizationWorker.TryRunAsync(e.Args);
+            var elevatedWorkerExitCode = await WindowsOptimizationElevationBridge.TryRunWorkerAsync(e.Args);
             if (elevatedWorkerExitCode.HasValue)
             {
                 Shutdown(elevatedWorkerExitCode.Value);

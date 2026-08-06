@@ -13,6 +13,7 @@ using UniversalDeviceToolkit.Lib.Automation.Pipeline;
 using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
 using UniversalDeviceToolkit.Lib.Automation.Serialization;
 using UniversalDeviceToolkit.Lib.Automation.Steps;
+using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Controllers.GodMode;
 using UniversalDeviceToolkit.Lib.Features;
@@ -33,8 +34,6 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Shared.Settings;
-using UniversalDeviceToolkit.WPF.Utils;
-using UniversalDeviceToolkit.WPF;
 using UniversalDeviceToolkit.Avalonia.Localization;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;

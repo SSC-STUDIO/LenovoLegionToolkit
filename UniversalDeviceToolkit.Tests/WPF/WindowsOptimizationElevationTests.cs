@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using FluentAssertions;
+using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.WPF.Pages.WindowsOptimization;
-using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.ViewModels;
 using Xunit;
 
