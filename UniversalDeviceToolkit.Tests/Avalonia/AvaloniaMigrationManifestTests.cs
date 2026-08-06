@@ -105,6 +105,36 @@ public sealed class AvaloniaMigrationManifestTests
         }
     }
 
+    [Fact]
+    public void OfficialPlugins_ExposeAvaloniaPagesAndSharedCoreRuntime()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var pluginsRoot = Path.Combine(root, "Plugins", "Official");
+        var pluginNames = new[] { "CustomMouse", "ShellIntegration", "ViveTool" };
+
+        foreach (var pluginName in pluginNames)
+        {
+            var pluginDirectory = Path.Combine(pluginsRoot, pluginName);
+            var projectPath = Directory.EnumerateFiles(pluginDirectory, "*.csproj")
+                .Single(path => !path.Contains(".Tests", StringComparison.OrdinalIgnoreCase));
+            var project = File.ReadAllText(projectPath);
+            project.Should().Contain("UniversalDeviceToolkit.Plugins.Shared.Core.csproj");
+            project.Should().Contain("<PackageReference Include=\"Avalonia\" />");
+
+            var source = string.Join(
+                Environment.NewLine,
+                Directory.EnumerateFiles(pluginDirectory, "*.cs", SearchOption.AllDirectories)
+                    .Where(path => !path.Split(Path.DirectorySeparatorChar)
+                        .Any(segment => segment.Equals("obj", StringComparison.OrdinalIgnoreCase)
+                            || segment.Equals("bin", StringComparison.OrdinalIgnoreCase)))
+                    .Select(File.ReadAllText));
+            source.Should().Contain("CreateAvaloniaPage", $"{pluginName} must expose an Avalonia page factory");
+
+            var manifest = File.ReadAllText(Path.Combine(pluginDirectory, "plugin.manifest.json"));
+            manifest.Should().Contain("UniversalDeviceToolkit.Plugins.Shared.Core.dll");
+        }
+    }
+
     private static IReadOnlySet<string> ReadResourceKeys(string path) =>
         XDocument.Load(path)
             .Root?
