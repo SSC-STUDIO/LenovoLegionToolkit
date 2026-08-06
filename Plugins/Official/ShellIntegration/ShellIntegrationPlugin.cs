@@ -739,4 +739,14 @@ public class ShellIntegrationSettingsPluginPage : UniversalDeviceToolkit.Lib.Plu
     {
         return new ShellIntegrationSettingsControl(_plugin);
     }
+
+    /// <summary>
+    /// Optional Avalonia factory used by the cross-platform host. The WPF
+    /// factory above remains the legacy desktop ABI.
+    /// </summary>
+    public object CreateAvaloniaPage()
+    {
+        return new AvaloniaShellIntegrationSettingsControl(_plugin);
+    }
+
 }

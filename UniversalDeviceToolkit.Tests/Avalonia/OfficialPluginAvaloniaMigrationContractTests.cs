@@ -50,4 +50,22 @@ public sealed class OfficialPluginAvaloniaMigrationContractTests
         source.Should().Contain("Avalonia{pluginName}");
         source.Should().Contain("CreateAvaloniaPage");
     }
+
+    [Theory]
+    [InlineData("CustomMouse", "new AvaloniaCustomMouseSettingsControl")]
+    [InlineData("ShellIntegration", "new AvaloniaShellIntegrationSettingsControl")]
+    [InlineData("ViveTool", "new AvaloniaViveToolSettingsPage")]
+    public void OfficialSettingsPlugins_ExposeExplicitAvaloniaFactory(string pluginDirectory, string factoryExpression)
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "Plugins",
+            "Official",
+            pluginDirectory,
+            $"{pluginDirectory}Plugin.cs"));
+
+        source.Should().Contain("public object CreateAvaloniaPage()");
+        source.Should().Contain(factoryExpression);
+    }
 }

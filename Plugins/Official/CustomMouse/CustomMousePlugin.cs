@@ -989,6 +989,16 @@ public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.
     {
         return new CustomMouseSettingsControl(_plugin);
     }
+
+    /// <summary>
+    /// Optional Avalonia factory used by the cross-platform host. The WPF
+    /// factory above remains the legacy desktop ABI.
+    /// </summary>
+    public object CreateAvaloniaPage()
+    {
+        return new AvaloniaCustomMouseSettingsControl(_plugin);
+    }
+
 }
 
 public enum CursorThemeMode
