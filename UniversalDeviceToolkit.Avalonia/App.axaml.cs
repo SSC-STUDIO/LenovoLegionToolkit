@@ -127,7 +127,7 @@ public partial class App : Application
                 IoCContainer.Resolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>());
             _singleInstanceGuard!.StartListener(() =>
                 global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
-            _ = StartWindowsHostServicesAsync();
+            _ = StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow);
 #endif
             Dispatcher.UIThread.Post(CheckPendingCrashReports, DispatcherPriority.Background);
         }
@@ -214,6 +214,7 @@ public partial class App : Application
         AvaloniaLocalization.ApplyCulture(e.Culture);
 #if WINDOWS
         ApplyWindowsResourceCulture(e.Culture);
+        AvaloniaPluginResourceCulture.Apply(e.Culture);
 #endif
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
@@ -462,8 +463,13 @@ public partial class App : Application
         return false;
     }
 
-    private static async Task StartWindowsHostServicesAsync()
+    private static async Task StartWindowsHostServicesAsync(MainWindow? mainWindow)
     {
+        await InitializePluginsAsync().ConfigureAwait(false);
+
+        if (mainWindow is not null)
+            Dispatcher.UIThread.Post(() => _ = mainWindow.RefreshPluginNavigationAsync());
+
         try
         {
             var lifecycle = IoCContainer.TryResolve<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>();
@@ -473,6 +479,24 @@ public partial class App : Application
         catch (Exception ex)
         {
             Log.Instance.Trace("Avalonia Windows host service startup failed.", ex);
+        }
+    }
+
+    private static async Task InitializePluginsAsync()
+    {
+        try
+        {
+            var pluginManager = IoCContainer.TryResolve<IPluginManager>();
+            if (pluginManager is null)
+                return;
+
+            pluginManager.PruneRetiredPlugins();
+            await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
+            AvaloniaPluginResourceCulture.Apply(LocalizationRuntime.CurrentCulture);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Avalonia plugin startup failed.", ex);
         }
     }
 #endif

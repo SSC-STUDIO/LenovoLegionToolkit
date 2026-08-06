@@ -11,6 +11,10 @@ using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
+#if WINDOWS
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Plugins;
+#endif
 
 namespace UniversalDeviceToolkit.Avalonia;
 
@@ -23,6 +27,9 @@ public partial class MainWindow : Window
     private string _activePage = MainNavigation.Dashboard;
     private bool? _keyboardHardwareAvailable;
     private int _windowSurfaceRefreshGeneration;
+#if WINDOWS
+    private IPluginManager? _pluginManager;
+#endif
 
     /// <summary>
     /// Gets the route currently rendered by the shell.
@@ -42,6 +49,10 @@ public partial class MainWindow : Window
         PropertyChanged += OnWindowPropertyChanged;
         SizeChanged += OnWindowSizeChanged;
         Activated += OnWindowActivated;
+#if WINDOWS
+        SubscribeToPluginStateChanges();
+        Closed += OnClosed;
+#endif
     }
 
     private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -282,6 +293,28 @@ public partial class MainWindow : Window
             _pluginNavigationRefreshLock.Release();
         }
     }
+
+    internal Task RefreshPluginNavigationAsync(bool forceRefresh = false) =>
+        RefreshPluginNavigationItemsAsync(forceRefresh);
+
+#if WINDOWS
+    private void SubscribeToPluginStateChanges()
+    {
+        _pluginManager = IoCContainer.TryResolve<IPluginManager>();
+        if (_pluginManager is not null)
+            _pluginManager.PluginStateChanged += PluginManagerOnPluginStateChanged;
+    }
+
+    private void PluginManagerOnPluginStateChanged(object? sender, PluginEventArgs args) =>
+        Dispatcher.UIThread.Post(() => _ = RefreshPluginNavigationItemsAsync());
+
+    private void OnClosed(object? sender, EventArgs args)
+    {
+        if (_pluginManager is not null)
+            _pluginManager.PluginStateChanged -= PluginManagerOnPluginStateChanged;
+        _pluginManager = null;
+    }
+#endif
 
     private PluginNavigationEntry CreatePluginNavigationEntry(PluginCatalogItem plugin)
     {
