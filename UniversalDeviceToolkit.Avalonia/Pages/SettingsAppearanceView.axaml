@@ -336,6 +336,9 @@
                         <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="Microsoft YaHei UI" />
                         <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="DengXian" />
                         <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="Noto Sans CJK SC" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="SimHei" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="SimSun" />
+                        <ComboBoxItem Content="{Binding Tag, RelativeSource={RelativeSource Self}}" Tag="KaiTi" />
                     </ComboBox>
                 </Grid>
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">

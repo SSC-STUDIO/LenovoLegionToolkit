@@ -3,6 +3,7 @@ using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Avalonia.Controls;
+using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.WPF.CLI;
 using Xunit;
 
@@ -459,6 +460,40 @@ public sealed class AvaloniaMigrationContractTests
         markup.Should().Contain("CustomAccentColorView_ColorChanged");
         source.Should().Contain("_themePrefs.Store.UseSystemAccent = false");
         source.Should().Contain("PersistSharedAccentColorAsync");
+    }
+
+    [Fact]
+    public void AvaloniaAppearance_FontSelectorIncludesEverySharedFontStyle()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "SettingsAppearanceView.axaml"));
+        var selectorStart = markup.IndexOf(
+            "<ComboBox x:Name=\"FontComboBox\"",
+            StringComparison.Ordinal);
+        selectorStart.Should().BeGreaterThanOrEqualTo(0);
+        var selectorEnd = markup.IndexOf("</ComboBox>", selectorStart, StringComparison.Ordinal);
+        selectorEnd.Should().BeGreaterThan(selectorStart);
+        var selector = markup[selectorStart..selectorEnd];
+
+        var expectedLabels = new[]
+        {
+            "Default",
+            "Segoe UI Variable",
+            "Microsoft YaHei UI",
+            "DengXian",
+            "Noto Sans CJK SC",
+            "SimHei",
+            "SimSun",
+            "KaiTi",
+        };
+
+        Enum.GetValues<AppFontStyle>().Should().HaveCount(expectedLabels.Length);
+        foreach (var label in expectedLabels)
+            selector.Should().Contain($"Tag=\"{label}\"");
     }
 
     [Fact]
