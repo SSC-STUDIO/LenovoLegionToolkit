@@ -51,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4F52FD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Tests", "Shared.Tests\Shared.Tests.csproj", "{CBB92951-6DC2-49B2-BF8C-AEDB91882B1D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.Shared.Core", "Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj", "{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -277,6 +279,18 @@ Global
 		{CBB92951-6DC2-49B2-BF8C-AEDB91882B1D}.Release|x64.Build.0 = Release|x64
 		{CBB92951-6DC2-49B2-BF8C-AEDB91882B1D}.Release|x86.ActiveCfg = Release|x64
 		{CBB92951-6DC2-49B2-BF8C-AEDB91882B1D}.Release|x86.Build.0 = Release|x64
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Debug|x64.Build.0 = Debug|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Debug|x86.Build.0 = Debug|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Release|x64.ActiveCfg = Release|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Release|x64.Build.0 = Release|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Release|x86.ActiveCfg = Release|Any CPU
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -299,5 +313,6 @@ Global
 		{A525D793-D8EF-4676-A8AD-DC8498713D7B} = {78DDA25A-7C38-13C4-DE39-740FEE45D7B1}
 		{F61D0A81-BD68-4275-981E-080533E46033} = {78DDA25A-7C38-13C4-DE39-740FEE45D7B1}
 		{CBB92951-6DC2-49B2-BF8C-AEDB91882B1D} = {4F52FD11-658E-A102-6CD3-7D7C16FFA15B}
+		{4AE2E8A7-3FA3-4759-A59E-AE1E63C49DD7} = {4F52FD11-658E-A102-6CD3-7D7C16FFA15B}
 	EndGlobalSection
 EndGlobal

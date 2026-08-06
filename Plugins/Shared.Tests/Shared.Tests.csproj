@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj" />
     <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
     <Reference Include="Universal Device Toolkit">
       <HintPath>$(HostWpfPath)</HintPath>

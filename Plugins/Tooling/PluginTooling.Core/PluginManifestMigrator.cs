@@ -27,6 +27,7 @@ public sealed class PluginManifestMigrator
             }
 
             EnsureRequiredFile(unifiedManifest, $"{plugin.ExpectedAssemblyName}.dll");
+            EnsureRequiredFile(unifiedManifest, "UniversalDeviceToolkit.Plugins.Shared.Core.dll");
             EnsureRequiredFile(unifiedManifest, "UniversalDeviceToolkit.Plugins.SDK.dll");
             EnsureRequiredFile(unifiedManifest, "plugin.json");
             EnsureRequiredFile(unifiedManifest, "plugin.manifest.json");

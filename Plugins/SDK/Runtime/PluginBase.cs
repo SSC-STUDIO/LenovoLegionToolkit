@@ -1,6 +1,6 @@
 using System.Net.Http;
 using System.Threading;
-using UniversalDeviceToolkit.Plugins.Shared;
+using UniversalDeviceToolkit.Plugins.Core;
 
 namespace UniversalDeviceToolkit.Plugins.SDK;
 
@@ -44,4 +44,3 @@ public abstract class PluginBase : UniversalDeviceToolkit.Lib.Plugins.PluginBase
         // Derived classes can override to handle settings changes
     }
 }
-

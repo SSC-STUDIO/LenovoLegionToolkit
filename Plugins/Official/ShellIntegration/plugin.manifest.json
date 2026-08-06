@@ -26,6 +26,7 @@
     "assetName": "shell-integration-v1.0.14.zip",
     "requiredFiles": [
       "UniversalDeviceToolkit.Plugins.ShellIntegration.dll",
+      "UniversalDeviceToolkit.Plugins.Shared.Core.dll",
       "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
       "plugin.manifest.json"

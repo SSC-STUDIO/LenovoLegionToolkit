@@ -262,6 +262,7 @@ public sealed class PluginRepository
                 RequiredFiles =
                 [
                     $"UniversalDeviceToolkit.Plugins.{folderName}.dll",
+                    "UniversalDeviceToolkit.Plugins.Shared.Core.dll",
                     "UniversalDeviceToolkit.Plugins.SDK.dll",
                     "plugin.json",
                     "plugin.manifest.json",

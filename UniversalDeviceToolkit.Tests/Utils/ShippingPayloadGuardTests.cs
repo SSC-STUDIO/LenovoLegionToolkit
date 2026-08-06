@@ -14,6 +14,7 @@ public sealed class ShippingPayloadGuardTests
         var script = ReadRepositoryFile("Scripts", "Assert-ShippingPayload.ps1");
 
         script.Should().Contain("'UniversalDeviceToolkit.Plugins.SDK.dll'");
+        script.Should().Contain("'UniversalDeviceToolkit.Plugins.Shared.Core.dll'");
         script.Should().Contain("'UniversalDeviceToolkit.Plugins.Shared.dll'");
         script.Should().Contain("Shipping payload is missing required plugin runtime files");
         script.Should().Contain("'UniversalDeviceToolkit.Tests'");
@@ -55,6 +56,7 @@ public sealed class ShippingPayloadGuardTests
 
             output.Should().Contain("Shipping payload is missing required plugin runtime files:");
             output.Should().Contain("UniversalDeviceToolkit.Plugins.SDK.dll");
+            output.Should().Contain("UniversalDeviceToolkit.Plugins.Shared.Core.dll");
             output.Should().Contain("UniversalDeviceToolkit.Plugins.Shared.dll");
         }
         finally
@@ -442,6 +444,7 @@ public sealed class ShippingPayloadGuardTests
 
     private static void SeedRequiredPluginRuntimeFiles(string payloadRoot)
     {
+        File.WriteAllBytes(Path.Combine(payloadRoot, "UniversalDeviceToolkit.Plugins.Shared.Core.dll"), [0x00]);
         File.WriteAllBytes(Path.Combine(payloadRoot, "UniversalDeviceToolkit.Plugins.SDK.dll"), [0x01]);
         File.WriteAllBytes(Path.Combine(payloadRoot, "UniversalDeviceToolkit.Plugins.Shared.dll"), [0x02]);
     }

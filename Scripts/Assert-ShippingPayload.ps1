@@ -3,7 +3,7 @@ param(
     [string]$PayloadPath,
 
     # Standalone payloads that intentionally ship no plugin runtime (e.g. the
-    # cross-platform CLI zip) can skip the plugin SDK/Shared presence check.
+    # cross-platform CLI zip) can skip the plugin SDK/Shared.Core/Shared check.
     [switch]$SkipPluginRuntimeCheck
 )
 
@@ -19,6 +19,7 @@ $pathTrimChars = [char[]]@([System.IO.Path]::DirectorySeparatorChar, [System.IO.
 $payloadRoot = $resolvedPath.Path.TrimEnd($pathTrimChars)
 
 $requiredExactNames = @(
+    'UniversalDeviceToolkit.Plugins.Shared.Core.dll',
     'UniversalDeviceToolkit.Plugins.SDK.dll',
     'UniversalDeviceToolkit.Plugins.Shared.dll'
 )

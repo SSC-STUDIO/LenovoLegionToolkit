@@ -24,6 +24,7 @@
     "assetName": "vive-tool-v1.2.4.zip",
     "requiredFiles": [
       "UniversalDeviceToolkit.Plugins.ViveTool.dll",
+      "UniversalDeviceToolkit.Plugins.Shared.Core.dll",
       "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
       "plugin.manifest.json"

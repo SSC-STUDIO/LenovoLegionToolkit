@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+    <ProjectReference Include="..\..\Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj" />
     <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
       <Private>false</Private>

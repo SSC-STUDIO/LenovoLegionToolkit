@@ -72,7 +72,7 @@ if ($LASTEXITCODE -ne 0) {
 $sdkProject = Join-Path $pluginsRoot "SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj"
 $sharedProject = Join-Path $pluginsRoot "Shared\UniversalDeviceToolkit.Plugins.Shared.csproj"
 
-Write-Host "Restoring plugin SDK and Shared"
+Write-Host "Restoring plugin SDK, Shared.Core and Shared"
 # The monorepo root owns the central package versions. Keep CPM enabled so the
 # migrated SDK and Shared projects cannot fall back to unversioned NuGet defaults.
 dotnet restore $sdkProject -p:ManagePackageVersionsCentrally=true
@@ -89,6 +89,10 @@ dotnet build $sharedProject -c $Configuration --no-restore -p:ManagePackageVersi
 if ($LASTEXITCODE -ne 0) { throw "Plugin Shared build failed." }
 
 $runtimeFiles = @(
+    @{
+        Source = Join-Path $pluginsRoot ".build\sdk\UniversalDeviceToolkit.Plugins.Shared.Core.dll"
+        Name = "UniversalDeviceToolkit.Plugins.Shared.Core.dll"
+    },
     @{
         Source = Join-Path $pluginsRoot ".build\shared\UniversalDeviceToolkit.Plugins.Shared.dll"
         Name = "UniversalDeviceToolkit.Plugins.Shared.dll"
