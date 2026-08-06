@@ -497,6 +497,32 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaOsdSettingsWindow_UsesApplicationContractAndGroupedSaveSurface()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "Windows",
+            "OsdSettingsWindow.cs"));
+
+        source.Should().Contain("GetPageAsync(\"Application\")");
+        source.Should().Contain("GeneralKeys");
+        source.Should().Contain("AppearanceKeys");
+        source.Should().Contain("SensorItemKeys");
+        source.Should().Contain("ThresholdKeys");
+        source.Should().Contain("SetToggleAsync(\"Application\"");
+        source.Should().Contain("SetSelectionAsync(\"Application\"");
+        source.Should().Contain("SetTextAsync(\"Application\"");
+        source.Should().Contain("SetMultiSelectionAsync(");
+        source.Should().Contain("InvokeActionAsync(\"Application\"");
+        source.Should().Contain("AvaloniaOsdSettingsSaveButton");
+        source.Should().Contain("AvaloniaOsdSettingsCloseButton");
+        source.Should().Contain("Close(true)");
+    }
+
+    [Fact]
     public void AvaloniaDriverDownload_PreservesWpfFilterAndSortSurface()
     {
         var root = RepositoryPaths.FindRoot();
