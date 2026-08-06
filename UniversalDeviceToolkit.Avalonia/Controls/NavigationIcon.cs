@@ -63,6 +63,10 @@ public sealed class NavigationIcon : TextBlock
             ["Tablet24"] = "\uE7F4",
             ["Power24"] = "\uE945",
             ["Checkmark24"] = "\uE73E",
+            ["CheckmarkCircle24"] = "\uE73E",
+            ["Warning24"] = "\uE7BA",
+            ["ErrorCircle24"] = "\uEA39",
+            ["Dismiss24"] = "\uE711",
             ["ToggleRight24"] = "\uF82C",
         };
 

@@ -41,6 +41,7 @@ public partial class App : Application
 
 #if WINDOWS
     private ApplicationSettings? _applicationSettings;
+    private AvaloniaNotificationManager? _notificationManager;
 #endif
 
     public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
@@ -103,6 +104,10 @@ public partial class App : Application
             // Set up system tray icon programmatically
             SetupTrayIcon();
 #if WINDOWS
+            _notificationManager = new AvaloniaNotificationManager(
+                _applicationSettings,
+                () => desktop.MainWindow as MainWindow,
+                IoCContainer.Resolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>());
             _ = StartWindowsHostServicesAsync();
 #endif
         }
@@ -285,6 +290,8 @@ public partial class App : Application
     {
         IsExiting = true;
 #if WINDOWS
+        _notificationManager?.Dispose();
+        _notificationManager = null;
         PluginHostContext.Reset();
         try
         {
