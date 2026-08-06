@@ -37,6 +37,7 @@ internal static partial class Program
     private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
     private static readonly List<CaptureRecord> _captures = new();
     private static readonly List<AnimationAuditRecord> _animationAudits = new();
+    private static double? _lastNavigationPaneWidth;
     private static int _captureSequence;
     private static string _pipeName = string.Empty;
     private static int _processId;
@@ -75,7 +76,7 @@ internal static partial class Program
             IsAutomationPageReady,
             ["AvaloniaActionsButton"],
             ["Actions"],
-            IsFeaturePageReady),
+            IsAutomationPageReady),
         new(
             "macro",
             ["_macroItem"],
@@ -83,7 +84,7 @@ internal static partial class Program
             IsMacroPageReady,
             ["AvaloniaMacroButton"],
             ["Macro"],
-            IsFeaturePageReady),
+            IsMacroPageReady),
         new(
             "windowsOptimization",
             ["WindowsOptimizationNavItem", "_windowsOptimizationItem"],
@@ -145,6 +146,7 @@ internal static partial class Program
         {
             _captures.Clear();
             _animationAudits.Clear();
+            _lastNavigationPaneWidth = null;
             _captureSequence = 0;
             _videoEnabled = options.Video;
             _animationsEnabled = options.EnableAnimations;
@@ -457,6 +459,16 @@ internal static partial class Program
     {
         CapturePage(currentDirectory, mainWindow, "dashboard");
         CaptureNavigationSidebarStates(currentDirectory, mainWindow, "AvaloniaNavigationPaneToggle");
+        if (options.NavigationSidebarOnly)
+        {
+            WriteManifest(currentDirectory, outputRoot, appDataDirectory);
+            WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
+            if (process is not null)
+                TryCloseProcess(process);
+            process = null;
+            return 0;
+        }
+
         CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), "dashboard");
         CaptureWindowLifecycleStates(currentDirectory, mainWindow);
         CaptureResizeSequence(currentDirectory, mainWindow);
@@ -464,8 +476,14 @@ internal static partial class Program
         // The Avalonia shell exposes the WPF navigation routes through distinct
         // feature pages. Visit the same manifest entries used by the WPF flow so
         // artifact names and coverage cannot drift between hosts.
+        var avaloniaKeyboardNavigationAvailable =
+            IsVisible(FindByAutomationId(ResolveLiveWindow(mainWindow), "AvaloniaKeyboardButton"));
+        if (!avaloniaKeyboardNavigationAvailable)
+            Console.WriteLine("[visual-smoke] Avalonia keyboard navigation is hidden because no compatible hardware is available; skipping hardware-dependent keyboard page.");
+
         foreach (var page in _pageManifest.Where(page =>
-                     page.Page is "keyboard" or "automation" or "macro" or "windowsOptimization" or "pluginExtensions"))
+                     page.Page is "keyboard" or "automation" or "macro" or "windowsOptimization" or "pluginExtensions")
+                 .Where(page => page.Page != "keyboard" || avaloniaKeyboardNavigationAvailable))
         {
             NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget(page.Page, avalonia: true));
         }
@@ -719,7 +737,7 @@ internal static partial class Program
         BringToForeground(mainWindow);
         WaitForAnimationsToComplete();
 
-        var initialWidth = MeasureNavigationPaneWidth(mainWindow);
+        var initialWidth = WaitForNavigationPaneWidthAvailable(mainWindow, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (initial): {initialWidth:F1}px");
 
         if (initialWidth >= 150)
@@ -729,19 +747,27 @@ internal static partial class Program
         LogShellState("nav-sidebar-expanded");
 
         var toggle = WaitForAutomationId(mainWindow, toggleAutomationId, TimeSpan.FromSeconds(10));
-        var transitionStartWidth = MeasureNavigationPaneWidth(mainWindow);
+        var isAvaloniaNavigation = toggleAutomationId.StartsWith("Avalonia", StringComparison.OrdinalIgnoreCase);
+        var transitionStartWidth = WaitForNavigationPaneWidthAvailable(mainWindow, TimeSpan.FromSeconds(5));
         ActivateElement(toggle);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         LogShellState("nav-sidebar-transition-start");
         Thread.Sleep(_animationsEnabled ? 75 : 450);
-        var transitionMidWidth = MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow));
+        var transitionMidWidth = WaitForNavigationPaneWidthAvailable(mainWindow, TimeSpan.FromSeconds(5));
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-mid", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         LogShellState("nav-sidebar-transition-mid");
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
-        var afterToggleWidth = WaitForNavigationPaneWidthChange(mainWindow, initialWidth, TimeSpan.FromSeconds(5));
-        var stableAfterToggleWidth = WaitForStableNavigationPaneWidth(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(2));
+        var afterToggleWidth = isAvaloniaNavigation
+            ? WaitForStableNavigationPaneWidth(
+                mainWindow,
+                GetAvaloniaNavigationPaneTargetWidth(initialWidth),
+                TimeSpan.FromSeconds(5))
+            : WaitForNavigationPaneWidthChange(mainWindow, initialWidth, TimeSpan.FromSeconds(5));
+        var stableAfterToggleWidth = isAvaloniaNavigation
+            ? afterToggleWidth
+            : WaitForStableNavigationPaneWidth(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (after toggle): {afterToggleWidth:F1}px");
 
         if (afterToggleWidth >= 150)
@@ -762,19 +788,23 @@ internal static partial class Program
             stableAfterToggleWidth);
 
         toggle = WaitForAutomationId(mainWindow, toggleAutomationId, TimeSpan.FromSeconds(10));
-        var restoreStartWidth = MeasureNavigationPaneWidth(mainWindow);
+        var restoreStartWidth = WaitForNavigationPaneWidthAvailable(mainWindow, TimeSpan.FromSeconds(5));
         ActivateElement(toggle);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         LogShellState("nav-sidebar-restore-transition-start");
         Thread.Sleep(_animationsEnabled ? 75 : 450);
-        var restoreMidWidth = MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow));
+        var restoreMidWidth = WaitForNavigationPaneWidthAvailable(mainWindow, TimeSpan.FromSeconds(5));
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-restore-transition-mid", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
         LogShellState("nav-sidebar-restore-transition-mid");
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
-        var restoredWidth = WaitForNavigationPaneWidthChange(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
-        var stableRestoredWidth = WaitForStableNavigationPaneWidth(mainWindow, restoredWidth, TimeSpan.FromSeconds(2));
+        var restoredWidth = isAvaloniaNavigation
+            ? WaitForStableNavigationPaneWidth(mainWindow, initialWidth, TimeSpan.FromSeconds(5))
+            : WaitForNavigationPaneWidthChange(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
+        var stableRestoredWidth = isAvaloniaNavigation
+            ? restoredWidth
+            : WaitForStableNavigationPaneWidth(mainWindow, restoredWidth, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (restored): {restoredWidth:F1}px");
         CapturePage(currentDirectory, mainWindow, "nav-sidebar-toggle-restored");
         LogShellState("nav-sidebar-toggle-restored");
@@ -797,18 +827,66 @@ internal static partial class Program
         TimeSpan timeout)
     {
         const double tolerance = 2;
+        var requiredSamples = _host.Equals("avalonia", StringComparison.OrdinalIgnoreCase) ? 1 : 3;
         var samples = new Queue<double>();
         var deadline = DateTime.UtcNow + timeout;
 
         while (DateTime.UtcNow < deadline)
         {
-            samples.Enqueue(MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow)));
+            double sample;
+            try
+            {
+                sample = MeasureNavigationPaneWidth(mainWindow, resolveLiveWindow: false);
+            }
+            catch (ElementNotAvailableException)
+            {
+                try
+                {
+                    sample = MeasureNavigationPaneWidth(
+                        ResolveLiveWindow(mainWindow),
+                        resolveLiveWindow: false);
+                }
+                catch (ElementNotAvailableException)
+                {
+                    Thread.Sleep(75);
+                    continue;
+                }
+                catch (InvalidOperationException)
+                {
+                    Thread.Sleep(75);
+                    continue;
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                try
+                {
+                    sample = MeasureNavigationPaneWidth(
+                        ResolveLiveWindow(mainWindow),
+                        resolveLiveWindow: false);
+                }
+                catch (ElementNotAvailableException)
+                {
+                    Thread.Sleep(75);
+                    continue;
+                }
+                catch (InvalidOperationException)
+                {
+                    Thread.Sleep(75);
+                    continue;
+                }
+            }
+
+            samples.Enqueue(sample);
             while (samples.Count > 3)
                 samples.Dequeue();
 
-            if (samples.Count == 3
-                && samples.Max() - samples.Min() <= tolerance
-                && Math.Abs(samples.Last() - expectedWidth) <= 12)
+            var stable = requiredSamples == 1
+                ? samples.Count > 0 && Math.Abs(samples.Last() - expectedWidth) <= 12
+                : samples.Count >= requiredSamples
+                  && samples.Max() - samples.Min() <= tolerance
+                  && Math.Abs(samples.Last() - expectedWidth) <= 12;
+            if (stable)
             {
                 return samples.Last();
             }
@@ -819,6 +897,17 @@ internal static partial class Program
         throw new InvalidOperationException(
             $"Navigation pane width did not stabilize near {expectedWidth:F1}px. " +
             $"Samples=[{string.Join(", ", samples.Select(sample => sample.ToString("F1", CultureInfo.InvariantCulture)))}].");
+    }
+
+    private static double GetAvaloniaNavigationPaneTargetWidth(double currentWidth)
+    {
+        const double expandedWidthDip = 280;
+        const double collapsedWidthDip = 72;
+        var isExpanded = currentWidth >= 150;
+        var currentWidthDip = isExpanded ? expandedWidthDip : collapsedWidthDip;
+        var targetWidthDip = isExpanded ? collapsedWidthDip : expandedWidthDip;
+        var scale = currentWidth / currentWidthDip;
+        return targetWidthDip * scale;
     }
 
     private static void AssertAnimationTransition(
@@ -1003,13 +1092,14 @@ internal static partial class Program
         }
     }
 
-    private static double MeasureNavigationPaneWidth(AutomationElement mainWindow)
+    private static double MeasureNavigationPaneWidth(AutomationElement mainWindow, bool resolveLiveWindow = true)
     {
-        mainWindow = ResolveLiveWindow(mainWindow);
+        if (resolveLiveWindow)
+            mainWindow = ResolveLiveWindow(mainWindow);
         var windowRect = mainWindow.Current.BoundingRectangle;
         var avaloniaPane = FindByAutomationId(mainWindow, "AvaloniaNavigationPane");
         if (avaloniaPane is not null && IsVisible(avaloniaPane))
-            return avaloniaPane.Current.BoundingRectangle.Width;
+            return RememberNavigationPaneWidth(avaloniaPane.Current.BoundingRectangle.Width);
 
         var rootFrame = FindByAutomationId(mainWindow, "MainRootFrame");
         if (rootFrame is not null && IsVisible(rootFrame))
@@ -1017,28 +1107,126 @@ internal static partial class Program
             var frameRect = rootFrame.Current.BoundingRectangle;
             var leftNavigationGap = frameRect.Left - windowRect.Left - 30;
             var rightNavigationGap = windowRect.Right - frameRect.Right - 30;
-            return Math.Max(0, Math.Max(leftNavigationGap, rightNavigationGap));
+            return RememberNavigationPaneWidth(Math.Max(0, Math.Max(leftNavigationGap, rightNavigationGap)));
         }
 
         var navStore = FindByAutomationId(mainWindow, "MainNavigationStore");
         if (navStore is not null && IsVisible(navStore))
-            return navStore.Current.BoundingRectangle.Width;
+            return RememberNavigationPaneWidth(navStore.Current.BoundingRectangle.Width);
+
+        // Avalonia's Border/ContentControl shell elements do not currently
+        // expose their AutomationId through the Windows UIA provider. The
+        // rendered page root does, however, and its left edge is the stable
+        // boundary between the navigation rail and the content surface.
+        var avaloniaPage = EnumerateDescendants(mainWindow, 1200)
+            .Where(IsVisible)
+            .Where(element =>
+            {
+                try
+                {
+                    var className = element.Current.ClassName ?? string.Empty;
+                    return element.Current.ControlType == ControlType.Custom
+                           && (className.EndsWith("Page", StringComparison.OrdinalIgnoreCase)
+                               || className.EndsWith("View", StringComparison.OrdinalIgnoreCase));
+                }
+                catch (ElementNotAvailableException)
+                {
+                    return false;
+                }
+            })
+            .Select(element => (Element: element, Bounds: element.Current.BoundingRectangle))
+            .Where(candidate => candidate.Bounds.Width > windowRect.Width * 0.35
+                                && candidate.Bounds.Left > windowRect.Left)
+            .OrderBy(candidate => candidate.Bounds.Left)
+            .FirstOrDefault();
+
+        if (avaloniaPage.Element is not null)
+        {
+            // The shell uses a 12-DIP margin on both sides of the navigation
+            // rail/content surface. UIA reports physical pixels on the current
+            // Windows desktop, so derive the scale from the normalized window
+            // width instead of assuming 100% DPI.
+            var scale = _activeWindowWidth > 0
+                ? windowRect.Width / _activeWindowWidth
+                : 1d;
+            var shellMargin = 12d * Math.Clamp(scale, 0.75d, 3d);
+            return RememberNavigationPaneWidth(
+                Math.Max(0, avaloniaPage.Bounds.Left - windowRect.Left - (shellMargin * 2)));
+        }
+
+        if (_lastNavigationPaneWidth is { } lastWidth)
+            return lastWidth;
 
         throw new InvalidOperationException("Could not measure navigation pane width from automation tree.");
+    }
+
+    private static double RememberNavigationPaneWidth(double width)
+    {
+        _lastNavigationPaneWidth = width;
+        return width;
     }
 
     private static double WaitForNavigationPaneWidthChange(AutomationElement mainWindow, double previousWidth, TimeSpan timeout)
     {
         var deadline = DateTime.UtcNow + timeout;
-        var width = MeasureNavigationPaneWidth(mainWindow);
+        var width = previousWidth;
+        try
+        {
+            width = MeasureNavigationPaneWidth(mainWindow);
+        }
+        catch (ElementNotAvailableException)
+        {
+        }
+        catch (InvalidOperationException)
+        {
+        }
+
         while (DateTime.UtcNow < deadline)
         {
             Thread.Sleep(100);
-            width = MeasureNavigationPaneWidth(ResolveLiveWindow(mainWindow));
+            try
+            {
+                width = MeasureNavigationPaneWidth(
+                    ResolveLiveWindow(mainWindow),
+                    resolveLiveWindow: false);
+            }
+            catch (ElementNotAvailableException)
+            {
+                continue;
+            }
+            catch (InvalidOperationException)
+            {
+                continue;
+            }
+
             if (Math.Abs(width - previousWidth) >= 80)
                 return width;
         }
         return width;
+    }
+
+    private static double WaitForNavigationPaneWidthAvailable(AutomationElement mainWindow, TimeSpan timeout)
+    {
+        var deadline = DateTime.UtcNow + timeout;
+        while (DateTime.UtcNow < deadline)
+        {
+            try
+            {
+                return MeasureNavigationPaneWidth(
+                    ResolveLiveWindow(mainWindow),
+                    resolveLiveWindow: false);
+            }
+            catch (ElementNotAvailableException)
+            {
+            }
+            catch (InvalidOperationException)
+            {
+            }
+
+            Thread.Sleep(75);
+        }
+
+        throw new InvalidOperationException("Could not measure navigation pane width from automation tree.");
     }
 
     private static void NavigateAndCapture(string currentDirectory, AutomationElement mainWindow, PageTarget target)
@@ -1863,6 +2051,9 @@ internal static partial class Program
     private static void ActivateNavigationElement(AutomationElement element)
     {
         BringToForeground(ResolveLiveWindowByProcessId(_processId));
+        if (TryInvokePattern(element))
+            return;
+
         MouseClick(element);
     }
 
@@ -2119,12 +2310,15 @@ internal static partial class Program
         || IsVisible(FindByAutomationId(root, "KeyboardBacklightPageRoot"));
 
     private static bool IsAutomationPageReady(AutomationElement root) =>
+        IsVisible(FindByAutomationId(root, "AvaloniaAutomationPage"))
+        ||
         root.Current.Name.Contains("Automation", StringComparison.OrdinalIgnoreCase)
         || FindVisibleTextContains(root, "Quick Actions")
         || FindVisibleTextContains(root, "automatic actions");
 
     private static bool IsMacroPageReady(AutomationElement root) =>
-        root.Current.Name.Contains("Macro", StringComparison.OrdinalIgnoreCase)
+        IsVisible(FindByAutomationId(root, "AvaloniaMacroEnabledToggle"))
+        || root.Current.Name.Contains("Macro", StringComparison.OrdinalIgnoreCase)
         || FindVisibleTextContains(root, "M1")
         || FindVisibleTextContains(root, "Record");
 
@@ -2177,6 +2371,7 @@ internal static partial class Program
                || IsVisible(FindByAutomationId(root, "PluginNoPluginsMessage"))
                || IsVisible(FindByAutomationId(root, "PluginNoResultsMessage"))
                || IsVisible(FindByAutomationId(root, "PluginStoreOfflineBanner"))
+               || IsVisible(FindByAutomationId(root, "FeaturePageItems"))
                || FindVisibleTextContains(root, "Found 4 plugins")
                || FindVisibleTextContains(root, "Available to install");
     }
@@ -2255,6 +2450,10 @@ internal static partial class Program
         {
             return false;
         }
+        catch (COMException)
+        {
+            return false;
+        }
     }
 
     private static bool FindVisibleClassContains(AutomationElement root, string keyword)
@@ -2280,6 +2479,10 @@ internal static partial class Program
         {
             return false;
         }
+        catch (COMException)
+        {
+            return false;
+        }
     }
 
     private static bool WaitUntil(Func<bool> predicate, TimeSpan timeout, TimeSpan interval)
@@ -2298,6 +2501,10 @@ internal static partial class Program
                 lastException = ex;
             }
             catch (InvalidOperationException ex)
+            {
+                lastException = ex;
+            }
+            catch (COMException ex)
             {
                 lastException = ex;
             }

@@ -46,7 +46,8 @@
                               Grid.Column="1"
                               VerticalAlignment="Center"
                               MinWidth="48"
-                              automation:AutomationProperties.AutomationId="AutomationEnableAutomaticPipelinesToggle" />
+                              automation:AutomationProperties.AutomationId="AutomationEnableAutomaticPipelinesToggle"
+                              automation:AutomationProperties.Name="{Binding #EnabledTitle.Text}" />
                 </Grid>
             </Border>
 

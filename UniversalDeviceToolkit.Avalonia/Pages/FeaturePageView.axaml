@@ -114,7 +114,8 @@
                         <ComboBox x:Name="PluginFilterBox"
                                   Grid.Column="1"
                                   SelectedIndex="0"
-                                  automation:AutomationProperties.AutomationId="AvaloniaPluginFilterBox">
+                                  automation:AutomationProperties.AutomationId="AvaloniaPluginFilterBox"
+                                  automation:AutomationProperties.Name="{local:Loc Key=PluginExtensionsPage_FilterAll, Fallback=All}">
                             <ComboBoxItem Content="{local:Loc Key=PluginExtensionsPage_FilterAll, Fallback=All}" />
                             <ComboBoxItem Content="{local:Loc Key=PluginExtensionsPage_FilterInstalled, Fallback=Installed}" />
                             <ComboBoxItem Content="{local:Loc Key=PluginExtensionsPage_FilterAvailable, Fallback=Available}" />
