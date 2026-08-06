@@ -579,6 +579,23 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaKeyboardSpectrum_PreservesWpfEffectKeySelection()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+
+        source.Should().Contain("ToggleButton");
+        source.Should().Contain("SetKey");
+        source.Should().Contain("SetKeys(availableKeys)");
+        source.Should().Contain("Keys.OrderBy(key => key).ToArray()");
+        source.Should().Contain("_state.KeyboardKeys?.ToArray() ?? []");
+    }
+
+    [Fact]
     public void WindowsPlatformServices_MapsTheWpfSensorDetailsSurface()
     {
         var root = RepositoryPaths.FindRoot();

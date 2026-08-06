@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -169,13 +170,78 @@ public partial class KeyboardBacklightPage : UserControl
         motion.Children.Add(editor.Direction);
         details.Children.Add(motion);
         details.Children.Add(editor.ClockwiseDirection);
-        details.Children.Add(new LocalizedTextBlock
+        var availableKeys = (_state?.KeyboardKeys ?? [])
+            .Concat(editor.Keys)
+            .Distinct()
+            .OrderBy(key => key)
+            .ToArray();
+        var keyHeader = new Grid
         {
-            Text = $"{editor.Original.Keys.Count} key(s), colors as #RRGGBB values",
+            ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"),
+            ColumnSpacing = 6,
+        };
+        keyHeader.Children.Add(new LocalizedTextBlock
+        {
+            Text = AvaloniaLocalization.GetString("Keyboard_Keys", "Keys"),
             Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
-            OverflowMode = LocalizedOverflowMode.Wrap,
-            MaxLines = 2,
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+            VerticalAlignment = VerticalAlignment.Center,
         });
+
+        var keyButtons = new List<ToggleButton>(availableKeys.Length);
+        var selectAllButton = CreateSpectrumKeyActionButton(
+            "SelectAllOn24",
+            "SpectrumKeyboardBacklightControl_SelectAll_ToolTip",
+            "Select all keys",
+            () =>
+            {
+                editor.SetKeys(availableKeys);
+                RefreshKeyButtons();
+            });
+        Grid.SetColumn(selectAllButton, 1);
+        keyHeader.Children.Add(selectAllButton);
+
+        var deselectAllButton = CreateSpectrumKeyActionButton(
+            "SelectAllOff24",
+            "SpectrumKeyboardBacklightControl_DeselectAll_ToolTip",
+            "Deselect all keys",
+            () =>
+            {
+                editor.SetKeys([]);
+                RefreshKeyButtons();
+            });
+        Grid.SetColumn(deselectAllButton, 2);
+        keyHeader.Children.Add(deselectAllButton);
+        details.Children.Add(keyHeader);
+
+        var keysPanel = new WrapPanel { Orientation = Orientation.Horizontal };
+        foreach (var key in availableKeys)
+        {
+            var keyButton = new ToggleButton
+            {
+                Content = $"0x{key:X4}",
+                IsChecked = editor.Keys.Contains(key),
+                Width = 52,
+                Height = 32,
+                Margin = new Thickness(0, 0, 4, 4),
+                Tag = key,
+            };
+            var keyName = $"Keyboard key 0x{key:X4}";
+            AutomationProperties.SetName(keyButton, keyName);
+            ToolTip.SetTip(keyButton, keyName);
+            keyButton.Click += (_, _) => editor.SetKey(key, keyButton.IsChecked == true);
+            keyButtons.Add(keyButton);
+            keysPanel.Children.Add(keyButton);
+        }
+
+        void RefreshKeyButtons()
+        {
+            foreach (var keyButton in keyButtons)
+                keyButton.IsChecked = editor.Keys.Contains((ushort)keyButton.Tag!);
+        }
+
+        details.Children.Add(keysPanel);
         details.Children.Add(editor.Colors);
 
         var removeButton = new Button
@@ -201,6 +267,24 @@ public partial class KeyboardBacklightPage : UserControl
         };
     }
 
+    private Button CreateSpectrumKeyActionButton(
+        string iconIdentifier,
+        string tooltipKey,
+        string fallbackTooltip,
+        Action action)
+    {
+        var button = new Button
+        {
+            Padding = new Thickness(4),
+            Content = new NavigationIcon { IconIdentifier = iconIdentifier },
+        };
+        var tooltip = AvaloniaLocalization.GetString(tooltipKey, fallbackTooltip);
+        AutomationProperties.SetName(button, tooltip);
+        ToolTip.SetTip(button, tooltip);
+        button.Click += (_, _) => action();
+        return button;
+    }
+
     private async void SpectrumProfile_Click(object? sender, RoutedEventArgs e)
     {
         if (_isRefreshing || sender is not Button { Tag: int profile })
@@ -220,7 +304,7 @@ public partial class KeyboardBacklightPage : UserControl
             "None",
             "None",
             [new KeyboardColorState(255, 255, 255)],
-            []));
+            _state.KeyboardKeys?.ToArray() ?? []));
         _spectrumEditors.Add(editor);
         SpectrumEffects.Items.Add(CreateSpectrumEffectCard(editor));
     }
@@ -503,6 +587,7 @@ public partial class KeyboardBacklightPage : UserControl
     private sealed class SpectrumEffectEditor
     {
         public KeyboardSpectrumEffectState Original { get; }
+        public HashSet<ushort> Keys { get; }
         public ComboBox Type { get; }
         public ComboBox Speed { get; }
         public ComboBox Direction { get; }
@@ -512,6 +597,7 @@ public partial class KeyboardBacklightPage : UserControl
         public SpectrumEffectEditor(KeyboardSpectrumEffectState effect)
         {
             Original = effect;
+            Keys = effect.Keys.ToHashSet();
             Type = CreateCombo(SpectrumEffectTypes, effect.Type);
             Speed = CreateCombo(SpectrumSpeeds, effect.Speed);
             Direction = CreateCombo(SpectrumDirections, effect.Direction);
@@ -524,13 +610,27 @@ public partial class KeyboardBacklightPage : UserControl
             };
         }
 
+        public void SetKey(ushort key, bool selected)
+        {
+            if (selected)
+                Keys.Add(key);
+            else
+                Keys.Remove(key);
+        }
+
+        public void SetKeys(IEnumerable<ushort> keys)
+        {
+            Keys.Clear();
+            Keys.UnionWith(keys);
+        }
+
         public KeyboardSpectrumEffectState ToState() => new(
             Type.SelectedItem?.ToString() ?? Original.Type,
             Speed.SelectedItem?.ToString() ?? Original.Speed,
             Direction.SelectedItem?.ToString() ?? Original.Direction,
             ClockwiseDirection.SelectedItem?.ToString() ?? Original.ClockwiseDirection,
             ParseColors(Colors.Text, Original.Colors),
-            Original.Keys);
+            Keys.OrderBy(key => key).ToArray());
 
         private static ComboBox CreateCombo(IReadOnlyList<string> values, string selected) => new()
         {
