@@ -16,6 +16,7 @@ using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Utils;
 using UniversalDeviceToolkit.WPF.Windows.Osd;
+using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Settings
 {
@@ -28,7 +29,7 @@ public partial class SettingsApplicationBehaviorControl
     private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
     private readonly RGBKeyboardBacklightController _rgbKeyboardBacklightController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
     private readonly OsdSettings _osdSettings = IoCContainer.Resolve<OsdSettings>();
-    private readonly HardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
+    private readonly WpfHardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<WpfHardwareSensorSettings>();
     private readonly HardwareSensorsFeature _hardwareSensorsFeature = IoCContainer.Resolve<HardwareSensorsFeature>();
     private readonly SettingsBackupService _settingsBackupService = new();
     private bool _isRefreshing;

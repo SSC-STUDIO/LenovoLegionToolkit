@@ -19,6 +19,7 @@ using UniversalDeviceToolkit.WPF.Windows.Dashboard;
 using Wpf.Ui.Controls;
 using MenuItem = Wpf.Ui.Controls.MenuItem;
 using UniversalDeviceToolkit.Abstractions.Utils;
+using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
 
 namespace UniversalDeviceToolkit.WPF.Controls.Dashboard
 {
@@ -47,7 +48,7 @@ public partial class SensorsControl : IDisposable
     private readonly ISensorsController _controller = IoCContainer.Resolve<ISensorsController>();
     private readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
-    private readonly HardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
+    private readonly WpfHardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<WpfHardwareSensorSettings>();
     private readonly SensorsGroupController? _sensorsGroupController = IoCContainer.TryResolve<SensorsGroupController>();
     private readonly IDelayProvider _delayProvider = IoCContainer.Resolve<IDelayProvider>();
     private bool _sensorRuntimeAvailable = true;

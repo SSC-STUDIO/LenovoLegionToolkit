@@ -20,7 +20,7 @@ using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using MachineCompatibility = UniversalDeviceToolkit.Lib.Utils.Compatibility;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
-using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
+using HardwareSensorSettings = UniversalDeviceToolkit.Lib.Settings.HardwareSensorSettings;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
@@ -138,8 +138,8 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
     private readonly ApplicationSettings _applicationSettings = SharedApplicationSettings;
     private readonly OsdSettings _osdSettings =
         IoCContainer.TryResolve<OsdSettings>() ?? new OsdSettings();
-    private readonly WpfHardwareSensorSettings _hardwareSensorSettings =
-        IoCContainer.TryResolve<WpfHardwareSensorSettings>() ?? new WpfHardwareSensorSettings();
+    private readonly HardwareSensorSettings _hardwareSensorSettings =
+        IoCContainer.TryResolve<HardwareSensorSettings>() ?? new HardwareSensorSettings();
     private readonly UpdateCheckSettings _updateSettings = new();
     private readonly SettingsBackupService _settingsBackupService = new();
     private readonly IntegrationsSettings _integrationsSettings =

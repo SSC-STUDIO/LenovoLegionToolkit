@@ -6,7 +6,7 @@ using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Shared.Settings;
 #if WINDOWS
 using UniversalDeviceToolkit.Lib;
-using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
+using HardwareSensorSettings = UniversalDeviceToolkit.Lib.Settings.HardwareSensorSettings;
 #endif
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
@@ -85,7 +85,7 @@ public partial class DashboardPageViewModel : ObservableObject
     private bool _showSensors;
     private int _sensorsRefreshIntervalSeconds;
 #if WINDOWS
-    private readonly WpfHardwareSensorSettings? _hardwareSensorSettings;
+    private readonly HardwareSensorSettings? _hardwareSensorSettings;
 #endif
 
     /// <summary>
@@ -126,7 +126,7 @@ public partial class DashboardPageViewModel : ObservableObject
         _showPowerModeSettings = showPowerModeSettings;
         _dashboardPreferences = dashboardPreferences ?? new AvaloniaDashboardPreferences();
 #if WINDOWS
-        _hardwareSensorSettings = IoCContainer.TryResolve<WpfHardwareSensorSettings>();
+        _hardwareSensorSettings = IoCContainer.TryResolve<HardwareSensorSettings>();
 #endif
         _showSensors = _dashboardPreferences.Store.ShowSensors;
         _sensorsRefreshIntervalSeconds = NormalizeRefreshInterval(

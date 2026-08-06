@@ -25,7 +25,10 @@ public class IoCModule : Module
         builder.Register<NotificationsManager>().AutoActivate();
 
         builder.Register<DashboardSettings>().SingleInstance();
-        builder.Register<HardwareSensorSettings>().SingleInstance();
+        builder.Register<HardwareSensorSettings>()
+            .AsSelf()
+            .As<UniversalDeviceToolkit.Lib.Settings.HardwareSensorSettings>()
+            .SingleInstance();
 
         builder.Register<IpcServer>().AsSelf().As<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>().SingleInstance();
         builder.Register<WindowsOptimizationElevationClient>()

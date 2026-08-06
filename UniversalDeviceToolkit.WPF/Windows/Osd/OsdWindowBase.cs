@@ -20,6 +20,7 @@ using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.WPF.Resources;
 using UniversalDeviceToolkit.WPF.Settings;
 using UniversalDeviceToolkit.WPF.Extensions;
+using WpfHardwareSensorSettings = UniversalDeviceToolkit.WPF.Settings.HardwareSensorSettings;
 
 namespace UniversalDeviceToolkit.WPF.Windows.Osd;
 
@@ -46,7 +47,7 @@ public abstract class OsdWindowBase : Window
     protected readonly SensorsController _controller = IoCContainer.Resolve<SensorsController>();
     protected readonly SensorsGroupController _sensorsGroupControllers = IoCContainer.Resolve<SensorsGroupController>();
     protected readonly FpsSensorController _fpsController = IoCContainer.Resolve<FpsSensorController>();
-    protected readonly HardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
+    protected readonly WpfHardwareSensorSettings _hardwareSensorSettings = IoCContainer.Resolve<WpfHardwareSensorSettings>();
     protected readonly ApplicationSettings _applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
 
     #endregion
