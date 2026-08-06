@@ -8,6 +8,7 @@ using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
@@ -61,7 +62,22 @@ public partial class SettingsCapabilityView : UserControl
                 ?? AvaloniaLocalization.GetString("Settings_Page_StatusMessage", "Changes are saved immediately.");
 
             OptionsPanel.Children.Clear();
-            foreach (var option in data.Options.Where(option => option.IsVisible))
+            var options = data.Options
+                .Where(option => option.IsVisible)
+                .ToList();
+            if (_pageKey == "Application"
+                && options.Any(option => option.Key == "HardwareSectionsVisible")
+                && options.Any(option => option.Key == "HardwareSectionsOrder"))
+            {
+                options.Add(new AvaloniaSettingOption(
+                    "HardwareSectionsConfigure",
+                    AvaloniaLocalization.GetString("SensorSections_Configure_Title", "Configure sensor sections"),
+                    AvaloniaLocalization.GetString("SensorSections_Configure_Description", "Choose visible dashboard sensor sections and their order."),
+                    AvaloniaSettingEditor.Action,
+                    data.IsAvailable,
+                    ActionText: AvaloniaLocalization.GetString("Configure", "Configure")));
+            }
+            foreach (var option in options)
                 OptionsPanel.Children.Add(CreateOptionCard(option));
 
             if (!data.Options.Any(option => option.IsVisible))
@@ -354,6 +370,12 @@ public partial class SettingsCapabilityView : UserControl
                 return;
             }
 
+            if (_pageKey == "Application" && option.Key == "HardwareSectionsConfigure")
+            {
+                await ConfigureHardwareSectionsAsync(button);
+                return;
+            }
+
             if (_pageKey == "Display" && option.Key == "BootLogo")
             {
                 var topLevel = TopLevel.GetTopLevel(this);
@@ -415,6 +437,28 @@ public partial class SettingsCapabilityView : UserControl
                 button);
         };
         return button;
+    }
+
+    private async Task ConfigureHardwareSectionsAsync(Button button)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        button.IsEnabled = false;
+        try
+        {
+            var dialog = new HardwareSensorSectionsWindow(_settingsService);
+            await dialog.ShowDialog(owner);
+            await RefreshPageAsync();
+        }
+        catch (Exception ex)
+        {
+            ToolTip.SetTip(button, ex.Message);
+        }
+        finally
+        {
+            button.IsEnabled = true;
+        }
     }
 
     private async Task CheckForUpdatesAsync(Button button, bool wasEnabled)
