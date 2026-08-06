@@ -58,6 +58,21 @@ public class CustomMousePluginTests
     }
 
     [Fact]
+    public void AvaloniaSettingsSurface_PreservesWpfActionSemanticsAndAutomationContracts()
+    {
+        var source = ReadAvaloniaSettingsSource();
+
+        Assert.Contains("AvaloniaCustomMouseSyncFromWindows", source);
+        Assert.Contains("AvaloniaCustomMouseReload", source);
+        Assert.Contains("ActionButton(CustomMouseText.ReloadButton, (Action)ReloadSettings", source);
+        Assert.Contains("if (!_plugin.SetSwapButtons(swapButtons))", source);
+        Assert.Contains("_plugin.SetWindowsPointerSpeed(originalSpeed)", source);
+        Assert.Contains("StatusWindowsDefaultRestored", source);
+        Assert.Contains("$\"{speed}/20\"", source);
+        Assert.Contains("AvaloniaCustomMouseApplyProgress", source);
+    }
+
+    [Fact]
     public void GetResourceRoot_WithLocalPluginDirectoryOverride_ReturnsLocalPackageResources()
     {
         const string overrideEnvironmentVariable = "LLT_PLUGIN_DIRECTORY_OVERRIDE";
@@ -277,5 +292,27 @@ public class CustomMousePluginTests
     {
         var result = CustomMousePlugin.SanitizeWindowsPointerSpeed(validValue);
         Assert.Equal(expected, result);
+    }
+
+    private static string ReadAvaloniaSettingsSource()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null)
+        {
+            var solutionPath = Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln");
+            if (File.Exists(solutionPath))
+            {
+                return File.ReadAllText(Path.Combine(
+                    directory.FullName,
+                    "Plugins",
+                    "Official",
+                    "CustomMouse",
+                    "AvaloniaCustomMouseSettingsControl.cs"));
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new DirectoryNotFoundException("UniversalDeviceToolkit repository root was not found.");
     }
 }
