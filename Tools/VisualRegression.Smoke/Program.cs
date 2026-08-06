@@ -931,9 +931,10 @@ internal static partial class Program
         }
 
         var delta = endWidth - expectedStartWidth;
+        var directionSign = Math.Sign(delta);
         if (Math.Abs(delta) > endpointTolerance
-            && ((midWidth - expectedStartWidth) * delta < -overshootTolerance
-                || (midWidth - endWidth) * delta > overshootTolerance))
+            && ((midWidth - expectedStartWidth) * directionSign < -overshootTolerance
+                || (midWidth - endWidth) * directionSign > overshootTolerance))
         {
             throw new InvalidOperationException(
                 $"Navigation pane {direction} animation moved in the wrong direction. " +
@@ -2988,13 +2989,31 @@ internal static partial class Program
             Path.Combine(binRoot, configuration)
         };
 
-        var directCandidates = runtimeRoots.SelectMany(runtimeRoot => new[]
+        var directCandidates = runtimeRoots.SelectMany(runtimeRoot =>
         {
-            Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0"),
-            Path.Combine(runtimeRoot, "net10.0"),
-            Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
-            Path.Combine(runtimeRoot, "net10.0", "win-x64"),
-            Path.Combine(runtimeRoot, "net10.0-windows", "win-x64")
+            // Avalonia's Windows target is multi-targeted and its x64 build is
+            // emitted below the RID directory. Prefer that output so a stale
+            // framework-only directory cannot silently bypass test hooks or
+            // newly built resources. WPF keeps its framework-only output first.
+            var candidates = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
+                ? new[]
+                {
+                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
+                    Path.Combine(runtimeRoot, "net10.0", "win-x64"),
+                    Path.Combine(runtimeRoot, "net10.0-windows", "win-x64"),
+                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0"),
+                    Path.Combine(runtimeRoot, "net10.0")
+                }
+                : new[]
+                {
+                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0"),
+                    Path.Combine(runtimeRoot, "net10.0"),
+                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
+                    Path.Combine(runtimeRoot, "net10.0", "win-x64"),
+                    Path.Combine(runtimeRoot, "net10.0-windows", "win-x64")
+                };
+
+            return candidates;
         });
 
         foreach (var candidate in directCandidates)
