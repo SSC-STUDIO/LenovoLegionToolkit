@@ -26,6 +26,41 @@ public sealed class DashboardHardwareActionContractTests
     }
 
     [Fact]
+    public async Task KillDiscreteGpuProcesses_FailurePreservesTheLastKnownStateWithoutRefreshing()
+    {
+        var services = new Mock<IPlatformServices>(MockBehavior.Strict);
+        services.Setup(service => service.KillDiscreteGpuProcessesAsync()).ReturnsAsync(false);
+        var viewModel = new DashboardPageViewModel(services.Object)
+        {
+            DiscreteGpuState = GpuState("Active", canKill: true, canRestart: true),
+        };
+
+        await viewModel.KillDiscreteGpuProcessesCommand.ExecuteAsync(null);
+
+        viewModel.DiscreteGpuState.Status.Should().Be("Active");
+        viewModel.GpuActionStatus.Should().NotBeNullOrWhiteSpace();
+        services.Verify(service => service.KillDiscreteGpuProcessesAsync(), Times.Once);
+        services.Verify(service => service.GetDiscreteGpuStateAsync(), Times.Never);
+    }
+
+    [Fact]
+    public async Task RestartDiscreteGpu_SuccessRefreshesTheAuthoritativeGpuState()
+    {
+        var refreshed = GpuState("Powered off", canKill: false, canRestart: false);
+        var services = new Mock<IPlatformServices>(MockBehavior.Strict);
+        services.Setup(service => service.RestartDiscreteGpuAsync()).ReturnsAsync(true);
+        services.Setup(service => service.GetDiscreteGpuStateAsync()).ReturnsAsync(refreshed);
+        var viewModel = new DashboardPageViewModel(services.Object);
+
+        await viewModel.RestartDiscreteGpuCommand.ExecuteAsync(null);
+
+        viewModel.DiscreteGpuState.Should().BeSameAs(refreshed);
+        viewModel.GpuActionStatus.Should().NotBeNullOrWhiteSpace();
+        services.Verify(service => service.RestartDiscreteGpuAsync(), Times.Once);
+        services.Verify(service => service.GetDiscreteGpuStateAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task RestartDiscreteGpu_FailurePreservesTheLastKnownStateWithoutRefreshing()
     {
         var services = new Mock<IPlatformServices>(MockBehavior.Strict);
