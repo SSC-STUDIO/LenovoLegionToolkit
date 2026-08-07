@@ -69,6 +69,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private readonly object _macroRecordingLock = new();
     private readonly HashSet<string> _selectedCleanupActions;
+    private readonly Dictionary<string, bool> _pendingOptimizationActions = new(StringComparer.OrdinalIgnoreCase);
     private readonly ApplicationSettings? _applicationSettings;
     private readonly AvaloniaDashboardPreferences _dashboardPreferences;
     private readonly PowerModeFeature? _powerMode;
@@ -1154,6 +1155,74 @@ internal sealed class WindowsFeatureHostServices
             // never surface a host-service exception from an async UI event.
             return false;
         }
+    }
+
+    public async Task<CleanupExecutionResult> RunSelectedCleanupAsync(IProgress<CleanupProgressState>? progress = null)
+    {
+        var actionKeys = _selectedCleanupActions.ToArray();
+        if (_optimization is null || actionKeys.Length == 0)
+            return new CleanupExecutionResult(0, 0, 0, 0, TimeSpan.Zero, []);
+
+        var definitions = _optimization.GetCategories()
+            .SelectMany(category => category.Actions)
+            .ToDictionary(action => action.Key, StringComparer.OrdinalIgnoreCase);
+        var results = new List<CleanupActionResult>(actionKeys.Length);
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        long totalFreedBytes = 0;
+
+        for (var index = 0; index < actionKeys.Length; index++)
+        {
+            var actionKey = actionKeys[index];
+            var title = definitions.TryGetValue(actionKey, out var definition)
+                ? ResolveResource(definition.TitleResourceKey)
+                : actionKey;
+            long before = 0;
+            try
+            {
+                before = await _optimization.EstimateActionSizeAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
+            }
+            catch
+            {
+                // Estimation is informational. Preserve execution parity when a
+                // cleanup provider cannot measure its candidate files.
+            }
+
+            try
+            {
+                await ExecuteCleanupAsync([actionKey], CancellationToken.None).ConfigureAwait(false);
+                long after = 0;
+                try
+                {
+                    after = await _optimization.EstimateActionSizeAsync(actionKey, CancellationToken.None).ConfigureAwait(false);
+                }
+                catch
+                {
+                    // A cleanup provider can remove its own source directory;
+                    // in that case the successful operation still has a valid
+                    // zero-byte measurable result.
+                }
+
+                var freed = Math.Max(0, before - after);
+                totalFreedBytes += freed;
+                results.Add(new CleanupActionResult(actionKey, title, true, freed));
+            }
+            catch (Exception ex)
+            {
+                results.Add(new CleanupActionResult(actionKey, title, false, 0, ex.Message));
+            }
+
+            progress?.Report(new CleanupProgressState(index + 1, actionKeys.Length, title, totalFreedBytes));
+        }
+
+        stopwatch.Stop();
+        var succeeded = results.Count(result => result.Succeeded);
+        return new CleanupExecutionResult(
+            actionKeys.Length,
+            succeeded,
+            actionKeys.Length - succeeded,
+            totalFreedBytes,
+            stopwatch.Elapsed,
+            results);
     }
 
     public async Task<bool> ImportPluginAsync(string zipFilePath)
@@ -2544,14 +2613,17 @@ internal sealed class WindowsFeatureHostServices
 
                 if (actionKey.Equals(FeatureActionContract.OptimizationApplyRecommendedActionKey, StringComparison.OrdinalIgnoreCase))
                 {
-                    var recommended = _optimization.GetCategories()
-                        .Where(category => !FeatureActionContract.IsCleanupAction(category.Key))
-                        .SelectMany(category => category.Actions)
-                        .Where(action => action.Recommended)
-                        .Select(action => action.Key)
-                        .ToArray();
-                    await ExecuteRecommendedOptimizationAsync(recommended, CancellationToken.None).ConfigureAwait(false);
-                    return true;
+                    return await SelectRecommendedOptimizationActionsAsync().ConfigureAwait(false);
+                }
+
+                if (actionKey.Equals(FeatureActionContract.OptimizationApplySelectedActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    return await ApplyPendingOptimizationActionsAsync().ConfigureAwait(false);
+                }
+
+                if (actionKey.Equals(FeatureActionContract.OptimizationClearSelectionActionKey, StringComparison.OrdinalIgnoreCase))
+                {
+                    return await ClearOptimizationSelectionAsync().ConfigureAwait(false);
                 }
 
                 if (actionKey.Equals(FeatureActionContract.CleanupScanActionKey, StringComparison.OrdinalIgnoreCase))
@@ -2575,16 +2647,7 @@ internal sealed class WindowsFeatureHostServices
 
                 if (actionKey.Equals(FeatureActionContract.CleanupRunActionKey, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (_selectedCleanupActions.Count == 0)
-                        return false;
-
-                    await ExecuteCleanupAsync(
-                        _selectedCleanupActions.ToArray(),
-                        CancellationToken.None).ConfigureAwait(false);
-                    _selectedCleanupActions.Clear();
-                    _estimatedCleanupSize = 0;
-                    PersistCleanupSelection();
-                    return true;
+                    return (await RunSelectedCleanupAsync().ConfigureAwait(false)).SucceededCount > 0;
                 }
 
                 var action = _optimization.GetCategories()
@@ -2593,16 +2656,11 @@ internal sealed class WindowsFeatureHostServices
                 if (action is null)
                     return false;
 
-                if (isSelected)
-                {
-                    await ExecuteOptimizationActionAsync(action.Key, apply: true, CancellationToken.None).ConfigureAwait(false);
-                    return true;
-                }
-
-                if (action.RollbackAsync is null)
+                var applied = await _optimization.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                if (!applied.HasValue)
                     return false;
 
-                await ExecuteOptimizationActionAsync(action.Key, apply: false, CancellationToken.None).ConfigureAwait(false);
+                _pendingOptimizationActions[action.Key] = isSelected;
                 return true;
             default:
                 return false;
@@ -2618,13 +2676,159 @@ internal sealed class WindowsFeatureHostServices
         _applicationSettings.SynchronizeStore();
     }
 
-    private Task ExecuteRecommendedOptimizationAsync(
-        IReadOnlyList<string> actionKeys,
-        CancellationToken cancellationToken)
+    private async Task<bool> SelectRecommendedOptimizationActionsAsync()
     {
-        return WindowsOptimizationElevationBridge.IsAvailable
-            ? WindowsOptimizationElevationBridge.ExecuteRecommendedAsync(actionKeys, cancellationToken)
-            : _optimization!.ExecuteActionsAsync(actionKeys, cancellationToken);
+        if (_optimization is null)
+            return false;
+
+        var actions = _optimization.GetCategories()
+            .Where(category => !FeatureActionContract.IsCleanupAction(category.Key))
+            .SelectMany(category => category.Actions)
+            .ToArray();
+        var byKey = actions.ToDictionary(action => action.Key, StringComparer.OrdinalIgnoreCase);
+        var paired = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var action in actions)
+        {
+            if (TryGetTogglePairKeys(action.Key, out var enableKey, out var disableKey)
+                && byKey.TryGetValue(enableKey, out var enable)
+                && byKey.TryGetValue(disableKey, out var disable))
+            {
+                var pairKey = enableKey[..^".enable".Length];
+                if (!paired.Add(pairKey))
+                    continue;
+
+                var enabled = await _optimization.TryGetActionAppliedAsync(enable.Key, CancellationToken.None).ConfigureAwait(false);
+                if (!enabled.HasValue)
+                    continue;
+
+                var visible = enabled.Value ? disable : enable;
+                _pendingOptimizationActions[visible.Key] = enable.Recommended != disable.Recommended
+                    ? enable.Recommended
+                    : visible.Recommended;
+                continue;
+            }
+
+            var applied = await _optimization.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+            if (applied.HasValue)
+                _pendingOptimizationActions[action.Key] = action.Recommended;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> ClearOptimizationSelectionAsync()
+    {
+        if (_optimization is null)
+            return false;
+
+        var actions = _optimization.GetCategories()
+            .Where(category => !FeatureActionContract.IsCleanupAction(category.Key))
+            .SelectMany(category => category.Actions)
+            .ToArray();
+        var byKey = actions.ToDictionary(action => action.Key, StringComparer.OrdinalIgnoreCase);
+        var paired = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var action in actions)
+        {
+            if (TryGetTogglePairKeys(action.Key, out var enableKey, out var disableKey)
+                && byKey.TryGetValue(enableKey, out var enable)
+                && byKey.TryGetValue(disableKey, out var disable))
+            {
+                var pairKey = enableKey[..^".enable".Length];
+                if (!paired.Add(pairKey))
+                    continue;
+
+                var enabled = await _optimization.TryGetActionAppliedAsync(enable.Key, CancellationToken.None).ConfigureAwait(false);
+                if (enabled.HasValue)
+                    _pendingOptimizationActions[(enabled.Value ? disable : enable).Key] = false;
+                continue;
+            }
+
+            if ((await _optimization.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false)).HasValue)
+                _pendingOptimizationActions[action.Key] = false;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> ApplyPendingOptimizationActionsAsync()
+    {
+        if (_optimization is null || _pendingOptimizationActions.Count == 0)
+            return false;
+
+        var actions = _optimization.GetCategories()
+            .Where(category => !FeatureActionContract.IsCleanupAction(category.Key))
+            .SelectMany(category => category.Actions)
+            .ToDictionary(action => action.Key, StringComparer.OrdinalIgnoreCase);
+        var pending = _pendingOptimizationActions.ToArray();
+        var processedPairs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var changed = false;
+
+        try
+        {
+            foreach (var (actionKey, desired) in pending)
+            {
+                if (!actions.TryGetValue(actionKey, out var action))
+                    continue;
+
+                if (TryGetTogglePairKeys(action.Key, out var enableKey, out var disableKey)
+                    && actions.TryGetValue(enableKey, out var enable)
+                    && actions.ContainsKey(disableKey))
+                {
+                    var pairKey = enableKey[..^".enable".Length];
+                    if (!processedPairs.Add(pairKey))
+                        continue;
+
+                    var enabled = await _optimization.TryGetActionAppliedAsync(enable.Key, CancellationToken.None).ConfigureAwait(false);
+                    if (!enabled.HasValue || enabled.Value == desired)
+                        continue;
+
+                    await ExecuteOptimizationActionAsync(desired ? enableKey : disableKey, apply: true, CancellationToken.None)
+                        .ConfigureAwait(false);
+                    changed = true;
+                    continue;
+                }
+
+                var applied = await _optimization.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+                if (!applied.HasValue || applied.Value == desired)
+                    continue;
+
+                await ExecuteOptimizationActionAsync(action.Key, desired, CancellationToken.None).ConfigureAwait(false);
+                changed = true;
+            }
+        }
+        finally
+        {
+            _pendingOptimizationActions.Clear();
+        }
+
+        return changed;
+    }
+
+    private static bool TryGetTogglePairKeys(string actionKey, out string enableKey, out string disableKey)
+    {
+        const string enableSuffix = ".enable";
+        const string disableSuffix = ".disable";
+        if (actionKey.EndsWith(enableSuffix, StringComparison.OrdinalIgnoreCase))
+        {
+            var baseKey = actionKey[..^enableSuffix.Length];
+            enableKey = actionKey;
+            disableKey = baseKey + disableSuffix;
+            return true;
+        }
+
+        if (actionKey.EndsWith(disableSuffix, StringComparison.OrdinalIgnoreCase))
+        {
+            var baseKey = actionKey[..^disableSuffix.Length];
+            enableKey = baseKey + enableSuffix;
+            disableKey = actionKey;
+            return true;
+        }
+
+        enableKey = string.Empty;
+        disableKey = string.Empty;
+        return false;
     }
 
     private Task ExecuteCleanupAsync(
@@ -3664,9 +3868,27 @@ internal sealed class WindowsFeatureHostServices
         {
             new FeatureActionItem(
                 FeatureActionContract.OptimizationApplyRecommendedActionKey,
-                "Apply recommended optimizations",
-                "Apply all recommended non-cleanup Windows optimization actions as one batch.",
+                "Select recommended optimizations",
+                "Set the pending state of recommended non-cleanup Windows optimization actions without changing the system yet.",
+                "Select",
+                true,
+                false,
+                false,
+                "Batch operations"),
+            new FeatureActionItem(
+                FeatureActionContract.OptimizationApplySelectedActionKey,
+                "Apply selected optimizations",
+                "Apply the pending Windows optimization changes as one batch.",
                 "Apply",
+                _pendingOptimizationActions.Count > 0,
+                false,
+                false,
+                "Batch operations"),
+            new FeatureActionItem(
+                FeatureActionContract.OptimizationClearSelectionActionKey,
+                "Clear optimization selection",
+                "Set all pending optimization selections to off without changing the system yet.",
+                "Clear",
                 true,
                 false,
                 false,
@@ -3683,7 +3905,7 @@ internal sealed class WindowsFeatureHostServices
             new FeatureActionItem(
                 FeatureActionContract.CleanupRunActionKey,
                 "Run selected cleanup",
-                "Execute the selected cleanup actions and clear their saved selection.",
+                "Execute the selected cleanup actions while preserving their selection.",
                 "Run",
                 _selectedCleanupActions.Count > 0,
                 false,
@@ -3699,35 +3921,55 @@ internal sealed class WindowsFeatureHostServices
                 false,
                 "Cleanup"),
         };
-        foreach (var category in _optimization.GetCategories())
+        var categories = _optimization.GetCategories();
+        var actionsByKey = categories
+            .SelectMany(category => category.Actions)
+            .ToDictionary(action => action.Key, StringComparer.OrdinalIgnoreCase);
+        var processedPairs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var category in categories)
         {
             foreach (var action in category.Actions)
             {
                 var isCleanup = FeatureActionContract.IsCleanupAction(action.Key);
-                var applied = false;
-                if (!isCleanup && action.IsAppliedAsync is not null)
+                var projectedAction = action;
+                bool? applied = null;
+                if (!isCleanup && TryGetTogglePairKeys(action.Key, out var enableKey, out var disableKey)
+                    && actionsByKey.TryGetValue(enableKey, out var enable)
+                    && actionsByKey.TryGetValue(disableKey, out var disable))
                 {
-                    try
-                    {
-                        applied = await action.IsAppliedAsync(CancellationToken.None).ConfigureAwait(false);
-                    }
-                    catch
-                    {
-                        // A failed probe keeps the action visible and safely unselected.
-                    }
+                    var pairKey = enableKey[..^".enable".Length];
+                    if (!processedPairs.Add(pairKey))
+                        continue;
+
+                    applied = await _optimization.TryGetActionAppliedAsync(enable.Key, CancellationToken.None).ConfigureAwait(false);
+                    projectedAction = applied == true ? disable : enable;
                 }
+                else if (!isCleanup)
+                    applied = await _optimization.TryGetActionAppliedAsync(action.Key, CancellationToken.None).ConfigureAwait(false);
+
+                var selected = isCleanup
+                    ? _selectedCleanupActions.Contains(projectedAction.Key)
+                    : applied.HasValue && _pendingOptimizationActions.TryGetValue(projectedAction.Key, out var pending)
+                        ? pending
+                        : applied ?? false;
+                var status = isCleanup
+                    ? (selected ? "Selected" : "Select")
+                    : !applied.HasValue
+                        ? "State unavailable"
+                        : selected != applied.Value
+                            ? (selected ? "Pending apply" : "Pending revert")
+                            : applied.Value ? "Applied" : projectedAction.Recommended ? "Recommended" : "Available";
 
                 actions.Add(new FeatureActionItem(
-                    action.Key,
-                    ResolveResource(action.TitleResourceKey),
-                    ResolveResource(action.DescriptionResourceKey),
-                    isCleanup
-                        ? (_selectedCleanupActions.Contains(action.Key) ? "Selected" : "Select")
-                        : applied ? "Applied" : action.Recommended ? "Recommended" : "Available",
-                    true,
-                    isCleanup ? _selectedCleanupActions.Contains(action.Key) : applied,
-                    isCleanup || FeatureActionContract.IsToggleAction(action.RollbackAsync is not null),
-                    ResolveResource(category.TitleResourceKey)));
+                    projectedAction.Key,
+                    ResolveResource(projectedAction.TitleResourceKey),
+                    ResolveResource(projectedAction.DescriptionResourceKey),
+                    status,
+                    isCleanup || applied.HasValue,
+                    selected,
+                    isCleanup || FeatureActionContract.IsToggleAction(projectedAction.RollbackAsync is not null),
+                    ResolveResource(category.TitleResourceKey),
+                    IsApplied: !isCleanup && applied == true));
             }
         }
 

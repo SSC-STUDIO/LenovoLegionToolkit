@@ -141,14 +141,19 @@
                                 Orientation="Horizontal"
                                 Spacing="8">
                         <Button x:Name="ApplyRecommendedButton"
-                                Content="{local:Loc Key=WindowsOptimizationPage_SelectRecommended_Button, Fallback=Apply recommended}"
+                                Content="{local:Loc Key=WindowsOptimizationPage_SelectRecommended_Button, Fallback=Select recommended}"
                                 Click="OptimizationCommandButton_Click"
                                 Tag="optimization-apply-recommended"
                                 automation:AutomationProperties.AutomationId="AvaloniaApplyRecommendedButton" />
+                        <Button x:Name="ApplySelectedButton"
+                                Content="{local:Loc Key=Common_Apply, Fallback=Apply selected}"
+                                Click="OptimizationCommandButton_Click"
+                                Tag="optimization-apply-selected"
+                                automation:AutomationProperties.AutomationId="AvaloniaOptimizationApplySelectedButton" />
                         <Button x:Name="OptimizationClearButton"
                                 Content="{local:Loc Key=WindowsOptimizationPage_ClearSelection_Button, Fallback=Clear selection}"
                                 Click="OptimizationCommandButton_Click"
-                                Tag="optimization-clear"
+                                Tag="optimization-clear-selection"
                                 automation:AutomationProperties.AutomationId="AvaloniaOptimizationClearButton" />
                     </StackPanel>
                     <StackPanel x:Name="CleanupCommands"

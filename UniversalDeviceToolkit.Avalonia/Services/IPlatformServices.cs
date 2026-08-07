@@ -64,6 +64,7 @@ public interface IPlatformServices
     Task<PluginPageState> GetPluginPageStateAsync(string pluginId);
     Task<PluginPageState> GetPluginSettingsPageStateAsync(string pluginId);
     Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected);
+    Task<CleanupExecutionResult> RunSelectedCleanupAsync(IProgress<CleanupProgressState>? progress = null);
     Task<MacroWorkspaceState> GetMacroWorkspaceAsync();
     Task<bool> SetMacroEnabledAsync(bool enabled);
     Task<bool> StartMacroRecordingAsync(ulong key, MacroRecordingMode mode);
@@ -180,7 +181,38 @@ public sealed record FeatureActionItem(
     bool IsSelected,
     bool IsToggle,
     string? Category = null,
-    FeatureActionStatusKind StatusKind = FeatureActionStatusKind.Neutral);
+    FeatureActionStatusKind StatusKind = FeatureActionStatusKind.Neutral,
+    bool IsApplied = false);
+
+/// <summary>
+/// One cleanup step as observed by the Avalonia host. A failure is recorded per
+/// action so the UI can mirror the WPF partial-result summary instead of
+/// reporting a whole batch as successful.
+/// </summary>
+public sealed record CleanupActionResult(
+    string ActionKey,
+    string Title,
+    bool Succeeded,
+    long FreedBytes,
+    string? Error = null);
+
+public sealed record CleanupProgressState(
+    int CompletedCount,
+    int TotalCount,
+    string ActionTitle,
+    long FreedBytes);
+
+public sealed record CleanupExecutionResult(
+    int RequestedCount,
+    int SucceededCount,
+    int FailedCount,
+    long FreedBytes,
+    TimeSpan Elapsed,
+    IReadOnlyList<CleanupActionResult> Actions)
+{
+    public bool Succeeded => RequestedCount > 0 && FailedCount == 0;
+    public bool HasPartialFailure => SucceededCount > 0 && FailedCount > 0;
+}
 
 /// <summary>
 /// Semantic visual state for a feature action. The UI uses this instead of

@@ -184,6 +184,9 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<bool> SetFeatureActionAsync(string routeKey, string actionKey, bool isSelected) =>
         Task.FromResult(false);
 
+    public Task<CleanupExecutionResult> RunSelectedCleanupAsync(IProgress<CleanupProgressState>? progress = null) =>
+        Task.FromResult(new CleanupExecutionResult(0, 0, 0, 0, TimeSpan.Zero, []));
+
     public Task<bool> ImportPluginAsync(string zipFilePath) => Task.FromResult(false);
 
     public Task<PluginCatalogState> GetPluginCatalogAsync(bool forceRefresh = false) =>

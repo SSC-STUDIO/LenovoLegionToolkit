@@ -318,6 +318,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetFeatureActionAsync(routeKey, actionKey, isSelected)
             : _featureHost.SetActionAsync(routeKey, actionKey, isSelected);
 
+    public Task<CleanupExecutionResult> RunSelectedCleanupAsync(IProgress<CleanupProgressState>? progress = null) =>
+        _featureHost is null
+            ? _inner.RunSelectedCleanupAsync(progress)
+            : _featureHost.RunSelectedCleanupAsync(progress);
+
     public Task<bool> ImportPluginAsync(string zipFilePath) =>
         _featureHost is null
             ? _inner.ImportPluginAsync(zipFilePath)

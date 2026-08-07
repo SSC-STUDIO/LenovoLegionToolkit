@@ -17,7 +17,6 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 
 public partial class FeaturePageView : UserControl
 {
-    private const string OptimizationClearActionKey = "optimization-clear";
     private readonly IPlatformServices _platformServices;
     private readonly FeaturePageDescriptor _descriptor;
     private readonly Action<string>? _actionRequested;
@@ -148,7 +147,10 @@ public partial class FeaturePageView : UserControl
                 : !FeatureActionContract.IsCleanupAction(action.Key)
                     && action.Key != FeatureActionContract.CleanupScanActionKey
                     && action.Key != FeatureActionContract.CleanupRunActionKey
-                    && action.Key != FeatureActionContract.CleanupClearActionKey)).ToArray();
+                    && action.Key != FeatureActionContract.CleanupClearActionKey
+                    && action.Key != FeatureActionContract.OptimizationApplyRecommendedActionKey
+                    && action.Key != FeatureActionContract.OptimizationApplySelectedActionKey
+                    && action.Key != FeatureActionContract.OptimizationClearSelectionActionKey)).ToArray();
 
         string? lastCategory = null;
         foreach (var item in visibleActions)
@@ -619,15 +621,20 @@ public partial class FeaturePageView : UserControl
         OptimizationCommands.IsVisible = !_showCleanup;
         CleanupCommands.IsVisible = _showCleanup;
         var cleanupSelected = state.Actions.Any(item => FeatureActionContract.IsCleanupAction(item.Key) && item.IsSelected);
-        var appliedOptimization = state.Actions.Any(item =>
+        var hasPendingOptimizationChanges = state.Actions.Any(item =>
             !FeatureActionContract.IsCleanupAction(item.Key)
             && item.Key != FeatureActionContract.CleanupScanActionKey
             && item.Key != FeatureActionContract.CleanupRunActionKey
             && item.Key != FeatureActionContract.CleanupClearActionKey
             && item.Key != FeatureActionContract.OptimizationApplyRecommendedActionKey
+            && item.Key != FeatureActionContract.OptimizationApplySelectedActionKey
+            && item.Key != FeatureActionContract.OptimizationClearSelectionActionKey
             && item.IsToggle
-            && item.IsSelected);
-        OptimizationClearButton.IsEnabled = appliedOptimization;
+            && item.IsSelected != item.IsApplied);
+        ApplySelectedButton.IsEnabled = hasPendingOptimizationChanges;
+        // WPF keeps Clear selection available in optimization mode. It only
+        // changes the pending intent; it never rolls back the system directly.
+        OptimizationClearButton.IsEnabled = true;
         foreach (var button in CleanupCommands.Children.OfType<Button>())
         {
             var actionKey = button.Tag?.ToString();
@@ -1002,12 +1009,6 @@ public partial class FeaturePageView : UserControl
         _isApplying = true;
         try
         {
-            if (actionKey.Equals(OptimizationClearActionKey, StringComparison.OrdinalIgnoreCase))
-            {
-                await RevertAppliedOptimizationActionsAsync();
-                return;
-            }
-
             if (actionKey.Equals(FeatureActionContract.CleanupRunActionKey, StringComparison.OrdinalIgnoreCase))
             {
                 await RunCleanupAsync();
@@ -1021,25 +1022,6 @@ public partial class FeaturePageView : UserControl
         {
             _isApplying = false;
         }
-    }
-
-    private async Task RevertAppliedOptimizationActionsAsync()
-    {
-        var applied = _lastState?.Actions
-            .Where(action => !FeatureActionContract.IsCleanupAction(action.Key)
-                && action.Key != FeatureActionContract.CleanupScanActionKey
-                && action.Key != FeatureActionContract.CleanupRunActionKey
-                && action.Key != FeatureActionContract.CleanupClearActionKey
-                && action.Key != FeatureActionContract.OptimizationApplyRecommendedActionKey
-                && action.IsToggle
-                && action.IsSelected)
-            .Select(action => action.Key)
-            .ToArray() ?? [];
-
-        foreach (var actionKey in applied)
-            await _platformServices.SetFeatureActionAsync(_descriptor.RouteKey, actionKey, false);
-
-        await RefreshStateAsync();
     }
 
     private async Task RunCleanupAsync()
@@ -1057,27 +1039,65 @@ public partial class FeaturePageView : UserControl
         ShowCleanupProgress(runningText);
         AvaloniaProgressToastHelper.Update(progressToastId, 0, runningText);
 
-        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-        var accepted = false;
+        var progress = new Progress<CleanupProgressState>(state =>
+        {
+            var percentage = state.TotalCount == 0
+                ? 0
+                : (int)Math.Round(state.CompletedCount * 100d / state.TotalCount);
+            var progressText = string.Format(
+                AvaloniaLocalization.GetString(
+                    "WindowsOptimizationPage_RunningStep",
+                    "Running {0}..."),
+                state.ActionTitle);
+            CleanupProgressText.Text = progressText;
+            CleanupProgressPercentage.Text = $"{percentage}%";
+            CleanupProgressBar.IsIndeterminate = false;
+            CleanupProgressBar.Value = percentage;
+            AvaloniaProgressToastHelper.Update(progressToastId, percentage, progressText);
+        });
+
+        CleanupExecutionResult result;
         try
         {
-            accepted = await _platformServices.SetFeatureActionAsync(
-                _descriptor.RouteKey,
-                FeatureActionContract.CleanupRunActionKey,
-                true);
+            result = await _platformServices.RunSelectedCleanupAsync(progress);
+        }
+        catch
+        {
+            result = new CleanupExecutionResult(selectedItems, 0, selectedItems, 0, TimeSpan.Zero, []);
         }
         finally
         {
-            stopwatch.Stop();
             AvaloniaProgressToastHelper.Complete(progressToastId);
         }
 
-        ShowCleanupSummary(accepted
-            ? AvaloniaProgressToastHelper.FormatCleanupSummary(selectedItems, stopwatch.Elapsed, null)
-            : AvaloniaLocalization.GetString(
-                "SettingsPage_WindowsOptimization_Cleanup_Error",
-                "Cleanup failed."));
+        ShowCleanupSummary(FormatCleanupSummary(result));
         await RefreshStateAsync();
+    }
+
+    private static string FormatCleanupSummary(CleanupExecutionResult result)
+    {
+        if (result.FailedCount == 0 && result.SucceededCount > 0)
+        {
+            return AvaloniaProgressToastHelper.FormatCleanupSummary(
+                result.SucceededCount,
+                result.Elapsed,
+                result.FreedBytes);
+        }
+
+        if (result.HasPartialFailure)
+        {
+            return string.Format(
+                AvaloniaLocalization.GetString(
+                    "WindowsOptimizationPage_CleanupPartialSummary",
+                    "Freed {0}. {1} succeeded, {2} failed."),
+                AvaloniaProgressToastHelper.FormatBytes(result.FreedBytes),
+                result.SucceededCount,
+                result.FailedCount);
+        }
+
+        return AvaloniaLocalization.GetString(
+            "SettingsPage_WindowsOptimization_Cleanup_Error",
+            "Cleanup failed.");
     }
 
     private void ShowCleanupProgress(string runningText)

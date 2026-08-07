@@ -12,6 +12,8 @@ public static class FeatureActionContract
     public const string MacroRecordPrefix = "macro-record:";
     public const string MacroPlayPrefix = "macro-key:";
     public const string OptimizationApplyRecommendedActionKey = "optimization-apply-recommended";
+    public const string OptimizationApplySelectedActionKey = "optimization-apply-selected";
+    public const string OptimizationClearSelectionActionKey = "optimization-clear-selection";
     public const string CleanupScanActionKey = "cleanup-scan";
     public const string CleanupRunActionKey = "cleanup-run";
     public const string CleanupClearActionKey = "cleanup-clear";
