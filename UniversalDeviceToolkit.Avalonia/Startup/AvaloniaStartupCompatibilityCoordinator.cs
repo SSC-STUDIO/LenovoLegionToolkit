@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Threading;
 using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Avalonia.Windows;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Utils;
 
@@ -35,8 +36,34 @@ internal sealed class AvaloniaStartupCompatibilityCoordinator
         catch (Exception exception)
         {
             Log.Instance.Error("Avalonia hardware compatibility check failed.", exception);
+            await ShowErrorAsync(owner, exception).ConfigureAwait(false);
             return false;
         }
+    }
+
+    private static Task ShowErrorAsync(Window? owner, Exception exception)
+    {
+        var shown = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        Dispatcher.UIThread.Post(async () =>
+        {
+            try
+            {
+                var window = new AvaloniaCompatibilityCheckErrorWindow(exception);
+                if (owner is not null)
+                    await window.ShowDialog(owner);
+                else
+                    window.Show();
+            }
+            catch (Exception showException)
+            {
+                Log.Instance.Trace("Avalonia compatibility error window could not be shown.", showException);
+            }
+            finally
+            {
+                shown.TrySetResult();
+            }
+        });
+        return shown.Task;
     }
 
     private static Task<bool> ShowWarningAsync(Window? owner, MachineInformation machine)

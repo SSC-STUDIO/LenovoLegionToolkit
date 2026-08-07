@@ -33,4 +33,32 @@ public sealed class AvaloniaCompatibilityStartupContractTests
         coordinator.Should().NotContain("UniversalDeviceToolkit.WPF");
         dialog.Should().NotContain("UniversalDeviceToolkit.WPF");
     }
+
+    [Fact]
+    public void AvaloniaWindowsHost_ShouldShowErrorWindowBeforeFailingStartupOnException()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var coordinator = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Startup",
+            "AvaloniaStartupCompatibilityCoordinator.cs"));
+        var errorWindow = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Windows",
+            "AvaloniaCompatibilityCheckErrorWindow.cs"));
+
+        coordinator.Should().Contain("Log.Instance.Error(\"Avalonia hardware compatibility check failed.\"");
+        coordinator.Should().Contain("AvaloniaCompatibilityCheckErrorWindow");
+        coordinator.Should().Contain("ShowDialog(owner)");
+        coordinator.Should().Contain("return false");
+        errorWindow.Should().Contain("AvaloniaCompatibilityCheckErrorWindow");
+        errorWindow.Should().Contain("Log.Instance.LogPath");
+        errorWindow.Should().Contain("Environment.ProcessPath");
+        errorWindow.Should().Contain("Environment.Exit(201)");
+        errorWindow.Should().Contain("Close");
+        errorWindow.Should().NotContain("UniversalDeviceToolkit.WPF");
+        coordinator.Should().NotContain("UniversalDeviceToolkit.WPF");
+    }
 }
