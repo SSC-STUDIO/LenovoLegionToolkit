@@ -982,7 +982,7 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 }
 
 #if UDT_PLUGIN_AVALONIA_ONLY
-public class CustomMouseSettingsPluginPage
+public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
 {
     private readonly CustomMousePlugin _plugin;
 
@@ -1004,7 +1004,7 @@ public class CustomMouseSettingsPluginPage
 
 }
 #else
-public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
+public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage, UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
 {
     private readonly CustomMousePlugin _plugin;
 

@@ -3,6 +3,7 @@ using System.Reflection;
 using System.IO;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.SDK;
 using UniversalDeviceToolkit.Plugins.TestCommon;
 using UniversalDeviceToolkit.Plugins.ViveTool;
@@ -65,7 +66,9 @@ public class ViveToolPluginTests
         var plugin = new ViveToolPlugin();
         var page = Assert.IsType<ViveToolPluginPage>(plugin.GetFeatureExtension());
 
-        Assert.IsType<AvaloniaViveToolPage>(page.CreateAvaloniaPage());
+        var avaloniaPage = Assert.IsAssignableFrom<IAvaloniaPluginPage>(page);
+
+        Assert.IsType<AvaloniaViveToolPage>(avaloniaPage.CreateAvaloniaPage());
     }
 
     [Fact]
@@ -74,7 +77,8 @@ public class ViveToolPluginTests
         var plugin = new ViveToolPlugin();
         var page = Assert.IsType<ViveToolSettingsPluginPage>(plugin.GetSettingsPage());
 
-        var avaloniaPage = Assert.IsType<AvaloniaViveToolSettingsPage>(page.CreateAvaloniaPage());
+        var factory = Assert.IsAssignableFrom<IAvaloniaPluginPage>(page);
+        var avaloniaPage = Assert.IsType<AvaloniaViveToolSettingsPage>(factory.CreateAvaloniaPage());
         Assert.Equal("AvaloniaViveToolSettingsRoot", AutomationProperties.GetAutomationId(avaloniaPage));
         Assert.IsAssignableFrom<Control>(avaloniaPage);
     }

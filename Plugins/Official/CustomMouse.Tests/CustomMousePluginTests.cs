@@ -1,6 +1,7 @@
 using UniversalDeviceToolkit.Plugins.CustomMouse;
 using UniversalDeviceToolkit.Plugins.SDK;
 using UniversalDeviceToolkit.Plugins.TestCommon;
+using UniversalDeviceToolkit.Lib.Plugins;
 using Microsoft.Win32;
 using System;
 using System.IO;
@@ -55,6 +56,16 @@ public class CustomMousePluginTests
         var plugin = new CustomMousePlugin();
 
         Assert.Null(plugin.GetFeatureExtension());
+    }
+
+    [Fact]
+    public void SettingsPage_AvaloniaFactoryProducesNativeControl()
+    {
+        var plugin = new CustomMousePlugin();
+
+        var page = Assert.IsAssignableFrom<IAvaloniaPluginPage>(plugin.GetSettingsPage());
+
+        Assert.IsType<AvaloniaCustomMouseSettingsControl>(page.CreateAvaloniaPage());
     }
 
     [Fact]

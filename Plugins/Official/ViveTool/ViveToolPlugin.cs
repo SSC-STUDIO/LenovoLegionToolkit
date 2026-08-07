@@ -42,9 +42,9 @@ public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
 }
 
 #if UDT_PLUGIN_AVALONIA_ONLY
-public class ViveToolPluginPage
+public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
 #else
-public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
+public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage, UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
 #endif
 {
     public string PageTitle => Resource.ViveTool_PageTitle;
@@ -68,9 +68,9 @@ public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 }
 
 #if UDT_PLUGIN_AVALONIA_ONLY
-public class ViveToolSettingsPluginPage
+public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
 #else
-public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
+public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage, UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
 #endif
 {
     public string PageTitle => Resource.ViveTool_BinaryPathTitle;
