@@ -44,6 +44,7 @@ public partial class App : Application
 
     private TrayIcon? _trayIcon;
     private int _handlingFatalException;
+    private int _shutdownStarted;
     private bool _exceptionHandlersRegistered;
 
 #if WINDOWS
@@ -309,11 +310,25 @@ public partial class App : Application
 
     private void ExitApplication() => ExitApplication(null);
 
-    private void ExitApplication(int? exitCode)
+    private void ExitApplication(int? exitCode) => _ = ExitApplicationAsync(exitCode);
+
+    private async Task ExitApplicationAsync(int? exitCode)
     {
+        if (Interlocked.CompareExchange(ref _shutdownStarted, 1, 0) != 0)
+            return;
+
         IsExiting = true;
         UnregisterExceptionHandlers();
 #if WINDOWS
+        try
+        {
+            await new AvaloniaWindowsShutdownCoordinator().StopAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Avalonia Windows host shutdown failed.", ex);
+        }
+
         _notificationManager?.Dispose();
         _notificationManager = null;
         _singleInstanceGuard?.Dispose();
