@@ -30,7 +30,7 @@ current WPF source:
 | Official plugin UI | Custom Mouse, Shell Integration, ViVeTool | Each official plugin supplies an Avalonia page factory; `PluginHostedPage` embeds native controls, preserves plugin actions and failure states, and renders an explicit compatibility state for WPF-only plugins | Complete |
 | Plugin lifecycle | Discovery, installation, updates and navigation refresh | Avalonia startup and `MainWindow` preserve install, update, cancellation, failure, retry, transactional rollback and navigation-refresh state through `IPluginManager` and the plugin catalog coordinator | Complete |
 | Startup and desktop lifecycle | Single instance, crash recovery, compatibility gate, device setup, OSD, services and clean shutdown | Avalonia uses shared runtime coordinators and Windows service adapters | Contracted |
-| Localization | WPF `Resource*.resx` catalogs | Avalonia `Resource*.resx` catalogs contain every WPF key for each available culture | Contracted |
+| Localization | WPF `Resource*.resx` catalogs | Avalonia `Resource*.resx` catalogs contain every WPF key across all 25 cultures and preserve fallback, RTL, runtime culture switching and per-plugin overrides | Complete |
 
 `Contracted` means that a source and/or contract test proves the host is wired
 to the required shared API. It does not mean visual equality. `In progress`
