@@ -22,6 +22,10 @@ public partial class AutomationPage : UserControl
     private readonly List<PipelineRow> _rows = [];
     private IReadOnlyList<AutomationTriggerOption> _triggerOptions = Array.Empty<AutomationTriggerOption>();
     private IReadOnlyList<AutomationStepOption> _stepOptions = Array.Empty<AutomationStepOption>();
+    private static readonly string[] ManualPipelineIcons =
+    [
+        "Play24", "Rocket24", "Star24", "Bolt24", "Keyboard24", "Settings24", "Apps24", "Heart24",
+    ];
     private bool _isRefreshing;
     private bool _isDirty;
 
@@ -109,6 +113,32 @@ public partial class AutomationPage : UserControl
         var copy = new StackPanel { Spacing = 6, MinWidth = 0 };
         copy.Children.Add(nameEditor);
 
+        TextBox? iconEditor = null;
+        if (!pipeline.IsAutomatic)
+        {
+            var iconPreview = new NavigationIcon
+            {
+                IconIdentifier = pipeline.IconName ?? "Play24",
+                FontSize = 20,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            iconEditor = new TextBox
+            {
+                Text = pipeline.IconName ?? string.Empty,
+                Watermark = Get("AutomationPage_ChangeIcon", "Icon name"),
+                MinWidth = 160,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+            };
+            ToolTip.SetTip(iconEditor, $"{Get("AutomationPage_ChangeIcon", "Enter a Fluent icon name.")} Examples: {string.Join(", ", ManualPipelineIcons)}");
+            AutomationProperties.SetAutomationId(iconEditor, $"AutomationPipeline_{pipeline.Id:N}_Icon");
+            var iconRow = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*"), ColumnSpacing = 8 };
+            iconRow.Children.Add(iconPreview);
+            Grid.SetColumn(iconEditor, 1);
+            iconRow.Children.Add(iconEditor);
+            copy.Children.Add(iconRow);
+            iconEditor.TextChanged += (_, _) => iconPreview.IconIdentifier = NormalizeIconName(iconEditor.Text) ?? "Play24";
+        }
+
         ComboBox? triggerEditor = null;
         TextBox? triggerConfigEditor = null;
         if (pipeline.IsAutomatic)
@@ -181,7 +211,14 @@ public partial class AutomationPage : UserControl
             MinWidth = 72,
             VerticalAlignment = VerticalAlignment.Center,
         };
+        var moveUpButton = CreatePipelineMoveButton("ArrowUp24", "MoveUp", "Move pipeline up");
+        var moveDownButton = CreatePipelineMoveButton("ArrowDown24", "MoveDown", "Move pipeline down");
+        var automationIdPrefix = $"AutomationPipeline_{pipeline.Id:N}";
+        AutomationProperties.SetAutomationId(moveUpButton, $"{automationIdPrefix}_MoveUp");
+        AutomationProperties.SetAutomationId(moveDownButton, $"{automationIdPrefix}_MoveDown");
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
+        actions.Children.Add(moveUpButton);
+        actions.Children.Add(moveDownButton);
         actions.Children.Add(runButton);
         actions.Children.Add(deleteButton);
 
@@ -201,8 +238,10 @@ public partial class AutomationPage : UserControl
         };
         AutomationProperties.SetName(card, pipeline.Name ?? pipeline.Trigger);
 
-        var row = new PipelineRow(pipeline.Id, pipeline.IsAutomatic, pipeline.IconName, nameEditor, card, triggerEditor, triggerConfigEditor, exclusiveEditor, stepsPanel, stepRows);
+        var row = new PipelineRow(pipeline.Id, pipeline.IsAutomatic, nameEditor, iconEditor, card, triggerEditor, triggerConfigEditor, exclusiveEditor, stepsPanel, stepRows);
         nameEditor.TextChanged += (_, _) => { if (!_isRefreshing) MarkDirty(); };
+        if (iconEditor is not null)
+            iconEditor.TextChanged += (_, _) => { if (!_isRefreshing) MarkDirty(); };
         if (triggerConfigEditor is not null)
             triggerConfigEditor.TextChanged += (_, _) => { if (!_isRefreshing) MarkDirty(); };
         exclusiveEditor.IsCheckedChanged += (_, _) => { if (!_isRefreshing) MarkDirty(); };
@@ -229,6 +268,8 @@ public partial class AutomationPage : UserControl
             addStepEditor.SelectedItem = null;
             MarkDirty();
         };
+        moveUpButton.Click += (_, _) => MovePipeline(row, -1);
+        moveDownButton.Click += (_, _) => MovePipeline(row, 1);
         runButton.Click += async (_, _) => await RunPipelineAsync(row);
         deleteButton.Click += (_, _) => DeleteRow(row);
         return row;
@@ -307,6 +348,11 @@ public partial class AutomationPage : UserControl
         return button;
     }
 
+    private Button CreatePipelineMoveButton(string iconIdentifier, string resourceKey, string fallback)
+    {
+        return CreateStepMoveButton(iconIdentifier, resourceKey, fallback);
+    }
+
     private void MoveStep(StepRow row, Panel panel, List<StepRow> rows, int delta)
     {
         var index = rows.IndexOf(row);
@@ -317,6 +363,23 @@ public partial class AutomationPage : UserControl
         rows.Insert(target, row);
         panel.Children.Remove(row.Card);
         panel.Children.Insert(target, row.Card);
+        MarkDirty();
+    }
+
+    private void MovePipeline(PipelineRow row, int delta)
+    {
+        var matchingRows = _rows.Where(candidate => candidate.IsAutomatic == row.IsAutomatic).ToList();
+        var index = matchingRows.IndexOf(row);
+        var target = index + delta;
+        if (index < 0 || target < 0 || target >= matchingRows.Count)
+            return;
+
+        var adjacent = matchingRows[target];
+        var sourceIndex = _rows.IndexOf(row);
+        var targetIndex = _rows.IndexOf(adjacent);
+        (_rows[sourceIndex], _rows[targetIndex]) = (_rows[targetIndex], _rows[sourceIndex]);
+        PipelineList.Children.Remove(row.Card);
+        PipelineList.Children.Insert(targetIndex, row.Card);
         MarkDirty();
     }
 
@@ -400,7 +463,11 @@ public partial class AutomationPage : UserControl
 
     private async void SaveButton_Click(object? sender, RoutedEventArgs e)
     {
-        var drafts = _rows.Select(row => new AutomationPipelineDraft(row.IsNew ? null : row.Id, row.NameEditor.Text, row.IconName, row.IsAutomatic)
+        var drafts = _rows.Select(row => new AutomationPipelineDraft(
+            row.IsNew ? null : row.Id,
+            row.NameEditor.Text,
+            NormalizeIconName(row.IconEditor?.Text),
+            row.IsAutomatic)
         {
             TriggerKey = row.TriggerEditor?.SelectedItem is AutomationTriggerOption option ? option.Key : null,
             TriggerConfigurationJson = row.TriggerConfigEditor?.Text,
@@ -450,6 +517,9 @@ public partial class AutomationPage : UserControl
         return $"{kind} | {stepCount} {Get("AutomationPipelineControl_Step", "step(s)")}";
     }
 
+    private static string? NormalizeIconName(string? iconName) =>
+        string.IsNullOrWhiteSpace(iconName) ? null : iconName.Trim();
+
     private string Get(string key, string fallback) => AvaloniaLocalization.GetString(key, fallback);
 
     private T GetResource<T>(object key)
@@ -466,8 +536,8 @@ public partial class AutomationPage : UserControl
     private sealed class PipelineRow(
         Guid id,
         bool isAutomatic,
-        string? iconName,
         TextBox nameEditor,
+        TextBox? iconEditor,
         Border card,
         ComboBox? triggerEditor,
         TextBox? triggerConfigEditor,
@@ -477,8 +547,8 @@ public partial class AutomationPage : UserControl
     {
         public Guid Id { get; } = id;
         public bool IsAutomatic { get; } = isAutomatic;
-        public string? IconName { get; } = iconName;
         public TextBox NameEditor { get; } = nameEditor;
+        public TextBox? IconEditor { get; } = iconEditor;
         public Border Card { get; } = card;
         public ComboBox? TriggerEditor { get; } = triggerEditor;
         public TextBox? TriggerConfigEditor { get; } = triggerConfigEditor;
