@@ -1097,7 +1097,7 @@ internal sealed class CustomCleanupRuleEditorWindow : Window
         {
             Content = AvaloniaLocalization.GetString(
                 "CustomCleanupRuleWindow_Recursive_Label", "Include subfolders"),
-            IsChecked = current?.Recursive ?? true,
+            IsChecked = current?.Recursive ?? false,
         };
         _error = new TextBlock
         {

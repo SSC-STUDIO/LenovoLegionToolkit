@@ -7,6 +7,25 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class CustomCleanupRuleContractTests
 {
     [Fact]
+    public void CustomCleanupRuleEditor_UsesWpfDefaultForNewRules()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var wpfSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.WPF",
+            "Pages",
+            "WindowsOptimizationPage.Cleanup.cs"));
+        var avaloniaSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "FeaturePageView.axaml.cs"));
+
+        wpfSource.Should().Contain("new CustomCleanupRuleViewModel(dialog.SelectedPath, [], false)");
+        avaloniaSource.Should().Contain("IsChecked = current?.Recursive ?? false");
+    }
+
+    [Fact]
     public void FeaturePageState_PreservesPersistedCustomCleanupRules()
     {
         var rule = new CustomCleanupRuleItem(
