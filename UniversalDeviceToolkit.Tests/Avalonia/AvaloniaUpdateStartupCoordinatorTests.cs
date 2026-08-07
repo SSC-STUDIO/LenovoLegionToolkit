@@ -77,4 +77,99 @@ public sealed class AvaloniaUpdateStartupCoordinatorTests
         await action.Should().NotThrowAsync();
         reported.Should().BeOfType<InvalidOperationException>();
     }
+
+    [Fact]
+    public async Task CheckAsync_WhenUpdateIsAvailable_RaisesUpdateAvailableChangedWithReleaseInfo()
+    {
+        UpdateReleaseInfo? raised = null;
+        var coordinator = new AvaloniaUpdateCheckCoordinator(
+            () => Task.FromResult<Version?>(new Version(5, 0, 3, 0)),
+            _ => { },
+            _ => throw new Xunit.Sdk.XunitException("Unexpected update-check failure."),
+            () => Task.FromResult<IReadOnlyList<UpdateReleaseInfo>>(
+            [
+                new UpdateReleaseInfo(new Version(5, 0, 3), "v5.0.3", false, "Release", "Notes", new DateTimeOffset(2026, 1, 2, 0, 0, 0, TimeSpan.Zero)),
+            ]));
+        coordinator.UpdateAvailableChanged += info => raised = info;
+
+        await coordinator.CheckAsync();
+
+        raised.Should().NotBeNull();
+        raised!.Version.Should().Be(new Version(5, 0, 3));
+        raised.TagName.Should().Be("v5.0.3");
+        coordinator.LatestUpdate.Should().BeSameAs(raised);
+    }
+
+    [Fact]
+    public async Task CheckAsync_WhenUpdateIsAvailable_DoesNotRaiseEventWithoutReleaseInfo()
+    {
+        UpdateReleaseInfo? raised = null;
+        var coordinator = new AvaloniaUpdateCheckCoordinator(
+            () => Task.FromResult<Version?>(new Version(5, 0, 3, 0)),
+            _ => { },
+            _ => throw new Xunit.Sdk.XunitException("Unexpected update-check failure."));
+        coordinator.UpdateAvailableChanged += info => raised = info;
+
+        await coordinator.CheckAsync();
+
+        raised.Should().BeNull();
+        coordinator.LatestUpdate.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CheckAsync_WhenNoUpdateIsAvailable_DoesNotRaiseUpdateAvailableChanged()
+    {
+        UpdateReleaseInfo? raised = null;
+        var coordinator = new AvaloniaUpdateCheckCoordinator(
+            () => Task.FromResult<Version?>(null),
+            _ => { },
+            _ => throw new Xunit.Sdk.XunitException("Unexpected update-check failure."),
+            () => Task.FromResult<IReadOnlyList<UpdateReleaseInfo>>(
+            [
+                new UpdateReleaseInfo(new Version(5, 0, 3), "v5.0.3", false, "Release", "Notes", DateTimeOffset.UtcNow),
+            ]));
+        coordinator.UpdateAvailableChanged += info => raised = info;
+
+        await coordinator.CheckAsync();
+
+        raised.Should().BeNull();
+        coordinator.LatestUpdate.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CheckAsync_WhenTheCheckFails_DoesNotRaiseUpdateAvailableChanged()
+    {
+        UpdateReleaseInfo? raised = null;
+        var coordinator = new AvaloniaUpdateCheckCoordinator(
+            () => Task.FromException<Version?>(new InvalidOperationException("network failure")),
+            _ => { },
+            _ => { });
+        coordinator.UpdateAvailableChanged += info => raised = info;
+
+        await coordinator.CheckAsync();
+
+        raised.Should().BeNull();
+        coordinator.LatestUpdate.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task CheckAsync_PicksTheNewestReleaseForTheEvent()
+    {
+        UpdateReleaseInfo? raised = null;
+        var coordinator = new AvaloniaUpdateCheckCoordinator(
+            () => Task.FromResult<Version?>(new Version(6, 0, 0, 0)),
+            _ => { },
+            _ => throw new Xunit.Sdk.XunitException("Unexpected update-check failure."),
+            () => Task.FromResult<IReadOnlyList<UpdateReleaseInfo>>(
+            [
+                new UpdateReleaseInfo(new Version(5, 1, 0), "v5.1.0", false, "Old", string.Empty, DateTimeOffset.UtcNow),
+                new UpdateReleaseInfo(new Version(6, 0, 0), "v6.0.0", false, "New", string.Empty, DateTimeOffset.UtcNow),
+            ]));
+        coordinator.UpdateAvailableChanged += info => raised = info;
+
+        await coordinator.CheckAsync();
+
+        raised.Should().NotBeNull();
+        raised!.Version.Should().Be(new Version(6, 0, 0));
+    }
 }

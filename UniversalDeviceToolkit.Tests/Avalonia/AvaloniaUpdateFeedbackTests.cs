@@ -32,4 +32,39 @@ public sealed class AvaloniaUpdateFeedbackTests
 
         feedback.MessageKey.Should().Be("MainWindow_UpdateAvailableWithVersion");
     }
+
+    [Theory]
+    [InlineData("**Bold** text", "Bold text")]
+    [InlineData("__Bold__ text", "Bold text")]
+    [InlineData("*Italic* text", "Italic text")]
+    [InlineData("_Italic_ text", "Italic text")]
+    [InlineData("`inline code`", "inline code")]
+    [InlineData("### Heading", "Heading")]
+    [InlineData("# Heading", "Heading")]
+    [InlineData("> quoted line", "quoted line")]
+    [InlineData("[Release notes](https://example.com)", "Release notes")]
+    [InlineData("![Logo](https://example.com/logo.png)", "Logo")]
+    [InlineData("- list item", "\u2022 list item")]
+    [InlineData("* list item", "\u2022 list item")]
+    [InlineData("normal line", "normal line")]
+    public void StripMarkdown_ReducesLightMarkdownToPlainText(string markdown, string expected)
+    {
+        UniversalDeviceToolkit.Avalonia.Windows.AvaloniaUpdateWindow.StripMarkdown(markdown).Should().Be(expected);
+    }
+
+    [Fact]
+    public void StripMarkdown_RemovesRulesAndKeepsMultiLineBody()
+    {
+        var markdown = "### Release\r\n\r\n- Added **feature A**\r\n- Fixed [bug](https://example.com)\r\n\r\n---\r\n";
+        var expected = $"Release{Environment.NewLine}{Environment.NewLine}\u2022 Added feature A{Environment.NewLine}\u2022 Fixed bug";
+
+        UniversalDeviceToolkit.Avalonia.Windows.AvaloniaUpdateWindow.StripMarkdown(markdown).Should().Be(expected);
+    }
+
+    [Fact]
+    public void StripMarkdown_ReturnsEmptyForBlankInput()
+    {
+        UniversalDeviceToolkit.Avalonia.Windows.AvaloniaUpdateWindow.StripMarkdown(null).Should().BeEmpty();
+        UniversalDeviceToolkit.Avalonia.Windows.AvaloniaUpdateWindow.StripMarkdown("  ").Should().BeEmpty();
+    }
 }

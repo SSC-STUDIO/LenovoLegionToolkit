@@ -9,6 +9,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.Avalonia.Startup;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Messaging;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
@@ -73,7 +74,7 @@ internal sealed class AvaloniaNotificationManager : IDisposable
         if (request is null)
             return;
 
-        _pending.Add(request);
+        EnqueueByPriority(request);
         ShowNext();
     }
 
@@ -114,7 +115,7 @@ internal sealed class AvaloniaNotificationManager : IDisposable
             args.Notification.ProgressPercent,
             null);
         _tracked.Add(request.Id!.Value, request);
-        _pending.Add(request);
+        EnqueueByPriority(request);
         TryPlaySound();
         ShowNext();
     }
@@ -144,6 +145,13 @@ internal sealed class AvaloniaNotificationManager : IDisposable
         _pending.RemoveAt(0);
         var screens = ResolveScreens(owner).ToArray();
         if (screens.Length == 0)
+        {
+            RemoveTrackedRequest(request);
+            ShowNext();
+            return;
+        }
+
+        if (ShouldSuppressForFullscreen(_settings.Store.NotificationAlwaysOnTop, IsAnyApplicationFullscreen(owner)))
         {
             RemoveTrackedRequest(request);
             ShowNext();
@@ -247,6 +255,76 @@ internal sealed class AvaloniaNotificationManager : IDisposable
     {
         if (request.Id is { } id)
             _tracked.Remove(id);
+    }
+
+    private static int PriorityValue(AppNotificationSeverity severity) => severity switch
+    {
+        AppNotificationSeverity.Error => 0,
+        AppNotificationSeverity.Warning => 1,
+        _ => 2,
+    };
+
+    // Mirrors the WPF min-heap ordering: higher severity notifications are
+    // dequeued before lower ones while equal severities keep arrival order.
+    private void EnqueueByPriority(ToastRequest request)
+    {
+        var priority = PriorityValue(request.Severity);
+        var index = _pending.Count;
+        while (index > 0 && PriorityValue(_pending[index - 1].Severity) > priority)
+            index--;
+        _pending.Insert(index, request);
+    }
+
+    internal static bool ShouldSuppressForFullscreen(bool notificationAlwaysOnTop, bool isAnyApplicationFullscreen) =>
+        !notificationAlwaysOnTop && isAnyApplicationFullscreen;
+
+    private static bool IsAnyApplicationFullscreen(MainWindow owner)
+    {
+        try
+        {
+            var desktopWindow = GetDesktopWindow();
+            var shellWindow = GetShellWindow();
+            var foregroundWindow = GetForegroundWindow();
+            if (foregroundWindow == IntPtr.Zero
+                || foregroundWindow == desktopWindow
+                || foregroundWindow == shellWindow)
+                return false;
+
+            if (!GetWindowRect(foregroundWindow, out var bounds))
+                return false;
+
+            var screens = owner.Screens?.All;
+            if (screens is null || screens.Count == 0)
+                return false;
+
+            // Exclusive fullscreen covers the full monitor bounds (not the working
+            // area); work-area maximization must not count as fullscreen.
+            if (!screens.Any(screen =>
+                    bounds.Left == screen.Bounds.X
+                    && bounds.Top == screen.Bounds.Y
+                    && bounds.Right == screen.Bounds.Right
+                    && bounds.Bottom == screen.Bounds.Bottom))
+                return false;
+
+            if (GetWindowThreadProcessId(foregroundWindow, out var processId) != 0 && processId != 0)
+            {
+                try
+                {
+                    using var process = System.Diagnostics.Process.GetProcessById((int)processId);
+                    return !string.Equals(process.ProcessName, "explorer", StringComparison.OrdinalIgnoreCase);
+                }
+                catch
+                {
+                    return true;
+                }
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private bool ShouldSuppress(AppNotificationSeverity severity) =>
@@ -400,6 +478,12 @@ internal sealed class AvaloniaNotificationManager : IDisposable
             return;
 
         owner.RestoreFromTray();
+        if (AvaloniaUpdateCheckCoordinator.Current is { } coordinator)
+        {
+            _ = coordinator.ShowUpdateAsync(owner);
+            return;
+        }
+
         owner.Navigate(MainNavigation.About);
     }
 
@@ -460,7 +544,6 @@ internal sealed class AvaloniaNotificationManager : IDisposable
     {
         if (_disposed)
             return;
-
         _disposed = true;
         MessagingCenter.Unsubscribe<NotificationMessage>(this);
         _appNotifications.Changed -= OnAppNotificationChanged;
@@ -473,6 +556,30 @@ internal sealed class AvaloniaNotificationManager : IDisposable
         _visible.Clear();
         _pending.Clear();
         _tracked.Clear();
+    }
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern IntPtr GetForegroundWindow();
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern bool GetWindowRect(IntPtr hWnd, out NativeRect rect);
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern IntPtr GetDesktopWindow();
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern IntPtr GetShellWindow();
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+    private struct NativeRect
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
     }
 
     private sealed class ToastRequest(

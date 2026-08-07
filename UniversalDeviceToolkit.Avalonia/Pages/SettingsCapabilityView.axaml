@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
              xmlns:automation="using:Avalonia.Automation"
+             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsCapabilityView"
              automation:AutomationProperties.AutomationId="AvaloniaSettingsCapabilityView">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
@@ -71,6 +72,13 @@
                                                  Classes="infoBarMessage"
                                                  OverflowMode="Wrap"
                                                  MaxLines="3" />
+                    <Button x:Name="OpenUpdateWindowButton"
+                            Content="{local:Loc Key=UpdateWindow_Open, Fallback='Open update window'}"
+                            Margin="0,8,0,0"
+                            HorizontalAlignment="Left"
+                            IsVisible="False"
+                            Click="OpenUpdateWindowButton_Click"
+                            automation:AutomationProperties.AutomationId="SettingsOpenUpdateWindow" />
                 </StackPanel>
             </Border>
 
