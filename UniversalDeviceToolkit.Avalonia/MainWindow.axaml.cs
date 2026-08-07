@@ -44,6 +44,7 @@ public partial class MainWindow : Window
     {
         _platformServices = platformServices;
         InitializeComponent();
+        AvaloniaAppearanceManager.Attach(this);
         ApplyNavigationPaneState();
         ApplyNavigationVisibility();
         ApplyTextDirection(LocalizationRuntime.CurrentCulture);

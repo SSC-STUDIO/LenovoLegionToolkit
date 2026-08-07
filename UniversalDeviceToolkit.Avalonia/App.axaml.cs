@@ -171,13 +171,12 @@ public partial class App : Application
 
     private void ApplyPersistedTheme()
     {
-        var theme = new AvaloniaThemePreferences().Store.Theme;
-        RequestedThemeVariant = theme switch
-        {
-            "Light" => ThemeVariant.Light,
-            "Dark" => ThemeVariant.Dark,
-            _ => ThemeVariant.Default
-        };
+#if WINDOWS
+        AvaloniaAppearanceManager.Apply(
+            _applicationSettings ?? WindowsAvaloniaSettingsService.SharedApplicationSettings);
+#else
+        AvaloniaAppearanceManager.Apply(new AvaloniaThemePreferences().Store);
+#endif
     }
 
     private void SetupTrayIcon()

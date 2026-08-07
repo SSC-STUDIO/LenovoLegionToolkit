@@ -282,23 +282,15 @@ public partial class SettingsAppearanceView : UserControl
     // Runs under the _isRefreshing guard (see OnLoaded) so it does not re-enter change handlers.
     private void RestorePreferences()
     {
-        var store = _themePrefs.Store;
+        var state = AvaloniaAppearanceManager.GetCurrentState(_themePrefs.Store);
+        AvaloniaAppearanceManager.Apply(state);
 
-        var variant = store.Theme switch
-        {
-            "Light" => ThemeVariant.Light,
-            "Dark" => ThemeVariant.Dark,
-            _ => ThemeVariant.Default
-        };
-        if (Application.Current is { } app)
-            app.RequestedThemeVariant = variant;
+        _applyAccentColorToTheme = state.ApplyAccentColorToTheme;
+        _applyAccentColorToSystem = state.ApplyAccentColorToSystem;
 
-        _applyAccentColorToTheme = store.ApplyAccentColorToTheme;
-        _applyAccentColorToSystem = store.ApplyAccentColorToSystem;
-
-        if (!store.UseSystemAccent
-            && !string.IsNullOrWhiteSpace(store.AccentColorHex)
-            && Color.TryParse(store.AccentColorHex, out var accent))
+        if (!state.UseSystemAccent
+            && !string.IsNullOrWhiteSpace(state.AccentColorHex)
+            && Color.TryParse(state.AccentColorHex, out var accent))
         {
             _selectedAccent = accent;
             if (_applyAccentColorToTheme)
@@ -312,10 +304,10 @@ public partial class SettingsAppearanceView : UserControl
 
     private void RestoreAppearanceOptions()
     {
-        var store = _themePrefs.Store;
-        SelectComboItem(TemperatureComboBox, store.TemperatureUnit);
-        SelectComboItem(FontComboBox, store.FontFamily);
-        SelectComboItem(UiScaleComboBox, store.UiScale);
+        var state = AvaloniaAppearanceManager.GetCurrentState(_themePrefs.Store);
+        SelectComboItem(TemperatureComboBox, state.TemperatureUnit);
+        SelectComboItem(FontComboBox, state.FontFamily);
+        SelectComboItem(UiScaleComboBox, state.UiScale);
     }
 
     private void TemperatureComboBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -324,7 +316,7 @@ public partial class SettingsAppearanceView : UserControl
             return;
 
         _themePrefs.Store.TemperatureUnit = value;
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
         _ = PersistSharedSelectionAsync("TemperatureUnit", value == "Fahrenheit" ? "°F" : "°C");
     }
 
@@ -334,7 +326,8 @@ public partial class SettingsAppearanceView : UserControl
             return;
 
         _themePrefs.Store.FontFamily = value;
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
+        AvaloniaAppearanceManager.Apply(_themePrefs.Store);
         _ = PersistSharedSelectionAsync("AppFontStyle", value);
     }
 
@@ -344,7 +337,8 @@ public partial class SettingsAppearanceView : UserControl
             return;
 
         _themePrefs.Store.UiScale = value;
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
+        AvaloniaAppearanceManager.Apply(_themePrefs.Store);
         _ = PersistSharedSelectionAsync("UiScale", value);
     }
 
@@ -385,7 +379,8 @@ public partial class SettingsAppearanceView : UserControl
         UpdateThemeCardSelection(tag);
 
         _themePrefs.Store.Theme = tag;
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
+        AvaloniaAppearanceManager.Apply(_themePrefs.Store);
         _ = PersistSharedSelectionAsync("Theme", tag);
     }
 
@@ -404,7 +399,8 @@ public partial class SettingsAppearanceView : UserControl
             ClearAccentOverride();
 
         _themePrefs.Store.ApplyAccentColorToTheme = _applyAccentColorToTheme;
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
+        AvaloniaAppearanceManager.Apply(_themePrefs.Store);
         _ = PersistSharedToggleAsync("ApplyAccentColorToTheme", _applyAccentColorToTheme);
     }
 
@@ -418,7 +414,7 @@ public partial class SettingsAppearanceView : UserControl
             ApplyAccentColorToSystem(color);
 
         _themePrefs.Store.ApplyAccentColorToSystem = _applyAccentColorToSystem;
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
         _ = PersistSharedToggleAsync("ApplyAccentColorToSystem", _applyAccentColorToSystem);
     }
 
@@ -450,7 +446,8 @@ public partial class SettingsAppearanceView : UserControl
             _themePrefs.Store.AccentColorHex = string.Format("#{0:X2}{1:X2}{2:X2}", item.R, item.G, item.B);
         }
 
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
+        AvaloniaAppearanceManager.Apply(_themePrefs.Store);
 
         _ = PersistSharedAccentColorAsync(item.IsSystem
             ? null
@@ -475,7 +472,8 @@ public partial class SettingsAppearanceView : UserControl
 
         _themePrefs.Store.UseSystemAccent = false;
         _themePrefs.Store.AccentColorHex = $"#{e.NewColor.R:X2}{e.NewColor.G:X2}{e.NewColor.B:X2}";
-        _themePrefs.SynchronizeStore();
+        SynchronizePortablePreferences();
+        AvaloniaAppearanceManager.Apply(_themePrefs.Store);
 
         _ = PersistSharedAccentColorAsync(_themePrefs.Store.AccentColorHex);
         AccentSwatches.ItemsSource = BuildSwatches();
@@ -490,6 +488,13 @@ public partial class SettingsAppearanceView : UserControl
 
     private Task PersistSharedAccentColorAsync(string? hexColor) =>
         PersistSharedAsync(() => _settingsService.SetAccentColorAsync(hexColor));
+
+    private void SynchronizePortablePreferences()
+    {
+#if !WINDOWS
+        _themePrefs.SynchronizeStore();
+#endif
+    }
 
     private static async Task PersistSharedAsync(Func<Task> operation)
     {
