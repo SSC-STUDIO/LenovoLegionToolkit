@@ -21,8 +21,9 @@ public sealed class AvaloniaPluginStartupContractTests
         app.Should().Contain("StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow)");
         app.Should().Contain("pluginManager.PruneRetiredPlugins()");
         app.Should().Contain("pluginManager.ScanAndLoadPluginsAsync()");
-        app.Should().Contain("AvaloniaPluginResourceCulture.Apply(LocalizationRuntime.CurrentCulture)");
-        app.Should().Contain("AvaloniaPluginResourceCulture.Apply(e.Culture)");
+        app.Should().Contain("PluginLanguageService.Current.ApplyForAllLoadedPlugins()");
+        app.Should().NotContain("AvaloniaPluginResourceCulture.Apply(LocalizationRuntime.CurrentCulture)");
+        app.Should().NotContain("AvaloniaPluginResourceCulture.Apply(e.Culture)");
         app.Should().Contain("mainWindow.RefreshPluginNavigationAsync()");
         mainWindow.Should().Contain("PluginStateChanged += PluginManagerOnPluginStateChanged");
         mainWindow.Should().Contain("PluginStateChanged -= PluginManagerOnPluginStateChanged");
