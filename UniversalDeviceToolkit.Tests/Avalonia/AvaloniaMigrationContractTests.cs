@@ -876,6 +876,22 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaKeyboardRgb_PreservesWpfEffectCapabilityRules()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+
+        source.Should().Contain("ApplyRgbEffectCapabilities");
+        source.Should().Contain("RgbKeyboardEffectRules.SupportsSpeed");
+        source.Should().Contain("RgbKeyboardEffectRules.SupportsZones");
+        source.Should().Contain("zone.Container.IsEnabled = zonesEnabled");
+    }
+
+    [Fact]
     public void AvaloniaKeyboardSpectrum_PreservesWpfAddAndDeleteEffectActions()
     {
         var root = RepositoryPaths.FindRoot();

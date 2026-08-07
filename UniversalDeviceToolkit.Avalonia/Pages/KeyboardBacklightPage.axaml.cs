@@ -515,10 +515,6 @@ public partial class KeyboardBacklightPage : UserControl
         SetComboItems(RgbEffect, RgbEffects, selected.Effect);
         SetComboItems(RgbSpeed, RgbSpeeds, selected.Speed);
         SetComboItems(RgbBrightness, RgbBrightnessLevels, selected.Brightness);
-        var editable = !selected.Key.Equals("Off", StringComparison.OrdinalIgnoreCase);
-        RgbEffect.IsEnabled = editable;
-        RgbSpeed.IsEnabled = editable;
-        RgbBrightness.IsEnabled = editable;
 
         _rgbZones.Clear();
         RgbZones.Children.Clear();
@@ -529,6 +525,8 @@ public partial class KeyboardBacklightPage : UserControl
             _rgbZones.Add(editor);
             RgbZones.Children.Add(editor.Container);
         }
+
+        ApplyRgbEffectCapabilities(selected.Key, selected.Effect);
     }
 
     private async void RgbZoneEditor_SynchronizeRequested(object? sender, EventArgs e)
@@ -563,7 +561,27 @@ public partial class KeyboardBacklightPage : UserControl
 
     private void RgbSetting_Changed(object? sender, SelectionChangedEventArgs e)
     {
-        // The Save button performs one atomic controller update for all RGB fields.
+        if (_isRefreshing || sender != RgbEffect || _state is null)
+            return;
+
+        var selected = _state.RgbPresets.FirstOrDefault(preset => preset.IsSelected);
+        if (selected is null)
+            return;
+
+        ApplyRgbEffectCapabilities(selected.Key, RgbEffect.SelectedItem?.ToString());
+    }
+
+    private void ApplyRgbEffectCapabilities(string presetKey, string? effectType)
+    {
+        var editable = !presetKey.Equals("Off", StringComparison.OrdinalIgnoreCase);
+        var speedEnabled = editable && RgbKeyboardEffectRules.SupportsSpeed(effectType);
+        var zonesEnabled = editable && RgbKeyboardEffectRules.SupportsZones(effectType);
+
+        RgbEffect.IsEnabled = editable;
+        RgbBrightness.IsEnabled = editable;
+        RgbSpeed.IsEnabled = speedEnabled;
+        foreach (var zone in _rgbZones)
+            zone.Container.IsEnabled = zonesEnabled;
     }
 
     private async void SaveRgb_Click(object? sender, RoutedEventArgs e)

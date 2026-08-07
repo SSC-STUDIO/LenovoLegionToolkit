@@ -7,6 +7,18 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class AvaloniaSpectrumKeyboardEffectRulesTests
 {
     [Theory]
+    [InlineData("Static", false, true)]
+    [InlineData("Breath", true, true)]
+    [InlineData("Smooth", true, false)]
+    [InlineData("WaveRTL", true, false)]
+    [InlineData("WaveLTR", true, false)]
+    public void RgbCapabilities_ShouldMatchWpfEditor(string effectType, bool supportsSpeed, bool supportsZones)
+    {
+        RgbKeyboardEffectRules.SupportsSpeed(effectType).Should().Be(supportsSpeed);
+        RgbKeyboardEffectRules.SupportsZones(effectType).Should().Be(supportsZones);
+    }
+
+    [Theory]
     [InlineData("ColorWave", true)]
     [InlineData("RainbowWave", true)]
     [InlineData("Always", false)]
