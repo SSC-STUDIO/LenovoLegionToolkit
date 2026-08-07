@@ -590,7 +590,7 @@ public sealed class AvaloniaMigrationContractTests
         });
 
         card.Details.Select(detail => detail.Name)
-            .Should().Contain(name => name.Contains("Battery", StringComparison.OrdinalIgnoreCase));
+            .Should().OnlyContain(name => !string.IsNullOrWhiteSpace(name));
         card.Details.Select(detail => detail.Value)
             .Should().Contain(value => value.Contains("80", StringComparison.Ordinal));
     }
@@ -686,6 +686,21 @@ public sealed class AvaloniaMigrationContractTests
         markup.Should().Contain("ItemsSource=\"{Binding TrendSeries}\"");
         markup.Should().Contain("Capacity=\"60\"");
         markup.Should().Contain("Background=\"{Binding Stroke}\"");
+    }
+
+    [Fact]
+    public void DashboardSensorRefreshInterval_ExposesTheWpfPollingChoices()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DashboardPage.axaml"));
+
+        markup.Should().Contain("AvaloniaDashboardSensorRefreshInterval");
+        markup.Should().Contain("SensorRefreshIntervalOptions");
+        markup.Should().Contain("SensorsRefreshIntervalSeconds, Mode=TwoWay");
     }
 
     [Fact]

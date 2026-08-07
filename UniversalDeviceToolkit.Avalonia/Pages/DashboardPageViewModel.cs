@@ -105,6 +105,28 @@ public partial class DashboardPageViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// The same sensor polling choices exposed by the WPF dashboard context menu.
+    /// Values outside this list are retained when loading older settings, rather
+    /// than silently rewriting a user's persisted dashboard file.
+    /// </summary>
+    public static IReadOnlyList<int> SensorRefreshIntervalOptions { get; } = [1, 2, 3, 5];
+
+    public int SensorsRefreshIntervalSeconds
+    {
+        get => _sensorsRefreshIntervalSeconds;
+        set
+        {
+            var normalized = NormalizeRefreshInterval(value);
+            if (!SetProperty(ref _sensorsRefreshIntervalSeconds, normalized))
+                return;
+
+            _dashboardPreferences.Store.SensorsRefreshIntervalSeconds = normalized;
+            _dashboardPreferences.SynchronizeStore();
+            RestartSensorPolling();
+        }
+    }
+
     private readonly IPlatformServices _platformServices;
     private readonly Action<string>? _navigate;
     private readonly Action<IReadOnlyList<DashboardStateOption>>? _showHybridInfo;
@@ -509,7 +531,13 @@ public partial class DashboardPageViewModel : ObservableObject
     {
         _showSensors = layout.ShowSensors;
         OnPropertyChanged(nameof(ShowSensors));
-        _sensorsRefreshIntervalSeconds = NormalizeRefreshInterval(layout.SensorsRefreshIntervalSeconds);
+        var refreshInterval = NormalizeRefreshInterval(layout.SensorsRefreshIntervalSeconds);
+        if (_sensorsRefreshIntervalSeconds != refreshInterval)
+        {
+            _sensorsRefreshIntervalSeconds = refreshInterval;
+            OnPropertyChanged(nameof(SensorsRefreshIntervalSeconds));
+            RestartSensorPolling();
+        }
 
         DashboardGroups.Clear();
         foreach (var group in layout.Groups)
@@ -591,6 +619,17 @@ public partial class DashboardPageViewModel : ObservableObject
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
         }
+    }
+
+    private void RestartSensorPolling()
+    {
+        if (_pollingCancellation is not { } previous)
+            return;
+
+        previous.Cancel();
+        previous.Dispose();
+        _pollingCancellation = new CancellationTokenSource();
+        _ = PollAsync(_pollingCancellation.Token);
     }
 
     private async Task PollBatteryAsync(CancellationToken cancellationToken)

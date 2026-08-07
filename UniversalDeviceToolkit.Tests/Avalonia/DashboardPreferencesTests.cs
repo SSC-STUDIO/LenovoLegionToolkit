@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FluentAssertions;
 using UniversalDeviceToolkit.Avalonia.Pages;
+using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Shared.Settings;
 using Xunit;
 
@@ -29,6 +30,30 @@ public sealed class DashboardPreferencesTests
 
         store.ShowSensors.Should().BeFalse();
         store.SensorsRefreshIntervalSeconds.Should().Be(15);
+    }
+
+    [Fact]
+    public void DashboardRefreshInterval_UsesWpfChoicesAndPersistsTheSelectedValue()
+    {
+        var tempRoot = Path.Combine(Path.GetTempPath(), "udt-dashboard-interval-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(tempRoot);
+
+        try
+        {
+            var preferences = new AvaloniaDashboardPreferences(tempRoot);
+            var viewModel = new DashboardPageViewModel(new UnavailablePlatformServices(), preferences);
+
+            DashboardPageViewModel.SensorRefreshIntervalOptions.Should().Equal(1, 2, 3, 5);
+            viewModel.SensorsRefreshIntervalSeconds = 3;
+
+            preferences.Store.SensorsRefreshIntervalSeconds.Should().Be(3);
+            using var document = JsonDocument.Parse(File.ReadAllText(Path.Combine(tempRoot, "dashboard.json")));
+            document.RootElement.GetProperty("SensorsRefreshIntervalSeconds").GetInt32().Should().Be(3);
+        }
+        finally
+        {
+            try { Directory.Delete(tempRoot, recursive: true); } catch { }
+        }
     }
 
     [Fact]
