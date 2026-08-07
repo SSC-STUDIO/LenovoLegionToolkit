@@ -62,140 +62,140 @@
     <value>Universal Device Toolkit</value>
   </data>
   <data name="Window_Title"><value>Universal Device Toolkit</value></data>
-  <data name="Nav_Show"><value>Show</value></data>
-  <data name="Navigation"><value>Navigation</value></data>
-  <data name="Nav_Dashboard"><value>Dashboard</value></data>
-  <data name="Nav_About"><value>About</value></data>
-  <data name="Nav_Settings"><value>Settings</value></data>
-  <data name="Nav_Exit"><value>Exit</value></data>
-  <data name="HostCapability_UnsupportedTitle"><value>Unavailable in this Avalonia host</value></data>
-  <data name="HostCapability_UnsupportedMessage"><value>This host does not expose a safe adapter for this page. Use the Windows host for this capability.</value></data>
-  <data name="HostCapability_CapabilityLabel"><value>Host capability</value></data>
-  <data name="HostCapability_Unavailable"><value>Unavailable</value></data>
-  <data name="HostCapability_KeyboardDescription"><value>Configure keyboard backlight and keyboard-specific controls.</value></data>
-  <data name="HostCapability_KeyboardReason"><value>Keyboard hardware controls require the Windows device adapter.</value></data>
-  <data name="HostCapability_ActionsDescription"><value>Run supported device actions and hardware workflows.</value></data>
-  <data name="HostCapability_ActionsReason"><value>Hardware action execution is not exposed by this host.</value></data>
-  <data name="HostCapability_MacroDescription"><value>Create and manage device macros.</value></data>
-  <data name="HostCapability_MacroReason"><value>Macro execution requires the Windows input and device services.</value></data>
-  <data name="HostCapability_WindowsOptimizationDescription"><value>Review Windows optimization actions and their current state.</value></data>
-  <data name="HostCapability_WindowsOptimizationReason"><value>Windows optimization actions are only available through the Windows host.</value></data>
-  <data name="HostCapability_PluginExtensionsDescription"><value>Discover and manage optional plugin extensions.</value></data>
-  <data name="HostCapability_PluginExtensionsReason"><value>Plugin discovery and installation services are not available in this host.</value></data>
-  <data name="About_Version"><value>Version</value></data>
+  <data name="Nav_Show"><value>Ko'rsatish</value></data>
+  <data name="Navigation"><value>Navigatsiya</value></data>
+  <data name="Nav_Dashboard"><value>Basqarıw paneli</value></data>
+  <data name="Nav_About"><value>Baǵdarlama haqqında</value></data>
+  <data name="Nav_Settings"><value>Sazlawlar</value></data>
+  <data name="Nav_Exit"><value>Shıǵıw</value></data>
+  <data name="HostCapability_UnsupportedTitle"><value>Ushbu Avalonia xostida mavjud emas</value></data>
+  <data name="HostCapability_UnsupportedMessage"><value>Bu xost ushbu sahifa uchun xavfsiz adapter taqdim etmaydi. Ushbu imkoniyat uchun Windows xostidan foydalaning.</value></data>
+  <data name="HostCapability_CapabilityLabel"><value>Xost imkoniyati</value></data>
+  <data name="HostCapability_Unavailable"><value>Mavjud emas</value></data>
+  <data name="HostCapability_KeyboardDescription"><value>Klaviatura orqa yorug'ligi va klaviaturaga xos boshqaruvlarni sozlang.</value></data>
+  <data name="HostCapability_KeyboardReason"><value>Klaviatura apparat boshqaruvlari Windows qurilma adapterini talab qiladi.</value></data>
+  <data name="HostCapability_ActionsDescription"><value>Qo'llab-quvvatlanadigan qurilma amallari va apparat jarayonlarini ishga tushiring.</value></data>
+  <data name="HostCapability_ActionsReason"><value>Apparat amallarini bajarish bu xostda taqdim etilmagan.</value></data>
+  <data name="HostCapability_MacroDescription"><value>Qurilma makrolarini yarating va boshqaring.</value></data>
+  <data name="HostCapability_MacroReason"><value>Makrolarni bajarish Windows kirish va qurilma xizmatlarini talab qiladi.</value></data>
+  <data name="HostCapability_WindowsOptimizationDescription"><value>Windows optimallashtirish amallari va ularning joriy holatini ko'rib chiqing.</value></data>
+  <data name="HostCapability_WindowsOptimizationReason"><value>Windows optimallashtirish amallari faqat Windows xosti orqali mavjud.</value></data>
+  <data name="HostCapability_PluginExtensionsDescription"><value>Ixtiyoriy plagin kengaytmalarini toping va boshqaring.</value></data>
+  <data name="HostCapability_PluginExtensionsReason"><value>Plaginlarni topish va o'rnatish xizmatlari bu xostda mavjud emas.</value></data>
+  <data name="About_Version"><value>Versiya</value></data>
   <data name="About_Build"><value>Build: {0}</value></data>
-  <data name="About_TranslationCredit"><value>Translation credits for non-English locales.</value></data>
-  <data name="About_Links"><value>Links</value></data>
-  <data name="About_ProjectWebsite"><value>Project Website on GitHub</value></data>
-  <data name="About_LatestRelease"><value>Latest Release on GitHub</value></data>
-  <data name="About_ThirdPartyLibraries"><value>Third-party Libraries</value></data>
-  <data name="About_ApplicationFolders"><value>Application Folders</value></data>
-  <data name="About_AppDataFolder"><value>AppData Folder</value></data>
-  <data name="About_TempFolder"><value>Temp Folder</value></data>
-  <data name="Dashboard_Title"><value>Dashboard</value></data>
-  <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
-  <data name="Dashboard_Sensors"><value>Sensors</value></data>
-  <data name="Dashboard_Refresh"><value>Refresh</value></data>
-  <data name="Dashboard_Status_NoTelemetry"><value>No telemetry available</value></data>
-  <data name="Dashboard_Status_NoPowerTelemetry"><value>No power telemetry available</value></data>
-  <data name="Dashboard_Description_NoAdapter"><value>No platform adapter is registered for telemetry.</value></data>
-  <data name="Dashboard_Status_Live"><value>Live</value></data>
-  <data name="Dashboard_Telemetry_CPU"><value>CPU</value></data>
-  <data name="Dashboard_Telemetry_CPUDescription"><value>Processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Telemetry_GPUDescription"><value>Graphics processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Telemetry_BatteryDescription"><value>Charge and battery health</value></data>
-  <data name="Dashboard_Telemetry_System"><value>System</value></data>
-  <data name="Dashboard_Telemetry_SystemDescription"><value>Additional platform telemetry</value></data>
-  <data name="Dashboard_Feature_Device"><value>Device</value></data>
+  <data name="About_TranslationCredit"><value>Ingliz tilidan boshqa tillar uchun tarjima ishtirokchilari.</value></data>
+  <data name="About_Links"><value>Siltemeler</value></data>
+  <data name="About_ProjectWebsite"><value>GitHubtaǵı jobanıń veb-saytı</value></data>
+  <data name="About_LatestRelease"><value>GitHubdaǵı sońǵı versiya</value></data>
+  <data name="About_ThirdPartyLibraries"><value>Uchinchi tomon kutubxonalari</value></data>
+  <data name="About_ApplicationFolders"><value>Baǵdarlama papkaları</value></data>
+  <data name="About_AppDataFolder"><value>AppData papkasi</value></data>
+  <data name="About_TempFolder"><value>Temp papkasi</value></data>
+  <data name="Dashboard_Title"><value>Basqarıw paneli</value></data>
+  <data name="Dashboard_FeatureGroups"><value>Funksiya guruhlari</value></data>
+  <data name="Dashboard_Sensors"><value>Sensor</value></data>
+  <data name="Dashboard_Refresh"><value>Jańalaw</value></data>
+  <data name="Dashboard_Status_NoTelemetry"><value>Telemetriya mavjud emas</value></data>
+  <data name="Dashboard_Status_NoPowerTelemetry"><value>Quvvat telemetriyasi mavjud emas</value></data>
+  <data name="Dashboard_Description_NoAdapter"><value>Telemetriya uchun platforma adapteri ro'yxatdan o'tmagan.</value></data>
+  <data name="Dashboard_Status_Live"><value>Jonli</value></data>
+  <data name="Dashboard_Telemetry_CPU"><value>Oraylıq processor</value></data>
+  <data name="Dashboard_Telemetry_CPUDescription"><value>Protsessor yuklamasi va harorati</value></data>
+  <data name="Dashboard_Telemetry_GPU"><value>Grafikalıq processor</value></data>
+  <data name="Dashboard_Telemetry_GPUDescription"><value>Grafik protsessor yuklamasi va harorati</value></data>
+  <data name="Dashboard_Telemetry_Battery"><value>Batareya</value></data>
+  <data name="Dashboard_Telemetry_BatteryDescription"><value>Zaryad va batareya holati</value></data>
+  <data name="Dashboard_Telemetry_System"><value>Sistema</value></data>
+  <data name="Dashboard_Telemetry_SystemDescription"><value>Qo'shimcha platforma telemetriyasi</value></data>
+  <data name="Dashboard_Feature_Device"><value>Qurılma</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
-  <data name="Dashboard_Feature_PowerMode"><value>Power Mode</value></data>
-  <data name="Dashboard_Feature_FanControl"><value>Fan Control</value></data>
-  <data name="Dashboard_Feature_Display"><value>Display</value></data>
-  <data name="Dashboard_Feature_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Feature_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Feature_Keyboard"><value>Keyboard</value></data>
-  <data name="Dashboard_Feature_PowerProfile"><value>Power Profile</value></data>
-  <data name="Dashboard_Feature_SystemTelemetry"><value>System Telemetry</value></data>
-  <data name="Dashboard_Feature_DevicePack"><value>Device support</value></data>
-  <data name="Dashboard_Description_PowerManagement"><value>System power management</value></data>
-  <data name="Dashboard_Description_FanManagement"><value>Fan speed management</value></data>
-  <data name="Dashboard_Description_RefreshRate"><value>Refresh rate control</value></data>
-  <data name="Dashboard_Description_GpuManagement"><value>GPU management</value></data>
-  <data name="Dashboard_Description_BatteryManagement"><value>Battery management</value></data>
-  <data name="Dashboard_Description_BacklightControl"><value>Backlight control</value></data>
-  <data name="Dashboard_Description_PlatformCapability"><value>Platform capability</value></data>
-  <data name="Dashboard_Status_Sample"><value>Sample</value></data>
-  <data name="Dashboard_Status_Available"><value>Available</value></data>
-  <data name="Dashboard_Status_NotSupported"><value>Not supported</value></data>
-  <data name="Dashboard_Status_Unknown"><value>Unknown</value></data>
+  <data name="Dashboard_Feature_PowerMode"><value>Quwatlılıq rejimi</value></data>
+  <data name="Dashboard_Feature_FanControl"><value>Ventilyator boshqaruvi</value></data>
+  <data name="Dashboard_Feature_Display"><value>Displey</value></data>
+  <data name="Dashboard_Feature_GPU"><value>Grafikalıq processor</value></data>
+  <data name="Dashboard_Feature_Battery"><value>Batareya</value></data>
+  <data name="Dashboard_Feature_Keyboard"><value>Klaviatura</value></data>
+  <data name="Dashboard_Feature_PowerProfile"><value>Quvvat profili</value></data>
+  <data name="Dashboard_Feature_SystemTelemetry"><value>Tizim telemetriyasi</value></data>
+  <data name="Dashboard_Feature_DevicePack"><value>Qurilma qo'llab-quvvatlashi</value></data>
+  <data name="Dashboard_Description_PowerManagement"><value>Tizim quvvatini boshqarish</value></data>
+  <data name="Dashboard_Description_FanManagement"><value>Ventilyator tezligini boshqarish</value></data>
+  <data name="Dashboard_Description_RefreshRate"><value>Yangilanish chastotasini boshqarish</value></data>
+  <data name="Dashboard_Description_GpuManagement"><value>GPU boshqaruvi</value></data>
+  <data name="Dashboard_Description_BatteryManagement"><value>Batareyani boshqarish</value></data>
+  <data name="Dashboard_Description_BacklightControl"><value>Orqa yorug'likni boshqarish</value></data>
+  <data name="Dashboard_Description_PlatformCapability"><value>Platforma imkoniyati</value></data>
+  <data name="Dashboard_Status_Sample"><value>Namuna</value></data>
+  <data name="Dashboard_Status_Available"><value>Mavjud</value></data>
+  <data name="Dashboard_Status_NotSupported"><value>Qo'llab-quvvatlanmaydi</value></data>
+  <data name="Dashboard_Status_Unknown"><value>Belgisiz</value></data>
   <data name="Dashboard_Status_Generation"><value>Gen {0}</value></data>
-  <data name="Dashboard_Status_Charging"><value>Charging</value></data>
-  <data name="Dashboard_Status_Discharging"><value>Discharging</value></data>
+  <data name="Dashboard_Status_Charging"><value>Zaryadlanmoqda</value></data>
+  <data name="Dashboard_Status_Discharging"><value>Zaryadsizlanmoqda</value></data>
   <data name="Dashboard_Status_Monitoring"><value>Monitoring</value></data>
   <data name="Dashboard_Status_Spectrum"><value>Spectrum</value></data>
-  <data name="Dashboard_Status_PerKey"><value>Per-key</value></data>
-  <data name="Dashboard_Status_ReadOnly"><value>Read-only</value></data>
-  <data name="Dashboard_Sensor_CpuTemperature"><value>CPU Temperature</value></data>
-  <data name="Dashboard_Sensor_GpuTemperature"><value>GPU Temperature</value></data>
-  <data name="Dashboard_Sensor_CpuUsage"><value>CPU Usage</value></data>
-  <data name="Dashboard_Sensor_MemoryUsage"><value>Memory Usage</value></data>
-  <data name="Dashboard_Sensor_FanSpeed"><value>Fan Speed</value></data>
-  <data name="Dashboard_Sensor_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Sensor_BatteryCharge"><value>Battery Charge</value></data>
-  <data name="Dashboard_Sensor_BatteryStatus"><value>Battery Status</value></data>
-  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
-  <data name="Dashboard_Sensor_MinDischargeRate"><value>Min Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Max Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_CycleCount"><value>Cycle Count</value></data>
-  <data name="Settings_Title"><value>Settings</value></data>
-  <data name="Settings_Appearance"><value>Appearance</value></data>
-  <data name="Settings_Application"><value>Application</value></data>
-  <data name="Settings_Display"><value>Display</value></data>
-  <data name="Settings_PlatformUnavailable_Title"><value>Unavailable in this host</value></data>
-  <data name="Settings_PlatformUnavailable_Message"><value>This Avalonia host does not expose a safe adapter for this setting.</value></data>
-  <data name="Settings_PlatformUnavailable_Feature"><value>Feature availability</value></data>
-  <data name="Settings_PlatformUnavailable_Action"><value>Unavailable</value></data>
-  <data name="Appearance_Title"><value>Appearance</value></data>
-  <data name="Appearance_Description"><value>Customize the look and feel of the application.</value></data>
-  <data name="Appearance_ThemeMode"><value>Global interface color mode</value></data>
-  <data name="Appearance_Light"><value>Light</value></data>
-  <data name="Appearance_Dark"><value>Dark</value></data>
-  <data name="Appearance_System"><value>Follow system</value></data>
-  <data name="Appearance_ApplyAccent"><value>Change system color when changing the global interface color</value></data>
-  <data name="Appearance_Accent"><value>Global interface accent color</value></data>
-  <data name="Appearance_Language"><value>Language</value></data>
-  <data name="Appearance_LanguageDescription"><value>Select the display language for the application.</value></data>
-  <data name="Application_Title"><value>Application Behavior</value></data>
-  <data name="Application_Description"><value>Configure how the application behaves on startup and during use.</value></data>
-  <data name="Application_LaunchStartup"><value>Launch at Startup</value></data>
-  <data name="Application_LaunchStartupDescription"><value>Automatically start the application when Windows starts.</value></data>
-  <data name="Application_MinimizeTray"><value>Minimize to System Tray</value></data>
-  <data name="Application_MinimizeTrayDescription"><value>Keep the application running in the system tray when closed.</value></data>
-  <data name="Application_AutoRefresh"><value>Auto-refresh Hardware Data</value></data>
-  <data name="Application_AutoRefreshDescription"><value>Periodically poll hardware sensors for updated readings.</value></data>
-  <data name="Display_Title"><value>Display</value></data>
-  <data name="Display_Description"><value>Adjust display-related settings for your device.</value></data>
-  <data name="Display_RefreshRate"><value>Refresh Rate</value></data>
-  <data name="Display_RefreshRateDescription"><value>Select the display refresh rate (requires supported hardware).</value></data>
+  <data name="Dashboard_Status_PerKey"><value>Har tugma uchun</value></data>
+  <data name="Dashboard_Status_ReadOnly"><value>Faqat o'qish</value></data>
+  <data name="Dashboard_Sensor_CpuTemperature"><value>CPU harorati</value></data>
+  <data name="Dashboard_Sensor_GpuTemperature"><value>GPU harorati</value></data>
+  <data name="Dashboard_Sensor_CpuUsage"><value>CPU yuklamasi</value></data>
+  <data name="Dashboard_Sensor_MemoryUsage"><value>Xotira bandligi</value></data>
+  <data name="Dashboard_Sensor_FanSpeed"><value>Samallatqıshtıń tezligi</value></data>
+  <data name="Dashboard_Sensor_Battery"><value>Batareya</value></data>
+  <data name="Dashboard_Sensor_BatteryCharge"><value>Batareya zaryadi</value></data>
+  <data name="Dashboard_Sensor_BatteryStatus"><value>Batareya holati</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>Batareya modeli</value></data>
+  <data name="Dashboard_Sensor_MinDischargeRate"><value>Minimal chiqarish tezligi</value></data>
+  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Maksimal chiqarish tezligi</value></data>
+  <data name="Dashboard_Sensor_CycleCount"><value>Zaryad sikllari soni</value></data>
+  <data name="Settings_Title"><value>Sazlawlar</value></data>
+  <data name="Settings_Appearance"><value>Ko'rinish</value></data>
+  <data name="Settings_Application"><value>Ilova</value></data>
+  <data name="Settings_Display"><value>Displey</value></data>
+  <data name="Settings_PlatformUnavailable_Title"><value>Ushbu xostda mavjud emas</value></data>
+  <data name="Settings_PlatformUnavailable_Message"><value>Bu Avalonia xosti ushbu sozlama uchun xavfsiz adapter taqdim etmaydi.</value></data>
+  <data name="Settings_PlatformUnavailable_Feature"><value>Funksiya mavjudligi</value></data>
+  <data name="Settings_PlatformUnavailable_Action"><value>Mavjud emas</value></data>
+  <data name="Appearance_Title"><value>Ko'rinish</value></data>
+  <data name="Appearance_Description"><value>Ilovaning ko'rinishi va uslubini sozlang.</value></data>
+  <data name="Appearance_ThemeMode"><value>Global interfeys rang rejimi</value></data>
+  <data name="Appearance_Light"><value>Yorug'</value></data>
+  <data name="Appearance_Dark"><value>Qorong'i</value></data>
+  <data name="Appearance_System"><value>Tizimga ergashish</value></data>
+  <data name="Appearance_ApplyAccent"><value>Global interfeys rangini o'zgartirganda tizim rangini o'zgartirish</value></data>
+  <data name="Appearance_Accent"><value>Global interfeys urg'u rangi</value></data>
+  <data name="Appearance_Language"><value>Til</value></data>
+  <data name="Appearance_LanguageDescription"><value>Ilova uchun ko'rsatish tilini tanlang.</value></data>
+  <data name="Application_Title"><value>Ilova xatti-harakati</value></data>
+  <data name="Application_Description"><value>Ilovaning ishga tushish va foydalanish paytidagi xatti-harakatini sozlang.</value></data>
+  <data name="Application_LaunchStartup"><value>Tizim ishga tushganda ishga tushirish</value></data>
+  <data name="Application_LaunchStartupDescription"><value>Windows ishga tushganda ilovani avtomatik ishga tushirish.</value></data>
+  <data name="Application_MinimizeTray"><value>Tizim tepsisiga yig'ish</value></data>
+  <data name="Application_MinimizeTrayDescription"><value>Yopilganda ilovani tizim tepsisida ishlab turishini davom ettirish.</value></data>
+  <data name="Application_AutoRefresh"><value>Apparat ma'lumotlarini avtomatik yangilash</value></data>
+  <data name="Application_AutoRefreshDescription"><value>Yangilangan ko'rsatkichlar uchun apparat sensorlarini davriy ravishda so'roq qilish.</value></data>
+  <data name="Display_Title"><value>Displey</value></data>
+  <data name="Display_Description"><value>Qurilmangiz uchun displeyga oid sozlamalarni sozlang.</value></data>
+  <data name="Display_RefreshRate"><value>Jańalanıw tezligi</value></data>
+  <data name="Display_RefreshRateDescription"><value>Displey yangilanish chastotasini tanlang (qo'llab-quvvatlanadigan apparat talab qilinadi).</value></data>
   <data name="Display_Overdrive"><value>Overdrive</value></data>
-  <data name="Display_OverdriveDescription"><value>Enable display overdrive for faster pixel response times.</value></data>
-  <data name="Dashboard_Subtitle"><value>Device health and controls</value></data>
-  <data name="Dashboard_Ready"><value>Ready</value></data>
-  <data name="Dashboard_Power"><value>Power</value></data>
-  <data name="Dashboard_LastUpdated"><value>Last updated</value></data>
-  <data name="FeaturePage_StatusTitle"><value>Feature status</value></data>
-  <data name="FeaturePage_Loading"><value>Reading the current platform capability...</value></data>
-  <data name="FeaturePage_Available"><value>Available</value></data>
-  <data name="FeaturePage_Unsupported"><value>Unavailable on this device</value></data>
-  <data name="FeaturePage_AvailableMessage"><value>The platform adapter reported this feature as available.</value></data>
-  <data name="FeaturePage_LoadFailed"><value>Unable to load feature state</value></data>
-  <data name="Settings_Page_StatusTitle"><value>Settings ready</value></data>
-  <data name="Settings_Page_StatusMessage"><value>Changes are saved immediately.</value></data>
-  <data name="Settings_Page_LoadFailed"><value>Unable to load settings</value></data>
-  <data name="Settings_Page_NoOptions"><value>No settings are available for this page.</value></data>
-  <data name="Settings_Page_UnavailableDetail"><value>The controls remain visible when the adapter is available on this platform.</value></data>
+  <data name="Display_OverdriveDescription"><value>Tezroq piksel javob vaqti uchun displey overdrive funksiyasini yoqing.</value></data>
+  <data name="Dashboard_Subtitle"><value>Qurilma holati va boshqaruvlar</value></data>
+  <data name="Dashboard_Ready"><value>Tayyor</value></data>
+  <data name="Dashboard_Power"><value>Quvvat</value></data>
+  <data name="Dashboard_LastUpdated"><value>Oxirgi yangilangan</value></data>
+  <data name="FeaturePage_StatusTitle"><value>Funksiya holati</value></data>
+  <data name="FeaturePage_Loading"><value>Joriy platforma imkoniyati o'qilmoqda...</value></data>
+  <data name="FeaturePage_Available"><value>Mavjud</value></data>
+  <data name="FeaturePage_Unsupported"><value>Ushbu qurilmada mavjud emas</value></data>
+  <data name="FeaturePage_AvailableMessage"><value>Platforma adapteri bu funksiyani mavjud deb bildirgan.</value></data>
+  <data name="FeaturePage_LoadFailed"><value>Funksiya holatini yuklab bo'lmadi</value></data>
+  <data name="Settings_Page_StatusTitle"><value>Sozlamalar tayyor</value></data>
+  <data name="Settings_Page_StatusMessage"><value>O'zgarishlar darhol saqlanadi.</value></data>
+  <data name="Settings_Page_LoadFailed"><value>Sozlamalarni yuklab bo'lmadi</value></data>
+  <data name="Settings_Page_NoOptions"><value>Ushbu sahifa uchun sozlamalar mavjud emas.</value></data>
+  <data name="Settings_Page_UnavailableDetail"><value>Boshqaruvlar adapter ushbu platformada mavjud bo'lganda ko'rinib turadi.</value></data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Qurıw</value>
   </data>
@@ -268,13 +268,13 @@ Tek ámeldegi jaǵdayǵa sáykes keletuǵın háreketler orınlanadı.</value>
     <value>Jańasın qosıw</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
-    <value>Add automatic</value>
+    <value>Avtomatik qo'shish</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
-    <value>New automatic pipeline</value>
+    <value>Yangi avtomatik jarayon</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
-    <value>Automatic triggers are unavailable.</value>
+    <value>Avtomatik trigerlar mavjud emas.</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>Tez háreketler anıqlanbaǵan. Jańa operativ háreket jaratıw ushın "Jańasın qosıw" túymesin basıń.</value>
@@ -1882,7 +1882,7 @@ ESKERTIW: Diskret GPU ámeldegi bolmasa, bul ámel tuwrı atqarılmaydı.</value
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
   <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
-    <value>Failed to switch power mode. The device did not accept the change.</value>
+    <value>Quvvat rejimini almashtirib bo'lmadi. Qurilma o'zgarishni qabul qilmadi.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Sensor</value>
@@ -2404,10 +2404,10 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Yangilanishlarni avtomatik tekshirish</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Title" xml:space="preserve">
-    <value>Include preview versions</value>
+    <value>Oldindan ko'rish versiyalarini qo'shish</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Message" xml:space="preserve">
-    <value>When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions.</value>
+    <value>O'chirilganda, yangilanishlar sifatida faqat barqaror relizlar taklif qilinadi. Oldindan ko'rish (prerelease) versiyalarini ham olish uchun yoqing.</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Jańalaw</value>
@@ -3489,31 +3489,31 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Iltimos, tozalash uchun kamida bitta elementni tanlang.</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Title" xml:space="preserve">
-    <value>Force software rendering</value>
+    <value>Dasturiy renderlashni majburlash</value>
   </data>
   <data name="SettingsPage_ForceSoftwareRendering_Message" xml:space="preserve">
-    <value>Use software rendering when remote desktop or headless display is detected. Restart recommended.</value>
+    <value>Masofaviy ish stoli yoki ekransiz displey aniqlanganda dasturiy renderlashdan foydalaning. Qayta ishga tushirish tavsiya etiladi.</value>
   </data>
   <data name="PackageControl_InstallError_ExitCode" xml:space="preserve">
-    <value>Installer exited with code {0}</value>
+    <value>O'rnatuvchi {0} kodi bilan yakunlandi</value>
   </data>
   <data name="PackageControl_Queued" xml:space="preserve">
-    <value>Queued</value>
+    <value>Navbatda</value>
   </data>
   <data name="PluginExtensionsPage_AuthorFormat" xml:space="preserve">
     <value>by {0}</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>Optimallashtirish</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
     <value>Tez ochish</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Sazlawlar</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>Jańalaw</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
     <value>Plaginlar mavjudligi tekshirilmoqda...</value>
@@ -3558,16 +3558,16 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Customize language, temperature unit, theme and accent color.</value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Ko'rinish</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
-    <value>Application</value>
+    <value>Ilova</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Message" xml:space="preserve">
-    <value>Universal Device Toolkit was started with {0}. Automatic and manual update checks, plus the update settings below, are disabled until you relaunch without that startup argument.</value>
+    <value>Universal Device Toolkit {0} bilan ishga tushirilgan. Avtomatik va qo'lda yangilanish tekshiruvlari, quyidagi yangilanish sozlamalari bilan birga, ushbu ishga tushirish argumentisiz qayta ishga tushirilmaguniga qadar o'chirilgan.</value>
   </data>
   <data name="SettingsPage_UpdateDisabled_Title" xml:space="preserve">
-    <value>Update checks are disabled for this session</value>
+    <value>Ushbu sessiya uchun yangilanish tekshiruvlari o'chirilgan</value>
   </data>
   <data name="WindowsOptimizationPage_DriverEmpty_Error_Message" xml:space="preserve">
     <value>Tanlangan manba va tarmoq ulanishini tekshiring, so‘ng qayta skanerlang.</value>
@@ -3754,7 +3754,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Katta fayllar tahlili</value>
   </data>
   <data name="Osd_Cpu" xml:space="preserve">
-    <value>CPU</value>
+    <value>Oraylıq processor</value>
   </data>
   <data name="Osd_CPU_Fan" xml:space="preserve">
     <value>Ventilator</value>
@@ -3778,7 +3778,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>O'yin</value>
   </data>
   <data name="Osd_Gpu" xml:space="preserve">
-    <value>GPU</value>
+    <value>Grafikalıq processor</value>
   </data>
   <data name="Osd_GPU_Fan" xml:space="preserve">
     <value>Ventilator</value>
@@ -3841,7 +3841,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Shaffoflik</value>
   </data>
   <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>Separator Color</value>
+    <value>Ajratuvchi rangi</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Qiymat rangi</value>
@@ -4063,7 +4063,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>ITS rejimi</value>
   </data>
   <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
-    <value>Intelligent Thermal Solution</value>
+    <value>Aqlli termal yechim</value>
   </data>
   <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
     <value>ITS ishga tushirish muhiti ushbu tizimda mavjud emas.</value>
@@ -4435,7 +4435,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Loopback proksi porti</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Gateway" xml:space="preserve">
-    <value>Gateway</value>
+    <value>Shlyuz</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Dns" xml:space="preserve">
     <value>DNS</value>
@@ -4447,7 +4447,7 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Diagnostika</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
-    <value>OK</value>
+    <value>Yaqshı</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Warn" xml:space="preserve">
     <value>Yetib bo'lmaydi</value>
@@ -4576,16 +4576,16 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
     <value>Standart</value>
   </data>
   <data name="SettingsPage_UiScale_Title" xml:space="preserve">
-    <value>Interface scale</value>
+    <value>Interfeys miqyosi</value>
   </data>
   <data name="SettingsPage_UiScale_Description" xml:space="preserve">
-    <value>Scale text and the whole interface together, independent of Windows display scaling.</value>
+    <value>Matn va butun interfeysni Windows displey miqyosidan mustaqil ravishda birga kattalashtiring.</value>
   </data>
   <data name="SettingsPage_AppScale_Title" xml:space="preserve">
-    <value>App scale</value>
+    <value>Ilova miqyosi</value>
   </data>
   <data name="SettingsPage_AppScale_Description" xml:space="preserve">
-    <value>Scale the entire app interface independently of Windows display scaling.</value>
+    <value>Butun ilova interfeysini Windows displey miqyosidan mustaqil ravishda kattalashtiring.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Matn o'lchami</value>
@@ -4599,76 +4599,76 @@ Qollap - quwatlanatuǵın formatlar: {1}.</value>
   <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
     <value>Qurilma qo‘llab-quvvatlash paketini yuklab bo‘lmadi. Ulanishni tekshirib, qayta urinish uchun tasdiqlang yoki o‘tkazib yuboring — keyingi ishga tushirishda yana so‘raymiz.</value>
   </data>
-  <data name="NaDiag_NatTitle" xml:space="preserve"><value>NAT Type Detection</value></data>
-  <data name="NaDiag_NatType" xml:space="preserve"><value>NAT Type:</value></data>
-  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Local IP:</value></data>
-  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Public IP:</value></data>
+  <data name="NaDiag_NatTitle" xml:space="preserve"><value>NAT turini aniqlash</value></data>
+  <data name="NaDiag_NatType" xml:space="preserve"><value>NAT turi:</value></data>
+  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Mahalliy IP:</value></data>
+  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Tashqi IP:</value></data>
   <data name="NaDiag_Internet" xml:space="preserve"><value>Internet:</value></data>
-  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>DNS Detection</value></data>
-  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Domain to test:</value></data>
-  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Custom DNS:</value></data>
-  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Enable DoH:</value></data>
+  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>DNS aniqlash</value></data>
+  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Sinov uchun domen:</value></data>
+  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Maxsus DNS:</value></data>
+  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>DoH'ni yoqish:</value></data>
   <data name="NaDiag_DohUrl" xml:space="preserve"><value>DoH URL:</value></data>
-  <data name="NaDiag_Latency" xml:space="preserve"><value>Latency:</value></data>
+  <data name="NaDiag_Latency" xml:space="preserve"><value>Kechikish:</value></data>
   <data name="NaDiag_LatencyFormat" xml:space="preserve"><value>{0} ms</value></data>
-  <data name="NaDiag_Failed" xml:space="preserve"><value>Failed</value></data>
-  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>IPv6 Detection</value></data>
-  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Support:</value></data>
-  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>IPv6 Address:</value></data>
-  <data name="NaDiag_Supported" xml:space="preserve"><value>Supported</value></data>
-  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Not supported</value></data>
-  <data name="NaDiag_Detect" xml:space="preserve"><value>Detect</value></data>
-  <data name="NaDiag_Unknown" xml:space="preserve"><value>Unknown</value></data>
-  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Open NAT</value></data>
+  <data name="NaDiag_Failed" xml:space="preserve"><value>Amalga oshmadi</value></data>
+  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>IPv6 aniqlash</value></data>
+  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Qo'llab-quvvatlash:</value></data>
+  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>IPv6 manzil:</value></data>
+  <data name="NaDiag_Supported" xml:space="preserve"><value>Qo'llab-quvvatlanadi</value></data>
+  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Qo'llab-quvvatlanmaydi</value></data>
+  <data name="NaDiag_Detect" xml:space="preserve"><value>Aniqlash</value></data>
+  <data name="NaDiag_Unknown" xml:space="preserve"><value>Belgisiz</value></data>
+  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Ochiq NAT</value></data>
   <data name="NaDiag_NatRestricted" xml:space="preserve"><value>NAT</value></data>
-  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP blocked</value></data>
-  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operation failed</value></data>
-  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Vantage: {0}</value></data>
-  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Failed to stop Legion Zone: {0}</value></data>
-  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Hotkeys: {0}</value></data>
-  <data name="Theme_Light" xml:space="preserve"><value>Light</value></data>
-  <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
-  <data name="Theme_System" xml:space="preserve"><value>System</value></data>
-  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP bloklangan</value></data>
+  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Amal amalga oshmadi</value></data>
+  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Lenovo Vantage'ni to'xtatib bo'lmadi: {0}</value></data>
+  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Legion Zone'ni to'xtatib bo'lmadi: {0}</value></data>
+  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Lenovo Hotkeys'ni to'xtatib bo'lmadi: {0}</value></data>
+  <data name="Theme_Light" xml:space="preserve"><value>Yorug'</value></data>
+  <data name="Theme_Dark" xml:space="preserve"><value>Qorong'i</value></data>
+  <data name="Theme_System" xml:space="preserve"><value>Sistema</value></data>
+  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Mavzu uslubi</value></data>
   <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Global interfeys rang rejimi</value></data>
   <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Global interfeys rangini sozlashda tizim rangini o'zgartirish</value></data>
   <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Global interfeys urg'u rangi</value></data>
-  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
-  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
-  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Global interfeys rangini sozlaganda mavzu uslubini qo'llash</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Oyna fon effekti</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Ilova oynalari uchun ishlatiladigan Windows fon effektini tanlang.</value></data>
   <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
-  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
-  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
-  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
-  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
-  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
-  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
-  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
-  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Akril</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>O'chiq</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 kirishi qo'llab-quvvatlanadi</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT hujjatlari</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Tegishli havolalar</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Aniqlangan:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Sinov ob'ektlari</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Sinov natijalari</value></data>
   <data name="ComboBox_UnsupportedType" xml:space="preserve">
-    <value>Unsupported type.</value>
+    <value>Qo'llab-quvvatlanmaydigan tur.</value>
   </data>
   <data name="AutomationStep_CreationFailed" xml:space="preserve">
-    <value>Could not create automation step.</value>
+    <value>Avtomatlashtirish qadamini yaratib bo'lmadi.</value>
   </data>
   <data name="FeatureRegistration_NotSupported" xml:space="preserve">
-    <value>Feature is not supported.</value>
+    <value>Funksiya qo'llab-quvvatlanmaydi.</value>
   </data>
   <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
-    <value>Feature returned no value.</value>
+    <value>Funksiya qiymat qaytarmadi.</value>
   </data>
   <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
-    <value>State is not supported.</value>
+    <value>Holat qo'llab-quvvatlanmaydi.</value>
   </data>
-  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>This feature is provided by the host platform adapter.</value></data>
-  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>No platform adapter reported this feature.</value></data>
-  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Platform adapter</value></data>
-  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Install or enable a compatible platform adapter to use this feature.</value></data>
-  <data name="FeaturePage_NoActions" xml:space="preserve"><value>No actions were reported by the platform adapter.</value></data>
-  <data name="Appearance_Advanced" xml:space="preserve"><value>Appearance options</value></data>
-  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Temperature unit</value></data>
-  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Choose how temperatures are displayed.</value></data>
-  <data name="Appearance_Font" xml:space="preserve"><value>Application font</value></data>
-  <data name="Appearance_FontDescription" xml:space="preserve"><value>Choose the application font family.</value></data>
-  <data name="Appearance_UiScale" xml:space="preserve"><value>Interface scale</value></data>
-  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Adjust text and control density together.</value></data></root>
+  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>Bu funksiya xost platforma adapteri tomonidan taqdim etiladi.</value></data>
+  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>Hech bir platforma adapteri bu funksiya haqida xabar bermagan.</value></data>
+  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Platforma adapteri</value></data>
+  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Ushbu funksiyadan foydalanish uchun mos platforma adapterini o'rnating yoki yoqing.</value></data>
+  <data name="FeaturePage_NoActions" xml:space="preserve"><value>Platforma adapteri hech qanday amal haqida xabar bermagan.</value></data>
+  <data name="Appearance_Advanced" xml:space="preserve"><value>Ko'rinish imkoniyatlari</value></data>
+  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Harorat birligi</value></data>
+  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Haroratlarning qanday ko'rsatilishini tanlang.</value></data>
+  <data name="Appearance_Font" xml:space="preserve"><value>Ilova shrifti</value></data>
+  <data name="Appearance_FontDescription" xml:space="preserve"><value>Ilova shrift oilasini tanlang.</value></data>
+  <data name="Appearance_UiScale" xml:space="preserve"><value>Interfeys miqyosi</value></data>
+  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Matn va boshqaruv zichligini birga sozlang.</value></data></root>

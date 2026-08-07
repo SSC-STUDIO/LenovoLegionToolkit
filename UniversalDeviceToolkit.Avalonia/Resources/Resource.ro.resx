@@ -59,140 +59,140 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Window_Title"><value>Universal Device Toolkit</value></data>
-  <data name="Nav_Show"><value>Show</value></data>
-  <data name="Navigation"><value>Navigation</value></data>
-  <data name="Nav_Dashboard"><value>Dashboard</value></data>
-  <data name="Nav_About"><value>About</value></data>
-  <data name="Nav_Settings"><value>Settings</value></data>
-  <data name="Nav_Exit"><value>Exit</value></data>
-  <data name="HostCapability_UnsupportedTitle"><value>Unavailable in this Avalonia host</value></data>
-  <data name="HostCapability_UnsupportedMessage"><value>This host does not expose a safe adapter for this page. Use the Windows host for this capability.</value></data>
-  <data name="HostCapability_CapabilityLabel"><value>Host capability</value></data>
-  <data name="HostCapability_Unavailable"><value>Unavailable</value></data>
-  <data name="HostCapability_KeyboardDescription"><value>Configure keyboard backlight and keyboard-specific controls.</value></data>
-  <data name="HostCapability_KeyboardReason"><value>Keyboard hardware controls require the Windows device adapter.</value></data>
-  <data name="HostCapability_ActionsDescription"><value>Run supported device actions and hardware workflows.</value></data>
-  <data name="HostCapability_ActionsReason"><value>Hardware action execution is not exposed by this host.</value></data>
-  <data name="HostCapability_MacroDescription"><value>Create and manage device macros.</value></data>
-  <data name="HostCapability_MacroReason"><value>Macro execution requires the Windows input and device services.</value></data>
-  <data name="HostCapability_WindowsOptimizationDescription"><value>Review Windows optimization actions and their current state.</value></data>
-  <data name="HostCapability_WindowsOptimizationReason"><value>Windows optimization actions are only available through the Windows host.</value></data>
-  <data name="HostCapability_PluginExtensionsDescription"><value>Discover and manage optional plugin extensions.</value></data>
-  <data name="HostCapability_PluginExtensionsReason"><value>Plugin discovery and installation services are not available in this host.</value></data>
-  <data name="About_Version"><value>Version</value></data>
-  <data name="About_Build"><value>Build: {0}</value></data>
-  <data name="About_TranslationCredit"><value>Translation credits for non-English locales.</value></data>
-  <data name="About_Links"><value>Links</value></data>
-  <data name="About_ProjectWebsite"><value>Project Website on GitHub</value></data>
-  <data name="About_LatestRelease"><value>Latest Release on GitHub</value></data>
-  <data name="About_ThirdPartyLibraries"><value>Third-party Libraries</value></data>
-  <data name="About_ApplicationFolders"><value>Application Folders</value></data>
-  <data name="About_AppDataFolder"><value>AppData Folder</value></data>
-  <data name="About_TempFolder"><value>Temp Folder</value></data>
-  <data name="Dashboard_Title"><value>Dashboard</value></data>
-  <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
-  <data name="Dashboard_Sensors"><value>Sensors</value></data>
-  <data name="Dashboard_Refresh"><value>Refresh</value></data>
-  <data name="Dashboard_Status_NoTelemetry"><value>No telemetry available</value></data>
-  <data name="Dashboard_Status_NoPowerTelemetry"><value>No power telemetry available</value></data>
-  <data name="Dashboard_Description_NoAdapter"><value>No platform adapter is registered for telemetry.</value></data>
-  <data name="Dashboard_Status_Live"><value>Live</value></data>
-  <data name="Dashboard_Telemetry_CPU"><value>CPU</value></data>
-  <data name="Dashboard_Telemetry_CPUDescription"><value>Processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Telemetry_GPUDescription"><value>Graphics processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Telemetry_BatteryDescription"><value>Charge and battery health</value></data>
-  <data name="Dashboard_Telemetry_System"><value>System</value></data>
-  <data name="Dashboard_Telemetry_SystemDescription"><value>Additional platform telemetry</value></data>
-  <data name="Dashboard_Feature_Device"><value>Device</value></data>
+  <data name="Nav_Show"><value>Afișare</value></data>
+  <data name="Navigation"><value>Navigare</value></data>
+  <data name="Nav_Dashboard"><value>Bord</value></data>
+  <data name="Nav_About"><value>Despre</value></data>
+  <data name="Nav_Settings"><value>Setări</value></data>
+  <data name="Nav_Exit"><value>Ieșire</value></data>
+  <data name="HostCapability_UnsupportedTitle"><value>Indisponibil în acest host Avalonia</value></data>
+  <data name="HostCapability_UnsupportedMessage"><value>Acest host nu expune un adaptor sigur pentru această pagină. Utilizați hostul Windows pentru această funcționalitate.</value></data>
+  <data name="HostCapability_CapabilityLabel"><value>Capabilitate host</value></data>
+  <data name="HostCapability_Unavailable"><value>Indisponibil</value></data>
+  <data name="HostCapability_KeyboardDescription"><value>Configurați iluminarea tastaturii și comenzile specifice tastaturii.</value></data>
+  <data name="HostCapability_KeyboardReason"><value>Comenzile hardware ale tastaturii necesită adaptorul de dispozitiv Windows.</value></data>
+  <data name="HostCapability_ActionsDescription"><value>Rulați acțiunile acceptate de dispozitiv și fluxurile de lucru hardware.</value></data>
+  <data name="HostCapability_ActionsReason"><value>Execuția acțiunilor hardware nu este expusă de acest host.</value></data>
+  <data name="HostCapability_MacroDescription"><value>Creați și gestionați macrocomenzile dispozitivului.</value></data>
+  <data name="HostCapability_MacroReason"><value>Execuția macrocomenzilor necesită serviciile de intrare și de dispozitiv Windows.</value></data>
+  <data name="HostCapability_WindowsOptimizationDescription"><value>Examinați acțiunile de optimizare Windows și starea lor curentă.</value></data>
+  <data name="HostCapability_WindowsOptimizationReason"><value>Acțiunile de optimizare Windows sunt disponibile doar prin hostul Windows.</value></data>
+  <data name="HostCapability_PluginExtensionsDescription"><value>Descoperiți și gestionați extensiile opționale de pluginuri.</value></data>
+  <data name="HostCapability_PluginExtensionsReason"><value>Serviciile de descoperire și instalare a pluginurilor nu sunt disponibile în acest host.</value></data>
+  <data name="About_Version"><value>Versiune</value></data>
+  <data name="About_Build"><value>Compilare: {0}</value></data>
+  <data name="About_TranslationCredit"><value>Credite de traducere pentru limbile non-engleze.</value></data>
+  <data name="About_Links"><value>Linkuri</value></data>
+  <data name="About_ProjectWebsite"><value>Website-ul proiectului pe GitHub</value></data>
+  <data name="About_LatestRelease"><value>Ultima versiune pe GitHub</value></data>
+  <data name="About_ThirdPartyLibraries"><value>Biblioteci terțe</value></data>
+  <data name="About_ApplicationFolders"><value>Folderele aplicației</value></data>
+  <data name="About_AppDataFolder"><value>Folder AppData</value></data>
+  <data name="About_TempFolder"><value>Folder Temp</value></data>
+  <data name="Dashboard_Title"><value>Bord</value></data>
+  <data name="Dashboard_FeatureGroups"><value>Grupuri de funcții</value></data>
+  <data name="Dashboard_Sensors"><value>Senzori</value></data>
+  <data name="Dashboard_Refresh"><value>Reîmprospătare</value></data>
+  <data name="Dashboard_Status_NoTelemetry"><value>Nicio telemetrie disponibilă</value></data>
+  <data name="Dashboard_Status_NoPowerTelemetry"><value>Nicio telemetrie de alimentare disponibilă</value></data>
+  <data name="Dashboard_Description_NoAdapter"><value>Nu este înregistrat niciun adaptor de platformă pentru telemetrie.</value></data>
+  <data name="Dashboard_Status_Live"><value>În timp real</value></data>
+  <data name="Dashboard_Telemetry_CPU"><value>procesor</value></data>
+  <data name="Dashboard_Telemetry_CPUDescription"><value>Utilizarea și temperatura procesorului</value></data>
+  <data name="Dashboard_Telemetry_GPU"><value>procesare grafică</value></data>
+  <data name="Dashboard_Telemetry_GPUDescription"><value>Utilizarea și temperatura procesorului grafic</value></data>
+  <data name="Dashboard_Telemetry_Battery"><value>Baterie</value></data>
+  <data name="Dashboard_Telemetry_BatteryDescription"><value>Nivelul de încărcare și starea bateriei</value></data>
+  <data name="Dashboard_Telemetry_System"><value>Sistem</value></data>
+  <data name="Dashboard_Telemetry_SystemDescription"><value>Telemetrie suplimentară de platformă</value></data>
+  <data name="Dashboard_Feature_Device"><value>Dispozitiv</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
-  <data name="Dashboard_Feature_PowerMode"><value>Power Mode</value></data>
-  <data name="Dashboard_Feature_FanControl"><value>Fan Control</value></data>
-  <data name="Dashboard_Feature_Display"><value>Display</value></data>
-  <data name="Dashboard_Feature_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Feature_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Feature_Keyboard"><value>Keyboard</value></data>
-  <data name="Dashboard_Feature_PowerProfile"><value>Power Profile</value></data>
-  <data name="Dashboard_Feature_SystemTelemetry"><value>System Telemetry</value></data>
-  <data name="Dashboard_Feature_DevicePack"><value>Device support</value></data>
-  <data name="Dashboard_Description_PowerManagement"><value>System power management</value></data>
-  <data name="Dashboard_Description_FanManagement"><value>Fan speed management</value></data>
-  <data name="Dashboard_Description_RefreshRate"><value>Refresh rate control</value></data>
-  <data name="Dashboard_Description_GpuManagement"><value>GPU management</value></data>
-  <data name="Dashboard_Description_BatteryManagement"><value>Battery management</value></data>
-  <data name="Dashboard_Description_BacklightControl"><value>Backlight control</value></data>
-  <data name="Dashboard_Description_PlatformCapability"><value>Platform capability</value></data>
-  <data name="Dashboard_Status_Sample"><value>Sample</value></data>
-  <data name="Dashboard_Status_Available"><value>Available</value></data>
-  <data name="Dashboard_Status_NotSupported"><value>Not supported</value></data>
-  <data name="Dashboard_Status_Unknown"><value>Unknown</value></data>
+  <data name="Dashboard_Feature_PowerMode"><value>Mod putere</value></data>
+  <data name="Dashboard_Feature_FanControl"><value>Control ventilator</value></data>
+  <data name="Dashboard_Feature_Display"><value>Afișaj</value></data>
+  <data name="Dashboard_Feature_GPU"><value>procesare grafică</value></data>
+  <data name="Dashboard_Feature_Battery"><value>Baterie</value></data>
+  <data name="Dashboard_Feature_Keyboard"><value>Tastatură</value></data>
+  <data name="Dashboard_Feature_PowerProfile"><value>Profil de alimentare</value></data>
+  <data name="Dashboard_Feature_SystemTelemetry"><value>Telemetrie sistem</value></data>
+  <data name="Dashboard_Feature_DevicePack"><value>Suport dispozitiv</value></data>
+  <data name="Dashboard_Description_PowerManagement"><value>Gestionarea energiei sistemului</value></data>
+  <data name="Dashboard_Description_FanManagement"><value>Gestionarea vitezei ventilatorului</value></data>
+  <data name="Dashboard_Description_RefreshRate"><value>Controlul ratei de reîmprospătare</value></data>
+  <data name="Dashboard_Description_GpuManagement"><value>Gestionare GPU</value></data>
+  <data name="Dashboard_Description_BatteryManagement"><value>Gestionarea bateriei</value></data>
+  <data name="Dashboard_Description_BacklightControl"><value>Control iluminare</value></data>
+  <data name="Dashboard_Description_PlatformCapability"><value>Capabilitate platformă</value></data>
+  <data name="Dashboard_Status_Sample"><value>Eșantion</value></data>
+  <data name="Dashboard_Status_Available"><value>Disponibil</value></data>
+  <data name="Dashboard_Status_NotSupported"><value>Nesuportat</value></data>
+  <data name="Dashboard_Status_Unknown"><value>Necunoscut</value></data>
   <data name="Dashboard_Status_Generation"><value>Gen {0}</value></data>
-  <data name="Dashboard_Status_Charging"><value>Charging</value></data>
-  <data name="Dashboard_Status_Discharging"><value>Discharging</value></data>
-  <data name="Dashboard_Status_Monitoring"><value>Monitoring</value></data>
+  <data name="Dashboard_Status_Charging"><value>Se încarcă</value></data>
+  <data name="Dashboard_Status_Discharging"><value>Se descarcă</value></data>
+  <data name="Dashboard_Status_Monitoring"><value>Monitorizare</value></data>
   <data name="Dashboard_Status_Spectrum"><value>Spectrum</value></data>
-  <data name="Dashboard_Status_PerKey"><value>Per-key</value></data>
-  <data name="Dashboard_Status_ReadOnly"><value>Read-only</value></data>
-  <data name="Dashboard_Sensor_CpuTemperature"><value>CPU Temperature</value></data>
-  <data name="Dashboard_Sensor_GpuTemperature"><value>GPU Temperature</value></data>
-  <data name="Dashboard_Sensor_CpuUsage"><value>CPU Usage</value></data>
-  <data name="Dashboard_Sensor_MemoryUsage"><value>Memory Usage</value></data>
-  <data name="Dashboard_Sensor_FanSpeed"><value>Fan Speed</value></data>
-  <data name="Dashboard_Sensor_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Sensor_BatteryCharge"><value>Battery Charge</value></data>
-  <data name="Dashboard_Sensor_BatteryStatus"><value>Battery Status</value></data>
-  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
-  <data name="Dashboard_Sensor_MinDischargeRate"><value>Min Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Max Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_CycleCount"><value>Cycle Count</value></data>
-  <data name="Settings_Title"><value>Settings</value></data>
-  <data name="Settings_Appearance"><value>Appearance</value></data>
-  <data name="Settings_Application"><value>Application</value></data>
-  <data name="Settings_Display"><value>Display</value></data>
-  <data name="Settings_PlatformUnavailable_Title"><value>Unavailable in this host</value></data>
-  <data name="Settings_PlatformUnavailable_Message"><value>This Avalonia host does not expose a safe adapter for this setting.</value></data>
-  <data name="Settings_PlatformUnavailable_Feature"><value>Feature availability</value></data>
-  <data name="Settings_PlatformUnavailable_Action"><value>Unavailable</value></data>
-  <data name="Appearance_Title"><value>Appearance</value></data>
-  <data name="Appearance_Description"><value>Customize the look and feel of the application.</value></data>
-  <data name="Appearance_ThemeMode"><value>Global interface color mode</value></data>
-  <data name="Appearance_Light"><value>Light</value></data>
-  <data name="Appearance_Dark"><value>Dark</value></data>
-  <data name="Appearance_System"><value>Follow system</value></data>
-  <data name="Appearance_ApplyAccent"><value>Change system color when changing the global interface color</value></data>
-  <data name="Appearance_Accent"><value>Global interface accent color</value></data>
-  <data name="Appearance_Language"><value>Language</value></data>
-  <data name="Appearance_LanguageDescription"><value>Select the display language for the application.</value></data>
-  <data name="Application_Title"><value>Application Behavior</value></data>
-  <data name="Application_Description"><value>Configure how the application behaves on startup and during use.</value></data>
-  <data name="Application_LaunchStartup"><value>Launch at Startup</value></data>
-  <data name="Application_LaunchStartupDescription"><value>Automatically start the application when Windows starts.</value></data>
-  <data name="Application_MinimizeTray"><value>Minimize to System Tray</value></data>
-  <data name="Application_MinimizeTrayDescription"><value>Keep the application running in the system tray when closed.</value></data>
-  <data name="Application_AutoRefresh"><value>Auto-refresh Hardware Data</value></data>
-  <data name="Application_AutoRefreshDescription"><value>Periodically poll hardware sensors for updated readings.</value></data>
-  <data name="Display_Title"><value>Display</value></data>
-  <data name="Display_Description"><value>Adjust display-related settings for your device.</value></data>
-  <data name="Display_RefreshRate"><value>Refresh Rate</value></data>
-  <data name="Display_RefreshRateDescription"><value>Select the display refresh rate (requires supported hardware).</value></data>
+  <data name="Dashboard_Status_PerKey"><value>Pe tastă</value></data>
+  <data name="Dashboard_Status_ReadOnly"><value>Doar citire</value></data>
+  <data name="Dashboard_Sensor_CpuTemperature"><value>Temperatură CPU</value></data>
+  <data name="Dashboard_Sensor_GpuTemperature"><value>Temperatură GPU</value></data>
+  <data name="Dashboard_Sensor_CpuUsage"><value>Utilizare CPU</value></data>
+  <data name="Dashboard_Sensor_MemoryUsage"><value>Utilizare memorie</value></data>
+  <data name="Dashboard_Sensor_FanSpeed"><value>Viteză ventilator</value></data>
+  <data name="Dashboard_Sensor_Battery"><value>Baterie</value></data>
+  <data name="Dashboard_Sensor_BatteryCharge"><value>Încărcare baterie</value></data>
+  <data name="Dashboard_Sensor_BatteryStatus"><value>Stare baterie</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>Model baterie</value></data>
+  <data name="Dashboard_Sensor_MinDischargeRate"><value>Rată minimă de descărcare</value></data>
+  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Rată maximă de descărcare</value></data>
+  <data name="Dashboard_Sensor_CycleCount"><value>Număr de cicluri</value></data>
+  <data name="Settings_Title"><value>Setări</value></data>
+  <data name="Settings_Appearance"><value>Aspect</value></data>
+  <data name="Settings_Application"><value>Aplicație</value></data>
+  <data name="Settings_Display"><value>Afișaj</value></data>
+  <data name="Settings_PlatformUnavailable_Title"><value>Indisponibil în acest host</value></data>
+  <data name="Settings_PlatformUnavailable_Message"><value>Acest host Avalonia nu expune un adaptor sigur pentru această setare.</value></data>
+  <data name="Settings_PlatformUnavailable_Feature"><value>Disponibilitate funcție</value></data>
+  <data name="Settings_PlatformUnavailable_Action"><value>Indisponibil</value></data>
+  <data name="Appearance_Title"><value>Aspect</value></data>
+  <data name="Appearance_Description"><value>Personalizați aspectul aplicației.</value></data>
+  <data name="Appearance_ThemeMode"><value>Mod global de culoare al interfeței</value></data>
+  <data name="Appearance_Light"><value>Luminos</value></data>
+  <data name="Appearance_Dark"><value>Întunecat</value></data>
+  <data name="Appearance_System"><value>După sistem</value></data>
+  <data name="Appearance_ApplyAccent"><value>Modifică culoarea sistemului atunci când se schimbă culoarea globală a interfeței</value></data>
+  <data name="Appearance_Accent"><value>Culoare de accent globală a interfeței</value></data>
+  <data name="Appearance_Language"><value>Limbă</value></data>
+  <data name="Appearance_LanguageDescription"><value>Selectați limba de afișare a aplicației.</value></data>
+  <data name="Application_Title"><value>Comportamentul aplicației</value></data>
+  <data name="Application_Description"><value>Configurați comportamentul aplicației la pornire și în timpul utilizării.</value></data>
+  <data name="Application_LaunchStartup"><value>Pornește cu Windows</value></data>
+  <data name="Application_LaunchStartupDescription"><value>Pornește automat aplicația la pornirea Windows.</value></data>
+  <data name="Application_MinimizeTray"><value>Minimizare în bara de sistem</value></data>
+  <data name="Application_MinimizeTrayDescription"><value>Menține aplicația în funcțiune în bara de sistem atunci când este închisă.</value></data>
+  <data name="Application_AutoRefresh"><value>Reîmprospătare automată a datelor hardware</value></data>
+  <data name="Application_AutoRefreshDescription"><value>Interoghează periodic senzorii hardware pentru citiri actualizate.</value></data>
+  <data name="Display_Title"><value>Afișaj</value></data>
+  <data name="Display_Description"><value>Reglați setările legate de afișaj pentru dispozitivul dvs.</value></data>
+  <data name="Display_RefreshRate"><value>Rată de reîmprospătare</value></data>
+  <data name="Display_RefreshRateDescription"><value>Selectați rata de reîmprospătare a afișajului (necesită hardware suportat).</value></data>
   <data name="Display_Overdrive"><value>Overdrive</value></data>
-  <data name="Display_OverdriveDescription"><value>Enable display overdrive for faster pixel response times.</value></data>
-  <data name="Dashboard_Subtitle"><value>Device health and controls</value></data>
-  <data name="Dashboard_Ready"><value>Ready</value></data>
-  <data name="Dashboard_Power"><value>Power</value></data>
-  <data name="Dashboard_LastUpdated"><value>Last updated</value></data>
-  <data name="FeaturePage_StatusTitle"><value>Feature status</value></data>
-  <data name="FeaturePage_Loading"><value>Reading the current platform capability...</value></data>
-  <data name="FeaturePage_Available"><value>Available</value></data>
-  <data name="FeaturePage_Unsupported"><value>Unavailable on this device</value></data>
-  <data name="FeaturePage_AvailableMessage"><value>The platform adapter reported this feature as available.</value></data>
-  <data name="FeaturePage_LoadFailed"><value>Unable to load feature state</value></data>
-  <data name="Settings_Page_StatusTitle"><value>Settings ready</value></data>
-  <data name="Settings_Page_StatusMessage"><value>Changes are saved immediately.</value></data>
-  <data name="Settings_Page_LoadFailed"><value>Unable to load settings</value></data>
-  <data name="Settings_Page_NoOptions"><value>No settings are available for this page.</value></data>
-  <data name="Settings_Page_UnavailableDetail"><value>The controls remain visible when the adapter is available on this platform.</value></data>
+  <data name="Display_OverdriveDescription"><value>Activează overdrive-ul afișajului pentru timpi de răspuns mai rapizi ai pixelilor.</value></data>
+  <data name="Dashboard_Subtitle"><value>Starea dispozitivului și comenzi</value></data>
+  <data name="Dashboard_Ready"><value>Pregătit</value></data>
+  <data name="Dashboard_Power"><value>Consum</value></data>
+  <data name="Dashboard_LastUpdated"><value>Ultima actualizare</value></data>
+  <data name="FeaturePage_StatusTitle"><value>Starea funcției</value></data>
+  <data name="FeaturePage_Loading"><value>Se citește capacitatea curentă a platformei...</value></data>
+  <data name="FeaturePage_Available"><value>Disponibil</value></data>
+  <data name="FeaturePage_Unsupported"><value>Indisponibil pe acest dispozitiv</value></data>
+  <data name="FeaturePage_AvailableMessage"><value>Adaptorul de platformă a raportat această funcție ca fiind disponibilă.</value></data>
+  <data name="FeaturePage_LoadFailed"><value>Nu s-a putut încărca starea funcției</value></data>
+  <data name="Settings_Page_StatusTitle"><value>Setări pregătite</value></data>
+  <data name="Settings_Page_StatusMessage"><value>Modificările sunt salvate imediat.</value></data>
+  <data name="Settings_Page_LoadFailed"><value>Nu s-au putut încărca setările</value></data>
+  <data name="Settings_Page_NoOptions"><value>Nu există setări disponibile pentru această pagină.</value></data>
+  <data name="Settings_Page_UnavailableDetail"><value>Comenzile rămân vizibile atunci când adaptorul este disponibil pe această platformă.</value></data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Compilare</value>
   </data>
@@ -262,13 +262,13 @@ Se vor rula numai acțiunile care se potrivesc cu starea actuală.</value>
     <value>Adăugați nou</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
-    <value>Add automatic</value>
+    <value>Adăugați automat</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
-    <value>New automatic pipeline</value>
+    <value>Pipeline automat nou</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
-    <value>Automatic triggers are unavailable.</value>
+    <value>Declanșatoarele automate nu sunt disponibile.</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>Nicio Acțiune Rapidă definită. Apăsați pe "Adăugați nou" pentru a crea o nouă Acțiune Rapidă.</value>
@@ -2065,7 +2065,7 @@ Schimbarea modurilor poate necesita repornirea.</value>
     <value>Modul de alimentare {0} nu este disponibil fără alimentare AC.</value>
   </data>
   <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
-    <value>Failed to switch power mode. The device did not accept the change.</value>
+    <value>Nu s-a reușit schimbarea modului de alimentare. Dispozitivul nu a acceptat modificarea.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
     <value>Nu se poate schimba Modul de alimentare</value>
@@ -2230,10 +2230,10 @@ Schimbarea modurilor poate necesita repornirea.</value>
     <value>Verifică automat pentru actualizări</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Title" xml:space="preserve">
-    <value>Include preview versions</value>
+    <value>Includeți versiunile de previzualizare</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Message" xml:space="preserve">
-    <value>When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions.</value>
+    <value>Când este dezactivată, sunt oferite ca actualizări doar versiunile stabile. Activați pentru a primi și versiuni de previzualizare (prerelease).</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Actualizare</value>
@@ -3114,16 +3114,16 @@ Necesită repornirea.</value>
     <value>În așteptare</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>Optimizează</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
     <value>Deschidere rapidă</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Setări</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>Actualizare</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
     <value>Se verifică disponibilitatea pluginurilor...</value>
@@ -3354,7 +3354,7 @@ Necesită repornirea.</value>
     <value>Analiza fișierelor mari</value>
   </data>
   <data name="Osd_Cpu" xml:space="preserve">
-    <value>CPU</value>
+    <value>procesor</value>
   </data>
   <data name="Osd_CPU_Fan" xml:space="preserve">
     <value>Ventilator</value>
@@ -3378,7 +3378,7 @@ Necesită repornirea.</value>
     <value>Joc</value>
   </data>
   <data name="Osd_Gpu" xml:space="preserve">
-    <value>GPU</value>
+    <value>procesare grafică</value>
   </data>
   <data name="Osd_GPU_Fan" xml:space="preserve">
     <value>Ventilator</value>
@@ -3441,7 +3441,7 @@ Necesită repornirea.</value>
     <value>Opacitate</value>
   </data>
   <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>Separator Color</value>
+    <value>Culoare separator</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Culoare valoare</value>
@@ -3681,7 +3681,7 @@ Necesită repornirea.</value>
     <value>Mod ITS</value>
   </data>
   <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
-    <value>Intelligent Thermal Solution</value>
+    <value>Soluție termică inteligentă</value>
   </data>
   <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
     <value>Runtime-ul ITS nu este disponibil pe acest sistem.</value>
@@ -4194,16 +4194,16 @@ Necesită repornirea.</value>
     <value>Implicit</value>
   </data>
   <data name="SettingsPage_UiScale_Title" xml:space="preserve">
-    <value>Interface scale</value>
+    <value>Scala interfeței</value>
   </data>
   <data name="SettingsPage_UiScale_Description" xml:space="preserve">
-    <value>Scale text and the whole interface together, independent of Windows display scaling.</value>
+    <value>Scalați textul și întreaga interfață împreună, independent de scalarea afișajului Windows.</value>
   </data>
   <data name="SettingsPage_AppScale_Title" xml:space="preserve">
-    <value>App scale</value>
+    <value>Scala aplicației</value>
   </data>
   <data name="SettingsPage_AppScale_Description" xml:space="preserve">
-    <value>Scale the entire app interface independently of Windows display scaling.</value>
+    <value>Scalați întreaga interfață a aplicației independent de scalarea afișajului Windows.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Dimensiune text</value>
@@ -4217,76 +4217,76 @@ Necesită repornirea.</value>
   <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
     <value>Pachetul de asistență pentru dispozitiv nu a putut fi descărcat. Verificați conexiunea și confirmați pentru a reîncerca, sau omiteți – vom întreba din nou la următoarea pornire.</value>
   </data>
-  <data name="NaDiag_NatTitle" xml:space="preserve"><value>NAT Type Detection</value></data>
-  <data name="NaDiag_NatType" xml:space="preserve"><value>NAT Type:</value></data>
-  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Local IP:</value></data>
-  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Public IP:</value></data>
+  <data name="NaDiag_NatTitle" xml:space="preserve"><value>Detectare tip NAT</value></data>
+  <data name="NaDiag_NatType" xml:space="preserve"><value>Tip NAT:</value></data>
+  <data name="NaDiag_LocalIp" xml:space="preserve"><value>IP local:</value></data>
+  <data name="NaDiag_PublicIp" xml:space="preserve"><value>IP public:</value></data>
   <data name="NaDiag_Internet" xml:space="preserve"><value>Internet:</value></data>
-  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>DNS Detection</value></data>
-  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Domain to test:</value></data>
-  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Custom DNS:</value></data>
-  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Enable DoH:</value></data>
-  <data name="NaDiag_DohUrl" xml:space="preserve"><value>DoH URL:</value></data>
-  <data name="NaDiag_Latency" xml:space="preserve"><value>Latency:</value></data>
+  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>Detectare DNS</value></data>
+  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Domeniu de testat:</value></data>
+  <data name="NaDiag_CustomDns" xml:space="preserve"><value>DNS personalizat:</value></data>
+  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Activează DoH:</value></data>
+  <data name="NaDiag_DohUrl" xml:space="preserve"><value>URL DoH:</value></data>
+  <data name="NaDiag_Latency" xml:space="preserve"><value>Latență:</value></data>
   <data name="NaDiag_LatencyFormat" xml:space="preserve"><value>{0} ms</value></data>
-  <data name="NaDiag_Failed" xml:space="preserve"><value>Failed</value></data>
-  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>IPv6 Detection</value></data>
-  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Support:</value></data>
-  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>IPv6 Address:</value></data>
-  <data name="NaDiag_Supported" xml:space="preserve"><value>Supported</value></data>
-  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Not supported</value></data>
-  <data name="NaDiag_Detect" xml:space="preserve"><value>Detect</value></data>
-  <data name="NaDiag_Unknown" xml:space="preserve"><value>Unknown</value></data>
-  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Open NAT</value></data>
+  <data name="NaDiag_Failed" xml:space="preserve"><value>Eșuat</value></data>
+  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>Detectare IPv6</value></data>
+  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Suport:</value></data>
+  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>Adresă IPv6:</value></data>
+  <data name="NaDiag_Supported" xml:space="preserve"><value>Suportat</value></data>
+  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Nesuportat</value></data>
+  <data name="NaDiag_Detect" xml:space="preserve"><value>Detectează</value></data>
+  <data name="NaDiag_Unknown" xml:space="preserve"><value>Necunoscut</value></data>
+  <data name="NaDiag_NatOpen" xml:space="preserve"><value>NAT deschis</value></data>
   <data name="NaDiag_NatRestricted" xml:space="preserve"><value>NAT</value></data>
-  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP blocked</value></data>
-  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operation failed</value></data>
-  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Vantage: {0}</value></data>
-  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Failed to stop Legion Zone: {0}</value></data>
-  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Hotkeys: {0}</value></data>
-  <data name="Theme_Light" xml:space="preserve"><value>Light</value></data>
-  <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
-  <data name="Theme_System" xml:space="preserve"><value>System</value></data>
-  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP blocat</value></data>
+  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operațiune eșuată</value></data>
+  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Nu s-a reușit oprirea Lenovo Vantage: {0}</value></data>
+  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Nu s-a reușit oprirea Legion Zone: {0}</value></data>
+  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Nu s-a reușit oprirea Lenovo Hotkeys: {0}</value></data>
+  <data name="Theme_Light" xml:space="preserve"><value>Luminos</value></data>
+  <data name="Theme_Dark" xml:space="preserve"><value>Întunecat</value></data>
+  <data name="Theme_System" xml:space="preserve"><value>Sistem</value></data>
+  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Stil temă</value></data>
   <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Mod global de culoare al interfeței</value></data>
   <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Modifică culoarea sistemului la ajustarea culorii globale a interfeței</value></data>
   <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Culoare de accent globală a interfeței</value></data>
-  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
-  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
-  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Aplică stilul temei atunci când se ajustează culoarea globală a interfeței</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Efect de fundal al ferestrei</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Alegeți efectul de fundal Windows utilizat de ferestrele aplicației.</value></data>
   <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
-  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
-  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
-  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
-  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
-  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
-  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
-  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
-  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
+  <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrilic</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Oprit</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>Acces IPv6 suportat</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>Documentație NAT {0}</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Linkuri conexe</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Rezolvat:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Elemente de test</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Rezultatele testelor</value></data>
   <data name="ComboBox_UnsupportedType" xml:space="preserve">
-    <value>Unsupported type.</value>
+    <value>Tip nesuportat.</value>
   </data>
   <data name="AutomationStep_CreationFailed" xml:space="preserve">
-    <value>Could not create automation step.</value>
+    <value>Nu s-a putut crea pasul de automatizare.</value>
   </data>
   <data name="FeatureRegistration_NotSupported" xml:space="preserve">
-    <value>Feature is not supported.</value>
+    <value>Funcția nu este suportată.</value>
   </data>
   <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
-    <value>Feature returned no value.</value>
+    <value>Funcția nu a returnat nicio valoare.</value>
   </data>
   <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
-    <value>State is not supported.</value>
+    <value>Starea nu este suportată.</value>
   </data>
-  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>This feature is provided by the host platform adapter.</value></data>
-  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>No platform adapter reported this feature.</value></data>
-  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Platform adapter</value></data>
-  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Install or enable a compatible platform adapter to use this feature.</value></data>
-  <data name="FeaturePage_NoActions" xml:space="preserve"><value>No actions were reported by the platform adapter.</value></data>
-  <data name="Appearance_Advanced" xml:space="preserve"><value>Appearance options</value></data>
-  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Temperature unit</value></data>
-  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Choose how temperatures are displayed.</value></data>
-  <data name="Appearance_Font" xml:space="preserve"><value>Application font</value></data>
-  <data name="Appearance_FontDescription" xml:space="preserve"><value>Choose the application font family.</value></data>
-  <data name="Appearance_UiScale" xml:space="preserve"><value>Interface scale</value></data>
-  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Adjust text and control density together.</value></data></root>
+  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>Această funcție este furnizată de adaptorul de platformă al hostului.</value></data>
+  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>Niciun adaptor de platformă nu a raportat această funcție.</value></data>
+  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Adaptor de platformă</value></data>
+  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Instalați sau activați un adaptor de platformă compatibil pentru a utiliza această funcție.</value></data>
+  <data name="FeaturePage_NoActions" xml:space="preserve"><value>Adaptorul de platformă nu a raportat nicio acțiune.</value></data>
+  <data name="Appearance_Advanced" xml:space="preserve"><value>Opțiuni de aspect</value></data>
+  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Unitate de temperatură</value></data>
+  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Alegeți modul de afișare a temperaturilor.</value></data>
+  <data name="Appearance_Font" xml:space="preserve"><value>Fontul aplicației</value></data>
+  <data name="Appearance_FontDescription" xml:space="preserve"><value>Alegeți familia de fonturi a aplicației.</value></data>
+  <data name="Appearance_UiScale" xml:space="preserve"><value>Scala interfeței</value></data>
+  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Reglați împreună dimensiunea textului și densitatea comenzilor.</value></data></root>

@@ -59,140 +59,140 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Window_Title"><value>Universal Device Toolkit</value></data>
-  <data name="Nav_Show"><value>Show</value></data>
-  <data name="Navigation"><value>Navigation</value></data>
-  <data name="Nav_Dashboard"><value>Dashboard</value></data>
-  <data name="Nav_About"><value>About</value></data>
-  <data name="Nav_Settings"><value>Settings</value></data>
-  <data name="Nav_Exit"><value>Exit</value></data>
-  <data name="HostCapability_UnsupportedTitle"><value>Unavailable in this Avalonia host</value></data>
-  <data name="HostCapability_UnsupportedMessage"><value>This host does not expose a safe adapter for this page. Use the Windows host for this capability.</value></data>
-  <data name="HostCapability_CapabilityLabel"><value>Host capability</value></data>
-  <data name="HostCapability_Unavailable"><value>Unavailable</value></data>
-  <data name="HostCapability_KeyboardDescription"><value>Configure keyboard backlight and keyboard-specific controls.</value></data>
-  <data name="HostCapability_KeyboardReason"><value>Keyboard hardware controls require the Windows device adapter.</value></data>
-  <data name="HostCapability_ActionsDescription"><value>Run supported device actions and hardware workflows.</value></data>
-  <data name="HostCapability_ActionsReason"><value>Hardware action execution is not exposed by this host.</value></data>
-  <data name="HostCapability_MacroDescription"><value>Create and manage device macros.</value></data>
-  <data name="HostCapability_MacroReason"><value>Macro execution requires the Windows input and device services.</value></data>
-  <data name="HostCapability_WindowsOptimizationDescription"><value>Review Windows optimization actions and their current state.</value></data>
-  <data name="HostCapability_WindowsOptimizationReason"><value>Windows optimization actions are only available through the Windows host.</value></data>
-  <data name="HostCapability_PluginExtensionsDescription"><value>Discover and manage optional plugin extensions.</value></data>
-  <data name="HostCapability_PluginExtensionsReason"><value>Plugin discovery and installation services are not available in this host.</value></data>
-  <data name="About_Version"><value>Version</value></data>
-  <data name="About_Build"><value>Build: {0}</value></data>
-  <data name="About_TranslationCredit"><value>Translation credits for non-English locales.</value></data>
-  <data name="About_Links"><value>Links</value></data>
-  <data name="About_ProjectWebsite"><value>Project Website on GitHub</value></data>
-  <data name="About_LatestRelease"><value>Latest Release on GitHub</value></data>
-  <data name="About_ThirdPartyLibraries"><value>Third-party Libraries</value></data>
-  <data name="About_ApplicationFolders"><value>Application Folders</value></data>
-  <data name="About_AppDataFolder"><value>AppData Folder</value></data>
-  <data name="About_TempFolder"><value>Temp Folder</value></data>
-  <data name="Dashboard_Title"><value>Dashboard</value></data>
-  <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
-  <data name="Dashboard_Sensors"><value>Sensors</value></data>
-  <data name="Dashboard_Refresh"><value>Refresh</value></data>
-  <data name="Dashboard_Status_NoTelemetry"><value>No telemetry available</value></data>
-  <data name="Dashboard_Status_NoPowerTelemetry"><value>No power telemetry available</value></data>
-  <data name="Dashboard_Description_NoAdapter"><value>No platform adapter is registered for telemetry.</value></data>
-  <data name="Dashboard_Status_Live"><value>Live</value></data>
+  <data name="Nav_Show"><value>Zobrazit</value></data>
+  <data name="Navigation"><value>Navigace</value></data>
+  <data name="Nav_Dashboard"><value>Přehled</value></data>
+  <data name="Nav_About"><value>O aplikaci</value></data>
+  <data name="Nav_Settings"><value>Nastavení</value></data>
+  <data name="Nav_Exit"><value>Konec</value></data>
+  <data name="HostCapability_UnsupportedTitle"><value>V tomto hostiteli Avalonia nedostupné</value></data>
+  <data name="HostCapability_UnsupportedMessage"><value>Tento hostitel neposkytuje bezpečný adaptér pro tuto stránku. Pro tuto funkci použijte hostitele Windows.</value></data>
+  <data name="HostCapability_CapabilityLabel"><value>Funkce hostitele</value></data>
+  <data name="HostCapability_Unavailable"><value>Nedostupné</value></data>
+  <data name="HostCapability_KeyboardDescription"><value>Nakonfigurujte podsvícení klávesnice a ovládací prvky specifické pro klávesnici.</value></data>
+  <data name="HostCapability_KeyboardReason"><value>Ovládání hardwaru klávesnice vyžaduje adaptér zařízení Windows.</value></data>
+  <data name="HostCapability_ActionsDescription"><value>Spouští podporované akce zařízení a hardwarové pracovní postupy.</value></data>
+  <data name="HostCapability_ActionsReason"><value>Spouštění hardwarových akcí tento hostitel neposkytuje.</value></data>
+  <data name="HostCapability_MacroDescription"><value>Vytvářejte a spravujte makra zařízení.</value></data>
+  <data name="HostCapability_MacroReason"><value>Spouštění maker vyžaduje služby vstupu a zařízení systému Windows.</value></data>
+  <data name="HostCapability_WindowsOptimizationDescription"><value>Zkontrolujte akce optimalizace systému Windows a jejich aktuální stav.</value></data>
+  <data name="HostCapability_WindowsOptimizationReason"><value>Akce optimalizace systému Windows jsou dostupné pouze prostřednictvím hostitele Windows.</value></data>
+  <data name="HostCapability_PluginExtensionsDescription"><value>Vyhledávejte a spravujte volitelná rozšíření pluginů.</value></data>
+  <data name="HostCapability_PluginExtensionsReason"><value>Služby vyhledávání a instalace pluginů nejsou v tomto hostiteli dostupné.</value></data>
+  <data name="About_Version"><value>Verze</value></data>
+  <data name="About_Build"><value>Sestavení: {0}</value></data>
+  <data name="About_TranslationCredit"><value>Poděkování překladatelům do jiných jazyků.</value></data>
+  <data name="About_Links"><value>Odkazy</value></data>
+  <data name="About_ProjectWebsite"><value>Stránka projektu na GitHubu</value></data>
+  <data name="About_LatestRelease"><value>Poslední verze na GitHubu</value></data>
+  <data name="About_ThirdPartyLibraries"><value>Knihovny třetích stran</value></data>
+  <data name="About_ApplicationFolders"><value>Složka aplikací</value></data>
+  <data name="About_AppDataFolder"><value>Složka AppData</value></data>
+  <data name="About_TempFolder"><value>Dočasná složka</value></data>
+  <data name="Dashboard_Title"><value>Přehled</value></data>
+  <data name="Dashboard_FeatureGroups"><value>Skupiny funkcí</value></data>
+  <data name="Dashboard_Sensors"><value>Senzory</value></data>
+  <data name="Dashboard_Refresh"><value>Obnovit</value></data>
+  <data name="Dashboard_Status_NoTelemetry"><value>Telemetrie není k dispozici</value></data>
+  <data name="Dashboard_Status_NoPowerTelemetry"><value>Telemetrie napájení není k dispozici</value></data>
+  <data name="Dashboard_Description_NoAdapter"><value>Pro telemetrii není zaregistrován žádný adaptér platformy.</value></data>
+  <data name="Dashboard_Status_Live"><value>Živě</value></data>
   <data name="Dashboard_Telemetry_CPU"><value>CPU</value></data>
-  <data name="Dashboard_Telemetry_CPUDescription"><value>Processor usage and temperature</value></data>
+  <data name="Dashboard_Telemetry_CPUDescription"><value>Využití a teplota procesoru</value></data>
   <data name="Dashboard_Telemetry_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Telemetry_GPUDescription"><value>Graphics processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Telemetry_BatteryDescription"><value>Charge and battery health</value></data>
-  <data name="Dashboard_Telemetry_System"><value>System</value></data>
-  <data name="Dashboard_Telemetry_SystemDescription"><value>Additional platform telemetry</value></data>
-  <data name="Dashboard_Feature_Device"><value>Device</value></data>
+  <data name="Dashboard_Telemetry_GPUDescription"><value>Využití a teplota grafického procesoru</value></data>
+  <data name="Dashboard_Telemetry_Battery"><value>Baterie</value></data>
+  <data name="Dashboard_Telemetry_BatteryDescription"><value>Nabití a stav baterie</value></data>
+  <data name="Dashboard_Telemetry_System"><value>Systém</value></data>
+  <data name="Dashboard_Telemetry_SystemDescription"><value>Další telemetrie platformy</value></data>
+  <data name="Dashboard_Feature_Device"><value>Zařízení</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
-  <data name="Dashboard_Feature_PowerMode"><value>Power Mode</value></data>
-  <data name="Dashboard_Feature_FanControl"><value>Fan Control</value></data>
-  <data name="Dashboard_Feature_Display"><value>Display</value></data>
+  <data name="Dashboard_Feature_PowerMode"><value>Režim výkonu</value></data>
+  <data name="Dashboard_Feature_FanControl"><value>Ovládání ventilátorů</value></data>
+  <data name="Dashboard_Feature_Display"><value>Displej</value></data>
   <data name="Dashboard_Feature_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Feature_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Feature_Keyboard"><value>Keyboard</value></data>
-  <data name="Dashboard_Feature_PowerProfile"><value>Power Profile</value></data>
-  <data name="Dashboard_Feature_SystemTelemetry"><value>System Telemetry</value></data>
-  <data name="Dashboard_Feature_DevicePack"><value>Device support</value></data>
-  <data name="Dashboard_Description_PowerManagement"><value>System power management</value></data>
-  <data name="Dashboard_Description_FanManagement"><value>Fan speed management</value></data>
-  <data name="Dashboard_Description_RefreshRate"><value>Refresh rate control</value></data>
-  <data name="Dashboard_Description_GpuManagement"><value>GPU management</value></data>
-  <data name="Dashboard_Description_BatteryManagement"><value>Battery management</value></data>
-  <data name="Dashboard_Description_BacklightControl"><value>Backlight control</value></data>
-  <data name="Dashboard_Description_PlatformCapability"><value>Platform capability</value></data>
-  <data name="Dashboard_Status_Sample"><value>Sample</value></data>
-  <data name="Dashboard_Status_Available"><value>Available</value></data>
-  <data name="Dashboard_Status_NotSupported"><value>Not supported</value></data>
-  <data name="Dashboard_Status_Unknown"><value>Unknown</value></data>
-  <data name="Dashboard_Status_Generation"><value>Gen {0}</value></data>
-  <data name="Dashboard_Status_Charging"><value>Charging</value></data>
-  <data name="Dashboard_Status_Discharging"><value>Discharging</value></data>
-  <data name="Dashboard_Status_Monitoring"><value>Monitoring</value></data>
+  <data name="Dashboard_Feature_Battery"><value>Baterie</value></data>
+  <data name="Dashboard_Feature_Keyboard"><value>Klávesnice</value></data>
+  <data name="Dashboard_Feature_PowerProfile"><value>Profil napájení</value></data>
+  <data name="Dashboard_Feature_SystemTelemetry"><value>Telemetrie systému</value></data>
+  <data name="Dashboard_Feature_DevicePack"><value>Podpora zařízení</value></data>
+  <data name="Dashboard_Description_PowerManagement"><value>Správa napájení systému</value></data>
+  <data name="Dashboard_Description_FanManagement"><value>Správa otáček ventilátorů</value></data>
+  <data name="Dashboard_Description_RefreshRate"><value>Ovládání obnovovací frekvence</value></data>
+  <data name="Dashboard_Description_GpuManagement"><value>Správa GPU</value></data>
+  <data name="Dashboard_Description_BatteryManagement"><value>Správa baterie</value></data>
+  <data name="Dashboard_Description_BacklightControl"><value>Ovládání podsvícení</value></data>
+  <data name="Dashboard_Description_PlatformCapability"><value>Funkce platformy</value></data>
+  <data name="Dashboard_Status_Sample"><value>Ukázka</value></data>
+  <data name="Dashboard_Status_Available"><value>Dostupné</value></data>
+  <data name="Dashboard_Status_NotSupported"><value>Nepodporováno</value></data>
+  <data name="Dashboard_Status_Unknown"><value>Neznámý</value></data>
+  <data name="Dashboard_Status_Generation"><value>Generace {0}</value></data>
+  <data name="Dashboard_Status_Charging"><value>Nabíjení</value></data>
+  <data name="Dashboard_Status_Discharging"><value>Vybíjení</value></data>
+  <data name="Dashboard_Status_Monitoring"><value>Sledování</value></data>
   <data name="Dashboard_Status_Spectrum"><value>Spectrum</value></data>
-  <data name="Dashboard_Status_PerKey"><value>Per-key</value></data>
-  <data name="Dashboard_Status_ReadOnly"><value>Read-only</value></data>
-  <data name="Dashboard_Sensor_CpuTemperature"><value>CPU Temperature</value></data>
-  <data name="Dashboard_Sensor_GpuTemperature"><value>GPU Temperature</value></data>
-  <data name="Dashboard_Sensor_CpuUsage"><value>CPU Usage</value></data>
-  <data name="Dashboard_Sensor_MemoryUsage"><value>Memory Usage</value></data>
-  <data name="Dashboard_Sensor_FanSpeed"><value>Fan Speed</value></data>
-  <data name="Dashboard_Sensor_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Sensor_BatteryCharge"><value>Battery Charge</value></data>
-  <data name="Dashboard_Sensor_BatteryStatus"><value>Battery Status</value></data>
-  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
-  <data name="Dashboard_Sensor_MinDischargeRate"><value>Min Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Max Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_CycleCount"><value>Cycle Count</value></data>
-  <data name="Settings_Title"><value>Settings</value></data>
-  <data name="Settings_Appearance"><value>Appearance</value></data>
-  <data name="Settings_Application"><value>Application</value></data>
-  <data name="Settings_Display"><value>Display</value></data>
-  <data name="Settings_PlatformUnavailable_Title"><value>Unavailable in this host</value></data>
-  <data name="Settings_PlatformUnavailable_Message"><value>This Avalonia host does not expose a safe adapter for this setting.</value></data>
-  <data name="Settings_PlatformUnavailable_Feature"><value>Feature availability</value></data>
-  <data name="Settings_PlatformUnavailable_Action"><value>Unavailable</value></data>
-  <data name="Appearance_Title"><value>Appearance</value></data>
-  <data name="Appearance_Description"><value>Customize the look and feel of the application.</value></data>
-  <data name="Appearance_ThemeMode"><value>Global interface color mode</value></data>
-  <data name="Appearance_Light"><value>Light</value></data>
-  <data name="Appearance_Dark"><value>Dark</value></data>
-  <data name="Appearance_System"><value>Follow system</value></data>
-  <data name="Appearance_ApplyAccent"><value>Change system color when changing the global interface color</value></data>
-  <data name="Appearance_Accent"><value>Global interface accent color</value></data>
-  <data name="Appearance_Language"><value>Language</value></data>
-  <data name="Appearance_LanguageDescription"><value>Select the display language for the application.</value></data>
-  <data name="Application_Title"><value>Application Behavior</value></data>
-  <data name="Application_Description"><value>Configure how the application behaves on startup and during use.</value></data>
-  <data name="Application_LaunchStartup"><value>Launch at Startup</value></data>
-  <data name="Application_LaunchStartupDescription"><value>Automatically start the application when Windows starts.</value></data>
-  <data name="Application_MinimizeTray"><value>Minimize to System Tray</value></data>
-  <data name="Application_MinimizeTrayDescription"><value>Keep the application running in the system tray when closed.</value></data>
-  <data name="Application_AutoRefresh"><value>Auto-refresh Hardware Data</value></data>
-  <data name="Application_AutoRefreshDescription"><value>Periodically poll hardware sensors for updated readings.</value></data>
-  <data name="Display_Title"><value>Display</value></data>
-  <data name="Display_Description"><value>Adjust display-related settings for your device.</value></data>
-  <data name="Display_RefreshRate"><value>Refresh Rate</value></data>
-  <data name="Display_RefreshRateDescription"><value>Select the display refresh rate (requires supported hardware).</value></data>
+  <data name="Dashboard_Status_PerKey"><value>Po jednotlivých klávesách</value></data>
+  <data name="Dashboard_Status_ReadOnly"><value>Jen pro čtení</value></data>
+  <data name="Dashboard_Sensor_CpuTemperature"><value>Teplota CPU</value></data>
+  <data name="Dashboard_Sensor_GpuTemperature"><value>Teplota GPU</value></data>
+  <data name="Dashboard_Sensor_CpuUsage"><value>Využití CPU</value></data>
+  <data name="Dashboard_Sensor_MemoryUsage"><value>Využití paměti</value></data>
+  <data name="Dashboard_Sensor_FanSpeed"><value>Otáčky ventilátoru</value></data>
+  <data name="Dashboard_Sensor_Battery"><value>Baterie</value></data>
+  <data name="Dashboard_Sensor_BatteryCharge"><value>Nabití baterie</value></data>
+  <data name="Dashboard_Sensor_BatteryStatus"><value>Stav baterie</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>Model baterie</value></data>
+  <data name="Dashboard_Sensor_MinDischargeRate"><value>Minimální vybíjecí proud</value></data>
+  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Maximální vybíjecí proud</value></data>
+  <data name="Dashboard_Sensor_CycleCount"><value>Počet cyklů</value></data>
+  <data name="Settings_Title"><value>Nastavení</value></data>
+  <data name="Settings_Appearance"><value>Vzhled</value></data>
+  <data name="Settings_Application"><value>Aplikace</value></data>
+  <data name="Settings_Display"><value>Displej</value></data>
+  <data name="Settings_PlatformUnavailable_Title"><value>V tomto hostiteli nedostupné</value></data>
+  <data name="Settings_PlatformUnavailable_Message"><value>Tento hostitel Avalonia neposkytuje bezpečný adaptér pro toto nastavení.</value></data>
+  <data name="Settings_PlatformUnavailable_Feature"><value>Dostupnost funkce</value></data>
+  <data name="Settings_PlatformUnavailable_Action"><value>Nedostupné</value></data>
+  <data name="Appearance_Title"><value>Vzhled</value></data>
+  <data name="Appearance_Description"><value>Přizpůsobte vzhled a dojem aplikace.</value></data>
+  <data name="Appearance_ThemeMode"><value>Globální barevný režim rozhraní</value></data>
+  <data name="Appearance_Light"><value>Světlý</value></data>
+  <data name="Appearance_Dark"><value>Tmavý</value></data>
+  <data name="Appearance_System"><value>Podle systému</value></data>
+  <data name="Appearance_ApplyAccent"><value>Změnit barvu systému při změně globální barvy rozhraní</value></data>
+  <data name="Appearance_Accent"><value>Globální barva zvýraznění rozhraní</value></data>
+  <data name="Appearance_Language"><value>Jazyk</value></data>
+  <data name="Appearance_LanguageDescription"><value>Vyberte jazyk zobrazení aplikace.</value></data>
+  <data name="Application_Title"><value>Chování aplikace</value></data>
+  <data name="Application_Description"><value>Nakonfigurujte, jak se aplikace chová při spuštění a během používání.</value></data>
+  <data name="Application_LaunchStartup"><value>Spustit při startu</value></data>
+  <data name="Application_LaunchStartupDescription"><value>Automaticky spustit aplikaci při startu systému Windows.</value></data>
+  <data name="Application_MinimizeTray"><value>Minimalizovat do systémové lišty</value></data>
+  <data name="Application_MinimizeTrayDescription"><value>Po zavření ponechat aplikaci spuštěnou v systémové liště.</value></data>
+  <data name="Application_AutoRefresh"><value>Automaticky obnovovat data hardwaru</value></data>
+  <data name="Application_AutoRefreshDescription"><value>Pravidelně dotazovat hardwarové senzory pro aktuální odečty.</value></data>
+  <data name="Display_Title"><value>Displej</value></data>
+  <data name="Display_Description"><value>Upravte nastavení související se zobrazením pro vaše zařízení.</value></data>
+  <data name="Display_RefreshRate"><value>Obnovovací frekvence</value></data>
+  <data name="Display_RefreshRateDescription"><value>Vyberte obnovovací frekvenci displeje (vyžaduje podporovaný hardware).</value></data>
   <data name="Display_Overdrive"><value>Overdrive</value></data>
-  <data name="Display_OverdriveDescription"><value>Enable display overdrive for faster pixel response times.</value></data>
-  <data name="Dashboard_Subtitle"><value>Device health and controls</value></data>
-  <data name="Dashboard_Ready"><value>Ready</value></data>
-  <data name="Dashboard_Power"><value>Power</value></data>
-  <data name="Dashboard_LastUpdated"><value>Last updated</value></data>
-  <data name="FeaturePage_StatusTitle"><value>Feature status</value></data>
-  <data name="FeaturePage_Loading"><value>Reading the current platform capability...</value></data>
-  <data name="FeaturePage_Available"><value>Available</value></data>
-  <data name="FeaturePage_Unsupported"><value>Unavailable on this device</value></data>
-  <data name="FeaturePage_AvailableMessage"><value>The platform adapter reported this feature as available.</value></data>
-  <data name="FeaturePage_LoadFailed"><value>Unable to load feature state</value></data>
-  <data name="Settings_Page_StatusTitle"><value>Settings ready</value></data>
-  <data name="Settings_Page_StatusMessage"><value>Changes are saved immediately.</value></data>
-  <data name="Settings_Page_LoadFailed"><value>Unable to load settings</value></data>
-  <data name="Settings_Page_NoOptions"><value>No settings are available for this page.</value></data>
-  <data name="Settings_Page_UnavailableDetail"><value>The controls remain visible when the adapter is available on this platform.</value></data>
+  <data name="Display_OverdriveDescription"><value>Povolte overdrive displeje pro rychlejší odezvu pixelů.</value></data>
+  <data name="Dashboard_Subtitle"><value>Stav zařízení a ovládací prvky</value></data>
+  <data name="Dashboard_Ready"><value>Připraveno</value></data>
+  <data name="Dashboard_Power"><value>Příkon</value></data>
+  <data name="Dashboard_LastUpdated"><value>Poslední aktualizace</value></data>
+  <data name="FeaturePage_StatusTitle"><value>Stav funkce</value></data>
+  <data name="FeaturePage_Loading"><value>Čtení aktuální funkce platformy...</value></data>
+  <data name="FeaturePage_Available"><value>Dostupné</value></data>
+  <data name="FeaturePage_Unsupported"><value>Na tomto zařízení nedostupné</value></data>
+  <data name="FeaturePage_AvailableMessage"><value>Adaptér platformy hlásí tuto funkci jako dostupnou.</value></data>
+  <data name="FeaturePage_LoadFailed"><value>Nelze načíst stav funkce</value></data>
+  <data name="Settings_Page_StatusTitle"><value>Nastavení připraveno</value></data>
+  <data name="Settings_Page_StatusMessage"><value>Změny se ukládají okamžitě.</value></data>
+  <data name="Settings_Page_LoadFailed"><value>Nelze načíst nastavení</value></data>
+  <data name="Settings_Page_NoOptions"><value>Pro tuto stránku nejsou k dispozici žádná nastavení.</value></data>
+  <data name="Settings_Page_UnavailableDetail"><value>Ovládací prvky zůstanou viditelné, jakmile bude adaptér na této platformě k dispozici.</value></data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Sestavení</value>
   </data>
@@ -262,13 +262,13 @@ Spustí se pouze akce, které odpovídají aktuálnímu stavu.</value>
     <value>Přidat nový</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
-    <value>Add automatic</value>
+    <value>Přidat automatický</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
-    <value>New automatic pipeline</value>
+    <value>Nový automatický kanál</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
-    <value>Automatic triggers are unavailable.</value>
+    <value>Automatické spouštěče nejsou k dispozici.</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>Nejsou definovány žádné rychlé akce. Kliknutím na „Přidat novou“ vytvoř novou rychlou akci.</value>
@@ -2080,7 +2080,7 @@ Přepínání režimů může vyžadovat restart.</value>
     <value>Režim napájení {0} není dostupný bez připojeného napájení AC.</value>
   </data>
   <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
-    <value>Failed to switch power mode. The device did not accept the change.</value>
+    <value>Přepnutí režimu napájení se nezdařilo. Zařízení změnu nepřijalo.</value>
   </data>
   <data name="PowerModeUnavailableWithoutACException_Title" xml:space="preserve">
     <value>Není možné změnit režim napájení</value>
@@ -2240,10 +2240,10 @@ Přepínání režimů může vyžadovat restart.</value>
     <value>Automaticky kontrolovat aktualizace</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Title" xml:space="preserve">
-    <value>Include preview versions</value>
+    <value>Zahrnout předběžné verze</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Message" xml:space="preserve">
-    <value>When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions.</value>
+    <value>Když je vypnuto, jako aktualizace se nabízejí pouze stabilní verze. Zapnutím dostanete také předběžné (prerelease) verze.</value>
   </data>
   <data name="SettingsPage_Update_Title" xml:space="preserve">
     <value>Aktualizovat</value>
@@ -3125,16 +3125,16 @@ Vyžaduje restart.</value>
 </value>
   </data>
   <data name="PluginExtensionsPage_CapabilityOptimize" xml:space="preserve">
-    <value>Optimize</value>
+    <value>Optimalizovat</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityQuickOpen" xml:space="preserve">
     <value>Rychlé otevření</value>
   </data>
   <data name="PluginExtensionsPage_CapabilitySettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Nastavení</value>
   </data>
   <data name="PluginExtensionsPage_CapabilityUpdate" xml:space="preserve">
-    <value>Update</value>
+    <value>Aktualizovat</value>
   </data>
   <data name="PluginExtensionsPage_SummaryCheckingAvailability" xml:space="preserve">
     <value>
@@ -3192,7 +3192,7 @@ Vyžaduje restart.</value>
 </value>
   </data>
   <data name="SettingsPage_Navigation_Appearance" xml:space="preserve">
-    <value>Appearance</value>
+    <value>Vzhled</value>
   </data>
   <data name="SettingsPage_Navigation_Application" xml:space="preserve">
     <value>Aplikace</value>
@@ -3496,7 +3496,7 @@ Vyžaduje restart.</value>
     <value>Průhlednost</value>
   </data>
   <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>Separator Color</value>
+    <value>Barva oddělovače</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Barva hodnoty</value>
@@ -3736,7 +3736,7 @@ Vyžaduje restart.</value>
     <value>Režim ITS</value>
   </data>
   <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
-    <value>Intelligent Thermal Solution</value>
+    <value>Inteligentní tepelné řešení</value>
   </data>
   <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
     <value>Běhové prostředí ITS není v tomto systému k dispozici.</value>
@@ -4249,16 +4249,16 @@ Vyžaduje restart.</value>
     <value>Výchozí</value>
   </data>
   <data name="SettingsPage_UiScale_Title" xml:space="preserve">
-    <value>Interface scale</value>
+    <value>Měřítko rozhraní</value>
   </data>
   <data name="SettingsPage_UiScale_Description" xml:space="preserve">
-    <value>Scale text and the whole interface together, independent of Windows display scaling.</value>
+    <value>Zvětšujte text a celé rozhraní společně, nezávisle na měřítku zobrazení systému Windows.</value>
   </data>
   <data name="SettingsPage_AppScale_Title" xml:space="preserve">
-    <value>App scale</value>
+    <value>Měřítko aplikace</value>
   </data>
   <data name="SettingsPage_AppScale_Description" xml:space="preserve">
-    <value>Scale the entire app interface independently of Windows display scaling.</value>
+    <value>Změňte měřítko celého rozhraní aplikace nezávisle na měřítku zobrazení systému Windows.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Velikost textu</value>
@@ -4272,76 +4272,76 @@ Vyžaduje restart.</value>
   <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
     <value>Balíček podpory zařízení se nepodařilo stáhnout. Zkontrolujte připojení a potvrďte pro opakování, nebo přeskočte – zeptáme se znovu při příštím spuštění.</value>
   </data>
-  <data name="NaDiag_NatTitle" xml:space="preserve"><value>NAT Type Detection</value></data>
-  <data name="NaDiag_NatType" xml:space="preserve"><value>NAT Type:</value></data>
-  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Local IP:</value></data>
-  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Public IP:</value></data>
+  <data name="NaDiag_NatTitle" xml:space="preserve"><value>Detekce typu NAT</value></data>
+  <data name="NaDiag_NatType" xml:space="preserve"><value>Typ NAT:</value></data>
+  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Místní IP:</value></data>
+  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Veřejná IP:</value></data>
   <data name="NaDiag_Internet" xml:space="preserve"><value>Internet:</value></data>
-  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>DNS Detection</value></data>
-  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Domain to test:</value></data>
-  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Custom DNS:</value></data>
-  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Enable DoH:</value></data>
-  <data name="NaDiag_DohUrl" xml:space="preserve"><value>DoH URL:</value></data>
-  <data name="NaDiag_Latency" xml:space="preserve"><value>Latency:</value></data>
+  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>Detekce DNS</value></data>
+  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Doména pro test:</value></data>
+  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Vlastní DNS:</value></data>
+  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Povolit DoH:</value></data>
+  <data name="NaDiag_DohUrl" xml:space="preserve"><value>Adresa DoH:</value></data>
+  <data name="NaDiag_Latency" xml:space="preserve"><value>Odezva:</value></data>
   <data name="NaDiag_LatencyFormat" xml:space="preserve"><value>{0} ms</value></data>
-  <data name="NaDiag_Failed" xml:space="preserve"><value>Failed</value></data>
-  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>IPv6 Detection</value></data>
-  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Support:</value></data>
-  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>IPv6 Address:</value></data>
-  <data name="NaDiag_Supported" xml:space="preserve"><value>Supported</value></data>
-  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Not supported</value></data>
-  <data name="NaDiag_Detect" xml:space="preserve"><value>Detect</value></data>
-  <data name="NaDiag_Unknown" xml:space="preserve"><value>Unknown</value></data>
-  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Open NAT</value></data>
+  <data name="NaDiag_Failed" xml:space="preserve"><value>Nezdařilo se</value></data>
+  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>Detekce IPv6</value></data>
+  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Podpora:</value></data>
+  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>Adresa IPv6:</value></data>
+  <data name="NaDiag_Supported" xml:space="preserve"><value>Podporováno</value></data>
+  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Nepodporováno</value></data>
+  <data name="NaDiag_Detect" xml:space="preserve"><value>Detekovat</value></data>
+  <data name="NaDiag_Unknown" xml:space="preserve"><value>Neznámý</value></data>
+  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Otevřený NAT</value></data>
   <data name="NaDiag_NatRestricted" xml:space="preserve"><value>NAT</value></data>
-  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP blocked</value></data>
-  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operation failed</value></data>
-  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Vantage: {0}</value></data>
-  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Failed to stop Legion Zone: {0}</value></data>
-  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Hotkeys: {0}</value></data>
-  <data name="Theme_Light" xml:space="preserve"><value>Light</value></data>
-  <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
-  <data name="Theme_System" xml:space="preserve"><value>System</value></data>
-  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP blokováno</value></data>
+  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operace se nezdařila</value></data>
+  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Zastavení Lenovo Vantage se nezdařilo: {0}</value></data>
+  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Zastavení Legion Zone se nezdařilo: {0}</value></data>
+  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Zastavení Lenovo Hotkeys se nezdařilo: {0}</value></data>
+  <data name="Theme_Light" xml:space="preserve"><value>Světlý</value></data>
+  <data name="Theme_Dark" xml:space="preserve"><value>Tmavý</value></data>
+  <data name="Theme_System" xml:space="preserve"><value>Systém</value></data>
+  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Styl motivu</value></data>
   <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Globální barevný režim rozhraní</value></data>
   <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Změnit barvu systému při úpravě globální barvy rozhraní</value></data>
   <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Globální barva zvýraznění rozhraní</value></data>
-  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
-  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
-  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Při úpravě globální barvy rozhraní použít styl motivu</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Efekt pozadí okna</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Vyberte efekt pozadí systému Windows používaný okny aplikace.</value></data>
   <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
   <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
-  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
-  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
-  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
-  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
-  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
-  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
-  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Vyp.</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>Přístup IPv6 je podporován</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} dokumentace NAT</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Související odkazy</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Vyřešeno:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Testované položky</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Výsledky testů</value></data>
   <data name="ComboBox_UnsupportedType" xml:space="preserve">
-    <value>Unsupported type.</value>
+    <value>Nepodporovaný typ.</value>
   </data>
   <data name="AutomationStep_CreationFailed" xml:space="preserve">
-    <value>Could not create automation step.</value>
+    <value>Krok automatizace se nepodařilo vytvořit.</value>
   </data>
   <data name="FeatureRegistration_NotSupported" xml:space="preserve">
-    <value>Feature is not supported.</value>
+    <value>Funkce není podporována.</value>
   </data>
   <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
-    <value>Feature returned no value.</value>
+    <value>Funkce nevrátila žádnou hodnotu.</value>
   </data>
   <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
-    <value>State is not supported.</value>
+    <value>Stav není podporován.</value>
   </data>
-  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>This feature is provided by the host platform adapter.</value></data>
-  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>No platform adapter reported this feature.</value></data>
-  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Platform adapter</value></data>
-  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Install or enable a compatible platform adapter to use this feature.</value></data>
-  <data name="FeaturePage_NoActions" xml:space="preserve"><value>No actions were reported by the platform adapter.</value></data>
-  <data name="Appearance_Advanced" xml:space="preserve"><value>Appearance options</value></data>
-  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Temperature unit</value></data>
-  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Choose how temperatures are displayed.</value></data>
-  <data name="Appearance_Font" xml:space="preserve"><value>Application font</value></data>
-  <data name="Appearance_FontDescription" xml:space="preserve"><value>Choose the application font family.</value></data>
-  <data name="Appearance_UiScale" xml:space="preserve"><value>Interface scale</value></data>
-  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Adjust text and control density together.</value></data></root>
+  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>Tuto funkci poskytuje adaptér hostitelské platformy.</value></data>
+  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>Žádný adaptér platformy tuto funkci nenahlásil.</value></data>
+  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Adaptér platformy</value></data>
+  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Pro použití této funkce nainstalujte nebo povolte kompatibilní adaptér platformy.</value></data>
+  <data name="FeaturePage_NoActions" xml:space="preserve"><value>Adaptér platformy nenahlásil žádné akce.</value></data>
+  <data name="Appearance_Advanced" xml:space="preserve"><value>Možnosti vzhledu</value></data>
+  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Jednotka teploty</value></data>
+  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Vyberte způsob zobrazení teplot.</value></data>
+  <data name="Appearance_Font" xml:space="preserve"><value>Písmo aplikace</value></data>
+  <data name="Appearance_FontDescription" xml:space="preserve"><value>Vyberte rodinu písma aplikace.</value></data>
+  <data name="Appearance_UiScale" xml:space="preserve"><value>Měřítko rozhraní</value></data>
+  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Upravte hustotu textu a ovládacích prvků společně.</value></data></root>

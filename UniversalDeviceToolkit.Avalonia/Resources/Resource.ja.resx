@@ -59,140 +59,140 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Window_Title"><value>Universal Device Toolkit</value></data>
-  <data name="Nav_Show"><value>Show</value></data>
-  <data name="Navigation"><value>Navigation</value></data>
-  <data name="Nav_Dashboard"><value>Dashboard</value></data>
-  <data name="Nav_About"><value>About</value></data>
-  <data name="Nav_Settings"><value>Settings</value></data>
-  <data name="Nav_Exit"><value>Exit</value></data>
-  <data name="HostCapability_UnsupportedTitle"><value>Unavailable in this Avalonia host</value></data>
-  <data name="HostCapability_UnsupportedMessage"><value>This host does not expose a safe adapter for this page. Use the Windows host for this capability.</value></data>
-  <data name="HostCapability_CapabilityLabel"><value>Host capability</value></data>
-  <data name="HostCapability_Unavailable"><value>Unavailable</value></data>
-  <data name="HostCapability_KeyboardDescription"><value>Configure keyboard backlight and keyboard-specific controls.</value></data>
-  <data name="HostCapability_KeyboardReason"><value>Keyboard hardware controls require the Windows device adapter.</value></data>
-  <data name="HostCapability_ActionsDescription"><value>Run supported device actions and hardware workflows.</value></data>
-  <data name="HostCapability_ActionsReason"><value>Hardware action execution is not exposed by this host.</value></data>
-  <data name="HostCapability_MacroDescription"><value>Create and manage device macros.</value></data>
-  <data name="HostCapability_MacroReason"><value>Macro execution requires the Windows input and device services.</value></data>
-  <data name="HostCapability_WindowsOptimizationDescription"><value>Review Windows optimization actions and their current state.</value></data>
-  <data name="HostCapability_WindowsOptimizationReason"><value>Windows optimization actions are only available through the Windows host.</value></data>
-  <data name="HostCapability_PluginExtensionsDescription"><value>Discover and manage optional plugin extensions.</value></data>
-  <data name="HostCapability_PluginExtensionsReason"><value>Plugin discovery and installation services are not available in this host.</value></data>
-  <data name="About_Version"><value>Version</value></data>
-  <data name="About_Build"><value>Build: {0}</value></data>
-  <data name="About_TranslationCredit"><value>Translation credits for non-English locales.</value></data>
-  <data name="About_Links"><value>Links</value></data>
-  <data name="About_ProjectWebsite"><value>Project Website on GitHub</value></data>
-  <data name="About_LatestRelease"><value>Latest Release on GitHub</value></data>
-  <data name="About_ThirdPartyLibraries"><value>Third-party Libraries</value></data>
-  <data name="About_ApplicationFolders"><value>Application Folders</value></data>
-  <data name="About_AppDataFolder"><value>AppData Folder</value></data>
-  <data name="About_TempFolder"><value>Temp Folder</value></data>
-  <data name="Dashboard_Title"><value>Dashboard</value></data>
-  <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
-  <data name="Dashboard_Sensors"><value>Sensors</value></data>
-  <data name="Dashboard_Refresh"><value>Refresh</value></data>
-  <data name="Dashboard_Status_NoTelemetry"><value>No telemetry available</value></data>
-  <data name="Dashboard_Status_NoPowerTelemetry"><value>No power telemetry available</value></data>
-  <data name="Dashboard_Description_NoAdapter"><value>No platform adapter is registered for telemetry.</value></data>
-  <data name="Dashboard_Status_Live"><value>Live</value></data>
-  <data name="Dashboard_Telemetry_CPU"><value>CPU</value></data>
-  <data name="Dashboard_Telemetry_CPUDescription"><value>Processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Telemetry_GPUDescription"><value>Graphics processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Telemetry_BatteryDescription"><value>Charge and battery health</value></data>
-  <data name="Dashboard_Telemetry_System"><value>System</value></data>
-  <data name="Dashboard_Telemetry_SystemDescription"><value>Additional platform telemetry</value></data>
-  <data name="Dashboard_Feature_Device"><value>Device</value></data>
+  <data name="Nav_Show"><value>表示</value></data>
+  <data name="Navigation"><value>ナビゲーション</value></data>
+  <data name="Nav_Dashboard"><value>ダッシュボード</value></data>
+  <data name="Nav_About"><value>ヘルプ</value></data>
+  <data name="Nav_Settings"><value>設定</value></data>
+  <data name="Nav_Exit"><value>終了</value></data>
+  <data name="HostCapability_UnsupportedTitle"><value>この Avalonia ホストでは利用できません</value></data>
+  <data name="HostCapability_UnsupportedMessage"><value>このホストはこのページ向けの安全なアダプターを公開していません。この機能には Windows ホストを使用してください。</value></data>
+  <data name="HostCapability_CapabilityLabel"><value>ホスト機能</value></data>
+  <data name="HostCapability_Unavailable"><value>利用できません</value></data>
+  <data name="HostCapability_KeyboardDescription"><value>キーボードのバックライトとキーボード固有のコントロールを設定します。</value></data>
+  <data name="HostCapability_KeyboardReason"><value>キーボードのハードウェア制御には Windows デバイスアダプターが必要です。</value></data>
+  <data name="HostCapability_ActionsDescription"><value>サポートされているデバイスアクションとハードウェアワークフローを実行します。</value></data>
+  <data name="HostCapability_ActionsReason"><value>このホストではハードウェアアクションの実行が提供されていません。</value></data>
+  <data name="HostCapability_MacroDescription"><value>デバイスマクロを作成および管理します。</value></data>
+  <data name="HostCapability_MacroReason"><value>マクロの実行には Windows の入力およびデバイスサービスが必要です。</value></data>
+  <data name="HostCapability_WindowsOptimizationDescription"><value>Windows 最適化アクションとその現在の状態を確認します。</value></data>
+  <data name="HostCapability_WindowsOptimizationReason"><value>Windows 最適化アクションは Windows ホストでのみ利用できます。</value></data>
+  <data name="HostCapability_PluginExtensionsDescription"><value>オプションのプラグイン拡張を検出および管理します。</value></data>
+  <data name="HostCapability_PluginExtensionsReason"><value>このホストではプラグインの検出およびインストールサービスを利用できません。</value></data>
+  <data name="About_Version"><value>バージョン</value></data>
+  <data name="About_Build"><value>ビルド: {0}</value></data>
+  <data name="About_TranslationCredit"><value>非英語ロケールの翻訳クレジット。</value></data>
+  <data name="About_Links"><value>リンク</value></data>
+  <data name="About_ProjectWebsite"><value>GitHubのリポジトリ</value></data>
+  <data name="About_LatestRelease"><value>GitHubの最新リリース</value></data>
+  <data name="About_ThirdPartyLibraries"><value>サードパーティのライブラリ</value></data>
+  <data name="About_ApplicationFolders"><value>アプリケーションのフォルダ</value></data>
+  <data name="About_AppDataFolder"><value>AppData フォルダ</value></data>
+  <data name="About_TempFolder"><value>一時フォルダ</value></data>
+  <data name="Dashboard_Title"><value>ダッシュボード</value></data>
+  <data name="Dashboard_FeatureGroups"><value>機能グループ</value></data>
+  <data name="Dashboard_Sensors"><value>センサー</value></data>
+  <data name="Dashboard_Refresh"><value>更新</value></data>
+  <data name="Dashboard_Status_NoTelemetry"><value>テレメトリを利用できません</value></data>
+  <data name="Dashboard_Status_NoPowerTelemetry"><value>電力テレメトリを利用できません</value></data>
+  <data name="Dashboard_Description_NoAdapter"><value>テレメトリ用のプラットフォームアダプターが登録されていません。</value></data>
+  <data name="Dashboard_Status_Live"><value>ライブ</value></data>
+  <data name="Dashboard_Telemetry_CPU"><value>CPUについて</value></data>
+  <data name="Dashboard_Telemetry_CPUDescription"><value>プロセッサの使用率と温度</value></data>
+  <data name="Dashboard_Telemetry_GPU"><value>GPUについて</value></data>
+  <data name="Dashboard_Telemetry_GPUDescription"><value>グラフィックスプロセッサの使用率と温度</value></data>
+  <data name="Dashboard_Telemetry_Battery"><value>バッテリー</value></data>
+  <data name="Dashboard_Telemetry_BatteryDescription"><value>充電とバッテリーの健全性</value></data>
+  <data name="Dashboard_Telemetry_System"><value>システム</value></data>
+  <data name="Dashboard_Telemetry_SystemDescription"><value>追加のプラットフォームテレメトリ</value></data>
+  <data name="Dashboard_Feature_Device"><value>デバイス</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
-  <data name="Dashboard_Feature_PowerMode"><value>Power Mode</value></data>
-  <data name="Dashboard_Feature_FanControl"><value>Fan Control</value></data>
-  <data name="Dashboard_Feature_Display"><value>Display</value></data>
-  <data name="Dashboard_Feature_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Feature_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Feature_Keyboard"><value>Keyboard</value></data>
-  <data name="Dashboard_Feature_PowerProfile"><value>Power Profile</value></data>
-  <data name="Dashboard_Feature_SystemTelemetry"><value>System Telemetry</value></data>
-  <data name="Dashboard_Feature_DevicePack"><value>Device support</value></data>
-  <data name="Dashboard_Description_PowerManagement"><value>System power management</value></data>
-  <data name="Dashboard_Description_FanManagement"><value>Fan speed management</value></data>
-  <data name="Dashboard_Description_RefreshRate"><value>Refresh rate control</value></data>
-  <data name="Dashboard_Description_GpuManagement"><value>GPU management</value></data>
-  <data name="Dashboard_Description_BatteryManagement"><value>Battery management</value></data>
-  <data name="Dashboard_Description_BacklightControl"><value>Backlight control</value></data>
-  <data name="Dashboard_Description_PlatformCapability"><value>Platform capability</value></data>
-  <data name="Dashboard_Status_Sample"><value>Sample</value></data>
-  <data name="Dashboard_Status_Available"><value>Available</value></data>
-  <data name="Dashboard_Status_NotSupported"><value>Not supported</value></data>
-  <data name="Dashboard_Status_Unknown"><value>Unknown</value></data>
+  <data name="Dashboard_Feature_PowerMode"><value>電源モード</value></data>
+  <data name="Dashboard_Feature_FanControl"><value>ファン制御</value></data>
+  <data name="Dashboard_Feature_Display"><value>ディスプレイ</value></data>
+  <data name="Dashboard_Feature_GPU"><value>GPUについて</value></data>
+  <data name="Dashboard_Feature_Battery"><value>バッテリー</value></data>
+  <data name="Dashboard_Feature_Keyboard"><value>キーボード</value></data>
+  <data name="Dashboard_Feature_PowerProfile"><value>電源プロファイル</value></data>
+  <data name="Dashboard_Feature_SystemTelemetry"><value>システムテレメトリ</value></data>
+  <data name="Dashboard_Feature_DevicePack"><value>デバイスサポート</value></data>
+  <data name="Dashboard_Description_PowerManagement"><value>システムの電力管理</value></data>
+  <data name="Dashboard_Description_FanManagement"><value>ファン速度の管理</value></data>
+  <data name="Dashboard_Description_RefreshRate"><value>リフレッシュレートの制御</value></data>
+  <data name="Dashboard_Description_GpuManagement"><value>GPU の管理</value></data>
+  <data name="Dashboard_Description_BatteryManagement"><value>バッテリーの管理</value></data>
+  <data name="Dashboard_Description_BacklightControl"><value>バックライトの制御</value></data>
+  <data name="Dashboard_Description_PlatformCapability"><value>プラットフォーム機能</value></data>
+  <data name="Dashboard_Status_Sample"><value>サンプル</value></data>
+  <data name="Dashboard_Status_Available"><value>利用可能</value></data>
+  <data name="Dashboard_Status_NotSupported"><value>サポートされていません</value></data>
+  <data name="Dashboard_Status_Unknown"><value>不明</value></data>
   <data name="Dashboard_Status_Generation"><value>Gen {0}</value></data>
-  <data name="Dashboard_Status_Charging"><value>Charging</value></data>
-  <data name="Dashboard_Status_Discharging"><value>Discharging</value></data>
-  <data name="Dashboard_Status_Monitoring"><value>Monitoring</value></data>
+  <data name="Dashboard_Status_Charging"><value>充電中</value></data>
+  <data name="Dashboard_Status_Discharging"><value>放電中</value></data>
+  <data name="Dashboard_Status_Monitoring"><value>監視中</value></data>
   <data name="Dashboard_Status_Spectrum"><value>Spectrum</value></data>
-  <data name="Dashboard_Status_PerKey"><value>Per-key</value></data>
-  <data name="Dashboard_Status_ReadOnly"><value>Read-only</value></data>
-  <data name="Dashboard_Sensor_CpuTemperature"><value>CPU Temperature</value></data>
-  <data name="Dashboard_Sensor_GpuTemperature"><value>GPU Temperature</value></data>
-  <data name="Dashboard_Sensor_CpuUsage"><value>CPU Usage</value></data>
-  <data name="Dashboard_Sensor_MemoryUsage"><value>Memory Usage</value></data>
-  <data name="Dashboard_Sensor_FanSpeed"><value>Fan Speed</value></data>
-  <data name="Dashboard_Sensor_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Sensor_BatteryCharge"><value>Battery Charge</value></data>
-  <data name="Dashboard_Sensor_BatteryStatus"><value>Battery Status</value></data>
-  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
-  <data name="Dashboard_Sensor_MinDischargeRate"><value>Min Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Max Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_CycleCount"><value>Cycle Count</value></data>
-  <data name="Settings_Title"><value>Settings</value></data>
-  <data name="Settings_Appearance"><value>Appearance</value></data>
-  <data name="Settings_Application"><value>Application</value></data>
-  <data name="Settings_Display"><value>Display</value></data>
-  <data name="Settings_PlatformUnavailable_Title"><value>Unavailable in this host</value></data>
-  <data name="Settings_PlatformUnavailable_Message"><value>This Avalonia host does not expose a safe adapter for this setting.</value></data>
-  <data name="Settings_PlatformUnavailable_Feature"><value>Feature availability</value></data>
-  <data name="Settings_PlatformUnavailable_Action"><value>Unavailable</value></data>
-  <data name="Appearance_Title"><value>Appearance</value></data>
-  <data name="Appearance_Description"><value>Customize the look and feel of the application.</value></data>
-  <data name="Appearance_ThemeMode"><value>Global interface color mode</value></data>
-  <data name="Appearance_Light"><value>Light</value></data>
-  <data name="Appearance_Dark"><value>Dark</value></data>
-  <data name="Appearance_System"><value>Follow system</value></data>
-  <data name="Appearance_ApplyAccent"><value>Change system color when changing the global interface color</value></data>
-  <data name="Appearance_Accent"><value>Global interface accent color</value></data>
-  <data name="Appearance_Language"><value>Language</value></data>
-  <data name="Appearance_LanguageDescription"><value>Select the display language for the application.</value></data>
-  <data name="Application_Title"><value>Application Behavior</value></data>
-  <data name="Application_Description"><value>Configure how the application behaves on startup and during use.</value></data>
-  <data name="Application_LaunchStartup"><value>Launch at Startup</value></data>
-  <data name="Application_LaunchStartupDescription"><value>Automatically start the application when Windows starts.</value></data>
-  <data name="Application_MinimizeTray"><value>Minimize to System Tray</value></data>
-  <data name="Application_MinimizeTrayDescription"><value>Keep the application running in the system tray when closed.</value></data>
-  <data name="Application_AutoRefresh"><value>Auto-refresh Hardware Data</value></data>
-  <data name="Application_AutoRefreshDescription"><value>Periodically poll hardware sensors for updated readings.</value></data>
-  <data name="Display_Title"><value>Display</value></data>
-  <data name="Display_Description"><value>Adjust display-related settings for your device.</value></data>
-  <data name="Display_RefreshRate"><value>Refresh Rate</value></data>
-  <data name="Display_RefreshRateDescription"><value>Select the display refresh rate (requires supported hardware).</value></data>
-  <data name="Display_Overdrive"><value>Overdrive</value></data>
-  <data name="Display_OverdriveDescription"><value>Enable display overdrive for faster pixel response times.</value></data>
-  <data name="Dashboard_Subtitle"><value>Device health and controls</value></data>
-  <data name="Dashboard_Ready"><value>Ready</value></data>
-  <data name="Dashboard_Power"><value>Power</value></data>
-  <data name="Dashboard_LastUpdated"><value>Last updated</value></data>
-  <data name="FeaturePage_StatusTitle"><value>Feature status</value></data>
-  <data name="FeaturePage_Loading"><value>Reading the current platform capability...</value></data>
-  <data name="FeaturePage_Available"><value>Available</value></data>
-  <data name="FeaturePage_Unsupported"><value>Unavailable on this device</value></data>
-  <data name="FeaturePage_AvailableMessage"><value>The platform adapter reported this feature as available.</value></data>
-  <data name="FeaturePage_LoadFailed"><value>Unable to load feature state</value></data>
-  <data name="Settings_Page_StatusTitle"><value>Settings ready</value></data>
-  <data name="Settings_Page_StatusMessage"><value>Changes are saved immediately.</value></data>
-  <data name="Settings_Page_LoadFailed"><value>Unable to load settings</value></data>
-  <data name="Settings_Page_NoOptions"><value>No settings are available for this page.</value></data>
-  <data name="Settings_Page_UnavailableDetail"><value>The controls remain visible when the adapter is available on this platform.</value></data>
+  <data name="Dashboard_Status_PerKey"><value>キーごと</value></data>
+  <data name="Dashboard_Status_ReadOnly"><value>読み取り専用</value></data>
+  <data name="Dashboard_Sensor_CpuTemperature"><value>CPU 温度</value></data>
+  <data name="Dashboard_Sensor_GpuTemperature"><value>GPU 温度</value></data>
+  <data name="Dashboard_Sensor_CpuUsage"><value>CPU 使用率</value></data>
+  <data name="Dashboard_Sensor_MemoryUsage"><value>メモリ使用量</value></data>
+  <data name="Dashboard_Sensor_FanSpeed"><value>ファン回転速度</value></data>
+  <data name="Dashboard_Sensor_Battery"><value>バッテリー</value></data>
+  <data name="Dashboard_Sensor_BatteryCharge"><value>バッテリー充電</value></data>
+  <data name="Dashboard_Sensor_BatteryStatus"><value>バッテリーの状態</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>バッテリーモデル</value></data>
+  <data name="Dashboard_Sensor_MinDischargeRate"><value>最小放電レート</value></data>
+  <data name="Dashboard_Sensor_MaxDischargeRate"><value>最大放電レート</value></data>
+  <data name="Dashboard_Sensor_CycleCount"><value>サイクル数</value></data>
+  <data name="Settings_Title"><value>設定</value></data>
+  <data name="Settings_Appearance"><value>外観</value></data>
+  <data name="Settings_Application"><value>アプリケーション</value></data>
+  <data name="Settings_Display"><value>ディスプレイ</value></data>
+  <data name="Settings_PlatformUnavailable_Title"><value>このホストでは利用できません</value></data>
+  <data name="Settings_PlatformUnavailable_Message"><value>この Avalonia ホストはこの設定向けの安全なアダプターを公開していません。</value></data>
+  <data name="Settings_PlatformUnavailable_Feature"><value>機能の利用可否</value></data>
+  <data name="Settings_PlatformUnavailable_Action"><value>利用できません</value></data>
+  <data name="Appearance_Title"><value>外観</value></data>
+  <data name="Appearance_Description"><value>アプリケーションの外観と操作感をカスタマイズします。</value></data>
+  <data name="Appearance_ThemeMode"><value>グローバルインターフェイスの配色モード</value></data>
+  <data name="Appearance_Light"><value>ライト</value></data>
+  <data name="Appearance_Dark"><value>ダーク</value></data>
+  <data name="Appearance_System"><value>システムに従う</value></data>
+  <data name="Appearance_ApplyAccent"><value>グローバルインターフェイスの色を変更するときにシステムの色も変更する</value></data>
+  <data name="Appearance_Accent"><value>グローバルインターフェイスのアクセントカラー</value></data>
+  <data name="Appearance_Language"><value>言語</value></data>
+  <data name="Appearance_LanguageDescription"><value>アプリケーションの表示言語を選択します。</value></data>
+  <data name="Application_Title"><value>アプリケーションの動作</value></data>
+  <data name="Application_Description"><value>起動時および使用中のアプリケーションの動作を設定します。</value></data>
+  <data name="Application_LaunchStartup"><value>起動時に開始</value></data>
+  <data name="Application_LaunchStartupDescription"><value>Windows の起動時にアプリケーションを自動的に開始します。</value></data>
+  <data name="Application_MinimizeTray"><value>システムトレイに最小化</value></data>
+  <data name="Application_MinimizeTrayDescription"><value>閉じたときにアプリケーションをシステムトレイで実行し続けます。</value></data>
+  <data name="Application_AutoRefresh"><value>ハードウェアデータを自動更新</value></data>
+  <data name="Application_AutoRefreshDescription"><value>ハードウェアセンサーを定期的にポーリングして最新の測定値を取得します。</value></data>
+  <data name="Display_Title"><value>ディスプレイ</value></data>
+  <data name="Display_Description"><value>デバイスのディスプレイ関連設定を調整します。</value></data>
+  <data name="Display_RefreshRate"><value>リフレッシュレート</value></data>
+  <data name="Display_RefreshRateDescription"><value>ディスプレイのリフレッシュレートを選択します（対応するハードウェアが必要です）。</value></data>
+  <data name="Display_Overdrive"><value>オーバードライブ</value></data>
+  <data name="Display_OverdriveDescription"><value>ピクセルの応答時間を短縮するため、ディスプレイのオーバードライブを有効にします。</value></data>
+  <data name="Dashboard_Subtitle"><value>デバイスの状態とコントロール</value></data>
+  <data name="Dashboard_Ready"><value>準備完了</value></data>
+  <data name="Dashboard_Power"><value>電力</value></data>
+  <data name="Dashboard_LastUpdated"><value>最終更新</value></data>
+  <data name="FeaturePage_StatusTitle"><value>機能の状態</value></data>
+  <data name="FeaturePage_Loading"><value>現在のプラットフォーム機能を読み取っています...</value></data>
+  <data name="FeaturePage_Available"><value>利用可能</value></data>
+  <data name="FeaturePage_Unsupported"><value>このデバイスでは利用できません</value></data>
+  <data name="FeaturePage_AvailableMessage"><value>プラットフォームアダプターがこの機能を利用可能として報告しました。</value></data>
+  <data name="FeaturePage_LoadFailed"><value>機能の状態を読み込めません</value></data>
+  <data name="Settings_Page_StatusTitle"><value>設定の準備ができました</value></data>
+  <data name="Settings_Page_StatusMessage"><value>変更はすぐに保存されます。</value></data>
+  <data name="Settings_Page_LoadFailed"><value>設定を読み込めません</value></data>
+  <data name="Settings_Page_NoOptions"><value>このページで利用できる設定はありません。</value></data>
+  <data name="Settings_Page_UnavailableDetail"><value>このプラットフォームでアダプターが利用可能になると、コントロールが表示されます。</value></data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>ビルド</value>
   </data>
@@ -265,13 +265,13 @@
     <value>新しく追加</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
-    <value>Add automatic</value>
+    <value>自動を追加</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
-    <value>New automatic pipeline</value>
+    <value>新しい自動パイプライン</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
-    <value>Automatic triggers are unavailable.</value>
+    <value>自動トリガーを利用できません。</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>クイック アクションが定義されていません。「新しく追加」をクリックして、新しいクイックアクションを作成します。</value>
@@ -1979,10 +1979,10 @@
     <value>更新を自動的に確認</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Title" xml:space="preserve">
-    <value>Include preview versions</value>
+    <value>プレビュー版を含める</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Message" xml:space="preserve">
-    <value>When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions.</value>
+    <value>オフの場合、安定版のみが更新として提供されます。オンにするとプレビュー（プレリリース）版も受け取れます。</value>
   </data>
   <data name="WindowsOptimization_Action_Recommended_Tag" xml:space="preserve">
     <value>推奨</value>
@@ -2243,7 +2243,7 @@
     <value>AC電源がないと{0}電源モードは使用できません。</value>
   </data>
   <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
-    <value>Failed to switch power mode. The device did not accept the change.</value>
+    <value>電源モードの切り替えに失敗しました。デバイスが変更を受け付けませんでした。</value>
   </data>
   <data name="PowerPlansWindow_AoAcWarning_Message" xml:space="preserve">
     <value>WindowsはこのノートパソコンがModern Standbyをサポートしていると報告しています。バランス型以外の電力プランを使用すると予期しない挙動が起こる可能性があります。</value>
@@ -3383,13 +3383,13 @@
     <value>ゲーム</value>
   </data>
   <data name="Osd_Gpu" xml:space="preserve">
-    <value>GPU</value>
+    <value>GPUについて</value>
   </data>
   <data name="Osd_GPU_Fan" xml:space="preserve">
     <value>ファン</value>
   </data>
   <data name="Osd_Low_Fps" xml:space="preserve">
-    <value>1% Low</value>
+    <value>1% ロー</value>
   </data>
   <data name="Osd_Memory_Temperature" xml:space="preserve">
     <value>温度</value>
@@ -3446,7 +3446,7 @@
     <value>不透明度</value>
   </data>
   <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>Separator Color</value>
+    <value>区切り線の色</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>値の色</value>
@@ -3683,7 +3683,7 @@
     <value>ITS モード</value>
   </data>
   <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
-    <value>Intelligent Thermal Solution</value>
+    <value>インテリジェント サーマル ソリューション</value>
   </data>
   <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
     <value>このシステムでは ITS ランタイムを利用できません。</value>
@@ -3995,7 +3995,7 @@
     <value>ループバック プロキシ ポート</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Ok" xml:space="preserve">
-    <value>OK</value>
+    <value>大丈夫</value>
   </data>
   <data name="NetworkAccelerationPage_Diag_Overall" xml:space="preserve">
     <value>診断</value>
@@ -4196,16 +4196,16 @@
     <value>既定</value>
   </data>
   <data name="SettingsPage_UiScale_Title" xml:space="preserve">
-    <value>Interface scale</value>
+    <value>インターフェイスの倍率</value>
   </data>
   <data name="SettingsPage_UiScale_Description" xml:space="preserve">
-    <value>Scale text and the whole interface together, independent of Windows display scaling.</value>
+    <value>Windows のディスプレイスケーリングとは独立して、テキストとインターフェイス全体を一緒に拡大します。</value>
   </data>
   <data name="SettingsPage_AppScale_Title" xml:space="preserve">
-    <value>App scale</value>
+    <value>アプリの倍率</value>
   </data>
   <data name="SettingsPage_AppScale_Description" xml:space="preserve">
-    <value>Scale the entire app interface independently of Windows display scaling.</value>
+    <value>Windows のディスプレイスケーリングとは独立して、アプリのインターフェイス全体を拡大します。</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>テキスト サイズ</value>
@@ -4219,76 +4219,76 @@
   <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
     <value>デバイスサポートパックをダウンロードできませんでした。接続を確認して「確認」を押して再試行するか、スキップしてください。次回起動時に再度お尋ねします。</value>
   </data>
-  <data name="NaDiag_NatTitle" xml:space="preserve"><value>NAT Type Detection</value></data>
-  <data name="NaDiag_NatType" xml:space="preserve"><value>NAT Type:</value></data>
-  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Local IP:</value></data>
-  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Public IP:</value></data>
-  <data name="NaDiag_Internet" xml:space="preserve"><value>Internet:</value></data>
-  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>DNS Detection</value></data>
-  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Domain to test:</value></data>
-  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Custom DNS:</value></data>
-  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Enable DoH:</value></data>
+  <data name="NaDiag_NatTitle" xml:space="preserve"><value>NAT タイプの検出</value></data>
+  <data name="NaDiag_NatType" xml:space="preserve"><value>NAT タイプ:</value></data>
+  <data name="NaDiag_LocalIp" xml:space="preserve"><value>ローカル IP:</value></data>
+  <data name="NaDiag_PublicIp" xml:space="preserve"><value>パブリック IP:</value></data>
+  <data name="NaDiag_Internet" xml:space="preserve"><value>インターネット:</value></data>
+  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>DNS の検出</value></data>
+  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>テストするドメイン:</value></data>
+  <data name="NaDiag_CustomDns" xml:space="preserve"><value>カスタム DNS:</value></data>
+  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>DoH を有効にする:</value></data>
   <data name="NaDiag_DohUrl" xml:space="preserve"><value>DoH URL:</value></data>
-  <data name="NaDiag_Latency" xml:space="preserve"><value>Latency:</value></data>
+  <data name="NaDiag_Latency" xml:space="preserve"><value>レイテンシ:</value></data>
   <data name="NaDiag_LatencyFormat" xml:space="preserve"><value>{0} ms</value></data>
-  <data name="NaDiag_Failed" xml:space="preserve"><value>Failed</value></data>
-  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>IPv6 Detection</value></data>
-  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Support:</value></data>
-  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>IPv6 Address:</value></data>
-  <data name="NaDiag_Supported" xml:space="preserve"><value>Supported</value></data>
-  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Not supported</value></data>
-  <data name="NaDiag_Detect" xml:space="preserve"><value>Detect</value></data>
-  <data name="NaDiag_Unknown" xml:space="preserve"><value>Unknown</value></data>
-  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Open NAT</value></data>
+  <data name="NaDiag_Failed" xml:space="preserve"><value>失敗</value></data>
+  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>IPv6 の検出</value></data>
+  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>対応状況:</value></data>
+  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>IPv6 アドレス:</value></data>
+  <data name="NaDiag_Supported" xml:space="preserve"><value>対応</value></data>
+  <data name="NaDiag_NotSupported" xml:space="preserve"><value>非対応</value></data>
+  <data name="NaDiag_Detect" xml:space="preserve"><value>検出</value></data>
+  <data name="NaDiag_Unknown" xml:space="preserve"><value>不明</value></data>
+  <data name="NaDiag_NatOpen" xml:space="preserve"><value>オープン NAT</value></data>
   <data name="NaDiag_NatRestricted" xml:space="preserve"><value>NAT</value></data>
-  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP blocked</value></data>
-  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operation failed</value></data>
-  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Vantage: {0}</value></data>
-  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Failed to stop Legion Zone: {0}</value></data>
-  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Hotkeys: {0}</value></data>
-  <data name="Theme_Light" xml:space="preserve"><value>Light</value></data>
-  <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
-  <data name="Theme_System" xml:space="preserve"><value>System</value></data>
-  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP ブロック</value></data>
+  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>操作に失敗しました</value></data>
+  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Lenovo Vantage を停止できませんでした: {0}</value></data>
+  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Legion Zone を停止できませんでした: {0}</value></data>
+  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Lenovo Hotkeys を停止できませんでした: {0}</value></data>
+  <data name="Theme_Light" xml:space="preserve"><value>ライト</value></data>
+  <data name="Theme_Dark" xml:space="preserve"><value>ダーク</value></data>
+  <data name="Theme_System" xml:space="preserve"><value>システム</value></data>
+  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>テーマスタイル</value></data>
   <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>グローバルインターフェイスの配色モード</value></data>
   <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>グローバルインターフェイスの色を調整するときにシステムの色を変更する</value></data>
   <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>グローバルインターフェイスのアクセントカラー</value></data>
-  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
-  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
-  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>グローバルインターフェイスの色を調整するときにテーマスタイルを適用する</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>ウィンドウの背景効果</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>アプリケーションウィンドウに使用する Windows の背景効果を選択します。</value></data>
   <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
   <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
-  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
-  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
-  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
-  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
-  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
-  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
-  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>オフ</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 アクセスに対応</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT のドキュメント</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>関連リンク</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>解決結果:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>テスト項目</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>テスト結果</value></data>
   <data name="ComboBox_UnsupportedType" xml:space="preserve">
-    <value>Unsupported type.</value>
+    <value>サポートされていない型です。</value>
   </data>
   <data name="AutomationStep_CreationFailed" xml:space="preserve">
-    <value>Could not create automation step.</value>
+    <value>自動化ステップを作成できませんでした。</value>
   </data>
   <data name="FeatureRegistration_NotSupported" xml:space="preserve">
-    <value>Feature is not supported.</value>
+    <value>機能はサポートされていません。</value>
   </data>
   <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
-    <value>Feature returned no value.</value>
+    <value>機能は値を返しませんでした。</value>
   </data>
   <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
-    <value>State is not supported.</value>
+    <value>状態はサポートされていません。</value>
   </data>
-  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>This feature is provided by the host platform adapter.</value></data>
-  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>No platform adapter reported this feature.</value></data>
-  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Platform adapter</value></data>
-  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Install or enable a compatible platform adapter to use this feature.</value></data>
-  <data name="FeaturePage_NoActions" xml:space="preserve"><value>No actions were reported by the platform adapter.</value></data>
-  <data name="Appearance_Advanced" xml:space="preserve"><value>Appearance options</value></data>
-  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Temperature unit</value></data>
-  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Choose how temperatures are displayed.</value></data>
-  <data name="Appearance_Font" xml:space="preserve"><value>Application font</value></data>
-  <data name="Appearance_FontDescription" xml:space="preserve"><value>Choose the application font family.</value></data>
-  <data name="Appearance_UiScale" xml:space="preserve"><value>Interface scale</value></data>
-  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Adjust text and control density together.</value></data></root>
+  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>この機能はホストのプラットフォームアダプターによって提供されます。</value></data>
+  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>この機能を報告したプラットフォームアダプターがありません。</value></data>
+  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>プラットフォームアダプター</value></data>
+  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>この機能を使用するには、互換性のあるプラットフォームアダプターをインストールまたは有効にしてください。</value></data>
+  <data name="FeaturePage_NoActions" xml:space="preserve"><value>プラットフォームアダプターからアクションが報告されていません。</value></data>
+  <data name="Appearance_Advanced" xml:space="preserve"><value>外観オプション</value></data>
+  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>温度の単位</value></data>
+  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>温度の表示方法を選択します。</value></data>
+  <data name="Appearance_Font" xml:space="preserve"><value>アプリケーションのフォント</value></data>
+  <data name="Appearance_FontDescription" xml:space="preserve"><value>アプリケーションのフォントファミリを選択します。</value></data>
+  <data name="Appearance_UiScale" xml:space="preserve"><value>インターフェイスの倍率</value></data>
+  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>テキストとコントロールの密度を一緒に調整します。</value></data></root>

@@ -48,9 +48,9 @@
   <data name="Dashboard_Status_NoPowerTelemetry"><value>暂无电源遥测数据</value></data>
   <data name="Dashboard_Description_NoAdapter"><value>当前没有注册用于遥测的平台适配器。</value></data>
   <data name="Dashboard_Status_Live"><value>实时</value></data>
-  <data name="Dashboard_Telemetry_CPU"><value>CPU</value></data>
+  <data name="Dashboard_Telemetry_CPU"><value>处理器</value></data>
   <data name="Dashboard_Telemetry_CPUDescription"><value>处理器占用率和温度</value></data>
-  <data name="Dashboard_Telemetry_GPU"><value>GPU</value></data>
+  <data name="Dashboard_Telemetry_GPU"><value>显卡</value></data>
   <data name="Dashboard_Telemetry_GPUDescription"><value>图形处理器占用率和温度</value></data>
   <data name="Dashboard_Telemetry_Battery"><value>电池</value></data>
   <data name="Dashboard_Telemetry_BatteryDescription"><value>电量和电池健康状态</value></data>
@@ -61,7 +61,7 @@
   <data name="Dashboard_Feature_PowerMode"><value>电源模式</value></data>
   <data name="Dashboard_Feature_FanControl"><value>风扇控制</value></data>
   <data name="Dashboard_Feature_Display"><value>显示</value></data>
-  <data name="Dashboard_Feature_GPU"><value>GPU</value></data>
+  <data name="Dashboard_Feature_GPU"><value>显卡</value></data>
   <data name="Dashboard_Feature_Battery"><value>电池</value></data>
   <data name="Dashboard_Feature_Keyboard"><value>键盘</value></data>
   <data name="Dashboard_Feature_PowerProfile"><value>电源配置</value></data>
@@ -93,7 +93,7 @@
   <data name="Dashboard_Sensor_Battery"><value>电池</value></data>
   <data name="Dashboard_Sensor_BatteryCharge"><value>电池电量</value></data>
   <data name="Dashboard_Sensor_BatteryStatus"><value>电池状态</value></data>
-  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>电池型号</value></data>
   <data name="Dashboard_Sensor_MinDischargeRate"><value>最小放电速率</value></data>
   <data name="Dashboard_Sensor_MaxDischargeRate"><value>最大放电速率</value></data>
   <data name="Dashboard_Sensor_CycleCount"><value>循环次数</value></data>
@@ -202,11 +202,11 @@
   </data><data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
     <value>新建</value>
   </data><data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
-    <value>Add automatic</value>
+    <value>添加自动流水线</value>
   </data><data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
-    <value>New automatic pipeline</value>
+    <value>新建自动流水线</value>
   </data><data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
-    <value>Automatic triggers are unavailable.</value>
+    <value>自动触发器不可用。</value>
   </data><data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>没有快捷操作，请点击 "新建" 来新建快捷操作。</value>
   </data><data name="AutomationPage_QuickActions_Message" xml:space="preserve">
@@ -295,7 +295,7 @@ CPU/GPU 性能。
   </data><data name="Cancel" xml:space="preserve">
     <value>取消</value>
   </data><data name="Celsius" xml:space="preserve">
-    <value>°C</value>
+    <value>摄氏度</value>
   </data><data name="Close" xml:space="preserve">
     <value>关闭</value>
   </data><data name="Color_Blue" xml:space="preserve">
@@ -453,7 +453,7 @@ CPU/GPU 性能。
   </data><data name="ExtendedHybridModeInfoWindow_Title" xml:space="preserve">
     <value>关于显卡工作模式</value>
   </data><data name="Fahrenheit" xml:space="preserve">
-    <value>°F</value>
+    <value>华氏度</value>
   </data><data name="FanCurveControl_CPU" xml:space="preserve">
     <value>处理器</value>
   </data><data name="FanCurveControl_CPUSensor" xml:space="preserve">
@@ -2481,7 +2481,7 @@ Fn 将会暂时解除锁定。</value>
   </data><data name="OsdWindow_Title" xml:space="preserve">
     <value>OSD 设置</value>
   </data><data name="Osd_Cpu" xml:space="preserve">
-    <value>CPU</value>
+    <value>处理器</value>
   </data><data name="Osd_CPU_Fan" xml:space="preserve">
     <value>风扇</value>
   </data><data name="Osd_Disk_0_Temperature" xml:space="preserve">
@@ -2497,11 +2497,11 @@ Fn 将会暂时解除锁定。</value>
   </data><data name="Osd_Game" xml:space="preserve">
     <value>游戏</value>
   </data><data name="Osd_Gpu" xml:space="preserve">
-    <value>GPU</value>
+    <value>显卡</value>
   </data><data name="Osd_GPU_Fan" xml:space="preserve">
     <value>风扇</value>
   </data><data name="Osd_Low_Fps" xml:space="preserve">
-    <value>1% Low</value>
+    <value>1% 低帧率</value>
   </data><data name="Osd_Memory_Temperature" xml:space="preserve">
     <value>温度</value>
   </data><data name="Osd_Memory_Utilization" xml:space="preserve">
@@ -2984,4 +2984,4 @@ Fn 将会暂时解除锁定。</value>
     <value>功能未返回值。</value>
   </data><data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
     <value>不支持此状态。</value>
-  </data><data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>此功能由主机平台适配器提供。</value></data><data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>平台适配器未报告此功能。</value></data><data name="FeaturePage_AdapterAction" xml:space="preserve"><value>平台适配器</value></data><data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>安装或启用兼容的平台适配器后才能使用此功能。</value></data><data name="FeaturePage_NoActions" xml:space="preserve"><value>平台适配器未报告可用操作。</value></data><data name="Appearance_Advanced" xml:space="preserve"><value>Appearance options</value></data><data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Temperature unit</value></data><data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Choose how temperatures are displayed.</value></data><data name="Appearance_Font" xml:space="preserve"><value>Application font</value></data><data name="Appearance_FontDescription" xml:space="preserve"><value>Choose the application font family.</value></data><data name="Appearance_UiScale" xml:space="preserve"><value>Interface scale</value></data><data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Adjust text and control density together.</value></data></root>
+  </data><data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>此功能由主机平台适配器提供。</value></data><data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>平台适配器未报告此功能。</value></data><data name="FeaturePage_AdapterAction" xml:space="preserve"><value>平台适配器</value></data><data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>安装或启用兼容的平台适配器后才能使用此功能。</value></data><data name="FeaturePage_NoActions" xml:space="preserve"><value>平台适配器未报告可用操作。</value></data><data name="Appearance_Advanced" xml:space="preserve"><value>外观选项</value></data><data name="Appearance_TemperatureUnit" xml:space="preserve"><value>温度单位</value></data><data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>选择温度的显示方式。</value></data><data name="Appearance_Font" xml:space="preserve"><value>应用字体</value></data><data name="Appearance_FontDescription" xml:space="preserve"><value>选择应用界面使用的字体族。</value></data><data name="Appearance_UiScale" xml:space="preserve"><value>界面缩放</value></data><data name="Appearance_UiScaleDescription" xml:space="preserve"><value>同时调整文本和控件密度。</value></data></root>

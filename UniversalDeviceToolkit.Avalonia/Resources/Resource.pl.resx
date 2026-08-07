@@ -59,140 +59,140 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Window_Title"><value>Universal Device Toolkit</value></data>
-  <data name="Nav_Show"><value>Show</value></data>
-  <data name="Navigation"><value>Navigation</value></data>
-  <data name="Nav_Dashboard"><value>Dashboard</value></data>
-  <data name="Nav_About"><value>About</value></data>
-  <data name="Nav_Settings"><value>Settings</value></data>
-  <data name="Nav_Exit"><value>Exit</value></data>
-  <data name="HostCapability_UnsupportedTitle"><value>Unavailable in this Avalonia host</value></data>
-  <data name="HostCapability_UnsupportedMessage"><value>This host does not expose a safe adapter for this page. Use the Windows host for this capability.</value></data>
-  <data name="HostCapability_CapabilityLabel"><value>Host capability</value></data>
-  <data name="HostCapability_Unavailable"><value>Unavailable</value></data>
-  <data name="HostCapability_KeyboardDescription"><value>Configure keyboard backlight and keyboard-specific controls.</value></data>
-  <data name="HostCapability_KeyboardReason"><value>Keyboard hardware controls require the Windows device adapter.</value></data>
-  <data name="HostCapability_ActionsDescription"><value>Run supported device actions and hardware workflows.</value></data>
-  <data name="HostCapability_ActionsReason"><value>Hardware action execution is not exposed by this host.</value></data>
-  <data name="HostCapability_MacroDescription"><value>Create and manage device macros.</value></data>
-  <data name="HostCapability_MacroReason"><value>Macro execution requires the Windows input and device services.</value></data>
-  <data name="HostCapability_WindowsOptimizationDescription"><value>Review Windows optimization actions and their current state.</value></data>
-  <data name="HostCapability_WindowsOptimizationReason"><value>Windows optimization actions are only available through the Windows host.</value></data>
-  <data name="HostCapability_PluginExtensionsDescription"><value>Discover and manage optional plugin extensions.</value></data>
-  <data name="HostCapability_PluginExtensionsReason"><value>Plugin discovery and installation services are not available in this host.</value></data>
-  <data name="About_Version"><value>Version</value></data>
-  <data name="About_Build"><value>Build: {0}</value></data>
-  <data name="About_TranslationCredit"><value>Translation credits for non-English locales.</value></data>
-  <data name="About_Links"><value>Links</value></data>
-  <data name="About_ProjectWebsite"><value>Project Website on GitHub</value></data>
-  <data name="About_LatestRelease"><value>Latest Release on GitHub</value></data>
-  <data name="About_ThirdPartyLibraries"><value>Third-party Libraries</value></data>
-  <data name="About_ApplicationFolders"><value>Application Folders</value></data>
-  <data name="About_AppDataFolder"><value>AppData Folder</value></data>
-  <data name="About_TempFolder"><value>Temp Folder</value></data>
-  <data name="Dashboard_Title"><value>Dashboard</value></data>
-  <data name="Dashboard_FeatureGroups"><value>Feature Groups</value></data>
-  <data name="Dashboard_Sensors"><value>Sensors</value></data>
-  <data name="Dashboard_Refresh"><value>Refresh</value></data>
-  <data name="Dashboard_Status_NoTelemetry"><value>No telemetry available</value></data>
-  <data name="Dashboard_Status_NoPowerTelemetry"><value>No power telemetry available</value></data>
-  <data name="Dashboard_Description_NoAdapter"><value>No platform adapter is registered for telemetry.</value></data>
-  <data name="Dashboard_Status_Live"><value>Live</value></data>
+  <data name="Nav_Show"><value>Pokaż</value></data>
+  <data name="Navigation"><value>Nawigacja</value></data>
+  <data name="Nav_Dashboard"><value>Pulpit</value></data>
+  <data name="Nav_About"><value>O programie</value></data>
+  <data name="Nav_Settings"><value>Ustawienia</value></data>
+  <data name="Nav_Exit"><value>Zakończ</value></data>
+  <data name="HostCapability_UnsupportedTitle"><value>Niedostępne w tym hoście Avalonia</value></data>
+  <data name="HostCapability_UnsupportedMessage"><value>Ten host nie udostępnia bezpiecznego adaptera dla tej strony. Użyj hosta Windows dla tej funkcji.</value></data>
+  <data name="HostCapability_CapabilityLabel"><value>Możliwości hosta</value></data>
+  <data name="HostCapability_Unavailable"><value>Niedostępne</value></data>
+  <data name="HostCapability_KeyboardDescription"><value>Skonfiguruj podświetlenie klawiatury i kontrolki specyficzne dla klawiatury.</value></data>
+  <data name="HostCapability_KeyboardReason"><value>Sprzętowe kontrolki klawiatury wymagają adaptera urządzeń Windows.</value></data>
+  <data name="HostCapability_ActionsDescription"><value>Uruchamiaj obsługiwane akcje urządzenia i przepływy pracy sprzętu.</value></data>
+  <data name="HostCapability_ActionsReason"><value>Ten host nie udostępnia wykonywania akcji sprzętowych.</value></data>
+  <data name="HostCapability_MacroDescription"><value>Twórz i zarządzaj makrami urządzenia.</value></data>
+  <data name="HostCapability_MacroReason"><value>Wykonywanie makr wymaga usług wejściowych i urządzeń systemu Windows.</value></data>
+  <data name="HostCapability_WindowsOptimizationDescription"><value>Przeglądaj akcje optymalizacji systemu Windows i ich bieżący stan.</value></data>
+  <data name="HostCapability_WindowsOptimizationReason"><value>Akcje optymalizacji systemu Windows są dostępne tylko za pośrednictwem hosta Windows.</value></data>
+  <data name="HostCapability_PluginExtensionsDescription"><value>Odkrywaj i zarządzaj opcjonalnymi rozszerzeniami wtyczek.</value></data>
+  <data name="HostCapability_PluginExtensionsReason"><value>Usługi wykrywania i instalowania wtyczek nie są dostępne w tym hoście.</value></data>
+  <data name="About_Version"><value>Wersja</value></data>
+  <data name="About_Build"><value>Kompilacja: {0}</value></data>
+  <data name="About_TranslationCredit"><value>Podziękowania dla tłumaczy wersji nieanglojęzycznych.</value></data>
+  <data name="About_Links"><value>Linki</value></data>
+  <data name="About_ProjectWebsite"><value>Strona projektu na GitHub</value></data>
+  <data name="About_LatestRelease"><value>Najnowsze wydanie na GitHub</value></data>
+  <data name="About_ThirdPartyLibraries"><value>Biblioteki zewnętrzne</value></data>
+  <data name="About_ApplicationFolders"><value>Foldery aplikacji</value></data>
+  <data name="About_AppDataFolder"><value>Folder AppData</value></data>
+  <data name="About_TempFolder"><value>Folder Temp</value></data>
+  <data name="Dashboard_Title"><value>Pulpit</value></data>
+  <data name="Dashboard_FeatureGroups"><value>Grupy funkcji</value></data>
+  <data name="Dashboard_Sensors"><value>Czujniki</value></data>
+  <data name="Dashboard_Refresh"><value>Odśwież</value></data>
+  <data name="Dashboard_Status_NoTelemetry"><value>Brak dostępnej telemetrii</value></data>
+  <data name="Dashboard_Status_NoPowerTelemetry"><value>Brak telemetrii zasilania</value></data>
+  <data name="Dashboard_Description_NoAdapter"><value>Nie zarejestrowano adaptera platformy dla telemetrii.</value></data>
+  <data name="Dashboard_Status_Live"><value>Na żywo</value></data>
   <data name="Dashboard_Telemetry_CPU"><value>CPU</value></data>
-  <data name="Dashboard_Telemetry_CPUDescription"><value>Processor usage and temperature</value></data>
+  <data name="Dashboard_Telemetry_CPUDescription"><value>Użycie i temperatura procesora</value></data>
   <data name="Dashboard_Telemetry_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Telemetry_GPUDescription"><value>Graphics processor usage and temperature</value></data>
-  <data name="Dashboard_Telemetry_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Telemetry_BatteryDescription"><value>Charge and battery health</value></data>
+  <data name="Dashboard_Telemetry_GPUDescription"><value>Użycie i temperatura procesora graficznego</value></data>
+  <data name="Dashboard_Telemetry_Battery"><value>Bateria</value></data>
+  <data name="Dashboard_Telemetry_BatteryDescription"><value>Poziom naładowania i stan baterii</value></data>
   <data name="Dashboard_Telemetry_System"><value>System</value></data>
-  <data name="Dashboard_Telemetry_SystemDescription"><value>Additional platform telemetry</value></data>
-  <data name="Dashboard_Feature_Device"><value>Device</value></data>
+  <data name="Dashboard_Telemetry_SystemDescription"><value>Dodatkowa telemetria platformy</value></data>
+  <data name="Dashboard_Feature_Device"><value>Urządzenie</value></data>
   <data name="Dashboard_Feature_Bios"><value>BIOS</value></data>
-  <data name="Dashboard_Feature_PowerMode"><value>Power Mode</value></data>
-  <data name="Dashboard_Feature_FanControl"><value>Fan Control</value></data>
-  <data name="Dashboard_Feature_Display"><value>Display</value></data>
+  <data name="Dashboard_Feature_PowerMode"><value>Tryb wydajności</value></data>
+  <data name="Dashboard_Feature_FanControl"><value>Sterowanie wentylatorami</value></data>
+  <data name="Dashboard_Feature_Display"><value>Wyświetlacz</value></data>
   <data name="Dashboard_Feature_GPU"><value>GPU</value></data>
-  <data name="Dashboard_Feature_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Feature_Keyboard"><value>Keyboard</value></data>
-  <data name="Dashboard_Feature_PowerProfile"><value>Power Profile</value></data>
-  <data name="Dashboard_Feature_SystemTelemetry"><value>System Telemetry</value></data>
-  <data name="Dashboard_Feature_DevicePack"><value>Device support</value></data>
-  <data name="Dashboard_Description_PowerManagement"><value>System power management</value></data>
-  <data name="Dashboard_Description_FanManagement"><value>Fan speed management</value></data>
-  <data name="Dashboard_Description_RefreshRate"><value>Refresh rate control</value></data>
-  <data name="Dashboard_Description_GpuManagement"><value>GPU management</value></data>
-  <data name="Dashboard_Description_BatteryManagement"><value>Battery management</value></data>
-  <data name="Dashboard_Description_BacklightControl"><value>Backlight control</value></data>
-  <data name="Dashboard_Description_PlatformCapability"><value>Platform capability</value></data>
-  <data name="Dashboard_Status_Sample"><value>Sample</value></data>
-  <data name="Dashboard_Status_Available"><value>Available</value></data>
-  <data name="Dashboard_Status_NotSupported"><value>Not supported</value></data>
-  <data name="Dashboard_Status_Unknown"><value>Unknown</value></data>
+  <data name="Dashboard_Feature_Battery"><value>Bateria</value></data>
+  <data name="Dashboard_Feature_Keyboard"><value>Klawiatura</value></data>
+  <data name="Dashboard_Feature_PowerProfile"><value>Profil zasilania</value></data>
+  <data name="Dashboard_Feature_SystemTelemetry"><value>Telemetria systemu</value></data>
+  <data name="Dashboard_Feature_DevicePack"><value>Obsługa urządzenia</value></data>
+  <data name="Dashboard_Description_PowerManagement"><value>Zarządzanie zasilaniem systemu</value></data>
+  <data name="Dashboard_Description_FanManagement"><value>Zarządzanie prędkością wentylatorów</value></data>
+  <data name="Dashboard_Description_RefreshRate"><value>Sterowanie częstotliwością odświeżania</value></data>
+  <data name="Dashboard_Description_GpuManagement"><value>Zarządzanie GPU</value></data>
+  <data name="Dashboard_Description_BatteryManagement"><value>Zarządzanie baterią</value></data>
+  <data name="Dashboard_Description_BacklightControl"><value>Sterowanie podświetleniem</value></data>
+  <data name="Dashboard_Description_PlatformCapability"><value>Możliwości platformy</value></data>
+  <data name="Dashboard_Status_Sample"><value>Przykład</value></data>
+  <data name="Dashboard_Status_Available"><value>Dostępne</value></data>
+  <data name="Dashboard_Status_NotSupported"><value>Nieobsługiwane</value></data>
+  <data name="Dashboard_Status_Unknown"><value>Nieznane</value></data>
   <data name="Dashboard_Status_Generation"><value>Gen {0}</value></data>
-  <data name="Dashboard_Status_Charging"><value>Charging</value></data>
-  <data name="Dashboard_Status_Discharging"><value>Discharging</value></data>
-  <data name="Dashboard_Status_Monitoring"><value>Monitoring</value></data>
+  <data name="Dashboard_Status_Charging"><value>Ładowanie</value></data>
+  <data name="Dashboard_Status_Discharging"><value>Rozładowywanie</value></data>
+  <data name="Dashboard_Status_Monitoring"><value>Monitorowanie</value></data>
   <data name="Dashboard_Status_Spectrum"><value>Spectrum</value></data>
-  <data name="Dashboard_Status_PerKey"><value>Per-key</value></data>
-  <data name="Dashboard_Status_ReadOnly"><value>Read-only</value></data>
-  <data name="Dashboard_Sensor_CpuTemperature"><value>CPU Temperature</value></data>
-  <data name="Dashboard_Sensor_GpuTemperature"><value>GPU Temperature</value></data>
-  <data name="Dashboard_Sensor_CpuUsage"><value>CPU Usage</value></data>
-  <data name="Dashboard_Sensor_MemoryUsage"><value>Memory Usage</value></data>
-  <data name="Dashboard_Sensor_FanSpeed"><value>Fan Speed</value></data>
-  <data name="Dashboard_Sensor_Battery"><value>Battery</value></data>
-  <data name="Dashboard_Sensor_BatteryCharge"><value>Battery Charge</value></data>
-  <data name="Dashboard_Sensor_BatteryStatus"><value>Battery Status</value></data>
-  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
-  <data name="Dashboard_Sensor_MinDischargeRate"><value>Min Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Max Discharge Rate</value></data>
-  <data name="Dashboard_Sensor_CycleCount"><value>Cycle Count</value></data>
-  <data name="Settings_Title"><value>Settings</value></data>
-  <data name="Settings_Appearance"><value>Appearance</value></data>
-  <data name="Settings_Application"><value>Application</value></data>
-  <data name="Settings_Display"><value>Display</value></data>
-  <data name="Settings_PlatformUnavailable_Title"><value>Unavailable in this host</value></data>
-  <data name="Settings_PlatformUnavailable_Message"><value>This Avalonia host does not expose a safe adapter for this setting.</value></data>
-  <data name="Settings_PlatformUnavailable_Feature"><value>Feature availability</value></data>
-  <data name="Settings_PlatformUnavailable_Action"><value>Unavailable</value></data>
-  <data name="Appearance_Title"><value>Appearance</value></data>
-  <data name="Appearance_Description"><value>Customize the look and feel of the application.</value></data>
-  <data name="Appearance_ThemeMode"><value>Global interface color mode</value></data>
-  <data name="Appearance_Light"><value>Light</value></data>
-  <data name="Appearance_Dark"><value>Dark</value></data>
-  <data name="Appearance_System"><value>Follow system</value></data>
-  <data name="Appearance_ApplyAccent"><value>Change system color when changing the global interface color</value></data>
-  <data name="Appearance_Accent"><value>Global interface accent color</value></data>
-  <data name="Appearance_Language"><value>Language</value></data>
-  <data name="Appearance_LanguageDescription"><value>Select the display language for the application.</value></data>
-  <data name="Application_Title"><value>Application Behavior</value></data>
-  <data name="Application_Description"><value>Configure how the application behaves on startup and during use.</value></data>
-  <data name="Application_LaunchStartup"><value>Launch at Startup</value></data>
-  <data name="Application_LaunchStartupDescription"><value>Automatically start the application when Windows starts.</value></data>
-  <data name="Application_MinimizeTray"><value>Minimize to System Tray</value></data>
-  <data name="Application_MinimizeTrayDescription"><value>Keep the application running in the system tray when closed.</value></data>
-  <data name="Application_AutoRefresh"><value>Auto-refresh Hardware Data</value></data>
-  <data name="Application_AutoRefreshDescription"><value>Periodically poll hardware sensors for updated readings.</value></data>
-  <data name="Display_Title"><value>Display</value></data>
-  <data name="Display_Description"><value>Adjust display-related settings for your device.</value></data>
-  <data name="Display_RefreshRate"><value>Refresh Rate</value></data>
-  <data name="Display_RefreshRateDescription"><value>Select the display refresh rate (requires supported hardware).</value></data>
+  <data name="Dashboard_Status_PerKey"><value>Klawisz po klawiszu</value></data>
+  <data name="Dashboard_Status_ReadOnly"><value>Tylko do odczytu</value></data>
+  <data name="Dashboard_Sensor_CpuTemperature"><value>Temperatura CPU</value></data>
+  <data name="Dashboard_Sensor_GpuTemperature"><value>Temperatura GPU</value></data>
+  <data name="Dashboard_Sensor_CpuUsage"><value>Użycie CPU</value></data>
+  <data name="Dashboard_Sensor_MemoryUsage"><value>Użycie pamięci</value></data>
+  <data name="Dashboard_Sensor_FanSpeed"><value>Prędkość wentylatora</value></data>
+  <data name="Dashboard_Sensor_Battery"><value>Bateria</value></data>
+  <data name="Dashboard_Sensor_BatteryCharge"><value>Poziom naładowania baterii</value></data>
+  <data name="Dashboard_Sensor_BatteryStatus"><value>Stan baterii</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>Model baterii</value></data>
+  <data name="Dashboard_Sensor_MinDischargeRate"><value>Minimalne tempo rozładowania</value></data>
+  <data name="Dashboard_Sensor_MaxDischargeRate"><value>Maksymalne tempo rozładowania</value></data>
+  <data name="Dashboard_Sensor_CycleCount"><value>Liczba cykli</value></data>
+  <data name="Settings_Title"><value>Ustawienia</value></data>
+  <data name="Settings_Appearance"><value>Wygląd</value></data>
+  <data name="Settings_Application"><value>Aplikacja</value></data>
+  <data name="Settings_Display"><value>Wyświetlacz</value></data>
+  <data name="Settings_PlatformUnavailable_Title"><value>Niedostępne w tym hoście</value></data>
+  <data name="Settings_PlatformUnavailable_Message"><value>Ten host Avalonia nie udostępnia bezpiecznego adaptera dla tego ustawienia.</value></data>
+  <data name="Settings_PlatformUnavailable_Feature"><value>Dostępność funkcji</value></data>
+  <data name="Settings_PlatformUnavailable_Action"><value>Niedostępne</value></data>
+  <data name="Appearance_Title"><value>Wygląd</value></data>
+  <data name="Appearance_Description"><value>Dostosuj wygląd i styl aplikacji.</value></data>
+  <data name="Appearance_ThemeMode"><value>Globalny tryb kolorów interfejsu</value></data>
+  <data name="Appearance_Light"><value>Jasny</value></data>
+  <data name="Appearance_Dark"><value>Ciemny</value></data>
+  <data name="Appearance_System"><value>Podążaj za systemem</value></data>
+  <data name="Appearance_ApplyAccent"><value>Zmień kolor systemu podczas zmiany globalnego koloru interfejsu</value></data>
+  <data name="Appearance_Accent"><value>Globalny kolor akcentu interfejsu</value></data>
+  <data name="Appearance_Language"><value>Język</value></data>
+  <data name="Appearance_LanguageDescription"><value>Wybierz język wyświetlania aplikacji.</value></data>
+  <data name="Application_Title"><value>Zachowanie aplikacji</value></data>
+  <data name="Application_Description"><value>Skonfiguruj zachowanie aplikacji przy uruchamianiu i podczas użytkowania.</value></data>
+  <data name="Application_LaunchStartup"><value>Uruchamiaj przy starcie</value></data>
+  <data name="Application_LaunchStartupDescription"><value>Automatycznie uruchamiaj aplikację po starcie systemu Windows.</value></data>
+  <data name="Application_MinimizeTray"><value>Minimalizuj do zasobnika systemowego</value></data>
+  <data name="Application_MinimizeTrayDescription"><value>Utrzymuj aplikację w zasobniku systemowym po zamknięciu.</value></data>
+  <data name="Application_AutoRefresh"><value>Automatyczne odświeżanie danych sprzętu</value></data>
+  <data name="Application_AutoRefreshDescription"><value>Okresowo odpytywa czujniki sprzętowe w celu aktualizacji odczytów.</value></data>
+  <data name="Display_Title"><value>Wyświetlacz</value></data>
+  <data name="Display_Description"><value>Dostosuj ustawienia wyświetlacza swojego urządzenia.</value></data>
+  <data name="Display_RefreshRate"><value>Częstotliwość odświeżania</value></data>
+  <data name="Display_RefreshRateDescription"><value>Wybierz częstotliwość odświeżania wyświetlacza (wymaga obsługiwanego sprzętu).</value></data>
   <data name="Display_Overdrive"><value>Overdrive</value></data>
-  <data name="Display_OverdriveDescription"><value>Enable display overdrive for faster pixel response times.</value></data>
-  <data name="Dashboard_Subtitle"><value>Device health and controls</value></data>
-  <data name="Dashboard_Ready"><value>Ready</value></data>
-  <data name="Dashboard_Power"><value>Power</value></data>
-  <data name="Dashboard_LastUpdated"><value>Last updated</value></data>
-  <data name="FeaturePage_StatusTitle"><value>Feature status</value></data>
-  <data name="FeaturePage_Loading"><value>Reading the current platform capability...</value></data>
-  <data name="FeaturePage_Available"><value>Available</value></data>
-  <data name="FeaturePage_Unsupported"><value>Unavailable on this device</value></data>
-  <data name="FeaturePage_AvailableMessage"><value>The platform adapter reported this feature as available.</value></data>
-  <data name="FeaturePage_LoadFailed"><value>Unable to load feature state</value></data>
-  <data name="Settings_Page_StatusTitle"><value>Settings ready</value></data>
-  <data name="Settings_Page_StatusMessage"><value>Changes are saved immediately.</value></data>
-  <data name="Settings_Page_LoadFailed"><value>Unable to load settings</value></data>
-  <data name="Settings_Page_NoOptions"><value>No settings are available for this page.</value></data>
-  <data name="Settings_Page_UnavailableDetail"><value>The controls remain visible when the adapter is available on this platform.</value></data>
+  <data name="Display_OverdriveDescription"><value>Włącz overdrive wyświetlacza, aby przyspieszyć czas reakcji pikseli.</value></data>
+  <data name="Dashboard_Subtitle"><value>Stan urządzenia i kontrolki</value></data>
+  <data name="Dashboard_Ready"><value>Gotowy</value></data>
+  <data name="Dashboard_Power"><value>Moc</value></data>
+  <data name="Dashboard_LastUpdated"><value>Ostatnia aktualizacja</value></data>
+  <data name="FeaturePage_StatusTitle"><value>Stan funkcji</value></data>
+  <data name="FeaturePage_Loading"><value>Odczyt bieżących możliwości platformy...</value></data>
+  <data name="FeaturePage_Available"><value>Dostępne</value></data>
+  <data name="FeaturePage_Unsupported"><value>Niedostępne na tym urządzeniu</value></data>
+  <data name="FeaturePage_AvailableMessage"><value>Adapter platformy zgłosił tę funkcję jako dostępną.</value></data>
+  <data name="FeaturePage_LoadFailed"><value>Nie można wczytać stanu funkcji</value></data>
+  <data name="Settings_Page_StatusTitle"><value>Ustawienia gotowe</value></data>
+  <data name="Settings_Page_StatusMessage"><value>Zmiany są zapisywane natychmiast.</value></data>
+  <data name="Settings_Page_LoadFailed"><value>Nie można wczytać ustawień</value></data>
+  <data name="Settings_Page_NoOptions"><value>Brak ustawień dla tej strony.</value></data>
+  <data name="Settings_Page_UnavailableDetail"><value>Kontrolki będą widoczne, gdy adapter będzie dostępny na tej platformie.</value></data>
   <data name="AboutPage_Build" xml:space="preserve">
     <value>Wersja</value>
   </data>
@@ -265,13 +265,13 @@ Uruchomione zostaną tylko te akcje, które odpowiadają bieżącemu stanowi.</v
     <value>Dodaj nową</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
-    <value>Add automatic</value>
+    <value>Dodaj automatyczny</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
-    <value>New automatic pipeline</value>
+    <value>Nowy automatyczny potok</value>
   </data>
   <data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
-    <value>Automatic triggers are unavailable.</value>
+    <value>Automatyczne wyzwalacze są niedostępne.</value>
   </data>
   <data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>Nie zdefiniowano żadnych szybkich akcji. Kliknij „Dodaj nową”, aby utworzyć nową szybką akcję.</value>
@@ -2382,7 +2382,7 @@ OSTRZEŻENIE: Ta akcja nie zadziała poprawnie, jeśli dedykowana karta graficzn
     <comment>For example: "{Performance} power mode is not available without AC power."</comment>
   </data>
   <data name="PowerModeControl_SwitchFailed_Message" xml:space="preserve">
-    <value>Failed to switch power mode. The device did not accept the change.</value>
+    <value>Nie udało się zmienić trybu wydajności. Urządzenie nie zaakceptowało zmiany.</value>
   </data>
   <data name="EditDashboardWindow_Sensors" xml:space="preserve">
     <value>Czujniki</value>
@@ -2828,10 +2828,10 @@ Obsługiwane formaty: {1}.</value>
     <value>Automatycznie sprawdzaj aktualizacje</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Title" xml:space="preserve">
-    <value>Include preview versions</value>
+    <value>Uwzględniaj wersje zapoznawcze</value>
   </data>
   <data name="SettingsPage_IncludePrereleaseUpdates_Message" xml:space="preserve">
-    <value>When off, only stable releases are offered as updates. Turn on to also receive preview (prerelease) versions.</value>
+    <value>Gdy wyłączone, oferowane są tylko stabilne wydania jako aktualizacje. Włącz, aby otrzymywać również wersje zapoznawcze (prerelease).</value>
   </data>
   <data name="SettingsPage_UpdateRepository_Title" xml:space="preserve">
     <value>Repozytorium aktualizacji</value>
@@ -3498,7 +3498,7 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Przezroczystość</value>
   </data>
   <data name="OsdSettings_Appearance_SeparatorColor" xml:space="preserve">
-    <value>Separator Color</value>
+    <value>Kolor separatora</value>
   </data>
   <data name="OsdSettings_Appearance_ValueColor" xml:space="preserve">
     <value>Kolor wartości</value>
@@ -3684,7 +3684,7 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Tryb ITS</value>
   </data>
   <data name="DashboardITSModeControl_Subtitle" xml:space="preserve">
-    <value>Intelligent Thermal Solution</value>
+    <value>Inteligentne rozwiązanie termiczne</value>
   </data>
   <data name="DashboardITSModeControl_RuntimeUnavailable" xml:space="preserve">
     <value>Środowisko uruchomieniowe ITS jest niedostępne w tym systemie.</value>
@@ -3771,7 +3771,7 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Opcjonalne lokalne przyspieszanie. Domyślnie wyłączone — proxy, hosts i certyfikaty nigdy nie startują automatycznie przy uruchomieniu.</value>
   </data>
   <data name="NetworkAccelerationPage_StatusHeading" xml:space="preserve">
-    <value>Status</value>
+    <value>Stan</value>
   </data>
   <data name="NetworkAccelerationPage_StatusOff" xml:space="preserve">
     <value>Wył. (domyślnie)</value>
@@ -4197,16 +4197,16 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
     <value>Domyślna</value>
   </data>
   <data name="SettingsPage_UiScale_Title" xml:space="preserve">
-    <value>Interface scale</value>
+    <value>Skala interfejsu</value>
   </data>
   <data name="SettingsPage_UiScale_Description" xml:space="preserve">
-    <value>Scale text and the whole interface together, independent of Windows display scaling.</value>
+    <value>Skaluj tekst i cały interfejs razem, niezależnie od skalowania wyświetlania systemu Windows.</value>
   </data>
   <data name="SettingsPage_AppScale_Title" xml:space="preserve">
-    <value>App scale</value>
+    <value>Skala aplikacji</value>
   </data>
   <data name="SettingsPage_AppScale_Description" xml:space="preserve">
-    <value>Scale the entire app interface independently of Windows display scaling.</value>
+    <value>Skaluj cały interfejs aplikacji niezależnie od skalowania wyświetlania systemu Windows.</value>
   </data>
   <data name="SettingsPage_TextSize_Title" xml:space="preserve">
     <value>Rozmiar tekstu</value>
@@ -4220,76 +4220,76 @@ Nie wpłynie to na inne pełnoekranowe okna, ale nie będziesz mógł klikać w 
   <data name="DeviceSetupWindow_PackDownloadFailed" xml:space="preserve">
     <value>Nie udało się pobrać pakietu obsługi urządzenia. Sprawdź połączenie i potwierdź, aby spróbować ponownie, lub pomiń – zapytamy ponownie przy następnym uruchomieniu.</value>
   </data>
-  <data name="NaDiag_NatTitle" xml:space="preserve"><value>NAT Type Detection</value></data>
-  <data name="NaDiag_NatType" xml:space="preserve"><value>NAT Type:</value></data>
-  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Local IP:</value></data>
-  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Public IP:</value></data>
+  <data name="NaDiag_NatTitle" xml:space="preserve"><value>Wykrywanie typu NAT</value></data>
+  <data name="NaDiag_NatType" xml:space="preserve"><value>Typ NAT:</value></data>
+  <data name="NaDiag_LocalIp" xml:space="preserve"><value>Lokalne IP:</value></data>
+  <data name="NaDiag_PublicIp" xml:space="preserve"><value>Publiczne IP:</value></data>
   <data name="NaDiag_Internet" xml:space="preserve"><value>Internet:</value></data>
-  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>DNS Detection</value></data>
-  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Domain to test:</value></data>
-  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Custom DNS:</value></data>
-  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Enable DoH:</value></data>
-  <data name="NaDiag_DohUrl" xml:space="preserve"><value>DoH URL:</value></data>
-  <data name="NaDiag_Latency" xml:space="preserve"><value>Latency:</value></data>
+  <data name="NaDiag_DnsTitle" xml:space="preserve"><value>Wykrywanie DNS</value></data>
+  <data name="NaDiag_DnsDomain" xml:space="preserve"><value>Domena do testu:</value></data>
+  <data name="NaDiag_CustomDns" xml:space="preserve"><value>Niestandardowe DNS:</value></data>
+  <data name="NaDiag_EnableDoh" xml:space="preserve"><value>Włącz DoH:</value></data>
+  <data name="NaDiag_DohUrl" xml:space="preserve"><value>Adres URL DoH:</value></data>
+  <data name="NaDiag_Latency" xml:space="preserve"><value>Opóźnienie:</value></data>
   <data name="NaDiag_LatencyFormat" xml:space="preserve"><value>{0} ms</value></data>
-  <data name="NaDiag_Failed" xml:space="preserve"><value>Failed</value></data>
-  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>IPv6 Detection</value></data>
-  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Support:</value></data>
-  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>IPv6 Address:</value></data>
-  <data name="NaDiag_Supported" xml:space="preserve"><value>Supported</value></data>
-  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Not supported</value></data>
-  <data name="NaDiag_Detect" xml:space="preserve"><value>Detect</value></data>
-  <data name="NaDiag_Unknown" xml:space="preserve"><value>Unknown</value></data>
-  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Open NAT</value></data>
+  <data name="NaDiag_Failed" xml:space="preserve"><value>Niepowodzenie</value></data>
+  <data name="NaDiag_Ipv6Title" xml:space="preserve"><value>Wykrywanie IPv6</value></data>
+  <data name="NaDiag_Ipv6Support" xml:space="preserve"><value>Obsługa:</value></data>
+  <data name="NaDiag_Ipv6Address" xml:space="preserve"><value>Adres IPv6:</value></data>
+  <data name="NaDiag_Supported" xml:space="preserve"><value>Obsługiwane</value></data>
+  <data name="NaDiag_NotSupported" xml:space="preserve"><value>Nieobsługiwane</value></data>
+  <data name="NaDiag_Detect" xml:space="preserve"><value>Wykryj</value></data>
+  <data name="NaDiag_Unknown" xml:space="preserve"><value>Nieznane</value></data>
+  <data name="NaDiag_NatOpen" xml:space="preserve"><value>Otwarty NAT</value></data>
   <data name="NaDiag_NatRestricted" xml:space="preserve"><value>NAT</value></data>
-  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP blocked</value></data>
-  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operation failed</value></data>
-  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Vantage: {0}</value></data>
-  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Failed to stop Legion Zone: {0}</value></data>
-  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Failed to stop Lenovo Hotkeys: {0}</value></data>
-  <data name="Theme_Light" xml:space="preserve"><value>Light</value></data>
-  <data name="Theme_Dark" xml:space="preserve"><value>Dark</value></data>
+  <data name="NaDiag_UdpBlocked" xml:space="preserve"><value>UDP zablokowany</value></data>
+  <data name="MainWindow_StopSoftware_Error_Title" xml:space="preserve"><value>Operacja nie powiodła się</value></data>
+  <data name="MainWindow_StopVantage_Error_Message" xml:space="preserve"><value>Nie udało się zatrzymać Lenovo Vantage: {0}</value></data>
+  <data name="MainWindow_StopLegionZone_Error_Message" xml:space="preserve"><value>Nie udało się zatrzymać Legion Zone: {0}</value></data>
+  <data name="MainWindow_StopFnKeys_Error_Message" xml:space="preserve"><value>Nie udało się zatrzymać Lenovo Hotkeys: {0}</value></data>
+  <data name="Theme_Light" xml:space="preserve"><value>Jasny</value></data>
+  <data name="Theme_Dark" xml:space="preserve"><value>Ciemny</value></data>
   <data name="Theme_System" xml:space="preserve"><value>System</value></data>
-  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Theme style</value></data>
+  <data name="SettingsPage_ThemeStyle_SubTitle" xml:space="preserve"><value>Styl motywu</value></data>
   <data name="SettingsPage_ThemeMode_Title" xml:space="preserve"><value>Globalny tryb kolorów interfejsu</value></data>
   <data name="SettingsPage_ApplyAccentColorToTheme_Title" xml:space="preserve"><value>Zmień kolor systemu podczas dostosowywania globalnego koloru interfejsu</value></data>
   <data name="SettingsPage_AccentColorPresets_Title" xml:space="preserve"><value>Globalny kolor akcentu interfejsu</value></data>
-  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Apply the theme style when adjusting the global interface color</value></data>
-  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Window background effect</value></data>
-  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Choose the Windows background effect used by the application windows.</value></data>
+  <data name="SettingsPage_ApplyAccentColorToThemeStyle_Title" xml:space="preserve"><value>Zastosuj styl motywu podczas zmiany globalnego koloru interfejsu</value></data>
+  <data name="SettingsPage_WindowBackdrop_Title" xml:space="preserve"><value>Efekt tła okna</value></data>
+  <data name="SettingsPage_WindowBackdrop_Message" xml:space="preserve"><value>Wybierz efekt tła Windows używany przez okna aplikacji.</value></data>
   <data name="SettingsPage_WindowBackdrop_Mica" xml:space="preserve"><value>Mica</value></data>
   <data name="SettingsPage_WindowBackdrop_Acrylic" xml:space="preserve"><value>Acrylic</value></data>
-  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Off</value></data>
-  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>IPv6 access supported</value></data>
-  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>{0} NAT documentation</value></data>
-  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Related links</value></data>
-  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Resolved:</value></data>
-  <data name="NaDiag_TestItems" xml:space="preserve"><value>Test items</value></data>
-  <data name="NaDiag_TestResults" xml:space="preserve"><value>Test results</value></data>
+  <data name="SettingsPage_WindowBackdrop_Off" xml:space="preserve"><value>Wył.</value></data>
+  <data name="NaDiag_Ipv6SupportedFull" xml:space="preserve"><value>Dostęp do IPv6 obsługiwany</value></data>
+  <data name="NaDiag_NatDocLinkFormat" xml:space="preserve"><value>Dokumentacja NAT {0}</value></data>
+  <data name="NaDiag_RelatedLinks" xml:space="preserve"><value>Powiązane linki</value></data>
+  <data name="NaDiag_ResolvedAddress" xml:space="preserve"><value>Rozwiązano:</value></data>
+  <data name="NaDiag_TestItems" xml:space="preserve"><value>Elementy testu</value></data>
+  <data name="NaDiag_TestResults" xml:space="preserve"><value>Wyniki testów</value></data>
   <data name="ComboBox_UnsupportedType" xml:space="preserve">
-    <value>Unsupported type.</value>
+    <value>Nieobsługiwany typ.</value>
   </data>
   <data name="AutomationStep_CreationFailed" xml:space="preserve">
-    <value>Could not create automation step.</value>
+    <value>Nie można utworzyć kroku automatyzacji.</value>
   </data>
   <data name="FeatureRegistration_NotSupported" xml:space="preserve">
-    <value>Feature is not supported.</value>
+    <value>Funkcja nie jest obsługiwana.</value>
   </data>
   <data name="FeatureRegistration_NullReturnValue" xml:space="preserve">
-    <value>Feature returned no value.</value>
+    <value>Funkcja nie zwróciła wartości.</value>
   </data>
   <data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
-    <value>State is not supported.</value>
+    <value>Stan nie jest obsługiwany.</value>
   </data>
-  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>This feature is provided by the host platform adapter.</value></data>
-  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>No platform adapter reported this feature.</value></data>
-  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Platform adapter</value></data>
-  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Install or enable a compatible platform adapter to use this feature.</value></data>
-  <data name="FeaturePage_NoActions" xml:space="preserve"><value>No actions were reported by the platform adapter.</value></data>
-  <data name="Appearance_Advanced" xml:space="preserve"><value>Appearance options</value></data>
-  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Temperature unit</value></data>
-  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Choose how temperatures are displayed.</value></data>
-  <data name="Appearance_Font" xml:space="preserve"><value>Application font</value></data>
-  <data name="Appearance_FontDescription" xml:space="preserve"><value>Choose the application font family.</value></data>
-  <data name="Appearance_UiScale" xml:space="preserve"><value>Interface scale</value></data>
-  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Adjust text and control density together.</value></data></root>
+  <data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>Ta funkcja jest udostępniana przez adapter platformy hosta.</value></data>
+  <data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>Żaden adapter platformy nie zgłosił tej funkcji.</value></data>
+  <data name="FeaturePage_AdapterAction" xml:space="preserve"><value>Adapter platformy</value></data>
+  <data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>Zainstaluj lub włącz kompatybilny adapter platformy, aby korzystać z tej funkcji.</value></data>
+  <data name="FeaturePage_NoActions" xml:space="preserve"><value>Adapter platformy nie zgłosił żadnych akcji.</value></data>
+  <data name="Appearance_Advanced" xml:space="preserve"><value>Opcje wyglądu</value></data>
+  <data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Jednostka temperatury</value></data>
+  <data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Wybierz sposób wyświetlania temperatur.</value></data>
+  <data name="Appearance_Font" xml:space="preserve"><value>Czcionka aplikacji</value></data>
+  <data name="Appearance_FontDescription" xml:space="preserve"><value>Wybierz rodzinę czcionek aplikacji.</value></data>
+  <data name="Appearance_UiScale" xml:space="preserve"><value>Skala interfejsu</value></data>
+  <data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Dostosuj tekst i zagęszczenie kontrolek razem.</value></data></root>
