@@ -544,10 +544,17 @@ public partial class KeyboardBacklightPage : UserControl
         }
     }
 
-    private void SpectrumBrightness_ValueChanged(object? sender, global::Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+    private async void SpectrumBrightness_ValueChanged(object? sender, global::Avalonia.Controls.Primitives.RangeBaseValueChangedEventArgs e)
     {
         SpectrumBrightnessValue.Text = ((int)e.NewValue).ToString(CultureInfo.InvariantCulture);
+        if (_isRefreshing || _state is null)
+            return;
+
+        await ApplyAsync(CreateSpectrumBrightnessUpdate(e.NewValue));
     }
+
+    internal static KeyboardLightingUpdate CreateSpectrumBrightnessUpdate(double brightness) =>
+        new("Spectrum", Brightness: Math.Clamp((int)brightness, 0, 9));
 
     private void SpectrumLogo_Click(object? sender, RoutedEventArgs e)
     {
