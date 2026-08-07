@@ -28,6 +28,10 @@ public partial class MainWindow : Window
     private bool? _keyboardHardwareAvailable;
     private int _windowSurfaceRefreshGeneration;
 #if WINDOWS
+    private Rect? _lastNormalWindowBounds;
+    private bool _windowPlacementRestored;
+#endif
+#if WINDOWS
     private IPluginManager? _pluginManager;
 #endif
 
@@ -50,6 +54,8 @@ public partial class MainWindow : Window
         SizeChanged += OnWindowSizeChanged;
         Activated += OnWindowActivated;
 #if WINDOWS
+        Opened += OnOpened;
+        Closing += OnClosing;
         SubscribeToPluginStateChanges();
         Closed += OnClosed;
 #endif
@@ -57,6 +63,10 @@ public partial class MainWindow : Window
 
     private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
     {
+#if WINDOWS
+        TrackNormalWindowBounds();
+#endif
+
         // Force UI refresh when window state changes
         if (e.Property == WindowStateProperty)
         {
@@ -80,12 +90,138 @@ public partial class MainWindow : Window
 
     private void OnWindowSizeChanged(object? sender, SizeChangedEventArgs e)
     {
+#if WINDOWS
+        TrackNormalWindowBounds();
+#endif
+
         // Trigger layout update when window is resized (including from minimized state)
         InvalidateArrange();
         InvalidateMeasure();
     }
 
     private void OnWindowActivated(object? sender, EventArgs e) => QueueWindowSurfaceRefresh();
+
+#if WINDOWS
+    private void OnOpened(object? sender, EventArgs e)
+    {
+        RestoreWindowPlacement();
+        TrackNormalWindowBounds();
+    }
+
+    private void OnClosing(object? sender, WindowClosingEventArgs e) => SaveWindowPlacement();
+
+    private void RestoreWindowPlacement()
+    {
+        if (_windowPlacementRestored)
+            return;
+
+        _windowPlacementRestored = true;
+        var settings = Services.WindowsAvaloniaSettingsService.SharedApplicationSettings;
+        var result = AvaloniaWindowPlacementCoordinator.Restore(
+            settings.Store.WindowPlacement,
+            settings.Store.WindowSize,
+            new Size(MinWidth, MinHeight),
+            GetScreenWorkAreas());
+        if (result is not { } restored)
+            return;
+
+        ApplyLogicalBounds(restored.Bounds);
+        _lastNormalWindowBounds = restored.Bounds;
+
+        // A minimized state is never persisted. Set Maximized only after the
+        // normal bounds are applied so a later close can restore them correctly.
+        if (restored.IsMaximized)
+            WindowState = WindowState.Maximized;
+    }
+
+    private void SaveWindowPlacement()
+    {
+        try
+        {
+            var normalBounds = _lastNormalWindowBounds ?? GetCurrentLogicalBounds();
+            if (normalBounds.Width <= 0 || normalBounds.Height <= 0)
+                return;
+
+            var settings = Services.WindowsAvaloniaSettingsService.SharedApplicationSettings;
+            settings.Store.WindowSize = new UniversalDeviceToolkit.Lib.WindowSize(
+                normalBounds.Width,
+                normalBounds.Height);
+            settings.Store.WindowPlacement = AvaloniaWindowPlacementCoordinator.Capture(
+                normalBounds,
+                WindowState == WindowState.Maximized);
+            settings.SynchronizeStore();
+        }
+        catch
+        {
+            // Closing must never be blocked by an unavailable display or a
+            // transient settings-file failure.
+        }
+    }
+
+    private void TrackNormalWindowBounds()
+    {
+        if (WindowState == WindowState.Normal && _windowPlacementRestored)
+            _lastNormalWindowBounds = GetCurrentLogicalBounds();
+    }
+
+    private Rect GetCurrentLogicalBounds()
+    {
+        var scaling = RenderScaling > 0 ? RenderScaling : 1d;
+        return new Rect(Position.X / scaling, Position.Y / scaling, Width, Height);
+    }
+
+    private IReadOnlyList<AvaloniaWindowPlacementCoordinator.ScreenWorkArea> GetScreenWorkAreas()
+    {
+        if (Screens is null)
+            return [];
+
+        var primary = Screens.Primary;
+        return Screens.All.Select(screen =>
+        {
+            var scaling = screen.Scaling > 0 ? screen.Scaling : 1d;
+            var workArea = screen.WorkingArea;
+            return new AvaloniaWindowPlacementCoordinator.ScreenWorkArea(
+                new Rect(
+                    workArea.X / scaling,
+                    workArea.Y / scaling,
+                    workArea.Width / scaling,
+                    workArea.Height / scaling),
+                screen == primary);
+        }).ToArray();
+    }
+
+    private void ApplyLogicalBounds(Rect bounds)
+    {
+        Width = Math.Max(MinWidth, bounds.Width);
+        Height = Math.Max(MinHeight, bounds.Height);
+
+        var targetScreen = GetScreenWorkAreas()
+            .FirstOrDefault(screen => screen.Bounds.Contains(bounds.Center));
+        var scaling = targetScreen.Bounds.Width > 0
+            ? GetScreenScaling(targetScreen.Bounds)
+            : (RenderScaling > 0 ? RenderScaling : 1d);
+        Position = new PixelPoint(
+            (int)Math.Round(bounds.X * scaling),
+            (int)Math.Round(bounds.Y * scaling));
+    }
+
+    private double GetScreenScaling(Rect logicalWorkArea)
+    {
+        if (Screens is null)
+            return RenderScaling > 0 ? RenderScaling : 1d;
+
+        foreach (var screen in Screens.All)
+        {
+            var scaling = screen.Scaling > 0 ? screen.Scaling : 1d;
+            var workArea = screen.WorkingArea;
+            if (Math.Abs(workArea.X / scaling - logicalWorkArea.X) < 0.01
+                && Math.Abs(workArea.Y / scaling - logicalWorkArea.Y) < 0.01)
+                return scaling;
+        }
+
+        return RenderScaling > 0 ? RenderScaling : 1d;
+    }
+#endif
 
     /// <summary>
     /// Restores a hidden tray window through the same redraw path used after a
