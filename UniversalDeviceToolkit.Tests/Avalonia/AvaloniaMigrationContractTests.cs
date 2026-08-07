@@ -155,6 +155,22 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Theory]
+    [InlineData("DiscreteGpu")]
+    [InlineData("OverclockDiscreteGpu")]
+    [InlineData("TurnOffMonitors")]
+    public void DedicatedDashboardCards_ArePersistedLayoutItems(string identifier)
+    {
+        var item = new DashboardLayoutItemViewModel(
+            new DashboardGroupViewModel(new DashboardGroupState("Graphics", null, [identifier])),
+            identifier);
+
+        item.IsCustomControl.Should().BeTrue();
+        item.IsStandardControl.Should().BeFalse();
+        (item.IsDiscreteGpuControl || item.IsGpuOverclockControl || item.IsTurnOffMonitorsControl)
+            .Should().BeTrue();
+    }
+
+    [Theory]
     [InlineData("Balance", true, true)]
     [InlineData("Performance", true, false)]
     [InlineData("Balance", false, false)]
@@ -294,6 +310,26 @@ public sealed class AvaloniaMigrationContractTests
         markup.Should().Contain("ToggleDashboardItemPickerCommand");
         markup.Should().Contain("AddDashboardItemCommand");
         markup.Should().Contain("AvailableDashboardItems");
+    }
+
+    [Fact]
+    public void DashboardLayoutMarkup_RendersDedicatedCardsInsidePersistedItems()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DashboardPage.axaml"));
+
+        markup.Should().Contain("IsDiscreteGpuControl");
+        markup.Should().Contain("IsGpuOverclockControl");
+        markup.Should().Contain("IsTurnOffMonitorsControl");
+        markup.Should().Contain("MoveDashboardItemUpCommand");
+        markup.Should().Contain("MoveDashboardItemDownCommand");
+        markup.Should().Contain("RemoveDashboardItemCommand");
+        markup.Should().NotContain("ToolTip.Tip=\"{Binding DiscreteGpuState.Error}\"");
+        markup.Should().NotContain("Command=\"{Binding TurnOffMonitorsCommand}\"");
     }
 
     [Fact]
