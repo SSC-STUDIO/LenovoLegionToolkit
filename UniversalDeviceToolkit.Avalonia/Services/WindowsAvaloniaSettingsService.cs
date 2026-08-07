@@ -19,6 +19,7 @@ using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.ViewModels;
 using MachineCompatibility = UniversalDeviceToolkit.Lib.Utils.Compatibility;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using HardwareSensorSettings = UniversalDeviceToolkit.Lib.Settings.HardwareSensorSettings;
@@ -1369,6 +1370,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         var refreshRates = await GetRefreshRatesAsync().ConfigureAwait(false);
         var currentRefreshRate = await GetCurrentRefreshRateAsync().ConfigureAwait(false);
         var bootLogoSupported = await BootLogo.IsSupportedAsync().ConfigureAwait(false);
+        var keyboardSupported = await GetKeyboardBacklightSupportedAsync().ConfigureAwait(false);
         var fnKeys = IoCContainer.TryResolve<FnKeysDisabler>();
         var fnKeysStatus = fnKeys is null
             ? SoftwareStatus.NotFound
@@ -1377,6 +1379,9 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         var notificationsEnabled = !store.DontShowNotifications;
 
         var navigationOptions = NavigationVisibilityPolicy.Entries
+            // WPF omits the Keyboard visibility card when no keyboard backlight implementation
+            // is available; offering a setting for an unreachable route is misleading.
+            .Where(entry => entry.Route != MainNavigation.Keyboard || keyboardSupported)
             .Select(entry => new AvaloniaSettingOption(
                 $"NavigationItemVisibility:{entry.Key}",
                 AvaloniaLocalization.GetString(entry.TitleKey, entry.TitleFallback),
@@ -1433,6 +1438,22 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 ..navigationOptions,
             ],
             true);
+    }
+
+    private static async Task<bool> GetKeyboardBacklightSupportedAsync()
+    {
+        try
+        {
+            var keyboardViewModel = IoCContainer.TryResolve<KeyboardBacklightViewModel>();
+            return keyboardViewModel is not null
+                && await keyboardViewModel.IsSupportedAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            // Match the WPF settings dialog: a failed capability probe must not expose
+            // a navigation preference for hardware that cannot be used.
+            return false;
+        }
     }
 
     private AvaloniaSettingsPageData BuildUpdatePage()
