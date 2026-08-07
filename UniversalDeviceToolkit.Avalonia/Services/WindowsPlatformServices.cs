@@ -377,6 +377,9 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.GetAutomationTriggerOptionsAsync()
             : _featureHost.GetAutomationTriggerOptionsAsync();
 
+    internal Task StartAutomationForHostAsync() =>
+        _featureHost?.StartAutomationForHostAsync() ?? Task.CompletedTask;
+
     public Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync() =>
         _featureHost is null
             ? _inner.GetAutomationStepOptionsAsync()

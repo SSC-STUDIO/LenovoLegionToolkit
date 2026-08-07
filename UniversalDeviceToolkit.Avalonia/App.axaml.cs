@@ -467,6 +467,19 @@ public partial class App : Application
     {
         await InitializePluginsAsync().ConfigureAwait(false);
 
+        await new AvaloniaWindowsStartupCoordinator().RunAsync().ConfigureAwait(false);
+        if (PlatformServices is WindowsPlatformServices windowsPlatformServices)
+        {
+            try
+            {
+                await windowsPlatformServices.StartAutomationForHostAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Trace("Avalonia automation startup failed.", ex);
+            }
+        }
+
         if (mainWindow is not null)
             Dispatcher.UIThread.Post(() => _ = mainWindow.RefreshPluginNavigationAsync());
 

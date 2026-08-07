@@ -95,6 +95,8 @@ internal sealed class WindowsFeatureHostServices
     private ulong? _macroRecordingKey;
     private List<MacroEvent>? _macroRecordingEvents;
     private bool _automationInitialized;
+    private bool _automationStartupInvoked;
+    private readonly SemaphoreSlim _automationStartupLock = new(1, 1);
     private KeyboardLayout? _spectrumKeyboardLayoutOverride;
     private static readonly ulong[] MacroKeys = [0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69];
 
@@ -1595,6 +1597,24 @@ internal sealed class WindowsFeatureHostServices
                 definition.Trigger.DisplayName,
                 AutomationSerialization.SerializeTrigger(definition.Trigger)))
             .ToArray();
+    }
+
+    internal async Task StartAutomationForHostAsync()
+    {
+        await _automationStartupLock.WaitAsync().ConfigureAwait(false);
+        try
+        {
+            if (_automationStartupInvoked)
+                return;
+
+            await EnsureAutomationInitializedAsync().ConfigureAwait(false);
+            _automation.RunOnStartup();
+            _automationStartupInvoked = true;
+        }
+        finally
+        {
+            _automationStartupLock.Release();
+        }
     }
 
     public async Task<IReadOnlyList<AutomationStepOption>> GetAutomationStepOptionsAsync()
