@@ -442,7 +442,10 @@ public partial class App : Application
         AvaloniaLocalization.ApplyCulture(e.Culture);
 #if WINDOWS
         ApplyWindowsResourceCulture(e.Culture);
-        AvaloniaPluginResourceCulture.Apply(e.Culture);
+        // Keep per-plugin language overrides intact. Applying the app culture
+        // directly to every loaded plugin resource would overwrite overrides
+        // until a settings page happened to create PluginLanguageService.
+        PluginLanguageService.Current.ApplyForAllLoadedPlugins();
 #endif
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
@@ -906,7 +909,7 @@ public partial class App : Application
 
             pluginManager.PruneRetiredPlugins();
             await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
-            AvaloniaPluginResourceCulture.Apply(LocalizationRuntime.CurrentCulture);
+            PluginLanguageService.Current.ApplyForAllLoadedPlugins();
         }
         catch (Exception ex)
         {

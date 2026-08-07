@@ -132,6 +132,41 @@ namespace UniversalDeviceToolkit.Tests.Avalonia
         }
 
         [Fact]
+        public void ApplyForAllLoadedPlugins_RestoresOverridesAfterAHostCultureRefresh()
+        {
+            var service = CreateService();
+            service.SetLanguage("custom-mouse", "zh-Hans");
+            service.SetLanguage("shell-integration", null);
+
+            // This is the state the old App host path produced: a direct
+            // resource refresh applies the app language to every plugin.
+            AvaloniaPluginResourceCulture.Apply(
+                new CultureInfo("de"),
+                new Dictionary<string, string>(),
+                TestPluginResourceTypeProvider());
+            CustomMouseResource.Culture!.Name.Should().Be("de");
+
+            service.ApplyForAllLoadedPlugins();
+
+            CustomMouseResource.Culture!.Name.Should().Be("zh-Hans");
+            ShellResource.Culture!.Name.Should().Be(LocalizationRuntime.CurrentCulture.Name);
+        }
+
+        [Fact]
+        public void AppLanguageRefresh_DelegatesPluginResourcesToOverrideAwareService()
+        {
+            var root = RepositoryPaths.FindRoot();
+            var app = File.ReadAllText(Path.Combine(
+                root,
+                "UniversalDeviceToolkit.Avalonia",
+                "App.axaml.cs"));
+
+            app.Should().Contain("PluginLanguageService.Current.ApplyForAllLoadedPlugins();");
+            app.Should().NotContain("AvaloniaPluginResourceCulture.Apply(e.Culture);");
+            app.Should().NotContain("AvaloniaPluginResourceCulture.Apply(LocalizationRuntime.CurrentCulture);");
+        }
+
+        [Fact]
         public void Apply_WithPerPluginOverrides_UsesOverrideOrAppCulture()
         {
             var overrides = new Dictionary<string, string>
