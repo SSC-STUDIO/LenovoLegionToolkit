@@ -13,6 +13,7 @@ public partial class SettingsPageViewModel : ObservableObject
 {
     private readonly SettingsNavigationViewModel _navModel;
     private readonly IPlatformServices _platformServices;
+    private readonly Func<string, object?> _contentFactory;
 
     [ObservableProperty]
     private IReadOnlyList<NavigationItemViewModel> _navigationItems = Array.Empty<NavigationItemViewModel>();
@@ -23,18 +24,38 @@ public partial class SettingsPageViewModel : ObservableObject
     [ObservableProperty]
     private object? _selectedContent;
 
-    public SettingsPageViewModel(IPlatformServices platformServices)
+    /// <summary>
+    /// Completes after capability detection has populated the navigation list.
+    /// Exposed so the host and tests can await the initial route state instead
+    /// of depending on an unobserved constructor task.
+    /// </summary>
+    public Task Initialization { get; }
+
+    public SettingsPageViewModel(
+        IPlatformServices platformServices,
+        Func<string, object?>? contentFactory = null)
     {
-        _platformServices = platformServices;
+        _platformServices = platformServices ?? throw new ArgumentNullException(nameof(platformServices));
+        _contentFactory = contentFactory ?? CreateContent;
 
         _navModel = new SettingsNavigationViewModel(Localization.AvaloniaLocalization.StringLocalizer);
 
-        _ = InitializeAsync();
+        Initialization = InitializeAsync();
     }
 
     private async Task InitializeAsync()
     {
-        var isSupportedLegionMachine = await _platformServices.IsSupportedLegionMachineAsync();
+        var isSupportedLegionMachine = false;
+        try
+        {
+            isSupportedLegionMachine = await _platformServices.IsSupportedLegionMachineAsync();
+        }
+        catch
+        {
+            // Capability detection is optional. Keep the portable settings
+            // pages reachable instead of leaving Settings without navigation.
+        }
+
         _navModel.InitializeNavigationCommand.Execute(isSupportedLegionMachine);
         NavigationItems = _navModel.NavigationItems;
 
@@ -58,8 +79,10 @@ public partial class SettingsPageViewModel : ObservableObject
             return;
         }
 
-        var item = NavigationItems[index];
-        SelectedContent = item.Key switch
+        SelectedContent = _contentFactory(NavigationItems[index].Key);
+    }
+
+    private static object? CreateContent(string key) => key switch
         {
             "Appearance" => new SettingsAppearanceView(),
             "Application" => new SettingsApplicationBehaviorView(),
@@ -70,5 +93,4 @@ public partial class SettingsPageViewModel : ObservableObject
             "Integrations" => new SettingsIntegrationsView(),
             _ => null
         };
-    }
 }
