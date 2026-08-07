@@ -28,7 +28,7 @@ current WPF source:
 | Macro | Macro editor and recorder state | `MacroPage` uses the shared macro workspace contract | In progress |
 | Windows optimization | Optimization actions and custom cleanup rules | `WindowsOptimizationPage` and `FeaturePageView` preserve pending selection, batch application, per-action cleanup progress and partial-failure results through the shared feature-action contract | Complete |
 | Official plugin UI | Custom Mouse, Shell Integration, ViVeTool | Each official plugin supplies an Avalonia page factory; `PluginHostedPage` embeds native controls, preserves plugin actions and failure states, and renders an explicit compatibility state for WPF-only plugins | Complete |
-| Plugin lifecycle | Discovery, installation, updates and navigation refresh | Avalonia startup and `MainWindow` use `IPluginManager` and plugin catalog state | Contracted |
+| Plugin lifecycle | Discovery, installation, updates and navigation refresh | Avalonia startup and `MainWindow` preserve install, update, cancellation, failure, retry, transactional rollback and navigation-refresh state through `IPluginManager` and the plugin catalog coordinator | Complete |
 | Startup and desktop lifecycle | Single instance, crash recovery, compatibility gate, device setup, OSD, services and clean shutdown | Avalonia uses shared runtime coordinators and Windows service adapters | Contracted |
 | Localization | WPF `Resource*.resx` catalogs | Avalonia `Resource*.resx` catalogs contain every WPF key for each available culture | Contracted |
 
