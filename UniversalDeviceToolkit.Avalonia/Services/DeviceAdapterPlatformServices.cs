@@ -279,6 +279,20 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
 
     public Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder) => Task.FromResult(false);
 
+    public Task<DriverDownloadState> SetDriverDownloadPathAsync(string downloadPath) => GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> SetSelectedDriverPackagesAsync(IReadOnlyCollection<string> packageIds) => GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> SelectRecommendedDriverPackagesAsync() => GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> StartSelectedDriverPackagesAsync() => GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> PauseDriverDownloadsAsync() => GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> HideDriverPackagesAsync(IReadOnlyCollection<string> packageIds) => GetDriverDownloadStateAsync();
+
+    public Task<DriverDownloadState> RestoreHiddenDriverPackagesAsync() => GetDriverDownloadStateAsync();
+
     private static IReadOnlyList<FeatureActionItem> BuildActions(
         string key,
         string title,

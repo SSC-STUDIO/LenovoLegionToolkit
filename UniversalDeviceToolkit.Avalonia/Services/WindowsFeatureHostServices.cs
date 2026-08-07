@@ -1630,16 +1630,7 @@ internal sealed class WindowsFeatureHostServices
         probe.Error);
 
     public Task<DriverDownloadState> GetDriverDownloadStateAsync()
-    {
-        lock (_driverLock)
-        {
-            return Task.FromResult(BuildDriverDownloadState(
-                isScanning: false,
-                machineType: string.Empty,
-                os: string.Empty,
-                source: string.Empty));
-        }
-    }
+        => Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
 
     public async Task<DriverDownloadState> SearchDriverPackagesAsync(
         string source,
@@ -1675,15 +1666,19 @@ internal sealed class WindowsFeatureHostServices
 
             var downloader = _packageDownloaderFactory.GetInstance(sourceType);
             var packages = await downloader.GetPackagesAsync(machineType, operatingSystem).ConfigureAwait(false);
-            var hidden = _packageDownloaderSettings?.Store.HiddenPackages ?? [];
-            var filtered = packages
-                .Where(package => !hidden.Contains(package.Id)
-                    && (!onlyUpdates || package.IsUpdate))
-                .ToList();
             lock (_driverLock)
             {
                 _driverDownloader = downloader;
-                _driverPackages = filtered;
+                _driverPackages = packages;
+                _driverPackageStates.Clear();
+                foreach (var package in packages)
+                    _driverPackageStates[package.Id] = new DriverPackageRuntimeState();
+
+                if (_packageDownloaderSettings is not null && sourceType == PackageDownloaderFactory.Type.Vantage)
+                {
+                    _packageDownloaderSettings.Store.OnlyShowUpdates = onlyUpdates;
+                    _packageDownloaderSettings.SynchronizeStore();
+                }
             }
 
             return BuildDriverDownloadState(false, machineType, os, source);
@@ -1716,31 +1711,253 @@ internal sealed class WindowsFeatureHostServices
         return true;
     }
 
+    public Task<DriverDownloadState> SetDriverDownloadPathAsync(string downloadPath)
+    {
+        if (string.IsNullOrWhiteSpace(downloadPath) || !Directory.Exists(downloadPath))
+            return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty,
+                "Choose an existing folder for driver downloads."));
+
+        lock (_driverLock)
+        {
+            if (_packageDownloaderSettings is not null)
+            {
+                _packageDownloaderSettings.Store.DownloadPath = downloadPath;
+                _packageDownloaderSettings.SynchronizeStore();
+            }
+        }
+
+        return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+    }
+
+    public Task<DriverDownloadState> SetSelectedDriverPackagesAsync(IReadOnlyCollection<string> packageIds)
+    {
+        var selected = packageIds.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        lock (_driverLock)
+        {
+            foreach (var (id, state) in _driverPackageStates)
+            {
+                state.IsSelected = selected.Contains(id);
+                if (!state.IsSelected && state.Status is DriverPackageStatus.Queued or DriverPackageStatus.Paused)
+                    state.Status = DriverPackageStatus.NotStarted;
+            }
+        }
+
+        return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+    }
+
+    public Task<DriverDownloadState> SelectRecommendedDriverPackagesAsync()
+    {
+        lock (_driverLock)
+        {
+            foreach (var package in _driverPackages)
+            {
+                if (_driverPackageStates.TryGetValue(package.Id, out var state))
+                    state.IsSelected = package.IsUpdate;
+            }
+        }
+
+        return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+    }
+
+    public Task<DriverDownloadState> StartSelectedDriverPackagesAsync()
+    {
+        lock (_driverLock)
+        {
+            var downloadPath = GetDriverDownloadPath();
+            if (!Directory.Exists(downloadPath))
+            {
+                return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty,
+                    "Choose an existing folder for driver downloads."));
+            }
+
+            foreach (var state in _driverPackageStates.Values.Where(state => state.IsSelected && state.Status != DriverPackageStatus.Completed))
+            {
+                state.Status = DriverPackageStatus.Queued;
+                state.Error = null;
+            }
+
+            if (_driverQueueTask is null || _driverQueueTask.IsCompleted)
+            {
+                _driverQueueCancellation?.Dispose();
+                _driverQueueCancellation = new CancellationTokenSource();
+                _driverQueueTask = ProcessDriverDownloadQueueAsync(downloadPath, _driverQueueCancellation.Token);
+            }
+        }
+
+        return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+    }
+
+    public Task<DriverDownloadState> PauseDriverDownloadsAsync()
+    {
+        lock (_driverLock)
+        {
+            _driverQueueCancellation?.Cancel();
+            foreach (var state in _driverPackageStates.Values.Where(state => state.Status == DriverPackageStatus.Queued))
+                state.Status = DriverPackageStatus.Paused;
+        }
+
+        return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+    }
+
+    public Task<DriverDownloadState> HideDriverPackagesAsync(IReadOnlyCollection<string> packageIds)
+    {
+        lock (_driverLock)
+        {
+            if (_packageDownloaderSettings is null)
+                return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+
+            foreach (var packageId in packageIds.Where(packageId => !string.IsNullOrWhiteSpace(packageId)))
+            {
+                _packageDownloaderSettings.Store.HiddenPackages.Add(packageId);
+                if (_driverPackageStates.TryGetValue(packageId, out var state))
+                    state.IsSelected = false;
+            }
+
+            _packageDownloaderSettings.SynchronizeStore();
+        }
+
+        return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+    }
+
+    public Task<DriverDownloadState> RestoreHiddenDriverPackagesAsync()
+    {
+        lock (_driverLock)
+        {
+            if (_packageDownloaderSettings is not null)
+            {
+                _packageDownloaderSettings.Store.HiddenPackages.Clear();
+                _packageDownloaderSettings.SynchronizeStore();
+            }
+        }
+
+        return Task.FromResult(BuildDriverDownloadState(false, string.Empty, string.Empty, string.Empty));
+    }
+
+    private async Task ProcessDriverDownloadQueueAsync(string downloadPath, CancellationToken token)
+    {
+        while (true)
+        {
+            Package package;
+            DriverPackageRuntimeState runtime;
+            IPackageDownloader? downloader;
+            lock (_driverLock)
+            {
+                downloader = _driverDownloader;
+                package = _driverPackages.FirstOrDefault(candidate =>
+                    _driverPackageStates.TryGetValue(candidate.Id, out var state)
+                    && state.IsSelected
+                    && state.Status == DriverPackageStatus.Queued);
+                if (string.IsNullOrWhiteSpace(package.Id) || downloader is null)
+                    return;
+
+                runtime = _driverPackageStates[package.Id];
+                runtime.Status = DriverPackageStatus.Downloading;
+                runtime.Progress = 0;
+            }
+
+            try
+            {
+                await downloader.DownloadPackageFileAsync(
+                    package,
+                    downloadPath,
+                    new Progress<float>(value => UpdateDriverDownloadProgress(package.Id, value)),
+                    token).ConfigureAwait(false);
+                lock (_driverLock)
+                {
+                    runtime.Status = DriverPackageStatus.Completed;
+                    runtime.Progress = 100;
+                    runtime.Error = null;
+                }
+            }
+            catch (OperationCanceledException) when (token.IsCancellationRequested)
+            {
+                lock (_driverLock)
+                {
+                    runtime.Status = DriverPackageStatus.Paused;
+                    runtime.Error = null;
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                lock (_driverLock)
+                {
+                    runtime.Status = DriverPackageStatus.Failed;
+                    runtime.Error = ex.Message;
+                }
+            }
+        }
+    }
+
+    private void UpdateDriverDownloadProgress(string packageId, float value)
+    {
+        lock (_driverLock)
+        {
+            if (_driverPackageStates.TryGetValue(packageId, out var state))
+                state.Progress = Math.Clamp(value, 0, 100);
+        }
+    }
+
     private DriverDownloadState BuildDriverDownloadState(
         bool isScanning,
         string machineType,
         string os,
-        string source)
+        string source,
+        string? error = null)
     {
-        var packages = _driverPackages
-            .Select(package => new DriverPackageItem(
-                package.Id,
-                package.Title,
-                package.Description,
-                package.Version,
-                package.Category,
-                package.FileSize,
-                package.IsUpdate,
-                package.Title.Contains("recommended", StringComparison.OrdinalIgnoreCase),
-                package.ReleaseDate))
-            .ToArray();
-        return new DriverDownloadState(
-            _packageDownloaderFactory is not null,
-            isScanning,
-            machineType,
-            os,
-            source,
-            packages);
+        lock (_driverLock)
+        {
+            var hidden = _packageDownloaderSettings?.Store.HiddenPackages ?? [];
+            var packages = _driverPackages
+                .Where(package => !hidden.Contains(package.Id))
+                .Select(package =>
+                {
+                    var runtime = _driverPackageStates.GetValueOrDefault(package.Id) ?? new DriverPackageRuntimeState();
+                    return new DriverPackageItem(
+                        package.Id,
+                        package.Title,
+                        package.Description,
+                        package.Version,
+                        package.Category,
+                        package.FileSize,
+                        package.IsUpdate,
+                        package.IsUpdate,
+                        package.ReleaseDate,
+                        runtime.IsSelected,
+                        runtime.Status,
+                        runtime.Progress,
+                        runtime.Error);
+                })
+                .ToArray();
+            return new DriverDownloadState(
+                _packageDownloaderFactory is not null,
+                isScanning,
+                machineType,
+                os,
+                source,
+                packages,
+                error,
+                GetDriverDownloadPath(),
+                _packageDownloaderSettings?.Store.OnlyShowUpdates ?? false,
+                hidden.Count,
+                _driverQueueTask is { IsCompleted: false });
+        }
+    }
+
+    private string GetDriverDownloadPath()
+    {
+        var configured = _packageDownloaderSettings?.Store.DownloadPath;
+        return !string.IsNullOrWhiteSpace(configured) && Directory.Exists(configured)
+            ? configured
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+    }
+
+    private sealed class DriverPackageRuntimeState
+    {
+        public bool IsSelected { get; set; }
+        public DriverPackageStatus Status { get; set; }
+        public float Progress { get; set; }
+        public string? Error { get; set; }
     }
 
     public async Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync()

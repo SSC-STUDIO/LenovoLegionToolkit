@@ -494,6 +494,41 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.DownloadDriverPackageAsync(packageId, destinationFolder)
             : _featureHost.DownloadDriverPackageAsync(packageId, destinationFolder);
 
+    public Task<DriverDownloadState> SetDriverDownloadPathAsync(string downloadPath) =>
+        _featureHost is null
+            ? _inner.SetDriverDownloadPathAsync(downloadPath)
+            : _featureHost.SetDriverDownloadPathAsync(downloadPath);
+
+    public Task<DriverDownloadState> SetSelectedDriverPackagesAsync(IReadOnlyCollection<string> packageIds) =>
+        _featureHost is null
+            ? _inner.SetSelectedDriverPackagesAsync(packageIds)
+            : _featureHost.SetSelectedDriverPackagesAsync(packageIds);
+
+    public Task<DriverDownloadState> SelectRecommendedDriverPackagesAsync() =>
+        _featureHost is null
+            ? _inner.SelectRecommendedDriverPackagesAsync()
+            : _featureHost.SelectRecommendedDriverPackagesAsync();
+
+    public Task<DriverDownloadState> StartSelectedDriverPackagesAsync() =>
+        _featureHost is null
+            ? _inner.StartSelectedDriverPackagesAsync()
+            : _featureHost.StartSelectedDriverPackagesAsync();
+
+    public Task<DriverDownloadState> PauseDriverDownloadsAsync() =>
+        _featureHost is null
+            ? _inner.PauseDriverDownloadsAsync()
+            : _featureHost.PauseDriverDownloadsAsync();
+
+    public Task<DriverDownloadState> HideDriverPackagesAsync(IReadOnlyCollection<string> packageIds) =>
+        _featureHost is null
+            ? _inner.HideDriverPackagesAsync(packageIds)
+            : _featureHost.HideDriverPackagesAsync(packageIds);
+
+    public Task<DriverDownloadState> RestoreHiddenDriverPackagesAsync() =>
+        _featureHost is null
+            ? _inner.RestoreHiddenDriverPackagesAsync()
+            : _featureHost.RestoreHiddenDriverPackagesAsync();
+
     private async Task<IReadOnlyList<SensorReadingItem>> AppendHardwareSensorReadingsAsync(
         IReadOnlyList<SensorReadingItem> existing)
     {

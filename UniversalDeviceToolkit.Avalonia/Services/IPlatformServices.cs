@@ -97,6 +97,13 @@ public interface IPlatformServices
     Task<DriverDownloadState> GetDriverDownloadStateAsync();
     Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates);
     Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);
+    Task<DriverDownloadState> SetDriverDownloadPathAsync(string downloadPath);
+    Task<DriverDownloadState> SetSelectedDriverPackagesAsync(IReadOnlyCollection<string> packageIds);
+    Task<DriverDownloadState> SelectRecommendedDriverPackagesAsync();
+    Task<DriverDownloadState> StartSelectedDriverPackagesAsync();
+    Task<DriverDownloadState> PauseDriverDownloadsAsync();
+    Task<DriverDownloadState> HideDriverPackagesAsync(IReadOnlyCollection<string> packageIds);
+    Task<DriverDownloadState> RestoreHiddenDriverPackagesAsync();
 }
 
 /// <summary>
@@ -466,7 +473,21 @@ public sealed record DriverPackageItem(
     string FileSize,
     bool IsUpdate,
     bool IsRecommended,
-    DateTime ReleaseDate = default);
+    DateTime ReleaseDate = default,
+    bool IsSelected = false,
+    DriverPackageStatus Status = DriverPackageStatus.NotStarted,
+    float Progress = 0,
+    string? Error = null);
+
+public enum DriverPackageStatus
+{
+    NotStarted,
+    Queued,
+    Downloading,
+    Paused,
+    Completed,
+    Failed,
+}
 
 public sealed record DriverDownloadState(
     bool IsAvailable,
@@ -475,7 +496,11 @@ public sealed record DriverDownloadState(
     string Os,
     string Source,
     IReadOnlyList<DriverPackageItem> Packages,
-    string? Error = null);
+    string? Error = null,
+    string DownloadPath = "",
+    bool OnlyShowUpdates = false,
+    int HiddenPackageCount = 0,
+    bool IsQueueRunning = false);
 /// <summary>
 /// Read-only sensor data prepared for the dashboard. Value and Unit are kept
 /// separately so the UI can render a stable metric row and an optional gauge

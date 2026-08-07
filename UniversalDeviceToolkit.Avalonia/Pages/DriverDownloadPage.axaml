@@ -28,7 +28,8 @@
                     BorderThickness="1"
                     CornerRadius="{StaticResource CornerRadiusCard}"
                     Padding="16">
-                <Grid ColumnDefinitions="*,*,*,Auto" ColumnSpacing="10">
+                <Grid RowDefinitions="Auto,Auto" RowSpacing="10">
+                    <Grid ColumnDefinitions="*,*,*,Auto" ColumnSpacing="10">
                     <ComboBox x:Name="SourceComboBox"
                               ItemsSource="{Binding Sources}"
                               SelectedIndex="0"
@@ -42,8 +43,23 @@
                               automation:AutomationProperties.AutomationId="AvaloniaDriverOperatingSystem" />
                     <Button Grid.Column="3"
                             Content="{local:Loc Key=WindowsOptimizationPage_Scan_Button, Fallback=Scan}"
-                            Click="ScanButton_Click"
-                            automation:AutomationProperties.AutomationId="AvaloniaDriverScan" />
+                             Click="ScanButton_Click"
+                             automation:AutomationProperties.AutomationId="AvaloniaDriverScan" />
+                    </Grid>
+                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                        <TextBox x:Name="DownloadPathTextBox"
+                                 Watermark="{local:Loc Key=PackagesPage_DownloadTo_Placeholder, Fallback=Download folder}"
+                                 LostFocus="DownloadPathTextBox_LostFocus"
+                                 automation:AutomationProperties.AutomationId="AvaloniaDriverDownloadPath" />
+                        <Button Grid.Column="1"
+                                Content="{local:Loc Key=PackagesPage_DownloadTo, Fallback=Browse}"
+                                Click="BrowseDownloadPathButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaDriverBrowseDownloadPath" />
+                        <Button Grid.Column="2"
+                                Content="{local:Loc Key=PackagesPage_OpenDownloadTo, Fallback=Open folder}"
+                                Click="OpenDownloadPathButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaDriverOpenDownloadPath" />
+                    </Grid>
                 </Grid>
             </Border>
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
@@ -68,9 +84,34 @@
                 </ComboBox>
             </Grid>
             <controls:LocalizedTextBlock x:Name="StateText"
-                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                         OverflowMode="Wrap"
-                                         MaxLines="3" />
+                                          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                          OverflowMode="Wrap"
+                                          MaxLines="3" />
+            <Border Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="12">
+                <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="8">
+                    <Button Content="{local:Loc Key=WindowsOptimizationPage_SelectRecommended_Button, Fallback=Select recommended}"
+                            Click="SelectRecommendedButton_Click"
+                            automation:AutomationProperties.AutomationId="AvaloniaDriverSelectRecommended" />
+                    <Button x:Name="StartPauseButton"
+                            Grid.Column="1"
+                            Content="{local:Loc Key=WindowsOptimizationPage_StartAll_Button, Fallback=Start selected}"
+                            Click="StartPauseButton_Click"
+                            automation:AutomationProperties.AutomationId="AvaloniaDriverStartPause" />
+                    <Button Grid.Column="2"
+                            Content="{local:Loc Key=Hide, Fallback=Hide selected}"
+                            Click="HideSelectedButton_Click"
+                            automation:AutomationProperties.AutomationId="AvaloniaDriverHideSelected" />
+                    <Button x:Name="RestoreHiddenButton"
+                            Grid.Column="4"
+                            Content="{local:Loc Key=WindowsOptimizationPage_ShowHiddenDownloads, Fallback=Show hidden downloads}"
+                            Click="RestoreHiddenButton_Click"
+                            automation:AutomationProperties.AutomationId="AvaloniaDriverRestoreHidden" />
+                </Grid>
+            </Border>
             <StackPanel x:Name="PackagesPanel"
                         Spacing="8"
                         automation:AutomationProperties.AutomationId="AvaloniaDriverPackages" />
