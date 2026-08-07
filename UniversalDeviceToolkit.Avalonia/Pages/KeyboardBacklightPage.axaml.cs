@@ -681,7 +681,7 @@ public partial class KeyboardBacklightPage : UserControl
                 ParseColors(Colors.Text, Original.Colors)),
             SpectrumKeyboardEffectRules.NormalizeKeys(
                 Type.SelectedItem?.ToString() ?? Original.Type,
-                Keys,
+                Keys.OrderBy(key => key).ToArray(),
                 []));
 
         private static ComboBox CreateCombo(IReadOnlyList<string> values, string selected) => new()
