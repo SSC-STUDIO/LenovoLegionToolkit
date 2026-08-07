@@ -467,25 +467,41 @@ public partial class App : Application
 
     private void OnMainWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (sender is Window window && !IsExiting)
-        {
+        if (sender is not Window window)
+            return;
+
 #if WINDOWS
-            var settings = _applicationSettings?.Store;
-            if (settings?.MinimizeOnClose == true)
-            {
+        var settings = _applicationSettings?.Store;
+        var action = AvaloniaDesktopLifecyclePolicy.ResolveCloseAction(
+            IsExiting,
+            settings?.MinimizeOnClose == true,
+            settings?.MinimizeToTray == true);
+#else
+        var action = AvaloniaDesktopLifecyclePolicy.ResolveCloseAction(
+            IsExiting,
+            minimizeOnClose: false,
+            minimizeToTray: false);
+#endif
+
+        switch (action)
+        {
+            case MainWindowCloseAction.AllowClose:
+                return;
+            case MainWindowCloseAction.Minimize:
                 e.Cancel = true;
                 window.WindowState = WindowState.Minimized;
                 return;
-            }
-
-            if (settings?.MinimizeToTray == true)
-            {
+            case MainWindowCloseAction.HideToTray:
                 e.Cancel = true;
                 window.ShowInTaskbar = false;
                 window.Hide();
                 return;
-            }
-#endif
+            case MainWindowCloseAction.ExitApplication:
+                // Avalonia would otherwise close the last window directly and
+                // bypass the Windows service/plug-in shutdown sequence.
+                e.Cancel = true;
+                ExitApplication();
+                return;
         }
     }
 
