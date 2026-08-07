@@ -3,6 +3,7 @@
 using System.Globalization;
 using System.Reflection;
 using System.Resources;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Shared.Logging;
 
@@ -24,22 +25,78 @@ internal static class AvaloniaPluginResourceCulture
             if (!IsPluginAssembly(assembly))
                 continue;
 
-            foreach (var type in GetPluginResourceTypes(assembly))
+            ApplyToAssembly(assembly, culture);
+        }
+    }
+
+    /// <summary>
+    /// Applies the per-plugin override culture to the resource classes of the
+    /// supplied plugin assemblies; plugins without an override follow the
+    /// application culture.
+    /// </summary>
+    public static void Apply(
+        CultureInfo appCulture,
+        IReadOnlyDictionary<string, string> pluginCultureOverrides,
+        IReadOnlyDictionary<string, IEnumerable<Type>> pluginResourceTypes)
+    {
+        ArgumentNullException.ThrowIfNull(appCulture);
+        ArgumentNullException.ThrowIfNull(pluginCultureOverrides);
+        ArgumentNullException.ThrowIfNull(pluginResourceTypes);
+
+        foreach (var (pluginId, resourceTypes) in pluginResourceTypes)
+        {
+            var culture = ResolvePluginCulture(appCulture, pluginCultureOverrides, pluginId);
+            ApplyToTypes(resourceTypes, culture);
+        }
+    }
+
+    internal static CultureInfo ResolvePluginCulture(
+        CultureInfo appCulture,
+        IReadOnlyDictionary<string, string> pluginCultureOverrides,
+        string pluginId)
+    {
+        if (pluginCultureOverrides.TryGetValue(pluginId, out var cultureName)
+            && !string.IsNullOrWhiteSpace(cultureName))
+        {
+            try
             {
-                try
+                var culture = CultureInfo.GetCultureInfo(cultureName);
+                var supported = LocalizationCatalog.SupportedCultures;
+                if (supported.Any(item => item.Name.Equals(culture.Name, StringComparison.OrdinalIgnoreCase))
+                    || supported.Any(item => item.TwoLetterISOLanguageName.Equals(
+                        culture.TwoLetterISOLanguageName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    type.GetProperty("Culture", BindingFlags.Public | BindingFlags.Static)!
-                        .SetValue(null, culture);
+                    return LocalizationCatalog.NormalizeCulture(culture);
                 }
-                catch (Exception exception)
-                {
-                    SharedLog.Trace($"Failed to apply culture to plugin resource {type.FullName}.", exception);
-                }
+            }
+            catch (CultureNotFoundException)
+            {
+            }
+        }
+
+        return appCulture;
+    }
+
+    private static void ApplyToAssembly(Assembly assembly, CultureInfo culture) =>
+        ApplyToTypes(GetPluginResourceTypes(assembly), culture);
+
+    private static void ApplyToTypes(IEnumerable<Type> types, CultureInfo culture)
+    {
+        foreach (var type in types)
+        {
+            try
+            {
+                type.GetProperty("Culture", BindingFlags.Public | BindingFlags.Static)!
+                    .SetValue(null, culture);
+            }
+            catch (Exception exception)
+            {
+                SharedLog.Trace($"Failed to apply culture to plugin resource {type.FullName}.", exception);
             }
         }
     }
 
-    private static IEnumerable<Type> GetPluginResourceTypes(Assembly assembly)
+    internal static IEnumerable<Type> GetPluginResourceTypes(Assembly assembly)
     {
         try
         {
