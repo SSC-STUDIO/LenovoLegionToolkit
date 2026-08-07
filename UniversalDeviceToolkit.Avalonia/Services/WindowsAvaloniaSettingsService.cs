@@ -5,6 +5,7 @@ using System.Globalization;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Utils;
+using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Integrations;
@@ -261,7 +262,7 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 _hardwareSensorSettings.NotifySectionsChanged();
                 break;
             case ("Application", "VantageDisabled"):
-                await SetSoftwareDisabledAsync<VantageDisabler>(value).ConfigureAwait(false);
+                await SetVantageDisabledAsync(value).ConfigureAwait(false);
                 break;
             case ("Application", "LegionZoneDisabled"):
                 await SetSoftwareDisabledAsync<LegionZoneDisabler>(value).ConfigureAwait(false);
@@ -811,11 +812,17 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         var store = _applicationSettings.Store;
         var softwareStatusTask = GetSoftwareStatusesAsync();
         var compatibilityTask = GetCompatibilityAsync();
+        var legionMachineTask = GetIsSupportedLegionMachineAsync();
         var hardwareSensorsSupportedTask = GetHardwareSensorsSupportedAsync();
-        await Task.WhenAll(softwareStatusTask, compatibilityTask, hardwareSensorsSupportedTask).ConfigureAwait(false);
+        await Task.WhenAll(
+            softwareStatusTask,
+            compatibilityTask,
+            legionMachineTask,
+            hardwareSensorsSupportedTask).ConfigureAwait(false);
 
         var (vantage, legionZone, fnKeys) = await softwareStatusTask.ConfigureAwait(false);
         var isCompatible = await compatibilityTask.ConfigureAwait(false);
+        var isSupportedLegionMachine = await legionMachineTask.ConfigureAwait(false);
         var hardwareSensorsSupported = await hardwareSensorsSupportedTask.ConfigureAwait(false);
         return new AvaloniaSettingsPageData(
             "Application",
@@ -827,18 +834,21 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
                 new("MinimizeToTray", "Minimize to system tray", "Keep the application running in the system tray when it is minimized or closed.", AvaloniaSettingEditor.Toggle, true, store.MinimizeToTray),
                 new("MinimizeOnClose", "Minimize on close", "Hide the window instead of exiting when the close button is pressed.", AvaloniaSettingEditor.Toggle, true, store.MinimizeOnClose),
                 new("VantageDisabled", "Disable Lenovo Vantage", "Stop Lenovo Vantage services while Universal Device Toolkit controls the device.", AvaloniaSettingEditor.Toggle, vantage != SoftwareStatus.NotFound, vantage == SoftwareStatus.Disabled,
-                    Warning: vantage == SoftwareStatus.NotFound ? "Lenovo Vantage was not detected." : null),
+                    Warning: vantage == SoftwareStatus.NotFound ? "Lenovo Vantage was not detected." : null,
+                    IsVisible: isSupportedLegionMachine && vantage != SoftwareStatus.NotFound),
                 new("LegionZoneDisabled", "Disable Legion Zone", "Stop Legion Zone services while Universal Device Toolkit controls the device.", AvaloniaSettingEditor.Toggle, legionZone != SoftwareStatus.NotFound, legionZone == SoftwareStatus.Disabled,
-                    Warning: legionZone == SoftwareStatus.NotFound ? "Legion Zone was not detected." : null),
+                    Warning: legionZone == SoftwareStatus.NotFound ? "Legion Zone was not detected." : null,
+                    IsVisible: isSupportedLegionMachine && legionZone != SoftwareStatus.NotFound),
                 new("FnKeysDisabled", "Disable Lenovo Fn keys service", "Stop the Lenovo hotkey service when Smart Keys are managed by this application.", AvaloniaSettingEditor.Toggle, fnKeys != SoftwareStatus.NotFound, fnKeys == SoftwareStatus.Disabled,
-                    Warning: fnKeys == SoftwareStatus.NotFound ? "The Lenovo Fn keys service was not detected." : null),
+                    Warning: fnKeys == SoftwareStatus.NotFound ? "The Lenovo Fn keys service was not detected." : null,
+                    IsVisible: isSupportedLegionMachine && fnKeys != SoftwareStatus.NotFound),
                 new("AnimationsEnabled", "Enable animations", "Use page and control transition animations throughout the application.", AvaloniaSettingEditor.Toggle, true, store.AnimationsEnabled),
                 new("EnableHardwareSensors", "Enable hardware sensors", "Poll supported hardware sensors for dashboard readings.", AvaloniaSettingEditor.Toggle,
                     hardwareSensorsSupported,
                     store.EnableHardwareSensors,
                     Warning: hardwareSensorsSupported ? null : "Hardware sensors require the supported sensor backend."),
                 new("DisableUnsupportedHardwareWarning", "Disable compatibility warning", "Hide the warning shown when hardware-specific features are unavailable.", AvaloniaSettingEditor.Toggle, !isCompatible, store.DisableUnsupportedHardwareWarning,
-                    Warning: isCompatible ? "This device does not report a compatibility warning." : null),
+                    IsVisible: !isCompatible),
                 new("ShowOsd", "Show on-screen display", "Show hardware status changes in the on-screen display.", AvaloniaSettingEditor.Toggle,
                     hardwareSensorsSupported && store.EnableHardwareSensors,
                     _osdSettings.Store.ShowOsd,
@@ -1234,6 +1244,21 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
         }
     }
 
+    private static async Task<bool> GetIsSupportedLegionMachineAsync()
+    {
+        try
+        {
+            var machine = await MachineCompatibility.GetMachineInformationAsync().ConfigureAwait(false);
+            return MachineCompatibility.IsSupportedLegionMachine(machine);
+        }
+        catch
+        {
+            // WPF keeps these Lenovo-service controls hidden when the machine
+            // capability cannot be established.
+            return false;
+        }
+    }
+
     public Task ExportSettingsAsync(string filePath)
     {
         _settingsBackupService.Export(filePath);
@@ -1274,6 +1299,68 @@ internal sealed class WindowsAvaloniaSettingsService : IAvaloniaSettingsService
             await disabler.DisableAsync().ConfigureAwait(false);
         else
             await disabler.EnableAsync().ConfigureAwait(false);
+    }
+
+    // Vantage owns the keyboard-light stack, so its transition must mirror the WPF host:
+    // acquire or release RGB ownership and start or stop Aurora around the service change.
+    private static async Task SetVantageDisabledAsync(bool disabled)
+    {
+        var vantage = IoCContainer.TryResolve<VantageDisabler>()
+            ?? throw new PlatformNotSupportedException($"{nameof(VantageDisabler)} is not initialized.");
+
+        if (disabled)
+        {
+            await vantage.DisableAsync().ConfigureAwait(false);
+            await SetRgbKeyboardLightOwnershipAsync(enable: true, restorePreset: true).ConfigureAwait(false);
+            await StartSpectrumAuroraAsync().ConfigureAwait(false);
+            return;
+        }
+
+        await SetRgbKeyboardLightOwnershipAsync(enable: false, restorePreset: false).ConfigureAwait(false);
+        await StopSpectrumAuroraAsync().ConfigureAwait(false);
+        await vantage.EnableAsync().ConfigureAwait(false);
+    }
+
+    private static async Task SetRgbKeyboardLightOwnershipAsync(bool enable, bool restorePreset)
+    {
+        try
+        {
+            var controller = IoCContainer.TryResolve<RGBKeyboardBacklightController>();
+            if (controller is not null && await controller.IsSupportedAsync().ConfigureAwait(false))
+                await controller.SetLightControlOwnerAsync(enable, restorePreset).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Log.Instance.Warning("Could not update RGB keyboard light control ownership.", exception);
+        }
+    }
+
+    private static async Task StartSpectrumAuroraAsync()
+    {
+        try
+        {
+            var controller = IoCContainer.TryResolve<SpectrumKeyboardBacklightController>();
+            if (controller is not null && await controller.IsSupportedAsync().ConfigureAwait(false))
+                await controller.StartAuroraIfNeededAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Log.Instance.Warning("Could not start Aurora after disabling Lenovo Vantage.", exception);
+        }
+    }
+
+    private static async Task StopSpectrumAuroraAsync()
+    {
+        try
+        {
+            var controller = IoCContainer.TryResolve<SpectrumKeyboardBacklightController>();
+            if (controller is not null && await controller.IsSupportedAsync().ConfigureAwait(false))
+                await controller.StopAuroraIfNeededAsync().ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Log.Instance.Warning("Could not stop Aurora before enabling Lenovo Vantage.", exception);
+        }
     }
 
     private async Task<AvaloniaSettingsPageData> BuildDisplayPageAsync()

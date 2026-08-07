@@ -734,6 +734,28 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void ApplicationSettings_PreserveWpfLegionGatingAndVantageKeyboardOwnership()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsAvaloniaSettingsService.cs"));
+
+        source.Should().Contain("var legionMachineTask = GetIsSupportedLegionMachineAsync();");
+        source.Should().Contain("IsVisible: isSupportedLegionMachine && vantage != SoftwareStatus.NotFound");
+        source.Should().Contain("IsVisible: isSupportedLegionMachine && legionZone != SoftwareStatus.NotFound");
+        source.Should().Contain("IsVisible: isSupportedLegionMachine && fnKeys != SoftwareStatus.NotFound");
+        source.Should().Contain("IsVisible: !isCompatible");
+        source.Should().Contain("case (\"Application\", \"VantageDisabled\"):");
+        source.Should().Contain("await SetVantageDisabledAsync(value).ConfigureAwait(false);");
+        source.Should().Contain("await controller.SetLightControlOwnerAsync(enable, restorePreset).ConfigureAwait(false);");
+        source.Should().Contain("await controller.StartAuroraIfNeededAsync().ConfigureAwait(false);");
+        source.Should().Contain("await controller.StopAuroraIfNeededAsync().ConfigureAwait(false);");
+    }
+
+    [Fact]
     public void AvaloniaAppearance_ProvidesWpfEquivalentCustomAccentPicker()
     {
         var root = RepositoryPaths.FindRoot();
