@@ -52,6 +52,7 @@ public partial class App : Application
     private AvaloniaNotificationManager? _notificationManager;
     private AvaloniaSingleInstanceGuard? _singleInstanceGuard;
     private AvaloniaOsdOverlayController? _osdOverlay;
+    private AvaloniaUpdateCheckCoordinator? _updateCheckCoordinator;
 #endif
 
     public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
@@ -129,6 +130,7 @@ public partial class App : Application
                 IoCContainer.Resolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>());
             _singleInstanceGuard!.StartListener(() =>
                 global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
+            _updateCheckCoordinator = AvaloniaUpdateCheckCoordinator.Create();
             _ = StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow);
 #endif
             Dispatcher.UIThread.Post(CheckPendingCrashReports, DispatcherPriority.Background);
@@ -283,6 +285,7 @@ public partial class App : Application
             if (desktop.MainWindow is MainWindow mainWindow)
             {
                 mainWindow.RestoreFromTray();
+                RequestAutomaticUpdateCheck();
                 return;
             }
 
@@ -296,7 +299,15 @@ public partial class App : Application
             window.Show();
             window.Activate();
             window.InvalidateVisual();
+            RequestAutomaticUpdateCheck();
         }
+    }
+
+    private void RequestAutomaticUpdateCheck()
+    {
+#if WINDOWS
+        _ = _updateCheckCoordinator?.CheckAsync();
+#endif
     }
 
     private void OpenSettings()
@@ -518,6 +529,8 @@ public partial class App : Application
             _osdOverlay ??= new AvaloniaOsdOverlayController(PlatformServices);
             _osdOverlay.Initialize();
         });
+
+        RequestAutomaticUpdateCheck();
 
         try
         {
