@@ -238,22 +238,23 @@
       "udt": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )",
-          "UniversalDeviceToolkit.Platform.MacOS": "[5.0.1, )",
-          "UniversalDeviceToolkit.Platform.Windows.Core": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )",
+          "UniversalDeviceToolkit.Platform.MacOS": "[5.0.2, )",
+          "UniversalDeviceToolkit.Platform.Windows.Core": "[5.0.2, )"
         }
       },
       "udt-gui": {
         "type": "Project",
         "dependencies": {
           "Avalonia": "[11.3.6, )",
+          "Avalonia.Controls.ColorPicker": "[11.2.3, )",
           "Avalonia.Desktop": "[11.3.6, )",
           "Avalonia.Themes.Fluent": "[11.3.6, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )",
-          "UniversalDeviceToolkit.Lib.Shared": "[5.0.1, )",
-          "UniversalDeviceToolkit.Platform.Linux": "[5.0.1, )",
-          "UniversalDeviceToolkit.Platform.MacOS": "[5.0.1, )",
-          "UniversalDeviceToolkit.ViewModels": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )",
+          "UniversalDeviceToolkit.Lib.Shared": "[5.0.2, )",
+          "UniversalDeviceToolkit.Platform.Linux": "[5.0.2, )",
+          "UniversalDeviceToolkit.Platform.MacOS": "[5.0.2, )",
+          "UniversalDeviceToolkit.ViewModels": "[5.0.2, )"
         }
       },
       "universaldevicetoolkit.lib.abstractions": {
@@ -262,26 +263,26 @@
       "universaldevicetoolkit.lib.shared": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
         }
       },
       "universaldevicetoolkit.platform.linux": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
         }
       },
       "universaldevicetoolkit.platform.macos": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
         }
       },
       "universaldevicetoolkit.platform.windows.core": {
         "type": "Project",
         "dependencies": {
           "System.Management": "[10.0.10, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
         }
       },
       "universaldevicetoolkit.tests.infrastructure": {
@@ -295,7 +296,7 @@
         "type": "Project",
         "dependencies": {
           "CommunityToolkit.Mvvm": "[8.4.2, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
         }
       },
       "Avalonia": {
@@ -307,6 +308,16 @@
           "Avalonia.BuildServices": "0.0.31",
           "Avalonia.Remote.Protocol": "11.3.6",
           "MicroCom.Runtime": "0.11.0"
+        }
+      },
+      "Avalonia.Controls.ColorPicker": {
+        "type": "CentralTransitive",
+        "requested": "[11.2.3, )",
+        "resolved": "11.2.3",
+        "contentHash": "JpK84GN+CkS5H0L/mDyYa4aMAJw93dukedKK1xC4g/J5NmwQ23qFPQNqZlTs+6f9nULwJPL+jiffJpSyGMt0gg==",
+        "dependencies": {
+          "Avalonia": "11.2.3",
+          "Avalonia.Remote.Protocol": "11.2.3"
         }
       },
       "Avalonia.Desktop": {

@@ -9,7 +9,7 @@
         "type": "Project",
         "dependencies": {
           "System.Management": "[10.0.10, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.1, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
         }
       },
       "System.Management": {
