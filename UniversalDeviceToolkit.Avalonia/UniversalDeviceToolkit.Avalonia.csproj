@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" />
     <PackageReference Include="Avalonia.Desktop" />
     <PackageReference Include="Avalonia.Themes.Fluent" />
     <ProjectReference Include="..\UniversalDeviceToolkit.ViewModels\UniversalDeviceToolkit.ViewModels.csproj" />
