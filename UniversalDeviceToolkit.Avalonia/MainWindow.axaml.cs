@@ -66,6 +66,7 @@ public partial class MainWindow : Window
                 && Application.Current is App app
                 && app.MinimizeToTrayEnabled)
             {
+                ShowInTaskbar = false;
                 Hide();
                 return;
             }
@@ -93,6 +94,7 @@ public partial class MainWindow : Window
     /// </summary>
     internal void RestoreFromTray()
     {
+        ShowInTaskbar = true;
         if (WindowState == WindowState.Minimized)
             WindowState = WindowState.Normal;
 

@@ -258,6 +258,7 @@ public partial class App : Application
             if (settings?.MinimizeToTray == true)
             {
                 e.Cancel = true;
+                window.ShowInTaskbar = false;
                 window.Hide();
                 return;
             }

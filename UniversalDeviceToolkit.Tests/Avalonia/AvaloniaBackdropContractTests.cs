@@ -57,4 +57,33 @@ public sealed class AvaloniaBackdropContractTests
         mainWindowSource.Should().Contain("QueueWindowSurfaceRefresh();");
         appSource.Should().Contain("mainWindow.RestoreFromTray();");
     }
+
+    [Fact]
+    public void TrayTransitions_ShouldRemoveAndRestoreTheTaskbarButton()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var mainWindowSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "MainWindow.axaml.cs"));
+        var appSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "App.axaml.cs"));
+
+        var minimizeSection = mainWindowSource[mainWindowSource.IndexOf(
+            "if (WindowState == WindowState.Minimized", StringComparison.Ordinal)..];
+        minimizeSection.IndexOf("ShowInTaskbar = false;", StringComparison.Ordinal)
+            .Should().BeLessThan(minimizeSection.IndexOf("Hide();", StringComparison.Ordinal));
+
+        var restoreSection = mainWindowSource[mainWindowSource.IndexOf(
+            "internal void RestoreFromTray()", StringComparison.Ordinal)..];
+        restoreSection.IndexOf("ShowInTaskbar = true;", StringComparison.Ordinal)
+            .Should().BeLessThan(restoreSection.IndexOf("Show();", StringComparison.Ordinal));
+
+        var closingSection = appSource[appSource.IndexOf(
+            "if (settings?.MinimizeToTray == true)", StringComparison.Ordinal)..];
+        closingSection.IndexOf("window.ShowInTaskbar = false;", StringComparison.Ordinal)
+            .Should().BeLessThan(closingSection.IndexOf("window.Hide();", StringComparison.Ordinal));
+    }
 }
