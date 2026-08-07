@@ -15,9 +15,19 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 public partial class NetworkAccelerationPage : UserControl
 {
     private readonly IPlatformServices _platformServices;
+    private readonly HashSet<string> _favoriteGroupIds = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, LocalizedTextBlock> _groupRuntimeLabels = new(StringComparer.OrdinalIgnoreCase);
+    private IReadOnlyList<NetworkAccelerationGroupState> _groups = Array.Empty<NetworkAccelerationGroupState>();
+    private NetworkAccelerationRuntimeState? _lastRuntime;
+    private string _targetQuery = string.Empty;
     private bool _isApplying;
     private bool _runtimePollInFlight;
     private DispatcherTimer? _runtimeTimer;
+    private bool _trafficChartInitialized;
+    private bool _hasTrafficSample;
+    private long _lastUploadedBytes;
+    private long _lastDownloadedBytes;
+    private DateTimeOffset _lastTrafficSampleUtc;
 
     public NetworkAccelerationPage(IPlatformServices platformServices)
     {
@@ -57,29 +67,54 @@ public partial class NetworkAccelerationPage : UserControl
                 ? AvaloniaLocalization.GetString("NetworkAccelerationPage_Stop", "Stop")
                 : AvaloniaLocalization.GetString("NetworkAccelerationPage_Start", "Start");
 
-            GroupsPanel.Children.Clear();
-            if (state.Groups.Count == 0)
+            _groups = state.Groups;
+            _favoriteGroupIds.Clear();
+            foreach (var group in state.Groups)
             {
-                GroupsPanel.Children.Add(new LocalizedTextBlock
-                {
-                    Text = AvaloniaLocalization.GetString(
-                        "NetworkAccelerationPage_DomainGroupsEmptyDescription",
-                        "No domain groups are available."),
-                    Foreground = FindBrush("TextFillColorSecondaryBrush"),
-                    OverflowMode = LocalizedOverflowMode.Wrap,
-                    MaxLines = 3,
-                });
+                if (group.IsFavorite)
+                    _favoriteGroupIds.Add(group.Id);
             }
-            else
-            {
-                foreach (var group in state.Groups)
-                    GroupsPanel.Children.Add(CreateGroupCard(group));
-            }
+
+            FavoriteStarButton.IsEnabled = NetworkAccelerationTargets.GetRecommendedGroups(_groups).Count > 0;
+            RebuildGroupsPanel();
+            if (!state.IsRunning)
+                ResetTrafficChart();
         }
         finally
         {
             _isApplying = false;
         }
+    }
+
+    private void RebuildGroupsPanel()
+    {
+        GroupsPanel.Children.Clear();
+        _groupRuntimeLabels.Clear();
+
+        var groups = NetworkAccelerationTargets.FilterGroups(_groups, _targetQuery);
+        if (groups.Count == 0)
+        {
+            GroupsPanel.Children.Add(new LocalizedTextBlock
+            {
+                Text = AvaloniaLocalization.GetString(
+                    _groups.Count == 0
+                        ? "NetworkAccelerationPage_DomainGroupsEmptyDescription"
+                        : "NetworkAccelerationPage_NoSearchResults",
+                    _groups.Count == 0
+                        ? "No domain groups are available."
+                        : "No targets match your search."),
+                Foreground = FindBrush("TextFillColorSecondaryBrush"),
+                OverflowMode = LocalizedOverflowMode.Wrap,
+                MaxLines = 3,
+            });
+            return;
+        }
+
+        foreach (var group in groups)
+            GroupsPanel.Children.Add(CreateGroupCard(group));
+
+        if (_lastRuntime is not null)
+            UpdateGroupRuntimeCounts();
     }
 
     private void StartRuntimePolling()
@@ -105,11 +140,18 @@ public partial class NetworkAccelerationPage : UserControl
             if (!IsLoaded)
                 return;
 
-            // WPF exposes this card only while its proxy worker is running.
-            RuntimeCard.IsVisible = runtime.IsAvailable && runtime.IsRunning;
-            if (!RuntimeCard.IsVisible)
-                return;
+            _lastRuntime = runtime;
 
+            // WPF exposes this card only while its proxy worker is running.
+            var isRunning = runtime.IsAvailable && runtime.IsRunning;
+            RuntimeCard.IsVisible = isRunning;
+            if (!isRunning)
+            {
+                ResetTrafficChart();
+                return;
+            }
+
+            UpdateTrafficChart(runtime);
             UploadValueText.Text = FormatBytes(runtime.BytesUploaded);
             DownloadValueText.Text = FormatBytes(runtime.BytesDownloaded);
             ConnectionsValueText.Text = $"{runtime.ActiveConnections} / {runtime.TotalConnections}";
@@ -117,10 +159,104 @@ public partial class NetworkAccelerationPage : UserControl
             RuntimeStatusText.Text = runtime.Status;
             PopulateConnections(runtime.Connections);
             PopulateDestinations(runtime.Destinations);
+            UpdateGroupRuntimeCounts();
         }
         finally
         {
             _runtimePollInFlight = false;
+        }
+    }
+
+    private void UpdateTrafficChart(NetworkAccelerationRuntimeState runtime)
+    {
+        EnsureTrafficChart();
+
+        var now = DateTimeOffset.UtcNow;
+        if (_hasTrafficSample
+            && (runtime.BytesUploaded < _lastUploadedBytes
+                || runtime.BytesDownloaded < _lastDownloadedBytes))
+        {
+            TrafficChart.ClearAll();
+            _hasTrafficSample = false;
+        }
+
+        var uploadRate = 0.0;
+        var downloadRate = 0.0;
+        if (_hasTrafficSample)
+        {
+            var elapsed = Math.Max(0.25, (now - _lastTrafficSampleUtc).TotalSeconds);
+            uploadRate = Math.Max(0, (runtime.BytesUploaded - _lastUploadedBytes) / elapsed);
+            downloadRate = Math.Max(0, (runtime.BytesDownloaded - _lastDownloadedBytes) / elapsed);
+        }
+
+        TrafficChart.AddSample("upload", uploadRate / 1024.0);
+        TrafficChart.AddSample("download", downloadRate / 1024.0);
+        _lastUploadedBytes = runtime.BytesUploaded;
+        _lastDownloadedBytes = runtime.BytesDownloaded;
+        _lastTrafficSampleUtc = now;
+        _hasTrafficSample = true;
+
+        TrafficUploadRateText.Text = FormatRate(uploadRate);
+        TrafficDownloadRateText.Text = FormatRate(downloadRate);
+        TrafficTotalText.Text = FormatBytes(runtime.BytesUploaded + runtime.BytesDownloaded);
+    }
+
+    private void EnsureTrafficChart()
+    {
+        if (_trafficChartInitialized)
+            return;
+
+        var uploadBrush = ResolveChartBrush("ChartTemperatureBrush", 238, 145, 70);
+        var downloadBrush = ResolveChartBrush("ChartUtilizationBrush", 77, 166, 232);
+        TrafficChart.DefineSeries("upload", uploadBrush);
+        TrafficChart.DefineSeries("download", downloadBrush);
+        UploadSwatch.Background = uploadBrush;
+        DownloadSwatch.Background = downloadBrush;
+        _trafficChartInitialized = true;
+    }
+
+    private void ResetTrafficChart()
+    {
+        if (_trafficChartInitialized)
+            TrafficChart.ClearAll();
+        _hasTrafficSample = false;
+        _lastUploadedBytes = 0;
+        _lastDownloadedBytes = 0;
+        _lastTrafficSampleUtc = default;
+        TrafficUploadRateText.Text = "\u2014";
+        TrafficDownloadRateText.Text = "\u2014";
+        TrafficTotalText.Text = "\u2014";
+    }
+
+    private IBrush ResolveChartBrush(string key, byte red, byte green, byte blue) =>
+        this.TryFindResource(key, out var value) && value is IBrush brush
+            ? brush
+            : new SolidColorBrush(Color.FromRgb(red, green, blue));
+
+    private static string FormatRate(double bytesPerSecond)
+    {
+        if (bytesPerSecond < 1024)
+            return $"{bytesPerSecond:0} B/s";
+        if (bytesPerSecond < 1024 * 1024)
+            return $"{bytesPerSecond / 1024:0.0} KB/s";
+        if (bytesPerSecond < 1024L * 1024 * 1024)
+            return $"{bytesPerSecond / (1024d * 1024):0.0} MB/s";
+        return $"{bytesPerSecond / (1024d * 1024 * 1024):0.0} GB/s";
+    }
+
+    private void UpdateGroupRuntimeCounts()
+    {
+        foreach (var group in _groups)
+        {
+            if (!_groupRuntimeLabels.TryGetValue(group.Id, out var label))
+                continue;
+
+            var selected = NetworkAccelerationTargets.GetSelectedDomainCount(group);
+            label.Text = string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                AvaloniaLocalization.GetString("NetworkAccelerationPage_GroupRuntimeFormat", "{0}/{1} selected"),
+                selected,
+                group.DomainCount);
         }
     }
 
@@ -244,6 +380,26 @@ public partial class NetworkAccelerationPage : UserControl
             OverflowMode = LocalizedOverflowMode.Wrap,
             MaxLines = 2,
         };
+        var titleRow = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            MinWidth = 0,
+        };
+        titleRow.Children.Add(title);
+        if (group.IsFavorite || _favoriteGroupIds.Contains(group.Id))
+        {
+            var star = new LocalizedTextBlock
+            {
+                Text = "\u2605",
+                FontSize = 13,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = FindBrush("ChartTemperatureBrush"),
+            };
+            ToolTip.SetTip(star, AvaloniaLocalization.GetString("NetworkAccelerationPage_FavoriteGroup", "Favorite group"));
+            titleRow.Children.Add(star);
+        }
+
         var description = new LocalizedTextBlock
         {
             Text = string.IsNullOrWhiteSpace(group.Description)
@@ -253,9 +409,24 @@ public partial class NetworkAccelerationPage : UserControl
             OverflowMode = LocalizedOverflowMode.Wrap,
             MaxLines = 3,
         };
+        var runtimeLabel = new LocalizedTextBlock
+        {
+            Foreground = FindBrush("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+            MinWidth = 0,
+        };
+        _groupRuntimeLabels[group.Id] = runtimeLabel;
+        var selected = NetworkAccelerationTargets.GetSelectedDomainCount(group);
+        runtimeLabel.Text = string.Format(
+            System.Globalization.CultureInfo.CurrentCulture,
+            AvaloniaLocalization.GetString("NetworkAccelerationPage_GroupRuntimeFormat", "{0}/{1} selected"),
+            selected,
+            group.DomainCount);
         var copy = new StackPanel { Spacing = 3, MinWidth = 0 };
-        copy.Children.Add(title);
+        copy.Children.Add(titleRow);
         copy.Children.Add(description);
+        copy.Children.Add(runtimeLabel);
         var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 16 };
         grid.Children.Add(copy);
         Grid.SetColumn(checkBox, 1);
@@ -269,6 +440,65 @@ public partial class NetworkAccelerationPage : UserControl
             Padding = new Thickness(16),
             Child = grid,
         };
+    }
+
+    private void FavoriteStarButton_Click(object? sender, RoutedEventArgs e)
+    {
+        RebuildFavoriteMenu();
+        FavoriteGroupsPopup.PlacementTarget = FavoriteStarButton;
+        FavoriteGroupsPopup.IsOpen = true;
+    }
+
+    private void RebuildFavoriteMenu()
+    {
+        FavoriteGroupsPanel.Children.Clear();
+        var groups = NetworkAccelerationTargets.GetRecommendedGroups(_groups);
+        if (groups.Count == 0)
+        {
+            FavoriteGroupsPanel.Children.Add(new LocalizedTextBlock
+            {
+                Text = AvaloniaLocalization.GetString(
+                    "NetworkAccelerationPage_FavoritesEmptyTitle",
+                    "No recommended targets"),
+                Foreground = FindBrush("TextFillColorSecondaryBrush"),
+                OverflowMode = LocalizedOverflowMode.Wrap,
+                MaxLines = 2,
+            });
+            return;
+        }
+
+        foreach (var group in groups)
+        {
+            var checkBox = new CheckBox
+            {
+                Content = group.DisplayName,
+                IsChecked = group.IsEnabled,
+                Margin = new Thickness(4, 0),
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            AutomationProperties.SetAutomationId(checkBox, $"AvaloniaNetworkAccelerationRecommended_{group.Id}");
+            AutomationProperties.SetName(checkBox, group.DisplayName);
+            ToolTip.SetTip(checkBox, group.Description);
+            var groupId = group.Id;
+            checkBox.IsCheckedChanged += async (_, _) =>
+            {
+                if (_isApplying || checkBox.IsChecked is not bool enabled)
+                    return;
+
+                if (!await _platformServices.SetNetworkAccelerationGroupEnabledAsync(groupId, enabled))
+                    await RefreshAsync();
+                else
+                    await RefreshAsync();
+                RebuildFavoriteMenu();
+            };
+            FavoriteGroupsPanel.Children.Add(checkBox);
+        }
+    }
+
+    private void TargetSearchBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        _targetQuery = TargetSearchBox.Text?.Trim() ?? string.Empty;
+        RebuildGroupsPanel();
     }
 
     private async void EnabledCheckBox_IsCheckedChanged(object? sender, RoutedEventArgs e)
@@ -441,4 +671,58 @@ public partial class NetworkAccelerationPage : UserControl
         this.TryFindResource(key, out var value) && value is CornerRadius radius
             ? radius
             : new CornerRadius(8);
+}
+
+/// <summary>
+/// Pure selection/filtering logic shared by the recommended-targets star menu and
+/// the target search box. Kept free of UI state so it can be unit-tested directly.
+/// </summary>
+public static class NetworkAccelerationTargets
+{
+    /// <summary>Default recommended ids (Watt Toolkit-style), favorite state aside.</summary>
+    public static readonly IReadOnlyList<string> RecommendedGroupIds = new[]
+    {
+        "steam",
+        "github",
+        "public-cdn",
+        "twitch",
+        "roblox",
+    };
+
+    public static bool IsRecommendedGroup(string groupId, bool isFavorite) =>
+        isFavorite || RecommendedGroupIds.Contains(groupId, StringComparer.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Recommended groups ordered favorites-first (stable order), capped to eight
+    /// entries so the star menu stays compact.
+    /// </summary>
+    public static IReadOnlyList<NetworkAccelerationGroupState> GetRecommendedGroups(
+        IReadOnlyList<NetworkAccelerationGroupState> groups) =>
+        groups
+            .Select((group, index) => (Group: group, Index: index))
+            .Where(item => IsRecommendedGroup(item.Group.Id, item.Group.IsFavorite))
+            .OrderByDescending(item => item.Group.IsFavorite)
+            .ThenBy(item => item.Index)
+            .Select(item => item.Group)
+            .Take(8)
+            .ToArray();
+
+    /// <summary>Filters groups by a case-insensitive display-name or description match.</summary>
+    public static IReadOnlyList<NetworkAccelerationGroupState> FilterGroups(
+        IReadOnlyList<NetworkAccelerationGroupState> groups,
+        string? query)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return groups;
+
+        return groups
+            .Where(group =>
+                group.DisplayName.Contains(query, StringComparison.OrdinalIgnoreCase)
+                || group.Description.Contains(query, StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+    }
+
+    /// <summary>Enabled groups count all of their domains toward the selection.</summary>
+    public static int GetSelectedDomainCount(NetworkAccelerationGroupState group) =>
+        group.IsEnabled ? Math.Max(0, group.DomainCount) : 0;
 }

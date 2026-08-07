@@ -69,6 +69,13 @@
                         <Button Content="{local:Loc Key=NetworkAccelerationPage_Restore, Fallback=Restore system network}"
                                 Click="RestoreButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationRestore" />
+                        <Button x:Name="FavoriteStarButton"
+                                Content="{local:Loc Key=NetworkAccelerationPage_FavoritesStar, Fallback=★}"
+                                FontSize="15"
+                                Click="FavoriteStarButton_Click"
+                                ToolTip.Tip="{local:Loc Key=NetworkAccelerationPage_SelectionFavoriteTooltip, Fallback=Quick-toggle recommended targets}"
+                                automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationFavorites"
+                                automation:AutomationProperties.Name="{local:Loc Key=NetworkAccelerationPage_SelectionFavorite, Fallback=Recommended targets}" />
                     </StackPanel>
                     <controls:LocalizedTextBlock x:Name="DiagnosticsText"
                                                  IsVisible="False"
@@ -77,6 +84,22 @@
                                                  MaxLines="4" />
                 </StackPanel>
             </Border>
+
+            <Popup x:Name="FavoriteGroupsPopup"
+                   Placement="BottomEdgeAlignedLeft"
+                   IsLightDismissEnabled="True">
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="10"
+                        MinWidth="230"
+                        MaxHeight="320">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="FavoriteGroupsPanel" Spacing="2" />
+                    </ScrollViewer>
+                </Border>
+            </Popup>
 
             <Border x:Name="RuntimeCard"
                     IsVisible="False"
@@ -121,6 +144,38 @@
                             <TextBlock x:Name="ConnectionsValueText" FontWeight="SemiBold" />
                         </StackPanel>
                     </Grid>
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_MetricsHeading, Fallback=Traffic overview}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock x:Name="TrafficTotalText"
+                                                     Grid.Column="1"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                    </Grid>
+                    <controls:TrendChart x:Name="TrafficChart"
+                                         Height="140"
+                                         automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationTrafficChart" />
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Border x:Name="UploadSwatch" Width="10" Height="10" CornerRadius="2" VerticalAlignment="Center" />
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Upload, Fallback=Upload}"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <TextBlock x:Name="TrafficUploadRateText" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <Border x:Name="DownloadSwatch" Width="10" Height="10" CornerRadius="2" VerticalAlignment="Center" />
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Download, Fallback=Download}"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <TextBlock x:Name="TrafficDownloadRateText" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </StackPanel>
                     <controls:LocalizedTextBlock x:Name="RuntimeStatusText"
                                                  Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                                  OverflowMode="Wrap"
@@ -161,8 +216,8 @@
                                                      MaxLines="2" />
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <TextBox x:Name="NatStunHostTextBox"
-                                     Text="stun.miwifi.com"
-                                     Watermark="STUN host"
+                                     Text="{local:Loc Key=NetworkAccelerationPage_NatStunHostDefault, Fallback=stun.miwifi.com}"
+                                     Watermark="{local:Loc Key=NetworkAccelerationPage_NatStunHostWatermark, Fallback=STUN host}"
                                      automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationNatStunHost" />
                             <Button x:Name="NatDiagnosticButton"
                                     Grid.Column="1"
@@ -181,11 +236,11 @@
                                                      OverflowMode="Wrap"
                                                      MaxLines="2" />
                         <TextBox x:Name="DnsDomainTextBox"
-                                 Text="store.steampowered.com"
-                                 Watermark="Domain"
+                                 Text="{local:Loc Key=NetworkAccelerationPage_DnsDomainDefault, Fallback=store.steampowered.com}"
+                                 Watermark="{local:Loc Key=NetworkAccelerationPage_DnsDomainWatermark, Fallback=Domain}"
                                  automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsDomain" />
                         <TextBox x:Name="DnsServerTextBox"
-                                 Watermark="Custom DNS server (optional)"
+                                 Watermark="{local:Loc Key=NetworkAccelerationPage_DnsServerWatermark, Fallback=Custom DNS server (optional)}"
                                  automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsServer" />
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                             <CheckBox x:Name="DnsUseDohCheckBox"
@@ -199,8 +254,8 @@
                                     automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsDetect" />
                         </Grid>
                         <TextBox x:Name="DnsDohUrlTextBox"
-                                 Text="https://doh.pub/dns-query"
-                                 Watermark="DoH URL"
+                                 Text="{local:Loc Key=NetworkAccelerationPage_DnsDohUrlDefault, Fallback=https://doh.pub/dns-query}"
+                                 Watermark="{local:Loc Key=NetworkAccelerationPage_DnsDohUrlWatermark, Fallback=DoH URL}"
                                  automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsDohUrl" />
                         <controls:LocalizedTextBlock x:Name="DnsDiagnosticResultText"
                                                      Foreground="{DynamicResource TextFillColorSecondaryBrush}"
@@ -232,6 +287,10 @@
                                          FontWeight="Medium"
                                          OverflowMode="Wrap"
                                          MaxLines="2" />
+            <TextBox x:Name="TargetSearchBox"
+                     Watermark="{local:Loc Key=NetworkAccelerationPage_SearchTargets, Fallback=Search targets}"
+                     TextChanged="TargetSearchBox_TextChanged"
+                     automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationTargetSearch" />
             <StackPanel x:Name="GroupsPanel"
                         Spacing="8"
                         automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationGroups" />
