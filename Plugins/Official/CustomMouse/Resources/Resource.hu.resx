@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xs:schema id="root">
@@ -442,12 +442,12 @@
     <value>Enable or disable auto theme cursor style based on Windows light/dark mode.</value>
   </data>
   <data name="StatusApplying" xml:space="preserve">
-    <value>Applying...</value>
+    <value>Alkalmazás...</value>
   </data>
   <data name="ApplyFailedPrefix" xml:space="preserve">
-    <value>Apply failed:</value>
+    <value>Az alkalmazás nem sikerült:</value>
   </data>
   <data name="ApplyCursorThemeFailedPrefix" xml:space="preserve">
-    <value>Apply cursor theme failed:</value>
+    <value>A kurzortéma alkalmazása nem sikerült:</value>
   </data>
   </root>

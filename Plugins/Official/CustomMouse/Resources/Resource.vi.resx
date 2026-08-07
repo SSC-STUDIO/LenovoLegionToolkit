@@ -1,453 +1,223 @@
-<?xml version='1.0' encoding='utf-8'?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
-  <xs:schema id="root">
-
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-
-    <xs:element name="root" ns1:IsDataSet="true">
-
-      <xs:complexType>
-
-        <xs:choice maxOccurs="unbounded">
-
-          <xs:element name="metadata">
-
-            <xs:complexType>
-
-              <xs:sequence>
-
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-
-              </xs:sequence>
-
-              <xs:attribute name="name" use="required" type="xsd:string" />
-
-              <xs:attribute name="type" type="xsd:string" />
-
-              <xs:attribute name="mimetype" type="xsd:string" />
-
-              <xs:attribute ref="xml:space" />
-
-            </xs:complexType>
-
-          </xs:element>
-
-          <xs:element name="assembly">
-
-            <xs:complexType>
-
-              <xs:attribute name="alias" type="xsd:string" />
-
-              <xs:attribute name="name" type="xsd:string" />
-
-            </xs:complexType>
-
-          </xs:element>
-
-          <xs:element name="data">
-
-            <xs:complexType>
-
-              <xs:sequence>
-
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-
-              </xs:sequence>
-
-              <xs:attribute name="name" use="required" type="xsd:string" />
-
-              <xs:attribute name="type" type="xsd:string" />
-
-              <xs:attribute name="mimetype" type="xsd:string" />
-
-              <xs:attribute ref="xml:space" />
-
-            </xs:complexType>
-
-          </xs:element>
-
-          <xs:element name="resheader">
-
-            <xs:complexType>
-
-              <xs:sequence>
-
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-
-              </xs:sequence>
-
-              <xs:attribute name="name" use="required" type="xsd:string" />
-
-            </xs:complexType>
-
-          </xs:element>
-
-        </xs:choice>
-
-      </xs:complexType>
-
-    </xs:element>
-
-  </xs:schema>
-
-  <resheader name="resmimetype">
-
-    <value>text/microsoft-resx</value>
-
-  </resheader>
-
-  <resheader name="version">
-
-    <value>2.0</value>
-
-  </resheader>
-
-  <resheader name="reader">
-
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-
-  </resheader>
-
-  <resheader name="writer">
-
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-
-  </resheader>
-
-  <data name="ApplyButton" xml:space="preserve">
+<?xml version="1.0" encoding="utf-8"?><root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:schema id="root"><xs:import namespace="http://www.w3.org/XML/1998/namespace" /><xs:element name="root" ns1:IsDataSet="true"><xs:complexType><xs:choice maxOccurs="unbounded"><xs:element name="metadata"><xs:complexType><xs:sequence><xs:element name="value" type="xsd:string" minOccurs="0" /></xs:sequence><xs:attribute name="name" use="required" type="xsd:string" /><xs:attribute name="type" type="xsd:string" /><xs:attribute name="mimetype" type="xsd:string" /><xs:attribute ref="xml:space" /></xs:complexType></xs:element><xs:element name="assembly"><xs:complexType><xs:attribute name="alias" type="xsd:string" /><xs:attribute name="name" type="xsd:string" /></xs:complexType></xs:element><xs:element name="data"><xs:complexType><xs:sequence><xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" /><xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" /></xs:sequence><xs:attribute name="name" use="required" type="xsd:string" /><xs:attribute name="type" type="xsd:string" /><xs:attribute name="mimetype" type="xsd:string" /><xs:attribute ref="xml:space" /></xs:complexType></xs:element><xs:element name="resheader"><xs:complexType><xs:sequence><xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" /></xs:sequence><xs:attribute name="name" use="required" type="xsd:string" /></xs:complexType></xs:element></xs:choice></xs:complexType></xs:element></xs:schema><resheader name="resmimetype"><value>text/microsoft-resx</value></resheader><resheader name="version"><value>2.0</value></resheader><resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader><data name="ApplyButton" xml:space="preserve">
 
     <value>Áp dụng</value>
 
-  </data>
-
-  <data name="ApplyCursorThemeNowButton" xml:space="preserve">
+  </data><data name="ApplyCursorThemeNowButton" xml:space="preserve">
 
     <value>Apply Cursor Theme Now</value>
 
-  </data>
-
-  <data name="ApplyToWindowsButton" xml:space="preserve">
+  </data><data name="ApplyToWindowsButton" xml:space="preserve">
 
     <value>Apply to Windows</value>
 
-  </data>
-
-  <data name="AutoThemeLabel" xml:space="preserve">
+  </data><data name="AutoThemeLabel" xml:space="preserve">
 
     <value>Auto-apply custom cursor style by current Windows light/dark theme</value>
 
-  </data>
-
-  <data name="CursorHint" xml:space="preserve">
+  </data><data name="CursorHint" xml:space="preserve">
 
     <value>Cursor appearance can be applied from this page or from System Optimization extension actions.</value>
 
-  </data>
-
-  <data name="PluginDescription" xml:space="preserve">
+  </data><data name="PluginDescription" xml:space="preserve">
 
     <value>Customize mouse cursor style behavior and mouse settings.</value>
 
-  </data>
-
-  <data name="PluginName" xml:space="preserve">
+  </data><data name="PluginName" xml:space="preserve">
 
     <value>Custom Mouse</value>
 
-  </data>
-
-  <data name="PointerSpeedLabel" xml:space="preserve">
+  </data><data name="PointerSpeedLabel" xml:space="preserve">
 
     <value>Windows Pointer Speed</value>
 
-  </data>
-
-  <data name="PollingRateLabel" xml:space="preserve">
+  </data><data name="PollingRateLabel" xml:space="preserve">
 
     <value>Polling Rate</value>
 
-  </data>
-
-  <data name="ReloadButton" xml:space="preserve">
+  </data><data name="ReloadButton" xml:space="preserve">
 
     <value>Reload</value>
 
-  </data>
-
-  <data name="ResetButton" xml:space="preserve">
+  </data><data name="ResetButton" xml:space="preserve">
 
     <value>Reset</value>
 
-  </data>
-
-  <data name="SettingsPageTitle" xml:space="preserve">
+  </data><data name="SettingsPageTitle" xml:space="preserve">
 
     <value>Mouse Settings</value>
 
-  </data>
-
-  <data name="SettingsSubtitle" xml:space="preserve">
+  </data><data name="SettingsSubtitle" xml:space="preserve">
 
     <value>Apply pointer speed and button layout to the active Windows profile.</value>
 
-  </data>
-
-  <data name="StatusApplyPointerFail" xml:space="preserve">
+  </data><data name="StatusApplyPointerFail" xml:space="preserve">
 
     <value>Failed to apply pointer speed.</value>
 
-  </data>
-
-  <data name="StatusApplySwapFail" xml:space="preserve">
+  </data><data name="StatusApplySwapFail" xml:space="preserve">
 
     <value>Failed to apply button swap setting.</value>
 
-  </data>
-
-  <data name="StatusCursorApplyFailed" xml:space="preserve">
+  </data><data name="StatusCursorApplyFailed" xml:space="preserve">
 
     <value>Failed to apply custom cursor style. Try running as administrator if your system blocks INF installation.</value>
 
-  </data>
-
-  <data name="StatusInvalidDpi" xml:space="preserve">
+  </data><data name="StatusInvalidDpi" xml:space="preserve">
 
     <value>Invalid DPI value.</value>
 
-  </data>
-
-  <data name="StatusInvalidPolling" xml:space="preserve">
+  </data><data name="StatusInvalidPolling" xml:space="preserve">
 
     <value>Invalid polling rate.</value>
 
-  </data>
-
-  <data name="StatusProfileSaved" xml:space="preserve">
+  </data><data name="StatusProfileSaved" xml:space="preserve">
 
     <value>Mouse profile saved.</value>
 
-  </data>
-
-  <data name="StatusReloaded" xml:space="preserve">
+  </data><data name="StatusReloaded" xml:space="preserve">
 
     <value>Current plugin settings reloaded.</value>
 
-  </data>
-
-  <data name="StatusResetDefaults" xml:space="preserve">
+  </data><data name="StatusResetDefaults" xml:space="preserve">
 
     <value>Mouse profile reset to defaults.</value>
 
-  </data>
-
-  <data name="StatusSelectValidPolling" xml:space="preserve">
+  </data><data name="StatusSelectValidPolling" xml:space="preserve">
 
     <value>Please select a valid polling rate.</value>
 
-  </data>
-
-  <data name="StatusWindowsApplied" xml:space="preserve">
+  </data><data name="StatusWindowsApplied" xml:space="preserve">
 
     <value>Windows mouse settings applied.</value>
 
-  </data>
-
-  <data name="SwapButtonsLabel" xml:space="preserve">
+  </data><data name="SwapButtonsLabel" xml:space="preserve">
 
     <value>Swap left and right mouse buttons</value>
 
-  </data>
-
-  <data name="DpiLabel" xml:space="preserve">
+  </data><data name="DpiLabel" xml:space="preserve">
 
     <value>DPI</value>
 
-  </data>
-
-  <data name="FormatCursorApplied" xml:space="preserve">
+  </data><data name="FormatCursorApplied" xml:space="preserve">
 
     <value>Applied cursor theme: {0}.</value>
 
-  </data>
-
-  <data name="QuickActionsTitle" xml:space="preserve">
+  </data><data name="QuickActionsTitle" xml:space="preserve">
 
     <value>Quick Actions</value>
 
-  </data>
-
-  <data name="QuickActionsDescription" xml:space="preserve">
+  </data><data name="QuickActionsDescription" xml:space="preserve">
 
     <value>Apply or reset your mouse profile settings.</value>
 
-  </data>
-
-  <data name="CursorThemeModeLabel" xml:space="preserve">
+  </data><data name="CursorThemeModeLabel" xml:space="preserve">
 
     <value>Cursor Theme Mode</value>
 
-  </data>
-
-  <data name="CursorThemeModeAuto" xml:space="preserve">
+  </data><data name="CursorThemeModeAuto" xml:space="preserve">
 
     <value>Follow System</value>
 
-  </data>
-
-  <data name="CursorThemeModeLight" xml:space="preserve">
+  </data><data name="CursorThemeModeLight" xml:space="preserve">
 
     <value>Light</value>
 
-  </data>
-
-  <data name="CursorThemeModeDark" xml:space="preserve">
+  </data><data name="CursorThemeModeDark" xml:space="preserve">
 
     <value>Dark</value>
 
-  </data>
-
-  <data name="CursorThemeModeApplied" xml:space="preserve">
+  </data><data name="CursorThemeModeApplied" xml:space="preserve">
 
     <value>Cursor theme mode set to: {0}.</value>
 
-  </data>
-
-  <data name="ProfileStatusLabel" xml:space="preserve">
+  </data><data name="ProfileStatusLabel" xml:space="preserve">
 
     <value>Profile State</value>
 
-  </data>
-
-  <data name="ProfileReady" xml:space="preserve">
+  </data><data name="ProfileReady" xml:space="preserve">
 
     <value>Ready to apply</value>
 
-  </data>
-
-  <data name="CurrentDpiLabel" xml:space="preserve">
+  </data><data name="CurrentDpiLabel" xml:space="preserve">
 
     <value>Current DPI</value>
 
-  </data>
-
-  <data name="CurrentPollingLabel" xml:space="preserve">
+  </data><data name="CurrentPollingLabel" xml:space="preserve">
 
     <value>Current Polling</value>
 
-  </data>
-
-  <data name="WindowsSettingsTitle" xml:space="preserve">
+  </data><data name="WindowsSettingsTitle" xml:space="preserve">
 
     <value>Windows Mouse Settings</value>
 
-  </data>
-
-  <data name="WindowsSettingsDescription" xml:space="preserve">
+  </data><data name="WindowsSettingsDescription" xml:space="preserve">
 
     <value>Preview the effective pointer behavior before writing it into the current Windows profile.</value>
 
-  </data>
-
-  <data name="PointerPreviewLabel" xml:space="preserve">
+  </data><data name="PointerPreviewLabel" xml:space="preserve">
 
     <value>Pointer Speed</value>
 
-  </data>
-
-  <data name="ButtonLayoutLabel" xml:space="preserve">
+  </data><data name="ButtonLayoutLabel" xml:space="preserve">
 
     <value>Button Layout</value>
 
-  </data>
-
-  <data name="CursorThemeStatusLabel" xml:space="preserve">
+  </data><data name="CursorThemeStatusLabel" xml:space="preserve">
 
     <value>Cursor Theme</value>
 
-  </data>
-
-  <data name="EnabledState" xml:space="preserve">
+  </data><data name="EnabledState" xml:space="preserve">
 
     <value>Enabled</value>
 
-  </data>
-
-  <data name="DisabledState" xml:space="preserve">
+  </data><data name="DisabledState" xml:space="preserve">
 
     <value>Disabled</value>
 
-  </data>
-
-  <data name="StandardButtonsState" xml:space="preserve">
+  </data><data name="StandardButtonsState" xml:space="preserve">
 
     <value>Standard</value>
 
-  </data>
-
-  <data name="SwappedButtonsState" xml:space="preserve">
+  </data><data name="SwappedButtonsState" xml:space="preserve">
 
     <value>Swapped</value>
 
-  </data>
-
-  <data name="AutomaticThemeState" xml:space="preserve">
+  </data><data name="AutomaticThemeState" xml:space="preserve">
 
     <value>Automatic</value>
 
-  </data>
-
-  <data name="ManualThemeState" xml:space="preserve">
+  </data><data name="ManualThemeState" xml:space="preserve">
 
     <value>Manual</value>
 
-  </data>
-
-<data name="StatusSyncedFromWindows" xml:space="preserve">
+  </data><data name="StatusSyncedFromWindows" xml:space="preserve">
     <value>Current Windows mouse state synced.</value>
-  </data>
-  <data name="CursorThemeModeWindowsDefault" xml:space="preserve">
+  </data><data name="CursorThemeModeWindowsDefault" xml:space="preserve">
     <value>Windows Default</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
+  </data><data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Title" xml:space="preserve">
     <value>Enable Auto Theme Cursor</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
+  </data><data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Enable_Description" xml:space="preserve">
     <value>Automatically apply light or dark cursor theme based on current Windows theme.</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
+  </data><data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Title" xml:space="preserve">
     <value>Disable Auto Theme Cursor</value>
-  </data>
-  <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
+  </data><data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
     <value>Stop automatically changing cursor theme based on Windows theme changes.</value>
-  </data>
-  <data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
+  </data><data name="StatusRestoreWindowsDefaultFailed" xml:space="preserve">
     <value>Failed to restore the Windows default cursor scheme.</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
+  </data><data name="WindowsOptimization_Category_CustomMouse_Title" xml:space="preserve">
     <value>Custom Mouse</value>
-  </data>
-<data name="StatusWindowsDefaultRestored" xml:space="preserve">
+  </data><data name="StatusWindowsDefaultRestored" xml:space="preserve">
     <value>Windows default cursor scheme restored.</value>
-  </data>
-  <data name="SyncFromWindowsButton" xml:space="preserve">
+  </data><data name="SyncFromWindowsButton" xml:space="preserve">
     <value>Sync from Windows</value>
-  </data>
-  <data name="RestoreWindowsDefaultButton" xml:space="preserve">
+  </data><data name="RestoreWindowsDefaultButton" xml:space="preserve">
     <value>Restore Windows Default</value>
-  </data>
-  <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
+  </data><data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
     <value>Enable or disable auto theme cursor style based on Windows light/dark mode.</value>
-  </data>
-  <data name="StatusApplying" xml:space="preserve">
-    <value>Applying...</value>
-  </data>
-  <data name="ApplyFailedPrefix" xml:space="preserve">
-    <value>Apply failed:</value>
-  </data>
-  <data name="ApplyCursorThemeFailedPrefix" xml:space="preserve">
-    <value>Apply cursor theme failed:</value>
-  </data>
-  </root>
+  </data><data name="StatusApplying" xml:space="preserve">
+    <value>Đang áp dụng...</value>
+  </data><data name="ApplyFailedPrefix" xml:space="preserve">
+    <value>Không thể áp dụng:</value>
+  </data><data name="ApplyCursorThemeFailedPrefix" xml:space="preserve">
+    <value>Không thể áp dụng chủ đề con trỏ:</value>
+  </data></root>

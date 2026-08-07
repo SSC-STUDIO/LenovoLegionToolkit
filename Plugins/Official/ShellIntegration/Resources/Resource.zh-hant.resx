@@ -375,6 +375,6 @@
   </data>
 <data name="OpenFileButton" xml:space="preserve"><value>Open File</value></data><data name="OpenFolderButton" xml:space="preserve"><value>Open Folder</value></data>
   <data name="StatusWorking" xml:space="preserve">
-    <value>Working...</value>
+    <value>正在運行...</value>
   </data>
 </root>

@@ -245,12 +245,12 @@
     <value>自訂滑鼠</value>
   </data>
   <data name="StatusApplying" xml:space="preserve">
-    <value>Applying...</value>
+    <value>正在應用...</value>
   </data>
   <data name="ApplyFailedPrefix" xml:space="preserve">
-    <value>Apply failed:</value>
+    <value>應用失敗：</value>
   </data>
   <data name="ApplyCursorThemeFailedPrefix" xml:space="preserve">
-    <value>Apply cursor theme failed:</value>
+    <value>應用光標主題失敗：</value>
   </data>
 </root>
