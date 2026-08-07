@@ -5,6 +5,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
@@ -24,14 +25,21 @@ public sealed class MacroPage : UserControl
     private readonly CheckBox _enabledToggle = new() { MinWidth = 48 };
     private readonly Button _stopButton = new() { MinWidth = 96 };
     private readonly LocalizedTextBlock _statusBlock = new();
+    private readonly DispatcherTimer _recordingRefreshTimer = new()
+    {
+        Interval = TimeSpan.FromMilliseconds(250),
+    };
     private bool _isRefreshing;
     private bool _isPreparingRecording;
+    private bool _isLoaded;
 
     public MacroPage(IPlatformServices platformServices)
     {
         _platformServices = platformServices;
         Content = BuildContent();
+        _recordingRefreshTimer.Tick += RecordingRefreshTimer_Tick;
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     private Control BuildContent()
@@ -121,12 +129,29 @@ public sealed class MacroPage : UserControl
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        Loaded -= OnLoaded;
+        _isLoaded = true;
+        await RefreshAsync();
+    }
+
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
+    {
+        _isLoaded = false;
+        _recordingRefreshTimer.Stop();
+    }
+
+    private async void RecordingRefreshTimer_Tick(object? sender, EventArgs e)
+    {
+        if (!_isLoaded || _isRefreshing)
+            return;
+
         await RefreshAsync();
     }
 
     private async Task RefreshAsync()
     {
+        if (_isRefreshing)
+            return;
+
         try
         {
             _isRefreshing = true;
@@ -143,10 +168,16 @@ public sealed class MacroPage : UserControl
             _slotsPanel.Children.Clear();
             foreach (var slot in state.Slots)
                 _slotsPanel.Children.Add(CreateSlotCard(slot, state.IsRecording));
+
+            if (state.IsRecording && _isLoaded)
+                _recordingRefreshTimer.Start();
+            else
+                _recordingRefreshTimer.Stop();
         }
         catch (Exception ex)
         {
             _statusBlock.Text = ex.Message;
+            _recordingRefreshTimer.Stop();
         }
         finally
         {

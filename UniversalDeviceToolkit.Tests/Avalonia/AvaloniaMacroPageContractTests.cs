@@ -5,7 +5,7 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class AvaloniaMacroPageContractTests
 {
     [Fact]
-    public void MacroPage_ShouldMatchWpfSequenceAvailabilityAndMovementRecordingPreparation()
+    public void MacroPage_ShouldMatchWpfSequenceAvailabilityMovementRecordingAndLiveProgress()
     {
         var root = FindRepositoryRoot();
         var source = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "Pages", "MacroPage.cs"));
@@ -14,6 +14,10 @@ public sealed class AvaloniaMacroPageContractTests
         Assert.Contains("MacroRecordingMode.KeyboardMouseMovement", source, StringComparison.Ordinal);
         Assert.Contains("Task.Delay(TimeSpan.FromSeconds(3))", source, StringComparison.Ordinal);
         Assert.Contains("MacroRecordingWindow_Preparing_Title", source, StringComparison.Ordinal);
+        Assert.Contains("DispatcherTimer", source, StringComparison.Ordinal);
+        Assert.Contains("Interval = TimeSpan.FromMilliseconds(250)", source, StringComparison.Ordinal);
+        Assert.Contains("state.IsRecording && _isLoaded", source, StringComparison.Ordinal);
+        Assert.Contains("OnUnloaded", source, StringComparison.Ordinal);
     }
 
     private static string FindRepositoryRoot()
