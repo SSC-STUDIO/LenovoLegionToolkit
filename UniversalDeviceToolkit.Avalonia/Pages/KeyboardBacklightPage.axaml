@@ -72,6 +72,27 @@
                                          OverflowMode="Wrap"
                                          MaxLines="3" />
 
+            <Border x:Name="VantageWarning"
+                    IsVisible="False"
+                    Background="{DynamicResource StatusWarningBackgroundBrush}"
+                    BorderBrush="{DynamicResource StatusWarningBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16"
+                    automation:AutomationProperties.AutomationId="AvaloniaKeyboardVantageWarning">
+                <StackPanel Spacing="4">
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_VantageEnabledWarning_Title, Fallback=Lenovo Vantage or its services are running}"
+                                                 FontSize="{StaticResource FontSizeSubsection}"
+                                                 FontWeight="Medium"
+                                                 Foreground="{DynamicResource StatusWarningBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2" />
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_VantageEnabledWarning_Message, Fallback=Keyboard backlight cannot be controlled while Lenovo Vantage or its services are running.}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="3" />
+                </StackPanel>
+            </Border>
+
             <StackPanel x:Name="SpectrumPanel" IsVisible="False" Spacing="12">
                 <Border Background="{DynamicResource CardBackgroundBrush}"
                         BorderBrush="{DynamicResource CardBorderBrush}"

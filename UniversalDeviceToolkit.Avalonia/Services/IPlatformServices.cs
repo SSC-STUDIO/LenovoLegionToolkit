@@ -367,7 +367,8 @@ public sealed record KeyboardLightingState(
     IReadOnlyList<KeyboardRgbPresetState> RgbPresets,
     string KeyboardLayout = "Ansi",
     string SpectrumLayout = "KeyboardOnly",
-    IReadOnlyList<ushort>? KeyboardKeys = null);
+    IReadOnlyList<ushort>? KeyboardKeys = null,
+    bool IsBlockedByVantage = false);
 
 public sealed record KeyboardLightingUpdate(
     string Mode,

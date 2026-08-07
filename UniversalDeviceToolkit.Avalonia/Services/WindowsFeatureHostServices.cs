@@ -31,6 +31,7 @@ using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Listeners;
 using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Shared.Settings;
@@ -49,6 +50,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly SpectrumKeyboardBacklightController? _spectrum;
     private readonly SpectrumKeyboardSettings? _spectrumSettings;
     private readonly RGBKeyboardBacklightController? _rgb;
+    private readonly VantageDisabler? _vantageDisabler;
     private readonly IMacroController _macro;
     private readonly AutomationProcessor _automation;
     private readonly IPluginManager _plugins;
@@ -122,6 +124,7 @@ internal sealed class WindowsFeatureHostServices
         _spectrum = spectrum;
         _spectrumSettings = IoCContainer.TryResolve<SpectrumKeyboardSettings>();
         _rgb = rgb;
+        _vantageDisabler = IoCContainer.TryResolve<VantageDisabler>();
         _macro = macro;
         _automation = automation;
         _plugins = plugins;
@@ -2686,6 +2689,7 @@ internal sealed class WindowsFeatureHostServices
 
     public async Task<KeyboardLightingState?> GetKeyboardLightingStateAsync()
     {
+        var isBlockedByVantage = await IsKeyboardLightingBlockedByVantageAsync().ConfigureAwait(false);
         if (_spectrum is not null && await _spectrum.IsSupportedAsync().ConfigureAwait(false))
         {
             var (spectrumLayout, detectedKeyboardLayout, keyboardKeys) =
@@ -2712,7 +2716,8 @@ internal sealed class WindowsFeatureHostServices
                 [],
                 keyboardLayout.ToString(),
                 spectrumLayout.ToString(),
-                keyboardKeys.OrderBy(key => key).ToArray());
+                keyboardKeys.OrderBy(key => key).ToArray(),
+                isBlockedByVantage);
         }
 
         if (_rgb is not null && await _rgb.IsSupportedAsync().ConfigureAwait(false))
@@ -2744,7 +2749,7 @@ internal sealed class WindowsFeatureHostServices
                 })
                 .ToArray();
 
-            return new KeyboardLightingState("RGB", 0, false, 0, [], presets);
+            return new KeyboardLightingState("RGB", 0, false, 0, [], presets, IsBlockedByVantage: isBlockedByVantage);
         }
 
         return null;
@@ -2752,6 +2757,9 @@ internal sealed class WindowsFeatureHostServices
 
     public async Task<bool> SetKeyboardLightingAsync(KeyboardLightingUpdate update)
     {
+        if (await IsKeyboardLightingBlockedByVantageAsync().ConfigureAwait(false))
+            return false;
+
         if (update.Mode.Equals("Spectrum", StringComparison.OrdinalIgnoreCase) && _spectrum is not null)
         {
             if (!await _spectrum.IsSupportedAsync().ConfigureAwait(false))
@@ -2856,7 +2864,8 @@ internal sealed class WindowsFeatureHostServices
 
     public async Task<bool> ResetKeyboardSpectrumProfileAsync()
     {
-        if (_spectrum is null || !await _spectrum.IsSupportedAsync().ConfigureAwait(false))
+        if (_spectrum is null || await IsKeyboardLightingBlockedByVantageAsync().ConfigureAwait(false)
+            || !await _spectrum.IsSupportedAsync().ConfigureAwait(false))
             return false;
 
         var profile = await _spectrum.GetProfileAsync().ConfigureAwait(false);
@@ -2867,6 +2876,7 @@ internal sealed class WindowsFeatureHostServices
     public async Task<bool> ExportKeyboardSpectrumProfileAsync(string filePath)
     {
         if (_spectrum is null || string.IsNullOrWhiteSpace(filePath)
+            || await IsKeyboardLightingBlockedByVantageAsync().ConfigureAwait(false)
             || !await _spectrum.IsSupportedAsync().ConfigureAwait(false))
             return false;
 
@@ -2879,6 +2889,7 @@ internal sealed class WindowsFeatureHostServices
     {
         if (_spectrum is null || string.IsNullOrWhiteSpace(filePath)
             || !File.Exists(filePath)
+            || await IsKeyboardLightingBlockedByVantageAsync().ConfigureAwait(false)
             || !await _spectrum.IsSupportedAsync().ConfigureAwait(false))
             return false;
 
@@ -2888,6 +2899,12 @@ internal sealed class WindowsFeatureHostServices
     }
 
     private static KeyboardColorState ToKeyboardColor(RGBColor color) => new(color.R, color.G, color.B);
+
+    private async Task<bool> IsKeyboardLightingBlockedByVantageAsync()
+    {
+        return _vantageDisabler is not null
+            && await _vantageDisabler.GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled;
+    }
 
     private static RGBColor ToRgbColor(KeyboardColorState color) => new(color.R, color.G, color.B);
 

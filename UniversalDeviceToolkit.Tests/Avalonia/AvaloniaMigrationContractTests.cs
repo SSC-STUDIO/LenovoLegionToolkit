@@ -892,6 +892,39 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void AvaloniaKeyboardLighting_PreservesWpfVantageProtectionAndExternalRefresh()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml"));
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+        var service = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+
+        markup.Should().Contain("AvaloniaKeyboardVantageWarning");
+        markup.Should().Contain("Keyboard_VantageEnabledWarning_Title");
+        markup.Should().Contain("Keyboard_VantageEnabledWarning_Message");
+        source.Should().Contain("VantageWarning.IsVisible = state.IsBlockedByVantage");
+        source.Should().Contain("SpectrumPanel.IsEnabled = !state.IsBlockedByVantage");
+        source.Should().Contain("RgbPanel.IsEnabled = !state.IsBlockedByVantage");
+        source.Should().Contain("MessagingCenter.Subscribe<RGBKeyboardBacklightChangedMessage>");
+        source.Should().Contain("MessagingCenter.Subscribe<SpectrumBacklightChangedMessage>");
+        source.Should().Contain("MessagingCenter.Unsubscribe(this)");
+        service.Should().Contain("IsKeyboardLightingBlockedByVantageAsync");
+        service.Should().Contain("SoftwareStatus.Enabled");
+    }
+
+    [Fact]
     public void AvaloniaKeyboardSpectrum_PreservesWpfAddAndDeleteEffectActions()
     {
         var root = RepositoryPaths.FindRoot();

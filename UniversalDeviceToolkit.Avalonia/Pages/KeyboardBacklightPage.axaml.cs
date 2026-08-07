@@ -7,10 +7,15 @@ using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Abstractions.Localization;
+#if WINDOWS
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+#endif
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -21,6 +26,9 @@ public partial class KeyboardBacklightPage : UserControl
     private readonly List<RgbZoneEditor> _rgbZones = [];
     private KeyboardLightingState? _state;
     private bool _isRefreshing;
+#if WINDOWS
+    private bool _isSubscribedToKeyboardChanges;
+#endif
     private static readonly string[] RgbEffects = ["Static", "Breath", "Smooth", "WaveRTL", "WaveLTR"];
     private static readonly string[] RgbSpeeds = ["Slowest", "Slow", "Fast", "Fastest"];
     private static readonly string[] RgbBrightnessLevels = ["Low", "High"];
@@ -36,13 +44,50 @@ public partial class KeyboardBacklightPage : UserControl
         InitializeComponent();
         AutomationProperties.SetName(this, AvaloniaLocalization.GetString("KeyboardBacklightPage_Title", "Keyboard Backlight"));
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
-        Loaded -= OnLoaded;
+        SubscribeToKeyboardChanges();
         await RefreshAsync();
     }
+
+    private void OnUnloaded(object? sender, RoutedEventArgs e)
+    {
+#if WINDOWS
+        if (!_isSubscribedToKeyboardChanges)
+            return;
+
+        MessagingCenter.Unsubscribe(this);
+        _isSubscribedToKeyboardChanges = false;
+#endif
+    }
+
+    private void SubscribeToKeyboardChanges()
+    {
+#if WINDOWS
+        if (_isSubscribedToKeyboardChanges)
+            return;
+
+        MessagingCenter.Subscribe<RGBKeyboardBacklightChangedMessage>(this, QueueKeyboardRefresh);
+        MessagingCenter.Subscribe<SpectrumBacklightChangedMessage>(this, QueueKeyboardRefresh);
+        _isSubscribedToKeyboardChanges = true;
+#endif
+    }
+
+#if WINDOWS
+    private void QueueKeyboardRefresh()
+    {
+        Dispatcher.UIThread.Post(async () =>
+        {
+            if (!IsVisible || _isRefreshing)
+                return;
+
+            await RefreshAsync();
+        });
+    }
+#endif
 
     private async Task RefreshAsync()
     {
@@ -52,6 +97,7 @@ public partial class KeyboardBacklightPage : UserControl
             ErrorMessage.IsVisible = false;
             SpectrumPanel.IsVisible = false;
             RgbPanel.IsVisible = false;
+            VantageWarning.IsVisible = false;
 
             var state = await _platformServices.GetKeyboardLightingStateAsync().ConfigureAwait(true);
             _state = state;
@@ -68,6 +114,7 @@ public partial class KeyboardBacklightPage : UserControl
                 state.Mode.Equals("Spectrum", StringComparison.OrdinalIgnoreCase)
                     ? $"Profile {state.SelectedProfile} loaded with {state.SpectrumEffects.Count} effect(s)."
                     : $"{state.RgbPresets.Count} RGB preset(s) loaded from the keyboard controller.");
+            VantageWarning.IsVisible = state.IsBlockedByVantage;
 
             if (state.Mode.Equals("Spectrum", StringComparison.OrdinalIgnoreCase))
                 BuildSpectrum(state);
@@ -99,6 +146,7 @@ public partial class KeyboardBacklightPage : UserControl
     private void BuildSpectrum(KeyboardLightingState state)
     {
         SpectrumPanel.IsVisible = true;
+        SpectrumPanel.IsEnabled = !state.IsBlockedByVantage;
         SpectrumKeyboardLayoutValue.Text = state.KeyboardLayout.ToUpperInvariant();
         ToolTip.SetTip(
             SpectrumKeyboardLayoutValue,
@@ -491,6 +539,7 @@ public partial class KeyboardBacklightPage : UserControl
     private void BuildRgb(KeyboardLightingState state)
     {
         RgbPanel.IsVisible = true;
+        RgbPanel.IsEnabled = !state.IsBlockedByVantage;
         RgbPresets.Children.Clear();
         var selected = state.RgbPresets.FirstOrDefault(preset => preset.IsSelected);
         foreach (var preset in state.RgbPresets)
