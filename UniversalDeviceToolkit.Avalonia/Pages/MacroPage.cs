@@ -9,6 +9,7 @@ using Avalonia.Threading;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
+using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
@@ -32,6 +33,7 @@ public sealed class MacroPage : UserControl
     private bool _isRefreshing;
     private bool _isPreparingRecording;
     private bool _isLoaded;
+    private readonly Dictionary<ulong, List<MacroEventItem>> _editedSequences = new();
 
     public MacroPage(IPlatformServices platformServices)
     {
@@ -167,7 +169,10 @@ public sealed class MacroPage : UserControl
 
             _slotsPanel.Children.Clear();
             foreach (var slot in state.Slots)
+            {
+                SeedEditedSequence(slot);
                 _slotsPanel.Children.Add(CreateSlotCard(slot, state.IsRecording));
+            }
 
             if (state.IsRecording && _isLoaded)
                 _recordingRefreshTimer.Start();
@@ -195,13 +200,17 @@ public sealed class MacroPage : UserControl
             FontWeight.Medium,
             LocalizedOverflowMode.Wrap,
             2);
+        var events = _editedSequences.TryGetValue(slot.Key, out var edited)
+            ? edited
+            : slot.Events;
+        var eventCount = events?.Count ?? 0;
         var summary = CreateText(
-            slot.EventCount == 0
+            eventCount == 0
                 ? Get("MacroPage_EmptySlot", "No sequence is stored for this slot.")
                 : string.Format(
                     System.Globalization.CultureInfo.CurrentCulture,
                     Get("MacroPage_EventSummary", "{0} recorded event(s)."),
-                    slot.EventCount),
+                    eventCount),
             "FontSizeCaption",
             "TextFillColorSecondaryBrush",
             FontWeight.Normal,
@@ -211,26 +220,45 @@ public sealed class MacroPage : UserControl
         copy.Children.Add(title);
         copy.Children.Add(summary);
 
-        if (slot.Events is { Count: > 0 })
+        var repeat = new NumericUpDown
         {
-            var eventList = new StackPanel
-            {
-                Spacing = 2,
-                Margin = new Thickness(0, 5, 0, 0),
-            };
-            foreach (var macroEvent in slot.Events)
-            {
-                eventList.Children.Add(CreateText(
-                    FormatEvent(macroEvent),
-                    "FontSizeCaption",
-                    "TextFillColorSecondaryBrush",
-                    FontWeight.Normal,
-                    LocalizedOverflowMode.Ellipsis,
-                    1));
-            }
+            Minimum = 1,
+            Maximum = 10,
+            Increment = 1,
+            Value = Math.Clamp(slot.RepeatCount, 1, 10),
+            MinWidth = 72,
+            FormatString = "0x",
+            IsEnabled = slot.EventCount > 0 && !isRecording,
+        };
+        var ignoreDelays = new CheckBox
+        {
+            Content = Get("MacroPage_IgnoreDelays", "Ignore delays"),
+            IsChecked = slot.IgnoreDelays,
+            IsEnabled = slot.EventCount > 0 && !isRecording,
+        };
+        var interrupt = new CheckBox
+        {
+            Content = Get("MacroPage_InterruptOnOtherKey", "Interrupt on other key"),
+            IsChecked = slot.InterruptOnOtherKey,
+            IsEnabled = slot.EventCount > 0 && !isRecording,
+        };
+        repeat.ValueChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
+        ignoreDelays.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
+        interrupt.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
 
-            copy.Children.Add(eventList);
+        var eventList = new StackPanel
+        {
+            Spacing = 4,
+            Margin = new Thickness(0, 6, 0, 0),
+        };
+        if (events is not null)
+        {
+            for (var i = 0; i < events.Count; i++)
+                eventList.Children.Add(CreateEventRow(slot.Key, i, events[i], repeat, ignoreDelays, interrupt, isRecording));
         }
+
+        eventList.Children.Add(CreateAddEventButton(slot.Key, repeat, ignoreDelays, interrupt, isRecording));
+        copy.Children.Add(eventList);
 
         var play = new Button
         {
@@ -281,32 +309,6 @@ public sealed class MacroPage : UserControl
         ToolTip.SetTip(play, summary.Text);
         ToolTip.SetTip(record, Get("MacroPage_RecordDescription", "Capture keyboard input into this macro slot."));
         ToolTip.SetTip(clear, Get("MacroPage_ClearDescription", "Remove all recorded events from this macro slot."));
-
-        var repeat = new NumericUpDown
-        {
-            Minimum = 1,
-            Maximum = 10,
-            Increment = 1,
-            Value = Math.Clamp(slot.RepeatCount, 1, 10),
-            MinWidth = 72,
-            FormatString = "0x",
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-        };
-        var ignoreDelays = new CheckBox
-        {
-            Content = Get("MacroPage_IgnoreDelays", "Ignore delays"),
-            IsChecked = slot.IgnoreDelays,
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-        };
-        var interrupt = new CheckBox
-        {
-            Content = Get("MacroPage_InterruptOnOtherKey", "Interrupt on other key"),
-            IsChecked = slot.InterruptOnOtherKey,
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-        };
-        repeat.ValueChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
-        ignoreDelays.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
-        interrupt.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
 
         var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
         actions.Children.Add(play);
@@ -384,6 +386,10 @@ public sealed class MacroPage : UserControl
         _isPreparingRecording = true;
         try
         {
+            // A fresh recording replaces the slot's host sequence, so any
+            // in-page edits are discarded before the new events are captured.
+            _editedSequences.Remove(key);
+
             // The WPF host gives the user three seconds to move away from the record button
             // before mouse-movement capture starts. Preserve that behavior in the native page.
             if (mode == MacroRecordingMode.KeyboardMouseMovement)
@@ -414,35 +420,256 @@ public sealed class MacroPage : UserControl
             return;
         }
 
+        _editedSequences.Remove(key);
         await RefreshAsync();
     }
 
-    private static string FormatEvent(MacroEventItem macroEvent)
+    private Control CreateEventRow(
+        ulong slotKey,
+        int index,
+        MacroEventItem macroEvent,
+        NumericUpDown repeat,
+        CheckBox ignoreDelays,
+        CheckBox interrupt,
+        bool isRecording)
     {
-        var location = macroEvent.X == 0 && macroEvent.Y == 0
-            ? string.Empty
-            : $" ({macroEvent.X}, {macroEvent.Y})";
-        return $"{macroEvent.Source} {macroEvent.Direction} | {macroEvent.Key}{location} | +{macroEvent.Delay.TotalMilliseconds:0} ms";
+        var summary = CreateText(
+            MacroEventEditing.FormatEvent(macroEvent),
+            "FontSizeCaption",
+            "TextFillColorSecondaryBrush",
+            FontWeight.Normal,
+            LocalizedOverflowMode.Ellipsis,
+            1);
+
+        var delay = new NumericUpDown
+        {
+            Minimum = 0,
+            Maximum = 10000,
+            Increment = 100,
+            FormatString = "0",
+            Value = Math.Clamp((decimal)Math.Round(macroEvent.Delay.TotalMilliseconds), 0m, 10000m),
+            MinWidth = 84,
+            VerticalAlignment = VerticalAlignment.Center,
+            IsEnabled = !isRecording,
+        };
+        AutomationProperties.SetAutomationId(delay, $"AvaloniaMacro_{slotKey:X}_EventRow_{index}_DelayEditor");
+        ToolTip.SetTip(delay, Get("MacroPage_DelayToolTip", "Delay before this event, in milliseconds."));
+
+        var up = new Button { Content = "\u2191", MinWidth = 28, VerticalAlignment = VerticalAlignment.Center, IsEnabled = !isRecording };
+        var down = new Button { Content = "\u2193", MinWidth = 28, VerticalAlignment = VerticalAlignment.Center, IsEnabled = !isRecording };
+        var remove = new Button { Content = "\u2715", MinWidth = 28, VerticalAlignment = VerticalAlignment.Center, IsEnabled = !isRecording };
+        AutomationProperties.SetAutomationId(up, $"AvaloniaMacro_{slotKey:X}_EventRow_{index}_MoveUpButton");
+        AutomationProperties.SetAutomationId(down, $"AvaloniaMacro_{slotKey:X}_EventRow_{index}_MoveDownButton");
+        AutomationProperties.SetAutomationId(remove, $"AvaloniaMacro_{slotKey:X}_EventRow_{index}_RemoveButton");
+        ToolTip.SetTip(up, Get("MacroPage_MoveUp", "Move event up"));
+        ToolTip.SetTip(down, Get("MacroPage_MoveDown", "Move event down"));
+        ToolTip.SetTip(remove, Get("MacroPage_RemoveEvent", "Remove event"));
+
+        delay.ValueChanged += async (_, _) =>
+        {
+            if (_isRefreshing || delay.Value is not decimal value)
+                return;
+
+            var list = EnsureEdited(slotKey);
+            if (index >= list.Count)
+                return;
+
+            list[index] = MacroEventEditing.WithDelay(list[index], TimeSpan.FromMilliseconds((double)value));
+            await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+        };
+        up.Click += async (_, _) =>
+        {
+            if (_isRefreshing || !MacroEventEditing.MoveEventUp(EnsureEdited(slotKey), index))
+                return;
+
+            await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+        };
+        down.Click += async (_, _) =>
+        {
+            if (_isRefreshing || !MacroEventEditing.MoveEventDown(EnsureEdited(slotKey), index))
+                return;
+
+            await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+        };
+        remove.Click += async (_, _) =>
+        {
+            if (_isRefreshing || !MacroEventEditing.RemoveEventAt(EnsureEdited(slotKey), index))
+                return;
+
+            await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+        };
+
+        Button? capture = null;
+        if (MacroEventEditing.CanCapture(macroEvent))
+        {
+            capture = new Button
+            {
+                Content = Get("MacroPage_Capture", "Capture"),
+                MinWidth = 72,
+                VerticalAlignment = VerticalAlignment.Center,
+                IsEnabled = !isRecording,
+            };
+            AutomationProperties.SetAutomationId(capture, $"AvaloniaMacro_{slotKey:X}_EventRow_{index}_CaptureButton");
+            ToolTip.SetTip(capture, Get("MacroPage_CaptureDescription", "Capture the next key or mouse button for this event."));
+            capture.Click += async (_, _) => await CaptureForEventAsync(slotKey, index, repeat, ignoreDelays, interrupt);
+        }
+
+        var row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto,Auto"), ColumnSpacing = 6 };
+        row.Children.Add(summary);
+        if (capture is not null)
+        {
+            Grid.SetColumn(capture, 1);
+            row.Children.Add(capture);
+        }
+
+        Grid.SetColumn(delay, capture is null ? 1 : 2);
+        row.Children.Add(delay);
+
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 4,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { up, down, remove },
+        };
+        Grid.SetColumn(buttons, 3);
+        row.Children.Add(buttons);
+
+        AutomationProperties.SetAutomationId(row, $"AvaloniaMacro_{slotKey:X}_EventRow_{index}");
+        AutomationProperties.SetName(row, summary.Text);
+        return row;
     }
+
+    private Control CreateAddEventButton(
+        ulong slotKey,
+        NumericUpDown repeat,
+        CheckBox ignoreDelays,
+        CheckBox interrupt,
+        bool isRecording)
+    {
+        var add = new Button
+        {
+            Content = Get("MacroPage_AddEvent", "Add event"),
+            MinWidth = 96,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            IsEnabled = !isRecording,
+        };
+        var keyItem = new MenuItem { Header = Get("MacroPage_AddKeyEvent", "Keyboard key") };
+        var mouseItem = new MenuItem { Header = Get("MacroPage_AddMouseEvent", "Mouse button") };
+        var delayItem = new MenuItem { Header = Get("MacroPage_AddDelayEvent", "Delay") };
+        keyItem.Click += async (_, _) => await AddKeyEventAsync(slotKey, repeat, ignoreDelays, interrupt);
+        mouseItem.Click += async (_, _) => await AddMouseEventAsync(slotKey, repeat, ignoreDelays, interrupt);
+        delayItem.Click += async (_, _) => await AddDelayEventAsync(slotKey, repeat, ignoreDelays, interrupt);
+        var menu = new MenuFlyout { Items = { keyItem, mouseItem, delayItem } };
+        add.Flyout = menu;
+        AutomationProperties.SetAutomationId(add, $"AvaloniaMacro_{slotKey:X}_AddEventButton");
+        AutomationProperties.SetName(add, Get("MacroPage_AddEvent", "Add event"));
+        return add;
+    }
+
+    private List<MacroEventItem> EnsureEdited(ulong key)
+    {
+        if (!_editedSequences.TryGetValue(key, out var events))
+        {
+            events = new List<MacroEventItem>();
+            _editedSequences[key] = events;
+        }
+
+        return events;
+    }
+
+    private void SeedEditedSequence(MacroSlotState slot)
+    {
+        if (slot.Events is { Count: > 0 } && !_editedSequences.ContainsKey(slot.Key))
+            _editedSequences[slot.Key] = [.. slot.Events];
+    }
+
+    private async Task AddKeyEventAsync(ulong slotKey, NumericUpDown repeat, CheckBox ignoreDelays, CheckBox interrupt)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        var result = await MacroKeyCaptureWindow.CaptureAsync(owner);
+        if (result is null || _isRefreshing)
+            return;
+
+        MacroEventEditing.AddEvents(EnsureEdited(slotKey), MacroEventEditing.CreatePress(result));
+        await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+    }
+
+    private async Task AddMouseEventAsync(ulong slotKey, NumericUpDown repeat, CheckBox ignoreDelays, CheckBox interrupt)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        var result = await MacroKeyCaptureWindow.CaptureAsync(owner);
+        if (result is null || _isRefreshing)
+            return;
+
+        MacroEventEditing.AddEvents(EnsureEdited(slotKey), MacroEventEditing.CreatePress(result));
+        await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+    }
+
+    private async Task AddDelayEventAsync(ulong slotKey, NumericUpDown repeat, CheckBox ignoreDelays, CheckBox interrupt)
+    {
+        if (_isRefreshing)
+            return;
+
+        MacroEventEditing.AddEvent(
+            EnsureEdited(slotKey),
+            MacroEventEditing.CreateDelayEvent(TimeSpan.FromMilliseconds(250)));
+        await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+    }
+
+    private async Task CaptureForEventAsync(ulong slotKey, int index, NumericUpDown repeat, CheckBox ignoreDelays, CheckBox interrupt)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        var result = await MacroKeyCaptureWindow.CaptureAsync(owner);
+        if (result is null || _isRefreshing)
+            return;
+
+        var list = EnsureEdited(slotKey);
+        if (index < 0 || index >= list.Count)
+            return;
+
+        if (!MacroEventEditing.ReplaceCapturedPress(list, index, result))
+        {
+            _statusBlock.Text = Get("MacroPage_CaptureError", "Unable to replace this macro event.");
+            return;
+        }
+
+        await SaveEditedSequenceAsync(slotKey, repeat, ignoreDelays, interrupt);
+    }
+
+    private async Task SaveEditedSequenceAsync(ulong key, NumericUpDown repeat, CheckBox ignoreDelays, CheckBox interrupt) =>
+        await SaveSequenceAsync(key, repeat, ignoreDelays, interrupt);
 
     private async Task SaveOptionsAsync(
         ulong key,
         NumericUpDown repeat,
         CheckBox ignoreDelays,
-        CheckBox interrupt)
+        CheckBox interrupt) =>
+        await SaveSequenceAsync(key, repeat, ignoreDelays, interrupt);
+
+    private async Task SaveSequenceAsync(ulong key, NumericUpDown repeat, CheckBox ignoreDelays, CheckBox interrupt)
     {
         if (_isRefreshing || repeat.Value is not decimal repeatValue
             || ignoreDelays.IsChecked is not bool ignore
             || interrupt.IsChecked is not bool stop)
             return;
 
-        var accepted = await _platformServices.SetMacroSequenceOptionsAsync(
-            key,
-            (int)Math.Round(repeatValue),
-            ignore,
-            stop);
-        if (!accepted)
+        var repeatCount = (int)Math.Round(repeatValue);
+        var saved = false;
+        if (_editedSequences.TryGetValue(key, out var events))
+            saved = await _platformServices.SaveMacroSequenceAsync(key, events, repeatCount, ignore, stop);
+        if (!saved)
+            saved = await _platformServices.SetMacroSequenceOptionsAsync(key, repeatCount, ignore, stop);
+        if (!saved)
             _statusBlock.Text = Get("MacroPage_OptionsError", "Unable to save macro sequence options.");
+
+        await RefreshAsync();
     }
 
     private LocalizedTextBlock CreateText(
@@ -475,4 +702,153 @@ public sealed class MacroPage : UserControl
 
     private T GetResource<T>(string key, T fallback) =>
         this.TryFindResource(key, out var value) && value is T resource ? resource : fallback;
+}
+
+/// <summary>
+/// Host-neutral editing model for a macro event sequence. These helpers operate
+/// on the <see cref="MacroEventItem"/> projection so the page and its tests can
+/// add, remove, reorder and edit events without depending on the Windows macro
+/// controller. The host model has no dedicated delay event; a delay-only item
+/// is a keyboard item with no key code and an unknown direction.
+/// </summary>
+public static class MacroEventEditing
+{
+    public const string KeyboardSource = "Keyboard";
+    public const string MouseSource = "Mouse";
+    public const string DelayOnlyDirection = "Unknown";
+
+    public static MacroEventItem CreateKeyboardEvent(uint keyCode, TimeSpan delay = default) =>
+        new(KeyboardSource, "Down", keyCode, 0, 0, delay);
+
+    public static MacroEventItem CreateMouseEvent(uint button, TimeSpan delay = default) =>
+        new(MouseSource, "Down", button, 0, 0, delay);
+
+    public static MacroEventItem CreateDelayEvent(TimeSpan delay) =>
+        new(KeyboardSource, DelayOnlyDirection, 0, 0, 0, delay);
+
+    public static MacroEventItem FromCapture(MacroKeyCaptureWindow.CaptureResult result, TimeSpan delay = default)
+    {
+        if (result is null)
+            throw new ArgumentNullException(nameof(result));
+
+        return new MacroEventItem(result.Source, result.Direction, result.Key, result.X, result.Y, delay);
+    }
+
+    public static IReadOnlyList<MacroEventItem> CreatePress(MacroKeyCaptureWindow.CaptureResult result)
+    {
+        var down = FromCapture(result);
+        return [down, down with { Direction = "Up" }];
+    }
+
+    public static bool IsDelayOnlyEvent(MacroEventItem item) => item is not null
+        && item.Source == KeyboardSource
+        && item.Direction == DelayOnlyDirection
+        && item.Key == 0;
+
+    public static bool CanCapture(MacroEventItem item) => item is not null && !IsDelayOnlyEvent(item);
+
+    public static bool AddEvent(IList<MacroEventItem> events, MacroEventItem item)
+    {
+        if (events is null || item is null)
+            return false;
+
+        events.Add(item);
+        return true;
+    }
+
+    public static bool AddEvents(IList<MacroEventItem> events, IEnumerable<MacroEventItem> items)
+    {
+        if (events is null || items is null)
+            return false;
+
+        var additions = items.Where(item => item is not null).ToArray();
+        if (additions.Length == 0)
+            return false;
+
+        foreach (var item in additions)
+            events.Add(item);
+        return true;
+    }
+
+    public static bool RemoveEventAt(IList<MacroEventItem> events, int index)
+    {
+        if (events is null || index < 0 || index >= events.Count)
+            return false;
+
+        events.RemoveAt(index);
+        return true;
+    }
+
+    public static bool MoveEventUp(IList<MacroEventItem> events, int index)
+    {
+        if (events is null || index <= 0 || index >= events.Count)
+            return false;
+
+        (events[index], events[index - 1]) = (events[index - 1], events[index]);
+        return true;
+    }
+
+    public static bool MoveEventDown(IList<MacroEventItem> events, int index)
+    {
+        if (events is null || index < 0 || index >= events.Count - 1)
+            return false;
+
+        (events[index], events[index + 1]) = (events[index + 1], events[index]);
+        return true;
+    }
+
+    public static MacroEventItem WithDelay(MacroEventItem item, TimeSpan delay) => item with { Delay = delay };
+
+    public static MacroEventItem WithCapturedInput(MacroEventItem item, MacroKeyCaptureWindow.CaptureResult result)
+    {
+        if (result is null)
+            throw new ArgumentNullException(nameof(result));
+
+        return item with
+        {
+            Source = result.Source,
+            Direction = result.Direction,
+            Key = result.Key,
+            X = result.X,
+            Y = result.Y,
+        };
+    }
+
+    public static bool ReplaceCapturedPress(
+        IList<MacroEventItem> events,
+        int index,
+        MacroKeyCaptureWindow.CaptureResult result)
+    {
+        if (events is null || result is null || index < 0 || index >= events.Count)
+            return false;
+
+        var downIndex = events[index].Direction == "Down" ? index : index - 1;
+        var upIndex = downIndex + 1;
+        if (downIndex < 0 || upIndex >= events.Count || !IsPressPair(events[downIndex], events[upIndex]))
+            return false;
+
+        events[downIndex] = WithCapturedInput(events[downIndex], result) with { Direction = "Down" };
+        events[upIndex] = WithCapturedInput(events[upIndex], result) with { Direction = "Up" };
+        return true;
+    }
+
+    private static bool IsPressPair(MacroEventItem down, MacroEventItem up) =>
+        down.Direction == "Down"
+        && up.Direction == "Up"
+        && string.Equals(down.Source, up.Source, StringComparison.OrdinalIgnoreCase)
+        && down.Key == up.Key;
+
+    public static string FormatEvent(MacroEventItem macroEvent)
+    {
+        if (macroEvent is null)
+            return string.Empty;
+
+        if (IsDelayOnlyEvent(macroEvent))
+            return $"+{macroEvent.Delay.TotalMilliseconds:0} ms delay";
+
+        var location = macroEvent.X == 0 && macroEvent.Y == 0
+            ? string.Empty
+            : $" ({macroEvent.X}, {macroEvent.Y})";
+        return $"{macroEvent.Source} {macroEvent.Direction} | {macroEvent.Key}{location} | +{macroEvent.Delay.TotalMilliseconds:0} ms";
+    }
 }
