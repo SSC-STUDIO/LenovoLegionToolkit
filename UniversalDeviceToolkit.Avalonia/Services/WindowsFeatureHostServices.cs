@@ -1476,6 +1476,101 @@ internal sealed class WindowsFeatureHostServices
         }
     }
 
+    public async Task<NetworkAccelerationRuntimeState> GetNetworkAccelerationRuntimeAsync()
+    {
+        if (_networkAcceleration is null)
+            return UnavailableNetworkRuntime("The network acceleration service is not initialized in this host.");
+
+        if (!_networkAcceleration.IsRunning)
+            return new NetworkAccelerationRuntimeState(
+                true,
+                false,
+                0,
+                0,
+                0,
+                0,
+                "stopped",
+                _networkAcceleration.StatusText,
+                [],
+                []);
+
+        try
+        {
+            var runtime = await _networkAcceleration.GetRuntimeSnapshotAsync().ConfigureAwait(false);
+            if (runtime is null)
+                return new NetworkAccelerationRuntimeState(
+                    true,
+                    true,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "unknown",
+                    "Traffic data is temporarily unavailable.",
+                    [],
+                    []);
+
+            var traffic = runtime.Traffic;
+            return new NetworkAccelerationRuntimeState(
+                true,
+                true,
+                traffic.BytesUploaded,
+                traffic.BytesDownloaded,
+                traffic.ActiveConnections,
+                traffic.TotalConnections,
+                runtime.HealthStatus,
+                _networkAcceleration.StatusText,
+                runtime.Connections.Select(connection => new NetworkAccelerationConnectionState(
+                    connection.Host,
+                    connection.Port,
+                    connection.Protocol,
+                    connection.State,
+                    connection.BytesUploaded,
+                    connection.BytesDownloaded,
+                    connection.ConnectLatencyMs,
+                    connection.Error)).ToArray(),
+                runtime.Destinations.Select(destination => new NetworkAccelerationDestinationState(
+                    destination.Host,
+                    destination.Port,
+                    destination.ActiveConnections,
+                    destination.TotalConnections,
+                    destination.BytesUploaded,
+                    destination.BytesDownloaded,
+                    destination.LastConnectLatencyMs,
+                    destination.LastState)).ToArray());
+        }
+        catch (Exception exception)
+        {
+            Log.Instance.TraceOnce(
+                "avalonia-network-acceleration-runtime",
+                "Network acceleration runtime polling failed.",
+                exception);
+            return new NetworkAccelerationRuntimeState(
+                true,
+                true,
+                0,
+                0,
+                0,
+                0,
+                "unknown",
+                "Traffic data is temporarily unavailable.",
+                [],
+                []);
+        }
+    }
+
+    private static NetworkAccelerationRuntimeState UnavailableNetworkRuntime(string status) => new(
+        false,
+        false,
+        0,
+        0,
+        0,
+        0,
+        "unavailable",
+        status,
+        [],
+        []);
+
     public Task<DriverDownloadState> GetDriverDownloadStateAsync()
     {
         lock (_driverLock)

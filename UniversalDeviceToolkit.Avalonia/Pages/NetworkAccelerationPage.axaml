@@ -78,6 +78,72 @@
                 </StackPanel>
             </Border>
 
+            <Border x:Name="RuntimeCard"
+                    IsVisible="False"
+                    Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_RuntimeHeading, Fallback=Live proxy activity}"
+                                                     FontSize="{StaticResource FontSizeSubsection}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <controls:LocalizedTextBlock x:Name="RuntimeHealthText"
+                                                     Grid.Column="1"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Ellipsis"
+                                                     MaxLines="1" />
+                    </Grid>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                        <StackPanel Spacing="2">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Upload, Fallback=Upload}"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <TextBlock x:Name="UploadValueText" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Download, Fallback=Download}"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <TextBlock x:Name="DownloadValueText" FontWeight="SemiBold" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Spacing="2">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Connections, Fallback=Connections}"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <TextBlock x:Name="ConnectionsValueText" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Grid>
+                    <controls:LocalizedTextBlock x:Name="RuntimeStatusText"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <StackPanel Spacing="6">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_ConnectionStats, Fallback=Current connections}"
+                                                         FontWeight="Medium"
+                                                         OverflowMode="Wrap"
+                                                         MaxLines="2" />
+                            <StackPanel x:Name="ConnectionsPanel" Spacing="4" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_DestinationStats, Fallback=Destination statistics}"
+                                                         FontWeight="Medium"
+                                                         OverflowMode="Wrap"
+                                                         MaxLines="2" />
+                            <StackPanel x:Name="DestinationsPanel" Spacing="4" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
             <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_DomainGroupsLabel, Fallback=Domain groups}"
                                          FontSize="{StaticResource FontSizeSubsection}"
                                          FontWeight="Medium"

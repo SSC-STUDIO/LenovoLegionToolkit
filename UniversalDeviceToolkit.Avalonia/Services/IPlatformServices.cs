@@ -86,6 +86,7 @@ public interface IPlatformServices
     Task<bool> ToggleNetworkAccelerationAsync();
     Task<string> RunNetworkDiagnosticsAsync();
     Task<string> RestoreNetworkAccelerationAsync();
+    Task<NetworkAccelerationRuntimeState> GetNetworkAccelerationRuntimeAsync();
     Task<DriverDownloadState> GetDriverDownloadStateAsync();
     Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates);
     Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);
@@ -385,6 +386,43 @@ public sealed record NetworkAccelerationState(
     int ListenPort,
     IReadOnlyList<NetworkAccelerationGroupState> Groups,
     string? Diagnostics = null);
+
+/// <summary>
+/// Read-only proxy-worker telemetry. Values remain structured so the Avalonia
+/// host can render the same traffic and endpoint summaries as WPF without
+/// parsing localized status strings.
+/// </summary>
+public sealed record NetworkAccelerationRuntimeState(
+    bool IsAvailable,
+    bool IsRunning,
+    long BytesUploaded,
+    long BytesDownloaded,
+    int ActiveConnections,
+    long TotalConnections,
+    string HealthStatus,
+    string Status,
+    IReadOnlyList<NetworkAccelerationConnectionState> Connections,
+    IReadOnlyList<NetworkAccelerationDestinationState> Destinations);
+
+public sealed record NetworkAccelerationConnectionState(
+    string Host,
+    int Port,
+    string Protocol,
+    string State,
+    long BytesUploaded,
+    long BytesDownloaded,
+    long? ConnectLatencyMs,
+    string? Error);
+
+public sealed record NetworkAccelerationDestinationState(
+    string Host,
+    int Port,
+    int ActiveConnections,
+    long TotalConnections,
+    long BytesUploaded,
+    long BytesDownloaded,
+    long? LastConnectLatencyMs,
+    string LastState);
 
 public sealed record DriverPackageItem(
     string Id,

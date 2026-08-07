@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
+using Avalonia.Threading;
 using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
@@ -15,6 +16,8 @@ public partial class NetworkAccelerationPage : UserControl
 {
     private readonly IPlatformServices _platformServices;
     private bool _isApplying;
+    private bool _runtimePollInFlight;
+    private DispatcherTimer? _runtimeTimer;
 
     public NetworkAccelerationPage(IPlatformServices platformServices)
     {
@@ -24,13 +27,17 @@ public partial class NetworkAccelerationPage : UserControl
         EnabledCheckBox.IsCheckedChanged += EnabledCheckBox_IsCheckedChanged;
         ModeComboBox.SelectionChanged += ModeComboBox_SelectionChanged;
         Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
     }
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         Loaded -= OnLoaded;
         await RefreshAsync();
+        StartRuntimePolling();
     }
+
+    private void OnUnloaded(object? sender, RoutedEventArgs e) => _runtimeTimer?.Stop();
 
     private async Task RefreshAsync()
     {
@@ -73,6 +80,140 @@ public partial class NetworkAccelerationPage : UserControl
         {
             _isApplying = false;
         }
+    }
+
+    private void StartRuntimePolling()
+    {
+        _runtimeTimer ??= new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+        _runtimeTimer.Tick -= RuntimeTimer_Tick;
+        _runtimeTimer.Tick += RuntimeTimer_Tick;
+        _runtimeTimer.Start();
+        _ = RefreshRuntimeAsync();
+    }
+
+    private async void RuntimeTimer_Tick(object? sender, EventArgs e) => await RefreshRuntimeAsync();
+
+    private async Task RefreshRuntimeAsync()
+    {
+        if (_runtimePollInFlight || _isApplying || !IsLoaded)
+            return;
+
+        _runtimePollInFlight = true;
+        try
+        {
+            var runtime = await _platformServices.GetNetworkAccelerationRuntimeAsync();
+            if (!IsLoaded)
+                return;
+
+            // WPF exposes this card only while its proxy worker is running.
+            RuntimeCard.IsVisible = runtime.IsAvailable && runtime.IsRunning;
+            if (!RuntimeCard.IsVisible)
+                return;
+
+            UploadValueText.Text = FormatBytes(runtime.BytesUploaded);
+            DownloadValueText.Text = FormatBytes(runtime.BytesDownloaded);
+            ConnectionsValueText.Text = $"{runtime.ActiveConnections} / {runtime.TotalConnections}";
+            RuntimeHealthText.Text = runtime.HealthStatus;
+            RuntimeStatusText.Text = runtime.Status;
+            PopulateConnections(runtime.Connections);
+            PopulateDestinations(runtime.Destinations);
+        }
+        finally
+        {
+            _runtimePollInFlight = false;
+        }
+    }
+
+    private void PopulateConnections(IReadOnlyList<NetworkAccelerationConnectionState> connections)
+    {
+        ConnectionsPanel.Children.Clear();
+        if (connections.Count == 0)
+        {
+            ConnectionsPanel.Children.Add(CreateRuntimeEmptyState("No active connections."));
+            return;
+        }
+
+        foreach (var connection in connections.Take(8))
+        {
+            var detail = $"{connection.Protocol} / {connection.State} / {FormatBytes(connection.BytesUploaded + connection.BytesDownloaded)}";
+            if (connection.ConnectLatencyMs is long latency)
+                detail += $" / {latency} ms";
+            if (!string.IsNullOrWhiteSpace(connection.Error))
+                detail += $" / {connection.Error}";
+            ConnectionsPanel.Children.Add(CreateRuntimeRow(
+                FormatEndpoint(connection.Host, connection.Port),
+                detail));
+        }
+    }
+
+    private void PopulateDestinations(IReadOnlyList<NetworkAccelerationDestinationState> destinations)
+    {
+        DestinationsPanel.Children.Clear();
+        if (destinations.Count == 0)
+        {
+            DestinationsPanel.Children.Add(CreateRuntimeEmptyState("No destination statistics."));
+            return;
+        }
+
+        foreach (var destination in destinations.Take(8))
+        {
+            var detail = $"{destination.ActiveConnections} active / {destination.TotalConnections} total / {FormatBytes(destination.BytesUploaded + destination.BytesDownloaded)}";
+            if (destination.LastConnectLatencyMs is long latency)
+                detail += $" / {latency} ms";
+            if (!string.IsNullOrWhiteSpace(destination.LastState))
+                detail += $" / {destination.LastState}";
+            DestinationsPanel.Children.Add(CreateRuntimeRow(
+                FormatEndpoint(destination.Host, destination.Port),
+                detail));
+        }
+    }
+
+    private Control CreateRuntimeEmptyState(string text) => new LocalizedTextBlock
+    {
+        Text = text,
+        Foreground = FindBrush("TextFillColorSecondaryBrush"),
+        OverflowMode = LocalizedOverflowMode.Wrap,
+        MaxLines = 2,
+    };
+
+    private Control CreateRuntimeRow(string title, string detail)
+    {
+        var titleBlock = new LocalizedTextBlock
+        {
+            Text = title,
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+            MinWidth = 0,
+        };
+        ToolTip.SetTip(titleBlock, title);
+        var detailBlock = new LocalizedTextBlock
+        {
+            Text = detail,
+            Foreground = FindBrush("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+            MinWidth = 0,
+        };
+        ToolTip.SetTip(detailBlock, detail);
+        var stack = new StackPanel { Spacing = 1 };
+        stack.Children.Add(titleBlock);
+        stack.Children.Add(detailBlock);
+        return stack;
+    }
+
+    private static string FormatEndpoint(string host, int port) =>
+        string.IsNullOrWhiteSpace(host) ? $"Port {port}" : $"{host}:{port}";
+
+    private static string FormatBytes(long bytes)
+    {
+        var value = Math.Max(0, bytes);
+        if (value < 1024)
+            return $"{value} B";
+        if (value < 1024 * 1024)
+            return $"{value / 1024d:0.0} KB";
+        if (value < 1024L * 1024 * 1024)
+            return $"{value / (1024d * 1024):0.0} MB";
+        return $"{value / (1024d * 1024 * 1024):0.0} GB";
     }
 
     private Border CreateGroupCard(NetworkAccelerationGroupState group)

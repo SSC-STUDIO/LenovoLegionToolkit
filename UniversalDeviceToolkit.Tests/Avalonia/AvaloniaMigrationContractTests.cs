@@ -1203,6 +1203,45 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public async Task NetworkAcceleration_ProjectsWpfRuntimeTrafficAndEndpointSnapshots()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var service = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+        var page = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "NetworkAccelerationPage.axaml.cs"));
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "NetworkAccelerationPage.axaml"));
+
+        service.Should().Contain("GetNetworkAccelerationRuntimeAsync()");
+        service.Should().Contain("GetRuntimeSnapshotAsync()");
+        service.Should().Contain("NetworkAccelerationConnectionState");
+        service.Should().Contain("NetworkAccelerationDestinationState");
+        markup.Should().Contain("RuntimeCard");
+        markup.Should().Contain("ConnectionsPanel");
+        markup.Should().Contain("DestinationsPanel");
+        page.Should().Contain("Interval = TimeSpan.FromSeconds(2)");
+        page.Should().Contain("GetNetworkAccelerationRuntimeAsync()");
+        page.Should().Contain("PopulateConnections(runtime.Connections)");
+        page.Should().Contain("PopulateDestinations(runtime.Destinations)");
+
+        var unavailable = await new UnavailablePlatformServices().GetNetworkAccelerationRuntimeAsync();
+        unavailable.IsAvailable.Should().BeFalse();
+        unavailable.IsRunning.Should().BeFalse();
+        unavailable.Connections.Should().BeEmpty();
+        unavailable.Destinations.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task PortablePlatformServices_ShouldExposeExplicitDriverUnavailableState()
     {
         var state = await new UnavailablePlatformServices().GetDriverDownloadStateAsync();
