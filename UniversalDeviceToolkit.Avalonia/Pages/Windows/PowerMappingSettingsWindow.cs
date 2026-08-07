@@ -29,6 +29,7 @@ internal sealed class PowerMappingSettingsWindow : Window
     private readonly WindowsPowerPlanController? _powerPlanController;
     private readonly StackPanel _rows = new() { Spacing = 8 };
     private readonly TextBlock _status = new() { TextWrapping = TextWrapping.Wrap };
+    private readonly Border _alwaysOnAcWarning;
     private bool _isLoading;
 
     public PowerMappingSettingsWindow(PowerMappingKind kind)
@@ -76,6 +77,7 @@ internal sealed class PowerMappingSettingsWindow : Window
         };
         _status.Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush");
         AutomationProperties.SetAutomationId(_status, "AvaloniaPowerMappingStatusText");
+        _alwaysOnAcWarning = CreateAlwaysOnAcWarning();
 
         var content = new StackPanel
         {
@@ -84,7 +86,7 @@ internal sealed class PowerMappingSettingsWindow : Window
             FlowDirection = LocalizationCatalog.IsRightToLeft(LocalizationRuntime.CurrentCulture)
                 ? FlowDirection.RightToLeft
                 : FlowDirection.LeftToRight,
-            Children = { title, description, _status, _rows },
+            Children = { title, description, _status, _alwaysOnAcWarning, _rows },
         };
         Content = new ScrollViewer { Content = content };
         Loaded += OnLoaded;
@@ -102,6 +104,7 @@ internal sealed class PowerMappingSettingsWindow : Window
         try
         {
             _rows.Children.Clear();
+            await RefreshAlwaysOnAcWarningAsync().ConfigureAwait(true);
             var states = (await _powerModeFeature.GetAllStatesAsync().ConfigureAwait(true)).ToHashSet();
             var choices = _kind == PowerMappingKind.WindowsPowerMode
                 ? CreatePowerModeChoices()
@@ -245,6 +248,58 @@ internal sealed class PowerMappingSettingsWindow : Window
     }
 
     private static string Get(string key, string fallback) => AvaloniaLocalization.GetString(key, fallback);
+
+    private Border CreateAlwaysOnAcWarning()
+    {
+        var title = new LocalizedTextBlock
+        {
+            Text = Get("PowerPlansWindow_AoAcWarning_Title", "Always-on AC warning"),
+            FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("StatusWarningBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 2,
+        };
+        var message = new LocalizedTextBlock
+        {
+            Text = Get("PowerPlansWindow_AoAcWarning_Message", "Power plan changes may not apply while the device is using Always On AC."),
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 3,
+        };
+        var warning = new Border
+        {
+            Background = GetResource<IBrush>("CardBackgroundBrush"),
+            BorderBrush = GetResource<IBrush>("StatusWarningBrush"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = GetCornerRadius(),
+            Padding = new Thickness(16),
+            IsVisible = false,
+            Child = new StackPanel { Spacing = 4, Children = { title, message } },
+        };
+        AutomationProperties.SetAutomationId(warning, "AvaloniaPowerPlansAlwaysOnAcWarning");
+        AutomationProperties.SetName(warning, title.Text);
+        ToolTip.SetTip(warning, message.Text);
+        return warning;
+    }
+
+    private async Task RefreshAlwaysOnAcWarningAsync()
+    {
+        if (_kind != PowerMappingKind.WindowsPowerPlan)
+        {
+            _alwaysOnAcWarning.IsVisible = false;
+            return;
+        }
+
+        try
+        {
+            var machine = await Compatibility.GetMachineInformationAsync().ConfigureAwait(true);
+            _alwaysOnAcWarning.IsVisible = machine.Properties.SupportsAlwaysOnAc.status;
+        }
+        catch
+        {
+            _alwaysOnAcWarning.IsVisible = false;
+        }
+    }
 
     private static T GetResource<T>(string key)
         where T : class =>

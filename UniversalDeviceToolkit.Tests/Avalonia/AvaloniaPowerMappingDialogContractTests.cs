@@ -29,5 +29,7 @@ public sealed class AvaloniaPowerMappingDialogContractTests
         dialogSource.Should().Contain("EnsureCorrectWindowsPowerSettingsAreSetAsync");
         dialogSource.Should().Contain("_settings.Store.PowerModes[state]");
         dialogSource.Should().Contain("_settings.Store.PowerPlans[state]");
+        dialogSource.Should().Contain("AvaloniaPowerPlansAlwaysOnAcWarning");
+        dialogSource.Should().Contain("SupportsAlwaysOnAc.status");
     }
 }
