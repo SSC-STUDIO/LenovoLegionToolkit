@@ -460,6 +460,25 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.GetNetworkAccelerationRuntimeAsync()
             : _featureHost.GetNetworkAccelerationRuntimeAsync();
 
+    public Task<NetworkNatDiagnosticState> RunNetworkNatDiagnosticAsync(string stunHost) =>
+        _featureHost is null
+            ? _inner.RunNetworkNatDiagnosticAsync(stunHost)
+            : _featureHost.RunNetworkNatDiagnosticAsync(stunHost);
+
+    public Task<NetworkDnsDiagnosticState> RunNetworkDnsDiagnosticAsync(
+        string domain,
+        string? dnsServer,
+        bool useDoh,
+        string? dohUrl) =>
+        _featureHost is null
+            ? _inner.RunNetworkDnsDiagnosticAsync(domain, dnsServer, useDoh, dohUrl)
+            : _featureHost.RunNetworkDnsDiagnosticAsync(domain, dnsServer, useDoh, dohUrl);
+
+    public Task<NetworkIpv6DiagnosticState> RunNetworkIpv6DiagnosticAsync() =>
+        _featureHost is null
+            ? _inner.RunNetworkIpv6DiagnosticAsync()
+            : _featureHost.RunNetworkIpv6DiagnosticAsync();
+
     public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
         _featureHost is null
             ? _inner.GetDriverDownloadStateAsync()

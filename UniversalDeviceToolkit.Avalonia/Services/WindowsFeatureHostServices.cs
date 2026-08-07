@@ -1571,6 +1571,64 @@ internal sealed class WindowsFeatureHostServices
         [],
         []);
 
+    public async Task<NetworkNatDiagnosticState> RunNetworkNatDiagnosticAsync(string stunHost)
+    {
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+        var result = await NatTypeDetector.CheckAsync(stunHost, 3478, cancellation.Token).ConfigureAwait(false);
+        return new NetworkNatDiagnosticState(
+            true,
+            result.Type.ToString(),
+            result.LocalIp,
+            result.PublicIp,
+            result.InternetAvailable,
+            result.Error);
+    }
+
+    public async Task<NetworkDnsDiagnosticState> RunNetworkDnsDiagnosticAsync(
+        string domain,
+        string? dnsServer,
+        bool useDoh,
+        string? dohUrl)
+    {
+        if (string.IsNullOrWhiteSpace(domain))
+            return new NetworkDnsDiagnosticState(true, [], "A domain is required.");
+
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+        var probes = new List<NetworkDnsProbeState>();
+        var system = await DnsDiagnosticsService.ResolveSystemAsync(domain.Trim(), cancellation.Token).ConfigureAwait(false);
+        probes.Add(ProjectDnsProbe(system));
+
+        if (!string.IsNullOrWhiteSpace(dnsServer))
+        {
+            var custom = await DnsDiagnosticsService.ResolveCustomServerAsync(
+                domain.Trim(), dnsServer.Trim(), cancellation.Token).ConfigureAwait(false);
+            probes.Add(ProjectDnsProbe(custom));
+        }
+
+        if (useDoh && !string.IsNullOrWhiteSpace(dohUrl))
+        {
+            var doh = await DnsDiagnosticsService.ResolveDohAsync(
+                domain.Trim(), dohUrl.Trim(), cancellation.Token).ConfigureAwait(false);
+            probes.Add(ProjectDnsProbe(doh));
+        }
+
+        return new NetworkDnsDiagnosticState(true, probes);
+    }
+
+    public async Task<NetworkIpv6DiagnosticState> RunNetworkIpv6DiagnosticAsync()
+    {
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        var result = await Ipv6Detector.CheckAsync(cancellation.Token).ConfigureAwait(false);
+        return new NetworkIpv6DiagnosticState(true, result.Supported, result.Address, result.Error);
+    }
+
+    private static NetworkDnsProbeState ProjectDnsProbe(DnsProbeResult probe) => new(
+        probe.Channel,
+        probe.Success,
+        probe.Addresses,
+        probe.ElapsedMs,
+        probe.Error);
+
     public Task<DriverDownloadState> GetDriverDownloadStateAsync()
     {
         lock (_driverLock)

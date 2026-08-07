@@ -293,6 +293,22 @@ public sealed class UnavailablePlatformServices : IPlatformServices
             AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host."),
             [], []));
 
+    public Task<NetworkNatDiagnosticState> RunNetworkNatDiagnosticAsync(string stunHost) =>
+        Task.FromResult(new NetworkNatDiagnosticState(false, "Unavailable", null, null, false,
+            AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host.")));
+
+    public Task<NetworkDnsDiagnosticState> RunNetworkDnsDiagnosticAsync(
+        string domain,
+        string? dnsServer,
+        bool useDoh,
+        string? dohUrl) =>
+        Task.FromResult(new NetworkDnsDiagnosticState(false, [],
+            AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host.")));
+
+    public Task<NetworkIpv6DiagnosticState> RunNetworkIpv6DiagnosticAsync() =>
+        Task.FromResult(new NetworkIpv6DiagnosticState(false, false, null,
+            AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host.")));
+
     public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
         Task.FromResult(new DriverDownloadState(
             false,

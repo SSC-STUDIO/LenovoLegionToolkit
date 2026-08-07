@@ -144,6 +144,89 @@
                 </StackPanel>
             </Border>
 
+            <Expander x:Name="DiagnosticsExpander"
+                      automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDetailedDiagnostics">
+                <Expander.Header>
+                    <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_DetailedDiagnostics, Fallback=Detailed network diagnostics}"
+                                                 FontSize="{StaticResource FontSizeSubsection}"
+                                                 FontWeight="Medium"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="2" />
+                </Expander.Header>
+                <StackPanel Spacing="16" Margin="0,12,0,0">
+                    <StackPanel Spacing="6">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_NatDiagnostics, Fallback=NAT connectivity}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <TextBox x:Name="NatStunHostTextBox"
+                                     Text="stun.miwifi.com"
+                                     Watermark="STUN host"
+                                     automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationNatStunHost" />
+                            <Button x:Name="NatDiagnosticButton"
+                                    Grid.Column="1"
+                                    Content="{local:Loc Key=NetworkAccelerationPage_Detect, Fallback=Detect}"
+                                    Click="NatDiagnosticButton_Click"
+                                    automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationNatDetect" />
+                        </Grid>
+                        <controls:LocalizedTextBlock x:Name="NatDiagnosticResultText"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="4" />
+                    </StackPanel>
+                    <StackPanel Spacing="6">
+                        <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_DnsDiagnostics, Fallback=DNS resolution}"
+                                                     FontWeight="Medium"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2" />
+                        <TextBox x:Name="DnsDomainTextBox"
+                                 Text="store.steampowered.com"
+                                 Watermark="Domain"
+                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsDomain" />
+                        <TextBox x:Name="DnsServerTextBox"
+                                 Watermark="Custom DNS server (optional)"
+                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsServer" />
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <CheckBox x:Name="DnsUseDohCheckBox"
+                                      Content="{local:Loc Key=NetworkAccelerationPage_UseDoh, Fallback=Use DNS over HTTPS}"
+                                      VerticalAlignment="Center"
+                                      automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsUseDoh" />
+                            <Button x:Name="DnsDiagnosticButton"
+                                    Grid.Column="1"
+                                    Content="{local:Loc Key=NetworkAccelerationPage_Detect, Fallback=Detect}"
+                                    Click="DnsDiagnosticButton_Click"
+                                    automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsDetect" />
+                        </Grid>
+                        <TextBox x:Name="DnsDohUrlTextBox"
+                                 Text="https://doh.pub/dns-query"
+                                 Watermark="DoH URL"
+                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDnsDohUrl" />
+                        <controls:LocalizedTextBlock x:Name="DnsDiagnosticResultText"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="6" />
+                    </StackPanel>
+                    <StackPanel Spacing="6">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_Ipv6Diagnostics, Fallback=IPv6 connectivity}"
+                                                         FontWeight="Medium"
+                                                         OverflowMode="Wrap"
+                                                         MaxLines="2" />
+                            <Button x:Name="Ipv6DiagnosticButton"
+                                    Grid.Column="1"
+                                    Content="{local:Loc Key=NetworkAccelerationPage_Detect, Fallback=Detect}"
+                                    Click="Ipv6DiagnosticButton_Click"
+                                    automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationIpv6Detect" />
+                        </Grid>
+                        <controls:LocalizedTextBlock x:Name="Ipv6DiagnosticResultText"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="4" />
+                    </StackPanel>
+                </StackPanel>
+            </Expander>
+
             <controls:LocalizedTextBlock Text="{local:Loc Key=NetworkAccelerationPage_DomainGroupsLabel, Fallback=Domain groups}"
                                          FontSize="{StaticResource FontSizeSubsection}"
                                          FontWeight="Medium"

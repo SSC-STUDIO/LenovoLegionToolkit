@@ -1242,6 +1242,44 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public async Task NetworkAcceleration_ExposesTheWpfNatDnsAndIpv6DiagnosticSurfaces()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var service = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "NetworkAccelerationPage.axaml"));
+        var page = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "NetworkAccelerationPage.axaml.cs"));
+
+        service.Should().Contain("NatTypeDetector.CheckAsync");
+        service.Should().Contain("DnsDiagnosticsService.ResolveSystemAsync");
+        service.Should().Contain("DnsDiagnosticsService.ResolveCustomServerAsync");
+        service.Should().Contain("DnsDiagnosticsService.ResolveDohAsync");
+        service.Should().Contain("Ipv6Detector.CheckAsync");
+        markup.Should().Contain("AvaloniaNetworkAccelerationNatDetect");
+        markup.Should().Contain("AvaloniaNetworkAccelerationDnsDetect");
+        markup.Should().Contain("AvaloniaNetworkAccelerationIpv6Detect");
+        page.Should().Contain("RunNetworkNatDiagnosticAsync");
+        page.Should().Contain("RunNetworkDnsDiagnosticAsync");
+        page.Should().Contain("RunNetworkIpv6DiagnosticAsync");
+
+        var unavailable = new UnavailablePlatformServices();
+        (await unavailable.RunNetworkNatDiagnosticAsync("stun.example.test")).IsAvailable.Should().BeFalse();
+        (await unavailable.RunNetworkDnsDiagnosticAsync("example.test", null, false, null)).IsAvailable.Should().BeFalse();
+        (await unavailable.RunNetworkIpv6DiagnosticAsync()).IsAvailable.Should().BeFalse();
+    }
+
+    [Fact]
     public async Task PortablePlatformServices_ShouldExposeExplicitDriverUnavailableState()
     {
         var state = await new UnavailablePlatformServices().GetDriverDownloadStateAsync();

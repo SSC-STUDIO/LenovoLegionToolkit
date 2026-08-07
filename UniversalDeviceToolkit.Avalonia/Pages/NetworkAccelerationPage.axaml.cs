@@ -346,6 +346,92 @@ public partial class NetworkAccelerationPage : UserControl
         await RefreshAsync();
     }
 
+    private async void NatDiagnosticButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isApplying)
+            return;
+
+        NatDiagnosticButton.IsEnabled = false;
+        try
+        {
+            var result = await _platformServices.RunNetworkNatDiagnosticAsync(
+                NatStunHostTextBox.Text?.Trim() ?? string.Empty);
+            NatDiagnosticResultText.Text = result.IsAvailable
+                ? $"{result.Type}; local: {result.LocalIp ?? "-"}; public: {result.PublicIp ?? "-"}; internet: {(result.InternetAvailable ? "connected" : "unreachable")}" +
+                  (string.IsNullOrWhiteSpace(result.Error) ? string.Empty : $"; {result.Error}")
+                : result.Error ?? "NAT diagnostics are unavailable.";
+        }
+        catch (Exception exception)
+        {
+            NatDiagnosticResultText.Text = exception.Message;
+        }
+        finally
+        {
+            NatDiagnosticButton.IsEnabled = true;
+        }
+    }
+
+    private async void DnsDiagnosticButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isApplying)
+            return;
+
+        DnsDiagnosticButton.IsEnabled = false;
+        try
+        {
+            var result = await _platformServices.RunNetworkDnsDiagnosticAsync(
+                DnsDomainTextBox.Text?.Trim() ?? string.Empty,
+                DnsServerTextBox.Text?.Trim(),
+                DnsUseDohCheckBox.IsChecked == true,
+                DnsDohUrlTextBox.Text?.Trim());
+            DnsDiagnosticResultText.Text = result.Probes.Count > 0
+                ? string.Join(Environment.NewLine, result.Probes.Select(FormatDnsProbe))
+                : result.Error ?? "DNS diagnostics returned no result.";
+        }
+        catch (Exception exception)
+        {
+            DnsDiagnosticResultText.Text = exception.Message;
+        }
+        finally
+        {
+            DnsDiagnosticButton.IsEnabled = true;
+        }
+    }
+
+    private async void Ipv6DiagnosticButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isApplying)
+            return;
+
+        Ipv6DiagnosticButton.IsEnabled = false;
+        try
+        {
+            var result = await _platformServices.RunNetworkIpv6DiagnosticAsync();
+            Ipv6DiagnosticResultText.Text = result.IsAvailable
+                ? result.Supported
+                    ? $"IPv6 supported: {result.Address ?? "address unavailable"}" +
+                      (string.IsNullOrWhiteSpace(result.Error) ? string.Empty : $"; {result.Error}")
+                    : $"IPv6 unavailable: {result.Error ?? "no routable address"}"
+                : result.Error ?? "IPv6 diagnostics are unavailable.";
+        }
+        catch (Exception exception)
+        {
+            Ipv6DiagnosticResultText.Text = exception.Message;
+        }
+        finally
+        {
+            Ipv6DiagnosticButton.IsEnabled = true;
+        }
+    }
+
+    private static string FormatDnsProbe(NetworkDnsProbeState probe)
+    {
+        var result = probe.Success && probe.Addresses.Count > 0
+            ? string.Join(", ", probe.Addresses)
+            : probe.Error ?? "failed";
+        return $"{probe.Channel}: {result} ({probe.ElapsedMs} ms)";
+    }
+
     private IBrush FindBrush(string key) =>
         this.TryFindResource(key, out var value) && value is IBrush brush
             ? brush

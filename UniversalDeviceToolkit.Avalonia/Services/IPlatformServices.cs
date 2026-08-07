@@ -87,6 +87,13 @@ public interface IPlatformServices
     Task<string> RunNetworkDiagnosticsAsync();
     Task<string> RestoreNetworkAccelerationAsync();
     Task<NetworkAccelerationRuntimeState> GetNetworkAccelerationRuntimeAsync();
+    Task<NetworkNatDiagnosticState> RunNetworkNatDiagnosticAsync(string stunHost);
+    Task<NetworkDnsDiagnosticState> RunNetworkDnsDiagnosticAsync(
+        string domain,
+        string? dnsServer,
+        bool useDoh,
+        string? dohUrl);
+    Task<NetworkIpv6DiagnosticState> RunNetworkIpv6DiagnosticAsync();
     Task<DriverDownloadState> GetDriverDownloadStateAsync();
     Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates);
     Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);
@@ -423,6 +430,32 @@ public sealed record NetworkAccelerationDestinationState(
     long BytesDownloaded,
     long? LastConnectLatencyMs,
     string LastState);
+
+public sealed record NetworkNatDiagnosticState(
+    bool IsAvailable,
+    string Type,
+    string? LocalIp,
+    string? PublicIp,
+    bool InternetAvailable,
+    string? Error = null);
+
+public sealed record NetworkDnsProbeState(
+    string Channel,
+    bool Success,
+    IReadOnlyList<string> Addresses,
+    long ElapsedMs,
+    string? Error = null);
+
+public sealed record NetworkDnsDiagnosticState(
+    bool IsAvailable,
+    IReadOnlyList<NetworkDnsProbeState> Probes,
+    string? Error = null);
+
+public sealed record NetworkIpv6DiagnosticState(
+    bool IsAvailable,
+    bool Supported,
+    string? Address,
+    string? Error = null);
 
 public sealed record DriverPackageItem(
     string Id,

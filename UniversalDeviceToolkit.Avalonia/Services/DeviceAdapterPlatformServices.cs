@@ -248,6 +248,22 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
             DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host."),
             [], []));
 
+    public Task<NetworkNatDiagnosticState> RunNetworkNatDiagnosticAsync(string stunHost) =>
+        Task.FromResult(new NetworkNatDiagnosticState(false, "Unavailable", null, null, false,
+            DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host.")));
+
+    public Task<NetworkDnsDiagnosticState> RunNetworkDnsDiagnosticAsync(
+        string domain,
+        string? dnsServer,
+        bool useDoh,
+        string? dohUrl) =>
+        Task.FromResult(new NetworkDnsDiagnosticState(false, [],
+            DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host.")));
+
+    public Task<NetworkIpv6DiagnosticState> RunNetworkIpv6DiagnosticAsync() =>
+        Task.FromResult(new NetworkIpv6DiagnosticState(false, false, null,
+            DashboardLocalization.Get("NetworkAcceleration_AdapterUnavailable", "Network acceleration requires the Windows host.")));
+
     public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
         Task.FromResult(new DriverDownloadState(
             false,
