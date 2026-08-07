@@ -177,17 +177,9 @@ public partial class AboutPageViewModel : ObservableObject
         }
     }
 
-    private static string GetAppDataPath()
-    {
-        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return Path.Combine(localAppData, "UDT");
-    }
+    internal static string GetAppDataPath() => Folders.AppData;
 
-    private static string GetTempPath()
-    {
-        var tempPath = Path.GetTempPath();
-        return Path.Combine(tempPath, "UDT");
-    }
+    internal static string GetTempPath() => Folders.Temp;
 
     public ICommand OpenLibraryLinkCommand => new RelayCommand<string>(url =>
     {
