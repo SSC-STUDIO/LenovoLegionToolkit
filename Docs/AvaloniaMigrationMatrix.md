@@ -22,7 +22,7 @@ current WPF source:
 | Main navigation | Dashboard, Keyboard, Actions, Macro, Windows optimization, Plugin Extensions, Settings, About | `MainNavigation` and `MainWindow` route all eight entries | Contracted |
 | Settings navigation | Appearance, Application, Smart Keys, Display, Update, Power, Integrations | `SettingsPageViewModel` maps all seven entries without placeholder content | Contracted |
 | Settings edits | Seven specialized WPF settings controls | Native appearance controls plus `SettingsCapabilityView` backed by `IAvaloniaSettingsService`; behavior-level persistence and rollback contracts cover all seven views | Complete |
-| Dashboard layout | Sensors, power controls, GPU controls, layout editor and actions | `DashboardPage` and `DashboardPageViewModel` use the shared dashboard, sensor, GPU, power and layout contracts | In progress |
+| Dashboard layout | Sensors, power controls, GPU controls, layout editor and actions | `DashboardPage` and `DashboardPageViewModel` use the shared dashboard, sensor, GPU, power and layout contracts; strict platform-service contracts cover success, failure, refresh and rollback paths | Complete |
 | Keyboard lighting | Keyboard backlight and Spectrum profiles | `KeyboardBacklightPage` uses the shared keyboard-lighting contract | In progress |
 | Actions | Automation pipeline editor and manual actions | `AutomationPage` edits and saves the shared automation workspace | In progress |
 | Macro | Macro editor and recorder state | `MacroPage` uses the shared macro workspace contract | In progress |
