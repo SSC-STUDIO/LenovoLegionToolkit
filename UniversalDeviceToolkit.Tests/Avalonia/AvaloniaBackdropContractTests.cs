@@ -110,7 +110,7 @@ public sealed class AvaloniaBackdropContractTests
             .Should().BeLessThan(restoreSection.IndexOf("Show();", StringComparison.Ordinal));
 
         var closingSection = appSource[appSource.IndexOf(
-            "if (settings?.MinimizeToTray == true)", StringComparison.Ordinal)..];
+            "case MainWindowCloseAction.HideToTray:", StringComparison.Ordinal)..];
         closingSection.IndexOf("window.ShowInTaskbar = false;", StringComparison.Ordinal)
             .Should().BeLessThan(closingSection.IndexOf("window.Hide();", StringComparison.Ordinal));
     }
