@@ -195,9 +195,11 @@ public partial class AutomationPage : UserControl
 
         ComboBox? triggerEditor = null;
         TextBox? triggerConfigEditor = null;
+#if WINDOWS
         StackPanel? triggerListPanel = null;
         ComboBox? addTriggerEditor = null;
         Button? addTriggerButton = null;
+#endif
         if (pipeline.IsAutomatic)
         {
             triggerEditor = new ComboBox
