@@ -15,6 +15,7 @@ using UniversalDeviceToolkit.Lib.Services;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia.Startup;
 
@@ -67,6 +68,7 @@ internal sealed class AvaloniaWindowsStartupCoordinator
             if (!safeStart)
             {
                 StartMacroController();
+                StartSmartKeyHandler();
                 await StartBackgroundServicesAsync().ConfigureAwait(false);
             }
 
@@ -167,6 +169,18 @@ internal sealed class AvaloniaWindowsStartupCoordinator
         catch (Exception exception)
         {
             Log.Instance.Trace("Avalonia macro controller startup failed.", exception);
+        }
+    }
+
+    private static void StartSmartKeyHandler()
+    {
+        try
+        {
+            AvaloniaSmartKeyHandler.Start();
+        }
+        catch (Exception exception)
+        {
+            Log.Instance.Trace("Avalonia smart key handler startup failed.", exception);
         }
     }
 

@@ -84,6 +84,73 @@ public sealed class SmartKeysSettingsServiceTests
         page.Options.Single(option => option.Key == "SmartKeyDoublePressActions")
             .SelectedValues!.Should().ContainSingle().Which.Should().Be("This app");
     }
+
+    [Fact]
+    public async Task SmartKeyPipelineSelection_ThisAppClearsStoredActionIdsAndLists()
+    {
+        var service = AvaloniaSettingsServiceFactory.Create();
+        var store = WindowsAvaloniaSettingsService.SharedApplicationSettings.Store;
+
+        await service.SetMultiSelectionAsync(
+            "SmartKeys",
+            "SmartKeySinglePressActions",
+            ["This app"]);
+        await service.SetMultiSelectionAsync(
+            "SmartKeys",
+            "SmartKeyDoublePressActions",
+            ["This app"]);
+
+        store.SmartKeySinglePressActionId.Should().BeNull();
+        store.SmartKeySinglePressActionList.Should().BeEmpty();
+        store.SmartKeyDoublePressActionId.Should().BeNull();
+        store.SmartKeyDoublePressActionList.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task SmartKeyPipelineSelection_DoublePressSelectionIsIndependentOfSinglePress()
+    {
+        var service = AvaloniaSettingsServiceFactory.Create();
+        var store = WindowsAvaloniaSettingsService.SharedApplicationSettings.Store;
+        var previousSingleList = store.SmartKeySinglePressActionList.ToList();
+        var previousSingleId = store.SmartKeySinglePressActionId;
+        var previousDoubleList = store.SmartKeyDoublePressActionList.ToList();
+        var previousDoubleId = store.SmartKeyDoublePressActionId;
+
+        try
+        {
+            await service.SetMultiSelectionAsync(
+                "SmartKeys",
+                "SmartKeyDoublePressActions",
+                ["This app"]);
+            await service.SetMultiSelectionAsync(
+                "SmartKeys",
+                "SmartKeySinglePressActions",
+                ["This app"]);
+
+            store.SmartKeySinglePressActionId.Should().BeNull();
+            store.SmartKeySinglePressActionList.Should().BeEmpty();
+            store.SmartKeyDoublePressActionId.Should().BeNull();
+            store.SmartKeyDoublePressActionList.Should().BeEmpty();
+
+            await service.SetMultiSelectionAsync(
+                "SmartKeys",
+                "SmartKeySinglePressActions",
+                ["This app"]);
+
+            store.SmartKeySinglePressActionId.Should().BeNull();
+            store.SmartKeySinglePressActionList.Should().BeEmpty();
+        }
+        finally
+        {
+            store.SmartKeySinglePressActionList.Clear();
+            store.SmartKeySinglePressActionList.AddRange(previousSingleList);
+            store.SmartKeySinglePressActionId = previousSingleId;
+            store.SmartKeyDoublePressActionList.Clear();
+            store.SmartKeyDoublePressActionList.AddRange(previousDoubleList);
+            store.SmartKeyDoublePressActionId = previousDoubleId;
+            WindowsAvaloniaSettingsService.SharedApplicationSettings.SynchronizeStore();
+        }
+    }
 }
 
 #endif

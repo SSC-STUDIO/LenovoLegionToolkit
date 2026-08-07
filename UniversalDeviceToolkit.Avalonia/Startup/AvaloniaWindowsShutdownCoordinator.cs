@@ -8,9 +8,12 @@ using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
+using UniversalDeviceToolkit.Lib.Overclocking.Amd;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Services;
+using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia.Startup;
 
@@ -49,6 +52,8 @@ internal sealed class AvaloniaWindowsShutdownCoordinator
             await stopServices.ConfigureAwait(false);
         }
 
+        StopSmartKeyHandler();
+        await FinalizeRuntimeProfilesAsync().ConfigureAwait(false);
         StopMacroController();
     }
 
@@ -119,6 +124,50 @@ internal sealed class AvaloniaWindowsShutdownCoordinator
         catch (Exception exception)
         {
             Log.Instance.Trace("Avalonia user inactivity listener shutdown failed.", exception);
+        }
+    }
+
+    private static void StopSmartKeyHandler()
+    {
+        try
+        {
+            AvaloniaSmartKeyHandler.Stop();
+        }
+        catch (Exception exception)
+        {
+            Log.Instance.Trace("Avalonia smart key handler shutdown failed.", exception);
+        }
+    }
+
+    private static async Task FinalizeRuntimeProfilesAsync()
+    {
+        try
+        {
+            if (IoCContainer.TryResolve<AmdOverclockingController>() is { } amdController && amdController.IsActive())
+            {
+                amdController.SaveShutdownInfo(new ShutdownInfo
+                {
+                    Status = "Normal",
+                    AbnormalCount = 0
+                });
+            }
+
+            if (IoCContainer.TryResolve<FanCurveManager>() is { } fanManager &&
+                await fanManager.IsSupportedAsync().ConfigureAwait(false))
+            {
+                await fanManager.SetRegisterAsync(false).ConfigureAwait(false);
+            }
+
+            if (IoCContainer.TryResolve<LampArrayController>() is { } lampArrayController &&
+                IoCContainer.TryResolve<LampArraySettings>() is { } lampArraySettings)
+            {
+                lampArrayController.SaveSettings(lampArraySettings);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Runtime profile finalization failed: {ex.Message}", ex);
         }
     }
 
