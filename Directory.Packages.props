@@ -26,6 +26,7 @@
   <!-- ==================== WPF/UI Dependencies ==================== -->
   <ItemGroup>
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="Avalonia.Controls.ColorPicker" Version="11.2.3" />
     <PackageVersion Include="Humanizer" Version="3.0.10" />
     <PackageVersion Include="PixiEditor.ColorPicker" Version="3.4.2.3" />
     <PackageVersion Include="PixiEditor.ColorPicker.Models" Version="1.0.11" />

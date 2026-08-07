@@ -217,8 +217,12 @@
                             <ComboBox x:Name="RgbBrightness" Grid.Row="2" Grid.Column="1" SelectionChanged="RgbSetting_Changed" />
                         </Grid>
                         <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Zones, Fallback=Zones}"
-                                                     FontSize="{StaticResource FontSizeSubsection}"
-                                                     FontWeight="Medium" />
+                                                      FontSize="{StaticResource FontSizeSubsection}"
+                                                      FontWeight="Medium" />
+                        <Grid x:Name="RgbZoneSurface"
+                              ColumnDefinitions="*,*,*,*"
+                              ColumnSpacing="8"
+                              Margin="0,0,0,4" />
                         <WrapPanel x:Name="RgbZones" Orientation="Horizontal" />
                         <Button x:Name="SaveRgbButton"
                                 HorizontalAlignment="Right"

@@ -11,6 +11,7 @@ using Avalonia.Threading;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Avalonia.Windows;
 using UniversalDeviceToolkit.Abstractions.Localization;
 #if WINDOWS
 using UniversalDeviceToolkit.Lib.Messaging;
@@ -24,6 +25,7 @@ public partial class KeyboardBacklightPage : UserControl
     private readonly IPlatformServices _platformServices;
     private readonly List<SpectrumEffectEditor> _spectrumEditors = [];
     private readonly List<RgbZoneEditor> _rgbZones = [];
+    private readonly List<Button> _zoneSurfaceBlocks = [];
     private KeyboardLightingState? _state;
     private bool _isRefreshing;
 #if WINDOWS
@@ -180,6 +182,8 @@ public partial class KeyboardBacklightPage : UserControl
             _spectrumEditors.Add(editor);
             SpectrumEffects.Items.Add(CreateSpectrumEffectCard(editor));
         }
+
+        RefreshSpectrumKeyColors();
     }
 
     private async void SwitchSpectrumLayout_Click(object? sender, RoutedEventArgs e)
@@ -243,6 +247,21 @@ public partial class KeyboardBacklightPage : UserControl
         });
 
         var keyButtons = new List<ToggleButton>(availableKeys.Length);
+        var keyCanvas = new SpectrumKeyboardLayoutCanvas
+        {
+            Layout = SpectrumKeyboardLayoutData.TryParse(_state?.KeyboardLayout, out var keyboardLayout)
+                ? keyboardLayout
+                : SpectrumKeyboardLayoutKind.Ansi,
+            AvailableKeys = availableKeys,
+            MinHeight = 220,
+            Margin = new Thickness(0, 4, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Stretch,
+        };
+        keyCanvas.SetSelection(editor.Keys);
+        keyCanvas.SelectionChanged += (_, _) => RefreshKeyButtons();
+        editor.KeyboardCanvas = keyCanvas;
+        keySection.Children.Add(keyCanvas);
+
         var selectAllButton = CreateSpectrumKeyActionButton(
             "SelectAllOn24",
             "SpectrumKeyboardBacklightControl_SelectAll_ToolTip",
@@ -283,7 +302,11 @@ public partial class KeyboardBacklightPage : UserControl
             var keyName = $"Keyboard key 0x{key:X4}";
             AutomationProperties.SetName(keyButton, keyName);
             ToolTip.SetTip(keyButton, keyName);
-            keyButton.Click += (_, _) => editor.SetKey(key, keyButton.IsChecked == true);
+            keyButton.Click += (_, _) =>
+            {
+                editor.SetKey(key, keyButton.IsChecked == true);
+                RefreshKeyButtons();
+            };
             keyButtons.Add(keyButton);
             keysPanel.Children.Add(keyButton);
         }
@@ -292,12 +315,18 @@ public partial class KeyboardBacklightPage : UserControl
         {
             foreach (var keyButton in keyButtons)
                 keyButton.IsChecked = editor.Keys.Contains((ushort)keyButton.Tag!);
+            keyCanvas.SetSelection(editor.Keys);
+            RefreshSpectrumKeyColors();
         }
 
         keySection.Children.Add(keysPanel);
         details.Children.Add(keySection);
 
-        var colorsSection = CreateSpectrumEditorSection("Colors", editor.Colors);
+        var colorRow = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*"), ColumnSpacing = 8 };
+        colorRow.Children.Add(editor.ColorSwatchButton);
+        Grid.SetColumn(editor.Colors, 1);
+        colorRow.Children.Add(editor.Colors);
+        var colorsSection = CreateSpectrumEditorSection("Colors", colorRow);
         details.Children.Add(colorsSection);
         var warning = new LocalizedTextBlock
         {
@@ -333,8 +362,14 @@ public partial class KeyboardBacklightPage : UserControl
             warning.IsVisible = !keySection.IsVisible;
         }
 
-        editor.Type.SelectionChanged += (_, _) => RefreshEffectOptions();
+        editor.Type.SelectionChanged += (_, _) =>
+        {
+            RefreshEffectOptions();
+            RefreshSpectrumKeyColors();
+        };
         RefreshEffectOptions();
+        editor.ColorSwatchButton.Click += async (_, _) => await PickSpectrumEffectColorAsync(editor);
+        editor.Colors.TextChanged += (_, _) => RefreshSpectrumKeyColors();
 
         return new Border
         {
@@ -566,26 +601,111 @@ public partial class KeyboardBacklightPage : UserControl
         SetComboItems(RgbBrightness, RgbBrightnessLevels, selected.Brightness);
 
         _rgbZones.Clear();
+        _zoneSurfaceBlocks.Clear();
         RgbZones.Children.Clear();
+        RgbZoneSurface.Children.Clear();
         foreach (var (color, index) in selected.Zones.Select((color, index) => (color, index)))
         {
             var editor = new RgbZoneEditor($"Zone {index + 1}", color);
             editor.SynchronizeRequested += RgbZoneEditor_SynchronizeRequested;
+            editor.ColorPickRequested += async (_, _) => await PickRgbZoneColorAsync(editor);
             _rgbZones.Add(editor);
             RgbZones.Children.Add(editor.Container);
+            var block = CreateRgbZoneSurfaceBlock(index, color);
+            _zoneSurfaceBlocks.Add(block);
+            RgbZoneSurface.Children.Add(block);
         }
 
         ApplyRgbEffectCapabilities(selected.Key, selected.Effect);
     }
 
-    private async void RgbZoneEditor_SynchronizeRequested(object? sender, EventArgs e)
+    private Button CreateRgbZoneSurfaceBlock(int index, KeyboardColorState color)
     {
-        if (_isRefreshing || sender is not RgbZoneEditor source || _state is null)
+        var button = new Button
+        {
+            Height = 56,
+            Background = ToBrush(color),
+            HorizontalContentAlignment = HorizontalAlignment.Center,
+            VerticalContentAlignment = VerticalAlignment.Center,
+            Tag = index,
+        };
+        var name = $"RGB zone {index + 1}";
+        AutomationProperties.SetName(button, name);
+        ToolTip.SetTip(button, name);
+        button.Click += async (_, _) => await PickRgbZoneColorAsync(index);
+        return button;
+    }
+
+    private void RefreshRgbZoneSurface()
+    {
+        for (var index = 0; index < _zoneSurfaceBlocks.Count && index < _rgbZones.Count; index++)
+            _zoneSurfaceBlocks[index].Background = ToBrush(_rgbZones[index].ReadColor());
+    }
+
+    private async Task PickRgbZoneColorAsync(int index)
+    {
+        if (_isRefreshing || index < 0 || index >= _rgbZones.Count)
             return;
 
-        var color = source.ReadColor();
-        foreach (var zone in _rgbZones)
-            zone.SetColor(color);
+        await PickRgbZoneColorAsync(_rgbZones[index]);
+    }
+
+    private async Task PickRgbZoneColorAsync(RgbZoneEditor editor)
+    {
+        if (_isRefreshing || _state is null || TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        var dialog = new ColorPickerDialogWindow(ToColor(editor.ReadColor()));
+        var picked = await dialog.ShowDialog<Color?>(owner);
+        if (picked is not { } color)
+            return;
+
+        editor.SetColor(ToKeyboardColor(color));
+        RefreshRgbZoneSurface();
+        await ApplyRgbZonesAsync();
+    }
+
+    private async Task PickSpectrumEffectColorAsync(SpectrumEffectEditor editor)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        var dialog = new ColorPickerDialogWindow(ToColor(editor.FirstColor()));
+        var picked = await dialog.ShowDialog<Color?>(owner);
+        if (picked is not { } color)
+            return;
+
+        editor.ReplaceFirstColor(ToKeyboardColor(color));
+        RefreshSpectrumKeyColors();
+    }
+
+    private void RefreshSpectrumKeyColors()
+    {
+        if (_state is null)
+            return;
+
+        var contributions = new List<(IReadOnlyCollection<ushort> Keys, IReadOnlyList<Color> Colors)>();
+        foreach (var editor in _spectrumEditors)
+        {
+            var type = editor.Type.SelectedItem?.ToString();
+            IReadOnlyCollection<ushort> keys = SpectrumKeyboardEffectRules.HidesKeySelection(type)
+                ? (_state.KeyboardKeys ?? []).ToArray()
+                : editor.Keys;
+            var colors = ParseColors(editor.Colors.Text, editor.Original.Colors)
+                .Select(ToColor)
+                .ToArray();
+            contributions.Add((keys, colors));
+        }
+
+        var map = SpectrumKeyboardLayoutCanvas.CombineKeyColors(contributions);
+        foreach (var editor in _spectrumEditors)
+            editor.KeyboardCanvas?.SetKeyColors(map);
+    }
+
+    private async Task ApplyRgbZonesAsync()
+    {
+        if (_state is null)
+            return;
 
         var selected = _state.RgbPresets.FirstOrDefault(preset => preset.IsSelected);
         if (selected is null)
@@ -598,6 +718,18 @@ public partial class KeyboardBacklightPage : UserControl
             RgbSpeed: RgbSpeed.SelectedItem?.ToString(),
             RgbBrightness: RgbBrightness.SelectedItem?.ToString(),
             RgbZones: _rgbZones.Select(zone => zone.ReadColor()).ToArray()));
+    }
+
+    private async void RgbZoneEditor_SynchronizeRequested(object? sender, EventArgs e)
+    {
+        if (_isRefreshing || sender is not RgbZoneEditor source || _state is null)
+            return;
+
+        var color = source.ReadColor();
+        foreach (var zone in _rgbZones)
+            zone.SetColor(color);
+        RefreshRgbZoneSurface();
+        await ApplyRgbZonesAsync();
     }
 
     private async void RgbPreset_Click(object? sender, RoutedEventArgs e)
@@ -629,6 +761,7 @@ public partial class KeyboardBacklightPage : UserControl
         RgbEffect.IsEnabled = editable;
         RgbBrightness.IsEnabled = editable;
         RgbSpeed.IsEnabled = speedEnabled;
+        RgbZoneSurface.IsEnabled = zonesEnabled;
         foreach (var zone in _rgbZones)
             zone.Container.IsEnabled = zonesEnabled;
     }
@@ -700,6 +833,8 @@ public partial class KeyboardBacklightPage : UserControl
 
     private sealed class SpectrumEffectEditor
     {
+        private readonly Border _colorSwatch;
+
         public KeyboardSpectrumEffectState Original { get; }
         public HashSet<ushort> Keys { get; }
         public ComboBox Type { get; }
@@ -707,6 +842,8 @@ public partial class KeyboardBacklightPage : UserControl
         public ComboBox Direction { get; }
         public ComboBox ClockwiseDirection { get; }
         public TextBox Colors { get; }
+        public Button ColorSwatchButton { get; }
+        public SpectrumKeyboardLayoutCanvas? KeyboardCanvas { get; set; }
 
         public SpectrumEffectEditor(KeyboardSpectrumEffectState effect)
         {
@@ -722,6 +859,47 @@ public partial class KeyboardBacklightPage : UserControl
                 Watermark = "#RRGGBB, #RRGGBB",
                 HorizontalAlignment = HorizontalAlignment.Stretch,
             };
+            _colorSwatch = new Border
+            {
+                Width = 26,
+                Height = 26,
+                CornerRadius = new CornerRadius(13),
+                Background = ToBrush(FirstColor()),
+            };
+            ColorSwatchButton = new Button
+            {
+                Width = 32,
+                Height = 32,
+                Padding = new Thickness(0),
+                Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                BorderThickness = new Thickness(0),
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Content = _colorSwatch,
+            };
+            var pickName = AvaloniaLocalization.GetString("Keyboard_ChangeColor", "Change color");
+            AutomationProperties.SetName(ColorSwatchButton, pickName);
+            ToolTip.SetTip(ColorSwatchButton, pickName);
+            Colors.TextChanged += (_, _) => RefreshColorSwatch();
+        }
+
+        public void RefreshColorSwatch() => _colorSwatch.Background = ToBrush(FirstColor());
+
+        public KeyboardColorState FirstColor()
+        {
+            var colors = ParseColors(Colors.Text, []);
+            return colors.Count > 0 ? colors[0] : new KeyboardColorState(255, 255, 255);
+        }
+
+        public void ReplaceFirstColor(KeyboardColorState color)
+        {
+            var colors = ParseColors(Colors.Text, []).ToList();
+            if (colors.Count == 0)
+                colors.Add(color);
+            else
+                colors[0] = color;
+            Colors.Text = string.Join(", ", colors.Select(item => item.Hex));
+            RefreshColorSwatch();
         }
 
         public void SetKey(ushort key, bool selected)
@@ -765,23 +943,39 @@ public partial class KeyboardBacklightPage : UserControl
         private readonly Border _swatch;
 
         public event EventHandler? SynchronizeRequested;
+        public event EventHandler? ColorPickRequested;
 
         public Border Container { get; }
+        public Button SwatchButton { get; }
 
         public RgbZoneEditor(string title, KeyboardColorState color)
         {
             _input = new TextBox { Text = color.Hex, Width = 100, Watermark = "#RRGGBB" };
             _swatch = new Border
             {
-                Width = 28,
-                Height = 28,
-                CornerRadius = new CornerRadius(14),
+                Width = 26,
+                Height = 26,
+                CornerRadius = new CornerRadius(13),
                 Background = ToBrush(color),
-                Margin = new Thickness(0, 0, 8, 0),
             };
+            SwatchButton = new Button
+            {
+                Width = 32,
+                Height = 32,
+                Padding = new Thickness(0),
+                Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                BorderThickness = new Thickness(0),
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Content = _swatch,
+            };
+            var pickName = AvaloniaLocalization.GetString("Keyboard_ChangeColor", "Change color");
+            AutomationProperties.SetName(SwatchButton, pickName);
+            ToolTip.SetTip(SwatchButton, pickName);
+            SwatchButton.Click += (_, _) => ColorPickRequested?.Invoke(this, EventArgs.Empty);
             _input.TextChanged += Input_TextChanged;
             var content = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
-            content.Children.Add(_swatch);
+            content.Children.Add(SwatchButton);
             content.Children.Add(_input);
             var synchronizeButton = new Button
             {
@@ -848,4 +1042,8 @@ public partial class KeyboardBacklightPage : UserControl
 
     private static IBrush ToBrush(KeyboardColorState color) =>
         new SolidColorBrush(Color.FromRgb(color.R, color.G, color.B));
+
+    private static Color ToColor(KeyboardColorState color) => Color.FromRgb(color.R, color.G, color.B);
+
+    private static KeyboardColorState ToKeyboardColor(Color color) => new(color.R, color.G, color.B);
 }

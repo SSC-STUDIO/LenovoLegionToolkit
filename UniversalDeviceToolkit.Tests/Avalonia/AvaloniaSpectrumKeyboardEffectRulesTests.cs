@@ -55,6 +55,16 @@ public sealed class AvaloniaSpectrumKeyboardEffectRulesTests
         SpectrumKeyboardEffectRules.SupportsColors(effectType).Should().Be(expected);
     }
 
+    [Theory]
+    [InlineData("Always", true)]
+    [InlineData("ColorChange", false)]
+    [InlineData("RainbowWave", false)]
+    [InlineData("Type", false)]
+    public void SingleColorSupport_ShouldMatchWpfEffectEditor(string effectType, bool expected)
+    {
+        SpectrumKeyboardEffectRules.UsesSingleColor(effectType).Should().Be(expected);
+    }
+
     [Fact]
     public void AllLightsEffects_ShouldDiscardPerKeySelectionAndColors()
     {
