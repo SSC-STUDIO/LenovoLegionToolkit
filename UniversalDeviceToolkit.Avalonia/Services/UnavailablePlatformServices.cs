@@ -216,6 +216,13 @@ public sealed class UnavailablePlatformServices : IPlatformServices
         bool ignoreDelays,
         bool interruptOnOtherKey) => Task.FromResult(false);
 
+    public Task<bool> SaveMacroSequenceAsync(
+        ulong key,
+        IReadOnlyList<MacroEventItem> events,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey) => Task.FromResult(false);
+
     public Task<bool> ClearMacroSequenceAsync(ulong key) => Task.FromResult(false);
 
     public Task<PluginPageState> GetPluginPageStateAsync(string pluginId) =>

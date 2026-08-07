@@ -68,6 +68,12 @@ public interface IPlatformServices
     Task<bool> SetMacroEnabledAsync(bool enabled);
     Task<bool> StartMacroRecordingAsync(ulong key, MacroRecordingMode mode);
     Task<bool> SetMacroSequenceOptionsAsync(ulong key, int repeatCount, bool ignoreDelays, bool interruptOnOtherKey);
+    Task<bool> SaveMacroSequenceAsync(
+        ulong key,
+        IReadOnlyList<MacroEventItem> events,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey);
     Task<bool> ClearMacroSequenceAsync(ulong key);
     Task<AutomationWorkspaceState> GetAutomationWorkspaceAsync();
     Task<IReadOnlyList<AutomationTriggerOption>> GetAutomationTriggerOptionsAsync();

@@ -362,6 +362,16 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey)
             : _featureHost.SetMacroSequenceOptionsAsync(key, repeatCount, ignoreDelays, interruptOnOtherKey);
 
+    public Task<bool> SaveMacroSequenceAsync(
+        ulong key,
+        IReadOnlyList<MacroEventItem> events,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey) =>
+        _featureHost is null
+            ? _inner.SaveMacroSequenceAsync(key, events, repeatCount, ignoreDelays, interruptOnOtherKey)
+            : _featureHost.SaveMacroSequenceAsync(key, events, repeatCount, ignoreDelays, interruptOnOtherKey);
+
     public Task<bool> ClearMacroSequenceAsync(ulong key) =>
         _featureHost is null
             ? _inner.ClearMacroSequenceAsync(key)
