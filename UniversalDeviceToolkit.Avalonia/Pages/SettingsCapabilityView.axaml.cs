@@ -393,6 +393,20 @@ public partial class SettingsCapabilityView : UserControl
                 return;
             }
 
+#if WINDOWS
+            if (_pageKey == "Power" && option.Key == "OpenPowerModes")
+            {
+                await ConfigurePowerMappingAsync(PowerMappingKind.WindowsPowerMode, button);
+                return;
+            }
+
+            if (_pageKey == "Power" && option.Key == "OpenPowerPlans")
+            {
+                await ConfigurePowerMappingAsync(PowerMappingKind.WindowsPowerPlan, button);
+                return;
+            }
+#endif
+
             if (_pageKey == "Display" && option.Key == "BootLogo")
             {
                 var topLevel = TopLevel.GetTopLevel(this);
@@ -499,6 +513,29 @@ public partial class SettingsCapabilityView : UserControl
             button.IsEnabled = true;
         }
     }
+
+#if WINDOWS
+    private async Task ConfigurePowerMappingAsync(PowerMappingKind kind, Button button)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+        button.IsEnabled = false;
+        try
+        {
+            await new PowerMappingSettingsWindow(kind).ShowDialog(owner);
+            await RefreshPageAsync();
+        }
+        catch (Exception ex)
+        {
+            ToolTip.SetTip(button, ex.Message);
+        }
+        finally
+        {
+            button.IsEnabled = true;
+        }
+    }
+#endif
 
     private async Task CheckForUpdatesAsync(Button button, bool wasEnabled)
     {
