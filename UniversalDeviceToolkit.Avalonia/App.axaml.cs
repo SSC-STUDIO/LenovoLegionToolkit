@@ -131,6 +131,7 @@ public partial class App : Application
             _singleInstanceGuard!.StartListener(() =>
                 global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
             _updateCheckCoordinator = AvaloniaUpdateCheckCoordinator.Create();
+            RequestAutomaticUpdateCheck();
             _ = StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow);
 #endif
             Dispatcher.UIThread.Post(CheckPendingCrashReports, DispatcherPriority.Background);
@@ -529,8 +530,6 @@ public partial class App : Application
             _osdOverlay ??= new AvaloniaOsdOverlayController(PlatformServices);
             _osdOverlay.Initialize();
         });
-
-        RequestAutomaticUpdateCheck();
 
         try
         {
