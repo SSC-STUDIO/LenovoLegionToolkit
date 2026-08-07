@@ -2381,6 +2381,7 @@ internal sealed class WindowsFeatureHostServices
             if (update.SpectrumEffects is not null)
             {
                 var selectedProfile = update.SelectedProfile ?? await _spectrum.GetProfileAsync().ConfigureAwait(false);
+                var (_, _, allKeyboardKeys) = await _spectrum.GetKeyboardLayoutAsync().ConfigureAwait(false);
                 var effects = new List<SpectrumKeyboardBacklightEffect>();
                 foreach (var item in update.SpectrumEffects)
                 {
@@ -2397,8 +2398,11 @@ internal sealed class WindowsFeatureHostServices
                         speed,
                         direction,
                         clockwise,
-                        item.Colors.Select(ToRgbColor).ToArray(),
-                        item.Keys.ToArray()));
+                        SpectrumKeyboardEffectRules.NormalizeColors(item.Type, item.Colors)
+                            .Select(ToRgbColor)
+                            .ToArray(),
+                        SpectrumKeyboardEffectRules.NormalizeKeys(item.Type, item.Keys, allKeyboardKeys)
+                            .ToArray()));
                 }
 
                 await _spectrum.SetProfileDescriptionAsync(selectedProfile, effects.ToArray()).ConfigureAwait(false);

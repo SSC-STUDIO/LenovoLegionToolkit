@@ -157,24 +157,29 @@ public partial class KeyboardBacklightPage : UserControl
             MaxLines = 1,
         });
         details.Children.Add(editor.Type);
-        details.Children.Add(new LocalizedTextBlock
+
+        var speedSection = new StackPanel { Spacing = 4 };
+        speedSection.Children.Add(new LocalizedTextBlock
         {
-            Text = "Speed / direction",
+            Text = "Speed",
             Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
             OverflowMode = LocalizedOverflowMode.Ellipsis,
             MaxLines = 1,
         });
-        var motion = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 8 };
-        motion.Children.Add(editor.Speed);
-        Grid.SetColumn(editor.Direction, 1);
-        motion.Children.Add(editor.Direction);
-        details.Children.Add(motion);
-        details.Children.Add(editor.ClockwiseDirection);
+        speedSection.Children.Add(editor.Speed);
+        details.Children.Add(speedSection);
+
+        var directionSection = CreateSpectrumEditorSection("Direction", editor.Direction);
+        details.Children.Add(directionSection);
+        var clockwiseDirectionSection = CreateSpectrumEditorSection("Clockwise direction", editor.ClockwiseDirection);
+        details.Children.Add(clockwiseDirectionSection);
+
         var availableKeys = (_state?.KeyboardKeys ?? [])
             .Concat(editor.Keys)
             .Distinct()
             .OrderBy(key => key)
             .ToArray();
+        var keySection = new StackPanel { Spacing = 8 };
         var keyHeader = new Grid
         {
             ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"),
@@ -213,7 +218,7 @@ public partial class KeyboardBacklightPage : UserControl
             });
         Grid.SetColumn(deselectAllButton, 2);
         keyHeader.Children.Add(deselectAllButton);
-        details.Children.Add(keyHeader);
+        keySection.Children.Add(keyHeader);
 
         var keysPanel = new WrapPanel { Orientation = Orientation.Horizontal };
         foreach (var key in availableKeys)
@@ -241,8 +246,22 @@ public partial class KeyboardBacklightPage : UserControl
                 keyButton.IsChecked = editor.Keys.Contains((ushort)keyButton.Tag!);
         }
 
-        details.Children.Add(keysPanel);
-        details.Children.Add(editor.Colors);
+        keySection.Children.Add(keysPanel);
+        details.Children.Add(keySection);
+
+        var colorsSection = CreateSpectrumEditorSection("Colors", editor.Colors);
+        details.Children.Add(colorsSection);
+        var warning = new LocalizedTextBlock
+        {
+            Text = AvaloniaLocalization.GetString(
+                "SpectrumKeyboardBacklightEditEffectWindow_Effect_Warning",
+                "This effect controls all keyboard lighting."),
+            Foreground = GetResource<IBrush>("StatusWarningBrush"),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 3,
+            IsVisible = false,
+        };
+        details.Children.Add(warning);
 
         var removeButton = new Button
         {
@@ -255,6 +274,20 @@ public partial class KeyboardBacklightPage : UserControl
         removeButton.Click += RemoveSpectrumEffect_Click;
         details.Children.Add(removeButton);
 
+        void RefreshEffectOptions()
+        {
+            var effectType = editor.Type.SelectedItem?.ToString();
+            speedSection.IsVisible = SpectrumKeyboardEffectRules.SupportsSpeed(effectType);
+            directionSection.IsVisible = SpectrumKeyboardEffectRules.SupportsDirection(effectType);
+            clockwiseDirectionSection.IsVisible = SpectrumKeyboardEffectRules.SupportsClockwiseDirection(effectType);
+            colorsSection.IsVisible = SpectrumKeyboardEffectRules.SupportsColors(effectType);
+            keySection.IsVisible = !SpectrumKeyboardEffectRules.HidesKeySelection(effectType);
+            warning.IsVisible = !keySection.IsVisible;
+        }
+
+        editor.Type.SelectionChanged += (_, _) => RefreshEffectOptions();
+        RefreshEffectOptions();
+
         return new Border
         {
             Background = GetResource<IBrush>("CardBackgroundBrush"),
@@ -265,6 +298,20 @@ public partial class KeyboardBacklightPage : UserControl
             Margin = new Thickness(0, 0, 0, 8),
             Child = details,
         };
+    }
+
+    private StackPanel CreateSpectrumEditorSection(string title, Control content)
+    {
+        var section = new StackPanel { Spacing = 4 };
+        section.Children.Add(new LocalizedTextBlock
+        {
+            Text = title,
+            Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+            OverflowMode = LocalizedOverflowMode.Ellipsis,
+            MaxLines = 1,
+        });
+        section.Children.Add(content);
+        return section;
     }
 
     private Button CreateSpectrumKeyActionButton(
@@ -629,8 +676,13 @@ public partial class KeyboardBacklightPage : UserControl
             Speed.SelectedItem?.ToString() ?? Original.Speed,
             Direction.SelectedItem?.ToString() ?? Original.Direction,
             ClockwiseDirection.SelectedItem?.ToString() ?? Original.ClockwiseDirection,
-            ParseColors(Colors.Text, Original.Colors),
-            Keys.OrderBy(key => key).ToArray());
+            SpectrumKeyboardEffectRules.NormalizeColors(
+                Type.SelectedItem?.ToString() ?? Original.Type,
+                ParseColors(Colors.Text, Original.Colors)),
+            SpectrumKeyboardEffectRules.NormalizeKeys(
+                Type.SelectedItem?.ToString() ?? Original.Type,
+                Keys,
+                []));
 
         private static ComboBox CreateCombo(IReadOnlyList<string> values, string selected) => new()
         {
