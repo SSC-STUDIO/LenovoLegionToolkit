@@ -61,6 +61,9 @@ internal sealed class WindowsFeatureHostServices
     private IPackageDownloader? _driverDownloader;
     private List<Package> _driverPackages = [];
     private readonly object _driverLock = new();
+    private readonly Dictionary<string, DriverPackageRuntimeState> _driverPackageStates = new(StringComparer.OrdinalIgnoreCase);
+    private CancellationTokenSource? _driverQueueCancellation;
+    private Task? _driverQueueTask;
     private readonly SemaphoreSlim _automationInitializationLock = new(1, 1);
     private readonly object _macroRecordingLock = new();
     private readonly HashSet<string> _selectedCleanupActions;
@@ -3710,6 +3713,3 @@ internal sealed class AvaloniaMainThreadDispatcher : IMainThreadDispatcher
 }
 
 #endif
-    private readonly Dictionary<string, DriverPackageRuntimeState> _driverPackageStates = new(StringComparer.OrdinalIgnoreCase);
-    private CancellationTokenSource? _driverQueueCancellation;
-    private Task? _driverQueueTask;
