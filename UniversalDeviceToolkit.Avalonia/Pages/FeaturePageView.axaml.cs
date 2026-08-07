@@ -760,9 +760,11 @@ public partial class FeaturePageView : UserControl
                 .ToArray() ?? [];
             if (updates.Length > 0)
             {
-                await AvaloniaPluginInstallCoordinator.Current.UpdateAsync(
+                var result = await AvaloniaPluginInstallCoordinator.Current.UpdateAsync(
                     updates,
                     pluginId => _platformServices.UpdatePluginAsync(pluginId));
+                if (!result.Succeeded)
+                    ShowPluginOperationFailure(result);
             }
 
             _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
@@ -788,18 +790,23 @@ public partial class FeaturePageView : UserControl
                 .Where(plugin => !plugin.IsInstalled && !plugin.IsSystemPlugin)
                 .Select(plugin => plugin.Id)
                 .ToArray() ?? [];
+            PluginOperationBatchResult? result = null;
             if (installable.Length > 0)
             {
-                await AvaloniaPluginInstallCoordinator.Current.InstallAsync(
+                result = await AvaloniaPluginInstallCoordinator.Current.InstallAsync(
                     installable,
                     pluginId => _platformServices.InstallPluginAsync(pluginId));
+                if (!result.Succeeded)
+                    ShowPluginOperationFailure(result);
             }
 
             _pluginCatalog = await _platformServices.GetPluginCatalogAsync(forceRefresh: true);
             _pluginCatalogChanged?.Invoke();
             if (_lastState is not null)
                 RenderFeatureItems(_lastState);
-            foreach (var pluginId in installable)
+            foreach (var pluginId in result?.Operations
+                         .Where(operation => operation.Succeeded)
+                         .Select(operation => operation.PluginId) ?? [])
                 RaiseOptimizationCategoryFocusRequest(pluginId);
         }
         finally
@@ -873,27 +880,41 @@ public partial class FeaturePageView : UserControl
 
     private async Task<bool> RunCoordinatedPluginActionAsync(
         IReadOnlyCollection<string> pluginIds,
-        Func<string, Task> installer,
+        Func<string, Task<bool>> installer,
         string operation)
     {
         if (pluginIds.Count == 0)
             return true;
 
         var coordinator = AvaloniaPluginInstallCoordinator.Current;
+        PluginOperationBatchResult result;
         switch (operation)
         {
             case "update":
-                await coordinator.UpdateAsync(pluginIds, installer);
+                result = await coordinator.UpdateAsync(pluginIds, installer);
                 break;
             case "uninstall":
-                await coordinator.UninstallAsync(pluginIds, installer);
+                result = await coordinator.UninstallAsync(pluginIds, installer);
                 break;
             default:
-                await coordinator.InstallAsync(pluginIds, installer);
+                result = await coordinator.InstallAsync(pluginIds, installer);
                 break;
         }
 
-        return true;
+        if (!result.Succeeded)
+            ShowPluginOperationFailure(result);
+        return result.Succeeded;
+    }
+
+    private void ShowPluginOperationFailure(PluginOperationBatchResult result)
+    {
+        StatusTitle.Text = AvaloniaLocalization.GetString(
+            "PluginExtensionsPage_ActionFailed",
+            "The plugin operation could not be completed.");
+        StatusMessage.Text = result.ErrorMessage ?? StatusTitle.Text;
+        StatusCard.Background = GetResource<IBrush>("StatusCriticalBackgroundBrush");
+        StatusCard.BorderBrush = GetResource<IBrush>("StatusCriticalBrush");
+        StatusIconBackground.Background = GetResource<IBrush>("StatusCriticalBrush");
     }
 
     private void RaiseOptimizationCategoryFocusRequest(string pluginId)

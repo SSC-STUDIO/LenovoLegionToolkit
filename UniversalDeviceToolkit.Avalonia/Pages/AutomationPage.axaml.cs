@@ -687,7 +687,9 @@ public partial class AutomationPage : UserControl
                 return;
             }
             await RefreshAsync();
-            SetFeedback(Get("AutomationPage_Saved_Message", "Automation pipelines saved."));
+            SetFeedback(
+                Get("AutomationPage_Saved_Message", "Automation pipelines saved."),
+                "success");
         }
         finally
         {
@@ -705,10 +707,22 @@ public partial class AutomationPage : UserControl
 
     private void UpdateDirtyState() => SaveRevertPanel.IsVisible = _isDirty;
 
-    private void SetFeedback(string? message)
+    private void SetFeedback(string? message, string variant = "error")
     {
-        if (!string.IsNullOrWhiteSpace(message))
-            ToolTip.SetTip(SaveButton, message);
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            FeedbackBar.IsVisible = false;
+            FeedbackMessageBlock.Text = string.Empty;
+            return;
+        }
+
+        foreach (var className in new[] { "informational", "success", "warning", "error" })
+            FeedbackBar.Classes.Remove(className);
+        FeedbackBar.Classes.Add(variant);
+        FeedbackMessageBlock.Text = message;
+        ToolTip.SetTip(FeedbackBar, message);
+        AutomationProperties.SetName(FeedbackBar, message);
+        FeedbackBar.IsVisible = true;
     }
 
     private string FormatSummary(string trigger, bool automatic, int stepCount)

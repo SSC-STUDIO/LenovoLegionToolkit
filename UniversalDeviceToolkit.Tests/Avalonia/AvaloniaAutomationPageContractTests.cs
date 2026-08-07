@@ -17,6 +17,21 @@ public sealed class AvaloniaAutomationPageContractTests
         Assert.Contains("NormalizeIconName(row.IconEditor?.Text)", source, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public void AutomationPage_ShouldExposeVisibleFeedbackForHostFailures()
+    {
+        var root = FindRepositoryRoot();
+        var xaml = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "Pages", "AutomationPage.axaml"));
+        var source = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "Pages", "AutomationPage.axaml.cs"));
+
+        Assert.Contains("x:Name=\"FeedbackBar\"", xaml, StringComparison.Ordinal);
+        Assert.Contains("AutomationFeedback", xaml, StringComparison.Ordinal);
+        Assert.Contains("FeedbackBar.IsVisible = true", source, StringComparison.Ordinal);
+        Assert.Contains("FeedbackBar.Classes.Add(variant)", source, StringComparison.Ordinal);
+        Assert.Contains("SetFeedback(", source, StringComparison.Ordinal);
+        Assert.Contains("\"success\"", source, StringComparison.Ordinal);
+    }
+
     private static string FindRepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);

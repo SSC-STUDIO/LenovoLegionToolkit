@@ -164,6 +164,94 @@ public sealed class PluginCatalogContractTests
     }
 
     [Fact]
+    public async Task InstallCoordinator_ReportsFailedOperationAndAllowsRetry()
+    {
+        var coordinator = new AvaloniaPluginInstallCoordinator();
+        Func<string, Task<bool>> fail = _ => Task.FromResult(false);
+        Func<string, Task<bool>> succeed = _ => Task.FromResult(true);
+
+        var failed = await coordinator.InstallAsync(["plugin-a"], fail);
+
+        failed.Succeeded.Should().BeFalse();
+        failed.HasFailures.Should().BeTrue();
+        failed.Operations.Should().ContainSingle();
+        failed.Operations[0].Status.Should().Be(PluginOperationStatus.Failed);
+        coordinator.IsQueuedOrActive("plugin-a").Should().BeFalse();
+
+        var retried = await coordinator.InstallAsync(["plugin-a"], succeed);
+
+        retried.Succeeded.Should().BeTrue();
+        retried.Operations[0].Status.Should().Be(PluginOperationStatus.Succeeded);
+    }
+
+    [Fact]
+    public async Task InstallCoordinator_ReportsCanceledOperationWithoutRunningInstaller()
+    {
+        var coordinator = new AvaloniaPluginInstallCoordinator();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var calls = 0;
+
+        var result = await coordinator.InstallAsync(
+            ["plugin-a"],
+            (id, _) =>
+            {
+                Interlocked.Increment(ref calls);
+                return Task.FromResult(true);
+            },
+            cancellation.Token);
+
+        result.Succeeded.Should().BeFalse();
+        result.HasCanceled.Should().BeTrue();
+        result.Operations[0].Status.Should().Be(PluginOperationStatus.Canceled);
+        calls.Should().Be(0);
+        coordinator.IsQueuedOrActive("plugin-a").Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task InstallCoordinator_DuplicateRequestAwaitsTheOriginalResult()
+    {
+        var coordinator = new AvaloniaPluginInstallCoordinator();
+        var started = new TaskCompletionSource();
+        var release = new TaskCompletionSource();
+        Func<string, Task<bool>> installer = async _ =>
+        {
+            started.TrySetResult();
+            await release.Task;
+            return false;
+        };
+
+        var first = coordinator.UpdateAsync(["plugin-a"], installer);
+        await started.Task;
+        var duplicate = coordinator.UpdateAsync(["PLUGIN-A"], installer);
+
+        duplicate.IsCompleted.Should().BeFalse();
+        release.TrySetResult();
+        var results = await Task.WhenAll(first, duplicate);
+
+        results.Should().OnlyContain(result => result.HasFailures);
+        results.SelectMany(result => result.Operations)
+            .Should().OnlyContain(operation => operation.Status == PluginOperationStatus.Failed);
+    }
+
+    [Fact]
+    public void PluginStorePage_RefreshesNavigationOnlyForSuccessfulLifecycleOperations()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "FeaturePageView.axaml.cs"));
+
+        source.Should().Contain("Func<string, Task<bool>> installer");
+        source.Should().Contain("PluginOperationBatchResult result");
+        source.Should().Contain("ShowPluginOperationFailure(result)");
+        source.Should().Contain(".Where(operation => operation.Succeeded)");
+        source.Should().Contain("_pluginCatalogChanged?.Invoke()");
+    }
+
+    [Fact]
     public void ExecutableResolver_PickExecutable_PrefersConventionalFolderName()
     {
         var picked = AvaloniaPluginExecutableResolver.PickExecutable(

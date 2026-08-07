@@ -1,27 +1,48 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Avalonia.Localization;
 
 namespace UniversalDeviceToolkit.Avalonia.Services;
 
+public enum PluginOperationStatus
+{
+    Succeeded,
+    Failed,
+    Canceled,
+}
+
+public sealed record PluginOperationResult(string PluginId, PluginOperationStatus Status, string? Error = null)
+{
+    public bool Succeeded => Status == PluginOperationStatus.Succeeded;
+}
+
+public sealed record PluginOperationBatchResult(IReadOnlyList<PluginOperationResult> Operations)
+{
+    public bool Succeeded => Operations.Count > 0 && Operations.All(operation => operation.Succeeded);
+
+    public bool HasFailures => Operations.Any(operation => operation.Status == PluginOperationStatus.Failed);
+
+    public bool HasCanceled => Operations.Any(operation => operation.Status == PluginOperationStatus.Canceled);
+
+    public string? ErrorMessage => Operations.FirstOrDefault(operation => !operation.Succeeded)?.Error;
+}
+
 /// <summary>
-/// Serializes online plugin install, update and uninstall work so only one
-/// plugin operation runs at a time. Requests are deduplicated by plugin id and
-/// progress is surfaced through the Changed event for the plugin store UI.
-/// The page passes host-neutral installer callbacks, so this coordinator stays
-/// usable on every TFM the Avalonia host builds for.
+/// Serializes online plugin lifecycle work and preserves the result of every
+/// request. A failed or canceled request never stops later requests, and the
+/// same plugin can be retried after the request has completed.
 /// </summary>
 public sealed class AvaloniaPluginInstallCoordinator
 {
-    /// <summary>Process-wide singleton consumed by the plugin store UI.</summary>
     public static AvaloniaPluginInstallCoordinator Current { get; } = new();
 
     private readonly object _sync = new();
     private readonly Queue<QueuedRequest> _queue = new();
-    private readonly HashSet<string> _queuedIds = new(StringComparer.OrdinalIgnoreCase);
-    private readonly List<Batch> _pendingBatches = new();
+    private readonly Dictionary<string, Task<PluginOperationResult>> _operationsByPluginId = new(StringComparer.OrdinalIgnoreCase);
     private Task? _processor;
     private string? _currentPluginId;
     private string? _statusText;
@@ -45,20 +66,7 @@ public sealed class AvaloniaPluginInstallCoordinator
         }
     }
 
-    /// <summary>
-    /// Install progress in percent, or null while the operation runs without a
-    /// progress source (indeterminate). The host installer callbacks used by the
-    /// page do not report byte-level progress, so the store UI shows an
-    /// indeterminate bar while a plugin is queued or active.
-    /// </summary>
-    public double? Progress
-    {
-        get
-        {
-            lock (_sync)
-                return null;
-        }
-    }
+    public double? Progress => null;
 
     public string? StatusText
     {
@@ -72,59 +80,106 @@ public sealed class AvaloniaPluginInstallCoordinator
     public event Action? Changed;
 
     public Task InstallAsync(IEnumerable<string> pluginIds, Func<string, Task> installer) =>
-        EnqueueAsync(pluginIds, installer, "install");
+        InstallAsync(pluginIds, async (pluginId, _) =>
+        {
+            await installer(pluginId).ConfigureAwait(false);
+            return true;
+        });
 
     public Task UpdateAsync(IEnumerable<string> pluginIds, Func<string, Task> installer) =>
-        EnqueueAsync(pluginIds, installer, "update");
+        UpdateAsync(pluginIds, async (pluginId, _) =>
+        {
+            await installer(pluginId).ConfigureAwait(false);
+            return true;
+        });
 
     public Task UninstallAsync(IEnumerable<string> pluginIds, Func<string, Task> installer) =>
-        EnqueueAsync(pluginIds, installer, "uninstall");
+        UninstallAsync(pluginIds, async (pluginId, _) =>
+        {
+            await installer(pluginId).ConfigureAwait(false);
+            return true;
+        });
 
-    /// <summary>
-    /// Whether the plugin id is currently queued or being processed. The store
-    /// UI uses this to show per-plugin progress and to keep its action buttons
-    /// disabled while the operation is pending.
-    /// </summary>
+    public Task<PluginOperationBatchResult> InstallAsync(IEnumerable<string> pluginIds, Func<string, Task<bool>> installer) =>
+        InstallAsync(pluginIds, (pluginId, _) => installer(pluginId));
+
+    public Task<PluginOperationBatchResult> UpdateAsync(IEnumerable<string> pluginIds, Func<string, Task<bool>> installer) =>
+        UpdateAsync(pluginIds, (pluginId, _) => installer(pluginId));
+
+    public Task<PluginOperationBatchResult> UninstallAsync(IEnumerable<string> pluginIds, Func<string, Task<bool>> installer) =>
+        UninstallAsync(pluginIds, (pluginId, _) => installer(pluginId));
+
+    public Task<PluginOperationBatchResult> InstallAsync(
+        IEnumerable<string> pluginIds,
+        Func<string, CancellationToken, Task<bool>> installer,
+        CancellationToken cancellationToken = default) =>
+        EnqueueAsync(pluginIds, installer, "install", cancellationToken);
+
+    public Task<PluginOperationBatchResult> UpdateAsync(
+        IEnumerable<string> pluginIds,
+        Func<string, CancellationToken, Task<bool>> installer,
+        CancellationToken cancellationToken = default) =>
+        EnqueueAsync(pluginIds, installer, "update", cancellationToken);
+
+    public Task<PluginOperationBatchResult> UninstallAsync(
+        IEnumerable<string> pluginIds,
+        Func<string, CancellationToken, Task<bool>> installer,
+        CancellationToken cancellationToken = default) =>
+        EnqueueAsync(pluginIds, installer, "uninstall", cancellationToken);
+
     public bool IsQueuedOrActive(string pluginId)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
             return false;
 
         lock (_sync)
-            return _queuedIds.Contains(pluginId)
-                || string.Equals(_currentPluginId, pluginId, StringComparison.OrdinalIgnoreCase);
+            return _operationsByPluginId.ContainsKey(pluginId);
     }
 
-    private Task EnqueueAsync(
+    private Task<PluginOperationBatchResult> EnqueueAsync(
         IEnumerable<string> pluginIds,
-        Func<string, Task> installer,
-        string operation)
+        Func<string, CancellationToken, Task<bool>> installer,
+        string operation,
+        CancellationToken cancellationToken)
     {
         if (pluginIds is null || installer is null)
-            return Task.CompletedTask;
+            return Task.FromResult(new PluginOperationBatchResult(Array.Empty<PluginOperationResult>()));
 
-        Batch? batch = null;
+        var operations = new List<Task<PluginOperationResult>>();
         lock (_sync)
         {
-            foreach (var pluginId in pluginIds)
+            foreach (var rawPluginId in pluginIds)
             {
-                if (string.IsNullOrWhiteSpace(pluginId) || !_queuedIds.Add(pluginId))
+                var pluginId = rawPluginId?.Trim();
+                if (string.IsNullOrWhiteSpace(pluginId))
                     continue;
 
-                batch ??= new Batch();
-                batch.Remaining++;
-                _queue.Enqueue(new QueuedRequest(pluginId, installer, operation, batch));
+                if (!_operationsByPluginId.TryGetValue(pluginId, out var resultTask))
+                {
+                    var request = new QueuedRequest(pluginId, installer, operation, cancellationToken);
+                    resultTask = request.Completion.Task;
+                    _operationsByPluginId.Add(pluginId, resultTask);
+                    _queue.Enqueue(request);
+                }
+
+                operations.Add(resultTask);
             }
 
-            if (batch is null)
-                return Task.CompletedTask;
-
-            _pendingBatches.Add(batch);
-            EnsureProcessorStarted();
+            if (_queue.Count > 0)
+                EnsureProcessorStarted();
         }
 
         RaiseChanged();
-        return batch.Completion.Task;
+        return CompleteBatchAsync(operations);
+    }
+
+    private static async Task<PluginOperationBatchResult> CompleteBatchAsync(
+        IReadOnlyCollection<Task<PluginOperationResult>> operations)
+    {
+        if (operations.Count == 0)
+            return new PluginOperationBatchResult(Array.Empty<PluginOperationResult>());
+
+        return new PluginOperationBatchResult(await Task.WhenAll(operations).ConfigureAwait(false));
     }
 
     private void EnsureProcessorStarted()
@@ -155,90 +210,64 @@ public sealed class AvaloniaPluginInstallCoordinator
             }
 
             RaiseChanged();
+            var result = await ProcessRequestAsync(request).ConfigureAwait(false);
+            request.Completion.TrySetResult(result);
 
-            try
+            lock (_sync)
             {
-                await request.Installer(request.PluginId).ConfigureAwait(false);
+                _operationsByPluginId.Remove(request.PluginId);
+                if (_queue.Count == 0)
+                {
+                    _isActive = false;
+                    _currentPluginId = null;
+                    _statusText = null;
+                }
             }
-            catch
-            {
-                // A failed plugin operation must not stop the remaining queue.
-            }
-            finally
-            {
-                CompleteRequest(request);
-            }
+
+            RaiseChanged();
         }
     }
 
-    private void CompleteRequest(QueuedRequest request)
+    private static async Task<PluginOperationResult> ProcessRequestAsync(QueuedRequest request)
     {
-        lock (_sync)
+        try
         {
-            _queuedIds.Remove(request.PluginId);
-            request.Batch.Remaining--;
-            if (_queue.Count == 0)
-            {
-                _isActive = false;
-                _currentPluginId = null;
-                _statusText = null;
-            }
-
-            if (request.Batch.Remaining == 0)
-            {
-                _pendingBatches.Remove(request.Batch);
-                request.Batch.Completion.TrySetResult();
-            }
+            request.CancellationToken.ThrowIfCancellationRequested();
+            var succeeded = await request.Installer(request.PluginId, request.CancellationToken).ConfigureAwait(false);
+            return succeeded
+                ? new PluginOperationResult(request.PluginId, PluginOperationStatus.Succeeded)
+                : new PluginOperationResult(request.PluginId, PluginOperationStatus.Failed, "The plugin operation did not complete.");
         }
-
-        RaiseChanged();
+        catch (OperationCanceledException) when (request.CancellationToken.IsCancellationRequested)
+        {
+            return new PluginOperationResult(request.PluginId, PluginOperationStatus.Canceled, "The plugin operation was canceled.");
+        }
+        catch (Exception ex)
+        {
+            return new PluginOperationResult(request.PluginId, PluginOperationStatus.Failed, ex.Message);
+        }
     }
 
     private static string FormatStatus(string operation, string pluginId) => operation switch
     {
-        "install" => string.Format(
-            CultureInfo.CurrentCulture,
-            AvaloniaLocalization.GetString(
-                "PluginExtensionsPage_InstallingProgress",
-                "Installing {0}..."),
-            pluginId),
-        "update" => string.Format(
-            CultureInfo.CurrentCulture,
-            AvaloniaLocalization.GetString(
-                "PluginExtensionsPage_UpdatingProgress",
-                "Updating {0}..."),
-            pluginId),
-        "uninstall" => string.Format(
-            CultureInfo.CurrentCulture,
-            AvaloniaLocalization.GetString(
-                "PluginExtensionsPage_UninstallingProgress",
-                "Uninstalling {0}..."),
-            pluginId),
+        "install" => string.Format(CultureInfo.CurrentCulture, AvaloniaLocalization.GetString("PluginExtensionsPage_InstallingProgress", "Installing {0}..."), pluginId),
+        "update" => string.Format(CultureInfo.CurrentCulture, AvaloniaLocalization.GetString("PluginExtensionsPage_UpdatingProgress", "Updating {0}..."), pluginId),
+        "uninstall" => string.Format(CultureInfo.CurrentCulture, AvaloniaLocalization.GetString("PluginExtensionsPage_UninstallingProgress", "Uninstalling {0}..."), pluginId),
         _ => pluginId,
     };
 
     private void RaiseChanged() => Changed?.Invoke();
 
-    private sealed class Batch
-    {
-        public int Remaining;
-
-        public TaskCompletionSource Completion { get; } =
-            new(TaskCreationOptions.RunContinuationsAsynchronously);
-    }
-
     private sealed class QueuedRequest(
         string pluginId,
-        Func<string, Task> installer,
+        Func<string, CancellationToken, Task<bool>> installer,
         string operation,
-        Batch batch)
+        CancellationToken cancellationToken)
     {
         public string PluginId { get; } = pluginId;
-
-        public Func<string, Task> Installer { get; } = installer;
-
+        public Func<string, CancellationToken, Task<bool>> Installer { get; } = installer;
         public string Operation { get; } = operation;
-
-        public Batch Batch { get; } = batch;
+        public CancellationToken CancellationToken { get; } = cancellationToken;
+        public TaskCompletionSource<PluginOperationResult> Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 }

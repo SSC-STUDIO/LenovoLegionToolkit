@@ -84,6 +84,16 @@
                                          MaxLines="3"
                                          automation:AutomationProperties.AutomationId="AutomationPipelineEmptyState" />
 
+            <Border x:Name="FeedbackBar"
+                    Classes="infoBar informational"
+                    IsVisible="False"
+                    automation:AutomationProperties.AutomationId="AutomationFeedback">
+                <controls:LocalizedTextBlock x:Name="FeedbackMessageBlock"
+                                             Classes="infoBarMessage"
+                                             OverflowMode="Wrap"
+                                             MaxLines="3" />
+            </Border>
+
             <StackPanel x:Name="SaveRevertPanel"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right"
