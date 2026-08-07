@@ -478,8 +478,16 @@ public partial class App : Application
         return false;
     }
 
-    private static async Task StartWindowsHostServicesAsync(MainWindow? mainWindow)
+    private async Task StartWindowsHostServicesAsync(MainWindow? mainWindow)
     {
+        if (!await new AvaloniaStartupCompatibilityCoordinator()
+                .EnsureCompatibleAsync(mainWindow)
+                .ConfigureAwait(false))
+        {
+            Dispatcher.UIThread.Post(() => ExitApplication(202));
+            return;
+        }
+
         await InitializePluginsAsync().ConfigureAwait(false);
 
         await new AvaloniaWindowsStartupCoordinator().RunAsync().ConfigureAwait(false);
