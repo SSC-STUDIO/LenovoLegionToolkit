@@ -311,6 +311,12 @@ public partial class DashboardPageViewModel : ObservableObject
             GpuOverclockState = refreshed;
             ApplyGpuOverclockState(refreshed);
         }
+        else
+        {
+            // The sliders are an editable draft. A rejected hardware write must
+            // not leave the dashboard showing values that were never applied.
+            ApplyGpuOverclockState(GpuOverclockState);
+        }
     }
 
     [RelayCommand]
