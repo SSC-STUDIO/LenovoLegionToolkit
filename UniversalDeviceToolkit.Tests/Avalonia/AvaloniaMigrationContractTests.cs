@@ -297,6 +297,13 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public void DashboardLayoutRefresh_DoesNotDiscardAnOpenEditorDraft()
+    {
+        DashboardPageViewModel.ShouldApplyPersistedDashboardLayout(false).Should().BeTrue();
+        DashboardPageViewModel.ShouldApplyPersistedDashboardLayout(true).Should().BeFalse();
+    }
+
+    [Fact]
     public void DashboardLayoutMarkup_ExposesBalanceModeSettingsEntry()
     {
         var root = RepositoryPaths.FindRoot();

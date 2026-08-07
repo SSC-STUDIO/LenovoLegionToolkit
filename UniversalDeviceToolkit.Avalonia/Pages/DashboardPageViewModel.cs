@@ -201,7 +201,11 @@ public partial class DashboardPageViewModel : ObservableObject
             foreach (var group in snapshot.FeatureGroups)
                 FeatureGroups.Add(group);
 
-            ApplyDashboardLayout(layout);
+            // The Avalonia editor is in-page, unlike WPF's modal editor. Do
+            // not replace an unsaved draft when the periodic telemetry refresh
+            // reads the persisted layout.
+            if (ShouldApplyPersistedDashboardLayout(IsLayoutEditorOpen))
+                ApplyDashboardLayout(layout);
             ApplyDashboardItemStates(itemStates);
             foreach (var item in DashboardGroups.SelectMany(group => group.Items))
             {
@@ -514,6 +518,9 @@ public partial class DashboardPageViewModel : ObservableObject
         _dashboardItemPickerGroup = null;
         RefreshDashboardItemCandidates();
     }
+
+    internal static bool ShouldApplyPersistedDashboardLayout(bool isLayoutEditorOpen) =>
+        !isLayoutEditorOpen;
 
     private DashboardGroupViewModel? _dashboardItemPickerGroup;
 
