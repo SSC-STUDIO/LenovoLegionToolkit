@@ -25,6 +25,7 @@ public sealed class MacroPage : UserControl
     private readonly Button _stopButton = new() { MinWidth = 96 };
     private readonly LocalizedTextBlock _statusBlock = new();
     private bool _isRefreshing;
+    private bool _isPreparingRecording;
 
     public MacroPage(IPlatformServices platformServices)
     {
@@ -258,16 +259,19 @@ public sealed class MacroPage : UserControl
             Value = Math.Clamp(slot.RepeatCount, 1, 10),
             MinWidth = 72,
             FormatString = "0x",
+            IsEnabled = slot.EventCount > 0 && !isRecording,
         };
         var ignoreDelays = new CheckBox
         {
             Content = Get("MacroPage_IgnoreDelays", "Ignore delays"),
             IsChecked = slot.IgnoreDelays,
+            IsEnabled = slot.EventCount > 0 && !isRecording,
         };
         var interrupt = new CheckBox
         {
             Content = Get("MacroPage_InterruptOnOtherKey", "Interrupt on other key"),
             IsChecked = slot.InterruptOnOtherKey,
+            IsEnabled = slot.EventCount > 0 && !isRecording,
         };
         repeat.ValueChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
         ignoreDelays.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
@@ -336,6 +340,9 @@ public sealed class MacroPage : UserControl
 
     private async Task StartRecordingAsync(ulong key, int selectedMode)
     {
+        if (_isPreparingRecording)
+            return;
+
         var mode = selectedMode switch
         {
             1 => MacroRecordingMode.KeyboardMouse,
@@ -343,13 +350,29 @@ public sealed class MacroPage : UserControl
             _ => MacroRecordingMode.Keyboard,
         };
 
-        if (!await _platformServices.StartMacroRecordingAsync(key, mode))
+        _isPreparingRecording = true;
+        try
         {
-            _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
-            return;
-        }
+            // The WPF host gives the user three seconds to move away from the record button
+            // before mouse-movement capture starts. Preserve that behavior in the native page.
+            if (mode == MacroRecordingMode.KeyboardMouseMovement)
+            {
+                _statusBlock.Text = Get("MacroRecordingWindow_Preparing_Title", "Preparing to record macro input...");
+                await Task.Delay(TimeSpan.FromSeconds(3));
+            }
 
-        await RefreshAsync();
+            if (!await _platformServices.StartMacroRecordingAsync(key, mode))
+            {
+                _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
+                return;
+            }
+
+            await RefreshAsync();
+        }
+        finally
+        {
+            _isPreparingRecording = false;
+        }
     }
 
     private async Task ClearSequenceAsync(ulong key)
