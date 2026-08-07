@@ -51,6 +51,33 @@ public sealed class OfficialPluginAvaloniaMigrationContractTests
         source.Should().Contain("CreateAvaloniaPage");
     }
 
+    [Fact]
+    public void AvaloniaHost_PrefersIAvaloniaPluginPageOverReflection()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+
+        source.Should().Contain("is IAvaloniaPluginPage");
+        source.Should().Contain("avaloniaPage.CreateAvaloniaPage()");
+        source.Should().Contain("GetMethod");
+    }
+
+    [Theory]
+    [InlineData("UniversalDeviceToolkit.Lib/Plugins/LegacyPluginContracts.cs")]
+    [InlineData("Plugins/SDK/Abstractions/IAvaloniaPluginPage.cs")]
+    public void IAvaloniaPluginPage_IsDeclaredInBothAbiContracts(string relativePath)
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(root, relativePath));
+
+        source.Should().Contain("interface IAvaloniaPluginPage");
+        source.Should().Contain("object CreateAvaloniaPage()");
+    }
+
     [Theory]
     [InlineData("CustomMouse", "new AvaloniaCustomMouseSettingsControl")]
     [InlineData("ShellIntegration", "new AvaloniaShellIntegrationSettingsControl")]

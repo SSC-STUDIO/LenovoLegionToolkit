@@ -269,6 +269,23 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
 
     public void OpenStyleSettingsWindow()
     {
+        var hostContext = SDK.PluginHostContextRuntime.Current;
+        if (hostContext.OwnerWindow is Avalonia.Controls.Window owner)
+        {
+            var window = new Avalonia.Controls.Window
+            {
+                Title = ShellIntegrationText.SettingsPageTitle,
+                Width = 760,
+                Height = 620,
+                MinWidth = 560,
+                MinHeight = 420,
+                WindowStartupLocation = Avalonia.Controls.WindowStartupLocation.CenterOwner,
+                Content = new AvaloniaShellIntegrationStyleSettingsControl(this),
+            };
+            _ = window.ShowDialog(owner);
+            return;
+        }
+
         SDK.PluginHostContextRuntime.Current.ShowDialog(
             new ShellIntegrationStyleSettingsWindow(this),
             ShellIntegrationText.SettingsPageTitle);
@@ -723,7 +740,7 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
     }
 }
 
-public class ShellIntegrationSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
+public class ShellIntegrationSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage, UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
 {
     private readonly ShellIntegrationPlugin _plugin;
 

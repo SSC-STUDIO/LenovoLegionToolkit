@@ -44,6 +44,17 @@ public class ShellIntegrationPluginTests
     }
 
     [Fact]
+    public void SettingsPage_AvaloniaFactoryProducesAvaloniaControl()
+    {
+        var plugin = new ShellIntegrationPlugin();
+
+        var avaloniaPage = Assert.IsAssignableFrom<IAvaloniaPluginPage>(plugin.GetSettingsPage());
+        var control = avaloniaPage.CreateAvaloniaPage();
+
+        Assert.IsType<AvaloniaShellIntegrationSettingsControl>(control);
+    }
+
+    [Fact]
     public void GetOptimizationCategory_ReturnsExpectedActions()
     {
         var plugin = new ShellIntegrationPlugin();

@@ -2368,6 +2368,65 @@ internal sealed class WindowsFeatureHostServices
         return Task.FromResult(true);
     }
 
+    public Task<bool> SaveMacroSequenceAsync(
+        ulong key,
+        IReadOnlyList<MacroEventItem> events,
+        int repeatCount,
+        bool ignoreDelays,
+        bool interruptOnOtherKey)
+    {
+        if (_macro is not MacroController controller
+            || events is null
+            || !MacroKeys.Contains(key)
+            || !MacroController.AllowedRepeatCounts.Contains(repeatCount))
+            return Task.FromResult(false);
+
+        var macroEvents = new List<MacroEvent>(events.Count);
+        var pendingDelay = TimeSpan.Zero;
+        foreach (var item in events)
+        {
+            if (IsDelayOnlyMacroEvent(item))
+            {
+                pendingDelay += item.Delay < TimeSpan.Zero ? TimeSpan.Zero : item.Delay;
+                continue;
+            }
+
+            if (!Enum.TryParse<MacroSource>(item.Source, ignoreCase: true, out var source)
+                || !Enum.TryParse<MacroDirection>(item.Direction, ignoreCase: true, out var direction)
+                || source == MacroSource.Unknown
+                || direction == MacroDirection.Unknown)
+                return Task.FromResult(false);
+
+            macroEvents.Add(new MacroEvent
+            {
+                Source = source,
+                Direction = direction,
+                Key = item.Key,
+                Point = new System.Drawing.Point(item.X, item.Y),
+                Delay = pendingDelay + (item.Delay < TimeSpan.Zero ? TimeSpan.Zero : item.Delay),
+            });
+            pendingDelay = TimeSpan.Zero;
+        }
+
+        var sequences = controller.GetSequences();
+        sequences[new MacroIdentifier(MacroSource.Keyboard, key)] = new MacroSequence
+        {
+            RepeatCount = repeatCount,
+            IgnoreDelays = ignoreDelays,
+            InterruptOnOtherKey = interruptOnOtherKey,
+            Events = [.. macroEvents],
+        };
+        controller.SetSequences(sequences);
+        return Task.FromResult(true);
+    }
+
+    private static bool IsDelayOnlyMacroEvent(MacroEventItem item) =>
+        string.Equals(item.Source, "Keyboard", StringComparison.OrdinalIgnoreCase)
+        && string.Equals(item.Direction, "Unknown", StringComparison.OrdinalIgnoreCase)
+        && item.Key == 0
+        && item.X == 0
+        && item.Y == 0;
+
     public Task<bool> ClearMacroSequenceAsync(ulong key)
     {
         if (_macro is not MacroController controller || !MacroKeys.Contains(key))
@@ -3529,6 +3588,12 @@ internal sealed class WindowsFeatureHostServices
     private static bool TryGetAvaloniaPageFactory(object page, out Func<object> factory)
     {
         factory = null!;
+        if (page is IAvaloniaPluginPage avaloniaPage)
+        {
+            factory = () => avaloniaPage.CreateAvaloniaPage() ?? new object();
+            return true;
+        }
+
         var method = page.GetType().GetMethod(
             "CreateAvaloniaPage",
             BindingFlags.Public | BindingFlags.Instance,
