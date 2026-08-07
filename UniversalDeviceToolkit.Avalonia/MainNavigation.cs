@@ -57,9 +57,22 @@ public static class MainNavigation
         return true;
     }
 
-    public static bool IsKnown(string? route) => route switch
+    public static bool IsKnown(string? route)
     {
-        Dashboard or Keyboard or Actions or Macro or WindowsOptimization or PluginExtensions or About or Settings => true,
-        _ => TryGetPluginId(route, out _) || TryGetPluginSettingsId(route, out _),
-    };
+        if (string.IsNullOrWhiteSpace(route))
+            return false;
+
+        var normalized = route.Trim();
+        if (TryGetPluginId(normalized, out _) || TryGetPluginSettingsId(normalized, out _))
+            return true;
+
+        return normalized.Equals(Dashboard, StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals(Keyboard, StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals(Actions, StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals(Macro, StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals(WindowsOptimization, StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals(PluginExtensions, StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals(About, StringComparison.OrdinalIgnoreCase)
+            || normalized.Equals(Settings, StringComparison.OrdinalIgnoreCase);
+    }
 }
