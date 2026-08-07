@@ -661,16 +661,17 @@ public sealed class MacroPage : UserControl
             return;
 
         var repeatCount = (int)Math.Round(repeatValue);
-        var saved = false;
-        if (_editedSequences.TryGetValue(key, out var events))
-            saved = await _platformServices.SaveMacroSequenceAsync(key, events, repeatCount, ignore, stop);
-        if (!saved)
-            saved = await _platformServices.SetMacroSequenceOptionsAsync(key, repeatCount, ignore, stop);
+        var hasEditedSequence = _editedSequences.TryGetValue(key, out var events);
+        var saved = ShouldPersistEditedSequence(hasEditedSequence)
+            ? await _platformServices.SaveMacroSequenceAsync(key, events!, repeatCount, ignore, stop)
+            : await _platformServices.SetMacroSequenceOptionsAsync(key, repeatCount, ignore, stop);
         if (!saved)
             _statusBlock.Text = Get("MacroPage_OptionsError", "Unable to save macro sequence options.");
 
         await RefreshAsync();
     }
+
+    internal static bool ShouldPersistEditedSequence(bool hasEditedSequence) => hasEditedSequence;
 
     private LocalizedTextBlock CreateText(
         string text,

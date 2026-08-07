@@ -12,6 +12,13 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class MacroWorkspaceContractTests
 {
     [Fact]
+    public void EditedSequence_MustUseTheFullSequenceSavePath()
+    {
+        MacroPage.ShouldPersistEditedSequence(hasEditedSequence: true).Should().BeTrue();
+        MacroPage.ShouldPersistEditedSequence(hasEditedSequence: false).Should().BeFalse();
+    }
+
+    [Fact]
     public async Task UnavailableHost_ExposesAnExplicitEmptyMacroWorkspace()
     {
         var service = new UnavailablePlatformServices();
