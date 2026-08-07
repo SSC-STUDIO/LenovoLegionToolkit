@@ -44,7 +44,6 @@ public partial class MainWindow : Window
     {
         _platformServices = platformServices;
         InitializeComponent();
-        AvaloniaAppearanceManager.Attach(this);
         ApplyNavigationPaneState();
         ApplyNavigationVisibility();
         ApplyTextDirection(LocalizationRuntime.CurrentCulture);
@@ -54,12 +53,59 @@ public partial class MainWindow : Window
         PropertyChanged += OnWindowPropertyChanged;
         SizeChanged += OnWindowSizeChanged;
         Activated += OnWindowActivated;
+        Closed += OnWindowClosed;
+        AvaloniaThemeManager.Instance.ThemeApplied += OnThemeApplied;
+        AvaloniaThemeManager.Instance.UiScaleChanged += OnUiScaleChanged;
+        ApplyUiScale(AvaloniaThemeManager.Instance.UiScaleFactor);
 #if WINDOWS
         Opened += OnOpened;
         Closing += OnClosing;
         SubscribeToPluginStateChanges();
         Closed += OnClosed;
 #endif
+    }
+
+    private void OnWindowClosed(object? sender, EventArgs e)
+    {
+        AvaloniaThemeManager.Instance.ThemeApplied -= OnThemeApplied;
+        AvaloniaThemeManager.Instance.UiScaleChanged -= OnUiScaleChanged;
+    }
+
+    // Re-applies the window backdrop whenever the theme manager re-applies
+    // appearance preferences so Mica/Acrylic follows the current theme.
+    private void OnThemeApplied(object? sender, EventArgs e) => ApplyWindowBackdrop();
+
+    private void OnUiScaleChanged(object? sender, double scale) => ApplyUiScale(scale);
+
+    private void ApplyUiScale(double scale)
+    {
+        if (ContentScaleTransform is null || !(scale > 0))
+            return;
+
+        ContentScaleTransform.LayoutTransform = new ScaleTransform(scale, scale);
+    }
+
+    private async void UpdateAvailableButton_Click(object? sender, global::Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (Application.Current is App app)
+            await app.ShowUpdateDialogAsync(this);
+    }
+
+    /// <summary>
+    /// Shows the update-available pill. The payload comes from the update
+    /// coordinator's UpdateAvailableChanged event (consumed through the
+    /// reflection bridge in App); its string form is used for the version label.
+    /// </summary>
+    internal void SetUpdateAvailable(object? releaseInfo)
+    {
+        var version = releaseInfo?.ToString();
+        UpdateAvailableLabel.Text = string.IsNullOrWhiteSpace(version)
+            ? Localization.AvaloniaLocalization.GetString("MainWindow_UpdateAvailable", "Update available")
+            : string.Format(
+                Localization.AvaloniaLocalization.GetString("MainWindow_UpdateAvailableVersion", "Update available ({0})"),
+                version);
+        UpdateAvailableButton.IsVisible = true;
+        global::Avalonia.Automation.AutomationProperties.SetName(UpdateAvailableButton, UpdateAvailableLabel.Text);
     }
 
     private void OnWindowPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -620,6 +666,11 @@ public partial class MainWindow : Window
         Navigate(_activePage);
         _ = UpdateHardwareDependentNavigationAsync();
         _ = RefreshPluginNavigationItemsAsync();
+
+        // Settings stores are persisted without change events; re-applying the
+        // persisted appearance on every shell refresh keeps theme, accent,
+        // font and scale in sync without a dedicated settings watcher.
+        AvaloniaThemeManager.Instance.Reapply();
     }
 
     /// <summary>

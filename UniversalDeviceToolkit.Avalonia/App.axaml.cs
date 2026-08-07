@@ -7,24 +7,31 @@ using Avalonia.Platform;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using UniversalDeviceToolkit.Abstractions.Localization;
-using UniversalDeviceToolkit.Abstractions.Hardware;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Avalonia.Windows;
-using UniversalDeviceToolkit.Shared.Settings;
 using UniversalDeviceToolkit.Shared.Diagnostics;
 using UniversalDeviceToolkit.Shared.Logging;
 using UniversalDeviceToolkit.Platform.Linux;
 using UniversalDeviceToolkit.Platform.MacOS;
 #if WINDOWS
+using System.Reflection;
 using Autofac;
 using UniversalDeviceToolkit.Avalonia.Startup;
 using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.WindowsDeviceAdapter;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib;
-using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Automation;
+using UniversalDeviceToolkit.Lib.Automation.CLI;
+using UniversalDeviceToolkit.Lib.Automation.Pipeline;
+using UniversalDeviceToolkit.Lib.Automation.Utils;
 using UniversalDeviceToolkit.Lib.Automation.Optimization;
+using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Features.Hybrid;
+using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
+using UniversalDeviceToolkit.Lib.Features.PanelLogo;
+using UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -46,6 +53,8 @@ public partial class App : Application
     private int _handlingFatalException;
     private int _shutdownStarted;
     private bool _exceptionHandlersRegistered;
+    private object? _pendingUpdateReleaseInfo = null;
+    private NativeMenuItem? _trayPipelinesItem;
 
 #if WINDOWS
     private ApplicationSettings? _applicationSettings;
@@ -54,6 +63,9 @@ public partial class App : Application
     private AvaloniaOsdOverlayController? _osdOverlay;
     private AvaloniaUpdateCheckCoordinator? _updateCheckCoordinator;
 #endif
+
+    /// <summary>Command-line startup switches parsed by Program.cs.</summary>
+    public static AvaloniaStartupFlags StartupFlags => AvaloniaStartupFlags.Current;
 
     public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
 
@@ -110,33 +122,57 @@ public partial class App : Application
             }
 #endif
             ApplyPersistedTheme();
-#if WINDOWS
-            _applicationSettings ??= WindowsAvaloniaSettingsService.SharedApplicationSettings;
-#endif
-            desktop.MainWindow = new MainWindow(PlatformServices);
-#if WINDOWS
-            PluginHostContext.SetCurrent(new AvaloniaPluginHostContext(
-                () => desktop.MainWindow as MainWindow));
-#endif
-            // Minimize to tray instead of closing
-            desktop.MainWindow.Closing += OnMainWindowClosing;
-
-            // Set up system tray icon programmatically
-            SetupTrayIcon();
-#if WINDOWS
-            _notificationManager = new AvaloniaNotificationManager(
-                _applicationSettings,
-                () => desktop.MainWindow as MainWindow,
-                IoCContainer.Resolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>());
-            _singleInstanceGuard!.StartListener(() =>
-                global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
-            _updateCheckCoordinator = AvaloniaUpdateCheckCoordinator.Create();
-            RequestAutomaticUpdateCheck();
-            _ = StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow);
-#endif
-            Dispatcher.UIThread.Post(CheckPendingCrashReports, DispatcherPriority.Background);
+            if (IsFirstRunLanguageSelection())
+                RunFirstRunLanguageGateAsync(desktop);
+            else
+                CompleteStartup(desktop);
         }
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void CompleteStartup(IClassicDesktopStyleApplicationLifetime desktop)
+    {
+#if WINDOWS
+        _applicationSettings ??= WindowsAvaloniaSettingsService.SharedApplicationSettings;
+#endif
+        ApplyStartupFlags();
+        desktop.MainWindow = new MainWindow(PlatformServices);
+#if WINDOWS
+        PluginHostContext.SetCurrent(new AvaloniaPluginHostContext(
+            () => desktop.MainWindow as MainWindow));
+#endif
+        // Minimize to tray instead of closing
+        desktop.MainWindow.Closing += OnMainWindowClosing;
+
+        // Set up system tray icon programmatically
+        SetupTrayIcon();
+#if WINDOWS
+        _notificationManager = new AvaloniaNotificationManager(
+            _applicationSettings,
+            () => desktop.MainWindow as MainWindow,
+            IoCContainer.Resolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>());
+        _singleInstanceGuard!.StartListener(() =>
+            global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
+        _updateCheckCoordinator = AvaloniaUpdateCheckCoordinator.Create();
+        SubscribeToUpdateCoordinator(_updateCheckCoordinator);
+        RequestAutomaticUpdateCheck();
+        _ = StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow);
+#endif
+        if (StartupFlags.Minimized && desktop.MainWindow is { } window)
+        {
+            // Applied after the window opens so the persisted placement restore
+            // (Opened handler) cannot override the requested minimized state.
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (window.WindowState != WindowState.Minimized)
+                    window.WindowState = WindowState.Minimized;
+            });
+        }
+
+        if (_pendingUpdateReleaseInfo is not null && desktop.MainWindow is MainWindow mainWindow)
+            mainWindow.SetUpdateAvailable(_pendingUpdateReleaseInfo);
+
+        Dispatcher.UIThread.Post(CheckPendingCrashReports, DispatcherPriority.Background);
     }
 
 #if WINDOWS
@@ -169,14 +205,105 @@ public partial class App : Application
     }
 #endif
 
-    private void ApplyPersistedTheme()
+    /// <summary>
+    /// Applies the persisted appearance preferences through the theme manager
+    /// (theme variant, accent color, font family and UI scale).
+    /// </summary>
+    private void ApplyPersistedTheme() => AvaloniaThemeManager.Instance.Apply();
+
+    /// <summary>
+    /// Applies command-line startup switches. Safe-start / reset switches are
+    /// owned by the Windows startup coordinator and left untouched here.
+    /// </summary>
+    private void ApplyStartupFlags()
     {
+        var flags = StartupFlags;
 #if WINDOWS
-        AvaloniaAppearanceManager.Apply(
-            _applicationSettings ?? WindowsAvaloniaSettingsService.SharedApplicationSettings);
-#else
-        AvaloniaAppearanceManager.Apply(new AvaloniaThemePreferences().Store);
+        if (flags.IsTraceEnabled)
+        {
+            try
+            {
+                Log.Instance.IsTraceEnabled = true;
+            }
+            catch
+            {
+                // Trace remains best-effort; a logging failure must not block startup.
+            }
+        }
+
+        try
+        {
+            IoCContainer.TryResolve<HttpClientFactory>()?
+                .SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Failed to apply startup proxy flags.", ex);
+        }
+
+        try
+        {
+            if (IoCContainer.TryResolve<PowerModeFeature>() is { } powerMode)
+                powerMode.AllowAllPowerModesOnBattery = flags.AllowAllPowerModesOnBattery;
+            if (IoCContainer.TryResolve<RGBKeyboardBacklightController>() is { } rgbKeyboard)
+                rgbKeyboard.ForceDisable = flags.ForceDisableRgbKeyboardSupport;
+            if (IoCContainer.TryResolve<SpectrumKeyboardBacklightController>() is { } spectrumKeyboard)
+                spectrumKeyboard.ForceDisable = flags.ForceDisableSpectrumKeyboardSupport;
+            if (flags.ForceDisableLenovoLighting)
+            {
+                if (IoCContainer.TryResolve<WhiteKeyboardLenovoLightingBacklightFeature>() is { } whiteLighting)
+                    whiteLighting.ForceDisable = true;
+                if (IoCContainer.TryResolve<PanelLogoLenovoLightingBacklightFeature>() is { } panelLighting)
+                    panelLighting.ForceDisable = true;
+                if (IoCContainer.TryResolve<PortsBacklightFeature>() is { } portsLighting)
+                    portsLighting.ForceDisable = true;
+            }
+            if (IoCContainer.TryResolve<IGPUModeFeature>() is { } gpuMode)
+                gpuMode.ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
+            if (IoCContainer.TryResolve<DGPUNotify>() is { } dgpuNotify)
+                dgpuNotify.ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
+            if (flags.DisableUpdateChecker && IoCContainer.TryResolve<UpdateChecker>() is { } updateChecker)
+            {
+                updateChecker.Disable = true;
+                updateChecker.DisableReason = AvaloniaStartupFlags.DisableUpdateCheckerSwitch;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Failed to apply startup hardware flags.", ex);
+        }
 #endif
+    }
+
+    /// <summary>
+    /// The first-run language selector runs instead of the main window whenever
+    /// no language has been persisted yet (missing "lang" marker file).
+    /// </summary>
+    private static bool IsFirstRunLanguageSelection()
+    {
+        try
+        {
+            return !File.Exists(LocalizationRuntime.LanguageFilePath);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async void RunFirstRunLanguageGateAsync(IClassicDesktopStyleApplicationLifetime desktop)
+    {
+        var selector = new AvaloniaLanguageSelectorWindow(AvaloniaLanguagePackServiceFactory.Create());
+        desktop.MainWindow = selector;
+        selector.Show();
+        var outcome = await selector.GateOutcome.ConfigureAwait(true);
+        if (outcome == AvaloniaLanguageSelectorWindow.LanguageGateOutcome.Exit)
+        {
+            desktop.Shutdown();
+            return;
+        }
+
+        CompleteStartup(desktop);
     }
 
     private void SetupTrayIcon()
@@ -188,18 +315,34 @@ public partial class App : Application
         {
             Items =
             {
-                new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Show", "Show")) { Command = ShowCommand },
-                new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Settings", "Settings")) { Command = SettingsCommand },
+                CreateNavigationMenuItem("Nav_Dashboard", "Dashboard", MainNavigation.Dashboard),
+                CreateNavigationMenuItem("MainWindow_NavigationItem_Keyboard", "Keyboard", MainNavigation.Keyboard),
+                CreateNavigationMenuItem("MainWindow_NavigationItem_Actions", "Automation", MainNavigation.Actions),
+                CreateNavigationMenuItem("MainWindow_NavigationItem_Macro", "Macro", MainNavigation.Macro),
+                CreateNavigationMenuItem("MainWindow_NavigationItem_WindowsOptimization", "System optimization", MainNavigation.WindowsOptimization),
+                CreateNavigationMenuItem("MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions", MainNavigation.PluginExtensions),
+                CreateNavigationMenuItem("Nav_About", "About", MainNavigation.About),
                 new NativeMenuItemSeparator(),
-                new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Exit", "Exit")) { Command = ExitCommand },
             }
         };
 
+        _trayPipelinesItem = new NativeMenuItem(AvaloniaLocalization.GetString("Tray_Pipelines", "Automation pipelines"));
+        _trayPipelinesItem.IsVisible = false;
+        menu.Items.Add(_trayPipelinesItem);
+#if WINDOWS
+        _ = RefreshTrayPipelinesMenuAsync(_trayPipelinesItem);
+#endif
+        menu.Items.Add(new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Show", "Show")) { Command = ShowCommand });
+        menu.Items.Add(new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Settings", "Settings")) { Command = SettingsCommand });
+        menu.Items.Add(new NativeMenuItemSeparator());
+        menu.Items.Add(new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Exit", "Exit")) { Command = ExitCommand });
+
         _trayIcon = new TrayIcon
         {
-            ToolTipText = AvaloniaLocalization.GetString("Window_Title", "Universal Device Toolkit"),
             Menu = menu,
         };
+        if (!StartupFlags.DisableTrayTooltip)
+            _trayIcon.ToolTipText = AvaloniaLocalization.GetString("Window_Title", "Universal Device Toolkit");
 
         // Try to load icon from Avalonia resource; falls back gracefully if unavailable
         try
@@ -212,6 +355,87 @@ public partial class App : Application
             // Icon resource not found; tray icon will display without a custom icon
         }
     }
+
+    private static NativeMenuItem CreateNavigationMenuItem(string localizationKey, string fallback, string route)
+    {
+        var label = AvaloniaLocalization.GetString(localizationKey, fallback);
+        return new NativeMenuItem(label)
+        {
+            Command = new RelayCommand(() => NavigateMainWindow(route)),
+        };
+    }
+
+    private static void NavigateMainWindow(string route)
+    {
+        if (Application.Current is not App { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow mainWindow } })
+            return;
+
+        mainWindow.RestoreFromTray();
+        mainWindow.Navigate(route);
+    }
+
+#if WINDOWS
+    /// <summary>
+    /// Best-effort manual-pipeline quick actions under the tray "Automation
+    /// pipelines" submenu (WPF TrayHelper parity). Manual pipelines are those
+    /// without a trigger; the list is refreshed on every tray rebuild.
+    /// </summary>
+    private async Task RefreshTrayPipelinesMenuAsync(NativeMenuItem item)
+    {
+        var submenu = new NativeMenu();
+        try
+        {
+            var automation = IoCContainer.TryResolve<AutomationProcessor>();
+            if (automation is null)
+            {
+                item.IsVisible = false;
+                return;
+            }
+
+            var pipelines = await automation.GetPipelinesAsync().ConfigureAwait(true);
+            foreach (var pipeline in pipelines.Where(p => p.Trigger is null))
+            {
+                var displayName = PipelineNameLocalizer.LocalizeStoredName(pipeline.Name)
+                    ?? pipeline.Name
+                    ?? AvaloniaLocalization.GetString("Unnamed", "Unnamed");
+                var menuItem = new NativeMenuItem(displayName);
+                var captured = pipeline;
+                menuItem.Click += (_, _) => _ = RunPipelineFromTrayAsync(captured);
+                submenu.Items.Add(menuItem);
+            }
+
+            if (submenu.Items.Count > 0)
+            {
+                item.Menu = submenu;
+                item.IsVisible = true;
+            }
+            else
+            {
+                item.Menu = null;
+                item.IsVisible = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Failed to refresh tray automation pipelines.", ex);
+            item.Menu = null;
+            item.IsVisible = false;
+        }
+    }
+
+    private static async Task RunPipelineFromTrayAsync(AutomationPipeline pipeline)
+    {
+        try
+        {
+            if (IoCContainer.TryResolve<AutomationProcessor>() is { } automation)
+                await automation.RunNowAsync(pipeline).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Failed to run automation pipeline from tray.", ex);
+        }
+    }
+#endif
 
     private void OnCultureChanged(object? sender, CultureChangedEventArgs e)
     {
@@ -307,6 +531,9 @@ public partial class App : Application
     private void RequestAutomaticUpdateCheck()
     {
 #if WINDOWS
+        if (StartupFlags.DisableUpdateChecker)
+            return;
+
         _ = _updateCheckCoordinator?.CheckAsync();
 #endif
     }
@@ -371,6 +598,89 @@ public partial class App : Application
         }
         else if (exitCode is { } code)
             Environment.ExitCode = code;
+    }
+
+    /// <summary>
+    /// The update coordinator exposes its availability through the
+    /// UpdateAvailableChanged / ShowUpdateAsync API owned by the update-check
+    /// agent. The bridge consumes those members reflectively so this shell
+    /// compiles and runs safely whether or not the API is present yet.
+    /// </summary>
+#if WINDOWS
+    private void SubscribeToUpdateCoordinator(AvaloniaUpdateCheckCoordinator? coordinator)
+    {
+        if (coordinator is null)
+            return;
+
+        try
+        {
+            var eventInfo = coordinator.GetType().GetEvent("UpdateAvailableChanged");
+            if (eventInfo is null
+                || eventInfo.EventHandlerType is not { IsGenericType: true } handlerType
+                || handlerType.GetGenericArguments() is not [{ } payloadType])
+                return;
+
+            var binder = (IUpdateEventBinder)Activator.CreateInstance(
+                typeof(UpdateEventBinder<>).MakeGenericType(payloadType))!;
+            binder.Attach(coordinator, eventInfo, OnUpdateAvailableChanged);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Update coordinator event bridge is unavailable.", ex);
+        }
+    }
+
+    private void OnUpdateAvailableChanged(object? releaseInfo)
+    {
+        Dispatcher.UIThread.Post(() =>
+        {
+            _pendingUpdateReleaseInfo = releaseInfo;
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow mainWindow })
+                mainWindow.SetUpdateAvailable(releaseInfo);
+        });
+    }
+
+    private interface IUpdateEventBinder
+    {
+        void Attach(object source, EventInfo eventInfo, Action<object?> payloadHandler);
+    }
+
+    private sealed class UpdateEventBinder<T> : IUpdateEventBinder
+    {
+        public void Attach(object source, EventInfo eventInfo, Action<object?> payloadHandler)
+        {
+            eventInfo.AddEventHandler(source, new Action<T>(payload => payloadHandler(payload)));
+        }
+    }
+#endif
+
+    /// <summary>
+    /// Opens the update dialog owned by the update coordinator. Returns without
+    /// doing anything when the coordinator or its ShowUpdateAsync API is absent.
+    /// </summary>
+    internal async Task ShowUpdateDialogAsync(MainWindow owner)
+    {
+#if WINDOWS
+        var coordinator = _updateCheckCoordinator;
+        if (coordinator is null)
+            return;
+
+        try
+        {
+            var method = coordinator.GetType().GetMethod("ShowUpdateAsync", new[] { typeof(Window) });
+            if (method is null)
+                return;
+
+            if (method.ReturnType == typeof(Task))
+                await ((Task)method.Invoke(coordinator, [owner])!).ConfigureAwait(true);
+            else if (method.ReturnType == typeof(void))
+                method.Invoke(coordinator, [owner]);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Failed to show the update dialog.", ex);
+        }
+#endif
     }
 
     private void RegisterExceptionHandlers()
@@ -523,7 +833,13 @@ public partial class App : Application
         }
 
         if (mainWindow is not null)
-            Dispatcher.UIThread.Post(() => _ = mainWindow.RefreshPluginNavigationAsync());
+            Dispatcher.UIThread.Post(() =>
+            {
+                _ = mainWindow.RefreshPluginNavigationAsync();
+                // Best effort: rebuild the tray menu so newly visible plugin
+                // routes and pipeline quick actions stay current.
+                SetupTrayIcon();
+            });
 
         Dispatcher.UIThread.Post(() =>
         {
@@ -543,10 +859,31 @@ public partial class App : Application
         }
     }
 
-    private static async Task InitializePluginsAsync()
+    private async Task InitializePluginsAsync()
     {
         try
         {
+            // WPF parity: skip the plugin directory scan entirely when safe-start
+            // is active, extensions are disabled, or no plugins are installed.
+            if (StartupFlags.SafeStart)
+            {
+                Log.Instance.Trace("Safe-start active; skipping plugin discovery and loading.");
+                return;
+            }
+
+            var settings = _applicationSettings?.Store;
+            if (settings is not { ExtensionsEnabled: true })
+            {
+                Log.Instance.Trace("Extensions disabled in settings; skipping plugin directory scan.");
+                return;
+            }
+
+            if (!HasInstalledPlugins())
+            {
+                Log.Instance.Trace("No installed plugins found; skipping plugin directory scan.");
+                return;
+            }
+
             var pluginManager = IoCContainer.TryResolve<IPluginManager>();
             if (pluginManager is null)
                 return;
@@ -558,6 +895,22 @@ public partial class App : Application
         catch (Exception ex)
         {
             Log.Instance.Trace("Avalonia plugin startup failed.", ex);
+        }
+    }
+
+    private static bool HasInstalledPlugins()
+    {
+        try
+        {
+            return PluginPaths.GetAllPossiblePluginsDirectories()
+                .Where(Directory.Exists)
+                .SelectMany(path => Directory.EnumerateDirectories(path))
+                .Any(PluginPaths.ContainsPlugin);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Failed to enumerate installed plugins.", ex);
+            return false;
         }
     }
 #endif

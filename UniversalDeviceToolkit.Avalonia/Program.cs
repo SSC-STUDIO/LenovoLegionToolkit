@@ -3,6 +3,7 @@ using Avalonia;
 using UniversalDeviceToolkit.Lib.Automation.Optimization;
 #endif
 using UniversalDeviceToolkit.Avalonia;
+using UniversalDeviceToolkit.Avalonia.Services;
 
 namespace UniversalDeviceToolkit.Avalonia;
 
@@ -11,6 +12,8 @@ internal static class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        AvaloniaStartupFlags.Current = AvaloniaStartupFlags.Parse(args);
+
 #if WINDOWS
         var elevatedWorkerExitCode = WindowsOptimizationElevationBridge
             .TryRunWorkerAsync(args)
@@ -27,7 +30,12 @@ internal static class Program
     }
 
     public static AppBuilder BuildAvaloniaApp()
-        => AppBuilder.Configure<App>()
-            .UsePlatformDetect()
-            .LogToTrace();
+    {
+        var builder = AppBuilder.Configure<App>();
+        // Software rendering must be decided before the windowing subsystem
+        // initializes (UseWin32 captures the options inside UsePlatformDetect);
+        // the helper is a no-op on non-Windows platforms.
+        AvaloniaRenderingCompatibilityHelper.Configure(builder);
+        return builder.UsePlatformDetect().LogToTrace();
+    }
 }

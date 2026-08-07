@@ -95,4 +95,30 @@ public sealed class AvaloniaWindowPlacementCoordinatorTests
         source.Should().Contain("AvaloniaWindowPlacementCoordinator.Restore(");
         source.Should().Contain("AvaloniaWindowPlacementCoordinator.Capture(");
     }
+
+    [Fact]
+    public void MinimizedStartup_ShouldNotDisturbPlacementRestore()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var appSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "App.axaml.cs"));
+
+        // The --minimized switch is applied after the window opens (dispatcher
+        // post), so the Opened placement restore still runs first and the
+        // persisted normal bounds are captured for the next close.
+        appSource.Should().Contain("StartupFlags.Minimized");
+        appSource.Should().Contain("WindowState.Minimized");
+        appSource.Should().Contain("Dispatcher.UIThread.Post");
+
+        var mainWindowSource = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "MainWindow.axaml.cs"));
+        var restoreSection = mainWindowSource[mainWindowSource.IndexOf(
+            "private void RestoreWindowPlacement()", StringComparison.Ordinal)..];
+        restoreSection.Should().Contain("_windowPlacementRestored = true;");
+        restoreSection.Should().Contain("WindowState = WindowState.Maximized");
+    }
 }

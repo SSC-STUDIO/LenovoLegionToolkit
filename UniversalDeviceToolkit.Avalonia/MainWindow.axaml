@@ -30,15 +30,31 @@
              Avalonia's content presenter. Keep the navigation rail readable in
              both theme variants, including dynamically-created plugin entries. -->
         <Style Selector="Button.navButton controls|LocalizedTextBlock">
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource UdtTextPrimaryBrush}" />
         </Style>
         <Style Selector="Button.navButton controls|NavigationIcon">
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource UdtTextPrimaryBrush}" />
         </Style>
         <Style Selector="Button.navToggleButton">
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="Padding" Value="10" />
             <Setter Property="MinHeight" Value="40" />
+        </Style>
+        <!-- Update indicator pill shown only when a newer release is available. -->
+        <Style Selector="Button.updatePill">
+            <Setter Property="Background" Value="{DynamicResource StatusInfoBrush}" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="CornerRadius" Value="{DynamicResource CornerRadiusCompact}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.updatePill controls|LocalizedTextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource UdtTextPrimaryBrush}" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+        <Style Selector="Button.updatePill:pointerover">
+            <Setter Property="Opacity" Value="0.88" />
         </Style>
     </Window.Styles>
     <DockPanel Background="{DynamicResource AppBackgroundBrush}">
@@ -224,8 +240,26 @@
                 Background="{DynamicResource AppSurfaceCardBrush}"
                 CornerRadius="{DynamicResource CornerRadiusSurface}"
                 ClipToBounds="True">
-            <ContentControl x:Name="MainContent"
-                            automation:AutomationProperties.AutomationId="AvaloniaMainContent" />
+            <Grid>
+                <!-- Scale host managed by AvaloniaThemeManager for the persisted UI scale. -->
+                <LayoutTransformControl x:Name="ContentScaleTransform"
+                                        automation:AutomationProperties.AutomationId="AvaloniaContentScaleHost">
+                    <ContentControl x:Name="MainContent"
+                                    automation:AutomationProperties.AutomationId="AvaloniaMainContent" />
+                </LayoutTransformControl>
+                <Button x:Name="UpdateAvailableButton"
+                        automation:AutomationProperties.AutomationId="AvaloniaUpdateAvailableButton"
+                        automation:AutomationProperties.Name="{local:Loc Key=MainWindow_UpdateAvailable, Fallback=Update available}"
+                        Classes="updatePill"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,20,20,0"
+                        IsVisible="False"
+                        Click="UpdateAvailableButton_Click">
+                    <controls:LocalizedTextBlock x:Name="UpdateAvailableLabel"
+                                                 Text="{local:Loc Key=MainWindow_UpdateAvailable, Fallback=Update available}" />
+                </Button>
+            </Grid>
         </Border>
     </DockPanel>
 </Window>

@@ -37,6 +37,34 @@ public sealed class AvaloniaBackdropContractTests
     }
 
     [Fact]
+    public void ThemeChanges_ShouldReApplyTheWindowBackdrop()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "MainWindow.axaml.cs"));
+
+        source.Should().Contain("AvaloniaThemeManager.Instance.ThemeApplied += OnThemeApplied;");
+        source.Should().Contain("OnThemeApplied");
+        source.Should().Contain("ApplyWindowBackdrop()");
+        source.Should().Contain("AvaloniaThemeManager.Instance.Reapply();");
+    }
+
+    [Fact]
+    public void UpdateCoordinator_ShouldSurfaceUpdateIndicatorWithoutHardDependency()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var appSource = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "App.axaml.cs"));
+        var mainWindowSource = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "MainWindow.axaml.cs"));
+        var markup = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "MainWindow.axaml"));
+
+        appSource.Should().Contain("SubscribeToUpdateCoordinator");
+        appSource.Should().Contain("ShowUpdateDialogAsync");
+        mainWindowSource.Should().Contain("SetUpdateAvailable");
+        mainWindowSource.Should().Contain("UpdateAvailableButton_Click");
+        markup.Should().Contain("x:Name=\"UpdateAvailableButton\"");
+        markup.Should().Contain("AvaloniaUpdateAvailableButton");
+    }
+
+    [Fact]
     public void TrayRestore_ShouldUseTheSameDeferredSurfaceRefreshPathAsNativeRestore()
     {
         var root = RepositoryPaths.FindRoot();
