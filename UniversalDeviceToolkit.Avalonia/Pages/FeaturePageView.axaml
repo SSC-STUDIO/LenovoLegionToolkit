@@ -145,6 +145,11 @@
                                 Click="OptimizationCommandButton_Click"
                                 Tag="optimization-apply-recommended"
                                 automation:AutomationProperties.AutomationId="AvaloniaApplyRecommendedButton" />
+                        <Button x:Name="OptimizationClearButton"
+                                Content="{local:Loc Key=WindowsOptimizationPage_ClearSelection_Button, Fallback=Clear selection}"
+                                Click="OptimizationCommandButton_Click"
+                                Tag="optimization-clear"
+                                automation:AutomationProperties.AutomationId="AvaloniaOptimizationClearButton" />
                     </StackPanel>
                     <StackPanel x:Name="CleanupCommands"
                                 Orientation="Horizontal"
@@ -163,6 +168,66 @@
                                 Tag="cleanup-clear"
                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupClearButton" />
                     </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border x:Name="CatalogOfflineBanner"
+                    IsVisible="False"
+                    Classes="infoBar error">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock x:Name="CatalogOfflineTitle"
+                                   FontWeight="Medium"
+                                   FontSize="{StaticResource FontSizeBody}"
+                                   Text="{local:Loc Key=PluginExtensionsPage_StoreOffline_Title, Fallback=Plugin store unavailable}" />
+                        <TextBlock x:Name="CatalogOfflineMessage"
+                                   FontSize="{StaticResource FontSizeCaption}"
+                                   TextWrapping="Wrap"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <Button x:Name="CatalogRetryButton"
+                            Grid.Column="1"
+                            Content="{local:Loc Key=PluginExtensionsPage_Retry, Fallback=Retry}"
+                            Click="CatalogRetryButton_Click"
+                            VerticalAlignment="Center"
+                            automation:AutomationProperties.AutomationId="AvaloniaPluginCatalogRetryButton" />
+                </Grid>
+            </Border>
+
+            <StackPanel x:Name="CatalogSummaryPanel"
+                        IsVisible="False"
+                        Orientation="Horizontal"
+                        Spacing="8" />
+
+            <Border x:Name="CleanupProgressCard"
+                    IsVisible="False"
+                    Background="{DynamicResource CardBackgroundBrush}"
+                    BorderBrush="{DynamicResource CardBorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{StaticResource CornerRadiusCard}"
+                    Padding="16">
+                <StackPanel Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <controls:LocalizedTextBlock x:Name="CleanupProgressText"
+                                                     FontWeight="Medium"
+                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                     OverflowMode="Wrap"
+                                                     MaxLines="2"
+                                                     automation:AutomationProperties.AutomationId="AvaloniaCleanupProgressText" />
+                        <controls:LocalizedTextBlock x:Name="CleanupProgressPercentage"
+                                                     Grid.Column="1"
+                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </Grid>
+                    <ProgressBar x:Name="CleanupProgressBar"
+                                 IsIndeterminate="True"
+                                 Height="6"
+                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupProgressBar" />
+                    <controls:LocalizedTextBlock x:Name="CleanupSummaryText"
+                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                 OverflowMode="Wrap"
+                                                 MaxLines="3"
+                                                 IsVisible="False"
+                                                 automation:AutomationProperties.AutomationId="AvaloniaCleanupSummaryText" />
                 </StackPanel>
             </Border>
 

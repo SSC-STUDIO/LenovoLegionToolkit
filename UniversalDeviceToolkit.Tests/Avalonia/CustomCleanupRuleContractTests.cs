@@ -62,4 +62,47 @@ public sealed class CustomCleanupRuleContractTests
 
         state.CustomCleanupRules.Should().BeNull();
     }
+
+    [Fact]
+    public void CleanupSummary_FormatsFreedBytesWithWpfWording()
+    {
+        var summary = AvaloniaProgressToastHelper.FormatCleanupSummary(
+            4,
+            TimeSpan.FromSeconds(12.4),
+            5 * 1024 * 1024);
+
+        summary.Should().Contain("5 MB");
+        summary.Should().Contain("12.4");
+    }
+
+    [Fact]
+    public void CleanupSummary_WithoutMeasuredSize_ReportsItemCountAndDuration()
+    {
+        var summary = AvaloniaProgressToastHelper.FormatCleanupSummary(
+            3,
+            TimeSpan.FromSeconds(7.5),
+            null);
+
+        summary.Should().Contain("3");
+        summary.Should().Contain("7.5");
+    }
+
+    [Fact]
+    public void CleanupSummary_FormatBytes_ParitiesWpf()
+    {
+        AvaloniaProgressToastHelper.FormatBytes(0).Should().Be("0 B");
+        AvaloniaProgressToastHelper.FormatBytes(1024).Should().Be("1 KB");
+        AvaloniaProgressToastHelper.FormatBytes(1536).Should().Be("1.5 KB");
+        AvaloniaProgressToastHelper.FormatBytes(1024L * 1024 * 1024 * 3).Should().Be("3 GB");
+    }
+
+    [Fact]
+    public void ProgressToastHelper_IsNoOpWhenHostHasNoProgressApi()
+    {
+        AvaloniaProgressToastHelper.Start("System optimization").Should().Be(Guid.Empty);
+        AvaloniaProgressToastHelper.Update(Guid.Empty, 42, "Running cleanup...");
+        AvaloniaProgressToastHelper.Complete(Guid.Empty);
+        AvaloniaProgressToastHelper.Update(Guid.NewGuid(), 100);
+        AvaloniaProgressToastHelper.Complete(Guid.NewGuid());
+    }
 }
