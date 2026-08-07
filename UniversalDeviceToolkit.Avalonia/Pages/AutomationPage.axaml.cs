@@ -33,6 +33,7 @@ public partial class AutomationPage : UserControl
 {
     private readonly IPlatformServices _platformServices;
     private readonly List<PipelineRow> _rows = [];
+    private IReadOnlyList<AutomationPipelineItem> _workspacePipelines = Array.Empty<AutomationPipelineItem>();
     private IReadOnlyList<AutomationTriggerOption> _triggerOptions = Array.Empty<AutomationTriggerOption>();
     private IReadOnlyList<AutomationStepOption> _stepOptions = Array.Empty<AutomationStepOption>();
     private static readonly string[] ManualPipelineIcons =
@@ -108,6 +109,7 @@ public partial class AutomationPage : UserControl
 #endif
             _stepOptions = await _platformServices.GetAutomationStepOptionsAsync();
             var state = await _platformServices.GetAutomationWorkspaceAsync();
+            _workspacePipelines = state.Pipelines;
             EnabledToggle.IsChecked = state.IsEnabled;
             PipelineList.Children.Clear();
             _rows.Clear();
@@ -118,6 +120,11 @@ public partial class AutomationPage : UserControl
                 _rows.Add(row);
                 PipelineList.Children.Add(row.Card);
             }
+
+#if WINDOWS
+            RefreshAutomaticTriggerEditors();
+            RefreshQuickActionTargetEditors();
+#endif
 
             EmptyText.IsVisible = _rows.Count == 0;
             _isDirty = false;
@@ -261,17 +268,23 @@ public partial class AutomationPage : UserControl
 
         var stepsPanel = new StackPanel { Spacing = 5 };
         var stepRows = new List<StepRow>();
-        var manualPipelines = pipeline.IsAutomatic ? Array.Empty<AutomationPipelineItem>() : new[] { pipeline };
+#if WINDOWS
+        var manualPipelines = pipeline.IsAutomatic
+            ? GetManualQuickActionTargets()
+            : Array.Empty<AutomationPipelineItem>();
+#else
+        var manualPipelines = Array.Empty<AutomationPipelineItem>();
+#endif
         foreach (var step in pipeline.Steps)
         {
             var option = FindStepOption(step);
-            var stepRow = CreateStepRow(option, step.ConfigurationJson, stepsPanel, stepRows, manualPipelines);
+            var stepRow = CreateStepRow(option, step.ConfigurationJson, stepsPanel, stepRows, pipeline.IsAutomatic, manualPipelines);
             stepRows.Add(stepRow);
             stepsPanel.Children.Add(stepRow.Card);
         }
         var addStepEditor = new ComboBox
         {
-            ItemsSource = _stepOptions,
+            ItemsSource = GetAvailableStepOptions(pipeline.IsAutomatic),
             PlaceholderText = Get("AutomationPipelineControl_AddStep", "Add step"),
             MinWidth = 220,
         };
@@ -332,7 +345,16 @@ public partial class AutomationPage : UserControl
             AddTriggerButton = addTriggerButton,
 #endif
         };
-        nameEditor.TextChanged += (_, _) => { if (!_isRefreshing) MarkDirty(); };
+        nameEditor.TextChanged += (_, _) =>
+        {
+            if (_isRefreshing)
+                return;
+            MarkDirty();
+#if WINDOWS
+            if (!row.IsAutomatic)
+                RefreshQuickActionTargetEditors();
+#endif
+        };
         if (iconEditor is not null)
             iconEditor.TextChanged += (_, _) => { if (!_isRefreshing) MarkDirty(); };
         if (triggerConfigEditor is not null)
@@ -354,6 +376,7 @@ public partial class AutomationPage : UserControl
                         AddTriggerRow(row, trigger, option.Key, automationIdPrefix);
                     RefreshAddTriggerOptions(row);
                     OnTriggerRowChanged(row);
+                    RefreshAutomaticTriggerEditors();
                 }
 #else
                 triggerConfigEditor!.Text = option.DefaultConfigurationJson ?? string.Empty;
@@ -374,7 +397,7 @@ public partial class AutomationPage : UserControl
         {
             if (addStepEditor.SelectedItem is not AutomationStepOption option)
                 return;
-            var stepRow = CreateStepRow(option, option.DefaultConfigurationJson, stepsPanel, stepRows, manualPipelines);
+            var stepRow = CreateStepRow(option, option.DefaultConfigurationJson, stepsPanel, stepRows, pipeline.IsAutomatic, manualPipelines);
             stepRows.Add(stepRow);
             stepsPanel.Children.Add(stepRow.Card);
             summary.Text = FormatSummary(triggerEditor?.SelectedItem is AutomationTriggerOption t ? t.DisplayName : pipeline.Trigger, pipeline.IsAutomatic, stepRows.Count);
@@ -389,9 +412,20 @@ public partial class AutomationPage : UserControl
         return row;
     }
 
-    private StepRow CreateStepRow(AutomationStepOption option, string configurationJson, Panel panel, List<StepRow> rows, IReadOnlyList<AutomationPipelineItem>? manualPipelines = null)
+    private StepRow CreateStepRow(
+        AutomationStepOption option,
+        string configurationJson,
+        Panel panel,
+        List<StepRow> rows,
+        bool isAutomatic,
+        IReadOnlyList<AutomationPipelineItem>? manualPipelines = null)
     {
-        var typeEditor = new ComboBox { ItemsSource = _stepOptions, SelectedItem = option, MinWidth = 190 };
+        var typeEditor = new ComboBox
+        {
+            ItemsSource = GetAvailableStepOptions(isAutomatic),
+            SelectedItem = option,
+            MinWidth = 190,
+        };
         var upButton = CreateStepMoveButton("ArrowUp24", "MoveUp", "Move step up");
         var downButton = CreateStepMoveButton("ArrowDown24", "MoveDown", "Move step down");
         var deleteButton = new Button { Content = Get("Delete", "Delete"), MinWidth = 64 };
@@ -541,13 +575,20 @@ public partial class AutomationPage : UserControl
         PipelineList.Children.Insert(0, row.Card);
         EmptyText.IsVisible = false;
         MarkDirty();
+#if WINDOWS
+        RefreshQuickActionTargetEditors();
+#endif
         row.NameEditor.Focus();
         row.NameEditor.SelectAll();
     }
 
     private void AddAutomaticButton_Click(object? sender, RoutedEventArgs e)
     {
+#if WINDOWS
+        var option = GetAvailableNewTriggerOptions().FirstOrDefault();
+#else
         var option = _triggerOptions.FirstOrDefault();
+#endif
         if (option is null)
         {
             SetFeedback(Get("AutomationPage_AddAutomaticPipeline_Error", "Automatic triggers are unavailable."));
@@ -565,6 +606,9 @@ public partial class AutomationPage : UserControl
         PipelineList.Children.Insert(0, row.Card);
         EmptyText.IsVisible = false;
         MarkDirty();
+#if WINDOWS
+        RefreshAutomaticTriggerEditors();
+#endif
         row.NameEditor.Focus();
         row.NameEditor.SelectAll();
     }
@@ -575,6 +619,10 @@ public partial class AutomationPage : UserControl
         PipelineList.Children.Remove(row.Card);
         EmptyText.IsVisible = _rows.Count == 0;
         MarkDirty();
+#if WINDOWS
+        if (!row.IsAutomatic)
+            RefreshQuickActionTargetEditors();
+#endif
     }
 
     private async Task RunPipelineAsync(PipelineRow row)
@@ -614,7 +662,13 @@ public partial class AutomationPage : UserControl
             TriggerConfigurationJson = row.TriggerConfigEditor?.Text,
 #endif
             IsExclusive = row.ExclusiveEditor.IsChecked ?? true,
-            Steps = row.StepRows.Select(step => new AutomationStepItem(
+            Steps = row.StepRows
+#if WINDOWS
+                // WPF intentionally does not offer QuickAction steps on manual actions.
+                // Do not keep an older self-reference alive when the draft is saved.
+                .Where(step => row.IsAutomatic || !string.Equals(GetStepTypeKey(step), "QuickAction", StringComparison.Ordinal))
+#endif
+                .Select(step => new AutomationStepItem(
                 step.TypeEditor.SelectedItem is AutomationStepOption option ? option.TypeKey : step.Option.TypeKey,
                 step.TypeEditor.SelectedItem is AutomationStepOption selected ? selected.DisplayName : step.Option.DisplayName,
 #if WINDOWS
@@ -747,6 +801,16 @@ public partial class AutomationPage : UserControl
         }
     }
 
+    internal static IReadOnlyList<AutomationStepOption> GetAvailableStepOptions(
+        IReadOnlyList<AutomationStepOption> options,
+        bool isAutomatic) =>
+        isAutomatic
+            ? options
+            : options.Where(option => !string.Equals(option.TypeKey, "QuickAction", StringComparison.Ordinal)).ToArray();
+
+    private IReadOnlyList<AutomationStepOption> GetAvailableStepOptions(bool isAutomatic) =>
+        GetAvailableStepOptions(_stepOptions, isAutomatic);
+
 #if WINDOWS
     internal const string GodModePresetTriggerKey = "god-mode-preset";
 
@@ -783,6 +847,57 @@ public partial class AutomationPage : UserControl
         return AutomationSerialization.SerializeTrigger(new AndAutomationPipelineTrigger(triggers.ToArray()));
     }
 
+    internal static IReadOnlyList<AutomationTriggerOption> FilterNewPipelineTriggerOptions(
+        IReadOnlyList<AutomationTriggerOption> options,
+        IEnumerable<IAutomationPipelineTrigger> existingTriggers)
+    {
+        var existingTypes = existingTriggers.Select(trigger => trigger.GetType()).ToHashSet();
+        return options.Where(option =>
+        {
+            var trigger = DeserializeTrigger(option.DefaultConfigurationJson ?? string.Empty);
+            return trigger is not IDisallowDuplicatesAutomationPipelineTrigger || !existingTypes.Contains(trigger.GetType());
+        }).ToArray();
+    }
+
+    private IReadOnlyList<AutomationTriggerOption> GetAvailableNewTriggerOptions() =>
+        FilterNewPipelineTriggerOptions(
+            _triggerOptions,
+            _rows.Where(row => row.IsAutomatic)
+                .Select(row => DeserializeTrigger(GetPipelineTriggerJson(row) ?? string.Empty))
+                .OfType<IAutomationPipelineTrigger>());
+
+    private IReadOnlyList<AutomationTriggerOption> GetAvailableTriggerOptions(PipelineRow currentRow) =>
+        FilterNewPipelineTriggerOptions(
+            _triggerOptions,
+            _rows.Where(row => row.IsAutomatic && !ReferenceEquals(row, currentRow))
+                .Select(row => DeserializeTrigger(GetPipelineTriggerJson(row) ?? string.Empty))
+                .OfType<IAutomationPipelineTrigger>());
+
+    private void RefreshAutomaticTriggerEditors()
+    {
+        var wasRefreshing = _isRefreshing;
+        _isRefreshing = true;
+        try
+        {
+            foreach (var row in _rows.Where(row => row.IsAutomatic))
+            {
+                if (row.TriggerEditor?.SelectedItem is not AutomationTriggerOption selected)
+                    continue;
+
+                var options = GetAvailableTriggerOptions(row).ToList();
+                if (!options.Any(option => string.Equals(option.Key, selected.Key, StringComparison.OrdinalIgnoreCase)))
+                    options.Add(selected);
+                row.TriggerEditor.ItemsSource = options;
+                row.TriggerEditor.SelectedItem = options.First(option =>
+                    string.Equals(option.Key, selected.Key, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+        finally
+        {
+            _isRefreshing = wasRefreshing;
+        }
+    }
+
     private static string? GetPipelineTriggerJson(PipelineRow row)
     {
 #if WINDOWS
@@ -799,6 +914,35 @@ public partial class AutomationPage : UserControl
             return step.Serialize();
 #endif
         return step.ConfigEditor.Text ?? string.Empty;
+    }
+
+    private static string GetStepTypeKey(StepRow step) =>
+        step.TypeEditor.SelectedItem is AutomationStepOption option ? option.TypeKey : step.Option.TypeKey;
+
+    private IReadOnlyList<AutomationPipelineItem> GetManualQuickActionTargets()
+    {
+        var manualRows = _rows.Where(row => !row.IsAutomatic).ToArray();
+        if (manualRows.Length == 0)
+            return FilterManualQuickActionTargets(_workspacePipelines);
+
+        return FilterManualQuickActionTargets(manualRows.Select(row => new AutomationPipelineItem(
+                row.Id,
+                row.NameEditor.Text,
+                row.IconEditor?.Text,
+                Get("AutomationPage_QuickActions_Title", "Manual quick action"),
+                row.StepRows.Count,
+                false)).ToArray());
+    }
+
+    internal static IReadOnlyList<AutomationPipelineItem> FilterManualQuickActionTargets(
+        IReadOnlyList<AutomationPipelineItem> pipelines) =>
+        pipelines.Where(pipeline => !pipeline.IsAutomatic).ToArray();
+
+    private void RefreshQuickActionTargetEditors()
+    {
+        foreach (var row in _rows.Where(row => row.IsAutomatic))
+        foreach (var step in row.StepRows)
+            step.RefreshQuickActionTargets?.Invoke();
     }
 
     private static IAutomationPipelineTrigger? DeserializeTrigger(string json)
@@ -986,6 +1130,7 @@ public partial class AutomationPage : UserControl
             body.Children.RemoveAt(0);
         row.Serialize = null;
         row.Validate = null;
+        row.RefreshQuickActionTargets = null;
         configEditor.IsVisible = true;
         configEditor.Text = configurationJson;
         var step = DeserializeStep(configurationJson);
@@ -1003,6 +1148,7 @@ public partial class AutomationPage : UserControl
             return;
         row.Serialize = editor.Serialize;
         row.Validate = editor.Validate;
+        row.RefreshQuickActionTargets = editor.Refresh;
         configEditor.IsVisible = false;
         body.Children.Insert(0, editor.Editor);
         UpdateStepValidation(row);
@@ -1236,13 +1382,18 @@ public partial class AutomationPage : UserControl
     {
         var combo = new AccessibleComboBox { MinWidth = 200, HorizontalAlignment = HorizontalAlignment.Stretch };
         var current = step;
-        var items = manualPipelines
-            .Select(pipeline => new DisplayOption<Guid>(pipeline.Id, string.IsNullOrWhiteSpace(pipeline.Name)
-                ? Get("AutomationPage_QuickActions_Title", "Manual quick action")
-                : pipeline.Name))
-            .ToList();
-        combo.ItemsSource = items;
-        combo.SelectedItem = items.FirstOrDefault(item => item.Value == step.PipelineId);
+        void RefreshTargets()
+        {
+            var targets = GetManualQuickActionTargets();
+            var items = targets
+                .Select(pipeline => new DisplayOption<Guid>(pipeline.Id, string.IsNullOrWhiteSpace(pipeline.Name)
+                    ? Get("AutomationPage_QuickActions_Title", "Manual quick action")
+                    : pipeline.Name))
+                .ToList();
+            combo.ItemsSource = items;
+            combo.SelectedItem = items.FirstOrDefault(item => item.Value == current.PipelineId);
+        }
+        RefreshTargets();
         combo.SelectionChanged += (_, _) =>
         {
             if (combo.SelectedItem is DisplayOption<Guid> selected)
@@ -1255,6 +1406,7 @@ public partial class AutomationPage : UserControl
         {
             Editor = combo,
             Serialize = () => AutomationSerialization.SerializeStep(current),
+            Refresh = RefreshTargets,
         };
     }
 
@@ -2005,6 +2157,7 @@ public partial class AutomationPage : UserControl
         public Control? Editor { get; init; }
         public Func<string> Serialize { get; init; } = static () => string.Empty;
         public Func<string?>? Validate { get; init; }
+        public Action? Refresh { get; init; }
     }
 
     private sealed class TypedTriggerEditor
@@ -2056,6 +2209,7 @@ public partial class AutomationPage : UserControl
 #if WINDOWS
         public Func<string>? Serialize { get; set; }
         public Func<string?>? Validate { get; set; }
+        public Action? RefreshQuickActionTargets { get; set; }
         public LocalizedTextBlock? ValidationText { get; set; }
 #endif
     }

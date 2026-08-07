@@ -1,5 +1,8 @@
 using FluentAssertions;
+using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
+using UniversalDeviceToolkit.Lib.Automation.Serialization;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Avalonia;
@@ -112,5 +115,52 @@ public sealed class AutomationWorkspaceContractTests
         option.TypeKey.Should().Be("Run");
         option.DisplayName.Should().Be("Run script");
         option.DefaultConfigurationJson.Should().Contain("$type");
+    }
+
+    [Fact]
+    public void ManualActions_DoNotOfferQuickActionSteps_AndAutomaticActionsDo()
+    {
+        var options = new[]
+        {
+            new AutomationStepOption("Delay", "Delay", "{}"),
+            new AutomationStepOption("QuickAction", "Quick action", "{}"),
+        };
+
+        AutomationPage.GetAvailableStepOptions(options, isAutomatic: false)
+            .Select(option => option.TypeKey)
+            .Should().Equal("Delay");
+        AutomationPage.GetAvailableStepOptions(options, isAutomatic: true)
+            .Select(option => option.TypeKey)
+            .Should().Equal("Delay", "QuickAction");
+    }
+
+    [Fact]
+    public void QuickActionTargets_ContainOnlyManualPipelines()
+    {
+        var manual = new AutomationPipelineItem(Guid.NewGuid(), "Desk mode", "Desktop24", "Manual", 1, false);
+        var automatic = new AutomationPipelineItem(Guid.NewGuid(), "On resume", null, "Resume", 1, true);
+
+        AutomationPage.FilterManualQuickActionTargets([automatic, manual])
+            .Should().ContainSingle()
+            .Which.Id.Should().Be(manual.Id);
+    }
+
+    [Fact]
+    public void NewAutomaticPipeline_ExcludesExistingDisallowDuplicateTriggerTypes()
+    {
+        var startup = new AutomationTriggerOption(
+            "on-startup",
+            "Startup",
+            AutomationSerialization.SerializeTrigger(new OnStartupAutomationPipelineTrigger()));
+        var periodic = new AutomationTriggerOption(
+            "periodic",
+            "Periodic",
+            AutomationSerialization.SerializeTrigger(new PeriodicAutomationPipelineTrigger(TimeSpan.FromMinutes(30))));
+
+        AutomationPage.FilterNewPipelineTriggerOptions(
+                [startup, periodic],
+                [new OnStartupAutomationPipelineTrigger()])
+            .Select(option => option.Key)
+            .Should().Equal("periodic");
     }
 }
