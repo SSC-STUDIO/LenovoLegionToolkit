@@ -12,6 +12,23 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class UpdateSettingsServiceTests
 {
     [Fact]
+    public void UpdateRepositoryFields_UseTheWpfDebouncedTextPersistenceFlow()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "SettingsCapabilityView.axaml.cs"));
+
+        source.Should().Contain("textBox.TextChanged +=");
+        source.Should().Contain("QueueUpdateRepositorySettingsPersistence();");
+        source.Should().Contain("TimeSpan.FromMilliseconds(400)");
+        source.Should().Contain("SetTextAsync(\"Update\", \"RepositoryOwner\"");
+        source.Should().Contain("SetTextAsync(\"Update\", \"RepositoryName\"");
+    }
+
+    [Fact]
     public async Task UpdatePage_UsesLocalizedFrequencyAndDefaultRepositoryValues()
     {
         var service = AvaloniaSettingsServiceFactory.Create();

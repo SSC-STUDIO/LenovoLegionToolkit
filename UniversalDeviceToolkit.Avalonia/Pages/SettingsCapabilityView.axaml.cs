@@ -19,6 +19,9 @@ public partial class SettingsCapabilityView : UserControl
     private readonly IAvaloniaSettingsService _settingsService;
     private bool _isApplying;
     private DispatcherTimer? _feedbackTimer;
+    private DispatcherTimer? _updateRepositorySettingsTimer;
+    private string? _pendingUpdateRepositoryOwner;
+    private string? _pendingUpdateRepositoryName;
 
     protected SettingsCapabilityView(string pageKey, string titleFallback, string descriptionFallback)
     {
@@ -270,6 +273,21 @@ public partial class SettingsCapabilityView : UserControl
         AutomationProperties.SetAutomationId(textBox, $"AvaloniaSettings_{_pageKey}_{option.Key}");
         AutomationProperties.SetName(textBox, option.Title);
         ToolTip.SetTip(textBox, option.Description);
+
+        if (_pageKey == "Update" && option.Key is "RepositoryOwner" or "RepositoryName")
+        {
+            SetPendingUpdateRepositoryValue(option.Key, textBox.Text);
+            textBox.TextChanged += (_, _) =>
+            {
+                if (_isApplying)
+                    return;
+
+                SetPendingUpdateRepositoryValue(option.Key, textBox.Text);
+                QueueUpdateRepositorySettingsPersistence();
+            };
+            return textBox;
+        }
+
         textBox.LostFocus += async (_, _) =>
         {
             if (_isApplying)
@@ -282,6 +300,48 @@ public partial class SettingsCapabilityView : UserControl
             }
         };
         return textBox;
+    }
+
+    // WPF saves both repository fields together after typing pauses. Keeping the
+    // snapshot here preserves that behavior without forcing a focus change.
+    private void SetPendingUpdateRepositoryValue(string optionKey, string? value)
+    {
+        if (optionKey == "RepositoryOwner")
+            _pendingUpdateRepositoryOwner = value;
+        else if (optionKey == "RepositoryName")
+            _pendingUpdateRepositoryName = value;
+    }
+
+    private void QueueUpdateRepositorySettingsPersistence()
+    {
+        _updateRepositorySettingsTimer ??= new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(400),
+        };
+        _updateRepositorySettingsTimer.Tick -= UpdateRepositorySettingsTimer_Tick;
+        _updateRepositorySettingsTimer.Tick += UpdateRepositorySettingsTimer_Tick;
+        _updateRepositorySettingsTimer.Stop();
+        _updateRepositorySettingsTimer.Start();
+    }
+
+    private async void UpdateRepositorySettingsTimer_Tick(object? sender, EventArgs e)
+    {
+        _updateRepositorySettingsTimer?.Stop();
+        if (_isApplying)
+            return;
+
+        try
+        {
+            await _settingsService.SetTextAsync("Update", "RepositoryOwner", _pendingUpdateRepositoryOwner);
+            await _settingsService.SetTextAsync("Update", "RepositoryName", _pendingUpdateRepositoryName);
+        }
+        catch (Exception ex)
+        {
+            ShowActionFeedback(
+                AvaloniaLocalization.GetString("Settings_Page_SaveFailed", "Unable to save settings"),
+                ex.Message,
+                "error");
+        }
     }
 
     private Control CreateMultiSelection(AvaloniaSettingOption option)
@@ -540,6 +600,7 @@ public partial class SettingsCapabilityView : UserControl
     private async Task CheckForUpdatesAsync(Button button, bool wasEnabled)
     {
         button.IsEnabled = false;
+        OpenUpdateWindowButton.IsVisible = false;
         ShowActionFeedback(
             AvaloniaLocalization.GetString("SettingsPage_CheckUpdates_Started_Title", "Checking for updates..."),
             null,
@@ -562,16 +623,19 @@ public partial class SettingsCapabilityView : UserControl
                 message = string.Format(message, result.LatestVersion);
             }
 
+            OpenUpdateWindowButton.IsVisible = feedback.Kind == AvaloniaUpdateFeedbackKind.UpdateAvailable;
+
             ShowActionFeedback(title, message, feedback.Kind switch
             {
                 AvaloniaUpdateFeedbackKind.UpdateAvailable => "informational",
                 AvaloniaUpdateFeedbackKind.NoUpdates => "success",
                 AvaloniaUpdateFeedbackKind.RateLimitReached => "error",
                 _ => "error",
-            });
+            }, autoHide: feedback.Kind != AvaloniaUpdateFeedbackKind.UpdateAvailable);
         }
         catch (Exception ex)
         {
+            OpenUpdateWindowButton.IsVisible = false;
             ToolTip.SetTip(button, ex.Message);
             ShowActionFeedback(
                 AvaloniaLocalization.GetString("MainWindow_CheckForUpdates_Error_Title", "Failed to check for updates"),
@@ -582,6 +646,17 @@ public partial class SettingsCapabilityView : UserControl
         {
             button.IsEnabled = wasEnabled;
         }
+    }
+
+    private void OpenUpdateWindowButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return;
+
+#if WINDOWS
+        if (UniversalDeviceToolkit.Avalonia.Startup.AvaloniaUpdateCheckCoordinator.Current is { } coordinator)
+            _ = coordinator.ShowUpdateAsync(owner);
+#endif
     }
 
     private void ShowActionFeedback(string title, string? message, string variant, bool autoHide = true)
