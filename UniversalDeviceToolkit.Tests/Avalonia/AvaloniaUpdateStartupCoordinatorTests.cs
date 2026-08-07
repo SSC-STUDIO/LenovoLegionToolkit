@@ -9,6 +9,31 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class AvaloniaUpdateStartupCoordinatorTests
 {
     [Fact]
+    public void App_StartsAutomaticUpdateChecksBeforeLongRunningHostInitialization()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "App.axaml.cs"));
+
+        var coordinatorIndex = source.IndexOf(
+            "_updateCheckCoordinator = AvaloniaUpdateCheckCoordinator.Create();",
+            StringComparison.Ordinal);
+        var startupIndex = source.IndexOf(
+            "_ = StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow);",
+            StringComparison.Ordinal);
+        var requestIndex = source.IndexOf(
+            "RequestAutomaticUpdateCheck();",
+            coordinatorIndex,
+            StringComparison.Ordinal);
+
+        coordinatorIndex.Should().BeGreaterThanOrEqualTo(0);
+        requestIndex.Should().BeGreaterThan(coordinatorIndex);
+        requestIndex.Should().BeLessThan(startupIndex);
+    }
+
+    [Fact]
     public async Task CheckAsync_WhenUpdateIsAvailable_PublishesSharedUpdateNotification()
     {
         NotificationMessage? published = null;
