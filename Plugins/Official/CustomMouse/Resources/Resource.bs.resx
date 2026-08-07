@@ -441,4 +441,13 @@
   <data name="WindowsOptimization_Category_CustomMouse_Description" xml:space="preserve">
     <value>Enable or disable auto theme cursor style based on Windows light/dark mode.</value>
   </data>
+  <data name="StatusApplying" xml:space="preserve">
+    <value>Applying...</value>
+  </data>
+  <data name="ApplyFailedPrefix" xml:space="preserve">
+    <value>Apply failed:</value>
+  </data>
+  <data name="ApplyCursorThemeFailedPrefix" xml:space="preserve">
+    <value>Apply cursor theme failed:</value>
+  </data>
   </root>

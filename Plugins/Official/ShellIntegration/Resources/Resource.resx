@@ -254,4 +254,37 @@
   <data name="StatusWorking" xml:space="preserve">
     <value>Working...</value>
   </data>
+  <data name="PresetsTitle" xml:space="preserve">
+    <value>Built-in Presets</value>
+  </data>
+  <data name="PresetsDescription" xml:space="preserve">
+    <value>Apply a tuned profile, save it locally, and regenerate the managed Shell config.</value>
+  </data>
+  <data name="PresetDefaultButton" xml:space="preserve">
+    <value>Apply Default</value>
+  </data>
+  <data name="PresetCompactDarkButton" xml:space="preserve">
+    <value>Apply Compact Dark</value>
+  </data>
+  <data name="PresetMinimalLightButton" xml:space="preserve">
+    <value>Apply Minimal Light</value>
+  </data>
+  <data name="StatusPresetAppliedDefault" xml:space="preserve">
+    <value>Applied the default Shell preset.</value>
+  </data>
+  <data name="StatusPresetAppliedCompactDark" xml:space="preserve">
+    <value>Applied the compact dark Shell preset.</value>
+  </data>
+  <data name="StatusPresetAppliedMinimalLight" xml:space="preserve">
+    <value>Applied the minimal light Shell preset.</value>
+  </data>
+  <data name="StatusPresetApplyFailed" xml:space="preserve">
+    <value>Preset apply failed.</value>
+  </data>
+  <data name="StatusRegistrationMissing" xml:space="preserve">
+    <value>Nilesoft Shell is installed, but registration is missing.</value>
+  </data>
+  <data name="ErrorPrefix" xml:space="preserve">
+    <value>Error</value>
+  </data>
 </root>

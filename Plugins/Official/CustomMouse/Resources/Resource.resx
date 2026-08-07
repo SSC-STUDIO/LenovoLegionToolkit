@@ -247,4 +247,7 @@
   <data name="WindowsOptimization_Action_CustomMouse_AutoTheme_Disable_Description" xml:space="preserve">
     <value>Stop automatically changing cursor theme based on Windows theme changes.</value>
   </data>
+  <data name="SettingsOverviewTitle" xml:space="preserve">
+    <value>Current Windows Mouse State</value>
+  </data>
 </root>

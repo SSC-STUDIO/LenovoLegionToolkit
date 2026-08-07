@@ -531,4 +531,7 @@
 <data name="ImportProfileButton" xml:space="preserve">
     <value>Import Profile</value>
   </data>
+  <data name="StatusWorking" xml:space="preserve">
+    <value>Working...</value>
+  </data>
   </root>
