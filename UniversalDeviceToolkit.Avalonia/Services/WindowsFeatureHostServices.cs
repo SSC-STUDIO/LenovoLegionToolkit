@@ -55,6 +55,7 @@ internal sealed class WindowsFeatureHostServices
     private readonly WindowsOptimizationService? _optimization;
     private readonly INetworkAccelerationService? _networkAcceleration;
     private readonly INetworkDiagnosticsService? _networkDiagnostics;
+    private readonly INetworkStateRecoveryService? _networkRecovery;
     private readonly PackageDownloaderFactory? _packageDownloaderFactory;
     private readonly PackageDownloaderSettings? _packageDownloaderSettings;
     private IPackageDownloader? _driverDownloader;
@@ -110,6 +111,7 @@ internal sealed class WindowsFeatureHostServices
         WindowsOptimizationService? optimization,
         INetworkAccelerationService? networkAcceleration,
         INetworkDiagnosticsService? networkDiagnostics,
+        INetworkStateRecoveryService? networkRecovery,
         PackageDownloaderFactory? packageDownloaderFactory,
         PackageDownloaderSettings? packageDownloaderSettings)
     {
@@ -123,6 +125,7 @@ internal sealed class WindowsFeatureHostServices
         _optimization = optimization;
         _networkAcceleration = networkAcceleration;
         _networkDiagnostics = networkDiagnostics;
+        _networkRecovery = networkRecovery;
         _packageDownloaderFactory = packageDownloaderFactory;
         _packageDownloaderSettings = packageDownloaderSettings;
         _applicationSettings = IoCContainer.TryResolve<ApplicationSettings>();
@@ -178,6 +181,7 @@ internal sealed class WindowsFeatureHostServices
                 IoCContainer.TryResolve<WindowsOptimizationService>(),
                 IoCContainer.TryResolve<INetworkAccelerationService>(),
                 IoCContainer.TryResolve<INetworkDiagnosticsService>(),
+                IoCContainer.TryResolve<INetworkStateRecoveryService>(),
                 IoCContainer.TryResolve<PackageDownloaderFactory>(),
                 IoCContainer.TryResolve<PackageDownloaderSettings>());
         }
@@ -1448,6 +1452,28 @@ internal sealed class WindowsFeatureHostServices
 
         var report = await _networkDiagnostics.RunQuickCheckAsync().ConfigureAwait(false);
         return report.Summary;
+    }
+
+    public async Task<string> RestoreNetworkAccelerationAsync()
+    {
+        if (_networkAcceleration is null || _networkRecovery is null)
+            return "Network acceleration recovery is not initialized in this host.";
+
+        try
+        {
+            // Match the WPF danger-zone action: stop first, restore the last
+            // snapshot, then keep the proxy worker in the disabled mode.
+            await _networkAcceleration.StopAsync().ConfigureAwait(false);
+            _networkRecovery.TryRestoreFromSnapshot(out var report);
+            _networkAcceleration.Config.Mode = NetworkAccelerationMode.Off;
+            await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);
+            return report;
+        }
+        catch (Exception exception)
+        {
+            Log.Instance.Warning("Network acceleration restore failed.", exception);
+            return $"Network restore failed: {exception.Message}";
+        }
     }
 
     public Task<DriverDownloadState> GetDriverDownloadStateAsync()

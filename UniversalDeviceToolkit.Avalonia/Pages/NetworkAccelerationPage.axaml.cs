@@ -186,6 +186,25 @@ public partial class NetworkAccelerationPage : UserControl
         }
     }
 
+    private async void RestoreButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isApplying)
+            return;
+
+        _isApplying = true;
+        try
+        {
+            DiagnosticsText.Text = await _platformServices.RestoreNetworkAccelerationAsync();
+            DiagnosticsText.IsVisible = true;
+        }
+        finally
+        {
+            _isApplying = false;
+        }
+
+        await RefreshAsync();
+    }
+
     private IBrush FindBrush(string key) =>
         this.TryFindResource(key, out var value) && value is IBrush brush
             ? brush

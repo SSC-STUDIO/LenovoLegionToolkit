@@ -1171,6 +1171,38 @@ public sealed class AvaloniaMigrationContractTests
     }
 
     [Fact]
+    public async Task NetworkAcceleration_RestoresTheWpfSystemRecoverySequence()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var service = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "WindowsFeatureHostServices.cs"));
+        var page = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "NetworkAccelerationPage.axaml.cs"));
+        var markup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "NetworkAccelerationPage.axaml"));
+
+        service.Should().Contain("Task<string> RestoreNetworkAccelerationAsync()");
+        service.Should().Contain("await _networkAcceleration.StopAsync().ConfigureAwait(false);");
+        service.Should().Contain("_networkRecovery.TryRestoreFromSnapshot(out var report);");
+        service.Should().Contain("_networkAcceleration.Config.Mode = NetworkAccelerationMode.Off;");
+        service.Should().Contain("await _networkAcceleration.SaveConfigAsync().ConfigureAwait(false);");
+        markup.Should().Contain("AvaloniaNetworkAccelerationRestore");
+        page.Should().Contain("RestoreNetworkAccelerationAsync()");
+
+        var unavailable = new UnavailablePlatformServices();
+        (await unavailable.RestoreNetworkAccelerationAsync()).Should().NotBeNullOrWhiteSpace();
+    }
+
+    [Fact]
     public async Task PortablePlatformServices_ShouldExposeExplicitDriverUnavailableState()
     {
         var state = await new UnavailablePlatformServices().GetDriverDownloadStateAsync();

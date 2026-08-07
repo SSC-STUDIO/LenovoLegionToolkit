@@ -66,6 +66,9 @@
                         <Button Content="{local:Loc Key=NetworkAccelerationPage_RunDiagnostics, Fallback=Run diagnostics}"
                                 Click="DiagnosticsButton_Click"
                                 automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationDiagnostics" />
+                        <Button Content="{local:Loc Key=NetworkAccelerationPage_Restore, Fallback=Restore system network}"
+                                Click="RestoreButton_Click"
+                                automation:AutomationProperties.AutomationId="AvaloniaNetworkAccelerationRestore" />
                     </StackPanel>
                     <controls:LocalizedTextBlock x:Name="DiagnosticsText"
                                                  IsVisible="False"

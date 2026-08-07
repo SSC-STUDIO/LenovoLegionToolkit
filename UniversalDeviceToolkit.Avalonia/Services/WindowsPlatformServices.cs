@@ -450,6 +450,11 @@ public sealed class WindowsPlatformServices : IPlatformServices
             ? _inner.RunNetworkDiagnosticsAsync()
             : _featureHost.RunNetworkDiagnosticsAsync();
 
+    public Task<string> RestoreNetworkAccelerationAsync() =>
+        _featureHost is null
+            ? _inner.RestoreNetworkAccelerationAsync()
+            : _featureHost.RestoreNetworkAccelerationAsync();
+
     public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
         _featureHost is null
             ? _inner.GetDriverDownloadStateAsync()

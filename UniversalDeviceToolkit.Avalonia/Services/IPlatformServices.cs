@@ -85,6 +85,7 @@ public interface IPlatformServices
     Task<bool> SetNetworkAccelerationGroupEnabledAsync(string groupId, bool enabled);
     Task<bool> ToggleNetworkAccelerationAsync();
     Task<string> RunNetworkDiagnosticsAsync();
+    Task<string> RestoreNetworkAccelerationAsync();
     Task<DriverDownloadState> GetDriverDownloadStateAsync();
     Task<DriverDownloadState> SearchDriverPackagesAsync(string source, string machineType, string os, bool onlyUpdates);
     Task<bool> DownloadDriverPackageAsync(string packageId, string destinationFolder);

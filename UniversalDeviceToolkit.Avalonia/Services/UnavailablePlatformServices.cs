@@ -284,6 +284,9 @@ public sealed class UnavailablePlatformServices : IPlatformServices
     public Task<string> RunNetworkDiagnosticsAsync() =>
         Task.FromResult(AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host."));
 
+    public Task<string> RestoreNetworkAccelerationAsync() =>
+        Task.FromResult(AvaloniaLocalization.GetString("NetworkAcceleration_AdapterUnavailable", "Network acceleration is unavailable in this host."));
+
     public Task<DriverDownloadState> GetDriverDownloadStateAsync() =>
         Task.FromResult(new DriverDownloadState(
             false,
