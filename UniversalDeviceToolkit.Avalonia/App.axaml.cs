@@ -483,6 +483,10 @@ public partial class App : Application
 
     private async Task StartWindowsHostServicesAsync(MainWindow? mainWindow)
     {
+        await new AvaloniaStartupDeviceSetupCoordinator()
+            .RunIfNeededAsync(mainWindow)
+            .ConfigureAwait(false);
+
         if (!await new AvaloniaStartupCompatibilityCoordinator()
                 .EnsureCompatibleAsync(mainWindow)
                 .ConfigureAwait(false))
