@@ -1,5 +1,7 @@
 using FluentAssertions;
+using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Services;
+using UniversalDeviceToolkit.Shared.Settings;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Avalonia;
@@ -70,5 +72,40 @@ public sealed class DashboardItemStateContractTests
         (await services.RestartDiscreteGpuAsync()).Should().BeFalse();
         (await services.TurnOffMonitorsAsync()).Should().BeFalse();
         (await services.SetGpuOverclockAsync(true, 100, 100)).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task UnavailableHostResolvesEveryDefaultGroupItemToAStableState()
+    {
+        var services = new UnavailablePlatformServices();
+
+        var identifiers = AvaloniaDashboardPreferences.CreateDefaultGroups()
+            .SelectMany(group => group.Items)
+            .Where(identifier => !DashboardItemStateRouting.IsDedicatedControl(identifier))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var states = await services.GetDashboardItemStatesAsync(identifiers);
+
+        states.Should().HaveCount(identifiers.Length);
+        states.Should().OnlyContain(state => !state.IsAvailable);
+    }
+
+    [Fact]
+    public void DefaultDashboardGroupsResolveToKnownDescriptors()
+    {
+        var identifiers = AvaloniaDashboardPreferences.CreateDefaultGroups()
+            .SelectMany(group => group.Items)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        foreach (var identifier in identifiers)
+        {
+            var descriptor = DashboardItemDescriptors.Get(identifier);
+            descriptor.FallbackTitle.Should().NotBeNullOrWhiteSpace();
+        }
+
+        identifiers.Should().OnlyHaveUniqueItems();
+        identifiers.Should().BeSubsetOf(DashboardItemDescriptors.AllIdentifiers);
     }
 }

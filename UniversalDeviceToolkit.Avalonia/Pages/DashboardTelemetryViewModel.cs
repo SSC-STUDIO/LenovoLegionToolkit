@@ -44,6 +44,15 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     private double _primaryProgressPercent;
 
     [ObservableProperty]
+    private double _gaugeValue;
+
+    [ObservableProperty]
+    private double _gaugeMaximum = 100;
+
+    [ObservableProperty]
+    private string _gaugeCaption = string.Empty;
+
+    [ObservableProperty]
     private bool _isDetailsExpanded;
 
     [ObservableProperty]
@@ -57,6 +66,14 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     public bool CanShowDetails => IsAvailable;
     public bool HasDetailsStatus => !string.IsNullOrWhiteSpace(DetailsStatusText);
     public bool HasWarning => !string.IsNullOrWhiteSpace(WarningText);
+
+    /// <summary>
+    /// The radial gauge replaces the static status circle on the primary telemetry
+    /// cards (CPU/GPU/battery). Other cards keep the fallback value badge.
+    /// </summary>
+    public bool IsGaugeCard => Key is "cpu" or "gpu" or "battery";
+
+    public bool IsFallbackGaugeCard => !IsGaugeCard;
 
     private DashboardBatteryState? _batteryState;
 
@@ -103,6 +120,8 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
             PrimaryValue = NoTelemetryText;
             HasPrimaryProgress = false;
             PrimaryProgressPercent = 0;
+            GaugeValue = 0;
+            GaugeCaption = string.Empty;
             IconIdentifier = "Battery024";
             OnPropertyChanged(nameof(IconIdentifier));
             ClearTrendSeries();
@@ -114,6 +133,9 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
         PrimaryValue = FormatPercent(state.Percentage) ?? NoTelemetryText;
         HasPrimaryProgress = state.Percentage is >= 0 and <= 100;
         PrimaryProgressPercent = Math.Clamp(state.Percentage ?? 0, 0, 100);
+        GaugeMaximum = 100;
+        GaugeValue = HasPrimaryProgress ? PrimaryProgressPercent : 0;
+        GaugeCaption = AvaloniaLocalization.GetString("SensorsControl_Charge", "Charge");
         if (state.Percentage is { } percentage && double.IsFinite(percentage))
         {
             History.Add(percentage);
@@ -184,6 +206,8 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
             PrimaryValue = NoTelemetryText;
             HasPrimaryProgress = false;
             PrimaryProgressPercent = 0;
+            GaugeValue = 0;
+            GaugeCaption = string.Empty;
             OnPropertyChanged(nameof(IsUnavailable));
             return;
         }
@@ -191,6 +215,9 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
         PrimaryValue = primary.DisplayValue;
         HasPrimaryProgress = primary.HasProgress;
         PrimaryProgressPercent = primary.ProgressPercent;
+        GaugeMaximum = 100;
+        GaugeValue = primary.HasProgress ? primary.ProgressPercent : 0;
+        GaugeCaption = GetGaugeCaption(primary);
         if (primary.Value is double numeric && double.IsFinite(numeric))
         {
             History.Add(numeric);
@@ -478,6 +505,10 @@ public sealed partial class DashboardTelemetryCardViewModel : ObservableObject
     private static SensorReadingItem? SelectPrimary(IReadOnlyList<SensorReadingItem> readings) =>
         readings.FirstOrDefault(reading => reading.HasProgress)
         ?? readings.FirstOrDefault();
+
+    private string GetGaugeCaption(SensorReadingItem primary) => Key is "cpu" or "gpu"
+        ? AvaloniaLocalization.GetString("SensorsControl_Utilization_Title", "Utilization")
+        : primary.Unit;
 
     private static string GetBatteryStatusText(DashboardBatteryState state)
     {

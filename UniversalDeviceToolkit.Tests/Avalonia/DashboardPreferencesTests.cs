@@ -1,5 +1,6 @@
 using System.Text.Json;
 using FluentAssertions;
+using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Shared.Settings;
 using Xunit;
 
@@ -144,5 +145,21 @@ public sealed class DashboardPreferencesTests
         {
             try { Directory.Delete(tempRoot, recursive: true); } catch { }
         }
+    }
+
+    [Theory]
+    [InlineData(600)]
+    [InlineData(900)]
+    [InlineData(1600)]
+    public void DashboardPreferences_DefaultGroupsReflowWithoutDropping(double width)
+    {
+        var groups = AvaloniaDashboardPreferences.CreateDefaultGroups();
+
+        var columns = DashboardColumnLayout.GetColumnCountForWidth(width);
+        var rows = (int)Math.Ceiling(groups.Count / (double)columns);
+
+        columns.Should().BeInRange(1, 3);
+        (rows * columns).Should().BeGreaterThanOrEqualTo(groups.Count);
+        rows.Should().Be((groups.Count + columns - 1) / columns);
     }
 }

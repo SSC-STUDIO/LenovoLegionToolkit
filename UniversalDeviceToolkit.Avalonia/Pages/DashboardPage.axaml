@@ -2,6 +2,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
                  xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+                 xmlns:pages="using:UniversalDeviceToolkit.Avalonia.Pages"
                  xmlns:automation="using:Avalonia.Automation"
                  x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage">
 
@@ -62,6 +63,11 @@
                 </Border>
             </Grid>
 
+            <controls:LoadingShimmer IsVisible="{Binding IsLoading}"
+                                     RowCount="3"
+                                     CardHeight="120"
+                                     Margin="0,0,0,4" />
+
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                 <Border Background="{DynamicResource CardBackgroundBrush}"
                         BorderBrush="{DynamicResource CardBorderBrush}"
@@ -114,211 +120,6 @@
                 </Border>
             </Grid>
 
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                <Border Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        ClipToBounds="True"
-                        Padding="16"
-                        ToolTip.Tip="{Binding DiscreteGpuState.Error}">
-                    <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <StackPanel Spacing="2" MinWidth="0">
-                                <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_Title, Fallback=Discrete GPU}"
-                                                             FontSize="{StaticResource FontSizeBody}"
-                                                             FontWeight="Medium"
-                                                             OverflowMode="Ellipsis"
-                                                             MaxLines="1" />
-                                <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_Message, Fallback=Monitor and manage the discrete GPU.}"
-                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                             OverflowMode="Wrap"
-                                                             MaxLines="2" />
-                            </StackPanel>
-                            <Border Grid.Column="1"
-                                    Background="{DynamicResource StatusInfoBackgroundBrush}"
-                                    BorderBrush="{DynamicResource StatusInfoBrush}"
-                                    BorderThickness="1"
-                                    CornerRadius="{StaticResource CornerRadiusRound}"
-                                    Padding="8,4">
-                                <controls:LocalizedTextBlock Text="{Binding DiscreteGpuState.Status}"
-                                                             Foreground="{DynamicResource StatusInfoBrush}"
-                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                             FontWeight="SemiBold"
-                                                             OverflowMode="Ellipsis"
-                                                             MaxLines="1" />
-                            </Border>
-                        </Grid>
-                        <controls:LocalizedTextBlock Grid.Row="1"
-                                                     Text="{Binding DiscreteGpuState.PerformanceState}"
-                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                        <controls:LocalizedTextBlock Grid.Row="2"
-                                                     Text="{Binding DiscreteGpuState.ProcessCount, StringFormat={}{0} processes}"
-                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                        <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="8">
-                            <Button Grid.Column="0"
-                                    Command="{Binding KillDiscreteGpuProcessesCommand}"
-                                    IsEnabled="{Binding DiscreteGpuState.CanKillProcesses}"
-                                    Padding="8,4"
-                                    MinWidth="0"
-                                    Width="140"
-                                    MaxWidth="140"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}"
-                                    automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}">
-                                <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop apps}"
-                                                             Width="120"
-                                                             HorizontalAlignment="Stretch"
-                                                             OverflowMode="Ellipsis"
-                                                             MaxLines="1" />
-                            </Button>
-                            <Button Grid.Column="1"
-                                    Command="{Binding RestartDiscreteGpuCommand}"
-                                    IsEnabled="{Binding DiscreteGpuState.CanRestart}"
-                                    Padding="8,4"
-                                    MinWidth="0"
-                                    Width="140"
-                                    MaxWidth="140"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Stretch"
-                                    ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
-                                    automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}">
-                                <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
-                                                             Width="120"
-                                                             HorizontalAlignment="Stretch"
-                                                             OverflowMode="Ellipsis"
-                                                             MaxLines="1" />
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Border>
-
-                <Border Grid.Column="1"
-                        Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        Padding="16"
-                        ToolTip.Tip="{Binding GpuOverclockState.Error}">
-                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
-                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                            <StackPanel Spacing="2" MinWidth="0">
-                                <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}"
-                                                             FontSize="{StaticResource FontSizeBody}"
-                                                             FontWeight="Medium"
-                                                             OverflowMode="Ellipsis"
-                                                             MaxLines="1" />
-                                <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUControl_Message, Fallback=Tune GPU core and memory offsets.}"
-                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                             OverflowMode="Wrap"
-                                                             MaxLines="2" />
-                            </StackPanel>
-                            <Button Grid.Column="1"
-                                    Click="ConfigureGpuOverclockButton_Click"
-                                    IsEnabled="{Binding GpuOverclockState.IsAvailable}"
-                                    Padding="6"
-                                    ToolTip.Tip="{local:Loc Key=Settings, Fallback=Configure}"
-                                    automation:AutomationProperties.Name="{local:Loc Key=Settings, Fallback=Configure GPU overclock}">
-                                <controls:NavigationIcon IconIdentifier="Settings24"
-                                                         FontSize="{StaticResource IconSizeSM}" />
-                            </Button>
-                            <ToggleSwitch Grid.Column="2"
-                                          IsChecked="{Binding GpuOverclockEnabled, Mode=TwoWay}"
-                                          IsEnabled="{Binding GpuOverclockState.IsAvailable}"
-                                          automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}" />
-                        </Grid>
-                        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title, Fallback=Core frequency offset}"
-                                                         VerticalAlignment="Center"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                            <controls:LocalizedTextBlock Grid.Column="1"
-                                                         Text="{Binding GpuCoreDeltaMhz, StringFormat={}{0:0} MHz}"
-                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                        </Grid>
-                        <Slider Grid.Row="2"
-                                Minimum="{Binding GpuCoreMinimum}"
-                                Maximum="{Binding GpuOverclockState.MaxCoreDeltaMhz}"
-                                Value="{Binding GpuCoreDeltaMhz, Mode=TwoWay}"
-                                IsEnabled="{Binding GpuOverclockState.IsAvailable}"
-                                automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title, Fallback=Core frequency offset}" />
-                        <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title, Fallback=Memory frequency offset}"
-                                                         VerticalAlignment="Center"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                            <controls:LocalizedTextBlock Grid.Column="1"
-                                                         Text="{Binding GpuMemoryDeltaMhz, StringFormat={}{0:0} MHz}"
-                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                        </Grid>
-                        <Grid Grid.Row="4" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <Slider Minimum="{Binding GpuMemoryMinimum}"
-                                    Maximum="{Binding GpuOverclockState.MaxMemoryDeltaMhz}"
-                                    Value="{Binding GpuMemoryDeltaMhz, Mode=TwoWay}"
-                                    IsEnabled="{Binding GpuOverclockState.IsAvailable}"
-                                    automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title, Fallback=Memory frequency offset}" />
-                            <Button Grid.Column="1"
-                                    Command="{Binding ApplyGpuOverclockCommand}"
-                                    IsEnabled="{Binding GpuOverclockState.IsAvailable}"
-                                    Padding="8,4"
-                                    ToolTip.Tip="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
-                                    automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Apply, Fallback=Apply}">
-                                <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
-                                                             OverflowMode="Ellipsis"
-                                                             MaxLines="1" />
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Border>
-            </Grid>
-
-                <Border Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        ClipToBounds="True"
-                        Padding="16">
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                    <StackPanel Spacing="2" MinWidth="0">
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
-                                                     FontSize="{StaticResource FontSizeBody}"
-                                                     FontWeight="Medium"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Message, Fallback=Turn off connected displays.}"
-                                                     FontSize="{StaticResource FontSizeSmallCaption}"
-                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                     OverflowMode="Wrap"
-                                                     MaxLines="2" />
-                    </StackPanel>
-                    <Button Grid.Column="1"
-                            Command="{Binding TurnOffMonitorsCommand}"
-                            Padding="10,6"
-                            MinWidth="0"
-                            MaxWidth="180"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            ToolTip.Tip="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
-                            automation:AutomationProperties.Name="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}">
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off}"
-                                                     HorizontalAlignment="Stretch"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                    </Button>
-                </Grid>
-            </Border>
-
             <!-- Persisted dashboard layout -->
             <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
                 <StackPanel Spacing="2">
@@ -354,13 +155,12 @@
             <ItemsControl ItemsSource="{Binding DashboardGroups}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
+                        <pages:DashboardWrapPanel />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Width="300"
-                                Margin="0,0,12,12"
+                        <Border Margin="0"
                                 Padding="14"
                                 Background="{DynamicResource CardBackgroundBrush}"
                                 BorderBrush="{DynamicResource CardBorderBrush}"
@@ -399,6 +199,7 @@
                                 <ItemsControl ItemsSource="{Binding Items}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
+                                            <StackPanel Spacing="8">
                                             <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                                                   ColumnSpacing="6"
                                                   MinWidth="0"
@@ -522,6 +323,220 @@
                                                                              FontSize="{StaticResource IconSizeCompact}" />
                                                 </Button>
                                             </Grid>
+
+                                            <Border IsVisible="{Binding IsDiscreteGpuControl}"
+                                                    Padding="12"
+                                                    Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                                                    BorderBrush="{DynamicResource CardBorderBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="{StaticResource CornerRadiusControl}"
+                                                    ToolTip.Tip="{Binding DataContext.DiscreteGpuState.Error, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                                        <StackPanel Spacing="2" MinWidth="0">
+                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_Title, Fallback=Discrete GPU}"
+                                                                                         FontSize="{StaticResource FontSizeBody}"
+                                                                                         FontWeight="Medium"
+                                                                                         OverflowMode="Ellipsis"
+                                                                                         MaxLines="1" />
+                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_Message, Fallback=Monitor and manage the discrete GPU.}"
+                                                                                         FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                         OverflowMode="Wrap"
+                                                                                         MaxLines="2" />
+                                                        </StackPanel>
+                                                        <Border Grid.Column="1"
+                                                                Background="{DynamicResource StatusInfoBackgroundBrush}"
+                                                                BorderBrush="{DynamicResource StatusInfoBrush}"
+                                                                BorderThickness="1"
+                                                                CornerRadius="{StaticResource CornerRadiusRound}"
+                                                                Padding="8,4">
+                                                            <controls:LocalizedTextBlock Text="{Binding DataContext.DiscreteGpuState.Status, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                                         Foreground="{DynamicResource StatusInfoBrush}"
+                                                                                         FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                                         FontWeight="SemiBold"
+                                                                                         OverflowMode="Ellipsis"
+                                                                                         MaxLines="1" />
+                                                        </Border>
+                                                    </Grid>
+                                                    <controls:LocalizedTextBlock Grid.Row="1"
+                                                                                 Text="{Binding DataContext.DiscreteGpuState.PerformanceState, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                 OverflowMode="Ellipsis"
+                                                                                 MaxLines="1" />
+                                                    <controls:LocalizedTextBlock Grid.Row="2"
+                                                                                 Text="{Binding DataContext.DiscreteGpuState.ProcessCount, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat={}{0} processes}"
+                                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                 OverflowMode="Ellipsis"
+                                                                                 MaxLines="1" />
+                                                    <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="8">
+                                                        <Button Grid.Column="0"
+                                                                Command="{Binding DataContext.KillDiscreteGpuProcessesCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                IsEnabled="{Binding DataContext.DiscreteGpuState.CanKillProcesses, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                Padding="8,4"
+                                                                ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}"
+                                                                automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}">
+                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop apps}"
+                                                                                         OverflowMode="Ellipsis"
+                                                                                         MaxLines="1" />
+                                                        </Button>
+                                                        <Button Grid.Column="1"
+                                                                Command="{Binding DataContext.RestartDiscreteGpuCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                IsEnabled="{Binding DataContext.DiscreteGpuState.CanRestart, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                Padding="8,4"
+                                                                ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
+                                                                automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}">
+                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
+                                                                                         OverflowMode="Ellipsis"
+                                                                                         MaxLines="1" />
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+
+                                            <Border IsVisible="{Binding IsGpuOverclockControl}"
+                                                    Padding="12"
+                                                    Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                                                    BorderBrush="{DynamicResource CardBorderBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="{StaticResource CornerRadiusControl}"
+                                                    ToolTip.Tip="{Binding DataContext.GpuOverclockState.Error, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
+                                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                                        <StackPanel Spacing="2" MinWidth="0">
+                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}"
+                                                                                         FontSize="{StaticResource FontSizeBody}"
+                                                                                         FontWeight="Medium"
+                                                                                         OverflowMode="Ellipsis"
+                                                                                         MaxLines="1" />
+                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUControl_Message, Fallback=Tune GPU core and memory offsets.}"
+                                                                                         FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                         OverflowMode="Wrap"
+                                                                                         MaxLines="2" />
+                                                        </StackPanel>
+                                                        <Button Grid.Column="1"
+                                                                Click="ConfigureGpuOverclockButton_Click"
+                                                                IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                Padding="6"
+                                                                ToolTip.Tip="{local:Loc Key=Settings, Fallback=Configure}"
+                                                                automation:AutomationProperties.Name="{local:Loc Key=Settings, Fallback=Configure GPU overclock}">
+                                                            <controls:NavigationIcon IconIdentifier="Settings24"
+                                                                                     FontSize="{StaticResource IconSizeSM}" />
+                                                        </Button>
+                                                        <ToggleSwitch Grid.Column="2"
+                                                                      IsChecked="{Binding DataContext.GpuOverclockEnabled, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                                                      IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                      automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}" />
+                                                    </Grid>
+                                                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title, Fallback=Core frequency offset}"
+                                                                                     VerticalAlignment="Center"
+                                                                                     OverflowMode="Ellipsis"
+                                                                                     MaxLines="1" />
+                                                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                                                     Text="{Binding DataContext.GpuCoreDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat={}{0:0} MHz}"
+                                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                     OverflowMode="Ellipsis"
+                                                                                     MaxLines="1" />
+                                                    </Grid>
+                                                    <Slider Grid.Row="2"
+                                                            Minimum="{Binding DataContext.GpuCoreMinimum, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            Maximum="{Binding DataContext.GpuOverclockState.MaxCoreDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            Value="{Binding DataContext.GpuCoreDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                                            IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title, Fallback=Core frequency offset}" />
+                                                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title, Fallback=Memory frequency offset}"
+                                                                                     VerticalAlignment="Center"
+                                                                                     OverflowMode="Ellipsis"
+                                                                                     MaxLines="1" />
+                                                        <controls:LocalizedTextBlock Grid.Column="1"
+                                                                                     Text="{Binding DataContext.GpuMemoryDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat={}{0:0} MHz}"
+                                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                     OverflowMode="Ellipsis"
+                                                                                     MaxLines="1" />
+                                                    </Grid>
+                                                    <Grid Grid.Row="4" ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                                        <Slider Minimum="{Binding DataContext.GpuMemoryMinimum, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                Maximum="{Binding DataContext.GpuOverclockState.MaxMemoryDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                Value="{Binding DataContext.GpuMemoryDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
+                                                                IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title, Fallback=Memory frequency offset}" />
+                                                        <Button Grid.Column="1"
+                                                                Command="{Binding DataContext.ApplyGpuOverclockCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                Padding="8,4"
+                                                                ToolTip.Tip="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
+                                                                automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Apply, Fallback=Apply}">
+                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
+                                                                                         OverflowMode="Ellipsis"
+                                                                                         MaxLines="1" />
+                                                        </Button>
+                                                    </Grid>
+                                                </Grid>
+                                            </Border>
+
+                                            <Border IsVisible="{Binding IsTurnOffMonitorsControl}"
+                                                    Padding="12"
+                                                    Background="{DynamicResource SubtleFillColorSecondaryBrush}"
+                                                    BorderBrush="{DynamicResource CardBorderBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="{StaticResource CornerRadiusControl}">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                                    <StackPanel Spacing="2" MinWidth="0">
+                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
+                                                                                     FontSize="{StaticResource FontSizeBody}"
+                                                                                     FontWeight="Medium"
+                                                                                     OverflowMode="Ellipsis"
+                                                                                     MaxLines="1" />
+                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Message, Fallback=Turn off connected displays.}"
+                                                                                     FontSize="{StaticResource FontSizeSmallCaption}"
+                                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                                     OverflowMode="Wrap"
+                                                                                     MaxLines="2" />
+                                                    </StackPanel>
+                                                    <Button Grid.Column="1"
+                                                            Command="{Binding DataContext.TurnOffMonitorsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                            Padding="10,6"
+                                                            ToolTip.Tip="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
+                                                            automation:AutomationProperties.Name="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}">
+                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off}"
+                                                                                     OverflowMode="Ellipsis"
+                                                                                     MaxLines="1" />
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+
+                                            <StackPanel IsVisible="{Binding IsCustomControl}"
+                                                        Orientation="Horizontal"
+                                                        Spacing="6">
+                                                <Button Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        Padding="3"
+                                                        MinWidth="24"
+                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}">
+                                                    <controls:NavigationIcon IconIdentifier="ChevronUp24" FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                                <Button Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        Padding="3"
+                                                        MinWidth="24"
+                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}">
+                                                    <controls:NavigationIcon IconIdentifier="ChevronDown24" FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                                <Button Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        Padding="3"
+                                                        MinWidth="24"
+                                                        ToolTip.Tip="{local:Loc Key=Dashboard_Remove, Fallback=Remove}">
+                                                    <controls:NavigationIcon IconIdentifier="Delete24" FontSize="{StaticResource IconSizeCompact}" />
+                                                </Button>
+                                            </StackPanel>
+                                            </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
@@ -803,7 +818,20 @@
                                                              OverflowMode="Wrap"
                                                              MaxLines="2" />
                                 <Grid Grid.Row="2" ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                                    <Border Width="82"
+                                    <controls:RadialGauge Grid.Column="0"
+                                                          IsVisible="{Binding IsGaugeCard}"
+                                                          Width="88"
+                                                          Height="88"
+                                                          VerticalAlignment="Center"
+                                                          Value="{Binding GaugeValue}"
+                                                          Maximum="{Binding GaugeMaximum}"
+                                                          ValueText="{Binding PrimaryValue}"
+                                                          Caption="{Binding GaugeCaption}"
+                                                          RingBrush="{DynamicResource AccentBackgroundBrush}"
+                                                          TrackBrush="{DynamicResource ChartTrackBrush}" />
+                                    <Border Grid.Column="0"
+                                            IsVisible="{Binding IsFallbackGaugeCard}"
+                                            Width="82"
                                             Height="82"
                                             CornerRadius="{StaticResource CornerRadiusRound}"
                                             Background="{DynamicResource StatusInfoBackgroundBrush}"

@@ -916,6 +916,10 @@ public sealed partial class DashboardLayoutItemViewModel : ObservableObject
     public DashboardItemDescriptor Descriptor => DashboardItemDescriptors.Get(Identifier);
     public string IconIdentifier => Descriptor.IconIdentifier;
     public bool IsStandardControl => !Descriptor.IsCustomControl;
+    public bool IsCustomControl => Descriptor.IsCustomControl;
+    public bool IsDiscreteGpuControl => Identifier.Equals("DiscreteGpu", StringComparison.OrdinalIgnoreCase);
+    public bool IsGpuOverclockControl => Identifier.Equals("OverclockDiscreteGpu", StringComparison.OrdinalIgnoreCase);
+    public bool IsTurnOffMonitorsControl => Identifier.Equals("TurnOffMonitors", StringComparison.OrdinalIgnoreCase);
     public bool IsToggleControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Toggle
         || IsHybridToggleControl;
     public bool IsComboControl => Descriptor.PresentationMode == DashboardItemPresentationMode.Combo

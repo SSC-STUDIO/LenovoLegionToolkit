@@ -29,8 +29,9 @@ public sealed class GodModeSettingsWindow : Window
     private readonly TextBlock _status;
     private readonly Button _saveButton;
     private readonly Button _saveCloseButton;
-    private readonly Dictionary<string, NumericUpDown> _valueEditors = new(StringComparer.Ordinal);
-    private readonly List<NumericUpDown> _fanEditors = [];
+    private readonly Dictionary<string, Slider> _valueEditors = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, TextBlock> _valueLabels = new(StringComparer.Ordinal);
+    private FanCurveEditor? _fanCurveEditor;
     private NumericUpDown? _minOffsetEditor;
     private NumericUpDown? _maxOffsetEditor;
     private ToggleSwitch? _fanFullSpeedEditor;
@@ -246,7 +247,8 @@ public sealed class GodModeSettingsWindow : Window
     {
         _activePreset = preset;
         _valueEditors.Clear();
-        _fanEditors.Clear();
+        _valueLabels.Clear();
+        _fanCurveEditor = null;
         _defaultFanCurveButton = null;
         _minOffsetEditor = null;
         _maxOffsetEditor = null;
@@ -279,32 +281,19 @@ public sealed class GodModeSettingsWindow : Window
                     OverflowMode = LocalizedOverflowMode.Wrap,
                     MaxLines = 3,
                 });
-                var curveGrid = new WrapPanel { Orientation = Orientation.Horizontal };
-                for (var index = 0; index < fanCurve.Count; index++)
+                var curveEditor = new FanCurveEditor
                 {
-                    var editor = new NumericUpDown
-                    {
-                        Minimum = 0,
-                        Maximum = ushort.MaxValue,
-                        Increment = 1,
-                        Value = fanCurve[index],
-                        FormatString = "0",
-                        Width = 120,
-                        Margin = new Thickness(4),
-                    };
-                    AutomationProperties.SetAutomationId(editor, $"GodModeFanCurvePoint{index + 1}");
-                    _fanEditors.Add(editor);
-                    curveGrid.Children.Add(new StackPanel
-                    {
-                        Spacing = 2,
-                        Children =
-                        {
-                            new TextBlock { Text = $"{index + 1}" },
-                            editor,
-                        },
-                    });
-                }
-                _fanPanel.Children.Add(curveGrid);
+                    Minimum = 0,
+                    Maximum = ushort.MaxValue,
+                    Height = 240,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    IsMonotonic = true,
+                };
+                AutomationProperties.SetAutomationId(curveEditor, "GodModeFanCurveEditor");
+                AutomationProperties.SetName(curveEditor, Get("GodModeSettingsWindow_Fans_Curve_Title", "Fan curve"));
+                curveEditor.SetValues(fanCurve);
+                _fanCurveEditor = curveEditor;
+                _fanPanel.Children.Add(curveEditor);
 
                 _defaultFanCurveButton = ActionButton(
                     Get("Default", "Default"),
@@ -353,7 +342,7 @@ public sealed class GodModeSettingsWindow : Window
 
     private async Task RestoreDefaultFanCurveAsync()
     {
-        if (_fanEditors.Count != 10 || _defaultFanCurveButton is null)
+        if (_fanCurveEditor is null || _defaultFanCurveButton is null)
             return;
 
         _defaultFanCurveButton.IsEnabled = false;
@@ -370,8 +359,7 @@ public sealed class GodModeSettingsWindow : Window
                 return;
             }
 
-            for (var index = 0; index < _fanEditors.Count; index++)
-                _fanEditors[index].Value = defaultCurve[index];
+            _fanCurveEditor.SetValues(defaultCurve);
 
             SetSuccess(Get(
                 "GodModeSettingsWindow_DefaultFanCurveApplied",
@@ -391,64 +379,91 @@ public sealed class GodModeSettingsWindow : Window
         parent.Children.Add(CreateHeading(title));
         foreach (var value in values)
         {
-            var editor = new NumericUpDown
-            {
-                Minimum = value.Minimum,
-                Maximum = value.Maximum,
-                Increment = value.Step,
-                Value = value.Value,
-                FormatString = "0",
-                Width = 120,
-                HorizontalAlignment = HorizontalAlignment.Right,
-            };
-            AutomationProperties.SetAutomationId(editor, $"GodMode{value.Key}");
-            AutomationProperties.SetName(editor, value.Title);
-            _valueEditors[value.Key] = editor;
-
-            var description = string.IsNullOrWhiteSpace(value.Description)
-                ? value.Title
-                : $"{value.Description} ({value.Unit})";
-            var row = new Grid
-            {
-                ColumnDefinitions = new ColumnDefinitions("*,Auto"),
-                ColumnSpacing = 12,
-                Margin = new Thickness(0, 0, 0, 4),
-            };
-            row.Children.Add(new StackPanel
-            {
-                Spacing = 2,
-                MinWidth = 0,
-                Children =
-                {
-                    new LocalizedTextBlock
-                    {
-                        Text = value.Title,
-                        OverflowMode = LocalizedOverflowMode.Wrap,
-                        MaxLines = 2,
-                        FontWeight = FontWeight.Medium,
-                    },
-                    new LocalizedTextBlock
-                    {
-                        Text = description,
-                        Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
-                        OverflowMode = LocalizedOverflowMode.Wrap,
-                        MaxLines = 3,
-                    },
-                },
-            });
-            Grid.SetColumn(editor, 1);
-            row.Children.Add(editor);
-            parent.Children.Add(new Border
-            {
-                Background = GetResource<IBrush>("CardBackgroundBrush"),
-                BorderBrush = GetResource<IBrush>("CardBorderBrush"),
-                BorderThickness = new Thickness(1),
-                CornerRadius = GetCornerRadius("CornerRadiusCard"),
-                Padding = new Thickness(12, 8),
-                Child = row,
-            });
+            parent.Children.Add(CreateValueRow(value));
         }
     }
+
+    private Border CreateValueRow(GodModeValueState value)
+    {
+        var maximum = Math.Max(value.Minimum, value.Maximum);
+        var slider = new Slider
+        {
+            Minimum = value.Minimum,
+            Maximum = maximum,
+            Value = Math.Clamp(value.Value, value.Minimum, maximum),
+            Width = 220,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        if (value.Step > 0 && maximum > value.Minimum)
+            slider.SmallChange = value.Step;
+        AutomationProperties.SetAutomationId(slider, $"GodMode{value.Key}");
+        AutomationProperties.SetName(slider, value.Title);
+        _valueEditors[value.Key] = slider;
+
+        var label = new TextBlock
+        {
+            Text = FormatValue((int)Math.Round(slider.Value), value.Unit),
+            MinWidth = 72,
+            TextAlignment = TextAlignment.Right,
+            VerticalAlignment = VerticalAlignment.Center,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
+        };
+        slider.ValueChanged += (_, _) => label.Text = FormatValue((int)Math.Round(slider.Value), value.Unit);
+        _valueLabels[value.Key] = label;
+
+        var description = string.IsNullOrWhiteSpace(value.Description)
+            ? value.Title
+            : $"{value.Description} ({value.Unit})";
+        var right = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            VerticalAlignment = VerticalAlignment.Center,
+            Children = { slider, label },
+        };
+        var row = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+            ColumnSpacing = 12,
+            Margin = new Thickness(0, 0, 0, 4),
+        };
+        row.Children.Add(new StackPanel
+        {
+            Spacing = 2,
+            MinWidth = 0,
+            Children =
+            {
+                new LocalizedTextBlock
+                {
+                    Text = value.Title,
+                    OverflowMode = LocalizedOverflowMode.Wrap,
+                    MaxLines = 2,
+                    FontWeight = FontWeight.Medium,
+                },
+                new LocalizedTextBlock
+                {
+                    Text = description,
+                    Foreground = GetResource<IBrush>("TextFillColorSecondaryBrush"),
+                    OverflowMode = LocalizedOverflowMode.Wrap,
+                    MaxLines = 3,
+                },
+            },
+        });
+        Grid.SetColumn(right, 1);
+        row.Children.Add(right);
+        return new Border
+        {
+            Background = GetResource<IBrush>("CardBackgroundBrush"),
+            BorderBrush = GetResource<IBrush>("CardBorderBrush"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = GetCornerRadius("CornerRadiusCard"),
+            Padding = new Thickness(12, 8),
+            Child = row,
+        };
+    }
+
+    private static string FormatValue(int value, string unit) =>
+        string.IsNullOrWhiteSpace(unit) ? $"{value}" : $"{value} {unit}";
 
     private NumericUpDown AddOffsetEditor(
         Panel parent,
@@ -572,9 +587,11 @@ public sealed class GodModeSettingsWindow : Window
         {
             var values = _valueEditors.ToDictionary(
                 pair => pair.Key,
-                pair => ToInt(pair.Value.Value));
-            var fanCurve = _fanEditors.Count == 10
-                ? _fanEditors.Select(editor => (ushort)Math.Clamp(ToInt(editor.Value), 0, ushort.MaxValue)).ToArray()
+                pair => (int)Math.Round(pair.Value.Value));
+            var fanCurve = _fanCurveEditor is { } curveEditor
+                ? curveEditor.Values
+                    .Select(value => (ushort)Math.Clamp(Math.Round(value), 0, ushort.MaxValue))
+                    .ToArray()
                 : null;
             var update = new GodModeSettingsUpdate(
                 _activePreset.Id,
