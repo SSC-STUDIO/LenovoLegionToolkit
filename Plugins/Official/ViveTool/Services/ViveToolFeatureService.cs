@@ -5,8 +5,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+#if UDT_PLUGIN_AVALONIA_ONLY
+using UniversalDeviceToolkit.Plugins.Core;
+#else
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.Core;
+#endif
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
@@ -305,11 +309,13 @@ public class ViveToolFeatureService : IDisposable
     {
         // ViVeTool v0.3.4 exposes only the configured subset through /query.
         var result = await _processService.ExecuteCommandAsync(viveToolPath, "/query").ConfigureAwait(false);
+#if !UDT_PLUGIN_AVALONIA_ONLY
         if (Log.Instance.IsTraceEnabled)
         {
             Log.Instance.Trace($"ViveTool: /query command result - Success: {result.Success}");
             Log.Instance.Trace($"ViveTool: /query command output: {result.Output ?? "(null)"}");
         }
+#endif
 
         if (!result.Success || string.IsNullOrWhiteSpace(result.Output))
         {

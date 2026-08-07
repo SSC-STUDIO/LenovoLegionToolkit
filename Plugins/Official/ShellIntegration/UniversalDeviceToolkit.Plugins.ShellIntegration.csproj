@@ -1,33 +1,72 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <UseWPF>true</UseWPF>
-    <Platforms>x64</Platforms>
     <Version>1.0.14</Version>
     <FileVersion>1.0.14</FileVersion>
     <AssemblyVersion>1.0.14</AssemblyVersion>
     <AssemblyName>UniversalDeviceToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+  <!-- Windows WPF flavor (default): net10.0-windows + UseWPF + win-x64. -->
+  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' != 'true'">
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <!-- Portable Avalonia-only flavor: -p:UdtPluginAvaloniaOnly=true
+       net10.0 (AnyCPU, no UseWPF / WPF-UI / Lib) build for the cross-platform
+       Avalonia host, in a distinct output folder. -->
+  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWPF>false</UseWPF>
+    <Platforms>AnyCPU</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
     <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
     <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
+    <OutputPath>..\..\.build\plugins-avalonia\UniversalDeviceToolkit.Plugins.ShellIntegration\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" />
+  </ItemGroup>
+
+  <!-- The portable flavor gets the portable Abstractions assembly (net10.0)
+       instead of the host Lib that carries the same types for the WPF host.
+       Registry types are part of the net10.0 shared framework. -->
+  <ItemGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
+    <ProjectReference Include="..\..\SDK\Abstractions\UniversalDeviceToolkit.Plugins.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <ProjectReference Include="..\..\Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj" />
+  </ItemGroup>
+
+  <!-- The WPF shared library is only referenced by the WPF flavor. -->
+  <ItemGroup Condition="'$(UdtPluginAvaloniaOnly)' != 'true'">
     <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
+
+  <!-- WPF UI surface (XAML, code-behind and the WPF-only style window) is
+       compiled out of the portable flavor. -->
+  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
+    <DefaultItemExcludes>$(DefaultItemExcludes);ShellIntegrationSettingsControl.xaml;ShellIntegrationSettingsControl.xaml.cs;ShellIntegrationStyleSettingsWindow.cs</DefaultItemExcludes>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Include="plugin.json">
@@ -44,8 +83,10 @@
     <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
   </PropertyGroup>
 
+  <!-- shell.exe/dll are Windows-only runtime artifacts; bundle them only in
+       the Windows WPF flavor. -->
   <!-- Priority 1: Local Shell repo (for developers who have it cloned) -->
-  <ItemGroup Condition="'$(_ShellLocalExists)' == 'true'">
+  <ItemGroup Condition="'$(_ShellLocalExists)' == 'true' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
     <None Include="$(ShellLocalBinPath)\shell.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -62,7 +103,7 @@
   </ItemGroup>
 
   <!-- Priority 2: Cached download from this plugin's Bundled/Shell/ directory. -->
-  <ItemGroup Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' == 'true'">
+  <ItemGroup Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' == 'true' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
     <None Include="$(ShellCachedBinPath)\shell.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -78,8 +119,9 @@
     </None>
   </ItemGroup>
 
-  <!-- Auto-fetch Shell binaries if neither local repo nor cache has them -->
-  <Target Name="FetchShellBinaries" BeforeTargets="BeforeBuild" Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true'">
+  <!-- Auto-fetch Shell binaries if neither local repo nor cache has them.
+       Windows-only: fetching is skipped for the portable flavor. -->
+  <Target Name="FetchShellBinaries" BeforeTargets="BeforeBuild" Condition="'$(_ShellLocalExists)' != 'true' And '$(_ShellCachedExists)' != 'true' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
     <Message Importance="high" Text="Shell binaries not found locally or in cache. Running fetch script..." />
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(FetchShellScript)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="true" StandardOutputImportance="normal" />
     <!-- Re-evaluate after download so the ItemGroup picks up the files -->

@@ -544,6 +544,13 @@ public sealed class ScaffoldRequest
     public string? NamespaceSegment { get; init; }
     public string? ClassPrefix { get; init; }
     public bool Official { get; init; }
+
+    /// <summary>
+    /// When true, scaffolds a portable net10.0 Avalonia-only plugin: no UseWPF,
+    /// no WPF XAML/code-behind, and a reference to Shared.Core instead of the
+    /// WPF Shared library. The default (false) keeps the WPF + Avalonia flavor.
+    /// </summary>
+    public bool AvaloniaOnly { get; init; }
 }
 
 public sealed record ScaffoldResult(string PluginDirectory, string TestDirectory, string ProjectPath, string TestProjectPath, string? StoreEntryPath);

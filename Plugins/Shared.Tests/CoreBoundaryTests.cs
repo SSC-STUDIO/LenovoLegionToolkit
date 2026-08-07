@@ -30,4 +30,18 @@ public sealed class CoreBoundaryTests
         Assert.NotNull(typeof(UniversalDeviceToolkit.Plugins.Core.PluginLog));
         Assert.NotNull(typeof(UniversalDeviceToolkit.Plugins.Core.SettingsManager<>));
     }
+
+    [Fact]
+    public void SharedCore_DoesNotContainWpfHelperTypes()
+    {
+        // WpfFallbackHelper / WpfHostNotifications live in the WPF-flavored
+        // Plugins\Shared library only; the portable Shared.Core must stay free
+        // of WPF code so the Avalonia-only plugin flavor can reference it.
+        var sharedCoreAssembly = typeof(UniversalDeviceToolkit.Plugins.Core.Constants).Assembly;
+
+        Assert.Null(sharedCoreAssembly.GetType("UniversalDeviceToolkit.Plugins.Core.WpfFallbackHelper", throwOnError: false));
+        Assert.Null(sharedCoreAssembly.GetType("UniversalDeviceToolkit.Plugins.Core.WpfHostNotifications", throwOnError: false));
+        Assert.Null(sharedCoreAssembly.GetType("UniversalDeviceToolkit.Plugins.Shared.WpfFallbackHelper", throwOnError: false));
+        Assert.Null(sharedCoreAssembly.GetType("UniversalDeviceToolkit.Plugins.Shared.WpfHostNotifications", throwOnError: false));
+    }
 }

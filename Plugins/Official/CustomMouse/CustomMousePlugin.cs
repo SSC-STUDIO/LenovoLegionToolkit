@@ -9,11 +9,15 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+#if UDT_PLUGIN_AVALONIA_ONLY
+using UniversalDeviceToolkit.Plugins.Core;
+#else
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Lib.Optimization;
+using UniversalDeviceToolkit.Plugins.Shared;
+#endif
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.SDK;
-using UniversalDeviceToolkit.Plugins.Shared;
 using Microsoft.Win32;
 
 namespace UniversalDeviceToolkit.Plugins.CustomMouse;
@@ -89,9 +93,11 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
     public CustomMousePlugin()
     {
+#if !UDT_PLUGIN_AVALONIA_ONLY
         PluginLog.Configure(
             isTraceEnabled: () => Log.Instance.IsTraceEnabled,
             trace: (message, exception) => Log.Instance.Trace(message, exception));
+#endif
 
         _settings = LoadSettings();
         NormalizeCursorThemeSettings();
@@ -118,6 +124,7 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
         return new CustomMouseSettingsPluginPage(this);
     }
 
+#if !UDT_PLUGIN_AVALONIA_ONLY
     public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {
         return new WindowsOptimizationCategoryDefinition(
@@ -143,6 +150,7 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
             },
             Id);
     }
+#endif
 
     public override void OnInstalled()
     {
@@ -973,6 +981,29 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
     private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 }
 
+#if UDT_PLUGIN_AVALONIA_ONLY
+public class CustomMouseSettingsPluginPage
+{
+    private readonly CustomMousePlugin _plugin;
+
+    public CustomMouseSettingsPluginPage(CustomMousePlugin plugin)
+    {
+        _plugin = plugin;
+    }
+
+    public string PageTitle => CustomMouseText.SettingsPageTitle;
+    public string? PageIcon => "Settings24";
+
+    /// <summary>
+    /// Avalonia factory used by the cross-platform host.
+    /// </summary>
+    public object CreateAvaloniaPage()
+    {
+        return new AvaloniaCustomMouseSettingsControl(_plugin);
+    }
+
+}
+#else
 public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 {
     private readonly CustomMousePlugin _plugin;
@@ -1000,6 +1031,7 @@ public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.
     }
 
 }
+#endif
 
 public enum CursorThemeMode
 {

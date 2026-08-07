@@ -1,4 +1,3 @@
-using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.SDK;
 using UniversalDeviceToolkit.Plugins.Core;
 using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
@@ -16,12 +15,14 @@ namespace UniversalDeviceToolkit.Plugins.ViveTool;
 )]
 public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
 {
+#if !UDT_PLUGIN_AVALONIA_ONLY
     static ViveToolPlugin()
     {
         PluginLog.Configure(
-            isTraceEnabled: () => Log.Instance.IsTraceEnabled,
-            trace: (message, exception) => Log.Instance.Trace(message, exception));
+            isTraceEnabled: () => UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
+            trace: (message, exception) => UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
     }
+#endif
 
     public override string Id => "vive-tool";
     public override string Name => Resource.ViveTool_PageTitle;
@@ -40,15 +41,21 @@ public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
     }
 }
 
+#if UDT_PLUGIN_AVALONIA_ONLY
+public class ViveToolPluginPage
+#else
 public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
+#endif
 {
     public string PageTitle => Resource.ViveTool_PageTitle;
     public string? PageIcon => "Code24";
 
+#if !UDT_PLUGIN_AVALONIA_ONLY
     public object CreatePage()
     {
         return new ViveToolPage();
     }
+#endif
 
     /// <summary>
     /// Optional Avalonia factory. The legacy WPF factory above remains the
@@ -60,15 +67,21 @@ public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
     }
 }
 
+#if UDT_PLUGIN_AVALONIA_ONLY
+public class ViveToolSettingsPluginPage
+#else
 public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
+#endif
 {
     public string PageTitle => Resource.ViveTool_BinaryPathTitle;
     public string? PageIcon => "Settings24";
 
+#if !UDT_PLUGIN_AVALONIA_ONLY
     public object CreatePage()
     {
         return new ViveToolSettingsPage();
     }
+#endif
 
     /// <summary>
     /// Optional Avalonia factory. The WPF settings page is still returned by

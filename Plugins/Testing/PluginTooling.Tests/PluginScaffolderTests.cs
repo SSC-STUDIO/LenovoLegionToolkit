@@ -7,6 +7,56 @@ namespace PluginTooling.Tests;
 
 public class PluginScaffolderChineseLocalizationTests
 {
+    private static readonly MethodInfo? BuildPluginClassMethod = typeof(PluginScaffolder).GetMethod(
+        "BuildPluginClass",
+        BindingFlags.Static | BindingFlags.NonPublic,
+        binder: null,
+        types: [typeof(string), typeof(string), typeof(ScaffoldRequest), typeof(string), typeof(ArchetypeDefinition)],
+        modifiers: null);
+
+    private static string InvokeBuildPluginClass(ScaffoldRequest request, ArchetypeDefinition archetype)
+    {
+        Assert.NotNull(BuildPluginClassMethod);
+        return (string)BuildPluginClassMethod!.Invoke(
+            null,
+            ["SamplePlugin", "SamplePlugin", request, "Sample Plugin description", archetype])!;
+    }
+
+    /// <summary>
+    /// The default scaffold (no --avalonia-only) must keep the full WPF + Avalonia
+    /// surface: IPluginPage base, CreatePage factories and the Windows optimization
+    /// category when the archetype declares one.
+    /// </summary>
+    [Fact]
+    public void BuildPluginClass_DefaultKeepsWpfPageSurfaceAndOptimization()
+    {
+        var request = new ScaffoldRequest
+        {
+            FolderName = "SamplePlugin",
+            PluginId = "sample-plugin",
+            DisplayName = "Sample Plugin",
+            Author = "Test",
+            MinimumHostVersion = "5.0.0"
+        };
+        var archetype = new ArchetypeDefinition
+        {
+            Name = "runtime-optimization",
+            HasFeaturePage = true,
+            HasSettingsPage = true,
+            HasRuntime = true,
+            HasOptimizationCategory = true
+        };
+
+        var source = InvokeBuildPluginClass(request, archetype);
+
+        Assert.Contains(": IPluginPage", source, StringComparison.Ordinal);
+        Assert.Contains("public object CreatePage() => new SamplePluginControl();", source, StringComparison.Ordinal);
+        Assert.Contains("public object CreatePage() => new SamplePluginSettingsControl();", source, StringComparison.Ordinal);
+        Assert.Contains("WindowsOptimizationCategoryDefinition", source, StringComparison.Ordinal);
+        Assert.Contains("CreateAvaloniaPage() => new AvaloniaSamplePluginFeaturePage();", source, StringComparison.Ordinal);
+        Assert.Contains("CreateAvaloniaPage() => new AvaloniaSamplePluginSettingsPage();", source, StringComparison.Ordinal);
+    }
+
     private static string InvokeBuildPluginChangelog(string displayName)
     {
         var method = typeof(PluginScaffolder).GetMethod(

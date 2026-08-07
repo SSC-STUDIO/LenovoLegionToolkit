@@ -62,13 +62,17 @@ public sealed class PluginScaffolder
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Text.cs"), PluginRepository.NormalizeLineEndings(BuildTextClass(namespaceSegment, classPrefix, request)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Plugin.cs"), PluginRepository.NormalizeLineEndings(BuildPluginClass(namespaceSegment, classPrefix, request, description, archetype)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"Avalonia{classPrefix}Pages.cs"), PluginRepository.NormalizeLineEndings(BuildAvaloniaPages(namespaceSegment, classPrefix, archetype)));
-        File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}Control", request.DisplayName, "Feature preview")));
-        File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "Control")));
 
-        if (archetype.HasSettingsPage)
+        if (!request.AvaloniaOnly)
         {
-            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}SettingsControl", $"{request.DisplayName} Settings", "Settings preview")));
-            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "SettingsControl")));
+            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}Control", request.DisplayName, "Feature preview")));
+            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "Control")));
+
+            if (archetype.HasSettingsPage)
+            {
+                File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}SettingsControl", $"{request.DisplayName} Settings", "Settings preview")));
+                File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "SettingsControl")));
+            }
         }
 
         if (archetype.HasRuntime)
@@ -150,6 +154,11 @@ public sealed class PluginScaffolder
 
     private static string BuildProjectFile(ScaffoldRequest request)
     {
+        return request.AvaloniaOnly ? BuildAvaloniaOnlyProjectFile(request) : BuildWpfProjectFile(request);
+    }
+
+    private static string BuildWpfProjectFile(ScaffoldRequest request)
+    {
         return $$"""
 <Project Sdk="Microsoft.NET.Sdk">
 
@@ -179,6 +188,68 @@ public sealed class PluginScaffolder
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="plugin.manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="plugin.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
+""";
+    }
+
+    private static string BuildAvaloniaOnlyProjectFile(ScaffoldRequest request)
+    {
+        return $$"""
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWPF>false</UseWPF>
+    <Platforms>AnyCPU</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <FileVersion>1.0.0</FileVersion>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.{{request.FolderName}}</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>..\..\.build\plugins-avalonia\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <OutputPath>..\..\.build\plugins-avalonia\UniversalDeviceToolkit.Plugins.{{request.FolderName}}\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <ProjectReference Include="..\..\SDK\Abstractions\UniversalDeviceToolkit.Plugins.Abstractions.csproj" />
+    <ProjectReference Include="..\..\Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -319,8 +390,15 @@ public static class {{classPrefix}}Text
         var runtimeField = archetype.HasRuntime
             ? $"    private readonly {classPrefix}Runtime _runtime = new();{Environment.NewLine}{Environment.NewLine}"
             : string.Empty;
-        var optimization = archetype.HasOptimizationCategory
-            ? $$"""
+
+        var pageInterface = request.AvaloniaOnly ? string.Empty : " : IPluginPage";
+        var featureCreatePage = request.AvaloniaOnly ? string.Empty : $"    public object CreatePage() => new {classPrefix}Control();{Environment.NewLine}";
+        var settingsCreatePage = request.AvaloniaOnly ? string.Empty : $"    public object CreatePage() => new {classPrefix}SettingsControl();{Environment.NewLine}";
+
+        var optimization = string.Empty;
+        if (!request.AvaloniaOnly && archetype.HasOptimizationCategory)
+        {
+            optimization = $$"""
 
     public override UniversalDeviceToolkit.Lib.Optimization.WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {
@@ -339,8 +417,8 @@ public static class {{classPrefix}}Text
             },
             Id);
     }
-"""
-            : string.Empty;
+""";
+        }
 
         return $$"""
 using UniversalDeviceToolkit.Plugins.SDK;
@@ -367,22 +445,20 @@ public sealed class {{classPrefix}}Plugin : PluginBase
 {{featureExtension}}{{settingsExtension}}{{optimization}}
 }
 
-public sealed class {{classPrefix}}FeaturePage : IPluginPage
+public sealed class {{classPrefix}}FeaturePage{{pageInterface}}
 {
     public string PageTitle => {{classPrefix}}Text.FeaturePageTitle;
     public string? PageIcon => "{{DefaultIcon}}";
 
-    public object CreatePage() => new {{classPrefix}}Control();
-{{(archetype.HasFeaturePage ? $"    public object CreateAvaloniaPage() => new Avalonia{classPrefix}FeaturePage();{Environment.NewLine}" : string.Empty)}}
+{{featureCreatePage}}{{(archetype.HasFeaturePage ? $"    public object CreateAvaloniaPage() => new Avalonia{classPrefix}FeaturePage();{Environment.NewLine}" : string.Empty)}}
 }
 
-public sealed class {{classPrefix}}SettingsPage : IPluginPage
+public sealed class {{classPrefix}}SettingsPage{{pageInterface}}
 {
     public string PageTitle => {{classPrefix}}Text.SettingsPageTitle;
     public string? PageIcon => "Settings24";
 
-    public object CreatePage() => new {{classPrefix}}SettingsControl();
-{{(archetype.HasSettingsPage ? $"    public object CreateAvaloniaPage() => new Avalonia{classPrefix}SettingsPage();{Environment.NewLine}" : string.Empty)}}
+{{settingsCreatePage}}{{(archetype.HasSettingsPage ? $"    public object CreateAvaloniaPage() => new Avalonia{classPrefix}SettingsPage();{Environment.NewLine}" : string.Empty)}}
 }
 """;
     }

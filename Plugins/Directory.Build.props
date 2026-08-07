@@ -40,6 +40,19 @@
   </PropertyGroup>
 
 
+  <!-- Portable Avalonia-only plugin flavor. Official plugins build with
+       -p:UdtPluginAvaloniaOnly=true to produce a net10.0 (AnyCPU, no UseWPF,
+       no WPF-UI, no Lib host reference) output for the cross-platform
+       Avalonia host. The default (Windows WPF) flavor is unchanged. -->
+  <PropertyGroup>
+    <UdtPluginAvaloniaOnly Condition="'$(UdtPluginAvaloniaOnly)' == ''">false</UdtPluginAvaloniaOnly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
+    <DefineConstants>$(DefineConstants);UDT_PLUGIN_AVALONIA_ONLY</DefineConstants>
+  </PropertyGroup>
+
+
   <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsPluginTestProject)' != 'True'">
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -99,7 +112,7 @@
   </ItemGroup>
 
 
-  <ItemGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
+  <ItemGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
    <Reference Include="UniversalDeviceToolkit.Lib">
      <HintPath>$(HostLibPath)</HintPath>
      <Private>false</Private>
@@ -115,7 +128,7 @@
     <PackageReference Include="WPF-UI" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
+  <ItemGroup Condition="('$(UseWPF)' == 'true' OR '$(UdtPluginAvaloniaOnly)' == 'true') AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
     <None Include="plugin.manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -123,14 +136,14 @@
 
   <Target Name="EnsureHostDependencies"
           BeforeTargets="ResolveReferences"
-          Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostLibPath)') OR !Exists('$(HostLibPluginsPath)') OR !Exists('$(HostWpfPath)') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
+          Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True' AND '$(UdtPluginAvaloniaOnly)' != 'true' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostLibPath)') OR !Exists('$(HostLibPluginsPath)') OR !Exists('$(HostWpfPath)') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
     <Message Importance="high" Text="Host dependencies are missing from the main build or Plugins\.host cache. Bootstrapping required host binaries..." />
     <Exec Command="&quot;$(PowerShellExecutable)&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(EnsureHostDependenciesScript)&quot;"
           WorkingDirectory="$(MSBuildThisFileDirectory)" />
   </Target>
 
 
-  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
+  <Target Name="CleanupPluginOutput" AfterTargets="Build" Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
     <ItemGroup>
       <FilesToDelete Include="$(OutputPath)*.deps.json" />
       <FilesToDelete Include="$(OutputPath)*.runtimeconfig.json" />
@@ -146,7 +159,7 @@
     <RemoveDir Directories="$(OutputPath)\tools" ContinueOnError="true" />
   </Target>
 
-  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True'">
+  <Target Name="CopySDKToPluginOutput" AfterTargets="CleanupPluginOutput" Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
     <PropertyGroup>
       <SDKDllSource>$(MSBuildThisFileDirectory).build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll</SDKDllSource>
     </PropertyGroup>
