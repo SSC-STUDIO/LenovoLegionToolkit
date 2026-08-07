@@ -93,6 +93,7 @@
   <data name="Dashboard_Sensor_Battery"><value>电池</value></data>
   <data name="Dashboard_Sensor_BatteryCharge"><value>电池电量</value></data>
   <data name="Dashboard_Sensor_BatteryStatus"><value>电池状态</value></data>
+  <data name="Dashboard_Sensor_BatteryModel"><value>Battery model</value></data>
   <data name="Dashboard_Sensor_MinDischargeRate"><value>最小放电速率</value></data>
   <data name="Dashboard_Sensor_MaxDischargeRate"><value>最大放电速率</value></data>
   <data name="Dashboard_Sensor_CycleCount"><value>循环次数</value></data>
@@ -200,6 +201,12 @@
     <value>点此输入名称</value>
   </data><data name="AutomationPage_AddManualPipeline_Title" xml:space="preserve">
     <value>新建</value>
+  </data><data name="AutomationPage_AddAutomaticPipeline" xml:space="preserve">
+    <value>Add automatic</value>
+  </data><data name="AutomationPage_AddAutomaticPipeline_Placeholder" xml:space="preserve">
+    <value>New automatic pipeline</value>
+  </data><data name="AutomationPage_AddAutomaticPipeline_Error" xml:space="preserve">
+    <value>Automatic triggers are unavailable.</value>
   </data><data name="AutomationPage_QuickActions_Empty" xml:space="preserve">
     <value>没有快捷操作，请点击 "新建" 来新建快捷操作。</value>
   </data><data name="AutomationPage_QuickActions_Message" xml:space="preserve">
@@ -2977,4 +2984,4 @@ Fn 将会暂时解除锁定。</value>
     <value>功能未返回值。</value>
   </data><data name="FeatureRegistration_StateNotSupported" xml:space="preserve">
     <value>不支持此状态。</value>
-  </data><data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>此功能由主机平台适配器提供。</value></data><data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>平台适配器未报告此功能。</value></data><data name="FeaturePage_AdapterAction" xml:space="preserve"><value>平台适配器</value></data><data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>安装或启用兼容的平台适配器后才能使用此功能。</value></data><data name="FeaturePage_NoActions" xml:space="preserve"><value>平台适配器未报告可用操作。</value></data></root>
+  </data><data name="FeaturePage_PlatformDescription" xml:space="preserve"><value>此功能由主机平台适配器提供。</value></data><data name="FeaturePage_AdapterUnavailable" xml:space="preserve"><value>平台适配器未报告此功能。</value></data><data name="FeaturePage_AdapterAction" xml:space="preserve"><value>平台适配器</value></data><data name="FeaturePage_AdapterActionDescription" xml:space="preserve"><value>安装或启用兼容的平台适配器后才能使用此功能。</value></data><data name="FeaturePage_NoActions" xml:space="preserve"><value>平台适配器未报告可用操作。</value></data><data name="Appearance_Advanced" xml:space="preserve"><value>Appearance options</value></data><data name="Appearance_TemperatureUnit" xml:space="preserve"><value>Temperature unit</value></data><data name="Appearance_TemperatureUnitDescription" xml:space="preserve"><value>Choose how temperatures are displayed.</value></data><data name="Appearance_Font" xml:space="preserve"><value>Application font</value></data><data name="Appearance_FontDescription" xml:space="preserve"><value>Choose the application font family.</value></data><data name="Appearance_UiScale" xml:space="preserve"><value>Interface scale</value></data><data name="Appearance_UiScaleDescription" xml:space="preserve"><value>Adjust text and control density together.</value></data></root>
