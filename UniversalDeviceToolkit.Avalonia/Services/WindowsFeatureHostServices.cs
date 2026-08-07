@@ -3710,3 +3710,6 @@ internal sealed class AvaloniaMainThreadDispatcher : IMainThreadDispatcher
 }
 
 #endif
+    private readonly Dictionary<string, DriverPackageRuntimeState> _driverPackageStates = new(StringComparer.OrdinalIgnoreCase);
+    private CancellationTokenSource? _driverQueueCancellation;
+    private Task? _driverQueueTask;
