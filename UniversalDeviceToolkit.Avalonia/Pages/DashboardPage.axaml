@@ -207,7 +207,7 @@
                         Padding="16"
                         ToolTip.Tip="{Binding GpuOverclockState.Error}">
                     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
                             <StackPanel Spacing="2" MinWidth="0">
                                 <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}"
                                                              FontSize="{StaticResource FontSizeBody}"
@@ -220,7 +220,16 @@
                                                              OverflowMode="Wrap"
                                                              MaxLines="2" />
                             </StackPanel>
-                            <ToggleSwitch Grid.Column="1"
+                            <Button Grid.Column="1"
+                                    Click="ConfigureGpuOverclockButton_Click"
+                                    IsEnabled="{Binding GpuOverclockState.IsAvailable}"
+                                    Padding="6"
+                                    ToolTip.Tip="{local:Loc Key=Settings, Fallback=Configure}"
+                                    automation:AutomationProperties.Name="{local:Loc Key=Settings, Fallback=Configure GPU overclock}">
+                                <controls:NavigationIcon IconIdentifier="Settings24"
+                                                         FontSize="{StaticResource IconSizeSM}" />
+                            </Button>
+                            <ToggleSwitch Grid.Column="2"
                                           IsChecked="{Binding GpuOverclockEnabled, Mode=TwoWay}"
                                           IsEnabled="{Binding GpuOverclockState.IsAvailable}"
                                           automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}" />

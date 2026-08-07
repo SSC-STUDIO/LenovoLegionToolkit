@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 
@@ -60,5 +61,16 @@ public partial class DashboardPage : UserControl
             : new GodModeSettingsWindow(_platformServices);
         await dialog.ShowDialog(owner);
         await _viewModel.LoadAsync();
+    }
+
+    private async void ConfigureGpuOverclockButton_Click(object? sender, RoutedEventArgs e)
+    {
+#if WINDOWS
+        if (TopLevel.GetTopLevel(this) is not Window owner || _viewModel is null)
+            return;
+
+        await new GpuOverclockProfilesWindow().ShowDialog(owner);
+        await _viewModel.LoadAsync();
+#endif
     }
 }
