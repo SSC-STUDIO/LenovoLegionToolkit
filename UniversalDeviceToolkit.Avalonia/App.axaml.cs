@@ -51,6 +51,7 @@ public partial class App : Application
     private ApplicationSettings? _applicationSettings;
     private AvaloniaNotificationManager? _notificationManager;
     private AvaloniaSingleInstanceGuard? _singleInstanceGuard;
+    private AvaloniaOsdOverlayController? _osdOverlay;
 #endif
 
     public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
@@ -320,6 +321,8 @@ public partial class App : Application
         IsExiting = true;
         UnregisterExceptionHandlers();
 #if WINDOWS
+        _osdOverlay?.Dispose();
+        _osdOverlay = null;
         try
         {
             await new AvaloniaWindowsShutdownCoordinator().StopAsync().ConfigureAwait(false);
@@ -505,6 +508,12 @@ public partial class App : Application
 
         if (mainWindow is not null)
             Dispatcher.UIThread.Post(() => _ = mainWindow.RefreshPluginNavigationAsync());
+
+        Dispatcher.UIThread.Post(() =>
+        {
+            _osdOverlay ??= new AvaloniaOsdOverlayController(PlatformServices);
+            _osdOverlay.Initialize();
+        });
 
         try
         {
