@@ -26,7 +26,7 @@ current WPF source:
 | Keyboard lighting | Keyboard backlight and Spectrum profiles | `KeyboardBacklightPage` uses the shared keyboard-lighting contract | In progress |
 | Actions | Automation pipeline editor and manual actions | `AutomationPage` edits and saves the shared automation workspace | In progress |
 | Macro | Macro editor and recorder state | `MacroPage` uses the shared macro workspace contract | In progress |
-| Windows optimization | Optimization actions and custom cleanup rules | `WindowsOptimizationPage` and `FeaturePageView` use the shared feature-action contract | In progress |
+| Windows optimization | Optimization actions and custom cleanup rules | `WindowsOptimizationPage` and `FeaturePageView` preserve pending selection, batch application, per-action cleanup progress and partial-failure results through the shared feature-action contract | Complete |
 | Official plugin UI | Custom Mouse, Shell Integration, ViVeTool | Each official plugin supplies an Avalonia page factory; `PluginHostedPage` embeds native controls | Contracted |
 | Plugin lifecycle | Discovery, installation, updates and navigation refresh | Avalonia startup and `MainWindow` use `IPluginManager` and plugin catalog state | Contracted |
 | Startup and desktop lifecycle | Single instance, crash recovery, compatibility gate, device setup, OSD, services and clean shutdown | Avalonia uses shared runtime coordinators and Windows service adapters | Contracted |
