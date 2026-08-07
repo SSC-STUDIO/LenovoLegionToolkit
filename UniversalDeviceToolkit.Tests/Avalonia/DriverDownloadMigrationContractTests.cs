@@ -1,4 +1,5 @@
 using FluentAssertions;
+using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Services;
 using Xunit;
 
@@ -95,5 +96,83 @@ public sealed class DriverDownloadMigrationContractTests
         state.DownloadPath.Should().BeEmpty();
         state.HiddenPackageCount.Should().Be(0);
         state.IsQueueRunning.Should().BeFalse();
+    }
+
+    [Fact]
+    public void DriverDownloadPage_AutoDefaultsOperatingSystemToCurrentOs()
+    {
+        var operatingSystems = new[] { "Windows11", "Windows10", "Windows8", "Windows7" };
+
+        DriverDownloadPage.ResolveDefaultOperatingSystem("Windows10", operatingSystems)
+            .Should().Be("Windows10");
+        DriverDownloadPage.ResolveDefaultOperatingSystem("windows11", operatingSystems)
+            .Should().Be("Windows11");
+        DriverDownloadPage.ResolveDefaultOperatingSystem(null, operatingSystems)
+            .Should().Be("Windows11");
+        DriverDownloadPage.ResolveDefaultOperatingSystem("WindowsXP", operatingSystems)
+            .Should().Be("Windows11");
+        DriverDownloadPage.ResolveDefaultOperatingSystem("Windows10", [])
+            .Should().BeEmpty();
+    }
+
+    [Fact]
+    public void DriverDownloadPage_RequiresRescanConfirmationOnlyWhileDownloadsRun()
+    {
+        var idle = new DriverPackageItem(
+            "driver-id",
+            "Driver",
+            "Description",
+            "1.0",
+            "Category",
+            "10 MB",
+            true,
+            true);
+        var downloading = idle with { Status = DriverPackageStatus.Downloading };
+        var queued = idle with { Status = DriverPackageStatus.Queued };
+        var paused = idle with { Status = DriverPackageStatus.Paused };
+
+        DriverDownloadPage.IsDriverDownloadRunning([idle, paused]).Should().BeFalse();
+        DriverDownloadPage.IsDriverDownloadRunning([queued]).Should().BeTrue();
+        DriverDownloadPage.IsDriverDownloadRunning([downloading]).Should().BeTrue();
+        DriverDownloadPage.IsDriverDownloadRunning([]).Should().BeFalse();
+    }
+
+    [Fact]
+    public void DriverDownloadPage_DecidesPerPackagePauseResumeFromStatus()
+    {
+        DriverDownloadPage.GetPackagePauseResumeAction(DriverPackageStatus.Downloading)
+            .Should().Be(DriverPackageAction.Pause);
+        DriverDownloadPage.GetPackagePauseResumeAction(DriverPackageStatus.Queued)
+            .Should().Be(DriverPackageAction.Pause);
+        DriverDownloadPage.GetPackagePauseResumeAction(DriverPackageStatus.Paused)
+            .Should().Be(DriverPackageAction.Resume);
+        DriverDownloadPage.GetPackagePauseResumeAction(DriverPackageStatus.NotStarted)
+            .Should().Be(DriverPackageAction.None);
+        DriverDownloadPage.GetPackagePauseResumeAction(DriverPackageStatus.Completed)
+            .Should().Be(DriverPackageAction.None);
+        DriverDownloadPage.GetPackagePauseResumeAction(DriverPackageStatus.Failed)
+            .Should().Be(DriverPackageAction.None);
+    }
+
+    [Fact]
+    public void DriverDownloadPage_PreservesWpfPauseResumeAndScanInterruptionSurface()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "DriverDownloadPage.axaml.cs"));
+
+        source.Should().Contain("GetPackagePauseResumeAction");
+        source.Should().Contain("AvaloniaDriverPause_");
+        source.Should().Contain("PauseDriverDownloadsAsync");
+        source.Should().Contain("StartSelectedDriverPackagesAsync");
+        source.Should().Contain("ConfirmScanInterruptionAsync");
+        source.Should().Contain("DriverScanInterruptWindow");
+        source.Should().Contain("GetMachineInformationAsync");
+        source.Should().Contain("OSExtensions.GetCurrent()");
+        source.Should().Contain("ResolveDefaultOperatingSystem");
+        source.Should().Contain("IsDriverDownloadRunning");
     }
 }

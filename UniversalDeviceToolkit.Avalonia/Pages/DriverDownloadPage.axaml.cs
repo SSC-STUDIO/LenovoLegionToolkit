@@ -11,6 +11,10 @@ using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
+#if WINDOWS
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
+#endif
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -43,8 +47,38 @@ public partial class DriverDownloadPage : UserControl
     private async void OnLoaded(object? sender, RoutedEventArgs e)
     {
         Loaded -= OnLoaded;
-        ApplyState(await _platformServices.GetDriverDownloadStateAsync(), updateInputs: true);
+        var state = await _platformServices.GetDriverDownloadStateAsync();
+        ApplyState(state, updateInputs: true);
+        await ApplyPageDefaultsAsync(state.Os);
         _queueRefreshTimer.Start();
+    }
+
+    private async Task ApplyPageDefaultsAsync(string persistedOs)
+    {
+#if WINDOWS
+        if (string.IsNullOrWhiteSpace(persistedOs))
+        {
+            var currentOs = OSExtensions.GetCurrent().ToString();
+            OsComboBox.SelectedItem = ResolveDefaultOperatingSystem(currentOs, _operatingSystems);
+        }
+
+        if (string.IsNullOrWhiteSpace(MachineTypeTextBox.Text))
+        {
+            try
+            {
+                var machine = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                if (!string.IsNullOrWhiteSpace(machine.MachineType))
+                    MachineTypeTextBox.Text = machine.MachineType;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"DriverDownloadPage: failed to auto-fill machine type: {ex.Message}", ex);
+            }
+        }
+#else
+        await Task.CompletedTask;
+#endif
     }
 
     private async void QueueRefreshTimer_Tick(object? sender, EventArgs e)
@@ -68,9 +102,16 @@ public partial class DriverDownloadPage : UserControl
         if (_isApplying)
             return;
 
+        var interruptDownloads = IsDriverDownloadRunning(_packages);
+        if (interruptDownloads && !await ConfirmScanInterruptionAsync())
+            return;
+
         _isApplying = true;
         try
         {
+            if (interruptDownloads)
+                await _platformServices.PauseDriverDownloadsAsync();
+
             var source = SourceComboBox.SelectedItem?.ToString() ?? _sources[0];
             var os = OsComboBox.SelectedItem?.ToString() ?? _operatingSystems[0];
             StateText.Text = AvaloniaLocalization.GetString("WindowsOptimizationPage_ScanningDrivers", "Scanning driver downloads...");
@@ -85,6 +126,14 @@ public partial class DriverDownloadPage : UserControl
         {
             _isApplying = false;
         }
+    }
+
+    private async Task<bool> ConfirmScanInterruptionAsync()
+    {
+        if (TopLevel.GetTopLevel(this) is not Window owner)
+            return true;
+
+        return await new DriverScanInterruptWindow().ShowDialog<bool>(owner);
     }
 
     private async void DownloadPathTextBox_LostFocus(object? sender, RoutedEventArgs e)
@@ -369,12 +418,47 @@ public partial class DriverDownloadPage : UserControl
             });
         };
 
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto"), ColumnSpacing = 12 };
+        var pauseResumeAction = GetPackagePauseResumeAction(package.Status);
+        var pauseResumeButton = new Button
+        {
+            Content = pauseResumeAction switch
+            {
+                DriverPackageAction.Pause => AvaloniaLocalization.GetString("PackageControl_Pause", "Pause"),
+                DriverPackageAction.Resume => AvaloniaLocalization.GetString("PackageControl_Resume", "Resume"),
+                _ => string.Empty,
+            },
+            IsVisible = pauseResumeAction != DriverPackageAction.None,
+            MinWidth = 110,
+            VerticalAlignment = VerticalAlignment.Top,
+        };
+        AutomationProperties.SetAutomationId(pauseResumeButton, $"AvaloniaDriverPause_{package.Id}");
+        AutomationProperties.SetName(pauseResumeButton, $"{pauseResumeAction} {package.Title}");
+        pauseResumeButton.Click += async (_, _) =>
+        {
+            var action = GetPackagePauseResumeAction(package.Status);
+            if (action == DriverPackageAction.Pause)
+            {
+                await ApplyActionAsync(() => _platformServices.PauseDriverDownloadsAsync());
+            }
+            else if (action == DriverPackageAction.Resume)
+            {
+                _selectedPackageIds.Add(package.Id);
+                await ApplyActionAsync(async () =>
+                {
+                    await _platformServices.SetSelectedDriverPackagesAsync(_selectedPackageIds.ToArray());
+                    return await _platformServices.StartSelectedDriverPackagesAsync();
+                });
+            }
+        };
+
+        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,*,Auto,Auto"), ColumnSpacing = 12 };
         grid.Children.Add(selection);
         Grid.SetColumn(copy, 1);
         grid.Children.Add(copy);
         Grid.SetColumn(queueButton, 2);
         grid.Children.Add(queueButton);
+        Grid.SetColumn(pauseResumeButton, 3);
+        grid.Children.Add(pauseResumeButton);
         var card = new Border
         {
             Background = FindBrush("CardBackgroundBrush"),
@@ -423,4 +507,85 @@ public partial class DriverDownloadPage : UserControl
         this.TryFindResource(key, out var value) && value is CornerRadius radius
             ? radius
             : new CornerRadius(8);
+
+    internal static bool IsDriverDownloadRunning(IEnumerable<DriverPackageItem> packages) =>
+        packages.Any(package => package.Status is DriverPackageStatus.Downloading or DriverPackageStatus.Queued);
+
+    internal static string ResolveDefaultOperatingSystem(string? currentOs, IReadOnlyList<string> operatingSystems)
+    {
+        if (operatingSystems.Count == 0)
+            return string.Empty;
+
+        if (!string.IsNullOrWhiteSpace(currentOs))
+        {
+            var match = operatingSystems.FirstOrDefault(item => item.Equals(currentOs, StringComparison.OrdinalIgnoreCase));
+            if (match is not null)
+                return match;
+        }
+
+        return operatingSystems[0];
+    }
+
+    internal static DriverPackageAction GetPackagePauseResumeAction(DriverPackageStatus status) => status switch
+    {
+        DriverPackageStatus.Downloading or DriverPackageStatus.Queued => DriverPackageAction.Pause,
+        DriverPackageStatus.Paused => DriverPackageAction.Resume,
+        _ => DriverPackageAction.None,
+    };
+}
+
+internal enum DriverPackageAction
+{
+    None,
+    Pause,
+    Resume,
+}
+
+internal sealed class DriverScanInterruptWindow : Window
+{
+    public DriverScanInterruptWindow()
+    {
+        Title = AvaloniaLocalization.GetString("PackagesPage_DownloadInProgress_Title", "Download in progress");
+        Width = 460;
+        SizeToContent = SizeToContent.Height;
+        WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+        var cancel = new Button
+        {
+            Content = AvaloniaLocalization.GetString("Common_Cancel", "Cancel"),
+            IsCancel = true,
+        };
+        var scan = new Button
+        {
+            Content = AvaloniaLocalization.GetString("WindowsOptimizationPage_Scan_Button", "Scan"),
+            IsDefault = true,
+        };
+        scan.Click += (_, _) => Close(true);
+
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 8,
+        };
+        buttons.Children.Add(cancel);
+        buttons.Children.Add(scan);
+
+        Content = new StackPanel
+        {
+            Margin = new Thickness(24),
+            Spacing = 10,
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = AvaloniaLocalization.GetString(
+                        "PackagesPage_DownloadInProgress_Message",
+                        "Driver downloads are running. Starting a new scan will stop the current downloads. Continue?"),
+                    TextWrapping = TextWrapping.Wrap,
+                },
+                buttons,
+            },
+        };
+    }
 }
