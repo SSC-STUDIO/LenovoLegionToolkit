@@ -95,4 +95,106 @@ public sealed class OfficialPluginAvaloniaMigrationContractTests
         source.Should().Contain("public object CreateAvaloniaPage()");
         source.Should().Contain(factoryExpression);
     }
+
+    [Fact]
+    public void CustomMouse_AvaloniaSeparatesModePersistenceFromApplyingCurrentTheme()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "Plugins",
+            "Official",
+            "CustomMouse",
+            "AvaloniaCustomMouseSettingsControl.cs"));
+
+        source.Should().Contain("ApplyCurrentCursorThemeAsync");
+        source.Should().Contain("ActionButton(CustomMouseText.ApplyCursorThemeNowButton, ApplyCurrentCursorThemeAsync");
+        source.Should().Contain("_plugin.ApplyCursorStyleForCurrentThemeAsync()");
+        source.Should().Contain("_plugin.SetCursorThemeModeAsync(mode)");
+        source.Should().Contain("await _plugin.SaveSettingsAsync()");
+        source.Should().Contain("Hydrate(setReadyStatus: false)");
+    }
+
+    [Fact]
+    public void ShellIntegration_AvaloniaProvidesTheWpfManagementAndProfileOperations()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "Plugins",
+            "Official",
+            "ShellIntegration",
+            "AvaloniaShellIntegrationSettingsControl.cs"));
+
+        foreach (var operation in new[]
+                 {
+                     "EnableShellAsync",
+                     "DisableShellAsync",
+                     "SyncManagedConfigurationAsync",
+                     "ResetManagedConfigurationAsync",
+                     "ApplyPresetAsync",
+                     "ExportProfile",
+                     "ImportProfileAsync",
+                     "OpenShellFolder",
+                     "OpenShellConfigFile",
+                     "OpenManagedConfigFolder",
+                 })
+        {
+            source.Should().Contain(operation);
+        }
+
+        source.Should().Contain("SaveFilePickerAsync");
+        source.Should().Contain("OpenFilePickerAsync");
+        source.Should().Contain("StatusPresetApplyFailed");
+        source.Should().Contain("StatusProfileImportFailed");
+    }
+
+    [Fact]
+    public void ViveTool_AvaloniaProvidesFeatureAndSettingsOperationsWithFailureStates()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "Plugins",
+            "Official",
+            "ViveTool",
+            "AvaloniaViveToolPages.cs"));
+
+        foreach (var operation in new[]
+                 {
+                     "ListFeaturesAsync",
+                     "EnableFeatureAsync",
+                     "DisableFeatureAsync",
+                     "ImportFeaturesFromFileAsync",
+                     "ImportFeaturesFromUrlAsync",
+                     "ExportFeaturesToFileAsync",
+                     "DownloadViveToolAsync",
+                     "SetViveToolPathAsync",
+                 })
+        {
+            source.Should().Contain(operation);
+        }
+
+        source.Should().Contain("ViveTool_ImportFailed");
+        source.Should().Contain("ViveTool_ExportFailed");
+        source.Should().Contain("ViveTool_DownloadFailed");
+        source.Should().Contain("ViveTool_EnableFeatureFailed");
+        source.Should().Contain("ViveTool_DisableFeatureFailed");
+    }
+
+    [Fact]
+    public void PluginHostedPage_EmbedsNativeContentAndRendersCompatibilityStateForOtherPlugins()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "PluginHostedPage.cs"));
+
+        source.Should().Contain("state.Content is Control control && state.IsAvaloniaPage");
+        source.Should().Contain("BuildCompatibilityState(state)");
+        source.Should().Contain("PluginPage_WpfOnlyTitle");
+        source.Should().Contain("PluginPage_NoFeatureTitle");
+    }
 }

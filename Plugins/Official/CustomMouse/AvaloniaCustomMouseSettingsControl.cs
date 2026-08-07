@@ -107,7 +107,7 @@ public sealed class AvaloniaCustomMouseSettingsControl : UserControl
             Spacing = 8,
             Children =
             {
-                ActionButton(CustomMouseText.ApplyCursorThemeNowButton, () => ApplyCursorThemeAsync(), "AvaloniaCustomMouseApplyCursorTheme"),
+                ActionButton(CustomMouseText.ApplyCursorThemeNowButton, ApplyCurrentCursorThemeAsync, "AvaloniaCustomMouseApplyCursorTheme"),
                 ActionButton(CustomMouseText.RestoreWindowsDefaultButton, RestoreWindowsDefaultAsync, "AvaloniaCustomMouseRestoreWindowsDefault"),
             },
         });
@@ -274,6 +274,30 @@ public sealed class AvaloniaCustomMouseSettingsControl : UserControl
             _hydrating = false;
             SetStatus($"{CustomMouseText.StatusCursorApplyFailed}: {ex.Message}", true);
             RefreshSummary();
+        }
+    }
+
+    private async Task ApplyCurrentCursorThemeAsync()
+    {
+        _applyProgress.IsVisible = true;
+        SetStatus(CustomMouseText.StatusApplying, false);
+        try
+        {
+            var applied = await _plugin.ApplyCursorStyleForCurrentThemeAsync().ConfigureAwait(true);
+            SetStatus(
+                applied
+                    ? CustomMouseText.FormatCursorApplied(_plugin.Settings.LastAppliedTheme)
+                    : CustomMouseText.StatusCursorApplyFailed,
+                !applied);
+            RefreshSummary();
+        }
+        catch (Exception ex)
+        {
+            SetStatus($"{CustomMouseText.ApplyCursorThemeFailedPrefix} {ex.Message}", true);
+        }
+        finally
+        {
+            _applyProgress.IsVisible = false;
         }
     }
 
