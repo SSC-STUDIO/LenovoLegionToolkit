@@ -21,11 +21,46 @@ public enum SpectrumKeyboardLayoutKind
 }
 
 /// <summary>
+/// Device zone layouts rendered alongside the keyboard by
+/// <see cref="SpectrumKeyboardLayoutCanvas"/>. Mirrors the four
+/// <c>SpectrumDevice*Control</c> variants in the WPF host; the page keeps the
+/// layout name as a string so this stays decoupled from the Windows-only
+/// <c>UniversalDeviceToolkit.Lib</c> <c>SpectrumLayout</c> enum.
+/// </summary>
+public enum SpectrumDeviceLayoutKind
+{
+    /// <summary>Keyboard + logo + rear vents + side panels + front panel.</summary>
+    Full,
+
+    /// <summary>Keyboard + logo + 6 rear vents + 3 side zones per side + front panel.</summary>
+    FullAlternative,
+
+    /// <summary>Keyboard + front panel only.</summary>
+    KeyboardAndFront,
+
+    /// <summary>Keyboard only, no device zones (matches the plain canvas).</summary>
+    KeyboardOnly,
+}
+
+/// <summary>
 /// Key geometry in relative units inside the fixed 200 x 100 canvas space
 /// (2:1 aspect). Coordinates describe the outer hit box; rendering insets each
 /// key by a small gap so neighbouring keys read as separate caps.
 /// </summary>
 public readonly record struct SpectrumKeyGeometry(
+    ushort KeyCode,
+    double X,
+    double Y,
+    double Width,
+    double Height);
+
+/// <summary>
+/// Non-keyboard device zone geometry (logo, vents, side/front panels) in the
+/// same relative units as <see cref="SpectrumKeyGeometry"/>, but expressed in
+/// the larger device canvas space (220 x 112). Key codes match the WPF
+/// <c>SpectrumDevice*Control</c> XAML files exactly.
+/// </summary>
+public readonly record struct SpectrumDeviceZoneGeometry(
     ushort KeyCode,
     double X,
     double Y,
@@ -78,6 +113,60 @@ public static class SpectrumKeyboardLayoutData
         }
 
         kind = SpectrumKeyboardLayoutKind.Ansi;
+        return false;
+    }
+
+    /// <summary>
+    /// Device layouts render the keyboard shifted down by
+    /// <see cref="DeviceKeyboardOffsetY"/> (and right by
+    /// <see cref="DeviceKeyboardOffsetX"/>) inside a wider 220 x 112 canvas so
+    /// the logo, vents, side panels and front panel fit around it. The offset
+    /// and size are chosen to keep the keyboard geometry identical in all
+    /// layouts; only the enclosing canvas and the keyboard placement change.
+    /// </summary>
+    public const double DeviceCanvasWidth = 220;
+    public const double DeviceCanvasHeight = 112;
+    public const double DeviceKeyboardOffsetX = 12;
+    public const double DeviceKeyboardOffsetY = 26;
+
+    /// <summary>
+    /// Zone rectangles for a device layout, transcribed from the WPF
+    /// <c>SpectrumDevice*Control</c> XAML grids: keyboard occupies grid
+    /// columns 1-6 and rows 2-6, with the logo above, vents between logo and
+    /// keyboard, side panels at columns 0/7 and the front panel below.
+    /// </summary>
+    public static IReadOnlyList<SpectrumDeviceZoneGeometry> GetDeviceZones(SpectrumDeviceLayoutKind kind) => kind switch
+    {
+        SpectrumDeviceLayoutKind.FullAlternative => FullAlternativeZones,
+        SpectrumDeviceLayoutKind.KeyboardAndFront => KeyboardAndFrontZones,
+        SpectrumDeviceLayoutKind.KeyboardOnly => KeyboardOnlyZones,
+        _ => FullZones,
+    };
+
+    public static IReadOnlyList<SpectrumDeviceZoneGeometry> GetDeviceZones(string? layoutName) =>
+        TryParseDeviceLayout(layoutName, out var kind) ? GetDeviceZones(kind) : FullZones;
+
+    public static bool TryParseDeviceLayout(string? layoutName, out SpectrumDeviceLayoutKind kind)
+    {
+        switch (layoutName)
+        {
+            case null:
+                break;
+            case { } name when name.Equals("Full", System.StringComparison.OrdinalIgnoreCase):
+                kind = SpectrumDeviceLayoutKind.Full;
+                return true;
+            case { } name when name.Equals("FullAlternative", System.StringComparison.OrdinalIgnoreCase):
+                kind = SpectrumDeviceLayoutKind.FullAlternative;
+                return true;
+            case { } name when name.Equals("KeyboardAndFront", System.StringComparison.OrdinalIgnoreCase):
+                kind = SpectrumDeviceLayoutKind.KeyboardAndFront;
+                return true;
+            case { } name when name.Equals("KeyboardOnly", System.StringComparison.OrdinalIgnoreCase):
+                kind = SpectrumDeviceLayoutKind.KeyboardOnly;
+                return true;
+        }
+
+        kind = SpectrumDeviceLayoutKind.Full;
         return false;
     }
 
@@ -244,6 +333,112 @@ public static class SpectrumKeyboardLayoutData
 
         return keys;
     }
+
+    private const double VentY = 13;
+    private const double VentHeight = 10;
+    private const double SideX = 0;
+    private const double SideRightX = DeviceCanvasWidth - 10;
+    private const double SideWidth = 10;
+    private const double FrontY = 97;
+    private const double FrontHeight = 12;
+
+    // Rear vents: WPF grid columns 1-6 map to six 34-unit columns starting at 14.
+    private static readonly IReadOnlyList<(ushort Code, double X)> VentColumns =
+    [
+        (0x03EA, 14), (0x03EB, 48), (0x03EC, 82), (0x03ED, 116), (0x03EE, 150), (0x03EF, 184),
+    ];
+
+    // Front panel: same column mapping, key codes follow the WPF XAML order.
+    private static readonly IReadOnlyList<(ushort Code, double X)> FrontColumns =
+    [
+        (0x01F5, 14), (0x01F6, 48), (0x01F7, 82), (0x01F8, 116), (0x01F9, 150), (0x01FA, 184),
+    ];
+
+    // Side panels: keyboard rows 2/3 (upper half) and 5/6 (lower half).
+    private const double SideTopY = 44;
+    private const double SideUpperY = 58;
+    private const double SideLowerY = 74;
+    private const double SideBottomY = 88;
+    private const double SideHeight = 13;
+    private const double SideTallHeight = 19;
+
+    private static SpectrumDeviceZoneGeometry Zone(ushort code, double x, double y, double width, double height) =>
+        new(code, x, y, width, height);
+
+    private static IReadOnlyList<SpectrumDeviceZoneGeometry> BuildFullZones() =>
+    [
+        // Panel logo (WPF: row 0, column 6, centered above the vents).
+        Zone(0x05DD, 92, 2, 36, 9),
+        // Rear vents (WPF: columns 1, 2, 5, 6 of the vent row).
+        Zone(0x03EB, VentColumns[1].X, VentY, 32, VentHeight),
+        Zone(0x03EC, VentColumns[2].X, VentY, 32, VentHeight),
+        Zone(0x03ED, VentColumns[4].X, VentY, 32, VentHeight),
+        Zone(0x03EE, VentColumns[5].X, VentY, 32, VentHeight),
+        // Left side (WPF: rows 2, 3, 5, 6 of column 0).
+        Zone(0x03EA, SideX, SideTopY, SideWidth, SideHeight),
+        Zone(0x03E9, SideX, SideUpperY, SideWidth, SideHeight),
+        Zone(0x01F5, SideX, SideLowerY, SideWidth, SideHeight),
+        Zone(0x01F6, SideX, SideBottomY, SideWidth, SideHeight),
+        // Right side (WPF: rows 2, 3, 5, 6 of column 7).
+        Zone(0x03EF, SideRightX, SideTopY, SideWidth, SideHeight),
+        Zone(0x03F0, SideRightX, SideUpperY, SideWidth, SideHeight),
+        Zone(0x01FE, SideRightX, SideLowerY, SideWidth, SideHeight),
+        Zone(0x01FD, SideRightX, SideBottomY, SideWidth, SideHeight),
+        // Front panel (WPF: columns 1-6 of the bottom row).
+        Zone(0x01F7, FrontColumns[2].X, FrontY, 32, FrontHeight),
+        Zone(0x01F8, FrontColumns[3].X, FrontY, 32, FrontHeight),
+        Zone(0x01F9, FrontColumns[4].X, FrontY, 32, FrontHeight),
+        Zone(0x01FA, FrontColumns[5].X, FrontY, 32, FrontHeight),
+        Zone(0x01FB, 150, FrontY, 32, FrontHeight),
+        Zone(0x01FC, 184, FrontY, 32, FrontHeight),
+    ];
+
+    private static IReadOnlyList<SpectrumDeviceZoneGeometry> BuildFullAlternativeZones() =>
+    [
+        // Panel logo (same placement as Full).
+        Zone(0x05DD, 92, 2, 36, 9),
+        // Rear vents (WPF alternative: all six columns 1-6, key codes shift).
+        Zone(0x03EA, VentColumns[0].X, VentY, 32, VentHeight),
+        Zone(0x03EB, VentColumns[1].X, VentY, 32, VentHeight),
+        Zone(0x03EC, VentColumns[2].X, VentY, 32, VentHeight),
+        Zone(0x03ED, VentColumns[3].X, VentY, 32, VentHeight),
+        Zone(0x03EE, VentColumns[4].X, VentY, 32, VentHeight),
+        Zone(0x03EF, VentColumns[5].X, VentY, 32, VentHeight),
+        // Left side (WPF alternative: row 2 only at the top, then rows 5 and 6).
+        Zone(0x03E9, SideX, SideTopY, SideWidth, SideTallHeight),
+        Zone(0x01F5, SideX, SideLowerY, SideWidth, SideHeight),
+        Zone(0x01F6, SideX, SideBottomY, SideWidth, SideHeight),
+        // Right side (WPF alternative: row 2 only at the top, then rows 5 and 6).
+        Zone(0x03F0, SideRightX, SideTopY, SideWidth, SideTallHeight),
+        Zone(0x01FE, SideRightX, SideLowerY, SideWidth, SideHeight),
+        Zone(0x01FD, SideRightX, SideBottomY, SideWidth, SideHeight),
+        // Front panel (same six zones as Full).
+        Zone(0x01F7, FrontColumns[2].X, FrontY, 32, FrontHeight),
+        Zone(0x01F8, FrontColumns[3].X, FrontY, 32, FrontHeight),
+        Zone(0x01F9, FrontColumns[4].X, FrontY, 32, FrontHeight),
+        Zone(0x01FA, FrontColumns[5].X, FrontY, 32, FrontHeight),
+        Zone(0x01FB, 150, FrontY, 32, FrontHeight),
+        Zone(0x01FC, 184, FrontY, 32, FrontHeight),
+    ];
+
+    private static IReadOnlyList<SpectrumDeviceZoneGeometry> BuildKeyboardAndFrontZones()
+    {
+        var zones = new List<SpectrumDeviceZoneGeometry>(6);
+        // Front panel (WPF KeyboardAndFront: columns 0-5 use codes 0x01F5-0x01FA).
+        foreach (var (code, x) in FrontColumns)
+            zones.Add(Zone(code, x, FrontY, 32, FrontHeight));
+        return zones;
+    }
+
+    private static readonly IReadOnlyList<SpectrumDeviceZoneGeometry> FullZones = BuildFullZones();
+    private static readonly IReadOnlyList<SpectrumDeviceZoneGeometry> FullAlternativeZones = BuildFullAlternativeZones();
+    private static readonly IReadOnlyList<SpectrumDeviceZoneGeometry> KeyboardAndFrontZones = BuildKeyboardAndFrontZones();
+    private static readonly IReadOnlyList<SpectrumDeviceZoneGeometry> KeyboardOnlyZones = [];
+
+    public static IReadOnlyList<SpectrumDeviceZoneGeometry> Full => FullZones;
+    public static IReadOnlyList<SpectrumDeviceZoneGeometry> FullAlternative => FullAlternativeZones;
+    public static IReadOnlyList<SpectrumDeviceZoneGeometry> KeyboardAndFront => KeyboardAndFrontZones;
+    public static IReadOnlyList<SpectrumDeviceZoneGeometry> KeyboardOnly => KeyboardOnlyZones;
 }
 
 /// <summary>
@@ -259,6 +454,11 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
         AvaloniaProperty.Register<SpectrumKeyboardLayoutCanvas, SpectrumKeyboardLayoutKind>(
             nameof(Layout),
             SpectrumKeyboardLayoutKind.Ansi);
+
+    public static readonly StyledProperty<SpectrumDeviceLayoutKind> DeviceLayoutProperty =
+        AvaloniaProperty.Register<SpectrumKeyboardLayoutCanvas, SpectrumDeviceLayoutKind>(
+            nameof(DeviceLayout),
+            SpectrumDeviceLayoutKind.KeyboardOnly);
 
     public static readonly StyledProperty<IReadOnlyCollection<ushort>?> AvailableKeysProperty =
         AvaloniaProperty.Register<SpectrumKeyboardLayoutCanvas, IReadOnlyCollection<ushort>?>(
@@ -289,6 +489,18 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
     }
 
     /// <summary>
+    /// Device zone layout rendered around the keyboard. KeyboardOnly matches
+    /// the original bare-keyboard canvas; the other values add logo, vent,
+    /// side-panel and front-panel zones transcribed from the WPF
+    /// <c>SpectrumDevice*Control</c> variants.
+    /// </summary>
+    public SpectrumDeviceLayoutKind DeviceLayout
+    {
+        get => GetValue(DeviceLayoutProperty);
+        set => SetValue(DeviceLayoutProperty, value);
+    }
+
+    /// <summary>
     /// Key codes reported by the keyboard controller. Keys without a matching
     /// geometry entry remain visible only in the hex fallback row. When null or
     /// empty every geometry key is shown.
@@ -315,6 +527,14 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
     public IReadOnlyCollection<ushort> Selection => _selectedKeys;
 
     public IReadOnlyList<SpectrumKeyGeometry> Geometry => SpectrumKeyboardLayoutData.GetLayout(Layout);
+
+    /// <summary>
+    /// Device zones for the current <see cref="DeviceLayout"/>. Zone key codes
+    /// participate in selection, coloring and the <see cref="AvailableKeys"/>
+    /// filter exactly like keyboard keys.
+    /// </summary>
+    public IReadOnlyList<SpectrumDeviceZoneGeometry> Zones =>
+        SpectrumKeyboardLayoutData.GetDeviceZones(DeviceLayout);
 
     public void SetKeyColors(IReadOnlyDictionary<ushort, Color> colors) => KeyColors = colors;
 
@@ -372,6 +592,7 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
     {
         base.OnPropertyChanged(change);
         if (change.Property == LayoutProperty
+            || change.Property == DeviceLayoutProperty
             || change.Property == AvailableKeysProperty
             || change.Property == KeyColorsProperty)
         {
@@ -385,8 +606,7 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
         if (!SelectionEnabled)
             return;
 
-        var key = HitTestKey(
-            GetVisibleKeys(Geometry, AvailableKeys),
+        var key = HitTest(
             e.GetCurrentPoint(this).Position,
             Bounds.Size);
         if (key is { } keyCode)
@@ -399,8 +619,7 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         base.OnPointerMoved(e);
-        var key = HitTestKey(
-            GetVisibleKeys(Geometry, AvailableKeys),
+        var key = HitTest(
             e.GetCurrentPoint(this).Position,
             Bounds.Size);
         ToolTip.SetTip(this, key is { } keyCode ? $"0x{keyCode:X4}" : null);
@@ -415,12 +634,19 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
         if (width <= 1 || height <= 1)
             return;
 
-        var (scale, offsetX, offsetY) = ComputeTransform(Bounds.Size);
+        var (scale, offsetX, offsetY) = ComputeDeviceTransform(Bounds.Size);
+        var isDeviceLayout = DeviceLayout != SpectrumDeviceLayoutKind.KeyboardOnly;
+        var canvasWidth = isDeviceLayout
+            ? SpectrumKeyboardLayoutData.DeviceCanvasWidth
+            : SpectrumKeyboardLayoutData.CanvasWidth;
+        var canvasHeight = isDeviceLayout
+            ? SpectrumKeyboardLayoutData.DeviceCanvasHeight
+            : SpectrumKeyboardLayoutData.CanvasHeight;
         var outline = new Rect(
             offsetX,
             offsetY,
-            SpectrumKeyboardLayoutData.CanvasWidth * scale,
-            SpectrumKeyboardLayoutData.CanvasHeight * scale);
+            canvasWidth * scale,
+            canvasHeight * scale);
         var outlinePen = new Pen(ResolveBrush("CardBorderBrush", Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)), 1.5);
         context.DrawRectangle(
             ResolveBrush("CardBackgroundBrush", Color.FromRgb(0x2B, 0x2B, 0x2B)),
@@ -436,40 +662,68 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
         var gap = 0.5 * scale;
         var corner = 3 * scale;
 
+        // Device zones sit directly in the device canvas space.
+        foreach (var zone in GetVisibleZones())
+        {
+            var rect = new Rect(
+                offsetX + zone.X * scale + gap,
+                offsetY + zone.Y * scale + gap,
+                zone.Width * scale - gap * 2,
+                zone.Height * scale - gap * 2);
+            DrawCap(context, rect, zone.KeyCode, selectionFill, selectionPen, dimBrush, keyFill, corner);
+        }
+
+        // Keyboard keys shift down/right inside the device canvas so the zones
+        // above, below and beside the keyboard line up with the WPF grid.
+        var keyOffsetX = isDeviceLayout ? SpectrumKeyboardLayoutData.DeviceKeyboardOffsetX * scale : 0;
+        var keyOffsetY = isDeviceLayout ? SpectrumKeyboardLayoutData.DeviceKeyboardOffsetY * scale : 0;
         foreach (var key in GetVisibleKeys(Geometry, AvailableKeys))
         {
             var rect = new Rect(
-                offsetX + key.X * scale + gap,
-                offsetY + key.Y * scale + gap,
+                offsetX + keyOffsetX + key.X * scale + gap,
+                offsetY + keyOffsetY + key.Y * scale + gap,
                 key.Width * scale - gap * 2,
                 key.Height * scale - gap * 2);
-            if (rect.Width <= 0 || rect.Height <= 0)
-                continue;
-
-            var rounded = new RoundedRect(rect, corner);
-            var selected = _selectedKeys.Contains(key.KeyCode);
-            var hasColor = false;
-            var keyColor = default(Color);
-            if (KeyColors is { } keyColors)
-                hasColor = keyColors.TryGetValue(key.KeyCode, out keyColor);
-            if (hasColor)
-            {
-                context.DrawRectangle(new SolidColorBrush(keyColor), null, rounded);
-                if (!selected)
-                    context.DrawRectangle(dimBrush, null, rounded);
-            }
-            else if (selected)
-            {
-                context.DrawRectangle(selectionFill, null, rounded);
-            }
-            else
-            {
-                context.DrawRectangle(keyFill, null, rounded);
-            }
-
-            if (selected)
-                context.DrawRectangle(null, selectionPen, rounded);
+            DrawCap(context, rect, key.KeyCode, selectionFill, selectionPen, dimBrush, keyFill, corner);
         }
+    }
+
+    private void DrawCap(
+        DrawingContext context,
+        Rect rect,
+        ushort keyCode,
+        IBrush selectionFill,
+        Pen selectionPen,
+        IBrush dimBrush,
+        IBrush keyFill,
+        double corner)
+    {
+        if (rect.Width <= 0 || rect.Height <= 0)
+            return;
+
+        var rounded = new RoundedRect(rect, corner);
+        var selected = _selectedKeys.Contains(keyCode);
+        var hasColor = false;
+        var keyColor = default(Color);
+        if (KeyColors is { } keyColors)
+            hasColor = keyColors.TryGetValue(keyCode, out keyColor);
+        if (hasColor)
+        {
+            context.DrawRectangle(new SolidColorBrush(keyColor), null, rounded);
+            if (!selected)
+                context.DrawRectangle(dimBrush, null, rounded);
+        }
+        else if (selected)
+        {
+            context.DrawRectangle(selectionFill, null, rounded);
+        }
+        else
+        {
+            context.DrawRectangle(keyFill, null, rounded);
+        }
+
+        if (selected)
+            context.DrawRectangle(null, selectionPen, rounded);
     }
 
     private IBrush ResolveBrush(string key, Color fallbackColor)
@@ -521,6 +775,26 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
     }
 
     /// <summary>
+    /// Filters device zones down to the key codes reported by the controller.
+    /// </summary>
+    public static IReadOnlyList<SpectrumDeviceZoneGeometry> GetVisibleZones(
+        IReadOnlyList<SpectrumDeviceZoneGeometry> zones,
+        IReadOnlyCollection<ushort>? availableKeys)
+    {
+        if (availableKeys is null || availableKeys.Count == 0)
+            return zones;
+
+        return zones.Where(zone => availableKeys.Contains(zone.KeyCode)).ToArray();
+    }
+
+    /// <summary>
+    /// Zones of the current <see cref="DeviceLayout"/> filtered by
+    /// <see cref="AvailableKeys"/>, mirroring <see cref="GetVisibleKeys"/>.
+    /// </summary>
+    public IReadOnlyList<SpectrumDeviceZoneGeometry> GetVisibleZones() =>
+        GetVisibleZones(Zones, AvailableKeys);
+
+    /// <summary>
     /// Merges per-effect key colors into one key-code map. Effects are applied in
     /// list order, so a later effect wins for a key shared by several effects
     /// (matching the device profile priority in the WPF host).
@@ -545,13 +819,79 @@ public sealed class SpectrumKeyboardLayoutCanvas : Control
         return map;
     }
 
-    internal static (double Scale, double OffsetX, double OffsetY) ComputeTransform(Size size)
+    internal static (double Scale, double OffsetX, double OffsetY) ComputeTransform(Size size) =>
+        ComputeTransform(size, SpectrumKeyboardLayoutData.CanvasWidth, SpectrumKeyboardLayoutData.CanvasHeight);
+
+    internal static (double Scale, double OffsetX, double OffsetY) ComputeTransform(
+        Size size,
+        double canvasWidth,
+        double canvasHeight)
     {
         var scale = Math.Min(
-            size.Width / SpectrumKeyboardLayoutData.CanvasWidth,
-            size.Height / SpectrumKeyboardLayoutData.CanvasHeight);
-        var offsetX = (size.Width - SpectrumKeyboardLayoutData.CanvasWidth * scale) / 2;
-        var offsetY = (size.Height - SpectrumKeyboardLayoutData.CanvasHeight * scale) / 2;
+            size.Width / canvasWidth,
+            size.Height / canvasHeight);
+        var offsetX = (size.Width - canvasWidth * scale) / 2;
+        var offsetY = (size.Height - canvasHeight * scale) / 2;
         return (scale, offsetX, offsetY);
+    }
+
+    /// <summary>
+    /// Transform that maps the model canvas (200 x 100 for KeyboardOnly,
+    /// 220 x 112 for device layouts) onto <paramref name="size"/>. Keyboard
+    /// geometry additionally shifts by the device keyboard offset so the keys
+    /// line up with the zones; see <see cref="SpectrumKeyboardLayoutData"/>.
+    /// </summary>
+    private (double Scale, double OffsetX, double OffsetY) ComputeDeviceTransform(Size size)
+    {
+        var isDeviceLayout = DeviceLayout != SpectrumDeviceLayoutKind.KeyboardOnly;
+        return ComputeTransform(
+            size,
+            isDeviceLayout ? SpectrumKeyboardLayoutData.DeviceCanvasWidth : SpectrumKeyboardLayoutData.CanvasWidth,
+            isDeviceLayout ? SpectrumKeyboardLayoutData.DeviceCanvasHeight : SpectrumKeyboardLayoutData.CanvasHeight);
+    }
+
+    /// <summary>
+    /// Hit-tests zones and keyboard keys (with the device-layout keyboard
+    /// offset applied) against a pointer position. Zones are tested first so
+    /// a click on a zone overlapping the keyboard outline selects the zone.
+    /// </summary>
+    private ushort? HitTest(Point point, Size size)
+    {
+        if (size.Width <= 0 || size.Height <= 0)
+            return null;
+
+        var visibleZones = GetVisibleZones();
+        var visibleKeys = GetVisibleKeys(Geometry, AvailableKeys);
+        if (visibleZones.Count == 0 && visibleKeys.Count == 0)
+            return null;
+
+        var (scale, offsetX, offsetY) = ComputeDeviceTransform(size);
+        var isDeviceLayout = DeviceLayout != SpectrumDeviceLayoutKind.KeyboardOnly;
+        var keyOffsetX = isDeviceLayout ? SpectrumKeyboardLayoutData.DeviceKeyboardOffsetX * scale : 0;
+        var keyOffsetY = isDeviceLayout ? SpectrumKeyboardLayoutData.DeviceKeyboardOffsetY * scale : 0;
+
+        foreach (var zone in visibleZones)
+        {
+            var rect = new Rect(
+                offsetX + zone.X * scale,
+                offsetY + zone.Y * scale,
+                zone.Width * scale,
+                zone.Height * scale);
+            if (rect.Contains(point))
+                return zone.KeyCode;
+        }
+
+        foreach (var key in visibleKeys)
+        {
+            var rect = new Rect(
+                offsetX + keyOffsetX + key.X * scale,
+                offsetY + keyOffsetY + key.Y * scale,
+                key.Width * scale,
+                key.Height * scale);
+            if (rect.Contains(point))
+                return key.KeyCode;
+        }
+
+        return null;
     }
 }

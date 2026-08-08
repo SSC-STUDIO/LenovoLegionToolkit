@@ -40,6 +40,13 @@ public partial class KeyboardBacklightPage : UserControl
     private static readonly string[] SpectrumDirections = ["None", "BottomToTop", "TopToBottom", "LeftToRight", "RightToLeft"];
     private static readonly string[] SpectrumClockwiseDirections = ["None", "Clockwise", "CounterClockwise"];
     private static readonly string[] SpectrumKeyboardLayouts = ["Ansi", "Iso", "Jis"];
+    private static readonly (string Name, string DisplayName)[] SpectrumDeviceLayouts =
+    [
+        ("Full", "Full"),
+        ("FullAlternative", "Full Alternative"),
+        ("KeyboardAndFront", "Keyboard + Front"),
+        ("KeyboardOnly", "Keyboard Only"),
+    ];
 
     public KeyboardBacklightPage(IPlatformServices platformServices)
     {
@@ -181,7 +188,13 @@ public partial class KeyboardBacklightPage : UserControl
         SpectrumDeviceCanvas.Layout = SpectrumKeyboardLayoutData.TryParse(state.KeyboardLayout, out var keyboardLayout)
             ? keyboardLayout
             : SpectrumKeyboardLayoutKind.Ansi;
+        SpectrumDeviceCanvas.DeviceLayout = SpectrumKeyboardLayoutData.TryParseDeviceLayout(
+            state.SpectrumLayout,
+            out var deviceLayout)
+            ? deviceLayout
+            : SpectrumDeviceLayoutKind.Full;
         SpectrumDeviceCanvas.AvailableKeys = state.KeyboardKeys?.OrderBy(key => key).ToArray() ?? [];
+        BuildSpectrumDeviceLayoutSelector(state.SpectrumLayout);
         _spectrumEditors.Clear();
         SpectrumEffects.Items.Clear();
         foreach (var effect in state.SpectrumEffects)
@@ -241,6 +254,49 @@ public partial class KeyboardBacklightPage : UserControl
         await ApplyAsync(new KeyboardLightingUpdate("Spectrum", KeyboardLayout: next));
     }
 
+    private void BuildSpectrumDeviceLayoutSelector(string detectedLayout)
+    {
+        SpectrumDeviceLayoutSelector.Children.Clear();
+        foreach (var (name, displayName) in SpectrumDeviceLayouts)
+        {
+            var button = new Button
+            {
+                Content = displayName,
+                Tag = name,
+                Margin = new Thickness(0, 0, 8, 8),
+            };
+            button.Classes.Set("active", name.Equals(detectedLayout, StringComparison.OrdinalIgnoreCase));
+            var accessibilityName = $"Spectrum device layout {displayName}";
+            AutomationProperties.SetName(button, accessibilityName);
+            ToolTip.SetTip(button, accessibilityName);
+            button.Click += SpectrumDeviceLayout_Click;
+            SpectrumDeviceLayoutSelector.Children.Add(button);
+        }
+    }
+
+    private void SpectrumDeviceLayout_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing || sender is not Button { Tag: string layout })
+            return;
+
+        SpectrumDeviceCanvas.DeviceLayout = SpectrumKeyboardLayoutData.TryParseDeviceLayout(
+            layout,
+            out var kind)
+            ? kind
+            : SpectrumDeviceLayoutKind.Full;
+        foreach (var child in SpectrumDeviceLayoutSelector.Children)
+        {
+            if (child is Button button)
+                button.Classes.Set("active", Equals(button.Tag, layout));
+        }
+
+        foreach (var editor in _spectrumEditors)
+        {
+            if (editor.KeyboardCanvas is { } canvas)
+                canvas.DeviceLayout = SpectrumDeviceCanvas.DeviceLayout;
+        }
+    }
+
     private Border CreateSpectrumEffectCard(SpectrumEffectEditor editor)
     {
         var details = new StackPanel { Spacing = 8 };
@@ -295,6 +351,11 @@ public partial class KeyboardBacklightPage : UserControl
             Layout = SpectrumKeyboardLayoutData.TryParse(_state?.KeyboardLayout, out var keyboardLayout)
                 ? keyboardLayout
                 : SpectrumKeyboardLayoutKind.Ansi,
+            DeviceLayout = SpectrumKeyboardLayoutData.TryParseDeviceLayout(
+                _state?.SpectrumLayout,
+                out var deviceLayout)
+                ? deviceLayout
+                : SpectrumDeviceLayoutKind.Full,
             AvailableKeys = availableKeys,
             MinHeight = 220,
             Margin = new Thickness(0, 4, 0, 0),

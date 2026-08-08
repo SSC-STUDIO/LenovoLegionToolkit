@@ -13,6 +13,7 @@ using UniversalDeviceToolkit.Avalonia.Pages;
 using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
 #if WINDOWS
+using UniversalDeviceToolkit.Avalonia.Utils;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
@@ -690,28 +691,33 @@ public partial class MainWindow : Window
 
     private void ShowDashboardPage()
     {
-        _activePage = MainNavigation.Dashboard;
-        MainContent.Content = new DashboardPage(_platformServices, Navigate);
+        var page = new DashboardPage(_platformServices, Navigate);
+        MainContent.Content = page;
+        PageEntranceAnimator.Play(page);
         SetActiveButton(DashboardButton);
     }
 
     private void ShowAboutPage()
     {
         _activePage = MainNavigation.About;
-        MainContent.Content = new AboutPage();
+        var aboutPage = new AboutPage();
+        MainContent.Content = aboutPage;
+        PageEntranceAnimator.Play(aboutPage);
         SetActiveButton(AboutButton);
     }
 
     public void ShowSettingsPage()
     {
         _activePage = MainNavigation.Settings;
-        MainContent.Content = new SettingsPage(_platformServices);
+        var settingsPage = new SettingsPage(_platformServices);
+        MainContent.Content = settingsPage;
+        PageEntranceAnimator.Play(settingsPage);
         SetActiveButton(SettingsButton);
     }
 
     private void ShowFeaturePage(string route)
     {
-        MainContent.Content = route switch
+        Control page = route switch
         {
             MainNavigation.Keyboard => new KeyboardBacklightPage(_platformServices),
             MainNavigation.Actions => new ActionsPage(_platformServices),
@@ -725,6 +731,8 @@ public partial class MainWindow : Window
                 () => _ = RefreshPluginNavigationItemsAsync(forceRefresh: true)),
             _ => throw new ArgumentOutOfRangeException(nameof(route), route, "Unknown feature route."),
         };
+        MainContent.Content = page;
+        PageEntranceAnimator.Play(page);
         _activePage = route;
         SetActiveButton(GetNavigationButton(route));
         if (string.Equals(route, MainNavigation.PluginExtensions, StringComparison.OrdinalIgnoreCase))
@@ -741,11 +749,13 @@ public partial class MainWindow : Window
         _activePage = isSettings
             ? MainNavigation.CreatePluginSettingsRoute(pluginId)
             : MainNavigation.CreatePluginRoute(pluginId);
-        MainContent.Content = new PluginHostedPage(
+        var pluginHostedPage = new PluginHostedPage(
             _platformServices,
             pluginId,
             () => Navigate(MainNavigation.PluginExtensions),
             isSettings);
+        MainContent.Content = pluginHostedPage;
+        PageEntranceAnimator.Play(pluginHostedPage);
         SetActiveButton(GetNavigationButton(route));
     }
 

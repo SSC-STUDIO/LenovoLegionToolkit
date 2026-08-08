@@ -129,6 +129,17 @@
                                                          OverflowMode="Ellipsis"
                                                          MaxLines="1" />
                         </Grid>
+                        <!-- Device layout selector (WPF SpectrumDeviceControl parity). -->
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_DeviceLayout, Fallback=Device layout}"
+                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                         VerticalAlignment="Center"
+                                                         OverflowMode="Ellipsis"
+                                                         MaxLines="1" />
+                            <WrapPanel x:Name="SpectrumDeviceLayoutSelector"
+                                       Grid.Column="1"
+                                       HorizontalAlignment="Right" />
+                        </Grid>
                         <!-- Device keyboard canvas (WPF SpectrumDeviceControl parity). -->
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,4,0,0">
                             <Border BorderBrush="{DynamicResource CardBorderBrush}"
