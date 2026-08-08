@@ -8,7 +8,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
-        <StackPanel x:Name="DashboardStack" Spacing="20" Margin="32">
+        <StackPanel x:Name="DashboardStack" Spacing="20" Margin="0,0,16,16">
 
             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
                 <StackPanel Spacing="4">

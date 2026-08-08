@@ -77,21 +77,23 @@ public sealed class MacroPage : UserControl
     {
         var title = CreateText(
             Get("MacroPage_Title", "Macro"),
-            "FontSizeDisplaySection",
+            "FontSizePageTitle",
             "TextFillColorPrimaryBrush",
             FontWeight.Medium,
             LocalizedOverflowMode.Wrap,
             2);
         var description = CreateText(
             Get("MacroPage_Description", "Create and manage device macros."),
-            "FontSizeBody",
+            "FontSizePageDescription",
             "TextFillColorSecondaryBrush",
             FontWeight.Normal,
             LocalizedOverflowMode.Wrap,
             3);
+        title.Margin = new Thickness(0, 16, 0, 8);
+        description.Margin = new Thickness(0, 0, 0, 24);
 
         AutomationProperties.SetName(this, title.Text ?? "Macro");
-        var header = new StackPanel { Spacing = 4 };
+        var header = new StackPanel { Spacing = 0 };
         header.Children.Add(title);
         header.Children.Add(description);
 
@@ -156,7 +158,7 @@ public sealed class MacroPage : UserControl
         Grid.SetColumn(editorCard, 1);
         workspace.Children.Add(editorCard);
 
-        var content = new StackPanel { Spacing = 16, Margin = new Thickness(32, 24, 32, 32), MaxWidth = 920 };
+        var content = new StackPanel { Spacing = 16, Margin = new Thickness(0, 0, 16, 16) };
         content.Children.Add(header);
         content.Children.Add(enabledCard);
         content.Children.Add(toolbar);

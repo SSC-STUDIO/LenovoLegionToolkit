@@ -77,13 +77,16 @@ public partial class AutomationPage : UserControl
         PageDescription.Text = Get("AutomationPage_Actions_Message", "Configure automation pipelines and run quick actions.");
         EnabledTitle.Text = Get("AutomationPage_ActionsEnabled_Title", "Automation service");
         EnabledDescription.Text = Get("AutomationPage_ActionsEnable_Message", "Enable or disable automation event listeners.");
-        PipelinesTitle.Text = Get("AutomationPage_QuickActions_Title", "Quick actions");
-        PipelinesDescription.Text = Get("AutomationPage_QuickActions_Message", "Run configured pipelines on demand.");
+        PipelinesTitle.Text = Get("AutomationPage_Actions_Title", "Actions");
+        PipelinesDescription.Text = Get("AutomationPage_Actions_Message", "Configure automation pipelines and run quick actions.");
+        QuickActionsTitle.Text = Get("AutomationPage_QuickActions_Title", "Quick actions");
+        QuickActionsDescription.Text = Get("AutomationPage_QuickActions_Message", "Run configured pipelines on demand.");
         AddButton.Content = Get("AddNew", "Add new");
-        AddAutomaticButton.Content = Get("AutomationPage_AddAutomaticPipeline", "Add automatic");
+        AddAutomaticButton.Content = Get("AddNew", "Add new");
         SaveButton.Content = Get("Save", "Save");
         RevertButton.Content = Get("Revert", "Revert");
-        EmptyText.Text = Get("AutomationPage_QuickActions_Empty", "No automation pipelines configured.");
+        AutomaticEmptyText.Text = Get("AutomationPage_Actions_Empty", "No automation pipelines configured.");
+        ManualEmptyText.Text = Get("AutomationPage_QuickActions_Empty", "No quick actions configured.");
 
         AddButton.Click += AddButton_Click;
         AddAutomaticButton.Click += AddAutomaticButton_Click;
@@ -123,14 +126,15 @@ public partial class AutomationPage : UserControl
             var state = PlatformAutomationWorkspace.ToPlatform(sharedState);
             _workspacePipelines = state.Pipelines;
             EnabledToggle.IsChecked = state.IsEnabled;
-            PipelineList.Children.Clear();
+            AutomaticPipelineList.Children.Clear();
+            ManualPipelineList.Children.Clear();
             _rows.Clear();
 
             foreach (var pipeline in state.Pipelines)
             {
                 var row = CreateRow(pipeline);
                 _rows.Add(row);
-                PipelineList.Children.Add(row.Card);
+                GetPipelineListPanel(row).Children.Add(row.Card);
             }
 
 #if WINDOWS
@@ -138,7 +142,7 @@ public partial class AutomationPage : UserControl
             RefreshQuickActionTargetEditors();
 #endif
 
-            EmptyText.IsVisible = _rows.Count == 0;
+            UpdateEmptyStates();
             _isDirty = false;
             UpdateDirtyState();
         }
@@ -584,9 +588,19 @@ public partial class AutomationPage : UserControl
         var sourceIndex = _rows.IndexOf(row);
         var targetIndex = _rows.IndexOf(adjacent);
         (_rows[sourceIndex], _rows[targetIndex]) = (_rows[targetIndex], _rows[sourceIndex]);
-        PipelineList.Children.Remove(row.Card);
-        PipelineList.Children.Insert(targetIndex, row.Card);
+        var panel = GetPipelineListPanel(row);
+        panel.Children.Remove(row.Card);
+        panel.Children.Insert(targetIndex, row.Card);
         MarkDirty();
+    }
+
+    private Panel GetPipelineListPanel(PipelineRow row) =>
+        row.IsAutomatic ? AutomaticPipelineList : ManualPipelineList;
+
+    private void UpdateEmptyStates()
+    {
+        AutomaticEmptyText.IsVisible = !_rows.Any(row => row.IsAutomatic);
+        ManualEmptyText.IsVisible = !_rows.Any(row => !row.IsAutomatic);
     }
 
     private AutomationTriggerOption? FindTriggerOption(AutomationPipelineItem pipeline) =>
@@ -606,8 +620,8 @@ public partial class AutomationPage : UserControl
         var row = CreateRow(item);
         row.IsNew = true;
         _rows.Insert(0, row);
-        PipelineList.Children.Insert(0, row.Card);
-        EmptyText.IsVisible = false;
+        ManualPipelineList.Children.Insert(0, row.Card);
+        UpdateEmptyStates();
         MarkDirty();
 #if WINDOWS
         RefreshQuickActionTargetEditors();
@@ -637,8 +651,8 @@ public partial class AutomationPage : UserControl
         var row = CreateRow(item);
         row.IsNew = true;
         _rows.Insert(0, row);
-        PipelineList.Children.Insert(0, row.Card);
-        EmptyText.IsVisible = false;
+        AutomaticPipelineList.Children.Insert(0, row.Card);
+        UpdateEmptyStates();
         MarkDirty();
 #if WINDOWS
         RefreshAutomaticTriggerEditors();
@@ -650,8 +664,8 @@ public partial class AutomationPage : UserControl
     private void DeleteRow(PipelineRow row)
     {
         _rows.Remove(row);
-        PipelineList.Children.Remove(row.Card);
-        EmptyText.IsVisible = _rows.Count == 0;
+        GetPipelineListPanel(row).Children.Remove(row.Card);
+        UpdateEmptyStates();
         MarkDirty();
 #if WINDOWS
         if (!row.IsAutomatic)
