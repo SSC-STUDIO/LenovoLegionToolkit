@@ -18,14 +18,15 @@ using SharedMacroViewModel = UniversalDeviceToolkit.ViewModels.MacroViewModel;
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
 /// <summary>
-/// Avalonia macro workspace backed by the shared MacroController. Recording and
+/// Avalonia macro workspace backed by the shared MacroController. The layout is
+/// transplanted from the WPF MacroPage: a numpad on the left selects the active
+/// slot, and the right side hosts the sequence editor for that slot. Recording and
 /// playback continue to use the existing feature-action bridge; sequence options
 /// are persisted immediately to the same macro store used by WPF.
 /// </summary>
 public sealed class MacroPage : UserControl
 {
     private readonly SharedMacroViewModel _viewModel;
-    private readonly StackPanel _slotsPanel = new() { Spacing = 8 };
     private readonly CheckBox _enabledToggle = new() { MinWidth = 48 };
     private readonly Button _stopButton = new() { MinWidth = 96 };
     private readonly LocalizedTextBlock _statusBlock = new();
@@ -33,9 +34,32 @@ public sealed class MacroPage : UserControl
     {
         Interval = TimeSpan.FromMilliseconds(250),
     };
+
+    private readonly List<Button> _numpadButtons = [];
+    private readonly List<ushort> _numpadKeys =
+    [
+        0x67, 0x68, 0x69,
+        0x64, 0x65, 0x66,
+        0x61, 0x62, 0x63,
+        0x60,
+    ];
+
+    private readonly LocalizedTextBlock _editorTitle = new();
+    private readonly LocalizedTextBlock _editorSummary = new();
+    private readonly NumericUpDown _repeat = new();
+    private readonly CheckBox _ignoreDelays = new();
+    private readonly CheckBox _interrupt = new();
+    private readonly ComboBox _recordingOptions = new();
+    private readonly Button _playButton = new() { MinWidth = 72 };
+    private readonly Button _recordButton = new() { MinWidth = 84 };
+    private readonly Button _clearButton = new() { MinWidth = 72 };
+    private readonly StackPanel _eventList = new() { Spacing = 4 };
+    private readonly Button _addEventButton = new() { MinWidth = 96 };
+
     private bool _isRefreshing;
     private bool _isPreparingRecording;
     private bool _isLoaded;
+    private ulong _selectedSlotKey = 0x60;
     private readonly Dictionary<ulong, List<MacroEventItem>> _editedSequences = new();
 
     public MacroPage(IPlatformServices platformServices)
@@ -121,17 +145,192 @@ public sealed class MacroPage : UserControl
         Grid.SetColumn(_stopButton, 1);
         toolbar.Children.Add(_stopButton);
 
+        var workspace = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("Auto,*"),
+            ColumnSpacing = 24,
+            VerticalAlignment = VerticalAlignment.Stretch,
+        };
+        workspace.Children.Add(BuildNumpad());
+        var editorCard = BuildEditorCard();
+        Grid.SetColumn(editorCard, 1);
+        workspace.Children.Add(editorCard);
+
         var content = new StackPanel { Spacing = 16, Margin = new Thickness(32, 24, 32, 32), MaxWidth = 920 };
         content.Children.Add(header);
         content.Children.Add(enabledCard);
         content.Children.Add(toolbar);
-        content.Children.Add(_slotsPanel);
+        content.Children.Add(workspace);
         return new ScrollViewer
         {
             HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             Content = content,
         };
+    }
+
+    private Control BuildNumpad()
+    {
+        var grid = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("56,56,56"),
+            RowDefinitions = new RowDefinitions("56,56,56,56"),
+        };
+        for (var index = 0; index < _numpadKeys.Count; index++)
+        {
+            var key = _numpadKeys[index];
+            var digit = key - 0x60;
+            var button = new Button
+            {
+                Margin = new Thickness(0, 0, 8, 8),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Content = digit.ToString(),
+                FontSize = 24,
+                FontWeight = FontWeight.Medium,
+                Tag = (ulong)key,
+            };
+            AutomationProperties.SetName(
+                button,
+                Get($"MacroPage_Number{digit}", digit.ToString()));
+            if (index < 9)
+            {
+                Grid.SetRow(button, index / 3);
+                Grid.SetColumn(button, index % 3);
+            }
+            else
+            {
+                Grid.SetRow(button, 3);
+                Grid.SetColumn(button, 1);
+            }
+
+            button.Click += NumpadButton_Click;
+            _numpadButtons.Add(button);
+            grid.Children.Add(button);
+        }
+
+        var card = new Border
+        {
+            Background = GetBrush("CardBackgroundBrush"),
+            BorderBrush = GetBrush("CardBorderBrush"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = GetResource("CornerRadiusCard", new CornerRadius(8)),
+            Padding = new Thickness(12),
+            Child = grid,
+        };
+        AutomationProperties.SetName(card, Get("MacroPage_NumberPad_AutomationName", "Macro numpad"));
+        return card;
+    }
+
+    private Control BuildEditorCard()
+    {
+        _editorTitle.FontWeight = FontWeight.Medium;
+        _editorTitle.OverflowMode = LocalizedOverflowMode.Wrap;
+        _editorTitle.MaxLines = 2;
+        _editorSummary.Foreground = GetBrush("TextFillColorSecondaryBrush");
+        _editorSummary.OverflowMode = LocalizedOverflowMode.Wrap;
+        _editorSummary.MaxLines = 3;
+
+        _repeat.Minimum = 1;
+        _repeat.Maximum = 10;
+        _repeat.Increment = 1;
+        _repeat.MinWidth = 72;
+        _repeat.FormatString = "0x";
+        _ignoreDelays.Content = Get("MacroPage_IgnoreDelays", "Ignore delays");
+        _interrupt.Content = Get("MacroPage_InterruptOnOtherKey", "Interrupt on other key");
+
+        _recordingOptions.ItemsSource = new[]
+        {
+            Get("MacroSequenceControl_Keyboard", "Keyboard"),
+            Get("MacroSequenceControl_KeyboardMouse", "Keyboard + mouse"),
+            Get("MacroSequenceControl_KeyboardMouseMovement", "Keyboard + mouse movement"),
+        };
+        _recordingOptions.SelectedIndex = 0;
+        _recordingOptions.MinWidth = 180;
+        _recordingOptions.HorizontalAlignment = HorizontalAlignment.Right;
+        ToolTip.SetTip(
+            _recordingOptions,
+            Get("MacroSequenceControl_RecordingOptions", "Choose which input sources recording captures."));
+        AutomationProperties.SetName(
+            _recordingOptions,
+            Get("MacroSequenceControl_RecordingOptions", "Recording options"));
+
+        _playButton.Content = Get("Play", "Play");
+        _recordButton.Content = Get("Record", "Record");
+        _clearButton.Content = Get("Clear", "Clear");
+        _playButton.Click += async (_, _) => await RunActionAsync($"macro-key:{_selectedSlotKey:X}");
+        _recordButton.Click += async (_, _) => await StartRecordingAsync(_selectedSlotKey, _recordingOptions.SelectedIndex);
+        _clearButton.Click += async (_, _) => await ClearSequenceAsync(_selectedSlotKey);
+        _repeat.ValueChanged += async (_, _) => await SaveOptionsAsync(_selectedSlotKey, _repeat, _ignoreDelays, _interrupt);
+        _ignoreDelays.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(_selectedSlotKey, _repeat, _ignoreDelays, _interrupt);
+        _interrupt.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(_selectedSlotKey, _repeat, _ignoreDelays, _interrupt);
+
+        _addEventButton.Content = Get("MacroPage_AddEvent", "Add event");
+        _addEventButton.HorizontalAlignment = HorizontalAlignment.Left;
+        var keyItem = new MenuItem { Header = Get("MacroPage_AddKeyEvent", "Keyboard key") };
+        var mouseItem = new MenuItem { Header = Get("MacroPage_AddMouseEvent", "Mouse button") };
+        var delayItem = new MenuItem { Header = Get("MacroPage_AddDelayEvent", "Delay") };
+        keyItem.Click += async (_, _) => await AddKeyEventAsync(_selectedSlotKey, _repeat, _ignoreDelays, _interrupt);
+        mouseItem.Click += async (_, _) => await AddMouseEventAsync(_selectedSlotKey, _repeat, _ignoreDelays, _interrupt);
+        delayItem.Click += async (_, _) => await AddDelayEventAsync(_selectedSlotKey, _repeat, _ignoreDelays, _interrupt);
+        var addMenu = new MenuFlyout { Items = { keyItem, mouseItem, delayItem } };
+        _addEventButton.Flyout = addMenu;
+        AutomationProperties.SetAutomationId(_addEventButton, $"AvaloniaMacro_{_selectedSlotKey:X}_AddEventButton");
+        AutomationProperties.SetName(_addEventButton, Get("MacroPage_AddEvent", "Add event"));
+
+        var options = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 12 };
+        options.Children.Add(_ignoreDelays);
+        options.Children.Add(_interrupt);
+
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, HorizontalAlignment = HorizontalAlignment.Right };
+        actions.Children.Add(_playButton);
+        actions.Children.Add(_recordButton);
+        actions.Children.Add(_clearButton);
+        actions.Children.Add(_repeat);
+
+        var panel = new StackPanel { Spacing = 8 };
+        panel.Children.Add(_editorTitle);
+        panel.Children.Add(_editorSummary);
+        panel.Children.Add(options);
+        panel.Children.Add(_recordingOptions);
+        panel.Children.Add(actions);
+        panel.Children.Add(_eventList);
+        panel.Children.Add(_addEventButton);
+
+        var card = new Border
+        {
+            Background = GetBrush("CardBackgroundBrush"),
+            BorderBrush = GetBrush("CardBorderBrush"),
+            BorderThickness = new Thickness(1),
+            CornerRadius = GetResource("CornerRadiusCard", new CornerRadius(8)),
+            Padding = new Thickness(16),
+            MinWidth = 420,
+            Child = panel,
+        };
+        AutomationProperties.SetName(card, Get("MacroPage_SequenceEditor_AutomationName", "Macro sequence editor"));
+        return card;
+    }
+
+    private void NumpadButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Button { Tag: ulong key })
+            return;
+
+        SelectSlot(key);
+    }
+
+    private void SelectSlot(ulong key)
+    {
+        _selectedSlotKey = key;
+        _viewModel.SelectKey(key);
+        foreach (var button in _numpadButtons)
+        {
+            var isSelected = button.Tag is ulong buttonKey && buttonKey == key;
+            button.Classes.Set("accent", isSelected);
+        }
+
+        AutomationProperties.SetAutomationId(_addEventButton, $"AvaloniaMacro_{key:X}_AddEventButton");
+        RebuildEditor();
     }
 
     private async void OnLoaded(object? sender, RoutedEventArgs e)
@@ -180,11 +379,14 @@ public sealed class MacroPage : UserControl
                     Get("MacroPage_SlotSummary", "{0} macro slots are available."),
                     state.Slots.Count);
 
-            _slotsPanel.Children.Clear();
-            foreach (var slot in state.Slots)
+            if (!state.Slots.Any(slot => slot.Key == _selectedSlotKey))
             {
-                SeedEditedSequence(slot);
-                _slotsPanel.Children.Add(CreateSlotCard(slot, state.IsRecording));
+                var preferred = state.Slots.FirstOrDefault(slot => slot.EventCount > 0);
+                SelectSlot(preferred?.Key ?? 0x60);
+            }
+            else
+            {
+                RebuildEditor();
             }
 
             if (state.IsRecording && _isLoaded)
@@ -203,157 +405,67 @@ public sealed class MacroPage : UserControl
         }
     }
 
-    private Control CreateSlotCard(MacroSlotState slot, bool isRecording)
+    private void RebuildEditor()
     {
-        var digit = slot.Key - 0x60;
-        var title = CreateText(
-            $"Numpad {digit}",
-            "FontSizeBody",
-            "TextFillColorPrimaryBrush",
-            FontWeight.Medium,
-            LocalizedOverflowMode.Wrap,
-            2);
-        var events = _editedSequences.TryGetValue(slot.Key, out var edited)
-            ? edited
-            : slot.Events;
-        var eventCount = events?.Count ?? 0;
-        var summary = CreateText(
-            eventCount == 0
-                ? Get("MacroPage_EmptySlot", "No sequence is stored for this slot.")
-                : string.Format(
-                    System.Globalization.CultureInfo.CurrentCulture,
-                    Get("MacroPage_EventSummary", "{0} recorded event(s)."),
-                    eventCount),
-            "FontSizeCaption",
-            "TextFillColorSecondaryBrush",
-            FontWeight.Normal,
-            LocalizedOverflowMode.Wrap,
-            3);
-        var copy = new StackPanel { Spacing = 3, MinWidth = 0 };
-        copy.Children.Add(title);
-        copy.Children.Add(summary);
-
-        var repeat = new NumericUpDown
+        var slot = _viewModel.FindSlot(_selectedSlotKey);
+        if (slot is null)
         {
-            Minimum = 1,
-            Maximum = 10,
-            Increment = 1,
-            Value = Math.Clamp(slot.RepeatCount, 1, 10),
-            MinWidth = 72,
-            FormatString = "0x",
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-        };
-        var ignoreDelays = new CheckBox
-        {
-            Content = Get("MacroPage_IgnoreDelays", "Ignore delays"),
-            IsChecked = slot.IgnoreDelays,
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-        };
-        var interrupt = new CheckBox
-        {
-            Content = Get("MacroPage_InterruptOnOtherKey", "Interrupt on other key"),
-            IsChecked = slot.InterruptOnOtherKey,
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-        };
-        repeat.ValueChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
-        ignoreDelays.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
-        interrupt.IsCheckedChanged += async (_, _) => await SaveOptionsAsync(slot.Key, repeat, ignoreDelays, interrupt);
-
-        var eventList = new StackPanel
-        {
-            Spacing = 4,
-            Margin = new Thickness(0, 6, 0, 0),
-        };
-        if (events is not null)
-        {
-            for (var i = 0; i < events.Count; i++)
-                eventList.Children.Add(CreateEventRow(slot.Key, i, events[i], repeat, ignoreDelays, interrupt, isRecording));
+            _editorTitle.Text = string.Empty;
+            _editorSummary.Text = Get("MacroPage_EmptySlot", "No sequence is stored for this slot.");
+            _repeat.Value = 1;
+            _ignoreDelays.IsChecked = false;
+            _interrupt.IsChecked = false;
+            _playButton.IsEnabled = false;
+            _recordButton.IsEnabled = true;
+            _clearButton.IsEnabled = false;
+            _eventList.Children.Clear();
+            return;
         }
 
-        eventList.Children.Add(CreateAddEventButton(slot.Key, repeat, ignoreDelays, interrupt, isRecording));
-        copy.Children.Add(eventList);
+        var snapshot = slot.ToSnapshot();
+        var digit = slot.Key - 0x60;
+        _editorTitle.Text = $"Numpad {digit}";
+        var eventCount = slot.Events.Count;
+        _editorSummary.Text = eventCount == 0
+            ? Get("MacroPage_EmptySlot", "No sequence is stored for this slot.")
+            : string.Format(
+                System.Globalization.CultureInfo.CurrentCulture,
+                Get("MacroPage_EventSummary", "{0} recorded event(s)."),
+                eventCount);
 
-        var play = new Button
+        _repeat.Value = Math.Clamp(snapshot.RepeatCount, 1, 10);
+        _ignoreDelays.IsChecked = snapshot.IgnoreDelays;
+        _interrupt.IsChecked = snapshot.InterruptOnOtherKey;
+
+        var isRecording = _viewModel.IsRecording;
+        _repeat.IsEnabled = slot.EventCount > 0 && !isRecording;
+        _ignoreDelays.IsEnabled = slot.EventCount > 0 && !isRecording;
+        _interrupt.IsEnabled = slot.EventCount > 0 && !isRecording;
+        _recordingOptions.IsEnabled = !isRecording;
+        _playButton.IsEnabled = slot.EventCount > 0 && !isRecording;
+        _recordButton.IsEnabled = !isRecording;
+        _clearButton.IsEnabled = slot.EventCount > 0 && !isRecording;
+
+        _eventList.Children.Clear();
+        for (var index = 0; index < slot.Events.Count; index++)
         {
-            Content = Get("Play", "Play"),
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-            MinWidth = 72,
-        };
-        var record = new Button
-        {
-            Content = Get("Record", "Record"),
-            IsEnabled = !isRecording,
-            MinWidth = 84,
-        };
-        var clear = new Button
-        {
-            Content = Get("Clear", "Clear"),
-            IsEnabled = slot.EventCount > 0 && !isRecording,
-            MinWidth = 72,
-        };
-
-        var recordingOptions = new ComboBox
-        {
-            ItemsSource = new[]
-            {
-                Get("MacroSequenceControl_Keyboard", "Keyboard"),
-                Get("MacroSequenceControl_KeyboardMouse", "Keyboard + mouse"),
-                Get("MacroSequenceControl_KeyboardMouseMovement", "Keyboard + mouse movement"),
-            },
-            SelectedIndex = 0,
-            IsEnabled = !isRecording,
-            MinWidth = 180,
-            HorizontalAlignment = HorizontalAlignment.Right,
-        };
-        ToolTip.SetTip(
-            recordingOptions,
-            Get("MacroSequenceControl_RecordingOptions", "Choose which input sources recording captures."));
-        AutomationProperties.SetAutomationId(recordingOptions, $"AvaloniaMacro_{slot.Key:X}_RecordingOptions");
-        AutomationProperties.SetName(
-            recordingOptions,
-            Get("MacroSequenceControl_RecordingOptions", "Recording options"));
-
-        play.Click += async (_, _) => await RunActionAsync($"macro-key:{slot.Key:X}");
-        record.Click += async (_, _) => await StartRecordingAsync(slot.Key, recordingOptions.SelectedIndex);
-        clear.Click += async (_, _) => await ClearSequenceAsync(slot.Key);
-        AutomationProperties.SetAutomationId(play, $"AvaloniaMacro_{slot.Key:X}_PlayButton");
-        AutomationProperties.SetAutomationId(record, $"AvaloniaMacro_{slot.Key:X}_RecordButton");
-        AutomationProperties.SetAutomationId(clear, $"AvaloniaMacro_{slot.Key:X}_ClearButton");
-        ToolTip.SetTip(play, summary.Text);
-        ToolTip.SetTip(record, Get("MacroPage_RecordDescription", "Capture keyboard input into this macro slot."));
-        ToolTip.SetTip(clear, Get("MacroPage_ClearDescription", "Remove all recorded events from this macro slot."));
-
-        var actions = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-        actions.Children.Add(play);
-        actions.Children.Add(record);
-        actions.Children.Add(clear);
-        actions.Children.Add(repeat);
-
-        var options = new StackPanel { Spacing = 4 };
-        options.Children.Add(ignoreDelays);
-        options.Children.Add(interrupt);
-
-        var right = new StackPanel { Spacing = 8, HorizontalAlignment = HorizontalAlignment.Right };
-        right.Children.Add(recordingOptions);
-        right.Children.Add(actions);
-        right.Children.Add(options);
-
-        var grid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"), ColumnSpacing = 16 };
-        grid.Children.Add(copy);
-        Grid.SetColumn(right, 1);
-        grid.Children.Add(right);
-
-        var card = new Border
-        {
-            Background = GetBrush("CardBackgroundBrush"),
-            BorderBrush = GetBrush("CardBorderBrush"),
-            BorderThickness = new Thickness(1),
-            CornerRadius = GetResource("CornerRadiusCard", new CornerRadius(8)),
-            Padding = new Thickness(16),
-            Child = grid,
-        };
-        AutomationProperties.SetName(card, title.Text ?? $"Numpad {digit}");
-        return card;
+            var eventSnapshot = slot.Events[index];
+            var macroEvent = new MacroEventItem(
+                eventSnapshot.Source,
+                eventSnapshot.Direction,
+                eventSnapshot.Key,
+                eventSnapshot.X,
+                eventSnapshot.Y,
+                eventSnapshot.Delay);
+            _eventList.Children.Add(CreateEventRow(
+                slot.Key,
+                index,
+                macroEvent,
+                _repeat,
+                _ignoreDelays,
+                _interrupt,
+                isRecording));
+        }
     }
 
     private async void EnabledToggle_IsCheckedChanged(object? sender, RoutedEventArgs e)
