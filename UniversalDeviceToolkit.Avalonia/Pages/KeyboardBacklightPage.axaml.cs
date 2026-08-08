@@ -178,6 +178,10 @@ public partial class KeyboardBacklightPage : UserControl
         SpectrumBrightness.Value = Math.Clamp(state.Brightness, 0, 9);
         SpectrumBrightnessValue.Text = state.Brightness.ToString(CultureInfo.InvariantCulture);
         SpectrumLogo.IsChecked = state.LogoEnabled;
+        SpectrumDeviceCanvas.Layout = SpectrumKeyboardLayoutData.TryParse(state.KeyboardLayout, out var keyboardLayout)
+            ? keyboardLayout
+            : SpectrumKeyboardLayoutKind.Ansi;
+        SpectrumDeviceCanvas.AvailableKeys = state.KeyboardKeys?.OrderBy(key => key).ToArray() ?? [];
         _spectrumEditors.Clear();
         SpectrumEffects.Items.Clear();
         foreach (var effect in state.SpectrumEffects)
@@ -187,6 +191,41 @@ public partial class KeyboardBacklightPage : UserControl
             SpectrumEffects.Items.Add(CreateSpectrumEffectCard(editor));
         }
 
+        RefreshSpectrumDeviceSelection();
+        RefreshSpectrumKeyColors();
+    }
+
+    private void RefreshSpectrumDeviceSelection()
+    {
+        if (_state is null)
+            return;
+
+        var allKeys = _state.KeyboardKeys ?? [];
+        var hidesAll = _spectrumEditors.Any(editor =>
+            SpectrumKeyboardEffectRules.HidesKeySelection(editor.Type.SelectedItem?.ToString()));
+        var selected = hidesAll
+            ? allKeys.ToArray()
+            : _spectrumEditors.SelectMany(editor => editor.Keys).Distinct().OrderBy(key => key).ToArray();
+        SpectrumDeviceCanvas.SetSelection(selected);
+    }
+
+    private void SpectrumSelectAll_Click(object? sender, RoutedEventArgs e)
+    {
+        if (_state is null)
+            return;
+
+        var allKeys = _state.KeyboardKeys ?? [];
+        foreach (var editor in _spectrumEditors)
+            editor.SetKeys(allKeys);
+        RefreshSpectrumDeviceSelection();
+        RefreshSpectrumKeyColors();
+    }
+
+    private void SpectrumDeselectAll_Click(object? sender, RoutedEventArgs e)
+    {
+        foreach (var editor in _spectrumEditors)
+            editor.SetKeys([]);
+        RefreshSpectrumDeviceSelection();
         RefreshSpectrumKeyColors();
     }
 

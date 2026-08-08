@@ -129,6 +129,34 @@
                                                          OverflowMode="Ellipsis"
                                                          MaxLines="1" />
                         </Grid>
+                        <!-- Device keyboard canvas (WPF SpectrumDeviceControl parity). -->
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,4,0,0">
+                            <Border BorderBrush="{DynamicResource CardBorderBrush}"
+                                    BorderThickness="2"
+                                    CornerRadius="{StaticResource CornerRadiusControl}"
+                                    ClipToBounds="True"
+                                    Padding="4">
+                                <controls:SpectrumKeyboardLayoutCanvas x:Name="SpectrumDeviceCanvas"
+                                                                       MinHeight="220"
+                                                                       HorizontalAlignment="Stretch" />
+                            </Border>
+                            <StackPanel Grid.Column="1"
+                                        Spacing="8"
+                                        VerticalAlignment="Center">
+                                <Button x:Name="SpectrumSelectAllButton"
+                                        Click="SpectrumSelectAll_Click"
+                                        ToolTip.Tip="{local:Loc Key=SpectrumKeyboardBacklightControl_SelectAll_ToolTip, Fallback=Select all keys}"
+                                        automation:AutomationProperties.AutomationId="AvaloniaSpectrumSelectAll">
+                                    <controls:NavigationIcon IconIdentifier="SelectAllOn24" />
+                                </Button>
+                                <Button x:Name="SpectrumDeselectAllButton"
+                                        Click="SpectrumDeselectAll_Click"
+                                        ToolTip.Tip="{local:Loc Key=SpectrumKeyboardBacklightControl_DeselectAll_ToolTip, Fallback=Deselect all keys}"
+                                        automation:AutomationProperties.AutomationId="AvaloniaSpectrumDeselectAll">
+                                    <controls:NavigationIcon IconIdentifier="SelectAllOff24" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
                             <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Brightness, Fallback=Brightness}"
                                                          VerticalAlignment="Center"
