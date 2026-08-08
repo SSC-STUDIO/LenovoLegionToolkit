@@ -32,6 +32,21 @@ current WPF source:
 | Startup and desktop lifecycle | Single instance, crash recovery, compatibility gate, device setup, OSD, services and clean shutdown | Avalonia uses shared runtime coordinators and Windows service adapters with full parity | Complete |
 | Localization | WPF `Resource*.resx` catalogs | Avalonia `Resource*.resx` catalogs contain every WPF key across all 25 cultures and preserve fallback, RTL, runtime culture switching and per-plugin overrides | Complete |
 
+## Shared Workspace Evidence
+
+The three feature rows above now use host-neutral state and operation contracts in
+`UniversalDeviceToolkit.ViewModels`:
+
+| Workspace | Shared state owner | Host boundary | Rejection and rollback coverage |
+| --- | --- | --- | --- |
+| Keyboard lighting | `KeyboardBacklightViewModel` | `PlatformKeyboardBacklightWorkspace` | Brightness clamping, RGB/Spectrum updates, Vantage blocking, import/export/reset |
+| Actions | `AutomationWorkspaceViewModel` | `PlatformAutomationWorkspace` | Enable rollback, ordered drafts, trigger/step options, save and manual execution |
+| Macro | `MacroViewModel` | `PlatformMacroWorkspace` | Enable rollback, recording modes, playback, sequence editing and option persistence |
+
+Avalonia adapters translate the existing platform facade at the host boundary;
+they do not reference `UniversalDeviceToolkit.WPF`. Contract tests cover the
+shared ViewModel behavior and the platform adapter wiring before visual audits.
+
 `Contracted` means that a source and/or contract test proves the host is wired
 to the required shared API. It does not mean visual equality. `In progress`
 means the route and shared state are present, but the detailed control behavior,
@@ -66,14 +81,13 @@ as a completed Avalonia plugin UI migration.
 ## Evidence and Next Order
 
 The baseline is guarded by
-`AvaloniaMigrationManifestTests` and
+`AvaloniaMigrationManifestTests`, the workspace contract tests, and
 `OfficialPluginAvaloniaMigrationContractTests` in
-`UniversalDeviceToolkit.Tests/Avalonia/`. The next implementation passes are:
+`UniversalDeviceToolkit.Tests/Avalonia/`. The remaining verification pass is:
 
-1. Complete feature-level WPF/Avalonia comparison for Dashboard, Keyboard,
-   Actions, Macro, Windows optimization, and all seven settings views.
-2. Close any missing dialog and state-transition paths discovered by those
-   comparisons.
-3. Audit bundled plugin UI at runtime through the Avalonia page factories.
-4. Only after those checks are complete, implement and execute the dual-host
-   visual automation and video audit.
+1. Execute the dual-host visual automation and video audit for Dashboard,
+   Keyboard, Actions, Macro, Windows optimization, settings, and plugins.
+2. Close any visual, dialog, or state-transition differences discovered by the
+   runtime comparison.
+3. Re-run the complete test matrix and keep this document aligned with the
+   observed runtime result.

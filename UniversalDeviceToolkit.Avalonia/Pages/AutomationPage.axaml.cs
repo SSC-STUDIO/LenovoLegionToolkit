@@ -11,6 +11,7 @@ using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
+using SharedAutomationViewModel = UniversalDeviceToolkit.ViewModels.AutomationWorkspaceViewModel;
 #if WINDOWS
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation;
@@ -32,6 +33,7 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 public partial class AutomationPage : UserControl
 {
     private readonly IPlatformServices _platformServices;
+    private readonly SharedAutomationViewModel _workspaceViewModel;
     private readonly List<PipelineRow> _rows = [];
     private IReadOnlyList<AutomationPipelineItem> _workspacePipelines = Array.Empty<AutomationPipelineItem>();
     private IReadOnlyList<AutomationTriggerOption> _triggerOptions = Array.Empty<AutomationTriggerOption>();
@@ -68,6 +70,7 @@ public partial class AutomationPage : UserControl
     public AutomationPage(IPlatformServices platformServices)
     {
         _platformServices = platformServices;
+        _workspaceViewModel = new(new PlatformAutomationWorkspace(platformServices));
         InitializeComponent();
 
         PageTitle.Text = Get("AutomationPage_Title", "Actions");
@@ -102,13 +105,22 @@ public partial class AutomationPage : UserControl
         {
             _isRefreshing = true;
             SetFeedback(null);
+            var sharedState = await _workspaceViewModel.LoadAsync();
+            if (sharedState is null)
+            {
+                SetFeedback(_workspaceViewModel.ErrorMessage
+                    ?? Get("AutomationPage_Save_Error_Message", "Unable to load automation pipelines."));
+                return;
+            }
+
 #if WINDOWS
-            _triggerOptions = MergeTriggerOptions(await _platformServices.GetAutomationTriggerOptionsAsync());
+            _triggerOptions = MergeTriggerOptions(
+                PlatformAutomationWorkspace.ToPlatformTriggers(sharedState.TriggerOptions));
 #else
-            _triggerOptions = await _platformServices.GetAutomationTriggerOptionsAsync();
+            _triggerOptions = PlatformAutomationWorkspace.ToPlatformTriggers(sharedState.TriggerOptions);
 #endif
-            _stepOptions = await _platformServices.GetAutomationStepOptionsAsync();
-            var state = await _platformServices.GetAutomationWorkspaceAsync();
+            _stepOptions = PlatformAutomationWorkspace.ToPlatformSteps(sharedState.StepOptions);
+            var state = PlatformAutomationWorkspace.ToPlatform(sharedState);
             _workspacePipelines = state.Pipelines;
             EnabledToggle.IsChecked = state.IsEnabled;
             PipelineList.Children.Clear();
@@ -630,7 +642,7 @@ public partial class AutomationPage : UserControl
         if (row.IsNew || row.Id == Guid.Empty)
             return;
         var accepted = await HostOperation.TryExecuteAsync(
-            () => _platformServices.SetFeatureActionAsync("Actions", $"automation-pipeline:{row.Id:D}", true));
+            () => _workspaceViewModel.RunAsync(row.Id));
         SetFeedback(accepted ? null : Get("AutomationPage_Run_Error", "Unable to run this pipeline."));
     }
 
@@ -638,7 +650,8 @@ public partial class AutomationPage : UserControl
     {
         if (_isRefreshing || EnabledToggle.IsChecked is not bool enabled)
             return;
-        var accepted = await HostOperation.TryExecuteAsync(() => _platformServices.SetAutomationEnabledAsync(enabled));
+        var accepted = await HostOperation.TryExecuteAsync(
+            () => _workspaceViewModel.SetEnabledAsync(enabled));
         if (!accepted)
         {
             SetFeedback(Get("AutomationPage_EnableAutomaticPipelines_Error_Message", "Unable to update automation state."));
@@ -682,7 +695,8 @@ public partial class AutomationPage : UserControl
         try
         {
             var accepted = await HostOperation.TryExecuteAsync(
-                () => _platformServices.SaveAutomationWorkspaceAsync(drafts));
+                () => _workspaceViewModel.SaveAsync(
+                    drafts.Select(PlatformAutomationWorkspace.ToShared).ToArray()));
             if (!accepted)
             {
                 SetFeedback(Get("AutomationPage_Save_Error_Message", "Unable to save automation pipelines."));
@@ -704,6 +718,7 @@ public partial class AutomationPage : UserControl
     private void MarkDirty()
     {
         _isDirty = true;
+        _workspaceViewModel.MarkDirty();
         UpdateDirtyState();
     }
 

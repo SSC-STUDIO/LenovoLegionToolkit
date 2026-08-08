@@ -47,15 +47,25 @@ public sealed class AvaloniaMacroPageContractTests
     {
         var root = FindRepositoryRoot();
         var source = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "Pages", "MacroPage.cs"));
+        var adapter = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "SharedWorkspaceAdapters.cs"));
 
-        Assert.Contains("SaveMacroSequenceAsync", source, StringComparison.Ordinal);
-        Assert.Contains("ClearMacroSequenceAsync", source, StringComparison.Ordinal);
-        Assert.Contains("StartMacroRecordingAsync", source, StringComparison.Ordinal);
+        Assert.Contains("SharedMacroViewModel", source, StringComparison.Ordinal);
+        Assert.Contains("LoadWorkspaceAsync", source, StringComparison.Ordinal);
+        Assert.Contains("SaveSequenceAsync", source, StringComparison.Ordinal);
+        Assert.Contains("ClearSequenceAsync", source, StringComparison.Ordinal);
+        Assert.Contains("StartRecordingAsync", source, StringComparison.Ordinal);
         Assert.Contains("SaveEditedSequenceAsync", source, StringComparison.Ordinal);
         Assert.Contains("HostOperation.TryExecuteAsync", source, StringComparison.Ordinal);
         Assert.Contains("MacroPage_ActionError", source, StringComparison.Ordinal);
         Assert.Contains("MacroPage_ClearError", source, StringComparison.Ordinal);
         Assert.Contains("MacroPage_OptionsError", source, StringComparison.Ordinal);
+        Assert.Contains("SaveMacroSequenceAsync", adapter, StringComparison.Ordinal);
+        Assert.Contains("StartMacroRecordingAsync", adapter, StringComparison.Ordinal);
+        Assert.Contains("ClearMacroSequenceAsync", adapter, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -11,6 +11,9 @@ using UniversalDeviceToolkit.Avalonia.Controls;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Pages.Windows;
 using UniversalDeviceToolkit.Avalonia.Services;
+using SharedMacroEventSnapshot = UniversalDeviceToolkit.ViewModels.MacroEventSnapshot;
+using SharedMacroSlotSnapshot = UniversalDeviceToolkit.ViewModels.MacroSlotSnapshot;
+using SharedMacroViewModel = UniversalDeviceToolkit.ViewModels.MacroViewModel;
 
 namespace UniversalDeviceToolkit.Avalonia.Pages;
 
@@ -21,7 +24,7 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 /// </summary>
 public sealed class MacroPage : UserControl
 {
-    private readonly IPlatformServices _platformServices;
+    private readonly SharedMacroViewModel _viewModel;
     private readonly StackPanel _slotsPanel = new() { Spacing = 8 };
     private readonly CheckBox _enabledToggle = new() { MinWidth = 48 };
     private readonly Button _stopButton = new() { MinWidth = 96 };
@@ -37,7 +40,9 @@ public sealed class MacroPage : UserControl
 
     public MacroPage(IPlatformServices platformServices)
     {
-        _platformServices = platformServices;
+        _viewModel = new(
+            new PlatformMacroController(),
+            new PlatformMacroWorkspace(platformServices));
         Content = BuildContent();
         _recordingRefreshTimer.Tick += RecordingRefreshTimer_Tick;
         Loaded += OnLoaded;
@@ -157,7 +162,15 @@ public sealed class MacroPage : UserControl
         try
         {
             _isRefreshing = true;
-            var state = await _platformServices.GetMacroWorkspaceAsync();
+            var sharedState = await _viewModel.LoadWorkspaceAsync();
+            if (sharedState is null)
+            {
+                _statusBlock.Text = _viewModel.ErrorMessage
+                    ?? Get("MacroPage_ActionError", "The macro action could not be completed.");
+                return;
+            }
+
+            var state = PlatformMacroWorkspace.ToPlatform(sharedState);
             _enabledToggle.IsChecked = state.IsEnabled;
             _stopButton.IsEnabled = state.IsRecording;
             _statusBlock.Text = state.IsRecording
@@ -348,7 +361,7 @@ public sealed class MacroPage : UserControl
         if (_isRefreshing || _enabledToggle.IsChecked is not bool enabled)
             return;
 
-        if (!await HostOperation.TryExecuteAsync(() => _platformServices.SetMacroEnabledAsync(enabled)))
+        if (!await HostOperation.TryExecuteAsync(() => _viewModel.SetEnabledAsync(enabled)))
         {
             _isRefreshing = true;
             _enabledToggle.IsChecked = !enabled;
@@ -362,7 +375,11 @@ public sealed class MacroPage : UserControl
 
     private async Task RunActionAsync(string actionKey)
     {
-        if (!await HostOperation.TryExecuteAsync(() => _platformServices.SetFeatureActionAsync("Macro", actionKey, true)))
+        var accepted = actionKey.Equals("macro-stop-recording", StringComparison.OrdinalIgnoreCase)
+            ? await HostOperation.TryExecuteAsync(() => _viewModel.StopRecordingAsync())
+            : FeatureActionContract.TryParseMacroPlayKey(actionKey, out var key)
+                && await HostOperation.TryExecuteAsync(() => _viewModel.PlayAsync(key));
+        if (!accepted)
         {
             _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
             return;
@@ -398,7 +415,8 @@ public sealed class MacroPage : UserControl
                 await Task.Delay(TimeSpan.FromSeconds(3));
             }
 
-            if (!await HostOperation.TryExecuteAsync(() => _platformServices.StartMacroRecordingAsync(key, mode)))
+            if (!await HostOperation.TryExecuteAsync(
+                    () => _viewModel.StartRecordingAsync(key, ToSharedRecordingMode(mode))))
             {
                 _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
                 return;
@@ -414,7 +432,7 @@ public sealed class MacroPage : UserControl
 
     private async Task ClearSequenceAsync(ulong key)
     {
-        if (_isRefreshing || !await HostOperation.TryExecuteAsync(() => _platformServices.ClearMacroSequenceAsync(key)))
+        if (_isRefreshing || !await HostOperation.TryExecuteAsync(() => _viewModel.ClearSequenceAsync(key)))
         {
             _statusBlock.Text = Get("MacroPage_ClearError", "Unable to clear this macro slot.");
             return;
@@ -663,8 +681,13 @@ public sealed class MacroPage : UserControl
         var repeatCount = (int)Math.Round(repeatValue);
         var hasEditedSequence = _editedSequences.TryGetValue(key, out var events);
         var saved = await HostOperation.TryExecuteAsync(() => ShouldPersistEditedSequence(hasEditedSequence)
-            ? _platformServices.SaveMacroSequenceAsync(key, events!, repeatCount, ignore, stop)
-            : _platformServices.SetMacroSequenceOptionsAsync(key, repeatCount, ignore, stop));
+            ? _viewModel.SaveSequenceAsync(new SharedMacroSlotSnapshot(
+                key,
+                repeatCount,
+                ignore,
+                stop,
+                events!.Select(ToSharedEvent).ToArray()))
+            : _viewModel.SetSequenceOptionsAsync(key, repeatCount, ignore, stop));
         if (!saved)
             _statusBlock.Text = Get("MacroPage_OptionsError", "Unable to save macro sequence options.");
 
@@ -672,6 +695,21 @@ public sealed class MacroPage : UserControl
     }
 
     internal static bool ShouldPersistEditedSequence(bool hasEditedSequence) => hasEditedSequence;
+
+    private static UniversalDeviceToolkit.ViewModels.MacroRecordingMode ToSharedRecordingMode(MacroRecordingMode mode) => mode switch
+    {
+        MacroRecordingMode.KeyboardMouse => UniversalDeviceToolkit.ViewModels.MacroRecordingMode.KeyboardMouse,
+        MacroRecordingMode.KeyboardMouseMovement => UniversalDeviceToolkit.ViewModels.MacroRecordingMode.KeyboardMouseMovement,
+        _ => UniversalDeviceToolkit.ViewModels.MacroRecordingMode.Keyboard,
+    };
+
+    private static SharedMacroEventSnapshot ToSharedEvent(MacroEventItem macroEvent) => new(
+        macroEvent.Source,
+        macroEvent.Direction,
+        macroEvent.Key,
+        macroEvent.X,
+        macroEvent.Y,
+        macroEvent.Delay);
 
     private LocalizedTextBlock CreateText(
         string text,

@@ -632,11 +632,18 @@ public sealed class AvaloniaMigrationContractTests
             "UniversalDeviceToolkit.Avalonia",
             "Pages",
             "MacroPage.cs"));
+        var adapter = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Services",
+            "SharedWorkspaceAdapters.cs"));
 
         source.Should().Contain("MacroSequenceControl_Keyboard");
         source.Should().Contain("MacroSequenceControl_KeyboardMouse");
         source.Should().Contain("MacroSequenceControl_KeyboardMouseMovement");
-        source.Should().Contain("StartMacroRecordingAsync");
+        source.Should().Contain("SharedMacroViewModel");
+        source.Should().Contain("StartRecordingAsync");
+        adapter.Should().Contain("StartMacroRecordingAsync");
     }
 
     [Theory]

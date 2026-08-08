@@ -71,4 +71,21 @@ public sealed class KeyboardLightingWorkspaceContractTests
         update.Mode.Should().Be("Spectrum");
         update.Brightness.Should().Be(expected);
     }
+
+    [Fact]
+    public void KeyboardPage_UsesTheSharedLightingViewModelForControllerMutations()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var source = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Pages",
+            "KeyboardBacklightPage.axaml.cs"));
+
+        source.Should().Contain("KeyboardBacklightViewModel");
+        source.Should().Contain("LoadWorkspaceAsync");
+        source.Should().Contain("_viewModel.ApplyAsync");
+        source.Should().Contain("_viewModel.ResetSpectrumProfileAsync");
+        source.Should().Contain("_viewModel.ImportSpectrumProfileAsync");
+    }
 }

@@ -4,6 +4,7 @@
     xmlns:controls="clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui"
     xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
     xmlns:overflow="clr-namespace:UniversalDeviceToolkit.WPF.Behaviors"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
@@ -487,7 +488,7 @@
                                 Padding="6"
                                 HorizontalAlignment="Center"
                                 AutomationProperties.AutomationId="NavigationPaneToggle"
-                                AutomationProperties.Name="Toggle navigation pane"
+                                AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_NavigationItems_Title}"
                                 Appearance="Transparent"
                                 Background="Transparent"
                                 BorderThickness="0"

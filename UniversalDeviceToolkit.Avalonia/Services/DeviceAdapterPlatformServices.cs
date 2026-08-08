@@ -537,6 +537,7 @@ public sealed class DeviceAdapterPlatformServices(IDeviceAdapter adapter) : IPla
     private static string? GetFeatureRoute(string capabilityId) => capabilityId.ToLowerInvariant() switch
     {
         "keyboard-backlight" => MainNavigation.Keyboard,
+        "read-only-telemetry" => MainNavigation.WindowsOptimization,
         "plugin-extensions" => MainNavigation.PluginExtensions,
         _ => null,
     };

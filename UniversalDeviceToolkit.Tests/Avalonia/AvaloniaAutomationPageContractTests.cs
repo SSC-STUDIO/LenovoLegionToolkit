@@ -18,6 +18,10 @@ public sealed class AvaloniaAutomationPageContractTests
         Assert.Contains("HostOperation.TryExecuteAsync", source, StringComparison.Ordinal);
         Assert.Contains("AutomationPage_Run_Error", source, StringComparison.Ordinal);
         Assert.Contains("AutomationPage_Save_Error_Message", source, StringComparison.Ordinal);
+        Assert.Contains("SharedAutomationViewModel", source, StringComparison.Ordinal);
+        Assert.Contains("_workspaceViewModel.RunAsync", source, StringComparison.Ordinal);
+        Assert.Contains("_workspaceViewModel.SaveAsync", source, StringComparison.Ordinal);
+        Assert.Contains("_workspaceViewModel.SetEnabledAsync", source, StringComparison.Ordinal);
     }
 
     [Fact]

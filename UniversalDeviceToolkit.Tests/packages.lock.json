@@ -830,11 +830,6 @@
         "resolved": "4.7.0",
         "contentHash": "VybpaOQQhqE6siHppMktjfGBw1GCwvCqiufqmP8F1nj7fTUNtW35LOEt3UZTEsECfo+ELAl/9o9nJx3U91i7vA=="
       },
-      "Tmds.DBus.Protocol": {
-        "type": "Transitive",
-        "resolved": "0.21.2",
-        "contentHash": "ScSMrUrrw8px4kK1Glh0fZv/HQUlg1078bNXNPfRPKQ3WbRzV9HpsydYEOgSoMK5LWICMf2bMwIFH0pGjxjcMA=="
-      },
       "Validation": {
         "type": "Transitive",
         "resolved": "2.6.68",
@@ -909,7 +904,6 @@
           "Avalonia.Controls.ColorPicker": "[11.2.3, )",
           "Avalonia.Desktop": "[11.3.6, )",
           "Avalonia.Themes.Fluent": "[11.3.6, )",
-          "Universal Device Toolkit": "[5.0.2, )",
           "UniversalDeviceToolkit.Lib": "[5.0.2, )",
           "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )",
           "UniversalDeviceToolkit.Lib.Automation": "[5.0.2, )",
@@ -1350,6 +1344,12 @@
         "dependencies": {
           "System.Diagnostics.EventLog": "9.0.2"
         }
+      },
+      "Tmds.DBus.Protocol": {
+        "type": "CentralTransitive",
+        "requested": "[0.21.3, )",
+        "resolved": "0.21.3",
+        "contentHash": "hDwB8WsQoyALQKqIbwzS68UKdlnafDm4T/DkO/JrA/YIneP/rKv96SxYPVXeh3FP4i/SXfShrYftKLtciJAIlw=="
       },
       "UniversalFanControl.Lib": {
         "type": "CentralTransitive",

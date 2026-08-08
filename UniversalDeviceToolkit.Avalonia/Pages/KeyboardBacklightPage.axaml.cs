@@ -13,6 +13,7 @@ using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Avalonia.Services;
 using UniversalDeviceToolkit.Avalonia.Windows;
 using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.ViewModels;
 #if WINDOWS
 using UniversalDeviceToolkit.Lib.Messaging;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
@@ -22,7 +23,7 @@ namespace UniversalDeviceToolkit.Avalonia.Pages;
 
 public partial class KeyboardBacklightPage : UserControl
 {
-    private readonly IPlatformServices _platformServices;
+    private readonly KeyboardBacklightViewModel _viewModel;
     private readonly List<SpectrumEffectEditor> _spectrumEditors = [];
     private readonly List<RgbZoneEditor> _rgbZones = [];
     private readonly List<Button> _zoneSurfaceBlocks = [];
@@ -42,7 +43,9 @@ public partial class KeyboardBacklightPage : UserControl
 
     public KeyboardBacklightPage(IPlatformServices platformServices)
     {
-        _platformServices = platformServices;
+        _viewModel = new(
+            new PlatformKeyboardBacklightDetectionService(platformServices),
+            new PlatformKeyboardBacklightWorkspace(platformServices));
         InitializeComponent();
         AutomationProperties.SetName(this, AvaloniaLocalization.GetString("KeyboardBacklightPage_Title", "Keyboard Backlight"));
         Loaded += OnLoaded;
@@ -101,7 +104,8 @@ public partial class KeyboardBacklightPage : UserControl
             RgbPanel.IsVisible = false;
             VantageWarning.IsVisible = false;
 
-            var state = await _platformServices.GetKeyboardLightingStateAsync().ConfigureAwait(true);
+            var sharedState = await _viewModel.LoadWorkspaceAsync().ConfigureAwait(true);
+            var state = PlatformKeyboardBacklightWorkspace.ToPlatform(sharedState);
             _state = state;
             if (state is null)
             {
@@ -460,7 +464,7 @@ public partial class KeyboardBacklightPage : UserControl
 
         try
         {
-            if (!await _platformServices.ResetKeyboardSpectrumProfileAsync().ConfigureAwait(true))
+            if (!await _viewModel.ResetSpectrumProfileAsync().ConfigureAwait(true))
             {
                 ErrorMessage.Text = AvaloniaLocalization.GetString(
                     "KeyboardBacklightPage_SaveFailed",
@@ -497,7 +501,7 @@ public partial class KeyboardBacklightPage : UserControl
         if (string.IsNullOrWhiteSpace(path))
             return;
 
-        if (!await _platformServices.ExportKeyboardSpectrumProfileAsync(path).ConfigureAwait(true))
+        if (!await _viewModel.ExportSpectrumProfileAsync(path).ConfigureAwait(true))
         {
             ErrorMessage.Text = AvaloniaLocalization.GetString(
                 "KeyboardBacklightPage_SaveFailed",
@@ -526,7 +530,7 @@ public partial class KeyboardBacklightPage : UserControl
 
         try
         {
-            if (!await _platformServices.ImportKeyboardSpectrumProfileAsync(path).ConfigureAwait(true))
+            if (!await _viewModel.ImportSpectrumProfileAsync(path).ConfigureAwait(true))
             {
                 ErrorMessage.Text = AvaloniaLocalization.GetString(
                     "KeyboardBacklightPage_SaveFailed",
@@ -554,7 +558,7 @@ public partial class KeyboardBacklightPage : UserControl
     }
 
     internal static KeyboardLightingUpdate CreateSpectrumBrightnessUpdate(double brightness) =>
-        new("Spectrum", Brightness: Math.Clamp((int)brightness, 0, 9));
+        new("Spectrum", Brightness: KeyboardBacklightViewModel.ClampSpectrumBrightness(brightness));
 
     private void SpectrumLogo_Click(object? sender, RoutedEventArgs e)
     {
@@ -798,7 +802,9 @@ public partial class KeyboardBacklightPage : UserControl
         {
             _isRefreshing = true;
             ErrorMessage.IsVisible = false;
-            if (!await _platformServices.SetKeyboardLightingAsync(update).ConfigureAwait(true))
+            if (!await _viewModel.ApplyAsync(
+                    PlatformKeyboardBacklightWorkspace.ToShared(update))
+                    .ConfigureAwait(true))
             {
                 ErrorMessage.Text = AvaloniaLocalization.GetString("KeyboardBacklightPage_SaveFailed", "The keyboard controller rejected this change.");
                 ErrorMessage.IsVisible = true;
