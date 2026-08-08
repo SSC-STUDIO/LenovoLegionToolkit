@@ -8,12 +8,16 @@
     </UserControl.DataContext>
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="16" Margin="0,0,16,16">
-            <TextBlock Text="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}"
+        <StackPanel Spacing="0" Margin="0,0,16,16">
+            <TextBlock Text="{local:Loc Key=AboutPage_Title, Fallback=About}"
                        FontSize="{StaticResource FontSizePageTitle}" FontWeight="Medium"
                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Margin="0,16,0,8" />
-            <Grid ColumnSpacing="4">
+                       Margin="0,16,0,24" />
+            <TextBlock Text="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}"
+                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
+                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                       Margin="0,0,0,8" />
+            <Grid ColumnSpacing="4" Margin="0,0,0,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
