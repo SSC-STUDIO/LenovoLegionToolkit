@@ -131,7 +131,7 @@ public static class DeviceSupportMatcher
         var matchScore = Math.Max(keywordScore, Math.Max(prefixScore, familyScore));
         if (matchScore < 0)
         {
-            if (pack.Id.EndsWith("-basic", StringComparison.OrdinalIgnoreCase))
+            if (!pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase) && pack.Id.EndsWith("-basic", StringComparison.OrdinalIgnoreCase))
                 return VendorScore(pack);
 
             return -1;
