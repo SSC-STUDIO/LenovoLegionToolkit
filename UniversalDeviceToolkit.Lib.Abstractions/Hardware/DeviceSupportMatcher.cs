@@ -128,7 +128,16 @@ public static class DeviceSupportMatcher
             .DefaultIfEmpty(-1)
             .Max();
 
-        return VendorScore(pack) + Math.Max(keywordScore, Math.Max(prefixScore, familyScore));
+        var matchScore = Math.Max(keywordScore, Math.Max(prefixScore, familyScore));
+        if (matchScore < 0)
+        {
+            if (pack.Id.EndsWith("-basic", StringComparison.OrdinalIgnoreCase))
+                return VendorScore(pack);
+
+            return -1;
+        }
+
+        return VendorScore(pack) + matchScore;
     }
 
     private static int VendorScore(DevicePackDefinition pack) =>

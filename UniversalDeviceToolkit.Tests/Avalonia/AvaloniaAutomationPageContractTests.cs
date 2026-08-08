@@ -15,6 +15,9 @@ public sealed class AvaloniaAutomationPageContractTests
         Assert.Contains("ManualPipelineIcons", source, StringComparison.Ordinal);
         Assert.Contains("AutomationPage_ChangeIcon", source, StringComparison.Ordinal);
         Assert.Contains("NormalizeIconName(row.IconEditor?.Text)", source, StringComparison.Ordinal);
+        Assert.Contains("HostOperation.TryExecuteAsync", source, StringComparison.Ordinal);
+        Assert.Contains("AutomationPage_Run_Error", source, StringComparison.Ordinal);
+        Assert.Contains("AutomationPage_Save_Error_Message", source, StringComparison.Ordinal);
     }
 
     [Fact]

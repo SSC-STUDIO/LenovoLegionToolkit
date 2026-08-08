@@ -348,7 +348,7 @@ public sealed class MacroPage : UserControl
         if (_isRefreshing || _enabledToggle.IsChecked is not bool enabled)
             return;
 
-        if (!await _platformServices.SetMacroEnabledAsync(enabled))
+        if (!await HostOperation.TryExecuteAsync(() => _platformServices.SetMacroEnabledAsync(enabled)))
         {
             _isRefreshing = true;
             _enabledToggle.IsChecked = !enabled;
@@ -362,7 +362,7 @@ public sealed class MacroPage : UserControl
 
     private async Task RunActionAsync(string actionKey)
     {
-        if (!await _platformServices.SetFeatureActionAsync("Macro", actionKey, true))
+        if (!await HostOperation.TryExecuteAsync(() => _platformServices.SetFeatureActionAsync("Macro", actionKey, true)))
         {
             _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
             return;
@@ -398,7 +398,7 @@ public sealed class MacroPage : UserControl
                 await Task.Delay(TimeSpan.FromSeconds(3));
             }
 
-            if (!await _platformServices.StartMacroRecordingAsync(key, mode))
+            if (!await HostOperation.TryExecuteAsync(() => _platformServices.StartMacroRecordingAsync(key, mode)))
             {
                 _statusBlock.Text = Get("MacroPage_ActionError", "The macro action could not be completed.");
                 return;
@@ -414,7 +414,7 @@ public sealed class MacroPage : UserControl
 
     private async Task ClearSequenceAsync(ulong key)
     {
-        if (_isRefreshing || !await _platformServices.ClearMacroSequenceAsync(key))
+        if (_isRefreshing || !await HostOperation.TryExecuteAsync(() => _platformServices.ClearMacroSequenceAsync(key)))
         {
             _statusBlock.Text = Get("MacroPage_ClearError", "Unable to clear this macro slot.");
             return;
@@ -662,9 +662,9 @@ public sealed class MacroPage : UserControl
 
         var repeatCount = (int)Math.Round(repeatValue);
         var hasEditedSequence = _editedSequences.TryGetValue(key, out var events);
-        var saved = ShouldPersistEditedSequence(hasEditedSequence)
-            ? await _platformServices.SaveMacroSequenceAsync(key, events!, repeatCount, ignore, stop)
-            : await _platformServices.SetMacroSequenceOptionsAsync(key, repeatCount, ignore, stop);
+        var saved = await HostOperation.TryExecuteAsync(() => ShouldPersistEditedSequence(hasEditedSequence)
+            ? _platformServices.SaveMacroSequenceAsync(key, events!, repeatCount, ignore, stop)
+            : _platformServices.SetMacroSequenceOptionsAsync(key, repeatCount, ignore, stop));
         if (!saved)
             _statusBlock.Text = Get("MacroPage_OptionsError", "Unable to save macro sequence options.");
 

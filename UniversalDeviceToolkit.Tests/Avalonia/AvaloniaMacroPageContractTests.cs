@@ -52,6 +52,10 @@ public sealed class AvaloniaMacroPageContractTests
         Assert.Contains("ClearMacroSequenceAsync", source, StringComparison.Ordinal);
         Assert.Contains("StartMacroRecordingAsync", source, StringComparison.Ordinal);
         Assert.Contains("SaveEditedSequenceAsync", source, StringComparison.Ordinal);
+        Assert.Contains("HostOperation.TryExecuteAsync", source, StringComparison.Ordinal);
+        Assert.Contains("MacroPage_ActionError", source, StringComparison.Ordinal);
+        Assert.Contains("MacroPage_ClearError", source, StringComparison.Ordinal);
+        Assert.Contains("MacroPage_OptionsError", source, StringComparison.Ordinal);
     }
 
     [Fact]

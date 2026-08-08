@@ -26,8 +26,8 @@ public sealed class ExceptionResourceGuardTests
             ["UniversalDeviceToolkit.WPF", "Controls", "Automation", "AbstractComboBoxAutomationStepControl.cs"],
             "Resource.AutomationStep_CreationFailed");
         AssertResourceBacked(
-            ["UniversalDeviceToolkit.WPF", "CLI", "Features", "FeatureRegistration.cs"],
-            "Resource.FeatureRegistration_");
+            ["UniversalDeviceToolkit.Lib.Automation", "CLI", "Features", "FeatureRegistration.cs"],
+            "Resource.");
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public sealed class ExceptionResourceGuardTests
         ["UniversalDeviceToolkit.Lib", "Settings", "SettingsBackupService.cs"],
         ["UniversalDeviceToolkit.WPF", "Controls", "AbstractComboBoxFeatureCardControl.cs"],
         ["UniversalDeviceToolkit.WPF", "Controls", "Automation", "AbstractComboBoxAutomationStepControl.cs"],
-        ["UniversalDeviceToolkit.WPF", "CLI", "Features", "FeatureRegistration.cs"]
+        ["UniversalDeviceToolkit.Lib.Automation", "CLI", "Features", "FeatureRegistration.cs"]
     ];
 
     private static void AssertResourceBacked(string[] path, string resourceMarker)

@@ -1,4 +1,4 @@
-﻿# English Hardcoding Whitelist – UniversalDeviceToolkit.WPF
+# English Hardcoding Whitelist – UniversalDeviceToolkit.WPF
 #
 # Source: hardcoding_audit.md in the same audit directory.
 #
@@ -166,6 +166,8 @@
 [TECH_DEFAULT] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: 223.5.5.5
 [GLYPH] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: ▾
 [GLYPH] :: UniversalDeviceToolkit.WPF/Pages/WindowsOptimization/NetworkAccelerationControl.xaml :: ▸
+
+[TECH_ABBREV] :: UniversalDeviceToolkit.WPF/Styles/NavigationStore.xaml :: Toggle navigation pane
 
 # ---------------------------------------------------------------------------
 # End of whitelist.

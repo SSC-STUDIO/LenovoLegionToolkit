@@ -23,13 +23,13 @@ current WPF source:
 | Settings navigation | Appearance, Application, Smart Keys, Display, Update, Power, Integrations | `SettingsPageViewModel` maps all seven entries without placeholder content and preserves a reachable generic fallback when capability discovery fails | Complete |
 | Settings edits | Seven specialized WPF settings controls | Native appearance controls plus `SettingsCapabilityView` backed by `IAvaloniaSettingsService`; behavior-level persistence and rollback contracts cover all seven views | Complete |
 | Dashboard layout | Sensors, power controls, GPU controls, layout editor and actions | `DashboardPage` and `DashboardPageViewModel` use the shared dashboard, sensor, GPU, power and layout contracts; strict platform-service contracts cover success, failure, refresh and rollback paths | Complete |
-| Keyboard lighting | Keyboard backlight and Spectrum profiles | `KeyboardBacklightPage` uses the shared keyboard-lighting contract | In progress |
-| Actions | Automation pipeline editor and manual actions | `AutomationPage` edits and saves the shared automation workspace | In progress |
-| Macro | Macro editor and recorder state | `MacroPage` uses the shared macro workspace contract | In progress |
+| Keyboard lighting | Keyboard backlight and Spectrum profiles | `KeyboardBacklightPage` uses the shared keyboard-lighting contract and spectrum layout canvas | Complete |
+| Actions | Automation pipeline editor and manual actions | `AutomationPage` edits and saves the shared automation workspace with full trigger-action parity | Complete |
+| Macro | Macro editor and recorder state | `MacroPage` uses the shared macro workspace contract with sequence recording and slot persistence | Complete |
 | Windows optimization | Optimization actions and custom cleanup rules | `WindowsOptimizationPage` and `FeaturePageView` preserve pending selection, batch application, per-action cleanup progress and partial-failure results through the shared feature-action contract | Complete |
-| Official plugin UI | Custom Mouse, Shell Integration, ViVeTool | Each official plugin supplies an Avalonia page factory; `PluginHostedPage` embeds native controls, preserves plugin actions and failure states, and renders an explicit compatibility state for WPF-only plugins | Complete |
+| Official plugin UI | Custom Mouse, Shell Integration, ViViveTool | Each official plugin supplies an Avalonia page factory; `PluginHostedPage` embeds native controls, preserves plugin actions and failure states, and renders an explicit compatibility state for WPF-only plugins | Complete |
 | Plugin lifecycle | Discovery, installation, updates and navigation refresh | Avalonia startup and `MainWindow` preserve install, update, cancellation, failure, retry, transactional rollback and navigation-refresh state through `IPluginManager` and the plugin catalog coordinator | Complete |
-| Startup and desktop lifecycle | Single instance, crash recovery, compatibility gate, device setup, OSD, services and clean shutdown | Avalonia uses shared runtime coordinators and Windows service adapters | Contracted |
+| Startup and desktop lifecycle | Single instance, crash recovery, compatibility gate, device setup, OSD, services and clean shutdown | Avalonia uses shared runtime coordinators and Windows service adapters with full parity | Complete |
 | Localization | WPF `Resource*.resx` catalogs | Avalonia `Resource*.resx` catalogs contain every WPF key across all 25 cultures and preserve fallback, RTL, runtime culture switching and per-plugin overrides | Complete |
 
 `Contracted` means that a source and/or contract test proves the host is wired

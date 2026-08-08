@@ -629,7 +629,8 @@ public partial class AutomationPage : UserControl
     {
         if (row.IsNew || row.Id == Guid.Empty)
             return;
-        var accepted = await _platformServices.SetFeatureActionAsync("Actions", $"automation-pipeline:{row.Id:D}", true);
+        var accepted = await HostOperation.TryExecuteAsync(
+            () => _platformServices.SetFeatureActionAsync("Actions", $"automation-pipeline:{row.Id:D}", true));
         SetFeedback(accepted ? null : Get("AutomationPage_Run_Error", "Unable to run this pipeline."));
     }
 
@@ -637,7 +638,7 @@ public partial class AutomationPage : UserControl
     {
         if (_isRefreshing || EnabledToggle.IsChecked is not bool enabled)
             return;
-        var accepted = await _platformServices.SetAutomationEnabledAsync(enabled);
+        var accepted = await HostOperation.TryExecuteAsync(() => _platformServices.SetAutomationEnabledAsync(enabled));
         if (!accepted)
         {
             SetFeedback(Get("AutomationPage_EnableAutomaticPipelines_Error_Message", "Unable to update automation state."));
@@ -680,7 +681,8 @@ public partial class AutomationPage : UserControl
         SaveButton.IsEnabled = false;
         try
         {
-            var accepted = await _platformServices.SaveAutomationWorkspaceAsync(drafts);
+            var accepted = await HostOperation.TryExecuteAsync(
+                () => _platformServices.SaveAutomationWorkspaceAsync(drafts));
             if (!accepted)
             {
                 SetFeedback(Get("AutomationPage_Save_Error_Message", "Unable to save automation pipelines."));
