@@ -153,13 +153,15 @@ public partial class FeaturePageView : UserControl
                     && action.Key != FeatureActionContract.OptimizationClearSelectionActionKey)).ToArray();
 
         string? lastCategory = null;
+        string? lastCategoryPluginId = null;
         foreach (var item in visibleActions)
         {
             if (!string.IsNullOrWhiteSpace(item.Category)
                 && !string.Equals(lastCategory, item.Category, StringComparison.Ordinal))
             {
-                FeatureItems.Items.Add(CreateCategoryHeading(item.Category));
+                FeatureItems.Items.Add(CreateCategoryHeading(item.Category, item.CategoryPluginId));
                 lastCategory = item.Category;
+                lastCategoryPluginId = item.CategoryPluginId;
             }
 
             FeatureItems.Items.Add(CreateFeatureCard(item));
@@ -1249,6 +1251,22 @@ public partial class FeaturePageView : UserControl
         var copy = new StackPanel { Spacing = 4, MinWidth = 0 };
         copy.Children.Add(title);
         copy.Children.Add(description);
+        if (item.IsRecommendedTag)
+        {
+            var recommendedBadge = new Border
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Child = new LocalizedTextBlock
+                {
+                    Text = AvaloniaLocalization.GetString("Recommended", "Recommended"),
+                    OverflowMode = LocalizedOverflowMode.Ellipsis,
+                    MaxLines = 1,
+                },
+            };
+            recommendedBadge.Classes.Add("badge");
+            recommendedBadge.Classes.Add("success");
+            copy.Children.Add(recommendedBadge);
+        }
         if (statusKind != FeatureActionStatusKind.Neutral && !string.IsNullOrWhiteSpace(item.Status))
             copy.Children.Add(CreateStatusBadge(item.Status, statusKind));
 
@@ -1551,16 +1569,44 @@ public partial class FeaturePageView : UserControl
         return await editor.ShowDialog<CustomCleanupRuleItem?>(owner);
     }
 
-    private LocalizedTextBlock CreateCategoryHeading(string category) => new()
+    private Control CreateCategoryHeading(string category, string? pluginId)
     {
-        Text = category,
-        FontSize = GetResource<double>("FontSizeSubsection"),
-        FontWeight = FontWeight.Medium,
-        Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
-        Margin = new Thickness(0, 10, 0, 2),
-        OverflowMode = LocalizedOverflowMode.Wrap,
-        MaxLines = 2,
-    };
+        var title = new LocalizedTextBlock
+        {
+            Text = category,
+            FontSize = GetResource<double>("FontSizeSubsection"),
+            FontWeight = FontWeight.Medium,
+            Foreground = GetResource<IBrush>("TextFillColorPrimaryBrush"),
+            Margin = new Thickness(0, 10, 0, 2),
+            OverflowMode = LocalizedOverflowMode.Wrap,
+            MaxLines = 2,
+        };
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return title;
+
+        var settings = new Button
+        {
+            Content = AvaloniaLocalization.GetString("Settings", "Settings"),
+            MinWidth = 0,
+            Padding = new Thickness(8, 4),
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+        AutomationProperties.SetAutomationId(settings, $"AvaloniaOptimizationCategorySettings_{pluginId}");
+        AutomationProperties.SetName(settings, $"{category} {AvaloniaLocalization.GetString("Settings", "Settings")}");
+        ToolTip.SetTip(settings, AvaloniaLocalization.GetString("Settings", "Settings"));
+        var requestedPluginId = pluginId;
+        settings.Click += (_, _) => _actionRequested?.Invoke($"plugin-settings:{requestedPluginId}");
+
+        var heading = new Grid
+        {
+            ColumnDefinitions = new ColumnDefinitions("*,Auto"),
+            Margin = new Thickness(0, 10, 0, 2),
+        };
+        heading.Children.Add(title);
+        Grid.SetColumn(settings, 1);
+        heading.Children.Add(settings);
+        return heading;
+    }
 
     private T GetResource<T>(object key)
     {
@@ -1591,7 +1637,10 @@ public partial class FeaturePageView : UserControl
 
 public sealed class ActionsPage(IPlatformServices services) : AutomationPage(services);
 
-public sealed class WindowsOptimizationPage(IPlatformServices services) : FeaturePageView(services, new(
+public sealed class WindowsOptimizationPage(
+    IPlatformServices services,
+    Action<string>? actionRequested = null)
+    : FeaturePageView(services, new(
     "WindowsOptimization",
     "System optimization",
     "Review Windows optimization actions and their current state.",
@@ -1599,7 +1648,7 @@ public sealed class WindowsOptimizationPage(IPlatformServices services) : Featur
     "Windows optimization actions require the Windows optimization adapter.",
     "Review optimization actions",
     "Apply or roll back supported Windows optimization actions from the shared optimization service.",
-    "Gauge24"));
+    "Gauge24"), actionRequested);
 
 public sealed class PluginExtensionsPage : FeaturePageView
 {

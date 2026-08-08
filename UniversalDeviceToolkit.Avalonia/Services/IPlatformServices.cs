@@ -182,7 +182,9 @@ public sealed record FeatureActionItem(
     bool IsToggle,
     string? Category = null,
     FeatureActionStatusKind StatusKind = FeatureActionStatusKind.Neutral,
-    bool IsApplied = false);
+    bool IsApplied = false,
+    bool IsRecommendedTag = false,
+    string? CategoryPluginId = null);
 
 /// <summary>
 /// One cleanup step as observed by the Avalonia host. A failure is recorded per

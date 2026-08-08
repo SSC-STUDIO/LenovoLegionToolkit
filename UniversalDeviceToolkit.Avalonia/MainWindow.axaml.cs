@@ -716,7 +716,9 @@ public partial class MainWindow : Window
             MainNavigation.Keyboard => new KeyboardBacklightPage(_platformServices),
             MainNavigation.Actions => new ActionsPage(_platformServices),
             MainNavigation.Macro => new MacroPage(_platformServices),
-            MainNavigation.WindowsOptimization => new WindowsOptimizationPage(_platformServices),
+            MainNavigation.WindowsOptimization => new WindowsOptimizationPage(
+                _platformServices,
+                OnPluginActionRequested),
             MainNavigation.PluginExtensions => new PluginExtensionsPage(
                 _platformServices,
                 OnPluginActionRequested,

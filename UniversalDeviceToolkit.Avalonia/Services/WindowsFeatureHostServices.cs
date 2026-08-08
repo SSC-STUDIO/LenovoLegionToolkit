@@ -3969,7 +3969,9 @@ internal sealed class WindowsFeatureHostServices
                     selected,
                     isCleanup || FeatureActionContract.IsToggleAction(projectedAction.RollbackAsync is not null),
                     ResolveResource(category.TitleResourceKey),
-                    IsApplied: !isCleanup && applied == true));
+                    IsApplied: !isCleanup && applied == true,
+                    IsRecommendedTag: !isCleanup && projectedAction.Recommended,
+                    CategoryPluginId: category.PluginId));
             }
         }
 
