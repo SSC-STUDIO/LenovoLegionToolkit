@@ -1,0 +1,299 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.WPF.Controls.Packages.PackageControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="clr-namespace:UniversalDeviceToolkit.WPF.Controls.Custom"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
+
+    <UserControl.Resources>
+        <Style x:Key="PackageActionButtonStyle" TargetType="wpfui:Button" BasedOn="{StaticResource AppButtonCompact}">
+            <Setter Property="Width" Value="34" />
+            <Setter Property="MinWidth" Value="34" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="{StaticResource IconSizeMD}" />
+            <Setter Property="Appearance" Value="Secondary" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="PackageMetadataTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallCaption}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <Style x:Key="PackageStateBadgeStyle" TargetType="Border">
+            <Setter Property="Margin" Value="0,0,8,0" />
+            <Setter Property="Padding" Value="8,3" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+    </UserControl.Resources>
+
+        <custom:CardControl Margin="0,0,0,8" ClipToBounds="False">
+        <custom:CardControl.Header>
+            <Grid MinHeight="108" ClipToBounds="False" Margin="4,6,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <CheckBox
+                    x:Name="_selectCheckBox"
+                    Grid.Row="0"
+                    Grid.RowSpan="6"
+                    Grid.Column="0"
+                    Margin="0,2,14,0"
+                    VerticalAlignment="Top"
+                    SnapsToDevicePixels="True"
+                    UseLayoutRounding="True" />
+
+                <Grid
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="0,2,16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        x:Name="_titleTextBlock"
+                        Grid.Column="0"
+                        FontSize="{DynamicResource FontSizeCaption}"
+                        FontWeight="Medium"
+                        MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
+                        TextTrimming="CharacterEllipsis" />
+
+                    <wpfui:Badge
+                        x:Name="_recommendedBadge"
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Appearance="Secondary"
+                        Background="{DynamicResource StatusSuccessBrush}"
+                        BorderBrush="{DynamicResource StatusSuccessBrush}"
+                        Content="{x:Static resources:Resource.PackageControl_Recommended}"
+                        Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
+                        Visibility="Collapsed" />
+
+                    <Border
+                        x:Name="_statusBadge"
+                        Grid.Column="2"
+                        Margin="8,0,0,0"
+                        Style="{StaticResource PackageStateBadgeStyle}"
+                        Visibility="Collapsed">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:SymbolIcon
+                                x:Name="_statusIcon"
+                                Margin="0,0,4,0"
+                                FontSize="{StaticResource IconSizeBadge}"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Symbol="Clock24" />
+                            <TextBlock
+                                x:Name="_statusTextBlock"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,5,16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        x:Name="_categoryTextBlock"
+                        Grid.Column="0"
+                        FontWeight="Medium"
+                        MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
+                        Style="{StaticResource PackageMetadataTextStyle}" />
+
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="8,0"
+                        Style="{StaticResource PackageMetadataTextStyle}"
+                        Text="|" />
+
+                    <TextBlock
+                        x:Name="_dateTextBlock"
+                        Grid.Column="2"
+                        Style="{StaticResource PackageMetadataTextStyle}" />
+                </Grid>
+
+                <TextBlock
+                    x:Name="_descriptionTextBlock"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="0,8,16,0"
+                    FontSize="{DynamicResource FontSizeSmallBody}"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    x:Name="_detailTextBlock"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Margin="0,8,16,0"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    MouseRightButtonUp="CopyToClipboard_MouseRightButtonUp"
+                    TextTrimming="CharacterEllipsis" />
+
+                <StackPanel
+                    x:Name="_updateRebootStackPanel"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Margin="0,10,16,0"
+                    Orientation="Horizontal">
+                    <Border
+                        x:Name="_isUpdateStackPanel"
+                        Style="{StaticResource PackageStateBadgeStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:SymbolIcon
+                                Margin="0,0,4,0"
+                                FontSize="{StaticResource IconSizeBadge}"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource StatusSuccessBrush}"
+                                Symbol="ArrowSync24" />
+                            <TextBlock
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource StatusSuccessBrush}"
+                                Text="{x:Static resources:Resource.PackageControl_IsUpdateInfo}"
+                                TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border
+                        x:Name="_rebootStackPanel"
+                        Style="{StaticResource PackageStateBadgeStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <wpfui:SymbolIcon
+                                Margin="0,0,4,0"
+                                FontSize="{StaticResource IconSizeBadge}"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource StatusWarningBrush}"
+                                Symbol="Warning24" />
+                            <TextBlock
+                                x:Name="_rebootTextBlock"
+                                FontSize="{DynamicResource FontSizeSmallCaption}"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource StatusWarningBrush}"
+                                Text="{x:Static resources:Resource.PackageControl_RebootRecommended}"
+                                TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <TextBlock
+                    x:Name="_warningTextBlock"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Margin="0,8,16,0"
+                    FontSize="{DynamicResource FontSizeSmallCaption}"
+                    FontWeight="Medium"
+                    Foreground="{DynamicResource StatusWarningBrush}"
+                    Text="{x:Static resources:Resource.PackageControl_OldPackageWarning}"
+                    TextTrimming="CharacterEllipsis"
+                    Visibility="Collapsed" />
+
+                <StackPanel
+                    x:Name="_idleStackPanel"
+                    Grid.Row="0"
+                    Grid.RowSpan="6"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal">
+                    <wpfui:Button
+                        x:Name="_readmeButton"
+                        Click="ReadmeButton_Click"
+                        Style="{StaticResource PackageActionButtonStyle}"
+                        ToolTip="{x:Static resources:Resource.PackageControl_OpenReadme}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon
+                                Symbol="DocumentBulletList24"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
+
+                    <wpfui:Button
+                        x:Name="_downloadButton"
+                        Click="DownloadButton_Click"
+                        Style="{StaticResource PackageActionButtonStyle}"
+                        ToolTip="{x:Static resources:Resource.PackageControl_Download}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon
+                                Symbol="ArrowDownload24"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
+                </StackPanel>
+
+                <StackPanel
+                    x:Name="_downloadingStackPanel"
+                    Grid.Row="0"
+                    Grid.RowSpan="6"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal"
+                    Visibility="Collapsed">
+                    <Label
+                        x:Name="_downloadProgressLabel"
+                        MinWidth="42"
+                        Padding="0"
+                        HorizontalContentAlignment="Right"
+                        VerticalContentAlignment="Center" />
+
+                    <wpfui:ProgressRing
+                        x:Name="_downloadProgressRing"
+                        Margin="8,4,0,0"
+                        Style="{StaticResource AppLoadingRingCompactStyle}" />
+
+                    <wpfui:Button
+                        Margin="8,0,0,0"
+                        Click="CancelDownloadButton_Click"
+                        Style="{StaticResource PackageActionButtonStyle}"
+                        ToolTip="{x:Static resources:Resource.Cancel}">
+                        <wpfui:Button.Icon>
+                            <wpfui:SymbolIcon
+                                Symbol="Dismiss24"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        </wpfui:Button.Icon>
+                    </wpfui:Button>
+                </StackPanel>
+            </Grid>
+        </custom:CardControl.Header>
+    </custom:CardControl>
+
+</UserControl>

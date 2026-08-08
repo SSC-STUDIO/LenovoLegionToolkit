@@ -1,0 +1,272 @@
+﻿<!--
+    UDT notification toast language — glass card matching AppStatusBanner.
+    Template structure adapted from WPF-UI Snackbar (MIT) with UDT tokens.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--
+      Single width token for every in-app notification card:
+      Snackbar, AppNotificationHost stack, AppStatusBanner.
+    -->
+    <sys:Double x:Key="NotificationToastWidth">400</sys:Double>
+    <Thickness x:Key="NotificationToastPadding">12,10</Thickness>
+    <Thickness x:Key="NotificationToastMargin">0,0,0,0</Thickness>
+
+    <!--
+      Icon-only dismiss control: no rounded “tile” behind the X.
+      Hover/press only tint the glyph, never draw a filled box.
+    -->
+    <Style x:Key="NotificationCloseButtonStyle" TargetType="{x:Type controls:Button}" BasedOn="{StaticResource {x:Type controls:Button}}">
+        <Setter Property="Appearance" Value="Transparent" />
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="28" />
+        <Setter Property="MinWidth" Value="28" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="MouseOverBackground" Value="Transparent" />
+        <Setter Property="MouseOverBorderBrush" Value="Transparent" />
+        <Setter Property="PressedBackground" Value="Transparent" />
+        <Setter Property="PressedBorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="PressedForeground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type controls:Snackbar}">
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="ContentForeground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+        <Setter Property="Margin" Value="{StaticResource NotificationToastMargin}" />
+        <Setter Property="Width" Value="{StaticResource NotificationToastWidth}" />
+        <Setter Property="MinWidth" Value="{StaticResource NotificationToastWidth}" />
+        <Setter Property="MaxWidth" Value="{StaticResource NotificationToastWidth}" />
+        <Setter Property="MinHeight" Value="56" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:Snackbar}">
+                    <Grid
+                        x:Name="CardBorderContainer"
+                        Opacity="0"
+                        AutomationProperties.Name="{TemplateBinding Title}">
+                        <!-- Off-canvas rest state lives on the render path (was Margin 0,0,0,-200). -->
+                        <Grid.RenderTransform>
+                            <TranslateTransform Y="200" />
+                        </Grid.RenderTransform>
+                        <Border
+                            x:Name="CardBorder"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Padding="{StaticResource NotificationToastPadding}"
+                            VerticalAlignment="Bottom"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="{StaticResource CornerRadiusCard}"
+                            Effect="{DynamicResource NotificationGlassShadowEffect}"
+                            RenderTransform="{TemplateBinding SlideTransform}"
+                            Visibility="{TemplateBinding Visibility}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <ContentPresenter
+                                    x:Name="IconChrome"
+                                    Width="28"
+                                    Height="28"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Content="{TemplateBinding Icon}"
+                                    TextElement.FontSize="20"
+                                    TextElement.Foreground="{TemplateBinding Foreground}" />
+
+                                <Grid Grid.Column="1" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <ContentPresenter
+                                        x:Name="TitleContentPresenter"
+                                        Grid.Row="0"
+                                        Content="{TemplateBinding Title}"
+                                        ContentTemplate="{TemplateBinding TitleTemplate}"
+                                        TextElement.FontSize="{DynamicResource FontSizeBody}"
+                                        TextElement.FontWeight="Medium"
+                                        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+                                        <ContentPresenter.Resources>
+                                            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+                                                <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                                            </Style>
+                                        </ContentPresenter.Resources>
+                                    </ContentPresenter>
+
+                                    <ContentPresenter
+                                        Grid.Row="1"
+                                        Content="{TemplateBinding Content}"
+                                        ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                        ContentTemplate="{TemplateBinding ContentTemplate}"
+                                        ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                        TextElement.FontSize="{DynamicResource FontSizeCaption}"
+                                        TextElement.FontWeight="Regular"
+                                        TextElement.Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                                        <ContentPresenter.Resources>
+                                            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+                                                <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+                                            </Style>
+                                        </ContentPresenter.Resources>
+                                    </ContentPresenter>
+                                </Grid>
+
+                                <controls:Button
+                                    x:Name="CloseButton"
+                                    Grid.Column="2"
+                                    Margin="8,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource NotificationCloseButtonStyle}"
+                                    AutomationProperties.Name="{x:Static resources:Resource.CloseNotification_AutomationName}"
+                                    Command="{Binding Path=TemplateButtonCommand, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                    ToolTip="{x:Static resources:Resource.Close_Tooltip}">
+                                    <controls:SymbolIcon FontSize="14" Symbol="Dismiss20" />
+                                </controls:Button>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Icon" Value="{x:Null}">
+                            <Setter TargetName="IconChrome" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="IconChrome" Property="Margin" Value="0" />
+                        </Trigger>
+                        <Trigger Property="IsCloseButtonEnabled" Value="False">
+                            <Setter TargetName="CloseButton" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="CloseButton" Property="Margin" Value="0" />
+                        </Trigger>
+                        <Trigger Property="IsShown" Value="True">
+                            <Setter Property="Focusable" Value="True" />
+                            <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <!-- Slide/fade on the render path; no layout pass per frame. -->
+                                        <DoubleAnimation
+                                            BeginTime="00:00:00"
+                                            Storyboard.TargetName="CardBorderContainer"
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                            From="200"
+                                            To="0"
+                                            Duration="{StaticResource AnimationDurationSlow}"
+                                            EasingFunction="{StaticResource AnimationEasingExpoOut}" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="CardBorderContainer"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="{StaticResource AnimationOpacityStart}"
+                                            To="{StaticResource AnimationOpacityEnd}"
+                                            Duration="{StaticResource AnimationDurationSlow}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            BeginTime="00:00:00"
+                                            Storyboard.TargetName="CardBorderContainer"
+                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+                                            From="0"
+                                            To="200"
+                                            Duration="{StaticResource AnimationDurationSlow}"
+                                            EasingFunction="{StaticResource AnimationEasingExpoOut}" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="CardBorderContainer"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="{StaticResource AnimationOpacityEnd}"
+                                            To="{StaticResource AnimationOpacityStart}"
+                                            Duration="{StaticResource AnimationDurationSlow}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!-- Severity via icon accent only — keep glass surface for all appearances. -->
+        <Style.Triggers>
+            <Trigger Property="Appearance" Value="Secondary">
+                <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Success">
+                <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Info">
+                <Setter Property="Foreground" Value="{DynamicResource StatusInfoBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Caution">
+                <Setter Property="Foreground" Value="{DynamicResource StatusWarningBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Danger">
+                <Setter Property="Foreground" Value="{DynamicResource StatusCriticalBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Transparent">
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Primary">
+                <Setter Property="Foreground" Value="{DynamicResource StatusInfoBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Dark">
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+            <Trigger Property="Appearance" Value="Light">
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                <Setter Property="Background" Value="{DynamicResource NotificationGlassSurfaceBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource NotificationGlassBorderBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

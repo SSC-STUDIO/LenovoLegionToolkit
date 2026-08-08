@@ -1,0 +1,163 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.WPF.Windows.Settings.PluginSettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:UniversalDeviceToolkit.WPF.Windows"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="{x:Static resources:Resource.PluginSettingsWindow_Title}"
+    Width="560"
+    Height="520"
+    MinWidth="480"
+    MinHeight="360"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    ResizeMode="CanResize"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner">
+    <Grid Background="{DynamicResource ApplicationBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <wpfui:TitleBar
+            x:Name="_titleBar"
+            Grid.Row="0"
+            CanMaximize="true" />
+
+        <Grid Grid.Row="1" Margin="16,6,16,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Width="36"
+                    Height="36"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    CornerRadius="{StaticResource CornerRadiusControl}"
+                    Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                    <ContentControl
+                        x:Name="_pluginIconHost"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Width="22"
+                        Height="22"
+                        Foreground="{DynamicResource SystemAccentColorBrush}" />
+                </Border>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="_pluginNameTextBlock"
+                        FontSize="{DynamicResource FontSizeCaption}"
+                        FontWeight="Medium"
+                        Text="{x:Static resources:Resource.PluginSettingsWindow_PluginName}"
+                        TextTrimming="CharacterEllipsis"
+                        Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                    <WrapPanel Margin="0,4,0,0">
+                        <Border
+                            x:Name="_pluginVersionBadge"
+                            Margin="0,0,6,0"
+                            Padding="6,2"
+                            CornerRadius="{StaticResource CornerRadiusControl}"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <TextBlock
+                                x:Name="_pluginVersionTextBlock"
+                                FontSize="{DynamicResource FontSizeDenseCaption}"
+                                FontWeight="Medium"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                Text="v1.0.0" />
+                        </Border>
+
+                        <Border
+                            x:Name="_pluginAuthorBadge"
+                            Padding="6,2"
+                            CornerRadius="{StaticResource CornerRadiusControl}"
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                            <TextBlock
+                                x:Name="_pluginAuthorTextBlock"
+                                FontSize="{DynamicResource FontSizeDenseCaption}"
+                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                Text="Author" />
+                        </Border>
+                    </WrapPanel>
+
+                    <!-- Kept for localization refresh; host chrome stays compact. -->
+                    <TextBlock
+                        x:Name="_pluginDescriptionTextBlock"
+                        Visibility="Collapsed"
+                        Text="{x:Static resources:Resource.PluginSettingsWindow_PluginDescription}" />
+                    <TextBlock
+                        x:Name="_pluginIdTextBlock"
+                        Visibility="Collapsed"
+                        Text="plugin-id" />
+                    <TextBlock
+                        x:Name="_titleTextBlock"
+                        Visibility="Collapsed"
+                        Text="{x:Static resources:Resource.PluginSettingsWindow_Title}" />
+                    <TextBlock
+                        x:Name="_settingsSectionTitleTextBlock"
+                        Visibility="Collapsed"
+                        Text="{x:Static resources:Resource.PluginSettingsWindow_Settings}" />
+                </StackPanel>
+
+                <wpfui:Button
+                    x:Name="_closeButton"
+                    Grid.Column="2"
+                    AutomationProperties.AutomationId="PluginSettingsCloseButton"
+                    Icon="Dismiss24"
+                    Appearance="Secondary"
+                    VerticalAlignment="Center"
+                    Click="CloseButton_Click"
+                    ToolTip="{x:Static resources:Resource.PluginSettingsWindow_Close}" />
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Border
+                    x:Name="_pluginSettingsContainer"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Visibility="Collapsed">
+                    <ContentControl
+                        x:Name="_pluginSettingsHost"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        BorderThickness="0" />
+                </Border>
+
+                <Border
+                    x:Name="_emptyStateBorder"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Visibility="Collapsed">
+                    <StackPanel Margin="0,4,0,0">
+                        <TextBlock
+                            x:Name="_emptyStateTitleTextBlock"
+                            FontSize="{DynamicResource FontSizeSmallBody}"
+                            FontWeight="Medium"
+                            Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock
+                            x:Name="_emptyStateHintTextBlock"
+                            Margin="0,6,0,0"
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
+                            TextWrapping="Wrap"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{x:Static resources:Resource.PluginSettingsWindow_NoConfigMessage}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</local:BaseWindow>

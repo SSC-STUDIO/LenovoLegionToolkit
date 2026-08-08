@@ -1,0 +1,132 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+
+    <!-- Fallback tokens retained for theme packs; runtime resolves black/white contrast from the bone fill. -->
+    <Color x:Key="SkeletonShimmerStartColor">#1CFFFFFF</Color>
+    <Color x:Key="SkeletonShimmerPeakColor">#46FFFFFF</Color>
+    <Color x:Key="SkeletonShimmerStartColorLight">#1C000000</Color>
+    <Color x:Key="SkeletonShimmerPeakColorLight">#46000000</Color>
+
+    <Style x:Key="AppLoadingRingStyle" TargetType="wpfui:ProgressRing">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="IsIndeterminate" Value="True" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TransformGroup>
+                    <RotateTransform Angle="-90" />
+                    <ScaleTransform ScaleX="-1" />
+                </TransformGroup>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="AppLoadingRingCompactStyle" TargetType="wpfui:ProgressRing" BasedOn="{StaticResource AppLoadingRingStyle}">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+    </Style>
+
+    <!-- Bone fill at 0.85 opacity matches classic 4.x skeleton chrome. -->
+    <Style x:Key="AppSkeletonBlockStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+    </Style>
+
+    <!--
+      Classic cool-slate shimmer (shimmer) via utils:SkeletonShimmer.
+      Border is a Decorator —no Control.Template; per-instance Freezables are required.
+    -->
+    <Style x:Key="AppSkeletonShimmerBlockStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonBlockStyle}">
+        <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+    </Style>
+
+    <!-- Matches CardControl / CardExpander surface chrome (padding, radius, stroke). -->
+    <Style x:Key="AppSkeletonCardStyle" TargetType="Border">
+        <Setter Property="Padding" Value="16,14" />
+        <Setter Property="MinHeight" Value="72" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+    </Style>
+
+    <!-- Collapsed CardExpander / feature list rows (Automation, Dashboard, Macro...). -->
+    <Style x:Key="AppSkeletonListItemCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonCardStyle}">
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="Padding" Value="16,14" />
+        <Setter Property="MinHeight" Value="72" />
+    </Style>
+
+    <!-- SymbolIcon 24px peers used by CardHeader accessory / pipeline icons. -->
+    <Style x:Key="AppSkeletonListItemIconStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+    </Style>
+
+    <!-- ~FontSizeBody / Medium title line. -->
+    <Style x:Key="AppSkeletonListItemSingleLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+        <Setter Property="Height" Value="16" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style x:Key="AppSkeletonListItemPrimaryLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+        <Setter Property="Height" Value="16" />
+        <Setter Property="MinWidth" Value="140" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+
+    <!-- Subtitle under CardHeaderControl title (Margin 0,4,0,0 in live control). -->
+    <Style x:Key="AppSkeletonListItemSecondaryLineStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+        <Setter Property="Height" Value="12" />
+        <Setter Property="MinWidth" Value="96" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,6,0,0" />
+    </Style>
+
+    <!-- Toggle-on-the-right CardControl (e.g. Automation enable switch). -->
+    <Style x:Key="AppSkeletonToggleCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonCardStyle}">
+        <Setter Property="Margin" Value="0,0,0,24" />
+        <Setter Property="MinHeight" Value="88" />
+        <Setter Property="Padding" Value="16,16" />
+    </Style>
+
+    <Style x:Key="AppSkeletonToggleSwitchStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonShimmerBlockStyle}">
+        <Setter Property="Width" Value="44" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="16,0,0,0" />
+    </Style>
+
+    <!-- Multi-line package / dense content rows. -->
+    <Style x:Key="AppSkeletonDenseListItemCardStyle" TargetType="Border" BasedOn="{StaticResource AppSkeletonListItemCardStyle}">
+        <Setter Property="MinHeight" Value="108" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+</ResourceDictionary>

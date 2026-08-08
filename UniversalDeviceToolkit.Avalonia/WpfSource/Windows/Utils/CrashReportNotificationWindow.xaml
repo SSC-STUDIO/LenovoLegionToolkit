@@ -1,0 +1,206 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.WPF.Windows.Utils.CrashReportNotificationWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:UniversalDeviceToolkit.WPF.Windows"
+    xmlns:resources="clr-namespace:UniversalDeviceToolkit.WPF.Resources"
+    xmlns:utils="clr-namespace:UniversalDeviceToolkit.WPF.Utils"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="{x:Static resources:Resource.CrashReportNotification_Title}"
+    Width="640"
+    Height="520"
+    MinWidth="520"
+    MinHeight="420"
+    MaxWidth="840"
+    MaxHeight="720"
+    ExtendsContentIntoTitleBar="True"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    Loaded="Window_Loaded"
+    ResizeMode="CanResize"
+    WindowStartupLocation="CenterScreen"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <wpfui:TitleBar
+            Title="{x:Static resources:Resource.CrashReportNotification_Title}"
+            Grid.Row="0"
+            CanMaximize="False"
+            ShowMaximize="False"
+            ShowMinimize="False" />
+
+        <Grid Grid.Row="1" Margin="24,8,24,20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" MinHeight="160" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Header: icon + message -->
+            <Border
+                Grid.Row="0"
+                Margin="0,0,0,16"
+                Padding="16,14"
+                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Icon only — no nested tile/box around the glyph. -->
+                    <wpfui:SymbolIcon
+                        Grid.Column="0"
+                        Margin="0,2,12,0"
+                        VerticalAlignment="Top"
+                        FontSize="{StaticResource IconSizeDialog}"
+                        Foreground="{DynamicResource StatusWarningBrush}"
+                        Symbol="Warning24" />
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <TextBlock
+                            x:Name="_mainMessageTextBlock"
+                            FontSize="{DynamicResource FontSizePageDescription}"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Text="{x:Static resources:Resource.CrashReportNotification_Message}"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Margin="0,6,0,0"
+                            FontSize="{DynamicResource FontSizeSmallBody}"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{x:Static resources:Resource.CrashReportNotification_Description}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Details (fills remaining space) -->
+            <Border
+                Grid.Row="1"
+                Margin="0,0,0,12"
+                Background="{DynamicResource ControlFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusCard}"
+                Padding="0"
+                SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Border
+                        Grid.Row="0"
+                        Padding="14,10"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="0,0,0,1"
+                        Background="{DynamicResource ControlFillColorSecondaryBrush}">
+                        <TextBlock
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="{x:Static resources:Resource.CrashReportNotification_DetailsHeading}" />
+                    </Border>
+
+                    <ScrollViewer
+                        Grid.Row="1"
+                        Padding="14,12"
+                        VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled"
+                        CanContentScroll="False">
+                        <TextBlock
+                            x:Name="_crashDetailsTextBlock"
+                            FontFamily="Cascadia Mono, Consolas, Courier New"
+                            FontSize="{DynamicResource FontSizeSmallCaption}"
+                            LineHeight="18"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            TextWrapping="Wrap" />
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+
+            <!-- Report path chip -->
+            <Border
+                Grid.Row="2"
+                Margin="0,0,0,16"
+                Padding="12,10"
+                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="{StaticResource CornerRadiusControl}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <wpfui:SymbolIcon
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Top"
+                        FontSize="{StaticResource IconSizeCompact}"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Symbol="Folder24" />
+                    <TextBlock
+                        x:Name="_reportPathTextBlock"
+                        Grid.Column="1"
+                        FontSize="{DynamicResource FontSizeSmallCaption}"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap"
+                        TextTrimming="CharacterEllipsis" />
+                </Grid>
+            </Border>
+
+            <!-- Actions -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <wpfui:Button
+                    x:Name="_deleteReportButton"
+                    Grid.Column="0"
+                    MinWidth="110"
+                    HorizontalAlignment="Left"
+                    Appearance="Secondary"
+                    AutomationProperties.Name="{x:Static resources:Resource.CrashReportNotification_DeleteReport}"
+                    Click="DeleteReportButton_Click"
+                    Content="{x:Static resources:Resource.CrashReportNotification_DeleteReport}"
+                    Icon="Delete24" />
+
+                <StackPanel
+                    Grid.Column="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                    <wpfui:Button
+                        x:Name="_openReportButton"
+                        MinWidth="110"
+                        Margin="0,0,10,0"
+                        Appearance="Secondary"
+                        AutomationProperties.Name="{x:Static resources:Resource.CrashReportNotification_OpenReport}"
+                        Click="OpenReportButton_Click"
+                        Content="{x:Static resources:Resource.CrashReportNotification_OpenReport}"
+                        Icon="Open24" />
+                    <wpfui:Button
+                        x:Name="_closeButton"
+                        MinWidth="110"
+                        Appearance="Primary"
+                        AutomationProperties.Name="{x:Static resources:Resource.CrashReportNotification_Close}"
+                        Click="CloseButton_Click"
+                        Content="{x:Static resources:Resource.CrashReportNotification_Close}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</local:BaseWindow>
