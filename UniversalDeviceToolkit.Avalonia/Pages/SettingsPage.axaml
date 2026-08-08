@@ -13,7 +13,7 @@
             <DockPanel>
                 <controls:LocalizedTextBlock DockPanel.Dock="Top"
                            Text="{local:Loc Key=Settings_Title, Fallback=Settings}"
-                           FontSize="{StaticResource FontSizeDisplaySection}"
+                           FontSize="{StaticResource FontSizePageTitle}"
                            FontWeight="Medium"
                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                            OverflowMode="Wrap"

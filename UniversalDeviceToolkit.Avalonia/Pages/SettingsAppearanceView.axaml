@@ -6,7 +6,7 @@
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsAppearanceView">
     <StackPanel Spacing="16" MaxWidth="600" HorizontalAlignment="Left">
         <controls:LocalizedTextBlock Text="{local:Loc Key=Appearance_Title, Fallback=Appearance}"
-                   FontSize="{StaticResource FontSizeDisplaySection}"
+                   FontSize="{StaticResource FontSizeSection}"
                    FontWeight="Medium"
                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                    OverflowMode="Wrap"
