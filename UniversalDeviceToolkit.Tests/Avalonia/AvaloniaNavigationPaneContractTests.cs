@@ -26,8 +26,8 @@ public sealed class AvaloniaNavigationPaneContractTests
         var source = File.ReadAllText(Path.Combine(root, "UniversalDeviceToolkit.Avalonia", "MainWindow.axaml.cs"));
 
         source.Should().Contain("NavigationPaneExpanded");
-        source.Should().Contain("NavigationPane.Width = expanded ? 280 : 72");
-        source.Should().Contain("NavigationHeader.IsVisible = expanded");
+        source.Should().Contain("NavigationPane.Width = expanded ? 220 : 70");
+        source.Should().Contain("NavigationPaneHost.Text = expanded ? \"220\" : \"70\"");
         source.Should().Contain("NavigationToggleIcon.IconIdentifier = expanded ? \"ArrowLeft24\" : \"ArrowRight24\"");
         source.Should().Contain("ApplyNavigationPaneState();");
     }

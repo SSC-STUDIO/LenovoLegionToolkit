@@ -161,6 +161,9 @@ public partial class AutomationPage : UserControl
             HorizontalAlignment = HorizontalAlignment.Stretch,
             MinWidth = 120,
         };
+        AutomationProperties.SetName(
+            nameEditor,
+            Get("AutomationPage_RenamePipeline_Placeholder", "Pipeline name"));
         var summary = new LocalizedTextBlock
         {
             Text = FormatSummary(pipeline.Trigger, pipeline.IsAutomatic, pipeline.Steps.Count),
@@ -189,6 +192,9 @@ public partial class AutomationPage : UserControl
             };
             ToolTip.SetTip(iconEditor, $"{Get("AutomationPage_ChangeIcon", "Enter a Fluent icon name.")} Examples: {string.Join(", ", ManualPipelineIcons)}");
             AutomationProperties.SetAutomationId(iconEditor, $"AutomationPipeline_{pipeline.Id:N}_Icon");
+            AutomationProperties.SetName(
+                iconEditor,
+                Get("AutomationPage_ChangeIcon", "Icon name"));
             var browseIconsButton = new Button
             {
                 Content = new NavigationIcon { IconIdentifier = "Folder20", FontSize = 16 },
@@ -229,6 +235,9 @@ public partial class AutomationPage : UserControl
                 MinWidth = 180,
             };
             AutomationProperties.SetAutomationId(triggerEditor, $"AutomationPipeline_{pipeline.Id:N}_TriggerType");
+            AutomationProperties.SetName(
+                triggerEditor,
+                Get("AutomationPage_TriggerType_AutomationName", "Trigger type"));
             copy.Children.Add(triggerEditor);
 
 #if WINDOWS
@@ -240,6 +249,7 @@ public partial class AutomationPage : UserControl
             };
             addTriggerButton = new Button { Content = Get("AutomationPage_AddTrigger", "Add trigger"), MinWidth = 90 };
             AutomationProperties.SetAutomationId(addTriggerEditor, $"AutomationPipeline_{pipeline.Id:N}_AddTrigger");
+            AutomationProperties.SetName(addTriggerEditor, Get("AutomationPage_AddTrigger", "Add trigger"));
             AutomationProperties.SetName(addTriggerButton, Get("AutomationPage_AddTrigger", "Add trigger"));
             var addTriggerPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
             addTriggerPanel.Children.Add(addTriggerEditor);
@@ -264,6 +274,9 @@ public partial class AutomationPage : UserControl
                 HorizontalAlignment = HorizontalAlignment.Stretch,
             };
             ToolTip.SetTip(triggerConfigEditor, Get("AutomationPipelineTriggerConfigurationWindow_Title", "Edit the complete trigger configuration JSON."));
+            AutomationProperties.SetName(
+                triggerConfigEditor,
+                Get("AutomationPage_TriggerConfiguration_AutomationName", "Trigger configuration"));
             copy.Children.Add(triggerConfigEditor);
 #endif
         }
@@ -300,6 +313,9 @@ public partial class AutomationPage : UserControl
             PlaceholderText = Get("AutomationPipelineControl_AddStep", "Add step"),
             MinWidth = 220,
         };
+        AutomationProperties.SetName(
+            addStepEditor,
+            Get("AutomationPipelineControl_AddStep", "Add step"));
         var addStepButton = new Button { Content = Get("AutomationPipelineControl_AddStep", "Add step"), MinWidth = 90 };
         var addStepPanel = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6 };
         addStepPanel.Children.Add(addStepEditor);
@@ -438,6 +454,9 @@ public partial class AutomationPage : UserControl
             SelectedItem = option,
             MinWidth = 190,
         };
+        AutomationProperties.SetName(
+            typeEditor,
+            Get("AutomationPipelineControl_StepType_AutomationName", "Step type"));
         var upButton = CreateStepMoveButton("ArrowUp24", "MoveUp", "Move step up");
         var downButton = CreateStepMoveButton("ArrowDown24", "MoveDown", "Move step down");
         var deleteButton = new Button { Content = Get("Delete", "Delete"), MinWidth = 64 };
@@ -459,6 +478,9 @@ public partial class AutomationPage : UserControl
             MinHeight = 46,
             HorizontalAlignment = HorizontalAlignment.Stretch,
         };
+        AutomationProperties.SetName(
+            configEditor,
+            Get("AutomationPipelineControl_StepConfiguration_AutomationName", "Step configuration"));
         var validationText = new LocalizedTextBlock
         {
             Foreground = GetResource<IBrush>("StatusCriticalTextBrush"),

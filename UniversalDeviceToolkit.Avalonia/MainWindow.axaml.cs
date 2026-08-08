@@ -1,6 +1,7 @@
 using global::Avalonia;
 using global::Avalonia.Automation;
 using global::Avalonia.Controls;
+using global::Avalonia.Input;
 using global::Avalonia.Interactivity;
 using global::Avalonia.Layout;
 using global::Avalonia.Media;
@@ -44,6 +45,9 @@ public partial class MainWindow : Window
     {
         _platformServices = platformServices;
         InitializeComponent();
+        MinimizeGlyph.Text = "\uE921";
+        MaximizeGlyph.Text = "\uE922";
+        CloseGlyph.Text = "\uE8BB";
         ApplyNavigationPaneState();
         ApplyNavigationVisibility();
         ApplyTextDirection(LocalizationRuntime.CurrentCulture);
@@ -313,6 +317,25 @@ public partial class MainWindow : Window
         ShowDashboardPage();
         await UpdateHardwareDependentNavigationAsync();
         await RefreshPluginNavigationItemsAsync();
+        await RefreshDeviceInfoIndicatorAsync();
+    }
+
+    private async Task RefreshDeviceInfoIndicatorAsync()
+    {
+        try
+        {
+            var snapshot = await _platformServices.GetDashboardSnapshotAsync().ConfigureAwait(true);
+            var deviceName = string.IsNullOrWhiteSpace(snapshot.DeviceName)
+                ? null
+                : snapshot.DeviceName.Trim();
+            DeviceInfoButton.IsVisible = deviceName is not null;
+            if (deviceName is not null)
+                DeviceInfoLabel.Text = deviceName;
+        }
+        catch
+        {
+            DeviceInfoButton.IsVisible = false;
+        }
     }
 
     /// <summary>
@@ -372,6 +395,27 @@ public partial class MainWindow : Window
         var dialog = new DeviceInformationWindow();
         await dialog.ShowDialog(this);
     }
+
+    private void TitleBarHost_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
+            && e.Source is not Button)
+        {
+            BeginMoveDrag(e);
+        }
+    }
+
+    private void MinimizeButton_Click(object? sender, RoutedEventArgs e) =>
+        WindowState = WindowState.Minimized;
+
+    private void MaximizeButton_Click(object? sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState == WindowState.Maximized
+            ? WindowState.Normal
+            : WindowState.Maximized;
+    }
+
+    private void CloseButton_Click(object? sender, RoutedEventArgs e) => Close();
 
     private void KeyboardButton_Click(object? sender, RoutedEventArgs e)
     {
@@ -751,16 +795,15 @@ public partial class MainWindow : Window
         const bool expanded = true;
 #endif
 
-        NavigationPane.Width = expanded ? 280 : 72;
+        NavigationPane.Width = expanded ? 220 : 70;
         NavigationStack.Margin = expanded
-            ? new Thickness(16, 18)
-            : new Thickness(8, 18);
-        NavigationHeader.IsVisible = expanded;
+            ? new Thickness(16, 12)
+            : new Thickness(8, 12);
+        NavigationPaneHost.Text = expanded ? "220" : "70";
 
         foreach (var label in new[]
                  {
                      DashboardLabel,
-                     DeviceInfoLabel,
                      KeyboardLabel,
                      ActionsLabel,
                      MacroLabel,
@@ -779,7 +822,6 @@ public partial class MainWindow : Window
         foreach (var button in new[]
                  {
                      DashboardButton,
-                     DeviceInfoButton,
                      KeyboardButton,
                      ActionsButton,
                      MacroButton,

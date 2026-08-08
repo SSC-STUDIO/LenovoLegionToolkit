@@ -30,6 +30,16 @@ public sealed class WindowsDeviceAdapterCore : IDeviceAdapter
     {
         cancellationToken.ThrowIfCancellationRequested();
 
+        // WMI queries are synchronous even though the host contract is async.
+        // Keep them off the Avalonia/WPF UI thread so the shell can render before
+        // hardware discovery completes.
+        return Task.Run(() => ReadSnapshotCore(cancellationToken), cancellationToken);
+    }
+
+    private DeviceSnapshot ReadSnapshotCore(CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var computer = First("Win32_ComputerSystem");
         var bios = First("Win32_BIOS");
         var processor = First("Win32_Processor");
@@ -52,13 +62,13 @@ public sealed class WindowsDeviceAdapterCore : IDeviceAdapter
         var sensors = ReadSensors(computer, processor, battery, video);
         var capabilities = BuildCapabilities(computer, processor, battery);
 
-        return Task.FromResult(new DeviceSnapshot(
+        return new DeviceSnapshot(
             identity,
             support,
             capabilities,
             sensors,
             FormatPowerStatus(battery),
-            "windows-wmi"));
+            "windows-wmi");
     }
 
     private IReadOnlyDictionary<string, string?> First(string className) =>

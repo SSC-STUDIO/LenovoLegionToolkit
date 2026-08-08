@@ -18,9 +18,9 @@ namespace UniversalDeviceToolkit.Avalonia.Services;
 public sealed class WindowsPlatformServices : IPlatformServices
 {
     private readonly DeviceAdapterPlatformServices _inner;
-    private readonly WindowsFeatureHostServices? _featureHost;
-    private readonly ISensorsController? _sensorController;
-    private readonly SensorsGroupController? _sensorsGroupController;
+    private WindowsFeatureHostServices? _featureHost;
+    private ISensorsController? _sensorController;
+    private SensorsGroupController? _sensorsGroupController;
 
     private WindowsPlatformServices(IDeviceAdapter adapter)
     {
@@ -28,6 +28,13 @@ public sealed class WindowsPlatformServices : IPlatformServices
         _featureHost = WindowsFeatureHostServices.TryCreate();
         _sensorController = IoCContainer.TryResolve<ISensorsController>();
         _sensorsGroupController = IoCContainer.TryResolve<SensorsGroupController>();
+    }
+
+    internal void InitializeHostServices()
+    {
+        _featureHost ??= WindowsFeatureHostServices.TryCreate();
+        _sensorController ??= IoCContainer.TryResolve<ISensorsController>();
+        _sensorsGroupController ??= IoCContainer.TryResolve<SensorsGroupController>();
     }
 
     public static IPlatformServices Create() => new WindowsPlatformServices(new WindowsDeviceAdapter());

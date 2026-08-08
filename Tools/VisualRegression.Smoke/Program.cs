@@ -901,8 +901,8 @@ internal static partial class Program
 
     private static double GetAvaloniaNavigationPaneTargetWidth(double currentWidth)
     {
-        const double expandedWidthDip = 280;
-        const double collapsedWidthDip = 72;
+        const double expandedWidthDip = 220;
+        const double collapsedWidthDip = 70;
         var isExpanded = currentWidth >= 150;
         var currentWidthDip = isExpanded ? expandedWidthDip : collapsedWidthDip;
         var targetWidthDip = isExpanded ? collapsedWidthDip : expandedWidthDip;
@@ -1114,6 +1114,44 @@ internal static partial class Program
         var navStore = FindByAutomationId(mainWindow, "MainNavigationStore");
         if (navStore is not null && IsVisible(navStore))
             return RememberNavigationPaneWidth(navStore.Current.BoundingRectangle.Width);
+
+        // Avalonia's rail Border has no UIA peer; the shell exposes a stretched
+        // background surface with this id. Its Name carries the current rail
+        // width in DIP, which is DPI-independent and layout-truth.
+        var avaloniaPaneHost = FindByAutomationId(mainWindow, "AvaloniaNavigationPaneHost");
+        if (avaloniaPaneHost is not null
+            && IsVisible(avaloniaPaneHost)
+            && double.TryParse(
+                GetElementName(avaloniaPaneHost),
+                NumberStyles.Float,
+                CultureInfo.InvariantCulture,
+                out var avaloniaPaneWidthDip)
+            && avaloniaPaneWidthDip > 0)
+        {
+            var scale = _activeWindowWidth > 0
+                ? windowRect.Width / _activeWindowWidth
+                : 1d;
+            return RememberNavigationPaneWidth(avaloniaPaneWidthDip * Math.Clamp(scale, 0.75d, 3d));
+        }
+
+        var avaloniaNavigationToggle = FindByAutomationId(mainWindow, "AvaloniaNavigationPaneToggle");
+        if (avaloniaNavigationToggle is not null && IsVisible(avaloniaNavigationToggle))
+        {
+            var toggleRect = avaloniaNavigationToggle.Current.BoundingRectangle;
+            return RememberNavigationPaneWidth(toggleRect.Right - windowRect.Left);
+        }
+
+        var avaloniaContent = FindByAutomationId(mainWindow, "AvaloniaMainContent");
+        if (avaloniaContent is not null && IsVisible(avaloniaContent))
+        {
+            var contentRect = avaloniaContent.Current.BoundingRectangle;
+            var scale = _activeWindowWidth > 0
+                ? windowRect.Width / _activeWindowWidth
+                : 1d;
+            var shellMargin = 12d * Math.Clamp(scale, 0.75d, 3d);
+            return RememberNavigationPaneWidth(
+                Math.Max(0, contentRect.Left - windowRect.Left - shellMargin));
+        }
 
         // Avalonia's Border/ContentControl shell elements do not currently
         // expose their AutomationId through the Windows UIA provider. The

@@ -80,7 +80,6 @@ public partial class App : Application
         LocalizationRuntime.CultureChanged += OnCultureChanged;
 #if WINDOWS
         _applicationSettings = WindowsAvaloniaSettingsService.SharedApplicationSettings;
-        InitializeWindowsServices(_applicationSettings);
 #endif
         PlatformServices = CreatePlatformServices();
         ShowCommand = new RelayCommand(ShowMainWindow);
@@ -147,10 +146,13 @@ public partial class App : Application
         // Set up system tray icon programmatically
         SetupTrayIcon();
 #if WINDOWS
-        _notificationManager = new AvaloniaNotificationManager(
-            _applicationSettings,
-            () => desktop.MainWindow as MainWindow,
-            IoCContainer.Resolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>());
+        if (IoCContainer.TryResolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>() is { } notificationService)
+        {
+            _notificationManager = new AvaloniaNotificationManager(
+                _applicationSettings,
+                () => desktop.MainWindow as MainWindow,
+                notificationService);
+        }
         _singleInstanceGuard!.StartListener(() =>
             global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
         _updateCheckCoordinator = AvaloniaUpdateCheckCoordinator.Create();
@@ -824,6 +826,36 @@ public partial class App : Application
 
     private async Task StartWindowsHostServicesAsync(MainWindow? mainWindow)
     {
+        // Autofac registers several hardware listeners with AutoActivate. Building
+        // that graph synchronously in App's constructor prevents Avalonia from
+        // entering its desktop event loop and leaves the process windowless.
+        // Finish the host graph after the shell has been created instead.
+        try
+        {
+            await Task.Run(() => InitializeWindowsServices(_applicationSettings!))
+                .ConfigureAwait(false);
+            if (PlatformServices is WindowsPlatformServices hostPlatformServices)
+                hostPlatformServices.InitializeHostServices();
+
+            if (_notificationManager is null
+                && mainWindow is not null
+                && _applicationSettings is { } applicationSettings
+                && IoCContainer.TryResolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>() is { } notificationService)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    _notificationManager ??= new AvaloniaNotificationManager(
+                        applicationSettings,
+                        () => mainWindow,
+                        notificationService);
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Trace("Avalonia deferred Windows service initialization failed.", ex);
+        }
+
         await new AvaloniaStartupDeviceSetupCoordinator()
             .RunIfNeededAsync(mainWindow)
             .ConfigureAwait(false);

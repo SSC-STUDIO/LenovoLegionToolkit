@@ -25,9 +25,7 @@ public sealed class DeviceAdapterPlatformServicesTests
         Assert.Contains(groups, group => group.Title == Localized("Dashboard_Feature_Device", "Device") && group.Description.Contains("Acme", StringComparison.Ordinal));
         Assert.Contains(groups, group => group.Title == Localized("Dashboard_Feature_DevicePack", "Device support") && group.Status == "Safe basic mode");
         Assert.Contains(groups, group => group.Title == "Read Only Telemetry" && group.Status == Localized("Dashboard_Status_ReadOnly", "Read-only"));
-        Assert.Contains(groups, group => group.Title == "Read Only Telemetry"
-            && group.RouteKey == MainNavigation.WindowsOptimization
-            && group.IsNavigable);
+        Assert.DoesNotContain(groups, group => group.Title == "Read Only Telemetry" && group.IsNavigable);
         Assert.Contains(groups, group => group.Title == "Fan Control" && group.Status == Localized("Dashboard_Status_NotSupported", "Not supported"));
         Assert.Contains(readings, reading => reading.Name == "CPU Usage" && reading.DisplayValue == "37 %");
         Assert.Equal(1, adapter.ReadCount);
