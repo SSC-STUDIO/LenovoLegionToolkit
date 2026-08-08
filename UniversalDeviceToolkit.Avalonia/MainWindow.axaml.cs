@@ -15,6 +15,8 @@ using UniversalDeviceToolkit.Avalonia.Services;
 #if WINDOWS
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Avalonia.Controls.Shell;
 #endif
 
 namespace UniversalDeviceToolkit.Avalonia;
@@ -34,6 +36,13 @@ public partial class MainWindow : Window
 #endif
 #if WINDOWS
     private IPluginManager? _pluginManager;
+    private AbstractSoftwareDisabler? _vantageDisabler;
+    private AbstractSoftwareDisabler? _legionZoneDisabler;
+    private AbstractSoftwareDisabler? _fnKeysDisabler;
+    private bool _pluginExtensionsNoticeDismissed;
+    private SoftwareStatus _vantageStatus;
+    private SoftwareStatus _legionZoneStatus;
+    private SoftwareStatus _fnKeysStatus;
 #endif
 
     /// <summary>
@@ -66,8 +75,68 @@ public partial class MainWindow : Window
         Closing += OnClosing;
         SubscribeToPluginStateChanges();
         Closed += OnClosed;
+        InitializeStatusBanners();
 #endif
     }
+
+    private void InitializeStatusBanners()
+    {
+        VantageWarningBanner.Message = AvaloniaLocalization.GetString(
+            "MainWindows_VantageRunning",
+            "Lenovo Vantage or its services are running.");
+        LegionZoneWarningBanner.Message = AvaloniaLocalization.GetString(
+            "MainWindow_LegionZoneRunning",
+            "Lenovo Legion Zone or its services are running.");
+        FnKeysWarningBanner.Message = AvaloniaLocalization.GetString(
+            "MainWindows_FnKeysRunning",
+            "Lenovo hotkeys are active.");
+        PluginExtensionsBanner.Message = AvaloniaLocalization.GetString(
+            "MainWindow_PluginExtensionsDisabledNotice",
+            "Plugin extensions are disabled.");
+        PluginExtensionsBanner.Closed += (_, _) => _pluginExtensionsNoticeDismissed = true;
+
+#if WINDOWS
+        _vantageDisabler = IoCContainer.TryResolve<VantageDisabler>();
+        _legionZoneDisabler = IoCContainer.TryResolve<LegionZoneDisabler>();
+        _fnKeysDisabler = IoCContainer.TryResolve<FnKeysDisabler>();
+        foreach (var disabler in new AbstractSoftwareDisabler?[]
+                 {
+                     _vantageDisabler,
+                     _legionZoneDisabler,
+                     _fnKeysDisabler,
+                 })
+        {
+            if (disabler is not null)
+                disabler.OnRefreshed += SoftwareDisabler_OnRefreshed;
+        }
+#endif
+        UpdateIndicators();
+    }
+
+#if WINDOWS
+    private void SoftwareDisabler_OnRefreshed(object? sender, AbstractSoftwareDisabler.AbstractSoftwareDisablerEventArgs e)
+    {
+        if (ReferenceEquals(sender, _vantageDisabler))
+            _vantageStatus = e.Status;
+        else if (ReferenceEquals(sender, _legionZoneDisabler))
+            _legionZoneStatus = e.Status;
+        else if (ReferenceEquals(sender, _fnKeysDisabler))
+            _fnKeysStatus = e.Status;
+
+        Dispatcher.UIThread.Post(UpdateIndicators);
+    }
+
+    private void UpdateIndicators()
+    {
+        VantageWarningBanner.IsVisible = _vantageStatus == SoftwareStatus.Enabled;
+        LegionZoneWarningBanner.IsVisible = _legionZoneStatus == SoftwareStatus.Enabled;
+        FnKeysWarningBanner.IsVisible = _fnKeysStatus == SoftwareStatus.Enabled;
+
+        var settings = Services.WindowsAvaloniaSettingsService.SharedApplicationSettings;
+        var extensionsEnabled = settings.Store.ExtensionsEnabled;
+        PluginExtensionsBanner.IsVisible = !extensionsEnabled && !_pluginExtensionsNoticeDismissed;
+    }
+#endif
 
     private void OnWindowClosed(object? sender, EventArgs e)
     {
@@ -542,6 +611,17 @@ public partial class MainWindow : Window
         if (_pluginManager is not null)
             _pluginManager.PluginStateChanged -= PluginManagerOnPluginStateChanged;
         _pluginManager = null;
+
+        foreach (var disabler in new AbstractSoftwareDisabler?[]
+                 {
+                     _vantageDisabler,
+                     _legionZoneDisabler,
+                     _fnKeysDisabler,
+                 })
+        {
+            if (disabler is not null)
+                disabler.OnRefreshed -= SoftwareDisabler_OnRefreshed;
+        }
     }
 #endif
 
