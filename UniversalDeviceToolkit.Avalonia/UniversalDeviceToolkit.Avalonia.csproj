@@ -35,16 +35,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- WPF reference source copied verbatim for one-by-one migration. Files are
-         either converted into the live Avalonia tree or deleted; never compiled. -->
-    <Compile Remove="WpfSource/**/*.cs" />
-    <Page Remove="WpfSource/**/*.xaml" />
-    <None Remove="WpfSource/**" />
-    <AvaloniaResource Remove="WpfSource/**" />
-    <EmbeddedResource Remove="WpfSource/**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Avalonia" />
     <PackageReference Include="Avalonia.Controls.ColorPicker" />
     <PackageReference Include="Avalonia.Desktop" />

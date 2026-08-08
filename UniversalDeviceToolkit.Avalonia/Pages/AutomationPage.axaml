@@ -28,6 +28,82 @@
                                              automation:AutomationProperties.AutomationId="AutomationPageDescription" />
             </StackPanel>
 
+            <!-- Loading skeleton (WPF parity: toggle card + collapsed pipeline rows). -->
+            <StackPanel x:Name="LoadingSkeleton" Spacing="8" IsVisible="False">
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <StackPanel Grid.Column="0" Spacing="8" VerticalAlignment="Center">
+                            <Border Width="200" Height="18" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Border Width="320" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Border Width="180" Height="10" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        </StackPanel>
+                        <Border Grid.Column="1" Width="42" Height="20" CornerRadius="10"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                </Border>
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Width="32" Height="32" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                            <Border Width="240" Height="16" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Border Width="168" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        </StackPanel>
+                        <Border Grid.Column="2" Width="18" Height="18" CornerRadius="9"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                </Border>
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Width="32" Height="32" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                            <Border Width="200" Height="16" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Border Width="140" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        </StackPanel>
+                        <Border Grid.Column="2" Width="18" Height="18" CornerRadius="9"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                </Border>
+                <Border Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Padding="16">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Border Width="32" Height="32" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+                            <Border Width="220" Height="16" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Border Width="152" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        </StackPanel>
+                        <Border Grid.Column="2" Width="18" Height="18" CornerRadius="9"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
             <!-- Automatic pipelines section (WPF parity: toggle card + pipeline list + add button). -->
             <Border Background="{DynamicResource CardBackgroundBrush}"
                     BorderBrush="{DynamicResource CardBorderBrush}"

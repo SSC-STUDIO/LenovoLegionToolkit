@@ -25,6 +25,7 @@
                          automation:AutomationProperties.AutomationId="AvaloniaSettingsNavigationList"
                          ItemsSource="{Binding NavigationItems}"
                          SelectedIndex="{Binding SelectedNavigationIndex}"
+                         SelectionChanged="SettingsNavigationList_SelectionChanged"
                          BorderThickness="0"
                          Background="Transparent">
                     <ListBox.ItemTemplate>
@@ -77,8 +78,87 @@
                       VerticalScrollBarVisibility="Auto">
             <Border Background="{DynamicResource AppSurfaceCardBrush}"
                     Padding="{StaticResource ContentPaddingPage}">
-                <ContentControl Content="{Binding SelectedContent}" />
+                <ContentControl x:Name="SelectedContentHost" />
             </Border>
         </ScrollViewer>
+
+        <!-- Loading skeleton (WPF parity: nav rows + settings cards while loading). -->
+        <Grid x:Name="LoadingSkeleton" Grid.ColumnSpan="3" IsVisible="False">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Padding="12,16">
+                <StackPanel Margin="4,0,0,0">
+                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Grid.Column="1" Width="118" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Grid.Column="1" Width="96" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Grid.Column="1" Width="132" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Grid.Column="1" Width="84" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Grid.Column="1" Width="108" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Grid.Column="1" Width="124" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <StackPanel Grid.Column="2" Margin="24,16,0,0">
+                <Border Margin="0,0,0,16" Padding="16" CornerRadius="{StaticResource CornerRadiusCard}"
+                        Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="8">
+                            <Border Width="180" Height="16" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                            <Border Width="260" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        </StackPanel>
+                        <Border Grid.Column="1" Width="42" Height="20" CornerRadius="10"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </Grid>
+                </Border>
+                <Border MinHeight="120" Padding="16" CornerRadius="{StaticResource CornerRadiusCard}"
+                        Background="{DynamicResource CardBackgroundBrush}"
+                        BorderBrush="{DynamicResource CardBorderBrush}"
+                        BorderThickness="1">
+                    <StackPanel VerticalAlignment="Center" Spacing="8">
+                        <Border Width="200" Height="16" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Width="320" Height="12" HorizontalAlignment="Left" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                        <Border Height="28" Margin="0,6,0,0" CornerRadius="4"
+                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

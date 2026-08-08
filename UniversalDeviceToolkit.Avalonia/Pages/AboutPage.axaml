@@ -1,89 +1,142 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
-             xmlns:vm="using:UniversalDeviceToolkit.Avalonia.Pages"
+             xmlns:automation="using:Avalonia.Automation"
              x:Class="UniversalDeviceToolkit.Avalonia.Pages.AboutPage">
-    <UserControl.DataContext>
-        <vm:AboutPageViewModel />
-    </UserControl.DataContext>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="0" Margin="0,0,16,16">
-            <TextBlock Text="{local:Loc Key=AboutPage_Title, Fallback=About}"
-                       FontSize="{StaticResource FontSizePageTitle}" FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Margin="0,16,0,24" />
-            <TextBlock Text="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}"
-                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Margin="0,0,0,8" />
-            <Grid ColumnSpacing="4" Margin="0,0,0,8">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  automation:AutomationProperties.AutomationId="AboutPageScrollViewer">
+        <StackPanel Margin="0,0,16,12">
+            <TextBlock
+                Margin="0,16,0,24"
+                Focusable="True"
+                FontSize="{StaticResource FontSizePageTitle}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{local:Loc Key=AboutPage_Title, Fallback=About}" />
+
+            <TextBlock
+                Padding="0,0,0,8"
+                Focusable="True"
+                FontSize="{StaticResource FontSizeSubsection}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}" />
+            <TextBlock
+                x:Name="_version"
+                Padding="0,0,0,8"
+                Focusable="True"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock
+                x:Name="_build"
+                Padding="0,0,0,16"
+                Focusable="True"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+            <TextBlock
+                x:Name="_copyright"
+                Focusable="True"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                TextWrapping="Wrap" />
+            <TextBlock
+                x:Name="_translationCredit"
+                Padding="0,8,0,0"
+                Focusable="True"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                TextWrapping="Wrap"
+                Text="{local:Loc Key=AboutPage_TranslationCredit, Fallback=Translation credits for non-English locales.}" />
+
+            <TextBlock
+                Padding="0,24,0,8"
+                Focusable="True"
+                FontSize="{StaticResource FontSizeSubsection}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{local:Loc Key=AboutPage_Links, Fallback=Links}" />
+            <Button x:Name="ProjectWebsiteButton"
+                    Content="{local:Loc Key=AboutPage_ProjectWebsiteOnGitHub, Fallback=Project Website on GitHub}"
+                    Click="OpenProjectWebsite_Click"
+                    Padding="0,2"
+                    HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+            <Button x:Name="LatestReleaseButton"
+                    Content="{local:Loc Key=AboutPage_LatestReleaseOnGitHub, Fallback=Latest Release on GitHub}"
+                    Click="OpenLatestRelease_Click"
+                    Padding="0,2"
+                    Margin="0,4,0,0"
+                    HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+
+            <TextBlock
+                Padding="0,24,0,8"
+                Focusable="True"
+                FontSize="{StaticResource FontSizeSubsection}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{local:Loc Key=AboutPage_ThirdPartyLibraries, Fallback=Third-party libraries}" />
+
+            <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                           Text="{local:Loc Key=About_Version, Fallback=Version}"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                <TextBlock Grid.Column="1" Text="{Binding VersionText}"
-                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+
+                <StackPanel Grid.Column="0" Margin="0,0,32,0">
+                    <Button Content="AsyncLock" Click="OpenLibraryLink_Click" Tag="https://github.com/neosmart/AsyncLock" />
+                    <Button Content="Autofac" Click="OpenLibraryLink_Click" Tag="https://github.com/autofac/Autofac" />
+                    <Button Content="Ben.Demystifier" Click="OpenLibraryLink_Click" Tag="https://github.com/benaadams/Ben.Demystifier" />
+                    <Button Content="ColorPicker" Click="OpenLibraryLink_Click" Tag="https://github.com/PixiEditor/ColorPicker" />
+                    <Button Content="CsWin32" Click="OpenLibraryLink_Click" Tag="https://github.com/microsoft/CsWin32" />
+                    <Button Content="Humanizer" Click="OpenLibraryLink_Click" Tag="https://github.com/Humanizr/Humanizer" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="0,0,32,0">
+                    <Button Content="ManagedNativeWifi" Click="OpenLibraryLink_Click" Tag="https://github.com/emoacht/ManagedNativeWifi" />
+                    <Button Content="Markdig" Click="OpenLibraryLink_Click" Tag="https://github.com/xoofx/markdig" />
+                    <Button Content="Markdig.Wpf" Click="OpenLibraryLink_Click" Tag="https://github.com/Kryptos-FR/markdig.wpf" />
+                    <Button Content="Microsoft.CSharp" Click="OpenLibraryLink_Click" Tag="https://github.com/dotnet/runtime" />
+                    <Button Content="NAudio.Wasapi" Click="OpenLibraryLink_Click" Tag="https://github.com/naudio/NAudio" />
+                    <Button Content="Newtonsoft.Json" Click="OpenLibraryLink_Click" Tag="https://github.com/JamesNK/Newtonsoft.Json" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <Button Content="Octokit" Click="OpenLibraryLink_Click" Tag="https://github.com/octokit/octokit.net" />
+                    <Button Content="System.Management" Click="OpenLibraryLink_Click" Tag="https://github.com/dotnet/runtime" />
+                    <Button Content="TaskScheduler" Click="OpenLibraryLink_Click" Tag="https://github.com/dahall/TaskScheduler" />
+                    <Button Content="WindowsDisplayAPI" Click="OpenLibraryLink_Click" Tag="https://github.com/falahati/WindowsDisplayAPI" />
+                    <Button Content="WPF-UI" Click="OpenLibraryLink_Click" Tag="https://github.com/lepoco/wpfui" />
+                </StackPanel>
             </Grid>
-            <TextBlock Text="{Binding BuildText}"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       IsVisible="{Binding BuildText, Converter={StaticResource IsNotNullOrEmpty}}"
-                       Margin="0,0,0,16"/>
-            <TextBlock Text="{Binding CopyrightText}"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       TextWrapping="Wrap"/>
-            <TextBlock Text="{local:Loc Key=About_TranslationCredit, Fallback=Translation credits for non-English locales.}"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       TextWrapping="Wrap" Margin="0,8,0,0"
-                       IsVisible="{Binding ShowTranslationCredit}"/>
-            <TextBlock Text="{local:Loc Key=About_Links, Fallback=Links}"
-                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Margin="0,24,0,8"/>
-            <Button Content="{local:Loc Key=About_ProjectWebsite, Fallback=Project Website on GitHub}"
-                    Command="{Binding OpenProjectWebsiteCommand}" Padding="8,8" MinWidth="200"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Background="{DynamicResource AccentBackgroundBrush}"
-                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
-            <Button Content="{local:Loc Key=About_LatestRelease, Fallback=Latest Release on GitHub}"
-                    Command="{Binding OpenLatestReleaseCommand}" Padding="8,8" Margin="0,8,0,0"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Background="{DynamicResource AccentBackgroundBrush}"
-                    Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"/>
-            <TextBlock Text="{local:Loc Key=About_ThirdPartyLibraries, Fallback=Third-party Libraries}"
-                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Margin="0,24,0,8"/>
-            <ItemsControl ItemsSource="{Binding Libraries}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <HyperlinkButton Content="{Binding Name}"
-                                         Command="{Binding DataContext.OpenLibraryLinkCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                         CommandParameter="{Binding Url}"
-                                         Background="{DynamicResource ControlFillColorDefaultBrush}"
-                                         CornerRadius="{StaticResource CornerRadiusCompact}"
-                                         Padding="12,6" Margin="0,4"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <TextBlock Text="{local:Loc Key=About_ApplicationFolders, Fallback=Application Folders}"
-                       FontSize="{StaticResource FontSizeSubsection}" FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                       Margin="0,24,0,8"/>
-            <Button Content="{local:Loc Key=About_AppDataFolder, Fallback=AppData Folder}"
-                    Command="{Binding OpenAppDataFolderCommand}" Padding="8,8"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"/>
-            <Button Content="{local:Loc Key=About_TempFolder, Fallback=Temp Folder}"
-                    Command="{Binding OpenTempFolderCommand}" Padding="8,8" Margin="0,8,0,0"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Background="{DynamicResource ControlFillColorDefaultBrush}"/>
+
+            <TextBlock
+                Padding="0,24,0,8"
+                Focusable="True"
+                FontSize="{StaticResource FontSizeSubsection}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Text="{local:Loc Key=AboutPage_ApplicationFolders, Fallback=Application folders}" />
+
+            <Button x:Name="DataFolderButton"
+                    Content="{local:Loc Key=AboutPage_Data, Fallback=Data}"
+                    Click="OpenApplicationDataFolder_Click"
+                    Padding="0,2"
+                    HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+            <Button x:Name="TempFolderButton"
+                    Content="{local:Loc Key=AboutPage_Temp, Fallback=Temp}"
+                    Click="OpenApplicationTempFolder_Click"
+                    Padding="0,2"
+                    Margin="0,4,0,0"
+                    HorizontalAlignment="Left"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

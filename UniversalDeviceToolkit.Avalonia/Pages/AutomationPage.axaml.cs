@@ -44,6 +44,7 @@ public partial class AutomationPage : UserControl
     ];
     private bool _isRefreshing;
     private bool _isDirty;
+    private bool _hasLoadedContent;
 
     internal static readonly string[] PipelineIconNames =
     [
@@ -108,6 +109,8 @@ public partial class AutomationPage : UserControl
         {
             _isRefreshing = true;
             SetFeedback(null);
+            if (!_hasLoadedContent)
+                LoadingSkeleton.IsVisible = true;
             var sharedState = await _workspaceViewModel.LoadAsync();
             if (sharedState is null)
             {
@@ -143,6 +146,8 @@ public partial class AutomationPage : UserControl
 #endif
 
             UpdateEmptyStates();
+            _hasLoadedContent = true;
+            LoadingSkeleton.IsVisible = false;
             _isDirty = false;
             UpdateDirtyState();
         }
