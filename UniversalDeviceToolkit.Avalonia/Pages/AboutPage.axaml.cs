@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Avalonia.Localization;
 using UniversalDeviceToolkit.Shared.Utils;
 

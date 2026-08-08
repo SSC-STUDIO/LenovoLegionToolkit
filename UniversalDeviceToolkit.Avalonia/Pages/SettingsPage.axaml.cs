@@ -107,7 +107,7 @@ public partial class SettingsPage : UserControl
 
     private void ShowView(string key)
     {
-        var view = key switch
+        Control? view = key switch
         {
             "Appearance" => _appearanceView,
             "Application" => _applicationBehaviorView,
