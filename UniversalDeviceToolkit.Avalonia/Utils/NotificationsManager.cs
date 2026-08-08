@@ -1,0 +1,439 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.WPF.Extensions;
+using UniversalDeviceToolkit.WPF.Resources;
+using UniversalDeviceToolkit.WPF.Windows;
+using UniversalDeviceToolkit.WPF.Windows.Utils;
+using Wpf.Ui.Controls;
+
+namespace UniversalDeviceToolkit.WPF.Utils;
+
+public class NotificationsManager : IDisposable
+{
+    private static Dispatcher Dispatcher => Application.Current.Dispatcher;
+
+    private readonly ApplicationSettings _settings;
+
+    private List<INotificationWindow?> _windows = [];
+
+    private readonly PriorityQueue<NotificationMessage, int> _queue = new();
+
+    private bool _isShowing;
+
+    public NotificationsManager(ApplicationSettings settings)
+    {
+        _settings = settings;
+
+        MessagingCenter.Subscribe<NotificationMessage>(this, OnNotificationReceived);
+    }
+
+    private void OnNotificationReceived(NotificationMessage notification)
+    {
+        _ = Dispatcher.InvokeAsync(async () =>
+        {
+            try
+            {
+                await HandleNotificationAsync(notification);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Error($"Failed to enqueue notification {notification}", ex);
+            }
+        });
+    }
+
+    private async Task HandleNotificationAsync(NotificationMessage notification)
+    {
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Notification {notification} received");
+
+        if (_settings.Store.DontShowNotifications)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Notifications are disabled.");
+
+            return;
+        }
+
+        if (!IsNotificationTypeEnabled(notification.Type))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Notification type {notification.Type} is disabled by policy.");
+            return;
+        }
+
+        // Map priority: High (2) -> 0, Normal (1) -> 1, Low (0) -> 2
+        var priorityValue = 2 - (int)ResolveSeverity(notification);
+        _queue.Enqueue(notification, priorityValue);
+
+        if (_isShowing)
+            return;
+
+        _isShowing = true;
+        try
+        {
+            while (_queue.Count > 0)
+            {
+                var nextNotification = _queue.Dequeue();
+                try
+                {
+                    await ProcessNotification(nextNotification);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error($"Failed to process notification {nextNotification}", ex);
+                }
+            }
+        }
+        finally
+        {
+            _isShowing = false;
+        }
+    }
+
+    private async Task ProcessNotification(NotificationMessage notification)
+    {
+        if (FullscreenHelper.IsAnyApplicationFullscreen() && !_settings.Store.NotificationAlwaysOnTop)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Some application is in fullscreen.");
+
+            return;
+        }
+
+        var allow = IsNotificationTypeEnabled(notification.Type);
+
+        if (!allow)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Notification type {notification.Type} is disabled.");
+
+            return;
+        }
+
+        // Severity already applied when enqueueing; keep ProcessNotification focused on display.
+
+        var symbol = notification.Type switch
+        {
+            NotificationType.ACAdapterConnected => SymbolRegular.BatteryCharge24,
+            NotificationType.ACAdapterConnectedLowWattage => SymbolRegular.BatteryCharge24,
+            NotificationType.ACAdapterDisconnected => SymbolRegular.BatteryCharge24,
+            NotificationType.AutomationNotification => SymbolRegular.Rocket24,
+            NotificationType.CapsLockOn => SymbolRegular.KeyboardShiftUppercase24,
+            NotificationType.CapsLockOff => SymbolRegular.KeyboardShiftUppercase24,
+            NotificationType.CameraOn => SymbolRegular.Camera24,
+            NotificationType.CameraOff => SymbolRegular.Camera24,
+            NotificationType.FnLockOn => SymbolRegular.Keyboard24,
+            NotificationType.FnLockOff => SymbolRegular.Keyboard24,
+            NotificationType.MicrophoneOn => SymbolRegular.Mic24,
+            NotificationType.MicrophoneOff => SymbolRegular.Mic24,
+            NotificationType.NumLockOn => SymbolRegular.Keyboard12324,
+            NotificationType.NumLockOff => SymbolRegular.Keyboard12324,
+            NotificationType.PanelLogoLightingOn => SymbolRegular.LightbulbCircle24,
+            NotificationType.PanelLogoLightingOff => SymbolRegular.LightbulbCircle24,
+            NotificationType.PortLightingOn => SymbolRegular.UsbPlug24,
+            NotificationType.PortLightingOff => SymbolRegular.UsbPlug24,
+            NotificationType.PowerModeQuiet => SymbolRegular.Gauge24,
+            NotificationType.PowerModeBalance => SymbolRegular.Gauge24,
+            NotificationType.PowerModePerformance => SymbolRegular.Gauge24,
+            NotificationType.PowerModeExtreme => SymbolRegular.Gauge24,
+            NotificationType.PowerModeGodMode => SymbolRegular.Gauge24,
+            NotificationType.ITSModeAuto => SymbolRegular.Gauge24,
+            NotificationType.ITSModeCool => SymbolRegular.Gauge24,
+            NotificationType.ITSModePerformance => SymbolRegular.Gauge24,
+            NotificationType.ITSModeGeek => SymbolRegular.Gauge24,
+            NotificationType.RefreshRate => SymbolRegular.DesktopPulse24,
+            NotificationType.RGBKeyboardBacklightOff => SymbolRegular.Lightbulb24,
+            NotificationType.RGBKeyboardBacklightChanged => SymbolRegular.Lightbulb24,
+            NotificationType.SmartKeyDoublePress => SymbolRegular.StarEmphasis24,
+            NotificationType.SmartKeySinglePress => SymbolRegular.Star24,
+            NotificationType.SpectrumBacklightChanged => SymbolRegular.Lightbulb24,
+            NotificationType.SpectrumBacklightOff => SymbolRegular.Lightbulb24,
+            NotificationType.SpectrumBacklightPresetChanged => SymbolRegular.Lightbulb24,
+            NotificationType.TouchpadOn => SymbolRegular.Tablet24,
+            NotificationType.TouchpadOff => SymbolRegular.Tablet24,
+            NotificationType.UpdateAvailable => SymbolRegular.ArrowSync24,
+            NotificationType.WhiteKeyboardBacklightOff => SymbolRegular.Lightbulb24,
+            NotificationType.WhiteKeyboardBacklightChanged => SymbolRegular.Lightbulb24,
+            _ => throw new ArgumentException(nameof(notification.Type))
+        };
+
+        SymbolRegular? overlaySymbol = notification.Type switch
+        {
+            NotificationType.ACAdapterDisconnected => SymbolRegular.Line24,
+            NotificationType.CapsLockOff => SymbolRegular.Line24,
+            NotificationType.CameraOff => SymbolRegular.Line24,
+            NotificationType.FnLockOff => SymbolRegular.Line24,
+            NotificationType.MicrophoneOff => SymbolRegular.Line24,
+            NotificationType.NumLockOff => SymbolRegular.Line24,
+            NotificationType.PanelLogoLightingOff => SymbolRegular.Line24,
+            NotificationType.PortLightingOff => SymbolRegular.Line24,
+            NotificationType.RGBKeyboardBacklightOff => SymbolRegular.Line24,
+            NotificationType.SpectrumBacklightOff => SymbolRegular.Line24,
+            NotificationType.TouchpadOff => SymbolRegular.Line24,
+            NotificationType.WhiteKeyboardBacklightOff => SymbolRegular.Line24,
+            _ => null,
+        };
+
+        var text = notification.Type switch
+        {
+            NotificationType.ACAdapterConnected => Resource.Notification_ACAdapterConnected,
+            NotificationType.ACAdapterConnectedLowWattage => Resource.Notification_ACAdapterConnectedLowWattage,
+            NotificationType.ACAdapterDisconnected => Resource.Notification_ACAdapterDisconnected,
+            NotificationType.AutomationNotification => string.Format("{0}", notification.Args),
+            NotificationType.CapsLockOn => Resource.Notification_CapsLockOn,
+            NotificationType.CapsLockOff => Resource.Notification_CapsLockOff,
+            NotificationType.CameraOn => Resource.Notification_CameraOn,
+            NotificationType.CameraOff => Resource.Notification_CameraOff,
+            NotificationType.FnLockOn => Resource.Notification_FnLockOn,
+            NotificationType.FnLockOff => Resource.Notification_FnLockOff,
+            NotificationType.MicrophoneOn => Resource.Notification_MicrophoneOn,
+            NotificationType.MicrophoneOff => Resource.Notification_MicrophoneOff,
+            NotificationType.NumLockOn => Resource.Notification_NumLockOn,
+            NotificationType.NumLockOff => Resource.Notification_NumLockOff,
+            NotificationType.PanelLogoLightingOn => Resource.Notification_PanelLogoLightingOn,
+            NotificationType.PanelLogoLightingOff => Resource.Notification_PanelLogoLightingOff,
+            NotificationType.PortLightingOn => Resource.Notification_PortLightingOn,
+            NotificationType.PortLightingOff => Resource.Notification_PortLightingOff,
+            NotificationType.PowerModeQuiet => string.Format("{0}", notification.Args),
+            NotificationType.PowerModeBalance => string.Format("{0}", notification.Args),
+            NotificationType.PowerModePerformance => string.Format("{0}", notification.Args),
+            NotificationType.PowerModeExtreme => string.Format("{0}", notification.Args),
+            NotificationType.PowerModeGodMode => string.Format("{0}", notification.Args),
+            NotificationType.ITSModeAuto => string.Format("{0}", notification.Args),
+            NotificationType.ITSModeCool => string.Format("{0}", notification.Args),
+            NotificationType.ITSModePerformance => string.Format("{0}", notification.Args),
+            NotificationType.ITSModeGeek => string.Format("{0}", notification.Args),
+            NotificationType.RefreshRate => string.Format("{0}", notification.Args),
+            NotificationType.RGBKeyboardBacklightOff => string.Format("{0}", notification.Args),
+            NotificationType.RGBKeyboardBacklightChanged => string.Format("{0}", notification.Args),
+            NotificationType.SmartKeyDoublePress => string.Format("{0}", notification.Args),
+            NotificationType.SmartKeySinglePress => string.Format("{0}", notification.Args),
+            NotificationType.SpectrumBacklightChanged => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Brightness, notification.Args),
+            NotificationType.SpectrumBacklightOff => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Backlight, notification.Args),
+            NotificationType.SpectrumBacklightPresetChanged => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Profile, notification.Args),
+            NotificationType.TouchpadOn => Resource.Notification_TouchpadOn,
+            NotificationType.TouchpadOff => Resource.Notification_TouchpadOff,
+            NotificationType.UpdateAvailable => string.Format(Resource.Notification_UpdateAvailable, notification.Args),
+            NotificationType.WhiteKeyboardBacklightOff => string.Format(Resource.Notification_WhiteKeyboardBacklight, notification.Args),
+            NotificationType.WhiteKeyboardBacklightChanged => string.Format(Resource.Notification_WhiteKeyboardBacklight, notification.Args),
+            _ => throw new ArgumentException(nameof(notification.Type))
+        };
+
+        Action<SymbolIcon>? symbolTransform = notification.Type switch
+        {
+            NotificationType.PowerModeQuiet => si => si.Foreground = PowerModeState.Quiet.GetSolidColorBrush(),
+            NotificationType.PowerModePerformance => si => si.Foreground = PowerModeState.Performance.GetSolidColorBrush(),
+            NotificationType.PowerModeExtreme => si => si.Foreground = PowerModeState.Extreme.GetSolidColorBrush(),
+            NotificationType.PowerModeGodMode => si => si.Foreground = PowerModeState.GodMode.GetSolidColorBrush(),
+            _ => null
+        };
+
+        Action? clickAction = notification.Type switch
+        {
+            NotificationType.UpdateAvailable => UpdateAvailableAction,
+            _ => null
+        };
+
+        if (symbolTransform is null && overlaySymbol is not null)
+            symbolTransform = si =>
+                si.SetResourceReference(Control.ForegroundProperty, "TextFillColorSecondaryBrush");
+
+        await ShowNotification(symbol, overlaySymbol, symbolTransform, text, clickAction);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Notification {notification} shown.");
+    }
+
+    private async Task ShowNotification(SymbolRegular symbol, SymbolRegular? overlaySymbol, Action<SymbolIcon>? symbolTransform, string text, Action? clickAction)
+    {
+        if (App.Current.MainWindow is not MainWindow mainWindow)
+            return;
+
+        _windows.Clear();
+
+        ScreenHelper.UpdateScreenInfos();
+        var duration = _settings.Store.NotificationDuration switch
+        {
+            NotificationDuration.Short => 500,
+            NotificationDuration.Long => 2500,
+            NotificationDuration.Normal => 1000,
+            _ => throw new ArgumentException(nameof(_settings.Store.NotificationDuration))
+        };
+
+        var tasks = new List<Task>();
+
+        if (_settings.Store.NotificationOnAllScreens)
+        {
+            foreach (var screen in ScreenHelper.Screens)
+            {
+                tasks.Add(ShowOnScreen(symbol, overlaySymbol, symbolTransform, text, clickAction, screen, mainWindow, duration));
+            }
+        }
+        else
+        {
+            var primaryScreen = ScreenHelper.PrimaryScreen;
+            if (primaryScreen.HasValue)
+            {
+                tasks.Add(ShowOnScreen(symbol, overlaySymbol, symbolTransform, text, clickAction, primaryScreen.Value, mainWindow, duration));
+            }
+        }
+
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task ShowOnScreen(SymbolRegular symbol, SymbolRegular? overlaySymbol, Action<SymbolIcon>? symbolTransform, string text, Action? clickAction, ScreenInfo screen, MainWindow mainWindow, int duration)
+    {
+        var nw = new NotificationWindow(symbol, overlaySymbol, symbolTransform, text, clickAction, screen, _settings.Store.NotificationPosition) { Owner = mainWindow };
+        var tcs = new TaskCompletionSource<bool>();
+
+        if (_settings.Store.NotificationAlwaysOnTop)
+        {
+            var bitmap = nw.GetBitmapView();
+            var nwaot = new NotificationAoTWindow(bitmap, screen, _settings.Store.NotificationPosition);
+            nwaot.Closed += (_, _) => tcs.TrySetResult(true);
+            nwaot.Show(duration);
+            Track(nwaot);
+        }
+        else
+        {
+            nw.Closed += (_, _) => tcs.TrySetResult(true);
+            nw.Show(duration);
+            Track(nw);
+        }
+
+        await tcs.Task;
+    }
+
+    private void Track(INotificationWindow window)
+    {
+        _windows.Add(window);
+        window.Closed += OnNotificationWindowClosed;
+    }
+
+    private void OnNotificationWindowClosed(object? sender, EventArgs e)
+    {
+        if (sender is not INotificationWindow window)
+            return;
+
+        window.Closed -= OnNotificationWindowClosed;
+        _windows.Remove(window);
+    }
+
+    private bool IsNotificationTypeEnabled(NotificationType type)
+    {
+        var (key, legacyEnabled) = ResolveNotificationCategory(type);
+        var policy = NotificationTypePolicyStore.GetOrDefault(
+            _settings.Store.Notifications.TypePolicies,
+            key,
+            legacyEnabled);
+        return policy.Enabled && legacyEnabled;
+    }
+
+    private NotificationPriority ResolveSeverity(NotificationMessage notification)
+    {
+        var (key, legacyEnabled) = ResolveNotificationCategory(notification.Type);
+        var policy = NotificationTypePolicyStore.GetOrDefault(
+            _settings.Store.Notifications.TypePolicies,
+            key,
+            legacyEnabled);
+        return notification.Priority == NotificationPriority.High
+            ? NotificationPriority.High
+            : policy.Severity;
+    }
+
+    private (string Key, bool LegacyEnabled) ResolveNotificationCategory(NotificationType type)
+    {
+        var n = _settings.Store.Notifications;
+        return type switch
+        {
+            NotificationType.ACAdapterConnected or NotificationType.ACAdapterConnectedLowWattage or NotificationType.ACAdapterDisconnected
+                => ("ACAdapter", n.ACAdapter),
+            NotificationType.AutomationNotification
+                => ("AutomationNotification", n.AutomationNotification),
+            NotificationType.CapsLockOn or NotificationType.CapsLockOff or NotificationType.NumLockOn or NotificationType.NumLockOff
+                => ("CapsNumLock", n.CapsNumLock),
+            NotificationType.CameraOn or NotificationType.CameraOff
+                => ("CameraLock", n.CameraLock),
+            NotificationType.FnLockOn or NotificationType.FnLockOff
+                => ("FnLock", n.FnLock),
+            NotificationType.MicrophoneOn or NotificationType.MicrophoneOff
+                => ("Microphone", n.Microphone),
+            NotificationType.PanelLogoLightingOn or NotificationType.PanelLogoLightingOff
+                or NotificationType.PortLightingOn or NotificationType.PortLightingOff
+                or NotificationType.RGBKeyboardBacklightOff or NotificationType.RGBKeyboardBacklightChanged
+                or NotificationType.SpectrumBacklightChanged or NotificationType.SpectrumBacklightOff
+                or NotificationType.SpectrumBacklightPresetChanged
+                or NotificationType.WhiteKeyboardBacklightOff or NotificationType.WhiteKeyboardBacklightChanged
+                => ("KeyboardBacklight", n.KeyboardBacklight),
+            NotificationType.PowerModeQuiet or NotificationType.PowerModeBalance or NotificationType.PowerModePerformance
+                or NotificationType.PowerModeExtreme or NotificationType.PowerModeGodMode
+                or NotificationType.ITSModeAuto or NotificationType.ITSModeCool
+                or NotificationType.ITSModePerformance or NotificationType.ITSModeGeek
+                => ("PowerMode", n.PowerMode),
+            NotificationType.RefreshRate => ("RefreshRate", n.RefreshRate),
+            NotificationType.SmartKeyDoublePress or NotificationType.SmartKeySinglePress
+                => ("SmartKey", n.SmartKey),
+            NotificationType.TouchpadOn or NotificationType.TouchpadOff
+                => ("TouchpadLock", n.TouchpadLock),
+            NotificationType.UpdateAvailable => ("UpdateAvailable", n.UpdateAvailable),
+            _ => throw new ArgumentException(nameof(type))
+        };
+    }
+
+private static void UpdateAvailableAction()
+    {
+        if (App.Current.MainWindow is not MainWindow mainWindow)
+            return;
+
+        mainWindow.BringToForeground();
+        mainWindow.ShowUpdateWindow();
+    }
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    // Unsubscribe from MessagingCenter to prevent memory leak
+                    MessagingCenter.Unsubscribe<NotificationMessage>(this);
+
+                    foreach (var window in _windows.ToArray())
+                    {
+                        if (window is null)
+                            continue;
+                        window.Closed -= OnNotificationWindowClosed;
+                        window.Close(true);
+                    }
+                    _windows.Clear();
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error during NotificationsManager disposal", ex);
+                }
+            }
+            _disposed = true;
+        }
+    }
+}

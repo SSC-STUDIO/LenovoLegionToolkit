@@ -1,0 +1,119 @@
+using System;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using UniversalDeviceToolkit.Lib.Utils;
+
+namespace UniversalDeviceToolkit.WPF.Controls;
+
+public abstract class AbstractRefreshingControl : UserControl
+{
+    private Task? _refreshTask;
+    private bool _hasFinishedLoading;
+    private readonly TaskCompletionSource _initialRefreshCompletedTaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    protected bool IsRefreshing => _refreshTask is not null;
+    public Task InitialRefreshCompletedTask => _initialRefreshCompletedTaskCompletionSource.Task;
+
+    protected virtual bool DisablesWhileRefreshing => true;
+
+    protected AbstractRefreshingControl()
+    {
+        IsEnabled = false;
+
+        Loaded += RefreshingControl_Loaded;
+        IsVisibleChanged += RefreshingControl_IsVisibleChanged;
+        Unloaded += AbstractRefreshingControl_Unloaded;
+    }
+
+    private void AbstractRefreshingControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        // Note: Do NOT unsubscribe Loaded here — it must remain subscribed
+        // so that it fires again when the control is re-added to the visual tree.
+        // The Loaded handler uses -= / += idempotent re-attachment to prevent duplicates.
+        IsVisibleChanged -= RefreshingControl_IsVisibleChanged;
+    }
+
+    private async void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            // Re-attach IsVisibleChanged in case it was removed by a prior Unloaded event
+            IsVisibleChanged -= RefreshingControl_IsVisibleChanged;
+            IsVisibleChanged += RefreshingControl_IsVisibleChanged;
+
+            if (!_hasFinishedLoading)
+            {
+                _hasFinishedLoading = true;
+                OnFinishedLoading();
+            }
+
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RefreshingControl_Loaded)}.", ex);
+        }
+    }
+
+    protected abstract void OnFinishedLoading();
+
+    private async void RefreshingControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        try
+        {
+            if (IsVisible)
+                await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(RefreshingControl_IsVisibleChanged)}.", ex);
+        }
+    }
+
+    protected async Task RefreshAsync()
+    {
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Refreshing control... [feature={GetType().Name}]");
+
+        var exceptions = false;
+
+        try
+        {
+            if (DisablesWhileRefreshing)
+                IsEnabled = false;
+
+            _refreshTask ??= OnRefreshAsync();
+            await _refreshTask;
+        }
+        catch (NotSupportedException)
+        {
+            exceptions = true;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Unsupported. [feature={GetType().Name}]");
+        }
+        catch (Exception ex)
+        {
+            exceptions = true;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception when refreshing control. [feature={GetType().Name}]", ex);
+        }
+        finally
+        {
+            _refreshTask = null;
+
+            if (exceptions)
+                Visibility = Visibility.Collapsed;
+            else
+                IsEnabled = true;
+
+            _initialRefreshCompletedTaskCompletionSource.TrySetResult();
+        }
+    }
+
+    protected abstract Task OnRefreshAsync();
+}

@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+             xmlns:automation="using:Avalonia.Automation"
+             x:Class="UniversalDeviceToolkit.Avalonia.Controls.Shell.AppStatusBanner"
+             Width="360"
+             MinWidth="360"
+             MaxWidth="360"
+             HorizontalAlignment="Right"
+             Focusable="False"
+             automation:AutomationProperties.Name="{Binding Message, RelativeSource={RelativeSource Self}}">
+    <Border
+        x:Name="RootBorder"
+        Margin="0,0,0,10"
+        Padding="10"
+        Background="{DynamicResource NotificationGlassSurfaceBrush}"
+        BorderBrush="{DynamicResource NotificationGlassBorderBrush}"
+        BorderThickness="1"
+        CornerRadius="{StaticResource CornerRadiusCard}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="32" />
+                <ColumnDefinition Width="32" />
+            </Grid.ColumnDefinitions>
+
+            <controls:NavigationIcon
+                x:Name="Icon"
+                Width="28"
+                Height="28"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource IconSizeMD}"
+                Foreground="{DynamicResource StatusWarningBrush}"
+                IconIdentifier="Warning24" />
+
+            <TextBlock
+                x:Name="MessageText"
+                Grid.Column="1"
+                Margin="10,0,8,0"
+                VerticalAlignment="Center"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                TextWrapping="Wrap" />
+
+            <Border
+                x:Name="ActionArea"
+                Grid.Column="2"
+                Width="28"
+                Height="28"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                CornerRadius="{StaticResource CornerRadiusCompact}"
+                IsVisible="False">
+                <controls:NavigationIcon
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource IconSizeSM}"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    IconIdentifier="ChevronRight24" />
+            </Border>
+
+            <Button
+                x:Name="CloseButton"
+                Grid.Column="3"
+                Width="28"
+                Height="28"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Padding="4"
+                Click="CloseButton_Click"
+                automation:AutomationProperties.Name="Close">
+                <controls:NavigationIcon FontSize="{StaticResource IconSizeSM}" IconIdentifier="Dismiss20" />
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

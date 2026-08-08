@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
         xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+        xmlns:shell="using:UniversalDeviceToolkit.Avalonia.Controls.Shell"
         xmlns:automation="using:Avalonia.Automation"
         x:Class="UniversalDeviceToolkit.Avalonia.MainWindow"
         Title="{local:Loc Key=Window_Title, Fallback=Universal Device Toolkit}"
@@ -345,6 +346,22 @@
                         <controls:LocalizedTextBlock x:Name="UpdateAvailableLabel"
                                                      Text="{local:Loc Key=MainWindow_UpdateAvailable, Fallback=Update available}" />
                     </Button>
+                    <!-- Status banners (WPF parity: bottom-right persistent software warnings). -->
+                    <StackPanel x:Name="StatusBannerStack"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Margin="0,0,18,18"
+                                Spacing="8"
+                                Panel.ZIndex="10">
+                        <shell:AppStatusBanner x:Name="VantageWarningBanner"
+                                               Message="{local:Loc Key=MainWindows_VantageRunning, Fallback=Lenovo Vantage or its services are running.}" />
+                        <shell:AppStatusBanner x:Name="LegionZoneWarningBanner"
+                                               Message="{local:Loc Key=MainWindow_LegionZoneRunning, Fallback=Lenovo Legion Zone or its services are running.}" />
+                        <shell:AppStatusBanner x:Name="FnKeysWarningBanner"
+                                               Message="{local:Loc Key=MainWindows_FnKeysRunning, Fallback=Lenovo hotkeys are active.}" />
+                        <shell:AppStatusBanner x:Name="PluginExtensionsBanner"
+                                               Message="{local:Loc Key=MainWindow_PluginExtensionsDisabledNotice, Fallback=Plugin extensions are disabled.}" />
+                    </StackPanel>
                 </Grid>
             </Border>
         </DockPanel>
