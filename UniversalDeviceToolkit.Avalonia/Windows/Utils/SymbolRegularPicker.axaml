@@ -1,0 +1,80 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Utils.SymbolRegularPicker"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Windows"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    Title="{x:Static resources:Resource.SymbolRegularPicker_Title}"
+    Width="800"
+    Height="600"
+    Closing="SymbolRegularPicker_Closing"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    Loaded="SymbolRegularPicker_Loaded"
+    CanResize="False"
+    CanMinimize="True"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <custom:TitleBar
+            Grid.Row="0"
+            CanMaximize="false"
+            ShowMaximize="false"
+            ShowMinimize="false" />
+
+        <Grid
+            Grid.Row="0"
+            Height="24"
+            Margin="12,8,12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                FontSize="{DynamicResource FontSizeSmallCaption}"
+                IsHitTestVisible="False"
+                Text="{x:Static resources:Resource.SymbolRegularPicker_Title}" />
+        </Grid>
+
+        <ui:TextBox
+            x:Name="_filterTextBox"
+            Grid.Row="1"
+            Margin="16"
+            Icon="Search24"
+            Watermark="{x:Static resources:Resource.Filter}"
+            TextChanged="FilterTextBox_TextChanged" />
+
+        <custom:VirtualizingItemsControl
+            x:Name="_itemsControl"
+            Grid.Row="2"
+            Margin="4,4,0,0" />
+
+        <Grid Grid.Row="3" Margin="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ui:Button
+                Grid.Column="1"
+                MinWidth="100"
+                Margin="8,0,0,0"
+                Click="DefaultButton_Click"
+                Content="{x:Static resources:Resource.Default}" />
+        </Grid>
+
+    </Grid>
+</local:BaseWindow>

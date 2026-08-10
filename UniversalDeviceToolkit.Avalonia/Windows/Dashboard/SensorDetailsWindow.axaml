@@ -1,0 +1,51 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Dashboard.SensorDetailsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dashboard="using:UniversalDeviceToolkit.Avalonia.Controls.Dashboard"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Windows"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    Width="1080"
+    Height="640"
+    MinWidth="900"
+    MinHeight="520"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    Closed="SensorDetailsWindow_Closed"
+    Loaded="SensorDetailsWindow_Loaded"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner"
+    AutomationProperties.AutomationId="SensorDetailsWindow">
+
+    <Grid Background="{DynamicResource AppNavigationBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <custom:TitleBar
+            Grid.Row="0"
+            CanMaximize="false"
+            ShowMaximize="false"
+            ShowMinimize="false" />
+
+        <Grid
+            Grid.Row="0"
+            Height="24"
+            Margin="12,8,48,8">
+            <TextBlock
+                x:Name="_titleText"
+                VerticalAlignment="Center"
+                Classes="appCaptionTextBlock"
+                IsHitTestVisible="False" />
+        </Grid>
+
+        <custom:DynamicScrollViewer
+            Grid.Row="1"
+            Margin="12,0,12,12"
+            HorizontalScrollBarVisibility="Disabled"
+            VerticalScrollBarVisibility="Auto">
+            <dashboard:SensorsControl x:Name="_sensors" />
+        </custom:DynamicScrollViewer>
+    </Grid>
+</local:BaseWindow>

@@ -1,0 +1,30 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:charts="using:UniversalDeviceToolkit.Avalonia.Controls.Charts">
+
+    <!--
+      Chart chrome. Both controls are self-drawn (Render(DrawingContext)); the WPF-UI
+      RadialGaugeControl template (PART_Track/PART_Value parts) was dropped because the
+      class derives from Control — Avalonia Control has no Template property and a
+      self-drawn control renders itself. Keep the parts drawn inside Render() using
+      RingBrush/TrackBrush/RingThickness/ValueThickness.
+    -->
+    <Style Selector="charts|TrendChartControl">
+        <Setter Property="GridlineBrush" Value="{DynamicResource ChartGridlineBrush}" />
+        <Setter Property="BaselineBrush" Value="{DynamicResource ChartBaselineBrush}" />
+        <Setter Property="ScaleLabelBrush" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+    </Style>
+
+    <Style Selector="charts|RadialGaugeControl">
+        <Setter Property="RingBrush" Value="{DynamicResource ChartUtilizationBrush}" />
+        <Setter Property="TrackBrush" Value="{DynamicResource ChartTrackBrush}" />
+        <Setter Property="RingThickness" Value="6" />
+        <Setter Property="ValueThickness" Value="6" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
+        <Setter Property="Height" Value="{StaticResource GaugeSizeMD}" />
+    </Style>
+
+</Styles>

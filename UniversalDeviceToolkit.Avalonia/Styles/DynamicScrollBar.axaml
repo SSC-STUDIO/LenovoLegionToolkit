@@ -1,0 +1,118 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:sys="using:System">
+
+    <!--
+      Dynamic scrollbar chrome (vertical approximation). Applies to ALL ScrollBars —
+      the WPF original targeted WPF-UI DynamicScrollBar (used inside DynamicScrollViewer);
+      with the default Avalonia ScrollViewer template, an implicit ScrollBar style is the
+      closest equivalent. Hover feedback uses Transitions (Avalonia 11.3 keyframes cannot
+      animate RenderTransform; ControlTemplate.Styles no longer exists, so the state
+      styles live at file level with /template/ selectors).
+    -->
+    <Styles.Resources>
+        <ResourceDictionary>
+            <sys:TimeSpan x:Key="DynamicScrollAnimationDuration">0:0:0.15</sys:TimeSpan>
+
+            <ControlTemplate x:Key="DynamicVerticalScrollBar" TargetType="ScrollBar">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" MaxHeight="14" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" MaxHeight="14" />
+                    </Grid.RowDefinitions>
+
+                    <RepeatButton
+                        x:Name="PART_LineUpButton"
+                        Grid.Row="0"
+                        Opacity="0"
+                        Classes="dynamicScrollBarLineButton">
+                        <ui:SymbolIcon FontSize="{StaticResource IconSizeSM}" Symbol="ChevronUp24" />
+                    </RepeatButton>
+
+                    <Track
+                        x:Name="PART_Track"
+                        Grid.Row="1"
+                        Width="6"
+                        HorizontalAlignment="Center"
+                        IsDirectionReversed="True"
+                        Opacity="0">
+                        <Track.DecreaseButton>
+                            <RepeatButton x:Name="PART_PageUpButton" Classes="dynamicScrollBarPageButton" />
+                        </Track.DecreaseButton>
+                        <Track.Thumb>
+                            <Thumb Classes="dynamicScrollBarThumb" />
+                        </Track.Thumb>
+                        <Track.IncreaseButton>
+                            <RepeatButton x:Name="PART_PageDownButton" Classes="dynamicScrollBarPageButton" />
+                        </Track.IncreaseButton>
+                    </Track>
+
+                    <RepeatButton
+                        x:Name="PART_LineDownButton"
+                        Grid.Row="2"
+                        Opacity="0"
+                        Classes="dynamicScrollBarLineButton">
+                        <ui:SymbolIcon FontSize="{StaticResource IconSizeSM}" Symbol="ChevronDown24" />
+                    </RepeatButton>
+                </Grid>
+            </ControlTemplate>
+
+            <!-- Inert key holder for the WPF-UI style key. -->
+            <Style x:Key="UiDynamicScrollBar" />
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <Style Selector="ScrollBar">
+        <Setter Property="Template" Value="{StaticResource DynamicVerticalScrollBar}" />
+    </Style>
+
+    <Style Selector="RepeatButton.dynamicScrollBarLineButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Opacity" Duration="{StaticResource DynamicScrollAnimationDuration}" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="ScrollBar:pointerover /template/ RepeatButton#PART_LineUpButton">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+    <Style Selector="ScrollBar:pointerover /template/ RepeatButton#PART_LineDownButton">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="RepeatButton.dynamicScrollBarPageButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+
+    <Style Selector="Thumb.dynamicScrollBarThumb">
+        <Setter Property="Background" Value="{DynamicResource ControlStrongFillColorDefaultBrush}" />
+        <Setter Property="CornerRadius" Value="3" />
+    </Style>
+    <Style Selector="Thumb.dynamicScrollBarThumb:pointerover">
+        <Setter Property="Background" Value="{DynamicResource ControlStrongFillColorSecondaryBrush}" />
+    </Style>
+
+    <Style Selector="Track#PART_Track">
+        <Setter Property="Width" Value="6" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <DoubleTransition Property="Width" Duration="{StaticResource DynamicScrollAnimationDuration}" />
+                <DoubleTransition Property="Opacity" Duration="{StaticResource DynamicScrollAnimationDuration}" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="ScrollBar:pointerover /template/ Track#PART_Track">
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+</Styles>

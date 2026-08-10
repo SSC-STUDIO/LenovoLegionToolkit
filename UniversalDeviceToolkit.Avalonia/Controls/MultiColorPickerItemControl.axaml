@@ -1,0 +1,31 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.MultiColorPickerItemControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls">
+    <Grid Margin="8,0,0,0">
+
+        <local:ColorPickerControl x:Name="_picker" />
+
+        <Border
+            Width="20"
+            Height="20"
+            Background="{DynamicResource SolidBackgroundFillColorBaseBrush}"
+            CornerRadius="{StaticResource CornerRadiusControl}"
+            Cursor="Hand"
+            PointerPressed="Delete_Click">
+            <Border.RenderTransform>
+                <TranslateTransform X="14" Y="-14" />
+            </Border.RenderTransform>
+
+            <ui:SymbolIcon
+                FontSize="{StaticResource IconSizeChip}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                Symbol="Dismiss12" />
+
+        </Border>
+
+    </Grid>
+</UserControl>

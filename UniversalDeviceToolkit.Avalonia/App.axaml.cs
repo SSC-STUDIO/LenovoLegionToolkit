@@ -1,986 +1,1220 @@
-using System.Windows.Input;
+using UniversalDeviceToolkit.Lib.System;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform;
-using Avalonia.Styling;
 using Avalonia.Threading;
-using UniversalDeviceToolkit.Abstractions.Localization;
-using UniversalDeviceToolkit.Avalonia.Localization;
-using UniversalDeviceToolkit.Avalonia.Services;
-using UniversalDeviceToolkit.Avalonia.Windows;
-using UniversalDeviceToolkit.Shared.Diagnostics;
-using UniversalDeviceToolkit.Shared.Logging;
-using UniversalDeviceToolkit.Platform.Linux;
-using UniversalDeviceToolkit.Platform.MacOS;
-#if WINDOWS
-using System.Reflection;
-using Autofac;
-using UniversalDeviceToolkit.Avalonia.Startup;
-using WindowsDeviceAdapter = UniversalDeviceToolkit.Platform.Windows.WindowsDeviceAdapter;
-using UniversalDeviceToolkit.Lib.Settings;
+using System.Runtime.InteropServices;
 using UniversalDeviceToolkit.Lib;
-using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.CLI;
-using UniversalDeviceToolkit.Lib.Automation.Pipeline;
-using UniversalDeviceToolkit.Lib.Automation.Utils;
+using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 using UniversalDeviceToolkit.Lib.Features.PanelLogo;
 using UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
+using UniversalDeviceToolkit.Lib.Integrations;
+using UniversalDeviceToolkit.Lib.Listeners;
+using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Macro;
+using UniversalDeviceToolkit.Lib.Overclocking.Amd;
+using UniversalDeviceToolkit.Lib.Services;
 using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.ResourcesCatalog;
+using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.SoftwareDisabler;
 using UniversalDeviceToolkit.Lib.Utils;
-using LibResource = UniversalDeviceToolkit.Lib.Resources.Resource;
-using AutomationResource = UniversalDeviceToolkit.Lib.Automation.Resources.Resource;
-using MacroResource = UniversalDeviceToolkit.Lib.Macro.Resources.Resource;
-using PluginResource = UniversalDeviceToolkit.Lib.Plugins.Resources.Resource;
-#endif
+using UniversalDeviceToolkit.Lib.Messaging;
+using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Avalonia.Extensions;
+using UniversalDeviceToolkit.Avalonia.Pages;
+using UniversalDeviceToolkit.Avalonia.Resources;
+using UniversalDeviceToolkit.Avalonia.Utils;
+using UniversalDeviceToolkit.Avalonia.Windows;
+using UniversalDeviceToolkit.Avalonia.Windows.Osd;
+using UniversalDeviceToolkit.Avalonia.Windows.Utils;
+using UniversalDeviceToolkit.Avalonia.Startup;
 
-namespace UniversalDeviceToolkit.Avalonia;
-
+namespace UniversalDeviceToolkit.Avalonia
+{
 public partial class App : Application
 {
-    public ICommand ShowCommand { get; }
-    public ICommand SettingsCommand { get; }
-    public ICommand ExitCommand { get; }
+        [LibraryImport("kernel32.dll")]
+        private static partial void ExitProcess(uint uExitCode);
 
-    private TrayIcon? _trayIcon;
-    private int _handlingFatalException;
-    private int _shutdownStarted;
-    private bool _exceptionHandlersRegistered;
-    private object? _pendingUpdateReleaseInfo = null;
-    private NativeMenuItem? _trayPipelinesItem;
+        private const int BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS = 3000;
 
-#if WINDOWS
-    private ApplicationSettings? _applicationSettings;
-    private AvaloniaNotificationManager? _notificationManager;
-    private AvaloniaSingleInstanceGuard? _singleInstanceGuard;
-    private AvaloniaOsdOverlayController? _osdOverlay;
-    private AvaloniaUpdateCheckCoordinator? _updateCheckCoordinator;
-#endif
+    private SingleInstanceGuard? _singleInstanceGuard;
+    private Task? _backgroundInitializationTask;
+    private CancellationTokenSource? _backgroundInitializationCancellationTokenSource;
+    private readonly object _shutdownLock = new();
+    private Task? _shutdownTask;
+    private bool _exitRequested;
+    private bool _shutdownInvoked;
+    private bool _inExitHandler;
+    private bool _exceptionHandlerExecuting;
+    private StartupOrchestrator? _orchestrator;
 
-    /// <summary>Command-line startup switches parsed by Program.cs.</summary>
-    public static AvaloniaStartupFlags StartupFlags => AvaloniaStartupFlags.Current;
+    // Lazily-resolved service caches (service-locator reduction per issue #129).
+    // Avalonia constructs App with a parameterless constructor and the IoC container is
+    // initialised later in OnFrameworkInitializationCompleted, so lazy resolution via the
+    // shared GetCachedService<T>/TryGetCachedService<T> helpers is the only option.
+    // The dictionary is populated on first access and reused thereafter so each
+    // registered type is resolved from the IoC container exactly once.
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, object?> s_serviceCache = new();
 
-    public static IPlatformServices PlatformServices { get; private set; } = new UnavailablePlatformServices();
-
-    public App()
+    private static T GetCachedService<T>() where T : class
     {
-        RegisterExceptionHandlers();
-        var culture = LocalizationRuntime.Initialize();
-        AvaloniaLocalization.ApplyCulture(culture);
-#if WINDOWS
-        ApplyWindowsResourceCulture(culture);
-#endif
-        LocalizationRuntime.CultureChanged += OnCultureChanged;
-#if WINDOWS
-        _applicationSettings = WindowsAvaloniaSettingsService.SharedApplicationSettings;
-#endif
-        PlatformServices = CreatePlatformServices();
-        ShowCommand = new RelayCommand(ShowMainWindow);
-        SettingsCommand = new RelayCommand(OpenSettings);
-        ExitCommand = new RelayCommand(ExitApplication);
-        DataContext = this;
+        return (T)(s_serviceCache.GetOrAdd(typeof(T), _ => IoCContainer.Resolve<T>()) ?? IoCContainer.Resolve<T>());
     }
 
-    private static IPlatformServices CreatePlatformServices()
+    private static T? TryGetCachedService<T>() where T : class
     {
-#if WINDOWS
-        return WindowsPlatformServices.Create();
-#else
-        if (OperatingSystem.IsLinux())
-            return new DeviceAdapterPlatformServices(new LinuxDeviceAdapter());
-
-        if (OperatingSystem.IsMacOS())
-            return new DeviceAdapterPlatformServices(new MacOSDeviceAdapter());
-
-        return new UnavailablePlatformServices();
-#endif
+        return (T?)s_serviceCache.GetOrAdd(typeof(T), _ => IoCContainer.TryResolve<T>());
     }
 
-    public override void Initialize()
+    internal static async Task RunInitStepAsync(Func<Task> action, string operationName, bool logOnSuccess = true)
+    {
+        try
+        {
+            if (Log.Instance.IsTraceEnabled && logOnSuccess)
+                Log.Instance.Trace($"Initializing {operationName}...");
+
+            await action().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't initialize {operationName}.", ex);
+        }
+    }
+
+    private static string T(string key, string fallback) => LocalizationHelper.GetStringOrEnglish(Resource.ResourceManager, key, fallback, Resource.Culture);
+
+    public new static App Current => (App)Application.Current;
+
+    public Window? OsdWindow;
+
+    public override void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            base.OnFrameworkInitializationCompleted();
+            return;
+        }
+
+        InitializeComponent();
+
+        desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+        desktop.Exit += Application_Exit;
+        Dispatcher.UIThread.UnhandledException += Application_DispatcherUnhandledException;
+
+        base.OnFrameworkInitializationCompleted();
+
+        _ = BootAsync(desktop.Args);
+    }
+
+    public void InitializeComponent()
     {
         AvaloniaXamlLoader.Load(this);
     }
 
-    public override void OnFrameworkInitializationCompleted()
-    {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-#if WINDOWS
-            if (!AcquireSingleInstance())
-            {
-                desktop.Shutdown();
-                base.OnFrameworkInitializationCompleted();
-                return;
-            }
-#endif
-            ApplyPersistedTheme();
-            if (IsFirstRunLanguageSelection())
-                RunFirstRunLanguageGateAsync(desktop);
-            else
-                CompleteStartup(desktop);
-        }
-        base.OnFrameworkInitializationCompleted();
-    }
-
-    private void CompleteStartup(IClassicDesktopStyleApplicationLifetime desktop)
-    {
-#if WINDOWS
-        _applicationSettings ??= WindowsAvaloniaSettingsService.SharedApplicationSettings;
-#endif
-        ApplyStartupFlags();
-        desktop.MainWindow = new MainWindow(PlatformServices);
-#if WINDOWS
-        PluginHostContext.SetCurrent(new AvaloniaPluginHostContext(
-            () => desktop.MainWindow as MainWindow));
-#endif
-        // Minimize to tray instead of closing
-        desktop.MainWindow.Closing += OnMainWindowClosing;
-
-        // Set up system tray icon programmatically
-        SetupTrayIcon();
-#if WINDOWS
-        if (IoCContainer.TryResolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>() is { } notificationService)
-        {
-            _notificationManager = new AvaloniaNotificationManager(
-                _applicationSettings,
-                () => desktop.MainWindow as MainWindow,
-                notificationService);
-        }
-        _singleInstanceGuard!.StartListener(() =>
-            global::Avalonia.Threading.Dispatcher.UIThread.Post(ShowMainWindow));
-        _updateCheckCoordinator = AvaloniaUpdateCheckCoordinator.Create();
-        SubscribeToUpdateCoordinator(_updateCheckCoordinator);
-        RequestAutomaticUpdateCheck();
-        _ = StartWindowsHostServicesAsync(desktop.MainWindow as MainWindow);
-#endif
-        if (StartupFlags.Minimized && desktop.MainWindow is { } window)
-        {
-            // Applied after the window opens so the persisted placement restore
-            // (Opened handler) cannot override the requested minimized state.
-            Dispatcher.UIThread.Post(() =>
-            {
-                if (window.WindowState != WindowState.Minimized)
-                    window.WindowState = WindowState.Minimized;
-            });
-        }
-
-        if (_pendingUpdateReleaseInfo is not null && desktop.MainWindow is MainWindow mainWindow)
-            mainWindow.SetUpdateAvailable(_pendingUpdateReleaseInfo);
-
-        Dispatcher.UIThread.Post(CheckPendingCrashReports, DispatcherPriority.Background);
-    }
-
-#if WINDOWS
-    private static void InitializeWindowsServices(ApplicationSettings settings)
+    private async Task BootAsync(string[] args)
     {
         try
         {
-            if (IoCContainer.TryResolve<ApplicationSettings>() is not null)
-                return;
-
-            IoCContainer.Initialize(
-                builder =>
-                {
-                    builder.RegisterInstance(settings).As<ApplicationSettings>().SingleInstance();
-                    builder.RegisterType<AvaloniaMainThreadDispatcher>()
-                        .As<IMainThreadDispatcher>()
-                        .SingleInstance();
-                },
-                new UniversalDeviceToolkit.Lib.IoCModule(),
-                new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
-                new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
-                new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
-                new WindowsOptimizationElevationIoCModule());
-        }
-        catch
-        {
-            // A host embedding Avalonia may have already initialized the shared container.
-            // The feature bridge will fall back to adapter-only state when resolution fails.
-        }
-    }
-#endif
-
-    /// <summary>
-    /// Applies the persisted appearance preferences through the theme manager
-    /// (theme variant, accent color, font family and UI scale).
-    /// </summary>
-    private void ApplyPersistedTheme() => AvaloniaThemeManager.Instance.Apply();
-
-    /// <summary>
-    /// Applies command-line startup switches. Safe-start / reset switches are
-    /// owned by the Windows startup coordinator and left untouched here.
-    /// </summary>
-    private void ApplyStartupFlags()
-    {
-        var flags = StartupFlags;
-#if WINDOWS
-        if (flags.IsTraceEnabled)
-        {
-            try
+            var elevatedWorkerExitCode = await WindowsOptimizationElevationBridge.TryRunWorkerAsync(args);
+            if (elevatedWorkerExitCode.HasValue)
             {
-                Log.Instance.IsTraceEnabled = true;
-            }
-            catch
-            {
-                // Trace remains best-effort; a logging failure must not block startup.
-            }
-        }
-
-        try
-        {
-            IoCContainer.TryResolve<HttpClientFactory>()?
-                .SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace("Failed to apply startup proxy flags.", ex);
-        }
-
-        try
-        {
-            if (IoCContainer.TryResolve<PowerModeFeature>() is { } powerMode)
-                powerMode.AllowAllPowerModesOnBattery = flags.AllowAllPowerModesOnBattery;
-            if (IoCContainer.TryResolve<RGBKeyboardBacklightController>() is { } rgbKeyboard)
-                rgbKeyboard.ForceDisable = flags.ForceDisableRgbKeyboardSupport;
-            if (IoCContainer.TryResolve<SpectrumKeyboardBacklightController>() is { } spectrumKeyboard)
-                spectrumKeyboard.ForceDisable = flags.ForceDisableSpectrumKeyboardSupport;
-            if (flags.ForceDisableLenovoLighting)
-            {
-                if (IoCContainer.TryResolve<WhiteKeyboardLenovoLightingBacklightFeature>() is { } whiteLighting)
-                    whiteLighting.ForceDisable = true;
-                if (IoCContainer.TryResolve<PanelLogoLenovoLightingBacklightFeature>() is { } panelLighting)
-                    panelLighting.ForceDisable = true;
-                if (IoCContainer.TryResolve<PortsBacklightFeature>() is { } portsLighting)
-                    portsLighting.ForceDisable = true;
-            }
-            if (IoCContainer.TryResolve<IGPUModeFeature>() is { } gpuMode)
-                gpuMode.ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
-            if (IoCContainer.TryResolve<DGPUNotify>() is { } dgpuNotify)
-                dgpuNotify.ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
-            if (flags.DisableUpdateChecker && IoCContainer.TryResolve<UpdateChecker>() is { } updateChecker)
-            {
-                updateChecker.Disable = true;
-                updateChecker.DisableReason = AvaloniaStartupFlags.DisableUpdateCheckerSwitch;
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace("Failed to apply startup hardware flags.", ex);
-        }
-#endif
-    }
-
-    /// <summary>
-    /// The first-run language selector runs instead of the main window whenever
-    /// no language has been persisted yet (missing "lang" marker file).
-    /// </summary>
-    private static bool IsFirstRunLanguageSelection()
-    {
-        try
-        {
-            return !File.Exists(LocalizationRuntime.LanguageFilePath);
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private async void RunFirstRunLanguageGateAsync(IClassicDesktopStyleApplicationLifetime desktop)
-    {
-        var selector = new AvaloniaLanguageSelectorWindow(AvaloniaLanguagePackServiceFactory.Create());
-        desktop.MainWindow = selector;
-        selector.Show();
-        var outcome = await selector.GateOutcome.ConfigureAwait(true);
-        if (outcome == AvaloniaLanguageSelectorWindow.LanguageGateOutcome.Exit)
-        {
-            desktop.Shutdown();
-            return;
-        }
-
-        CompleteStartup(desktop);
-    }
-
-    private void SetupTrayIcon()
-    {
-        _trayIcon?.Dispose();
-        _trayIcon = null;
-
-        var menu = new NativeMenu
-        {
-            Items =
-            {
-                CreateNavigationMenuItem("Nav_Dashboard", "Dashboard", MainNavigation.Dashboard),
-                CreateNavigationMenuItem("MainWindow_NavigationItem_Keyboard", "Keyboard", MainNavigation.Keyboard),
-                CreateNavigationMenuItem("MainWindow_NavigationItem_Actions", "Automation", MainNavigation.Actions),
-                CreateNavigationMenuItem("MainWindow_NavigationItem_Macro", "Macro", MainNavigation.Macro),
-                CreateNavigationMenuItem("MainWindow_NavigationItem_WindowsOptimization", "System optimization", MainNavigation.WindowsOptimization),
-                CreateNavigationMenuItem("MainWindow_NavigationItem_PluginExtensions", "Plugin Extensions", MainNavigation.PluginExtensions),
-                CreateNavigationMenuItem("Nav_About", "About", MainNavigation.About),
-                new NativeMenuItemSeparator(),
-            }
-        };
-
-        _trayPipelinesItem = new NativeMenuItem(AvaloniaLocalization.GetString("Tray_Pipelines", "Automation pipelines"));
-        _trayPipelinesItem.IsVisible = false;
-        menu.Items.Add(_trayPipelinesItem);
-#if WINDOWS
-        _ = RefreshTrayPipelinesMenuAsync(_trayPipelinesItem);
-#endif
-        menu.Items.Add(new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Show", "Show")) { Command = ShowCommand });
-        menu.Items.Add(new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Settings", "Settings")) { Command = SettingsCommand });
-        menu.Items.Add(new NativeMenuItemSeparator());
-        menu.Items.Add(new NativeMenuItem(AvaloniaLocalization.GetString("Nav_Exit", "Exit")) { Command = ExitCommand });
-
-        _trayIcon = new TrayIcon
-        {
-            Menu = menu,
-        };
-        if (!StartupFlags.DisableTrayTooltip)
-            _trayIcon.ToolTipText = AvaloniaLocalization.GetString("Window_Title", "Universal Device Toolkit");
-
-        // Try to load icon from Avalonia resource; falls back gracefully if unavailable
-        try
-        {
-            var uri = new Uri("avares://UniversalDeviceToolkit.Avalonia/Assets/udt-icon.ico");
-            _trayIcon.Icon = new WindowIcon(new global::Avalonia.Media.Imaging.Bitmap(AssetLoader.Open(uri)));
-        }
-        catch
-        {
-            // Icon resource not found; tray icon will display without a custom icon
-        }
-    }
-
-    private static NativeMenuItem CreateNavigationMenuItem(string localizationKey, string fallback, string route)
-    {
-        var label = AvaloniaLocalization.GetString(localizationKey, fallback);
-        return new NativeMenuItem(label)
-        {
-            Command = new RelayCommand(() => NavigateMainWindow(route)),
-        };
-    }
-
-    private static void NavigateMainWindow(string route)
-    {
-        if (Application.Current is not App { ApplicationLifetime: IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow mainWindow } })
-            return;
-
-        mainWindow.RestoreFromTray();
-        mainWindow.Navigate(route);
-    }
-
-#if WINDOWS
-    /// <summary>
-    /// Best-effort manual-pipeline quick actions under the tray "Automation
-    /// pipelines" submenu (WPF TrayHelper parity). Manual pipelines are those
-    /// without a trigger; the list is refreshed on every tray rebuild.
-    /// </summary>
-    private async Task RefreshTrayPipelinesMenuAsync(NativeMenuItem item)
-    {
-        var submenu = new NativeMenu();
-        try
-        {
-            var automation = IoCContainer.TryResolve<AutomationProcessor>();
-            if (automation is null)
-            {
-                item.IsVisible = false;
+                UdtAppContext.Shutdown();
                 return;
             }
 
-            var pipelines = await automation.GetPipelinesAsync().ConfigureAwait(true);
-            foreach (var pipeline in pipelines.Where(p => p.Trigger is null))
-            {
-                var displayName = PipelineNameLocalizer.LocalizeStoredName(pipeline.Name)
-                    ?? pipeline.Name
-                    ?? AvaloniaLocalization.GetString("Unnamed", "Unnamed");
-                var menuItem = new NativeMenuItem(displayName);
-                var captured = pipeline;
-                menuItem.Click += (_, _) => _ = RunPipelineFromTrayAsync(captured);
-                submenu.Items.Add(menuItem);
-            }
+            var orchestrator = new StartupOrchestrator(this, args);
+            _orchestrator = orchestrator;
+            var exitCode = await orchestrator.RunAsync();
 
-            if (submenu.Items.Count > 0)
-            {
-                item.Menu = submenu;
-                item.IsVisible = true;
-            }
-            else
-            {
-                item.Menu = null;
-                item.IsVisible = false;
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace("Failed to refresh tray automation pipelines.", ex);
-            item.Menu = null;
-            item.IsVisible = false;
-        }
-    }
-
-    private static async Task RunPipelineFromTrayAsync(AutomationPipeline pipeline)
-    {
-        try
-        {
-            if (IoCContainer.TryResolve<AutomationProcessor>() is { } automation)
-                await automation.RunNowAsync(pipeline).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace("Failed to run automation pipeline from tray.", ex);
-        }
-    }
-#endif
-
-    private void OnCultureChanged(object? sender, CultureChangedEventArgs e)
-    {
-        AvaloniaLocalization.ApplyCulture(e.Culture);
-#if WINDOWS
-        ApplyWindowsResourceCulture(e.Culture);
-        // Keep per-plugin language overrides intact. Applying the app culture
-        // directly to every loaded plugin resource would overwrite overrides
-        // until a settings page happened to create PluginLanguageService.
-        PluginLanguageService.Current.ApplyForAllLoadedPlugins();
-#endif
-
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
-            && desktop.MainWindow is MainWindow mainWindow)
-        {
-            mainWindow.RefreshForCulture();
-            SetupTrayIcon();
-        }
-    }
-
-#if WINDOWS
-    private static void ApplyWindowsResourceCulture(System.Globalization.CultureInfo culture)
-    {
-        // Shared Windows services use these generated Resource classes directly;
-        // keep them in lockstep with the Avalonia localizer after every language change.
-        LibResource.Culture = culture;
-        AutomationResource.Culture = culture;
-        MacroResource.Culture = culture;
-        PluginResource.Culture = culture;
-    }
-#endif
-
-    private void OnMainWindowClosing(object? sender, System.ComponentModel.CancelEventArgs e)
-    {
-        if (sender is not Window window)
-            return;
-
-#if WINDOWS
-        var settings = _applicationSettings?.Store;
-        var action = AvaloniaDesktopLifecyclePolicy.ResolveCloseAction(
-            IsExiting,
-            settings?.MinimizeOnClose == true,
-            settings?.MinimizeToTray == true);
-#else
-        var action = AvaloniaDesktopLifecyclePolicy.ResolveCloseAction(
-            IsExiting,
-            minimizeOnClose: false,
-            minimizeToTray: false);
-#endif
-
-        switch (action)
-        {
-            case MainWindowCloseAction.AllowClose:
-                return;
-            case MainWindowCloseAction.Minimize:
-                e.Cancel = true;
-                window.WindowState = WindowState.Minimized;
-                return;
-            case MainWindowCloseAction.HideToTray:
-                e.Cancel = true;
-                window.ShowInTaskbar = false;
-                window.Hide();
-                return;
-            case MainWindowCloseAction.ExitApplication:
-                // Avalonia would otherwise close the last window directly and
-                // bypass the Windows service/plug-in shutdown sequence.
-                e.Cancel = true;
-                ExitApplication();
-                return;
-        }
-    }
-
-    internal bool MinimizeToTrayEnabled
-    {
-        get
-        {
-#if WINDOWS
-            return _applicationSettings?.Store.MinimizeToTray == true;
-#else
-            return false;
-#endif
-        }
-    }
-
-    private bool IsExiting { get; set; }
-
-    private void ShowMainWindow()
-    {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            if (desktop.MainWindow is MainWindow mainWindow)
-            {
-                mainWindow.RestoreFromTray();
-                RequestAutomaticUpdateCheck();
-                return;
-            }
-
-            var window = desktop.MainWindow;
-            if (window is null)
-                return;
-
-            if (window.WindowState == WindowState.Minimized)
-                window.WindowState = WindowState.Normal;
-
-            window.Show();
-            window.Activate();
-            window.InvalidateVisual();
-            RequestAutomaticUpdateCheck();
-        }
-    }
-
-    private void RequestAutomaticUpdateCheck()
-    {
-#if WINDOWS
-        if (StartupFlags.DisableUpdateChecker)
-            return;
-
-        _ = _updateCheckCoordinator?.CheckAsync();
-#endif
-    }
-
-    private void OpenSettings()
-    {
-        ShowMainWindow();
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
-            && desktop.MainWindow is MainWindow mainWindow)
-        {
-            mainWindow.ShowSettingsPage();
-        }
-    }
-
-    private void ExitApplication() => ExitApplication(null);
-
-    private void ExitApplication(int? exitCode) => _ = ExitApplicationAsync(exitCode);
-
-    private async Task ExitApplicationAsync(int? exitCode)
-    {
-        if (Interlocked.CompareExchange(ref _shutdownStarted, 1, 0) != 0)
-            return;
-
-        IsExiting = true;
-        UnregisterExceptionHandlers();
-#if WINDOWS
-        _osdOverlay?.Dispose();
-        _osdOverlay = null;
-        try
-        {
-            await new AvaloniaWindowsShutdownCoordinator().StopAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace("Avalonia Windows host shutdown failed.", ex);
-        }
-
-        _notificationManager?.Dispose();
-        _notificationManager = null;
-        _singleInstanceGuard?.Dispose();
-        _singleInstanceGuard = null;
-        PluginHostContext.Reset();
-        try
-        {
-            IoCContainer.TryResolve<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>()?
-                .StopAsync()
-                .GetAwaiter()
-                .GetResult();
-        }
-        catch
-        {
-            // Process teardown remains best effort; the named pipe is scoped to this process.
-        }
-#endif
-        _trayIcon?.Dispose();
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            if (exitCode is { } code)
-                desktop.Shutdown(code);
-            else
-                desktop.Shutdown();
-        }
-        else if (exitCode is { } code)
-            Environment.ExitCode = code;
-    }
-
-    /// <summary>
-    /// The update coordinator exposes its availability through the
-    /// UpdateAvailableChanged / ShowUpdateAsync API owned by the update-check
-    /// agent. The bridge consumes those members reflectively so this shell
-    /// compiles and runs safely whether or not the API is present yet.
-    /// </summary>
-#if WINDOWS
-    private void SubscribeToUpdateCoordinator(AvaloniaUpdateCheckCoordinator? coordinator)
-    {
-        if (coordinator is null)
-            return;
-
-        try
-        {
-            var eventInfo = coordinator.GetType().GetEvent("UpdateAvailableChanged");
-            if (eventInfo is null
-                || eventInfo.EventHandlerType is not { IsGenericType: true } handlerType
-                || handlerType.GetGenericArguments() is not [{ } payloadType])
-                return;
-
-            var binder = (IUpdateEventBinder)Activator.CreateInstance(
-                typeof(UpdateEventBinder<>).MakeGenericType(payloadType))!;
-            binder.Attach(coordinator, eventInfo, OnUpdateAvailableChanged);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace("Update coordinator event bridge is unavailable.", ex);
-        }
-    }
-
-    private void OnUpdateAvailableChanged(object? releaseInfo)
-    {
-        Dispatcher.UIThread.Post(() =>
-        {
-            _pendingUpdateReleaseInfo = releaseInfo;
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: MainWindow mainWindow })
-                mainWindow.SetUpdateAvailable(releaseInfo);
-        });
-    }
-
-    private interface IUpdateEventBinder
-    {
-        void Attach(object source, EventInfo eventInfo, Action<object?> payloadHandler);
-    }
-
-    private sealed class UpdateEventBinder<T> : IUpdateEventBinder
-    {
-        public void Attach(object source, EventInfo eventInfo, Action<object?> payloadHandler)
-        {
-            eventInfo.AddEventHandler(source, new Action<T>(payload => payloadHandler(payload)));
-        }
-    }
-#endif
-
-    /// <summary>
-    /// Opens the update dialog owned by the update coordinator. Returns without
-    /// doing anything when the coordinator or its ShowUpdateAsync API is absent.
-    /// </summary>
-    internal async Task ShowUpdateDialogAsync(MainWindow owner)
-    {
-#if WINDOWS
-        var coordinator = _updateCheckCoordinator;
-        if (coordinator is null)
-            return;
-
-        try
-        {
-            var method = coordinator.GetType().GetMethod("ShowUpdateAsync", new[] { typeof(Window) });
-            if (method is null)
-                return;
-
-            if (method.ReturnType == typeof(Task))
-                await ((Task)method.Invoke(coordinator, [owner])!).ConfigureAwait(true);
-            else if (method.ReturnType == typeof(void))
-                method.Invoke(coordinator, [owner]);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace("Failed to show the update dialog.", ex);
-        }
-#endif
-    }
-
-    private void RegisterExceptionHandlers()
-    {
-        if (_exceptionHandlersRegistered)
-            return;
-
-        _exceptionHandlersRegistered = true;
-        AppDomain.CurrentDomain.UnhandledException += OnAppDomainUnhandledException;
-        TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
-        Dispatcher.UIThread.UnhandledException += OnDispatcherUnhandledException;
-    }
-
-    private void UnregisterExceptionHandlers()
-    {
-        if (!_exceptionHandlersRegistered)
-            return;
-
-        _exceptionHandlersRegistered = false;
-        AppDomain.CurrentDomain.UnhandledException -= OnAppDomainUnhandledException;
-        TaskScheduler.UnobservedTaskException -= OnUnobservedTaskException;
-        Dispatcher.UIThread.UnhandledException -= OnDispatcherUnhandledException;
-    }
-
-    private void OnAppDomainUnhandledException(object? sender, UnhandledExceptionEventArgs args)
-    {
-        var exception = args.ExceptionObject as Exception
-            ?? new InvalidOperationException($"Unknown unhandled exception: {args.ExceptionObject}");
-        HandleFatalException(exception, "AppDomain", 100);
-    }
-
-    private void OnDispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs args)
-    {
-        args.Handled = true;
-        HandleFatalException(args.Exception, "Dispatcher", 101);
-    }
-
-    private void OnUnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs args)
-    {
-        try
-        {
-            SharedLog.Error("Avalonia unobserved task exception.", args.Exception);
-            CrashReportStore.Save(args.Exception, "TaskScheduler");
-        }
-        finally
-        {
-            args.SetObserved();
-        }
-    }
-
-    private void HandleFatalException(Exception exception, string source, int exitCode)
-    {
-        if (Interlocked.CompareExchange(ref _handlingFatalException, 1, 0) != 0)
-        {
-            Environment.FailFast($"Fatal error: re-entered Avalonia {source} exception handler", exception);
-            return;
-        }
-
-        try
-        {
-            SharedLog.Error($"Avalonia {source} unhandled exception.", exception);
-            CrashReportStore.Save(exception, source);
-        }
-        catch
-        {
-            // A fatal exception must still close the host if reporting itself fails.
-        }
-        finally
-        {
-            try
-            {
-                if (Dispatcher.UIThread.CheckAccess())
-                    ExitApplication(exitCode);
-                else
-                    Dispatcher.UIThread.Post(() => ExitApplication(exitCode));
-            }
-            catch
-            {
+            if (exitCode != 0)
                 Environment.Exit(exitCode);
-            }
-        }
-    }
-
-    private void CheckPendingCrashReports()
-    {
-        try
-        {
-            CrashReportStore.CleanupOld();
-            var reports = CrashReportStore.GetUnsent();
-            if (reports.Count == 0)
-                return;
-
-            var mostRecent = reports
-                .OrderByDescending(path => File.GetCreationTimeUtc(path))
-                .FirstOrDefault();
-            if (string.IsNullOrWhiteSpace(mostRecent))
-                return;
-
-            foreach (var report in reports.Where(path => !string.Equals(path, mostRecent, StringComparison.OrdinalIgnoreCase)))
-                CrashReportStore.Delete(report);
-
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: Window owner })
-                new AvaloniaCrashReportWindow(mostRecent).Show(owner);
-        }
-        catch (Exception exception)
-        {
-            SharedLog.Warning("Failed to show pending Avalonia crash report.", exception);
-        }
-    }
-
-#if WINDOWS
-    private bool AcquireSingleInstance()
-    {
-        _singleInstanceGuard = new AvaloniaSingleInstanceGuard();
-        if (_singleInstanceGuard.TryAcquire())
-            return true;
-
-        _singleInstanceGuard.Dispose();
-        _singleInstanceGuard = null;
-        return false;
-    }
-
-    private async Task StartWindowsHostServicesAsync(MainWindow? mainWindow)
-    {
-        // Autofac registers several hardware listeners with AutoActivate. Building
-        // that graph synchronously in App's constructor prevents Avalonia from
-        // entering its desktop event loop and leaves the process windowless.
-        // Finish the host graph after the shell has been created instead.
-        try
-        {
-            await Task.Run(() => InitializeWindowsServices(_applicationSettings!))
-                .ConfigureAwait(false);
-            if (PlatformServices is WindowsPlatformServices hostPlatformServices)
-                hostPlatformServices.InitializeHostServices();
-
-            if (_notificationManager is null
-                && mainWindow is not null
-                && _applicationSettings is { } applicationSettings
-                && IoCContainer.TryResolve<UniversalDeviceToolkit.Lib.Notifications.IAppNotificationService>() is { } notificationService)
-            {
-                Dispatcher.UIThread.Post(() =>
-                {
-                    _notificationManager ??= new AvaloniaNotificationManager(
-                        applicationSettings,
-                        () => mainWindow,
-                        notificationService);
-                });
-            }
         }
         catch (Exception ex)
         {
-            Log.Instance.Trace("Avalonia deferred Windows service initialization failed.", ex);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(BootAsync)}.", ex);
         }
+    }
 
-        await new AvaloniaStartupDeviceSetupCoordinator()
-            .RunIfNeededAsync(mainWindow)
-            .ConfigureAwait(false);
+    internal void RegisterExceptionHandlers()
+    {
+        AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
+        AppDomain.CurrentDomain.ProcessExit += AppDomain_ProcessExit;
+        TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+    }
 
-        if (!await new AvaloniaStartupCompatibilityCoordinator()
-                .EnsureCompatibleAsync(mainWindow)
-                .ConfigureAwait(false))
+    private void AppDomain_ProcessExit(object? sender, EventArgs e)
+    {
+        // Last-resort cleanup: if Application_Exit was not called (e.g. process killed externally),
+        // try to release global hooks here. This is a best-effort attempt because by the time
+        // ProcessExit fires, the finalizer thread may have already started.
+        try
         {
-            Dispatcher.UIThread.Post(() => ExitApplication(202));
-            return;
+            StopMacroControllerSafely();
+
+            if (TryGetCachedService<NativeWindowsMessageListener>() is { } nwml)
+                nwml.StopAsync().GetAwaiter().GetResult();
+
+            // UserInactivityAutoListener.StopAsync() is protected; dispose instead
+            // (AbstractAutoListener.Dispose() calls StopAsync() internally)
+            if (TryGetCachedService<UserInactivityAutoListener>() is { } uial)
+                ((IDisposable)uial).Dispose();
         }
-
-        await InitializePluginsAsync().ConfigureAwait(false);
-
-        await new AvaloniaWindowsStartupCoordinator().RunAsync().ConfigureAwait(false);
-        if (PlatformServices is WindowsPlatformServices windowsPlatformServices)
+        catch
         {
+            // Best effort only — process is exiting anyway
+        }
+    }
+
+    internal static async Task InitializePluginsAsync()
+    {
+        try
+        {
+            var pluginManager = GetCachedService<IPluginManager>();
+
+            // System Optimization and Tools are now default interfaces, not plugins
+            // They are registered directly in MainWindow.xaml as NavigationItems
+            // No need to register them as plugins
+
+            // Drop retired plugins (migrated to built-in features) before loading assemblies.
+            pluginManager.PruneRetiredPlugins();
+
+            // Scan and load plugins from the plugins directory
+            // This will automatically discover and register external plugins
+            await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Plugins initialized successfully.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to initialize plugins.", ex);
+        }
+    }
+
+    internal static async Task RunStartupDeviceSetupIfNeededAsync(MachineInformation machineInformation, Flags flags)
+    {
+        try
+        {
+            await StartupDeviceSetupCoordinator.CreateDefault(CreateStartupHttpClientFactory(flags)).RunIfNeededAsync(machineInformation).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Startup device setup failed; continuing with current compatibility state.", ex);
+        }
+    }
+
+    internal static LanguagePackManager CreateStartupLanguagePackManager(Flags flags) =>
+        new(new OnlineResourceCatalogClient(CreateStartupHttpClientFactory(flags)));
+
+    internal static HttpClientFactory CreateStartupHttpClientFactory(Flags flags)
+    {
+        var httpClientFactory = new HttpClientFactory();
+        httpClientFactory.SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
+        return httpClientFactory;
+    }
+
+    internal static void CheckPendingCrashReports()
+    {
+        try
+        {
+            // Clean up old crash reports first (older than 30 days)
+            CrashReportHelper.CleanupOldCrashReports(30);
+
+            var reports = CrashReportHelper.GetUnsentCrashReports().ToList();
+            if (reports.Count <= 0)
+                return;
+
+            // Log that we found pending crash reports
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Found {reports.Count} pending crash report(s).");
+
+            // Show crash report notification for the most recent report
+            var mostRecentReport = reports.OrderByDescending(r =>
+            {
+                var info = new FileInfo(r);
+                return info.CreationTimeUtc;
+            }).FirstOrDefault();
+
+            if (mostRecentReport != null)
+            {
+                try
+                {
+                    var notificationWindow = new CrashReportNotificationWindow(mostRecentReport)
+                    {
+                        ShowInTaskbar = false
+                    };
+                    notificationWindow.Show(UdtAppContext.MainWindow);
+
+                    // Delete other reports (keep only the most recent one shown)
+                    foreach (var otherReport in reports.Where(r => r != mostRecentReport))
+                    {
+                        CrashReportHelper.DeleteCrashReport(otherReport);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to show crash report notification: {ex.Message}", ex);
+
+                    // Delete all reports if we can't show the notification
+                    foreach (var report in reports)
+                    {
+                        CrashReportHelper.DeleteCrashReport(report);
+                    }
+                }
+            }
+        }
+        catch { /* Ignore crash report checking errors */ }
+    }
+
+    internal void StartBackgroundInitialization()
+    {
+        _backgroundInitializationCancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _backgroundInitializationCancellationTokenSource.Token;
+
+        var (initializationSteps, serviceStartSteps) = _orchestrator?.GetBackgroundInitializationSteps() ?? ([], []);
+        // Prefer the orchestrator's guard so consecutive-failure tracking is shared.
+        var healthGuard = _orchestrator?.HealthGuard ?? new StartupHealthGuard();
+
+        _backgroundInitializationTask = Task.Run(async () =>
+        {
+            var totalSw = System.Diagnostics.Stopwatch.StartNew();
+            var completedCleanly = false;
+            // incomplete marker: set before any hardware work; cleared only on clean success.
+            StartupHealthGuard.MarkHardwareInitInProgress();
             try
             {
-                await windowsPlatformServices.StartAutomationForHostAsync().ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Hardware / WMI / EC steps run strictly serially via StartupInitializationRunner
+                // to avoid driver thrash, concurrent WMI load, and post-start system lag.
+                // Steps are non-critical so one failure does not abort the rest of the pass.
+                // (Safe-start already filtered the list to read-only probes only.)
+                var runner = new StartupInitializationRunner(healthGuard, safeStart: false);
+                for (var i = 0; i < initializationSteps.Length; i++)
+                {
+                    var step = initializationSteps[i];
+                    var stepName = $"bg-hw-{i}";
+                    runner.RegisterStep(stepName, TimeSpan.FromSeconds(45), step, isCritical: false);
+                }
+
+                var hwResult = await runner.RunAsync(cancellationToken).ConfigureAwait(false);
+                if (Log.Instance.IsTraceEnabled)
+                {
+                    Log.Instance.Trace(
+                        $"Background hardware init via StartupInitializationRunner: success={hwResult.Success}, " +
+                        $"failed=[{string.Join(", ", hwResult.FailedSteps)}], elapsed={totalSw.ElapsedMilliseconds}ms.");
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+                InitMacroController();
+
+                // Independent background services: limited parallelism via SemaphoreSlim(2).
+                const int maxServiceConcurrency = 2;
+                await RunWithLimitedConcurrencyAsync(serviceStartSteps, maxServiceConcurrency, cancellationToken)
+                    .ConfigureAwait(false);
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+#if !DEBUG
+                Autorun.Validate();
+#endif
+
+                completedCleanly = true;
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization completed in {totalSw.ElapsedMilliseconds}ms.");
+            }
+            catch (OperationCanceledException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization was cancelled after {totalSw.ElapsedMilliseconds}ms.");
             }
             catch (Exception ex)
             {
-                Log.Instance.Trace("Avalonia automation startup failed.", ex);
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Background initialization failed after {totalSw.ElapsedMilliseconds}ms.", ex);
             }
-        }
-
-        if (mainWindow is not null)
-            Dispatcher.UIThread.Post(() =>
+            finally
             {
-                _ = mainWindow.RefreshPluginNavigationAsync();
-                // Best effort: rebuild the tray menu so newly visible plugin
-                // routes and pipeline quick actions stay current.
-                SetupTrayIcon();
-            });
+                if (completedCleanly)
+                    StartupHealthGuard.ClearHardwareInitInProgress();
+            }
+        }, cancellationToken);
 
-        Dispatcher.UIThread.Post(() =>
+        _backgroundInitializationTask = _backgroundInitializationTask.ContinueWith(t =>
         {
-            _osdOverlay ??= new AvaloniaOsdOverlayController(PlatformServices);
-            _osdOverlay.Initialize();
-        });
+            if (t.IsFaulted && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Background initialization task completed faulted and was observed.", t.Exception);
+        }, CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+    }
+
+    /// <summary>
+    /// Runs async work items with a fixed concurrency cap (default 2) to limit
+    /// simultaneous WMI/network/service startup without serializing everything.
+    /// </summary>
+    private static async Task RunWithLimitedConcurrencyAsync(
+        IReadOnlyList<Func<Task>> steps,
+        int maxConcurrency,
+        CancellationToken cancellationToken)
+    {
+        if (steps.Count == 0)
+            return;
+
+        maxConcurrency = Math.Max(1, maxConcurrency);
+        using var gate = new System.Threading.SemaphoreSlim(maxConcurrency, maxConcurrency);
+        var tasks = new Task[steps.Count];
+
+        for (var i = 0; i < steps.Count; i++)
+        {
+            var step = steps[i];
+            tasks[i] = Task.Run(async () =>
+            {
+                await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+                try
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await step().ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Background service start step failed.", ex);
+                }
+                finally
+                {
+                    gate.Release();
+                }
+            }, cancellationToken);
+        }
 
         try
         {
-            var lifecycle = IoCContainer.TryResolve<UniversalDeviceToolkit.Abstractions.Lifecycle.ICliHostLifecycle>();
-            if (lifecycle is not null)
-                await lifecycle.StartStopIfNeededAsync().ConfigureAwait(false);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
-        catch (Exception ex)
+        catch (OperationCanceledException)
         {
-            Log.Instance.Trace("Avalonia Windows host service startup failed.", ex);
+            throw;
         }
     }
 
-    private async Task InitializePluginsAsync()
+    private async Task AwaitBackgroundInitializationAsync()
     {
-        try
+        if (_backgroundInitializationTask is not { } task)
+            return;
+
+        if (!task.IsCompleted)
         {
-            // WPF parity: skip the plugin directory scan entirely when safe-start
-            // is active, extensions are disabled, or no plugins are installed.
-            if (StartupFlags.SafeStart)
+            var completedTask = await Task.WhenAny(task, Task.Delay(BACKGROUND_INITIALIZATION_WAIT_TIMEOUT_MS)).ConfigureAwait(false);
+            if (completedTask != task)
             {
-                Log.Instance.Trace("Safe-start active; skipping plugin discovery and loading.");
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+                try { await Task.WhenAny(task, Task.Delay(500)).ConfigureAwait(false); }
+                catch (Exception ex)
+                {
+                    Log.Instance.WarningOnce(
+                        "bg-init-cancel-wait",
+                        "Background initialization cancellation wait failed; startup continues.",
+                        ex);
+                }
                 return;
             }
-
-            var settings = _applicationSettings?.Store;
-            if (settings is not { ExtensionsEnabled: true })
-            {
-                Log.Instance.Trace("Extensions disabled in settings; skipping plugin directory scan.");
-                return;
-            }
-
-            if (!HasInstalledPlugins())
-            {
-                Log.Instance.Trace("No installed plugins found; skipping plugin directory scan.");
-                return;
-            }
-
-            var pluginManager = IoCContainer.TryResolve<IPluginManager>();
-            if (pluginManager is null)
-                return;
-
-            pluginManager.PruneRetiredPlugins();
-            await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
-            PluginLanguageService.Current.ApplyForAllLoadedPlugins();
         }
+
+        try { await task.ConfigureAwait(false); }
         catch (Exception ex)
         {
-            Log.Instance.Trace("Avalonia plugin startup failed.", ex);
+            Log.Instance.Warning(
+                "Background initialization failed; app continues startup.",
+                ex);
         }
     }
 
-    private static bool HasInstalledPlugins()
+    /// <summary>
+    /// Performs safe shutdown for incompatible systems to prevent process residue
+    /// This method ensures all resources are properly cleaned up before exit
+    /// </summary>
+    internal async Task PerformSafeShutdownForIncompatibleSystemAsync(int? exitCode = null)
     {
         try
         {
-            return PluginPaths.GetAllPossiblePluginsDirectories()
-                .Where(Directory.Exists)
-                .SelectMany(path => Directory.EnumerateDirectories(path))
-                .Any(PluginPaths.ContainsPlugin);
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Starting safe shutdown for incompatible system...");
+
+            // Cancel any background initialization that might be running
+            _backgroundInitializationCancellationTokenSource?.Cancel();
+
+            // Wait for background tasks to complete with timeout
+            if (_backgroundInitializationTask != null)
+            {
+                try
+                {
+                    var completedTask = await Task.WhenAny(_backgroundInitializationTask, Task.Delay(1000)).ConfigureAwait(false);
+                    if (completedTask != _backgroundInitializationTask)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Background initialization did not complete in time, continuing with shutdown...");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error waiting for background initialization during shutdown: {ex.Message}");
+                }
+            }
+
+            StopSingleInstanceThreadSafely();
+            CleanupSingleInstanceResources();
+
+            // CRITICAL: Stop MacroController to release keyboard hook
+            // If the hook is not released, the process cannot exit cleanly
+            StopMacroControllerSafely();
+
+            // Cancel and dispose the cancellation token source
+            try
+            {
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+                _backgroundInitializationCancellationTokenSource?.Dispose();
+                _backgroundInitializationCancellationTokenSource = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing cancellation token source during safe shutdown: {ex.Message}");
+            }
+
+            // Flush and shutdown the log system
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Flushing and shutting down log system...");
+
+                Log.Instance.Flush();
+                await Log.Instance.ShutdownAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                // Log shutdown failure to console as fallback
+                Console.WriteLine($"Error during log shutdown: {ex.Message}");
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Safe shutdown for incompatible system completed.");
+
+            // If an exit code is provided, force exit now to prevent process residue
+            if (exitCode.HasValue)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Forcing exit via ExitProcess({exitCode.Value}) from safe shutdown...");
+
+                ExitProcess((uint)exitCode.Value);
+                Environment.Exit(exitCode.Value);
+            }
         }
         catch (Exception ex)
         {
-            Log.Instance.Trace("Failed to enumerate installed plugins.", ex);
+            // As a last resort, log to console
+            Console.WriteLine($"Critical error during safe shutdown: {ex.Message}");
+
+            // If we have an exit code, try to exit even if cleanup failed
+            if (exitCode.HasValue)
+            {
+                ExitProcess((uint)exitCode.Value);
+                Environment.Exit(exitCode.Value);
+            }
+        }
+    }
+
+    private async void Application_Exit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
+    {
+        try
+        {
+            lock (_shutdownLock)
+                _inExitHandler = true;
+
+            PluginHostContext.Reset();
+
+            try { await ShutdownAsync(true); }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Shutdown failed during Application_Exit.", ex);
+            }
+
+            try { await Log.Instance.ShutdownAsync().ConfigureAwait(false); }
+            catch { /* Log shutdown failed - continue with exit */ }
+
+            StopMacroControllerSafely();
+            StopSingleInstanceThreadSafely();
+
+            IoCContainer.Dispose();
+
+            await ForceExitAsync((uint)e.ApplicationExitCode);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(Application_Exit)}.", ex);
+
+            try { ExitProcess((uint)e.ApplicationExitCode); }
+            catch { /* last-resort exit */ }
+        }
+    }
+
+    public void RestartMainWindow()
+    {
+        if (UdtAppContext.MainWindow is MainWindow mw)
+        {
+            mw.SuppressClosingEventHandler = true;
+            mw.Close();
+        }
+
+        var mainWindow = new MainWindow(GetCachedService<ApplicationSettings>(),
+            GetCachedService<IPluginManager>(),
+            GetCachedService<SpecialKeyListener>(),
+            GetCachedService<VantageDisabler>(),
+            GetCachedService<LegionZoneDisabler>(),
+            GetCachedService<FnKeysDisabler>(),
+            GetCachedService<UpdateChecker>())
+        {
+            WindowStartupLocation = WindowStartupLocation.CenterScreen
+        };
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            desktop.MainWindow = mainWindow;
+        PluginHostContext.SetCurrent(new MainAppPluginHostContext(() => UdtAppContext.MainWindow));
+        mainWindow.Show();
+    }
+
+    /// <summary>
+    /// Stops MacroController safely with error handling
+    /// CRITICAL: The keyboard hook MUST be released or the process cannot exit
+    /// </summary>
+    private static void StopMacroControllerSafely()
+    {
+        try
+        {
+            if (TryGetCachedService<MacroController>() is { } macroController)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Stopping MacroController...");
+                macroController.Stop();
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"MacroController stopped.");
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error stopping MacroController: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Stops the single instance thread safely with timeout
+    /// </summary>
+    private void StopSingleInstanceThreadSafely() => _singleInstanceGuard?.StopListener();
+
+    /// <summary>
+    /// Cleanup single instance resources (mutex and wait handle)
+    /// </summary>
+    private void CleanupSingleInstanceResources()
+    {
+        if (_singleInstanceGuard is null)
+            return;
+
+        _singleInstanceGuard.Dispose();
+        _singleInstanceGuard = null;
+    }
+
+    private Task ForceExitAsync(uint exitCode)
+    {
+        try { Environment.Exit((int)exitCode); }
+        catch { /* Environment.Exit failed - use fallback exit method */ }
+        ExitProcess(exitCode);
+        return Task.CompletedTask;
+    }
+
+    private static async Task StopServiceAsync<T>(Func<T, Task> stopAction, string serviceName) where T : class
+    {
+        try
+        {
+            if (TryGetCachedService<T>() is not { } service)
+                return;
+
+            await stopAction(service).ConfigureAwait(false);
+        }
+        catch { /* Service stop failed during shutdown - continue cleanup */ }
+    }
+
+    public async Task ShutdownAsync(bool exitApplication = false)
+    {
+        Task shutdownTask;
+
+        lock (_shutdownLock)
+        {
+            if (_shutdownTask is null)
+                _shutdownTask = PerformShutdownAsync();
+
+            if (exitApplication)
+                _exitRequested = true;
+
+            shutdownTask = _shutdownTask;
+        }
+
+        await shutdownTask.ConfigureAwait(false);
+
+        bool shouldInvokeShutdown;
+
+        lock (_shutdownLock)
+        {
+            // Don't call Shutdown() if we're already in the Application_Exit handler
+            // as that would cause a double shutdown attempt
+            shouldInvokeShutdown = _exitRequested && !_shutdownInvoked && !_inExitHandler;
+            if (shouldInvokeShutdown)
+                _shutdownInvoked = true;
+        }
+
+        if (shouldInvokeShutdown)
+        {
+            StopMacroControllerSafely();
+
+            if (Dispatcher.UIThread.CheckAccess())
+                UdtAppContext.Shutdown();
+            else
+                await Dispatcher.UIThread.InvokeAsync(UdtAppContext.Shutdown);
+        }
+    }
+
+    private async Task PerformShutdownAsync()
+    {
+        var totalStopwatch = Stopwatch.StartNew();
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Shutdown started.");
+
+        try
+        {
+            try
+            {
+                _backgroundInitializationCancellationTokenSource?.Cancel();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error cancelling background initialization during shutdown: {ex.Message}");
+            }
+
+            StopSingleInstanceThreadSafely();
+            CleanupSingleInstanceResources();
+
+            await AwaitBackgroundInitializationAsync().ConfigureAwait(false);
+
+            try
+            {
+                _backgroundInitializationCancellationTokenSource?.Dispose();
+                _backgroundInitializationCancellationTokenSource = null;
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error disposing cancellation token source during shutdown: {ex.Message}");
+            }
+
+            await StopPluginsAsync().ConfigureAwait(false);
+
+            // Stop network acceleration worker and restore system proxy/hosts before other services.
+            try
+            {
+                if (TryGetCachedService<UniversalDeviceToolkit.Lib.Network.INetworkAccelerationService>() is { } networkAcceleration)
+                    await networkAcceleration.StopAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error stopping network acceleration during shutdown: {ex.Message}");
+            }
+
+            var stopServicesTask = Task.WhenAll(
+                StopServiceAsync<AIController>(controller => controller.StopAsync(), "AI controller"),
+                StopServiceAsync<RGBKeyboardBacklightController>(controller => controller.SetLightControlOwnerAsync(false), "RGB keyboard controller"),
+                StopServiceAsync<SessionLockUnlockListener>(listener => listener.StopAsync(), "session lock/unlock listener"),
+                StopServiceAsync<HWiNFOIntegration>(integration => integration.StopAsync(), "HWiNFO integration"),
+                StopServiceAsync<IpcServer>(server => server.StopAsync(), "IPC server"),
+                StopServiceAsync<BatteryDischargeRateMonitorService>(monitor => monitor.StopAsync(), "battery monitor"),
+                StopServiceAsync<LampArrayController>(controller => controller.StopAsync(), "lamp array controller"),
+                StopServiceAsync<NativeWindowsMessageListener>(listener => listener.StopAsync(), "native Windows message listener")
+            );
+
+            // UserInactivityAutoListener.StopAsync() is protected; dispose it instead
+            // (AbstractAutoListener.Dispose() calls StopAsync() internally)
+            await StopUserInactivityListenerAsync().ConfigureAwait(false);
+
+            var completedTask = await Task.WhenAny(stopServicesTask, Task.Delay(TimeSpan.FromSeconds(2))).ConfigureAwait(false);
+            if (completedTask != stopServicesTask)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Service stop timed out after 2 seconds.");
+            }
+
+            await FinalizeRuntimeProfilesAsync().ConfigureAwait(false);
+
+            StopMacroControllerSafely();
+            StopSingleInstanceThreadSafely();
+            CleanupSingleInstanceResources();
+
+            totalStopwatch.Stop();
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Shutdown completed in {totalStopwatch.ElapsedMilliseconds}ms.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Shutdown error: {ex.Message}");
+        }
+    }
+
+    private async Task StopPluginsAsync()
+    {
+        try
+        {
+            if (TryGetCachedService<IPluginManager>() is not { } pluginManager)
+                return;
+
+            var registeredPlugins = pluginManager.GetRegisteredPlugins().ToList();
+            if (registeredPlugins.Count == 0)
+                return;
+
+            var shutdownTasks = registeredPlugins.Select(plugin => Task.Run(() =>
+            {
+                try { plugin.OnShutdown(); }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning(
+                        $"Plugin OnShutdown failed; continuing with other plugins. [{plugin.GetType().Name}]",
+                        ex);
+                }
+            })).ToList();
+
+            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
+
+            await Task.Delay(200).ConfigureAwait(false);
+
+            if (pluginManager is PluginManager manager)
+                await manager.PerformPendingDeletionsAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning("Plugin shutdown process failed; continuing app shutdown.", ex);
+        }
+    }
+
+    /// <summary>
+    /// Stops the UserInactivityAutoListener by disposing it.
+    /// UserInactivityAutoListener.StopAsync() is protected (called internally by AbstractAutoListener),
+    /// so we dispose it instead — Dispose() calls StopAsync() internally and releases keyboard/mouse hooks.
+    /// CRITICAL: If these global hooks are not released, the process cannot exit cleanly and the system stutters.
+    /// </summary>
+    private static async Task StopUserInactivityListenerAsync()
+    {
+        try
+        {
+            if (TryGetCachedService<UserInactivityAutoListener>() is not { } listener)
+                return;
+
+            // AbstractAutoListener.Dispose() calls StopAsync() which releases WH_KEYBOARD_LL/WH_MOUSE_LL hooks
+            await Task.Run(() => ((IDisposable)listener).Dispose()).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning(
+                "UserInactivityAutoListener dispose failed during shutdown; hooks may linger until process exit.",
+                ex);
+        }
+    }
+
+    private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        // Prevent infinite recursion - use FailFast on re-entry since state is corrupted
+        if (_exceptionHandlerExecuting)
+        {
+            Environment.FailFast("Fatal error: re-entered AppDomain_UnhandledException", new Exception("Re-entry detected"));
+            return;
+        }
+
+        _exceptionHandlerExecuting = true;
+
+        try
+        {
+            var exception = e.ExceptionObject as Exception;
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
+
+            Log.Instance.ErrorReport($"AppDomain_UnhandledException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
+            Log.Instance.Trace($"Unhandled exception occurred.", exception);
+
+            // Save crash report BEFORE showing message box
+            CrashReportHelper.SaveCrashReport(exception, "AppDomain");
+
+            // Try to show message box, but don't let it cause infinite recursion
+            try
+            {
+                MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToString() ?? T("App_UnhandledException_Unknown", "Unknown exception.")),
+                    T("App_UnhandledException_AppDomain_Title", "Application Domain Error"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            catch
+            {
+                // If MessageBox fails, just log and exit
+                Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
+            }
+        }
+        catch
+        {
+            // If even logging fails, just exit
+        }
+        finally
+        {
+            // CRITICAL: Stop MacroController to release keyboard hook before exit
+            StopMacroControllerSafely();
+
+            Log.Instance.Flush();
+
+            // Force exit to prevent hanging
+            try
+            {
+                UdtAppContext.Shutdown();
+            }
+            catch
+            {
+                try
+                {
+                    Environment.Exit(100);
+                }
+                catch
+                {
+                    Environment.FailFast("Fatal unhandled exception in AppDomain", e.ExceptionObject as Exception);
+                }
+            }
+        }
+    }
+
+    private void Application_DispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        // Prevent infinite recursion - use FailFast on re-entry since state is corrupted
+        if (_exceptionHandlerExecuting)
+        {
+            e.Handled = true;
+            Environment.FailFast("Fatal error: re-entered Application_DispatcherUnhandledException", new Exception("Re-entry detected"));
+            return;
+        }
+
+        _exceptionHandlerExecuting = true;
+        e.Handled = true; // Mark as handled to prevent further propagation
+
+        try
+        {
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
+
+            Log.Instance.ErrorReport($"Application_DispatcherUnhandledException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", e.Exception);
+            Log.Instance.Trace($"Unhandled exception occurred.", e.Exception);
+
+            // Save crash report BEFORE showing message box
+            CrashReportHelper.SaveCrashReport(e.Exception, "Dispatcher");
+
+            // Try to show message box, but don't let it cause infinite recursion
+            try
+            {
+                MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToString()),
+                    T("App_UnhandledException_Dispatcher_Title", "Application Error"),
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            catch
+            {
+                // If MessageBox fails, just log and exit
+                Log.Instance.Trace($"Failed to show error dialog, forcing exit.");
+            }
+        }
+        catch
+        {
+            // If even logging fails, just exit
+        }
+        finally
+        {
+            // CRITICAL: Stop MacroController to release keyboard hook before exit
+            StopMacroControllerSafely();
+
+            Log.Instance.Flush();
+
+            // Force exit to prevent hanging
+            try
+            {
+                UdtAppContext.Shutdown();
+            }
+            catch
+            {
+                try
+                {
+                    Environment.Exit(101);
+                }
+                catch
+                {
+                    Environment.FailFast("Fatal unhandled exception in Dispatcher", e.Exception);
+                }
+            }
+        }
+    }
+
+    private void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+    {
+        try
+        {
+            var osVersion = Environment.OSVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "Unknown";
+            var managedMemory = GC.GetTotalMemory(false);
+            var workingSet = Environment.WorkingSet;
+
+            // Log the unobserved task exception
+            Log.Instance.ErrorReport($"TaskScheduler_UnobservedTaskException [OS={osVersion}, Assembly={assemblyVersion}, ManagedMemory={managedMemory:N0}, WorkingSet={workingSet:N0}]", e.Exception);
+            Log.Instance.Trace($"Unobserved task exception occurred.", e.Exception);
+
+            // Save crash report
+            CrashReportHelper.SaveCrashReport(e.Exception, "TaskScheduler");
+
+            // Mark as observed to prevent the process from terminating
+            // Note: In .NET 5+, unobserved task exceptions don't terminate the process by default,
+            // but we mark as observed for safety
+            e.SetObserved();
+        }
+        catch
+        {
+            // If even this fails, mark as observed to prevent termination
+            e.SetObserved();
+        }
+    }
+
+
+    internal bool EnsureSingleInstance()
+    {
+        if (_singleInstanceGuard is not null)
+            throw new InvalidOperationException("Single instance guard already initialized.");
+
+        _singleInstanceGuard = new SingleInstanceGuard(Dispatcher.UIThread);
+
+        if (!_singleInstanceGuard.TryAcquire(out _))
+        {
+            _singleInstanceGuard = null;
             return false;
         }
+
+        _singleInstanceGuard.StartListener(BringMainWindowToForegroundFromSingleInstanceThread);
+        return true;
     }
-#endif
+
+    internal static void ExitDuplicateInstance()
+    {
+        try { Log.Instance.Shutdown(); }
+        catch { /* Logging shutdown failed; duplicate instance must still exit. */ }
+
+        try { Environment.Exit(0); }
+        catch { /* Fall back to native process exit. */ }
+
+        ExitProcess(0);
+    }
+
+    private void BringMainWindowToForegroundFromSingleInstanceThread()
+    {
+        if (Current == null || Dispatcher.UIThread == null)
+            return;
+
+        try
+        {
+            Dispatcher.UIThread.Post(async () =>
+            {
+                try
+                {
+                    if (UdtAppContext.MainWindow is { } window)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Another instance started, bringing this one to front instead...");
+
+                        try
+                        {
+                            window.BringToForeground();
+                        }
+                        catch (Exception ex)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Failed to bring existing main window to foreground.", ex);
+                        }
+                    }
+                    else
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"!!! PANIC !!! This instance is missing main window. Shutting down.");
+
+                        await ShutdownAsync(true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Error handling single-instance foreground request.", ex);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Error in single instance thread dispatcher invoke.", ex);
+        }
+    }
+
+    private static async Task FinalizeRuntimeProfilesAsync()
+    {
+        try
+        {
+            if (TryGetCachedService<AmdOverclockingController>() is { } amdController && amdController.IsActive())
+            {
+                amdController.SaveShutdownInfo(new ShutdownInfo
+                {
+                    Status = "Normal",
+                    AbnormalCount = 0
+                });
+            }
+
+            if (TryGetCachedService<FanCurveManager>() is { } fanManager &&
+                await fanManager.IsSupportedAsync().ConfigureAwait(false))
+            {
+                await fanManager.SetRegisterAsync(false).ConfigureAwait(false);
+            }
+
+            if (TryGetCachedService<LampArrayController>() is { } lampArrayController &&
+                TryGetCachedService<LampArraySettings>() is { } lampArraySettings)
+            {
+                lampArrayController.SaveSettings(lampArraySettings);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Runtime profile finalization failed: {ex.Message}", ex);
+        }
+    }
+
+    private static void InitMacroController()
+    {
+        var controller = GetCachedService<MacroController>();
+        controller.Start();
+    }
+
+    public void InitOsd()
+    {
+        MessagingCenter.Subscribe<OsdChangedMessage>(this, message =>
+        {
+            Dispatcher.UIThread.Post(() =>
+            {
+                HandleOsdCommand(message.State);
+            });
+        });
+
+        var osdSettings = GetCachedService<OsdSettings>();
+
+        if (osdSettings.Store.ShowOsd)
+        {
+            HandleOsdCommand(OsdState.Show);
+        }
+    }
+
+    private void HandleOsdCommand(OsdState command)
+    {
+        var osdSettings = GetCachedService<OsdSettings>();
+        bool shouldBeBar = osdSettings.Store.SelectedStyleIndex == 1;
+
+        switch (command)
+        {
+            case OsdState.Hidden:
+                if (OsdWindow != null)
+                {
+                    OsdWindow.Hide();
+                }
+                break;
+
+            case OsdState.Show:
+                EnsureCorrectOsdStyle(shouldBeBar);
+                OsdWindow?.Show();
+                break;
+
+            case OsdState.Toggle:
+                if (OsdWindow is { IsVisible: true })
+                {
+                    OsdWindow.Hide();
+                }
+                else
+                {
+                    EnsureCorrectOsdStyle(shouldBeBar);
+                    OsdWindow?.Show();
+                }
+                break;
+        }
+
+        osdSettings.Store.ShowOsd = OsdWindow?.IsVisible ?? false;
+        osdSettings.SynchronizeStore();
+    }
+
+    private void EnsureCorrectOsdStyle(bool shouldBeBar)
+    {
+        if (OsdWindow != null && (OsdWindow is OsdBarWindow) != shouldBeBar)
+        {
+            OsdWindow.Close();
+            OsdWindow = null;
+        }
+
+        EnsureOsdWindowCreated(shouldBeBar);
+    }
+
+    private void EnsureOsdWindowCreated(bool isBar)
+    {
+        if (OsdWindow != null)
+        {
+            return;
+        }
+
+        OsdWindow = isBar ? new OsdBarWindow() : new OsdPanelWindow();
+        OsdWindow.Closed += (_, _) => OsdWindow = null;
+    }
+
 }
-
-/// <summary>
-/// Simple ICommand implementation for tray menu commands.
-/// </summary>
-internal sealed class RelayCommand : ICommand
-{
-    private readonly Action _execute;
-
-    public RelayCommand(Action execute) => _execute = execute;
-
-    public event EventHandler? CanExecuteChanged;
-
-    public bool CanExecute(object? parameter) => true;
-
-    public void Execute(object? parameter) => _execute();
-
-    public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }

@@ -1,0 +1,90 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.Dashboard.GodMode.GodModeValueControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls">
+    <Border
+        Background="{DynamicResource ControlFillColorDefaultBrush}"
+        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+        BorderThickness="1"
+        CornerRadius="{StaticResource CornerRadiusMD}"
+        Padding="12,8">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition
+                    Width="*"
+                    MinWidth="140"
+                    MaxWidth="260" />
+                <ColumnDefinition
+                    Width="2.4*"
+                    MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Grid.Column="0"
+                Margin="0,0,12,0"
+                VerticalAlignment="Center">
+                <TextBlock
+                    x:Name="_titleTextBlock"
+                    FontWeight="Medium"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="NoWrap"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                <TextBlock
+                    x:Name="_descriptionTextBlock"
+                    Margin="0,2,0,0"
+                    FontSize="{DynamicResource FontSizeDenseCaption}"
+                    LineHeight="14"
+                    MaxHeight="28"
+                    Opacity="0.78"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <Slider
+                x:Name="_slider"
+                Grid.Column="1"
+                Margin="0,0,8,0"
+                VerticalAlignment="Center"
+                IsSnapToTickEnabled="True" />
+
+            <TextBlock
+                x:Name="_sliderLabel"
+                Grid.Column="2"
+                MinWidth="48"
+                Margin="0,0,4,0"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Right"
+                FlowDirection="LeftToRight"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+            <ComboBox
+                x:Name="_comboBox"
+                Grid.Column="3"
+                MinWidth="88"
+                MaxWidth="120"
+                Margin="0,0,4,0"
+                VerticalAlignment="Center" />
+
+            <ui:Button
+                x:Name="_resetToDefaultButton"
+                Grid.Column="4"
+                Width="32"
+                Height="32"
+                Margin="4,0,0,0"
+                Padding="0"
+                Click="ResetToDefaultButton_OnClick"
+                ToolTip.Tip="{x:Static resources:Resource.Default}">
+                <ui:Button.Icon>
+                    <ui:SymbolIcon FontSize="{StaticResource IconSizeSM}" Symbol="ArrowClockwise24" />
+                </ui:Button.Icon>
+            </ui:Button>
+        </Grid>
+    </Border>
+</UserControl>

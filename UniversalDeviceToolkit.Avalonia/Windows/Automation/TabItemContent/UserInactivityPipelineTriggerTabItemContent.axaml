@@ -1,0 +1,11 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Automation.TabItemContent.UserInactivityPipelineTriggerTabItemContent"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <ComboBox
+            x:Name="_timeoutComboBox"
+            MinWidth="160"
+            Margin="16,16,16,16" />
+    </StackPanel>
+</UserControl>

@@ -1,164 +1,286 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
-             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
-             xmlns:automation="using:Avalonia.Automation"
-             x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsPage">
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Pages.SettingsPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:automation="using:Avalonia.Automation"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:overflow="using:UniversalDeviceToolkit.Avalonia.Behaviors"
+    xmlns:settings="using:UniversalDeviceToolkit.Avalonia.Controls.Settings"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
-    <Grid ColumnDefinitions="280,Auto,*">
-        <!-- Left Navigation Bar -->
-        <Border Grid.Column="0"
-                Background="{DynamicResource NavigationPaneBackgroundBrush}"
-                Padding="12,16">
-            <DockPanel>
-                <controls:LocalizedTextBlock DockPanel.Dock="Top"
-                           Text="{local:Loc Key=Settings_Title, Fallback=Settings}"
-                           FontSize="{StaticResource FontSizePageTitle}"
-                           FontWeight="Medium"
-                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                           OverflowMode="Wrap"
-                           MaxLines="2"
-                           automation:AutomationProperties.Name="{local:Loc Key=Settings_Title, Fallback=Settings}"
-                           Margin="12,0,0,16"/>
+    <UserControl.Resources>
+        <Style x:Key="ContentTransitionAnimation">
+            <Style.Animations>
+                <Animation Duration="{StaticResource AnimationDurationMedium}" Easing="CubicEaseOut" FillMode="Both">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Opacity" Value="{StaticResource AnimationOpacityStart}" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Resources>
 
-                <ListBox x:Name="SettingsNavigationList"
-                         automation:AutomationProperties.AutomationId="AvaloniaSettingsNavigationList"
-                         ItemsSource="{Binding NavigationItems}"
-                         SelectedIndex="{Binding SelectedNavigationIndex}"
-                         SelectionChanged="SettingsNavigationList_SelectionChanged"
-                         BorderThickness="0"
-                         Background="Transparent">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,2"
-                                  ColumnDefinitions="Auto,*"
-                                  automation:AutomationProperties.AutomationId="{Binding Key}">
-                                <controls:NavigationIcon Grid.Column="0"
-                                           IconIdentifier="{Binding IconIdentifier}"
-                                           FontSize="{StaticResource IconSizeMD}"
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                           Margin="0,0,12,0"
-                                           Width="24"
-                                           Height="24" />
-                                <controls:LocalizedTextBlock Grid.Column="1"
-                                           Text="{Binding Title}"
-                                           FontSize="{StaticResource FontSizeCaption}"
-                                           VerticalAlignment="Center"
-                                           HorizontalAlignment="Stretch"
-                                           MinWidth="0"
-                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                           OverflowMode="Ellipsis"
-                                           MaxLines="1"
-                                           automation:AutomationProperties.Name="{Binding Title}"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180" MinWidth="150" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Header -->
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="0,0,16,24">
+            <controls:AdaptiveTextBlock
+                Margin="0,16,0,8"
+                Classes="appPageTitleTextBlock"
+                OverflowMode="Wrap"
+                MaxLines="2"
+                MinFontSize="11"
+                Text="{x:Static resources:Resource.SettingsPage_Title}" />
+            <controls:AdaptiveTextBlock
+                Margin="0,0,0,0"
+                Classes="appPageDescriptionTextBlock"
+                OverflowMode="Wrap"
+                MaxLines="3"
+                MinFontSize="11"
+                Text="{x:Static resources:Resource.SettingsPage_Description}"
+                />
+        </StackPanel>
+
+        <controls:LoadableControl
+            x:Name="_loader"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            ContentVisibilityWhileLoading="False">
+            <controls:LoadableControl.LoadingContent>
+                <!-- Mirrors: left nav rows (icon + label) + right settings cards while nav items and first control load. -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180" MinWidth="150" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border
+                        Grid.Column="0"
+                        Background="{DynamicResource PageBackgroundFillColorDefaultBrush}"
+                        BorderBrush="Transparent"
+                        BorderThickness="0">
+                        <StackPanel Margin="16,12,12,0">
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Classes="appSkeletonListItemIcon" />
+                                <Border Grid.Column="1" Width="118" Classes="appSkeletonListItemSingleLine" />
                             </Grid>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.Styles>
-                        <Style Selector="ListBoxItem">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Padding" Value="16,12,12,12"/>
-                            <Setter Property="Margin" Value="0,0,0,2"/>
-                            <Setter Property="Cursor" Value="Hand"/>
-                            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}"/>
-                            <Setter Property="automation:AutomationProperties.Name" Value="{Binding Title}"/>
-                            <Setter Property="automation:AutomationProperties.AutomationId" Value="{Binding Key}"/>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Classes="appSkeletonListItemIcon" />
+                                <Border Grid.Column="1" Width="96" Classes="appSkeletonListItemSingleLine" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Classes="appSkeletonListItemIcon" />
+                                <Border Grid.Column="1" Width="132" Classes="appSkeletonListItemSingleLine" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Classes="appSkeletonListItemIcon" />
+                                <Border Grid.Column="1" Width="84" Classes="appSkeletonListItemSingleLine" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Classes="appSkeletonListItemIcon" />
+                                <Border Grid.Column="1" Width="108" Classes="appSkeletonListItemSingleLine" />
+                            </Grid>
+                            <Grid Margin="0,0,0,2" Height="44">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Classes="appSkeletonListItemIcon" />
+                                <Border Grid.Column="1" Width="124" Classes="appSkeletonListItemSingleLine" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Margin="24,0,0,0">
+                        <Border Margin="0,0,0,16" Classes="appSkeletonCard">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                    <Border Width="180" Classes="appSkeletonListItemPrimaryLine" />
+                                    <Border Width="260" Classes="appSkeletonListItemSecondaryLine" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Classes="appSkeletonToggleSwitch" />
+                            </Grid>
+                        </Border>
+                        <Border MinHeight="120" Classes="appSkeletonCard">
+                            <StackPanel VerticalAlignment="Center">
+                                <Border Width="200" Classes="appSkeletonListItemPrimaryLine" />
+                                <Border Width="320" Classes="appSkeletonListItemSecondaryLine" />
+                                <Border Height="28" Margin="0,14,0,0" Classes="appSkeletonShimmerBlock" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </controls:LoadableControl.LoadingContent>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="180" MinWidth="150" MaxWidth="480" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+        <!-- Draggable splitter: makes the left nav width user-adjustable instead of fixed 240. -->
+        <GridSplitter
+            Grid.Row="0"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            Cursor="SizeWE"
+            Focusable="False" />
+
+        <!-- Left Navigation Bar -->
+        <Border
+            Grid.Column="0"
+            Background="{DynamicResource PageBackgroundFillColorDefaultBrush}"
+            BorderBrush="Transparent"
+            BorderThickness="0">
+
+            <ListBox
+                x:Name="_navigationListBox"
+                automation:AutomationProperties.AutomationId="SettingsNavigationList"
+                BorderThickness="0"
+                Background="Transparent"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                SelectionChanged="NavigationListBox_SelectionChanged"
+                SelectedIndex="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" MinWidth="0" />
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon
+                                Grid.Column="0"
+                                FontSize="{StaticResource IconSizeMD}"
+                                Symbol="{Binding Icon}"
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                FontSize="{DynamicResource FontSizeCaption}"
+                                Text="{Binding Title}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="NoWrap"
+                                MinWidth="0"
+                                automation:AutomationProperties.Name="{Binding Title}"
+                                overflow:LocalizedOverflowBehavior.IsEnabled="True"
+                                overflow:LocalizedOverflowBehavior.Mode="Ellipsis"
+                                overflow:LocalizedOverflowBehavior.MaxLines="1" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerTheme>
+                    <ControlTheme TargetType="ListBoxItem">
+                        <Setter Property="automation:AutomationProperties.Name" Value="{Binding Title}" />
+                        <Setter Property="automation:AutomationProperties.AutomationId" Value="{Binding Key, StringFormat=SettingsNav_{0}}" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="Margin" Value="0,0,0,2" />
+                        <Setter Property="Cursor" Value="Hand" />
+                        <Setter Property="Template">
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border
+                                    x:Name="Bd"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    Padding="16,12,12,12"
+                                    CornerRadius="{StaticResource CornerRadiusControl}">
+                                    <Grid>
+                                        <!-- Accent indicator — matches main NavigationStore selection chrome -->
+                                        <Rectangle
+                                            x:Name="ActiveRectangle"
+                                            Width="4"
+                                            Height="24"
+                                            Margin="-16,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Opacity="0.0"
+                                            RadiusX="2"
+                                            RadiusY="2">
+                                            <Rectangle.Fill>
+                                                <SolidColorBrush Color="{DynamicResource SystemAccentColorSecondary}" />
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <ContentPresenter
+                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter>
+                        <!-- Theme-aware fills (no hardcoded #26000000 — broken in light/presets). -->
+                        <Style Selector="^:selected /template/ Rectangle#ActiveRectangle">
+                            <Setter Property="Opacity" Value="1.0" />
                         </Style>
-                    </ListBox.Styles>
-                </ListBox>
-            </DockPanel>
+                        <Style Selector="^:selected /template/ Border#Bd">
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefault}" />
+                        </Style>
+                        <Style Selector="^:pointerover:not(:selected) /template/ Border#Bd">
+                            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondary}" />
+                        </Style>
+                    </ControlTheme>
+                </ListBox.ItemContainerTheme>
+            </ListBox>
         </Border>
 
-        <!-- Splitter area (visual separator) -->
-        <Border Grid.Column="1" Width="1"
-                Background="{DynamicResource CardStrokeColorDefaultBrush}"/>
-
         <!-- Right Content Area -->
-        <ScrollViewer Grid.Column="2"
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
-            <Border Background="{DynamicResource AppSurfaceCardBrush}"
-                    Padding="{StaticResource ContentPaddingPage}">
-                <ContentControl x:Name="SelectedContentHost" />
-            </Border>
-        </ScrollViewer>
-
-        <!-- Loading skeleton (WPF parity: nav rows + settings cards while loading). -->
-        <Grid x:Name="LoadingSkeleton" Grid.ColumnSpan="3" IsVisible="False">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="280" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Padding="12,16">
-                <StackPanel Margin="4,0,0,0">
-                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Grid.Column="1" Width="118" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </Grid>
-                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Grid.Column="1" Width="96" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </Grid>
-                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Grid.Column="1" Width="132" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </Grid>
-                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Grid.Column="1" Width="84" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </Grid>
-                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Grid.Column="1" Width="108" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </Grid>
-                    <Grid Margin="0,0,0,2" Height="44" ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                        <Border Grid.Column="0" Width="24" Height="24" CornerRadius="6"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Grid.Column="1" Width="124" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </Grid>
-                </StackPanel>
-            </Border>
-            <StackPanel Grid.Column="2" Margin="24,16,0,0">
-                <Border Margin="0,0,0,16" Padding="16" CornerRadius="{StaticResource CornerRadiusCard}"
-                        Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="8">
-                            <Border Width="180" Height="16" HorizontalAlignment="Left" CornerRadius="4"
-                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                            <Border Width="260" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                    Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        </StackPanel>
-                        <Border Grid.Column="1" Width="42" Height="20" CornerRadius="10"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </Grid>
-                </Border>
-                <Border MinHeight="120" Padding="16" CornerRadius="{StaticResource CornerRadiusCard}"
-                        Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1">
-                    <StackPanel VerticalAlignment="Center" Spacing="8">
-                        <Border Width="200" Height="16" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Width="320" Height="12" HorizontalAlignment="Left" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                        <Border Height="28" Margin="0,6,0,0" CornerRadius="4"
-                                Background="{DynamicResource ControlFillColorTertiaryBrush}" />
-                    </StackPanel>
-                </Border>
-            </StackPanel>
-        </Grid>
+        <ContentControl
+            x:Name="_contentControl"
+            automation:AutomationProperties.AutomationId="SettingsContentControl"
+            Grid.Column="2"
+            Margin="16,0,0,0">
+            <ContentControl.RenderTransform>
+                <TranslateTransform />
+            </ContentControl.RenderTransform>
+        </ContentControl>
+            </Grid>
+        </controls:LoadableControl>
     </Grid>
 </UserControl>

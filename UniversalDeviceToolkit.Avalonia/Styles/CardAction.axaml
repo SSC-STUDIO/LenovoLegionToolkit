@@ -1,0 +1,97 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls">
+
+    <!--
+      CardAction theme. The WPF-UI default (DefaultUiCardActionStyle) no longer exists;
+      this file now provides the full template. CornerRadius is fixed to CornerRadiusCard
+      (WPF set Border.CornerRadius attached, which has no Avalonia equivalent).
+      Hover/press feedback drives a lift + surface tint via pseudo-classes.
+    -->
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ControlTheme x:Key="{x:Type custom:CardAction}" TargetType="custom:CardAction">
+                <Setter Property="Margin" Value="0,0,0,12" />
+                <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="Template">
+                    <ControlTemplate TargetType="custom:CardAction">
+                        <Border
+                            x:Name="ContentBorder"
+                            Padding="16,12"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource CornerRadiusCard}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter
+                                    x:Name="IconChrome"
+                                    Grid.Column="0"
+                                    Margin="0,0,12,0"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Icon}"
+                                    Focusable="False" />
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <ContentPresenter
+                                        x:Name="HeaderContentPresenter"
+                                        Content="{TemplateBinding Header}"
+                                        TextElement.Foreground="{TemplateBinding Foreground}"
+                                        TextElement.FontWeight="Medium"
+                                        TextElement.FontSize="{DynamicResource FontSizeBody}" />
+                                    <ContentPresenter
+                                        x:Name="SubtitleContentPresenter"
+                                        Margin="0,2,0,0"
+                                        Content="{TemplateBinding Subtitle}"
+                                        TextElement.Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        TextElement.FontSize="{DynamicResource FontSizeCaption}" />
+                                </StackPanel>
+                                <ContentPresenter
+                                    x:Name="ActionPresenter"
+                                    Grid.Column="2"
+                                    Margin="12,0,0,0"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Content}" />
+                                <ui:SymbolIcon
+                                    x:Name="ChevronIcon"
+                                    Grid.Column="2"
+                                    Margin="12,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="{StaticResource IconSizeCompact}"
+                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                    Symbol="ChevronRight20"
+                                    IsVisible="{TemplateBinding IsChevronVisible}" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+
+                <Style Selector="^:pointerover /template/ Border#ContentBorder">
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    <Setter Property="RenderTransform" Value="translate(0px, -1px)" />
+                </Style>
+                <Style Selector="^:pressed /template/ Border#ContentBorder">
+                    <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+                    <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+                </Style>
+                <Style Selector="^ /template/ Border#ContentBorder">
+                    <Setter Property="Transitions">
+                        <Transitions>
+                            <BrushTransition Property="Background" Duration="0:0:0.15" />
+                            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
+                        </Transitions>
+                    </Setter>
+                </Style>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+</Styles>

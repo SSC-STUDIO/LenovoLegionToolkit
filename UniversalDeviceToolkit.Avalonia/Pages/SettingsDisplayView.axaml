@@ -1,4 +1,0 @@
-<!-- The page uses SettingsCapabilityView's shared option renderer. This resource is retained
-     as the page resource identity so navigation and tooling can resolve the view consistently. -->
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" />

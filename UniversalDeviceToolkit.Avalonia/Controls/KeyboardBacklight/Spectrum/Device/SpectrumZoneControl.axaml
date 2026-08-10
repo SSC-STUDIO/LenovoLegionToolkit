@@ -1,0 +1,17 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.KeyboardBacklight.Spectrum.Device.SpectrumZoneControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Border
+            x:Name="_background"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            BorderThickness="4"
+            CornerRadius="{StaticResource CornerRadiusCompact}" />
+        <ToggleButton
+            x:Name="_button"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch" />
+    </Grid>
+</UserControl>

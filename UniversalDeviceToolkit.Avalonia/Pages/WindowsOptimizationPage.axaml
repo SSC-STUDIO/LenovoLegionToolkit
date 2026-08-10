@@ -1,0 +1,1465 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Pages.WindowsOptimizationPage"
+    x:Name="PageRoot"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:opt="using:UniversalDeviceToolkit.Avalonia.Pages.WindowsOptimization"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    Classes="appPageEntrance"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+
+    <UserControl.Resources>
+        <utils:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+        <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <!-- Unified segmented navigation: one surface, lightweight selected state. -->
+        <Style Selector="RadioButton.navRadioButton">
+            <Setter Property="Margin" Value="1,0" />
+            <Setter Property="Padding" Value="18,8,18,9" />
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="FontSize" Value="{DynamicResource FontSizeSmallBody}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            MaxWidth="220"
+                            Text="{Binding}"
+                            TextAlignment="Center"
+                            TextWrapping="Wrap" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border
+                            x:Name="RootBorder"
+                            MinHeight="{TemplateBinding MinHeight}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource CornerRadiusControl}"
+                            Margin="{TemplateBinding Margin}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="3" />
+                                </Grid.RowDefinitions>
+                                <ContentPresenter
+                                    x:Name="ContentPresenter"
+                                    Grid.Row="0"
+                                    Margin="{TemplateBinding Padding}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                    TextElement.FontSize="{TemplateBinding FontSize}"
+                                    TextElement.Foreground="{TemplateBinding Foreground}" />
+                                <Border
+                                    x:Name="ActiveIndicator"
+                                    Grid.Row="1"
+                                    Width="22"
+                                    Height="3"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    Background="Transparent"
+                                    CornerRadius="{StaticResource CornerRadiusCompact}" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style Selector="^:checked /template/ Border#RootBorder">
+                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+            <Style Selector="^:checked /template/ ContentPresenter#ContentPresenter">
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                <Setter Property="TextElement.FontWeight" Value="SemiBold" />
+            </Style>
+            <Style Selector="^:checked /template/ Border#ActiveIndicator">
+                <Setter Property="Background" Value="{DynamicResource SystemAccentColorPrimaryBrush}" />
+            </Style>
+            <Style Selector="^:not(:checked) /template/ Border#RootBorder">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+            <Style Selector="^:not(:checked) /template/ ContentPresenter#ContentPresenter">
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            </Style>
+            <Style Selector="^:pointerover /template/ Border#RootBorder">
+                <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            </Style>
+            <Style Selector="^:pointerover /template/ ContentPresenter#ContentPresenter">
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            </Style>
+            <Style Selector="^:checked:pointerover /template/ Border#RootBorder">
+                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            </Style>
+            <Style Selector="^:disabled /template/ Border#RootBorder">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+            <Style Selector="^:disabled /template/ ContentPresenter#ContentPresenter">
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+            </Style>
+        </Style>
+        <Style Selector="TextBlock.sectionTitleText">
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
+        <Style Selector="TextBlock.driverFieldLabel">
+            <Setter Property="MinWidth" Value="122" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.driverSourcePanel">
+            <Setter Property="Padding" Value="14,12" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="RadioButton.driverSourceRadio">
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="VerticalContentAlignment" Value="Top" />
+        </Style>
+        <Style Selector="Border.driverToolbarPanel">
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusControl}" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <!-- CardContainerStyle (hover lift) -->
+        <Style Selector="Border.cardContainer">
+            <Setter Property="Padding" Value="{StaticResource SpacingMD}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="0,0,16,16" />
+        </Style>
+        <Style Selector="Border.cardContainer:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorSecondaryBrush}" />
+        </Style>
+        <Style Selector="Border.rightColumnCard">
+            <Setter Property="Margin" Value="0,0,0,16" />
+            <Setter Property="Padding" Value="20" />
+        </Style>
+
+        <!-- PrimaryActionButtonStyle (formerly BasedOn AppButtonPrimary; AppButtonPrimary applied via class) -->
+        <Style Selector="ui|Button.primaryActionButton">
+            <Setter Property="MinWidth" Value="180" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+        </Style>
+        <Style Selector="ui|Button.primaryActionButton:disabled">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="ui|Button.cleanupActionButton">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="ui|Button.driverIconButton">
+            <Setter Property="Width" Value="34" />
+            <Setter Property="MinWidth" Value="34" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="Border.driverSkeletonCard">
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Padding" Value="16" />
+        </Style>
+
+        <!-- Mode-driven visibility (replaces WPF Style.Triggers DataTrigger visibility). -->
+        <Style Selector="Border.actionBar">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="Border.actionBar.hideActionBar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="controls|LoadableControl.categoryColumn">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="controls|LoadableControl.categoryColumn.showCategoryColumn.showCategoryColumn2">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ScrollViewer.categoryColumn">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ScrollViewer.categoryColumn.showCategoryColumn.showCategoryColumn2">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Cleanup action buttons (visible state driven by bound classes). -->
+        <Style Selector="ui|Button.cleanupScanButton">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ui|Button.cleanupScanButton.showScanCleanup.showScanCleanupIdle">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ui|Button.cleanupRunButton">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ui|Button.cleanupRunButton.showRunCleanup.showRunCleanupIdle">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ui|Button.cleanupRunButton.showRunCleaning">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ui|Button.cleanupRescanButton">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ui|Button.cleanupRescanButton.showRunCleanup.showRunCleanupIdle">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Bulk action button: tooltip / automation name / icon follow the driver mode. -->
+        <Style Selector="ui|Button.clearActionButton">
+            <Setter Property="MinHeight" Value="40" />
+            <Setter Property="Padding" Value="12,7" />
+            <Setter Property="ToolTip.Tip" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
+            <Setter Property="AutomationProperties.Name" Value="{x:Static resources:Resource.WindowsOptimizationPage_ClearSelection_Button}" />
+        </Style>
+        <Style Selector="ui|Button.clearActionButton.driverClearMode">
+            <Setter Property="ToolTip.Tip" Value="{Binding StartAllButtonText}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding StartAllButtonText}" />
+        </Style>
+        <Style Selector="ui|Button.clearActionButton.driverClearMode.driverPauseMode">
+            <Setter Property="ToolTip.Tip" Value="{Binding PauseAllButtonText}" />
+            <Setter Property="AutomationProperties.Name" Value="{Binding PauseAllButtonText}" />
+        </Style>
+        <Style Selector="ui|SymbolIcon.clearActionIcon">
+            <Setter Property="Symbol" Value="Delete24" />
+        </Style>
+        <Style Selector="ui|SymbolIcon.clearActionIcon.driverClearMode">
+            <Setter Property="Symbol" Value="Play24" />
+        </Style>
+        <Style Selector="ui|SymbolIcon.clearActionIcon.driverClearMode.driverPauseMode">
+            <Setter Property="Symbol" Value="Pause24" />
+        </Style>
+
+        <!-- Cleanup status text rows. -->
+        <Style Selector="Border.cleanupEstimateRow">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Border.cleanupEstimateRow.showEstimateRow.showEstimateRowIdle">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="Border.cleanupDeletingRow">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Border.cleanupDeletingRow.showDeletingRow">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="Border.cleanupPendingRow">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Border.cleanupPendingRow.showPendingRow.showPendingRowIdle">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid Margin="16,16,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            Margin="0,0,16,0">
+            <StackPanel
+                Margin="0,0,0,16">
+                <TextBlock
+                    Margin="0,0,0,8"
+                    AutomationProperties.Name="{Binding RelativeSource={RelativeSource Self}, Path=Text}"
+                    Focusable="True"
+                    Classes="appPageTitleTextBlock"
+                    Text="{Binding PageHeaderTitle, FallbackValue={x:Static resources:Resource.SettingsPage_WindowsOptimization_Title}}" />
+
+                <TextBlock
+                    MaxWidth="540"
+                    HorizontalAlignment="Left"
+                    Classes="appPageDescriptionTextBlock"
+                    Text="{Binding PageHeaderDescription, FallbackValue={x:Static resources:Resource.WindowsOptimizationPage_Info}}"
+                    TextTrimming="CharacterEllipsis"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,0,16,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="1" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Padding="3"
+                    MinHeight="48"
+                    MinWidth="48"
+                    VerticalAlignment="Bottom"
+                    Background="{DynamicResource AppSurfaceCardBrush}"
+                        BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource CornerRadiusCard}"
+                        Margin="0,0,20,0">
+                    <WrapPanel
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                        <RadioButton
+                            x:Name="_optimizationNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationOptimizationTabButton"
+                            Classes="navRadioButton"
+                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Optimization}"
+                            IsChecked="True"
+                            Checked="NavButton_Checked" />
+                        <RadioButton
+                            x:Name="_cleanupNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationCleanupTabButton"
+                            Classes="navRadioButton"
+                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_Cleanup}"
+                            Checked="NavButton_Checked" />
+                        <RadioButton
+                            x:Name="_driverDownloadNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationDriverTabButton"
+                            Classes="navRadioButton"
+                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_DriverDownload}"
+                            Checked="NavButton_Checked" />
+                        <RadioButton
+                            x:Name="_networkAccelerationNavButton"
+                            AutomationProperties.AutomationId="WindowsOptimizationNetworkAccelerationTabButton"
+                            Classes="navRadioButton"
+                            Content="{x:Static resources:Resource.WindowsOptimizationPage_Tab_NetworkAcceleration}"
+                            Checked="NavButton_Checked" />
+
+                    </WrapPanel>
+                </Border>
+
+                <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Text=""
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            FontSize="{DynamicResource FontSizeCaption}"
+                            IsVisible="False" />
+
+                        <!-- Action chrome shares the nav baseline; summaries live beside the page heading above. -->
+                        <StackPanel
+                            Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Border
+                                x:Name="_networkAccelerationSelectionBar"
+                                Padding="3"
+                                MinHeight="48"
+                                MinWidth="48"
+                                HorizontalAlignment="Right"
+                                Background="{DynamicResource AppSurfaceCardBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource CornerRadiusCard}"
+                                AutomationProperties.AutomationId="NetworkAccelerationSelectionBar"
+                                AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionBar}"
+                                IsVisible="{Binding IsNetworkAccelerationMode}">
+                                <Border.Styles>
+                                    <Style Selector="ui|Button">
+                                        <Setter Property="MinHeight" Value="40" />
+                                        <Setter Property="Padding" Value="12,7" />
+                                    </Style>
+                                    <Style Selector="ui|Button:disabled">
+                                        <Setter Property="Opacity" Value="0.45" />
+                                    </Style>
+                                </Border.Styles>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:Button
+                                        x:Name="_networkAccelerationSelectionFavoriteButton"
+                                        MinWidth="40"
+                                        Margin="0,0,4,0"
+                                        Appearance="Secondary"
+                                        IsEnabled="False"
+                                        Click="NetworkAccelerationSelectionFavoriteButton_Click"
+                                        AutomationProperties.AutomationId="NetworkAccelerationSelectionFavoriteButton"
+                                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavorite}"
+                                        ToolTip.Tip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionFavoriteTooltip}">
+                                        <ui:SymbolIcon Symbol="Star24" />
+                                    </ui:Button>
+                                    <ui:Button
+                                        x:Name="_networkAccelerationSelectionStartButton"
+                                        MinWidth="40"
+                                        Margin="0"
+                                        Appearance="Secondary"
+                                        IsEnabled="False"
+                                        Click="NetworkAccelerationSelectionStartButton_Click"
+                                        Icon="Play24"
+                                        AutomationProperties.AutomationId="NetworkAccelerationSelectionStartButton"
+                                        AutomationProperties.Name="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStart}"
+                                        ToolTip.Tip="{x:Static resources:Resource.NetworkAccelerationPage_SelectionStartTooltip}">
+                                    </ui:Button>
+                                </StackPanel>
+                            </Border>
+
+                            <Border
+                                Padding="3"
+                                MinHeight="48"
+                                MinWidth="48"
+                                HorizontalAlignment="Right"
+                                Background="{DynamicResource AppSurfaceCardBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource CornerRadiusCard}"
+                                Classes="actionBar"
+                                Classes.hideActionBar="{Binding IsNetworkAccelerationMode}"
+                                AutomationProperties.AutomationId="WindowsOptimizationActionBar"
+                                AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}">
+                                <Border.Styles>
+                                    <Style Selector="ui|Button">
+                                        <Setter Property="MinHeight" Value="40" />
+                                        <Setter Property="Padding" Value="12,7" />
+                                    </Style>
+                                </Border.Styles>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:Button
+                                        x:Name="_selectRecommendedButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationSelectRecommendedButton"
+                                        MinWidth="40"
+                                        Margin="0,0,4,0"
+                                        Appearance="Secondary"
+                                        ToolTip.Tip="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
+                                        AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_SelectRecommended_Button}"
+                                        IsEnabled="{Binding CanSelectRecommended}"
+                                        Click="SelectRecommendedButton_Click">
+                                        <ui:SymbolIcon Symbol="Star24" />
+                                    </ui:Button>
+                                    <ui:Button
+                                        x:Name="_applyOptimizationButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationApplyButton"
+                                        Margin="0,0,4,0"
+                                        MinHeight="40"
+                                        Padding="12,7"
+                                        Appearance="Primary"
+                                        Content="{x:Static resources:Resource.Apply}"
+                                        AutomationProperties.Name="{x:Static resources:Resource.Apply}"
+                                        IsEnabled="{Binding CanApplyOptimizationChanges}"
+                                        IsVisible="{Binding IsOptimizationMode}"
+                                        Click="ApplyOptimizationButton_Click">
+                                    </ui:Button>
+                                    <ui:Button
+                                        x:Name="_clearButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationBulkActionButton"
+                                        MinWidth="40"
+                                        Margin="0"
+                                        Appearance="Secondary"
+                                        Classes="clearActionButton"
+                                        Classes.driverClearMode="{Binding IsDriverDownloadMode}"
+                                        Classes.driverPauseMode="{Binding IsAnyDriverRunning}"
+                                        Click="ClearSelectionButton_Click">
+                                        <ui:SymbolIcon
+                                            Classes="clearActionIcon"
+                                            Classes.driverClearMode="{Binding IsDriverDownloadMode}"
+                                            Classes.driverPauseMode="{Binding IsAnyDriverRunning}" />
+                                    </ui:Button>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Category list for optimization, cleanup, and beautification modes -->
+                <controls:LoadableControl
+                    x:Name="_categoriesLoader"
+                    Grid.Column="0"
+                    Margin="0,0,16,0"
+                    ContentVisibilityWhileLoading="False"
+                    Classes="categoryColumn"
+                    Classes.showCategoryColumn="{Binding IsOptimizationMode}"
+                    Classes.showCategoryColumn2="{Binding IsCleanupMode}">
+                    <controls:LoadableControl.LoadingContent>
+                        <!-- Mirrors collapsed CardExpander category rows: title + description stack, selection summary right. -->
+                        <StackPanel>
+                            <Border Classes="appSkeletonListItemCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="220" Classes="appSkeletonListItemPrimaryLine" />
+                                        <Border Width="160" Classes="appSkeletonListItemSecondaryLine" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="72" Margin="12,0,0,0" Classes="appSkeletonListItemSingleLine" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="appSkeletonListItemCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="180" Classes="appSkeletonListItemPrimaryLine" />
+                                        <Border Width="132" Classes="appSkeletonListItemSecondaryLine" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="64" Margin="12,0,0,0" Classes="appSkeletonListItemSingleLine" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="appSkeletonListItemCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="240" Classes="appSkeletonListItemPrimaryLine" />
+                                        <Border Width="176" Classes="appSkeletonListItemSecondaryLine" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="80" Margin="12,0,0,0" Classes="appSkeletonListItemSingleLine" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="appSkeletonListItemCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                        <Border Width="196" Classes="appSkeletonListItemPrimaryLine" />
+                                        <Border Width="144" Classes="appSkeletonListItemSecondaryLine" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Width="68" Margin="12,0,0,0" Classes="appSkeletonListItemSingleLine" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </controls:LoadableControl.LoadingContent>
+                <ScrollViewer
+                    x:Name="_categoriesList"
+                    AutomationProperties.AutomationId="WindowsOptimizationCategoryList"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    Classes="categoryColumn"
+                    Classes.showCategoryColumn="{Binding IsOptimizationMode}"
+                    Classes.showCategoryColumn2="{Binding IsCleanupMode}"
+                    PointerWheelChanged="ScrollViewer_PointerWheelChanged">
+                    <ItemsControl
+                        ItemsSource="{Binding ActiveCategories}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <custom:CardExpander
+                                    AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationCategory_{0}}"
+                                    IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+                                    Margin="0,0,0,8">
+                                    <custom:CardExpander.Header>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock
+                                                    FontWeight="Medium"
+                                                    Text="{Binding Title}" />
+                                                <TextBlock
+                                                    Margin="0,4,0,0"
+                                                    FontSize="{DynamicResource FontSizeSmallCaption}"
+                                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                    Text="{Binding Description}"
+                                                    TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <!--
+                                              Gear only when category HasSettings is true.
+                                              Real data binds via CardExpander.DataContext,
+                                              not inherited Grid/Self.
+                                            -->
+                                            <ui:Button
+                                                Grid.Column="1"
+                                                x:Name="_categorySettingsButton"
+                                                DataContext="{Binding RelativeSource={RelativeSource Self}}"
+                                                Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=custom:CardExpander}}"
+                                                AutomationProperties.AutomationId="{Binding DataContext.PluginId, RelativeSource={RelativeSource AncestorType=custom:CardExpander}, StringFormat=WindowsOptimizationCategorySettings_{0}}"
+                                                Margin="12,0,8,0"
+                                                VerticalAlignment="Center"
+                                                Appearance="Transparent"
+                                                ToolTip.Tip="{x:Static resources:Resource.Settings}"
+                                                Click="OpenStyleSettingsButton_Click"
+                                                IsVisible="{Binding DataContext.HasSettings, RelativeSource={RelativeSource AncestorType=custom:CardExpander}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <ui:Button.Icon>
+                                                    <ui:SymbolIcon Symbol="Settings24" />
+                                                </ui:Button.Icon>
+                                            </ui:Button>
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                Margin="0,0,0,0"
+                                                VerticalAlignment="Center"
+                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                Text="{Binding SelectionSummary}" />
+                                        </Grid>
+                                    </custom:CardExpander.Header>
+                                    <ItemsControl
+                                        ItemsSource="{Binding Actions}"
+                                        Margin="12,8,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,0,0,8"
+                                                      PointerPressed="ActionItem_PointerPressed"
+                                                      IsVisible="{Binding IsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <CheckBox
+                                                        Grid.Column="0"
+                                                        AutomationProperties.AutomationId="{Binding Key, StringFormat=WindowsOptimizationAction_{0}}"
+                                                        AutomationProperties.HelpText="{Binding StateStatusText, TargetNullValue='', FallbackValue=''}"
+                                                        ToolTip.Tip="{Binding StateStatusText}"
+                                                        VerticalAlignment="Center"
+                                                        IsEnabled="{Binding CanEdit}"
+                                                        IsThreeState="{Binding AllowsIndeterminate}"
+                                                        IsChecked="{Binding CheckState, Mode=TwoWay}" />
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Margin="8,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding Title}" />
+                                                    <custom:Badge
+                                                        Grid.Column="2"
+                                                        x:Name="_recommendedBadge"
+                                                        Margin="8,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        IsVisible="{Binding HasRecommendedTag, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                        <TextBlock Text="{Binding RecommendedTagText}" />
+                                                    </custom:Badge>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </custom:CardExpander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                </controls:LoadableControl>
+
+                <!-- Content for driver download mode -->
+                <Grid Grid.Column="0" Margin="0,0,16,0" IsVisible="{Binding IsDriverDownloadMode}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                            <!-- Driver filter form surface: Border card chrome (not CardControl.Header — Header is for title/subtitle rows). -->
+                            <Border
+                                Grid.Row="0"
+                                Margin="0,0,0,10"
+                                Padding="12,10"
+                                Background="{DynamicResource AppSurfaceCardBrush}"
+                                BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource CornerRadiusCard}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" MinWidth="420" />
+                                        <ColumnDefinition Width="310" MinWidth="280" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Grid.Column="0" VerticalAlignment="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Text="{x:Static resources:Resource.PackagesPage_MachineType}"
+                                            Classes="driverFieldLabel" />
+                                        <ui:TextBox
+                                            x:Name="_driverMachineTypeTextBox"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            AutomationProperties.AutomationId="WindowsOptimizationDriverMachineTypeTextBox"
+                                            AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_MachineType}"
+                                            ClearButtonEnabled="False"
+                                            Watermark="{x:Static resources:Resource.PackagesPage_MachineType_Placeholder}" />
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Margin="0,10,12,0"
+                                            Text="{x:Static resources:Resource.PackagesPage_OperatingSystem}"
+                                            Classes="driverFieldLabel" />
+                                        <ComboBox
+                                            x:Name="_driverOsComboBox"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="0,10,0,0"
+                                            AutomationProperties.AutomationId="WindowsOptimizationDriverOsComboBox"
+                                            AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_OperatingSystem}" />
+
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="0"
+                                            Margin="0,10,12,0"
+                                            Text="{x:Static resources:Resource.PackagesPage_DownloadTo}"
+                                            Classes="driverFieldLabel" />
+                                        <Grid
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Margin="0,10,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <ui:TextBox
+                                                x:Name="_driverDownloadToText"
+                                                Grid.Column="0"
+                                                AutomationProperties.AutomationId="WindowsOptimizationDriverDownloadToTextBox"
+                                                AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
+                                                ClearButtonEnabled="False"
+                                                Watermark="{x:Static resources:Resource.PackagesPage_DownloadTo_Placeholder}"
+                                                TextChanged="DriverDownloadToText_OnTextChanged" />
+
+                                            <ui:Button
+                                                Grid.Column="1"
+                                                Margin="6,0,0,0"
+                                                AutomationProperties.AutomationId="WindowsOptimizationDriverBrowseButton"
+                                                AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_DownloadTo}"
+                                                Click="DriverDownloadToButton_Click"
+                                                Classes="appButtonCompact driverIconButton"
+                                                ToolTip.Tip="{x:Static resources:Resource.PackagesPage_DownloadTo}">
+                                                <ui:Button.Icon>
+                                                    <ui:SymbolIcon Symbol="MoreHorizontal24" />
+                                                </ui:Button.Icon>
+                                            </ui:Button>
+
+                                            <ui:Button
+                                                Grid.Column="2"
+                                                Margin="6,0,0,0"
+                                                AutomationProperties.AutomationId="WindowsOptimizationDriverOpenFolderButton"
+                                                Click="DriverOpenDownloadToButton_Click"
+                                                Classes="appButtonCompact driverIconButton"
+                                                ToolTip.Tip="{x:Static resources:Resource.PackagesPage_OpenDownloadTo}">
+                                                <ui:Button.Icon>
+                                                    <ui:SymbolIcon Symbol="Open24" />
+                                                </ui:Button.Icon>
+                                            </ui:Button>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Border
+                                        Grid.Column="1"
+                                        Margin="18,0,0,0"
+                                        Classes="driverSourcePanel">
+                                        <StackPanel>
+                                            <TextBlock
+                                                Margin="0,0,0,8"
+                                                AutomationProperties.Name="{Binding RelativeSource={RelativeSource Self}, Path=Text}"
+                                                Focusable="True"
+                                                FontWeight="Medium"
+                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                Text="{x:Static resources:Resource.PackagesPage_Source}" />
+                                            <RadioButton
+                                                x:Name="_driverSourcePrimaryRadio"
+                                                AutomationProperties.HelpText="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}"
+                                                AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_PrimarySource}"
+                                                Focusable="True"
+                                                IsChecked="True"
+                                                Classes="driverSourceRadio">
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        FontWeight="Medium"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{x:Static resources:Resource.PackagesPage_PrimarySource}" />
+                                                    <TextBlock
+                                                        FontSize="{DynamicResource FontSizeSmallCaption}"
+                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                        Text="{x:Static resources:Resource.PackagesPage_PrimarySource_Message}"
+                                                        TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </RadioButton>
+                                            <RadioButton
+                                                x:Name="_driverSourceSecondaryRadio"
+                                                AutomationProperties.HelpText="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}"
+                                                AutomationProperties.Name="{x:Static resources:Resource.PackagesPage_SecondarySource}"
+                                                Classes="driverSourceRadio">
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        FontWeight="Medium"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{x:Static resources:Resource.PackagesPage_SecondarySource}" />
+                                                    <TextBlock
+                                                        FontSize="{DynamicResource FontSizeSmallCaption}"
+                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                        Text="{x:Static resources:Resource.PackagesPage_SecondarySource_Message}"
+                                                        TextTrimming="CharacterEllipsis" />
+                                                </StackPanel>
+                                            </RadioButton>
+
+                                            <ui:Button
+                                                AutomationProperties.AutomationId="WindowsOptimizationDriverSearchButton"
+                                                Margin="0,6,0,0"
+                                                HorizontalAlignment="Stretch"
+                                                Click="DriverSearchButton_Click"
+                                                Content="{x:Static resources:Resource.WindowsOptimizationPage_Scan_Button}"
+                                                Classes="appButtonPrimary">
+                                                <ui:Button.Icon>
+                                                    <ui:SymbolIcon Symbol="Search24" />
+                                                </ui:Button.Icon>
+                                            </ui:Button>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+
+                                <Grid x:Name="_driverLoader" Grid.Row="1" IsVisible="True">
+                                    <ScrollViewer
+                                        x:Name="_driverScrollViewer"
+                                        VerticalScrollBarVisibility="Auto"
+                                        HorizontalScrollBarVisibility="Disabled"
+                                        PointerWheelChanged="DriverScrollViewer_PointerWheelChanged">
+
+                                    <StackPanel>
+
+                                        <custom:InfoBar
+                                            x:Name="_driverInfoBar"
+                                            Title="{x:Static resources:Resource.PackagesPage_Disclaimer_Message}"
+                                            Margin="0,0,0,8"
+                                            IsClosable="False"
+                                            IsOpen="True"
+                                            Severity="Informational"
+                                            IsVisible="False" />
+
+                                        <Grid x:Name="_driverSearchControlsGrid" Margin="0,0,0,10" IsVisible="False">
+                                            <Border Classes="driverToolbarPanel">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" MinWidth="260" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <ui:TextBox
+                                                        x:Name="_driverFilterTextBox"
+                                                        Grid.Column="0"
+                                                        MinWidth="240"
+                                                        AutomationProperties.Name="{x:Static resources:Resource.Filter}"
+                                                        Watermark="{x:Static resources:Resource.Filter}"
+                                                        TextChanged="DriverFilterTextBox_TextChanged">
+                                                        <ui:TextBox.Icon>
+                                                            <ui:SymbolIcon Symbol="Search24" />
+                                                        </ui:TextBox.Icon>
+                                                    </ui:TextBox>
+
+                                                    <CheckBox
+                                                        x:Name="_driverOnlyShowUpdatesCheckBox"
+                                                        Grid.Column="1"
+                                                        Margin="14,0,14,0"
+                                                        VerticalAlignment="Center"
+                                                        VerticalContentAlignment="Center"
+                                                        Content="{x:Static resources:Resource.PackagesPage_OnlyShowUpdates}"
+                                                        Checked="DriverOnlyShowUpdatesCheckBox_OnChecked"
+                                                        Unchecked="DriverOnlyShowUpdatesCheckBox_OnChecked" />
+
+                                                    <ComboBox
+                                                        x:Name="_driverSortingComboBox"
+                                                        Grid.Column="2"
+                                                        MinWidth="158"
+                                                        VerticalAlignment="Center"
+                                                        SelectedIndex="2"
+                                                        SelectionChanged="DriverSortingComboBox_SelectionChanged">
+                                                        <ComboBoxItem Content="{x:Static resources:Resource.PackagesPage_Sort_Name}" />
+                                                        <ComboBoxItem Content="{x:Static resources:Resource.PackagesPage_Sort_Category}" />
+                                                        <ComboBoxItem Content="{x:Static resources:Resource.PackagesPage_Sort_Date}" />
+                                                    </ComboBox>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+
+                                        <StackPanel
+                                            x:Name="_driverLoadingIndicator"
+                                            AutomationProperties.AutomationId="WindowsOptimizationDriverLoadingIndicator"
+                                            Margin="0,4,0,12"
+                                            AutomationProperties.Name="{x:Static resources:Resource.WindowsOptimizationPage_ScanningDrivers}"
+                                            IsVisible="False">
+                                            <Border Classes="appSkeletonCard driverSkeletonCard">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border
+                                                        Grid.Row="0"
+                                                        Grid.RowSpan="3"
+                                                        Grid.Column="0"
+                                                        Width="18"
+                                                        Height="18"
+                                                        Margin="0,2,14,0"
+                                                        VerticalAlignment="Top"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <Border
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Width="280"
+                                                        Height="16"
+                                                        HorizontalAlignment="Left"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <StackPanel
+                                                        Grid.Row="0"
+                                                        Grid.Column="2"
+                                                        Orientation="Horizontal">
+                                                        <Border
+                                                            Width="34"
+                                                            Height="30"
+                                                            Margin="0,0,8,0"
+                                                            Classes="appSkeletonShimmerBlock" />
+                                                        <Border
+                                                            Width="34"
+                                                            Height="30"
+                                                            Classes="appSkeletonShimmerBlock" />
+                                                    </StackPanel>
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Width="170"
+                                                        Height="12"
+                                                        Margin="0,8,0,0"
+                                                        HorizontalAlignment="Left"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Height="12"
+                                                        Margin="0,10,110,0"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                </Grid>
+                                            </Border>
+                                            <Border Classes="appSkeletonCard driverSkeletonCard">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border
+                                                        Grid.Row="0"
+                                                        Grid.RowSpan="3"
+                                                        Grid.Column="0"
+                                                        Width="18"
+                                                        Height="18"
+                                                        Margin="0,2,14,0"
+                                                        VerticalAlignment="Top"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <Border
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Width="340"
+                                                        Height="16"
+                                                        HorizontalAlignment="Left"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <StackPanel
+                                                        Grid.Row="0"
+                                                        Grid.Column="2"
+                                                        Orientation="Horizontal">
+                                                        <Border
+                                                            Width="34"
+                                                            Height="30"
+                                                            Margin="0,0,8,0"
+                                                            Classes="appSkeletonShimmerBlock" />
+                                                        <Border
+                                                            Width="34"
+                                                            Height="30"
+                                                            Classes="appSkeletonShimmerBlock" />
+                                                    </StackPanel>
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Width="210"
+                                                        Height="12"
+                                                        Margin="0,8,0,0"
+                                                        HorizontalAlignment="Left"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Height="12"
+                                                        Margin="0,10,70,0"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                </Grid>
+                                            </Border>
+                                            <Border Classes="appSkeletonCard driverSkeletonCard">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border
+                                                        Grid.Row="0"
+                                                        Grid.RowSpan="3"
+                                                        Grid.Column="0"
+                                                        Width="18"
+                                                        Height="18"
+                                                        Margin="0,2,14,0"
+                                                        VerticalAlignment="Top"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <Border
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        Width="240"
+                                                        Height="16"
+                                                        HorizontalAlignment="Left"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <StackPanel
+                                                        Grid.Row="0"
+                                                        Grid.Column="2"
+                                                        Orientation="Horizontal">
+                                                        <Border
+                                                            Width="34"
+                                                            Height="30"
+                                                            Margin="0,0,8,0"
+                                                            Classes="appSkeletonShimmerBlock" />
+                                                        <Border
+                                                            Width="34"
+                                                            Height="30"
+                                                            Classes="appSkeletonShimmerBlock" />
+                                                    </StackPanel>
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Width="190"
+                                                        Height="12"
+                                                        Margin="0,8,0,0"
+                                                        HorizontalAlignment="Left"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Height="12"
+                                                        Margin="0,10,140,0"
+                                                        Classes="appSkeletonShimmerBlock" />
+                                                </Grid>
+                                            </Border>
+                                        </StackPanel>
+
+                                        <Border
+                                            x:Name="_driverEmptyStateBorder"
+                                            AutomationProperties.AutomationId="WindowsOptimizationDriverEmptyState"
+                                            Margin="0,4,0,12"
+                                            Background="{DynamicResource AppSurfaceCardBrush}"
+                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                            BorderThickness="1"
+                                            CornerRadius="{StaticResource CornerRadiusCard}"
+                                            IsVisible="False">
+                                            <custom:EmptyState
+                                                x:Name="_driverEmptyStateControl"
+                                                MaxWidth="520"
+                                                Icon="Search24" />
+                                        </Border>
+
+                                        <StackPanel x:Name="_driverPackagesStackPanel" Margin="0,0,0,12" />
+
+                                    </StackPanel>
+
+                                    </ScrollViewer>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                <!-- Content for network acceleration mode -->
+                <Grid Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0" IsVisible="{Binding IsNetworkAccelerationMode}">
+                    <opt:NetworkAccelerationControl x:Name="_networkAccelerationControl" />
+                </Grid>
+
+                <ScrollViewer
+                    Grid.Column="1"
+                    VerticalScrollBarVisibility="Auto"
+                    HorizontalScrollBarVisibility="Disabled"
+                    MinWidth="260"
+                    MaxWidth="400"
+                    IsVisible="{Binding IsCleanupMode}"
+                    PointerWheelChanged="ScrollViewer_PointerWheelChanged">
+                    <StackPanel>
+
+                        <Border
+                            Classes="cardContainer rightColumnCard"
+                            IsVisible="{Binding IsOptimizationMode}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    FontSize="{DynamicResource FontSizePageDescription}"
+                                    FontWeight="Medium"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_SelectedActions_Header}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="0,2,0,12"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{Binding SelectedActionsSummary}" />
+
+                                <Grid Grid.Row="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <ListBox
+                                        Grid.Row="0"
+                                        ItemsSource="{Binding SelectedOptimizationActions}"
+                                        BorderThickness="0"
+                                        Background="Transparent"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                        <ListBox.ItemContainerTheme>
+                                            <ControlTheme TargetType="ListBoxItem">
+                                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                                <Setter Property="Margin" Value="0,0,0,8" />
+                                                <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+                                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                                <Setter Property="Template">
+                                                    <ControlTemplate TargetType="ListBoxItem">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="{StaticResource CornerRadiusControl}">
+                                                            <ContentPresenter Margin="12" />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter>
+                                            </ControlTheme>
+                                        </ListBox.ItemContainerTheme>
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock
+                                                        FontWeight="Medium"
+                                                        Text="{Binding ActionTitle}"
+                                                        TextWrapping="Wrap" />
+                                                    <TextBlock
+                                                        Margin="0,4,0,0"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{Binding CategoryTitle}"
+                                                        TextWrapping="Wrap" />
+                                                    <TextBlock
+                                                        Margin="0,4,0,0"
+                                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                        Text="{Binding Description}"
+                                                        TextWrapping="Wrap"
+                                                        IsVisible="{Binding Text, RelativeSource={RelativeSource Self}, Converter={StaticResource TextToVisibilityConverter}}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Margin="0,12,0,0"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{Binding SelectedActionsEmptyText}"
+                                        IsVisible="{Binding HasSelectedActions, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                                    </TextBlock>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border
+                            Classes="cardContainer rightColumnCard"
+                            IsVisible="{Binding IsCleanupMode}">
+                            <StackPanel>
+                                <!-- Header section matching left side Expander.Header style -->
+                                <TextBlock
+                                    FontWeight="Medium"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Margin="0,0,0,2"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupInfo}" />
+                                <TextBlock
+                                    Margin="0,0,0,12"
+                                    FontSize="{DynamicResource FontSizeSmallCaption}"
+                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                    Text="{x:Static resources:Resource.WindowsOptimizationPage_CleanupDescription}"
+                                    TextWrapping="Wrap" />
+
+                                <!-- Show current running step during cleanup run; otherwise show estimation -->
+                                <TextBlock
+                                    Margin="0,0,0,4"
+                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                    Text="{Binding CurrentOperationText}"
+                                    TextWrapping="Wrap"
+                                    IsVisible="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <Border
+                                    Margin="0,0,0,4"
+                                    Classes="cleanupEstimateRow"
+                                    Classes.showEstimateRow="{Binding IsScanned}"
+                                    Classes.showEstimateRowIdle="{Binding !IsBusy}">
+                                    <TextBlock
+                                        x:Name="_estimatedCleanupText"
+                                        FontWeight="Medium"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Text="{Binding EstimatedCleanupSizeText}"
+                                        TextWrapping="Wrap"
+                                        IsVisible="{Binding Text, RelativeSource={RelativeSource Self}, Converter={StaticResource TextToVisibilityConverter}}" />
+                                </Border>
+                                <Border
+                                    Margin="0,0,0,8"
+                                    Classes="cleanupPendingRow"
+                                    Classes.showPendingRow="{Binding !IsScanned}"
+                                    Classes.showPendingRowIdle="{Binding !IsBusy}">
+                                    <TextBlock
+                                        FontSize="{DynamicResource FontSizeSmallCaption}"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding PendingText}"
+                                        TextWrapping="Wrap" />
+                                </Border>
+                                <!-- Current deleting file -->
+                                <Border
+                                    Margin="0,0,0,12"
+                                    Classes="cleanupDeletingRow"
+                                    Classes.showDeletingRow="{Binding IsBusy}">
+                                    <TextBlock
+                                        FontSize="{DynamicResource FontSizeSmallCaption}"
+                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding CurrentDeletingFile}"
+                                        TextWrapping="Wrap"
+                                        TextTrimming="CharacterEllipsis"
+                                        IsVisible="{Binding Text, RelativeSource={RelativeSource Self}, Converter={StaticResource TextToVisibilityConverter}}" />
+                                </Border>
+
+                                <!-- Scan Progress -->
+                                <StackPanel Margin="0,0,0,16" IsVisible="{Binding IsCalculatingSize, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <TextBlock
+                                        Text="{Binding CurrentOperationText}"
+                                        FontSize="{DynamicResource FontSizeSmallCaption}"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Margin="0,0,0,4" />
+                                    <ProgressBar IsIndeterminate="True" Height="4" />
+                                </StackPanel>
+                                <!-- Scan and Execute Buttons -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                    <ui:Button
+                                        x:Name="_scanCleanupButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationScanCleanupButton"
+                                        MinWidth="120"
+                                        Margin="0,0,8,0"
+                                        HorizontalAlignment="Stretch"
+                                        ToolTip.Tip="{Binding ScanCleanupButtonText}"
+                                        AutomationProperties.Name="{Binding ScanCleanupButtonText}"
+                                        Click="ScanCleanupButton_Click"
+                                        Content="{Binding ScanCleanupButtonText}"
+                                        Classes="appButtonPrimary cleanupScanButton"
+                                        Classes.showScanCleanup="{Binding !IsScanned}"
+                                        Classes.showScanCleanupIdle="{Binding !IsBusy}" />
+                                    <ui:Button
+                                        x:Name="_runCleanupButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationRunCleanupButton"
+                                        MinWidth="120"
+                                        Margin="0,0,0,0"
+                                        HorizontalAlignment="Stretch"
+                                        ToolTip.Tip="{Binding RunCleanupButtonText}"
+                                        AutomationProperties.Name="{Binding RunCleanupButtonText}"
+                                        Click="RunCleanupButton_Click"
+                                        Content="{Binding RunCleanupButtonText}"
+                                        Classes="appButtonPrimary cleanupRunButton"
+                                        Classes.showRunCleanup="{Binding IsScanned}"
+                                        Classes.showRunCleanupIdle="{Binding !IsBusy}"
+                                        Classes.showRunCleaning="{Binding IsCleaning}" />
+                                    <ui:Button
+                                        x:Name="_reScanButton"
+                                        AutomationProperties.AutomationId="WindowsOptimizationReScanCleanupButton"
+                                        MinWidth="36"
+                                        Margin="8,0,0,0"
+                                        HorizontalAlignment="Stretch"
+                                        ToolTip.Tip="{x:Static resources:Resource.Refresh}"
+                                        AutomationProperties.Name="{x:Static resources:Resource.Refresh}"
+                                        Click="ScanCleanupButton_Click"
+                                        Classes="appButtonStandard cleanupRescanButton"
+                                        Classes.showRunCleanup="{Binding IsScanned}"
+                                        Classes.showRunCleanupIdle="{Binding !IsBusy}">
+                                        <ui:SymbolIcon Symbol="ArrowCounterclockwise24" />
+                                    </ui:Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border
+                            Classes="cardContainer rightColumnCard"
+                            IsVisible="{Binding IsCleanupMode}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <ScrollViewer
+                                    Grid.Row="0"
+                                    Margin="0,0,0,12"
+                                    VerticalScrollBarVisibility="Auto"
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    PointerWheelChanged="ScrollViewer_PointerWheelChanged">
+                                    <StackPanel>
+                                        <TextBlock
+                                            FontWeight="Medium"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            Margin="0,0,0,2"
+                                            Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Header}" />
+                                        <TextBlock
+                                            Margin="0,0,0,12"
+                                            FontSize="{DynamicResource FontSizeSmallCaption}"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Description}"
+                                            TextWrapping="Wrap" />
+                                        <ItemsControl
+                                            ItemsSource="{Binding CustomCleanupRules}"
+                                            IsVisible="{Binding !!CustomCleanupRules.Count}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border
+                                                Margin="0,0,0,8"
+                                                Padding="12"
+                                                Background="{DynamicResource AppSurfaceCardBrush}"
+                                                CornerRadius="{StaticResource CornerRadiusControl}">
+                                                        <StackPanel>
+                                                            <TextBlock
+                                                                FontWeight="Medium"
+                                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                                Text="{Binding DirectoryPath}"
+                                                                TextWrapping="Wrap" />
+                                                            <TextBlock
+                                                                Margin="0,4,0,0"
+                                                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                                Text="{Binding ExtensionsDisplay}"
+                                                                TextWrapping="Wrap" />
+                                                            <TextBlock
+                                                                Margin="0,2,0,0"
+                                                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                                                Text="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Recursive_Label}"
+                                                                IsVisible="{Binding Recursive, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                            </TextBlock>
+                                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                                                <ui:Button
+                                                                    Margin="0,8,8,0"
+
+                                                                    Tag="{Binding}"
+                                                                    Click="EditCustomCleanupRuleButton_Click"
+                                                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Edit}" />
+                                                                <ui:Button
+                                                                    Margin="0,8,0,0"
+
+                                                                    Tag="{Binding}"
+                                                                    Click="RemoveCustomCleanupRuleButton_Click"
+                                                                    Content="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Remove}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <custom:EmptyState
+                                            Margin="0,0,0,12"
+                                            Icon="Delete24"
+                                            Title="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Empty}"
+                                            IsVisible="{Binding !CustomCleanupRules.Count}">
+                                        </custom:EmptyState>
+                                    </StackPanel>
+                                </ScrollViewer>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <ui:Button
+                                        x:Name="_addCustomCleanupRuleButton"
+                                        Margin="0,0,8,0"
+                                        Appearance="Secondary"
+                                        Click="AddCustomCleanupRuleButton_Click"
+                                        Content="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Add}" />
+                                    <ui:Button
+                                        x:Name="_clearCustomCleanupRulesButton"
+
+                                        Click="ClearCustomCleanupRulesButton_Click"
+                                        Content="{x:Static resources:Resource.WindowsOptimizationPage_CustomCleanup_Clear}" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

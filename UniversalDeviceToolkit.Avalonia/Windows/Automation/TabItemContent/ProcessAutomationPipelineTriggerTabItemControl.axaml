@@ -1,0 +1,69 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Automation.TabItemContent.ProcessAutomationPipelineTriggerTabItemControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    Initialized="ProcessAutomationPipelineTriggerTabItemControl_Initialized">
+    <Grid Margin="16,16,0,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <custom:DynamicScrollViewer Grid.Row="0">
+            <ItemsControl
+                x:Name="_list"
+                Margin="0,0,16,8"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+        </custom:DynamicScrollViewer>
+
+        <Border
+            Grid.Row="1"
+            Margin="0,8,16,0"
+            BorderBrush="{DynamicResource KeyboardFocusBorderColorBrush}"
+            BorderThickness="0,1,0,0">
+            <Grid Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ui:Button
+                    Grid.Column="1"
+                    Click="AddButton_Click"
+                    FontSize="{StaticResource IconSizeMD}"
+                    Icon="Add24"
+                    ToolTip.Tip="{x:Static resources:Resource.Add}" />
+
+                <ui:Button
+                    Grid.Column="2"
+                    Margin="8,0,0,0"
+                    Click="DeleteAllButton_Click"
+                    FontSize="{StaticResource IconSizeMD}"
+                    Icon="Delete24"
+                    ToolTip.Tip="{x:Static resources:Resource.Delete}" />
+
+                <ui:Button
+                    Grid.Column="3"
+                    Margin="8,0,0,0"
+                    Click="CopyShortcut"
+                    FontSize="{StaticResource IconSizeMD}"
+                    Icon="Copy24"
+                    ToolTip.Tip="{x:Static resources:Resource.CopyAll}" />
+
+                <ui:Button
+                    Grid.Column="4"
+                    Margin="8,0,0,0"
+                    Click="PasteShortcut"
+                    FontSize="{StaticResource IconSizeMD}"
+                    Icon="ClipboardPaste24"
+                    ToolTip.Tip="{x:Static resources:Resource.Paste}" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

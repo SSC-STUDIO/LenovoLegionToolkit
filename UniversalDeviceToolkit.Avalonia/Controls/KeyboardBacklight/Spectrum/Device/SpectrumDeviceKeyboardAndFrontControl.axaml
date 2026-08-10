@@ -1,0 +1,66 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.KeyboardBacklight.Spectrum.Device.SpectrumDeviceKeyboardAndFrontControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls.KeyboardBacklight.Spectrum.Device"
+    FlowDirection="LeftToRight">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="24" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Keyboard  -->
+        <controls:SpectrumKeyboardControl
+            x:Name="_keyboard"
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="6"
+            Padding="0,0,0,16" />
+
+        <!--  Front  -->
+        <controls:SpectrumZoneControl
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="2"
+            KeyCode="501" />
+        <controls:SpectrumZoneControl
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="2"
+            KeyCode="502" />
+        <controls:SpectrumZoneControl
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="2"
+            KeyCode="503" />
+        <controls:SpectrumZoneControl
+            Grid.Row="1"
+            Grid.Column="3"
+            Margin="2"
+            KeyCode="504" />
+        <controls:SpectrumZoneControl
+            Grid.Row="1"
+            Grid.Column="4"
+            Margin="2"
+            KeyCode="505" />
+        <controls:SpectrumZoneControl
+            Grid.Row="1"
+            Grid.Column="5"
+            Margin="2"
+            KeyCode="506" />
+
+    </Grid>
+
+</UserControl>

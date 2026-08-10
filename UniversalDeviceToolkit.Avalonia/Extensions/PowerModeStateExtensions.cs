@@ -1,5 +1,3 @@
-#if WINDOWS
-
 using Avalonia.Media;
 using UniversalDeviceToolkit.Lib;
 
@@ -17,5 +15,3 @@ public static class PowerModeStateExtensions
         _ => Colors.Transparent,
     });
 }
-
-#endif

@@ -1,995 +1,550 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
-                 xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
-                 xmlns:pages="using:UniversalDeviceToolkit.Avalonia.Pages"
-                 xmlns:automation="using:Avalonia.Automation"
-                 x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage">
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Pages.DashboardPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:automation="using:Avalonia.Automation"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:dashboard="using:UniversalDeviceToolkit.Avalonia.Controls.Dashboard"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    automation:AutomationProperties.AutomationId="DashboardPageRoot"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    Initialized="DashboardPage_Initialized"
+    SizeChanged="DashboardPage_SizeChanged">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
-        <StackPanel x:Name="DashboardStack" Spacing="20" Margin="0,0,16,16">
+    <UserControl.Styles>
+        <Style Selector="Border.dashboardSkeletonShimmerBlock">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+        </Style>
 
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
-                <StackPanel Spacing="4">
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Title, Fallback=Dashboard}"
-                               FontSize="{StaticResource FontSizePageTitle}"
-                               FontWeight="Medium"
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                               OverflowMode="Wrap"
-                               MaxLines="2" />
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Subtitle, Fallback=Device health and controls}"
-                               FontSize="{StaticResource FontSizeSmallBody}"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               OverflowMode="Wrap"
-                               MaxLines="2" />
-                    <controls:LocalizedTextBlock Text="{Binding DeviceName}"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                               FontSize="{StaticResource FontSizeSmallCaption}"
-                               OverflowMode="Ellipsis"
-                               MaxLines="1" />
-                </StackPanel>
-                <Button Grid.Column="1"
-                        x:Name="DashboardRefreshButton"
-                        automation:AutomationProperties.AutomationId="AvaloniaDashboardRefreshButton"
-                        Command="{Binding RefreshCommand}"
-                        ToolTip.Tip="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh dashboard}"
-                        Padding="10,6"
-                        MinWidth="80"
-                        CornerRadius="{StaticResource CornerRadiusControl}"
-                        Background="{DynamicResource ButtonBackgroundBrush}"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:NavigationIcon IconIdentifier="ArrowSync24"
-                                                 FontSize="{StaticResource IconSizeCompact}" />
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh}"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                    </StackPanel>
-                </Button>
-                <Border Grid.Column="2"
-                        Background="{DynamicResource StatusSuccessBackgroundBrush}"
-                        BorderBrush="{DynamicResource StatusSuccessBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusRound}"
-                        Padding="12,6"
-                        VerticalAlignment="Center">
-                    <controls:LocalizedTextBlock Text="{Binding DeviceSupport}"
-                               Foreground="{DynamicResource StatusSuccessBrush}"
-                               FontSize="{StaticResource FontSizeSmallCaption}"
-                               FontWeight="SemiBold"
-                               OverflowMode="Ellipsis"
-                               MaxLines="1" />
-                </Border>
-            </Grid>
+        <Style Selector="Border.dashboardListSkeletonCard">
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="MinHeight" Value="72" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+        </Style>
 
-            <controls:LoadingShimmer IsVisible="{Binding IsLoading}"
-                                     RowCount="3"
-                                     CardHeight="120"
-                                     Margin="0,0,0,4" />
+        <!--
+          Sensors skeleton mirrors SensorsControl overlay layout:
+          title + model subtitle, GaugeSizeMD + 3 metric rows, trend well, 3-item legend.
+        -->
+        <Style Selector="Border.dashboardSensorsSkeletonCard">
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Margin" Value="0,0,16,16" />
+            <Setter Property="Padding" Value="8,10" />
+            <Setter Property="MinHeight" Value="280" />
+            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+        </Style>
 
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                <Border Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        Padding="16">
-                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                        <StackPanel Spacing="4">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Power, Fallback=Power}"
-                                                         FontSize="{StaticResource FontSizeBody}"
-                                                         FontWeight="Medium"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                            <controls:LocalizedTextBlock Text="{Binding PowerStatus}"
-                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="2" />
-                        </StackPanel>
-                        <Button Grid.Column="1"
-                                x:Name="PowerRefreshButton"
-                                Command="{Binding RefreshCommand}"
-                                automation:AutomationProperties.AutomationId="AvaloniaPowerRefreshButton"
-                                automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh}"
-                                ToolTip.Tip="{local:Loc Key=Dashboard_Refresh, Fallback=Refresh}"
-                                Padding="8"
-                                MinWidth="36"
-                                VerticalAlignment="Center">
-                            <controls:NavigationIcon IconIdentifier="ArrowSync24"
-                                                     FontSize="{StaticResource IconSizeCompact}" />
-                        </Button>
-                    </Grid>
-                </Border>
-                <Border Grid.Column="1"
-                        Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        Padding="16">
-                    <StackPanel Spacing="4">
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_LastUpdated, Fallback=Last updated}"
-                                                     FontSize="{StaticResource FontSizeBody}"
-                                                     FontWeight="Medium"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                        <controls:LocalizedTextBlock Text="{Binding LastUpdatedText}"
-                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                    </StackPanel>
-                </Border>
-            </Grid>
+        <Style Selector="StackPanel.dashboardSensorsSkeletonSection">
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="MinWidth" Value="0" />
+        </Style>
 
-            <!-- Persisted dashboard layout -->
-            <Grid ColumnDefinitions="*,Auto" Margin="0,8,0,0">
-                <StackPanel Spacing="2">
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Layout, Fallback=Dashboard layout}"
-                                                 FontSize="{StaticResource FontSizeSubsection}"
-                                                 FontWeight="Medium"
-                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                 OverflowMode="Ellipsis"
-                                                 MaxLines="1" />
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_LayoutDescription, Fallback=Choose the groups and order shown on the dashboard.}"
-                                                 FontSize="{StaticResource FontSizeSmallCaption}"
-                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                 OverflowMode="Wrap"
-                                                 MaxLines="2" />
-                </StackPanel>
-                <Button Grid.Column="1"
-                        Command="{Binding ToggleLayoutEditorCommand}"
-                        Padding="10,6"
-                        MinWidth="110"
-                        automation:AutomationProperties.AutomationId="AvaloniaDashboardEditLayoutButton"
-                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_EditLayout, Fallback=Edit layout}"
-                        ToolTip.Tip="{local:Loc Key=Dashboard_EditLayout, Fallback=Edit layout}">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <controls:NavigationIcon IconIdentifier="Edit24"
-                                                 FontSize="{StaticResource IconSizeCompact}" />
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_EditLayout, Fallback=Edit}"
-                                                     OverflowMode="Ellipsis"
-                                                     MaxLines="1" />
-                    </StackPanel>
-                </Button>
-            </Grid>
+        <Style Selector="Border.dashboardSensorsSkeletonTitle">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="MinWidth" Value="56" />
+            <Setter Property="Width" Value="72" />
+            <Setter Property="MaxWidth" Value="120" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
 
-            <ItemsControl ItemsSource="{Binding DashboardGroups}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <pages:DashboardWrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Margin="0"
-                                Padding="14"
-                                Background="{DynamicResource CardBackgroundBrush}"
-                                BorderBrush="{DynamicResource CardBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="{StaticResource CornerRadiusCard}"
-                                automation:AutomationProperties.Name="{Binding DisplayName}">
-                            <StackPanel Spacing="8">
-                                <Grid ColumnDefinitions="*,Auto,Auto">
-                                    <controls:LocalizedTextBlock Text="{Binding DisplayName}"
-                                                                 FontSize="{StaticResource FontSizeBody}"
-                                                                 FontWeight="Medium"
-                                                                 OverflowMode="Ellipsis"
-                                                                 MaxLines="1"
-                                                                 MinWidth="0" />
-                                    <Button Grid.Column="1"
-                                            Command="{Binding DataContext.MoveDashboardGroupUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Padding="4"
-                                            MinWidth="28"
-                                            ToolTip.Tip="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}"
-                                            automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}">
-                                        <controls:NavigationIcon IconIdentifier="ChevronUp24"
-                                                                 FontSize="{StaticResource IconSizeCompact}" />
-                                    </Button>
-                                    <Button Grid.Column="2"
-                                            Command="{Binding DataContext.MoveDashboardGroupDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"
-                                            Padding="4"
-                                            MinWidth="28"
-                                            ToolTip.Tip="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}"
-                                            automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}">
-                                        <controls:NavigationIcon IconIdentifier="ChevronDown24"
-                                                                 FontSize="{StaticResource IconSizeCompact}" />
-                                    </Button>
+        <Style Selector="Border.dashboardSensorsSkeletonSubtitle">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Height" Value="14" />
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="Width" Value="140" />
+            <Setter Property="MaxWidth" Value="220" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="8,1,0,0" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonGauge">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
+            <Setter Property="Height" Value="{StaticResource GaugeSizeMD}" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonLabel">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="56" />
+            <Setter Property="MinWidth" Value="48" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonBar">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Height" Value="3.5" />
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MaxWidth" Value="260" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusProgressBar}" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonValue">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="64" />
+            <Setter Property="MinWidth" Value="56" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonTrendPanel">
+            <Setter Property="Margin" Value="0,14,0,0" />
+            <Setter Property="Height" Value="76" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+            <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonTrendFill">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+        </Style>
+
+        <Style Selector="WrapPanel.dashboardSensorsSkeletonLegendPanel">
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+
+        <Style Selector="StackPanel.dashboardSensorsSkeletonLegendItem">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,14,4" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonLegendDot">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style Selector="Border.dashboardSensorsSkeletonLegendText">
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+            <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+            <Setter Property="Height" Value="12" />
+            <Setter Property="Width" Value="48" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+
+    <custom:DynamicScrollViewer
+        x:Name="_scrollViewer"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <controls:LoadableControl
+            x:Name="_loader"
+            Margin="0,0,0,12"
+            ContentVisibilityWhileLoading="True">
+            <controls:LoadableControl.LoadingContent>
+                <StackPanel
+                    Margin="0,16,0,0"
+                    automation:AutomationProperties.AutomationId="DashboardLoadingSkeleton"
+                    automation:AutomationProperties.Name="{x:Static resources:Resource.DashboardPage_Title}">
+
+                    <!--
+                      Single page-owned skeleton: sensors card + feature groups.
+                      NavigationStore skips its generic shell because DashboardPage owns loading chrome.
+                      Content stays Opacity 0 while loading, so SensorsControl overlay cannot paint —
+                      the page skeleton must include the sensor-card silhouette.
+                    -->
+                    <Border
+                        x:Name="_skeletonSensorsCard"
+                        automation:AutomationProperties.AutomationId="DashboardSensorsLoadingSkeleton"
+                        Classes="dashboardSensorsSkeletonCard">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- CPU: title+model, gauge+3 metrics, trend, legend -->
+                            <StackPanel Grid.Column="0" Classes="dashboardSensorsSkeletonSection">
+                                <Grid Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Classes="dashboardSensorsSkeletonTitle" Width="72" />
+                                    <Border Grid.Column="1" Classes="dashboardSensorsSkeletonSubtitle" Width="168" />
                                 </Grid>
-                                <ItemsControl ItemsSource="{Binding Items}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Spacing="8">
-                                            <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-                                                  ColumnSpacing="6"
-                                                  MinWidth="0"
-                                                  IsVisible="{Binding IsStandardControl}"
-                                                  ToolTip.Tip="{Binding StateError}">
-                                                <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
-                                                                         FontSize="{StaticResource IconSizeCompact}"
-                                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                         VerticalAlignment="Top" />
-                                                <StackPanel Grid.Column="1"
-                                                            Spacing="2"
-                                                            MinWidth="0"
-                                                            VerticalAlignment="Center">
-                                                    <controls:LocalizedTextBlock Text="{Binding DisplayName}"
-                                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                                 FontWeight="Medium"
-                                                                                 Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                                                 OverflowMode="Ellipsis"
-                                                                                 MaxLines="1"
-                                                                                 MinWidth="0" />
-                                                    <controls:LocalizedTextBlock Text="{Binding StateDisplayText}"
-                                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                 OverflowMode="Ellipsis"
-                                                                                 MaxLines="1"
-                                                                                 MinWidth="0" />
-                                                </StackPanel>
-                                                <ComboBox Grid.Column="2"
-                                                          IsVisible="{Binding IsComboAvailable}"
-                                                          ItemsSource="{Binding Options}"
-                                                          SelectedItem="{Binding SelectedOption, Mode=TwoWay}"
-                                                          Width="132"
-                                                          MinWidth="96"
-                                                          VerticalAlignment="Center"
-                                                          automation:AutomationProperties.Name="{Binding DisplayName}">
-                                                    <ComboBox.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <controls:LocalizedTextBlock Text="{Binding DisplayName}"
-                                                                                         OverflowMode="Ellipsis"
-                                                                                         MaxLines="1" />
-                                                        </DataTemplate>
-                                                    </ComboBox.ItemTemplate>
-                                                </ComboBox>
-                                                <ToggleSwitch Grid.Column="2"
-                                                              IsVisible="{Binding IsToggleControl}"
-                                                              IsChecked="{Binding IsToggleOn, Mode=TwoWay}"
-                                                              IsEnabled="{Binding IsAvailable}"
-                                                              VerticalAlignment="Center"
-                                                              automation:AutomationProperties.Name="{Binding DisplayName}"
-                                                              Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                              CommandParameter="{Binding}" />
-                                                <Button Grid.Column="3"
-                                                        IsVisible="{Binding IsHybridModeInfoVisible}"
-                                                        Command="{Binding DataContext.ShowHybridModeInfoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Padding="3"
-                                                        MinWidth="28"
-                                                        VerticalAlignment="Center"
-                                                        ToolTip.Tip="{local:Loc Key=Information, Fallback=Information}"
-                                                        automation:AutomationProperties.AutomationId="AvaloniaDashboardHybridModeInfoButton"
-                                                        automation:AutomationProperties.Name="{local:Loc Key=Information, Fallback=Information}">
-                                                    <controls:NavigationIcon IconIdentifier="Info24"
-                                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                                <Button Grid.Column="4"
-                                                        IsVisible="{Binding IsComboAvailable}"
-                                                        Command="{Binding DataContext.SetDashboardItemStateCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Padding="3"
-                                                        MinWidth="28"
-                                                        VerticalAlignment="Center"
-                                                        ToolTip.Tip="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
-                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Apply, Fallback=Apply}">
-                                                    <controls:NavigationIcon IconIdentifier="Checkmark24"
-                                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                                <Button Grid.Column="5"
-                                                        IsVisible="{Binding IsPowerModeSettingsVisible}"
-                                                        Command="{Binding DataContext.ShowPowerModeSettingsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Padding="3"
-                                                        MinWidth="28"
-                                                        VerticalAlignment="Center"
-                                                        ToolTip.Tip="{local:Loc Key=PowerModeControl_Settings, Fallback=Power mode settings}"
-                                                        automation:AutomationProperties.AutomationId="AvaloniaPowerModeSettingsButton"
-                                                        automation:AutomationProperties.Name="{local:Loc Key=PowerModeControl_Settings, Fallback=Power mode settings}">
-                                                    <controls:NavigationIcon IconIdentifier="Settings24"
-                                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                                <Button Grid.Column="6"
-                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Padding="3"
-                                                        MinWidth="24"
-                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}"
-                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}">
-                                                    <controls:NavigationIcon IconIdentifier="ChevronUp24"
-                                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                                <Button Grid.Column="7"
-                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Padding="3"
-                                                        MinWidth="24"
-                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}"
-                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}">
-                                                    <controls:NavigationIcon IconIdentifier="ChevronDown24"
-                                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                                <Button Grid.Column="8"
-                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Padding="3"
-                                                        MinWidth="24"
-                                                        ToolTip.Tip="{local:Loc Key=Dashboard_Remove, Fallback=Remove}"
-                                                        automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Remove, Fallback=Remove}">
-                                                    <controls:NavigationIcon IconIdentifier="Delete24"
-                                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                            </Grid>
-
-                                            <Border IsVisible="{Binding IsDiscreteGpuControl}"
-                                                    Padding="12"
-                                                    Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                                                    BorderBrush="{DynamicResource CardBorderBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="{StaticResource CornerRadiusControl}"
-                                                    ToolTip.Tip="{Binding DataContext.DiscreteGpuState.Error, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
-                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                                        <StackPanel Spacing="2" MinWidth="0">
-                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_Title, Fallback=Discrete GPU}"
-                                                                                         FontSize="{StaticResource FontSizeBody}"
-                                                                                         FontWeight="Medium"
-                                                                                         OverflowMode="Ellipsis"
-                                                                                         MaxLines="1" />
-                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_Message, Fallback=Monitor and manage the discrete GPU.}"
-                                                                                         FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                         OverflowMode="Wrap"
-                                                                                         MaxLines="2" />
-                                                        </StackPanel>
-                                                        <Border Grid.Column="1"
-                                                                Background="{DynamicResource StatusInfoBackgroundBrush}"
-                                                                BorderBrush="{DynamicResource StatusInfoBrush}"
-                                                                BorderThickness="1"
-                                                                CornerRadius="{StaticResource CornerRadiusRound}"
-                                                                Padding="8,4">
-                                                            <controls:LocalizedTextBlock Text="{Binding DataContext.DiscreteGpuState.Status, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                                         Foreground="{DynamicResource StatusInfoBrush}"
-                                                                                         FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                                         FontWeight="SemiBold"
-                                                                                         OverflowMode="Ellipsis"
-                                                                                         MaxLines="1" />
-                                                        </Border>
-                                                    </Grid>
-                                                    <controls:LocalizedTextBlock Grid.Row="1"
-                                                                                 Text="{Binding DataContext.DiscreteGpuState.PerformanceState, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                 OverflowMode="Ellipsis"
-                                                                                 MaxLines="1" />
-                                                    <controls:LocalizedTextBlock Grid.Row="2"
-                                                                                 Text="{Binding DataContext.DiscreteGpuState.ProcessCount, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat={}{0} processes}"
-                                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                 OverflowMode="Ellipsis"
-                                                                                 MaxLines="1" />
-                                                    <Grid Grid.Row="3" ColumnDefinitions="*,*" ColumnSpacing="8">
-                                                        <Button Grid.Column="0"
-                                                                Command="{Binding DataContext.KillDiscreteGpuProcessesCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                IsEnabled="{Binding DataContext.DiscreteGpuState.CanKillProcesses, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                Padding="8,4"
-                                                                ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}"
-                                                                automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop GPU apps}">
-                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_KillApps, Fallback=Stop apps}"
-                                                                                         OverflowMode="Ellipsis"
-                                                                                         MaxLines="1" />
-                                                        </Button>
-                                                        <Button Grid.Column="1"
-                                                                Command="{Binding DataContext.RestartDiscreteGpuCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                IsEnabled="{Binding DataContext.DiscreteGpuState.CanRestart, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                Padding="8,4"
-                                                                ToolTip.Tip="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
-                                                                automation:AutomationProperties.Name="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}">
-                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=DiscreteGPUControl_RestartGPU, Fallback=Restart GPU}"
-                                                                                         OverflowMode="Ellipsis"
-                                                                                         MaxLines="1" />
-                                                        </Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </Border>
-
-                                            <Border IsVisible="{Binding IsGpuOverclockControl}"
-                                                    Padding="12"
-                                                    Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                                                    BorderBrush="{DynamicResource CardBorderBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="{StaticResource CornerRadiusControl}"
-                                                    ToolTip.Tip="{Binding DataContext.GpuOverclockState.Error, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8">
-                                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                                                        <StackPanel Spacing="2" MinWidth="0">
-                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}"
-                                                                                         FontSize="{StaticResource FontSizeBody}"
-                                                                                         FontWeight="Medium"
-                                                                                         OverflowMode="Ellipsis"
-                                                                                         MaxLines="1" />
-                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUControl_Message, Fallback=Tune GPU core and memory offsets.}"
-                                                                                         FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                         OverflowMode="Wrap"
-                                                                                         MaxLines="2" />
-                                                        </StackPanel>
-                                                        <Button Grid.Column="1"
-                                                                Click="ConfigureGpuOverclockButton_Click"
-                                                                IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                Padding="6"
-                                                                ToolTip.Tip="{local:Loc Key=Settings, Fallback=Configure}"
-                                                                automation:AutomationProperties.Name="{local:Loc Key=Settings, Fallback=Configure GPU overclock}">
-                                                            <controls:NavigationIcon IconIdentifier="Settings24"
-                                                                                     FontSize="{StaticResource IconSizeSM}" />
-                                                        </Button>
-                                                        <ToggleSwitch Grid.Column="2"
-                                                                      IsChecked="{Binding DataContext.GpuOverclockEnabled, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-                                                                      IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                      automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUControl_Title, Fallback=Overclock GPU}" />
-                                                    </Grid>
-                                                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title, Fallback=Core frequency offset}"
-                                                                                     VerticalAlignment="Center"
-                                                                                     OverflowMode="Ellipsis"
-                                                                                     MaxLines="1" />
-                                                        <controls:LocalizedTextBlock Grid.Column="1"
-                                                                                     Text="{Binding DataContext.GpuCoreDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat={}{0:0} MHz}"
-                                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                     OverflowMode="Ellipsis"
-                                                                                     MaxLines="1" />
-                                                    </Grid>
-                                                    <Slider Grid.Row="2"
-                                                            Minimum="{Binding DataContext.GpuCoreMinimum, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                            Maximum="{Binding DataContext.GpuOverclockState.MaxCoreDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                            Value="{Binding DataContext.GpuCoreDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-                                                            IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                            automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_CoreFrequencyOffset_Title, Fallback=Core frequency offset}" />
-                                                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title, Fallback=Memory frequency offset}"
-                                                                                     VerticalAlignment="Center"
-                                                                                     OverflowMode="Ellipsis"
-                                                                                     MaxLines="1" />
-                                                        <controls:LocalizedTextBlock Grid.Column="1"
-                                                                                     Text="{Binding DataContext.GpuMemoryDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, StringFormat={}{0:0} MHz}"
-                                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                     OverflowMode="Ellipsis"
-                                                                                     MaxLines="1" />
-                                                    </Grid>
-                                                    <Grid Grid.Row="4" ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                                                        <Slider Minimum="{Binding DataContext.GpuMemoryMinimum, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                Maximum="{Binding DataContext.GpuOverclockState.MaxMemoryDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                Value="{Binding DataContext.GpuMemoryDeltaMhz, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
-                                                                IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                automation:AutomationProperties.Name="{local:Loc Key=OverclockDiscreteGPUSettingsWindow_MemoryFrequencyOffset_Title, Fallback=Memory frequency offset}" />
-                                                        <Button Grid.Column="1"
-                                                                Command="{Binding DataContext.ApplyGpuOverclockCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                IsEnabled="{Binding DataContext.GpuOverclockState.IsAvailable, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                Padding="8,4"
-                                                                ToolTip.Tip="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
-                                                                automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Apply, Fallback=Apply}">
-                                                            <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Apply, Fallback=Apply}"
-                                                                                         OverflowMode="Ellipsis"
-                                                                                         MaxLines="1" />
-                                                        </Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </Border>
-
-                                            <Border IsVisible="{Binding IsTurnOffMonitorsControl}"
-                                                    Padding="12"
-                                                    Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                                                    BorderBrush="{DynamicResource CardBorderBrush}"
-                                                    BorderThickness="1"
-                                                    CornerRadius="{StaticResource CornerRadiusControl}">
-                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                                    <StackPanel Spacing="2" MinWidth="0">
-                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
-                                                                                     FontSize="{StaticResource FontSizeBody}"
-                                                                                     FontWeight="Medium"
-                                                                                     OverflowMode="Ellipsis"
-                                                                                     MaxLines="1" />
-                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Message, Fallback=Turn off connected displays.}"
-                                                                                     FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                                     OverflowMode="Wrap"
-                                                                                     MaxLines="2" />
-                                                    </StackPanel>
-                                                    <Button Grid.Column="1"
-                                                            Command="{Binding DataContext.TurnOffMonitorsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                            Padding="10,6"
-                                                            ToolTip.Tip="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}"
-                                                            automation:AutomationProperties.Name="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off monitors}">
-                                                        <controls:LocalizedTextBlock Text="{local:Loc Key=TurnOffMonitorsControl_Title, Fallback=Turn off}"
-                                                                                     OverflowMode="Ellipsis"
-                                                                                     MaxLines="1" />
-                                                    </Button>
-                                                </Grid>
-                                            </Border>
-
-                                            <StackPanel IsVisible="{Binding IsCustomControl}"
-                                                        Orientation="Horizontal"
-                                                        Spacing="6">
-                                                <Button Command="{Binding DataContext.MoveDashboardItemUpCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        Padding="3"
-                                                        MinWidth="24"
-                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveUp, Fallback=Move up}">
-                                                    <controls:NavigationIcon IconIdentifier="ChevronUp24" FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                                <Button Command="{Binding DataContext.MoveDashboardItemDownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        Padding="3"
-                                                        MinWidth="24"
-                                                        ToolTip.Tip="{local:Loc Key=Dashboard_MoveDown, Fallback=Move down}">
-                                                    <controls:NavigationIcon IconIdentifier="ChevronDown24" FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                                <Button Command="{Binding DataContext.RemoveDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        IsVisible="{Binding DataContext.IsLayoutEditorOpen, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                        Padding="3"
-                                                        MinWidth="24"
-                                                        ToolTip.Tip="{local:Loc Key=Dashboard_Remove, Fallback=Remove}">
-                                                    <controls:NavigationIcon IconIdentifier="Delete24" FontSize="{StaticResource IconSizeCompact}" />
-                                                </Button>
-                                            </StackPanel>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <Expander IsExpanded="{Binding IsLayoutEditorOpen}"
-                      IsVisible="{Binding IsLayoutEditorOpen}"
-                      Header="{local:Loc Key=Dashboard_LayoutEditor, Fallback=Edit dashboard layout}">
-                <Border Margin="0,4,0,0"
-                        Padding="14"
-                        Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}">
-                    <StackPanel Spacing="10">
-                        <ItemsControl ItemsSource="{Binding DashboardGroups}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Spacing="6" Margin="0,0,0,6">
-                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
-                                        <controls:LocalizedTextBlock Text="{Binding DisplayName}"
-                                                                     VerticalAlignment="Center"
-                                                                     OverflowMode="Ellipsis"
-                                                                     MaxLines="1" />
-                                        <TextBox Grid.Column="1"
-                                                 IsVisible="{Binding IsCustom}"
-                                                  Text="{Binding CustomName, Mode=TwoWay}"
-                                                  Watermark="{local:Loc Key=Dashboard_CustomGroupName, Fallback=Custom group name}"
-                                                  MinWidth="160" />
-                                        <Button Grid.Column="2"
-                                                Command="{Binding DataContext.ToggleDashboardItemPickerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"
-                                                IsEnabled="{Binding DataContext.HasAvailableDashboardItems, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                Padding="6"
-                                                ToolTip.Tip="{local:Loc Key=Add, Fallback=Add}"
-                                                automation:AutomationProperties.AutomationId="AvaloniaDashboardAddItemButton"
-                                                automation:AutomationProperties.Name="{local:Loc Key=Add, Fallback=Add}">
-                                            <controls:NavigationIcon IconIdentifier="Add24"
-                                                                     FontSize="{StaticResource IconSizeCompact}" />
-                                        </Button>
-                                        <Button Grid.Column="3"
-                                                IsVisible="{Binding IsCustom}"
-                                                Command="{Binding DataContext.RemoveDashboardGroupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"
-                                                Padding="6"
-                                                ToolTip.Tip="{local:Loc Key=Dashboard_RemoveGroup, Fallback=Remove group}"
-                                                automation:AutomationProperties.Name="{local:Loc Key=Dashboard_RemoveGroup, Fallback=Remove group}">
-                                             <controls:NavigationIcon IconIdentifier="Delete24"
-                                                                      FontSize="{StaticResource IconSizeCompact}" />
-                                         </Button>
-                                        </Grid>
-                                        <Border IsVisible="{Binding IsAddItemPickerOpen}"
-                                                Padding="8"
-                                                Background="{DynamicResource SubtleFillColorSecondaryBrush}"
-                                                BorderBrush="{DynamicResource CardBorderBrush}"
-                                                BorderThickness="1"
-                                                CornerRadius="{StaticResource CornerRadiusControl}">
-                                            <ItemsControl ItemsSource="{Binding DataContext.AvailableDashboardItems, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <WrapPanel Orientation="Horizontal" />
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Button Command="{Binding DataContext.AddDashboardItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                CommandParameter="{Binding}"
-                                                                Padding="8,5"
-                                                                Margin="0,0,6,6"
-                                                                ToolTip.Tip="{Binding DisplayName}"
-                                                                automation:AutomationProperties.Name="{Binding DisplayName}">
-                                                            <StackPanel Orientation="Horizontal" Spacing="5">
-                                                                <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
-                                                                                         FontSize="{StaticResource IconSizeCompact}" />
-                                                                <controls:LocalizedTextBlock Text="{Binding DisplayName}"
-                                                                                             OverflowMode="Ellipsis"
-                                                                                             MaxLines="1"
-                                                                                             MaxWidth="160" />
-                                                            </StackPanel>
-                                                        </Button>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </Border>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Button Command="{Binding AddCustomDashboardGroupCommand}"
-                                    Padding="10,6"
-                                    automation:AutomationProperties.AutomationId="AvaloniaDashboardAddGroupButton">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <controls:NavigationIcon IconIdentifier="Add24"
-                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_AddGroup, Fallback=Add group}"
-                                                                 OverflowMode="Ellipsis"
-                                                                 MaxLines="1" />
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding RestoreDefaultDashboardLayoutCommand}"
-                                    Padding="10,6"
-                                    automation:AutomationProperties.AutomationId="AvaloniaDashboardRestoreLayoutButton">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <controls:NavigationIcon IconIdentifier="ArrowReset24"
-                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_RestoreLayout, Fallback=Restore defaults}"
-                                                                 OverflowMode="Ellipsis"
-                                                                 MaxLines="1" />
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding SaveDashboardLayoutCommand}"
-                                    Padding="10,6"
-                                    Background="{DynamicResource AccentBackgroundBrush}"
-                                    Foreground="{DynamicResource TextOnAccentBrush}"
-                                    automation:AutomationProperties.AutomationId="AvaloniaDashboardSaveLayoutButton">
-                                <StackPanel Orientation="Horizontal" Spacing="6">
-                                    <controls:NavigationIcon IconIdentifier="Save24"
-                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                    <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_SaveLayout, Fallback=Save layout}"
-                                                                 OverflowMode="Ellipsis"
-                                                                 MaxLines="1" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                        <controls:LocalizedTextBlock Text="{Binding LayoutStatusText}"
-                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                     OverflowMode="Wrap"
-                                                     MaxLines="2" />
-                    </StackPanel>
-                </Border>
-            </Expander>
-
-            <!-- Feature Groups -->
-            <TextBlock Text="{local:Loc Key=Dashboard_FeatureGroups, Fallback=Feature Groups}"
-                       FontSize="{StaticResource FontSizeSubsection}"
-                       FontWeight="Medium"
-                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-
-            <ItemsControl ItemsSource="{Binding FeatureGroups}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Classes="cardControl" Width="300" Margin="0,0,12,12"
-                                Background="{DynamicResource CardBackgroundBrush}"
-                                BorderBrush="{DynamicResource CardBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="{StaticResource CornerRadiusCard}">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" Margin="16" RowSpacing="10">
-                                <controls:LocalizedTextBlock Text="{Binding Title}"
-                                           Classes="cardTitle"
-                                           OverflowMode="Wrap"
-                                           MaxLines="2" />
-                                <controls:LocalizedTextBlock Grid.Row="1" Text="{Binding Description}"
-                                           Classes="cardDescription"
-                                           OverflowMode="Wrap"
-                                           MaxLines="3" />
-                                <Border Grid.Row="2" Classes="badge" HorizontalAlignment="Left"
-                                        Background="{DynamicResource StatusInfoBackgroundBrush}"
-                                        BorderBrush="{DynamicResource StatusInfoBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="{StaticResource CornerRadiusRound}"
-                                        Padding="8,4"
-                                        Margin="0,2,0,0">
-                                    <controls:LocalizedTextBlock Text="{Binding Status}"
-                                               Foreground="{DynamicResource StatusInfoBrush}"
-                                               FontSize="{StaticResource FontSizeSmallCaption}"
-                                               OverflowMode="Ellipsis"
-                                               MaxLines="1" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Classes="dashboardSensorsSkeletonGauge" />
+                                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" MinWidth="72" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="24" />
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="52" />
+                                        <Border Grid.Row="0" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="0" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="58" />
+                                        <Border Grid.Row="1" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="44" />
+                                        <Border Grid.Row="1" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="1" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="48" />
+                                        <Border Grid.Row="2" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="40" />
+                                        <Border Grid.Row="2" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="2" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="36" />
+                                    </Grid>
+                                </Grid>
+                                <Border Classes="dashboardSensorsSkeletonTrendPanel">
+                                    <Border Classes="dashboardSensorsSkeletonTrendFill" />
                                 </Border>
-                                <Button Grid.Row="3"
-                                        HorizontalAlignment="Left"
-                                        Padding="8,4"
-                                        MinWidth="36"
-                                        IsVisible="{Binding IsNavigable}"
-                                        IsEnabled="{Binding IsNavigable}"
-                                        Command="{Binding DataContext.OpenFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        ToolTip.Tip="{Binding Title}"
-                                        automation:AutomationProperties.Name="{Binding Title}"
-                                        automation:AutomationProperties.AutomationId="DashboardFeatureOpenButton">
-                                    <controls:NavigationIcon IconIdentifier="ArrowRight24"
-                                                             FontSize="{StaticResource IconSizeCompact}" />
-                                </Button>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-            <!-- Sensors Panel -->
-            <Grid x:Name="SensorsHeaderPanel"
-                  ColumnDefinitions="*,Auto,Auto"
-                  Margin="0,8,0,0">
-                <controls:LocalizedTextBlock Text="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
-                                             FontSize="{StaticResource FontSizeSubsection}"
-                                             FontWeight="Medium"
-                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                             VerticalAlignment="Center"
-                                             OverflowMode="Ellipsis"
-                                             MaxLines="1" />
-                <ToggleSwitch Grid.Column="1"
-                              IsChecked="{Binding ShowSensors, Mode=TwoWay}"
-                              automation:AutomationProperties.AutomationId="AvaloniaDashboardShowSensorsToggle"
-                              automation:AutomationProperties.Name="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
-                              ToolTip.Tip="{local:Loc Key=Dashboard_Sensors, Fallback=Sensors}"
-                              MinWidth="120"
-                              HorizontalContentAlignment="Left"
-                              VerticalAlignment="Center" />
-                <ComboBox Grid.Column="2"
-                          x:Name="DashboardSensorRefreshInterval"
-                          ItemsSource="{Binding SensorRefreshIntervalOptions}"
-                          SelectedItem="{Binding SensorsRefreshIntervalSeconds, Mode=TwoWay}"
-                          MinWidth="86"
-                          Margin="12,0,0,0"
-                          VerticalAlignment="Center"
-                          ToolTip.Tip="{local:Loc Key=SensorsControl_RefreshInterval, Fallback=Sensor refresh interval}"
-                          automation:AutomationProperties.AutomationId="AvaloniaDashboardSensorRefreshInterval"
-                          automation:AutomationProperties.Name="{local:Loc Key=SensorsControl_RefreshInterval, Fallback=Sensor refresh interval}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding StringFormat={}{0} s}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-            </Grid>
-
-            <ItemsControl x:Name="TelemetryCardsPanel"
-                          ItemsSource="{Binding TelemetryCards}"
-                          IsVisible="{Binding ShowSensors}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Classes="cardControl"
-                                Width="320"
-                                Margin="0,0,12,12"
-                                IsVisible="{Binding IsVisible}"
-                                Background="{DynamicResource CardBackgroundBrush}"
-                                BorderBrush="{DynamicResource CardBorderBrush}"
-                                BorderThickness="1"
-                                CornerRadius="{StaticResource CornerRadiusCard}"
-                                Padding="16"
-                                automation:AutomationProperties.Name="{Binding Title}">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
-                                <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="10">
-                                    <controls:NavigationIcon IconIdentifier="{Binding IconIdentifier}"
-                                                             FontSize="{StaticResource IconSizeMD}"
-                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                             VerticalAlignment="Top" />
-                                    <controls:LocalizedTextBlock Grid.Column="1"
-                                                                 Text="{Binding Title}"
-                                                                 FontSize="{StaticResource FontSizeBody}"
-                                                                 FontWeight="Medium"
-                                                                 OverflowMode="Ellipsis"
-                                                                 MaxLines="1"
-                                                                 MinWidth="0" />
-                                    <controls:LocalizedTextBlock Grid.Column="2"
-                                                                 Text="{Binding StatusText}"
-                                                                 FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                 OverflowMode="Ellipsis"
-                                                                 MaxLines="1"
-                                                                 MaxWidth="92" />
-                                    <ToggleButton Grid.Column="3"
-                                                  IsVisible="{Binding CanShowDetails}"
-                                                  IsChecked="{Binding IsDetailsExpanded, Mode=OneWay}"
-                                                  Command="{Binding DataContext.ToggleTelemetryDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                  CommandParameter="{Binding}"
-                                                  Padding="3"
-                                                  MinWidth="28"
-                                                  VerticalAlignment="Center"
-                                                  ToolTip.Tip="{local:Loc Key=SensorsControl_Details, Fallback=Sensor details}"
-                                                  automation:AutomationProperties.AutomationId="AvaloniaDashboardTelemetryDetailsButton"
-                                                  automation:AutomationProperties.Name="{local:Loc Key=SensorsControl_Details, Fallback=Sensor details}">
-                                        <controls:NavigationIcon IconIdentifier="ChevronDown24"
-                                                                 FontSize="{StaticResource IconSizeCompact}" />
-                                    </ToggleButton>
-                                </Grid>
-                                <controls:LocalizedTextBlock Grid.Row="1"
-                                                             Text="{Binding Description}"
-                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                             OverflowMode="Wrap"
-                                                             MaxLines="2" />
-                                <Grid Grid.Row="2" ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                                    <controls:RadialGauge Grid.Column="0"
-                                                          IsVisible="{Binding IsGaugeCard}"
-                                                          Width="88"
-                                                          Height="88"
-                                                          VerticalAlignment="Center"
-                                                          Value="{Binding GaugeValue}"
-                                                          Maximum="{Binding GaugeMaximum}"
-                                                          ValueText="{Binding PrimaryValue}"
-                                                          Caption="{Binding GaugeCaption}"
-                                                          RingBrush="{DynamicResource AccentBackgroundBrush}"
-                                                          TrackBrush="{DynamicResource ChartTrackBrush}" />
-                                    <Border Grid.Column="0"
-                                            IsVisible="{Binding IsFallbackGaugeCard}"
-                                            Width="82"
-                                            Height="82"
-                                            CornerRadius="{StaticResource CornerRadiusRound}"
-                                            Background="{DynamicResource StatusInfoBackgroundBrush}"
-                                            BorderBrush="{DynamicResource StatusInfoBrush}"
-                                            BorderThickness="2"
-                                            VerticalAlignment="Center">
-                                        <controls:LocalizedTextBlock Text="{Binding PrimaryValue}"
-                                                                     HorizontalAlignment="Center"
-                                                                     VerticalAlignment="Center"
-                                                                     TextAlignment="Center"
-                                                                     MaxWidth="74"
-                                                                     OverflowMode="Ellipsis"
-                                                                     MaxLines="2"
-                                                                     FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                     FontWeight="SemiBold"
-                                                                     Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                    </Border>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="4">
-                                        <controls:LocalizedTextBlock Text="{Binding PrimaryValue}"
-                                                                     FontSize="{StaticResource FontSizeGaugeValue}"
-                                                                     FontWeight="SemiBold"
-                                                                     OverflowMode="Ellipsis"
-                                                                     MaxLines="1" />
-                                        <controls:LocalizedTextBlock Text="{Binding StatusText}"
-                                                                     FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                     OverflowMode="Ellipsis"
-                                                                     MaxLines="1" />
+                                <WrapPanel Classes="dashboardSensorsSkeletonLegendPanel">
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="42" />
                                     </StackPanel>
-                                </Grid>
-                                <ProgressBar Grid.Row="3"
-                                             IsVisible="{Binding HasPrimaryProgress}"
-                                             Value="{Binding PrimaryProgressPercent}"
-                                             Maximum="100"
-                                             Height="6"
-                                             CornerRadius="{StaticResource CornerRadiusProgressBar}"
-                                             Foreground="{DynamicResource AccentBackgroundBrush}"
-                                             Background="{DynamicResource ChartTrackBrush}" />
-                                <controls:TrendSparkline Grid.Row="4"
-                                                         SeriesSource="{Binding TrendSeries}"
-                                                         Capacity="60"
-                                                         Height="52"
-                                                         Margin="0,2,0,0"
-                                                         Stroke="{DynamicResource AccentBackgroundBrush}"
-                                                         Fill="{DynamicResource ChartSurfaceBrush}" />
-                                <ItemsControl Grid.Row="5"
-                                              ItemsSource="{Binding TrendSeries}"
-                                              IsVisible="{Binding IsAvailable}"
-                                              Margin="0,0,0,2">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,0,12,0">
-                                                <Border Width="8"
-                                                        Height="8"
-                                                        CornerRadius="4"
-                                                        Background="{Binding Stroke}"
-                                                        VerticalAlignment="Center" />
-                                                <controls:LocalizedTextBlock Text="{Binding Label}"
-                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                             OverflowMode="Ellipsis"
-                                                                             MaxLines="1"
-                                                                             MaxWidth="120" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                <ItemsControl Grid.Row="6"
-                                              IsVisible="{Binding IsAvailable}"
-                                              ItemsSource="{Binding Metrics}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid ColumnDefinitions="*,Auto" Margin="0,2">
-                                                <controls:LocalizedTextBlock Text="{Binding Name}"
-                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                             OverflowMode="Ellipsis"
-                                                                             MaxLines="1" />
-                                                <controls:LocalizedTextBlock Grid.Column="1"
-                                                                             Text="{Binding DisplayValue}"
-                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                             FontWeight="Medium"
-                                                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                                             OverflowMode="Ellipsis"
-                                                                             MaxLines="1" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                <ItemsControl Grid.Row="7"
-                                              IsVisible="{Binding IsDetailsExpanded}"
-                                              ItemsSource="{Binding Details}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid ColumnDefinitions="*,Auto"
-                                                  Margin="0,2"
-                                                  ColumnSpacing="8">
-                                                <controls:LocalizedTextBlock Text="{Binding Name}"
-                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                                             OverflowMode="Ellipsis"
-                                                                             MaxLines="1"
-                                                                             MinWidth="0" />
-                                                <controls:LocalizedTextBlock Grid.Column="1"
-                                                                             Text="{Binding Value}"
-                                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                                             FontWeight="Medium"
-                                                                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                                                             OverflowMode="Wrap"
-                                                                             MaxLines="2"
-                                                                             TextWrapping="Wrap"
-                                                                             TextAlignment="Right" />
-                                            </Grid>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                                <controls:LocalizedTextBlock Grid.Row="8"
-                                                             IsVisible="{Binding HasDetailsStatus}"
-                                                             Text="{Binding DetailsStatusText}"
-                                                             FontSize="{StaticResource FontSizeSmallCaption}"
-                                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                             OverflowMode="Wrap"
-                                                             MaxLines="2" />
-                                <controls:LocalizedTextBlock Grid.Row="9"
-                                                             Text="{Binding WarningText}"
-                                                             IsVisible="{Binding HasWarning}"
-                                                             Foreground="{DynamicResource StatusWarningBrush}"
-                                                             OverflowMode="Wrap"
-                                                             MaxLines="2"
-                                                             TextWrapping="Wrap"
-                                                             automation:AutomationProperties.AutomationId="AvaloniaDashboardTelemetryWarning" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="52" />
+                                    </StackPanel>
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="36" />
+                                    </StackPanel>
+                                </WrapPanel>
+                            </StackPanel>
 
-        </StackPanel>
-    </ScrollViewer>
+                            <!-- Battery -->
+                            <StackPanel Grid.Column="1" Classes="dashboardSensorsSkeletonSection">
+                                <Grid Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Classes="dashboardSensorsSkeletonTitle" Width="56" />
+                                    <Border Grid.Column="1" Classes="dashboardSensorsSkeletonSubtitle" Width="120" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Classes="dashboardSensorsSkeletonGauge" />
+                                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" MinWidth="72" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="24" />
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="40" />
+                                        <Border Grid.Row="0" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="0" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="52" />
+                                        <Border Grid.Row="1" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="48" />
+                                        <Border Grid.Row="1" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="1" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="56" />
+                                        <Border Grid.Row="2" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="36" />
+                                        <Border Grid.Row="2" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="2" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="60" />
+                                    </Grid>
+                                </Grid>
+                                <Border Classes="dashboardSensorsSkeletonTrendPanel">
+                                    <Border Classes="dashboardSensorsSkeletonTrendFill" />
+                                </Border>
+                                <WrapPanel Classes="dashboardSensorsSkeletonLegendPanel">
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="36" />
+                                    </StackPanel>
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="44" />
+                                    </StackPanel>
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="36" />
+                                    </StackPanel>
+                                </WrapPanel>
+                            </StackPanel>
+
+                            <!-- GPU -->
+                            <StackPanel Grid.Column="2" Classes="dashboardSensorsSkeletonSection">
+                                <Grid Margin="0,0,0,14">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Classes="dashboardSensorsSkeletonTitle" Width="48" />
+                                    <Border Grid.Column="1" Classes="dashboardSensorsSkeletonSubtitle" Width="152" />
+                                </Grid>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Classes="dashboardSensorsSkeletonGauge" />
+                                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" MinWidth="72" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="24" />
+                                            <RowDefinition Height="24" />
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="52" />
+                                        <Border Grid.Row="0" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="0" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="58" />
+                                        <Border Grid.Row="1" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="44" />
+                                        <Border Grid.Row="1" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="1" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="48" />
+                                        <Border Grid.Row="2" Grid.Column="0" Classes="dashboardSensorsSkeletonLabel" Width="40" />
+                                        <Border Grid.Row="2" Grid.Column="1" Classes="dashboardSensorsSkeletonBar" />
+                                        <Border Grid.Row="2" Grid.Column="2" Classes="dashboardSensorsSkeletonValue" Width="36" />
+                                    </Grid>
+                                </Grid>
+                                <Border Classes="dashboardSensorsSkeletonTrendPanel">
+                                    <Border Classes="dashboardSensorsSkeletonTrendFill" />
+                                </Border>
+                                <WrapPanel Classes="dashboardSensorsSkeletonLegendPanel">
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="42" />
+                                    </StackPanel>
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="52" />
+                                    </StackPanel>
+                                    <StackPanel Classes="dashboardSensorsSkeletonLegendItem">
+                                        <Border Classes="dashboardSensorsSkeletonLegendDot" />
+                                        <Border Classes="dashboardSensorsSkeletonLegendText" Width="36" />
+                                    </StackPanel>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Grid x:Name="_skeletonGroupsGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel x:Name="_skeletonGroup0" Grid.Row="0" Grid.Column="0" Margin="0,0,16,0">
+                            <Border Width="132" Height="29" Margin="0,0,0,24" HorizontalAlignment="Left" Classes="dashboardSkeletonShimmerBlock" />
+                            <Border Classes="dashboardListSkeletonCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="0"
+                                        Margin="0,0,12,0"
+                                        Classes="appSkeletonListItemIcon" />
+                                    <Border
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Width="180"
+                                        Classes="appSkeletonListItemPrimaryLine" />
+                                    <Border
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Width="220"
+                                        Margin="0,8,0,0"
+                                        Classes="appSkeletonListItemSecondaryLine" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="dashboardListSkeletonCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border
+                                        Grid.Row="0"
+                                        Grid.RowSpan="2"
+                                        Grid.Column="0"
+                                        Margin="0,0,12,0"
+                                        Classes="appSkeletonListItemIcon" />
+                                    <Border
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Width="160"
+                                        Classes="appSkeletonListItemPrimaryLine" />
+                                    <Border
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Width="200"
+                                        Margin="0,8,0,0"
+                                        Classes="appSkeletonListItemSecondaryLine" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel x:Name="_skeletonGroup1" Grid.Row="0" Grid.Column="1" Margin="0,0,16,0">
+                            <Border Width="112" Height="29" Margin="0,0,0,24" HorizontalAlignment="Left" Classes="dashboardSkeletonShimmerBlock" />
+                            <Border Classes="dashboardListSkeletonCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="0,1,12,0" Classes="appSkeletonListItemIcon" />
+                                    <Border Grid.Column="1" Width="196" Classes="appSkeletonListItemSingleLine" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="dashboardListSkeletonCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="0,1,12,0" Classes="appSkeletonListItemIcon" />
+                                    <Border Grid.Column="1" Width="172" Classes="appSkeletonListItemSingleLine" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel x:Name="_skeletonGroup2" Grid.Row="0" Grid.Column="2" Margin="0,0,16,0">
+                            <Border Width="144" Height="29" Margin="0,0,0,24" HorizontalAlignment="Left" Classes="dashboardSkeletonShimmerBlock" />
+                            <Border Classes="dashboardListSkeletonCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="0,0,12,0" Classes="appSkeletonListItemIcon" />
+                                    <Border Grid.Row="0" Grid.Column="1" Width="176" Classes="appSkeletonListItemPrimaryLine" />
+                                    <Border Grid.Row="1" Grid.Column="1" Width="216" Margin="0,8,0,0" Classes="appSkeletonListItemSecondaryLine" />
+                                </Grid>
+                            </Border>
+                            <Border Classes="dashboardListSkeletonCard">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Margin="0,1,12,0" Classes="appSkeletonListItemIcon" />
+                                    <Border Grid.Column="1" Width="188" Classes="appSkeletonListItemSingleLine" />
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </controls:LoadableControl.LoadingContent>
+
+            <Grid
+                x:Name="_dashboardContentRoot"
+                IsHitTestVisible="False"
+                Opacity="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <dashboard:SensorsControl x:Name="_sensors" Grid.Row="0" Margin="0,16,16,0" />
+                <Grid x:Name="_content" Grid.Row="1" VerticalAlignment="Stretch" />
+            </Grid>
+        </controls:LoadableControl>
+    </custom:DynamicScrollViewer>
 </UserControl>

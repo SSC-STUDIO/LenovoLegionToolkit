@@ -1,0 +1,190 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Settings.NavigationItemsSettingsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Windows"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    Title="{x:Static resources:Resource.NavigationItemsSettingsWindow_Title}"
+    Height="600"
+    MinWidth="500"
+    MinHeight="300"
+    MaxWidth="500"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    CanResize="False"
+    CanMinimize="True"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <custom:TitleBar
+            Grid.Row="0"
+            CanMaximize="false"
+            ShowMaximize="false"
+            ShowMinimize="false" />
+
+        <Grid
+            Grid.Row="0"
+            Height="24"
+            Margin="12,8,12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                FontSize="{DynamicResource FontSizeSmallCaption}"
+                IsHitTestVisible="False"
+                Text="{x:Static resources:Resource.NavigationItemsSettingsWindow_Title}" />
+        </Grid>
+
+        <custom:DynamicScrollViewer Grid.Row="1" Margin="12,0,0,0">
+            <StackPanel Margin="0,0,16,0">
+                <TextBlock
+                    Margin="0,0,0,16"
+                    FontSize="{DynamicResource FontSizeCaption}"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{x:Static resources:Resource.NavigationItemsSettingsWindow_Description}"
+                    TextWrapping="Wrap" />
+
+                <custom:CardControl
+                    x:Name="_keyboardCard"
+                    Margin="0,0,0,8"
+                    IsVisible="False">
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Keyboard}"
+                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowKeyboardNavigationItem_Description}" />
+                        <ui:ToggleSwitch
+                            x:Name="_keyboardToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="keyboard" />
+                    </Grid>
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Actions}"
+                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowAutomationNavigationItem_Description}" />
+                        <ui:ToggleSwitch
+                            x:Name="_automationToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="automation" />
+                    </Grid>
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_Macro}"
+                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowMacroNavigationItem_Description}" />
+                        <ui:ToggleSwitch
+                            x:Name="_macroToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="macro" />
+                    </Grid>
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_WindowsOptimization}"
+                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowWindowsOptimizationNavigationItem_Description}" />
+                        <ui:ToggleSwitch
+                            x:Name="_windowsOptimizationToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="windowsOptimization" />
+                    </Grid>
+                </custom:CardControl>
+
+
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_PluginExtensions}"
+                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowPluginExtensionsNavigationItem_Description}" />
+                        <ui:ToggleSwitch
+                            x:Name="_pluginExtensionsToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="pluginExtensions" />
+                    </Grid>
+                </custom:CardControl>
+
+
+
+                <custom:CardControl Margin="0,0,0,24">
+                    <Grid MinHeight="44">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <controls:CardHeaderControl
+                            Grid.Column="0"
+                            Margin="0,0,16,0"
+                            Title="{x:Static resources:Resource.MainWindow_NavigationItem_About}"
+                            Subtitle="{x:Static resources:Resource.NavigationItemsSettingsWindow_ShowAboutNavigationItem_Description}" />
+                        <ui:ToggleSwitch
+                            x:Name="_aboutToggle"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="NavigationItemToggle_Click"
+                            Tag="about" />
+                    </Grid>
+                </custom:CardControl>
+            </StackPanel>
+        </custom:DynamicScrollViewer>
+
+    </Grid>
+</local:BaseWindow>

@@ -1,0 +1,467 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Osd.OsdSettingsWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Windows"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:system="using:System"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    Title="{Binding Source={x:Static resources:Resource.OsdWindow_Title}}"
+    Width="460"
+    Height="600"
+    MinWidth="460"
+    MinHeight="600"
+    Background="Transparent"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    CanResize="False"
+    CanMinimize="True"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterScreen">
+
+    <local:BaseWindow.Resources>
+        <system:Double x:Key="PrimaryFontSize">14</system:Double>
+        <system:Double x:Key="SecondaryFontSize">14</system:Double>
+        <system:Double x:Key="TertiaryFontSize">12</system:Double>
+        <system:Double x:Key="HeaderFontSize">18</system:Double>
+    </local:BaseWindow.Resources>
+
+    <local:BaseWindow.Styles>
+        <Style Selector="CheckBox">
+            <Setter Property="Margin" Value="0,6" />
+            <Setter Property="FontSize" Value="{StaticResource PrimaryFontSize}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+
+        <Style Selector="TextBlock.header">
+            <Setter Property="FontSize" Value="{StaticResource HeaderFontSize}" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+
+        <Style Selector="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0,16,0,0" />
+        </Style>
+
+        <Style Selector="TabItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Margin" Value="0,0,24,0" />
+            <Setter Property="Padding" Value="10,8,10,10" />
+            <Setter Property="MinHeight" Value="46" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="TabItem:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+        <Style Selector="TabItem:selected">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+    </local:BaseWindow.Styles>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <custom:TitleBar
+            x:Name="_titleBar"
+            Grid.Row="0"
+            CanMaximize="false"
+            ShowMaximize="false"
+            ShowMinimize="false" />
+
+        <Grid
+            Grid.Row="0"
+            Height="24"
+            Margin="12,8,12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                FontSize="{DynamicResource FontSizeSmallCaption}"
+                IsHitTestVisible="False"
+                Text="{Binding Source={x:Static resources:Resource.OsdWindow_Title}}" />
+
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="16,0,16,16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TabControl Grid.Row="0">
+                <TabItem Header="{x:Static resources:Resource.OsdSettings_Tabs_General}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,12,0">
+                            <custom:CardControl Margin="0,0,0,8" Icon="Window24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_OverlayStyle}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <ComboBox
+                                    x:Name="_osdStyleComboBox"
+                                    Width="140"
+                                    SelectionChanged="StyleComboBox_SelectionChanged">
+                                    <ComboBoxItem Content="{x:Static resources:Resource.Osd_Style_Panel}" Tag="Panel" />
+                                    <ComboBoxItem Content="{x:Static resources:Resource.Osd_Style_Bar}" Tag="Bar" />
+                                </ComboBox>
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="Timer24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_RefreshInterval}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <ui:NumberBox
+                                    x:Name="_osdRefreshInterval"
+                                    ToolTip.Tip="{x:Static resources:Resource.OsdSettings_General_RefreshInterval_Tooltip}"
+                                    Width="100"
+                                    Maximum="10"
+                                    Minimum="0.1"
+                                    SmallChange="0.1"
+                                    LargeChange="0.5"
+                                    MaxDecimalPlaces="1"
+                                    SpinButtonPlacementMode="Compact"
+                                    ValueChanged="OsdRefreshInterval_ValueChanged" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="Target24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_SnapThreshold}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <ui:NumberBox
+                                    x:Name="_osdSnapThreshold"
+                                    Width="100"
+                                    Maximum="100"
+                                    Minimum="0"
+                                    SpinButtonPlacementMode="Compact"
+                                    ValueChanged="OsdSnapThreshold_ValueChanged" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="LockClosed24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_General_LockPosition}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <ui:Button
+                                        Padding="8,4"
+                                        Margin="0,0,12,0"
+                                        VerticalAlignment="Center"
+                                        Click="ResetPositionButton_Click"
+                                        ToolTip.Tip="{x:Static resources:Resource.OsdSettings_General_ResetPosition}"
+                                        Icon="ArrowReset24" />
+                                    <ui:ToggleSwitch x:Name="_osdLockPosition" VerticalAlignment="Center" Checked="OsdLockPosition_CheckedOrUnchecked" Unchecked="OsdLockPosition_CheckedOrUnchecked" />
+                                </StackPanel>
+                            </custom:CardControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="{x:Static resources:Resource.OsdSettings_Tabs_Appearance}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,12,0">
+                            <custom:CardControl Margin="0,0,0,8" Icon="Layer24">
+                                <custom:CardControl.Header>
+                                    <StackPanel>
+                                        <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_Opacity}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                        <TextBlock x:Name="_opacityValueText" FontSize="{DynamicResource FontSizeDenseCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                    </StackPanel>
+                                </custom:CardControl.Header>
+                                <Slider
+                                    x:Name="_osdOpacitySlider"
+                                    Width="140"
+                                    Maximum="1"
+                                    Minimum="0"
+                                    TickFrequency="0.1"
+                                    ValueChanged="OsdOpacitySlider_ValueChanged" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="AppGeneric24">
+                                <custom:CardControl.Header>
+                                    <StackPanel>
+                                        <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_CornerRadius}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                        <TextBlock x:Name="_cornerRadiusValueText" FontSize="{DynamicResource FontSizeDenseCaption}" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                                    </StackPanel>
+                                </custom:CardControl.Header>
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                                        <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_CornerRadiusTop}" Margin="0,0,8,4" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <Slider
+                                            x:Name="_osdCornerRadiusTopSlider"
+                                            Width="140"
+                                            Maximum="50"
+                                            Minimum="0"
+                                            TickFrequency="1"
+                                            IsSnapToTickEnabled="True"
+                                            ValueChanged="OsdCornerRadiusTopSlider_ValueChanged" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="0,8,0,0">
+                                        <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_CornerRadiusBottom}" Margin="0,0,8,4" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <Slider
+                                            x:Name="_osdCornerRadiusBottomSlider"
+                                            Width="140"
+                                            Maximum="50"
+                                            Minimum="0"
+                                            TickFrequency="1"
+                                            IsSnapToTickEnabled="True"
+                                            ValueChanged="OsdCornerRadiusBottomSlider_ValueChanged" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="TextFontSize24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_FontSize}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <ui:NumberBox
+                                    x:Name="_osdFontSize"
+                                    Width="100"
+                                    Maximum="24"
+                                    Minimum="8"
+                                    SpinButtonPlacementMode="Compact"
+                                    ValueChanged="OsdFontSize_ValueChanged" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="Color24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_BackgroundColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                    x:Name="_osdBackgroundColorPicker"
+                                    HorizontalAlignment="Right"
+                                    ColorChangedDelayed="OsdBackgroundColorPicker_ColorChangedDelayed" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="Grid24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_CategoryColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                    x:Name="_categoryColorPicker"
+                                    HorizontalAlignment="Right"
+                                    ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="Tag24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_LabelColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                    x:Name="_labelColorPicker"
+                                    HorizontalAlignment="Right"
+                                    ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="TextNumberFormat24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_ValueColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                    x:Name="_valueColorPicker"
+                                    HorizontalAlignment="Right"
+                                    ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="Warning24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_WarningColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                    x:Name="_warningColorPicker"
+                                    HorizontalAlignment="Right"
+                                    ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
+                            </custom:CardControl>
+
+                            <custom:CardControl Margin="0,0,0,8" Icon="ErrorCircle24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_CriticalColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                   x:Name="_criticalColorPicker"
+                                   HorizontalAlignment="Right"
+                                   ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
+                           </custom:CardControl>
+                            <custom:CardControl Margin="0,0,0,8" Icon="LineStyle24">
+                                <custom:CardControl.Header>
+                                    <TextBlock Text="{x:Static resources:Resource.OsdSettings_Appearance_SeparatorColor}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </custom:CardControl.Header>
+                                <controls:ColorPickerControl
+                                    x:Name="_separatorColorPicker"
+                                    HorizontalAlignment="Right"
+                                    ColorChangedDelayed="ColorPicker_ColorChangedDelayed" />
+                            </custom:CardControl>
+                       </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="{x:Static resources:Resource.OsdSettings_Tabs_Thresholds}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="0,0,12,0">
+                            <Border
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultSolidBrush}"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                Margin="0,0,0,16"
+                                Padding="16,12"
+                                CornerRadius="{StaticResource CornerRadiusControl}">
+                                <StackPanel>
+                                    <TextBlock
+                                        Text="{x:Static resources:Resource.OsdSettings_Thresholds_Performance}"
+                                        FontWeight="Medium"
+                                        FontSize="{DynamicResource FontSizeCaption}"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Margin="0,0,0,12" />
+                                    <StackPanel>
+                                        <custom:CardControl
+                                            Margin="0,0,0,8"
+                                            ToolTip.Tip="{x:Static resources:Resource.OsdSettings_Thresholds_FpsRedline_Description}"
+                                            Icon="FastForward24">
+                                            <custom:CardControl.Header>
+                                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_Thresholds_FpsRedline}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            </custom:CardControl.Header>
+                                            <ui:NumberBox
+                                                x:Name="_fpsCritical"
+                                                Width="100"
+                                                Maximum="1000"
+                                                Minimum="0"
+                                                SpinButtonPlacementMode="Compact"
+                                                ValueChanged="Threshold_ValueChanged" />
+                                        </custom:CardControl>
+                                        <custom:CardControl
+                                            Margin="0"
+                                            ToolTip.Tip="{x:Static resources:Resource.OsdSettings_Thresholds_LowFpsDelta_Description}"
+                                            Icon="LineStyle24">
+                                            <custom:CardControl.Header>
+                                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_Thresholds_LowFpsDelta}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            </custom:CardControl.Header>
+                                            <ui:NumberBox
+                                                x:Name="_lowFpsDelta"
+                                                Width="100"
+                                                Maximum="1000"
+                                                Minimum="0"
+                                                SpinButtonPlacementMode="Compact"
+                                                ValueChanged="Threshold_ValueChanged" />
+                                        </custom:CardControl>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultSolidBrush}"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                Margin="0,0,0,16"
+                                Padding="16,12"
+                                CornerRadius="{StaticResource CornerRadiusControl}">
+                                <StackPanel>
+                                    <TextBlock
+                                        Text="{x:Static resources:Resource.OsdSettings_Thresholds_Temperature}"
+                                        FontWeight="Medium"
+                                        FontSize="{DynamicResource FontSizeCaption}"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Margin="0,0,0,12" />
+                                    <StackPanel>
+                                        <custom:CardControl Margin="0,0,0,8" Icon="Temperature24">
+                                            <custom:CardControl.Header>
+                                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_Thresholds_Warning}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            </custom:CardControl.Header>
+                                            <ui:NumberBox
+                                                x:Name="_tempWarning"
+                                                Width="100"
+                                                Maximum="110"
+                                                Minimum="0"
+                                                SpinButtonPlacementMode="Compact"
+                                                ValueChanged="Threshold_ValueChanged" />
+                                        </custom:CardControl>
+                                        <custom:CardControl Margin="0" Icon="Temperature24">
+                                            <custom:CardControl.Header>
+                                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_Thresholds_Critical}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            </custom:CardControl.Header>
+                                            <ui:NumberBox
+                                                x:Name="_tempCritical"
+                                                Width="100"
+                                                Maximum="110"
+                                                Minimum="0"
+                                                SpinButtonPlacementMode="Compact"
+                                                ValueChanged="Threshold_ValueChanged" />
+                                        </custom:CardControl>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultSolidBrush}"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                Margin="0,0,0,16"
+                                Padding="16,12"
+                                CornerRadius="{StaticResource CornerRadiusControl}">
+                                <StackPanel>
+                                    <TextBlock
+                                        Text="{x:Static resources:Resource.OsdSettings_Thresholds_Usage}"
+                                        FontWeight="Medium"
+                                        FontSize="{DynamicResource FontSizeCaption}"
+                                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                        Margin="0,0,0,12" />
+                                    <StackPanel>
+                                        <custom:CardControl Margin="0,0,0,8" Icon="DataUsage24">
+                                            <custom:CardControl.Header>
+                                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_Thresholds_Warning}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            </custom:CardControl.Header>
+                                            <ui:NumberBox
+                                                x:Name="_usageWarning"
+                                                Width="100"
+                                                Maximum="100"
+                                                Minimum="0"
+                                                SpinButtonPlacementMode="Compact"
+                                                ValueChanged="Threshold_ValueChanged" />
+                                        </custom:CardControl>
+                                        <custom:CardControl Margin="0" Icon="DataUsage24">
+                                            <custom:CardControl.Header>
+                                                <TextBlock Text="{x:Static resources:Resource.OsdSettings_Thresholds_Critical}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                            </custom:CardControl.Header>
+                                            <ui:NumberBox
+                                                x:Name="_usageCritical"
+                                                Width="100"
+                                                Maximum="100"
+                                                Minimum="0"
+                                                SpinButtonPlacementMode="Compact"
+                                                ValueChanged="Threshold_ValueChanged" />
+                                        </custom:CardControl>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="{x:Static resources:Resource.OsdSettings_Tabs_SensorItems}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel x:Name="_itemsStackPanel" Margin="0,0,12,0" />
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+
+            <ui:Button
+                Grid.Row="1"
+                Margin="0,16,0,0"
+                HorizontalAlignment="Stretch"
+                Click="CloseButton_Click"
+                Appearance="Primary"
+                Content="{Binding Source={x:Static resources:Resource.Close}}" />
+        </Grid>
+    </Grid>
+</local:BaseWindow>

@@ -1,0 +1,154 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:converters="using:Avalonia.Data.Converters"
+    xmlns:sys="using:System">
+
+    <!--
+      InfoBar theme. WPF ControlTemplate.Triggers became property-equals selectors:
+      [Severity=...] / [IsClosable=False] / [IsOpen=False]. The close button is a named
+      part (PART_CloseButton); the WPF TemplateButtonCommand binding has no Avalonia
+      equivalent — InfoBar.OnApplyTemplate should wire its Click to the Closed event.
+    -->
+    <Styles.Resources>
+        <ResourceDictionary>
+            <Thickness x:Key="InfoBarPadding">14,8,14,8</Thickness>
+            <Thickness x:Key="InfoBarBorderThemeThickness">1</Thickness>
+            <!-- WPF-UI default token kept for template references. -->
+            <sys:Double x:Key="ControlContentThemeFontSize">14</sys:Double>
+
+            <ControlTheme x:Key="{x:Type custom:InfoBar}" TargetType="custom:InfoBar">
+                <Setter Property="Background" Value="{DynamicResource ControlFillColorDefault}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimary}" />
+                <Setter Property="Padding" Value="{StaticResource InfoBarPadding}" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
+                <Setter Property="BorderThickness" Value="{StaticResource InfoBarBorderThemeThickness}" />
+                <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="Focusable" Value="True" />
+                <Setter Property="Template">
+                    <ControlTemplate TargetType="custom:InfoBar">
+                        <Grid x:Name="InfoBarRoot">
+                            <!--
+                              Stretch the surface to the control width. Title/Message must live in a
+                              width-constrained panel (not WrapPanel) so TextWrapping can fill the card.
+                            -->
+                            <Border
+                                x:Name="ContentBorder"
+                                Padding="16,14,16,10"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{StaticResource CornerRadiusControl}">
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Margin="0,2,14,0" VerticalAlignment="Top">
+                                        <ui:SymbolIcon
+                                            x:Name="SymbolIcon"
+                                            VerticalAlignment="Top"
+                                            FontSize="{StaticResource IconSizeCompact}" />
+                                    </Border>
+
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Top">
+                                        <TextBlock
+                                            HorizontalAlignment="Stretch"
+                                            FontSize="{TemplateBinding FontSize}"
+                                            FontWeight="Medium"
+                                            Text="{TemplateBinding Title}"
+                                            TextWrapping="Wrap" />
+
+                                        <TextBlock
+                                            Margin="0,4,0,0"
+                                            HorizontalAlignment="Stretch"
+                                            FontSize="{TemplateBinding FontSize}"
+                                            Text="{TemplateBinding Message}"
+                                            TextWrapping="Wrap"
+                                            IsVisible="{Binding Message, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}" />
+                                    </StackPanel>
+
+                                    <Border
+                                        Grid.Column="2"
+                                        Margin="12,-2,0,0"
+                                        VerticalAlignment="Top">
+                                        <ui:Button
+                                            x:Name="PART_CloseButton"
+                                            Width="28"
+                                            Height="28"
+                                            Padding="0"
+                                            Appearance="Transparent"
+                                            AutomationProperties.Name="{x:Static resources:Resource.Close_Tooltip}"
+                                            Background="Transparent"
+                                            BorderThickness="0"
+                                            BorderBrush="Transparent"
+                                            MouseOverBackground="Transparent"
+                                            MouseOverBorderBrush="Transparent"
+                                            CornerRadius="{StaticResource CornerRadiusNone}"
+                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                            PressedForeground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            IsEnabled="True"
+                                            ToolTip.Tip="{x:Static resources:Resource.Close_Tooltip}">
+                                            <ui:SymbolIcon FontSize="{StaticResource IconSizeSM}" Symbol="Dismiss20" />
+                                        </ui:Button>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+
+                <Style Selector="^[IsClosable=False] /template/ Button#PART_CloseButton">
+                    <Setter Property="IsVisible" Value="False" />
+                </Style>
+                <Style Selector="^[IsOpen=False] /template/ Grid#InfoBarRoot">
+                    <Setter Property="IsVisible" Value="False" />
+                </Style>
+
+                <Style Selector="^[Severity=Informational] /template/ ui|SymbolIcon#SymbolIcon">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusInfoBrush}" />
+                    <Setter Property="Symbol" Value="Info24" />
+                </Style>
+                <Style Selector="^[Severity=Informational] /template/ Border#ContentBorder">
+                    <Setter Property="Background" Value="{DynamicResource StatusNeutralBackgroundBrush}" />
+                </Style>
+                <Style Selector="^[Severity=Success] /template/ ui|SymbolIcon#SymbolIcon">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusSuccessBrush}" />
+                    <Setter Property="Symbol" Value="CheckmarkCircle24" />
+                </Style>
+                <Style Selector="^[Severity=Success] /template/ Border#ContentBorder">
+                    <Setter Property="Background" Value="{DynamicResource StatusSuccessBackgroundBrush}" />
+                </Style>
+                <Style Selector="^[Severity=Warning] /template/ ui|SymbolIcon#SymbolIcon">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusWarningBrush}" />
+                    <Setter Property="Symbol" Value="ErrorCircle24" />
+                </Style>
+                <Style Selector="^[Severity=Warning] /template/ Border#ContentBorder">
+                    <Setter Property="Background" Value="{DynamicResource StatusWarningBackgroundBrush}" />
+                </Style>
+                <Style Selector="^[Severity=Error] /template/ ui|SymbolIcon#SymbolIcon">
+                    <Setter Property="Foreground" Value="{DynamicResource StatusCriticalBrush}" />
+                    <Setter Property="Symbol" Value="DismissCircle24" />
+                </Style>
+                <Style Selector="^[Severity=Error] /template/ Border#ContentBorder">
+                    <Setter Property="Background" Value="{DynamicResource StatusCriticalBackgroundBrush}" />
+                </Style>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+</Styles>

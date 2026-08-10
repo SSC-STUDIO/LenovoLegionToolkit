@@ -1,0 +1,11 @@
+global using Avalonia;
+global using UniversalDeviceToolkit.Lib;
+global using Application = Avalonia.Application;
+global using CardControl = UniversalDeviceToolkit.Avalonia.Controls.Custom.CardControl;
+global using Compatibility = UniversalDeviceToolkit.Lib.Utils.Compatibility;
+global using Image = Avalonia.Controls.Image;
+global using MachineCompatibility = UniversalDeviceToolkit.Lib.Utils.Compatibility;
+global using MessageBox = UniversalDeviceToolkit.Avalonia.Utils.NativeMessageBox;
+global using SystemTheme = UniversalDeviceToolkit.Lib.System.SystemTheme;
+global using TextBlock = Avalonia.Controls.TextBlock;
+global using Window = Avalonia.Controls.Window;

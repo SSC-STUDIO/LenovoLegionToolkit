@@ -2,53 +2,37 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
-using UniversalDeviceToolkit.Abstractions.Localization;
-using UniversalDeviceToolkit.Avalonia.Localization;
-using UniversalDeviceToolkit.Shared.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Avalonia.Resources;
 
-namespace UniversalDeviceToolkit.Avalonia.Pages;
-
-public partial class AboutPage : UserControl
+namespace UniversalDeviceToolkit.Avalonia.Pages
+{
+public partial class AboutPage : global::Avalonia.Controls.UserControl
 {
     private static string VersionText
     {
         get
         {
-            // Use the current assembly to get the version, not Assembly.GetEntryAssembly()
+            // Use current assembly to get version, not Assembly.GetEntryAssembly()
             var version = typeof(AboutPage).Assembly.GetName().Version;
             if (version is null)
                 return string.Empty;
-
-            var informational = typeof(AboutPage).Assembly
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
-            var isBeta = informational?.Contains("beta", StringComparison.OrdinalIgnoreCase) == true
-                || informational?.Contains("-", StringComparison.Ordinal) == true;
-            if (isBeta)
+            if (version.IsBeta())
                 return $"{version.ToString(4)} BETA";
             return version.ToString(4);
         }
     }
 
-    private static string BuildText
-    {
-        get
-        {
-            var location = Assembly.GetEntryAssembly()?.Location;
-            if (string.IsNullOrEmpty(location))
-                return string.Empty;
-            return File.GetLastWriteTimeUtc(location)
-                .ToString("yyyy-MM-dd HH:mm:ss UTC", CultureInfo.InvariantCulture);
-        }
-    }
+    private static string BuildText => Assembly.GetEntryAssembly()?.GetBuildDateTimeString() ?? string.Empty;
 
     private static string CopyrightText
     {
         get
         {
             var location = Assembly.GetEntryAssembly()?.Location;
-            if (string.IsNullOrEmpty(location))
+            if (location is null)
                 return string.Empty;
             return FileVersionInfo.GetVersionInfo(location).LegalCopyright ?? string.Empty;
         }
@@ -58,7 +42,7 @@ public partial class AboutPage : UserControl
     {
         InitializeComponent();
 
-        _version.Text = $"{Get("AboutPage_Version", "Version")} {VersionText}".Trim();
+        _version.Text = $"{Resource.AboutPage_Version} {VersionText}".Trim();
         var build = BuildText;
         if (string.IsNullOrWhiteSpace(build))
         {
@@ -66,15 +50,13 @@ public partial class AboutPage : UserControl
         }
         else
         {
-            _build.Text = $"{Get("AboutPage_Build", "Build")} {build}".Trim();
+            _build.Text = $"{Resource.AboutPage_Build} {build}".Trim();
             _build.IsVisible = true;
         }
 
         _copyright.Text = CopyrightText;
 
-        _translationCredit.IsVisible = !LocalizationCatalog.NormalizeCulture(
-            LocalizationRuntime.CurrentCulture)
-            .Name.Equals("en", StringComparison.OrdinalIgnoreCase);
+        _translationCredit.IsVisible = !Resource.Culture.Equals(new CultureInfo("en"));
     }
 
     private void OpenApplicationDataFolder_Click(object? sender, RoutedEventArgs e)
@@ -92,31 +74,5 @@ public partial class AboutPage : UserControl
 
         using var process = Process.Start("explorer", Folders.Temp);
     }
-
-    private void OpenProjectWebsite_Click(object? sender, RoutedEventArgs e) =>
-        OpenUrl(AppIdentity.RepositoryUrl);
-
-    private void OpenLatestRelease_Click(object? sender, RoutedEventArgs e) =>
-        OpenUrl($"{AppIdentity.RepositoryUrl}/releases/latest");
-
-    private void OpenLibraryLink_Click(object? sender, RoutedEventArgs e)
-    {
-        if (sender is Button { Tag: string url })
-            OpenUrl(url);
-    }
-
-    private static void OpenUrl(string url)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-            return;
-
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = url,
-            UseShellExecute = true,
-        });
-    }
-
-    private static string Get(string key, string fallback) =>
-        AvaloniaLocalization.GetString(key, fallback);
+}
 }

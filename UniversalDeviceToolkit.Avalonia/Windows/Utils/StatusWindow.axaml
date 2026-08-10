@@ -1,0 +1,446 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Utils.StatusWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Windows"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:system="using:System"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    Width="300"
+    Height="100"
+    MinWidth="300"
+    MinHeight="100"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+    <local:BaseWindow.Resources>
+        <system:Double x:Key="SymbolFontSize">24</system:Double>
+        <system:Double x:Key="BodyFontSize">14</system:Double>
+    </local:BaseWindow.Resources>
+
+    <StackPanel Background="{DynamicResource ApplicationBackgroundBrush}">
+        <TextBlock
+            x:Name="_title"
+            Margin="16,16,16,0"
+            Classes="appCaptionTextBlock"
+            Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+            Text="{x:Static utils:AppDisplayName.Value}" />
+
+        <Grid Margin="16,16,16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ui:SymbolIcon
+                Grid.Column="0"
+                FontSize="{StaticResource SymbolFontSize}"
+                Symbol="Gauge24" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_PowerMode}"
+                Classes="appPageDescriptionTextBlock"
+                FontWeight="Medium" />
+            <StackPanel
+                Grid.Row="0"
+                Grid.Column="3"
+                Margin="16,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Ellipse
+                    x:Name="_powerModeValueIndicator"
+                    Width="12"
+                    Height="12"
+                    Margin="0,0,0,2" />
+                <TextBlock
+                    x:Name="_powerModeValueLabel"
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="{StaticResource BodyFontSize}"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            </StackPanel>
+
+            <TextBlock
+                x:Name="_powerModePresetLabel"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_Preset}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+            <TextBlock
+                x:Name="_powerModePresetValueLabel"
+                Grid.Row="1"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+
+            <TextBlock
+                x:Name="_cpuSensorsLabel"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+            <TextBlock
+                x:Name="_cpuSensorsValueLabel"
+                Grid.Row="2"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+
+            <TextBlock
+                x:Name="_memoryLabel"
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+            <TextBlock
+                x:Name="_memoryValueLabel"
+                Grid.Row="3"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+
+            <TextBlock
+                x:Name="_ssdTemperatureLabel"
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+            <TextBlock
+                x:Name="_ssdTemperatureValueLabel"
+                Grid.Row="4"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+        </Grid>
+
+        <Grid x:Name="_gpuGrid" Margin="16,16,16,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ui:SymbolIcon
+                Grid.Row="0"
+                Grid.Column="0"
+                FontSize="{StaticResource SymbolFontSize}"
+                Symbol="DeveloperBoard24" />
+            <TextBlock
+                x:Name="_gpuTitleLabel"
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_DiscreteGPU}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <StackPanel
+                x:Name="_gpuActive"
+                Grid.Row="0"
+                Grid.Column="3"
+                Margin="16,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                IsVisible="False">
+                <Ellipse
+                    Width="12"
+                    Height="12"
+                    Margin="0,0,0,2"
+                    Fill="{DynamicResource StatusSuccessBrush}" />
+                <TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resources:Resource.Active}"
+                    FontSize="{StaticResource BodyFontSize}"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            </StackPanel>
+            <StackPanel
+                x:Name="_gpuInactive"
+                Grid.Row="0"
+                Grid.Column="3"
+                Margin="16,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                IsVisible="False">
+                <Ellipse
+                    Width="12"
+                    Height="12"
+                    Margin="0,0,0,2"
+                    Fill="{DynamicResource StatusWarningBrush}" />
+                <TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resources:Resource.Inactive}"
+                    FontSize="{StaticResource BodyFontSize}"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            </StackPanel>
+            <StackPanel
+                x:Name="_gpuPoweredOff"
+                Grid.Row="0"
+                Grid.Column="3"
+                Margin="16,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                IsVisible="False">
+                <Ellipse
+                    Width="12"
+                    Height="12"
+                    Margin="0,0,0,2"
+                    Fill="{DynamicResource StatusCriticalBrush}" />
+                <TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resources:Resource.PoweredOff}"
+                    FontSize="{StaticResource BodyFontSize}"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            </StackPanel>
+
+            <TextBlock
+                x:Name="_gpuPowerStateValue"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_PowerState}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_gpuPowerStateValueLabel"
+                Grid.Row="1"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+            <TextBlock
+                x:Name="_gpuSensorsLabel"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+            <TextBlock
+                x:Name="_gpuSensorsValueLabel"
+                Grid.Row="2"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                IsVisible="False" />
+        </Grid>
+
+        <Grid Margin="16,16,16,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ui:SymbolIcon
+                x:Name="_batteryIcon"
+                Grid.Row="0"
+                Grid.Column="0"
+                FontSize="{StaticResource SymbolFontSize}"
+                Symbol="Battery624" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="8,0,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_Battery}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+            <TextBlock
+                x:Name="_batteryValueLabel"
+                Grid.Row="0"
+                Grid.Column="3"
+                Margin="16,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FlowDirection="LeftToRight"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_Mode}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_batteryModeValueLabel"
+                Grid.Row="1"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+            <TextBlock
+                x:Name="_batteryDischargeLabel"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_DischargeRate}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_batteryDischargeValueLabel"
+                Grid.Row="2"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FlowDirection="LeftToRight"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_batteryMinDischargeLabel"
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_MinDischargeRate}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_batteryMinDischargeValueLabel"
+                Grid.Row="3"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FlowDirection="LeftToRight"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_batteryMaxDischargeLabel"
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_MaxDischargeRate}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_batteryMaxDischargeValueLabel"
+                Grid.Row="4"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FlowDirection="LeftToRight"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                Grid.Row="5"
+                Grid.Column="1"
+                Margin="8,4,0,0"
+                VerticalAlignment="Center"
+                Text="{x:Static resources:Resource.StatusTrayPopup_UsageTime}"
+                FontSize="{StaticResource BodyFontSize}"
+                FontWeight="Medium"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            <TextBlock
+                x:Name="_batteryUsageTimeValueLabel"
+                Grid.Row="5"
+                Grid.Column="3"
+                Margin="16,4,0,0"
+                HorizontalAlignment="Right"
+                FlowDirection="LeftToRight"
+                FontSize="{StaticResource BodyFontSize}"
+                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Grid>
+
+        <Border
+            x:Name="_updateIndicator"
+            Padding="8,4,8,4"
+            Background="{DynamicResource StatusSuccessBrush}"
+            CornerRadius="{StaticResource CornerRadiusSurfaceBottom}"
+            IsVisible="False">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <ui:SymbolIcon
+                    Margin="0,0,4,0"
+                    FontSize="{StaticResource BodyFontSize}"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Symbol="ArrowSync24" />
+                <TextBlock
+                    FontSize="{StaticResource BodyFontSize}"
+                    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                    Text="{x:Static resources:Resource.StatusTrayPopup_UpdateAvailable}" />
+            </StackPanel>
+        </Border>
+
+    </StackPanel>
+</local:BaseWindow>

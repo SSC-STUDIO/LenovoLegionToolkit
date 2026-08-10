@@ -1,0 +1,160 @@
+<controls:AbstractRefreshingControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.Dashboard.DiscreteGPUControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    >
+    <controls:AbstractRefreshingControl.Resources>
+        <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </controls:AbstractRefreshingControl.Resources>
+    <custom:CardControl Margin="0,0,0,8">
+        <custom:CardControl.Header>
+            <controls:CardHeaderControl
+                Title="{x:Static resources:Resource.DiscreteGPUControl_Title}"
+                Subtitle="{x:Static resources:Resource.DiscreteGPUControl_Message}">
+                <controls:CardHeaderControl.Accessory>
+                    <Grid Margin="16,0,0,0" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center">
+                            <Ellipse
+                                x:Name="_discreteGPUStatusActiveIndicator"
+                                Width="12"
+                                Height="12"
+                                Margin="0,0,8,0"
+                                Fill="{DynamicResource StatusSuccessBrush}"
+                                IsVisible="{Binding IsGpuActive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
+                            <Ellipse
+                                x:Name="_discreteGPUStatusInactiveIndicator"
+                                Width="12"
+                                Height="12"
+                                Margin="0,0,8,0"
+                                Fill="{DynamicResource StatusWarningBrush}"
+                                IsVisible="{Binding IsGpuInactive, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
+                            <Ellipse
+                                x:Name="_discreteGPUStatusPoweredOffIndicator"
+                                Width="12"
+                                Height="12"
+                                Margin="0,0,8,0"
+                                Fill="{DynamicResource TextFillColorTertiaryBrush}"
+                                IsVisible="{Binding IsGpuPoweredOff, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}" />
+                            <TextBlock
+                                x:Name="_discreteGPUStatusDescription"
+                                AutomationProperties.HelpText="{Binding Text, RelativeSource={RelativeSource Self}}"
+                                AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}"
+                                Focusable="True"
+                                FontWeight="Medium"
+                                Text="-"
+                                VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <ui:Button
+                            x:Name="_gpuInfoButton"
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Width="40"
+                            Height="36"
+                            Margin="12,0,0,0"
+                            Padding="0"
+                            AutomationProperties.HelpText="{x:Static resources:Resource.Information}"
+                            AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Title}">
+                    <ui:Button.Styles>
+                        <!-- Crisp, theme-aware tooltip card: plain ToolTip text renders blurry
+                             at high DPI. Avalonia: TextOptions/rounding properties removed. -->
+                        <Style Selector="ToolTip">
+                            <Setter Property="Padding" Value="12,9" />
+                            <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="FontSize" Value="{DynamicResource FontSizeCaption}" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ToolTip">
+                                        <Border
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="{StaticResource CornerRadiusControl}"
+                                            Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter
+                                                Content="{TemplateBinding Content}"
+                                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ui:Button.Styles>
+                            <ui:SymbolIcon Symbol="QuestionCircle24" FontSize="{StaticResource IconSizeCardGlyph}" />
+                        </ui:Button>
+
+                        <ui:Button
+                            x:Name="_deactivateGPUButton"
+                            Grid.ColumnSpan="2"
+                            Grid.Row="1"
+                            MinWidth="150"
+                            Height="36"
+                            Margin="0,8,0,0"
+                            Padding="12,6"
+                            Appearance="Primary"
+                            AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}"
+                            Click="DeactivateGPUButton_Click"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{Binding CanDeactivateGpu, Mode=OneWay, RelativeSource={RelativeSource AncestorType=controls:AbstractRefreshingControl}}">
+                            <ui:Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:SymbolIcon
+                                        x:Name="_deactivateGPUButtonIcon"
+                                        Margin="0,0,8,0"
+                                        FontWeight="Medium"
+                                        Symbol="Sleep24" />
+                                    <TextBlock
+                                        x:Name="_deactivateGPUButtonText"
+                                        VerticalAlignment="Center"
+                                        FontWeight="Medium"
+                                        Text="{x:Static resources:Resource.DiscreteGPUControl_Deactivate}" />
+                                    <ui:SymbolIcon
+                                        Margin="8,0,0,0"
+                                        FontWeight="Medium"
+                                        Symbol="ChevronDown24" />
+                                </StackPanel>
+                            </ui:Button.Content>
+                            <ui:Button.ContextMenu>
+                                <ContextMenu MinWidth="150">
+                                    <ui:MenuItem
+                                        x:Name="_killAppsMenuItem"
+                                        AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_KillApps}"
+                                        Click="KillAppsMenuItem_Click"
+                                        Header="{x:Static resources:Resource.DiscreteGPUControl_KillApps}" />
+                                    <ui:MenuItem
+                                        x:Name="_restartGPUMenuItem"
+                                        AutomationProperties.Name="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}"
+                                        Click="RestartGPUMenuItem_Click"
+                                        Header="{x:Static resources:Resource.DiscreteGPUControl_RestartGPU}" />
+                                </ContextMenu>
+                            </ui:Button.ContextMenu>
+                        </ui:Button>
+                    </Grid>
+                </controls:CardHeaderControl.Accessory>
+            </controls:CardHeaderControl>
+        </custom:CardControl.Header>
+    </custom:CardControl>
+</controls:AbstractRefreshingControl>

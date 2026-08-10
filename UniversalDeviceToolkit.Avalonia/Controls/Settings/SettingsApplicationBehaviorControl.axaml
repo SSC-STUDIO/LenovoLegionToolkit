@@ -1,0 +1,225 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.Settings.SettingsApplicationBehaviorControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,16,12">
+            <custom:CardControl Margin="0,0,0,8">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_Autorun_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_Autorun_Message}" />
+                </custom:CardControl.Header>
+                <ComboBox
+                    x:Name="_autorunComboBox"
+                    MinWidth="160"
+                    Margin="0,0,0,8"
+                    AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Autorun_Title}"
+                    SelectionChanged="AutorunComboBox_SelectionChanged" />
+            </custom:CardControl>
+
+            <custom:CardControl Margin="0,0,0,8">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_MinimizeToTray_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_MinimizeToTray_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_minimizeToTrayToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_MinimizeToTray_Title}"
+                        Click="MinimizeToTrayToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+
+            <custom:CardControl Margin="0,0,0,8">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_MinimizeOnClose_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_MinimizeOnClose_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_minimizeOnCloseToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_MinimizeOnClose_Title}"
+                        Click="MinimizeOnCloseToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+
+            <custom:CardControl
+                x:Name="_disableCompatibilityWarningCard"
+                Margin="0,0,0,8"
+                IsVisible="False">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_disableCompatibilityWarningToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_DisableCompatibilityWarning_Title}"
+                        Click="DisableCompatibilityWarningToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+
+            <custom:CardControl x:Name="_vantageCard" Margin="0,0,0,8">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_DisableVantage_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_DisableVantage_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_vantageToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_DisableVantage_Title}"
+                        Click="VantageToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+
+            <custom:CardControl x:Name="_legionZoneCard" Margin="0,0,0,8">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_DisableLegionZone_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_DisableLegionZone_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_legionZoneToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_DisableLegionZone_Title}"
+                        Click="LegionZoneToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+
+            <custom:CardControl x:Name="_fnKeysCard" Margin="0,0,0,8">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_DisableLenovoHotkeys_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_DisableLenovoHotkeys_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_fnKeysToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_DisableLenovoHotkeys_Title}"
+                        Click="FnKeysToggle_Click" />
+                </Grid>
+            </custom:CardControl>
+
+            <custom:CardAction
+                x:Name="_hardwareSensorsCardControl"
+                Margin="0,0,0,8"
+                Click="HardwareSensorsCard_Click"
+                Icon="DataUsage24">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        x:Name="_hardwareSensorsCardHeader"
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_HardwareSensors_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_HardwareSensors_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_hardwareSensorsToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_HardwareSensors_Title}"
+                        Click="HardwareSensorsToggle_Click" />
+                </Grid>
+            </custom:CardAction>
+
+            <custom:CardAction
+                x:Name="_osdCardControl"
+                Margin="24,0,0,8"
+                Click="OsdSettingsButton_Click"
+                Icon="ProjectionScreen24"
+                IsVisible="False">
+                <Grid MinHeight="44">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:CardHeaderControl
+                        Grid.Column="0"
+                        Margin="0,0,16,0"
+                        Title="{x:Static resources:Resource.SettingsPage_Osd_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_Osd_Message}" />
+                    <ui:ToggleSwitch
+                        x:Name="_osdToggle"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_Osd_Title}"
+                        Click="OsdToggle_Click" />
+                </Grid>
+            </custom:CardAction>
+
+            <custom:CardControl Margin="0,0,0,8">
+                <custom:CardControl.Header>
+                    <controls:CardHeaderControl
+                        Title="{x:Static resources:Resource.SettingsPage_SettingsBackup_Title}"
+                        Subtitle="{x:Static resources:Resource.SettingsPage_SettingsBackup_Message}" />
+                </custom:CardControl.Header>
+                <StackPanel
+                    Margin="0,0,0,8"
+                    Orientation="Horizontal">
+                    <ui:Button
+                        x:Name="_exportSettingsButton"
+                        MinWidth="120"
+                        Margin="0,0,8,0"
+                        Appearance="Secondary"
+                        Click="ExportSettingsButton_Click"
+                        Content="{x:Static resources:Resource.Export}" />
+                    <ui:Button
+                        x:Name="_importSettingsButton"
+                        MinWidth="120"
+                        Appearance="Secondary"
+                        Click="ImportSettingsButton_Click"
+                        Content="{x:Static resources:Resource.Import}" />
+                </StackPanel>
+            </custom:CardControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

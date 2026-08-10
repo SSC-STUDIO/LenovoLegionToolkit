@@ -1,0 +1,173 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.ColorPickerControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cp="using:Avalonia.Controls"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls">
+
+    <UserControl.Styles>
+        <Style Selector="Button#_button:pointerover /template/ Border#ButtonSurface">
+            <Setter Property="Opacity" Value="0.92" />
+        </Style>
+        <Style Selector="Button#_button:pressed /template/ Border#ButtonSurface">
+            <Setter Property="Opacity" Value="0.78" />
+        </Style>
+        <Style Selector="Button#_button:disabled /template/ Border#ButtonSurface">
+            <Setter Property="Opacity" Value="0.55" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <Button
+            x:Name="_button"
+            Width="38"
+            Height="38"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            Click="Button_Click"
+            Cursor="Hand"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="ButtonSurface"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{StaticResource CornerRadiusRound}">
+                        <ContentPresenter
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
+        <Popup
+            x:Name="_popup"
+            Width="250"
+            HorizontalOffset="-106"
+            IsLightDismissEnabled="True"
+            Placement="Bottom"
+            VerticalOffset="4">
+            <Border
+                Background="{DynamicResource ApplicationBackgroundBrush}"
+                BorderBrush="{DynamicResource KeyboardFocusBorderColorBrush}"
+                BorderThickness="0.5"
+                ClipToBounds="True"
+                CornerRadius="{StaticResource CornerRadiusControl}">
+                <StackPanel>
+                    <cp:ColorPicker
+                        x:Name="_colorPicker"
+                        Width="200"
+                        Height="200"
+                        Margin="16"
+                        HorizontalAlignment="Center"
+                        ColorChanged="ColorPicker_ColorChanged"
+                        IsAlphaEnabled="False"
+                        PointerPressed="ColorPicker_PointerPressed"
+                        PointerReleased="ColorPicker_PointerReleased" />
+
+                    <Grid Margin="0,0,0,16" HorizontalAlignment="Center">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" MinWidth="120" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="0,0,16,24"
+                            VerticalAlignment="Center"
+                            Text="{x:Static resources:Resource.Color_Hex}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="0,0,16,8"
+                            VerticalAlignment="Center"
+                            Text="{x:Static resources:Resource.Color_Red}" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0,0,16,8"
+                            VerticalAlignment="Center"
+                            Text="{x:Static resources:Resource.Color_Green}" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="0,0,16,8"
+                            VerticalAlignment="Center"
+                            Text="{x:Static resources:Resource.Color_Blue}" />
+
+                        <ui:TextBox
+                            x:Name="_hexTextBox"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,0,0,24"
+                            HorizontalContentAlignment="Right"
+                            ClearButtonEnabled="False"
+                            TextChanged="HexTextBox_TextChanged" />
+                        <ui:NumberBox
+                            x:Name="_redNumberBox"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,0,0,8"
+                            ClearButtonEnabled="False"
+                            MaxDecimalPlaces="0"
+                            Maximum="255"
+                            Minimum="0"
+                            Text="0"
+                            TextChanged="NumberBox_TextChanged" />
+                        <ui:NumberBox
+                            x:Name="_greenNumberBox"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="0,0,0,8"
+                            ClearButtonEnabled="False"
+                            MaxDecimalPlaces="0"
+                            Maximum="255"
+                            Minimum="0"
+                            Text="0"
+                            TextChanged="NumberBox_TextChanged" />
+                        <ui:NumberBox
+                            x:Name="_blueNumberBox"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="0,0,0,8"
+                            AcceptsExpression="False"
+                            ClearButtonEnabled="False"
+                            MaxDecimalPlaces="0"
+                            Maximum="255"
+                            Minimum="0"
+                            Text="0"
+                            TextChanged="NumberBox_TextChanged" />
+
+                    </Grid>
+
+                    <ui:Button
+                        MinWidth="100"
+                        Margin="0,0,0,16"
+                        HorizontalAlignment="Center"
+                        Appearance="Primary"
+                        Click="OK_Click"
+                        Content="{x:Static resources:Resource.OK}" />
+
+                </StackPanel>
+            </Border>
+        </Popup>
+
+    </Grid>
+
+</UserControl>

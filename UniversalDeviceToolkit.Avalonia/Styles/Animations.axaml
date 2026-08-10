@@ -1,0 +1,131 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+      Animation entry points. WPF Storyboards became class-based styles:
+      consumers add Classes="appPageEntrance" etc.; the Style.Animations play on activation.
+      NOTE (Avalonia 11.3): RenderTransform/Scale keyframes are NOT supported (no animator),
+      so all keyframe animations here animate Opacity only. Hover/click translation effects
+      are expressed via Transitions + class selectors (see CardAction.axaml).
+    -->
+    <Styles.Resources>
+        <ResourceDictionary>
+            <!-- Inert key holders so existing {StaticResource Key} references keep resolving. -->
+            <Style x:Key="CardHoverEnterAnimation" />
+            <Style x:Key="CardHoverLeaveAnimation" />
+            <Style x:Key="PageFadeInAnimation" />
+            <Style x:Key="ButtonClickAnimation" />
+            <Style x:Key="ListItemLoadAnimation" />
+            <Style x:Key="SectionExpandAnimation" />
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <!-- Page Fade In -->
+    <Style Selector="Control.pageFadeIn">
+        <Style.Animations>
+            <Animation Duration="{StaticResource AnimationDurationSlow}" Easing="CubicEaseOut" FillMode="Both">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityStart}" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!-- Page entrance: apply Classes="appPageEntrance" for an opacity fade on load. -->
+    <Style Selector="Control.appPageEntrance">
+        <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+        <Style.Animations>
+            <Animation Duration="{StaticResource AnimationDurationMedium}" Easing="CubicEaseOut" FillMode="Both">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityStart}" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!-- Button click pulse (scale feedback unavailable in 11.3 keyframes; use Button:pressed Opacity instead). -->
+    <Style Selector="Control.buttonClick">
+        <Style.Animations>
+            <Animation Duration="{StaticResource AnimationDurationFast}" Easing="CubicEaseOut" FillMode="Both" IterationCount="2" PlaybackDirection="Alternate">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="1" />
+                </KeyFrame>
+                <KeyFrame Cue="50%">
+                    <Setter Property="Opacity" Value="0.85" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="1" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!-- List item load (transform-only so layout margins stay intact; translate omitted). -->
+    <Style Selector="Control.listItemLoad">
+        <Style.Animations>
+            <Animation Duration="{StaticResource AnimationDurationMedium}" Easing="CubicEaseOut" FillMode="Both">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityStart}" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <Style Selector="Control.appListItemLoad">
+        <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+        <Style.Animations>
+            <Animation Duration="{StaticResource AnimationDurationMedium}" Easing="CubicEaseOut" FillMode="Both">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityStart}" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!-- Section expand/collapse -->
+    <Style Selector="Control.sectionExpand">
+        <Style.Animations>
+            <Animation Duration="{StaticResource AnimationDurationMedium}" Easing="CubicEaseOut" FillMode="Both">
+                <KeyFrame Cue="0%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityStart}" />
+                </KeyFrame>
+                <KeyFrame Cue="100%">
+                    <Setter Property="Opacity" Value="{StaticResource AnimationOpacityEnd}" />
+                </KeyFrame>
+            </Animation>
+        </Style.Animations>
+    </Style>
+
+    <!--
+      Card hover lift via Transitions (works for RenderTransform in 11.3):
+      <Border Classes="cardHover">  +  Classes="cardHoverEntered" toggled by the consumer.
+    -->
+    <Style Selector="Border.cardHover">
+        <Setter Property="BoxShadow" Value="0 2 8 0 #1A000000" />
+        <Setter Property="RenderTransform" Value="translate(0px, 0px)" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="{StaticResource AnimationDurationFast}" Easing="CubicEaseOut" />
+                <BoxShadowsTransition Property="BoxShadow" Duration="{StaticResource AnimationDurationFast}" Easing="CubicEaseOut" />
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="Border.cardHover.cardHoverEntered">
+        <Setter Property="BoxShadow" Value="0 3 12 0 #26000000" />
+        <Setter Property="RenderTransform" Value="translate(0px, -2px)" />
+    </Style>
+
+</Styles>

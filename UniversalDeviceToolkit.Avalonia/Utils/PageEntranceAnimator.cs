@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Animation.Easings;
@@ -16,6 +17,7 @@ namespace UniversalDeviceToolkit.Avalonia.Utils;
 internal static class PageEntranceAnimator
 {
     private const double Offset = 12;
+    private static readonly TimeSpan Duration = TimeSpan.FromMilliseconds(180);
 
     public static void Play(Control target)
     {
@@ -34,7 +36,7 @@ internal static class PageEntranceAnimator
 
         var animation = new Animation
         {
-            Duration = TimeSpan.FromMilliseconds(180),
+            Duration = Duration,
             Easing = new CubicEaseOut(),
             FillMode = FillMode.Forward,
         };
@@ -49,7 +51,7 @@ internal static class PageEntranceAnimator
         });
         animation.Children.Add(new KeyFrame
         {
-            KeyTime = TimeSpan.FromMilliseconds(180),
+            KeyTime = Duration,
             Setters =
             {
                 new Setter(Visual.OpacityProperty, 1d),
@@ -57,6 +59,7 @@ internal static class PageEntranceAnimator
             },
         });
 
-        _ = animation.RunAsync(target);
+        var cts = new CancellationTokenSource();
+        _ = animation.RunAsync(target, cts.Token);
     }
 }

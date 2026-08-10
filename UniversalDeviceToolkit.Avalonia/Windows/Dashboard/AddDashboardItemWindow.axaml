@@ -1,0 +1,72 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Dashboard.AddDashboardItemWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Windows"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    Title="{x:Static resources:Resource.Add}"
+    Width="600"
+    Height="570"
+    MinWidth="500"
+    MinHeight="400"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    CanResize="False"
+    CanMinimize="True"
+    ShowInTaskbar="False"
+    WindowStartupLocation="CenterOwner">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <custom:TitleBar
+            Grid.Row="0"
+            CanMaximize="false"
+            ShowMaximize="false"
+            ShowMinimize="false" />
+
+        <Grid
+            Grid.Row="0"
+            Height="24"
+            Margin="12,8,12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Classes="appCaptionTextBlock"
+                IsHitTestVisible="False"
+                Text="{x:Static resources:Resource.Add}" />
+
+        </Grid>
+
+        <custom:DynamicScrollViewer Grid.Row="1" Margin="12,0,0,12">
+            <StackPanel x:Name="_content" Margin="0,0,12,0" />
+        </custom:DynamicScrollViewer>
+
+        <Grid Grid.Row="2" Margin="0,0,12,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ui:Button
+                Grid.Column="1"
+                MinWidth="100"
+                Margin="8,0,0,0"
+                Click="CancelButton_Click"
+                Content="{x:Static resources:Resource.Cancel}" />
+
+        </Grid>
+    </Grid>
+</local:BaseWindow>

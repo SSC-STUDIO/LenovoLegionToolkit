@@ -1,0 +1,69 @@
+﻿<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Automation.TabItemContent.TimeAutomationPipelineTriggerTabItemContent"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:system="using:System"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    Initialized="TimeAutomationPipelineTriggerTabItemContent_Initialized">
+    <StackPanel Margin="16">
+        <RadioButton
+            x:Name="_sunriseRadioButton"
+            Margin="0,0,0,8"
+            Click="RadioButton_Click"
+            Content="{x:Static resources:Resource.TimeAutomationPipelineTriggerTabItemContent_Sunrise}"
+            GroupName="A" />
+
+        <RadioButton
+            x:Name="_sunsetRadioButton"
+            Margin="0,0,0,8"
+            Click="RadioButton_Click"
+            Content="{x:Static resources:Resource.TimeAutomationPipelineTriggerTabItemContent_Sunset}"
+            GroupName="A" />
+
+        <RadioButton
+            x:Name="_timeRadioButton"
+            Margin="0,0,0,8"
+            Click="RadioButton_Click"
+            Content="{x:Static resources:Resource.TimeAutomationPipelineTriggerTabItemContent_Time}"
+            GroupName="A" />
+        <StackPanel
+            x:Name="_timePickerPanel"
+            Margin="28,0,0,0"
+            VerticalAlignment="Center"
+            IsEnabled="False"
+            Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <ui:NumberBox
+                    x:Name="_timePickerHours"
+                    ClearButtonEnabled="False"
+                    MaxDecimalPlaces="0"
+                    Maximum="23"
+                    Minimum="0" />
+                <TextBlock
+                    Margin="4,0,4,0"
+                    VerticalAlignment="Center"
+                    Text=":" />
+                <ui:NumberBox
+                    x:Name="_timePickerMinutes"
+                    ClearButtonEnabled="False"
+                    MaxDecimalPlaces="0"
+                    Maximum="59"
+                    Minimum="0" />
+                <TextBlock
+                    Margin="8,0,0,0"
+                    VerticalAlignment="Center"
+                    Text="{x:Static resources:Resource.TimeAutomationPipelineTriggerTabItemContent_HHMMHint}" />
+            </StackPanel>
+            <StackPanel x:Name="_daysOfWeekPanel" Margin="0,16,0,0">
+                <CheckBox Click="DayOfWeekCheckBox_OnClick" Tag="{x:Static system:DayOfWeek.Monday}" />
+                <CheckBox Click="DayOfWeekCheckBox_OnClick" Tag="{x:Static system:DayOfWeek.Tuesday}" />
+                <CheckBox Click="DayOfWeekCheckBox_OnClick" Tag="{x:Static system:DayOfWeek.Wednesday}" />
+                <CheckBox Click="DayOfWeekCheckBox_OnClick" Tag="{x:Static system:DayOfWeek.Thursday}" />
+                <CheckBox Click="DayOfWeekCheckBox_OnClick" Tag="{x:Static system:DayOfWeek.Friday}" />
+                <CheckBox Click="DayOfWeekCheckBox_OnClick" Tag="{x:Static system:DayOfWeek.Saturday}" />
+                <CheckBox Click="DayOfWeekCheckBox_OnClick" Tag="{x:Static system:DayOfWeek.Sunday}" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,94 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom">
+
+    <!--
+      CardExpander theme (replaces the WPF-UI default + customizations).
+      Header toggle is a plain ToggleButton wired to IsExpanded (two-way); the content
+      row is visible while expanded. PART_ExpanderHeader must be found by the control's
+      OnApplyTemplate (Click toggles IsExpanded) — keep the part name.
+    -->
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ControlTheme x:Key="{x:Type custom:CardExpander}" TargetType="custom:CardExpander">
+                <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+                <Setter Property="Background" Value="{DynamicResource AppSurfaceCardBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Setter Property="Margin" Value="0,0,0,12" />
+                <Setter Property="Template">
+                    <ControlTemplate TargetType="custom:CardExpander">
+                        <Border
+                            Padding="0"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <ToggleButton
+                                    x:Name="PART_ExpanderHeader"
+                                    Grid.Row="0"
+                                    IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Padding="14,12"
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Center">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <ContentPresenter
+                                            x:Name="HeaderIcon"
+                                            Grid.Column="0"
+                                            Margin="0,0,12,0"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding Icon}"
+                                            Focusable="False" />
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <ContentPresenter
+                                                x:Name="HeaderContentPresenter"
+                                                Content="{TemplateBinding Header}"
+                                                TextElement.Foreground="{TemplateBinding Foreground}"
+                                                TextElement.FontWeight="Medium"
+                                                TextElement.FontSize="{DynamicResource FontSizeBody}" />
+                                            <ContentPresenter
+                                                x:Name="SubtitleContentPresenter"
+                                                Margin="0,2,0,0"
+                                                Content="{TemplateBinding Subtitle}"
+                                                TextElement.Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                TextElement.FontSize="{DynamicResource FontSizeCaption}" />
+                                        </StackPanel>
+                                        <Path
+                                            Grid.Column="2"
+                                            Margin="12,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Data="M 0,0 L 4,4 L 0,8"
+                                            Stroke="{DynamicResource TextFillColorSecondaryBrush}"
+                                            StrokeThickness="1.5"
+                                            StrokeLineCap="Round"
+                                            StrokeJoin="Round" />
+                                    </Grid>
+                                </ToggleButton>
+                                <ContentPresenter
+                                    x:Name="ContentPresenter"
+                                    Grid.Row="1"
+                                    Padding="14,0,14,14"
+                                    Content="{TemplateBinding Content}"
+                                    IsVisible="{TemplateBinding IsExpanded}" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+</Styles>

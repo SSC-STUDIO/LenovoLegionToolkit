@@ -1,0 +1,127 @@
+<local:BaseWindow
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Dashboard.ExtendedHybridModeInfoWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniversalDeviceToolkit.Avalonia.Windows"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    Title="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Title}"
+    MinWidth="550"
+    MaxWidth="550"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    CanResize="False"
+    CanMinimize="True"
+    ShowInTaskbar="False"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+
+        <custom:TitleBar
+            Grid.Row="0"
+            CanMaximize="false"
+            ShowMaximize="false"
+            ShowMinimize="false" />
+
+        <Grid
+            Grid.Row="0"
+            Height="24"
+            Margin="12,8,12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Classes="appCaptionTextBlock"
+                IsHitTestVisible="False"
+                Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Title}" />
+
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" Margin="16,16,16,16">
+            <StackPanel>
+
+                <StackPanel x:Name="_hybridPanel">
+                    <TextBlock
+                        Classes="appPageDescriptionTextBlock"
+                        FontWeight="Medium"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Hybrid_Title}" />
+                    <TextBlock
+                        Margin="0,4,0,24"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Hybrid_Message}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel x:Name="_hybridIgpuPanel">
+                    <TextBlock
+                        Classes="appPageDescriptionTextBlock"
+                        FontWeight="Medium"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_IGPU_Title}" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_IGPU_Message}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,4,0,24"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_IGPU_Disclaimer}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel x:Name="_hybridAutoPanel">
+                    <TextBlock
+                        Classes="appPageDescriptionTextBlock"
+                        FontWeight="Medium"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Auto_Title}" />
+                    <TextBlock
+                        Margin="0,4,0,24"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_Auto_Message}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel x:Name="_dgpuPanel">
+                    <TextBlock
+                        Classes="appPageDescriptionTextBlock"
+                        FontWeight="Medium"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_DGPU_Title}" />
+                    <TextBlock
+                        Margin="0,4,0,0"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_DGPU_Message}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,4,0,24"
+                        FontWeight="Medium"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="{x:Static resources:Resource.ExtendedHybridModeInfoWindow_DGPU_Disclaimer}"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Margin="16,16,16,16">
+            <ui:Button
+                MinWidth="120"
+                HorizontalAlignment="Center"
+                Appearance="Primary"
+                Click="CloseButton_Click"
+                Content="{x:Static resources:Resource.Close}" />
+        </StackPanel>
+
+    </Grid>
+</local:BaseWindow>

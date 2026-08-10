@@ -1,8 +1,10 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using UniversalDeviceToolkit.Avalonia.Controls;
+using UniversalDeviceToolkit.Avalonia.Extensions;
 
 namespace UniversalDeviceToolkit.Avalonia.Controls.Shell;
 
@@ -13,8 +15,8 @@ public enum AppStatusBannerSeverity
 }
 
 /// <summary>
-/// Migrated from the WPF AppStatusBanner: a persistent bottom-right software
-/// status banner with an icon, message, action affordance and close button.
+/// A persistent bottom-right status banner with an icon, message, action affordance
+/// and close button (port of the WPF AppStatusBanner).
 /// </summary>
 public partial class AppStatusBanner : UserControl
 {
@@ -32,6 +34,11 @@ public partial class AppStatusBanner : UserControl
         AvaloniaProperty.Register<AppStatusBanner, bool>(
             nameof(IsPersistent),
             true);
+
+    static AppStatusBanner()
+    {
+        SeverityProperty.Changed.AddClassHandler<AppStatusBanner>((banner, _) => banner.ApplySeverity());
+    }
 
     public AppStatusBannerSeverity Severity
     {
@@ -51,20 +58,14 @@ public partial class AppStatusBanner : UserControl
         set => SetValue(IsPersistentProperty, value);
     }
 
-    public event EventHandler? Closed;
+    public event EventHandler<RoutedEventArgs>? Closed;
 
     public AppStatusBanner()
     {
         InitializeComponent();
-        MessageProperty.Changed.AddClassHandler<AppStatusBanner>((banner, _) =>
-        {
-            if (banner.MessageText is not null)
-                banner.MessageText.Text = banner.Message;
-        });
-        SeverityProperty.Changed.AddClassHandler<AppStatusBanner>((banner, _) => banner.ApplySeverity());
         ApplySeverity();
-        // Do NOT raise Closed when the host collapses the banner: initial load is
-        // collapsed and that would fire Closed before the host ever shows it.
+        // Do NOT raise Closed on IsVisibleChanged→Collapsed: initial load is Collapsed and
+        // that would fire Closed before the host ever shows the banner (false "user dismissed").
         // Closed is only raised from Hide() (close button).
     }
 
@@ -72,15 +73,24 @@ public partial class AppStatusBanner : UserControl
     {
         if (Severity == AppStatusBannerSeverity.Success)
         {
-            Icon.IconIdentifier = "ArrowSync24";
-            Icon.Foreground = TryBrush("StatusSuccessBrush") ?? Icon.Foreground;
+            Icon.Symbol = SymbolRegular.ArrowSync24;
+            Icon.SetResourceReference(TextBlock.ForegroundProperty, "StatusSuccessBrush");
             ActionArea.IsVisible = true;
             return;
         }
 
         ActionArea.IsVisible = false;
-        Icon.IconIdentifier = "Warning24";
-        Icon.Foreground = TryBrush("StatusWarningBrush") ?? Icon.Foreground;
+        Icon.Symbol = SymbolRegular.Warning24;
+        Icon.SetResourceReference(TextBlock.ForegroundProperty, "StatusWarningBrush");
+    }
+
+    private void CloseButton_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+            return;
+
+        e.Handled = true;
+        Hide();
     }
 
     private void CloseButton_Click(object? sender, RoutedEventArgs e)
@@ -95,9 +105,6 @@ public partial class AppStatusBanner : UserControl
             return;
 
         IsVisible = false;
-        Closed?.Invoke(this, EventArgs.Empty);
+        Closed?.Invoke(this, new RoutedEventArgs());
     }
-
-    private IBrush? TryBrush(object key) =>
-        this.TryFindResource(key, out var resource) ? resource as IBrush : null;
 }

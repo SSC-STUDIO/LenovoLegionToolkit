@@ -1,0 +1,11 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.KeyboardBacklight.Spectrum.Device.SpectrumDeviceKeyboardOnlyControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls.KeyboardBacklight.Spectrum.Device"
+    FlowDirection="LeftToRight">
+
+    <!--  Keyboard  -->
+    <controls:SpectrumKeyboardControl x:Name="_keyboard" />
+
+</UserControl>

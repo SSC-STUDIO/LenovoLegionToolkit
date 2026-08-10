@@ -1,277 +1,60 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:UniversalDeviceToolkit.Avalonia.Localization"
-             xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
-             xmlns:automation="using:Avalonia.Automation"
-             x:Class="UniversalDeviceToolkit.Avalonia.Pages.KeyboardBacklightPage"
-             automation:AutomationProperties.AutomationId="AvaloniaKeyboardBacklightPage">
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="16"
-                    Margin="0,0,16,16"
-                    HorizontalAlignment="Left">
-            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16" Margin="0,16,0,0">
-                <Border Width="48"
-                        Height="48"
-                        CornerRadius="{StaticResource CornerRadiusControl}"
-                        Background="{DynamicResource StatusNeutralBackgroundBrush}"
-                        VerticalAlignment="Top">
-                    <controls:NavigationIcon IconIdentifier="Keyboard24"
-                                             FontSize="{StaticResource IconSizeLG}"
-                                             Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                </Border>
-                <StackPanel Grid.Column="1" Spacing="4">
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=KeyboardBacklightPage_Title, Fallback=Keyboard Backlight}"
-                                                 FontSize="{StaticResource FontSizePageTitle}"
-                                                 FontWeight="Medium"
-                                                 Margin="0,0,0,8"
-                                                 OverflowMode="Wrap"
-                                                 MaxLines="2" />
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=KeyboardBacklightPage_Description, Fallback=Configure keyboard lighting and effects.}"
-                                                 FontSize="{StaticResource FontSizePageDescription}"
-                                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                 Margin="0,0,0,24"
-                                                 OverflowMode="Wrap"
-                                                 MaxLines="3" />
-                </StackPanel>
-            </Grid>
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Pages.KeyboardBacklightPage"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:automation="using:Avalonia.Automation"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
-            <Border x:Name="StatusCard"
-                    Background="{DynamicResource StatusInfoBackgroundBrush}"
-                    BorderBrush="{DynamicResource StatusInfoBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Padding="16">
-                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                    <Border Width="36"
-                            Height="36"
-                            CornerRadius="{StaticResource CornerRadiusRound}"
-                            Background="{DynamicResource StatusInfoBrush}"
-                            VerticalAlignment="Top">
-                        <controls:NavigationIcon IconIdentifier="Info24"
-                                                 FontSize="{StaticResource IconSizeMD}"
-                                                 Foreground="{DynamicResource TextOnAccentFillColorPrimaryBrush}"
-                                                 HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center" />
-                    </Border>
-                    <StackPanel Grid.Column="1" Spacing="4">
-                        <controls:LocalizedTextBlock x:Name="StatusTitle"
-                                                     FontSize="{StaticResource FontSizeSubsection}"
-                                                     FontWeight="Medium"
-                                                     OverflowMode="Wrap"
-                                                     MaxLines="2" />
-                        <controls:LocalizedTextBlock x:Name="StatusMessage"
-                                                     Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                     OverflowMode="Wrap"
-                                                     MaxLines="4" />
-                    </StackPanel>
-                </Grid>
-            </Border>
+    <custom:DynamicScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,0,0">
+        <TextBlock
+                x:Name="_titleTextBlock"
+                Margin="0,16,0,24"
+                Focusable="True"
+                Classes="appPageTitleTextBlock"
+                Text="{x:Static resources:Resource.KeyboardBacklightPage_Title}" />
 
-            <controls:LocalizedTextBlock x:Name="ErrorMessage"
-                                         IsVisible="False"
-                                         Foreground="{DynamicResource StatusCriticalTextBrush}"
-                                         OverflowMode="Wrap"
-                                         MaxLines="3" />
-
-            <Border x:Name="VantageWarning"
-                    IsVisible="False"
-                    Background="{DynamicResource StatusWarningBackgroundBrush}"
-                    BorderBrush="{DynamicResource StatusWarningBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{StaticResource CornerRadiusCard}"
-                    Padding="16"
-                    automation:AutomationProperties.AutomationId="AvaloniaKeyboardVantageWarning">
-                <StackPanel Spacing="4">
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_VantageEnabledWarning_Title, Fallback=Lenovo Vantage or its services are running}"
-                                                 FontSize="{StaticResource FontSizeSubsection}"
-                                                 FontWeight="Medium"
-                                                 Foreground="{DynamicResource StatusWarningBrush}"
-                                                 OverflowMode="Wrap"
-                                                 MaxLines="2" />
-                    <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_VantageEnabledWarning_Message, Fallback=Keyboard backlight cannot be controlled while Lenovo Vantage or its services are running.}"
-                                                 OverflowMode="Wrap"
-                                                 MaxLines="3" />
-                </StackPanel>
-            </Border>
-
-            <StackPanel x:Name="SpectrumPanel" IsVisible="False" Spacing="12">
-                <Border Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        Padding="16">
-                    <StackPanel Spacing="12">
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_SpectrumProfiles, Fallback=Spectrum profiles}"
-                                                     FontSize="{StaticResource FontSizeSubsection}"
-                                                     FontWeight="Medium"
-                                                     OverflowMode="Wrap"
-                                                     MaxLines="2" />
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                            <WrapPanel x:Name="SpectrumProfiles" Orientation="Horizontal" />
-                            <Button Grid.Column="1"
-                                    x:Name="SwitchSpectrumLayoutButton"
-                                    Click="SwitchSpectrumLayout_Click"
-                                    ToolTip.Tip="{local:Loc Key=SpectrumKeyboardBacklightControl_SwitchKeyboardLayout_ToolTip, Fallback=Switch keyboard layout}"
-                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumSwitchLayout">
-                                <controls:NavigationIcon IconIdentifier="ArrowRepeatAll24" />
-                            </Button>
-                        </Grid>
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Layout, Fallback=Keyboard layout}"
-                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                            <controls:LocalizedTextBlock x:Name="SpectrumKeyboardLayoutValue"
-                                                         Grid.Column="1"
-                                                         HorizontalAlignment="Right"
-                                                         FontWeight="Medium"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                        </Grid>
-                        <!-- Device layout selector (WPF SpectrumDeviceControl parity). -->
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_DeviceLayout, Fallback=Device layout}"
-                                                         Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                                                         VerticalAlignment="Center"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                            <WrapPanel x:Name="SpectrumDeviceLayoutSelector"
-                                       Grid.Column="1"
-                                       HorizontalAlignment="Right" />
-                        </Grid>
-                        <!-- Device keyboard canvas (WPF SpectrumDeviceControl parity). -->
-                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="0,4,0,0">
-                            <Border BorderBrush="{DynamicResource CardBorderBrush}"
-                                    BorderThickness="2"
-                                    CornerRadius="{StaticResource CornerRadiusControl}"
-                                    ClipToBounds="True"
-                                    Padding="4">
-                                <controls:SpectrumKeyboardLayoutCanvas x:Name="SpectrumDeviceCanvas"
-                                                                       MinHeight="220"
-                                                                       HorizontalAlignment="Stretch" />
-                            </Border>
-                            <StackPanel Grid.Column="1"
-                                        Spacing="8"
-                                        VerticalAlignment="Center">
-                                <Button x:Name="SpectrumSelectAllButton"
-                                        Click="SpectrumSelectAll_Click"
-                                        ToolTip.Tip="{local:Loc Key=SpectrumKeyboardBacklightControl_SelectAll_ToolTip, Fallback=Select all keys}"
-                                        automation:AutomationProperties.AutomationId="AvaloniaSpectrumSelectAll">
-                                    <controls:NavigationIcon IconIdentifier="SelectAllOn24" />
-                                </Button>
-                                <Button x:Name="SpectrumDeselectAllButton"
-                                        Click="SpectrumDeselectAll_Click"
-                                        ToolTip.Tip="{local:Loc Key=SpectrumKeyboardBacklightControl_DeselectAll_ToolTip, Fallback=Deselect all keys}"
-                                        automation:AutomationProperties.AutomationId="AvaloniaSpectrumDeselectAll">
-                                    <controls:NavigationIcon IconIdentifier="SelectAllOff24" />
-                                </Button>
+            <controls:LoadableControl x:Name="_loader" ContentVisibilityWhileLoading="False">
+                <controls:LoadableControl.LoadingContent>
+                    <StackPanel
+                        Margin="0,0,8,0"
+                        automation:AutomationProperties.AutomationId="KeyboardBacklightLoadingSkeleton">
+                        <Border Classes="appSkeletonCard" MinHeight="200" Margin="0,0,0,12">
+                            <StackPanel>
+                                <Border Width="220" Height="18" HorizontalAlignment="Left" Classes="appSkeletonShimmerBlock" />
+                                <Border Height="8" Margin="0,28,140,0" Classes="appSkeletonShimmerBlock" />
+                                <Border Height="8" Margin="0,16,96,0" Classes="appSkeletonShimmerBlock" />
+                                <Border Height="32" Margin="0,24,180,0" CornerRadius="{StaticResource CornerRadiusLG}" Classes="appSkeletonShimmerBlock" />
                             </StackPanel>
-                        </Grid>
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Brightness, Fallback=Brightness}"
-                                                         VerticalAlignment="Center"
-                                                         OverflowMode="Ellipsis"
-                                                         MaxLines="1" />
-                            <Slider x:Name="SpectrumBrightness"
-                                    Grid.Column="1"
-                                    Minimum="0"
-                                    Maximum="9"
-                                    TickFrequency="1"
-                                    IsSnapToTickEnabled="True"
-                                    VerticalAlignment="Center"
-                                    ValueChanged="SpectrumBrightness_ValueChanged" />
-                            <TextBlock x:Name="SpectrumBrightnessValue"
-                                       Grid.Column="2"
-                                       MinWidth="32"
-                                       TextAlignment="Right"
-                                       VerticalAlignment="Center" />
-                        </Grid>
-                        <CheckBox x:Name="SpectrumLogo"
-                                  Content="{local:Loc Key=Keyboard_LogoLighting, Fallback=Keyboard logo lighting}"
-                                  Click="SpectrumLogo_Click" />
-                        <Grid ColumnDefinitions="*,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="8">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Effects, Fallback=Effects}"
-                                                         FontSize="{StaticResource FontSizeSubsection}"
-                                                         FontWeight="Medium"
-                                                         VerticalAlignment="Center" />
-                            <Button Grid.Column="1"
-                                    x:Name="AddSpectrumEffectButton"
-                                    Content="{local:Loc Key=SpectrumKeyboardBacklightControl_AddEffect, Fallback=Add effect}"
-                                    Click="AddSpectrumEffect_Click"
-                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumAddEffect" />
-                            <Button Grid.Column="2"
-                                    x:Name="ResetSpectrumButton"
-                                    Click="ResetSpectrum_Click"
-                                    ToolTip.Tip="{local:Loc Key=SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip, Fallback=Reset to default}"
-                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumReset">
-                                <controls:NavigationIcon IconIdentifier="ArrowClockwise24" />
-                            </Button>
-                            <Button Grid.Column="3"
-                                    x:Name="ExportSpectrumButton"
-                                    Click="ExportSpectrum_Click"
-                                    ToolTip.Tip="{local:Loc Key=Export, Fallback=Export}"
-                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumExport">
-                                <controls:NavigationIcon IconIdentifier="ArrowExportLtr24" />
-                            </Button>
-                            <Button Grid.Column="4"
-                                    x:Name="ImportSpectrumButton"
-                                    Click="ImportSpectrum_Click"
-                                    ToolTip.Tip="{local:Loc Key=Import, Fallback=Import}"
-                                    automation:AutomationProperties.AutomationId="AvaloniaSpectrumImport">
-                                <controls:NavigationIcon IconIdentifier="ArrowImport24" />
-                            </Button>
-                            <Button Grid.Column="5"
-                                    x:Name="SaveSpectrumButton"
-                                    Content="{local:Loc Key=Common_Save, Fallback=Save}"
-                                    Click="SaveSpectrum_Click" />
-                        </Grid>
-                        <ItemsControl x:Name="SpectrumEffects" />
+                        </Border>
+                        <Border Classes="appSkeletonListItemCard">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Classes="appSkeletonListItemIcon" />
+                                <Border Grid.Column="1" Width="220" Classes="appSkeletonListItemPrimaryLine" />
+                            </Grid>
+                        </Border>
                     </StackPanel>
-                </Border>
+                </controls:LoadableControl.LoadingContent>
+                <StackPanel x:Name="_content" Margin="0,0,8,0">
+                <TextBlock
+                    x:Name="_noKeyboardsText"
+                    FontSize="{DynamicResource FontSizeCaption}"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                    Text="{x:Static resources:Resource.KeyboardBacklightPage_NoCompatibleKeyboardsFound}"
+                    IsVisible="False" />
             </StackPanel>
+        </controls:LoadableControl>
 
-            <StackPanel x:Name="RgbPanel" IsVisible="False" Spacing="12">
-                <Border Background="{DynamicResource CardBackgroundBrush}"
-                        BorderBrush="{DynamicResource CardBorderBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{StaticResource CornerRadiusCard}"
-                        Padding="16">
-                    <StackPanel Spacing="12">
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_RGBPresets, Fallback=RGB presets}"
-                                                     FontSize="{StaticResource FontSizeSubsection}"
-                                                     FontWeight="Medium"
-                                                     OverflowMode="Wrap"
-                                                     MaxLines="2" />
-                        <WrapPanel x:Name="RgbPresets" Orientation="Horizontal" />
-                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="10">
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Effect, Fallback=Effect}"
-                                                         VerticalAlignment="Center" />
-                            <ComboBox x:Name="RgbEffect" Grid.Column="1" SelectionChanged="RgbSetting_Changed" />
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Speed, Fallback=Speed}"
-                                                         Grid.Row="1"
-                                                         VerticalAlignment="Center" />
-                            <ComboBox x:Name="RgbSpeed" Grid.Row="1" Grid.Column="1" SelectionChanged="RgbSetting_Changed" />
-                            <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Brightness, Fallback=Brightness}"
-                                                         Grid.Row="2"
-                                                         VerticalAlignment="Center" />
-                            <ComboBox x:Name="RgbBrightness" Grid.Row="2" Grid.Column="1" SelectionChanged="RgbSetting_Changed" />
-                        </Grid>
-                        <controls:LocalizedTextBlock Text="{local:Loc Key=Keyboard_Zones, Fallback=Zones}"
-                                                      FontSize="{StaticResource FontSizeSubsection}"
-                                                      FontWeight="Medium" />
-                        <Grid x:Name="RgbZoneSurface"
-                              ColumnDefinitions="*,*,*,*"
-                              ColumnSpacing="8"
-                              Margin="0,0,0,4" />
-                        <WrapPanel x:Name="RgbZones" Orientation="Horizontal" />
-                        <Button x:Name="SaveRgbButton"
-                                HorizontalAlignment="Right"
-                                Content="{local:Loc Key=Common_Save, Fallback=Save}"
-                                Click="SaveRgb_Click" />
-                    </StackPanel>
-                </Border>
-            </StackPanel>
         </StackPanel>
-    </ScrollViewer>
+    </custom:DynamicScrollViewer>
+
 </UserControl>

@@ -1,19 +1,39 @@
-<Application xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converters="using:UniversalDeviceToolkit.Avalonia.Converters"
-             x:Class="UniversalDeviceToolkit.Avalonia.App"
-             RequestedThemeVariant="Default">
-    <Application.Styles>
-        <FluentTheme />
-        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
-        <StyleInclude Source="avares://udt-gui/Styles/Controls.axaml" />
-    </Application.Styles>
+<Application
+    x:Class="UniversalDeviceToolkit.Avalonia.App"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedThemeVariant="Dark">
+    <!-- IMPORTANT: Application.Resources must be declared before Application.Styles
+         so Style files can resolve StaticResource across the merged dictionaries. -->
     <Application.Resources>
         <ResourceDictionary>
+            <SolidColorBrush x:Key="SnackbarShadowColor" Color="#40000000" />
+            <SolidColorBrush x:Key="AppSurfaceBackgroundBrush" Color="#202020" />
+            <SolidColorBrush x:Key="AppSurfaceCardBrush" Color="#303030" />
+            <SolidColorBrush x:Key="AppNavigationBackgroundBrush" Color="#202020" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://udt-gui/Styles/DesignTokens.axaml" />
+                <ResourceInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/DesignTokens.axaml" />
+                <ResourceInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/ElevationTokens.axaml" />
+                <ResourceInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/AnimationTokens.axaml" />
             </ResourceDictionary.MergedDictionaries>
-            <converters:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmpty" />
         </ResourceDictionary>
     </Application.Resources>
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/Typography.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/ButtonStyles.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/ControlStyles.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/Animations.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/Loading.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/Badge.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/CardAction.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/CardControl.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/CardExpander.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/Charts.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/DynamicScrollBar.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/EmptyState.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/InfoBar.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/NotificationToast.axaml" />
+        <StyleInclude Source="avares://UniversalDeviceToolkit.Avalonia/Styles/NavigationStore.axaml" />
+    </Application.Styles>
 </Application>

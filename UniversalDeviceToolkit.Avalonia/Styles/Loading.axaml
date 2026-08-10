@@ -1,0 +1,208 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils">
+
+    <!--
+      Loading chrome. ProgressRing template is an Avalonia Arc pair (track + value).
+      WPF-UI rotated/scale-flipped the ring; here the arcs start at -90 degrees instead.
+      NOTE: Avalonia 11.3 keyframe animations cannot animate RenderTransform (no animator),
+      so the indeterminate rotation must be driven from code: ProgressRing.OnApplyTemplate
+      should animate the PART_Rotation RotateTransform (double Angle) while IsIndeterminate,
+      e.g. new Animation { Duration = TimeSpan.FromSeconds(1), IterationCount = IterationCount.Infinite }
+      with Angle keyframes, run on the transform via RunAsync.
+      Determinate rings: the control may update PART_Value.SweepAngle from Progress in code;
+      XAML default sweep is 270 degrees.
+      NOTE: Style.BasedOn does not exist in Avalonia 11.3 (only ControlTheme.BasedOn), so
+      keyed skeleton styles are flattened (full setter lists, no BasedOn chains).
+    -->
+    <Styles.Resources>
+        <ResourceDictionary>
+            <Color x:Key="SkeletonShimmerStartColor">#1CFFFFFF</Color>
+            <Color x:Key="SkeletonShimmerPeakColor">#46FFFFFF</Color>
+            <Color x:Key="SkeletonShimmerStartColorLight">#1C000000</Color>
+            <Color x:Key="SkeletonShimmerPeakColorLight">#46000000</Color>
+
+            <ControlTheme x:Key="{x:Type custom:ProgressRing}" TargetType="custom:ProgressRing">
+                <Setter Property="Width" Value="48" />
+                <Setter Property="Height" Value="48" />
+                <Setter Property="Foreground" Value="{DynamicResource AccentFillColorSecondaryBrush}" />
+                <Setter Property="Background" Value="{DynamicResource ControlStrongStrokeColorDefaultBrush}" />
+                <Setter Property="Template">
+                    <ControlTemplate TargetType="custom:ProgressRing">
+                        <Grid x:Name="PART_Rotation" RenderTransformOrigin="50%,50%">
+                            <Grid.RenderTransform>
+                                <RotateTransform Angle="-90" />
+                            </Grid.RenderTransform>
+                            <Arc
+                                x:Name="PART_Track"
+                                StartAngle="0"
+                                SweepAngle="360"
+                                Stroke="{TemplateBinding Background}"
+                                StrokeThickness="4"
+                                StrokeLineCap="Round" />
+                            <Arc
+                                x:Name="PART_Value"
+                                StartAngle="0"
+                                SweepAngle="270"
+                                Stroke="{TemplateBinding Foreground}"
+                                StrokeThickness="4"
+                                StrokeLineCap="Round" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+
+            <Style x:Key="AppLoadingRingStyle" />
+            <Style x:Key="AppLoadingRingCompactStyle" />
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <Style Selector="custom|ProgressRing.appLoadingRing">
+        <Setter Property="Width" Value="48" />
+        <Setter Property="Height" Value="48" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="IsIndeterminate" Value="True" />
+    </Style>
+
+    <Style Selector="custom|ProgressRing.appLoadingRingCompact">
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="IsIndeterminate" Value="True" />
+    </Style>
+
+    <!-- Bone fill at 0.85 opacity matches classic 4.x skeleton chrome. -->
+    <Style Selector="Border.appSkeletonBlock">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+    </Style>
+
+    <Style Selector="Border.appSkeletonShimmerBlock">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+    </Style>
+
+    <!-- Matches CardControl / CardExpander surface chrome (padding, radius, stroke). -->
+    <Style Selector="Border.appSkeletonCard">
+        <Setter Property="Padding" Value="16,14" />
+        <Setter Property="MinHeight" Value="72" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!-- Collapsed CardExpander / feature list rows (Automation, Dashboard, Macro...). -->
+    <Style Selector="Border.appSkeletonListItemCard">
+        <Setter Property="Padding" Value="16,14" />
+        <Setter Property="MinHeight" Value="72" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!-- SymbolIcon 24px peers used by CardHeader accessory / pipeline icons. -->
+    <Style Selector="Border.appSkeletonListItemIcon">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+        <Setter Property="Width" Value="24" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,0,12,0" />
+    </Style>
+
+    <!-- ~FontSizeBody / Medium title line. -->
+    <Style Selector="Border.appSkeletonListItemSingleLine">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Border.appSkeletonListItemPrimaryLine">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="MinWidth" Value="140" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+
+    <!-- Subtitle under CardHeaderControl title (Margin 0,4,0,0 in live control). -->
+    <Style Selector="Border.appSkeletonListItemSecondaryLine">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSM}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+        <Setter Property="Height" Value="12" />
+        <Setter Property="MinWidth" Value="96" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,6,0,0" />
+    </Style>
+
+    <!-- Toggle-on-the-right CardControl (e.g. Automation enable switch). -->
+    <Style Selector="Border.appSkeletonToggleCard">
+        <Setter Property="Padding" Value="16,16" />
+        <Setter Property="MinHeight" Value="88" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="0,0,0,24" />
+    </Style>
+
+    <Style Selector="Border.appSkeletonToggleSwitch">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusRound}" />
+        <Setter Property="Opacity" Value="0.85" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        <Setter Property="utils:SkeletonShimmer.DelaySeconds" Value="-1" />
+        <Setter Property="Width" Value="44" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="Margin" Value="16,0,0,0" />
+    </Style>
+
+    <!-- Multi-line package / dense content rows. -->
+    <Style Selector="Border.appSkeletonDenseListItemCard">
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="MinHeight" Value="108" />
+        <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusCard}" />
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+</Styles>

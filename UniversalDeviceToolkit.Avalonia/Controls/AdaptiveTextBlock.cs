@@ -3,9 +3,9 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
-using Avalonia.Layout;
+using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.VisualTree;
+using Avalonia.Reactive;
 using UniversalDeviceToolkit.Abstractions.Localization;
 
 namespace UniversalDeviceToolkit.Avalonia.Controls;
@@ -34,9 +34,14 @@ public class AdaptiveTextBlock : TextBlock
 
     private double _baseFontSize;
     private bool _isAdapting;
-    private bool _isAttached;
     private bool _ownsToolTip;
     private string? _automationText;
+
+    // Avalonia's TextBlock already defines a MaxLinesProperty; the WPF control had to
+    // re-register its own because WPF's TextBlock lacks MaxLines. Here we shadow the
+    // inherited one and use it purely as a constraint input (never as a base layout hint).
+    public static readonly new StyledProperty<int> MaxLinesProperty =
+        AvaloniaProperty.Register<AdaptiveTextBlock, int>(nameof(MaxLines), 0);
 
     public static readonly StyledProperty<double> MinFontSizeProperty =
         AvaloniaProperty.Register<AdaptiveTextBlock, double>(nameof(MinFontSize), DefaultMinFontSize);
@@ -52,20 +57,37 @@ public class AdaptiveTextBlock : TextBlock
     static AdaptiveTextBlock()
     {
         // Mirror the WPF FrameworkPropertyMetadataOptions.AffectsMeasure flags:
-        // constraint changes schedule a re-measure so the post-arrange Bounds
-        // (and therefore the re-run of Adapt) is guaranteed.
+        // constraint changes schedule a re-measure so the layout pass re-runs Adapt.
         AffectsMeasure<AdaptiveTextBlock>(MaxLinesProperty, MinFontSizeProperty, OverflowModeProperty);
     }
 
-    // MaxLines is inherited from TextBlock (MaxLinesProperty). The WPF control had to
-    // re-register its own property because WPF's TextBlock lacks MaxLines.
+    public AdaptiveTextBlock()
+    {
+        Loaded += OnLoaded;
+        SizeChanged += OnSizeChanged;
+        Unloaded += OnUnloaded;
+
+        // Replace the WPF DependencyPropertyDescriptor.AddValueChanged hook for the
+        // Text property with an Avalonia property-changed observable.
+        this.GetObservable(TextProperty).Subscribe(new AnonymousObserver<string>(_ => OnTextChanged()));
+    }
+
+    /// <summary>
+    /// Maximum number of lines the text should occupy at the base font size.
+    /// If zero, the constraint is taken from <see cref="MaxHeight"/>.
+    /// </summary>
+    public new int MaxLines
+    {
+        get => (int)GetValue(MaxLinesProperty);
+        set => SetValue(MaxLinesProperty, value);
+    }
 
     /// <summary>
     /// Smallest font size the control may use when scaling down.
     /// </summary>
     public double MinFontSize
     {
-        get => GetValue(MinFontSizeProperty);
+        get => (double)GetValue(MinFontSizeProperty);
         set => SetValue(MinFontSizeProperty, value);
     }
 
@@ -74,7 +96,7 @@ public class AdaptiveTextBlock : TextBlock
     /// </summary>
     public bool AutoToolTip
     {
-        get => GetValue(AutoToolTipProperty);
+        get => (bool)GetValue(AutoToolTipProperty);
         set => SetValue(AutoToolTipProperty, value);
     }
 
@@ -84,30 +106,17 @@ public class AdaptiveTextBlock : TextBlock
     /// </summary>
     public LocalizedOverflowMode OverflowMode
     {
-        get => GetValue(OverflowModeProperty);
+        get => (LocalizedOverflowMode)GetValue(OverflowModeProperty);
         set => SetValue(OverflowModeProperty, value);
-    }
-
-    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        base.OnAttachedToVisualTree(e);
-        _isAttached = true;
-        _baseFontSize = NormalizeFontSize(FontSize);
-        ApplyOverflowMode();
-        UpdateAutomationName();
-        Adapt();
-    }
-
-    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
-    {
-        _isAttached = false;
-        base.OnDetachedFromVisualTree(e);
-        RestoreOwnedToolTip();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
+
+        // Skip changes caused by Adapt itself (e.g. the scaled FontSize it applies).
+        if (_isAdapting)
+            return;
 
         if (change.Property == OverflowModeProperty)
         {
@@ -119,17 +128,11 @@ public class AdaptiveTextBlock : TextBlock
         {
             Adapt();
         }
-        else if (change.Property == TextProperty)
-        {
-            ApplyOverflowMode();
-            UpdateAutomationName();
-            Adapt();
-        }
         else if (change.Property == FontSizeProperty)
         {
             // Keep the base font size in sync with external FontSize changes;
-            // ignore the scaled values Adapt applies itself.
-            if (!_isAdapting && IsValidFontSize(FontSize))
+            // the scaled values Adapt applies itself are guarded by _isAdapting.
+            if (IsValidFontSize(FontSize))
                 _baseFontSize = FontSize;
 
             Adapt();
@@ -137,18 +140,35 @@ public class AdaptiveTextBlock : TextBlock
         else if (change.Property == FontFamilyProperty || change.Property == FontStyleProperty
                  || change.Property == FontWeightProperty || change.Property == FontStretchProperty
                  || change.Property == ForegroundProperty || change.Property == TextWrappingProperty
-                 || change.Property == TextTrimmingProperty || change.Property == PaddingProperty
-                 || change.Property == FlowDirectionProperty || change.Property == BoundsProperty)
+                 || change.Property == TextTrimmingProperty || change.Property == PaddingProperty)
         {
-            // Re-run adaptation when the inherited text properties change or the
-            // arranged size changes (Avalonia analogue of WPF's SizeChanged).
+            // Re-run adaptation when the inherited text properties change.
             Adapt();
         }
     }
 
+    private void OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        _baseFontSize = NormalizeFontSize(FontSize);
+        ApplyOverflowMode();
+        UpdateAutomationName();
+        Adapt();
+    }
+
+    private void OnSizeChanged(object? sender, SizeChangedEventArgs e) => Adapt();
+
+    private void OnUnloaded(object? sender, RoutedEventArgs e) => RestoreOwnedToolTip();
+
+    private void OnTextChanged()
+    {
+        ApplyOverflowMode();
+        UpdateAutomationName();
+        Adapt();
+    }
+
     private void Adapt()
     {
-        if (!_isAttached || _isAdapting)
+        if (!IsLoaded || _isAdapting)
             return;
 
         if (!IsValidFontSize(_baseFontSize))
@@ -205,8 +225,8 @@ public class AdaptiveTextBlock : TextBlock
             if (Math.Abs(FontSize - bestSize) > 0.01)
             {
                 FontSize = bestSize;
-                // A font-size change affects measure; the next layout pass will
-                // fire Bounds again, but _isAdapting prevents recursion.
+                // A font-size change affects measure; the next layout pass will fire
+                // SizeChanged again, but _isAdapting prevents recursion.
             }
 
             UpdateToolTip(constraint, availableWidth);
@@ -239,7 +259,7 @@ public class AdaptiveTextBlock : TextBlock
     {
         fontSize = NormalizeFontSize(fontSize);
 
-        var typeface = new Typeface(FontFamily ?? global::Avalonia.Media.FontFamily.Default, FontStyle, FontWeight, FontStretch);
+        var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
         var foreground = Foreground ?? Brushes.Black;
 
         var formatted = new FormattedText(
@@ -274,6 +294,8 @@ public class AdaptiveTextBlock : TextBlock
             || TextWrapping == TextWrapping.Wrap
             || TextWrapping == TextWrapping.WrapWithOverflow;
 
+    private double GetPixelsPerDip() => VisualRoot?.RenderScaling ?? 1.0;
+
     private void UpdateToolTip(double constraint, double availableWidth)
     {
         if (!AutoToolTip)
@@ -292,7 +314,6 @@ public class AdaptiveTextBlock : TextBlock
                 _ownsToolTip = true;
             if (_ownsToolTip)
                 ToolTip.SetTip(this, Text);
-            ToolTip.SetServiceEnabled(this, true);
         }
         else
         {
@@ -319,7 +340,7 @@ public class AdaptiveTextBlock : TextBlock
 
     private double MeasureNaturalWidth(double fontSize)
     {
-        var typeface = new Typeface(FontFamily ?? global::Avalonia.Media.FontFamily.Default, FontStyle, FontWeight, FontStretch);
+        var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
         var formatted = new FormattedText(
             Text ?? string.Empty,
             CultureInfo.CurrentUICulture,
@@ -348,7 +369,6 @@ public class AdaptiveTextBlock : TextBlock
             return;
 
         ToolTip.SetTip(this, null);
-        ToolTip.SetServiceEnabled(this, false);
         _ownsToolTip = false;
     }
 }

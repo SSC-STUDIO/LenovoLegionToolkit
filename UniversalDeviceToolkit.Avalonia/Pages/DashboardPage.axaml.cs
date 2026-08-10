@@ -1,180 +1,306 @@
-using Avalonia;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using UniversalDeviceToolkit.Avalonia.Pages.Windows;
-using UniversalDeviceToolkit.Avalonia.Services;
+using Avalonia.Layout;
+using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Avalonia.Controls;
+using UniversalDeviceToolkit.Avalonia.Controls.Dashboard;
+using UniversalDeviceToolkit.Avalonia.Controls.Loading;
+using UniversalDeviceToolkit.Avalonia.Resources;
+using UniversalDeviceToolkit.Avalonia.Settings;
+using UniversalDeviceToolkit.Avalonia.Utils;
+using UniversalDeviceToolkit.Avalonia.Windows.Dashboard;
+using Button = UniversalDeviceToolkit.Avalonia.Controls.Button;
 
-namespace UniversalDeviceToolkit.Avalonia.Pages;
-
-/// <summary>
-/// Responsive column-count rule for the dashboard group cards. Mirrors the WPF
-/// dashboard reflow (1/2/3 columns) with the Avalonia breakpoints: <700 one column,
-/// 700-1100 two columns, >1100 three columns.
-/// </summary>
-internal static class DashboardColumnLayout
+namespace UniversalDeviceToolkit.Avalonia.Pages
 {
-    public const double TwoColumnBreakpoint = 700.0;
-    public const double ThreeColumnBreakpoint = 1100.0;
+/// <summary>
+/// Owns loading chrome so NavigationStore skips the generic shell skeleton.
+/// A single page-level skeleton covers sensors + feature groups (no multi-stage flash).
+/// </summary>
+[LoadingChromeOwner(LoadingChromeOwnership.Page, delayMilliseconds: 0, minimumVisibleMilliseconds: 180)]
+public partial class DashboardPage : global::Avalonia.Controls.UserControl, ILoadingChromeOwner
+{
+    private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
 
-    public static int GetColumnCountForWidth(double width)
+    private readonly List<DashboardGroupControl> _dashboardGroupControls = [];
+    private Button? _editDashboardHyperlink;
+    private int _currentColumnCount = 1;
+    private CancellationTokenSource? _refreshCancellationTokenSource;
+    private int _refreshVersion;
+    private bool _hasLoadedContent;
+
+    public LoadingChromeOwnership LoadingChromeOwnership => LoadingChromeOwnership.Page;
+
+    public DashboardPage()
     {
-        if (width > ThreeColumnBreakpoint)
+        InitializeComponent();
+    }
+
+    private async void DashboardPage_Initialized(object? sender, EventArgs e)
+    {
+        try
+        {
+            await RefreshAsync();
+        }
+        catch (Exception ex)
+        {
+            _loader.IsLoading = false;
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Dashboard initialization failed.", ex);
+        }
+    }
+
+    private async Task RefreshAsync()
+    {
+        var refreshVersion = Interlocked.Increment(ref _refreshVersion);
+        var cancellationTokenSource = new CancellationTokenSource();
+        var previousCancellationTokenSource = Interlocked.Exchange(ref _refreshCancellationTokenSource, cancellationTokenSource);
+        previousCancellationTokenSource?.Cancel();
+        previousCancellationTokenSource?.Dispose();
+        var cancellationToken = cancellationTokenSource.Token;
+
+        var initialLoad = !_hasLoadedContent;
+        if (initialLoad)
+        {
+            _loader.IsLoading = true;
+            SetDashboardContentReady(false);
+        }
+
+        if (this.FindNameScope()?.Find("_scrollViewer") is ScrollViewer scrollViewer)
+            scrollViewer.Offset = scrollViewer.Offset.WithY(0);
+
+        Task? sensorsReadyTask = null;
+        var showSensors = _dashboardSettings.Store.ShowSensors;
+        // Page skeleton owns the sensor-card silhouette during initial load (content is Opacity 0).
+        if (_skeletonSensorsCard is not null)
+            _skeletonSensorsCard.IsVisible = showSensors;
+
+        if (showSensors)
+        {
+            _sensors.RestartTrendCharts();
+            sensorsReadyTask = _sensors.RestartInitialSensorDataLoad();
+            _sensors.IsVisible = true;
+        }
+        else
+        {
+            _sensors.IsVisible = false;
+        }
+
+        _dashboardGroupControls.Clear();
+        _content.ColumnDefinitions.Clear();
+        _content.RowDefinitions.Clear();
+        _content.Children.Clear();
+
+        var groups = _dashboardSettings.Store.Groups ?? DashboardGroup.DefaultGroups;
+
+        if (Log.Instance.IsTraceEnabled)
+        {
+            Log.Instance.Trace($"Groups:");
+            foreach (var group in groups)
+                Log.Instance.Trace($" - {group}");
+        }
+
+        foreach (var group in groups)
+        {
+            var control = new DashboardGroupControl(group);
+            _content.Children.Add(control);
+            _dashboardGroupControls.Add(control);
+        }
+
+        var editDashboardHyperlink = new Button
+        {
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Edit24 },
+            Content = Resource.DashboardPage_Customize,
+            Margin = new(0, 16, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        editDashboardHyperlink.Click += (_, _) =>
+        {
+            var window = new EditDashboardWindow();
+            window.Apply += async (_, _) => await RefreshAsync();
+            window.ShowDialog(UdtAppContext.MainWindow);
+        };
+
+        _editDashboardHyperlink = editDashboardHyperlink;
+        _content.Children.Add(editDashboardHyperlink);
+
+        LayoutGroups(Bounds.Width);
+
+        try
+        {
+            await WaitForDashboardShellAsync(sensorsReadyTask, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (cancellationToken.IsCancellationRequested || refreshVersion != Volatile.Read(ref _refreshVersion))
+            return;
+
+        SetDashboardContentReady(true);
+        _hasLoadedContent = true;
+        _loader.IsLoading = false;
+    }
+
+    private void SetDashboardContentReady(bool ready)
+    {
+        _dashboardContentRoot.IsVisible = true;
+        _dashboardContentRoot.Opacity = ready ? 1 : 0;
+        _dashboardContentRoot.IsHitTestVisible = ready;
+    }
+
+    private async Task WaitForDashboardShellAsync(Task? sensorsReadyTask, CancellationToken cancellationToken)
+    {
+        var groupInitializationTasks = _dashboardGroupControls.Select(control => control.InitializedTask).ToArray();
+        if (groupInitializationTasks.Length > 0)
+            await Task.WhenAll(groupInitializationTasks).WaitAsync(cancellationToken);
+
+        var contentReadyTasks = _dashboardGroupControls.Select(control => control.FirstVisibleContentReadyTask).ToArray();
+
+        if (contentReadyTasks.Length > 0)
+        {
+            try
+            {
+                await Task.WhenAll(contentReadyTasks).WaitAsync(GetDashboardGroupContentReadyTimeout(), cancellationToken);
+            }
+            catch (TimeoutException ex)
+            {
+                // Do not let one regular card block the whole dashboard.
+                Log.Instance.WarningOnce(
+                    "dashboard-group-content-timeout",
+                    "Dashboard group content ready wait timed out; continuing without blocking sensors shell.",
+                    ex);
+            }
+        }
+
+        if (sensorsReadyTask is not null)
+            await WaitForDashboardSensorDataAsync(sensorsReadyTask, cancellationToken);
+    }
+
+    private static async Task WaitForDashboardSensorDataAsync(Task sensorsReadyTask, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await sensorsReadyTask.WaitAsync(GetDashboardSensorDataReadyTimeout(), cancellationToken);
+        }
+        catch (TimeoutException)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Dashboard sensor data was not ready before the bounded loading timeout.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Dashboard sensor data readiness failed.", ex);
+        }
+    }
+
+    internal static TimeSpan GetDashboardGroupContentReadyTimeout() => TimeSpan.FromSeconds(3);
+
+    internal static TimeSpan GetDashboardSensorDataReadyTimeout() => TimeSpan.FromSeconds(12);
+
+    private void DashboardPage_SizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        if (!e.WidthChanged)
+            return;
+
+        // Live resize uses a content snapshot; defer full group reflow until mouse-up.
+        if (UdtAppContext.MainWindow is { } host && WindowResizeStabilityHelper.IsLiveResizing(host))
+            return;
+
+        // Only relayout when the responsive column count actually changes.
+        if (GetColumnCountForWidth(e.NewSize.Width) == _currentColumnCount && _content.ColumnDefinitions.Count > 0)
+        {
+            LayoutSkeletonGroups(_currentColumnCount);
+            return;
+        }
+
+        LayoutGroups(e.NewSize.Width);
+    }
+
+    private void LayoutGroups(double width)
+    {
+        var columns = GetColumnCountForWidth(width);
+        LayoutSkeletonGroups(columns);
+        LayoutColumns(columns);
+    }
+
+    internal static int GetColumnCountForWidth(double width)
+    {
+        if (width > 1500)
             return 3;
-        if (width >= TwoColumnBreakpoint)
+        if (width > 1000)
             return 2;
         return 1;
     }
-}
 
-/// <summary>
-/// Wrap panel that sizes each dashboard group card to the container width divided by
-/// the responsive column count, preserving the WPF group reflow behavior on resize.
-/// </summary>
-internal sealed class DashboardWrapPanel : Panel
-{
-    public double HorizontalSpacing { get; set; } = 12;
-    public double VerticalSpacing { get; set; } = 12;
-
-    private double _measuredHeight;
-
-    protected override Size MeasureOverride(Size availableSize)
+    private void LayoutSkeletonGroups(int columns)
     {
-        if (double.IsInfinity(availableSize.Width)
-            || double.IsNaN(availableSize.Width)
-            || availableSize.Width <= 0)
-        {
-            var desired = new Size();
-            foreach (var child in Children)
-            {
-                child.Measure(availableSize);
-                desired = new Size(
-                    Math.Max(desired.Width, child.DesiredSize.Width),
-                    Math.Max(desired.Height, child.DesiredSize.Height));
-            }
+        if (_skeletonGroupsGrid is null || _skeletonGroup0 is null || _skeletonGroup1 is null || _skeletonGroup2 is null)
+            return;
 
-            return desired;
+        columns = Math.Clamp(columns, 1, 3);
+        for (var index = 0; index < _skeletonGroupsGrid.ColumnDefinitions.Count; index++)
+        {
+            _skeletonGroupsGrid.ColumnDefinitions[index].Width = index < columns
+                ? new GridLength(1, GridUnitType.Star)
+                : new GridLength(0, GridUnitType.Pixel);
         }
 
-        var columns = DashboardColumnLayout.GetColumnCountForWidth(availableSize.Width);
-        var usedColumns = Math.Min(columns, Math.Max(1, Children.Count));
-        var spacing = HorizontalSpacing * Math.Max(0, usedColumns - 1);
-        var childWidth = Math.Max(1.0, (availableSize.Width - spacing) / usedColumns);
-        var rowHeight = 0.0;
-        var totalHeight = 0.0;
-        for (var index = 0; index < Children.Count; index++)
+        var groups = new[] { _skeletonGroup0, _skeletonGroup1, _skeletonGroup2 };
+        for (var index = 0; index < groups.Length; index++)
         {
-            var child = Children[index];
-            child.Measure(new Size(childWidth, double.PositiveInfinity));
-            rowHeight = Math.Max(rowHeight, child.DesiredSize.Height);
-            if ((index + 1) % usedColumns == 0 || index == Children.Count - 1)
-            {
-                totalHeight += rowHeight;
-                if (index < Children.Count - 1)
-                    totalHeight += VerticalSpacing;
-                rowHeight = 0.0;
-            }
+            Grid.SetRow(groups[index], index / columns);
+            Grid.SetColumn(groups[index], index % columns);
         }
-
-        _measuredHeight = totalHeight;
-        return new Size(availableSize.Width, totalHeight);
     }
 
-    protected override Size ArrangeOverride(Size finalSize)
+    private void LayoutColumns(int columns)
     {
-        var columns = DashboardColumnLayout.GetColumnCountForWidth(finalSize.Width);
-        var usedColumns = Math.Min(columns, Math.Max(1, Children.Count));
-        var spacing = HorizontalSpacing * Math.Max(0, usedColumns - 1);
-        var childWidth = Math.Max(1.0, (finalSize.Width - spacing) / usedColumns);
-        var x = 0.0;
-        var y = 0.0;
-        var rowHeight = 0.0;
-        for (var index = 0; index < Children.Count; index++)
+        columns = Math.Max(1, columns);
+
+        // Rebuild column definitions to match the target column count.
+        if (_content.ColumnDefinitions.Count != columns)
         {
-            var child = Children[index];
-            var width = childWidth;
-            if (usedColumns > 1 && index == Children.Count - 1 && index % usedColumns == 0)
-                width = Math.Max(childWidth, finalSize.Width - x);
-            child.Arrange(new Rect(x, y, width, child.DesiredSize.Height));
-            rowHeight = Math.Max(rowHeight, child.DesiredSize.Height);
-            x += width + HorizontalSpacing;
-            if ((index + 1) % usedColumns == 0)
-            {
-                y += rowHeight + VerticalSpacing;
-                x = 0.0;
-                rowHeight = 0.0;
-            }
+            _content.ColumnDefinitions.Clear();
+            for (var i = 0; i < columns; i++)
+                _content.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
         }
 
-        return new Size(finalSize.Width, _measuredHeight);
+        // Ensure enough rows: one per "row" of group controls plus a trailing row for the link.
+        var groupRows = (int)Math.Ceiling(_dashboardGroupControls.Count / (double)columns);
+        var rowsNeeded = groupRows + 1;
+        if (_content.RowDefinitions.Count != rowsNeeded)
+        {
+            _content.RowDefinitions.Clear();
+            for (var i = 0; i < rowsNeeded; i++)
+                _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
+        }
+
+        for (var index = 0; index < _dashboardGroupControls.Count; index++)
+        {
+            var control = _dashboardGroupControls[index];
+            Grid.SetRow(control, index / columns);
+            Grid.SetColumn(control, index % columns);
+            Grid.SetColumnSpan(control, 1);
+        }
+
+        if (_editDashboardHyperlink is not null)
+        {
+            Grid.SetRow(_editDashboardHyperlink, groupRows);
+            Grid.SetColumn(_editDashboardHyperlink, 0);
+            Grid.SetColumnSpan(_editDashboardHyperlink, columns);
+        }
+
+        _currentColumnCount = columns;
     }
 }
-
-public partial class DashboardPage : UserControl
-{
-    private DashboardPageViewModel? _viewModel;
-    private readonly IPlatformServices _platformServices;
-
-    public DashboardPage(IPlatformServices platformServices, Action<string>? navigate = null)
-    {
-        InitializeComponent();
-        ArrangeSensorSurfaceLikeWpf();
-        _platformServices = platformServices;
-        _viewModel = new DashboardPageViewModel(
-            platformServices,
-            navigate: navigate,
-            showHybridInfo: ShowHybridModeInfo,
-            showPowerModeSettings: ShowPowerModeSettings);
-        DataContext = _viewModel;
-        AttachedToVisualTree += (_, _) => _viewModel.StartPolling();
-        DetachedFromVisualTree += (_, _) => _viewModel.StopPolling();
-    }
-
-    private void ArrangeSensorSurfaceLikeWpf()
-    {
-        // WPF owns the sensor surface directly below the page header. The
-        // Avalonia page also has a settings/layout editor, so move the same
-        // controls to the top of the existing stack instead of duplicating
-        // telemetry state or introducing a second dashboard composition.
-        if (!DashboardStack.Children.Remove(TelemetryCardsPanel))
-            return;
-
-        DashboardStack.Children.Remove(SensorsHeaderPanel);
-        var insertIndex = Math.Min(1, DashboardStack.Children.Count);
-        DashboardStack.Children.Insert(insertIndex, TelemetryCardsPanel);
-        DashboardStack.Children.Insert(Math.Min(insertIndex + 1, DashboardStack.Children.Count), SensorsHeaderPanel);
-    }
-
-    private async void ShowHybridModeInfo(IReadOnlyList<DashboardStateOption> options)
-    {
-        if (TopLevel.GetTopLevel(this) is not Window owner)
-        {
-            return;
-        }
-
-        var dialog = new HybridModeInfoWindow(options);
-        await dialog.ShowDialog(owner);
-    }
-
-    private async void ShowPowerModeSettings(string state)
-    {
-        if (TopLevel.GetTopLevel(this) is not Window owner || _viewModel is null)
-            return;
-
-        Window dialog = state.Equals("Balance", StringComparison.OrdinalIgnoreCase)
-            ? new BalanceModeSettingsWindow(_platformServices)
-            : new GodModeSettingsWindow(_platformServices);
-        await dialog.ShowDialog(owner);
-        await _viewModel.LoadAsync();
-    }
-
-    private async void ConfigureGpuOverclockButton_Click(object? sender, RoutedEventArgs e)
-    {
-#if WINDOWS
-        if (TopLevel.GetTopLevel(this) is not Window owner || _viewModel is null)
-            return;
-
-        await new GpuOverclockProfilesWindow().ShowDialog(owner);
-        await _viewModel.LoadAsync();
-#endif
-    }
 }

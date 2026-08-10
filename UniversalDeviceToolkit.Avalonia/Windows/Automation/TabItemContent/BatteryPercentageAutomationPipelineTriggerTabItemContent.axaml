@@ -1,0 +1,68 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Automation.TabItemContent.BatteryPercentageAutomationPipelineTriggerTabItemContent"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:ui="using:UniversalDeviceToolkit.Avalonia.Controls"
+    Initialized="BatteryPercentageAutomationPipelineTriggerTabItemContent_Initialized">
+    <StackPanel Margin="16">
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="{x:Static resources:Resource.AutomationTrigger_Comparison}" />
+            <ComboBox x:Name="_comparisonComboBox" Grid.Column="1" MinWidth="200" />
+        </Grid>
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="{x:Static resources:Resource.AutomationTrigger_Threshold_Percent}" />
+            <ui:NumberBox
+                x:Name="_thresholdBox"
+                Grid.Column="1"
+                ClearButtonEnabled="False"
+                MaxDecimalPlaces="0"
+                Maximum="100"
+                Minimum="0" />
+        </Grid>
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="{x:Static resources:Resource.AutomationTrigger_ChargeFilter}" />
+            <ComboBox x:Name="_chargeFilterComboBox" Grid.Column="1" MinWidth="200" />
+        </Grid>
+        <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="{x:Static resources:Resource.AutomationTrigger_Duration}" />
+            <ui:NumberBox
+                x:Name="_durationSecondsBox"
+                Grid.Column="1"
+                ClearButtonEnabled="False"
+                MaxDecimalPlaces="0"
+                Maximum="86400"
+                Minimum="0" />
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Text="{x:Static resources:Resource.AutomationTrigger_Cooldown}" />
+            <ui:NumberBox
+                x:Name="_cooldownSecondsBox"
+                Grid.Column="1"
+                ClearButtonEnabled="False"
+                MaxDecimalPlaces="0"
+                Maximum="86400"
+                Minimum="0" />
+        </Grid>
+    </StackPanel>
+</UserControl>

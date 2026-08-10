@@ -1,0 +1,9 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Automation.TabItemContent.GodModePresetPipelineTriggerTabItemContent"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Initialized="GodModePresetPipelineTriggerTabItemContent_Initialized">
+    <ScrollViewer>
+        <StackPanel x:Name="_content" Margin="16" />
+    </ScrollViewer>
+</UserControl>

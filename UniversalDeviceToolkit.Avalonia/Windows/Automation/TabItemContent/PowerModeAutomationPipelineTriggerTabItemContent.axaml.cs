@@ -1,0 +1,62 @@
+using System;
+using System.Linq;
+using Avalonia.Controls;
+using UniversalDeviceToolkit.Lib.Automation.Pipeline.Triggers;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Features;
+using UniversalDeviceToolkit.Lib.Utils;
+
+namespace UniversalDeviceToolkit.Avalonia.Windows.Automation.TabItemContent
+{
+public partial class PowerModeAutomationPipelineTriggerTabItemContent : global::Avalonia.Controls.UserControl, IAutomationPipelineTriggerTabItemContent<IPowerModeAutomationPipelineTrigger>
+{
+    private readonly PowerModeFeature _feature = IoCContainer.Resolve<PowerModeFeature>();
+
+    private readonly IPowerModeAutomationPipelineTrigger _trigger;
+    private readonly PowerModeState _powerModeState;
+
+    public PowerModeAutomationPipelineTriggerTabItemContent(IPowerModeAutomationPipelineTrigger trigger)
+    {
+        _trigger = trigger;
+        _powerModeState = trigger.PowerModeState;
+
+        InitializeComponent();
+    }
+
+    public IPowerModeAutomationPipelineTrigger GetTrigger()
+    {
+        var state = _content.Children
+            .OfType<RadioButton>()
+            .Where(r => r.IsChecked ?? false)
+            .Select(r => (PowerModeState)r.Tag)
+            .DefaultIfEmpty(PowerModeState.Balance)
+            .FirstOrDefault();
+        return _trigger.DeepCopy(state);
+    }
+
+    private async void PowerModeAutomationPipelineTriggerTabItemContent_Initialized(object? sender, EventArgs eventArgs)
+    {
+        try
+        {
+            var states = await _feature.GetAllStatesAsync();
+
+            foreach (var state in states)
+            {
+                var radio = new RadioButton
+                {
+                    Content = state.GetDisplayName(),
+                    Tag = state,
+                    IsChecked = state == _powerModeState,
+                    Margin = new(0, 0, 0, 8)
+                };
+                _content.Children.Add(radio);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Exception in {nameof(PowerModeAutomationPipelineTriggerTabItemContent_Initialized)}.", ex);
+        }
+    }
+}
+}

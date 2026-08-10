@@ -1,0 +1,26 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="using:System"
+    xmlns:an="using:Avalonia.Animation.Easings">
+
+    <!-- Animation Durations (Avalonia Animation.Duration is TimeSpan) -->
+    <sys:TimeSpan x:Key="AnimationDurationFast">0:0:0.1</sys:TimeSpan>
+    <sys:TimeSpan x:Key="AnimationDurationMedium">0:0:0.2</sys:TimeSpan>
+    <sys:TimeSpan x:Key="AnimationDurationSlow">0:0:0.3</sys:TimeSpan>
+    <!-- Skeleton shimmer one-way duration; element staggering is applied per session. -->
+    <sys:TimeSpan x:Key="AnimationDurationShimmer">0:0:1.65</sys:TimeSpan>
+    <sys:TimeSpan x:Key="AnimationDurationSkeletonCrossfade">0:0:0.2</sys:TimeSpan>
+
+    <!-- Animation Easing Functions (kept as Avalonia easing objects so existing
+         TryFindResource("AnimationEasingCubicOut") as Easing lookups keep working) -->
+    <an:CubicEaseOut x:Key="AnimationEasingCubicOut" />
+    <an:ExponentialEaseOut x:Key="AnimationEasingExpoOut" />
+
+    <!-- Configuration Parameters (can be adjusted by user settings later) -->
+    <sys:Double x:Key="AnimationOpacityStart">0.0</sys:Double>
+    <sys:Double x:Key="AnimationOpacityEnd">1.0</sys:Double>
+    <sys:Double x:Key="AnimationTranslationOffset">10.0</sys:Double>
+    <sys:Double x:Key="AnimationSubtleTranslationOffset">6.0</sys:Double>
+
+</ResourceDictionary>

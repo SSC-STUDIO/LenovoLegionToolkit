@@ -1,0 +1,945 @@
+<UserControl
+    x:Class="UniversalDeviceToolkit.Avalonia.Controls.Dashboard.SensorsControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:charts="using:UniversalDeviceToolkit.Avalonia.Controls.Charts"
+    xmlns:controls="using:UniversalDeviceToolkit.Avalonia.Controls"
+    xmlns:custom="using:UniversalDeviceToolkit.Avalonia.Controls.Custom"
+    xmlns:resources="using:UniversalDeviceToolkit.Avalonia.Resources"
+    xmlns:utils="using:UniversalDeviceToolkit.Avalonia.Utils">
+    <UserControl.Resources>
+        <Style x:Key="SectionTitleStyle" Selector="TextBlock">
+            <Setter Property="Margin" Value="0" />
+        </Style>
+
+        <Style x:Key="SensorHeaderModelStyle" Selector="TextBlock">
+            <Setter Property="Margin" Value="8,1,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style x:Key="StatValueTextBlockStyle" Selector="TextBlock">
+            <Setter Property="TextAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,2,0,2" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Style>
+
+        <!-- Keyed chrome for MarqueeMetricBar.BarStyle; the inner ProgressBar is created in code
+             without the metricProgressBar class, so the class-based style cannot match it. -->
+        <Style x:Key="MetricProgressBarStyle" Selector="ProgressBar">
+            <Setter Property="Height" Value="6" />
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MaxWidth" Value="260" />
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Maximum" Value="100" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <!-- AVALONIA: replaces ProgressBarAnimateBehavior (Microsoft.Xaml.Behaviors is not available); 250ms value transition. -->
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Value" Duration="0:0:0.25" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid Height="{TemplateBinding Height}">
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{StaticResource CornerRadiusProgressBar}" />
+                            <Grid x:Name="PART_Track" ClipToBounds="True" Margin="1,1,1,1">
+                                <Border
+                                    x:Name="PART_Indicator"
+                                    HorizontalAlignment="Left"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="{StaticResource CornerRadiusProgressBar}" />
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LegendTextStyle" Selector="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="MaxWidth" Value="120" />
+        </Style>
+
+        <!--
+          Skeleton sizes track the live summary layout (title + model, gauge + 3 metric rows,
+          trend panel, 3-item legend). Fixed shimmer sizes use the same tokens as live gauges
+          (GaugeSizeMD/SM); code-behind still resizes gauges/trends on window width changes.
+        -->
+        <Style x:Key="SkeletonTitleBlockStyle" Selector="Border">
+            <Setter Property="Height" Value="20" />
+            <Setter Property="MinWidth" Value="56" />
+            <Setter Property="Width" Value="72" />
+            <Setter Property="MaxWidth" Value="120" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="SkeletonSubtitleBlockStyle" Selector="Border">
+            <!-- Matches SensorHeaderModelStyle: caption-height text beside title -->
+            <Setter Property="Height" Value="14" />
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="Width" Value="140" />
+            <Setter Property="MaxWidth" Value="220" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="8,1,0,0" />
+        </Style>
+        <Style x:Key="SkeletonGaugeCenterTextStyle" Selector="Border">
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="20" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+        <Style x:Key="SkeletonLabelBlockStyle" Selector="Border">
+            <!-- Fills the 24px metric row like StatLabelStyle text -->
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="56" />
+            <Setter Property="MinWidth" Value="48" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonBarBlockStyle" Selector="Border">
+            <!-- Matches MetricProgressBarStyle Height=6, Margin=8,0 -->
+            <Setter Property="Height" Value="6" />
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MaxWidth" Value="260" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusProgressBar}" />
+        </Style>
+        <Style x:Key="SkeletonValueBlockStyle" Selector="Border">
+            <!-- Tracks live StatValue column MinWidth=72 so skeleton silhouette matches units. -->
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Width" Value="64" />
+            <Setter Property="MinWidth" Value="56" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonTrendPanelStyle" Selector="Border">
+            <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
+        </Style>
+        <Style x:Key="SkeletonTrendBlockStyle" Selector="Border">
+            <!-- Fill trend panel (live chart uses Margin=2) -->
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+        </Style>
+        <Style x:Key="SkeletonLegendDotStyle" Selector="Border">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style x:Key="SkeletonLegendTextStyle" Selector="Border">
+            <Setter Property="Height" Value="12" />
+            <Setter Property="Width" Value="48" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusSmall}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="SkeletonLegendItemStyle" Selector="StackPanel" />
+        <!-- AVALONIA: WPF Storyboard (SkeletonFadeOutStoryboard) replaced by an Animation resource; HideSkeletonOverlay() runs it via RunAsync then collapses the overlay. -->
+        <Animation x:Key="SkeletonFadeOutAnimation" x:SetterTargetType="Border" Duration="0:0:0.45" Easing="CubicEaseOut" FillMode="Both">
+            <KeyFrame Cue="0%">
+                <Setter Property="Opacity" Value="1" />
+            </KeyFrame>
+            <KeyFrame Cue="100%">
+                <Setter Property="Opacity" Value="0" />
+            </KeyFrame>
+        </Animation>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <!-- AVALONIA: WPF Label has no direct counterpart in this codebase; converted to TextBlock (VerticalContentAlignment -> VerticalAlignment). -->
+        <Style Selector="StackPanel.sensorSection">
+            <Setter Property="Margin" Value="6,0" />
+            <Setter Property="MinWidth" Value="0" />
+        </Style>
+        <Style Selector="TextBlock.statLabel">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="0,2" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+        <Style Selector="TextBlock.statValue">
+            <!--
+              Keep room for units (GHz / RPM / °C / W). Too-narrow Auto columns were clipping
+              the unit suffix when the sensors card is dense.
+            -->
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,2,0,2" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        </Style>
+        <!--
+          Detail values (PCIe throughput, CPU power breakdown) can be long. Wrap + trim so they
+          stay inside their column instead of painting over the adjacent temperature field
+          (e.g. "2.71 MB/s" covering "80 °C" → "2.71 ME 80℃").
+        -->
+        <Style Selector="TextBlock.statDetailValue">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+        <Style Selector="StackPanel.sensorDetailColumn">
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+        <!--
+          Track must stay readable on light card surfaces. ControlFillColorSecondary is nearly
+          white in light theme and blends into the card; Tertiary + stroke keeps the empty
+          segment visible while remaining subtle in dark theme.
+        -->
+        <Style Selector="ProgressBar.metricProgressBar">
+            <Setter Property="Height" Value="6" />
+            <Setter Property="MinWidth" Value="24" />
+            <Setter Property="MaxWidth" Value="260" />
+            <Setter Property="Margin" Value="8,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Maximum" Value="100" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <!-- AVALONIA: replaces ProgressBarAnimateBehavior (Microsoft.Xaml.Behaviors is not available); 250ms value transition. -->
+            <Setter Property="Transitions">
+                <Setter.Value>
+                    <Transitions>
+                        <DoubleTransition Property="Value" Duration="0:0:0.25" />
+                    </Transitions>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Grid Height="{TemplateBinding Height}">
+                            <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="{StaticResource CornerRadiusProgressBar}" />
+                            <Grid x:Name="PART_Track" ClipToBounds="True" Margin="1,1,1,1">
+                                <Border
+                                    x:Name="PART_Indicator"
+                                    HorizontalAlignment="Left"
+                                    Background="{TemplateBinding Foreground}"
+                                    CornerRadius="{StaticResource CornerRadiusProgressBar}" />
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--
+          Legend item = (dot + label) as one WrapPanel child so narrow cards wrap whole entries
+          instead of splitting CJK labels mid-string (e.g. a two-char label showing only the second character).
+        -->
+        <Style Selector="StackPanel.legendItem">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,14,4" />
+        </Style>
+        <Style Selector="Ellipse.legendDot">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Height" Value="8" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="WrapPanel.legendPanel">
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Orientation" Value="Horizontal" />
+        </Style>
+        <Style Selector="Border.trendPanel">
+            <Setter Property="Margin" Value="0,14,0,0" />
+            <Setter Property="Height" Value="120" />
+            <Setter Property="CornerRadius" Value="{StaticResource CornerRadiusMD}" />
+            <Setter Property="Background" Value="{DynamicResource ChartSurfaceBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="2,2,2,2" />
+            <Setter Property="ClipToBounds" Value="True" />
+        </Style>
+        <Style Selector="Grid.skeletonGauge">
+            <!-- Enhanced skeleton gauge with realistic ring structure instead of simple circle -->
+            <Setter Property="Width" Value="{StaticResource GaugeSizeMD}" />
+            <Setter Property="Height" Value="{StaticResource GaugeSizeMD}" />
+            <Setter Property="Margin" Value="0,0,12,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Ellipse.skeletonGaugeBackgroundRing">
+            <Setter Property="Stroke" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+            <Setter Property="StrokeThickness" Value="8" />
+            <Setter Property="Opacity" Value="0.3" />
+        </Style>
+        <!-- AVALONIA: WPF StrokeStartLineCap/StrokeEndLineCap -> StrokeLineCap (single property, both ends). -->
+        <Style Selector="Path.skeletonGaugeProgressArc">
+            <Setter Property="Stroke" Value="{DynamicResource ControlFillColorTertiaryBrush}" />
+            <Setter Property="StrokeThickness" Value="8" />
+            <Setter Property="StrokeLineCap" Value="Round" />
+            <Setter Property="Opacity" Value="0.85" />
+            <Setter Property="utils:SkeletonShimmer.IsEnabled" Value="True" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <custom:CardControl
+            x:Name="_sensorsCard"
+            AutomationProperties.AutomationId="DashboardSensorsCard"
+            Background="{DynamicResource AppSurfaceCardBrush}"
+            CornerRadius="{StaticResource CornerRadiusCard}"
+            Focusable="False"
+            PointerPressed="CardControl_PointerPressed">
+            <custom:CardControl.Header>
+                <!-- AVALONIA: WPF UniformGrid -> Grid with star columns; column count is driven from code (SetColumnCount). -->
+                <Grid x:Name="_sensorsGrid" Margin="8,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <!-- PLACEHOLDER_CPU -->
+                    <StackPanel x:Name="_cpuSection" Grid.Column="0" Classes="sensorSection">
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:Resource.SensorsControl_CPU_Title}" Classes="sectionTitle" Margin="0" />
+                            <TextBlock x:Name="_cpuModelName" Grid.Column="1" Text="" Classes="sensorHeaderModel" />
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <charts:RadialGaugeControl
+                                x:Name="_cpuGauge"
+                                Grid.Column="0"
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center"
+                                RingBrush="{DynamicResource ChartUtilizationBrush}"
+                                Caption="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
+
+                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_cpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_cpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Fan_Title}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_cpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+                            </Grid>
+                        </Grid>
+
+                        <Border x:Name="_cpuTrendPanel" Classes="trendPanel">
+                            <charts:TrendChartControl x:Name="_cpuTrendChart" Margin="2" />
+                        </Border>
+                        <WrapPanel x:Name="_cpuLegend" Classes="legendPanel">
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartUtilizationBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
+                            </StackPanel>
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartCoreClockBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
+                            </StackPanel>
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartTemperatureBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <!-- PLACEHOLDER_CPU_DETAILS -->
+                        <StackPanel x:Name="_cpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsCpuDetailsPanel" IsVisible="False" Margin="0,16,0,0">
+                            <Grid ClipToBounds="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0" Classes="sensorDetailColumn">
+                                    <StackPanel x:Name="_cpuWattageDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuWattage" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_cpuVoltageDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuVoltage" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_cpuPCoreClockDetail">
+                                        <TextBlock x:Name="_cpuPCoreClockTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuPCoreClock" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_cpuECoreClockDetail">
+                                        <TextBlock x:Name="_cpuECoreClockTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuECoreClock" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_cpuMemoryUsageDetail">
+                                        <TextBlock x:Name="_cpuMemoryUsageTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuMemoryUsage" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0" Classes="sensorDetailColumn">
+                                    <StackPanel x:Name="_cpuTempRangeDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuTempRange" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_cpuVoltageRangeDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuVoltageRange" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_cpuMemoryTemperatureDetail">
+                                        <TextBlock x:Name="_cpuMemoryTemperatureTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuMemoryTemperature" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_cpuSsdTemperatureDetail">
+                                        <TextBlock x:Name="_cpuSsdTemperatureTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_cpuSsdTemperature" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                    <!-- PLACEHOLDER_BATTERY -->
+                    <StackPanel x:Name="_batterySectionColumn" Grid.Column="1" Classes="sensorSection">
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:Resource.BatteryPage_Title}" Classes="sectionTitle" Margin="0" />
+                            <TextBlock x:Name="_batteryModelName" Grid.Column="1" Text="" Classes="sensorHeaderModel" />
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <charts:RadialGaugeControl
+                                x:Name="_batteryGauge"
+                                Grid.Column="0"
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center"
+                                RingBrush="{DynamicResource ChartBatteryBrush}"
+                                Caption="{x:Static resources:Resource.SensorsControl_Charge}" />
+
+                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Health}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_batteryHealthMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_batteryTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Rate}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_batteryRateMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+                            </Grid>
+                        </Grid>
+
+                        <Border x:Name="_batteryTrendPanel" Classes="trendPanel">
+                            <charts:TrendChartControl x:Name="_batteryTrendChart" Margin="2" />
+                        </Border>
+                        <WrapPanel x:Name="_batteryLegend" Classes="legendPanel">
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartBatteryBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_Rate}" />
+                            </StackPanel>
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartTemperatureBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <StackPanel Margin="0,12,0,0">
+                            <TextBlock x:Name="_batteryStatusLabel" Text="" Classes="appCaptionTextBlock" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" IsVisible="False" />
+                            <TextBlock x:Name="_lowBatteryWarning" Text="{x:Static resources:Resource.BatteryPage_LowLevel}" Foreground="{DynamicResource StatusWarningBrush}" IsVisible="False" HorizontalAlignment="Center" Classes="appCaptionTextBlock" />
+                            <TextBlock x:Name="_lowWattageWarning" Text="{x:Static resources:Resource.BatteryPage_LowWattageChargerConnected}" Foreground="{DynamicResource StatusWarningBrush}" IsVisible="False" HorizontalAlignment="Center" Classes="appCaptionTextBlock" />
+                            <controls:SymbolIcon x:Name="_batteryIcon" Symbol="Battery024" FontSize="{DynamicResource FontSizeDisplaySection}" HorizontalAlignment="Center" Margin="0,8,0,0" IsVisible="False" />
+                        </StackPanel>
+
+                        <!-- PLACEHOLDER_BATTERY_DETAILS -->
+                        <StackPanel x:Name="_batteryDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsBatteryDetailsPanel" IsVisible="False" Margin="0,16,0,0">
+                            <!-- AVALONIA: WPF UniformGrid -> Grid with three star columns. -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                                    <charts:RadialGaugeControl
+                                        x:Name="_batteryCapGauge"
+                                        Width="{StaticResource GaugeSizeSM}"
+                                        Height="{StaticResource GaugeSizeSM}"
+                                        RingThickness="4" ValueThickness="4"
+                                        RingBrush="{DynamicResource ChartBatteryBrush}"
+                                        Caption="{x:Static resources:Resource.SensorsControl_Capacity}" />
+                                    <TextBlock x:Name="_batteryCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Classes="appSmallBodyTextBlock" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                                    <charts:RadialGaugeControl
+                                        x:Name="_batteryFullCapGauge"
+                                        Width="{StaticResource GaugeSizeSM}"
+                                        Height="{StaticResource GaugeSizeSM}"
+                                        RingThickness="4" ValueThickness="4"
+                                        RingBrush="{DynamicResource ChartUtilizationBrush}"
+                                        Caption="{x:Static resources:Resource.SensorsControl_FullCapacity}" />
+                                    <TextBlock x:Name="_batteryFullCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Classes="appSmallBodyTextBlock" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                                    <!-- Health ring (was a static "design capacity" track that always looked empty/gray). -->
+                                    <charts:RadialGaugeControl
+                                        x:Name="_batteryHealthGauge"
+                                        Width="{StaticResource GaugeSizeSM}"
+                                        Height="{StaticResource GaugeSizeSM}"
+                                        RingThickness="4" ValueThickness="4"
+                                        Maximum="100"
+                                        RingBrush="{DynamicResource StatusCriticalBrush}"
+                                        Caption="{x:Static resources:Resource.SensorsControl_Health}" />
+                                    <TextBlock x:Name="_batteryDesignCap" Text="-" HorizontalAlignment="Center" Margin="0,4,0,0" Classes="appSmallBodyTextBlock"
+                                               ToolTip.Tip="{x:Static resources:Resource.SensorsControl_DesignCapacity}" />
+                                </StackPanel>
+                            </Grid>
+                            <Grid ClipToBounds="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0" Classes="sensorDetailColumn">
+                                    <StackPanel x:Name="_batteryRateRangeDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_RateRange}" Classes="appSmallBodyTextBlock" />
+                                        <TextBlock x:Name="_batteryRateRange" Text="-" Classes="statDetailValue" />
+                                    </StackPanel>
+                                    <StackPanel x:Name="_batteryCyclesDetail" Margin="0,4,0,0">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Cycles}" Classes="appSmallBodyTextBlock" />
+                                        <TextBlock x:Name="_batteryCycles" Text="-" Classes="statDetailValue" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0" Classes="sensorDetailColumn">
+                                    <StackPanel x:Name="_batteryDateDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Date}" Classes="appSmallBodyTextBlock" />
+                                        <TextBlock x:Name="_batteryDate" Text="-" Classes="statDetailValue" />
+                                    </StackPanel>
+                                    <StackPanel x:Name="_batteryTemperatureDetail" Margin="0,4,0,0">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Classes="appSmallBodyTextBlock" />
+                                        <TextBlock x:Name="_batteryTemperature" Text="-" Classes="statDetailValue" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                    <!-- PLACEHOLDER_GPU -->
+                    <StackPanel x:Name="_gpuSection" Grid.Column="2" Classes="sensorSection">
+                        <Grid Margin="0,0,0,14">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static resources:Resource.SensorsControl_GPU_Title}" Classes="sectionTitle" Margin="0" />
+                            <TextBlock x:Name="_gpuModelName" Grid.Column="1" Text="" Classes="sensorHeaderModel" />
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <charts:RadialGaugeControl
+                                x:Name="_gpuGauge"
+                                Grid.Column="0"
+                                Margin="0,0,12,0"
+                                VerticalAlignment="Center"
+                                RingBrush="{DynamicResource ChartUtilizationBrush}"
+                                Caption="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
+
+                            <Grid Grid.Column="1" VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                    <RowDefinition Height="24" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_gpuCoreClockMetric" Grid.Row="0" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_gpuTemperatureMetric" Grid.Row="1" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static resources:Resource.SensorsControl_Fan_Title}" Classes="statLabel" />
+                                <controls:MarqueeMetricBar x:Name="_gpuFanSpeedMetric" Grid.Row="2" Grid.Column="1" BarStyle="{StaticResource MetricProgressBarStyle}" TextStyle="{StaticResource StatValueTextBlockStyle}" />
+                            </Grid>
+                        </Grid>
+
+                        <Border x:Name="_gpuTrendPanel" Classes="trendPanel">
+                            <charts:TrendChartControl x:Name="_gpuTrendChart" Margin="2" />
+                        </Border>
+                        <WrapPanel x:Name="_gpuLegend" Classes="legendPanel">
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartUtilizationBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_Utilization_Title}" />
+                            </StackPanel>
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartCoreClockBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" />
+                            </StackPanel>
+                            <StackPanel Classes="legendItem">
+                                <Ellipse Classes="legendDot" Fill="{DynamicResource ChartTemperatureBrush}" />
+                                <TextBlock Classes="legendText" Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" />
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <!-- PLACEHOLDER_GPU_DETAILS -->
+                        <StackPanel x:Name="_gpuDetailsPanel" AutomationProperties.AutomationId="DashboardSensorsGpuDetailsPanel" IsVisible="False" Margin="0,16,0,0">
+                            <TextBlock Text="{x:Static resources:Resource.SensorsControl_MemoryClock_Title}" Classes="appCaptionTextBlock" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" MinWidth="72" />
+                                </Grid.ColumnDefinitions>
+                                <!-- AVALONIA: ProgressBarAnimateBehavior (Microsoft.Xaml.Behaviors) removed; value animation now a Transitions setter on MetricProgressBarStyle. -->
+                                <ProgressBar x:Name="_gpuMemoryClockBar" Grid.Column="0" Margin="0,0,8,0" Maximum="100" Classes="metricProgressBar" />
+                                <TextBlock x:Name="_gpuMemoryClockText" Grid.Column="1" Text="-" Classes="statDetailValue" Margin="0" />
+                            </Grid>
+
+                            <Grid Margin="0,8,0,0" ClipToBounds="True">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,8,0" Classes="sensorDetailColumn">
+                                    <StackPanel x:Name="_gpuVramUsageDetail">
+                                        <TextBlock x:Name="_gpuVramUsageTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuVramUsage" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_gpuWattageDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_PowerUsage}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuWattage" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_gpuVoltageDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Voltage}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuVoltage" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_gpuPcieThroughputDetail">
+                                        <TextBlock x:Name="_gpuPcieThroughputTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuPcieThroughput" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="8,0,0,0" Classes="sensorDetailColumn">
+                                    <StackPanel x:Name="_gpuVramTemperatureDetail">
+                                        <TextBlock x:Name="_gpuVramTemperatureTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuVramTemperature" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_gpuHotSpotTemperatureDetail">
+                                        <TextBlock x:Name="_gpuHotSpotTemperatureTitle" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuHotSpotTemperature" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_gpuTempRangeDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuTempRange" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+
+                                    <StackPanel x:Name="_gpuVoltageRangeDetail">
+                                        <TextBlock Text="{x:Static resources:Resource.SensorsControl_VoltageRange}" Classes="appCaptionTextBlock" />
+                                        <TextBlock x:Name="_gpuVoltageRange" Text="" Classes="statDetailValue" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </custom:CardControl.Header>
+        </custom:CardControl>
+
+        <!-- Overlay sits on top of the live card; corner radius/padding match CardControl.Header. -->
+        <Border
+            x:Name="_skeletonOverlay"
+            AutomationProperties.AutomationId="DashboardSensorsSkeleton"
+            Background="{DynamicResource AppSurfaceCardBrush}"
+            CornerRadius="{StaticResource CornerRadiusCard}"
+            ClipToBounds="True"
+            IsHitTestVisible="False">
+            <!-- AVALONIA: WPF UniformGrid -> Grid with star columns; column count is driven from code (SetColumnCount). -->
+            <Grid x:Name="_skeletonGrid" Margin="8,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel x:Name="_skeletonCpuSection" Grid.Column="0" Classes="sensorSection">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Classes="skeletonTitleBlock" />
+                        <Border x:Name="_skeletonCpuSubtitle" Grid.Column="1" Classes="skeletonSubtitleBlock" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid x:Name="_skeletonCpuGauge" Grid.Column="0" Classes="skeletonGauge">
+                            <!-- Background ring (full circle track) -->
+                            <Ellipse Classes="skeletonGaugeBackgroundRing" />
+                            <!-- Progress arc (simulating 75% progress) -->
+                            <Path Classes="skeletonGaugeProgressArc">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="55,10">
+                                            <ArcSegment Point="10,55" Size="45,45" SweepDirection="Clockwise" IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <!-- Center percentage text skeleton -->
+                            <Border Classes="skeletonGaugeCenterText" />
+                        </Grid>
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonCpuBar0" Grid.Row="0" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="0" Grid.Column="2" Classes="skeletonValueBlock" />
+                            <Border Grid.Row="1" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonCpuBar1" Grid.Row="1" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="1" Grid.Column="2" Classes="skeletonValueBlock" />
+                            <Border Grid.Row="2" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonCpuBar2" Grid.Row="2" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="2" Grid.Column="2" Classes="skeletonValueBlock" />
+                        </Grid>
+                    </Grid>
+                    <Border x:Name="_skeletonCpuTrendPanel" Classes="skeletonTrendPanel">
+                        <Border Classes="skeletonTrendBlock" />
+                    </Border>
+                    <WrapPanel x:Name="_skeletonCpuLegend" Classes="legendPanel">
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
+                <StackPanel x:Name="_skeletonBatterySection" Grid.Column="1" Classes="sensorSection">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Classes="skeletonTitleBlock" />
+                        <Border x:Name="_skeletonBatterySubtitle" Grid.Column="1" Classes="skeletonSubtitleBlock" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid x:Name="_skeletonBatteryGauge" Grid.Column="0" Classes="skeletonGauge">
+                            <!-- Background ring (full circle track) -->
+                            <Ellipse Classes="skeletonGaugeBackgroundRing" />
+                            <!-- Progress arc (simulating 75% progress) -->
+                            <Path Classes="skeletonGaugeProgressArc">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="55,10">
+                                            <ArcSegment Point="10,55" Size="45,45" SweepDirection="Clockwise" IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <!-- Center percentage text skeleton -->
+                            <Border Classes="skeletonGaugeCenterText" />
+                        </Grid>
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonBatteryBar0" Grid.Row="0" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="0" Grid.Column="2" Classes="skeletonValueBlock" />
+                            <Border Grid.Row="1" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonBatteryBar1" Grid.Row="1" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="1" Grid.Column="2" Classes="skeletonValueBlock" />
+                            <Border Grid.Row="2" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonBatteryBar2" Grid.Row="2" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="2" Grid.Column="2" Classes="skeletonValueBlock" />
+                        </Grid>
+                    </Grid>
+                    <Border x:Name="_skeletonBatteryTrendPanel" Classes="skeletonTrendPanel">
+                        <Border Classes="skeletonTrendBlock" />
+                    </Border>
+                    <WrapPanel x:Name="_skeletonBatteryLegend" Classes="legendPanel">
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
+                <StackPanel x:Name="_skeletonGpuSection" Grid.Column="2" Classes="sensorSection">
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Classes="skeletonTitleBlock" />
+                        <Border x:Name="_skeletonGpuSubtitle" Grid.Column="1" Classes="skeletonSubtitleBlock" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid x:Name="_skeletonGpuGauge" Grid.Column="0" Classes="skeletonGauge">
+                            <!-- Background ring (full circle track) -->
+                            <Ellipse Classes="skeletonGaugeBackgroundRing" />
+                            <!-- Progress arc (simulating 75% progress) -->
+                            <Path Classes="skeletonGaugeProgressArc">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="55,10">
+                                            <ArcSegment Point="10,55" Size="45,45" SweepDirection="Clockwise" IsLargeArc="True" />
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <!-- Center percentage text skeleton -->
+                            <Border Classes="skeletonGaugeCenterText" />
+                        </Grid>
+                        <Grid Grid.Column="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" MinWidth="72" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                                <RowDefinition Height="24" />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonGpuBar0" Grid.Row="0" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="0" Grid.Column="2" Classes="skeletonValueBlock" />
+                            <Border Grid.Row="1" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonGpuBar1" Grid.Row="1" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="1" Grid.Column="2" Classes="skeletonValueBlock" />
+                            <Border Grid.Row="2" Grid.Column="0" Classes="skeletonLabelBlock" />
+                            <Border x:Name="_skeletonGpuBar2" Grid.Row="2" Grid.Column="1" Classes="skeletonBarBlock" />
+                            <Border Grid.Row="2" Grid.Column="2" Classes="skeletonValueBlock" />
+                        </Grid>
+                    </Grid>
+                    <Border x:Name="_skeletonGpuTrendPanel" Classes="skeletonTrendPanel">
+                        <Border Classes="skeletonTrendBlock" />
+                    </Border>
+                    <WrapPanel x:Name="_skeletonGpuLegend" Classes="legendPanel">
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                        <StackPanel Classes="skeletonLegendItem">
+                            <Border Classes="skeletonLegendDot" />
+                            <Border Classes="skeletonLegendText" />
+                        </StackPanel>
+                    </WrapPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

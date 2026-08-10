@@ -1,66 +1,121 @@
 <Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+        <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+		<RootNamespace>UniversalDeviceToolkit.Avalonia</RootNamespace>
+		<OutputType>WinExe</OutputType>
+		<!-- Canonical brand icons live in repo-root Assets/ (single source of truth). -->
+		<ApplicationIcon>..\Assets\Icon.ico</ApplicationIcon>
+		<AssemblyName>UniversalDeviceToolkit.Avalonia</AssemblyName>
+		<!-- WinForms and Avalonia expose overlapping type names; keep imports explicit. -->
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Copyright>$(ProjectCopyright)</Copyright>
+		<UseWindowsForms>true</UseWindowsForms>
+		<IsUdtShippingApp>true</IsUdtShippingApp>
+		<SelfContained>false</SelfContained>
+		<PublishSingleFile>false</PublishSingleFile>
+		<PublishReadyToRun>false</PublishReadyToRun>
+		<PublishUrl>publish\</PublishUrl>
+		<IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
+		<RollForward>Major</RollForward>
+		<PlatformTarget>x64</PlatformTarget>
+				<AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+	</PropertyGroup>
+	<PropertyGroup>
+		<ApplicationManifest>App.manifest</ApplicationManifest>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<NeutralLanguage>en</NeutralLanguage>
+		<SatelliteResourceLanguages>$(UdtSatelliteResourceLanguages)</SatelliteResourceLanguages>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+	  <DebugType>portable</DebugType>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" />
+		<PackageReference Include="Avalonia.Desktop" />
+		<PackageReference Include="Avalonia.Themes.Fluent" />
+		<PackageReference Include="Avalonia.Controls.ColorPicker" />
+		<PackageReference Include="Autofac" />
+		<PackageReference Include="CommunityToolkit.Mvvm" />
+		<PackageReference Include="Humanizer" />
+		<PackageReference Include="Markdig" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.CLI.Lib\UniversalDeviceToolkit.CLI.Lib.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.ViewModels\UniversalDeviceToolkit.ViewModels.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Shared\UniversalDeviceToolkit.Lib.Shared.csproj" />
+		<ProjectReference Include="..\UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj" />
+		<!-- Build worker beside the app; do not load it as a managed reference. -->
+		<ProjectReference Include="..\UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj">
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+		</ProjectReference>
+	</ItemGroup>
+	<!-- Copy NetworkProxy exe next to the main app so the launcher can find it. -->
+	<Target Name="CopyNetworkProxyWorker" AfterTargets="Build">
+		<PropertyGroup>
+			<_NetworkProxyOutDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\UniversalDeviceToolkit.NetworkProxy\bin\$(Platform)\$(Configuration)\$(TargetFramework)\$(RuntimeIdentifier)\'))</_NetworkProxyOutDir>
+		</PropertyGroup>
+		<ItemGroup>
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.exe"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.exe')" />
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.dll"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.dll')" />
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json')" />
+			<_NetworkProxyFiles Include="$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.deps.json"
+			                    Condition="Exists('$(_NetworkProxyOutDir)UniversalDeviceToolkit.NetworkProxy.deps.json')" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_NetworkProxyFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" Condition="'@(_NetworkProxyFiles)' != ''" />
+	</Target>
+	<ItemGroup>
+		<!-- Local plugin runtime assets are generated under the monorepo's ignored cache. -->
+		<Content Include="..\Plugins\.build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll"
+		         Link="UniversalDeviceToolkit.Plugins.SDK.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\Plugins\.build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll')" />
+		<Content Include="..\Plugins\.build\shared\UniversalDeviceToolkit.Plugins.Shared.dll"
+		         Link="UniversalDeviceToolkit.Plugins.Shared.dll"
+		         CopyToOutputDirectory="PreserveNewest"
+		         Condition="Exists('..\Plugins\.build\shared\UniversalDeviceToolkit.Plugins.Shared.dll')" />
+	</ItemGroup>
+	<ItemGroup>
+		<AvaloniaResource Include="..\Assets\Logo.png" Link="Assets\Logo.png" />
+		<AvaloniaResource Include="Assets\Fonts\fluentsystemicons-regular.ttf" />
+		<AvaloniaResource Include="Assets\Fonts\fluentsystemicons-filled.ttf" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Assets\AssetResources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>AssetResources.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\Resource.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resource.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Assets\AssetResources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>AssetResources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Resource.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <DisableUdtForceX64>true</DisableUdtForceX64>
-    <RootNamespace>UniversalDeviceToolkit.Avalonia</RootNamespace>
-    <AssemblyName>udt-gui</AssemblyName>
-    <RuntimeIdentifiers>win-x64;linux-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
-    <!-- AVLN3001: pages/window take constructor-injected services, so their .axaml
-         resources are not reachable via the runtime URI loader (they are created
-         from code with explicit args). That is intentional; suppress the noise. -->
-    <NoWarn>$(NoWarn);AVLN3001</NoWarn>
-  </PropertyGroup>
-
-  <!-- Keep Windows-only dependencies out of Linux/macOS restore and build graphs.
-       Windows retains both the portable and desktop Avalonia targets. -->
-  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
-    <TargetFrameworks>net10.0;net10.0-windows10.0.26100.0</TargetFrameworks>
-    <NuGetLockFilePath>$(MSBuildProjectDirectory)\packages.lock.json</NuGetLockFilePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
-    <TargetFramework>net10.0</TargetFramework>
-    <NuGetLockFilePath>$(MSBuildProjectDirectory)/packages.lock.unix.json</NuGetLockFilePath>
-  </PropertyGroup>
-
-  <!--
-    Windows TFM branch: opts OUT of the portable x64-skip so the shipping graph
-    stamps win-x64 (required when referencing UniversalDeviceToolkit.Lib, whose
-    Directory.Build.props force x64). Portable net10.0 branch keeps host-native RID.
-  -->
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">
-    <DisableUdtForceX64>false</DisableUdtForceX64>
-    <!-- Windows apps reference WinDesktop (WPF/WinForms); only win-x64 exists. -->
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Avalonia" />
-    <PackageReference Include="Avalonia.Controls.ColorPicker" />
-    <PackageReference Include="Avalonia.Desktop" />
-    <PackageReference Include="Avalonia.Themes.Fluent" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.ViewModels\UniversalDeviceToolkit.ViewModels.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Shared\UniversalDeviceToolkit.Lib.Shared.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Platform.Linux\UniversalDeviceToolkit.Platform.Linux.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Platform.MacOS\UniversalDeviceToolkit.Platform.MacOS.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- Use the root-level icon as the tray icon resource -->
-    <AvaloniaResource Include="..\Assets\Icon.ico" Link="Assets\udt-icon.ico" />
-    <None Include="..\resources\device-packs.json"
-          Link="resources\device-packs.json"
-          CopyToOutputDirectory="PreserveNewest"
-          CopyToPublishDirectory="PreserveNewest" />
-  </ItemGroup>
+	<Target Name="CreateSatelliteResourceOutputDirectories" BeforeTargets="_CopyFilesMarkedCopyLocal;CopyFilesToOutputDirectory">
+		<ItemGroup>
+			<SatelliteResourceOutputDirectory Include="$(OutDir)%(ReferenceCopyLocalPaths.DestinationSubDirectory)" Condition="'%(ReferenceCopyLocalPaths.DestinationSubDirectory)' != ''" />
+		</ItemGroup>
+		<MakeDir Directories="@(SatelliteResourceOutputDirectory)" Condition="'@(SatelliteResourceOutputDirectory)' != ''" />
+	</Target>
 
 </Project>
