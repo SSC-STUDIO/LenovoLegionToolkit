@@ -29,6 +29,8 @@ internal static class SkeletonShimmerBehavior
         internal Animation? BreathingAnimation;
         internal TranslateTransform? SweepTransform;
         internal EventHandler? TransformChanged;
+        internal DispatcherTimer? SweepTimer;
+        internal DispatcherTimer? BreathingTimer;
     }
 
     private static readonly ConditionalWeakTable<Border, ElementState> States = new();
@@ -185,8 +187,8 @@ internal static class SkeletonShimmerBehavior
         transform.Changed += transformChanged;
         state.TransformChanged = transformChanged;
 
-        RunLooping(sweepAnimation, transform, cts.Token);
-        RunLooping(breathingAnimation, border, cts.Token);
+        state.SweepTimer = CreateSweepTimer(sweepAnimation, transform, cts.Token);
+        state.BreathingTimer = CreateBreathingTimer(breathingAnimation, border, cts.Token);
 
         state.IsRunning = true;
         TrackActive(border);
@@ -268,6 +270,11 @@ internal static class SkeletonShimmerBehavior
 
     private static void StopAnimation(Border border, ElementState state, bool restoreBackground)
     {
+        state.SweepTimer?.Stop();
+        state.SweepTimer = null;
+        state.BreathingTimer?.Stop();
+        state.BreathingTimer = null;
+
         if (state.Cancellation is { } cts)
         {
             cts.Cancel();
@@ -383,28 +390,53 @@ internal static class SkeletonShimmerBehavior
     }
 
     /// <summary>
-    /// Runs a looping <see cref="Animation"/> until <paramref name="token"/> is cancelled.
-    /// Avalonia 11.x <see cref="Animation.RunAsync"/> faults the returned task for infinite
-    /// iteration counts ("Looping animations must not use the Run method.") but still starts
-    /// the animation; the fault is swallowed here. References to the animation are kept in
-    /// <see cref="ElementState"/> so the running pipeline is not collected.
+    /// AVALONIA: <c>Animation.RunAsync</c> faults for infinite iteration counts
+    /// ("Looping animations must not use the Run method."), so the shimmer loops are
+    /// driven manually with DispatcherTimers instead of animations.
     /// </summary>
-    private static async void RunLooping(Animation animation, Animatable target, CancellationToken token)
+    private static DispatcherTimer CreateSweepTimer(Animation animation, TranslateTransform transform, CancellationToken token)
     {
-        try
+        var durationMs = Math.Max(16, (int)animation.Duration.TotalMilliseconds);
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        var from = SkeletonAnimationTokens.SweepFrom;
+        var to = SkeletonAnimationTokens.SweepTo;
+        timer.Tick += (_, _) =>
         {
-            await animation.RunAsync(target, token);
-        }
-        catch (InvalidOperationException)
+            if (token.IsCancellationRequested)
+            {
+                timer.Stop();
+                return;
+            }
+            var phase = (stopwatch.ElapsedMilliseconds % (durationMs * 2)) / (double)(durationMs * 2);
+            transform.X = phase < 0.5
+                ? from + (to - from) * (phase * 2)
+                : to - (to - from) * ((phase - 0.5) * 2);
+        };
+        timer.Start();
+        return timer;
+    }
+
+    private static DispatcherTimer CreateBreathingTimer(Animation animation, Border border, CancellationToken token)
+    {
+        var durationMs = Math.Max(16, (int)animation.Duration.TotalMilliseconds);
+        var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        var floor = SkeletonAnimationTokens.BreathingFloorOpacity;
+        timer.Tick += (_, _) =>
         {
-            // Infinite-loop guard fault — the animation itself keeps running until cancelled.
-        }
-        catch (OperationCanceledException)
-        {
-        }
-        catch (Exception)
-        {
-            // Shimmer must never break the page it decorates.
-        }
+            if (token.IsCancellationRequested)
+            {
+                timer.Stop();
+                return;
+            }
+            var phase = (stopwatch.ElapsedMilliseconds % (durationMs * 2)) / (double)(durationMs * 2);
+            border.Opacity = phase < 0.5
+                ? 1.0 - (1.0 - floor) * (phase * 2)
+                : floor + (1.0 - floor) * ((phase - 0.5) * 2);
+        };
+        timer.Start();
+        return timer;
     }
 }
+

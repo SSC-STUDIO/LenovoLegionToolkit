@@ -24,6 +24,10 @@ namespace UniversalDeviceToolkit.Avalonia.Controls.Custom;
 // and the WPF animation APIs were replaced by Avalonia Transitions.
 public class NavigationStore : ContentControl
 {
+    // The navigation shell has its own template in Styles/NavigationStore.axaml.
+    // Without this key Avalonia uses ContentControl's default theme and ignores Items/Footer.
+    protected override Type StyleKeyOverride => typeof(NavigationStore);
+
     private const string TogglePaneButtonPartName = "PART_TogglePaneButton";
     private readonly Dictionary<string, object> _pageCache = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<object> _attachedCollections = [];

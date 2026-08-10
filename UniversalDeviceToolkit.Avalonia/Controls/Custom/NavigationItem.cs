@@ -10,6 +10,10 @@ namespace UniversalDeviceToolkit.Avalonia.Controls.Custom;
 // Click and IsEnabled come from the base; AutomationPeer removed. All public members kept.
 public class NavigationItem : Avalonia.Controls.Button
 {
+    // Avalonia does not automatically apply a ControlTheme keyed to a derived control.
+    // Keep this item on its dedicated navigation template instead of falling back to Button.
+    protected override Type StyleKeyOverride => typeof(NavigationItem);
+
     public static readonly StyledProperty<string?> PageTagProperty = AvaloniaProperty.Register<NavigationItem, string?>(
         nameof(PageTag),
         string.Empty);

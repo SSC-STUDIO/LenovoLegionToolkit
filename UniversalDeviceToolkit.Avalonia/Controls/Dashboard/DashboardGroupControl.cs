@@ -20,6 +20,7 @@ public class DashboardGroupControl : UserControl
 
     private StackPanel? _stackPanel;
     private TextBlock? _headerTextBlock;
+    private bool _initializationStarted;
 
     public Task InitializedTask => _initializedTaskCompletionSource.Task;
     public Task FirstVisibleContentReadyTask => _firstVisibleContentReadyTaskCompletionSource.Task;
@@ -34,10 +35,20 @@ public class DashboardGroupControl : UserControl
 
         _dashboardGroup = dashboardGroup;
 
-        Initialized += DashboardGroupControl_Initialized;
     }
 
-    private async void DashboardGroupControl_Initialized(object? sender, System.EventArgs e)
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+
+        if (_initializationStarted)
+            return;
+
+        _initializationStarted = true;
+        _ = InitializeAsync();
+    }
+
+    private async Task InitializeAsync()
     {
         try
         {
