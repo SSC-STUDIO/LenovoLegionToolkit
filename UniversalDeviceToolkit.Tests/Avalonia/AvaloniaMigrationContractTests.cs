@@ -16,6 +16,43 @@ namespace UniversalDeviceToolkit.Tests.Avalonia;
 public sealed class AvaloniaMigrationContractTests
 {
     [Fact]
+    public void AvaloniaNavigationAndDashboardLifecycle_UseAvaloniaControlThemesAndAttachment()
+    {
+        var root = RepositoryPaths.FindRoot();
+        var navigationStore = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Controls",
+            "Custom",
+            "NavigationStore.cs"));
+        var navigationItem = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Controls",
+            "Custom",
+            "NavigationItem.cs"));
+        var navigationStyles = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Styles",
+            "NavigationStore.axaml"));
+        var dashboardGroup = File.ReadAllText(Path.Combine(
+            root,
+            "UniversalDeviceToolkit.Avalonia",
+            "Controls",
+            "Dashboard",
+            "DashboardGroupControl.cs"));
+
+        navigationStore.Should().Contain("StyleKeyOverride => typeof(NavigationStore)");
+        navigationItem.Should().Contain("StyleKeyOverride => typeof(NavigationItem)");
+        navigationStyles.Should().Contain("<ControlTheme x:Key=\"{x:Type custom:NavigationStore}\"");
+        navigationStyles.Should().Contain("<ControlTheme x:Key=\"{x:Type custom:NavigationItem}\"");
+        dashboardGroup.Should().Contain("OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)");
+        dashboardGroup.Should().Contain("_ = InitializeAsync();");
+        dashboardGroup.Should().NotContain("Initialized += DashboardGroupControl_Initialized");
+    }
+
+    [Fact]
     public void AvaloniaHost_DoesNotReferenceTheWpfHostAssembly()
     {
         var root = RepositoryPaths.FindRoot();
