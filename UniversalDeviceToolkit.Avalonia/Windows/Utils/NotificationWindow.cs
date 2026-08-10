@@ -365,7 +365,7 @@ public class NotificationWindow : BaseWindow, INotificationWindow
                 new KeyFrame { Cue = new Cue(1d), Setters = { new Setter(Visual.OpacityProperty, to) } },
             }
         };
-        return animation.RunAsync(target);
+        return animation.RunAsync(target); // AVALONIA: caller observes failures
     }
 
     private GraphicsPath GetRoundedRectanglePath(Rectangle rect, int radius)

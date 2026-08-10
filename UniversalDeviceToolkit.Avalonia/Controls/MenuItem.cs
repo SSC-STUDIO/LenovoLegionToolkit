@@ -1,4 +1,5 @@
 using Avalonia;
+using System;
 
 namespace UniversalDeviceToolkit.Avalonia.Controls;
 
@@ -9,6 +10,8 @@ namespace UniversalDeviceToolkit.Avalonia.Controls;
 /// </summary>
 public class MenuItem : global::Avalonia.Controls.MenuItem
 {
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.MenuItem);
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);

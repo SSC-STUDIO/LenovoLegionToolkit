@@ -152,11 +152,7 @@ public class NumberBox : TextBox
         remove => RemoveHandler(ValueChangedEvent, value);
     }
 
-    static NumberBox()
-    {
-        ValueProperty.Changed.AddClassHandler<NumberBox>((box, e) => box.OnValuePropertyChanged((double?)e.OldValue, (double?)e.NewValue));
-    }
-
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.TextBox);
     public NumberBox()
     {
         TextChanged += OnTextChangedHandler;

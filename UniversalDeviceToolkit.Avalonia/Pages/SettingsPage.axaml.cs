@@ -283,7 +283,8 @@ public partial class SettingsPage : global::Avalonia.Controls.UserControl
         if (Resources["ContentTransitionAnimation"] is Style transitionStyle)
         {
             foreach (var animation in transitionStyle.Animations)
-                _ = ((global::Avalonia.Animation.Animation)animation).RunAsync(_contentControl, CancellationToken.None);
+                _ = ((global::Avalonia.Animation.Animation)animation).RunAsync(_contentControl, CancellationToken.None)
+                    .ContinueWith(t2 => _ = t2.Exception, TaskContinuationOptions.OnlyOnFaulted);
         }
     }
 

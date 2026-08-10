@@ -1,4 +1,5 @@
 using Avalonia;
+using System;
 
 namespace UniversalDeviceToolkit.Avalonia.Controls;
 
@@ -8,6 +9,8 @@ namespace UniversalDeviceToolkit.Avalonia.Controls;
 /// </summary>
 public class TextBox : global::Avalonia.Controls.TextBox
 {
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.TextBox);
+
     /// <summary>Defines the <see cref="ClearButtonEnabled"/> property.</summary>
     public static readonly StyledProperty<bool> ClearButtonEnabledProperty =
         AvaloniaProperty.Register<TextBox, bool>(nameof(ClearButtonEnabled), false);

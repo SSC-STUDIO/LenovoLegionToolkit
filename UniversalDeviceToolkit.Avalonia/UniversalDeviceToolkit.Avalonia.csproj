@@ -88,6 +88,12 @@
 		<AvaloniaResource Include="Assets\Fonts\fluentsystemicons-regular.ttf" />
 		<AvaloniaResource Include="Assets\Fonts\fluentsystemicons-filled.ttf" />
 	</ItemGroup>
+
+	<Target Name="CopyIconFonts" AfterTargets="Build">
+		<Copy SourceFiles="Assets\Fonts\fluentsystemicons-regular.ttf;Assets\Fonts\fluentsystemicons-filled.ttf"
+		      DestinationFolder="$(OutDir)Assets\Fonts\" SkipUnchangedFiles="true" />
+	</Target>
+
 	<ItemGroup>
 	  <Compile Update="Assets\AssetResources.Designer.cs">
 	    <DesignTime>True</DesignTime>

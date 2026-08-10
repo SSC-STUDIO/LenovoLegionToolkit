@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using System;
 
 namespace UniversalDeviceToolkit.Avalonia.Controls.Custom;
 
@@ -9,4 +10,6 @@ namespace UniversalDeviceToolkit.Avalonia.Controls.Custom;
 /// </summary>
 public class DynamicScrollViewer : ScrollViewer
 {
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.ScrollViewer);
+
 }

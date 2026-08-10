@@ -282,10 +282,16 @@ public class MarqueeMetricBar : ContentControl
 
     // AVALONIA: controls have no Style property; register the keyed style on the
     // control's own Styles collection (selector matches the control itself).
+    // A Style instance can only have a single parent, and the same keyed resource is
+    // shared by every MarqueeMetricBar instance, so clone the style per target.
     private static void ApplyStyle(Control target, Style style)
     {
-        if (!target.Styles.Contains(style))
-            target.Styles.Add(style);
+        var clone = new Style(_ => style.Selector);
+        foreach (var setter in style.Setters)
+            clone.Setters.Add(setter);
+        foreach (var animation in style.Animations)
+            clone.Animations.Add(animation);
+        target.Styles.Add(clone);
     }
 
     private static void OnLayoutParameterChanged(MarqueeMetricBar bar, AvaloniaPropertyChangedEventArgs e)

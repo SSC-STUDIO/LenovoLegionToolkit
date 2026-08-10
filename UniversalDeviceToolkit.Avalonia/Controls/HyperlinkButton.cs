@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System;
 using Avalonia;
 using Avalonia.Interactivity;
 
@@ -23,6 +24,7 @@ public class HyperlinkButton : Button
         set => SetValue(NavigateUriProperty, value);
     }
 
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.Button);
     public HyperlinkButton()
     {
         Click += OnHyperlinkButtonClick;

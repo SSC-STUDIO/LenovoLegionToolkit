@@ -115,7 +115,10 @@ public partial class App : Application
             return;
         }
 
+        RegisterIconFont();
+
         InitializeComponent();
+
 
         desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
         desktop.Exit += Application_Exit;
@@ -1214,6 +1217,30 @@ public partial class App : Application
 
         OsdWindow = isBar ? new OsdBarWindow() : new OsdPanelWindow();
         OsdWindow.Closed += (_, _) => OsdWindow = null;
+    }
+
+    /// <summary>
+    /// Registers the bundled Fluent System Icons font with the FontManager so icon
+    /// glyphs resolve by family name. File-based loading is used because embedded
+    /// avares:// font URIs fail to resolve on this host.
+    /// </summary>
+    private static void RegisterIconFont()
+    {
+        try
+        {
+            var path = UniversalDeviceToolkit.Avalonia.Controls.SymbolIcon.SymbolFontPath;
+            if (!System.IO.File.Exists(path))
+                return;
+            var collection = new global::Avalonia.Media.Fonts.EmbeddedFontCollection(
+                new System.Uri("fonts:FluentSystemIcons"),
+                new System.Uri(path));
+            global::Avalonia.Media.FontManager.Current.AddFontCollection(collection);
+        }
+        catch (System.Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Icon font registration failed: {ex.Message}");
+        }
     }
 
 }

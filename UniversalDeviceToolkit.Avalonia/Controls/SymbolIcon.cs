@@ -14,8 +14,18 @@ namespace UniversalDeviceToolkit.Avalonia.Controls;
 public class SymbolIcon : TextBlock
 {
     public const string SymbolFontFamilyName = "FluentSystemIcons-Regular";
-    public const string SymbolFontUri =
-        "avares://UniversalDeviceToolkit.Avalonia/Assets/Fonts/fluentsystemicons-regular.ttf#FluentSystemIcons-Regular";
+
+    /// <summary>
+    /// Absolute path of the icon font next to the executable (copied by the
+    /// CopyIconFonts MSBuild target). File-based loading is used because
+    /// avares:// embedded font URIs are unreliable across Avalonia 11.3.6 hosts.
+    /// </summary>
+    public static string SymbolFontPath =>
+        System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "Fonts", "fluentsystemicons-regular.ttf");
+
+    public static FontFamily SymbolFontFamily => new FontFamily(SymbolFontFamilyName);
+
+    public static string SymbolFontUri => SymbolFontPath + "#" + SymbolFontFamilyName;
 
     public static readonly StyledProperty<SymbolRegular> SymbolProperty =
         AvaloniaProperty.Register<SymbolIcon, SymbolRegular>(nameof(Symbol), SymbolRegular.Empty);
@@ -36,7 +46,7 @@ public class SymbolIcon : TextBlock
 
     public SymbolIcon()
     {
-        FontFamily = new FontFamily(SymbolFontUri);
+        FontFamily = SymbolFontFamily;
         HorizontalAlignment = global::Avalonia.Layout.HorizontalAlignment.Center;
         VerticalAlignment = global::Avalonia.Layout.VerticalAlignment.Center;
         UpdateGlyph();

@@ -1,4 +1,5 @@
 using Avalonia;
+using System;
 
 namespace UniversalDeviceToolkit.Avalonia.Controls;
 
@@ -8,6 +9,8 @@ namespace UniversalDeviceToolkit.Avalonia.Controls;
 /// </summary>
 public class ToggleSwitch : global::Avalonia.Controls.ToggleSwitch
 {
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.ToggleSwitch);
+
     /// <summary>Defines the <see cref="Icon"/> property.</summary>
     public static readonly StyledProperty<object?> IconProperty =
         AvaloniaProperty.Register<ToggleSwitch, object?>(nameof(Icon));

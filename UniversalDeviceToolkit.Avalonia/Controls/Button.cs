@@ -12,6 +12,8 @@ namespace UniversalDeviceToolkit.Avalonia.Controls;
 /// </summary>
 public class Button : global::Avalonia.Controls.Button
 {
+    protected override Type StyleKeyOverride => typeof(global::Avalonia.Controls.Button);
+
     /// <summary>Defines the <see cref="Appearance"/> property.</summary>
     public static readonly StyledProperty<ControlAppearance> AppearanceProperty =
         AvaloniaProperty.Register<Button, ControlAppearance>(nameof(Appearance), ControlAppearance.Secondary);

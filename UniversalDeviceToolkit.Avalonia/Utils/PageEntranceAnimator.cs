@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Animation.Easings;
@@ -60,6 +61,7 @@ internal static class PageEntranceAnimator
         });
 
         var cts = new CancellationTokenSource();
-        _ = animation.RunAsync(target, cts.Token);
+        _ = animation.RunAsync(target, cts.Token)
+            .ContinueWith(t => _ = t.Exception, TaskContinuationOptions.OnlyOnFaulted);
     }
 }

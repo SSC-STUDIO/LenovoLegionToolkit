@@ -169,7 +169,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Background="Transparent"
-            Cursor="SizeWE"
+            Cursor="SizeWestEast"
             Focusable="False" />
 
         <!-- Left Navigation Bar -->

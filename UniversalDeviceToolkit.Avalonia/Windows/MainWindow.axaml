@@ -240,7 +240,7 @@
                 Width="10"
                 HorizontalAlignment="Left"
                 Margin="0,0,0,12"
-                Cursor="SizeWE"
+                Cursor="SizeWestEast"
                 DragCompleted="NavigationSplitter_DragCompleted"
                 DragDelta="NavigationSplitter_DragDelta">
                 <primitives:Thumb.Template>
