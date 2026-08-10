@@ -51,8 +51,9 @@ public static class BridgeProtocol
             ? idProp.GetInt64()
             : (long?)null;
 
+        // Clone the params element: it must outlive the parsing document.
         var parameters = root.TryGetProperty("params", out var paramsProp)
-            ? paramsProp
+            ? paramsProp.Clone()
             : default;
 
         request = new BridgeRequest(id, method.GetString()!, parameters);

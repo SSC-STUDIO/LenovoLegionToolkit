@@ -1,4 +1,5 @@
 using Autofac;
+using UniversalDeviceToolkit.Host.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Host;
@@ -13,6 +14,9 @@ public class BridgeModule : Module
     {
         builder.RegisterType<HeadlessMainThreadDispatcher>()
             .As<IMainThreadDispatcher>()
+            .SingleInstance();
+
+        builder.RegisterType<HostDashboardSettings>()
             .SingleInstance();
     }
 }

@@ -21,6 +21,7 @@ using UniversalDeviceToolkit.Lib.Services;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Host.Rpc;
+using UniversalDeviceToolkit.Host.Rpc.Handlers;
 
 namespace UniversalDeviceToolkit.Host;
 
@@ -120,6 +121,14 @@ public static class Program
             rpc.RequestShutdown();
             return BridgeResult.Ok(new { quitting = true });
         });
+
+        SystemHandlers.Register(rpc);
+        SettingsHandlers.Register(rpc);
+        SensorsHandlers.Register(rpc);
+        FeatureHandlers.Register(rpc);
+        DashboardHandlers.Register(rpc);
+        AutomationHandlers.Register(rpc);
+        MacroHandlers.Register(rpc);
 
         _ = flags;
     }
