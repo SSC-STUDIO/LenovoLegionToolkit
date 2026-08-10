@@ -1,7 +1,7 @@
 namespace UniversalDeviceToolkit.Abstractions.Localization;
 
 /// <summary>
-/// Shared layout budget for localized text across the WPF and Avalonia hosts.
+/// Shared layout budget for localized text across the WPF hosts.
 /// </summary>
 public static class LocalizedOverflowPolicy
 {

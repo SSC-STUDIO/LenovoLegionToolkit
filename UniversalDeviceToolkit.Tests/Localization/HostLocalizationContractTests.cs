@@ -17,7 +17,6 @@ public sealed class HostLocalizationContractTests
     [
         new("UniversalDeviceToolkit.WPF/Resources", "Resource.resx", "Resource.*.resx"),
         new("UniversalDeviceToolkit.CLI/Resources", "CLI.Resources.resx", "CLI.Resources.*.resx"),
-        new("UniversalDeviceToolkit.Avalonia/Resources", "Resource.resx", "Resource.*.resx"),
         new("UniversalDeviceToolkit.CrossPlatform/Resources", "Resource.resx", "Resource.*.resx"),
         new("Tools/Installer/Resources", "Resource.resx", "Resource.*.resx"),
     ];
@@ -104,12 +103,6 @@ public sealed class HostLocalizationContractTests
                     "UniversalDeviceToolkit.CLI.Resources.CLI.Resources",
                     typeof(Strings).Assembly),
                 "CLI_Header_RootCommandDescription"),
-            new ResourceProbe(
-                "Avalonia",
-                new ResourceManager(
-                    "UniversalDeviceToolkit.Avalonia.Resources.Resource",
-                    typeof(UniversalDeviceToolkit.Avalonia.App).Assembly),
-                "Window_Title"),
         };
 
         foreach (var culture in LocalizationCatalog.SupportedCultures)

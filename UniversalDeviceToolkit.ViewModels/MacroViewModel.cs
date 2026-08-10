@@ -5,8 +5,8 @@ using UniversalDeviceToolkit.Abstractions.Macro;
 namespace UniversalDeviceToolkit.ViewModels;
 
 /// <summary>
-/// Host-neutral macro workspace operations. The Windows page and Avalonia page
-/// adapt their platform services to this interface and share the same editor state.
+/// Host-neutral macro workspace operations. The Windows page adapts its platform
+/// services to this interface and shares the same editor state.
 /// </summary>
 public interface IMacroWorkspace
 {

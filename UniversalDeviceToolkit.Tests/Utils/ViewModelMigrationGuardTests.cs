@@ -29,25 +29,4 @@ public sealed class ViewModelMigrationGuardTests
         keyboardPage.Should().Contain("using UniversalDeviceToolkit.ViewModels;");
         macroPage.Should().Contain("using UniversalDeviceToolkit.ViewModels;");
     }
-
-    [Fact]
-    public void Avalonia_Workspaces_ShouldUseSharedViewModelsAndKeepHostAdaptersSeparate()
-    {
-        var root = RepositoryPaths.FindRoot();
-        var sharedRoot = Path.Combine(root, "UniversalDeviceToolkit.ViewModels");
-        var avaloniaRoot = Path.Combine(root, "UniversalDeviceToolkit.Avalonia");
-
-        File.Exists(Path.Combine(sharedRoot, "AutomationWorkspaceViewModel.cs"))
-            .Should().BeTrue();
-
-        File.ReadAllText(Path.Combine(avaloniaRoot, "Pages", "AutomationPage.axaml.cs"))
-            .Should().Contain("AutomationWorkspaceViewModel");
-        File.ReadAllText(Path.Combine(avaloniaRoot, "Pages", "KeyboardBacklightPage.axaml.cs"))
-            .Should().Contain("KeyboardBacklightViewModel");
-        File.ReadAllText(Path.Combine(avaloniaRoot, "Pages", "MacroPage.cs"))
-            .Should().Contain("MacroViewModel");
-
-        File.ReadAllText(Path.Combine(avaloniaRoot, "Services", "SharedWorkspaceAdapters.cs"))
-            .Should().NotContain("UniversalDeviceToolkit.WPF");
-    }
 }

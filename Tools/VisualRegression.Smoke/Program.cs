@@ -32,7 +32,6 @@ internal static partial class Program
     private static int _activeMinimumHeight = _minWindowHeight;
     private static Viewport _activeViewport = Viewport.Default;
     private static readonly string[] _wpfAppBaseNames = ["Universal Device Toolkit", "Lenovo Legion Toolkit"];
-    private static readonly string[] _avaloniaAppBaseNames = ["udt-gui"];
 
     private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
     private static readonly List<CaptureRecord> _captures = new();
@@ -49,72 +48,47 @@ internal static partial class Program
     private static string _auditCulture = "en";
     private static string _auditViewport = "1300x850";
 
-    // Keep the shell coverage contract in one place. Both hosts expose the same
-    // page surface even though their UI Automation identifiers differ.
+    // Keep the shell coverage contract in one place.
     private static readonly IReadOnlyList<AuditPageDescriptor> _pageManifest =
     [
         new(
             "dashboard",
             ["_dashboardItem"],
             ["Dashboard"],
-            IsDashboardPageReady,
-            ["AvaloniaDashboardButton"],
-            ["Dashboard"],
             IsDashboardPageReady),
         new(
             "keyboard",
             ["_keyboardItem"],
             ["Keyboard", "Keyboard Backlight"],
-            IsKeyboardPageReady,
-            ["AvaloniaKeyboardButton"],
-            ["Keyboard"],
-            IsFeaturePageReady),
+            IsKeyboardPageReady),
         new(
             "automation",
             ["_automationItem"],
             ["Actions", "Automation"],
-            IsAutomationPageReady,
-            ["AvaloniaActionsButton"],
-            ["Actions"],
             IsAutomationPageReady),
         new(
             "macro",
             ["_macroItem"],
-            ["Macro"],
-            IsMacroPageReady,
-            ["AvaloniaMacroButton"],
             ["Macro"],
             IsMacroPageReady),
         new(
             "windowsOptimization",
             ["WindowsOptimizationNavItem", "_windowsOptimizationItem"],
             ["System optimization", "Windows Optimization", "Windows optimization"],
-            IsWindowsOptimizationPageReady,
-            ["AvaloniaWindowsOptimizationButton"],
-            ["System optimization"],
-            IsFeaturePageReady),
+            IsWindowsOptimizationPageReady),
         new(
             "pluginExtensions",
             ["PluginExtensionsNavItem"],
-            ["Plugin Extensions"],
-            IsPluginExtensionsPageReady,
-            ["AvaloniaPluginExtensionsButton"],
             ["Plugin Extensions"],
             IsPluginExtensionsPageReady),
         new(
             "settings",
             ["SettingsNavItem"],
             ["Settings"],
-            IsSettingsPageReady,
-            ["AvaloniaSettingsButton"],
-            ["Settings"],
             IsSettingsPageReady),
         new(
             "about",
             ["_aboutItem"],
-            ["About"],
-            IsAboutPageReady,
-            ["AvaloniaAboutButton"],
             ["About"],
             IsAboutPageReady),
     ];
@@ -180,8 +154,8 @@ internal static partial class Program
 
             _pipeName = Constants.GetPipeName(appDataDirectory);
 
-            var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration, options.Host);
-            process = StartApp(runtimeDirectory, appDataDirectory, options.Host);
+            var runtimeDirectory = ResolveRuntimeDirectory(repoRoot, options.Configuration);
+            process = StartApp(runtimeDirectory, appDataDirectory);
             _processId = process.Id;
 
             Console.WriteLine($"[visual-smoke] Process: {_processId}");
@@ -196,9 +170,6 @@ internal static partial class Program
             if (options.Host.Equals("wpf", StringComparison.OrdinalIgnoreCase)
                 && !WaitForIpcReady(TimeSpan.FromSeconds(30)))
                 Console.WriteLine("[visual-smoke] IPC did not become ready; continuing with UI Automation-only capture.");
-
-            if (options.Host.Equals("avalonia", StringComparison.OrdinalIgnoreCase))
-                return RunAvaloniaFlow(args, options, currentDirectory, outputRoot, appDataDirectory, ref process, mainWindow);
 
             if (options.OsdOnly)
             {
@@ -236,7 +207,7 @@ internal static partial class Program
             // Sidebar animations can leave the UIA provider with a stale hit-test
             // target after the second toggle. Re-select Dashboard and wait for its
             // content before naming subsequent captures or exercising interactions.
-            NavigateAndWait(mainWindow, CreatePageTarget("dashboard", avalonia: false));
+            NavigateAndWait(mainWindow, CreatePageTarget("dashboard"));
 
             if (options.NavigationSidebarOnly)
             {
@@ -256,7 +227,7 @@ internal static partial class Program
             {
                 UpdateSandboxTheme(switchTheme);
                 _assertDarkThemeSurface = switchTheme.Equals("Dark", StringComparison.OrdinalIgnoreCase);
-                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings", avalonia: false));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings"));
                 SelectComboBoxItemByNames(WaitForNamedComboBox(ResolveLiveWindow(mainWindow), "Theme", TimeSpan.FromSeconds(10)), switchTheme);
                 WaitForAnimationsToComplete();
                 NavigateAndCapture(
@@ -264,7 +235,6 @@ internal static partial class Program
                     mainWindow,
                     CreatePageTarget(
                         "dashboard",
-                        avalonia: false,
                         label: $"dashboard-after-{switchTheme.ToLowerInvariant()}-switch"));
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
@@ -284,7 +254,7 @@ internal static partial class Program
 
             if (options.PluginOnly)
             {
-                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("pluginExtensions", avalonia: false));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("pluginExtensions"));
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
                 WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
@@ -303,7 +273,7 @@ internal static partial class Program
 
             if (options.SettingsOnly)
             {
-                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings", avalonia: false));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings"));
                 CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
                 WriteManifest(currentDirectory, outputRoot, appDataDirectory);
@@ -323,20 +293,20 @@ internal static partial class Program
 
             if (options.ExpectKeyboardNavigation)
             {
-                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("keyboard", avalonia: false));
+                NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("keyboard"));
             }
 
-            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("automation", avalonia: false));
-            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("macro", avalonia: false));
-            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("windowsOptimization", avalonia: false));
-            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("pluginExtensions", avalonia: false));
-            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings", avalonia: false));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("automation"));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("macro"));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("windowsOptimization"));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("pluginExtensions"));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("settings"));
             CaptureWpfSettingsStates(currentDirectory, mainWindow);
 
-            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("about", avalonia: false));
+            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("about"));
             CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "about-min-window", _minWindowWidth, _minWindowHeight);
 
-            NavigateAndWait(mainWindow, CreatePageTarget("windowsOptimization", avalonia: false));
+            NavigateAndWait(mainWindow, CreatePageTarget("windowsOptimization"));
             ClickTabAndCapture(currentDirectory, mainWindow, "WindowsOptimizationOptimizationTabButton", "winopt-optimization-tab", IsWindowsOptimizationPageReady);
             ClickTabAndCapture(currentDirectory, mainWindow, "WindowsOptimizationCleanupTabButton", "winopt-cleanup-tab",
                 root => IsVisible(FindByAutomationId(root, "WindowsOptimizationCategoryList")) && FindVisibleTextContains(root, "Cleanup"));
@@ -446,118 +416,6 @@ internal static partial class Program
             JsonSerializer.Serialize(batchResult, _jsonOptions));
 
         return failures.Count == 0 ? 0 : 1;
-    }
-
-    private static int RunAvaloniaFlow(
-        string[] args,
-        SmokeOptions options,
-        string currentDirectory,
-        string outputRoot,
-        string appDataDirectory,
-        ref Process? process,
-        AutomationElement mainWindow)
-    {
-        CapturePage(currentDirectory, mainWindow, "dashboard");
-        CaptureNavigationSidebarStates(currentDirectory, mainWindow, "AvaloniaNavigationPaneToggle");
-        if (options.NavigationSidebarOnly)
-        {
-            WriteManifest(currentDirectory, outputRoot, appDataDirectory);
-            WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
-            if (process is not null)
-                TryCloseProcess(process);
-            process = null;
-            return 0;
-        }
-
-        CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), "dashboard");
-        CaptureWindowLifecycleStates(currentDirectory, mainWindow);
-        CaptureResizeSequence(currentDirectory, mainWindow);
-
-        // The Avalonia shell exposes the WPF navigation routes through distinct
-        // feature pages. Visit the same manifest entries used by the WPF flow so
-        // artifact names and coverage cannot drift between hosts.
-        var avaloniaKeyboardNavigationAvailable =
-            IsVisible(FindByAutomationId(ResolveLiveWindow(mainWindow), "AvaloniaKeyboardButton"));
-        if (!avaloniaKeyboardNavigationAvailable)
-            Console.WriteLine("[visual-smoke] Avalonia keyboard navigation is hidden because no compatible hardware is available; skipping hardware-dependent keyboard page.");
-
-        foreach (var page in _pageManifest.Where(page =>
-                     page.Page is "keyboard" or "automation" or "macro" or "windowsOptimization" or "pluginExtensions")
-                 .Where(page => page.Page != "keyboard" || avaloniaKeyboardNavigationAvailable))
-        {
-            NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget(page.Page, avalonia: true));
-        }
-
-        NavigateAndCapture(currentDirectory, mainWindow, CreatePageTarget("about", avalonia: true));
-
-        NavigateAndWait(mainWindow, CreatePageTarget("settings", avalonia: true));
-        CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "settings");
-        CaptureAvaloniaSettingsItems(currentDirectory, mainWindow);
-
-        WriteManifest(currentDirectory, outputRoot, appDataDirectory);
-        WriteResult(outputRoot, appDataDirectory, process, exitCode: null, error: null);
-
-        if (options.KeepApp)
-        {
-            Console.WriteLine("[visual-smoke] Leaving Avalonia app running for inspection.");
-            process = null;
-            return 0;
-        }
-
-        if (process is not null)
-            TryCloseProcess(process);
-        process = null;
-        return 0;
-    }
-
-    private static void CaptureAvaloniaSettingsItems(string currentDirectory, AutomationElement mainWindow)
-    {
-        var visited = new HashSet<string>(StringComparer.Ordinal);
-        for (var pass = 0; pass < 32; pass++)
-        {
-            var live = ResolveLiveWindow(mainWindow);
-            var navigation = FindByAutomationId(live, "AvaloniaSettingsNavigationList") ?? live;
-            var items = navigation.FindAll(
-                    TreeScope.Descendants,
-                    new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ListItem))
-                .Cast<AutomationElement>()
-                .ToArray();
-
-            var descriptor = items
-                .Select(item => new NavigationItemDescriptor(
-                    GetStableNavigationItemKey(item),
-                    GetAutomationLabel(item)))
-                .FirstOrDefault(item => !visited.Contains(item.Key));
-            if (descriptor is null)
-                break;
-
-            var item = FindNavigationItem(navigation, descriptor);
-            if (item is null)
-                break;
-
-            TryScrollIntoView(item);
-            item = FindNavigationItem(navigation, descriptor);
-            if (item is null || !IsVisible(item))
-            {
-                visited.Add(descriptor.Key);
-                continue;
-            }
-
-            visited.Add(descriptor.Key);
-            ActivateElement(item);
-            WaitForAnimationsToComplete();
-            var itemLabel = SanitizeFileNameSegment(descriptor.Label);
-            var label = string.IsNullOrWhiteSpace(itemLabel)
-                ? $"settings-item-{visited.Count}"
-                : $"settings-{visited.Count}-{itemLabel}";
-            CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), label);
-            CaptureInteractiveStates(currentDirectory, ResolveLiveWindow(mainWindow), label);
-            CaptureFirstComboState(currentDirectory, mainWindow, label);
-            CaptureFirstSafeToggleState(currentDirectory, mainWindow, label);
-        }
-
-        if (visited.Count == 0)
-            throw new TimeoutException("Avalonia settings navigation did not expose any items.");
     }
 
     private static void CaptureWpfSettingsStates(string currentDirectory, AutomationElement mainWindow)
@@ -747,7 +605,6 @@ internal static partial class Program
         LogShellState("nav-sidebar-expanded");
 
         var toggle = WaitForAutomationId(mainWindow, toggleAutomationId, TimeSpan.FromSeconds(10));
-        var isAvaloniaNavigation = toggleAutomationId.StartsWith("Avalonia", StringComparison.OrdinalIgnoreCase);
         var transitionStartWidth = WaitForNavigationPaneWidthAvailable(mainWindow, TimeSpan.FromSeconds(5));
         ActivateElement(toggle);
         CapturePage(currentDirectory, ResolveLiveWindow(mainWindow), "nav-sidebar-transition-start", _activeWindowWidth, _activeWindowHeight, waitForAnimations: false);
@@ -759,15 +616,8 @@ internal static partial class Program
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
-        var afterToggleWidth = isAvaloniaNavigation
-            ? WaitForStableNavigationPaneWidth(
-                mainWindow,
-                GetAvaloniaNavigationPaneTargetWidth(initialWidth),
-                TimeSpan.FromSeconds(5))
-            : WaitForNavigationPaneWidthChange(mainWindow, initialWidth, TimeSpan.FromSeconds(5));
-        var stableAfterToggleWidth = isAvaloniaNavigation
-            ? afterToggleWidth
-            : WaitForStableNavigationPaneWidth(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
+        var afterToggleWidth = WaitForNavigationPaneWidthChange(mainWindow, initialWidth, TimeSpan.FromSeconds(5));
+        var stableAfterToggleWidth = WaitForStableNavigationPaneWidth(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (after toggle): {afterToggleWidth:F1}px");
 
         if (afterToggleWidth >= 150)
@@ -799,12 +649,8 @@ internal static partial class Program
         WaitForAnimationsToComplete();
 
         mainWindow = ResolveLiveWindow(mainWindow);
-        var restoredWidth = isAvaloniaNavigation
-            ? WaitForStableNavigationPaneWidth(mainWindow, initialWidth, TimeSpan.FromSeconds(5))
-            : WaitForNavigationPaneWidthChange(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
-        var stableRestoredWidth = isAvaloniaNavigation
-            ? restoredWidth
-            : WaitForStableNavigationPaneWidth(mainWindow, restoredWidth, TimeSpan.FromSeconds(5));
+        var restoredWidth = WaitForNavigationPaneWidthChange(mainWindow, afterToggleWidth, TimeSpan.FromSeconds(5));
+        var stableRestoredWidth = WaitForStableNavigationPaneWidth(mainWindow, restoredWidth, TimeSpan.FromSeconds(5));
         Console.WriteLine($"[visual-smoke] Navigation pane width (restored): {restoredWidth:F1}px");
         CapturePage(currentDirectory, mainWindow, "nav-sidebar-toggle-restored");
         LogShellState("nav-sidebar-toggle-restored");
@@ -827,7 +673,7 @@ internal static partial class Program
         TimeSpan timeout)
     {
         const double tolerance = 2;
-        var requiredSamples = _host.Equals("avalonia", StringComparison.OrdinalIgnoreCase) ? 1 : 3;
+        const int requiredSamples = 3;
         var samples = new Queue<double>();
         var deadline = DateTime.UtcNow + timeout;
 
@@ -881,11 +727,9 @@ internal static partial class Program
             while (samples.Count > 3)
                 samples.Dequeue();
 
-            var stable = requiredSamples == 1
-                ? samples.Count > 0 && Math.Abs(samples.Last() - expectedWidth) <= 12
-                : samples.Count >= requiredSamples
-                  && samples.Max() - samples.Min() <= tolerance
-                  && Math.Abs(samples.Last() - expectedWidth) <= 12;
+            var stable = samples.Count >= requiredSamples
+                && samples.Max() - samples.Min() <= tolerance
+                && Math.Abs(samples.Last() - expectedWidth) <= 12;
             if (stable)
             {
                 return samples.Last();
@@ -897,17 +741,6 @@ internal static partial class Program
         throw new InvalidOperationException(
             $"Navigation pane width did not stabilize near {expectedWidth:F1}px. " +
             $"Samples=[{string.Join(", ", samples.Select(sample => sample.ToString("F1", CultureInfo.InvariantCulture)))}].");
-    }
-
-    private static double GetAvaloniaNavigationPaneTargetWidth(double currentWidth)
-    {
-        const double expandedWidthDip = 220;
-        const double collapsedWidthDip = 70;
-        var isExpanded = currentWidth >= 150;
-        var currentWidthDip = isExpanded ? expandedWidthDip : collapsedWidthDip;
-        var targetWidthDip = isExpanded ? collapsedWidthDip : expandedWidthDip;
-        var scale = currentWidth / currentWidthDip;
-        return targetWidthDip * scale;
     }
 
     private static void AssertAnimationTransition(
@@ -1098,9 +931,6 @@ internal static partial class Program
         if (resolveLiveWindow)
             mainWindow = ResolveLiveWindow(mainWindow);
         var windowRect = mainWindow.Current.BoundingRectangle;
-        var avaloniaPane = FindByAutomationId(mainWindow, "AvaloniaNavigationPane");
-        if (avaloniaPane is not null && IsVisible(avaloniaPane))
-            return RememberNavigationPaneWidth(avaloniaPane.Current.BoundingRectangle.Width);
 
         var rootFrame = FindByAutomationId(mainWindow, "MainRootFrame");
         if (rootFrame is not null && IsVisible(rootFrame))
@@ -1114,86 +944,6 @@ internal static partial class Program
         var navStore = FindByAutomationId(mainWindow, "MainNavigationStore");
         if (navStore is not null && IsVisible(navStore))
             return RememberNavigationPaneWidth(navStore.Current.BoundingRectangle.Width);
-
-        // Avalonia's rail Border has no UIA peer; the shell exposes a stretched
-        // background surface with this id. Its Name carries the current rail
-        // width in DIP, which is DPI-independent and layout-truth.
-        var avaloniaPaneHost = FindByAutomationId(mainWindow, "AvaloniaNavigationPaneHost");
-        if (avaloniaPaneHost is not null
-            && IsVisible(avaloniaPaneHost)
-            && double.TryParse(
-                GetElementName(avaloniaPaneHost),
-                NumberStyles.Float,
-                CultureInfo.InvariantCulture,
-                out var avaloniaPaneWidthDip)
-            && avaloniaPaneWidthDip > 0)
-        {
-            var scale = _activeWindowWidth > 0
-                ? windowRect.Width / _activeWindowWidth
-                : 1d;
-            return RememberNavigationPaneWidth(avaloniaPaneWidthDip * Math.Clamp(scale, 0.75d, 3d));
-        }
-
-        var avaloniaNavigationToggle = FindByAutomationId(mainWindow, "AvaloniaNavigationPaneToggle");
-        if (avaloniaNavigationToggle is not null && IsVisible(avaloniaNavigationToggle))
-        {
-            var toggleRect = avaloniaNavigationToggle.Current.BoundingRectangle;
-            return RememberNavigationPaneWidth(toggleRect.Right - windowRect.Left);
-        }
-
-        var avaloniaContent = FindByAutomationId(mainWindow, "AvaloniaMainContent");
-        if (avaloniaContent is not null && IsVisible(avaloniaContent))
-        {
-            var contentRect = avaloniaContent.Current.BoundingRectangle;
-            var scale = _activeWindowWidth > 0
-                ? windowRect.Width / _activeWindowWidth
-                : 1d;
-            var shellMargin = 12d * Math.Clamp(scale, 0.75d, 3d);
-            return RememberNavigationPaneWidth(
-                Math.Max(0, contentRect.Left - windowRect.Left - shellMargin));
-        }
-
-        // Avalonia's Border/ContentControl shell elements do not currently
-        // expose their AutomationId through the Windows UIA provider. The
-        // rendered page root does, however, and its left edge is the stable
-        // boundary between the navigation rail and the content surface.
-        var avaloniaPage = EnumerateDescendants(mainWindow, 1200)
-            .Where(IsVisible)
-            .Where(element =>
-            {
-                try
-                {
-                    var className = element.Current.ClassName ?? string.Empty;
-                    return element.Current.ControlType == ControlType.Custom
-                           && (className.EndsWith("Page", StringComparison.OrdinalIgnoreCase)
-                               || className.EndsWith("View", StringComparison.OrdinalIgnoreCase));
-                }
-                catch (ElementNotAvailableException)
-                {
-                    return false;
-                }
-            })
-            .Select(element => (Element: element, Bounds: element.Current.BoundingRectangle))
-            .Where(candidate => candidate.Bounds.Width > windowRect.Width * 0.35
-                                && candidate.Bounds.Left > windowRect.Left)
-            .OrderBy(candidate => candidate.Bounds.Left)
-            .FirstOrDefault();
-
-        if (avaloniaPage.Element is not null)
-        {
-            // The shell uses a 12-DIP margin on both sides of the navigation
-            // rail/content surface. UIA reports physical pixels on the current
-            // Windows desktop, so derive the scale from the normalized window
-            // width instead of assuming 100% DPI.
-            var scale = _activeWindowWidth > 0
-                ? windowRect.Width / _activeWindowWidth
-                : 1d;
-            var shellMargin = 12d * Math.Clamp(scale, 0.75d, 3d);
-            var leftNavigationWidth = avaloniaPage.Bounds.Left - windowRect.Left - (shellMargin * 2);
-            var rightNavigationWidth = windowRect.Right - avaloniaPage.Bounds.Right - (shellMargin * 2);
-            return RememberNavigationPaneWidth(
-                Math.Max(0, Math.Max(leftNavigationWidth, rightNavigationWidth)));
-        }
 
         if (_lastNavigationPaneWidth is { } lastWidth)
             return lastWidth;
@@ -1936,10 +1686,7 @@ internal static partial class Program
         if (sample.AverageLuminance > 120)
         {
             var message = $"Dark theme surface regression detected in '{label}'. Average luminance {sample.AverageLuminance:F1} is too bright. Screenshot: {outputPath}";
-            if (_host.Equals("avalonia", StringComparison.OrdinalIgnoreCase))
-                Console.WriteLine($"[visual-smoke] Theme warning: {message} Avalonia currently uses its system theme variant.");
-            else
-                throw new InvalidOperationException(message);
+            throw new InvalidOperationException(message);
         }
     }
 
@@ -2362,25 +2109,17 @@ internal static partial class Program
         || IsVisible(FindByAutomationId(root, "KeyboardBacklightPageRoot"));
 
     private static bool IsAutomationPageReady(AutomationElement root) =>
-        IsVisible(FindByAutomationId(root, "AvaloniaAutomationPage"))
-        ||
         root.Current.Name.Contains("Automation", StringComparison.OrdinalIgnoreCase)
         || FindVisibleTextContains(root, "Quick Actions")
         || FindVisibleTextContains(root, "automatic actions");
 
     private static bool IsMacroPageReady(AutomationElement root) =>
-        IsVisible(FindByAutomationId(root, "AvaloniaMacroEnabledToggle"))
-        || root.Current.Name.Contains("Macro", StringComparison.OrdinalIgnoreCase)
+        root.Current.Name.Contains("Macro", StringComparison.OrdinalIgnoreCase)
         || FindVisibleTextContains(root, "M1")
         || FindVisibleTextContains(root, "Record");
 
-    private static bool IsFeaturePageReady(AutomationElement root) =>
-        FindVisibleClassContains(root, "FeaturePageView")
-        || IsVisible(FindByAutomationId(root, "FeaturePageItems"));
-
     private static bool IsSettingsPageReady(AutomationElement root) =>
         IsVisible(FindByAutomationId(root, "SettingsNavigationList"))
-        || IsVisible(FindByAutomationId(root, "AvaloniaSettingsNavigationList"))
         || FindVisibleClassContains(root, "SettingsPage")
         || FindVisibleTextContains(root, "Settings");
 
@@ -2390,24 +2129,18 @@ internal static partial class Program
         || FindVisibleTextContains(root, "Third-party Libraries")
         || FindVisibleTextContains(root, "Application Folders");
 
-    private static PageTarget CreatePageTarget(string page, bool avalonia, string? label = null)
+    private static PageTarget CreatePageTarget(string page, string? label = null)
     {
         var descriptor = _pageManifest.FirstOrDefault(item =>
             item.Page.Equals(page, StringComparison.OrdinalIgnoreCase));
         if (descriptor is null)
             throw new InvalidOperationException($"Unknown visual audit page '{page}'.");
 
-        return avalonia
-            ? new PageTarget(
-                label ?? descriptor.Page,
-                descriptor.AvaloniaAutomationIds,
-                descriptor.AvaloniaNames,
-                descriptor.AvaloniaReady)
-            : new PageTarget(
-                label ?? descriptor.Page,
-                descriptor.WpfAutomationIds,
-                descriptor.WpfNames,
-                descriptor.WpfReady);
+        return new PageTarget(
+            label ?? descriptor.Page,
+            descriptor.WpfAutomationIds,
+            descriptor.WpfNames,
+            descriptor.WpfReady);
     }
 
     private static bool IsPluginExtensionsPageReady(AutomationElement root)
@@ -2780,15 +2513,12 @@ internal static partial class Program
         Thread.Sleep(900);
     }
 
-    private static Process StartApp(string runtimeDirectory, string appDataDirectory, string host)
+    private static Process StartApp(string runtimeDirectory, string appDataDirectory)
     {
-        var appBaseNames = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
-            ? _avaloniaAppBaseNames
-            : _wpfAppBaseNames;
-        var appBaseName = appBaseNames.FirstOrDefault(name =>
+        var appBaseName = _wpfAppBaseNames.FirstOrDefault(name =>
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json")))
-            ?? appBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
+            ?? _wpfAppBaseNames.FirstOrDefault(name => File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
 
         if (string.IsNullOrWhiteSpace(appBaseName))
             throw new FileNotFoundException($"Could not find startup entry in runtime directory: {runtimeDirectory}");
@@ -2856,22 +2586,6 @@ internal static partial class Program
 
         Directory.CreateDirectory(appDataDirectory);
         File.WriteAllText(settingsPath, root.ToJsonString(_jsonOptions));
-
-        // Avalonia persists its portable theme preference separately from the WPF settings file.
-        // Seed the same requested variant so cross-host visual checks exercise the intended theme.
-        var avaloniaThemePath = Path.Combine(appDataDirectory, "avalonia-theme.json");
-        File.WriteAllText(
-            avaloniaThemePath,
-            new JsonObject
-            {
-                ["Theme"] = theme.Equals("Light", StringComparison.OrdinalIgnoreCase)
-                    ? "Light"
-                    : theme.Equals("Dark", StringComparison.OrdinalIgnoreCase)
-                        ? "Dark"
-                        : "System",
-                ["ApplyAccentColorToTheme"] = true,
-                ["UseSystemAccent"] = true
-            }.ToJsonString(_jsonOptions));
 
         var integrationsPath = Path.Combine(appDataDirectory, "integrations.json");
         File.WriteAllText(integrationsPath, new JsonObject { ["CLI"] = true }.ToJsonString(_jsonOptions));
@@ -3015,11 +2729,9 @@ internal static partial class Program
         File.SetLastWriteTimeUtc(destinationPath, DateTime.UtcNow);
     }
 
-    private static string ResolveRuntimeDirectory(string repoRoot, string configuration, string host)
+    private static string ResolveRuntimeDirectory(string repoRoot, string configuration)
     {
-        var projectDirectory = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
-            ? "UniversalDeviceToolkit.Avalonia"
-            : "UniversalDeviceToolkit.WPF";
+        var projectDirectory = "UniversalDeviceToolkit.WPF";
         var binRoot = Path.Combine(repoRoot, projectDirectory, "bin");
         var runtimeRoots = new[]
         {
@@ -3028,35 +2740,18 @@ internal static partial class Program
         };
 
         var directCandidates = runtimeRoots.SelectMany(runtimeRoot =>
-        {
-            // Avalonia's Windows target is multi-targeted and its x64 build is
-            // emitted below the RID directory. Prefer that output so a stale
-            // framework-only directory cannot silently bypass test hooks or
-            // newly built resources. WPF keeps its framework-only output first.
-            var candidates = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
-                ? new[]
-                {
-                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
-                    Path.Combine(runtimeRoot, "net10.0", "win-x64"),
-                    Path.Combine(runtimeRoot, "net10.0-windows", "win-x64"),
-                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0"),
-                    Path.Combine(runtimeRoot, "net10.0")
-                }
-                : new[]
-                {
-                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0"),
-                    Path.Combine(runtimeRoot, "net10.0"),
-                    Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
-                    Path.Combine(runtimeRoot, "net10.0", "win-x64"),
-                    Path.Combine(runtimeRoot, "net10.0-windows", "win-x64")
-                };
-
-            return candidates;
-        });
+            new[]
+            {
+                Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0"),
+                Path.Combine(runtimeRoot, "net10.0"),
+                Path.Combine(runtimeRoot, "net10.0-windows10.0.26100.0", "win-x64"),
+                Path.Combine(runtimeRoot, "net10.0", "win-x64"),
+                Path.Combine(runtimeRoot, "net10.0-windows", "win-x64")
+            });
 
         foreach (var candidate in directCandidates)
         {
-            if (Directory.Exists(candidate) && ContainsMainAppStartupEntry(candidate, host))
+            if (Directory.Exists(candidate) && ContainsMainAppStartupEntry(candidate))
                 return candidate;
         }
 
@@ -3065,7 +2760,7 @@ internal static partial class Program
             .SelectMany(runtimeRoot => Directory.EnumerateDirectories(runtimeRoot, "net10.0*", SearchOption.TopDirectoryOnly))
             .SelectMany(path => new[] { path, Path.Combine(path, "win-x64") })
             .Where(Directory.Exists)
-            .Where(path => ContainsMainAppStartupEntry(path, host))
+            .Where(ContainsMainAppStartupEntry)
             .OrderByDescending(Directory.GetLastWriteTimeUtc)
             .FirstOrDefault();
 
@@ -3075,12 +2770,9 @@ internal static partial class Program
         throw new DirectoryNotFoundException($"Runtime directory not found under: {string.Join(", ", runtimeRoots)}");
     }
 
-    private static bool ContainsMainAppStartupEntry(string runtimeDirectory, string host)
+    private static bool ContainsMainAppStartupEntry(string runtimeDirectory)
     {
-        var appBaseNames = host.Equals("avalonia", StringComparison.OrdinalIgnoreCase)
-            ? _avaloniaAppBaseNames
-            : _wpfAppBaseNames;
-        return appBaseNames.Any(name =>
+        return _wpfAppBaseNames.Any(name =>
             (File.Exists(Path.Combine(runtimeDirectory, $"{name}.dll")) &&
              File.Exists(Path.Combine(runtimeDirectory, $"{name}.runtimeconfig.json"))) ||
             File.Exists(Path.Combine(runtimeDirectory, $"{name}.exe")));
@@ -3323,7 +3015,7 @@ internal static partial class Program
     <aside>
       <h1>Visual Regression Smoke</h1>
       <p class="muted">Host: {{_host}} | Culture: {{_auditCulture}} | Viewport: {{_auditViewport}}</p>
-      <p class="muted">Page-by-page WPF/Avalonia screenshots, UIA snapshots and animation recordings.</p>
+      <p class="muted">Page-by-page WPF screenshots, UIA snapshots and animation recordings.</p>
       <div id="list"></div>
     </aside>
     <main>
@@ -3583,10 +3275,7 @@ internal static partial class Program
         string Page,
         string[] WpfAutomationIds,
         string[] WpfNames,
-        Func<AutomationElement, bool> WpfReady,
-        string[] AvaloniaAutomationIds,
-        string[] AvaloniaNames,
-        Func<AutomationElement, bool> AvaloniaReady);
+        Func<AutomationElement, bool> WpfReady);
 
     private sealed record NavigationItemDescriptor(string Key, string Label);
 
@@ -3688,10 +3377,9 @@ internal static partial class Program
             var outputDirectory = ReadOption(args, "--output-dir", "--output-directory")
                                   ?? Path.Combine(repoRoot, "Build", "visual-regression-after-wpfui4");
             var host = ReadOption(args, "--host") ?? "wpf";
-            if (!host.Equals("wpf", StringComparison.OrdinalIgnoreCase)
-                && !host.Equals("avalonia", StringComparison.OrdinalIgnoreCase))
+            if (!host.Equals("wpf", StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException($"Unsupported host '{host}'. Expected 'wpf' or 'avalonia'.");
+                throw new ArgumentException($"Unsupported host '{host}'. Expected 'wpf'.");
             }
 
             var theme = ReadOption(args, "--theme") ?? "Dark";

@@ -6,7 +6,7 @@ namespace UniversalDeviceToolkit.Platform.Linux;
 
 /// <summary>
 /// Projects the existing Linux capability probe into the shared snapshot contract.
-/// The generic Avalonia surface does not claim write support without a verified
+/// The generic cross-platform surface does not claim write support without a verified
 /// backend, even when a platform path exists.
 /// </summary>
 public sealed class LinuxDeviceAdapter : IDeviceAdapter

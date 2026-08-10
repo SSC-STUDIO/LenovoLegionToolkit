@@ -49,25 +49,11 @@ public sealed class LocalizedOverflowPolicyTests
             "UniversalDeviceToolkit.WPF",
             "Controls",
             "CardHeaderControl.cs"));
-        var avaloniaSettings = File.ReadAllText(Path.Combine(
-            root,
-            "UniversalDeviceToolkit.Avalonia",
-            "Pages",
-            "SettingsPage.axaml"));
-        var avaloniaFeaturePage = File.ReadAllText(Path.Combine(
-            root,
-            "UniversalDeviceToolkit.Avalonia",
-            "Pages",
-            "FeaturePageView.axaml"));
 
         wpfSettings.Should().Contain("controls:AdaptiveTextBlock");
         wpfSettings.Should().Contain("overflow:LocalizedOverflowBehavior.IsEnabled=\"True\"");
         wpfNavigation.Should().Contain("overflow:LocalizedOverflowBehavior.Mode=\"Ellipsis\"");
         cardHeader.Should().Contain("MaxLines = 2");
         cardHeader.Should().Contain("MaxLines = 3");
-        avaloniaSettings.Should().Contain("controls:LocalizedTextBlock");
-        avaloniaSettings.Should().Contain("OverflowMode=\"Ellipsis\"");
-        avaloniaFeaturePage.Should().Contain("controls:LocalizedTextBlock");
-        avaloniaFeaturePage.Should().Contain("MaxLines=\"3\"");
     }
 }

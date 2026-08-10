@@ -1,9 +1,4 @@
-using System;
 using System.Reflection;
-using System.IO;
-using Avalonia.Automation;
-using Avalonia.Controls;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.SDK;
 using UniversalDeviceToolkit.Plugins.TestCommon;
 using UniversalDeviceToolkit.Plugins.ViveTool;
@@ -58,65 +53,5 @@ public class ViveToolPluginTests
             plugin.GetSettingsPage(),
             Resource.ViveTool_BinaryPathTitle,
             "Settings24");
-    }
-
-    [Fact]
-    public void FeaturePage_ProvidesAvaloniaFactoryWithoutChangingWpfFactory()
-    {
-        var plugin = new ViveToolPlugin();
-        var page = Assert.IsType<ViveToolPluginPage>(plugin.GetFeatureExtension());
-
-        var avaloniaPage = Assert.IsAssignableFrom<IAvaloniaPluginPage>(page);
-
-        Assert.IsType<AvaloniaViveToolPage>(avaloniaPage.CreateAvaloniaPage());
-    }
-
-    [Fact]
-    public void SettingsPage_ProvidesAvaloniaFactoryWithoutChangingWpfFactory()
-    {
-        var plugin = new ViveToolPlugin();
-        var page = Assert.IsType<ViveToolSettingsPluginPage>(plugin.GetSettingsPage());
-
-        var factory = Assert.IsAssignableFrom<IAvaloniaPluginPage>(page);
-        var avaloniaPage = Assert.IsType<AvaloniaViveToolSettingsPage>(factory.CreateAvaloniaPage());
-        Assert.Equal("AvaloniaViveToolSettingsRoot", AutomationProperties.GetAutomationId(avaloniaPage));
-        Assert.IsAssignableFrom<Control>(avaloniaPage);
-    }
-
-    [Fact]
-    public void AvaloniaFeaturePage_PreservesWpfWarningImportProgressAndLoadingContracts()
-    {
-        var source = ReadAvaloniaPagesSource();
-
-        Assert.Contains("Resource.ViveTool_WarningMessage", source);
-        Assert.Contains("ViveToolFeatureGoToSettingsButton", source);
-        Assert.Contains("ViveToolMissingRefreshStatusButton", source);
-        Assert.Contains("ImportFeaturesFromUrlAsync", source);
-        Assert.Contains("PickImportModeAsync", source);
-        Assert.Contains("EstimatedViveToolDownloadBytes", source);
-        Assert.Contains("AvaloniaViveToolDownloadProgressBar", source);
-        Assert.Contains("_featureList.IsVisible = !busy", source);
-        Assert.Contains("ViveToolEmptyStatePanel", source);
-    }
-
-    private static string ReadAvaloniaPagesSource()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-            {
-                return File.ReadAllText(Path.Combine(
-                    directory.FullName,
-                    "Plugins",
-                    "Official",
-                    "ViveTool",
-                    "AvaloniaViveToolPages.cs"));
-            }
-
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("UniversalDeviceToolkit repository root was not found.");
     }
 }

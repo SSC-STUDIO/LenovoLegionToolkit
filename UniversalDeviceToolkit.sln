@@ -56,8 +56,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.View
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Platform.Windows", "UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj", "{976A7C50-51C1-4E98-B9DB-1D5B82049FBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Avalonia", "UniversalDeviceToolkit.Avalonia\UniversalDeviceToolkit.Avalonia.csproj", "{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Platform.Linux", "UniversalDeviceToolkit.Platform.Linux\UniversalDeviceToolkit.Platform.Linux.csproj", "{27660724-2D75-4F95-9D1E-BFDA92879AAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Platform.MacOS", "UniversalDeviceToolkit.Platform.MacOS\UniversalDeviceToolkit.Platform.MacOS.csproj", "{D610BF97-DD19-4BBF-A15F-08D5790D4479}"
@@ -358,18 +356,6 @@ Global
 		{976A7C50-51C1-4E98-B9DB-1D5B82049FBD}.Release|x86.Build.0 = Release|x64
 		{976A7C50-51C1-4E98-B9DB-1D5B82049FBD}.Release|Any CPU.ActiveCfg = Release|x64
 		{976A7C50-51C1-4E98-B9DB-1D5B82049FBD}.Release|Any CPU.Build.0 = Release|x64
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Debug|x64.Build.0 = Debug|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Debug|x86.Build.0 = Debug|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Release|x64.ActiveCfg = Release|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Release|x64.Build.0 = Release|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Release|x86.ActiveCfg = Release|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Release|x86.Build.0 = Release|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{50D9886F-6C7A-4E54-BB3F-4F6E2E503EA5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27660724-2D75-4F95-9D1E-BFDA92879AAB}.Debug|x64.ActiveCfg = Debug|x64
 		{27660724-2D75-4F95-9D1E-BFDA92879AAB}.Debug|x64.Build.0 = Debug|x64
 		{27660724-2D75-4F95-9D1E-BFDA92879AAB}.Debug|x86.ActiveCfg = Debug|Any CPU

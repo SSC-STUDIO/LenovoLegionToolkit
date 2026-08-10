@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
@@ -44,17 +43,6 @@ public class ShellIntegrationPluginTests
     }
 
     [Fact]
-    public void SettingsPage_AvaloniaFactoryProducesAvaloniaControl()
-    {
-        var plugin = new ShellIntegrationPlugin();
-
-        var avaloniaPage = Assert.IsAssignableFrom<IAvaloniaPluginPage>(plugin.GetSettingsPage());
-        var control = avaloniaPage.CreateAvaloniaPage();
-
-        Assert.IsType<AvaloniaShellIntegrationSettingsControl>(control);
-    }
-
-    [Fact]
     public void GetOptimizationCategory_ReturnsExpectedActions()
     {
         var plugin = new ShellIntegrationPlugin();
@@ -73,24 +61,6 @@ public class ShellIntegrationPluginTests
         Assert.False(disableAction.Recommended);
         Assert.NotNull(enableAction.IsAppliedAsync);
         Assert.NotNull(disableAction.IsAppliedAsync);
-    }
-
-    [Fact]
-    public void AvaloniaSettingsSurface_PreservesWpfCapabilityGatesAndRefreshesActions()
-    {
-        var source = ReadAvaloniaSettingsSource();
-
-        Assert.Contains("PluginHostContextRuntime.Current.AllowSystemActions", source);
-        Assert.Contains("File.Exists(shellConfigPath)", source);
-        Assert.Contains("_enableButton.IsVisible = !registered", source);
-        Assert.Contains("_disableButton.IsVisible = registered", source);
-        Assert.Contains("_openConfigButton.IsEnabled = configExists", source);
-        Assert.Contains("await RefreshAsync(", source);
-        Assert.Contains("culture.TextInfo.IsRightToLeft", source);
-        Assert.Contains("ShowDialog(owner)", source);
-        Assert.Contains("AvaloniaShellIntegrationOpenShellConfigFileButton", source);
-        Assert.Contains("Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true })", source);
-        Assert.Contains("catch (Exception ex)", source);
     }
 
     [Fact]
@@ -242,26 +212,5 @@ public class ShellIntegrationPluginTests
         {
             ExceptionDispatchInfo.Capture(failure).Throw();
         }
-    }
-
-    private static string ReadAvaloniaSettingsSource()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            if (File.Exists(Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln")))
-            {
-                return File.ReadAllText(Path.Combine(
-                    directory.FullName,
-                    "Plugins",
-                    "Official",
-                    "ShellIntegration",
-                    "AvaloniaShellIntegrationSettingsControl.cs"));
-            }
-
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("UniversalDeviceToolkit repository root was not found.");
     }
 }

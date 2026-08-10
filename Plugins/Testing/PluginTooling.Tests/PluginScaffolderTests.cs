@@ -23,9 +23,9 @@ public class PluginScaffolderChineseLocalizationTests
     }
 
     /// <summary>
-    /// The default scaffold (no --avalonia-only) must keep the full WPF + Avalonia
-    /// surface: IPluginPage base, CreatePage factories and the Windows optimization
-    /// category when the archetype declares one.
+    /// The default scaffold must keep the full WPF surface: IPluginPage base,
+    /// CreatePage factories and the Windows optimization category when the
+    /// archetype declares one.
     /// </summary>
     [Fact]
     public void BuildPluginClass_DefaultKeepsWpfPageSurfaceAndOptimization()
@@ -53,8 +53,6 @@ public class PluginScaffolderChineseLocalizationTests
         Assert.Contains("public object CreatePage() => new SamplePluginControl();", source, StringComparison.Ordinal);
         Assert.Contains("public object CreatePage() => new SamplePluginSettingsControl();", source, StringComparison.Ordinal);
         Assert.Contains("WindowsOptimizationCategoryDefinition", source, StringComparison.Ordinal);
-        Assert.Contains("CreateAvaloniaPage() => new AvaloniaSamplePluginFeaturePage();", source, StringComparison.Ordinal);
-        Assert.Contains("CreateAvaloniaPage() => new AvaloniaSamplePluginSettingsPage();", source, StringComparison.Ordinal);
     }
 
     private static string InvokeBuildPluginChangelog(string displayName)

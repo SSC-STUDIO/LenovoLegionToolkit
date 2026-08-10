@@ -4,12 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-#if UDT_PLUGIN_AVALONIA_ONLY
-using UniversalDeviceToolkit.Plugins.Core;
-#else
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.Core;
-#endif
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
@@ -83,13 +79,7 @@ public class ViveToolPathService
 
     public string GetBuiltInViveToolPath()
     {
-#if UDT_PLUGIN_AVALONIA_ONLY
-        var appData = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "UniversalDeviceToolkit");
-#else
         var appData = Folders.AppData;
-#endif
         return Path.Combine(appData, "ViveTool", ViveToolExeName);
     }
 

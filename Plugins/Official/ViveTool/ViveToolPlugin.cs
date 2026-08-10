@@ -15,14 +15,12 @@ namespace UniversalDeviceToolkit.Plugins.ViveTool;
 )]
 public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
 {
-#if !UDT_PLUGIN_AVALONIA_ONLY
     static ViveToolPlugin()
     {
         PluginLog.Configure(
             isTraceEnabled: () => UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled,
             trace: (message, exception) => UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(message, exception));
     }
-#endif
 
     public override string Id => "vive-tool";
     public override string Name => Resource.ViveTool_PageTitle;
@@ -41,54 +39,24 @@ public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
     }
 }
 
-#if UDT_PLUGIN_AVALONIA_ONLY
-public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
-#else
-public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage, UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
-#endif
+public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 {
     public string PageTitle => Resource.ViveTool_PageTitle;
     public string? PageIcon => "Code24";
 
-#if !UDT_PLUGIN_AVALONIA_ONLY
     public object CreatePage()
     {
         return new ViveToolPage();
     }
-#endif
-
-    /// <summary>
-    /// Optional Avalonia factory. The legacy WPF factory above remains the
-    /// default for the WPF host and preserves the plugin ABI.
-    /// </summary>
-    public object CreateAvaloniaPage()
-    {
-        return new AvaloniaViveToolPage();
-    }
 }
 
-#if UDT_PLUGIN_AVALONIA_ONLY
-public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
-#else
-public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage, UniversalDeviceToolkit.Lib.Plugins.IAvaloniaPluginPage
-#endif
+public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
 {
     public string PageTitle => Resource.ViveTool_BinaryPathTitle;
     public string? PageIcon => "Settings24";
 
-#if !UDT_PLUGIN_AVALONIA_ONLY
     public object CreatePage()
     {
         return new ViveToolSettingsPage();
-    }
-#endif
-
-    /// <summary>
-    /// Optional Avalonia factory. The WPF settings page is still returned by
-    /// <see cref="CreatePage"/> for the legacy desktop host.
-    /// </summary>
-    public object CreateAvaloniaPage()
-    {
-        return new AvaloniaViveToolSettingsPage();
     }
 }

@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Platform.Windows.Core\UniversalDeviceToolkit.Platform.Windows.Core.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
   </ItemGroup>

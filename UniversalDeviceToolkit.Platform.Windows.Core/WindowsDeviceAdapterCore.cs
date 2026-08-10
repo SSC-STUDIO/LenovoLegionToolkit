@@ -31,7 +31,7 @@ public sealed class WindowsDeviceAdapterCore : IDeviceAdapter
         cancellationToken.ThrowIfCancellationRequested();
 
         // WMI queries are synchronous even though the host contract is async.
-        // Keep them off the Avalonia/WPF UI thread so the shell can render before
+        // Keep them off the WPF UI thread so the shell can render before
         // hardware discovery completes.
         return Task.Run(() => ReadSnapshotCore(cancellationToken), cancellationToken);
     }

@@ -1,7 +1,6 @@
 using UniversalDeviceToolkit.Plugins.CustomMouse;
 using UniversalDeviceToolkit.Plugins.SDK;
 using UniversalDeviceToolkit.Plugins.TestCommon;
-using UniversalDeviceToolkit.Lib.Plugins;
 using Microsoft.Win32;
 using System;
 using System.IO;
@@ -56,34 +55,6 @@ public class CustomMousePluginTests
         var plugin = new CustomMousePlugin();
 
         Assert.Null(plugin.GetFeatureExtension());
-    }
-
-    [Fact]
-    public void SettingsPage_AvaloniaFactoryProducesNativeControl()
-    {
-        var plugin = new CustomMousePlugin();
-
-        var page = Assert.IsAssignableFrom<IAvaloniaPluginPage>(plugin.GetSettingsPage());
-
-        Assert.IsType<AvaloniaCustomMouseSettingsControl>(page.CreateAvaloniaPage());
-    }
-
-    [Fact]
-    public void AvaloniaSettingsSurface_PreservesWpfActionSemanticsAndAutomationContracts()
-    {
-        var source = ReadAvaloniaSettingsSource();
-
-        Assert.Contains("AvaloniaCustomMouseSyncFromWindows", source);
-        Assert.Contains("AvaloniaCustomMouseReload", source);
-        Assert.Contains("ActionButton(CustomMouseText.ReloadButton, (Action)ReloadSettings", source);
-        Assert.Contains("if (!_plugin.SetSwapButtons(swapButtons))", source);
-        Assert.Contains("_plugin.SetWindowsPointerSpeed(originalSpeed)", source);
-        Assert.Contains("StatusWindowsDefaultRestored", source);
-        Assert.Contains("$\"{speed}/20\"", source);
-        Assert.Contains("AvaloniaCustomMouseApplyProgress", source);
-        Assert.Contains("Interlocked.Increment(ref _cursorThemeSelectionVersion)", source);
-        Assert.Contains("Volatile.Read(ref _cursorThemeSelectionVersion)", source);
-        Assert.Contains("StatusCursorApplyFailed}: {ex.Message}", source);
     }
 
     [Fact]
@@ -306,27 +277,5 @@ public class CustomMousePluginTests
     {
         var result = CustomMousePlugin.SanitizeWindowsPointerSpeed(validValue);
         Assert.Equal(expected, result);
-    }
-
-    private static string ReadAvaloniaSettingsSource()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null)
-        {
-            var solutionPath = Path.Combine(directory.FullName, "UniversalDeviceToolkit.sln");
-            if (File.Exists(solutionPath))
-            {
-                return File.ReadAllText(Path.Combine(
-                    directory.FullName,
-                    "Plugins",
-                    "Official",
-                    "CustomMouse",
-                    "AvaloniaCustomMouseSettingsControl.cs"));
-            }
-
-            directory = directory.Parent;
-        }
-
-        throw new DirectoryNotFoundException("UniversalDeviceToolkit repository root was not found.");
     }
 }

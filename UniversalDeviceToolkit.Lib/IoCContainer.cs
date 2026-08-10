@@ -53,9 +53,8 @@ public static class IoCContainer
 
     public static T? TryResolve<T>() where T : class
     {
-        // Avalonia creates its shell before the Windows hardware graph finishes
-        // building on a background thread. Do not make UI capability probes wait
-        // on the container build lock; they can retry after initialization.
+        // Do not make UI capability probes wait on the container build lock;
+        // they can retry after initialization.
         if (Volatile.Read(ref _container) is null)
             return null;
 

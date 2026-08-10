@@ -41,20 +41,6 @@ public sealed class AndroidSupportGuardTests
     }
 
     [Fact]
-    public void Avalonia_ShouldExposeOnlyDesktopRuntimeIdentifiers()
-    {
-        var root = RepositoryPaths.FindRoot();
-        var projectPath = Path.Combine(
-            root,
-            "UniversalDeviceToolkit.Avalonia",
-            "UniversalDeviceToolkit.Avalonia.csproj");
-        var project = File.ReadAllText(projectPath);
-
-        project.Should().Contain("<RuntimeIdentifiers>win-x64;linux-x64;osx-x64;osx-arm64</RuntimeIdentifiers>");
-        project.IndexOf("android", StringComparison.OrdinalIgnoreCase).Should().Be(-1);
-    }
-
-    [Fact]
     public void PlatformDocumentation_ShouldDeclareAndroidUnsupported()
     {
         var architecture = RepositoryPaths.ReadFile("Docs", "ARCHITECTURE.md");

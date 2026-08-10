@@ -1,7 +1,0 @@
-<UserControl
-    x:Class="UniversalDeviceToolkit.Avalonia.Windows.Automation.TabItemContent.PowerModeAutomationPipelineTriggerTabItemContent"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Initialized="PowerModeAutomationPipelineTriggerTabItemContent_Initialized">
-    <StackPanel x:Name="_content" Margin="16" />
-</UserControl>

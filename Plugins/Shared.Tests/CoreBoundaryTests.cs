@@ -36,7 +36,7 @@ public sealed class CoreBoundaryTests
     {
         // WpfFallbackHelper / WpfHostNotifications live in the WPF-flavored
         // Plugins\Shared library only; the portable Shared.Core must stay free
-        // of WPF code so the Avalonia-only plugin flavor can reference it.
+        // of WPF code so the portable plugin flavor can reference it.
         var sharedCoreAssembly = typeof(UniversalDeviceToolkit.Plugins.Core.Constants).Assembly;
 
         Assert.Null(sharedCoreAssembly.GetType("UniversalDeviceToolkit.Plugins.Core.WpfFallbackHelper", throwOnError: false));

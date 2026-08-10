@@ -21,9 +21,6 @@
     <UDTTargetFramework>net10.0-windows10.0.26100.0</UDTTargetFramework>
     <LLTTargetFramework>$(UDTTargetFramework)</LLTTargetFramework>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
-    <!-- XPF: library projects build with the plain .NET SDK and need Windows targeting
-         enabled so -windows TFMs restore on non-Windows hosts. -->
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <RestoreConfigFile Condition="'$(RestoreConfigFile)' == '' and Exists('$(MSBuildThisFileDirectory)NuGet.Config')">$(MSBuildThisFileDirectory)NuGet.Config</RestoreConfigFile>
     <DefaultItemExcludes>$(DefaultItemExcludes);**/obj-*/**</DefaultItemExcludes>
     <EnableUdtTestHooks Condition="'$(EnableUdtTestHooks)' == ''">false</EnableUdtTestHooks>
@@ -45,9 +42,9 @@
     Portable cross-platform projects must opt out before the Windows x64/win-x64 stamp.
     Project-level DisableUdtForceX64=true is too late (props evaluate first), so detect by name.
     Includes: CrossPlatform (CLI), Lib.Shared (extracted cross-platform business logic),
-    Lib.Abstractions (pure interfaces), ViewModels, and Avalonia (cross-platform UI).
+    Lib.Abstractions (pure interfaces), ViewModels.
   -->
-  <PropertyGroup Condition="$(MSBuildProjectName.Contains('CrossPlatform')) or $(MSBuildProjectName.Contains('Shared')) or $(MSBuildProjectName.Contains('Abstractions')) or $(MSBuildProjectName.Contains('ViewModels')) or $(MSBuildProjectName.Contains('Avalonia')) or $(MSBuildProjectName.Contains('Platform.Linux')) or $(MSBuildProjectName.Contains('Platform.MacOS')) or $(MSBuildProjectName.Contains('Platform.Windows.Core')) or $(MSBuildProjectName.Contains('Tests.Infrastructure'))">
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('CrossPlatform')) or $(MSBuildProjectName.Contains('Shared')) or $(MSBuildProjectName.Contains('Abstractions')) or $(MSBuildProjectName.Contains('ViewModels')) or $(MSBuildProjectName.Contains('Platform.Linux')) or $(MSBuildProjectName.Contains('Platform.MacOS')) or $(MSBuildProjectName.Contains('Platform.Windows.Core')) or $(MSBuildProjectName.Contains('Tests.Infrastructure'))">
     <DisableUdtForceX64>true</DisableUdtForceX64>
   </PropertyGroup>
 

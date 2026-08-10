@@ -7,8 +7,8 @@
     <AssemblyName>UniversalDeviceToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>
 
-  <!-- Windows WPF flavor (default): net10.0-windows + UseWPF + win-x64. -->
-  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' != 'true'">
+  <!-- Windows WPF flavor: net10.0-windows + UseWPF + win-x64. -->
+  <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
@@ -16,58 +16,26 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- Portable Avalonia-only flavor: -p:UdtPluginAvaloniaOnly=true
-       net10.0 (AnyCPU, no UseWPF / WPF-UI / Lib) build for the cross-platform
-       Avalonia host, in a distinct output folder. -->
-  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
-    <TargetFramework>net10.0</TargetFramework>
-    <UseWPF>false</UseWPF>
-    <Platforms>AnyCPU</Platforms>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug' AND '$(UdtPluginAvaloniaOnly)' != 'true'">
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <OutputPath>..\..\.build\plugins\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
-    <OutputPath>..\..\.build\plugins-avalonia\UniversalDeviceToolkit.Plugins.ViveTool\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" />
     <PackageReference Include="NeoSmart.AsyncLock" />
-  </ItemGroup>
-
-  <!-- The portable flavor gets the portable Abstractions assembly (net10.0)
-       instead of the host Lib that carries the same types for the WPF host. -->
-  <ItemGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
-    <ProjectReference Include="..\..\SDK\Abstractions\UniversalDeviceToolkit.Plugins.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <ProjectReference Include="..\..\Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj" />
-  </ItemGroup>
-
-  <!-- The WPF shared library is only referenced by the WPF flavor. -->
-  <ItemGroup Condition="'$(UdtPluginAvaloniaOnly)' != 'true'">
     <ProjectReference Include="..\..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
   </ItemGroup>
-
-  <!-- WPF UI surface (XAML, code-behind and the WPF-only converter) is
-       compiled out of the portable flavor. -->
-  <PropertyGroup Condition="'$(UdtPluginAvaloniaOnly)' == 'true'">
-    <DefaultItemExcludes>$(DefaultItemExcludes);ViveToolPage.xaml;ViveToolPage.xaml.cs;ViveToolSettingsPage.xaml;ViveToolSettingsPage.xaml.cs;Utils\InverseBooleanToVisibilityConverter.cs</DefaultItemExcludes>
-  </PropertyGroup>
 
   <ItemGroup>
     <None Include="plugin.json">

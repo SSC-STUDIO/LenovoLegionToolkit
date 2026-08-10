@@ -127,7 +127,6 @@ static async Task<int> ProgramMainAsync(string[] args)
             Description = OptionalValue(argv, "--description") ?? string.Empty,
             MinimumHostVersion = OptionalValue(argv, "--min-llt-version") ?? "5.0.0",
             Official = HasFlag(argv, "--official"),
-            AvaloniaOnly = HasFlag(argv, "--avalonia-only"),
         };
 
         var scaffolder = new PluginScaffolder();
@@ -485,7 +484,7 @@ static void PrintHelp()
     Console.WriteLine("""
 plugin-tooling doctor [--repository-root <path>] [--json-report-path <path>]
 plugin-tooling inspect [--repository-root <path>] [--plugin <plugin-id>|--plugin-ids <id,id>] [--json-report-path <path>]
-plugin-tooling init --template <settings-only|feature-settings|runtime-optimization> --folder <FolderName> --id <plugin-id> --name <DisplayName> [--author <Author>] [--description <Text>] [--min-llt-version <X.Y.Z>] [--official] [--avalonia-only]
+plugin-tooling init --template <settings-only|feature-settings|runtime-optimization> --folder <FolderName> --id <plugin-id> --name <DisplayName> [--author <Author>] [--description <Text>] [--min-llt-version <X.Y.Z>] [--official]
 plugin-tooling dev --plugin <plugin-id> [--configuration Release] [--theme system|light|dark] [--view feature|settings|optimization]
 plugin-tooling build --plugin <plugin-id> [--configuration Release]
 plugin-tooling test --plugin <plugin-id> [--configuration Release]

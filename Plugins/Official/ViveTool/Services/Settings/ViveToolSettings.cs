@@ -4,12 +4,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using NeoSmart.AsyncLock;
-#if UDT_PLUGIN_AVALONIA_ONLY
-using UniversalDeviceToolkit.Plugins.Core;
-#else
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.Core;
-#endif
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
 
@@ -18,18 +14,10 @@ namespace UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
 /// </summary>
 public class ViveToolSettings
 {
-#if UDT_PLUGIN_AVALONIA_ONLY
-    private static readonly string SettingsFilePath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "UniversalDeviceToolkit",
-        "ViveTool",
-        "settings.json");
-#else
     private static readonly string SettingsFilePath = Path.Combine(
         Folders.AppData,
         "ViveTool",
         "settings.json");
-#endif
 
     private readonly AsyncLock _dataLock = new();
     private SettingsData _data = new();

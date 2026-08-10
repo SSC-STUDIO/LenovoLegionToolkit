@@ -50,10 +50,6 @@ IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.NetworkProxy.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
-echo --- Building Avalonia application ---
-dotnet build UniversalDeviceToolkit.Avalonia\UniversalDeviceToolkit.Avalonia.csproj --configuration Release --verbosity minimal
-IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
-
 echo --- Building Platform.Windows ---
 dotnet build UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj --configuration Release --verbosity minimal
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
@@ -152,11 +148,6 @@ dotnet publish UniversalDeviceToolkit.NetworkProxy\UniversalDeviceToolkit.Networ
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
-echo Building Avalonia application (Debug)...
-dotnet build UniversalDeviceToolkit.Avalonia\UniversalDeviceToolkit.Avalonia.csproj --configuration Debug --verbosity minimal
-IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
-
-echo.
 echo Building Platform.Windows (Debug)...
 dotnet build UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj --configuration Debug --verbosity minimal
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
@@ -196,7 +187,6 @@ for %%p in (
     UniversalDeviceToolkit.SpectrumTester
     UniversalDeviceToolkit.PerformanceTest
     UniversalDeviceToolkit.Tests
-    UniversalDeviceToolkit.Avalonia
     UniversalDeviceToolkit.CrossPlatform
     UniversalDeviceToolkit.Platform.Windows
     UniversalDeviceToolkit.ViewModels

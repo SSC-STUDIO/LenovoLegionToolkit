@@ -56,12 +56,6 @@ case "$(uname -s)" in
         ;;
 esac
 
-# Build Avalonia application
-echo ""
-echo "--- Building Avalonia application ---"
-dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.Avalonia/UniversalDeviceToolkit.Avalonia.csproj" \
-    --configuration "$CONFIGURATION" --verbosity minimal
-
 # Build CrossPlatform CLI
 echo ""
 echo "--- Building CrossPlatform CLI ---"

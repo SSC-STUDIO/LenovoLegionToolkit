@@ -46,11 +46,6 @@ public interface IPluginPage
     object CreatePage();
 }
 
-public interface IAvaloniaPluginPage
-{
-    object CreateAvaloniaPage();
-}
-
 public interface IPluginConfiguration
 {
     T GetValue<T>(string key, T defaultValue = default!);

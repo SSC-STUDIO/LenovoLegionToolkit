@@ -91,17 +91,6 @@ files:
         uz: uz-Latn-UZ
         uz-UZ: uz-Latn-UZ
         uz@Latn: uz-Latn-UZ
-
-  - source: /UniversalDeviceToolkit.Avalonia/Resources/Resource.resx
-    translation: /UniversalDeviceToolkit.Avalonia/Resources/Resource.%locale%.resx
-    languages_mapping:
-      locale:
-        nl: nl-NL
-        nl-NL: nl-NL
-        pt-BR: pt-BR
-        pt-PT: pt
-        zh-CN: zh-Hans
-        zh-TW: zh-Hant
         uz: uz-Latn-UZ
         uz-UZ: uz-Latn-UZ
         uz@Latn: uz-Latn-UZ
