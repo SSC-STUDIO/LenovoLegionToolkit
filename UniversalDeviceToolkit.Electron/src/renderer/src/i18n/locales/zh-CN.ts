@@ -201,6 +201,10 @@ export default {
         check: '检查更新',
         comingSoon: '检查更新将在后续版本中接入'
       },
+      checkResult: {
+        available: '发现新版本 v{{version}}',
+        latest: '已是最新版本'
+      },
       integrations: {
         hwinfo: 'HWiNFO',
         cli: 'CLI'

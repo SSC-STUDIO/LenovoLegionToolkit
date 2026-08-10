@@ -5,9 +5,12 @@ import { ConfigProvider, theme } from 'antd'
 import enUS from 'antd/locale/en_US'
 import zhCN from 'antd/locale/zh_CN'
 import i18n from './i18n'
+import { initNotifications } from './notifications'
 import { useThemeStore } from './stores/themeStore'
 import App from './App'
 import './styles/global.css'
+
+void initNotifications()
 
 function Root(): React.JSX.Element {
   const themeMode = useThemeStore((s) => s.themeMode)

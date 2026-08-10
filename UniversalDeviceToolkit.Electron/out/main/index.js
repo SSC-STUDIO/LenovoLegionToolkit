@@ -104,12 +104,159 @@ class HostClient {
   }
 }
 const hostClient = new HostClient();
+let getMainWindow = () => null;
+function setMainWindowRef(getter) {
+  getMainWindow = getter;
+}
+function initSingleInstance() {
+  if (!electron.app.requestSingleInstanceLock()) {
+    electron.app.quit();
+    return false;
+  }
+  electron.app.on("second-instance", () => {
+    const window = getMainWindow();
+    if (!window || window.isDestroyed()) return;
+    if (window.isMinimized()) window.restore();
+    window.show();
+    window.focus();
+  });
+  return true;
+}
+let tray = null;
+const TRAY_ICON_DATA_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADeSURBVDhPtZIrEsIwEIYrkUgkEomDJqI9AhKJRHKDNFvBETgCR0AiOQKyEtkZpruRZdJ2OnSTPhD8M5/a/feRbBD8U6F6r2RqYqGKNY/1KlLlTIA5C0AjgcoOGq+RKhbc08p2kkBPx/iFAHrZqbi36iwBM27wIYByZxIJdOGJQwhNt053784jbJRZVgWa3Z2EMULAXV1A45EHJ6ExqfdPTewEJyCgODRvkM95cAqdAxNAd54wDGat2cqe7U8/4TumEGg/qYjGE/e2qiehh2MaOmOfpMJt9b0aE9uxz/gBIPu9+GgGzAUAAAAASUVORK5CYII=";
+function showWindow(window) {
+  if (!window || window.isDestroyed()) return;
+  if (window.isMinimized()) window.restore();
+  window.show();
+  window.focus();
+}
+function toggleWindow(window) {
+  if (!window || window.isDestroyed()) return;
+  if (window.isVisible() && !window.isMinimized()) {
+    window.hide();
+  } else {
+    showWindow(window);
+  }
+}
+function initTray(getWindow) {
+  if (tray) return;
+  const icon = electron.nativeImage.createFromDataURL(TRAY_ICON_DATA_URL);
+  tray = new electron.Tray(icon);
+  tray.setToolTip("Universal Device Toolkit");
+  tray.setContextMenu(
+    electron.Menu.buildFromTemplate([
+      { label: "显示 / 隐藏", click: () => toggleWindow(getWindow()) },
+      { type: "separator" },
+      { label: "退出", click: () => electron.app.quit() }
+    ])
+  );
+  tray.on("double-click", () => showWindow(getWindow()));
+}
+function destroyTray() {
+  if (!tray) return;
+  tray.destroy();
+  tray = null;
+}
+const OSD_WIDTH = 320;
+const OSD_HEIGHT = 96;
+let osdWindow = null;
+let unsubscribe = null;
+function buildOsdUrl(state) {
+  const time = (/* @__PURE__ */ new Date()).toLocaleTimeString();
+  const html = [
+    "<!DOCTYPE html>",
+    "<html>",
+    "<head>",
+    '<meta charset="utf-8">',
+    "<style>",
+    'html,body{margin:0;padding:0;background:transparent;overflow:hidden;font-family:"Segoe UI",system-ui,sans-serif;}',
+    "body{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;}",
+    ".title{font-size:20px;font-weight:600;color:#ffffff;}",
+    ".meta{font-size:12px;color:rgba(255,255,255,0.75);margin-top:4px;}",
+    "</style>",
+    "</head>",
+    `<body><div class="title">OSD</div><div class="meta">${state} · ${time}</div></body>`,
+    "</html>"
+  ].join("");
+  return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+}
+function positionAtBottomRight(window) {
+  const { workArea } = electron.screen.getPrimaryDisplay();
+  const [width, height] = window.getSize();
+  window.setPosition(
+    workArea.x + workArea.width - width - 16,
+    workArea.y + workArea.height - height - 16
+  );
+}
+function showOsd(state) {
+  const window = osdWindow;
+  if (!window || window.isDestroyed()) return;
+  void window.loadURL(buildOsdUrl(state)).then(() => {
+    if (!window.isDestroyed()) {
+      positionAtBottomRight(window);
+      window.show();
+    }
+  });
+}
+function handleOsdChanged(data) {
+  const state = data?.state;
+  if (state === "Hidden") {
+    osdWindow?.hide();
+  } else if (state === "Toggle") {
+    if (osdWindow?.isVisible()) {
+      osdWindow.hide();
+    } else {
+      showOsd("Toggle");
+    }
+  } else if (state === "Show") {
+    showOsd("Show");
+  }
+}
+function initOsdWindow() {
+  if (osdWindow && !osdWindow.isDestroyed()) return;
+  osdWindow = new electron.BrowserWindow({
+    width: OSD_WIDTH,
+    height: OSD_HEIGHT,
+    show: false,
+    frame: false,
+    transparent: true,
+    backgroundColor: "#00000000",
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    resizable: false,
+    focusable: false,
+    hasShadow: false,
+    webPreferences: {
+      sandbox: true
+    }
+  });
+  osdWindow.on("closed", () => {
+    osdWindow = null;
+  });
+  if (!unsubscribe) {
+    unsubscribe = hostClient.on("osd.changed", handleOsdChanged);
+  }
+}
+function destroyOsdWindow() {
+  unsubscribe?.();
+  unsubscribe = null;
+  if (osdWindow && !osdWindow.isDestroyed()) {
+    osdWindow.destroy();
+  }
+  osdWindow = null;
+}
+if (!initSingleInstance()) {
+  electron.app.exit(0);
+}
 let mainWindow = null;
+let isQuitting = false;
 function resolveHostPath() {
   const fromEnv = process.env["UDT_HOST_PATH"];
   if (fromEnv) return fromEnv;
   const projectRoot = path.join(__dirname, "..", "..");
   const candidates = [
+    // packaged: Host copied into resources/host by electron-builder
+    path.join(process.resourcesPath ?? "", "host", "UniversalDeviceToolkit.Host.exe"),
     // dev: sibling repo folder next to the Electron project
     path.join(
       projectRoot,
@@ -118,6 +265,18 @@ function resolveHostPath() {
       "bin",
       "x64",
       "Debug",
+      "net10.0-windows10.0.26100.0",
+      "win-x64",
+      "UniversalDeviceToolkit.Host.exe"
+    ),
+    // dev: Release build
+    path.join(
+      projectRoot,
+      "..",
+      "UniversalDeviceToolkit.Host",
+      "bin",
+      "x64",
+      "Release",
       "net10.0-windows10.0.26100.0",
       "win-x64",
       "UniversalDeviceToolkit.Host.exe"
@@ -131,12 +290,21 @@ function resolveHostPath() {
   return candidates[0];
 }
 function forwardHostEvents(window) {
-  for (const event of ["host.ready", "host.initialized", "host.log"]) {
+  for (const event of ["host.ready", "host.initialized", "host.log", "notifications.changed"]) {
     hostClient.on(event, (data) => {
       if (!window.isDestroyed()) {
         window.webContents.send("bridge:event", event, data);
       }
     });
+  }
+}
+async function shouldMinimizeToTray(keys) {
+  try {
+    const result = await hostClient.invoke("settings.get", { scope: "application" });
+    return keys.some((key) => result?.value?.[key] === true);
+  } catch (error) {
+    console.error("[main] failed to read settings:", error);
+    return false;
   }
 }
 function createWindow() {
@@ -155,8 +323,24 @@ function createWindow() {
   mainWindow.on("ready-to-show", () => {
     mainWindow?.show();
   });
+  mainWindow.on("close", (event) => {
+    if (isQuitting) return;
+    void shouldMinimizeToTray(["MinimizeOnClose", "MinimizeToTray"]).then((toTray) => {
+      if (!toTray || !mainWindow || mainWindow.isDestroyed()) return;
+      event.preventDefault();
+      mainWindow.hide();
+    });
+  });
+  mainWindow.on("minimize", () => {
+    void shouldMinimizeToTray(["MinimizeToTray"]).then((toTray) => {
+      if (!toTray || !mainWindow || mainWindow.isDestroyed()) return;
+      mainWindow.hide();
+    });
+  });
   mainWindow.on("closed", () => {
     mainWindow = null;
+    destroyTray();
+    destroyOsdWindow();
   });
   if (!electron.app.isPackaged && process.env["ELECTRON_RENDERER_URL"]) {
     mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
@@ -177,9 +361,16 @@ electron.app.whenReady().then(() => {
   );
   startHost();
   createWindow();
+  setMainWindowRef(() => mainWindow);
+  initTray(() => mainWindow);
+  initOsdWindow();
   if (mainWindow) forwardHostEvents(mainWindow);
   electron.app.on("activate", () => {
-    if (electron.BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (electron.BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+      initTray(() => mainWindow);
+      initOsdWindow();
+    }
   });
 });
 electron.app.on("window-all-closed", () => {
@@ -190,6 +381,7 @@ electron.app.on("window-all-closed", () => {
 });
 electron.app.on("before-quit", (event) => {
   console.log("[main] before-quit, host running:", hostClient.isRunning);
+  isQuitting = true;
   if (!hostClient.isRunning) return;
   event.preventDefault();
   void hostClient.stop().finally(() => {

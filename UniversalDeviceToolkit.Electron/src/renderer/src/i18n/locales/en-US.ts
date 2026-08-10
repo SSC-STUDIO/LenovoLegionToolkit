@@ -201,6 +201,10 @@ export default {
         check: 'Check for Updates',
         comingSoon: 'Update check will be available in a future version'
       },
+      checkResult: {
+        available: 'New version available: v{{version}}',
+        latest: 'You are up to date'
+      },
       integrations: {
         hwinfo: 'HWiNFO',
         cli: 'CLI'

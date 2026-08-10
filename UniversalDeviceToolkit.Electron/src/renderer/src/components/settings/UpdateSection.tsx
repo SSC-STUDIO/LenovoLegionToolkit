@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
-import { Button, Form, Select, Switch, message } from 'antd'
+import { useEffect, useState } from 'react'
+import { Alert, Button, Form, Select, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { updateApi } from '../../api/update'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 
@@ -16,6 +17,12 @@ const UPDATE_CHECK_FREQUENCIES: Array<{ value: string; i18nKey: string }> = [
 export function UpdateSection(): React.JSX.Element {
   const { t } = useTranslation()
   const { scopes, load, setScope } = useSettingsStore()
+  const [checking, setChecking] = useState(false)
+  const [checkResult, setCheckResult] = useState<{
+    available: boolean
+    version?: string | null
+    error?: string | null
+  } | null>(null)
 
   useEffect(() => {
     void load()
@@ -38,8 +45,22 @@ export function UpdateSection(): React.JSX.Element {
     }
   }
 
-  const handleCheckForUpdates = (): void => {
-    message.info(t('settings.update.comingSoon'))
+  const handleCheckForUpdates = async (): Promise<void> => {
+    setChecking(true)
+    setCheckResult(null)
+    try {
+      const result = await updateApi.check(true)
+      setCheckResult(result)
+      if (result.error) {
+        message.error(result.error)
+      } else if (!result.available) {
+        message.info(t('update.checkResult.latest'))
+      }
+    } catch (error) {
+      message.error((error as Error).message)
+    } finally {
+      setChecking(false)
+    }
   }
 
   return (
@@ -64,8 +85,20 @@ export function UpdateSection(): React.JSX.Element {
       </Form.Item>
 
       <Form.Item>
-        <Button onClick={handleCheckForUpdates}>{t('settings.update.check')}</Button>
+        <Button onClick={() => void handleCheckForUpdates()} loading={checking}>
+          {t('settings.update.check')}
+        </Button>
       </Form.Item>
+
+      {checkResult?.available && (
+        <Form.Item>
+          <Alert
+            type="success"
+            showIcon
+            message={t('update.checkResult.available', { version: checkResult.version ?? '' })}
+          />
+        </Form.Item>
+      )}
     </Form>
   )
 }

@@ -128,3 +128,5 @@ export class HostClient {
     }
   }
 }
+
+export const hostClient = new HostClient()

@@ -74440,6 +74440,10 @@ const enUS = {
         check: "Check for Updates",
         comingSoon: "Update check will be available in a future version"
       },
+      checkResult: {
+        available: "New version available: v{{version}}",
+        latest: "You are up to date"
+      },
       integrations: {
         hwinfo: "HWiNFO",
         cli: "CLI"
@@ -74835,6 +74839,10 @@ const zhCN = {
         check: "检查更新",
         comingSoon: "检查更新将在后续版本中接入"
       },
+      checkResult: {
+        available: "发现新版本 v{{version}}",
+        latest: "已是最新版本"
+      },
       integrations: {
         hwinfo: "HWiNFO",
         cli: "CLI"
@@ -75047,6 +75055,45 @@ void instance.use(initReactI18next).init({
 });
 async function changeLanguage(lng) {
   await instance.changeLanguage(lng);
+}
+const bridge = window.bridge;
+async function invoke(method2, params = {}) {
+  if (!bridge) {
+    throw new Error("Bridge is not available");
+  }
+  const result = await bridge.invoke(method2, params);
+  return result;
+}
+function on(event, callback) {
+  if (!bridge) {
+    return () => void 0;
+  }
+  return bridge.on(event, callback);
+}
+let unsubscribe;
+function showNotification(data) {
+  const content = data.message ? `${data.title}: ${data.message}` : data.title;
+  switch (data.severity) {
+    case "Success":
+      staticMethods.success(content);
+      break;
+    case "Info":
+      staticMethods.info(content);
+      break;
+    case "Warning":
+      staticMethods.warning(content);
+      break;
+    case "Error":
+      staticMethods.error(content);
+      break;
+  }
+}
+function initNotifications() {
+  if (unsubscribe) {
+    return unsubscribe;
+  }
+  unsubscribe = on("notifications.changed", showNotification);
+  return unsubscribe;
 }
 const createStoreImpl = (createState) => {
   let state;
@@ -75403,20 +75450,6 @@ const SunOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(I
   icon: SunOutlinedSvg
 }));
 const RefIcon = /* @__PURE__ */ reactExports.forwardRef(SunOutlined);
-const bridge = window.bridge;
-async function invoke(method2, params = {}) {
-  if (!bridge) {
-    throw new Error("Bridge is not available");
-  }
-  const result = await bridge.invoke(method2, params);
-  return result;
-}
-function on(event, callback) {
-  if (!bridge) {
-    return () => void 0;
-  }
-  return bridge.on(event, callback);
-}
 const settingsApi = {
   get: (scope, path) => invoke("settings.get", path ? { scope, path } : { scope }),
   getAll: (scopes) => invoke("settings.getAll", scopes ? { scopes } : {}),
@@ -157730,6 +157763,7 @@ function App() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/about", element: /* @__PURE__ */ jsxRuntimeExports.jsx(AboutPage, {}) })
   ] }) });
 }
+void initNotifications();
 function Root() {
   const themeMode = useThemeStore((s) => s.themeMode);
   const colorPrimary = useThemeStore((s) => s.colorPrimary);

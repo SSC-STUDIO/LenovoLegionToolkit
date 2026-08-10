@@ -1,10 +1,17 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { existsSync } from 'fs'
-import { HostClient } from './host-client'
+import { hostClient } from './host-client'
+import { initSingleInstance, setMainWindowRef } from './single-instance'
+import { initTray, destroyTray } from './tray'
+import { initOsdWindow, destroyOsdWindow } from './osd-window'
 
-const hostClient = new HostClient()
+if (!initSingleInstance()) {
+  app.exit(0)
+}
+
 let mainWindow: BrowserWindow | null = null
+let isQuitting = false
 
 function resolveHostPath(): string {
   const fromEnv = process.env['UDT_HOST_PATH']
@@ -13,8 +20,13 @@ function resolveHostPath(): string {
   // __dirname = <project>/out/main -> project root is two levels up.
   const projectRoot = join(__dirname, '..', '..')
   const candidates = [
+    // packaged: Host copied into resources/host by electron-builder
+    join(process.resourcesPath ?? '', 'host', 'UniversalDeviceToolkit.Host.exe'),
     // dev: sibling repo folder next to the Electron project
     join(projectRoot, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug',
+      'net10.0-windows10.0.26100.0', 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
+    // dev: Release build
+    join(projectRoot, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release',
       'net10.0-windows10.0.26100.0', 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
     // fallback: explicit build output inside this project
     join(projectRoot, 'host', 'UniversalDeviceToolkit.Host.exe')
@@ -27,12 +39,27 @@ function resolveHostPath(): string {
 }
 
 function forwardHostEvents(window: BrowserWindow): void {
-  for (const event of ['host.ready', 'host.initialized', 'host.log']) {
+  for (const event of ['host.ready', 'host.initialized', 'host.log', 'notifications.changed']) {
     hostClient.on(event, (data) => {
       if (!window.isDestroyed()) {
         window.webContents.send('bridge:event', event, data)
       }
     })
+  }
+}
+
+type MinimizeSetting = 'MinimizeOnClose' | 'MinimizeToTray'
+
+async function shouldMinimizeToTray(keys: MinimizeSetting[]): Promise<boolean> {
+  try {
+    const result = (await hostClient.invoke('settings.get', { scope: 'application' })) as
+      | { value?: Record<string, unknown> }
+      | null
+      | undefined
+    return keys.some((key) => result?.value?.[key] === true)
+  } catch (error) {
+    console.error('[main] failed to read settings:', error)
+    return false
   }
 }
 
@@ -54,8 +81,26 @@ function createWindow(): void {
     mainWindow?.show()
   })
 
+  mainWindow.on('close', (event) => {
+    if (isQuitting) return
+    void shouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray']).then((toTray) => {
+      if (!toTray || !mainWindow || mainWindow.isDestroyed()) return
+      event.preventDefault()
+      mainWindow.hide()
+    })
+  })
+
+  mainWindow.on('minimize', () => {
+    void shouldMinimizeToTray(['MinimizeToTray']).then((toTray) => {
+      if (!toTray || !mainWindow || mainWindow.isDestroyed()) return
+      mainWindow.hide()
+    })
+  })
+
   mainWindow.on('closed', () => {
     mainWindow = null
+    destroyTray()
+    destroyOsdWindow()
   })
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
@@ -79,10 +124,17 @@ app.whenReady().then(() => {
 
   startHost()
   createWindow()
+  setMainWindowRef(() => mainWindow)
+  initTray(() => mainWindow)
+  initOsdWindow()
   if (mainWindow) forwardHostEvents(mainWindow)
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+      initTray(() => mainWindow)
+      initOsdWindow()
+    }
   })
 })
 
@@ -95,6 +147,7 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', (event) => {
   console.log('[main] before-quit, host running:', hostClient.isRunning)
+  isQuitting = true
   if (!hostClient.isRunning) return
   event.preventDefault()
   void hostClient.stop().finally(() => {

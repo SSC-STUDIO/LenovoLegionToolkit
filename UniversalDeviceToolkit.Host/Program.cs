@@ -132,6 +132,7 @@ public static class Program
         KeyboardBacklightHandlers.Register(rpc);
         OptimizationHandlers.Register(rpc);
         PluginHandlers.Register(rpc);
+        AppIntegrationHandlers.Register(rpc);
 
         _ = flags;
     }
